@@ -1,0 +1,176 @@
+cls
+$targetId = 'xxx'
+$targetItem = Get-Item -Path "master:" -Id $targetId
+Add-ItemVersion -Item $targetItem
+
+$pageEditPage = "xxxx/?sc_itemid=$targetId&sc_mode=edit&sc_lang=en&sc_site=xxxx"
+$fullScript = "window.open('$pageEditPage', '_blank')"
+Write-Host $fullScript
+#Invoke-JavaScript -Script $fullScript
+$URL = $pageEditPage
+$Width = 800
+$Height = 600
+$Title = "Adam's blog..."
+
+
+
+#Invoke-JavaScript -Script `"window.open("$pageEditPage", "_blank")"
+$dryRun = $false
+$defaultLayout = Get-LayoutDevice "Default"
+$useFinalLayout = $true
+$placeHolderRegex = "key='.*?'"
+
+
+Write-Host 'Found target: ' $targetItem.Name
+
+Invoke-JavaScript -Script $fullScript
+$markup = Read-Host 'Page Markup'
+
+$foundPlaceholders = $markup | Select-String -Pattern $placeHolderRegex -AllMatches | ForEach-Object { $_.Matches } | ForEach-Object { $_.Value -replace "key='","" } | ForEach-Object { $_ -replace "'","" }
+
+
+Write-Host "Found Placeholders in Markup: "
+$foundPlaceholders | ForEach-Object { Write-Host "`t" $_ }
+
+$logFile = "$($SitecoreDataFolder)\CleanPagelog{0:MMddyyHHmmss}.txt" -f (Get-Date)
+Write-Host "Log: " $logFile
+
+$foundPlaceholders | ForEach-Object { $_ | Out-File -FilePath $logFile -Append }
+
+
+$Accordion = "xxxxx"
+
+
+$renderingsToKill = $Accordion
+
+$renderingsToKeep = $SomethingElse
+
+
+function DoesPlaceholderExist {
+	param([string]$needle)
+	$found = $false
+
+	$foundPlaceholders | ForEach-Object {
+		if ($_ -match $needle) {
+			$found = $true
+		}
+	}
+	if ($needle.length -lt 5) {
+		$found = $true
+	}
+
+	return $found
+}
+
+
+
+#Invoke-ShellCommand `
+#-Name "ise:iframe(spe_url=$url,spe_w=$width,spe_h=$height,spe_t=$title)" `
+#-Path master:\ ` # not ideal but the cmdlet needs it
+
+
+
+#$username = "admin"
+#$password = "b"
+
+#$pair = "$($username):$($password)"
+
+#$encodedCreds = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($pair))
+
+#$basicAuthValue = "Basic $encodedCreds"
+
+#$headers = @{
+#Authorization = $basicAuthValue
+#}
+
+#$cat = Invoke-RestMethod -Headers $headers -Uri $URL
+#$cat
+
+$continueAsking = $true
+
+
+
+
+if ($markup.length -gt 10) {
+
+
+
+	if (Get-Layout $targetItem.FullPath)
+	{
+		$renderings = Get-Rendering -Item $targetItem -FinalLayout:$useFinalLayout
+
+
+		foreach ($candidateRendering in $renderings) {
+
+			$renderingItem = Get-Item ($candidateRendering.ItemId)
+			$assignedPlaceholder = $candidateRendering.Placeholder
+			$placeholderFound = DoesPlaceholderExist -Needle $assignedPlaceholder
+
+
+			#Write-Host "Placeholder Exists?" $placeholderFound
+
+			$matchFoundForKill = $false
+			$matchFoundForKeep = $false
+
+			$renderingsToKill | ForEach-Object {
+				if ($_ -match $candidateRendering.ItemId) {
+					$matchFoundForKill = $true
+				}
+			}
+
+			$renderingsToKeep | ForEach-Object {
+				if ($_ -match $candidateRendering.ItemId) {
+					$matchFoundForKeep = $true
+				}
+			}
+
+			$stat = " $($assignedPlaceholder) ~~ $($renderingItem.Name) $($candidateRendering.ItemId)"
+			if (!$matchFoundForKill -and !$matchFoundForKeep) {
+				Write-Host "No data for: $stat "
+			}
+
+			$noPlaceHolderString = ""
+			if (!$placeholderFound) {
+				$noPlaceHolderString = "No Placeholder found: $stat"
+				Write-Host $noPlaceHolderString
+				#Write-Host "Found Name: " $renderingItem.Name $candidateRendering.ItemId " using target placeholder:" $candidateRendering.Placeholder
+
+			}
+
+
+
+
+			if (!$dryRun -and $matchFoundForKill -and !$matchFoundForKeep -and !$placeholderFound -and $continueAsking) {
+				Write-Host "Kill Match Found? " $matchFoundForKill
+				Write-Host "Keep Match Found? " $matchFoundForKeep
+
+				Write-Host "Wet Run. Killing " $targetItem.Name $renderingItem.Name
+				Write-Host "Wet Run"
+				$confirmation = Read-Host "Confirm ('y') Quit ('q') Stop Asking('s') `n" $noPlaceHolderString
+
+				if ($confirmation -eq 'y') {
+
+					$targetItem.Editing.BeginEdit()
+					Remove-Rendering -Item $targetItem -Instance $candidateRendering -FinalLayout:$useFinalLayout
+					$targetItem.Editing.EndEdit()
+
+					Publish-Item -Item $targetItem
+
+					$noPlaceHolderString | Out-File -FilePath $logFile -Append
+
+				}
+				if ($confirmation -eq 's') {
+					$continueAsking = $false
+				}
+				if ($confirmation -eq 'q') {
+					break
+				}
+			}
+
+			Write-Host ""
+		}
+
+
+	}
+}
+Write-Host "done"
