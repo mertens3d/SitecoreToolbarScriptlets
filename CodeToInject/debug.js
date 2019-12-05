@@ -1,4 +1,6 @@
-var debug = {
+var xyyz = xyyz || {};
+
+xyyz.debug = {
     valueCombine : "",
     log : function(text){
         console.log(text);

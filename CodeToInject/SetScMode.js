@@ -4,23 +4,23 @@ function SetScMode(newValue) {
 }
 
 function AdminB(ownerDoc) {
-    debug.log('s) AdminB');
+    xyyz.debug.log('s) AdminB');
 
-    debug.log('s) AdminB');
+    xyyz.debug.log('s) AdminB');
     ownerDoc.querySelector('#UserName').setAttribute('value', 'admin');
     ownerDoc.querySelector('#Password').setAttribute('value', 'b');
     ownerDoc.querySelector('#LogInBtn').click();
-    debug.log('e) AdminB');
+    xyyz.debug.log('e) AdminB');
 }
 
 
 
 function Desktop(ownerWindow) {
-    debug.log('owner: ' + ownerWindow);
+    xyyz.debug.log('owner: ' + ownerWindow);
     var pat = new RegExp('.*' + ownerWindow.location.hostname);
-    debug.log('pat: ' + pat);
+    xyyz.debug.log('pat: ' + pat);
     var match = ownerWindow.location.href.match(pat);
-    debug.log('match: ' + match);
+    xyyz.debug.log('match: ' + match);
 
     ownerWindow.location.href = '/sitecore/shell/default.aspx';
 
@@ -30,7 +30,7 @@ function Desktop(ownerWindow) {
 }
 
 function TriggeRedButton(ownerWindow) {
-    debug.log('TriggeRedButton');
+    xyyz.debug.log('TriggeRedButton');
 
     setTimeout(function () {
         RedButton(ownerWindow, 10);
@@ -38,9 +38,9 @@ function TriggeRedButton(ownerWindow) {
 }
 
 function RedButton(ownerWindow, iteration) {
-    debug.log();
+    xyyz.debug.log();
     var found = ownerWindow.document.getElementById('StartButton');
-    debug.log('Red Button: ' + found + '  ' + ownerWindow.location.href + ' ' + iteration);
+    xyyz.debug.log('Red Button: ' + found + '  ' + ownerWindow.location.href + ' ' + iteration);
     if (found) {
         found.click();
         ownerWindow.document.querySelector('.scStartMenuLeftOption').click();

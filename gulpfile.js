@@ -37,7 +37,8 @@ var fs = require('fs');
 //     done();
 // });
 
-var dest = './dist/';
+var dist = './dist/';
+var distFinal = dist + "final/";
 var codeToInjectShortName = 'CodeToInject.js';
 var codeToInjectMinName = 'CodeToInject.min.js';
 var codeToInjectVarName = 'CodeToInject';
@@ -45,7 +46,7 @@ var htmlToInjectVarName = 'HtmlToInject';
 var concatCode = 'concat.js';
 var concatCodeMin = 'concat.min.js';
 var codeToInjectDir = './CodeToInject';
-var codeToInjectDest = dest + codeToInjectShortName;
+var codeToInjectDest = dist + codeToInjectShortName;
 
 
 var myResources = function (fileName, varName) {
@@ -59,7 +60,7 @@ var myResources = function (fileName, varName) {
 };
 
 gulp.task('bookletMenu', function (done) {
- 
+
 
     // gulp.src(dest +  concatCodeMin)
     //     .pipe(gulp.dest(dest));
@@ -69,15 +70,16 @@ gulp.task('bookletMenu', function (done) {
 
 
     console.log("reading back");
-    var htmlToInjectResourceText = myResources(dest + "menu.min.html", htmlToInjectVarName);
-    var codeToInjectResourceText = myResources(dest + codeToInjectMinName, codeToInjectVarName);
+    var htmlToInjectResourceText = myResources(dist + "menu.min.html", htmlToInjectVarName);
+    var codeToInjectResourceText = myResources(dist + codeToInjectMinName, codeToInjectVarName);
 
     console.log(codeToInjectResourceText);
     // // allResources = allResources.replace(/(\r\n|\n|\r)/gm, "");
     // // allResources = allResources.replace(/\s\s+/g, ' ');
 
-    return gulp.src(['Constants.js','menu.js'  ])
+    return gulp.src(['Constants.js', 'menu.js'])
         .pipe(concat('menuConcat.js'))
+        .pipe(gulp.dest(dist))
         .pipe(minify({
             ext: {
                 min: '.min.js'
@@ -85,7 +87,7 @@ gulp.task('bookletMenu', function (done) {
         }))
         .pipe(header('javascript:(function(){' + codeToInjectResourceText + htmlToInjectResourceText))
         .pipe(footer('}());'))
-        .pipe(gulp.dest(dest));
+        .pipe(gulp.dest(distFinal));
 });
 
 
@@ -93,34 +95,38 @@ gulp.task('buildHtml', () => {
     console.log('buildHtml');
 
     return gulp.src('./html/*.html')
-    .pipe(htmlmin({ collapseWhitespace: true, quoteCharacter: "'" }))
-    // .pipe(gulp.dest(dest))
-    .pipe(rename('menu.min.html'))
-    .pipe(gulp.dest(dest));
+        .pipe(htmlmin({
+            collapseWhitespace: true,
+            quoteCharacter: "'",
+            removeComments: true
+        }))
+        // .pipe(gulp.dest(dest))
+        .pipe(rename('menu.min.html'))
+        .pipe(gulp.dest(dist));
 });
 
 
-gulp.task('buildCodeToInject', function(done){
-
-
+gulp.task('buildCodeToInject', function (done) {
     var source = codeToInjectDir + '/**/*.js';
     console.log("source: " + source);
-    console.log("dest: " + dest);
+    console.log("dest: " + dist);
     return gulp.src(source)
         .pipe(concat(codeToInjectShortName))
-        .pipe(gulp.dest(dest))
+        .pipe(gulp.dest(dist))
+        // .pipe(uglify())
+        .pipe(gulp.dest(dist))
         .pipe(minify({
             ext: {
                 min: '.min.js'
             }
         }))
-        .pipe(gulp.dest(dest))
+        .pipe(gulp.dest(dist))
         .pipe(replace('"', '\\"'))
-        .pipe(gulp.dest(dest));
+        .pipe(gulp.dest(dist));
 });
 
 
 
-gulp.task('default', gulp.series(['buildCodeToInject','buildHtml', 'bookletMenu']), function (resolve) {
+gulp.task('default', gulp.series(['buildCodeToInject', 'buildHtml', 'bookletMenu']), function (resolve) {
     resolve();
 });
