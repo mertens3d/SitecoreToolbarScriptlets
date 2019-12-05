@@ -24,13 +24,13 @@ function Desktop(ownerWindow) {
 
     ownerWindow.location.href = '/sitecore/shell/default.aspx';
 
-    TriggeRedButton(ownerWindow);
+    TriggerRedButton(ownerWindow);
 
 
 }
 
-function TriggeRedButton(ownerWindow) {
-    xyyz.debug.log('TriggeRedButton');
+function TriggerRedButton(ownerWindow) {
+    xyyz.debug.log('TriggerRedButton');
 
     setTimeout(function () {
         RedButton(ownerWindow, 10);

@@ -1,10 +1,8 @@
 {
   "tabWidth": 2,
   "useTabs": false,
-  // Set the default
-"editor.formatOnSave": true,
-// Enable per-language
-"[javascript]": {
+  "editor.formatOnSave": true,
+  "[javascript]": {
     "editor.formatOnSave": true
-}
+  }
 }

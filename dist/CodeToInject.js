@@ -1,36 +1,50 @@
 var xyyz = xyyz || {};
 
 xyyz.debug = {
-    valueCombine : \"\",
     log : function(text){
         console.log(text);
-        var ta = document.querySelector(\"#ta-debug\");
+        var ta = document.querySelector('#ta-debug');
         if(ta){
             
-            ta.value += (\"\\n\\r\" + text);
+            ta.value += ('\\n\\r' + text);
 
         }
     }
 }
 var xyyz = xyyz || {};
-xyyz.InjectConst = {
-    ClassNames :{
-        ContentTreeNode:'scContentTreeNode',
-    },
-    Selector :{
-        ContentTreeNodeGlyph : '.scContentTreeNodeGlyph'
-    },
-    TreeExpandedPng : 'treemenu_expanded.png',
 
-}
-function WireMenuButtons() {
+
+xyyz.WireMenuButtons = function() {
+    xyyz.debug.log('s) WireMenuButtons' );
+    
     document.querySelector('#btnEdit').onclick = function () { SetScMode('edit'); };
     document.querySelector('#btnPrev').onclick = function () { SetScMode('preview'); };
     document.querySelector('#btnNorm').onclick = function () { SetScMode('normal'); };
     document.querySelector('#btnAdminB').onclick = function () { AdminB(window.opener.document); };
     document.querySelector('#btnDesktop').onclick = function () { Desktop(window.opener); };
-    document.querySelector('#btnSaveTheTrees').onclick = function () { SaveTheTrees(window.opener.document); };
-    document.querySelector('#btnPlantTheTrees').onclick = function () { PlantTheTrees(window.opener.document); };
+    document.querySelector('#btnSaveTheTrees').onclick = function () { xyyz.ManyTrees.SaveAllTrees(window.opener.document); };
+    document.querySelector('#btnPlantTheTrees').onclick = function () { xyyz.ManyTrees.PlantTheTrees(window.opener.document, 0); };
+    xyyz.debug.log('e) WireMenuButtons ');
+}
+var xyyz = xyyz || {};
+
+xyyz.InjectConst = {
+    ClassNames :{
+        ContentTreeNode:'scContentTreeNode',
+    },
+    Selector :{
+        ContentTreeNodeGlyph : '.scContentTreeNodeGlyph',
+        RootNodeId : '#Tree_Node_11111111111111111111111111111111'
+    },
+    Storage :{
+        Root: 'xyyz'
+    },
+    TreeExpandedPng : 'treemenu_expanded.png',
+    MaxIter : 100,
+    prop :{
+        AllTreeData : 'AllTreeData',
+    }
+
 }
 function SetScMode(newValue) {
     var newValueB = '=' + newValue;
@@ -58,13 +72,13 @@ function Desktop(ownerWindow) {
 
     ownerWindow.location.href = '/sitecore/shell/default.aspx';
 
-    TriggeRedButton(ownerWindow);
+    TriggerRedButton(ownerWindow);
 
 
 }
 
-function TriggeRedButton(ownerWindow) {
-    xyyz.debug.log('TriggeRedButton');
+function TriggerRedButton(ownerWindow) {
+    xyyz.debug.log('TriggerRedButton');
 
     setTimeout(function () {
         RedButton(ownerWindow, 10);
@@ -92,115 +106,175 @@ function RedButton(ownerWindow, iteration) {
 }
 
 
-function WalkNodeRecursive(targetNode, depth) {
-    // xyyz.debug.log('WalkNodeRecursive ' + depth);
-    var toReturn = [];
-    depth = depth - 1;
+var xyyz = xyyz || {};
 
-    if (targetNode) {
-        var id = targetNode.id;
-        var className = targetNode.className;
-        // xyyz.debug.log('class: ' + className);
-        if (className === xyyz.InjectConst.ClassName.ContentTreeNode ) {
-            var firstImg = targetNode.querySelector(xyyz.InjectConst.Selector.ContentTreeNodeGlyph );
-            if (firstImg) {
-                var srcAttr = firstImg.getAttribute(\"src\");
-                if (srcAttr.indexOf(xyyz.InjectConst.TreeExpandedPng ) > -1) {
-                    xyyz.debug.log('src: ' + srcAttr);
-                    toReturn.push(firstImg.id);
-                }
+
+xyyz.OneCEIframe = function () {
+    this.Index = -1;
+    this.TreeData = {}
+};
+
+xyyz.TreeData = function () {
+    this.DateStamp = Date.now();
+    this.AllCEIframes = [];
+};
+
+xyyz.StorageMan = {
+    GetTreeData: function (treeIdx) {
+        xyyz.debug.log('s) GetTreeData');
+        var toReturn = null;
+        var foundInStorageJson = window.localStorage.getItem(xyyz.InjectConst.Storage.root);
+        if (foundInStorageJson) {
+            var foundInStorage = JSON.parse(foundInStorageJson);
+            
+            var allTreeDataAr = foundInStorage[xyyz.InjectConst.prop.AllTreeData];
+            if (allTreeDataAr.length <= treeIdx) {
+                toReturn = allTreeDataAr[treeIdx];
             }
+            
         }
-
-        if (id) {
-            // xyyz.debug.log('id: ' + id);
-
-            var idx = id.indexOf('Tree_Node_');
-            if (idx > -1) {
-                // xyyz.debug.log('pushing ' + id);
-                // toReturn.push(id);
-            }
-
-        }
-        var childNodes = targetNode.children;
-        if (childNodes && childNodes.length > 0 && depth > 0) {
-            for (var jdx = 0; jdx < childNodes.length; jdx++) {
-                var oneChild = childNodes[jdx];
-                toReturn = toReturn.concat(WalkNodeRecursive(oneChild, depth));
-            }
-        }
+        xyyz.debug.log('e) GetTreeData');
+        return treeIdx;
     }
-    return toReturn;
-}
+};
 
-function GetIframe(targetDoc) {
-    var toReturn = null;
-    var iframeAr = targetDoc.querySelectorAll('iframe[src*=content]');
-    if (iframeAr) {
-        xyyz.debug.log('iframeAr: ' + iframeAr.length);
-        for (var idx = 0; idx < iframeAr.length; idx++) {
-            toReturn = iframeAr[idx].contentDocument;
+xyyz.OneLivingTreeData = function (index, docElem) {
+    xyyz.debug.log('s) OneLivingTreeData: ' + index);
+    this.Index = index;
+    this.DocElem = docElem;
+    xyyz.debug.log('e) OneLivingTreeData');
+};
+var xyyz = xyyz || {};
 
+xyyz.ManyTrees = {
+    GetAllLiveTreeData: function (targetDoc) {
+        xyyz.debug.log('s) GetAllLiveTreeData');
+        var toReturn = [];
+        var iframeAr = targetDoc.querySelectorAll('iframe[src*=content]');
+        if (iframeAr) {
+            xyyz.debug.log('iframeAr: ' + iframeAr.length);
+            for (var jdx = 0; jdx < iframeAr.length; jdx++) {
+                // if (idx <= iframeAr.length) {
+                xyyz.debug.log('pushing: ' + jdx);
+                toReturn.push(new xyyz.OneLivingTreeData(jdx, iframeAr[jdx].contentDocument));
+                // } else {
+                // xyyz.debug.log('ERROR - invalid iframe index: ' + idx);
+                // }
+            }
         }
-    }
-    return toReturn;
-}
+        xyyz.debug.log('e) GetAllLiveTreeData');
+        return toReturn;
+    },
 
-function PlantTheTrees(targetDoc) {
-    xyyz.debug.log('s) LookAtExistingData');
-    var foundInStorage = window.localStorage.getItem('nodeData-0');
-    if (foundInStorage) {
-        xyyz.debug.log('foundInStorage: ' + foundInStorage);
-        //note: no IE support. Maybe use split if needed
-        var foundAr = foundInStorage.split(',');
-        if (foundAr) {
-            xyyz.debug.log('foundAr: ' + foundAr.length + ' ' + foundAr);
+    PlantTheTrees: function (targetDoc, treeIdx) {
+        xyyz.debug.log('s) LookAtExistingData: ' + treeIdx);
+        var foundInStorage = xyyz.StorageMan.GetTreeData(treeIdx);
+
+        if (foundInStorage) {
+            xyyz.debug.log('foundInStorage: ' + foundInStorage);
+            //note: no IE support. Maybe use split if needed
+            var foundAr = foundInStorage.split(',');
+            if (foundAr) {
+                xyyz.debug.log('foundAr: ' + foundAr.length + ' ' + foundAr);
 
 
-var targetIframe = GetIframe(targetDoc);
+                var targetIframe = this.GetAllLiveTreeData(targetDoc)[treeIdx];
 
-            for (var idx = 0; idx < foundAr.length; idx++) {
-                var candidate = foundAr[idx].replace(/\"/gi, '');
-                candidate = candidate.replace('[', '').replace(']', '');
-                xyyz.debug.log('candidate: ' + candidate);
-                var foundOnPage = targetIframe.getElementById(candidate);
-                if (foundOnPage) {
-                    xyyz.debug.log('foundOnPage');
-                    var currentSrc = foundOnPage.getAttribute('src');
-                    xyyz.debug.log('currentSrc' + currentSrc);
-                    if(currentSrc.indexOf('treemenu_expanded.png') < 0 ){
-                        xyyz.debug.log('clicking it');
+                for (var idx = 0; idx < foundAr.length; idx++) {
+                    var candidate = foundAr[idx].replace(/\"/gi, '');
+                    candidate = candidate.replace('[', '').replace(']', '');
+                    xyyz.debug.log('candidate: ' + candidate);
+                    var foundOnPage = targetIframe.getElementById(candidate);
+                    if (foundOnPage) {
+                        xyyz.debug.log('foundOnPage');
+                        var currentSrc = foundOnPage.getAttribute('src');
+                        xyyz.debug.log('currentSrc' + currentSrc);
+                        if (currentSrc.indexOf('treemenu_expanded.png') < 0) {
+                            xyyz.debug.log('clicking it');
 
-                        foundOnPage.click();
+                            foundOnPage.click();
+                        }
                     }
                 }
             }
         }
-    }
-}
+    },
 
+    SaveAllTrees: function (targetDoc) {
+        xyyz.debug.log('s) ' + this.SaveAllTrees.name);
 
+        var allTreeData = [];
 
-function SaveTheTrees(targetDoc) {
-    xyyz.debug.log('s) SaveTheTrees');
+        var iframeAr = this.GetAllLiveTreeData(targetDoc);
+        if (iframeAr && iframeAr.length > 0) {
 
-    var iframeAr = GetIframe(targetDoc);
-    if (iframeAr) {
-        var rootNode = oneIframeDoc.querySelector('#Tree_Node_11111111111111111111111111111111');
-        xyyz.debug.log('rootNode: ' + rootNode.innerHTML);
-        if (rootNode) {
-            var rootParent = rootNode.parentElement;
-
-            var foundNodes = WalkNodeRecursive(rootParent, 100);
-            xyyz.debug.log(\"foundNodes: \" + foundNodes.length);
-            xyyz.debug.log(\"foundNodes: \" + foundNodes);
-
-            window.localStorage.setItem('nodeData-' + idx, JSON.stringify(foundNodes));
-
-
+            for (var iframeIdx = 0; iframeIdx < iframeAr.length; iframeIdx++) {
+                var targetCe = iframeAr[iframeIdx];
+                var oneCeData = xyyz.oneCeData.GetOneLiveCeData(iframeIdx, targetCe.contentDocument);
+                allTreeData.push(oneCeData);
+            }
+            xyyz.debug.log('e) ' + this.SaveAllTrees.name);
         }
 
-        xyyz.debug.log('e) SaveTheTrees');
-
+        for (var jdx = 0; jdx < allTreeData.length; jdx++) {
+            xyyz.debug('Tree: ' + jdx + ' ' + allTreeData[jdx]);
+        }
     }
+};
+var xyyz = xyyz || {};
+
+xyyz.OneTree = {
+    WalkNodeRecursive: function (targetNode, depth) {
+        // xyyz.debug.log('WalkNodeRecursive ' + depth);
+        var toReturn = [];
+        depth = depth - 1;
+
+        if (targetNode) {
+            var id = targetNode.id;
+            var className = targetNode.className;
+            // xyyz.debug.log('class: ' + className);
+            if (className === xyyz.InjectConst.ClassName.ContentTreeNode) {
+                var firstImg = targetNode.querySelector(xyyz.InjectConst.Selector.ContentTreeNodeGlyph);
+                if (firstImg) {
+                    var srcAttr = firstImg.getAttribute('src');
+                    if (srcAttr.indexOf(xyyz.InjectConst.TreeExpandedPng) > -1) {
+                        xyyz.debug.log('src: ' + srcAttr);
+                        toReturn.push(firstImg.id);
+                    }
+                }
+            }
+
+            var childNodes = targetNode.children;
+            if (childNodes && childNodes.length > 0 && depth > 0) {
+                for (var jdx = 0; jdx < childNodes.length; jdx++) {
+                    var oneChild = childNodes[jdx];
+                    toReturn = toReturn.concat(this.WalkNodeRecursive(oneChild, depth));
+                }
+            }
+        }
+        return toReturn;
+    },
+    GetOneLiveTreeData: function (idx, targetDoc){
+        xyyz.debug.log('s) SaveOneCeData idx: ' + idx);
+        
+        var toReturn = new xyyz.Storage.LivingCE(idx, targetDoc);
+        
+        var rootNode = targetDoc.querySelector(xyyz.InjectConst.Selector.RootNodeId );
+        xyyz.debug.log('rootNode: '  + rootNode.innerHTML);
+        if (rootNode) {
+            var rootParent = rootNode.parentElement;
+            
+            var foundNodes = this.WalkNodeRecursive(rootParent, xyyz.InjectConst.MaxIter);
+            xyyz.debug.log('foundNodes: ' + foundNodes.length);
+            xyyz.debug.log('foundNodes: ' + foundNodes);
+            
+            window.localStorage.setItem(xyyz.Storage.root + idx, JSON.stringify(foundNodes));
+            
+            
+        }
+        xyyz.debug.log('e) SaveOneCeData');
+
+    },
+
 }
+xyyz.WireMenuButtons();
