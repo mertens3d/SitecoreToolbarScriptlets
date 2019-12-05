@@ -8,5 +8,5 @@
         "node_modules",
         "**/node_modules/*"
     ],
-    "include": ["SetScMode.js"]
+    "include": ["InjectCode/SetScMode.js"]
 }
