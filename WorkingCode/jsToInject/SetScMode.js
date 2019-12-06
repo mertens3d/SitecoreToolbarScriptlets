@@ -1,36 +1,37 @@
+var xyyz = xyyz || {};
+
 function SetScMode(newValue) {
     var newValueB = '=' + newValue;
     window.opener.location.href = window.opener.location.href.replace('=normal', newValueB).replace('=preview', newValueB).replace('=edit', newValueB);
 }
 
 function AdminB(ownerDoc) {
-    xyyz.debug.log('s) AdminB');
+    xyyz.debug.Log('s) AdminB');
 
-    xyyz.debug.log('s) AdminB');
-    ownerDoc.querySelector('#UserName').setAttribute('value', 'admin');
-    ownerDoc.querySelector('#Password').setAttribute('value', 'b');
-    ownerDoc.querySelector('#LogInBtn').click();
-    xyyz.debug.log('e) AdminB');
+    xyyz.debug.Log('s) AdminB');
+    ownerDoc.getElementById('UserName').setAttribute('value', 'admin');
+    ownerDoc.getElementById('Password').setAttribute('value', 'b');
+    ownerDoc.getElementById('LogInBtn').click();
+    xyyz.debug.Log('e) AdminB');
 }
 
-
-
 function Desktop(ownerWindow) {
-    xyyz.debug.log('owner: ' + ownerWindow);
+    xyyz.debug.FuncStart(this.Desktop.name);
+    xyyz.debug.Log('owner: ' + JSON.stringify(ownerWindow));
     var pat = new RegExp('.*' + ownerWindow.location.hostname);
-    xyyz.debug.log('pat: ' + pat);
+    xyyz.debug.Log('pat: ' + pat);
     var match = ownerWindow.location.href.match(pat);
-    xyyz.debug.log('match: ' + match);
+    xyyz.debug.Log('match: ' + match);
 
     ownerWindow.location.href = '/sitecore/shell/default.aspx';
 
     TriggerRedButton(ownerWindow);
 
-
+    xyyz.debug.FuncEnd(this.Desktop.name);
 }
 
 function TriggerRedButton(ownerWindow) {
-    xyyz.debug.log('TriggerRedButton');
+    xyyz.debug.Log('TriggerRedButton');
 
     setTimeout(function () {
         RedButton(ownerWindow, 10);
@@ -38,15 +39,13 @@ function TriggerRedButton(ownerWindow) {
 }
 
 function RedButton(ownerWindow, iteration) {
-    xyyz.debug.log();
+    xyyz.debug.Log();
     var found = ownerWindow.document.getElementById('StartButton');
-    xyyz.debug.log('Red Button: ' + found + '  ' + ownerWindow.location.href + ' ' + iteration);
+    xyyz.debug.Log('Red Button: ' + found + '  ' + ownerWindow.location.href + ' ' + iteration);
     if (found) {
         found.click();
         ownerWindow.document.querySelector('.scStartMenuLeftOption').click();
-
     } else {
-
         iteration = iteration - 1;
 
         if (iteration > 0) {
@@ -56,4 +55,3 @@ function RedButton(ownerWindow, iteration) {
         }
     }
 }
-

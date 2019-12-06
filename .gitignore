@@ -1,1 +1,5 @@
 node_modules
+**/*Secrets*
+!Secrets.example.js
+/.vs/slnx.sqlite
+/.vs/SitecoreToolbarScriptlets/v15/.suo

@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const uglify = require('gulp-uglify');
+const uglify = require('gulp-terser'); //require('gulp-uglify-es');
 const minify = require('gulp-minify');
 const header = require('gulp-header');
 const footer = require('gulp-footer');
@@ -10,33 +10,83 @@ const rename = require("gulp-rename");
 const del = require('del');
 const fs = require('fs');
 const sass = require('gulp-sass');
+const secrets = require('./secrets.js');
+
 
 var dist = './dist/';
 var distFinal = dist + "final/";
-var codeToInjectShortName = 'CodeToInject.js';
-var codeToInjectMinName = 'CodeToInject.min.js';
-var codeToInjectVarName = 'CodeToInject';
-var htmlToInjectVarName = 'HtmlToInject';
-var concatCode = 'concat.js';
-var concatCodeMin = 'concat.min.js';
-var codeToInjectDir = './CodeToInject';
-var codeToInjectDest = dist + codeToInjectShortName;
-var openerCodeDir = "./ChildWindow";
 
-var openerName = "ChildCreator";
-var openerNameConcat = openerName + ".concat.js";
+var WorkingCodeRootDir = './WorkingCode';
 
-var cssName = "Style";
-var cssNameMin = cssName + ".css";
-var cssVarNameMin = cssName + "Inject";
+
+
+var local = {
+    Dest: secrets.localWebRoot,
+};
+
+
+class Injectable {
+    constructor(shortName, sourceExt, finalExt) {
+        this.ShortName = shortName;
+        this.SourceExt = sourceExt;
+        this.FinalExt = finalExt;
+        this.SourceDirFilter = WorkingCodeRootDir + '/' + this.ShortName + '/**/*.' + this.SourceExt;
+        this.VarName = shortName;
+        this.FileNameWithExt = this.ShortName + '.' + this.FinalExt;
+        this.MinFileName = this.ShortName + '.min.' + this.FinalExt;
+        this.WorkingDest = dist;
+        this.FinalDest = distFinal;
+        this.NameConcat = this.ShortName + ".concat." + this.FinalExt;
+        this.NameConcatMin = this.shortName + "concat.min." + this.FinalExt;
+    }
+    debugInfo() {
+        console.log("----------");
+        console.log("ShortName: " + this.ShortName);
+        console.log("SourceExt: " + this.SourceExt);
+        console.log("SourceDirFilter: " + this.SourceDirFilter);
+        console.log("MinFileName: " + this.MinFileName);
+        console.log("NameConcatMin: " + this.NameConcatMin);
+    }
+}
+class WindowOpenerClass {
+    constructor() {
+        this.ShortName = "windowOpener";
+        this.SourceDirFilter = WorkingCodeRootDir + '/' + this.ShortName + "/**/*.js";
+        this.NameConcat = this.ShortName + ".concat.js";
+        this.NameConcatMin = this.ShortName + ".concat.min.js";
+        this.NameConcatMinWithVar = this.ShortName + ".concat.min.var.js";
+
+    }
+    debugInfo() {
+        console.log("----------");
+        console.log("ShortName: " + this.ShortName);
+        console.log("SourceDirFilter: " + this.SourceDirFilter);
+        console.log("NameConcat: " + this.NameConcat);
+        console.log("NameConcatMin: " + this.NameConcatMin);
+    }
+}
+
+var htmlToInject = new Injectable('HtmlToInject' , 'html', 'html');
+var jsToInject = new Injectable('jsToInject', "js", "js");
+var stylesToInject = new Injectable('StylesToInject', "scss", "css");
+var WindowOpener = new WindowOpenerClass();
+
+htmlToInject.debugInfo();
+jsToInject.debugInfo();
+stylesToInject.debugInfo();
+WindowOpener.debugInfo();
+
+var bookmarkFinal = "Bookmark.js";
+
 
 var myResources = function (fileName, varName) {
-    console.log("myResources: fileName: " + fileName + " : " + varName);
+    console.log("s) myResources: fileName: " + fileName + " : " + varName);
     var fileContent = fs.readFileSync(fileName, "utf8");
+    fileContent = fileContent.replace(/\r|\n/gi, "");
+    var toReturn = "var " + varName + " = \"" + fileContent + "\";"; // + "\r\n";
     console.log("-----------------------");
-    // console.log(fileContent);
-    var toReturn = "var " + varName + " = \"" + fileContent + "\";" + "\r\n";
     console.log(toReturn);
+    console.log("e) myResources");
     return (toReturn);
 };
 
@@ -46,76 +96,109 @@ gulp.task('cleanDist', function (cb) {
     ], cb);
 });
 
-gulp.task('bookletMenu', function (done) {
-    console.log("reading back");
-    var htmlToInjectResourceText = myResources(dist + "menu.min.html", htmlToInjectVarName);
-    var codeToInjectResourceText = myResources(dist + codeToInjectMinName, codeToInjectVarName);
-    var cssToInjectResourceText = myResources(dist + cssNameMin, cssVarNameMin);
 
-    console.log(codeToInjectResourceText);
-    // // allResources = allResources.replace(/(\r\n|\n|\r)/gm, "");
-    // // allResources = allResources.replace(/\s\s+/g, ' ');
-    var source = openerCodeDir + '/**/*.js';
+gulp.task('buildStylesToInject', function () {
+    stylesToInject.debugInfo();
 
-    return gulp.src(source)
-        .pipe(concat(openerNameConcat))
-        .pipe(gulp.dest(dist))
-        .pipe(minify({
-            ext: {
-                min: '.min.js'
-            }
-        }))
-        .pipe(header('javascript:(function(){' + cssToInjectResourceText + codeToInjectResourceText + htmlToInjectResourceText))
-        .pipe(footer('}());'))
-        .pipe(gulp.dest(distFinal));
+    return gulp.src(stylesToInject.SourceDirFilter)
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }).on('error', sass.logError))
+        .pipe(rename(stylesToInject.MinFileName))
+        .pipe(gulp.dest(dist));
 });
 
-gulp.task('buildCssToInject', function () {
-    var source = codeToInjectDir + '/sass/**/*.scss';
-    return gulp.src( source )
-      .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-      .pipe(rename( cssName + ".css"))
-      .pipe(gulp.dest(dist));
-  });
 
 gulp.task('buildHtmlToInject', () => {
     console.log('buildHtml');
 
-    var source = codeToInjectDir + '/html/**/*.html';
-
-    return gulp.src(source)
+    return gulp.src(htmlToInject.SourceDirFilter)
         .pipe(htmlmin({
             collapseWhitespace: true,
             quoteCharacter: "'",
             removeComments: true,
         }))
         // .pipe(gulp.dest(dest))
-        .pipe(rename('menu.min.html'))
+        .pipe(rename(htmlToInject.MinFileName))
         .pipe(gulp.dest(dist));
 });
 
 
 gulp.task('buildJsToInject', function (done) {
-    var source = codeToInjectDir + '/js/**/*.js';
-    console.log("source: " + source);
+    console.log("s) buildJsToInject");
+    console.log("source filter: " + jsToInject.SourceDirFilter);
     console.log("dest: " + dist);
-    return gulp.src(source)
-        .pipe(concat(codeToInjectShortName))
-        .pipe(gulp.dest(dist))
+    console.log("rename: " + jsToInject.MinFileName);
+    console.log("e) buildJsToInject");
+    return gulp.src(jsToInject.SourceDirFilter)
+        .pipe(concat(jsToInject.FileNameWithExt))
+        .pipe(gulp.dest(jsToInject.WorkingDest))
+        // .pipe(minify())
         // .pipe(uglify())
+        .pipe(gulp.dest(jsToInject.WorkingDest))
+        .pipe(uglify({
+            mangle: false,
+            output: {
+            quote_style: 3
+        }}))
+        .pipe(gulp.dest(jsToInject.WorkingDest))
+        // .pipe(gulp.dest(jsToInject.WorkingDest))
+        .pipe(rename(jsToInject.MinFileName))
+        .pipe(gulp.dest(jsToInject.WorkingDest));
+        // .pipe(replace('"', '\\"'))
+        // .pipe(gulp.dest(jsToInject.WorkingDest));
+});
+
+gulp.task('buildWindowOpener', function (done) {
+    console.log("reading back");
+
+    var cssToInjectWithVar = myResources(dist + stylesToInject.MinFileName, stylesToInject.VarName);
+    var htmlToInjectWithVar = myResources(dist + htmlToInject.MinFileName, htmlToInject.VarName);
+    var jsToInjectWithVar = myResources(dist + jsToInject.MinFileName, jsToInject.VarName);
+
+    console.log('compiling');
+
+    WindowOpener.debugInfo();
+
+    return gulp.src(WindowOpener.SourceDirFilter)
+        .pipe(concat(WindowOpener.NameConcat))
         .pipe(gulp.dest(dist))
-        .pipe(minify({
-            ext: {
-                min: '.min.js'
-            }
-        }))
+        .pipe(uglify())
+        .pipe(rename(WindowOpener.NameConcatMin))
+        .pipe(header(cssToInjectWithVar + "\n")) // + codeToInjectResourceText + ))
+        .pipe(header(jsToInjectWithVar + "\n"))
+        .pipe(header(htmlToInjectWithVar + "\n"))
+        .pipe(header('(function(){'))
+        .pipe(footer('}());'))
+        .pipe(rename(WindowOpener.NameConcatMinWithVar))
+        // .pipe(gulp.dest(dist))
         .pipe(gulp.dest(dist))
-        .pipe(replace('"', '\\"'))
-        .pipe(gulp.dest(dist));
+        ;
 });
 
 
+gulp.task('BookmarkText', function (done) {
+    console.log("reading back");
 
-gulp.task('default', gulp.series(['cleanDist', 'buildCssToInject', 'buildJsToInject', 'buildHtmlToInject', 'bookletMenu']), function (resolve) {
+    var source = dist + WindowOpener.NameConcatMinWithVar;
+console.log(source);
+    return gulp.src(source)
+        .pipe(header('javascript:'))
+        .pipe(rename(bookmarkFinal))
+        .pipe(gulp.dest(distFinal));
+});
+
+
+gulp.task('putWindowOpenerToLocal', function () {
+    //C:/Users/GXM073/Documents/SitecoreToolbarScriptlets/dist/CodeToInject.js")}())
+
+    var source = dist + "/" + WindowOpener.NameConcatMinWithVar;
+    console.log('source filter: ' + source);
+    console.log('dest: ' + secrets.localWebRoot);
+    return gulp.src (source)
+        .pipe(gulp.dest(secrets.localWebRoot));
+});
+
+gulp.task('default', gulp.series(['cleanDist', 'buildStylesToInject', 'buildJsToInject', 'buildHtmlToInject', 'buildWindowOpener', 'putWindowOpenerToLocal', 'BookmarkText']), function (resolve) {
     resolve();
 });

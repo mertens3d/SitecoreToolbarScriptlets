@@ -1,0 +1,38 @@
+{
+  "name": "sitecoretoolbarscriptlets",
+  "version": "1.0.0",
+  "description": "Here is a description",
+  "main": "Secrets.example.js",
+  "dependencies": {
+    "del": "5.1.0",
+    "gulp": "4.0.2",
+    "gulp-concat": "2.6.1",
+    "gulp-footer": "2.0.2",
+    "gulp-htmlmin": "5.0.1",
+    "gulp-minify": "3.1.0",
+    "gulp-header": "2.0.9",
+    "gulp-rename": "1.4.0",
+    "gulp-replace": "1.0.0",
+    "gulp-uglify": "3.0.2",
+    "gulp-sass": "4.0.2",
+    "jshint": "2.10.3",
+    "node-sass": "4.13.0"
+  },
+  "devDependencies": {
+    "gulp-terser": "1.2.0",
+    "gulp-uglify-es": "2.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mertens3d/SitecoreToolbarScriptlets.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mertens3d/SitecoreToolbarScriptlets/issues"
+  },
+  "homepage": "https://github.com/mertens3d/SitecoreToolbarScriptlets#readme"
+}

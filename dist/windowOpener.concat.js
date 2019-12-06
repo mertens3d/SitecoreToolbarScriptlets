@@ -1,3 +1,6 @@
+var constants = {
+    taDebug : 'ta-debug',
+}
 var xyyz = xyyz || {};
 
 xyyz.ChildWindow = {
@@ -10,27 +13,30 @@ xyyz.ChildWindow = {
         return toReturn;
     },
     WriteHtml: function (targetWindow) {
-
+        console.log('s) WriteHtml');
         var fullMarkup = "<head>";
         fullMarkup += "<style>";
-        fullMarkup += StyleInject;
+        console.log('marker a');
+        fullMarkup += StylesToInject;
+        console.log('marker b');
         fullMarkup += "</style>";
         fullMarkup += "<body>";
         fullMarkup += HtmlToInject;
         fullMarkup += "<script>";
-        fullMarkup += CodeToInject;
+        fullMarkup += jsToInject;
         fullMarkup += "</script>";
         fullMarkup += "</body>";
-
+        
         targetWindow.document.innerHtml = "";
-
-        console.log(fullMarkup);
+        
+        xyyz.WireMenuButtons // console.log(fullMarkup);
         targetWindow.document.write(fullMarkup);
+        console.log('e) WriteHtml');
     },
     CreateWindow: function () {
         console.log('new window');
         console.log("Constants: " + constants.taDebug);
-        window.mywindow = window.open("", "mywindow", "width=800, height=400");
+        window.mywindow = window.open("", "mywindow", "width=900, height=400");
         this.WriteHtml(window.mywindow);
     },
     FocusWindow: function () {
@@ -44,4 +50,6 @@ if (xyyz.ChildWindow.WindowExists()) {
 
 } else {
     xyyz.ChildWindow.CreateWindow();
+    // window.mywindow.WireMenuButtons();
+    // window.mywindow.document.WireMenuButtons();
 }
