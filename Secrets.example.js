@@ -1,3 +1,3 @@
 var secrets = {
-    LocalWebHostPhysical : "C:\inetpub\wwwroot\...",
+    LocalWebHostPhysical : 'C:\inetpub\wwwroot\...',
 }

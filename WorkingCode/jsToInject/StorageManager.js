@@ -1,6 +1,5 @@
 var xyyz = xyyz || {};
 
-
 // class StorageManager {
 //   constructor(message) {
 //     this.greeting = message;

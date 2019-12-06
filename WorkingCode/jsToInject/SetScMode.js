@@ -5,34 +5,41 @@ function SetScMode(newValue) {
   window.opener.location.href = window.opener.location.href.replace('=normal', newValueB).replace('=preview', newValueB).replace('=edit', newValueB);
 }
 
-function AdminB(ownerDoc) {
-  xyyz.debug.Log('s) AdminB');
+function AdminB() {
+  xyyz.debug.FuncStart(this.AdminB.name);
 
-  xyyz.debug.Log('s) AdminB');
-  ownerDoc.getElementById('UserName').setAttribute('value', 'admin');
-  ownerDoc.getElementById('Password').setAttribute('value', 'b');
-  ownerDoc.getElementById('LogInBtn').click();
-  xyyz.debug.Log('e) AdminB');
+  xyyz.PageData.Opener.Document.getElementById('UserName').setAttribute('value', 'admin');
+  xyyz.PageData.Opener.Document.getElementById('Password').setAttribute('value', 'b');
+  xyyz.PageData.Opener.Document.getElementById('LogInBtn').click();
+
+  xyyz.debug.FuncEnd(this.AdminB.name);
 }
 
 function Desktop(ownerWindow) {
-  xyyz.debug.FuncStart(this.Desktop.name);
+  xyyz.debug.FuncStart(this.Desktop.name + '**');
 
-  var currentLoc = ownerWindow.location.href;
-  xyyz.debug.Log('currentLoc: ' + currentLoc);
+  var currentState = xyyz.PageData.CurrentOpenerPageState();
 
-  if (currentLoc.indexOf(xyyz.InjectConst.Url.ShellDefaultAspx) < 0) {
-    xyyz.debug.Log('owner: ' + JSON.stringify(ownerWindow));
-
-    var pat = new RegExp('.*' + ownerWindow.location.hostname);
-    xyyz.debug.Log('pat: ' + pat);
-    var match = ownerWindow.location.href.match(pat);
-    xyyz.debug.Log('match: ' + match);
-
-    ownerWindow.location.href = xyyz.InjectConst.Url.ShellDefaultAspx;
+  if (currentState === xyyz.InjectConst.PageType.LoginPage) {
+    xyyz.debug.Log('On Login page: ');
+    AdminB();
+    setTimeout(function () {
+      xyyz.Desktop();
+    }, 1000);
   }
 
-  TriggerRedButton(ownerWindow);
+  else if (currentState === xyyz.InjectConst.PageType.Desktop) {
+    //xyyz.debug.Log('post login');
+    //xyyz.debug.Log('owner: ' + JSON.stringify(ownerWindow));
+
+    //var pat = new RegExp('.*' + ownerWindow.location.hostname);
+    //xyyz.debug.Log('pat: ' + pat);
+    //var match = ownerWindow.location.href.match(pat);
+    //xyyz.debug.Log('match: ' + match);
+
+    //ownerWindow.location.href = xyyz.InjectConst.Url.ShellDefaultAspx;
+    TriggerRedButton(ownerWindow);
+  }
 
   xyyz.debug.FuncEnd(this.Desktop.name);
 }

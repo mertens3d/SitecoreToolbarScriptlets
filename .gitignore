@@ -3,3 +3,6 @@ node_modules
 !Secrets.example.js
 /.vs/slnx.sqlite
 /.vs/SitecoreToolbarScriptlets/v15/.suo
+/.vs/
+/bin/
+/obj/

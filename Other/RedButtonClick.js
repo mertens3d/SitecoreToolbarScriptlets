@@ -1,1 +1,1 @@
-javascript:document.getElementById("StartButton").click();document.querySelector(".scStartMenuLeftOption").click();
+javascript:document.getElementById('StartButton').click();document.querySelector('.scStartMenuLeftOption').click();

@@ -1,0 +1,8 @@
+﻿External tools ->
+
+  GulpDefaultSitecoreScriptlets
+  C:\Windows\System32\cmd.exe
+  /k gulp
+  $(ProjectDir)
+
+  Use output window -> yes

@@ -19,6 +19,7 @@
     "node-sass": "4.13.0"
   },
   "devDependencies": {
+    "gulp-sort": "2.0.0",
     "gulp-terser": "1.2.0",
     "gulp-uglify-es": "2.0.0"
   },

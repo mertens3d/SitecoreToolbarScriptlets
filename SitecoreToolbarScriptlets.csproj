@@ -1,0 +1,82 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{904A3DDE-396B-413F-B46E-C53FD4498BE6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>ClassLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>SitecoreToolbarScriptlets</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+    <None Include=".jshintrc" />
+    <None Include=".prettierrc" />
+    <None Include=".vscode\tasks.json" />
+    <None Include="jsconfig.json" />
+    <Content Include="gulpfile.js" />
+    <Content Include="Help\Help.txt" />
+    <Content Include="Other\RedButtonClick.js" />
+    <Content Include="Secrets.example.js" />
+    <Content Include="Secrets.js" />
+    <Content Include="WorkingCode\HtmlToInject\menu.html" />
+    <Content Include="WorkingCode\jsToInject\Classes\LocationManager.js" />
+    <Content Include="WorkingCode\jsToInject\Classes\OneTreeNode.js" />
+    <Content Include="WorkingCode\jsToInject\Classes\ClassOneLivingIframe.js" />
+    <Content Include="WorkingCode\jsToInject\Classes\PageData.js" />
+    <Content Include="WorkingCode\jsToInject\Classes\_debug.js" />
+    <Content Include="WorkingCode\jsToInject\WireButtons.js" />
+    <Content Include="WorkingCode\jsToInject\InjectConst.js" />
+    <Content Include="WorkingCode\jsToInject\SetScMode.js" />
+    <Content Include="WorkingCode\jsToInject\Storage.js" />
+    <Content Include="WorkingCode\jsToInject\StorageManager.js" />
+    <Content Include="WorkingCode\jsToInject\Classes\TreeDataManager.js" />
+    <Content Include="WorkingCode\jsToInject\Trees.Many.js" />
+    <Content Include="WorkingCode\jsToInject\Trees.One.js" />
+    <Content Include="WorkingCode\jsToInject\zLast.js" />
+    <Content Include="WorkingCode\jsToInject\_first.js" />
+    <Content Include="WorkingCode\WindowOpener\Constants.js" />
+    <Content Include="WorkingCode\WindowOpener\menu.js" />
+    <None Include="WorkingCode\StylesToInject\menu.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WorkingCode\jsToInject\Classes\AllTreeStorageStruct.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WorkingCode\jsToInject\Code\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>
