@@ -1,13 +1,19 @@
 var xyyz = xyyz || {};
 
+
 class TreeDataManager {
   constructor() {
     this.AllTreeData = [];
   }
   PutTreeData(newTreeData) {
+    xyyz.debug.FuncStart(this.PutTreeData.name + ' ' + newTreeData);
     this.AllTreeData.push(newTreeData);
 
-    window.localStorage.setItem(xyyz.InjectConst.Storage.Root + idx, nodesAsString);
+    var dataAsString = JSON.stringify(this.AllTreeData);
+
+    xyyz.debug.Log('dataAsString: ' + dataAsString);
+    window.localStorage.setItem(xyyz.InjectConst.Storage.Root, dataAsString);
+    xyyz.debug.FuncEnd(this.PutTreeData.name);
   }
   CreateNewAllTreeData() {
     this.AllTreeData = [];
@@ -15,7 +21,8 @@ class TreeDataManager {
   ShowDebugData() {
     xyyz.debug.FuncStart(this.ShowDebugData.name);
     for (var jdx = 0; jdx < this.AllTreeData.length; jdx++) {
-      xyyz.debug.Log('Tree: ' + jdx + ' ' + allTreeData[jdx]);
+      var oneTreeData = this.AllTreeData[jdx];
+      xyyz.debug.Log('Tree: ' + jdx + ' ' + oneTreeData );
     }
     xyyz.debug.FuncEnd(this.ShowDebugData.name);
   }
