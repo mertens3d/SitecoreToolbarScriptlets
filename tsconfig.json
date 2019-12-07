@@ -1,0 +1,18 @@
+﻿{
+  
+  "compileOnSave": true,
+  "compilerOptions": {
+
+    //"noImplicitAny": false,
+    //"noEmitOnError": true,
+    "removeComments": true,
+    "sourceMap": false,
+    "alwaysStrict": false,
+    "noImplicitUseStrict": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es6"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

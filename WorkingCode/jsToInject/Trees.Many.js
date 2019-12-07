@@ -48,26 +48,27 @@ xyyz.ManyTrees = {
     }
   },
 
-  SaveOneContentEditor: function (index, docElem) {
+  SaveOneContentEditor: function (id, docElem) {
     xyyz.debug.FuncStart(this.SaveOneContentEditor.name);
 
-    if (!index) {
-      index = -1;
+    if (!id) {
+      id = xyyz.InjectConst.GuidEmpty;
     }
     if (!docElem) {
       docElem = xyyz.PageData.Opener.Document;
       xyyz.debug.Log('Assigning docElem: ' + docElem);
     }
+    var CeSnapShot = new SnapShotOneContentEditor(id);
+    CeSnapShot.__allTreeDataAr = xyyz.OneTree.GetOneLiveTreeData(id, docElem);
 
-    var oneCeData = xyyz.OneTree.GetOneLiveTreeData(index, docElem);
-    xyyz.TreeDataMan.PutTreeData(oneCeData);
+    xyyz.WindowTreeSnapShotMan.PutCEDataToCurrentSnapShot(CeSnapShot);
 
     xyyz.debug.FuncEnd(this.SaveOneContentEditor.name);
   },
 
   SaveOneDesktop: function () {
     xyyz.debug.FuncStart(this.SaveOneDesktop.name);
-    var livingIframeAr = this.GetAllLiveIframeData(targetDoc);
+    var livingIframeAr = this.GetAllLiveIframeData(xyyz.PageData.Opener.Document);
     if (livingIframeAr && livingIframeAr.length > 0) {
       for (var iframeIdx = 0; iframeIdx < livingIframeAr.length; iframeIdx++) {
         xyyz.debug.Log('iframeIdx: ' + iframeIdx);
@@ -79,13 +80,13 @@ xyyz.ManyTrees = {
     }
 
     xyyz.debug.Log('done gathering tree data');
-    xyyz.TreeDataMan.ShowDebugData();
+    xyyz.WindowTreeSnapShotMan.ShowDebugData();
     xyyz.debug.FuncEnd(this.SaveOneDesktop.name);
   },
   SaveAllTrees: function () {
     xyyz.debug.FuncStart(this.SaveAllTrees.name);
 
-    xyyz.TreeDataMan.CreateNewAllTreeData();
+    xyyz.WindowTreeSnapShotMan.CreateNewWindowTreeSnapShot();
 
     var currentState = xyyz.PageData.CurrentOpenerPageState();
     if (currentState === xyyz.InjectConst.PageType.ContentEditor) {

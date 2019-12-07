@@ -50,11 +50,19 @@
     <Content Include="Secrets.example.js" />
     <Content Include="Secrets.js" />
     <Content Include="WorkingCode\HtmlToInject\menu.html" />
-    <Content Include="WorkingCode\jsToInject\Classes\LocationManager.js" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Classes\LocationManager.ts" />
+    <Content Include="WorkingCode\jsToInject\Classes\debug.js">
+      <DependentUpon>debug.ts</DependentUpon>
+    </Content>
+    <Content Include="WorkingCode\jsToInject\Classes\LocationManager.js">
+      <DependentUpon>LocationManager.ts</DependentUpon>
+    </Content>
     <Content Include="WorkingCode\jsToInject\Classes\OneTreeNode.js" />
     <Content Include="WorkingCode\jsToInject\Classes\ClassOneLivingIframe.js" />
     <Content Include="WorkingCode\jsToInject\Classes\PageData.js" />
-    <Content Include="WorkingCode\jsToInject\Classes\_debug.js" />
+    <Content Include="WorkingCode\jsToInject\Classes\Tree\SnapShot.OneWindow.js" />
+    <Content Include="WorkingCode\jsToInject\Classes\Utilities.js" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Classes\debug.ts" />
     <Content Include="WorkingCode\jsToInject\WireButtons.js" />
     <Content Include="WorkingCode\jsToInject\InjectConst.js" />
     <Content Include="WorkingCode\jsToInject\SetScMode.js" />
@@ -63,10 +71,30 @@
     <Content Include="WorkingCode\jsToInject\Classes\TreeDataManager.js" />
     <Content Include="WorkingCode\jsToInject\Trees.Many.js" />
     <Content Include="WorkingCode\jsToInject\Trees.One.js" />
-    <Content Include="WorkingCode\jsToInject\zLast.js" />
-    <Content Include="WorkingCode\jsToInject\_first.js" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\zLast.ts" />
+    <Content Include="WorkingCode\jsToInject\zLast.js">
+      <DependentUpon>zLast.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="WorkingCode\jsToInject\_first.ts" />
+    <Content Include="WorkingCode\jsToInject\_first.js">
+      <DependentUpon>_first.ts</DependentUpon>
+    </Content>
     <Content Include="WorkingCode\WindowOpener\Constants.js" />
     <Content Include="WorkingCode\WindowOpener\menu.js" />
+    <None Include="tsconfig.json" />
+    <None Include="tslint.json" />
+    <None Include="WorkingCode\jsToInject\Classes\debug.js.map">
+      <DependentUpon>debug.js</DependentUpon>
+    </None>
+    <None Include="WorkingCode\jsToInject\Classes\LocationManager.js.map">
+      <DependentUpon>LocationManager.js</DependentUpon>
+    </None>
+    <None Include="WorkingCode\jsToInject\zLast.js.map">
+      <DependentUpon>zLast.js</DependentUpon>
+    </None>
+    <None Include="WorkingCode\jsToInject\_first.js.map">
+      <DependentUpon>_first.js</DependentUpon>
+    </None>
     <None Include="WorkingCode\StylesToInject\menu.scss" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="WorkingCode\jsToInject\Code\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WorkingCode\jsToInject\Classes\Tree\SnapShotOneContentEditor.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

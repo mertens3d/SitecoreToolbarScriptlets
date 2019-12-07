@@ -48,3 +48,5 @@ if (xyyz.ChildWindow.WindowExists()) {
   // window.mywindow.WireMenuButtons();
   // window.mywindow.document.WireMenuButtons();
 }
+console.log('Menu Finished');
+console.log(jsToInject);

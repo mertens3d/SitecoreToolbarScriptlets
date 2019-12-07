@@ -4,19 +4,19 @@ xyyz.WireMenuButtons = function () {
   xyyz.debug.Log('s) WireMenuButtons');
 
   document.getElementById('btnEdit').onclick = function () {
-    SetScMode('edit');
+    xyyz.LocationMan. SetScMode('edit');
   };
   document.getElementById('btnPrev').onclick = function () {
-    SetScMode('preview');
+    xyyz.LocationMan.    SetScMode('preview');
   };
   document.getElementById('btnNorm').onclick = function () {
-    SetScMode('normal');
+    xyyz.LocationMan.SetScMode('normal');
   };
   document.getElementById('btnAdminB').onclick = function () {
-    AdminB();
+    xyyz.LocationMan.AdminB();
   };
   document.getElementById('btnDesktop').onclick = function () {
-    Desktop(window.opener);
+    xyyz.LocationMan.Desktop(window.opener);
   };
   document.getElementById('btnSaveTheTrees').onclick = function () {
     xyyz.ManyTrees.SaveAllTrees();
