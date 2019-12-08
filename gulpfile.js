@@ -10,7 +10,7 @@ const minify = require('gulp-minify');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
 const sass = require('gulp-sass');
-const secrets = require('./secrets.js');
+const secrets = require('./gulp.support/Secrets.js');
 const uglify = require('gulp-terser'); //require('gulp-uglify-es');
 var sort = require('gulp-sort');
 var InjectableClass = require('./gulp.support/OneInjectable.js');
@@ -21,9 +21,14 @@ const WindowOpenerClass = require('./gulp.support/WindowOpener.js');
 
 
 var local = {
-  Dest: secrets.localWebRoot,
+  Dest: ''
 };
 
+var mySecrete = new secrets();
+console.log('===================' + mySecrete);
+console.log('===================' + mySecrete.localWebRoot);
+local.Dest = mySecrete.localWebRoot;
+console.log('===================' + local.Dest);
 
 
 
@@ -149,12 +154,13 @@ gulp.task('BookmarkText', function (done) {
 
 gulp.task('putWindowOpenerToLocal', function () {
   console.log('s) putWindowOpenerToLocal ');
+  console.log('localWebRoot: ' + local.Dest);
   //C:/Users/GXM073/Documents/SitecoreToolbarScriptlets/dist/CodeToInject.js')}())
 
   var source = WindowOpener. dist + '/' + WindowOpener.NameConcatMinWithVar;
   console.log('dest: ' + secrets.localWebRoot);
   return gulp.src(source)
-    .pipe(gulp.dest(secrets.localWebRoot));
+    .pipe(gulp.dest(local.Dest));
 });
 
 //gulp.task('typescript', function ()){

@@ -49,8 +49,8 @@
     <Content Include="gulpfile.js" />
     <Content Include="Help\Help.txt" />
     <Content Include="Other\RedButtonClick.js" />
-    <Content Include="Secrets.example.js" />
-    <Content Include="Secrets.js" />
+    <Content Include="gulp.support\Secrets.example.js" />
+    <Content Include="gulp.support\Secrets.js" />
     <Content Include="WorkingCode\HtmlToInject\menu.html" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\LocationManager.ts" />
     <Content Include="WorkingCode\jsToInject\Tested\Classes\ClassOneLivingIframe.js">

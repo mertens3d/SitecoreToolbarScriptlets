@@ -6,3 +6,16 @@
   $(ProjectDir)
 
   Use output window -> yes
+
+
+  -------------
+  Cloning
+  npm init
+  it may take a while. Watch the bottom left of visual studio. It will say 'Installing packages'
+  npm link gulp
+  npm i
+
+  -----
+var newScript = document.createElement("script");newScript.src = '/windowOpener.concat.min.var.js';window.document.head.appendChild(newScript);
+
+javascript:(function(){var newScript = document.createElement("script");newScript.src = '/windowOpener.concat.min.var.js';window.document.head.appendChild(newScript);})()
