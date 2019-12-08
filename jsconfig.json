@@ -2,11 +2,11 @@
     "compilerOptions": {
         //"module": "commonjs",
         "target": "es6",
-        "jsx": "preserve"
+        //"jsx": "preserve"
     },
     "exclude": [
         "node_modules",
         "**/node_modules/*"
     ],
-    "include": ["InjectCode/SetScMode.js"]
+    //"include": ["InjectCode/SetScMode.js"]
 }

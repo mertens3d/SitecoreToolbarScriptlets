@@ -21,22 +21,39 @@ xyyz.ChildWindow = {
     fullMarkup += '</style>';
     fullMarkup += '<body>';
     fullMarkup += HtmlToInject;
-    fullMarkup += '<script>';
+    console.log('marker c');
+    fullMarkup += '<script>';//console.log(\'before\')';
+    console.log('marker d');
     fullMarkup += jsToInject;
-    fullMarkup += '</script>';
+    console.log('marker e');
+    //fullMarkup += 'console.log(\'after\')
+    console.log('marker f');
+    fullMarkup +='</script>';
     fullMarkup += '</body>';
 
+    
     targetWindow.document.innerHtml = '';
 
     //xyyz.WireMenuButtons(); // console.log(fullMarkup);
     targetWindow.document.write(fullMarkup);
+
+    console.log('marker g');
+    console.log(targetWindow);
+    console.log(targetWindow.document);
+    //console.log(targetWindow.xyyz);
+
+
+
+    //targetWindow.document.xyyz.Hub.init();
     console.log('e) WriteHtml');
   },
   CreateWindow: function () {
     console.log('new window');
     console.log('Constants: ' + constants.taDebug);
     window.mywindow = window.open('', 'mywindow', 'width=900, height=600');
+    window.mywindow.Parent = this;
     this.WriteHtml(window.mywindow);
+   //window.mywindow.WireMenuButtons();
   },
   FocusWindow: function () {
     console.log('existing window');
@@ -48,8 +65,8 @@ if (xyyz.ChildWindow.WindowExists()) {
   xyyz.ChildWindow.FocusWindow();
 } else {
   xyyz.ChildWindow.CreateWindow();
-  // window.mywindow.WireMenuButtons();
   // window.mywindow.document.WireMenuButtons();
 }
 console.log('Menu Finished');
-console.log(jsToInject);
+//window.mywindow.document.xyyz.Hub.init();
+//console.log(jsToInject);

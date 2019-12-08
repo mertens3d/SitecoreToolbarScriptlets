@@ -5,6 +5,7 @@
 
     //"noImplicitAny": false,
     //"noEmitOnError": true,
+    
     "removeComments": true,
     "sourceMap": false,
     "alwaysStrict": false,
