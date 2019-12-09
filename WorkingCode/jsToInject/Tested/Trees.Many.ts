@@ -54,8 +54,10 @@ class ManyTrees extends SpokeBase {
     }
   }
 
-  SaveOneContentEditor(id, docElem) {
-    this.Xyyz.debug.FuncStart(this.SaveOneContentEditor.name);;
+  SaveOneContentEditor(id, docElem: Document) {
+    this.Xyyz.debug.FuncStart('SaveOneContentEditor');
+    this.Xyyz.debug.Log('SaveOneContentEditor');;
+    this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));;
 
     if (!id) {
       id = this.Xyyz.InjectConst.GuidEmpty;
@@ -64,19 +66,22 @@ class ManyTrees extends SpokeBase {
       docElem = this.Xyyz.PageData.WinData.Opener.Document;
       this.Xyyz.debug.Log('Assigning docElem: ' + docElem);
     }
+    this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));;
     var CeSnapShot = new SnapShotOneContentEditor(id, this.Xyyz);
 
-    var oneTree = new OneTree(this.Xyyz);
+    //var oneTree = new OneTreeManager(this.Xyyz);
 
-    CeSnapShot.__allTreeDataAr = oneTree.GetOneLiveTreeData(id, docElem);
+    this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));;
+    CeSnapShot.__allTreeDataAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(id, docElem);
 
     this.Xyyz.WindowTreeSnapShotMan.PutCEDataToCurrentSnapShot(CeSnapShot);
 
-    this.Xyyz.debug.FuncEnd(this.SaveOneContentEditor.name);;
+    this.Xyyz.debug.FuncEnd('SaveOneContentEditor');
   }
 
   SaveOneDesktop() {
     this.Xyyz.debug.FuncStart(this.SaveOneDesktop.name);;
+    this.Xyyz.debug.FuncStart('SaveOneDesktop');;
     var livingIframeAr = this.GetAllLiveIframeData(this.Xyyz.PageData.WinData.Opener.Document);
     if (livingIframeAr && livingIframeAr.length > 0) {
       for (var iframeIdx = 0; iframeIdx < livingIframeAr.length; iframeIdx++) {
@@ -92,6 +97,7 @@ class ManyTrees extends SpokeBase {
     this.Xyyz.WindowTreeSnapShotMan.ShowDebugData();
     this.Xyyz.debug.FuncEnd(this.SaveOneDesktop.name);
   }
+
   SaveAllTrees() {
     this.Xyyz.debug.FuncStart(this.SaveAllTrees.name);
 
@@ -99,9 +105,11 @@ class ManyTrees extends SpokeBase {
 
     var currentState = this.Xyyz.PageData.CurrentOpenerPageState();
     if (currentState === PageType.ContentEditor) {
-      this.SaveOneContentEditor(null, this.Xyyz);
+      this.Xyyz.debug.Log('is Content Editor');
+      this.SaveOneContentEditor(null, null);
     }
     else if (currentState === PageType.Desktop) {
+      this.Xyyz.debug.Log('is Desktop');
       this.SaveOneDesktop();
     } else {
       this.Xyyz.debug.Error(this.SaveAllTrees.name, 'Invalid page location ' + currentState);

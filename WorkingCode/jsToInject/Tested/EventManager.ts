@@ -21,7 +21,11 @@ class EventManager extends SpokeBase {
       thisObj.Xyyz.LocationMan.AdminB();
     };
     document.getElementById('btnDesktop').onclick = function () {
-      thisObj.Xyyz.LocationMan.Desktop();
+      thisObj.Xyyz.LocationMan.ChangeLocation(PageType.Desktop);
+    };
+
+    document.getElementById('btnCE').onclick = function () {
+      thisObj.Xyyz.LocationMan.ChangeLocation(PageType.ContentEditor);
     };
     document.getElementById('btnSaveTheTrees').onclick = function () {
       thisObj.Xyyz.ManyTreesMan.SaveAllTrees();

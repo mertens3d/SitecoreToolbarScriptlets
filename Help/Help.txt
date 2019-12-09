@@ -18,4 +18,4 @@
   -----
 var newScript = document.createElement("script");newScript.src = '/windowOpener.concat.min.var.js';window.document.head.appendChild(newScript);
 
-javascript:(function(){var newScript = document.createElement("script");newScript.src = '/windowOpener.concat.min.var.js';window.document.head.appendChild(newScript);})()
+(function(){var newScript = document.createElement("script");newScript.src = '/windowOpener.concat.min.var.js?v=' + Math.random();window.document.head.appendChild(newScript);})()

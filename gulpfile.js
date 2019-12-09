@@ -155,10 +155,11 @@ gulp.task('BookmarkText', function (done) {
 gulp.task('putWindowOpenerToLocal', function () {
   console.log('s) putWindowOpenerToLocal ');
   console.log('localWebRoot: ' + local.Dest);
+  console.log('dest: ' + local.Dest);
   //C:/Users/GXM073/Documents/SitecoreToolbarScriptlets/dist/CodeToInject.js')}())
 
-  var source = WindowOpener. dist + '/' + WindowOpener.NameConcatMinWithVar;
-  console.log('dest: ' + secrets.localWebRoot);
+  var source = WindowOpener.dist + '/' + WindowOpener.NameConcatMinWithVar;
+  console.log('source: ' + source);
   return gulp.src(source)
     .pipe(gulp.dest(local.Dest));
 });

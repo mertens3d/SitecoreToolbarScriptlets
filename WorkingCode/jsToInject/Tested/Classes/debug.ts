@@ -1,9 +1,11 @@
 class Debug  {
   __indentCount: number;
+  ParentWindow: Window;
 
-  constructor() {
+  constructor(parentWindow: Window) {
     console.log('debug');
     this.__indentCount = 0;
+    this.ParentWindow = parentWindow;
   }
   Log(text) {
     var indent = '  ';
@@ -20,9 +22,15 @@ class Debug  {
       ta.value += text + '\\n\\r';
       ta.scrollTop = ta.scrollHeight;
     }
+
+
+    if (this.ParentWindow) {
+      this.ParentWindow.console.log(text);
+    }
   }
 
   FuncStart(text) {
+    console.log('caller is ' + this.FuncStart.caller.name)
     text = 's) ' + text;
     this.Log(text);
     this.__indentCount++;

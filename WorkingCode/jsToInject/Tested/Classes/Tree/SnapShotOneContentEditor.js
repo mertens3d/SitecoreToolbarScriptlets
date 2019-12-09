@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var SnapShotOneContentEditor = /** @class */ (function (_super) {
     __extends(SnapShotOneContentEditor, _super);
-    function SnapShotOneContentEditor(id, zzyx) {
+    function SnapShotOneContentEditor(id, xyyz) {
         var _this = _super.call(this, xyyz) || this;
         _this.Id = id;
         _this.__allTreeDataAr = [];

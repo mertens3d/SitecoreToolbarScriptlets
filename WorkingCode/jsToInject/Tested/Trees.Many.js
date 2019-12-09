@@ -63,7 +63,10 @@ var ManyTrees = /** @class */ (function (_super) {
         }
     };
     ManyTrees.prototype.SaveOneContentEditor = function (id, docElem) {
-        this.Xyyz.debug.FuncStart(this.SaveOneContentEditor.name);
+        this.Xyyz.debug.FuncStart('SaveOneContentEditor');
+        this.Xyyz.debug.Log('SaveOneContentEditor');
+        ;
+        this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
         ;
         if (!id) {
             id = this.Xyyz.InjectConst.GuidEmpty;
@@ -72,15 +75,20 @@ var ManyTrees = /** @class */ (function (_super) {
             docElem = this.Xyyz.PageData.WinData.Opener.Document;
             this.Xyyz.debug.Log('Assigning docElem: ' + docElem);
         }
-        var CeSnapShot = new SnapShotOneContentEditor(id, this.Xyyz);
-        var oneTree = new OneTree(this.Xyyz);
-        CeSnapShot.__allTreeDataAr = oneTree.GetOneLiveTreeData(id, docElem);
-        this.Xyyz.WindowTreeSnapShotMan.PutCEDataToCurrentSnapShot(CeSnapShot);
-        this.Xyyz.debug.FuncEnd(this.SaveOneContentEditor.name);
+        this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
         ;
+        var CeSnapShot = new SnapShotOneContentEditor(id, this.Xyyz);
+        //var oneTree = new OneTreeManager(this.Xyyz);
+        this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
+        ;
+        CeSnapShot.__allTreeDataAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(id, docElem);
+        this.Xyyz.WindowTreeSnapShotMan.PutCEDataToCurrentSnapShot(CeSnapShot);
+        this.Xyyz.debug.FuncEnd('SaveOneContentEditor');
     };
     ManyTrees.prototype.SaveOneDesktop = function () {
         this.Xyyz.debug.FuncStart(this.SaveOneDesktop.name);
+        ;
+        this.Xyyz.debug.FuncStart('SaveOneDesktop');
         ;
         var livingIframeAr = this.GetAllLiveIframeData(this.Xyyz.PageData.WinData.Opener.Document);
         if (livingIframeAr && livingIframeAr.length > 0) {
@@ -100,9 +108,11 @@ var ManyTrees = /** @class */ (function (_super) {
         this.Xyyz.WindowTreeSnapShotMan.CreateNewWindowTreeSnapShot();
         var currentState = this.Xyyz.PageData.CurrentOpenerPageState();
         if (currentState === PageType.ContentEditor) {
-            this.SaveOneContentEditor(null, this.Xyyz);
+            this.Xyyz.debug.Log('is Content Editor');
+            this.SaveOneContentEditor(null, null);
         }
         else if (currentState === PageType.Desktop) {
+            this.Xyyz.debug.Log('is Desktop');
             this.SaveOneDesktop();
         }
         else {

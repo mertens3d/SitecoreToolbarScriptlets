@@ -39,9 +39,10 @@ var ClassOneLivingIframe = /** @class */ (function (_super) {
 }(SpokeBase));
 //# sourceMappingURL=ClassOneLivingIframe.js.map
 var Debug = /** @class */ (function () {
-    function Debug() {
+    function Debug(parentWindow) {
         console.log('debug');
         this.__indentCount = 0;
+        this.ParentWindow = parentWindow;
     }
     Debug.prototype.Log = function (text) {
         var indent = '  ';
@@ -55,8 +56,12 @@ var Debug = /** @class */ (function () {
             ta.value += text + '\\n\\r';
             ta.scrollTop = ta.scrollHeight;
         }
+        if (this.ParentWindow) {
+            this.ParentWindow.console.log(text);
+        }
     };
     Debug.prototype.FuncStart = function (text) {
+        console.log('caller is ' + this.FuncStart.caller.name);
         text = 's) ' + text;
         this.Log(text);
         this.__indentCount++;
@@ -81,7 +86,7 @@ var Debug = /** @class */ (function () {
 //# sourceMappingURL=debug.js.map
 var Hub = /** @class */ (function () {
     function Hub() {
-        this.debug = new Debug();
+        this.debug = new Debug(window.opener);
         this.debug.FuncStart(Hub.name);
         this.Start();
         this.debug.FuncEnd(Hub.name);
@@ -101,7 +106,7 @@ var Hub = /** @class */ (function () {
         console.log('marker F');
         this.ManyTreesMan = new ManyTrees(this);
         console.log('marker G');
-        this.OneTreeMan = new OneTree(this);
+        this.OneTreeMan = new OneTreeManager(this);
         console.log('marker H');
         this.WindowTreeSnapShotMan = new WindowTreeSnapShotManager(this);
         console.log('marker I');
@@ -162,18 +167,24 @@ var LocationManager = /** @class */ (function (_super) {
         }
         this.Xyyz.debug.FuncEnd(this.SetHref.name);
     };
-    LocationManager.prototype.Desktop = function () {
-        //   this.Xyyz.debug.FuncStart(this.Desktop .name);
+    LocationManager.prototype.ChangeLocation = function (desiredPageType) {
+        this.Xyyz.debug.FuncStart(this.ChangeLocation.name);
         var currentState = this.Xyyz.PageData.CurrentOpenerPageState();
         if (currentState === PageType.LoginPage) {
             this.Xyyz.debug.Log('On Login page: ');
             this.AdminB();
+            var self = this;
             setTimeout(function () {
-                this.Xyyz.LocationMan.Desktop();
+                self.Xyyz.LocationMan.ChangeLocation(desiredPageType);
             }, 1000);
         }
         else if (currentState === PageType.Launchpad) {
-            this.SetHref(this.Xyyz.InjectConst.Url.Desktop, this.Desktop, null, null);
+            if (desiredPageType === PageType.Desktop) {
+                this.SetHref(this.Xyyz.InjectConst.Url.Desktop, function () { this.ChangeLocation(desiredPageType); }, null, null);
+            }
+            else if (desiredPageType === PageType.ContentEditor) {
+                this.SetHref(this.Xyyz.InjectConst.Url.ContentEditor, function () { this.ChangeLocation(desiredPageType); }, null, null);
+            }
         }
         else if (currentState === PageType.Desktop) {
             this.Xyyz.debug.Log('On Desktop');
@@ -185,10 +196,10 @@ var LocationManager = /** @class */ (function (_super) {
             //  this.Xyyz.PageData.WinData.Opener.Window.location.href =   this.Xyyz.InjectConst.Url.ShellDefaultAspx;
             this.Xyyz.LocationMan.TriggerRedButton();
         }
-        this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.Desktop.name);
+        this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.ChangeLocation.name);
     };
     LocationManager.prototype.RedButton = function (iteration) {
-        this.Xyyz.debug.FuncStart(this.Xyyz.LocationMan.RedButton.name);
+        this.Xyyz.debug.FuncStart(this.Xyyz.LocationMan.RedButton.name + ':' + iteration);
         var found = this.Xyyz.PageData.WinData.Opener.Document.getElementById('StartButton');
         this.Xyyz.debug.Log('Red Button: ' + found + '  ' + this.Xyyz.PageData.WinData.Opener.Window.location.href + ' ' + iteration);
         if (found) {
@@ -201,11 +212,13 @@ var LocationManager = /** @class */ (function (_super) {
         else {
             iteration = iteration - 1;
             if (iteration > 0) {
+                var self = this;
                 setTimeout(function () {
-                    this.Xyyz.LocationMan.RedButton(iteration);
+                    self.Xyyz.LocationMan.RedButton(iteration);
                 }, 1500);
             }
         }
+        this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.RedButton.name);
     };
     LocationManager.prototype.TriggerRedButton = function () {
         this.Xyyz.debug.FuncStart(this.Xyyz.LocationMan.TriggerRedButton.name);
@@ -221,15 +234,21 @@ var LocationManager = /** @class */ (function (_super) {
     };
     LocationManager.prototype.AdminB = function () {
         this.Xyyz.debug.FuncStart(this.AdminB.name);
-        this.Xyyz.PageData.WinData.Opener.Document.getElementById('UserName').setAttribute('value', 'admin');
-        this.Xyyz.PageData.WinData.Opener.Document.getElementById('Password').setAttribute('value', 'b');
+        var userNameElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('UserName');
+        var passwordElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('Password');
+        this.Xyyz.debug.Log('userNameElem: ' + userNameElem);
+        this.Xyyz.debug.Log('passwordElem: ' + passwordElem);
+        userNameElem.setAttribute('value', 'admin');
+        passwordElem.setAttribute('value', 'b');
         var candidate = this.Xyyz.PageData.WinData.Opener.Document.getElementById('LogInBtn');
+        this.Xyyz.debug.Log('candidate: ' + candidate);
         if (candidate) {
             candidate.click();
         }
         else {
             //window.opener.document.querySelector('input.btn').click()
             var candidate = this.Xyyz.PageData.WinData.Opener.Document.querySelector('input.btn');
+            this.Xyyz.debug.Log('candidate: ' + candidate);
             if (candidate) {
                 candidate.click();
             }
@@ -263,13 +282,16 @@ var OneTreeNode = /** @class */ (function (_super) {
     return OneTreeNode;
 }(SpokeBase));
 //# sourceMappingURL=OneTreeNode.js.map
+//interface Function {
+//  name: string;
+//}
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -350,24 +372,40 @@ var SnapShotOneWindow = /** @class */ (function (_super) {
     function SnapShotOneWindow(xyyz) {
         var _this = _super.call(this, xyyz) || this;
         xyyz.debug.FuncStart(SnapShotOneWindow.name);
-        _this.Start();
         xyyz.debug.FuncEnd(SnapShotOneWindow.name);
         return _this;
     }
-    SnapShotOneWindow.prototype.Start = function () {
-        this.Xyyz.debug.FuncStart(this.Start.name);
-        this.TimeStamp = new Date();
-        this.TimeStampFriendly = this.Xyyz.Utilities.MakeFriendlyDate(this.TimeStamp);
-        this.AllCEAr = [];
-        this.Id = this.Xyyz.Utilities.Uuidv4();
-        this.Xyyz.debug.FuncEnd(this.Start.name);
+    SnapShotOneWindow.prototype.Init = function () {
+        this.Xyyz.debug.FuncStart('Start');
+        var dateToUse = new Date();
+        this.Xyyz.debug.Log('marker a');
+        var friendly = this.Xyyz.Utilities.MakeFriendlyDate(dateToUse);
+        this.Xyyz.debug.Log('marker b');
+        var guid = this.Xyyz.Utilities.Uuidv4();
+        this.Xyyz.debug.Log('marker c');
+        var CurrentData = {
+            TimeStamp: dateToUse,
+            TimeStampFriendly: friendly,
+            AllCEAr: [],
+            Id: guid
+        };
+        this.Xyyz.debug.Log('marker d');
+        this.CurrentData = CurrentData;
+        //this.CurrentData.TimeStamp = new Date();
+        //this.Xyyz.debug.Log('mark a');
+        //this.CurrentData.TimeStampFriendly = this.Xyyz.Utilities.MakeFriendlyDate(this.CurrentData.TimeStamp);
+        //this.Xyyz.debug.Log('mark b');
+        //this.CurrentData.AllCEAr = [];
+        //this.Xyyz.debug.Log('mark c');
+        //this.CurrentData.Id = this.Xyyz.Utilities.Uuidv4();
+        this.Xyyz.debug.FuncEnd('Start');
     };
     SnapShotOneWindow.prototype.ShowDebugDataOneWindow = function () {
         this.Xyyz.debug.FuncStart(this.ShowDebugDataOneWindow.name);
         var toReturn = [];
-        toReturn.push(this.TimeStamp);
-        for (var jdx = 0; jdx < this.AllCEAr.length; jdx++) {
-            var oneCE = this.AllCEAr[jdx];
+        toReturn.push(this.CurrentData.TimeStamp);
+        for (var jdx = 0; jdx < this.CurrentData.AllCEAr.length; jdx++) {
+            var oneCE = this.CurrentData.AllCEAr[jdx];
             toReturn.push(oneCE.GetDebugDataOneCE());
         }
         this.Xyyz.debug.FuncEnd(this.ShowDebugDataOneWindow.name);
@@ -391,7 +429,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var SnapShotOneContentEditor = /** @class */ (function (_super) {
     __extends(SnapShotOneContentEditor, _super);
-    function SnapShotOneContentEditor(id, zzyx) {
+    function SnapShotOneContentEditor(id, xyyz) {
         var _this = _super.call(this, xyyz) || this;
         _this.Id = id;
         _this.__allTreeDataAr = [];
@@ -433,48 +471,55 @@ var WindowTreeSnapShotManager = /** @class */ (function (_super) {
         return _this;
     }
     WindowTreeSnapShotManager.prototype.PutCEDataToCurrentSnapShot = function (oneCeData) {
-        this.Xyyz.debug.FuncStart(this.PutCEDataToCurrentSnapShot.name + ' ' + JSON.stringify(oneCeData));
+        this.Xyyz.debug.FuncStart(this.PutCEDataToCurrentSnapShot.name);
+        this.Xyyz.debug.Log('PutCEDataToCurrentSnapShot');
         var matchingCeData = this.FindMatchingCeData(oneCeData);
         if (matchingCeData) {
             matchingCeData = oneCeData;
         }
         else {
-            this.__activeWindowTreeSnapShot.AllCEAr.push(oneCeData);
+            this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.push(oneCeData);
+            this.__activeWindowTreeSnapShot.ShowDebugDataOneWindow();
         }
         this.UpdateStorage();
         this.ShowDebugData();
         this.Xyyz.debug.FuncEnd(this.PutCEDataToCurrentSnapShot.name);
     };
     WindowTreeSnapShotManager.prototype.UpdateStorage = function () {
+        this.Xyyz.debug.FuncStart('UpdateStorage');
         var snapShotAsString = JSON.stringify(this.__activeWindowTreeSnapShot);
-        window.localStorage.setItem(this.Xyyz.InjectConst.Storage.WindowRoot + this.__activeWindowTreeSnapShot.Id, snapShotAsString);
+        this.Xyyz.debug.Log('snapShotAsString: ' + snapShotAsString);
+        window.localStorage.setItem(this.Xyyz.InjectConst.Storage.WindowRoot + this.__activeWindowTreeSnapShot.CurrentData.Id, snapShotAsString);
+        this.Xyyz.debug.FuncEnd('UpdateStorage');
     };
     WindowTreeSnapShotManager.prototype.FindMatchingCeData = function (oneCeData) {
         var toReturn = null;
-        for (var idx = 0; idx < this.__activeWindowTreeSnapShot.AllCEAr.length; idx++) {
-            var candidate = this.__activeWindowTreeSnapShot.AllCEAr[idx];
-            if (candidate.id === oneCeData.id) {
+        for (var idx = 0; idx < this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.length; idx++) {
+            var candidate = this.__activeWindowTreeSnapShot.CurrentData.AllCEAr[idx];
+            if (candidate.Id === oneCeData.Id) {
                 toReturn = candidate;
                 break;
             }
         }
+        this.Xyyz.debug.Log('match found :' + (toReturn !== null));
         return toReturn;
     };
     WindowTreeSnapShotManager.prototype.CreateNewWindowTreeSnapShot = function () {
-        this.Xyyz.debug.FuncStart(this.CreateNewWindowTreeSnapShot.name);
+        this.Xyyz.debug.FuncStart('CreateNewWindowTreeSnapShot');
         this.__activeWindowTreeSnapShot = new SnapShotOneWindow(this.Xyyz);
-        this.Xyyz.debug.FuncEnd(this.CreateNewWindowTreeSnapShot.name);
+        this.__activeWindowTreeSnapShot.Init();
+        this.Xyyz.debug.FuncEnd('CreateNewWindowTreeSnapShot');
     };
     WindowTreeSnapShotManager.prototype.ShowDebugData = function () {
         this.Xyyz.debug.FuncStart(this.ShowDebugData.name);
         var allDebugData = [];
         allDebugData.push('------ One Window Snap Shot Start -----');
-        allDebugData.push('Id: ' + this.__activeWindowTreeSnapShot.Id);
-        allDebugData.push('TimeStamp: ' + this.__activeWindowTreeSnapShot.TimeStamp);
-        allDebugData.push('CE Count: ' + this.__activeWindowTreeSnapShot.AllCEAr.length);
-        for (var jdx = 0; jdx < this.__activeWindowTreeSnapShot.AllCEAr.length; jdx++) {
+        allDebugData.push('Id: ' + this.__activeWindowTreeSnapShot.CurrentData.Id);
+        allDebugData.push('TimeStamp: ' + this.__activeWindowTreeSnapShot.CurrentData.TimeStamp);
+        allDebugData.push('CE Count: ' + this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.length);
+        for (var jdx = 0; jdx < this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.length; jdx++) {
             allDebugData.push('------ One CE -----');
-            var oneCE = this.__activeWindowTreeSnapShot.AllCEAr[jdx];
+            var oneCE = this.__activeWindowTreeSnapShot.CurrentData.AllCEAr[jdx];
             allDebugData.push('Id: ' + oneCE.Id);
             var allCeDebugDataAr = oneCE.GetDebugDataOneCE();
             for (var kdx = 0; kdx < allCeDebugDataAr.length; kdx++) {
@@ -517,10 +562,12 @@ var Utilities = /** @class */ (function (_super) {
     };
     Utilities.prototype.Uuidv4 = function () {
         //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var toReturn = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
+            var toReturn = v.toString(16);
+            return toReturn;
         });
+        return toReturn;
     };
     return Utilities;
 }(SpokeBase));
@@ -551,6 +598,7 @@ var WindowData = /** @class */ (function (_super) {
         var _this = _super.call(this, xyyz) || this;
         xyyz.debug.FuncStart(_this.constructor.name);
         _this.Opener = new Opener();
+        xyyz.debug.FuncEnd(_this.constructor.name);
         xyyz.debug.FuncEnd(_this.constructor.name);
         return _this;
     }
@@ -601,7 +649,10 @@ var EventManager = /** @class */ (function (_super) {
             thisObj.Xyyz.LocationMan.AdminB();
         };
         document.getElementById('btnDesktop').onclick = function () {
-            thisObj.Xyyz.LocationMan.Desktop();
+            thisObj.Xyyz.LocationMan.ChangeLocation(PageType.Desktop);
+        };
+        document.getElementById('btnCE').onclick = function () {
+            thisObj.Xyyz.LocationMan.ChangeLocation(PageType.ContentEditor);
         };
         document.getElementById('btnSaveTheTrees').onclick = function () {
             thisObj.Xyyz.ManyTreesMan.SaveAllTrees();
@@ -784,7 +835,10 @@ var ManyTrees = /** @class */ (function (_super) {
         }
     };
     ManyTrees.prototype.SaveOneContentEditor = function (id, docElem) {
-        this.Xyyz.debug.FuncStart(this.SaveOneContentEditor.name);
+        this.Xyyz.debug.FuncStart('SaveOneContentEditor');
+        this.Xyyz.debug.Log('SaveOneContentEditor');
+        ;
+        this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
         ;
         if (!id) {
             id = this.Xyyz.InjectConst.GuidEmpty;
@@ -793,15 +847,20 @@ var ManyTrees = /** @class */ (function (_super) {
             docElem = this.Xyyz.PageData.WinData.Opener.Document;
             this.Xyyz.debug.Log('Assigning docElem: ' + docElem);
         }
-        var CeSnapShot = new SnapShotOneContentEditor(id, this.Xyyz);
-        var oneTree = new OneTree(this.Xyyz);
-        CeSnapShot.__allTreeDataAr = oneTree.GetOneLiveTreeData(id, docElem);
-        this.Xyyz.WindowTreeSnapShotMan.PutCEDataToCurrentSnapShot(CeSnapShot);
-        this.Xyyz.debug.FuncEnd(this.SaveOneContentEditor.name);
+        this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
         ;
+        var CeSnapShot = new SnapShotOneContentEditor(id, this.Xyyz);
+        //var oneTree = new OneTreeManager(this.Xyyz);
+        this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
+        ;
+        CeSnapShot.__allTreeDataAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(id, docElem);
+        this.Xyyz.WindowTreeSnapShotMan.PutCEDataToCurrentSnapShot(CeSnapShot);
+        this.Xyyz.debug.FuncEnd('SaveOneContentEditor');
     };
     ManyTrees.prototype.SaveOneDesktop = function () {
         this.Xyyz.debug.FuncStart(this.SaveOneDesktop.name);
+        ;
+        this.Xyyz.debug.FuncStart('SaveOneDesktop');
         ;
         var livingIframeAr = this.GetAllLiveIframeData(this.Xyyz.PageData.WinData.Opener.Document);
         if (livingIframeAr && livingIframeAr.length > 0) {
@@ -821,9 +880,11 @@ var ManyTrees = /** @class */ (function (_super) {
         this.Xyyz.WindowTreeSnapShotMan.CreateNewWindowTreeSnapShot();
         var currentState = this.Xyyz.PageData.CurrentOpenerPageState();
         if (currentState === PageType.ContentEditor) {
-            this.SaveOneContentEditor(null, this.Xyyz);
+            this.Xyyz.debug.Log('is Content Editor');
+            this.SaveOneContentEditor(null, null);
         }
         else if (currentState === PageType.Desktop) {
+            this.Xyyz.debug.Log('is Desktop');
             this.SaveOneDesktop();
         }
         else {
@@ -850,15 +911,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 console.log('OneTree loaded');
-var OneTree = /** @class */ (function (_super) {
-    __extends(OneTree, _super);
-    function OneTree(xyyz) {
+var OneTreeManager = /** @class */ (function (_super) {
+    __extends(OneTreeManager, _super);
+    function OneTreeManager(xyyz) {
         var _this = _super.call(this, xyyz) || this;
-        xyyz.debug.FuncStart(OneTree.name);
-        xyyz.debug.FuncEnd(OneTree.name);
+        xyyz.debug.FuncStart(OneTreeManager.name);
+        xyyz.debug.FuncEnd(OneTreeManager.name);
         return _this;
     }
-    OneTree.prototype.GetFriendlyNameFromNode = function (inputNode) {
+    OneTreeManager.prototype.GetFriendlyNameFromNode = function (inputNode) {
         this.Xyyz.debug.FuncStart(this.GetFriendlyNameFromNode.name);
         var toReturn = 'unknown';
         var parentNode = inputNode.parentNode;
@@ -872,7 +933,7 @@ var OneTree = /** @class */ (function (_super) {
         this.Xyyz.debug.FuncEnd(this.GetFriendlyNameFromNode.toString + ' ' + toReturn);
         return toReturn;
     };
-    OneTree.prototype.WalkNodeRecursive = function (targetNode, depth) {
+    OneTreeManager.prototype.WalkNodeRecursive = function (targetNode, depth) {
         var toReturn = [];
         depth = depth - 1;
         if (targetNode) {
@@ -897,19 +958,20 @@ var OneTree = /** @class */ (function (_super) {
         }
         return toReturn;
     };
-    OneTree.prototype.GetOneLiveTreeData = function (idx, targetDoc) {
-        this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + ' idx: ' + idx);
+    OneTreeManager.prototype.GetOneLiveTreeData = function (idx, targetDoc) {
+        this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + idx);
+        this.Xyyz.debug.Log('targetDoc isnull xx: ' + (targetDoc === null));
         var toReturn = [];
         if (targetDoc) {
-            this.Xyyz.debug.Log(JSON.stringify(targetDoc));
+            this.Xyyz.debug.Log(targetDoc);
             var rootNode = targetDoc.getElementById(this.Xyyz.InjectConst.Selector.RootNodeId);
             if (rootNode) {
                 this.Xyyz.debug.Log('rootNode: ' + rootNode.innerHTML);
                 var rootParent = rootNode.parentElement;
                 toReturn = this.WalkNodeRecursive(rootParent, this.Xyyz.InjectConst.MaxIter);
                 this.Xyyz.debug.Log('foundNodes count: ' + toReturn.length);
-                var nodesAsString = JSON.stringify(toReturn);
-                this.Xyyz.debug.Log('toReturn as string: ' + nodesAsString);
+                //var nodesAsString = JSON.stringify(toReturn);
+                //this.Xyyz.debug.Log('toReturn as string: ' + nodesAsString);
             }
             else {
                 this.Xyyz.debug.Error(this.GetOneLiveTreeData.name, 'no root node');
@@ -921,7 +983,7 @@ var OneTree = /** @class */ (function (_super) {
         this.Xyyz.debug.FuncEnd(this.GetOneLiveTreeData.name);
         return toReturn;
     };
-    return OneTree;
+    return OneTreeManager;
 }(SpokeBase));
 //# sourceMappingURL=Trees.One.js.map
 console.log('marker aa');

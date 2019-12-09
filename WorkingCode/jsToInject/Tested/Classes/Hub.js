@@ -1,6 +1,6 @@
 var Hub = /** @class */ (function () {
     function Hub() {
-        this.debug = new Debug();
+        this.debug = new Debug(window.opener);
         this.debug.FuncStart(Hub.name);
         this.Start();
         this.debug.FuncEnd(Hub.name);
@@ -20,7 +20,7 @@ var Hub = /** @class */ (function () {
         console.log('marker F');
         this.ManyTreesMan = new ManyTrees(this);
         console.log('marker G');
-        this.OneTreeMan = new OneTree(this);
+        this.OneTreeMan = new OneTreeManager(this);
         console.log('marker H');
         this.WindowTreeSnapShotMan = new WindowTreeSnapShotManager(this);
         console.log('marker I');

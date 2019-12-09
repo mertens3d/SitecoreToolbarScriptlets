@@ -44,19 +44,24 @@ var LocationManager = /** @class */ (function (_super) {
         }
         this.Xyyz.debug.FuncEnd(this.SetHref.name);
     };
-    LocationManager.prototype.Desktop = function () {
-        //   this.Xyyz.debug.FuncStart(this.Desktop .name);
+    LocationManager.prototype.ChangeLocation = function (desiredPageType) {
+        this.Xyyz.debug.FuncStart(this.ChangeLocation.name);
         var currentState = this.Xyyz.PageData.CurrentOpenerPageState();
         if (currentState === PageType.LoginPage) {
             this.Xyyz.debug.Log('On Login page: ');
             this.AdminB();
             var self = this;
             setTimeout(function () {
-                self.Xyyz.LocationMan.Desktop();
+                self.Xyyz.LocationMan.ChangeLocation(desiredPageType);
             }, 1000);
         }
         else if (currentState === PageType.Launchpad) {
-            this.SetHref(this.Xyyz.InjectConst.Url.Desktop, this.Desktop, null, null);
+            if (desiredPageType === PageType.Desktop) {
+                this.SetHref(this.Xyyz.InjectConst.Url.Desktop, function () { this.ChangeLocation(desiredPageType); }, null, null);
+            }
+            else if (desiredPageType === PageType.ContentEditor) {
+                this.SetHref(this.Xyyz.InjectConst.Url.ContentEditor, function () { this.ChangeLocation(desiredPageType); }, null, null);
+            }
         }
         else if (currentState === PageType.Desktop) {
             this.Xyyz.debug.Log('On Desktop');
@@ -68,7 +73,7 @@ var LocationManager = /** @class */ (function (_super) {
             //  this.Xyyz.PageData.WinData.Opener.Window.location.href =   this.Xyyz.InjectConst.Url.ShellDefaultAspx;
             this.Xyyz.LocationMan.TriggerRedButton();
         }
-        this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.Desktop.name);
+        this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.ChangeLocation.name);
     };
     LocationManager.prototype.RedButton = function (iteration) {
         this.Xyyz.debug.FuncStart(this.Xyyz.LocationMan.RedButton.name + ':' + iteration);
@@ -106,8 +111,12 @@ var LocationManager = /** @class */ (function (_super) {
     };
     LocationManager.prototype.AdminB = function () {
         this.Xyyz.debug.FuncStart(this.AdminB.name);
-        this.Xyyz.PageData.WinData.Opener.Document.getElementById('UserName').setAttribute('value', 'admin');
-        this.Xyyz.PageData.WinData.Opener.Document.getElementById('Password').setAttribute('value', 'b');
+        var userNameElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('UserName');
+        var passwordElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('Password');
+        this.Xyyz.debug.Log('userNameElem: ' + userNameElem);
+        this.Xyyz.debug.Log('passwordElem: ' + passwordElem);
+        userNameElem.setAttribute('value', 'admin');
+        passwordElem.setAttribute('value', 'b');
         var candidate = this.Xyyz.PageData.WinData.Opener.Document.getElementById('LogInBtn');
         this.Xyyz.debug.Log('candidate: ' + candidate);
         if (candidate) {

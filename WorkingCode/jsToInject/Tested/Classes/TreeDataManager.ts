@@ -7,15 +7,17 @@ class WindowTreeSnapShotManager extends SpokeBase {
     xyyz.debug.FuncEnd(WindowTreeSnapShotManager.name);
   }
 
-  PutCEDataToCurrentSnapShot(oneCeData) {
-    this.Xyyz.debug.FuncStart(this.PutCEDataToCurrentSnapShot.name + ' ' + JSON.stringify(oneCeData));
+  PutCEDataToCurrentSnapShot(oneCeData: SnapShotOneContentEditor) {
+    this.Xyyz.debug.FuncStart(this.PutCEDataToCurrentSnapShot.name);
+    this.Xyyz.debug.Log('PutCEDataToCurrentSnapShot');
 
     var matchingCeData = this.FindMatchingCeData(oneCeData);
 
     if (matchingCeData) {
       matchingCeData = oneCeData;
     } else {
-      this.__activeWindowTreeSnapShot.AllCEAr.push(oneCeData);
+      this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.push(oneCeData);
+      this.__activeWindowTreeSnapShot.ShowDebugDataOneWindow();
     }
 
     this.UpdateStorage();
@@ -26,29 +28,34 @@ class WindowTreeSnapShotManager extends SpokeBase {
   }
 
   UpdateStorage() {
+    this.Xyyz.debug.FuncStart('UpdateStorage');
     var snapShotAsString = JSON.stringify(this.__activeWindowTreeSnapShot);
+    this.Xyyz.debug.Log('snapShotAsString: ' + snapShotAsString);
 
-    window.localStorage.setItem(this.Xyyz.InjectConst.Storage.WindowRoot + this.__activeWindowTreeSnapShot.Id, snapShotAsString);
+    window.localStorage.setItem(this.Xyyz.InjectConst.Storage.WindowRoot + this.__activeWindowTreeSnapShot.CurrentData.Id, snapShotAsString);
+    this.Xyyz.debug.FuncEnd('UpdateStorage');
   }
 
-  FindMatchingCeData(oneCeData) {
-    var toReturn = null;
+  FindMatchingCeData(oneCeData: SnapShotOneContentEditor): SnapShotOneContentEditor {
+    var toReturn: SnapShotOneContentEditor = null;
 
-    for (var idx = 0; idx < this.__activeWindowTreeSnapShot.AllCEAr.length; idx++) {
-      var candidate = this.__activeWindowTreeSnapShot.AllCEAr[idx];
-      if (candidate.id === oneCeData.id) {
+    for (var idx = 0; idx < this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.length; idx++) {
+      var candidate: SnapShotOneContentEditor = this.__activeWindowTreeSnapShot.CurrentData.AllCEAr[idx];
+      if (candidate.Id === oneCeData.Id) {
         toReturn = candidate;
         break;
       }
     }
 
+    this.Xyyz.debug.Log('match found :' + (toReturn !== null));
     return toReturn;
   }
 
   CreateNewWindowTreeSnapShot() {
-    this.Xyyz.debug.FuncStart(this.CreateNewWindowTreeSnapShot.name);
+    this.Xyyz.debug.FuncStart('CreateNewWindowTreeSnapShot');
     this.__activeWindowTreeSnapShot = new SnapShotOneWindow(this.Xyyz);
-    this.Xyyz.debug.FuncEnd(this.CreateNewWindowTreeSnapShot.name);
+    this.__activeWindowTreeSnapShot.Init();
+    this.Xyyz.debug.FuncEnd('CreateNewWindowTreeSnapShot');
   }
 
   ShowDebugData() {
@@ -57,12 +64,12 @@ class WindowTreeSnapShotManager extends SpokeBase {
     var allDebugData = [];
 
     allDebugData.push('------ One Window Snap Shot Start -----');
-    allDebugData.push('Id: ' + this.__activeWindowTreeSnapShot.Id);
-    allDebugData.push('TimeStamp: ' + this.__activeWindowTreeSnapShot.TimeStamp);
-    allDebugData.push('CE Count: ' + this.__activeWindowTreeSnapShot.AllCEAr.length);
-    for (var jdx = 0; jdx < this.__activeWindowTreeSnapShot.AllCEAr.length; jdx++) {
+    allDebugData.push('Id: ' + this.__activeWindowTreeSnapShot.CurrentData.Id);
+    allDebugData.push('TimeStamp: ' + this.__activeWindowTreeSnapShot.CurrentData.TimeStamp);
+    allDebugData.push('CE Count: ' + this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.length);
+    for (var jdx = 0; jdx < this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.length; jdx++) {
       allDebugData.push('------ One CE -----');
-      var oneCE = this.__activeWindowTreeSnapShot.AllCEAr[jdx];
+      var oneCE = this.__activeWindowTreeSnapShot.CurrentData.AllCEAr[jdx];
       allDebugData.push('Id: ' + oneCE.Id);
 
       var allCeDebugDataAr = oneCE.GetDebugDataOneCE();

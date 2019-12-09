@@ -1,7 +1,8 @@
 var Debug = /** @class */ (function () {
-    function Debug() {
+    function Debug(parentWindow) {
         console.log('debug');
         this.__indentCount = 0;
+        this.ParentWindow = parentWindow;
     }
     Debug.prototype.Log = function (text) {
         var indent = '  ';
@@ -15,8 +16,12 @@ var Debug = /** @class */ (function () {
             ta.value += text + '\\n\\r';
             ta.scrollTop = ta.scrollHeight;
         }
+        if (this.ParentWindow) {
+            this.ParentWindow.console.log(text);
+        }
     };
     Debug.prototype.FuncStart = function (text) {
+        console.log('caller is ' + this.FuncStart.caller.name);
         text = 's) ' + text;
         this.Log(text);
         this.__indentCount++;

@@ -35,9 +35,8 @@ class LocationManager extends SpokeBase {
     }
     this.Xyyz.debug.FuncEnd(this.SetHref.name);
   }
-
-  Desktop() {
-    //   this.Xyyz.debug.FuncStart(this.Desktop .name);
+  ChangeLocation(desiredPageType: PageType) {
+    this.Xyyz.debug.FuncStart(this.ChangeLocation .name);
 
     var currentState = this.Xyyz.PageData.CurrentOpenerPageState();
 
@@ -46,12 +45,19 @@ class LocationManager extends SpokeBase {
       this.AdminB();
       var self = this;
       setTimeout(function () {
-        self.Xyyz.LocationMan.Desktop();
+        self.Xyyz.LocationMan.ChangeLocation(desiredPageType);
       }, 1000);
     }
 
     else if (currentState === PageType.Launchpad) {
-      this.SetHref(this.Xyyz.InjectConst.Url.Desktop, this.Desktop, null, null);
+
+      if (desiredPageType === PageType.Desktop) {
+        this.SetHref(this.Xyyz.InjectConst.Url.Desktop, function () { this.ChangeLocation(desiredPageType) }, null, null);
+
+      } else if (desiredPageType === PageType.ContentEditor) {
+
+        this.SetHref(this.Xyyz.InjectConst.Url.ContentEditor, function () { this.ChangeLocation(desiredPageType) }, null, null);
+      }
     }
 
     else if (currentState === PageType.Desktop) {
@@ -67,7 +73,7 @@ class LocationManager extends SpokeBase {
       this.Xyyz.LocationMan.TriggerRedButton();
     }
 
-    this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.Desktop.name);
+    this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.ChangeLocation.name);
   }
 
   RedButton(iteration) {
@@ -110,8 +116,15 @@ class LocationManager extends SpokeBase {
   AdminB() {
     this.Xyyz.debug.FuncStart(this.AdminB.name);
 
-    this.Xyyz.PageData.WinData.Opener.Document.getElementById('UserName').setAttribute('value', 'admin');
-    this.Xyyz.PageData.WinData.Opener.Document.getElementById('Password').setAttribute('value', 'b');
+    var userNameElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('UserName');
+    var passwordElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('Password');
+
+    this.Xyyz.debug.Log('userNameElem: ' + userNameElem);
+    this.Xyyz.debug.Log('passwordElem: ' + passwordElem);
+    userNameElem.setAttribute('value', 'admin');
+    passwordElem.setAttribute('value', 'b');
+
+
 
     var candidate = this.Xyyz.PageData.WinData.Opener.Document.getElementById('LogInBtn');
 

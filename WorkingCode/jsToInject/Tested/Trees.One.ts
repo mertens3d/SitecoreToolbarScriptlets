@@ -1,10 +1,10 @@
 console.log('OneTree loaded');
 
-class OneTree extends SpokeBase {
+class OneTreeManager extends SpokeBase {
   constructor(xyyz: Hub) {
     super(xyyz)
-    xyyz.debug.FuncStart(OneTree.name);
-    xyyz.debug.FuncEnd(OneTree.name);
+    xyyz.debug.FuncStart(OneTreeManager.name);
+    xyyz.debug.FuncEnd(OneTreeManager.name);
   }
 
   GetFriendlyNameFromNode(inputNode) {
@@ -23,8 +23,8 @@ class OneTree extends SpokeBase {
     return toReturn;
   }
 
-  WalkNodeRecursive(targetNode, depth) {
-    var toReturn = [];
+  WalkNodeRecursive(targetNode: HTMLElement, depth :number): OneTreeNode[] {
+    var toReturn: OneTreeNode[] = [];
     depth = depth - 1;
 
     if (targetNode) {
@@ -34,7 +34,6 @@ class OneTree extends SpokeBase {
         if (firstImg) {
           var srcAttr = firstImg.getAttribute('src');
           if (srcAttr.indexOf(this.Xyyz.InjectConst.TreeExpandedPng) > -1) {
-
             var friendlyName = this.GetFriendlyNameFromNode(firstImg);
 
             toReturn.push(new OneTreeNode(firstImg.id, friendlyName, this.Xyyz));
@@ -42,10 +41,10 @@ class OneTree extends SpokeBase {
         }
       }
 
-      var childNodes = targetNode.children;
+      var childNodes: HTMLCollection = targetNode.children;
       if (childNodes && childNodes.length > 0 && depth > 0) {
         for (var jdx = 0; jdx < childNodes.length; jdx++) {
-          var oneChild = childNodes[jdx];
+          var oneChild = <HTMLElement> childNodes[jdx];
           toReturn = toReturn.concat(this.WalkNodeRecursive(oneChild, depth));
         }
       }
@@ -53,13 +52,14 @@ class OneTree extends SpokeBase {
     return toReturn;
   }
 
-  GetOneLiveTreeData(idx, targetDoc) {
-    this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + ' idx: ' + idx);
+  GetOneLiveTreeData(idx, targetDoc: Document): OneTreeNode[] {
+    this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + idx);
+    this.Xyyz.debug.Log('targetDoc isnull xx: ' + (targetDoc === null));
 
-    var toReturn = [];
+    var toReturn: OneTreeNode[] = [];
 
     if (targetDoc) {
-      this.Xyyz.debug.Log(JSON.stringify(targetDoc));
+      this.Xyyz.debug.Log(targetDoc);
       var rootNode = targetDoc.getElementById(this.Xyyz.InjectConst.Selector.RootNodeId);
 
       if (rootNode) {
@@ -69,8 +69,8 @@ class OneTree extends SpokeBase {
         toReturn = this.WalkNodeRecursive(rootParent, this.Xyyz.InjectConst.MaxIter);
         this.Xyyz.debug.Log('foundNodes count: ' + toReturn.length);
 
-        var nodesAsString = JSON.stringify(toReturn);
-        this.Xyyz.debug.Log('toReturn as string: ' + nodesAsString);
+        //var nodesAsString = JSON.stringify(toReturn);
+        //this.Xyyz.debug.Log('toReturn as string: ' + nodesAsString);
       } else {
         this.Xyyz.debug.Error(this.GetOneLiveTreeData.name, 'no root node');
       }

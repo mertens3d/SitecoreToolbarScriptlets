@@ -15,5 +15,6 @@ class WindowData extends SpokeBase {
     xyyz.debug.FuncStart(this.constructor.name)
     this.Opener = new Opener();
     xyyz.debug.FuncEnd(this.constructor.name)
+    xyyz.debug.FuncEnd(this.constructor.name)
   }
 }

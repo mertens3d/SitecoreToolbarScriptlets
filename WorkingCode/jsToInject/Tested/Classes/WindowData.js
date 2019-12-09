@@ -25,6 +25,7 @@ var WindowData = /** @class */ (function (_super) {
         xyyz.debug.FuncStart(_this.constructor.name);
         _this.Opener = new Opener();
         xyyz.debug.FuncEnd(_this.constructor.name);
+        xyyz.debug.FuncEnd(_this.constructor.name);
         return _this;
     }
     return WindowData;

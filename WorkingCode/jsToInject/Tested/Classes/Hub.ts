@@ -4,12 +4,12 @@
   InjectConst: InjectConst;
   LocationMan: LocationManager;
   ManyTreesMan: ManyTrees;
-  OneTreeMan: OneTree;
+  OneTreeMan: OneTreeManager;
   PageData: PageData;
   Utilities: Utilities;
   WindowTreeSnapShotMan: WindowTreeSnapShotManager;
   constructor() {
-    this.debug = new Debug();
+    this.debug = new Debug(window.opener);
     this.debug.FuncStart(Hub.name);
     this.Start();
     this.debug.FuncEnd(Hub.name);
@@ -30,7 +30,7 @@
     console.log('marker F');
     this.ManyTreesMan = new ManyTrees(this);
     console.log('marker G');
-    this.OneTreeMan = new OneTree(this);
+    this.OneTreeMan = new OneTreeManager(this);
     console.log('marker H');
     this.WindowTreeSnapShotMan = new WindowTreeSnapShotManager(this);
     console.log('marker I');

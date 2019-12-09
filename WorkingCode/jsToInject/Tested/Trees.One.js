@@ -12,15 +12,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 console.log('OneTree loaded');
-var OneTree = /** @class */ (function (_super) {
-    __extends(OneTree, _super);
-    function OneTree(xyyz) {
+var OneTreeManager = /** @class */ (function (_super) {
+    __extends(OneTreeManager, _super);
+    function OneTreeManager(xyyz) {
         var _this = _super.call(this, xyyz) || this;
-        xyyz.debug.FuncStart(OneTree.name);
-        xyyz.debug.FuncEnd(OneTree.name);
+        xyyz.debug.FuncStart(OneTreeManager.name);
+        xyyz.debug.FuncEnd(OneTreeManager.name);
         return _this;
     }
-    OneTree.prototype.GetFriendlyNameFromNode = function (inputNode) {
+    OneTreeManager.prototype.GetFriendlyNameFromNode = function (inputNode) {
         this.Xyyz.debug.FuncStart(this.GetFriendlyNameFromNode.name);
         var toReturn = 'unknown';
         var parentNode = inputNode.parentNode;
@@ -34,7 +34,7 @@ var OneTree = /** @class */ (function (_super) {
         this.Xyyz.debug.FuncEnd(this.GetFriendlyNameFromNode.toString + ' ' + toReturn);
         return toReturn;
     };
-    OneTree.prototype.WalkNodeRecursive = function (targetNode, depth) {
+    OneTreeManager.prototype.WalkNodeRecursive = function (targetNode, depth) {
         var toReturn = [];
         depth = depth - 1;
         if (targetNode) {
@@ -59,19 +59,20 @@ var OneTree = /** @class */ (function (_super) {
         }
         return toReturn;
     };
-    OneTree.prototype.GetOneLiveTreeData = function (idx, targetDoc) {
-        this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + ' idx: ' + idx);
+    OneTreeManager.prototype.GetOneLiveTreeData = function (idx, targetDoc) {
+        this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + idx);
+        this.Xyyz.debug.Log('targetDoc isnull xx: ' + (targetDoc === null));
         var toReturn = [];
         if (targetDoc) {
-            this.Xyyz.debug.Log(JSON.stringify(targetDoc));
+            this.Xyyz.debug.Log(targetDoc);
             var rootNode = targetDoc.getElementById(this.Xyyz.InjectConst.Selector.RootNodeId);
             if (rootNode) {
                 this.Xyyz.debug.Log('rootNode: ' + rootNode.innerHTML);
                 var rootParent = rootNode.parentElement;
                 toReturn = this.WalkNodeRecursive(rootParent, this.Xyyz.InjectConst.MaxIter);
                 this.Xyyz.debug.Log('foundNodes count: ' + toReturn.length);
-                var nodesAsString = JSON.stringify(toReturn);
-                this.Xyyz.debug.Log('toReturn as string: ' + nodesAsString);
+                //var nodesAsString = JSON.stringify(toReturn);
+                //this.Xyyz.debug.Log('toReturn as string: ' + nodesAsString);
             }
             else {
                 this.Xyyz.debug.Error(this.GetOneLiveTreeData.name, 'no root node');
@@ -83,6 +84,6 @@ var OneTree = /** @class */ (function (_super) {
         this.Xyyz.debug.FuncEnd(this.GetOneLiveTreeData.name);
         return toReturn;
     };
-    return OneTree;
+    return OneTreeManager;
 }(SpokeBase));
 //# sourceMappingURL=Trees.One.js.map

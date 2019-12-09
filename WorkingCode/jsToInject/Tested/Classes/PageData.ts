@@ -1,6 +1,6 @@
-﻿interface Function {
-  name: string;
-}
+﻿//interface Function {
+//  name: string;
+//}
 
 class PageData extends SpokeBase {
   WinData: WindowData;

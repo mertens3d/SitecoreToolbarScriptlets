@@ -1,7 +1,7 @@
 ﻿class SnapShotOneContentEditor extends SpokeBase {
-  Id: any;
-  __allTreeDataAr: any[];
-  constructor(id, zzyx: Hub) {
+  Id: string;
+  __allTreeDataAr: OneTreeNode[];
+  constructor(id, xyyz: Hub) {
     super(xyyz);
     this.Id = id;
     this.__allTreeDataAr = [];
