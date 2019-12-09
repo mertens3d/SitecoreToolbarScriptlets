@@ -8,7 +8,6 @@ class Injectable extends CommonBase
     this.ShortName = shortName;
     this.SourceExt = sourceExt;
     this.FinalExt = finalExt;
-    this.SourceDirFilter = this.WorkingCodeRootDir + '/' + this.ShortName + '/**/*.' + this.SourceExt;
     this.VarName = shortName;
     this.FileNameWithExt = this.ShortName + '.' + this.FinalExt;
     this.MinFileName = this.ShortName + '.min.' + this.FinalExt;
@@ -18,6 +17,10 @@ class Injectable extends CommonBase
     this.NameConcatMin = this.ShortName + '.concat.min.' + this.FinalExt;
 
     this.debugInfo();
+  }
+
+  SourceDirFilter() {
+    return this.WorkingCodeRootDir + '/' + this.ShortName + '/**/*.' + this.SourceExt;
   }
   debugInfo()
   {

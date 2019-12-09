@@ -3,7 +3,7 @@
   EventMan: EventManager;
   FeedbackMan: FeedbackManager;
   GuidMan: GuidManager;
-  InjectConst: InjectConst;
+  Const:  IConst;
   LocationMan: LocationManager;
   OneCEMan: OneCEManager;
   OneDesktopMan: OneDesktopManager;
@@ -16,12 +16,12 @@
 
   constructor() {
     this.debug = new Debug(window.opener);
-    this.debug.FuncStart(Hub.name);
+    this.debug.FuncStartName(Hub.name);
     this.Start();
-    this.debug.FuncEnd(Hub.name);
+    this.debug.FuncEndName(Hub.name);
   }
   Start() {
-    this.debug.FuncStart(this.Start.name);
+    this.debug.FuncStartName(this.Start.name);
 
     console.log('marker A');
     this.PageData = new PageData(window, this);
@@ -48,12 +48,15 @@
     this.MiscMan = new MiscManager(this);
 
     this.init();
-    this.debug.FuncEnd(this.Start.name);
+    this.debug.FuncEndName(this.Start.name);
   }
   init() {
-    this.debug.FuncStart(Hub.constructor.name + ' ' + this.init.name);
+    this.debug.FuncStartName(Hub.constructor.name + ' ' + this.init.name);
+    this.Const = InjectConst.const;
     this.EventMan.WireMenuButtons();
-    this.MiscMan.FillConst();
-    this.debug.FuncEnd(Hub.constructor.name + ' ' + this.init.name);
+    this.OneWindowMan.CreateNewWindowSnapShot();
+    this.OneWindowMan.PopulateStateSel();
+
+    this.debug.FuncEndName(Hub.constructor.name + ' ' + this.init.name);
   }
 }

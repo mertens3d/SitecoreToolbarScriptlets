@@ -8,6 +8,14 @@ button {
     cursor: pointer;
 }
 
+select{
+  /*height: 50px;*/
+}
+
+.group{
+  border: 1px solid black;
+}
+
 button:hover {
     background-color: #afff00;
 }

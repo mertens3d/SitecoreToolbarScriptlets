@@ -1,10 +1,13 @@
 console.log('ManyTrees loaded');
 
 class OneDesktopManager extends ManagerBase {
+    RestoreDesktopState(foundMatch: IDataOneWindow) {
+        throw new Error("Method not implemented.");
+    }
   constructor(xyyz: Hub) {
-    xyyz.debug.FuncStart(OneDesktopManager.name);
+    xyyz.debug.FuncStartName(OneDesktopManager.name);
     super(xyyz)
-    xyyz.debug.FuncEnd(OneDesktopManager.name);
+    xyyz.debug.FuncEndName(OneDesktopManager.name);
   }
 
   GetNewIframeData(index: number, docElem: Document, iframe: HTMLIFrameElement) {
@@ -18,7 +21,7 @@ class OneDesktopManager extends ManagerBase {
   }
 
   GetAllLiveIframeData(targetDoc) {
-    this.Xyyz.debug.FuncStart(this.GetAllLiveIframeData.name);
+    this.Xyyz.debug.FuncStartName(this.GetAllLiveIframeData.name);
     var toReturn = [];
     var iframeAr = targetDoc.querySelectorAll('iframe[src*=content]');
     if (iframeAr) {
@@ -28,34 +31,19 @@ class OneDesktopManager extends ManagerBase {
         toReturn.push(this.GetNewIframeData(ifrIdx, null, iframeAr[ifrIdx]));
       }
     }
-    this.Xyyz.debug.FuncEnd(this.GetAllLiveIframeData.name + ' ' + toReturn.length);
+    this.Xyyz.debug.FuncEndName(this.GetAllLiveIframeData.name + ' ' + toReturn.length);
     return toReturn;
   }
 
   
 
-  PlantTheTrees(targetDoc, treeIdx) {
-    this.Xyyz.debug.FuncStart('PlantTheTrees');
-    this.Xyyz.debug.Log('s) LookAtExistingData: ' + treeIdx);
-    var foundInStorage = null;//todo   this.Xyyz.StorageMan.GetTreeData(treeIdx);
-
-    if (foundInStorage) {
-      this.Xyyz.debug.Log('foundInStorage: ' + foundInStorage);
-      var fromStorageAr = foundInStorage.split(',');
-      if (fromStorageAr) {
-        this.Xyyz.debug.Log('foundAr: ' + fromStorageAr.length + ' ' + fromStorageAr);
-
-        var allData = this.GetAllLiveIframeData(targetDoc)[treeIdx];
-      }
-    }
-    this.Xyyz.debug.FuncEnd('PlantTheTrees');
-  }
+  
 
   
 
   SaveStateOneDesktop() {
-    this.Xyyz.debug.FuncStart(this.SaveStateOneDesktop.name);;
-    this.Xyyz.debug.FuncStart('SaveOneDesktop');;
+    this.Xyyz.debug.FuncStartName(this.SaveStateOneDesktop.name);;
+    this.Xyyz.debug.FuncStartName('SaveOneDesktop');;
     var livingIframeAr = this.GetAllLiveIframeData(this.Xyyz.PageData.WinData.Opener.Document);
     if (livingIframeAr && livingIframeAr.length > 0) {
       for (var iframeIdx = 0; iframeIdx < livingIframeAr.length; iframeIdx++) {
@@ -69,7 +57,7 @@ class OneDesktopManager extends ManagerBase {
 
     this.Xyyz.debug.Log('done gathering tree data');
     this.Xyyz.OneWindowMan.DrawDebugDataPretty(null);
-    this.Xyyz.debug.FuncEnd(this.SaveStateOneDesktop.name);
+    this.Xyyz.debug.FuncEndName(this.SaveStateOneDesktop.name);
   }
 
   

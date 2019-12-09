@@ -1,4 +1,4 @@
-﻿console.log('_SpokeBase loaded');
+﻿console.log('_ManagerBase loaded');
 class ManagerBase {
   Xyyz: Hub;
 
@@ -6,6 +6,10 @@ class ManagerBase {
     //console.log(xyyzHub);
     this.Xyyz = xyyz;
     //console.log('SpokeBase');
+  }
+
+  OpenerDoc(): Document {
+    return this.Xyyz.PageData.WinData.Opener.Document;
   }
 }
 

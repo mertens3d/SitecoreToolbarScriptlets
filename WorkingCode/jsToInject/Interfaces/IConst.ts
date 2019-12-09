@@ -1,7 +1,14 @@
 console.log('InjectConst loaded');
-interface InjectConst {
+interface IConst {
   ElemId: {
-    textAreaFeedback: string
+    BtnEdit: string,
+    BtnRestoreWindowState: string,
+    BtnSaveWindowState: string,
+    LoginBtn:  string,
+    SelStateSnapShot: string,
+    textAreaFeedback: string,
+    SitecoreRootNodeId: string,
+    SitecoreRootGlyphId: string,
   },
   ClassNames: {
     ContentTreeNode: string,
@@ -14,7 +21,7 @@ interface InjectConst {
   },
   Selector: {
     ContentTreeNodeGlyph: string,
-    RootNodeId: string
+    InputBtn2:  string,
   },
   Storage: {
     WindowRoot: string
@@ -22,13 +29,16 @@ interface InjectConst {
   TreeExpandedPng: string,
 
   MaxIter: number,
+  TimeoutWaitForNodeToLoad: number,
 
-  GuidEmpty : IGuid,
+  GuidEmpty : string,
   prop: {
     AllTreeData: string,
   },
   Names: {
     HtmlToInject: string,
     StylesToInject: string
+    TreeMenuExpandedPng: string
+    TreeMenuCollapsedPng: string
   }
 }

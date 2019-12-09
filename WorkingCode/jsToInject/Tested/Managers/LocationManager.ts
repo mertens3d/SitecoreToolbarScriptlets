@@ -5,15 +5,15 @@ class LocationManager extends ManagerBase {
 
   constructor(xyyz: Hub) {
     super(xyyz);
-    xyyz.debug.FuncStart(LocationManager.name);
+    xyyz.debug.FuncStartName(LocationManager.name);
     this.MaxAttempts = 10;
     this.CurrentAttempt = this.MaxAttempts;
     this.EffortWait = 1000;
-    xyyz.debug.FuncEnd(LocationManager.name);
+    xyyz.debug.FuncEndName(LocationManager.name);
   }
 
   SetHref(href, callback, isFromTimeout, effortCount) {
-    this.Xyyz.debug.FuncStart(this.SetHref.toString() + ' : ' + href + ' : ' + isFromTimeout + ' : ' + effortCount);
+    this.Xyyz.debug.FuncStartName(this.SetHref.toString() + ' : ' + href + ' : ' + isFromTimeout + ' : ' + effortCount);
     this.Xyyz.PageData.WinData.Opener.Window.location.href = href;
 
     if (isFromTimeout) {
@@ -33,10 +33,10 @@ class LocationManager extends ManagerBase {
     else {
       this.Xyyz.debug.Log('changing href unsuccessful. Dying');
     }
-    this.Xyyz.debug.FuncEnd(this.SetHref.name);
+    this.Xyyz.debug.FuncEndName(this.SetHref.name);
   }
   ChangeLocation(desiredPageType: PageType) {
-    this.Xyyz.debug.FuncStart(this.ChangeLocation .name);
+    this.Xyyz.debug.FuncStartName(this.ChangeLocation.name);
 
     var currentState = this.Xyyz.PageData.GetCurrentPageType();
 
@@ -50,13 +50,10 @@ class LocationManager extends ManagerBase {
     }
 
     else if (currentState === PageType.Launchpad) {
-
       if (desiredPageType === PageType.Desktop) {
-        this.SetHref(this.Xyyz.InjectConst.Url.Desktop, function () { this.ChangeLocation(desiredPageType) }, null, null);
-
+        this.SetHref(this.Xyyz.Const.Url.Desktop, function () { this.ChangeLocation(desiredPageType) }, null, null);
       } else if (desiredPageType === PageType.ContentEditor) {
-
-        this.SetHref(this.Xyyz.InjectConst.Url.ContentEditor, function () { this.ChangeLocation(desiredPageType) }, null, null);
+        this.SetHref(this.Xyyz.Const.Url.ContentEditor, function () { this.ChangeLocation(desiredPageType) }, null, null);
       }
     }
 
@@ -73,11 +70,11 @@ class LocationManager extends ManagerBase {
       this.Xyyz.LocationMan.TriggerRedButton();
     }
 
-    this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.ChangeLocation.name);
+    this.Xyyz.debug.FuncEndName(this.Xyyz.LocationMan.ChangeLocation.name);
   }
 
   RedButton(iteration) {
-    this.Xyyz.debug.FuncStart(this.Xyyz.LocationMan.RedButton.name + ':' + iteration);
+    this.Xyyz.debug.FuncStartName(this.Xyyz.LocationMan.RedButton.name + ':' + iteration);
     var found: HTMLElement = <HTMLElement>this.Xyyz.PageData.WinData.Opener.Document.getElementById('StartButton');
     this.Xyyz.debug.Log('Red Button: ' + found + '  ' + this.Xyyz.PageData.WinData.Opener.Window.location.href + ' ' + iteration);
     if (found) {
@@ -96,16 +93,16 @@ class LocationManager extends ManagerBase {
         }, 1500);
       }
     }
-    this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.RedButton.name);
+    this.Xyyz.debug.FuncEndName(this.Xyyz.LocationMan.RedButton.name);
   }
   TriggerRedButton() {
-    this.Xyyz.debug.FuncStart(this.Xyyz.LocationMan.TriggerRedButton.name);
+    this.Xyyz.debug.FuncStartName(this.Xyyz.LocationMan.TriggerRedButton.name);
 
     var self = this;
     setTimeout(function () {
       self.Xyyz.LocationMan.RedButton(10);
     }, 1500);
-    this.Xyyz.debug.FuncEnd(this.Xyyz.LocationMan.TriggerRedButton.name);
+    this.Xyyz.debug.FuncEndName(this.Xyyz.LocationMan.TriggerRedButton.name);
   }
 
   SetScMode(newValue) {
@@ -114,7 +111,7 @@ class LocationManager extends ManagerBase {
   }
 
   AdminB() {
-    this.Xyyz.debug.FuncStart(this.AdminB.name);
+    this.Xyyz.debug.FuncStartName(this.AdminB.name);
 
     var userNameElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('UserName');
     var passwordElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('Password');
@@ -124,22 +121,26 @@ class LocationManager extends ManagerBase {
     userNameElem.setAttribute('value', 'admin');
     passwordElem.setAttribute('value', 'b');
 
+    var candidate: HTMLElement = this.Xyyz.PageData.WinData.Opener.Document.getElementById(this.QkID().LoginBtn);
 
-
-    var candidate = this.Xyyz.PageData.WinData.Opener.Document.getElementById('LogInBtn');
-
-    this.Xyyz.debug.Log('candidate: ' + candidate );
+    this.Xyyz.debug.Log('candidate: ' + candidate);
     if (candidate) {
       candidate.click();
     } else {
       //window.opener.document.querySelector('input.btn').click()
-      var candidate = this.Xyyz.PageData.WinData.Opener.Document.querySelector('input.btn');
-    this.Xyyz.debug.Log('candidate: ' + candidate );
+      candidate = this.Xyyz.PageData.WinData.Opener.Document.querySelector(this.QkSel().InputBtn2);
+      this.Xyyz.debug.Log('candidate: ' + candidate);
       if (candidate) {
         candidate.click();
       }
     }
 
-    this.Xyyz.debug.FuncEnd(this.AdminB.name);
+    this.Xyyz.debug.FuncEndName(this.AdminB.name);
+  }
+  QkSel() {
+    return this.Xyyz.Const.Selector;
+  }
+  QkID() {
+    return this.Xyyz.Const.ElemId;
   }
 }

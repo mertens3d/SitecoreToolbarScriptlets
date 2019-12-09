@@ -52,7 +52,9 @@
     <Content Include="gulp.support\Secrets.example.js" />
     <Content Include="gulp.support\Secrets.js" />
     <Content Include="WorkingCode\HtmlToInject\menu.html" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\InjectConst.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IGuid.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IConst.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IOneStorageData.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Feedback.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\GuidManager.ts" />
@@ -67,7 +69,7 @@
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneIframe.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\PageData.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\MiscManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\_ManagerBase.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\_first\_ManagerBase.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneWindow.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Utilities.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\debug.ts" />
@@ -85,7 +87,6 @@
     </Content>
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\EventManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\PageType.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IInjectConst.ts" />
     <Content Include="WorkingCode\jsToInject\Tested\Storage.js" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneWindowManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneDesktopManager.ts" />

@@ -4,7 +4,7 @@
     console.log('Feedback');
   }
   __getTextArea(): HTMLTextAreaElement {
-    return <HTMLTextAreaElement>document.getElementById(this.Xyyz.InjectConst.ElemId.textAreaFeedback);
+    return <HTMLTextAreaElement>document.getElementById(this.Xyyz.Const.ElemId.textAreaFeedback);
   }
 
   ClearTextArea(): void {

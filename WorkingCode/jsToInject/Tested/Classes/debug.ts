@@ -38,14 +38,16 @@ class Debug {
     }
   }
 
-  FuncStart(text) {
-    //console.log('caller is ' + this.FuncStart.caller.name)
+  FuncStartFunc(func) {
+    this.FuncStartName(func.name);
+  }
+  FuncStartName(text) {
     text = 's) ' + text;
     this.Log(text);
     this.__indentCount++;
   }
 
-  FuncEnd(text) {
+  FuncEndName(text) {
     text = 'e) ' + text;
     this.__indentCount--;
     this.Log(text);

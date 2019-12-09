@@ -4,11 +4,13 @@ class WindowOpenerClass extends CommonBase{
   constructor() {
     super();
     this.ShortName = 'windowOpener';
-    this.SourceDirFilter = this.WorkingCodeRootDir + '/' + this.ShortName + '/**/*.js';
     this.NameConcat = this.ShortName + '.concat.js';
     this.NameConcatMin = this.ShortName + '.concat.min.js';
     this.NameConcatMinWithVar = this.ShortName + '.concat.min.var.js';
     this.debugInfo();
+  }
+  SourceDirFilter() {
+    return this.WorkingCodeRootDir + '/' + this.ShortName + '/**/*.js';
   }
   debugInfo() {
     console.log('----------');

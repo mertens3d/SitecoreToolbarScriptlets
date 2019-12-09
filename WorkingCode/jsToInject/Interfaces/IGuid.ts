@@ -1,3 +1,4 @@
 ﻿interface IGuid {
-  Value : string,
+  Value: string,
+  
 }

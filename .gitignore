@@ -6,3 +6,12 @@ node_modules
 /.vs/
 /bin/
 /obj/
+/dist/WorkingCode/
+/WorkingCode/jsToInject/Interfaces/*.js
+/WorkingCode/jsToInject/_first/*.js
+/WorkingCode/jsToInject/*.map
+/WorkingCode/jsToInject/**/*.map
+/WorkingCode/jsToInject/Tested/**/*.js
+/WorkingCode/jsToInject/Tested/**/*.js
+/WorkingCode/jsToInject/Tested/**/*.js.map
+/WorkingCode/jsToInject/Tested/**/*.js.map

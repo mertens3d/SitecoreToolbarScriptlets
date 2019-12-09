@@ -3,12 +3,12 @@ console.log('OneTree loaded');
 class OneTreeManager extends ManagerBase {
   constructor(xyyz: Hub) {
     super(xyyz)
-    xyyz.debug.FuncStart(OneTreeManager.name);
-    xyyz.debug.FuncEnd(OneTreeManager.name);
+    xyyz.debug.FuncStartName(OneTreeManager.name);
+    xyyz.debug.FuncEndName(OneTreeManager.name);
   }
 
   GetFriendlyNameFromNode(inputNode) {
-    this.Xyyz.debug.FuncStart(this.GetFriendlyNameFromNode.name);
+    this.Xyyz.debug.FuncStartName(this.GetFriendlyNameFromNode.name);
     var toReturn = 'unknown';
 
     var parentNode = inputNode.parentNode;
@@ -19,7 +19,7 @@ class OneTreeManager extends ManagerBase {
     } else {
       this.Xyyz.debug.Log('No treeNode');
     }
-    this.Xyyz.debug.FuncEnd(this.GetFriendlyNameFromNode.toString + ' ' + toReturn);
+    this.Xyyz.debug.FuncEndName(this.GetFriendlyNameFromNode.toString + ' ' + toReturn);
     return toReturn;
   }
 
@@ -29,14 +29,14 @@ class OneTreeManager extends ManagerBase {
 
     if (targetNode) {
       var className = targetNode.className;
-      if (className === this.Xyyz.InjectConst.ClassNames.ContentTreeNode) {
-        var firstImg = targetNode.querySelector(this.Xyyz.InjectConst.Selector.ContentTreeNodeGlyph);
+      if (className === this.Xyyz.Const.ClassNames.ContentTreeNode) {
+        var firstImg = targetNode.querySelector(this.Xyyz.Const.Selector.ContentTreeNodeGlyph);
         if (firstImg) {
           var srcAttr = firstImg.getAttribute('src');
-          if (srcAttr.indexOf(this.Xyyz.InjectConst.TreeExpandedPng) > -1) {
+          if (srcAttr.indexOf(this.Xyyz.Const.TreeExpandedPng) > -1) {
             var friendlyName = this.GetFriendlyNameFromNode(firstImg);
 
-            var newData: IDataOneTreeNode = { NodeFriendly: friendlyName , NodeId: firstImg.id }
+            var newData: IDataOneTreeNode = { NodeFriendly: friendlyName, NodeId: this.Xyyz.GuidMan.ParseGuid( firstImg.id) }
             toReturn.push(newData);
           }
         }
@@ -54,20 +54,20 @@ class OneTreeManager extends ManagerBase {
   }
 
   GetOneLiveTreeData(dataOneCe: IDataOneCE, targetDoc: Document): IDataOneTreeNode[] {
-    this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + dataOneCe.Id);
+    this.Xyyz.debug.FuncStartName(this.GetOneLiveTreeData.name + 'b idx: ' + dataOneCe.Id);
     this.Xyyz.debug.Log('targetDoc isnull xx: ' + (targetDoc === null));
 
     var toReturn: IDataOneTreeNode[] = [];
 
     if (targetDoc) {
       this.Xyyz.debug.Log(targetDoc);
-      var rootNode = targetDoc.getElementById(this.Xyyz.InjectConst.Selector.RootNodeId);
+      var rootNode = targetDoc.getElementById(this.Xyyz.Const.ElemId.SitecoreRootNodeId);
 
       if (rootNode) {
         this.Xyyz.debug.Log('rootNode: ' + rootNode.innerHTML);
         var rootParent = rootNode.parentElement;
 
-        toReturn =  this.WalkNodeRecursive(rootParent, this.Xyyz.InjectConst.MaxIter);
+        toReturn =  this.WalkNodeRecursive(rootParent, this.Xyyz.Const.MaxIter);
         this.Xyyz.debug.Log('foundNodes count: ' + toReturn.length);
 
         //var nodesAsString = JSON.stringify(toReturn);
@@ -78,7 +78,7 @@ class OneTreeManager extends ManagerBase {
     } else {
       this.Xyyz.debug.Error(this.GetOneLiveTreeData.name, 'no targetDoc');
     }
-    this.Xyyz.debug.FuncEnd(this.GetOneLiveTreeData.name);
+    this.Xyyz.debug.FuncEndName(this.GetOneLiveTreeData.name);
 
     return toReturn;
   }

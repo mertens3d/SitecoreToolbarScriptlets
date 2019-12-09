@@ -3,49 +3,30 @@ class EventManager extends ManagerBase {
   constructor(xyyz: Hub) {
     super(xyyz);
   }
+  __ById(value) {
+    return document.getElementById(value);
+  }
   WireMenuButtons() {
-    this.Xyyz.debug.FuncStart(EventManager.name + ' ' + this.WireMenuButtons.name);
+    this.Xyyz.debug.FuncStartName(EventManager.name + ' ' + this.WireMenuButtons.name);
 
     var thisObj = this;
+    var locMan = thisObj.Xyyz.LocationMan;
+    var constId = this.Xyyz.Const.ElemId;
 
-    document.getElementById('btnEdit').onclick = function () {
-      thisObj.Xyyz.LocationMan.SetScMode('edit');
-    };
-    document.getElementById('btnPrev').onclick = function () {
-      thisObj.Xyyz.LocationMan.SetScMode('preview');
-    };
-    document.getElementById('btnNorm').onclick = function () {
-      thisObj.Xyyz.LocationMan.SetScMode('normal');
-    };
-    document.getElementById('btnAdminB').onclick = function () {
-      thisObj.Xyyz.LocationMan.AdminB();
-    };
-    document.getElementById('btnDesktop').onclick = function () {
-      thisObj.Xyyz.LocationMan.ChangeLocation(PageType.Desktop);
-    };
+    this.__ById(this.Xyyz.Const.ElemId.BtnEdit).onclick = () => { locMan.SetScMode('edit'); };
+    this.__ById('btnPrev').onclick = () => { locMan.SetScMode('preview'); };
+    this.__ById('btnNorm').onclick = () => { locMan.SetScMode('normal'); };
+    this.__ById('btnAdminB').onclick = () => { locMan.AdminB(); };
+    this.__ById('btnDesktop').onclick = () => { locMan.ChangeLocation(PageType.Desktop); };
 
-    document.getElementById('btnCE').onclick = function () {
-      thisObj.Xyyz.LocationMan.ChangeLocation(PageType.ContentEditor);
-    };
-    document.getElementById('btnSaveTheTrees').onclick = function () {
-      thisObj.Xyyz.OneWindowMan.SaveWindowState();
-    };
-    document.getElementById('btnPlantTheTrees').onclick = function () {
-      thisObj.Xyyz.OneDesktopMan.PlantTheTrees(window.opener.document, 0);
-    };
-    document.getElementById('btnDrawLocalStorage').onclick = function () {
-      thisObj.Xyyz.OneWindowMan.DrawStorage();
-    };
-    document.getElementById('btnClearLocalStorage').onclick = function () {
-      thisObj.Xyyz.OneWindowMan.ClearStorage();
-    };
-    document.getElementById('btnClearTextArea').onclick = function () {
-      thisObj.Xyyz.debug.ClearTextArea();
-    };
+    this.__ById('btnCE').onclick = () => { locMan.ChangeLocation(PageType.ContentEditor); };
+    this.__ById(constId.BtnSaveWindowState).onclick = () => { thisObj.Xyyz.OneWindowMan.SaveWindowState(); };
+    this.__ById(constId.BtnRestoreWindowState).onclick = () => { thisObj.Xyyz.OneWindowMan.RestoreWindowState(window.opener.document, 0); };
+    this.__ById('btnDrawLocalStorage').onclick = () => { thisObj.Xyyz.OneWindowMan.DrawStorage(); };
+    this.__ById('btnClearLocalStorage').onclick = () => { thisObj.Xyyz.OneWindowMan.ClearStorage(); };
+    this.__ById('btnClearTextArea').onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
+    //this.__ById(constId.SelSnapShot).onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
 
-
-
-
-    this.Xyyz.debug.FuncEnd(this.WireMenuButtons.name);
+    this.Xyyz.debug.FuncEndName(this.WireMenuButtons.name);
   };
 }

@@ -22,10 +22,10 @@ var WindowData = /** @class */ (function (_super) {
     __extends(WindowData, _super);
     function WindowData(xyyz) {
         var _this = _super.call(this, xyyz) || this;
-        xyyz.debug.FuncStart(_this.constructor.name);
+        xyyz.debug.FuncStartName(_this.constructor.name);
         _this.Opener = new Opener();
-        xyyz.debug.FuncEnd(_this.constructor.name);
-        xyyz.debug.FuncEnd(_this.constructor.name);
+        xyyz.debug.FuncEndName(_this.constructor.name);
+        xyyz.debug.FuncEndName(_this.constructor.name);
         return _this;
     }
     return WindowData;
