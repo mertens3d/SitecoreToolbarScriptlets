@@ -47,7 +47,7 @@ xyyz.ChildWindow = {
   CreateWindow: function () {
     console.log('new window');
     console.log('Constants: ' + constants.taDebug);
-    window.mywindow = window.open('', 'mywindow', 'width=900, height=600');
+    window.mywindow = window.open('', 'mywindow', 'width=900, height=700');
     window.mywindow.Parent = this;
     this.WriteHtml(window.mywindow);
    //window.mywindow.WireMenuButtons();

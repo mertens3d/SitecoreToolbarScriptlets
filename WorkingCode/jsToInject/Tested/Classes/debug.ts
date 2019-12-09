@@ -1,4 +1,4 @@
-class Debug  {
+class Debug {
   __indentCount: number;
   ParentWindow: Window;
 
@@ -6,6 +6,17 @@ class Debug  {
     console.log('debug');
     this.__indentCount = 0;
     this.ParentWindow = parentWindow;
+  }
+  __getTextArea(): HTMLTextAreaElement {
+    return <HTMLTextAreaElement>document.getElementById('ta-debug');
+  }
+  ClearTextArea(): void {
+    var ta = this.__getTextArea();
+    if (ta) {
+      ta.value = '';
+    } else {
+      this.Error(Debug.name, 'No text area found');
+    }
   }
   Log(text) {
     var indent = '  ';
@@ -16,13 +27,11 @@ class Debug  {
     }
     console.log(text);
 
-    var ta = <HTMLTextAreaElement>document.getElementById('ta-debug');
+    var ta = this.__getTextArea();
     if (ta) {
-
       ta.value += text + '\\n\\r';
       ta.scrollTop = ta.scrollHeight;
     }
-
 
     if (this.ParentWindow) {
       this.ParentWindow.console.log(text);
@@ -30,7 +39,7 @@ class Debug  {
   }
 
   FuncStart(text) {
-    console.log('caller is ' + this.FuncStart.caller.name)
+    //console.log('caller is ' + this.FuncStart.caller.name)
     text = 's) ' + text;
     this.Log(text);
     this.__indentCount++;

@@ -1,11 +1,18 @@
 console.log('InjectConst loaded');
 
 class InjectConst extends SpokeBase {
+   
   constructor(xyyz: Hub) {
     super(xyyz);
     xyyz.debug.FuncStart(InjectConst.name);
     xyyz.debug.FuncEnd(InjectConst.name);
   }
+
+
+  ElemId = {
+   textAreaFeedback : 'ta-feedback',
+  }
+
   ClassNames = {
     ContentTreeNode: 'scContentTreeNode',
   }
@@ -23,7 +30,7 @@ class InjectConst extends SpokeBase {
   }
 
   Storage = {
-    WindowRoot: '  this.Xyyz.'
+    WindowRoot: 'Xyyz.WindowSnapShot.'
   }
   TreeExpandedPng = 'treemenu_expanded.png'
 

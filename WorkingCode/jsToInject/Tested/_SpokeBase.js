@@ -1,9 +1,9 @@
 console.log('_SpokeBase loaded');
 var SpokeBase = /** @class */ (function () {
-    function SpokeBase(xyyzHub) {
+    function SpokeBase(xyyz) {
         //console.log(xyyzHub);
-        this.Xyyz = xyyzHub;
-        console.log('SpokeBase');
+        this.Xyyz = xyyz;
+        //console.log('SpokeBase');
     }
     return SpokeBase;
 }());

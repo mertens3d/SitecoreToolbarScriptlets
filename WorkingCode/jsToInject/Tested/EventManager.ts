@@ -34,9 +34,18 @@ class EventManager extends SpokeBase {
       thisObj.Xyyz.ManyTreesMan.PlantTheTrees(window.opener.document, 0);
     };
     document.getElementById('btnDrawLocalStorage').onclick = function () {
-      //todo   this.Xyyz.ManyTreesMan.DrawStorage();
-      console.log('todo');
+      thisObj.Xyyz.WindowTreeSnapShotMan.DrawStorage();
     };
+    document.getElementById('btnClearLocalStorage').onclick = function () {
+      thisObj.Xyyz.WindowTreeSnapShotMan.ClearStorage();
+    };
+    document.getElementById('btnClearTextArea').onclick = function () {
+      thisObj.Xyyz.debug.ClearTextArea();
+    };
+
+
+
+
     this.Xyyz.debug.FuncEnd(this.WireMenuButtons.name);
   };
 }

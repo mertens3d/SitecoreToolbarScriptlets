@@ -16,6 +16,9 @@ var InjectConst = /** @class */ (function (_super) {
     __extends(InjectConst, _super);
     function InjectConst(xyyz) {
         var _this = _super.call(this, xyyz) || this;
+        _this.ElemId = {
+            textAreaFeedback: 'ta-feedback',
+        };
         _this.ClassNames = {
             ContentTreeNode: 'scContentTreeNode',
         };
@@ -30,7 +33,7 @@ var InjectConst = /** @class */ (function (_super) {
             RootNodeId: 'Tree_Node_11111111111111111111111111111111'
         };
         _this.Storage = {
-            WindowRoot: '  this.Xyyz.'
+            WindowRoot: 'Xyyz.WindowSnapShot.'
         };
         _this.TreeExpandedPng = 'treemenu_expanded.png';
         _this.MaxIter = 100;

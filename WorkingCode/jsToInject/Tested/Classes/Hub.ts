@@ -7,7 +7,10 @@
   OneTreeMan: OneTreeManager;
   PageData: PageData;
   Utilities: Utilities;
-  WindowTreeSnapShotMan: WindowTreeSnapShotManager;
+  WindowTreeSnapShotMan: WindowSnapShotManager;
+  SnapShotOneContentEditorMan: SnapShotOneContentEditorManager;
+  FeedbackMan: FeedbackManager;
+
   constructor() {
     this.debug = new Debug(window.opener);
     this.debug.FuncStart(Hub.name);
@@ -32,15 +35,19 @@
     console.log('marker G');
     this.OneTreeMan = new OneTreeManager(this);
     console.log('marker H');
-    this.WindowTreeSnapShotMan = new WindowTreeSnapShotManager(this);
+    this.WindowTreeSnapShotMan = new WindowSnapShotManager(this);
     console.log('marker I');
+    this.SnapShotOneContentEditorMan = new SnapShotOneContentEditorManager(this);
+    console.log('marker J');
+
+    this.FeedbackMan = new FeedbackManager(this);
 
     this.init();
     this.debug.FuncEnd(this.Start.name);
   }
   init() {
-    this.debug.FuncStart(Hub.constructor.name + ' ' +  this.init.name);
+    this.debug.FuncStart(Hub.constructor.name + ' ' + this.init.name);
     this.EventMan.WireMenuButtons();
-    this.debug.FuncEnd(Hub.constructor.name + ' ' +this.init.name);
+    this.debug.FuncEnd(Hub.constructor.name + ' ' + this.init.name);
   }
 }

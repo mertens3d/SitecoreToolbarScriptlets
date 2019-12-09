@@ -22,8 +22,11 @@ var Hub = /** @class */ (function () {
         console.log('marker G');
         this.OneTreeMan = new OneTreeManager(this);
         console.log('marker H');
-        this.WindowTreeSnapShotMan = new WindowTreeSnapShotManager(this);
+        this.WindowTreeSnapShotMan = new WindowSnapShotManager(this);
         console.log('marker I');
+        this.SnapShotOneContentEditorMan = new SnapShotOneContentEditorManager(this);
+        console.log('marker J');
+        this.FeedbackMan = new FeedbackManager(this);
         this.init();
         this.debug.FuncEnd(this.Start.name);
     };

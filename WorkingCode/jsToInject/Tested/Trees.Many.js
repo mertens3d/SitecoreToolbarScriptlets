@@ -77,11 +77,9 @@ var ManyTrees = /** @class */ (function (_super) {
         }
         this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
         ;
-        var CeSnapShot = new SnapShotOneContentEditor(id, this.Xyyz);
-        //var oneTree = new OneTreeManager(this.Xyyz);
-        this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
-        ;
-        CeSnapShot.__allTreeDataAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(id, docElem);
+        var CeSnapShot = this.Xyyz.SnapShotOneContentEditorMan.MakeNewData(id);
+        CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(CeSnapShot, docElem);
+        this.Xyyz.WindowTreeSnapShotMan.DrawDebugDataPretty(null);
         this.Xyyz.WindowTreeSnapShotMan.PutCEDataToCurrentSnapShot(CeSnapShot);
         this.Xyyz.debug.FuncEnd('SaveOneContentEditor');
     };
@@ -100,7 +98,7 @@ var ManyTrees = /** @class */ (function (_super) {
             }
         }
         this.Xyyz.debug.Log('done gathering tree data');
-        this.Xyyz.WindowTreeSnapShotMan.ShowDebugData();
+        this.Xyyz.WindowTreeSnapShotMan.DrawDebugDataPretty(null);
         this.Xyyz.debug.FuncEnd(this.SaveOneDesktop.name);
     };
     ManyTrees.prototype.SaveAllTrees = function () {

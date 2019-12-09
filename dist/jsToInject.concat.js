@@ -1,11 +1,13 @@
+//# sourceMappingURL=DataStructure.OneWindow.js.map
+//# sourceMappingURL=IOneStorageData.js.map
 console.log('_first loaded');
 //# sourceMappingURL=_first.js.map
 console.log('_SpokeBase loaded');
 var SpokeBase = /** @class */ (function () {
-    function SpokeBase(xyyzHub) {
+    function SpokeBase(xyyz) {
         //console.log(xyyzHub);
-        this.Xyyz = xyyzHub;
-        console.log('SpokeBase');
+        this.Xyyz = xyyz;
+        //console.log('SpokeBase');
     }
     return SpokeBase;
 }());
@@ -44,6 +46,18 @@ var Debug = /** @class */ (function () {
         this.__indentCount = 0;
         this.ParentWindow = parentWindow;
     }
+    Debug.prototype.__getTextArea = function () {
+        return document.getElementById('ta-debug');
+    };
+    Debug.prototype.ClearTextArea = function () {
+        var ta = this.__getTextArea();
+        if (ta) {
+            ta.value = '';
+        }
+        else {
+            this.Error(Debug.name, 'No text area found');
+        }
+    };
     Debug.prototype.Log = function (text) {
         var indent = '  ';
         //text =  indent.repeat(this.__indentCount) + text;
@@ -51,7 +65,7 @@ var Debug = /** @class */ (function () {
             text = indent + text;
         }
         console.log(text);
-        var ta = document.getElementById('ta-debug');
+        var ta = this.__getTextArea();
         if (ta) {
             ta.value += text + '\\n\\r';
             ta.scrollTop = ta.scrollHeight;
@@ -61,7 +75,7 @@ var Debug = /** @class */ (function () {
         }
     };
     Debug.prototype.FuncStart = function (text) {
-        console.log('caller is ' + this.FuncStart.caller.name);
+        //console.log('caller is ' + this.FuncStart.caller.name)
         text = 's) ' + text;
         this.Log(text);
         this.__indentCount++;
@@ -84,6 +98,48 @@ var Debug = /** @class */ (function () {
     return Debug;
 }());
 //# sourceMappingURL=debug.js.map
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var FeedbackManager = /** @class */ (function (_super) {
+    __extends(FeedbackManager, _super);
+    function FeedbackManager(xyyz) {
+        var _this = _super.call(this, xyyz) || this;
+        console.log('Feedback');
+        return _this;
+    }
+    FeedbackManager.prototype.__getTextArea = function () {
+        return document.getElementById(this.Xyyz.InjectConst.ElemId.textAreaFeedback);
+    };
+    FeedbackManager.prototype.ClearTextArea = function () {
+        var ta = this.__getTextArea();
+        if (ta) {
+            ta.value = '';
+        }
+        else {
+            this.Xyyz.debug.Error(FeedbackManager.name, 'No text area found');
+        }
+    };
+    FeedbackManager.prototype.WriteLine = function (text) {
+        var ta = this.__getTextArea();
+        if (ta) {
+            ta.value += text + '\\n\\r';
+            //ta.scrollTop = ta.scrollHeight;
+        }
+    };
+    return FeedbackManager;
+}(SpokeBase));
+//# sourceMappingURL=Feedback.js.map
 var Hub = /** @class */ (function () {
     function Hub() {
         this.debug = new Debug(window.opener);
@@ -108,8 +164,11 @@ var Hub = /** @class */ (function () {
         console.log('marker G');
         this.OneTreeMan = new OneTreeManager(this);
         console.log('marker H');
-        this.WindowTreeSnapShotMan = new WindowTreeSnapShotManager(this);
+        this.WindowTreeSnapShotMan = new WindowSnapShotManager(this);
         console.log('marker I');
+        this.SnapShotOneContentEditorMan = new SnapShotOneContentEditorManager(this);
+        console.log('marker J');
+        this.FeedbackMan = new FeedbackManager(this);
         this.init();
         this.debug.FuncEnd(this.Start.name);
     };
@@ -274,10 +333,7 @@ var __extends = (this && this.__extends) || (function () {
 var OneTreeNode = /** @class */ (function (_super) {
     __extends(OneTreeNode, _super);
     function OneTreeNode(nodeId, nodeFriendly, xyyz) {
-        var _this = _super.call(this, xyyz) || this;
-        _this.NodeId = nodeId;
-        _this.NodeFriendly = nodeFriendly;
-        return _this;
+        return _super.call(this, xyyz) || this;
     }
     return OneTreeNode;
 }(SpokeBase));
@@ -367,174 +423,42 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var SnapShotOneWindow = /** @class */ (function (_super) {
-    __extends(SnapShotOneWindow, _super);
-    function SnapShotOneWindow(xyyz) {
-        var _this = _super.call(this, xyyz) || this;
-        xyyz.debug.FuncStart(SnapShotOneWindow.name);
-        xyyz.debug.FuncEnd(SnapShotOneWindow.name);
-        return _this;
+var SnapShotOneContentEditorManager = /** @class */ (function (_super) {
+    __extends(SnapShotOneContentEditorManager, _super);
+    function SnapShotOneContentEditorManager(xyyz) {
+        return _super.call(this, xyyz) || this;
     }
-    SnapShotOneWindow.prototype.Init = function () {
-        this.Xyyz.debug.FuncStart('Start');
-        var dateToUse = new Date();
-        this.Xyyz.debug.Log('marker a');
-        var friendly = this.Xyyz.Utilities.MakeFriendlyDate(dateToUse);
-        this.Xyyz.debug.Log('marker b');
-        var guid = this.Xyyz.Utilities.Uuidv4();
-        this.Xyyz.debug.Log('marker c');
-        var CurrentData = {
-            TimeStamp: dateToUse,
-            TimeStampFriendly: friendly,
-            AllCEAr: [],
-            Id: guid
+    SnapShotOneContentEditorManager.prototype.MakeNewData = function (id) {
+        this.Xyyz.debug.FuncStart('MakeNewData: ' + id);
+        var toReturn = {
+            Id: id,
+            AllTreeNodeAr: []
         };
-        this.Xyyz.debug.Log('marker d');
-        this.CurrentData = CurrentData;
-        //this.CurrentData.TimeStamp = new Date();
-        //this.Xyyz.debug.Log('mark a');
-        //this.CurrentData.TimeStampFriendly = this.Xyyz.Utilities.MakeFriendlyDate(this.CurrentData.TimeStamp);
-        //this.Xyyz.debug.Log('mark b');
-        //this.CurrentData.AllCEAr = [];
-        //this.Xyyz.debug.Log('mark c');
-        //this.CurrentData.Id = this.Xyyz.Utilities.Uuidv4();
-        this.Xyyz.debug.FuncEnd('Start');
-    };
-    SnapShotOneWindow.prototype.ShowDebugDataOneWindow = function () {
-        this.Xyyz.debug.FuncStart(this.ShowDebugDataOneWindow.name);
-        var toReturn = [];
-        toReturn.push(this.CurrentData.TimeStamp);
-        for (var jdx = 0; jdx < this.CurrentData.AllCEAr.length; jdx++) {
-            var oneCE = this.CurrentData.AllCEAr[jdx];
-            toReturn.push(oneCE.GetDebugDataOneCE());
-        }
-        this.Xyyz.debug.FuncEnd(this.ShowDebugDataOneWindow.name);
+        this.Xyyz.debug.FuncEnd('MakeNewData: ' + id);
         return toReturn;
     };
-    return SnapShotOneWindow;
-}(SpokeBase));
-//# sourceMappingURL=SnapShot.OneWindow.js.map
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
+    SnapShotOneContentEditorManager.prototype.DebugDataOneNode = function (dataOneTreeNode) {
+        this.Xyyz.debug.FuncStart('DebugDataOneNode');
+        var toReturn = dataOneTreeNode.NodeId + ' ' + dataOneTreeNode.NodeFriendly;
+        this.Xyyz.debug.FuncEnd('DebugDataOneNode');
+        return toReturn;
     };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var SnapShotOneContentEditor = /** @class */ (function (_super) {
-    __extends(SnapShotOneContentEditor, _super);
-    function SnapShotOneContentEditor(id, xyyz) {
-        var _this = _super.call(this, xyyz) || this;
-        _this.Id = id;
-        _this.__allTreeDataAr = [];
-        return _this;
-    }
-    SnapShotOneContentEditor.prototype.GetDebugDataOneCE = function () {
-        this.Xyyz.debug.FuncStart(this.GetDebugDataOneCE.name);
+    SnapShotOneContentEditorManager.prototype.GetDebugDataOneCE = function (dataOneCe) {
+        this.Xyyz.debug.FuncStart('GetDebugDataOneCE');
         var toReturn = [];
         toReturn.push('------ All Tree Nodes -----');
-        for (var idx = 0; idx < this.__allTreeDataAr.length; idx++) {
-            toReturn.push(this.__allTreeDataAr[idx].NodeId + ' ' + this.__allTreeDataAr[idx].NodeFriendly);
+        for (var idx = 0; idx < dataOneCe.AllTreeNodeAr.length; idx++) {
+            this.Xyyz.debug.Log('idx: ' + idx);
+            var oneVal = this.DebugDataOneNode(dataOneCe.AllTreeNodeAr[idx]);
+            this.Xyyz.debug.Log('oneVal : ' + oneVal);
+            toReturn.push(oneVal);
         }
         this.Xyyz.debug.FuncEnd(this.GetDebugDataOneCE.name);
         return toReturn;
     };
-    return SnapShotOneContentEditor;
+    return SnapShotOneContentEditorManager;
 }(SpokeBase));
 //# sourceMappingURL=SnapShotOneContentEditor.js.map
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var WindowTreeSnapShotManager = /** @class */ (function (_super) {
-    __extends(WindowTreeSnapShotManager, _super);
-    function WindowTreeSnapShotManager(xyyz) {
-        var _this = _super.call(this, xyyz) || this;
-        xyyz.debug.FuncStart(WindowTreeSnapShotManager.name);
-        _this.CreateNewWindowTreeSnapShot();
-        xyyz.debug.FuncEnd(WindowTreeSnapShotManager.name);
-        return _this;
-    }
-    WindowTreeSnapShotManager.prototype.PutCEDataToCurrentSnapShot = function (oneCeData) {
-        this.Xyyz.debug.FuncStart(this.PutCEDataToCurrentSnapShot.name);
-        this.Xyyz.debug.Log('PutCEDataToCurrentSnapShot');
-        var matchingCeData = this.FindMatchingCeData(oneCeData);
-        if (matchingCeData) {
-            matchingCeData = oneCeData;
-        }
-        else {
-            this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.push(oneCeData);
-            this.__activeWindowTreeSnapShot.ShowDebugDataOneWindow();
-        }
-        this.UpdateStorage();
-        this.ShowDebugData();
-        this.Xyyz.debug.FuncEnd(this.PutCEDataToCurrentSnapShot.name);
-    };
-    WindowTreeSnapShotManager.prototype.UpdateStorage = function () {
-        this.Xyyz.debug.FuncStart('UpdateStorage');
-        var snapShotAsString = JSON.stringify(this.__activeWindowTreeSnapShot);
-        this.Xyyz.debug.Log('snapShotAsString: ' + snapShotAsString);
-        window.localStorage.setItem(this.Xyyz.InjectConst.Storage.WindowRoot + this.__activeWindowTreeSnapShot.CurrentData.Id, snapShotAsString);
-        this.Xyyz.debug.FuncEnd('UpdateStorage');
-    };
-    WindowTreeSnapShotManager.prototype.FindMatchingCeData = function (oneCeData) {
-        var toReturn = null;
-        for (var idx = 0; idx < this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.length; idx++) {
-            var candidate = this.__activeWindowTreeSnapShot.CurrentData.AllCEAr[idx];
-            if (candidate.Id === oneCeData.Id) {
-                toReturn = candidate;
-                break;
-            }
-        }
-        this.Xyyz.debug.Log('match found :' + (toReturn !== null));
-        return toReturn;
-    };
-    WindowTreeSnapShotManager.prototype.CreateNewWindowTreeSnapShot = function () {
-        this.Xyyz.debug.FuncStart('CreateNewWindowTreeSnapShot');
-        this.__activeWindowTreeSnapShot = new SnapShotOneWindow(this.Xyyz);
-        this.__activeWindowTreeSnapShot.Init();
-        this.Xyyz.debug.FuncEnd('CreateNewWindowTreeSnapShot');
-    };
-    WindowTreeSnapShotManager.prototype.ShowDebugData = function () {
-        this.Xyyz.debug.FuncStart(this.ShowDebugData.name);
-        var allDebugData = [];
-        allDebugData.push('------ One Window Snap Shot Start -----');
-        allDebugData.push('Id: ' + this.__activeWindowTreeSnapShot.CurrentData.Id);
-        allDebugData.push('TimeStamp: ' + this.__activeWindowTreeSnapShot.CurrentData.TimeStamp);
-        allDebugData.push('CE Count: ' + this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.length);
-        for (var jdx = 0; jdx < this.__activeWindowTreeSnapShot.CurrentData.AllCEAr.length; jdx++) {
-            allDebugData.push('------ One CE -----');
-            var oneCE = this.__activeWindowTreeSnapShot.CurrentData.AllCEAr[jdx];
-            allDebugData.push('Id: ' + oneCE.Id);
-            var allCeDebugDataAr = oneCE.GetDebugDataOneCE();
-            for (var kdx = 0; kdx < allCeDebugDataAr.length; kdx++) {
-                allDebugData.push(allCeDebugDataAr[kdx]);
-            }
-        }
-        allDebugData.push('------ One Window Snap Shot End -----');
-        for (var ldx = 0; ldx < allDebugData.length; ldx++) {
-            this.Xyyz.debug.Log(allDebugData[ldx]);
-        }
-        this.Xyyz.debug.FuncEnd(this.ShowDebugData.name);
-    };
-    return WindowTreeSnapShotManager;
-}(SpokeBase));
-//# sourceMappingURL=TreeDataManager.js.map
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -605,6 +529,200 @@ var WindowData = /** @class */ (function (_super) {
     return WindowData;
 }(SpokeBase));
 //# sourceMappingURL=WindowData.js.map
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var WindowSnapShotManager = /** @class */ (function (_super) {
+    __extends(WindowSnapShotManager, _super);
+    function WindowSnapShotManager(xyyz) {
+        var _this = _super.call(this, xyyz) || this;
+        xyyz.debug.FuncStart(WindowSnapShotManager.name);
+        _this.CreateNewWindowTreeSnapShot();
+        xyyz.debug.FuncEnd(WindowSnapShotManager.name);
+        return _this;
+    }
+    WindowSnapShotManager.prototype.ClearStorage = function () {
+        this.Xyyz.debug.FuncStart('ClearStorage');
+        var result = confirm('Clear Local Storage for Xyyz b?');
+        if (result === true) {
+            var targets = this.__GetAllLocalStorage();
+            if (targets) {
+                this.Xyyz.debug.Log('Target Count: ' + targets.length);
+                var countBefore = targets.length;
+                for (var idx = 0; idx < targets.length; idx++) {
+                    this.Xyyz.debug.Log('idx: ' + idx);
+                    var oneTarget = targets[idx];
+                    this.Xyyz.debug.Log('key: ' + oneTarget.key);
+                    window.localStorage.removeItem(oneTarget.key);
+                }
+                targets = this.__GetAllLocalStorage();
+                var countAfter = targets.length;
+                alert('Count Before: ' + countBefore + ' Count After: ' + countAfter);
+            }
+            else {
+                alert('No local storage was found for Xyyz');
+            }
+        }
+        this.Xyyz.debug.FuncEnd('ClearStorage');
+    };
+    WindowSnapShotManager.prototype.__GetAllLocalStorage = function () {
+        this.Xyyz.debug.FuncStart('__GetAllLocalStorage ');
+        var toReturn = [];
+        for (var idx = 0; idx < window.localStorage.length; idx++) {
+            var candidate = {
+                data: '',
+                key: ''
+            };
+            candidate.key = window.localStorage.key(idx);
+            this.Xyyz.debug.Log('candidate.key: ' + candidate.key);
+            if (candidate.key.startsWith(this.Xyyz.InjectConst.Storage.WindowRoot)) {
+                candidate.data = window.localStorage.getItem(candidate.key);
+                toReturn.push(candidate);
+            }
+        }
+        this.Xyyz.debug.FuncEnd('__GetAllLocalStorage ');
+        return toReturn;
+    };
+    WindowSnapShotManager.prototype.__drawStorageRaw = function (ourData) {
+        this.Xyyz.debug.FuncStart('DrawStorageRaw');
+        for (var idx = 0; idx < ourData.length; idx++) {
+            this.Xyyz.debug.Log('key: \t' + ourData[idx].key);
+            this.Xyyz.debug.Log('data: \t' + ourData[idx].data);
+            this.Xyyz.debug.Log('------------');
+        }
+        this.Xyyz.debug.FuncEnd('DrawStorageRaw');
+    };
+    WindowSnapShotManager.prototype.__drawStoragePretty = function (ourData) {
+        this.Xyyz.debug.FuncStart('DrawStoragePretty');
+        this.Xyyz.FeedbackMan.ClearTextArea();
+        for (var idx = 0; idx < ourData.length; idx++) {
+            this.Xyyz.debug.Log('key: \t' + ourData[idx].key);
+            var parsed = JSON.parse(ourData[idx].data);
+            if (parsed) {
+                this.DrawDebugDataPretty(parsed);
+                this.Xyyz.debug.Log('------------');
+            }
+        }
+        this.Xyyz.debug.FuncEnd('DrawStoragePretty');
+    };
+    WindowSnapShotManager.prototype.DrawStorage = function () {
+        this.Xyyz.debug.FuncStart('DrawStorage');
+        try {
+            var ourData = this.__GetAllLocalStorage();
+            if (ourData) {
+                this.__drawStorageRaw(ourData);
+                this.__drawStoragePretty(ourData);
+            }
+        }
+        catch (e) {
+            xyyz.debug.Error(e.message);
+        }
+        this.Xyyz.debug.FuncEnd('DrawStorage');
+    };
+    WindowSnapShotManager.prototype.PutCEDataToCurrentSnapShot = function (oneCeData) {
+        this.Xyyz.debug.FuncStart(this.PutCEDataToCurrentSnapShot.name);
+        this.Xyyz.debug.Log('PutCEDataToCurrentSnapShot');
+        var matchingCeData = this.FindMatchingCeData(oneCeData);
+        if (matchingCeData) {
+            matchingCeData = oneCeData;
+        }
+        else {
+            this.__activeWindowSnapShot.AllCEAr.push(oneCeData);
+        }
+        //this.__activeWindowTreeSnapShot.ShowDebugDataOneWindow();
+        this.UpdateStorage();
+        this.DrawDebugDataPretty(null);
+        this.Xyyz.debug.FuncEnd(this.PutCEDataToCurrentSnapShot.name);
+    };
+    WindowSnapShotManager.prototype.ShowDebugDataOneWindow = function () {
+        this.Xyyz.debug.FuncStart('ShowDebugDataOneWindow');
+        var toReturn = [];
+        toReturn.push(this.__activeWindowSnapShot.TimeStamp.toJSON());
+        for (var jdx = 0; jdx < this.__activeWindowSnapShot.AllCEAr.length; jdx++) {
+            var oneCE = this.__activeWindowSnapShot.AllCEAr[jdx];
+            toReturn = toReturn.concat(this.Xyyz.SnapShotOneContentEditorMan.GetDebugDataOneCE(oneCE));
+        }
+        for (var kdx = 0; kdx < toReturn.length; kdx++) {
+            this.Xyyz.debug.Log(toReturn[kdx]);
+        }
+        this.Xyyz.debug.FuncEnd('ShowDebugDataOneWindow');
+        return toReturn;
+    };
+    WindowSnapShotManager.prototype.UpdateStorage = function () {
+        this.Xyyz.debug.FuncStart('UpdateStorage');
+        //this.__activeWindowTreeSnapShot.ShowDebugDataOneWindow();
+        var snapShotAsString = JSON.stringify(this.__activeWindowSnapShot);
+        this.Xyyz.debug.Log('snapShotAsString: ' + snapShotAsString);
+        window.localStorage.setItem(this.Xyyz.InjectConst.Storage.WindowRoot + this.__activeWindowSnapShot.Id, snapShotAsString);
+        this.Xyyz.debug.FuncEnd('UpdateStorage');
+    };
+    WindowSnapShotManager.prototype.FindMatchingCeData = function (oneCeData) {
+        var toReturn = null;
+        for (var idx = 0; idx < this.__activeWindowSnapShot.AllCEAr.length; idx++) {
+            var candidate = this.__activeWindowSnapShot.AllCEAr[idx];
+            if (candidate.Id === oneCeData.Id) {
+                toReturn = candidate;
+                break;
+            }
+        }
+        this.Xyyz.debug.Log('match found :' + (toReturn !== null));
+        return toReturn;
+    };
+    WindowSnapShotManager.prototype.CreateNewWindowTreeSnapShot = function () {
+        this.Xyyz.debug.FuncStart('CreateNewWindowTreeSnapShot');
+        var dateToUse = new Date();
+        //var friendly: string = this.Xyyz.Utilities.MakeFriendlyDate(dateToUse);
+        this.__activeWindowSnapShot = {
+            TimeStamp: dateToUse,
+            //TimeStampFriendly: friendly,
+            AllCEAr: [],
+            Id: this.Xyyz.Utilities.Uuidv4()
+        };
+        this.Xyyz.debug.FuncEnd('CreateNewWindowTreeSnapShot');
+    };
+    WindowSnapShotManager.prototype.DrawDebugDataPretty = function (source) {
+        var allDebugData = this.__buildDebugDataPretty(source);
+        for (var ldx = 0; ldx < allDebugData.length; ldx++) {
+            this.Xyyz.FeedbackMan.WriteLine(allDebugData[ldx]);
+        }
+        //this.Xyyz.debug.Log(JSON.stringify(this.__activeWindowSnapShot));
+    };
+    WindowSnapShotManager.prototype.__buildDebugDataPretty = function (source) {
+        this.Xyyz.debug.FuncStart(this.__buildDebugDataPretty.name);
+        if (!source) {
+            source = this.__activeWindowSnapShot;
+        }
+        var toReturn = [];
+        toReturn.push('------ One Window Snap Shot Start -----');
+        toReturn.push('Id: ' + source.Id);
+        toReturn.push('TimeStamp: ' + source.TimeStamp);
+        toReturn.push('CE Count: ' + source.AllCEAr.length);
+        for (var jdx = 0; jdx < source.AllCEAr.length; jdx++) {
+            toReturn.push('\t------ One CE -----');
+            var dataOneCE = source.AllCEAr[jdx];
+            toReturn.push('\tId: ' + dataOneCE.Id);
+            var allCeDebugDataAr = this.Xyyz.SnapShotOneContentEditorMan.GetDebugDataOneCE(dataOneCE);
+            for (var kdx = 0; kdx < allCeDebugDataAr.length; kdx++) {
+                toReturn.push('\t\t' + allCeDebugDataAr[kdx]);
+            }
+        }
+        toReturn.push('------ One Window Snap Shot End -----');
+        this.Xyyz.debug.FuncEnd(this.__buildDebugDataPretty.name);
+        return toReturn;
+    };
+    return WindowSnapShotManager;
+}(SpokeBase));
+//# sourceMappingURL=WindowDataManager.js.map
 var PageType;
 (function (PageType) {
     PageType[PageType['Unknown'] = 0] = 'Unknown';
@@ -661,8 +779,13 @@ var EventManager = /** @class */ (function (_super) {
             thisObj.Xyyz.ManyTreesMan.PlantTheTrees(window.opener.document, 0);
         };
         document.getElementById('btnDrawLocalStorage').onclick = function () {
-            //todo   this.Xyyz.ManyTreesMan.DrawStorage();
-            console.log('todo');
+            thisObj.Xyyz.WindowTreeSnapShotMan.DrawStorage();
+        };
+        document.getElementById('btnClearLocalStorage').onclick = function () {
+            thisObj.Xyyz.WindowTreeSnapShotMan.ClearStorage();
+        };
+        document.getElementById('btnClearTextArea').onclick = function () {
+            thisObj.Xyyz.debug.ClearTextArea();
         };
         this.Xyyz.debug.FuncEnd(this.WireMenuButtons.name);
     };
@@ -688,6 +811,9 @@ var InjectConst = /** @class */ (function (_super) {
     __extends(InjectConst, _super);
     function InjectConst(xyyz) {
         var _this = _super.call(this, xyyz) || this;
+        _this.ElemId = {
+            textAreaFeedback: 'ta-feedback',
+        };
         _this.ClassNames = {
             ContentTreeNode: 'scContentTreeNode',
         };
@@ -702,7 +828,7 @@ var InjectConst = /** @class */ (function (_super) {
             RootNodeId: 'Tree_Node_11111111111111111111111111111111'
         };
         _this.Storage = {
-            WindowRoot: '  this.Xyyz.'
+            WindowRoot: 'Xyyz.WindowSnapShot.'
         };
         _this.TreeExpandedPng = 'treemenu_expanded.png';
         _this.MaxIter = 100;
@@ -735,25 +861,6 @@ xyyz.TreeData = function () {
 console.log('StorageMan loaded');
 
 xyyz.StorageMan = {
-  DrawStorage: function () {
-    try {
-      var fromStorage = window.localStorage.getItem(xyyz.InjectConst.Storage.WindowRoot);
-
-      var asAr = fromStorage.split('},{');
-      for (var idx = 0; idx < asAr.length; idx++) {
-
-        xyyz.debug.Log(asAr[idx]);
-      }
-
-      //var converted = JSON.parse(fromStorage);
-      
-      //xyyz.debug.Log(JSON.stringify(converted, null, 4));
-
-    } catch (e) {
-      xyyz.debug.Error(e.message);
-    }
-  },
-
   GetTreeData: function (treeIdx) {
     xyyz.debug.Log('s) GetTreeData');
     var toReturn = null;
@@ -849,11 +956,9 @@ var ManyTrees = /** @class */ (function (_super) {
         }
         this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
         ;
-        var CeSnapShot = new SnapShotOneContentEditor(id, this.Xyyz);
-        //var oneTree = new OneTreeManager(this.Xyyz);
-        this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));
-        ;
-        CeSnapShot.__allTreeDataAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(id, docElem);
+        var CeSnapShot = this.Xyyz.SnapShotOneContentEditorMan.MakeNewData(id);
+        CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(CeSnapShot, docElem);
+        this.Xyyz.WindowTreeSnapShotMan.DrawDebugDataPretty(null);
         this.Xyyz.WindowTreeSnapShotMan.PutCEDataToCurrentSnapShot(CeSnapShot);
         this.Xyyz.debug.FuncEnd('SaveOneContentEditor');
     };
@@ -872,7 +977,7 @@ var ManyTrees = /** @class */ (function (_super) {
             }
         }
         this.Xyyz.debug.Log('done gathering tree data');
-        this.Xyyz.WindowTreeSnapShotMan.ShowDebugData();
+        this.Xyyz.WindowTreeSnapShotMan.DrawDebugDataPretty(null);
         this.Xyyz.debug.FuncEnd(this.SaveOneDesktop.name);
     };
     ManyTrees.prototype.SaveAllTrees = function () {
@@ -944,7 +1049,8 @@ var OneTreeManager = /** @class */ (function (_super) {
                     var srcAttr = firstImg.getAttribute('src');
                     if (srcAttr.indexOf(this.Xyyz.InjectConst.TreeExpandedPng) > -1) {
                         var friendlyName = this.GetFriendlyNameFromNode(firstImg);
-                        toReturn.push(new OneTreeNode(firstImg.id, friendlyName, this.Xyyz));
+                        var newData = { NodeFriendly: friendlyName, NodeId: firstImg.id };
+                        toReturn.push(newData);
                     }
                 }
             }
@@ -958,8 +1064,8 @@ var OneTreeManager = /** @class */ (function (_super) {
         }
         return toReturn;
     };
-    OneTreeManager.prototype.GetOneLiveTreeData = function (idx, targetDoc) {
-        this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + idx);
+    OneTreeManager.prototype.GetOneLiveTreeData = function (dataOneCe, targetDoc) {
+        this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + dataOneCe.Id);
         this.Xyyz.debug.Log('targetDoc isnull xx: ' + (targetDoc === null));
         var toReturn = [];
         if (targetDoc) {

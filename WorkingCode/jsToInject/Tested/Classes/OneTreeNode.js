@@ -14,10 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 var OneTreeNode = /** @class */ (function (_super) {
     __extends(OneTreeNode, _super);
     function OneTreeNode(nodeId, nodeFriendly, xyyz) {
-        var _this = _super.call(this, xyyz) || this;
-        _this.NodeId = nodeId;
-        _this.NodeFriendly = nodeFriendly;
-        return _this;
+        return _super.call(this, xyyz) || this;
     }
     return OneTreeNode;
 }(SpokeBase));

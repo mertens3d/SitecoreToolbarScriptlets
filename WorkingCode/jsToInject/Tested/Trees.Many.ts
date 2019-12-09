@@ -67,13 +67,10 @@ class ManyTrees extends SpokeBase {
       this.Xyyz.debug.Log('Assigning docElem: ' + docElem);
     }
     this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));;
-    var CeSnapShot = new SnapShotOneContentEditor(id, this.Xyyz);
+    var CeSnapShot: IDataOneCE = this.Xyyz.SnapShotOneContentEditorMan.MakeNewData(id);
+    CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(CeSnapShot, docElem);
 
-    //var oneTree = new OneTreeManager(this.Xyyz);
-
-    this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));;
-    CeSnapShot.__allTreeDataAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(id, docElem);
-
+    this.Xyyz.WindowTreeSnapShotMan.DrawDebugDataPretty(null);
     this.Xyyz.WindowTreeSnapShotMan.PutCEDataToCurrentSnapShot(CeSnapShot);
 
     this.Xyyz.debug.FuncEnd('SaveOneContentEditor');
@@ -94,7 +91,7 @@ class ManyTrees extends SpokeBase {
     }
 
     this.Xyyz.debug.Log('done gathering tree data');
-    this.Xyyz.WindowTreeSnapShotMan.ShowDebugData();
+    this.Xyyz.WindowTreeSnapShotMan.DrawDebugDataPretty(null);
     this.Xyyz.debug.FuncEnd(this.SaveOneDesktop.name);
   }
 

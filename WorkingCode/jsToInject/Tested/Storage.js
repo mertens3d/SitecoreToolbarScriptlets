@@ -12,25 +12,6 @@ xyyz.TreeData = function () {
 console.log('StorageMan loaded');
 
 xyyz.StorageMan = {
-  DrawStorage: function () {
-    try {
-      var fromStorage = window.localStorage.getItem(xyyz.InjectConst.Storage.WindowRoot);
-
-      var asAr = fromStorage.split('},{');
-      for (var idx = 0; idx < asAr.length; idx++) {
-
-        xyyz.debug.Log(asAr[idx]);
-      }
-
-      //var converted = JSON.parse(fromStorage);
-      
-      //xyyz.debug.Log(JSON.stringify(converted, null, 4));
-
-    } catch (e) {
-      xyyz.debug.Error(e.message);
-    }
-  },
-
   GetTreeData: function (treeIdx) {
     xyyz.debug.Log('s) GetTreeData');
     var toReturn = null;

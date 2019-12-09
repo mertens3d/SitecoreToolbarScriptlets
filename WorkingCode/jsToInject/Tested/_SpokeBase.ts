@@ -2,10 +2,10 @@
 class SpokeBase {
   Xyyz: Hub;
 
-  constructor(xyyzHub: Hub) {
+  constructor(xyyz: Hub) {
     //console.log(xyyzHub);
-    this.Xyyz = xyyzHub;
-    console.log('SpokeBase');
+    this.Xyyz = xyyz;
+    //console.log('SpokeBase');
   }
 }
 

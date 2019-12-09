@@ -45,7 +45,8 @@ var OneTreeManager = /** @class */ (function (_super) {
                     var srcAttr = firstImg.getAttribute('src');
                     if (srcAttr.indexOf(this.Xyyz.InjectConst.TreeExpandedPng) > -1) {
                         var friendlyName = this.GetFriendlyNameFromNode(firstImg);
-                        toReturn.push(new OneTreeNode(firstImg.id, friendlyName, this.Xyyz));
+                        var newData = { NodeFriendly: friendlyName, NodeId: firstImg.id };
+                        toReturn.push(newData);
                     }
                 }
             }
@@ -59,8 +60,8 @@ var OneTreeManager = /** @class */ (function (_super) {
         }
         return toReturn;
     };
-    OneTreeManager.prototype.GetOneLiveTreeData = function (idx, targetDoc) {
-        this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + idx);
+    OneTreeManager.prototype.GetOneLiveTreeData = function (dataOneCe, targetDoc) {
+        this.Xyyz.debug.FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + dataOneCe.Id);
         this.Xyyz.debug.Log('targetDoc isnull xx: ' + (targetDoc === null));
         var toReturn = [];
         if (targetDoc) {
