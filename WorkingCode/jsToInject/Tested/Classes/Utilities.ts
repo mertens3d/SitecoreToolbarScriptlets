@@ -1,4 +1,4 @@
-﻿class Utilities extends SpokeBase {
+﻿class Utilities extends ManagerBase {
   constructor(xyyz: Hub) {
     super(xyyz);
     xyyz.debug.FuncStart(Utilities.name);

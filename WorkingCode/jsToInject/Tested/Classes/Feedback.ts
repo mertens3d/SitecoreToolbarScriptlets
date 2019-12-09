@@ -1,4 +1,4 @@
-﻿class FeedbackManager extends SpokeBase {
+﻿class FeedbackManager extends ManagerBase {
   constructor(xyyz: Hub) {
     super(xyyz);
     console.log('Feedback');
@@ -18,7 +18,7 @@
   WriteLine(text) {
     var ta = this.__getTextArea();
     if (ta) {
-      ta.value += text + '\\n\\r';
+      ta.value += text + '\\n';
       //ta.scrollTop = ta.scrollHeight;
     }
   }

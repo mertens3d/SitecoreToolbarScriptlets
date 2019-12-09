@@ -33,5 +33,5 @@ var Utilities = /** @class */ (function (_super) {
         return toReturn;
     };
     return Utilities;
-}(SpokeBase));
+}(ManagerBase));
 //# sourceMappingURL=Utilities.js.map

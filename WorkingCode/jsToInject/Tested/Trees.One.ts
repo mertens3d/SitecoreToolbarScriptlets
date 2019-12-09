@@ -1,6 +1,6 @@
 console.log('OneTree loaded');
 
-class OneTreeManager extends SpokeBase {
+class OneTreeManager extends ManagerBase {
   constructor(xyyz: Hub) {
     super(xyyz)
     xyyz.debug.FuncStart(OneTreeManager.name);

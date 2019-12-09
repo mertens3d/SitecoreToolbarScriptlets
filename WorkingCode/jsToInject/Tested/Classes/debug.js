@@ -25,7 +25,7 @@ var Debug = /** @class */ (function () {
         console.log(text);
         var ta = this.__getTextArea();
         if (ta) {
-            ta.value += text + '\\n\\r';
+            ta.value += text + '\\n';
             ta.scrollTop = ta.scrollHeight;
         }
         if (this.ParentWindow) {

@@ -33,10 +33,10 @@ var FeedbackManager = /** @class */ (function (_super) {
     FeedbackManager.prototype.WriteLine = function (text) {
         var ta = this.__getTextArea();
         if (ta) {
-            ta.value += text + '\\n\\r';
+            ta.value += text + '\\n';
             //ta.scrollTop = ta.scrollHeight;
         }
     };
     return FeedbackManager;
-}(SpokeBase));
+}(ManagerBase));
 //# sourceMappingURL=Feedback.js.map

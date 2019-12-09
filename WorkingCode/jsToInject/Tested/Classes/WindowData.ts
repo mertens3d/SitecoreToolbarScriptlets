@@ -7,7 +7,7 @@
   }
 }
 
-class WindowData extends SpokeBase {
+class WindowData extends ManagerBase {
   Opener: Opener;
 
   constructor(xyyz: Hub) {

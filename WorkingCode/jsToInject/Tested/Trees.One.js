@@ -86,5 +86,5 @@ var OneTreeManager = /** @class */ (function (_super) {
         return toReturn;
     };
     return OneTreeManager;
-}(SpokeBase));
+}(ManagerBase));
 //# sourceMappingURL=Trees.One.js.map

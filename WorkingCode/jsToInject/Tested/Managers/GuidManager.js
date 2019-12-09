@@ -11,23 +11,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var Opener = /** @class */ (function () {
-    function Opener() {
-        this.Window = null;
-        this.Document = null;
+var GuidManager = /** @class */ (function (_super) {
+    __extends(GuidManager, _super);
+    function GuidManager(xyyz) {
+        return _super.call(this, xyyz) || this;
     }
-    return Opener;
-}());
-var WindowData = /** @class */ (function (_super) {
-    __extends(WindowData, _super);
-    function WindowData(xyyz) {
-        var _this = _super.call(this, xyyz) || this;
-        xyyz.debug.FuncStart(_this.constructor.name);
-        _this.Opener = new Opener();
-        xyyz.debug.FuncEnd(_this.constructor.name);
-        xyyz.debug.FuncEnd(_this.constructor.name);
-        return _this;
-    }
-    return WindowData;
+    GuidManager.prototype.ParseGuid = function (val) {
+        var toReturn = {
+            Value: val
+        };
+        return toReturn;
+    };
+    return GuidManager;
 }(ManagerBase));
-//# sourceMappingURL=WindowData.js.map
+//# sourceMappingURL=GuidManager.js.map

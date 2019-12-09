@@ -2,7 +2,7 @@
 //  name: string;
 //}
 
-class PageData extends SpokeBase {
+class PageData extends ManagerBase {
   WinData: WindowData;
 
   constructor(window: Window, xyyz: Hub) {
@@ -26,8 +26,8 @@ class PageData extends SpokeBase {
     this.Xyyz.debug.FuncEnd(this.constructor.name);
   }
 
-  CurrentOpenerPageState() {
-    this.Xyyz.debug.FuncStart(this.CurrentOpenerPageState.name);
+  GetCurrentPageType() {
+    this.Xyyz.debug.FuncStart(this.GetCurrentPageType.name);
     var toReturn: PageType = PageType.Unknown;
     if (this.WinData && this.WinData.Opener && this.WinData.Opener.Window && this.WinData.Opener.Document) {
       var currentLoc = this.WinData.Opener.Window.location.href;
@@ -50,7 +50,7 @@ class PageData extends SpokeBase {
       }
     }
 
-    this.Xyyz.debug.FuncEnd(this.CurrentOpenerPageState.name + ' ' + toReturn);
+    this.Xyyz.debug.FuncEnd(this.GetCurrentPageType.name + ' ' + toReturn);
     return toReturn;
   }
   DebugInfo() {

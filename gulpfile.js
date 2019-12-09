@@ -12,13 +12,10 @@ const replace = require('gulp-replace');
 const sass = require('gulp-sass');
 const secrets = require('./gulp.support/Secrets.js');
 const uglify = require('gulp-terser'); //require('gulp-uglify-es');
-var sort = require('gulp-sort');
-var InjectableClass = require('./gulp.support/OneInjectable.js');
 const WindowOpenerClass = require('./gulp.support/WindowOpener.js');
-
-
-
-
+var InjectableClass = require('./gulp.support/OneInjectable.js');
+var sort = require('gulp-sort');
+var ts = require('gulp-typescript');
 
 var local = {
   Dest: ''
@@ -30,12 +27,10 @@ console.log('===================' + mySecrete.localWebRoot);
 local.Dest = mySecrete.localWebRoot;
 console.log('===================' + local.Dest);
 
-
-
 var htmlToInject = new InjectableClass('HtmlToInject', 'html', 'html');
 var jsToInject = new InjectableClass('jsToInject', 'js', 'js');
 
-jsToInject.SourceDirFilter =  './WorkingCode/jsToInject/**/**/*.js';
+jsToInject.SourceDirFilter = './WorkingCode/jsToInject/**/**/*.js';
 
 var stylesToInject = new InjectableClass('StylesToInject', 'scss', 'css');
 var WindowOpener = new WindowOpenerClass();
@@ -55,7 +50,7 @@ var myResources = function (fileName, varName) {
 
 gulp.task('cleanDist', function (cb) {
   return del([
-    jsToInject. dist + '/**/*'
+    jsToInject.dist + '/**/*'
   ], cb);
 });
 
@@ -86,7 +81,7 @@ gulp.task('buildHtmlToInject', () => {
 
 gulp.task('combineJs', function () {
   console.log('s) combineJs');
-  console.log('source filter: ' + jsToInject.SourceDirFilter  );
+  console.log('source filter: ' + jsToInject.SourceDirFilter);
   return gulp.src(jsToInject.SourceDirFilter)
     .pipe(sort())
     .pipe(concat(jsToInject.NameConcat))
@@ -95,9 +90,15 @@ gulp.task('combineJs', function () {
     .pipe(gulp.dest(jsToInject.WorkingDest));
 });
 
+gulp.task('buildTypeScript', function () {
+  return gulp.src('.\**\jsToInject\**\*.ts')
+    .pipe(ts())
+    .pipe(gulp.dest(jsToInject.dist));
+});
+
 gulp.task('buildJsToInject', function (done) {
   console.log('s) buildJsToInject');
-  var thisDist = jsToInject. dist + '/' + jsToInject.NameConcat;
+  var thisDist = jsToInject.dist + '/' + jsToInject.NameConcat;
   console.log('source filter: ' + thisDist);
   console.log('dest: ' + jsToInject.dist);
   console.log('rename: ' + jsToInject.MinFileName);
@@ -119,7 +120,7 @@ gulp.task('buildWindowOpener', function (done) {
 
   var cssToInjectWithVar = myResources(stylesToInject.dist + stylesToInject.MinFileName, stylesToInject.VarName);
   var htmlToInjectWithVar = myResources(htmlToInject.dist + htmlToInject.MinFileName, htmlToInject.VarName);
-  var jsToInjectWithVar = myResources(jsToInject. dist + jsToInject.MinFileName, jsToInject.VarName);
+  var jsToInjectWithVar = myResources(jsToInject.dist + jsToInject.MinFileName, jsToInject.VarName);
 
   console.log('compiling');
 
@@ -127,7 +128,7 @@ gulp.task('buildWindowOpener', function (done) {
 
   return gulp.src(WindowOpener.SourceDirFilter)
     .pipe(concat(WindowOpener.NameConcat))
-    .pipe(gulp.dest(WindowOpener. dist))
+    .pipe(gulp.dest(WindowOpener.dist))
     .pipe(uglify())
     .pipe(rename(WindowOpener.NameConcatMin))
     .pipe(header(cssToInjectWithVar + '\n')) // + codeToInjectResourceText + ))
@@ -137,19 +138,19 @@ gulp.task('buildWindowOpener', function (done) {
     .pipe(footer('}());'))
     .pipe(rename(WindowOpener.NameConcatMinWithVar))
     // .pipe(gulp.dest(dist))
-    .pipe(gulp.dest(WindowOpener. dist))
+    .pipe(gulp.dest(WindowOpener.dist))
     ;
 });
 
 gulp.task('BookmarkText', function (done) {
   console.log('BookmarkText');
 
-  var source = WindowOpener. dist + WindowOpener.NameConcatMinWithVar;
+  var source = WindowOpener.dist + WindowOpener.NameConcatMinWithVar;
   console.log(source);
   return gulp.src(source)
     .pipe(header('javascript:'))
     .pipe(rename(bookmarkFinal))
-    .pipe(gulp.dest(WindowOpener. distFinal));
+    .pipe(gulp.dest(WindowOpener.distFinal));
 });
 
 gulp.task('putWindowOpenerToLocal', function () {
@@ -172,6 +173,6 @@ gulp.task('putWindowOpenerToLocal', function () {
 
 //}
 
-gulp.task('default', gulp.series(['cleanDist', 'buildStylesToInject', 'combineJs','buildJsToInject',  'buildHtmlToInject', 'buildWindowOpener', 'BookmarkText', 'putWindowOpenerToLocal']), function (resolve) {
+gulp.task('default', gulp.series(['cleanDist', 'buildStylesToInject', 'combineJs', 'buildJsToInject', 'buildHtmlToInject', 'buildWindowOpener', 'BookmarkText', 'putWindowOpenerToLocal']), function (resolve) {
   resolve();
 });

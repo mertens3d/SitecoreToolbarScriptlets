@@ -36,8 +36,8 @@ var PageData = /** @class */ (function (_super) {
         this.DebugInfo();
         this.Xyyz.debug.FuncEnd(this.constructor.name);
     };
-    PageData.prototype.CurrentOpenerPageState = function () {
-        this.Xyyz.debug.FuncStart(this.CurrentOpenerPageState.name);
+    PageData.prototype.GetCurrentPageType = function () {
+        this.Xyyz.debug.FuncStart(this.GetCurrentPageType.name);
         var toReturn = PageType.Unknown;
         if (this.WinData && this.WinData.Opener && this.WinData.Opener.Window && this.WinData.Opener.Document) {
             var currentLoc = this.WinData.Opener.Window.location.href;
@@ -58,7 +58,7 @@ var PageData = /** @class */ (function (_super) {
                 toReturn = PageType.Unknown;
             }
         }
-        this.Xyyz.debug.FuncEnd(this.CurrentOpenerPageState.name + ' ' + toReturn);
+        this.Xyyz.debug.FuncEnd(this.GetCurrentPageType.name + ' ' + toReturn);
         return toReturn;
     };
     PageData.prototype.DebugInfo = function () {
@@ -68,5 +68,5 @@ var PageData = /** @class */ (function (_super) {
         this.Xyyz.debug.FuncEnd(this.DebugInfo.name);
     };
     return PageData;
-}(SpokeBase));
+}(ManagerBase));
 //# sourceMappingURL=PageData.js.map
