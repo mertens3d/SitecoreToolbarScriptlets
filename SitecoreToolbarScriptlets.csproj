@@ -52,40 +52,27 @@
     <Content Include="gulp.support\Secrets.example.js" />
     <Content Include="gulp.support\Secrets.js" />
     <Content Include="WorkingCode\HtmlToInject\menu.html" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\LocationManager.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\ClassOneLivingIframe.js">
-      <DependentUpon>ClassOneLivingIframe.ts</DependentUpon>
-    </Content>
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IGuid.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IOneStorageData.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Feedback.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\GuidManager.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\Hub.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\LocationManager.ts" />
     <Content Include="WorkingCode\jsToInject\Tested\Classes\debug.js">
       <DependentUpon>debug.ts</DependentUpon>
     </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\Hub.js">
-      <DependentUpon>Hub.ts</DependentUpon>
+    <Content Include="WorkingCode\jsToInject\Tested\Classes\Feedback.js">
+      <DependentUpon>Feedback.ts</DependentUpon>
     </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\LocationManager.js">
-      <DependentUpon>LocationManager.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\OneTreeNode.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\ClassOneLivingIframe.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneIframe.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\PageData.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\_SpokeBase.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Tree\SnapShot.OneWindow.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\MiscManager.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\_ManagerBase.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneWindow.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Utilities.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\debug.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\OneTreeNode.js">
-      <DependentUpon>OneTreeNode.ts</DependentUpon>
-    </Content>
     <Content Include="WorkingCode\jsToInject\Tested\Classes\PageData.js">
       <DependentUpon>PageData.ts</DependentUpon>
-    </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\TreeDataManager.js">
-      <DependentUpon>TreeDataManager.ts</DependentUpon>
-    </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\Tree\SnapShot.OneWindow.js">
-      <DependentUpon>SnapShot.OneWindow.ts</DependentUpon>
-    </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\Tree\SnapShotOneContentEditor.js">
-      <DependentUpon>SnapShotOneContentEditor.ts</DependentUpon>
     </Content>
     <Content Include="WorkingCode\jsToInject\Tested\Classes\Utilities.js">
       <DependentUpon>Utilities.ts</DependentUpon>
@@ -96,27 +83,15 @@
     <Content Include="WorkingCode\jsToInject\Tested\Enums\PageType.js">
       <DependentUpon>PageType.ts</DependentUpon>
     </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\EventManager.js">
-      <DependentUpon>EventManager.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\EventManager.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\EventManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\PageType.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\InjectConst.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\InjectConst.js">
-      <DependentUpon>InjectConst.ts</DependentUpon>
-    </Content>
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IInjectConst.ts" />
     <Content Include="WorkingCode\jsToInject\Tested\Storage.js" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\TreeDataManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Trees.Many.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneWindowManager.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneDesktopManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Trees.One.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\WindowData.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\zLast.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\_SpokeBase.js">
-      <DependentUpon>_SpokeBase.ts</DependentUpon>
-    </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\Trees.Many.js">
-      <DependentUpon>Trees.Many.ts</DependentUpon>
-    </Content>
     <Content Include="WorkingCode\jsToInject\Tested\Trees.One.js">
       <DependentUpon>Trees.One.ts</DependentUpon>
     </Content>
@@ -130,32 +105,14 @@
     <Content Include="WorkingCode\WindowOpener\menu.js" />
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
-    <None Include="WorkingCode\jsToInject\Tested\Classes\ClassOneLivingIframe.js.map">
-      <DependentUpon>ClassOneLivingIframe.js</DependentUpon>
-    </None>
     <None Include="WorkingCode\jsToInject\Tested\Classes\debug.js.map">
       <DependentUpon>debug.js</DependentUpon>
     </None>
-    <None Include="WorkingCode\jsToInject\Tested\Classes\Hub.js.map">
-      <DependentUpon>Hub.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Classes\LocationManager.js.map">
-      <DependentUpon>LocationManager.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Classes\OneTreeNode.js.map">
-      <DependentUpon>OneTreeNode.js</DependentUpon>
+    <None Include="WorkingCode\jsToInject\Tested\Classes\Feedback.js.map">
+      <DependentUpon>Feedback.js</DependentUpon>
     </None>
     <None Include="WorkingCode\jsToInject\Tested\Classes\PageData.js.map">
       <DependentUpon>PageData.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Classes\TreeDataManager.js.map">
-      <DependentUpon>TreeDataManager.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Classes\Tree\SnapShot.OneWindow.js.map">
-      <DependentUpon>SnapShot.OneWindow.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Classes\Tree\SnapShotOneContentEditor.js.map">
-      <DependentUpon>SnapShotOneContentEditor.js</DependentUpon>
     </None>
     <None Include="WorkingCode\jsToInject\Tested\Classes\Utilities.js.map">
       <DependentUpon>Utilities.js</DependentUpon>
@@ -165,18 +122,6 @@
     </None>
     <None Include="WorkingCode\jsToInject\Tested\Enums\PageType.js.map">
       <DependentUpon>PageType.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\EventManager.js.map">
-      <DependentUpon>EventManager.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\InjectConst.js.map">
-      <DependentUpon>InjectConst.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\_SpokeBase.js.map">
-      <DependentUpon>_SpokeBase.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Trees.Many.js.map">
-      <DependentUpon>Trees.Many.js</DependentUpon>
     </None>
     <None Include="WorkingCode\jsToInject\Tested\Trees.One.js.map">
       <DependentUpon>Trees.One.js</DependentUpon>
@@ -190,12 +135,11 @@
     <None Include="WorkingCode\StylesToInject\menu.scss" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\_first.ts" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Tree\SnapShotOneContentEditor.ts" />
+    <Folder Include="WorkingCode\jsToInject\Tested\Classes\Tree\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Hub.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneCEManager.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="gulp.support\OneInjectable.js" />
