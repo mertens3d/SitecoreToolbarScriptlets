@@ -1,12 +1,13 @@
 ﻿class GuidManager extends ManagerBase {
+
     
   constructor(xyyz: Hub) {
     super(xyyz);
   }
   EmptyGuid(): IGuid{
-    return this.ParseGuid(this.Xyyz.Const.GuidEmpty);
+    return this.ParseGuid(this.Const().GuidEmpty);
   }
-  Uuidv4(): IGuid {
+  NewGuid(): IGuid {
 
     var toReturn: IGuid;
     //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -21,6 +22,15 @@
     toReturn = this.ParseGuid(temp);
     return toReturn;
   }
+
+  ShortGuid(Id: IGuid) :string{
+    var toReturn: string = '{error}';
+    if (Id && Id.asString.length > this.Const().Numbers.ShortGuidLength) {
+      toReturn = Id.asString.substr(0, this.Const().Numbers.ShortGuidLength);
+    }
+    return toReturn;
+  }
+
   ParseGuid(val: string): IGuid {
     let toReturn: IGuid = {
       asString: val

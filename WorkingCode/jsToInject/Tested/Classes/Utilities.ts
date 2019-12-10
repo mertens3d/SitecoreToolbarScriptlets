@@ -1,11 +1,11 @@
 ﻿class Utilities extends ManagerBase {
-  TimeNicknameFavStr(data: IDataOneWindow): string {
+  TimeNicknameFavStr(data: IDataOneWindowStorage): string {
     return this.MakeFriendlyDate(data.TimeStamp) + ' - ' + data.NickName + ' - ' + (data.IsFavorite ? 'Favorite' : '--');
   }
   constructor(xyyz: Hub) {
     super(xyyz);
-    xyyz.debug.FuncStartName(Utilities.name);
-    xyyz.debug.FuncEndName(Utilities.name);
+    xyyz.debug.FuncStart(Utilities.name);
+    xyyz.debug.FuncEnd(Utilities.name);
   }
 
   //GetEnumTextValue(myEnum: any) {

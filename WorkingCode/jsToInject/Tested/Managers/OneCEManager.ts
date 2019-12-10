@@ -3,112 +3,156 @@
     super(xyyz);
   }
 
-  WaitForNode(lookingFor: IGuid, targetDoc: Document, currentIteration: number, timeout: number) {
-    this.Xyyz.debug.Log('looking for guid: ' + currentIteration + ' ' + lookingFor.asString);
-    var foundOnPage: HTMLElement = targetDoc.getElementById(lookingFor.asString);
+  WaitForNode(needleId: IGuid, targetDoc: IDataOneDoc, currentIteration: number, timeout: number, callbackOnComplete: Function) {
+    this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.asString + ' on ' + this.GuidMan().ShortGuid(targetDoc.Id));
+    currentIteration--;
+
+    var foundOnPage: HTMLElement = targetDoc.Document.getElementById(needleId.asString);
+
     if (foundOnPage) {
-      this.Xyyz.debug.Log('foundOnPage');
+      this.debug().Log('foundOnPage. Triggering callback on complete');
 
       this.__expandNode(foundOnPage);
+
+      callbackOnComplete(foundOnPage);
+
     } else {
       if (currentIteration > 0) {
-        this.Xyyz.debug.Log('not found on page...setting timeout: ' + timeout);
+        this.debug().Log('not found on page...setting timeout: ' + timeout);
         var self = this;
         setTimeout(function () {
           currentIteration = currentIteration - 1;
-          self.WaitForNode(lookingFor, targetDoc, currentIteration--, timeout)
+          self.WaitForNode(needleId, targetDoc, currentIteration, timeout, callbackOnComplete)
         }, timeout)
+      } else {
+        this.debug().Log('Not Found. Triggering callback on complete');
+        callbackOnComplete(null);
       }
     }
+    this.debug().FuncEnd(this.WaitForNode.name);
   }
 
-  __expandNode(foundOnPage: HTMLElement): void {
+  private __expandNode(foundOnPage: HTMLElement): void {
+    this.debug().FuncStart(this.__expandNode.name);
     var currentSrc = foundOnPage.getAttribute('src');
-    this.Xyyz.debug.Log('currentSrc' + currentSrc);
-    if (currentSrc.indexOf(this.Xyyz.Const.Names.TreeMenuExpandedPng) < 0) {
-      this.Xyyz.debug.Log('clicking it');
+    this.debug().Log('currentSrc' + currentSrc);
+    if (currentSrc.indexOf(this.Const().Names.TreeMenuExpandedPng) < 0) {
+      this.debug().Log('clicking it');
       foundOnPage.click();
     }
+    this.debug().FuncEnd(this.__expandNode.name);
   }
 
   private __collapseNode(element: HTMLElement): void {
     var currentSrc = element.getAttribute('src');
-    this.Xyyz.debug.Log('currentSrc' + currentSrc);
-    if (currentSrc.indexOf(this.Xyyz.Const.Names.TreeMenuExpandedPng) > -1) {
-      this.Xyyz.debug.Log('clicking it');
+    this.debug().Log('currentSrc' + currentSrc);
+    if (currentSrc.indexOf(this.Const().Names.TreeMenuExpandedPng) > -1) {
+      this.debug().Log('clicking it');
       element.click();
     }
   }
 
-  private __collapseRootNode(targetDoc: Document) {
-    var rootElem: HTMLElement = targetDoc.getElementById(this.Xyyz.Const.ElemId.SitecoreRootGlyphId);
+  private __collapseRootNode(targetCEDoc: IDataOneDoc) {
+    var rootElem: HTMLElement = targetCEDoc.Document.getElementById(this.Const().ElemId.SitecoreRootGlyphId);
     if (rootElem) {
       this.__collapseNode(rootElem);
     } else {
-      this.Xyyz.debug.Error(this.__collapseRootNode.name, 'Root glyph not found ' + this.Xyyz.Const.ElemId.SitecoreRootGlyphId);
+      this.debug().Error(this.__collapseRootNode.name, 'Root glyph not found ' + this.Const().ElemId.SitecoreRootGlyphId);
     }
   }
 
-  RestoreCEState(storageData: IDataOneCE, targetDoc: Document): boolean {
-    this.Xyyz.debug.FuncStartName(this.RestoreCEState.name);
+  RestoreOneNodeAtATimeRecursive(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc, nodeIteration: number, callBackOnNoNodesLeft: Function) {
+    this.debug().FuncStart(this.RestoreOneNodeAtATimeRecursive.name, nodeIteration.toString());
+    nodeIteration--;
+    while (storageData.AllTreeNodeAr.length > 0 && nodeIteration > 0) {
+      var nextNode = storageData.AllTreeNodeAr.shift();
+
+      var lookingFor: IGuid = nextNode.NodeId;
+      var self = this;
+
+      var callbackOnNodeSearchComplete: Function = function () {
+        self.RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, nodeIteration, callBackOnNoNodesLeft);
+      }
+
+      this.WaitForNode(lookingFor,
+        dataOneDocTarget,
+        this.Const().Iterations.MaxIterationLookingForNode,
+        this.Const().Timeouts.TimeoutWaitForNodeToLoad,
+        callbackOnNodeSearchComplete);
+    }
+
+    callBackOnNoNodesLeft();
+
+    this.debug().FuncEnd(this.RestoreOneNodeAtATimeRecursive.name);
+  }
+
+  RestoreCEState(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Boolean {
+    this.debug().FuncStart(this.RestoreCEState.name, this.GuidMan().ShortGuid(dataOneDocTarget.Id));
 
     var toReturn: boolean = false;
 
-    this.Xyyz.debug.Log('Node Count: ' + storageData.AllTreeNodeAr.length);
-    this.__collapseRootNode(targetDoc);
+    //dataOneDocTarget.DataWinParent      .Window.document.body.innerHTML = 'uuuuuuuuuu';
 
-    for (var idx = 0; idx < storageData.AllTreeNodeAr.length; idx++) {
-      var lookingFor: IGuid = storageData.AllTreeNodeAr[idx].NodeId;//.replace(/\u0022/gi, '');
+    this.debug().Log('Node Count in storage data: ' + storageData.AllTreeNodeAr.length);
+    this.__collapseRootNode(dataOneDocTarget);
 
-      //candidate = candidate.replace('[', '').replace(']', '');
+    const maxIteration: number = this.Const().Iterations.MaxIterationLookingForNode
+    const timeout: number = this.Const().Timeouts.TimeoutWaitForNodeToLoad
 
-      this.WaitForNode(lookingFor, targetDoc, 5, this.Xyyz.Const.TimeoutWaitForNodeToLoad);
+    var callBackOnSuccess: Function = function () {
     }
-    this.Xyyz.debug.FuncEndName(this.RestoreCEState.name);
+
+    this.RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, 100, callBackOnSuccess);
+
+    //for (var idx = 0; idx < storageData.AllTreeNodeAr.length; idx++) {
+    //  var lookingFor: IGuid = storageData.AllTreeNodeAr[idx].NodeId;
+
+    //  this.WaitForNode(lookingFor, dataOneDocTarget, maxIteration, timeout);
+    //}
+    this.debug().FuncEnd(this.RestoreCEState.name);
     return toReturn;
   }
-  SaveStateOneContentEditor(id: IGuid, docElem: Document) {
-    this.Xyyz.debug.FuncStartName('SaveOneContentEditor');
-    this.Xyyz.debug.Log('SaveOneContentEditor');;
-    this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));;
+  SaveStateOneContentEditor(id: IGuid, dataOneDoc: IDataOneDoc) {
+    this.debug().FuncStart('SaveOneContentEditor');
+    this.debug().Log('SaveOneContentEditor');;
+    this.debug().Log('docElem is null: ' + (dataOneDoc === null));;
 
-    this.Xyyz.debug.Log('docElem is null: ' + (docElem === null));;
-    var CeSnapShot: IDataOneCE = this.Xyyz.OneCEMan.MakeNewData(id);
-    CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(CeSnapShot, docElem);
+    var CeSnapShot: IDataOneStorageCE = this.Xyyz.OneCEMan.MakeNewData(id);
+    CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(CeSnapShot, dataOneDoc);
 
     this.AtticMan().DrawDebugDataPretty(null);
     this.Xyyz.OneWindowMan.PutCEDataToCurrentSnapShot(CeSnapShot);
 
-    this.Xyyz.debug.FuncEndName('SaveOneContentEditor');
+    this.debug().FuncEnd('SaveOneContentEditor');
   }
-  MakeNewData(id: IGuid): IDataOneCE {
-    this.Xyyz.debug.FuncStartName('MakeNewData: ' + id);
-    var toReturn: IDataOneCE = {
+  MakeNewData(id: IGuid): IDataOneStorageCE {
+    this.debug().FuncStart('MakeNewData: ' + id);
+    var toReturn: IDataOneStorageCE = {
       Id: id,
       AllTreeNodeAr: []
     }
-    this.Xyyz.debug.FuncEndName('MakeNewData: ' + id);
+    this.debug().FuncEnd('MakeNewData: ' + id);
     return toReturn;
   }
   DebugDataOneNode(dataOneTreeNode: IDataOneTreeNode): string {
-    this.Xyyz.debug.FuncStartName(this.DebugDataOneNode.name);
+    this.debug().FuncStart(this.DebugDataOneNode.name);
     var toReturn: string = dataOneTreeNode.NodeId.asString + ' ' + dataOneTreeNode.NodeFriendly;
-    this.Xyyz.debug.FuncEndName(this.DebugDataOneNode.name);
+    this.debug().FuncEnd(this.DebugDataOneNode.name);
     return toReturn;
   }
-  GetDebugDataOneCE(dataOneCe: IDataOneCE): string[] {
-    this.Xyyz.debug.FuncStartName('GetDebugDataOneCE');
+  GetDebugDataOneCE(dataOneCe: IDataOneStorageCE): string[] {
+    this.debug().FuncStart('GetDebugDataOneCE');
     var toReturn: string[] = [];
     toReturn.push('------ All Tree Nodes -----');
 
     for (var idx = 0; idx < dataOneCe.AllTreeNodeAr.length; idx++) {
-      this.Xyyz.debug.Log('idx: ' + idx);
+      this.debug().Log('idx: ' + idx);
       var oneVal = this.DebugDataOneNode(dataOneCe.AllTreeNodeAr[idx]);
-      this.Xyyz.debug.Log("oneVal : " + oneVal);
+      this.debug().Log("oneVal : " + oneVal);
       toReturn.push(oneVal);
     }
 
-    this.Xyyz.debug.FuncEndName(this.GetDebugDataOneCE.name);
+    this.debug().FuncEnd(this.GetDebugDataOneCE.name);
     return toReturn;
   }
 }

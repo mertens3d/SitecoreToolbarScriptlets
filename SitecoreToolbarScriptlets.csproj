@@ -52,30 +52,30 @@
     <Content Include="gulp.support\Secrets.example.js" />
     <Content Include="gulp.support\Secrets.js" />
     <Content Include="WorkingCode\HtmlToInject\menu.html" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataWindow.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\InjectConst.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IGuid.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IConst.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IOneStorageData.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IScVerSpec.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Feedback.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\NewWindowDest.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\GuidManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\Hub.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\LocationManager.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\debug.js">
-      <DependentUpon>debug.ts</DependentUpon>
-    </Content>
     <Content Include="WorkingCode\jsToInject\Tested\Classes\Feedback.js">
       <DependentUpon>Feedback.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneIframe.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\PageData.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\PageDataManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\MiscManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\UiManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\_first\_ManagerBase.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneWindow.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Utilities.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\debug.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\PageData.js">
-      <DependentUpon>PageData.ts</DependentUpon>
+    <Content Include="WorkingCode\jsToInject\Tested\Managers\PageData.js">
+      <DependentUpon>PageDataManager.ts</DependentUpon>
     </Content>
     <Content Include="WorkingCode\jsToInject\Tested\Classes\Utilities.js">
       <DependentUpon>Utilities.ts</DependentUpon>
@@ -84,10 +84,10 @@
       <DependentUpon>WindowData.ts</DependentUpon>
     </Content>
     <Content Include="WorkingCode\jsToInject\Tested\Enums\PageType.js">
-      <DependentUpon>PageType.ts</DependentUpon>
+      <DependentUpon>WindowType.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\EventManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\PageType.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\WindowType.ts" />
     <Content Include="WorkingCode\jsToInject\Tested\Storage.js" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneWindowManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneDesktopManager.ts" />
@@ -107,13 +107,10 @@
     <Content Include="WorkingCode\WindowOpener\menu.js" />
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
-    <None Include="WorkingCode\jsToInject\Tested\Classes\debug.js.map">
-      <DependentUpon>debug.js</DependentUpon>
-    </None>
     <None Include="WorkingCode\jsToInject\Tested\Classes\Feedback.js.map">
       <DependentUpon>Feedback.js</DependentUpon>
     </None>
-    <None Include="WorkingCode\jsToInject\Tested\Classes\PageData.js.map">
+    <None Include="WorkingCode\jsToInject\Tested\Managers\PageData.js.map">
       <DependentUpon>PageData.js</DependentUpon>
     </None>
     <None Include="WorkingCode\jsToInject\Tested\Classes\Utilities.js.map">

@@ -4,7 +4,7 @@
     console.log('Feedback');
   }
   __getTextArea(): HTMLTextAreaElement {
-    return <HTMLTextAreaElement>document.getElementById(this.Xyyz.Const.ElemId.textAreaFeedback);
+    return <HTMLTextAreaElement>document.getElementById(this.Const().ElemId.textAreaFeedback);
   }
 
   ClearTextArea(): void {
@@ -12,7 +12,7 @@
     if (ta) {
       ta.value = '';
     } else {
-      this.Xyyz.debug.Error(FeedbackManager.name, 'No text area found');
+      this.debug().Error(FeedbackManager.name, 'No text area found');
     }
   }
   WriteLine(text) {

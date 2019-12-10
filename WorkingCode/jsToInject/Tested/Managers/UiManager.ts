@@ -1,33 +1,47 @@
 ﻿class UiManager extends ManagerBase {
+    SetParentInfo(winDataParent: IDataBroswerWindow) {
+
+      var targetSpan = document.getElementById(this.Const().ElemId.HindSiteParentInfo);
+      if (targetSpan) {
+        targetSpan.innerHTML = ' | Parent Id: ' + this.GuidMan().ShortGuid(winDataParent.DataDocSelf.Id) + ' | ' + winDataParent.Window.location.href;
+      }
+    }
   private __selectSnapshotIndex: number = 0;
 
   constructor(xyyz: Hub) {
     super(xyyz);
-    xyyz.debug.FuncStartName(UiManager.name);
+    xyyz.debug.FuncStart(UiManager.name);
 
-    xyyz.debug.FuncEndName(UiManager.name);
+    xyyz.debug.FuncEnd(UiManager.name);
   }
 
+  
 
   SelectChanged(): void {
-    this.Xyyz.debug.FuncStartName(this.SelectChanged.name);
+    this.debug().FuncStart(this.SelectChanged.name);
     this.__selectSnapshotIndex = this.__getSelectElem().selectedIndex;
-    this.Xyyz.debug.Log('new index :' + this.__selectSnapshotIndex);
+    this.debug().Log('new index :' + this.__selectSnapshotIndex);
+
+    //if (e.ctrlKey) {
+    //  alert 
+    //}
+
+
     this.RefreshUi();
-    this.Xyyz.debug.FuncEndName(this.SelectChanged.name);
+    this.debug().FuncEnd(this.SelectChanged.name);
   }
 
   RefreshUi() {
-    this.Xyyz.debug.FuncStartName(this.DrawCorrectNicknameInUI.name);
+    this.debug().FuncStart(this.DrawCorrectNicknameInUI.name);
     this.__populateStateSel();
     this.DrawCorrectNicknameInUI();
-    this.Xyyz.debug.FuncEndName(this.DrawCorrectNicknameInUI.name);
+    this.debug().FuncEnd(this.DrawCorrectNicknameInUI.name);
   }
   DrawCorrectNicknameInUI() {
-    this.Xyyz.debug.FuncStartName(this.DrawCorrectNicknameInUI.name);
+    this.debug().FuncStart(this.DrawCorrectNicknameInUI.name);
     var targetId: IGuid = this.UiMan().GetIdOfSelectWindowSnapshot();
     if (targetId) {
-      this.Xyyz.debug.Log('targetId : ' + targetId.asString);
+      this.debug().Log('targetId : ' + targetId.asString);
 
       var storageValue = this.AtticMan().GetFromStorageById(targetId);
       if (storageValue) {
@@ -37,7 +51,7 @@
         }
       }
     }
-    this.Xyyz.debug.FuncEndName(this.DrawCorrectNicknameInUI.name);
+    this.debug().FuncEnd(this.DrawCorrectNicknameInUI.name);
   }
   GetValueInNickname(): string {
     var toReturn: string = '';
@@ -45,7 +59,7 @@
     return toReturn;
   }
   private __getSelectElem(): HTMLSelectElement {
-    return <HTMLSelectElement>window.document.getElementById(this.Xyyz.Const.ElemId.SelStateSnapShot);
+    return <HTMLSelectElement>window.document.getElementById(this.Const().ElemId.SelStateSnapShot);
   }
 
   GetIdOfSelectWindowSnapshot(): IGuid {
@@ -54,28 +68,28 @@
     if (targetSel) {
       var temp = targetSel.options[this.__selectSnapshotIndex].value;
       this.debug().Log('temp: ' + temp);
-      toReturn = this.Guidman().ParseGuid(temp);
+      toReturn = this.GuidMan().ParseGuid(temp);
     }
     this.debug().Log('idOfSelect: ' + toReturn.asString);
     return toReturn;
   }
 
   private __populateStateSel() {
-    this.Xyyz.debug.FuncStartName(this.__populateStateSel.name, this.__selectSnapshotIndex.toString());
+    this.debug().FuncStart(this.__populateStateSel.name, this.__selectSnapshotIndex.toString());
 
     var targetSel: HTMLSelectElement = this.__getSelectElem();
 
     if (targetSel) {
-      var snapShots: IDataOneWindow[] = this.AtticMan().GetAllStorageAsIDataOneWindow();
+      var snapShots: IDataOneWindowStorage[] = this.AtticMan().GetAllStorageAsIDataOneWindow();
 
       if (snapShots && snapShots.length > 0) {
         targetSel.options.length = 0;
-        this.Xyyz.debug.Log('targetSel.options.length : ' + targetSel.options.length);
+        this.debug().Log('targetSel.options.length : ' + targetSel.options.length);
 
         for (var idx: number = 0; idx < snapShots.length; idx++) {
           var data = snapShots[idx];
 
-          this.Xyyz.debug.Log('data.Id.asString : ' + data.Id.asString);
+          this.debug().Log('data.Id.asString : ' + data.Id.asString);
 
           var el = <HTMLOptionElement>window.document.createElement('option');
           el.textContent = this.Xyyz.Utilities.TimeNicknameFavStr(data);
@@ -90,6 +104,6 @@
       }
     }
 
-    this.Xyyz.debug.FuncEndName(this.__populateStateSel.name);
+    this.debug().FuncEnd(this.__populateStateSel.name);
   }
 }

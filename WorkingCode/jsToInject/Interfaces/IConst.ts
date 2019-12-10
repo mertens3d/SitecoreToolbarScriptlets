@@ -1,22 +1,27 @@
-console.log('InjectConst loaded');
-
-
-interface IScVerSpec {
-  sc920: string,
-  sc820: string
-}
-
-
-
+console.log( 'IConst loaded');
 
 interface IConst {
-
+  Numbers: {
+    ShortGuidLength: number,
+    
+  },
+  Iterations: {
+    MaxIterationLookingForNode: number,
+    MaxIterationPageLoad: number,
+    MaxIterationRedButton: number,
+  },
+  Timeouts: {
+    TimeoutChangeLocation: number, //1000
+    TimeoutTriggerRedButton: number, //1500
+    TimeoutWaitForNodeToLoad: number,
+    WaitFogPageLoad: number,
+  },
   ElemId: {
     BtnEdit: string,
     BtnRestoreWindowState: string,
     BtnSaveWindowState: string,
     InputNickname: string,
-    LoginBtn:  string,
+    LoginBtn: string,
     SelStateSnapShot: string,
     textAreaFeedback: string,
     SitecoreRootNodeId: string,
@@ -25,7 +30,8 @@ interface IConst {
     btnToggleFavoriteB: string,
     scLoginUserName: string,
     scLoginPassword: string,
-    StartButton: IScVerSpec
+    StartButton: IScVerSpec,
+    HindSiteParentInfo: string,
   },
   ClassNames: {
     ContentTreeNode: string,
@@ -39,7 +45,7 @@ interface IConst {
   Selector: {
     ContentTreeNodeGlyph: string,
     InputBtn2: string,
-    IframeContent : string,
+    IframeContent: string,
   },
   Storage: {
     WindowRoot: string
@@ -47,9 +53,8 @@ interface IConst {
   TreeExpandedPng: string,
 
   MaxIter: number,
-  TimeoutWaitForNodeToLoad: number,
 
-  GuidEmpty : string,
+  GuidEmpty: string,
   prop: {
     AllTreeData: string,
   },
@@ -60,3 +65,4 @@ interface IConst {
     TreeMenuCollapsedPng: string
   }
 }
+

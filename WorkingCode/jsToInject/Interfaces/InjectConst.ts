@@ -4,6 +4,20 @@ console.log('InjectConst loaded');
 
 class InjectConst {
   static const: IConst = {
+    Numbers: {
+      ShortGuidLength: 4,
+    },
+    Iterations: {
+      MaxIterationLookingForNode: 10,
+      MaxIterationPageLoad: 10,
+      MaxIterationRedButton: 10,
+    },
+    Timeouts: {
+      TimeoutChangeLocation: 1000,
+      TimeoutTriggerRedButton: 1500,
+      TimeoutWaitForNodeToLoad: 500,
+      WaitFogPageLoad: 1000,
+    },
     ElemId: {
       BtnEdit: 'btnEdit',
       BtnRestoreWindowState: 'btnRestoreWindowState',
@@ -18,6 +32,7 @@ class InjectConst {
       btnToggleFavoriteB: 'btnToggleFavorite',
       scLoginPassword: 'Password',
       scLoginUserName: 'UserName',
+      HindSiteParentInfo: 'spanParentInfo',
       StartButton: {
         sc920: 'StartButton',
         sc820: 'startButton'
@@ -47,7 +62,7 @@ class InjectConst {
     TreeExpandedPng: 'treemenu_expanded.png',
 
     MaxIter: 100,
-    TimeoutWaitForNodeToLoad: 200,
+
     GuidEmpty: '00000000-0000-0000-0000-000000000000',
 
     prop: {

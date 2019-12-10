@@ -1,14 +1,14 @@
-﻿interface IDataOneWindow {
+﻿interface IDataOneWindowStorage {
   RawData: IOneStorageData;
   TimeStamp: Date,
   //TimeStampFriendly: String,
-  AllCEAr: IDataOneCE[],
+  AllCEAr: IDataOneStorageCE[],
   Id: IGuid,
   IsFavorite: Boolean,
   NickName: string
 
 }
-interface IDataOneCE {
+interface IDataOneStorageCE {
   Id: IGuid,
   AllTreeNodeAr: IDataOneTreeNode[]
 }

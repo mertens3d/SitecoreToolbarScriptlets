@@ -1,4 +1,4 @@
-﻿enum PageType {
+﻿enum WindowType {
   Unknown = 0,
   LoginPage = 1,
   Desktop = 2,

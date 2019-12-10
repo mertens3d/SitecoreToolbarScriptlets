@@ -19,7 +19,7 @@ class Debug {
       this.Error(Debug.name, 'No text area found');
     }
   }
-  Log(text) {
+  Log(text, optionalValue: string = '') {
     var indent = '  ';
     //text =  indent.repeat(this.__indentCount) + text;
 
@@ -42,7 +42,12 @@ class Debug {
   //FuncStartFunc(func) {
   //  this.FuncStartName(func.name);
   //}
-  FuncStartName(textOrFunc, optionalValue:string = '') {
+
+  CtorName(ctorName: string) {
+    this.Log('Constructor: ' + ctorName);
+  }
+
+  FuncStart(textOrFunc, optionalValue:string = '') {
     textOrFunc = 's) ' + textOrFunc;
 
     if (typeof (textOrFunc) === 'function') {
@@ -61,9 +66,18 @@ class Debug {
     }
   }
 
-  FuncEndName(text) {
+  FuncEnd(text, optionalValue: string = '') {
     text = 'e) ' + text;
+
+    if (optionalValue.length > 0) {
+      text = text + ' : ' + optionalValue;
+    }
+
+
+
     this.__indentCount--;
+
+       
     if (this.__indentCount < 0) {
       this.__indentCount = 0;
     }

@@ -3,9 +3,9 @@ console.log('ManyTrees loaded');
 class OneDesktopManager extends ManagerBase {
 
   constructor(xyyz: Hub) {
-    xyyz.debug.FuncStartName(OneDesktopManager.name);
+    xyyz.debug.FuncStart(OneDesktopManager.name);
     super(xyyz)
-    xyyz.debug.FuncEndName(OneDesktopManager.name);
+    xyyz.debug.FuncEnd(OneDesktopManager.name);
   }
 
   //GetNewIframeData(index: number, docElem: Document, iframe: HTMLIFrameElement) {
@@ -18,21 +18,21 @@ class OneDesktopManager extends ManagerBase {
   //  return toReturn;
   //}
 
-  RestoreDesktopState(foundMatch: IDataOneWindow) {
-    var allExistingIframe = this.GetAllLiveIframeData()
+  RestoreDesktopState(foundMatch: IDataOneWindowStorage) {
+    //var allExistingIframe = this.GetAllLiveIframeData()
   }
 
-  GetAllLiveIframeData() {
-    this.Xyyz.debug.FuncStartName(this.GetAllLiveIframeData.name);
+  GetAllLiveIframeData(targetWindow: IDataBroswerWindow) {
+    this.debug().FuncStart(this.GetAllLiveIframeData.name);
     var toReturn = [];
-    var iframeAr = this.Xyyz.PageData.WinDataParent.Opener.Document.querySelectorAll(this.Const().Selector.IframeContent);
+    var iframeAr = targetWindow.DataDocSelf.Document.querySelectorAll(this.Const().Selector.IframeContent);
     if (iframeAr) {
-      this.Xyyz.debug.Log('iframeAr: ' + iframeAr.length);
+      this.debug().Log('iframeAr: ' + iframeAr.length);
       for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
-        this.Xyyz.debug.Log('pushing: ' + ifrIdx);
+        this.debug().Log('pushing: ' + ifrIdx);
 
         var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        var id: IGuid = this.Guidman().ParseGuid(iframeElem.id); //this.Xyyz.GuidMan.ParseGuid(iframeElem.getAttribute('id'))
+        var id: IGuid = this.GuidMan().ParseGuid(iframeElem.id); //this.Xyyz.GuidMan.ParseGuid(iframeElem.getAttribute('id'))
 
         var dataOneIframe: IDataOneIframe = {
           Index: ifrIdx,
@@ -45,26 +45,26 @@ class OneDesktopManager extends ManagerBase {
         //toReturn.push(this.GetNewIframeData(ifrIdx, null, iframeAr[ifrIdx]));
       }
     }
-    this.Xyyz.debug.FuncEndName(this.GetAllLiveIframeData.name + ' ' + toReturn.length);
+    this.debug().FuncEnd(this.GetAllLiveIframeData.name + ' ' + toReturn.length);
     return toReturn;
   }
 
-  SaveStateOneDesktop() {
-    this.Xyyz.debug.FuncStartName(this.SaveStateOneDesktop.name);;
-    this.Xyyz.debug.FuncStartName('SaveOneDesktop');;
-    var livingIframeAr = this.GetAllLiveIframeData();
+  SaveStateOneDesktop(targetWindow: IDataBroswerWindow) {
+    this.debug().FuncStart(this.SaveStateOneDesktop.name);;
+    this.debug().FuncStart('SaveOneDesktop');;
+    var livingIframeAr = this.GetAllLiveIframeData(targetWindow);
     if (livingIframeAr && livingIframeAr.length > 0) {
       for (var iframeIdx = 0; iframeIdx < livingIframeAr.length; iframeIdx++) {
-        this.Xyyz.debug.Log('iframeIdx: ' + iframeIdx);
+        this.debug().Log('iframeIdx: ' + iframeIdx);
 
         var targetIframeObj = livingIframeAr[iframeIdx];
-        this.Xyyz.debug.Log('targetIframe: ' + JSON.stringify(targetIframeObj));
+        this.debug().Log('targetIframe: ' + JSON.stringify(targetIframeObj));
         this.Xyyz.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.DocElem);
       }
     }
 
-    this.Xyyz.debug.Log('done gathering tree data');
+    this.debug().Log('done gathering tree data');
     this.AtticMan().DrawDebugDataPretty(null);
-    this.Xyyz.debug.FuncEndName(this.SaveStateOneDesktop.name);
+    this.debug().FuncEnd(this.SaveStateOneDesktop.name);
   }
 };
