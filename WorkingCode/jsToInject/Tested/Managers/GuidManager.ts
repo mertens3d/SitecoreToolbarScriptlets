@@ -23,7 +23,7 @@
   }
   ParseGuid(val: string): IGuid {
     let toReturn: IGuid = {
-      Value: val
+      asString: val
     }
     return toReturn
   }

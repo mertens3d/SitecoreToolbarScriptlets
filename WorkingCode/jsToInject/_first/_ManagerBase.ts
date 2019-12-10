@@ -8,6 +8,22 @@ class ManagerBase {
     //console.log('SpokeBase');
   }
 
+  AtticMan(): AtticManager {
+    return this.Xyyz.AtticMan;
+  }
+  UiMan(): UiManager {
+    return this.Xyyz.UiMan;
+  }
+  debug(): Debug {
+    return this.Xyyz.debug;
+  }
+  Const(): IConst{
+    return this.Xyyz.Const;
+  }
+
+  Guidman(): GuidManager {
+    return this.Xyyz.GuidMan;
+  }
   OpenerDoc(): Document {
     return this.Xyyz.PageData.WinData.Opener.Document;
   }

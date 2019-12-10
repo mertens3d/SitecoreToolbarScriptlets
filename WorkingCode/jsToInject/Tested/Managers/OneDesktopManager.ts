@@ -56,7 +56,7 @@ class OneDesktopManager extends ManagerBase {
     }
 
     this.Xyyz.debug.Log('done gathering tree data');
-    this.Xyyz.OneWindowMan.DrawDebugDataPretty(null);
+    this.AtticMan().DrawDebugDataPretty(null);
     this.Xyyz.debug.FuncEndName(this.SaveStateOneDesktop.name);
   }
 

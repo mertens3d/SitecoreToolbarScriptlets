@@ -1,4 +1,5 @@
 ﻿interface IDataOneWindow {
+  RawData: IOneStorageData;
   TimeStamp: Date,
   //TimeStampFriendly: String,
   AllCEAr: IDataOneCE[],

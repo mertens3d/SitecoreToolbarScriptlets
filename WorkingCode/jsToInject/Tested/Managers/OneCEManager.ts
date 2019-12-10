@@ -4,8 +4,8 @@
   }
 
   WaitForNode(lookingFor: IGuid, targetDoc: Document, currentIteration: number, timeout: number) {
-    this.Xyyz.debug.Log('looking for guid: ' + lookingFor.Value);
-    var foundOnPage: HTMLElement = targetDoc.getElementById(lookingFor.Value);
+    this.Xyyz.debug.Log('looking for guid: ' + lookingFor.asString);
+    var foundOnPage: HTMLElement = targetDoc.getElementById(lookingFor.asString);
     if (foundOnPage) {
       this.Xyyz.debug.Log('foundOnPage');
 
@@ -30,7 +30,7 @@
     }
   }
 
-  __collapseNode(element: HTMLElement): void {
+  private __collapseNode(element: HTMLElement): void {
     var currentSrc = element.getAttribute('src');
     this.Xyyz.debug.Log('currentSrc' + currentSrc);
     if (currentSrc.indexOf(this.Xyyz.Const.Names.TreeMenuExpandedPng) > -1) {
@@ -39,19 +39,17 @@
     }
   }
 
-
-  __collapseRootNode(targetDoc: Document) {
+  private __collapseRootNode(targetDoc: Document) {
     var rootElem: HTMLElement = targetDoc.getElementById(this.Xyyz.Const.ElemId.SitecoreRootGlyphId);
     if (rootElem) {
       this.__collapseNode(rootElem);
     } else {
-
       this.Xyyz.debug.Error(this.__collapseRootNode.name, 'Root glyph not found ' + this.Xyyz.Const.ElemId.SitecoreRootGlyphId);
     }
   }
 
   RestoreCEState(storageData: IDataOneCE, targetDoc: Document): boolean {
-    this.Xyyz.debug.FuncStartFunc(this.RestoreCEState);
+    this.Xyyz.debug.FuncStartName(this.RestoreCEState);
 
     var toReturn: boolean = false;
 
@@ -77,7 +75,7 @@
     var CeSnapShot: IDataOneCE = this.Xyyz.OneCEMan.MakeNewData(id);
     CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(CeSnapShot, docElem);
 
-    this.Xyyz.OneWindowMan.DrawDebugDataPretty(null);
+    this.AtticMan().DrawDebugDataPretty(null);
     this.Xyyz.OneWindowMan.PutCEDataToCurrentSnapShot(CeSnapShot);
 
     this.Xyyz.debug.FuncEndName('SaveOneContentEditor');
@@ -92,9 +90,9 @@
     return toReturn;
   }
   DebugDataOneNode(dataOneTreeNode: IDataOneTreeNode): string {
-    this.Xyyz.debug.FuncStartName('DebugDataOneNode');
-    var toReturn: string = dataOneTreeNode.NodeId + ' ' + dataOneTreeNode.NodeFriendly;
-    this.Xyyz.debug.FuncEndName('DebugDataOneNode');
+    this.Xyyz.debug.FuncStartName(this.DebugDataOneNode.name);
+    var toReturn: string = dataOneTreeNode.NodeId.asString + ' ' + dataOneTreeNode.NodeFriendly;
+    this.Xyyz.debug.FuncEndName(this.DebugDataOneNode.name);
     return toReturn;
   }
   GetDebugDataOneCE(dataOneCe: IDataOneCE): string[] {

@@ -13,6 +13,8 @@
   Utilities: Utilities;
 
   MiscMan: MiscManager;
+    AtticMan: AtticManager;
+    UiMan: UiManager;
 
   constructor() {
     this.debug = new Debug(window.opener);
@@ -46,6 +48,8 @@
     this.FeedbackMan = new FeedbackManager(this);
     this.GuidMan = new GuidManager(this);
     this.MiscMan = new MiscManager(this);
+    this.AtticMan = new AtticManager(this);
+    this.UiMan = new UiManager(this);
 
     this.init();
     this.debug.FuncEndName(this.Start.name);
@@ -55,7 +59,7 @@
     this.Const = InjectConst.const;
     this.EventMan.WireMenuButtons();
     this.OneWindowMan.CreateNewWindowSnapShot();
-    this.OneWindowMan.PopulateStateSel();
+    this.UiMan.RefreshUi();
 
     this.debug.FuncEndName(Hub.constructor.name + ' ' + this.init.name);
   }

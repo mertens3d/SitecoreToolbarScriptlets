@@ -5,11 +5,16 @@ class InjectConst {
       BtnEdit:'btnEdit',
       BtnRestoreWindowState: 'btnRestoreWindowState',
       BtnSaveWindowState: 'btnSaveWindowState',
+      InputNickname: 'inputNickname',
       LoginBtn: 'LogInBtn',
       SelStateSnapShot: 'selState',
       textAreaFeedback: 'ta-feedback',
       SitecoreRootNodeId: 'Tree_Node_11111111111111111111111111111111',
       SitecoreRootGlyphId: 'Tree_Glyph_11111111111111111111111111111111',
+      btnUpdateNicknameB: 'btnUpdateNickname',
+      btnToggleFavoriteB: 'btnToggleFavorite',
+      scLoginPassword: 'Password',
+      scLoginUserName: 'UserName',
     },
 
     ClassNames: {

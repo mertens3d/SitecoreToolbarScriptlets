@@ -113,8 +113,8 @@ class LocationManager extends ManagerBase {
   AdminB() {
     this.Xyyz.debug.FuncStartName(this.AdminB.name);
 
-    var userNameElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('UserName');
-    var passwordElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById('Password');
+    var userNameElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById(this.Const().ElemId.scLoginUserName);
+    var passwordElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById(this.Const().ElemId.scLoginPassword);
 
     this.Xyyz.debug.Log('userNameElem: ' + userNameElem);
     this.Xyyz.debug.Log('passwordElem: ' + passwordElem);

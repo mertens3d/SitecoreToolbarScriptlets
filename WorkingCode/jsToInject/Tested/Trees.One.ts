@@ -60,7 +60,7 @@ class OneTreeManager extends ManagerBase {
     var toReturn: IDataOneTreeNode[] = [];
 
     if (targetDoc) {
-      this.Xyyz.debug.Log(targetDoc);
+      //this.Xyyz.debug.Log(targetDoc);
       var rootNode = targetDoc.getElementById(this.Xyyz.Const.ElemId.SitecoreRootNodeId);
 
       if (rootNode) {

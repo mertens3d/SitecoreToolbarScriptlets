@@ -14,6 +14,7 @@ class Debug {
     var ta = this.__getTextArea();
     if (ta) {
       ta.value = '';
+      this.__indentCount = 0;
     } else {
       this.Error(Debug.name, 'No text area found');
     }
@@ -38,18 +39,34 @@ class Debug {
     }
   }
 
-  FuncStartFunc(func) {
-    this.FuncStartName(func.name);
-  }
-  FuncStartName(text) {
-    text = 's) ' + text;
-    this.Log(text);
+  //FuncStartFunc(func) {
+  //  this.FuncStartName(func.name);
+  //}
+  FuncStartName(textOrFunc, optionalValue:string = '') {
+    textOrFunc = 's) ' + textOrFunc;
+
+    if (typeof (textOrFunc) === 'function') {
+      console.log('******* is func *************');
+      textOrFunc = textOrFunc.name;
+    }
+
+    if (optionalValue.length > 0) {
+      textOrFunc = textOrFunc + ' : ' + optionalValue;
+    }
+
+    this.Log(textOrFunc);
     this.__indentCount++;
+    if (this.__indentCount > 10) {
+      this.__indentCount = 10;
+    }
   }
 
   FuncEndName(text) {
     text = 'e) ' + text;
     this.__indentCount--;
+    if (this.__indentCount < 0) {
+      this.__indentCount = 0;
+    }
     this.Log(text);
   }
 

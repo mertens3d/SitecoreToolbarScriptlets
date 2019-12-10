@@ -22,9 +22,15 @@ class EventManager extends ManagerBase {
     this.__ById('btnCE').onclick = () => { locMan.ChangeLocation(PageType.ContentEditor); };
     this.__ById(constId.BtnSaveWindowState).onclick = () => { thisObj.Xyyz.OneWindowMan.SaveWindowState(); };
     this.__ById(constId.BtnRestoreWindowState).onclick = () => { thisObj.Xyyz.OneWindowMan.RestoreWindowState(window.opener.document, 0); };
-    this.__ById('btnDrawLocalStorage').onclick = () => { thisObj.Xyyz.OneWindowMan.DrawStorage(); };
-    this.__ById('btnClearLocalStorage').onclick = () => { thisObj.Xyyz.OneWindowMan.ClearStorage(); };
+    this.__ById('btnDrawLocalStorage').onclick = () => { this.AtticMan().DrawStorage(); };
+    this.__ById('btnRemoveOneFromLocalStorage').onclick = () => { this.AttRemoveOneFromStoragerStorage(); };
     this.__ById('btnClearTextArea').onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
+    this.__ById(constId.btnUpdateNicknameB).onclick = () => { thisObj.Xyyz.AtticMan.UpdateNickname(); };
+    this.__ById(constId.btnToggleFavoriteB).onclick = () => { thisObj.Xyyz.AtticMan.ToggleFavorite(); };
+    (<HTMLSelectElement>this.__ById(constId.SelStateSnapShot)).onchange = () => { thisObj.Xyyz.UiMan.SelectChanged(); };
+
+    //this.__ById(constId.InputNickname).onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
+
     //this.__ById(constId.SelSnapShot).onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
 
     this.Xyyz.debug.FuncEndName(this.WireMenuButtons.name);
