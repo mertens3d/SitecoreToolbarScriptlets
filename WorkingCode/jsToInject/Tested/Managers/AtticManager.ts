@@ -1,9 +1,21 @@
 ﻿class AtticManager extends ManagerBase {
+  eventAwesome: CustomEvent<string>;
+
+
+
   constructor(xyyz: Hub) {
     super(xyyz);
     xyyz.debug.FuncStartName(AtticManager.name);
 
     xyyz.debug.FuncEndName(AtticManager.name);
+  }
+
+  Init() {
+    this.eventAwesome = new CustomEvent('awesome', { detail: 'some detail' });
+  }
+
+  functioneventHandler(e) {
+    console.log('this data is ' + e.detail);
   }
 
   UpdateNickname() {
@@ -104,7 +116,7 @@
     for (var idx = 0; idx < window.localStorage.length; idx++) {
       var candidate: IOneStorageData = {
         data: '',
-        key: ''
+        key: '',
       };
 
       candidate.key = window.localStorage.key(idx);
@@ -137,8 +149,6 @@
   //  this.Xyyz.debug.FuncStartName(this.GetAllStorageAsIOneStorageData.name);
   //  var toReturn: IOneStorageData[] = [];
 
-
-
   //  this.Xyyz.debug.FuncEndName(this.GetAllStorageAsIOneStorageData.name);
   //  return toReturn;
 
@@ -146,10 +156,11 @@
   GetAllStorageAsIDataOneWindow(): IDataOneWindow[] {
     this.Xyyz.debug.FuncStartName(this.GetAllStorageAsIDataOneWindow.name);
     var toReturn: IDataOneWindow[] = [];
-    var rawStorageData: IOneStorageData = this.__getAllLocalStorageAsIOneStorageData();
+    var rawStorageData: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
     if (rawStorageData) {
       for (var idx = 0; idx < rawStorageData.length; idx++) {
-        var candidate: IDataOneWindow = <IDataOneWindow>JSON.parse(rawStorageData[idx].data);
+        var oneRaw: IOneStorageData = rawStorageData[idx];
+        var candidate: IDataOneWindow = <IDataOneWindow>JSON.parse(oneRaw.data);
 
         //this.Xyyz.debug.Log('rawStorageData[idx].data : ' + rawStorageData[idx].data);
 
@@ -157,7 +168,7 @@
           this.Xyyz.debug.Log('candidate.AllCEAr.length : ' + candidate.AllCEAr.length);
           candidate.TimeStamp = new Date(candidate.TimeStamp);
           candidate.Id = this.Xyyz.GuidMan.ParseGuid(candidate.Id.asString);
-          candidate.RawData = rawStorageData;
+          candidate.RawData = oneRaw;
 
           if (!candidate.NickName) {
             candidate.NickName = '__';
@@ -177,18 +188,18 @@
   RemoveOneFromStorage() {
     this.Xyyz.debug.FuncStartName(this.RemoveOneFromStorage.name);
 
-
     var targetId: IGuid = this.UiMan().GetIdOfSelectWindowSnapshot();
     if (targetId) {
       var storageMatch = this.GetFromStorageById(targetId)
       if (storageMatch) {
         var result: boolean = confirm('Remove ?: ' + this.Xyyz.Utilities.TimeNicknameFavStr(storageMatch));
         if (result === true) {
-          window.localStorage.removeItem(storageMatch.ke);
+          window.localStorage.removeItem(storageMatch.RawData.key);
+
+          this.UiMan().RefreshUi();
         }
       }
     }
-
 
     //if (result === true) {
     //  var targets: IOneStorageData[] = this.__getAllLocalStorage();
@@ -236,15 +247,10 @@
     var foundStorage: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
     if (foundStorage) {
       for (var idx = 0; idx < foundStorage.length; idx++) {
-
         var candidate = foundStorage[idx];
         //if (candidate.key === needleId) {
-
-
-
         //}
       }
-
     }
     this.Xyyz.debug.FuncEndName(this.GetRawFromStorageById.name);
 
@@ -257,7 +263,6 @@
     var foundMatch: IDataOneWindow = null;
 
     if (foundStorage) {
-
       for (var idx = 0; idx < foundStorage.length; idx++) {
         var candidate = foundStorage[idx];
         if (candidate.Id.asString === needleId.asString) {

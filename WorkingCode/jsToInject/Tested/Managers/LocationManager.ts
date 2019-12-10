@@ -13,8 +13,8 @@ class LocationManager extends ManagerBase {
   }
 
   SetHref(href, callback, isFromTimeout, effortCount) {
-    this.Xyyz.debug.FuncStartName(this.SetHref.toString() + ' : ' + href + ' : ' + isFromTimeout + ' : ' + effortCount);
-    this.Xyyz.PageData.WinData.Opener.Window.location.href = href;
+    this.Xyyz.debug.FuncStartName(this.SetHref.name, href + ' : ' + isFromTimeout + ' : ' + effortCount);
+    this.Xyyz.PageData.WinDataParent.Opener.Window.location.href = href;
 
     if (isFromTimeout) {
       effortCount--;
@@ -23,7 +23,7 @@ class LocationManager extends ManagerBase {
       effortCount = this.MaxAttempts;
     }
 
-    if (this.Xyyz.PageData.WinData.Opener.Window.location.href === href) {
+    if (this.Xyyz.PageData.WinDataParent.Opener.Window.location.href === href) {
       callback();
     } else if (effortCount > 0) {
       setTimeout(function () {
@@ -36,7 +36,7 @@ class LocationManager extends ManagerBase {
     this.Xyyz.debug.FuncEndName(this.SetHref.name);
   }
   ChangeLocation(desiredPageType: PageType) {
-    this.Xyyz.debug.FuncStartName(this.ChangeLocation.name);
+    this.Xyyz.debug.FuncStartName(this.ChangeLocation.name, 'desired = ' + PageType[desiredPageType]);
 
     var currentState = this.Xyyz.PageData.GetCurrentPageType();
 
@@ -49,25 +49,25 @@ class LocationManager extends ManagerBase {
       }, 1000);
     }
 
-    else if (currentState === PageType.Launchpad) {
-      if (desiredPageType === PageType.Desktop) {
+    else if (currentState === PageType.Launchpad || currentState === PageType.ContentEditor || currentState === PageType.Desktop) {
+      if (desiredPageType === PageType.Desktop && currentState !== PageType.Desktop) {
         this.SetHref(this.Xyyz.Const.Url.Desktop, function () { this.ChangeLocation(desiredPageType) }, null, null);
-      } else if (desiredPageType === PageType.ContentEditor) {
+      } else if (desiredPageType === PageType.ContentEditor && currentState !== PageType.ContentEditor) {
         this.SetHref(this.Xyyz.Const.Url.ContentEditor, function () { this.ChangeLocation(desiredPageType) }, null, null);
       }
-    }
 
-    else if (currentState === PageType.Desktop) {
-      this.Xyyz.debug.Log('On Desktop');
-      //   this.Xyyz.debug.Log('owner: ' + JSON.stringify(ownerWindow));
+      else if (currentState === PageType.Desktop && desiredPageType === PageType.Desktop) {
+        this.Xyyz.debug.Log('On Desktop');
+        //   this.Xyyz.debug.Log('owner: ' + JSON.stringify(ownerWindow));
 
-      //var pat = new RegExp('.*' + ownerWindow.location.hostname);
-      //   this.Xyyz.debug.Log('pat: ' + pat);
-      //var match = ownerWindow.location.href.match(pat);
-      //   this.Xyyz.debug.Log('match: ' + match);
+        //var pat = new RegExp('.*' + ownerWindow.location.hostname);
+        //   this.Xyyz.debug.Log('pat: ' + pat);
+        //var match = ownerWindow.location.href.match(pat);
+        //   this.Xyyz.debug.Log('match: ' + match);
 
-      //  this.Xyyz.PageData.WinData.Opener.Window.location.href =   this.Xyyz.InjectConst.Url.ShellDefaultAspx;
-      this.Xyyz.LocationMan.TriggerRedButton();
+        //  this.Xyyz.PageData.WinData.Opener.Window.location.href =   this.Xyyz.InjectConst.Url.ShellDefaultAspx;
+        this.Xyyz.LocationMan.TriggerRedButton();
+      }
     }
 
     this.Xyyz.debug.FuncEndName(this.Xyyz.LocationMan.ChangeLocation.name);
@@ -75,11 +75,19 @@ class LocationManager extends ManagerBase {
 
   RedButton(iteration) {
     this.Xyyz.debug.FuncStartName(this.Xyyz.LocationMan.RedButton.name + ':' + iteration);
-    var found: HTMLElement = <HTMLElement>this.Xyyz.PageData.WinData.Opener.Document.getElementById('StartButton');
-    this.Xyyz.debug.Log('Red Button: ' + found + '  ' + this.Xyyz.PageData.WinData.Opener.Window.location.href + ' ' + iteration);
+
+    var found: HTMLElement = <HTMLElement>this.Xyyz.PageData.WinDataParent.Opener.Document.getElementById(this.Const().ElemId.StartButton.sc920);
+    if (!found) {
+      found = <HTMLElement>this.Xyyz.PageData.WinDataParent.Opener.Document.getElementById(this.Const().ElemId.StartButton.sc820);
+    }
+
+
+
+
+    this.Xyyz.debug.Log('Red Button: ' + found + '  ' + this.Xyyz.PageData.WinDataParent.Opener.Window.location.href + ' ' + iteration);
     if (found) {
       found.click();
-      var menuLeft: HTMLElement = this.Xyyz.PageData.WinData.Opener.Document.querySelector('.scStartMenuLeftOption');
+      var menuLeft: HTMLElement = this.Xyyz.PageData.WinDataParent.Opener.Document.querySelector('.scStartMenuLeftOption');
       if (menuLeft) {
         menuLeft.click();
       }
@@ -113,22 +121,22 @@ class LocationManager extends ManagerBase {
   AdminB() {
     this.Xyyz.debug.FuncStartName(this.AdminB.name);
 
-    var userNameElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById(this.Const().ElemId.scLoginUserName);
-    var passwordElem = this.Xyyz.PageData.WinData.Opener.Document.getElementById(this.Const().ElemId.scLoginPassword);
+    var userNameElem = this.Xyyz.PageData.WinDataParent.Opener.Document.getElementById(this.Const().ElemId.scLoginUserName);
+    var passwordElem = this.Xyyz.PageData.WinDataParent.Opener.Document.getElementById(this.Const().ElemId.scLoginPassword);
 
     this.Xyyz.debug.Log('userNameElem: ' + userNameElem);
     this.Xyyz.debug.Log('passwordElem: ' + passwordElem);
     userNameElem.setAttribute('value', 'admin');
     passwordElem.setAttribute('value', 'b');
 
-    var candidate: HTMLElement = this.Xyyz.PageData.WinData.Opener.Document.getElementById(this.QkID().LoginBtn);
+    var candidate: HTMLElement = this.Xyyz.PageData.WinDataParent.Opener.Document.getElementById(this.QkID().LoginBtn);
 
     this.Xyyz.debug.Log('candidate: ' + candidate);
     if (candidate) {
       candidate.click();
     } else {
       //window.opener.document.querySelector('input.btn').click()
-      candidate = this.Xyyz.PageData.WinData.Opener.Document.querySelector(this.QkSel().InputBtn2);
+      candidate = this.Xyyz.PageData.WinDataParent.Opener.Document.querySelector(this.QkSel().InputBtn2);
       this.Xyyz.debug.Log('candidate: ' + candidate);
       if (candidate) {
         candidate.click();

@@ -13,7 +13,7 @@ class Debug {
   ClearTextArea(): void {
     var ta = this.__getTextArea();
     if (ta) {
-      ta.value = '';
+      ta.value = '--- Debug Text Reset ---\\n';
       this.__indentCount = 0;
     } else {
       this.Error(Debug.name, 'No text area found');

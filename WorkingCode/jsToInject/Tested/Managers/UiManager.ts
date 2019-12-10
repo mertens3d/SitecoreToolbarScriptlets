@@ -8,6 +8,7 @@
     xyyz.debug.FuncEndName(UiManager.name);
   }
 
+
   SelectChanged(): void {
     this.Xyyz.debug.FuncStartName(this.SelectChanged.name);
     this.__selectSnapshotIndex = this.__getSelectElem().selectedIndex;
@@ -74,9 +75,7 @@
         for (var idx: number = 0; idx < snapShots.length; idx++) {
           var data = snapShots[idx];
 
-
           this.Xyyz.debug.Log('data.Id.asString : ' + data.Id.asString);
-
 
           var el = <HTMLOptionElement>window.document.createElement('option');
           el.textContent = this.Xyyz.Utilities.TimeNicknameFavStr(data);

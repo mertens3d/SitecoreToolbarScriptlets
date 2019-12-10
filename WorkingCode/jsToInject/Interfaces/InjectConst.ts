@@ -1,8 +1,11 @@
 console.log('InjectConst loaded');
+
+//https://sitecore.stackexchange.com/questions/338/what-are-the-ways-to-find-the-sitecore-version-on-sitecore-installations
+
 class InjectConst {
   static const: IConst = {
-    ElemId : {
-      BtnEdit:'btnEdit',
+    ElemId: {
+      BtnEdit: 'btnEdit',
       BtnRestoreWindowState: 'btnRestoreWindowState',
       BtnSaveWindowState: 'btnSaveWindowState',
       InputNickname: 'inputNickname',
@@ -15,6 +18,10 @@ class InjectConst {
       btnToggleFavoriteB: 'btnToggleFavorite',
       scLoginPassword: 'Password',
       scLoginUserName: 'UserName',
+      StartButton: {
+        sc920: 'StartButton',
+        sc820: 'startButton'
+      }
     },
 
     ClassNames: {
@@ -31,6 +38,7 @@ class InjectConst {
     Selector: {
       ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
       InputBtn2: 'input.btn',
+      IframeContent: 'iframe[src*=content]'
     },
 
     Storage: {

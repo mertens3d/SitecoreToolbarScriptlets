@@ -25,7 +25,7 @@ class ManagerBase {
     return this.Xyyz.GuidMan;
   }
   OpenerDoc(): Document {
-    return this.Xyyz.PageData.WinData.Opener.Document;
+    return this.Xyyz.PageData.WinDataParent.Opener.Document;
   }
 }
 

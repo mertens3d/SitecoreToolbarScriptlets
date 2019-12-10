@@ -1,4 +1,10 @@
-﻿class Opener {
+﻿interface IWindowData {
+  Window: Window;
+}
+
+
+
+class Opener {
   Document: Document;
   Window: Window;
   constructor() {

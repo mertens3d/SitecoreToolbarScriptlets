@@ -4,7 +4,7 @@
   }
 
   WaitForNode(lookingFor: IGuid, targetDoc: Document, currentIteration: number, timeout: number) {
-    this.Xyyz.debug.Log('looking for guid: ' + lookingFor.asString);
+    this.Xyyz.debug.Log('looking for guid: ' + currentIteration + ' ' + lookingFor.asString);
     var foundOnPage: HTMLElement = targetDoc.getElementById(lookingFor.asString);
     if (foundOnPage) {
       this.Xyyz.debug.Log('foundOnPage');
@@ -15,6 +15,7 @@
         this.Xyyz.debug.Log('not found on page...setting timeout: ' + timeout);
         var self = this;
         setTimeout(function () {
+          currentIteration = currentIteration - 1;
           self.WaitForNode(lookingFor, targetDoc, currentIteration--, timeout)
         }, timeout)
       }
@@ -49,7 +50,7 @@
   }
 
   RestoreCEState(storageData: IDataOneCE, targetDoc: Document): boolean {
-    this.Xyyz.debug.FuncStartName(this.RestoreCEState);
+    this.Xyyz.debug.FuncStartName(this.RestoreCEState.name);
 
     var toReturn: boolean = false;
 
@@ -61,7 +62,7 @@
 
       //candidate = candidate.replace('[', '').replace(']', '');
 
-      this.WaitForNode(lookingFor, targetDoc, 100, this.Xyyz.Const.TimeoutWaitForNodeToLoad);
+      this.WaitForNode(lookingFor, targetDoc, 5, this.Xyyz.Const.TimeoutWaitForNodeToLoad);
     }
     this.Xyyz.debug.FuncEndName(this.RestoreCEState.name);
     return toReturn;

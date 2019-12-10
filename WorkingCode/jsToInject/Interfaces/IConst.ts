@@ -1,5 +1,16 @@
 console.log('InjectConst loaded');
+
+
+interface IScVerSpec {
+  sc920: string,
+  sc820: string
+}
+
+
+
+
 interface IConst {
+
   ElemId: {
     BtnEdit: string,
     BtnRestoreWindowState: string,
@@ -14,6 +25,7 @@ interface IConst {
     btnToggleFavoriteB: string,
     scLoginUserName: string,
     scLoginPassword: string,
+    StartButton: IScVerSpec
   },
   ClassNames: {
     ContentTreeNode: string,
@@ -26,7 +38,8 @@ interface IConst {
   },
   Selector: {
     ContentTreeNodeGlyph: string,
-    InputBtn2:  string,
+    InputBtn2: string,
+    IframeContent : string,
   },
   Storage: {
     WindowRoot: string
