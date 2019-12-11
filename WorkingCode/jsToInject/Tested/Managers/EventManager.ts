@@ -19,10 +19,11 @@ class EventManager extends ManagerBase {
     this.__ById(this.Const().ElemId.BtnEdit).onclick = () => { locMan.SetScMode('edit'); };
     this.__ById('btnPrev').onclick = () => { locMan.SetScMode('preview'); };
     this.__ById('btnNorm').onclick = () => { locMan.SetScMode('normal'); };
-    this.__ById('btnAdminB').onclick = () => { locMan.AdminB(this.PageDataMan().GetParentWindow().DataDocSelf); };
-    this.__ById('btnDesktop').onclick = () => { locMan.ChangeLocation(WindowType.Desktop, this.PageDataMan().GetParentWindow()); };
+    this.__ById('btnAdminB').onclick = () => { locMan.AdminB(this.PageDataMan().GetParentWindow().DataDocSelf, null); };
 
-    this.__ById('btnCE').onclick = () => { locMan.ChangeLocation(WindowType.ContentEditor, this.PageDataMan().GetParentWindow()); };
+    this.__ById('btnDesktop').onclick = () => { this.debug().ClearTextArea(); locMan.ChangeLocationSwitchBoard(WindowType.Desktop, this.PageDataMan().GetParentWindow()); };
+    this.__ById('btnCE').onclick = () => { this.debug().ClearTextArea();locMan.ChangeLocationSwitchBoard(WindowType.ContentEditor, this.PageDataMan().GetParentWindow()); };
+
     this.__ById(constId.BtnSaveWindowState).onclick = () => { thisObj.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().GetParentWindow()); };
     this.__ById('btnDrawLocalStorage').onclick = () => { this.AtticMan().DrawStorage(); };
     this.__ById('btnRemoveOneFromLocalStorage').onclick = () => { this.AtticMan().RemoveOneFromStorage(); };

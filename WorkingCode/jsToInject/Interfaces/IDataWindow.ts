@@ -9,6 +9,7 @@
 interface IDataOneDoc {
   DataWinParent: IDataBroswerWindow;
   Id: IGuid,
+  
   IsCEDoc: Boolean,
   Document: Document,
   ParentDesktop: IGuid,

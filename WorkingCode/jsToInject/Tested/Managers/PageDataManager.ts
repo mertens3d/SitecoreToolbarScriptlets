@@ -3,6 +3,30 @@
 //}
 
 class PageDataManager extends ManagerBase {
+
+
+  SetWindowDataToCurrent(window: Window): IDataBroswerWindow{
+
+    var toReturn: IDataBroswerWindow = {
+      Friendly: 'New Tab',
+      Window: window,
+      WindowType: WindowType.Unknown,
+      DataDocSelf: {
+        DataWinParent: null,
+        Document: window.document,
+        HasParentDesktop: false,
+        Id: this.GuidMan().NewGuid(),
+        IsCEDoc: false,
+        ParentDesktop: null
+      },
+
+    }
+
+    toReturn.DataDocSelf.DataWinParent = toReturn;
+    return toReturn;
+  }
+
+
   private __winDataParent: IDataBroswerWindow;
   ChildPage: IDataBroswerWindow;
   SelfWindow: IDataBroswerWindow;
@@ -17,22 +41,7 @@ class PageDataManager extends ManagerBase {
     var newWindow: Window = <Window>this.__winDataParent.Window.open(newWindowUrl);
     
 
-    var toReturn: IDataBroswerWindow = {
-      Friendly: 'New Tab',
-      Window: newWindow,
-      WindowType: WindowType.Unknown,
-      DataDocSelf: {
-        DataWinParent: null,
-        Document: newWindow.document,
-        HasParentDesktop: false,
-        Id: this.GuidMan().NewGuid(),
-        IsCEDoc: false,
-        ParentDesktop: null
-      },
-
-    }
-
-    toReturn.DataDocSelf.DataWinParent = toReturn;
+    var toReturn = this.SetWindowDataToCurrent(newWindow)
 
     this.debug().FuncEnd(this.OpenNewBrowserWindow.name + ' : ' + toReturn.DataDocSelf.Id.asString);
 
@@ -87,7 +96,7 @@ class PageDataManager extends ManagerBase {
     else if (currentLoc.indexOf(this.Const().Url.ContentEditor) > -1) {
       toReturn = WindowType.ContentEditor;
     }
-    else if (currentLoc.indexOf(this.Const().Url.LaunchPad) > -1) {
+    else if (currentLoc.toLowerCase().indexOf(this.Const().Url.LaunchPad.toLowerCase()) > -1) {
       toReturn = WindowType.Launchpad;
     }
     else {
@@ -101,8 +110,9 @@ class PageDataManager extends ManagerBase {
   GetCurrentPageType() {
     this.debug().FuncStart(this.GetCurrentPageType.name);
     var toReturn: WindowType = WindowType.Unknown;
+
     if (this.__winDataParent && this.__winDataParent && this.__winDataParent.Window && this.__winDataParent.DataDocSelf) {
-      return this.GetPageTypeOfTargetWindow(this.__winDataParent.Window);
+      toReturn = this.GetPageTypeOfTargetWindow(this.__winDataParent.Window);
     }
 
     this.debug().FuncEnd(this.GetCurrentPageType.name + ' (' + toReturn + ') ' + WindowType[toReturn]);

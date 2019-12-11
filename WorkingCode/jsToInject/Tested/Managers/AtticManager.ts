@@ -35,7 +35,7 @@
   }
 
   ToggleFavorite() {
-    this.debug().FuncStart(this.ToggleFavorite);
+    this.debug().FuncStart(this.ToggleFavorite.name);
 
     var targetId: IGuid = this.UiMan().GetIdOfSelectWindowSnapshot();
     if (targetId) {
@@ -46,7 +46,7 @@
       }
     }
 
-    this.debug().FuncEnd(this.ToggleFavorite);
+    this.debug().FuncEnd(this.ToggleFavorite.name);
   }
 
   DrawDebugDataPretty(source: IDataOneWindowStorage): void {

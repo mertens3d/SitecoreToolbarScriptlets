@@ -9,19 +9,22 @@ interface IConst {
     MaxIterationLookingForNode: number,
     MaxIterationPageLoad: number,
     MaxIterationRedButton: number,
+    MaxSetHrefEffort: number,
   },
   Timeouts: {
     TimeoutChangeLocation: number, //1000
     TimeoutTriggerRedButton: number, //1500
     TimeoutWaitForNodeToLoad: number,
     WaitFogPageLoad: number,
+    PostLoginBtnClick: number,
+    SetHrefEffortWait: number,
   },
   ElemId: {
     BtnEdit: string,
     BtnRestoreWindowState: string,
     BtnSaveWindowState: string,
     InputNickname: string,
-    LoginBtn: string,
+    scLoginBtn:  IScVerSpec,
     SelStateSnapShot: string,
     textAreaFeedback: string,
     SitecoreRootNodeId: string,
@@ -30,7 +33,7 @@ interface IConst {
     btnToggleFavoriteB: string,
     scLoginUserName: string,
     scLoginPassword: string,
-    StartButton: IScVerSpec,
+    scStartButton: IScVerSpec,
     HindSiteParentInfo: string,
   },
   ClassNames: {
@@ -44,7 +47,7 @@ interface IConst {
   },
   Selector: {
     ContentTreeNodeGlyph: string,
-    InputBtn2: string,
+    scLoginBtn: IScVerSpec,
     IframeContent: string,
   },
   Storage: {
@@ -60,9 +63,11 @@ interface IConst {
   },
   Names: {
     HtmlToInject: string,
-    StylesToInject: string
-    TreeMenuExpandedPng: string
-    TreeMenuCollapsedPng: string
+    StylesToInject: string,
+    TreeMenuExpandedPng: string,
+    TreeMenuCollapsedPng: string,
+    scDefaultAdminPassword: string,
+    scDefaultAdminUserName: string,
   }
 }
 

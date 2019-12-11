@@ -1,5 +1,6 @@
 ﻿interface IGuid {
   asString: string,
+  asShort: string
   //toString(): string;
 }
 

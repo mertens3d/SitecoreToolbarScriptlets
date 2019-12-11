@@ -30,19 +30,25 @@ InjectConst.const = {
         MaxIterationLookingForNode: 10,
         MaxIterationPageLoad: 10,
         MaxIterationRedButton: 10,
+        MaxSetHrefEffort: 10,
     },
     Timeouts: {
         TimeoutChangeLocation: 1000,
         TimeoutTriggerRedButton: 1500,
         TimeoutWaitForNodeToLoad: 500,
         WaitFogPageLoad: 1000,
+        PostLoginBtnClick: 1000,
+        SetHrefEffortWait: 1000,
     },
     ElemId: {
         BtnEdit: 'btnEdit',
         BtnRestoreWindowState: 'btnRestoreWindowState',
         BtnSaveWindowState: 'btnSaveWindowState',
         InputNickname: 'inputNickname',
-        LoginBtn: 'LogInBtn',
+        scLoginBtn: {
+            sc920: 'LogInBtn',
+            sc820: null
+        },
         SelStateSnapShot: 'selState',
         textAreaFeedback: 'ta-feedback',
         SitecoreRootNodeId: 'Tree_Node_11111111111111111111111111111111',
@@ -52,7 +58,7 @@ InjectConst.const = {
         scLoginPassword: 'Password',
         scLoginUserName: 'UserName',
         HindSiteParentInfo: 'spanParentInfo',
-        StartButton: {
+        scStartButton: {
             sc920: 'StartButton',
             sc820: 'startButton'
         }
@@ -64,12 +70,15 @@ InjectConst.const = {
         Desktop: '/sitecore/shell/default.aspx',
         Login: '/sitecore/login',
         ContentEditor: '/sitecore/shell/Applications/Content%20Editor.aspx',
-        LaunchPad: '/sitecore/shell/sitecore/client/applications/launchpad',
+        LaunchPad: '/client/applications/launchpad',
     },
     Selector: {
         ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
-        InputBtn2: 'input.btn',
-        IframeContent: 'iframe[src*=content]'
+        IframeContent: 'iframe[src*=content]',
+        scLoginBtn: {
+            sc920: null,
+            sc820: 'input.btn',
+        },
     },
     Storage: {
         WindowRoot: 'Xyyz.WindowSnapShot.'
@@ -85,6 +94,8 @@ InjectConst.const = {
         StylesToInject: 'StylesToInject',
         TreeMenuExpandedPng: 'treemenu_expanded.png',
         TreeMenuCollapsedPng: 'treemenu_collapsed.png',
+        scDefaultAdminPassword: 'b',
+        scDefaultAdminUserName: 'admin',
     }
 };
 
@@ -250,7 +261,7 @@ class AtticManager extends ManagerBase {
         this.debug().FuncEnd(this.UpdateNickname);
     }
     ToggleFavorite() {
-        this.debug().FuncStart(this.ToggleFavorite);
+        this.debug().FuncStart(this.ToggleFavorite.name);
         var targetId = this.UiMan().GetIdOfSelectWindowSnapshot();
         if (targetId) {
             var storageMatch = this.GetFromStorageById(targetId);
@@ -259,7 +270,7 @@ class AtticManager extends ManagerBase {
                 this.WriteToStorage(storageMatch);
             }
         }
-        this.debug().FuncEnd(this.ToggleFavorite);
+        this.debug().FuncEnd(this.ToggleFavorite.name);
     }
     DrawDebugDataPretty(source) {
         var allDebugData = this.__buildDebugDataPretty(source);
@@ -448,9 +459,9 @@ class EventManager extends ManagerBase {
         this.__ById(this.Const().ElemId.BtnEdit).onclick = () => { locMan.SetScMode('edit'); };
         this.__ById('btnPrev').onclick = () => { locMan.SetScMode('preview'); };
         this.__ById('btnNorm').onclick = () => { locMan.SetScMode('normal'); };
-        this.__ById('btnAdminB').onclick = () => { locMan.AdminB(this.PageDataMan().GetParentWindow().DataDocSelf); };
-        this.__ById('btnDesktop').onclick = () => { locMan.ChangeLocation(WindowType.Desktop, this.PageDataMan().GetParentWindow()); };
-        this.__ById('btnCE').onclick = () => { locMan.ChangeLocation(WindowType.ContentEditor, this.PageDataMan().GetParentWindow()); };
+        this.__ById('btnAdminB').onclick = () => { locMan.AdminB(this.PageDataMan().GetParentWindow().DataDocSelf, null); };
+        this.__ById('btnDesktop').onclick = () => { this.debug().ClearTextArea(); locMan.ChangeLocationSwitchBoard(WindowType.Desktop, this.PageDataMan().GetParentWindow()); };
+        this.__ById('btnCE').onclick = () => { this.debug().ClearTextArea(); locMan.ChangeLocationSwitchBoard(WindowType.ContentEditor, this.PageDataMan().GetParentWindow()); };
         this.__ById(constId.BtnSaveWindowState).onclick = () => { thisObj.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().GetParentWindow()); };
         this.__ById('btnDrawLocalStorage').onclick = () => { this.AtticMan().DrawStorage(); };
         this.__ById('btnRemoveOneFromLocalStorage').onclick = () => { this.AtticMan().RemoveOneFromStorage(); };
@@ -525,8 +536,10 @@ class GuidManager extends ManagerBase {
     }
     ParseGuid(val) {
         let toReturn = {
-            asString: val
+            asString: val,
+            asShort: ''
         };
+        toReturn.asShort = this.ShortGuid(toReturn);
         return toReturn;
     }
 }
@@ -581,83 +594,98 @@ class LocationManager extends ManagerBase {
     constructor(xyyz) {
         super(xyyz);
         xyyz.debug.FuncStart(LocationManager.name);
-        this.MaxAttempts = 10;
-        this.CurrentAttempt = this.MaxAttempts;
         this.EffortWait = 1000;
         xyyz.debug.FuncEnd(LocationManager.name);
     }
-    SetHref(href, callback, isFromTimeout, effortCount, targetWindow) {
-        this.debug().FuncStart(this.SetHref.name, href + ' : ' + isFromTimeout + ' : ' + effortCount);
-        targetWindow.Window.location.href = href;
-        if (isFromTimeout) {
-            effortCount--;
-        }
-        else {
-            effortCount = this.MaxAttempts;
-        }
-        if (targetWindow.Window.location.href === href) {
-            callback();
-        }
-        else if (effortCount > 0) {
-            setTimeout(function () {
-                this.SetHref(href, callback, true, effortCount);
-            }, this.EffortWait);
+    SetHref(href, callback, targetWindow, effortCount = this.Const().Iterations.MaxSetHrefEffort) {
+        this.debug().FuncStart(this.SetHref.name, href + ' : ' + effortCount + ' : has callback? ' + (callback !== null));
+        effortCount -= 1;
+        var isCorrectHref = targetWindow.Window.location.href = href;
+        var isReadyState = targetWindow.DataDocSelf.Document.readyState === 'complete';
+        if (effortCount > 0) {
+            if (isCorrectHref && isReadyState) {
+                this.debug().Log('triggering callback');
+                callback();
+            }
+            else {
+                if (!isCorrectHref) {
+                    targetWindow.Window.location.href !== href;
+                }
+                var self = this;
+                setTimeout(function () {
+                    this.debug().Log('setting timeout');
+                    self.SetHref(href, callback, targetWindow, effortCount);
+                }, self.Const().Timeouts.SetHrefEffortWait);
+            }
         }
         else {
             this.debug().Log('changing href unsuccessful. Dying');
         }
         this.debug().FuncEnd(this.SetHref.name);
     }
-    ChangeLocation(desiredPageType, targetWindow) {
-        this.debug().FuncStart(this.ChangeLocation.name, 'desired = ' + WindowType[desiredPageType]);
-        var currentState = this.PageDataMan().GetCurrentPageType();
-        if (currentState === WindowType.LoginPage) {
-            this.debug().Log('On Login page: ');
-            this.AdminB(targetWindow.DataDocSelf);
-            var self = this;
-            setTimeout(function () {
-                self.Xyyz.LocationMan.ChangeLocation(desiredPageType, targetWindow);
-            }, self.Const().Timeouts.TimeoutChangeLocation);
+    ChangeLocationSwitchBoard(desiredPageType, targetWindow, iteration = 20) {
+        this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + WindowType[desiredPageType] + ' iteration: ' + iteration);
+        if (iteration > 0) {
+            iteration -= 1;
+            var currentState = this.PageDataMan().GetCurrentPageType();
+            if (currentState === WindowType.LoginPage) {
+                var self = this;
+                var callbackOnComplete = () => {
+                    this.debug().Log('callback triggered');
+                    self.ChangeLocationSwitchBoard(desiredPageType, targetWindow, iteration);
+                };
+                this.AdminB(targetWindow.DataDocSelf, callbackOnComplete);
+                var self = this;
+            }
+            else if (currentState === WindowType.Launchpad || currentState === WindowType.ContentEditor || currentState === WindowType.Desktop) {
+                var self = this;
+                var callBackOnSuccessfulHrefChange = function () {
+                    self.debug().Log('Callback triggered');
+                    targetWindow = self.PageDataMan().SetWindowDataToCurrent(targetWindow.Window);
+                    self.ChangeLocationSwitchBoard(desiredPageType, targetWindow, iteration);
+                };
+                if (desiredPageType === WindowType.Desktop && currentState !== WindowType.Desktop) {
+                    this.SetHref(this.Const().Url.Desktop, callBackOnSuccessfulHrefChange, targetWindow);
+                }
+                else if (desiredPageType === WindowType.ContentEditor && currentState !== WindowType.ContentEditor) {
+                    this.SetHref(this.Const().Url.ContentEditor, callBackOnSuccessfulHrefChange, targetWindow);
+                }
+                else if (currentState === WindowType.Desktop && desiredPageType === WindowType.Desktop) {
+                    this.debug().Log('On Desktop');
+                    this.Xyyz.LocationMan.TriggerRedButton(targetWindow.DataDocSelf);
+                }
+            }
         }
-        else if (currentState === WindowType.Launchpad || currentState === WindowType.ContentEditor || currentState === WindowType.Desktop) {
-            var callBackFunc = function () { this.ChangeLocation(desiredPageType, targetWindow); };
-            if (desiredPageType === WindowType.Desktop && currentState !== WindowType.Desktop) {
-                this.SetHref(this.Const().Url.Desktop, callBackFunc, null, null, targetWindow);
-            }
-            else if (desiredPageType === WindowType.ContentEditor && currentState !== WindowType.ContentEditor) {
-                this.SetHref(this.Const().Url.ContentEditor, callBackFunc, null, null, targetWindow);
-            }
-            else if (currentState === WindowType.Desktop && desiredPageType === WindowType.Desktop) {
-                this.debug().Log('On Desktop');
-                this.Xyyz.LocationMan.TriggerRedButton(targetWindow.DataDocSelf);
-            }
+        this.debug().FuncEnd(this.Xyyz.LocationMan.ChangeLocationSwitchBoard.name);
+    }
+    GetBigRedButtonElem(targetDoc) {
+        var toReturn = targetDoc.Document.getElementById(this.Const().ElemId.scStartButton.sc920);
+        if (!toReturn) {
+            toReturn = targetDoc.Document.getElementById(this.Const().ElemId.scStartButton.sc820);
         }
-        this.debug().FuncEnd(this.Xyyz.LocationMan.ChangeLocation.name);
+        return toReturn;
     }
     RedButton(iteration, targetDoc) {
-        this.debug().FuncStart(this.Xyyz.LocationMan.RedButton.name + ':' + iteration);
-        var found = targetDoc.Document.getElementById(this.Const().ElemId.StartButton.sc920);
-        if (!found) {
-            found = targetDoc.Document.getElementById(this.Const().ElemId.StartButton.sc820);
-        }
-        this.debug().Log('Red Button: ' + found + '  ' + targetDoc.DataWinParent.Window.location.href + ' ' + iteration);
-        if (found) {
-            found.click();
-            var menuLeft = targetDoc.Document.querySelector('.scStartMenuLeftOption');
-            if (menuLeft) {
-                menuLeft.click();
+        this.debug().FuncStart(this.RedButton.name, iteration.toString());
+        iteration = iteration - 1;
+        if (iteration > 0) {
+            var found = this.GetBigRedButtonElem(targetDoc);
+            if (found) {
+                this.debug().Log('clicking it');
+                found.click();
+                var menuLeft = targetDoc.Document.querySelector('.scStartMenuLeftOption');
+                if (menuLeft) {
+                    menuLeft.click();
+                }
             }
-        }
-        else {
-            iteration = iteration - 1;
-            if (iteration > 0) {
+            else {
                 var self = this;
                 setTimeout(function () {
                     self.Xyyz.LocationMan.RedButton(iteration, targetDoc);
                 }, self.Const().Timeouts.TimeoutTriggerRedButton);
             }
         }
-        this.debug().FuncEnd(this.Xyyz.LocationMan.RedButton.name);
+        this.debug().FuncEnd(this.RedButton.name);
     }
     TriggerRedButton(targetDoc) {
         this.debug().FuncStart(this.Xyyz.LocationMan.TriggerRedButton.name);
@@ -671,30 +699,41 @@ class LocationManager extends ManagerBase {
         var newValueB = '=' + newValue;
         window.opener.location.href = window.opener.location.href.replace('=normal', newValueB).replace('=preview', newValueB).replace('=edit', newValueB);
     }
-    AdminB(targetDoc) {
-        this.debug().FuncStart(this.AdminB.name);
+    GetLoginButton(targetDoc) {
+        this.debug().FuncStart(this.GetLoginButton.name);
+        var toReturn = targetDoc.Document.getElementById(this.Const().ElemId.scLoginBtn.sc920);
+        if (!toReturn) {
+            toReturn = targetDoc.Document.querySelector(this.Const().Selector.scLoginBtn.sc820);
+        }
+        this.debug().Log('toReturn: ' + toReturn);
+        this.debug().FuncEnd(this.GetLoginButton.name);
+        return toReturn;
+    }
+    AdminB(targetDoc, callbackOnComplete) {
+        this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.Id.asShort);
+        this.debug().Log('callback passed: ' + (callbackOnComplete !== null));
         var userNameElem = targetDoc.Document.getElementById(this.Const().ElemId.scLoginUserName);
         var passwordElem = targetDoc.Document.getElementById(this.Const().ElemId.scLoginPassword);
         this.debug().Log('userNameElem: ' + userNameElem);
         this.debug().Log('passwordElem: ' + passwordElem);
-        userNameElem.setAttribute('value', 'admin');
-        passwordElem.setAttribute('value', 'b');
-        var candidate = targetDoc.Document.getElementById(this.QkID().LoginBtn);
-        this.debug().Log('candidate: ' + candidate);
-        if (candidate) {
-            candidate.click();
-        }
-        else {
-            candidate = targetDoc.Document.querySelector(this.QkSel().InputBtn2);
-            this.debug().Log('candidate: ' + candidate);
-            if (candidate) {
-                candidate.click();
+        userNameElem.setAttribute('value', this.Const().Names.scDefaultAdminUserName);
+        passwordElem.setAttribute('value', this.Const().Names.scDefaultAdminPassword);
+        var loginButton = this.GetLoginButton(targetDoc);
+        if (loginButton) {
+            this.debug().Log('clicking');
+            loginButton.click();
+            if (callbackOnComplete) {
+                this.debug().Log('Triggering callback');
+                setTimeout(callbackOnComplete, this.Const().Timeouts.PostLoginBtnClick);
+            }
+            else {
+                this.debug().Log('no callback passed');
             }
         }
+        else {
+            this.debug().Error(this.AdminB.name, 'No loginButton');
+        }
         this.debug().FuncEnd(this.AdminB.name);
-    }
-    QkSel() {
-        return this.Const().Selector;
     }
     QkID() {
         return this.Const().ElemId;
@@ -991,20 +1030,14 @@ class PageDataManager extends ManagerBase {
         super(xyyz);
         this.debug().CtorName(this.constructor.name);
     }
-    GetParentWindow() {
-        return this.__winDataParent;
-    }
-    OpenNewBrowserWindow() {
-        this.debug().FuncStart(this.OpenNewBrowserWindow.name);
-        var newWindowUrl = this.PageDataMan().__winDataParent.Window.location.href;
-        var newWindow = this.__winDataParent.Window.open(newWindowUrl);
+    SetWindowDataToCurrent(window) {
         var toReturn = {
             Friendly: 'New Tab',
-            Window: newWindow,
+            Window: window,
             WindowType: WindowType.Unknown,
             DataDocSelf: {
                 DataWinParent: null,
-                Document: newWindow.document,
+                Document: window.document,
                 HasParentDesktop: false,
                 Id: this.GuidMan().NewGuid(),
                 IsCEDoc: false,
@@ -1012,6 +1045,16 @@ class PageDataManager extends ManagerBase {
             },
         };
         toReturn.DataDocSelf.DataWinParent = toReturn;
+        return toReturn;
+    }
+    GetParentWindow() {
+        return this.__winDataParent;
+    }
+    OpenNewBrowserWindow() {
+        this.debug().FuncStart(this.OpenNewBrowserWindow.name);
+        var newWindowUrl = this.PageDataMan().__winDataParent.Window.location.href;
+        var newWindow = this.__winDataParent.Window.open(newWindowUrl);
+        var toReturn = this.SetWindowDataToCurrent(newWindow);
         this.debug().FuncEnd(this.OpenNewBrowserWindow.name + ' : ' + toReturn.DataDocSelf.Id.asString);
         return toReturn;
     }
@@ -1054,7 +1097,7 @@ class PageDataManager extends ManagerBase {
         else if (currentLoc.indexOf(this.Const().Url.ContentEditor) > -1) {
             toReturn = WindowType.ContentEditor;
         }
-        else if (currentLoc.indexOf(this.Const().Url.LaunchPad) > -1) {
+        else if (currentLoc.toLowerCase().indexOf(this.Const().Url.LaunchPad.toLowerCase()) > -1) {
             toReturn = WindowType.Launchpad;
         }
         else {
@@ -1067,7 +1110,7 @@ class PageDataManager extends ManagerBase {
         this.debug().FuncStart(this.GetCurrentPageType.name);
         var toReturn = WindowType.Unknown;
         if (this.__winDataParent && this.__winDataParent && this.__winDataParent.Window && this.__winDataParent.DataDocSelf) {
-            return this.GetPageTypeOfTargetWindow(this.__winDataParent.Window);
+            toReturn = this.GetPageTypeOfTargetWindow(this.__winDataParent.Window);
         }
         this.debug().FuncEnd(this.GetCurrentPageType.name + ' (' + toReturn + ') ' + WindowType[toReturn]);
         return toReturn;

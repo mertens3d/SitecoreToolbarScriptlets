@@ -33,8 +33,12 @@
 
   ParseGuid(val: string): IGuid {
     let toReturn: IGuid = {
-      asString: val
+      asString: val,
+      asShort: ''
     }
+
+    toReturn.asShort = this.ShortGuid(toReturn);
+
     return toReturn
   }
 }

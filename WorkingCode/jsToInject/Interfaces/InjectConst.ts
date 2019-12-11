@@ -11,19 +11,26 @@ class InjectConst {
       MaxIterationLookingForNode: 10,
       MaxIterationPageLoad: 10,
       MaxIterationRedButton: 10,
+      MaxSetHrefEffort: 10,
     },
     Timeouts: {
       TimeoutChangeLocation: 1000,
       TimeoutTriggerRedButton: 1500,
       TimeoutWaitForNodeToLoad: 500,
       WaitFogPageLoad: 1000,
+      PostLoginBtnClick: 1000,
+      SetHrefEffortWait: 1000,
     },
     ElemId: {
       BtnEdit: 'btnEdit',
       BtnRestoreWindowState: 'btnRestoreWindowState',
       BtnSaveWindowState: 'btnSaveWindowState',
       InputNickname: 'inputNickname',
-      LoginBtn: 'LogInBtn',
+      scLoginBtn: {
+        sc920: 'LogInBtn',
+        sc820: null
+      },
+        
       SelStateSnapShot: 'selState',
       textAreaFeedback: 'ta-feedback',
       SitecoreRootNodeId: 'Tree_Node_11111111111111111111111111111111',
@@ -33,7 +40,7 @@ class InjectConst {
       scLoginPassword: 'Password',
       scLoginUserName: 'UserName',
       HindSiteParentInfo: 'spanParentInfo',
-      StartButton: {
+      scStartButton: {
         sc920: 'StartButton',
         sc820: 'startButton'
       }
@@ -47,13 +54,17 @@ class InjectConst {
       Desktop: '/sitecore/shell/default.aspx',
       Login: '/sitecore/login',
       ContentEditor: '/sitecore/shell/Applications/Content%20Editor.aspx',
-      LaunchPad: '/sitecore/shell/sitecore/client/applications/launchpad',
+      LaunchPad:  '/client/applications/launchpad',
     },
 
     Selector: {
       ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
-      InputBtn2: 'input.btn',
-      IframeContent: 'iframe[src*=content]'
+      IframeContent: 'iframe[src*=content]',
+      
+      scLoginBtn: {
+        sc920: null,
+        sc820: 'input.btn',
+      },
     },
 
     Storage: {
@@ -74,6 +85,8 @@ class InjectConst {
       StylesToInject: 'StylesToInject',
       TreeMenuExpandedPng: 'treemenu_expanded.png',
       TreeMenuCollapsedPng: 'treemenu_collapsed.png',
+      scDefaultAdminPassword: 'b',
+      scDefaultAdminUserName: 'admin',
     }
   }
 }

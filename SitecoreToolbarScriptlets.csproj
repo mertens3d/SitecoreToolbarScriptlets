@@ -105,6 +105,7 @@
     </Content>
     <Content Include="WorkingCode\WindowOpener\Constants.js" />
     <Content Include="WorkingCode\WindowOpener\menu.js" />
+    <None Include="Readme.md" />
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
     <None Include="WorkingCode\jsToInject\Tested\Classes\Feedback.js.map">
