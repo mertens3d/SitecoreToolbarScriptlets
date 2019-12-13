@@ -1,38 +1,59 @@
 <body>
-  <div>
-    <button id="btnEdit" type="button">sc_mode=edit</button>
-    <button id="btnPrev" type="button">sc_mode=prev</button>
-    <button id="btnNorm" type="button">sc_mode=normal</button>
-    <button id="btnAdminB" type="button">Admin B</button>
-    <button id="btnDesktop" type="button">Desktop</button>
-    <button id="btnCE" type="button">Content Editor</button>
+  <form>
 
+    <fieldset>
+      <legend>Fore&bull;Site</legend>
 
-    <div class='group'>
-      <div>Window States</div>
+      <button id="btnEdit" type="button">sc_mode= edit</button>
+      <button id="btnPrev" type="button" class='preview-icon'>sc_mode= prev</button>
+      <button id="btnNorm" type="button">sc_mode= normal</button>
+      <button id="btnAdminB" type="button">Admin B</button>
+      <button id="btnDesktop" type="button" class='desktop-icon'>Desktop</button>
+      <button id="btnCE" type="button">Content Editor</button>
+      <button id="btnBigRed" type="button">Add CE Tab to DT</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Hind&bull;Site</legend>
+      <div class="col-sel">
+        <button id="btnSaveWindowState" type="button">Take Window State Snapshot</button>
+        <div class='mono light-text'><pre> Time Stamp          - Page Type - Nickname       - Favorite?</pre></div>
+
+        <!--<input type='checkbox' /> todo favorites only-->
+        <select id='selState' size='6'>
+        </select>
+      </div>
+      <div class='col-sel-btn'>
+        <input type="text" id="inputNickname" value='' placeholder='Nick Name' />
+        <button id="btnUpdateNickname" type="button">Set Nickname</button>
+        <button id="btnToggleFavorite" type="button">Toggle as Favorite</button>
+        <button id="btnRemoveOneFromLocalStorage" type="button">Delete From Storage</button>
+
+        <button id="btnRestoreWindowState" type="button">Restore Window State</button>
+      </div>
+    </fieldset>
+    
+    <fieldset >
+      <legend>In&bull;Site</legend>
+      <div class="col-left">
+        <textarea id="ta-feedback"></textarea>
+      </div>
+      <div class='col-right'>
+        <button id="btnDrawLocalStorage" type="button">Draw Local Storage</button>
+      </div>
+    </fieldset>
+
+    <fieldset >
+      <legend>Debug Info <span id='spanParentInfo'></span></legend>
+    
+      <div class="col-left">
+        <textarea id="ta-debug"></textarea>
+      </div>
       
-      <!--<input type='checkbox' /> todo favorites only-->
-      <select id='selState' size='4'>
-      </select>
+      <div class="col-right">
+        <button id="btnClearDebugTextArea" type="button">Clear Debug Text</button>
 
-      <input type="text" id="inputNickname" value='' placeholder='Nick Name' />
-      <button id="btnUpdateNickname" type="button">Set Nickname</button>
-      <button id="btnToggleFavorite" type="button">Toggle as Favorite</button>
-      <button id="btnRemoveOneFromLocalStorage" type="button">Delete From Storage</button>
-
-
-      <button id="btnSaveWindowState" type="button">Save Window State</button>
-      <button id="btnRestoreWindowState" type="button">Restore Window State</button>
-
-    </div>
-
-
-
-      <button id="btnDrawLocalStorage" type="button">Draw Local Storage</button>
-      <button id="btnClearTextArea" type="button">Clear Text Area</button>
-  </div>
-  <div>Feed Back</div>
-  <textarea id="ta-feedback"></textarea>
-  <div>Debug Info <span id='spanParentInfo'></span></div>
-  <textarea id="ta-debug"></textarea>
+      </div>
+    </fieldset>
+  </form>
 </body>

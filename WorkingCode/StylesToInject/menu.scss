@@ -1,30 +1,142 @@
+$scBackgroundColor: #f7f7f7;
+$scHoverColor: #E3E3E3;
+$scLaunchPadBtnBackground: white;
+$scLaunchPageButtonHeight: 96px;
+$scLaunchPagebuttonWidth: 96px;
+$scTextColorLight: #ccc;
+$scTextColorNorm: #131313;
+
+$selWidth: 500px;
+
+// widths
+$padding: 4px;
+$margin: 4px;
+$selColWidth: $margin + $padding + $selWidth + $padding +$margin;
+
+$selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $scLaunchPagebuttonWidth + $padding +$margin + 40px;
+
+//heights
+
+
+.light-text {
+  color: $scTextColorLight;
+}
+.preview-icon {
+  background-image: url(/~/icon/apps/32x32/Preview.png);
+  background-repeat: no-repeat;
+  background-position: top;
+}
+.admin-b-icon {
+  background-image: url(/~/icon/office/32x32/log_in.png);
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+.desktop-icon {
+  background-image: url(/temp/iconcache/apps/48x48/windows%20table.png);
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
 button {
-    color: green;
-    background-color: light-gray;
-    width: 200px;
-    border-radius: 5px;
-    height: 30px;
-    margin: 7px;
-    cursor: pointer;
+  background: none;
+  background-color: $scLaunchPadBtnBackground;
+  border: 0;
+  border-radius: 0px;
+  /*border-radius: 5px;*/
+  box-shadow: none;
+  cursor: pointer;
+  height: $scLaunchPageButtonHeight;
+  height: 60px;
+  margin: 7px;
+  vertical-align: top;
+  white-space: normal;
+  width: $scLaunchPagebuttonWidth;
+  word-wrap: break-word;
+
+  &:hover {
+    background-color: $scHoverColor;
+  }
 }
 
-select{
+select {
   /*height: 50px;*/
-  width: 400px;
+  width: $selWidth;
+  font-family: Courier New, Courier, monospace;
 }
 
-.group{
-  border: 1px solid black;
+.mono {
+  font-family: Courier New, Courier, monospace;
+
+  div {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
 }
 
-button:hover {
-    background-color: #afff00;
+fieldset {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-sel {
+  display: flex;
+  flex-wrap: wrap;
+  width: $selColWidth;
+  /*border: 1px solid black;*/
+}
+
+.col-sel-btn {
+  display: flex;
+  flex-wrap: wrap;
+  float: right;
+  width: $selButtonColWidth;
+  /*border: 1px solid black;*/
+}
+
+.group {
+  border: 1px solid lightgray;
+  display: flex;
+  margin: $margin;
+  padding: $padding;
+  vertical-align: top;
+}
+
+legend {
 }
 
 body {
-    background-color: coral;
+  background-color: $scBackgroundColor;
+  overflow: auto;
+  color: $scTextColorNorm;
 }
-textarea{
-    width: 100%;
-    height: 160px;
+.col-right{
+
+}
+.col-left {
+  display: inline-block;
+  vertical-align: top;
+  width: 75%;
+
+  /*button {
+    display: inline-block;
+    width: 100px;
+  }*/
+}
+
+.ta-wrapper {
+  width: 60%;
+  display: inline-block;
+
+  .ta-feedback {
+    height: 100px;
+    display: inline-block;
+    width: auto;
+  }
+}
+
+textarea {
+  width: 100%;
+  height: 160px;
 }

@@ -10,7 +10,7 @@ class Debug {
   __getTextArea(): HTMLTextAreaElement {
     return <HTMLTextAreaElement>document.getElementById('ta-debug');
   }
-  ClearTextArea(): void {
+  ClearDebugText(): void {
     var ta = this.__getTextArea();
     if (ta) {
       ta.value = '--- Debug Text Reset ---\\n';
@@ -19,13 +19,46 @@ class Debug {
       this.Error(Debug.name, 'No text area found');
     }
   }
-  Log(text, optionalValue: string = '') {
+
+  MarkerA() {
+    this.__markerRaw('A');
+  }
+
+  MarkerB() {
+    this.__markerRaw('B');
+  }
+
+  MarkerC() {
+    this.__markerRaw('C');
+  }
+
+  MarkerD() {
+    this.__markerRaw('D');
+  }
+
+  MarkerE() {
+    this.__markerRaw('E');
+  }
+
+  private __markerRaw(marker) {
+    this.Log('Marker ' + marker);
+  }
+
+  Log(text, optionalValue: string = '', hasPrefix = false) {
     var indent = '  ';
     //text =  indent.repeat(this.__indentCount) + text;
 
     for (var idx = 0; idx < this.__indentCount; idx++) {
       text = indent + text;
     }
+
+    var prefixLength = 3;
+    if (!hasPrefix) {
+      for (var idx = 0; idx < prefixLength; idx++) {
+        text = ' ' + text;
+      }
+    }
+
     console.log(text);
 
     var ta = this.__getTextArea();
@@ -47,7 +80,7 @@ class Debug {
     this.Log('Constructor: ' + ctorName);
   }
 
-  FuncStart(textOrFunc, optionalValue:string = '') {
+  FuncStart(textOrFunc, optionalValue: string = '') {
     textOrFunc = 's) ' + textOrFunc;
 
     if (typeof (textOrFunc) === 'function') {
@@ -59,7 +92,7 @@ class Debug {
       textOrFunc = textOrFunc + ' : ' + optionalValue;
     }
 
-    this.Log(textOrFunc);
+    this.Log(textOrFunc, '', true);
     this.__indentCount++;
     if (this.__indentCount > 10) {
       this.__indentCount = 10;
@@ -73,15 +106,12 @@ class Debug {
       text = text + ' : ' + optionalValue;
     }
 
-
-
     this.__indentCount--;
 
-       
     if (this.__indentCount < 0) {
       this.__indentCount = 0;
     }
-    this.Log(text);
+    this.Log(text, optionalValue, true);
   }
 
   Error(container, text) {
@@ -91,7 +121,12 @@ class Debug {
     if (!text) {
       text = 'unknown';
     }
-    var logText = '** ERROR ** ' + container + ':' + text;
-    this.Log(logText);
+    this.Log('');
+    this.Log('\t\t** ERROR ** ' + container);
+    this.Log('');
+    this.Log(text);
+    this.Log('');
+    this.Log('\t\t** ERROR ** ' + container);
+    this.Log('');
   }
 }

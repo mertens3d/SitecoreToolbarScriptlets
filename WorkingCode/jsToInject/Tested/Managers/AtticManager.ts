@@ -60,7 +60,7 @@
   }
 
   __buildDebugDataPretty(dataOneWindow: IDataOneWindowStorage) {
-    this.debug().FuncStart(this.__buildDebugDataPretty.name, (dataOneWindow !== null).toString());
+    this.debug().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + (dataOneWindow !== null).toString());
 
     var toReturn: string[] = [];
     if (dataOneWindow) {
@@ -68,8 +68,10 @@
       toReturn.push('Id: ' + dataOneWindow.Id);
       toReturn.push('TimeStamp: ' + dataOneWindow.TimeStamp);
       toReturn.push('CE Count: ' + dataOneWindow.AllCEAr.length);
+      toReturn.push('Type: ' + WindowType[dataOneWindow.WindowType]);
+      toReturn.push('Nickname: ' + dataOneWindow.NickName);
       for (var jdx = 0; jdx < dataOneWindow.AllCEAr.length; jdx++) {
-        toReturn.push('\t------ One CE -----');
+        toReturn.push('\t------ One CE Start -----');
         var dataOneCE: IDataOneStorageCE = dataOneWindow.AllCEAr[jdx];
         toReturn.push('\tId: ' + dataOneCE.Id.asString);
 
@@ -77,6 +79,7 @@
         for (var kdx = 0; kdx < allCeDebugDataAr.length; kdx++) {
           toReturn.push('\t\t' + allCeDebugDataAr[kdx]);
         }
+        toReturn.push('\t------ One CE End -----');
       }
       toReturn.push('------ One Window Snap Shot End -----');
 
@@ -170,8 +173,13 @@
           candidate.Id = this.Xyyz.GuidMan.ParseGuid(candidate.Id.asString);
           candidate.RawData = oneRaw;
 
+          if (!candidate.WindowType) {
+            candidate.WindowType = WindowType.Unknown;
+            candidate.WindowFriendly = WindowType[candidate.WindowType];
+          }
+
           if (!candidate.NickName) {
-            candidate.NickName = '__';
+            candidate.NickName = '';
           }
           toReturn.push(candidate);
         }

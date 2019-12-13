@@ -1,7 +1,8 @@
 ﻿interface IDataOneWindowStorage {
-  RawData: IOneStorageData;
+  RawData: IOneStorageData ,
   TimeStamp: Date,
-  //TimeStampFriendly: String,
+  WindowType: WindowType,
+  WindowFriendly: string,
   AllCEAr: IDataOneStorageCE[],
   Id: IGuid,
   IsFavorite: Boolean,

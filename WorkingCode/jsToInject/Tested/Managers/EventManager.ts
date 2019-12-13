@@ -12,85 +12,111 @@ class EventManager extends ManagerBase {
   private __wireMenuButtons() {
     this.debug().FuncStart(EventManager.name + ' ' + this.__wireMenuButtons.name);
 
-    var thisObj = this;
-    var locMan = thisObj.Xyyz.LocationMan;
-    var constId = this.Const().ElemId;
+    this.__ById(this.Const().ElemId.BtnEdit).onclick = () => { this.locMan().SetScMode('edit'); };
+    this.__ById('btnPrev').onclick = () => { this.locMan().SetScMode('preview'); };
+    this.__ById('btnNorm').onclick = () => { this.locMan().SetScMode('normal'); };
+    this.__ById('btnAdminB').onclick = () => { this.locMan().AdminB(this.PageDataMan().GetParentWindow().DataDocSelf, null); };
 
-    this.__ById(this.Const().ElemId.BtnEdit).onclick = () => { locMan.SetScMode('edit'); };
-    this.__ById('btnPrev').onclick = () => { locMan.SetScMode('preview'); };
-    this.__ById('btnNorm').onclick = () => { locMan.SetScMode('normal'); };
-    this.__ById('btnAdminB').onclick = () => { locMan.AdminB(this.PageDataMan().GetParentWindow().DataDocSelf, null); };
+    this.__ById('btnDesktop').onclick = () => { this.debug().ClearDebugText(); this.locMan().ChangeLocationSwitchBoard(WindowType.Desktop, this.PageDataMan().GetParentWindow()); };
+    this.__ById('btnCE').onclick = () => { this.__openCE(); };
 
-    this.__ById('btnDesktop').onclick = () => { this.debug().ClearTextArea(); locMan.ChangeLocationSwitchBoard(WindowType.Desktop, this.PageDataMan().GetParentWindow()); };
-    this.__ById('btnCE').onclick = () => { this.debug().ClearTextArea();locMan.ChangeLocationSwitchBoard(WindowType.ContentEditor, this.PageDataMan().GetParentWindow()); };
-
-    this.__ById(constId.BtnSaveWindowState).onclick = () => { thisObj.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().GetParentWindow()); };
+    this.__ById(this.Const().ElemId.BtnSaveWindowState).onclick = () => { this.__takeSnapShot(); };
     this.__ById('btnDrawLocalStorage').onclick = () => { this.AtticMan().DrawStorage(); };
     this.__ById('btnRemoveOneFromLocalStorage').onclick = () => { this.AtticMan().RemoveOneFromStorage(); };
-    this.__ById('btnClearTextArea').onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
-    this.__ById(constId.btnUpdateNicknameB).onclick = () => { thisObj.Xyyz.AtticMan.UpdateNickname(); };
-    this.__ById(constId.btnToggleFavoriteB).onclick = () => { thisObj.Xyyz.AtticMan.ToggleFavorite(); };
+    this.__ById(this.Const().ElemId.Hs.btnClearDebugTextArea).onclick = () => { this.Xyyz.debug.ClearDebugText(); };
+    this.__ById(this.Const().ElemId.btnUpdateNicknameB).onclick = () => { this.Xyyz.AtticMan.UpdateNickname(); };
 
-    this.__ById(constId.BtnRestoreWindowState).onclick = (evt) => { this._handlerRestoreClick(evt); };
-    (<HTMLSelectElement>this.__ById(constId.SelStateSnapShot)).onchange = () => { thisObj.Xyyz.UiMan.SelectChanged(); };
+    this.__ById(this.Const().ElemId.hsBtnBigRed).onclick = () => { this.__addCETab() };
 
-    (<HTMLSelectElement>this.__ById(constId.SelStateSnapShot)).ondblclick = (evt) => { this._handlerRestoreClick(evt); };
+    this.__ById(this.Const().ElemId.BtnRestoreWindowState).onclick = (evt) => { this._handlerRestoreClick(evt); };
+    (<HTMLSelectElement>this.__ById(this.Const().ElemId.SelStateSnapShot)).onchange = () => { this.Xyyz.UiMan.SelectChanged(); };
 
-    //this.__ById(constId.InputNickname).onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
+    (<HTMLSelectElement>this.__ById(this.Const().ElemId.SelStateSnapShot)).ondblclick = (evt) => { this._handlerRestoreClick(evt); };
 
-    //this.__ById(constId.SelSnapShot).onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
+    //this.__ById(this.Const().ElemId.InputNickname).onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
+
+    //this.__ById(this.Const().ElemId.SelSnapShot).onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
 
     this.debug().FuncEnd(this.__wireMenuButtons.name);
   };
 
-  private _getTargetWindow(evt: MouseEvent, callbackOnLoaded: Function): IDataBroswerWindow {
+  private __takeSnapShot() {
+    this.debug().ClearDebugText();
+    this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().GetParentWindow());
+  }
+
+  private __addCETab() {
+    this.debug().ClearDebugText();
+    this.DesktopMan().WaitForAndClickRedStartButtonWorker(this.PageDataMan().SelfWindow);
+  }
+
+  private __openCE() {
+    this.debug().ClearDebugText();
+    this.locMan().ChangeLocationSwitchBoard(WindowType.ContentEditor, this.PageDataMan().GetParentWindow());
+  }
+
+  private __getTargetWindow(evt: MouseEvent, callbackOnLoaded: Function): IDataBroswerWindow {
+    this.debug().FuncStart(this.__getTargetWindow.name);
     var targetWindow: IDataBroswerWindow;
+
     if (evt.ctrlKey) {
+      this.debug().Log('target window is self');
       targetWindow = this.PageDataMan().GetParentWindow();
-      this.debug().Log('targetWindow id: ' + targetWindow.DataDocSelf.Id.asString)
+
       callbackOnLoaded(targetWindow);
     } else {
+      this.debug().Log('target window is new');
       targetWindow = this.PageDataMan().OpenNewBrowserWindow();
+
       var self = this;
+
       targetWindow.Window.addEventListener('load', function () {
-        self.debug().Log('targetWindow id: ' + targetWindow.DataDocSelf.Id.asString)
+        if (targetWindow) {
+          targetWindow.DataDocSelf.DataWinParent = targetWindow;
+          targetWindow.DataDocSelf.Document = targetWindow.Window.document;
 
-        //targetWindow.Window.document.body.innerHTML = 'adsffsda';
-        targetWindow.DataDocSelf.DataWinParent = targetWindow;
-        targetWindow.DataDocSelf.Document = targetWindow.Window.document;
-
-        console.log(targetWindow.DataDocSelf.Document.body.innerHTML);
-
-
-          //.Window.location.href = 'https://bing.com?mmouse=true';
-        callbackOnLoaded(targetWindow);
+          self.debug().Log(self.__getTargetWindow.name,'triggering callback');
+          callbackOnLoaded(targetWindow);
+        } else {
+          self.debug().Error(self.__getTargetWindow, 'No target window');
+        }
       }, false);
     }
+
     targetWindow.WindowType = WindowType.ContentEditor;
+    this.debug().FuncEnd(this.__getTargetWindow.name, 'child window id: ' + targetWindow.DataDocSelf.Id.asShort);
 
     return targetWindow;
   }
 
   private _handlerRestoreClick(evt: MouseEvent) {
-    this.debug().ClearTextArea();
+    this.debug().ClearDebugText();
+
     this.debug().FuncStart(this._handlerRestoreClick.name);
-    var idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
-    var dataOneWindowStorage = this.AtticMan().GetFromStorageById(idOfSelect);
 
-    var self = this;
+    try {
+      var idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
 
-    var callbackOnLoaded: Function = (targetWindow: IDataBroswerWindow) => {
-      self.debug().Log('Page loaded callback ' + (targetWindow.Window.location.href));
+      this.debug().MarkerA();
+      var dataOneWindowStorage = this.AtticMan().GetFromStorageById(idOfSelect);
+      this.debug().MarkerB();
+      var self = this;
 
-      
+      var callbackOnLoaded: Function = function (targetWindow: IDataBroswerWindow) {
+        self.debug().FuncStart(self._handlerRestoreClick.name, 'callback');
+        if (targetWindow) {
+              self.Xyyz.OneWindowMan.RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage);
+            } else {
+              self.debug().Error(this._handlerRestoreClick.name, 'no target window');
+        }
+        self.debug().FuncEnd('callback');
+      }
+      this.debug().MarkerC();
 
-      //targetWindow.Window.location.href = 'https://bing.com?dog=2';
-
-      self.Xyyz.OneWindowMan.RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage);
+      this.__getTargetWindow(evt, callbackOnLoaded);
+    } catch (ex) {
+      this.debug().Error(this._handlerRestoreClick.name, ex)
     }
-
-    this._getTargetWindow(evt, callbackOnLoaded);
-
     this.debug().FuncEnd(this._handlerRestoreClick.name);
   }
 }

@@ -33,7 +33,7 @@ class OneTreeManager extends ManagerBase {
         var firstImg = targetNode.querySelector(this.Const().Selector.ContentTreeNodeGlyph);
         if (firstImg) {
           var srcAttr = firstImg.getAttribute('src');
-          if (srcAttr.indexOf(this.Const().TreeExpandedPng) > -1) {
+          if (srcAttr.indexOf(this.Const().Names.sc.scTreeExpandedPng) > -1) {
             var friendlyName = this.GetFriendlyNameFromNode(firstImg);
 
             var newData: IDataOneTreeNode = { NodeFriendly: friendlyName, NodeId: this.Xyyz.GuidMan.ParseGuid( firstImg.id) }
@@ -53,15 +53,15 @@ class OneTreeManager extends ManagerBase {
     return toReturn;
   }
 
-  GetOneLiveTreeData(dataOneCe: IDataOneStorageCE, targetDoc:  IDataOneDoc): IDataOneTreeNode[] {
-    this.debug().FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + dataOneCe.Id);
-    this.debug().Log('targetDoc isnull xx: ' + (targetDoc === null));
+  GetOneLiveTreeData(dataOneCe: IDataOneStorageCE, targetDoc: IDataOneDoc): IDataOneTreeNode[] {
+    this.debug().FuncStart(this.GetOneLiveTreeData.name, 'id: ' + dataOneCe.Id.asShort);
+    this.debug().Log('targetDoc isnull: ' + (targetDoc === null));
 
     var toReturn: IDataOneTreeNode[] = [];
 
     if (targetDoc) {
       //this.debug().Log(targetDoc);
-      var rootNode = targetDoc.Document.getElementById(this.Const().ElemId.SitecoreRootNodeId);
+      var rootNode = targetDoc.Document.getElementById(this.Const().ElemId.sc.SitecoreRootNodeId);
 
       if (rootNode) {
         this.debug().Log('rootNode: ' + rootNode.innerHTML);

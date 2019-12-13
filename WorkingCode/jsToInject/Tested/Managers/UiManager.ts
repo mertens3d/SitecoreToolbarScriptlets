@@ -63,14 +63,16 @@
   }
 
   GetIdOfSelectWindowSnapshot(): IGuid {
+    this.debug().FuncStart(this.GetIdOfSelectWindowSnapshot.name);
+
     var targetSel: HTMLSelectElement = this.__getSelectElem();
     var toReturn: IGuid = null;
     if (targetSel) {
       var temp = targetSel.options[this.__selectSnapshotIndex].value;
-      this.debug().Log('temp: ' + temp);
+      //this.debug().Log('temp: ' + temp);
       toReturn = this.GuidMan().ParseGuid(temp);
     }
-    this.debug().Log('idOfSelect: ' + toReturn.asString);
+    this.debug().FuncEnd(this.GetIdOfSelectWindowSnapshot.name, 'idOfSelect: ' + toReturn.asString);
     return toReturn;
   }
 
@@ -92,7 +94,9 @@
           this.debug().Log('data.Id.asString : ' + data.Id.asString);
 
           var el = <HTMLOptionElement>window.document.createElement('option');
-          el.textContent = this.Xyyz.Utilities.TimeNicknameFavStr(data);
+          el.innerHTML =  this.Xyyz.Utilities.TimeNicknameFavStr(data);
+
+          //this.debug().Log('el.textContent : ' + el.outerHTML);
           //el.textContent = this.Xyyz.Utilities.MakeFriendlyDate(data.TimeStamp) + ' - ' + data.NickName + ' - ' + (data.IsFavorite ? 'Favorite' : '--');
           el.value = data.Id.asString;
           if (idx === this.__selectSnapshotIndex) {

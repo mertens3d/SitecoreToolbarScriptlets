@@ -6,7 +6,9 @@ class ManagerBase {
     AtticMan() { return this.Xyyz.AtticMan; }
     Const() { return this.Xyyz.Const; }
     debug() { return this.Xyyz.debug; }
+    DesktopMan() { return this.Xyyz.OneDesktopMan; }
     GuidMan() { return this.Xyyz.GuidMan; }
+    locMan() { return this.Xyyz.LocationMan; }
     PageDataMan() { return this.Xyyz.PageDataMan; }
     UiMan() { return this.Xyyz.UiMan; }
     Utilites() { return this.Xyyz.Utilities; }
@@ -14,6 +16,7 @@ class ManagerBase {
 exports = ManagerBase;
 
 console.log('IConst loaded');
+
 
 
 
@@ -31,6 +34,7 @@ InjectConst.const = {
         MaxIterationPageLoad: 10,
         MaxIterationRedButton: 10,
         MaxSetHrefEffort: 10,
+        MaxIterationSwitchBoard: 20,
     },
     Timeouts: {
         TimeoutChangeLocation: 1000,
@@ -41,26 +45,32 @@ InjectConst.const = {
         SetHrefEffortWait: 1000,
     },
     ElemId: {
+        Hs: {
+            btnClearDebugTextArea: 'btnClearDebugTextArea',
+        },
         BtnEdit: 'btnEdit',
         BtnRestoreWindowState: 'btnRestoreWindowState',
         BtnSaveWindowState: 'btnSaveWindowState',
         InputNickname: 'inputNickname',
-        scLoginBtn: {
-            sc920: 'LogInBtn',
-            sc820: null
-        },
+        hsBtnBigRed: 'btnBigRed',
         SelStateSnapShot: 'selState',
         textAreaFeedback: 'ta-feedback',
-        SitecoreRootNodeId: 'Tree_Node_11111111111111111111111111111111',
-        SitecoreRootGlyphId: 'Tree_Glyph_11111111111111111111111111111111',
         btnUpdateNicknameB: 'btnUpdateNickname',
         btnToggleFavoriteB: 'btnToggleFavorite',
-        scLoginPassword: 'Password',
-        scLoginUserName: 'UserName',
         HindSiteParentInfo: 'spanParentInfo',
-        scStartButton: {
-            sc920: 'StartButton',
-            sc820: 'startButton'
+        sc: {
+            scLoginUserName: 'UserName',
+            scLoginPassword: 'Password',
+            SitecoreRootNodeId: 'Tree_Node_11111111111111111111111111111111',
+            SitecoreRootGlyphId: 'Tree_Glyph_11111111111111111111111111111111',
+            scLoginBtn: {
+                sc920: 'LogInBtn',
+                sc820: null
+            },
+            scStartButton: {
+                sc920: 'StartButton',
+                sc820: 'startButton'
+            },
         }
     },
     ClassNames: {
@@ -83,13 +93,15 @@ InjectConst.const = {
     Storage: {
         WindowRoot: 'Xyyz.WindowSnapShot.'
     },
-    TreeExpandedPng: 'treemenu_expanded.png',
     MaxIter: 100,
     GuidEmpty: '00000000-0000-0000-0000-000000000000',
     prop: {
         AllTreeData: 'AllTreeData',
     },
     Names: {
+        sc: {
+            scTreeExpandedPng: 'treemenu_expanded.png',
+        },
         HtmlToInject: 'HtmlToInject',
         StylesToInject: 'StylesToInject',
         TreeMenuExpandedPng: 'treemenu_expanded.png',
@@ -112,7 +124,7 @@ class Debug {
     __getTextArea() {
         return document.getElementById('ta-debug');
     }
-    ClearTextArea() {
+    ClearDebugText() {
         var ta = this.__getTextArea();
         if (ta) {
             ta.value = '--- Debug Text Reset ---\\n';
@@ -122,10 +134,34 @@ class Debug {
             this.Error(Debug.name, 'No text area found');
         }
     }
-    Log(text, optionalValue = '') {
+    MarkerA() {
+        this.__markerRaw('A');
+    }
+    MarkerB() {
+        this.__markerRaw('B');
+    }
+    MarkerC() {
+        this.__markerRaw('C');
+    }
+    MarkerD() {
+        this.__markerRaw('D');
+    }
+    MarkerE() {
+        this.__markerRaw('E');
+    }
+    __markerRaw(marker) {
+        this.Log('Marker ' + marker);
+    }
+    Log(text, optionalValue = '', hasPrefix = false) {
         var indent = '  ';
         for (var idx = 0; idx < this.__indentCount; idx++) {
             text = indent + text;
+        }
+        var prefixLength = 3;
+        if (!hasPrefix) {
+            for (var idx = 0; idx < prefixLength; idx++) {
+                text = ' ' + text;
+            }
         }
         console.log(text);
         var ta = this.__getTextArea();
@@ -149,7 +185,7 @@ class Debug {
         if (optionalValue.length > 0) {
             textOrFunc = textOrFunc + ' : ' + optionalValue;
         }
-        this.Log(textOrFunc);
+        this.Log(textOrFunc, '', true);
         this.__indentCount++;
         if (this.__indentCount > 10) {
             this.__indentCount = 10;
@@ -164,7 +200,7 @@ class Debug {
         if (this.__indentCount < 0) {
             this.__indentCount = 0;
         }
-        this.Log(text);
+        this.Log(text, optionalValue, true);
     }
     Error(container, text) {
         if (!container) {
@@ -173,8 +209,13 @@ class Debug {
         if (!text) {
             text = 'unknown';
         }
-        var logText = '** ERROR ** ' + container + ':' + text;
-        this.Log(logText);
+        this.Log('');
+        this.Log('\t\t** ERROR ** ' + container);
+        this.Log('');
+        this.Log(text);
+        this.Log('');
+        this.Log('\t\t** ERROR ** ' + container);
+        this.Log('');
     }
 }
 
@@ -203,21 +244,89 @@ class FeedbackManager extends ManagerBase {
     }
 }
 
+class IterationHelper extends ManagerBase {
+    constructor(xyyz, maxIterations, timeout, nickname) {
+        super(xyyz);
+        xyyz.debug.FuncStart(IterationHelper.name, nickname);
+        this.__maxIterations = maxIterations;
+        this.__currentIteration = maxIterations;
+        this.__timeout = timeout;
+        this.__nickName = nickname;
+        xyyz.debug.FuncEnd(IterationHelper.name);
+    }
+    DecrementAndKeepGoing() {
+        this.__currentIteration -= 1;
+        this.debug().Log('Iteration: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations);
+        var toReturn = this.__currentIteration > 0;
+        if (!toReturn) {
+            this.NotifyExhausted();
+        }
+        return toReturn;
+    }
+    NotifyExhausted() {
+        this.debug().Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
+    }
+    WaitAndThen(timeoutFunction) {
+        setTimeout(timeoutFunction, this.__timeout);
+    }
+}
+
 class Utilities extends ManagerBase {
     TimeNicknameFavStr(data) {
-        return this.MakeFriendlyDate(data.TimeStamp) + ' - ' + data.NickName + ' - ' + (data.IsFavorite ? 'Favorite' : '--');
+        var typeStr = (data.WindowType === WindowType.Unknown) ? '?' : WindowType[data.WindowType];
+        return this.MakeFriendlyDate(data.TimeStamp)
+            + ' - ' + this.Buffer(typeStr, 9, ' ', false)
+            + ' - ' + this.Buffer(data.NickName, 16, ' ', false)
+            + ' - ' + this.Buffer((data.IsFavorite ? '*' : ' '), 1);
     }
     constructor(xyyz) {
         super(xyyz);
         xyyz.debug.FuncStart(Utilities.name);
         xyyz.debug.FuncEnd(Utilities.name);
     }
+    Buffer(str, desiredLength, buffChar = ' ', bufferLEft = true) {
+        var toReturn = str;
+        if (buffChar.length === 0) {
+            buffChar = ' ';
+        }
+        if (toReturn.length > desiredLength) {
+            if (desiredLength > 6) {
+                toReturn = toReturn.substring(0, desiredLength - 3) + '...';
+            }
+            else {
+                toReturn = toReturn.substring(0, desiredLength);
+            }
+        }
+        if (toReturn.length < desiredLength) {
+            var spacesNeeded = desiredLength - toReturn.length;
+            if (buffChar === ' ') {
+                buffChar = '&nbsp;';
+            }
+            for (var idx = 0; idx < spacesNeeded; idx++) {
+                if (bufferLEft) {
+                    toReturn = buffChar + toReturn;
+                }
+                else {
+                    toReturn = toReturn + buffChar;
+                }
+            }
+        }
+        return toReturn;
+    }
     MakeFriendlyDate(date) {
-        var toReturn = date.toDateString() + ' ' + date.toLocaleTimeString();
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        var day = this.Utilites().Buffer(date.getDay().toString(), 2, '0');
+        var min = this.Utilites().Buffer(date.getMinutes().toString(), 2, '0');
+        var hoursRaw = date.getHours();
+        var ampm = hoursRaw >= 12 ? 'pm' : 'am';
+        hoursRaw = hoursRaw % 12;
+        var hourClean = hoursRaw ? hoursRaw : 12;
+        var hourCleanStr = this.Utilites().Buffer(hourClean.toString(), 2, '0');
+        var toReturn = year + '.' + month + '.' + day + ' ' + hourCleanStr + ':' + min + ' ' + ampm;
         return toReturn;
     }
 }
-
 
 var ChildWindowDest;
 (function (ChildWindowDest) {
@@ -279,21 +388,24 @@ class AtticManager extends ManagerBase {
         }
     }
     __buildDebugDataPretty(dataOneWindow) {
-        this.debug().FuncStart(this.__buildDebugDataPretty.name, (dataOneWindow !== null).toString());
+        this.debug().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + (dataOneWindow !== null).toString());
         var toReturn = [];
         if (dataOneWindow) {
             toReturn.push('------ One Window Snap Shot Start -----');
             toReturn.push('Id: ' + dataOneWindow.Id);
             toReturn.push('TimeStamp: ' + dataOneWindow.TimeStamp);
             toReturn.push('CE Count: ' + dataOneWindow.AllCEAr.length);
+            toReturn.push('Type: ' + WindowType[dataOneWindow.WindowType]);
+            toReturn.push('Nickname: ' + dataOneWindow.NickName);
             for (var jdx = 0; jdx < dataOneWindow.AllCEAr.length; jdx++) {
-                toReturn.push('\t------ One CE -----');
+                toReturn.push('\t------ One CE Start -----');
                 var dataOneCE = dataOneWindow.AllCEAr[jdx];
                 toReturn.push('\tId: ' + dataOneCE.Id.asString);
                 var allCeDebugDataAr = this.Xyyz.OneCEMan.GetDebugDataOneCE(dataOneCE);
                 for (var kdx = 0; kdx < allCeDebugDataAr.length; kdx++) {
                     toReturn.push('\t\t' + allCeDebugDataAr[kdx]);
                 }
+                toReturn.push('\t------ One CE End -----');
             }
             toReturn.push('------ One Window Snap Shot End -----');
             this.debug().FuncEnd(this.__buildDebugDataPretty.name);
@@ -364,8 +476,12 @@ class AtticManager extends ManagerBase {
                     candidate.TimeStamp = new Date(candidate.TimeStamp);
                     candidate.Id = this.Xyyz.GuidMan.ParseGuid(candidate.Id.asString);
                     candidate.RawData = oneRaw;
+                    if (!candidate.WindowType) {
+                        candidate.WindowType = WindowType.Unknown;
+                        candidate.WindowFriendly = WindowType[candidate.WindowType];
+                    }
                     if (!candidate.NickName) {
-                        candidate.NickName = '__';
+                        candidate.NickName = '';
                     }
                     toReturn.push(candidate);
                 }
@@ -453,59 +569,89 @@ class EventManager extends ManagerBase {
     }
     __wireMenuButtons() {
         this.debug().FuncStart(EventManager.name + ' ' + this.__wireMenuButtons.name);
-        var thisObj = this;
-        var locMan = thisObj.Xyyz.LocationMan;
-        var constId = this.Const().ElemId;
-        this.__ById(this.Const().ElemId.BtnEdit).onclick = () => { locMan.SetScMode('edit'); };
-        this.__ById('btnPrev').onclick = () => { locMan.SetScMode('preview'); };
-        this.__ById('btnNorm').onclick = () => { locMan.SetScMode('normal'); };
-        this.__ById('btnAdminB').onclick = () => { locMan.AdminB(this.PageDataMan().GetParentWindow().DataDocSelf, null); };
-        this.__ById('btnDesktop').onclick = () => { this.debug().ClearTextArea(); locMan.ChangeLocationSwitchBoard(WindowType.Desktop, this.PageDataMan().GetParentWindow()); };
-        this.__ById('btnCE').onclick = () => { this.debug().ClearTextArea(); locMan.ChangeLocationSwitchBoard(WindowType.ContentEditor, this.PageDataMan().GetParentWindow()); };
-        this.__ById(constId.BtnSaveWindowState).onclick = () => { thisObj.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().GetParentWindow()); };
+        this.__ById(this.Const().ElemId.BtnEdit).onclick = () => { this.locMan().SetScMode('edit'); };
+        this.__ById('btnPrev').onclick = () => { this.locMan().SetScMode('preview'); };
+        this.__ById('btnNorm').onclick = () => { this.locMan().SetScMode('normal'); };
+        this.__ById('btnAdminB').onclick = () => { this.locMan().AdminB(this.PageDataMan().GetParentWindow().DataDocSelf, null); };
+        this.__ById('btnDesktop').onclick = () => { this.debug().ClearDebugText(); this.locMan().ChangeLocationSwitchBoard(WindowType.Desktop, this.PageDataMan().GetParentWindow()); };
+        this.__ById('btnCE').onclick = () => { this.__openCE(); };
+        this.__ById(this.Const().ElemId.BtnSaveWindowState).onclick = () => { this.__takeSnapShot(); };
         this.__ById('btnDrawLocalStorage').onclick = () => { this.AtticMan().DrawStorage(); };
         this.__ById('btnRemoveOneFromLocalStorage').onclick = () => { this.AtticMan().RemoveOneFromStorage(); };
-        this.__ById('btnClearTextArea').onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
-        this.__ById(constId.btnUpdateNicknameB).onclick = () => { thisObj.Xyyz.AtticMan.UpdateNickname(); };
-        this.__ById(constId.btnToggleFavoriteB).onclick = () => { thisObj.Xyyz.AtticMan.ToggleFavorite(); };
-        this.__ById(constId.BtnRestoreWindowState).onclick = (evt) => { this._handlerRestoreClick(evt); };
-        this.__ById(constId.SelStateSnapShot).onchange = () => { thisObj.Xyyz.UiMan.SelectChanged(); };
-        this.__ById(constId.SelStateSnapShot).ondblclick = (evt) => { this._handlerRestoreClick(evt); };
+        this.__ById(this.Const().ElemId.Hs.btnClearDebugTextArea).onclick = () => { this.Xyyz.debug.ClearDebugText(); };
+        this.__ById(this.Const().ElemId.btnUpdateNicknameB).onclick = () => { this.Xyyz.AtticMan.UpdateNickname(); };
+        this.__ById(this.Const().ElemId.hsBtnBigRed).onclick = () => { this.__addCETab(); };
+        this.__ById(this.Const().ElemId.BtnRestoreWindowState).onclick = (evt) => { this._handlerRestoreClick(evt); };
+        this.__ById(this.Const().ElemId.SelStateSnapShot).onchange = () => { this.Xyyz.UiMan.SelectChanged(); };
+        this.__ById(this.Const().ElemId.SelStateSnapShot).ondblclick = (evt) => { this._handlerRestoreClick(evt); };
         this.debug().FuncEnd(this.__wireMenuButtons.name);
     }
     ;
-    _getTargetWindow(evt, callbackOnLoaded) {
+    __takeSnapShot() {
+        this.debug().ClearDebugText();
+        this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().GetParentWindow());
+    }
+    __addCETab() {
+        this.debug().ClearDebugText();
+        this.DesktopMan().WaitForAndClickRedStartButtonWorker(this.PageDataMan().SelfWindow);
+    }
+    __openCE() {
+        this.debug().ClearDebugText();
+        this.locMan().ChangeLocationSwitchBoard(WindowType.ContentEditor, this.PageDataMan().GetParentWindow());
+    }
+    __getTargetWindow(evt, callbackOnLoaded) {
+        this.debug().FuncStart(this.__getTargetWindow.name);
         var targetWindow;
         if (evt.ctrlKey) {
+            this.debug().Log('target window is self');
             targetWindow = this.PageDataMan().GetParentWindow();
-            this.debug().Log('targetWindow id: ' + targetWindow.DataDocSelf.Id.asString);
             callbackOnLoaded(targetWindow);
         }
         else {
+            this.debug().Log('target window is new');
             targetWindow = this.PageDataMan().OpenNewBrowserWindow();
             var self = this;
             targetWindow.Window.addEventListener('load', function () {
-                self.debug().Log('targetWindow id: ' + targetWindow.DataDocSelf.Id.asString);
-                targetWindow.DataDocSelf.DataWinParent = targetWindow;
-                targetWindow.DataDocSelf.Document = targetWindow.Window.document;
-                console.log(targetWindow.DataDocSelf.Document.body.innerHTML);
-                callbackOnLoaded(targetWindow);
+                if (targetWindow) {
+                    targetWindow.DataDocSelf.DataWinParent = targetWindow;
+                    targetWindow.DataDocSelf.Document = targetWindow.Window.document;
+                    self.debug().Log(self.__getTargetWindow.name, 'triggering callback');
+                    callbackOnLoaded(targetWindow);
+                }
+                else {
+                    self.debug().Error(self.__getTargetWindow, 'No target window');
+                }
             }, false);
         }
         targetWindow.WindowType = WindowType.ContentEditor;
+        this.debug().FuncEnd(this.__getTargetWindow.name, 'child window id: ' + targetWindow.DataDocSelf.Id.asShort);
         return targetWindow;
     }
     _handlerRestoreClick(evt) {
-        this.debug().ClearTextArea();
+        this.debug().ClearDebugText();
         this.debug().FuncStart(this._handlerRestoreClick.name);
-        var idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
-        var dataOneWindowStorage = this.AtticMan().GetFromStorageById(idOfSelect);
-        var self = this;
-        var callbackOnLoaded = (targetWindow) => {
-            self.debug().Log('Page loaded callback ' + (targetWindow.Window.location.href));
-            self.Xyyz.OneWindowMan.RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage);
-        };
-        this._getTargetWindow(evt, callbackOnLoaded);
+        try {
+            var idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
+            this.debug().MarkerA();
+            var dataOneWindowStorage = this.AtticMan().GetFromStorageById(idOfSelect);
+            this.debug().MarkerB();
+            var self = this;
+            var callbackOnLoaded = function (targetWindow) {
+                self.debug().FuncStart(self._handlerRestoreClick.name, 'callback');
+                if (targetWindow) {
+                    self.Xyyz.OneWindowMan.RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage);
+                }
+                else {
+                    self.debug().Error(this._handlerRestoreClick.name, 'no target window');
+                }
+                self.debug().FuncEnd('callback');
+            };
+            this.debug().MarkerC();
+            this.__getTargetWindow(evt, callbackOnLoaded);
+        }
+        catch (ex) {
+            this.debug().Error(this._handlerRestoreClick.name, ex);
+        }
         this.debug().FuncEnd(this._handlerRestoreClick.name);
     }
 }
@@ -594,7 +740,6 @@ class LocationManager extends ManagerBase {
     constructor(xyyz) {
         super(xyyz);
         xyyz.debug.FuncStart(LocationManager.name);
-        this.EffortWait = 1000;
         xyyz.debug.FuncEnd(LocationManager.name);
     }
     SetHref(href, callback, targetWindow, effortCount = this.Const().Iterations.MaxSetHrefEffort) {
@@ -604,7 +749,7 @@ class LocationManager extends ManagerBase {
         var isReadyState = targetWindow.DataDocSelf.Document.readyState === 'complete';
         if (effortCount > 0) {
             if (isCorrectHref && isReadyState) {
-                this.debug().Log('triggering callback');
+                this.debug().Log(this.SetHref.name, 'triggering callback');
                 callback();
             }
             else {
@@ -623,8 +768,8 @@ class LocationManager extends ManagerBase {
         }
         this.debug().FuncEnd(this.SetHref.name);
     }
-    ChangeLocationSwitchBoard(desiredPageType, targetWindow, iteration = 20) {
-        this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + WindowType[desiredPageType] + ' iteration: ' + iteration);
+    ChangeLocationSwitchBoard(desiredPageType, targetWindow, iteration = this.Const().Iterations.MaxIterationSwitchBoard) {
+        this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + WindowType[desiredPageType] + ' iteration: ' + iteration + ':' + this.Const().Iterations.MaxIterationSwitchBoard);
         if (iteration > 0) {
             iteration -= 1;
             var currentState = this.PageDataMan().GetCurrentPageType();
@@ -652,48 +797,10 @@ class LocationManager extends ManagerBase {
                 }
                 else if (currentState === WindowType.Desktop && desiredPageType === WindowType.Desktop) {
                     this.debug().Log('On Desktop');
-                    this.Xyyz.LocationMan.TriggerRedButton(targetWindow.DataDocSelf);
                 }
             }
         }
-        this.debug().FuncEnd(this.Xyyz.LocationMan.ChangeLocationSwitchBoard.name);
-    }
-    GetBigRedButtonElem(targetDoc) {
-        var toReturn = targetDoc.Document.getElementById(this.Const().ElemId.scStartButton.sc920);
-        if (!toReturn) {
-            toReturn = targetDoc.Document.getElementById(this.Const().ElemId.scStartButton.sc820);
-        }
-        return toReturn;
-    }
-    RedButton(iteration, targetDoc) {
-        this.debug().FuncStart(this.RedButton.name, iteration.toString());
-        iteration = iteration - 1;
-        if (iteration > 0) {
-            var found = this.GetBigRedButtonElem(targetDoc);
-            if (found) {
-                this.debug().Log('clicking it');
-                found.click();
-                var menuLeft = targetDoc.Document.querySelector('.scStartMenuLeftOption');
-                if (menuLeft) {
-                    menuLeft.click();
-                }
-            }
-            else {
-                var self = this;
-                setTimeout(function () {
-                    self.Xyyz.LocationMan.RedButton(iteration, targetDoc);
-                }, self.Const().Timeouts.TimeoutTriggerRedButton);
-            }
-        }
-        this.debug().FuncEnd(this.RedButton.name);
-    }
-    TriggerRedButton(targetDoc) {
-        this.debug().FuncStart(this.Xyyz.LocationMan.TriggerRedButton.name);
-        var self = this;
-        setTimeout(function () {
-            self.Xyyz.LocationMan.RedButton(self.Const().Iterations.MaxIterationRedButton, targetDoc);
-        }, self.Const().Timeouts.TimeoutTriggerRedButton);
-        this.debug().FuncEnd(this.Xyyz.LocationMan.TriggerRedButton.name);
+        this.debug().FuncEnd(this.ChangeLocationSwitchBoard.name);
     }
     SetScMode(newValue) {
         var newValueB = '=' + newValue;
@@ -701,7 +808,7 @@ class LocationManager extends ManagerBase {
     }
     GetLoginButton(targetDoc) {
         this.debug().FuncStart(this.GetLoginButton.name);
-        var toReturn = targetDoc.Document.getElementById(this.Const().ElemId.scLoginBtn.sc920);
+        var toReturn = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginBtn.sc920);
         if (!toReturn) {
             toReturn = targetDoc.Document.querySelector(this.Const().Selector.scLoginBtn.sc820);
         }
@@ -712,8 +819,8 @@ class LocationManager extends ManagerBase {
     AdminB(targetDoc, callbackOnComplete) {
         this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.Id.asShort);
         this.debug().Log('callback passed: ' + (callbackOnComplete !== null));
-        var userNameElem = targetDoc.Document.getElementById(this.Const().ElemId.scLoginUserName);
-        var passwordElem = targetDoc.Document.getElementById(this.Const().ElemId.scLoginPassword);
+        var userNameElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginUserName);
+        var passwordElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginPassword);
         this.debug().Log('userNameElem: ' + userNameElem);
         this.debug().Log('passwordElem: ' + passwordElem);
         userNameElem.setAttribute('value', this.Const().Names.scDefaultAdminUserName);
@@ -794,12 +901,12 @@ class OneCEManager extends ManagerBase {
         }
     }
     __collapseRootNode(targetCEDoc) {
-        var rootElem = targetCEDoc.Document.getElementById(this.Const().ElemId.SitecoreRootGlyphId);
+        var rootElem = targetCEDoc.Document.getElementById(this.Const().ElemId.sc.SitecoreRootGlyphId);
         if (rootElem) {
             this.__collapseNode(rootElem);
         }
         else {
-            this.debug().Error(this.__collapseRootNode.name, 'Root glyph not found ' + this.Const().ElemId.SitecoreRootGlyphId);
+            this.debug().Error(this.__collapseRootNode.name, 'Root glyph not found ' + this.Const().ElemId.sc.SitecoreRootGlyphId);
         }
     }
     RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, nodeIteration, callBackOnNoNodesLeft) {
@@ -817,16 +924,16 @@ class OneCEManager extends ManagerBase {
         callBackOnNoNodesLeft();
         this.debug().FuncEnd(this.RestoreOneNodeAtATimeRecursive.name);
     }
-    RestoreCEState(storageData, dataOneDocTarget) {
-        this.debug().FuncStart(this.RestoreCEState.name, this.GuidMan().ShortGuid(dataOneDocTarget.Id));
+    RestoreCEState(dataToRestore, dataOneDocTarget) {
+        this.debug().FuncStart(this.RestoreCEState.name, dataOneDocTarget.Id.asShort);
         var toReturn = false;
-        this.debug().Log('Node Count in storage data: ' + storageData.AllTreeNodeAr.length);
+        this.debug().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
         this.__collapseRootNode(dataOneDocTarget);
         const maxIteration = this.Const().Iterations.MaxIterationLookingForNode;
         const timeout = this.Const().Timeouts.TimeoutWaitForNodeToLoad;
         var callBackOnSuccess = function () {
         };
-        this.RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, 100, callBackOnSuccess);
+        this.RestoreOneNodeAtATimeRecursive(dataToRestore, dataOneDocTarget, 100, callBackOnSuccess);
         this.debug().FuncEnd(this.RestoreCEState.name);
         return toReturn;
     }
@@ -879,7 +986,121 @@ class OneDesktopManager extends ManagerBase {
         super(xyyz);
         xyyz.debug.FuncEnd(OneDesktopManager.name);
     }
-    RestoreDesktopState(foundMatch) {
+    RestoreDesktopState(targetWindow, dataToRestore) {
+        this.debug().FuncStart(this.RestoreDesktopState.name);
+        ;
+        for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
+            this.debug().Log('idx: ' + idx);
+            var desktopPromiser = new PromiseChainRestoreDesktop(this.Xyyz);
+            desktopPromiser.RunOneChain(targetWindow, dataToRestore.AllCEAr[idx]);
+            this.debug().FuncEnd(this.RestoreDesktopState.name);
+        }
+    }
+    RestoreDataToOneIframeWorker(oneCEdata, newIframe) {
+        this.debug().FuncStart(this.RestoreDataToOneIframeWorker.name, 'oneCEdata not null: ' + (oneCEdata != null) + ' newFrame not null: ' + (newIframe !== null));
+        var toReturn = false;
+        if (oneCEdata && newIframe) {
+            this.Xyyz.OneCEMan.RestoreCEState(oneCEdata, newIframe.DocElem);
+            toReturn = true;
+        }
+        else {
+            this.debug().Error(this.RestoreDataToOneIframeWorker.name, 'bad data');
+            toReturn = false;
+        }
+        this.debug().FuncEnd(this.RestoreDataToOneIframeWorker.name, toReturn.toString());
+        return toReturn;
+    }
+    WaitForIframeCountDiffWorker(IFramesbefore, targetWin, iterationJr = null) {
+        this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
+        var toReturn = null;
+        if (!iterationJr) {
+            iterationJr = new IterationHelper(this.Xyyz, 20, 1000, this.WaitForIframeCountDiffWorker.name);
+        }
+        if (iterationJr.DecrementAndKeepGoing()) {
+            var beforeCount = IFramesbefore.length;
+            var allIframesAfter = this.GetAllLiveIframeData(targetWin);
+            var count = allIframesAfter.length;
+            this.debug().Log('iFrame count before: ' + IFramesbefore.length);
+            this.debug().Log('iFrame count after: ' + allIframesAfter.length);
+            if (count > beforeCount) {
+                var newIframes = allIframesAfter.filter(e => !IFramesbefore.includes(e));
+                toReturn = newIframes[0];
+            }
+            else {
+                var self = this;
+                iterationJr.WaitAndThen(function () {
+                    self.WaitForIframeCountDiffWorker(IFramesbefore, targetWin, iterationJr);
+                });
+            }
+        }
+        else {
+            iterationJr.NotifyExhausted();
+            toReturn = null;
+        }
+        this.debug().FuncEnd(this.WaitForIframeCountDiffWorker.name);
+        return toReturn;
+    }
+    __getBigRedButtonElem(targetWin) {
+        this.debug().FuncStart(this.__getBigRedButtonElem.name, 'targetWin not null: ' + (targetWin !== null));
+        var toReturn = targetWin.Window.document.getElementById(this.Const().ElemId.sc.scStartButton.sc920);
+        if (!toReturn) {
+            toReturn = targetWin.Window.document.getElementById(this.Const().ElemId.sc.scStartButton.sc820);
+        }
+        this.debug().FuncEnd(this.__getBigRedButtonElem.name, 'toReturn: ' + (toReturn !== null));
+        return toReturn;
+    }
+    WaitForAndClickRedStartButtonWorker(targetWin, iterationJr = null) {
+        this.debug().FuncStart(this.WaitForAndClickRedStartButtonWorker.name, 'targetDoc not null: ' + (targetWin !== null));
+        var toReturn = false;
+        if (!iterationJr) {
+            iterationJr = new IterationHelper(this.Xyyz, 10, 1000, this.WaitForAndClickRedStartButtonWorker.name);
+        }
+        if (iterationJr.DecrementAndKeepGoing()) {
+            var found = this.__getBigRedButtonElem(targetWin);
+            if (found) {
+                this.debug().Log('red button found, clicking it');
+                found.click();
+                toReturn = true;
+            }
+            else {
+                var self = this;
+                iterationJr.WaitAndThen(() => {
+                    self.WaitForAndClickRedStartButtonWorker(targetWin, iterationJr);
+                });
+            }
+        }
+        else {
+            toReturn = false;
+        }
+        this.debug().FuncEnd(this.WaitForAndClickRedStartButtonWorker.name);
+        return toReturn;
+    }
+    WaitForAndThenClickCEFromMenuWorker(targetWin, iterationJr = null) {
+        this.debug().FuncStart(this.WaitForAndThenClickCEFromMenuWorker.name);
+        ;
+        var toReturn = false;
+        if (!iterationJr) {
+            iterationJr = new IterationHelper(this.Xyyz, 10, 1000, this.WaitForAndThenClickCEFromMenuWorker.name);
+        }
+        if (iterationJr.DecrementAndKeepGoing()) {
+            var menuLeft = targetWin.Window.document.querySelector('.scStartMenuLeftOption');
+            if (menuLeft) {
+                menuLeft.click();
+                toReturn = true;
+            }
+            else {
+                var self = this;
+                iterationJr.WaitAndThen(function () {
+                    self.WaitForAndThenClickCEFromMenuWorker(targetWin, iterationJr);
+                });
+            }
+        }
+        else {
+            toReturn = false;
+        }
+        this.debug().FuncEnd(this.WaitForAndThenClickCEFromMenuWorker.name);
+        ;
+        return toReturn;
     }
     GetAllLiveIframeData(targetWindow) {
         this.debug().FuncStart(this.GetAllLiveIframeData.name);
@@ -893,9 +1114,16 @@ class OneDesktopManager extends ManagerBase {
                 var id = this.GuidMan().ParseGuid(iframeElem.id);
                 var dataOneIframe = {
                     Index: ifrIdx,
-                    DocElem: null,
+                    DocElem: {
+                        DataWinParent: targetWindow,
+                        Document: iframeElem.contentDocument,
+                        HasParentDesktop: true,
+                        Id: this.GuidMan().NewGuid(),
+                        IsCEDoc: true,
+                        ParentDesktop: null
+                    },
                     IframeElem: iframeElem,
-                    Id: id
+                    Id: this.GuidMan().NewGuid(),
                 };
                 toReturn.push(dataOneIframe);
             }
@@ -906,14 +1134,13 @@ class OneDesktopManager extends ManagerBase {
     SaveStateOneDesktop(targetWindow) {
         this.debug().FuncStart(this.SaveStateOneDesktop.name);
         ;
-        this.debug().FuncStart('SaveOneDesktop');
+        this.debug().Log('SaveOneDesktop');
         ;
         var livingIframeAr = this.GetAllLiveIframeData(targetWindow);
         if (livingIframeAr && livingIframeAr.length > 0) {
             for (var iframeIdx = 0; iframeIdx < livingIframeAr.length; iframeIdx++) {
                 this.debug().Log('iframeIdx: ' + iframeIdx);
                 var targetIframeObj = livingIframeAr[iframeIdx];
-                this.debug().Log('targetIframe: ' + JSON.stringify(targetIframeObj));
                 this.Xyyz.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.DocElem);
             }
         }
@@ -932,8 +1159,8 @@ class OneWindowManager extends ManagerBase {
     }
     SaveWindowState(targetWindow) {
         this.debug().FuncStart(this.SaveWindowState.name);
-        this.Xyyz.OneWindowMan.CreateNewWindowSnapShot();
         var currentPageType = this.PageDataMan().GetCurrentPageType();
+        this.Xyyz.OneWindowMan.CreateNewWindowSnapShot(currentPageType);
         if (currentPageType === WindowType.ContentEditor) {
             this.debug().Log('is Content Editor');
             var id = this.Xyyz.GuidMan.EmptyGuid();
@@ -950,15 +1177,20 @@ class OneWindowManager extends ManagerBase {
         this.debug().FuncEnd(this.SaveWindowState.name);
         ;
     }
-    RestoreWindowStateToTarget(targetWindow, dataToREstore) {
+    RestoreWindowStateToTarget(targetWindow, dataToRestore) {
         this.debug().FuncStart(this.RestoreWindowStateToTarget.name);
-        if (dataToREstore) {
-            this.Xyyz.OneCEMan.RestoreCEState(dataToREstore.AllCEAr[0], targetWindow.DataDocSelf);
+        if (dataToRestore) {
+            if (dataToRestore.WindowType === WindowType.ContentEditor) {
+                this.Xyyz.OneCEMan.RestoreCEState(dataToRestore.AllCEAr[0], targetWindow.DataDocSelf);
+            }
+            else if (dataToRestore.WindowType === WindowType.Desktop) {
+                this.Xyyz.OneDesktopMan.RestoreDesktopState(targetWindow, dataToRestore);
+            }
+            else {
+                this.debug().Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
+            }
+            this.debug().FuncEnd(this.RestoreWindowStateToTarget.name);
         }
-        else {
-            this.debug().Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
-        }
-        this.debug().FuncEnd(this.RestoreWindowStateToTarget.name);
     }
     PutCEDataToCurrentSnapShot(oneCeData) {
         this.debug().FuncStart(this.PutCEDataToCurrentSnapShot.name);
@@ -1007,18 +1239,21 @@ class OneWindowManager extends ManagerBase {
         return toReturn;
     }
     Init() {
-        this.CreateNewWindowSnapShot();
+        var currentPageType = this.PageDataMan().GetCurrentPageType();
+        this.CreateNewWindowSnapShot(currentPageType);
     }
-    CreateNewWindowSnapShot() {
+    CreateNewWindowSnapShot(windowType) {
         this.debug().FuncStart('CreateNewWindowSnapShot');
         var dateToUse = new Date();
         var newGuid = this.Xyyz.GuidMan.NewGuid();
         this.__activeWindowSnapShot = {
             TimeStamp: dateToUse,
+            WindowType: windowType,
+            WindowFriendly: windowType[windowType],
             AllCEAr: [],
             Id: newGuid,
             IsFavorite: false,
-            NickName: '__',
+            NickName: '',
             RawData: null
         };
         this.debug().FuncEnd('CreateNewWindowSnapShot');
@@ -1173,14 +1408,14 @@ class UiManager extends ManagerBase {
         return window.document.getElementById(this.Const().ElemId.SelStateSnapShot);
     }
     GetIdOfSelectWindowSnapshot() {
+        this.debug().FuncStart(this.GetIdOfSelectWindowSnapshot.name);
         var targetSel = this.__getSelectElem();
         var toReturn = null;
         if (targetSel) {
             var temp = targetSel.options[this.__selectSnapshotIndex].value;
-            this.debug().Log('temp: ' + temp);
             toReturn = this.GuidMan().ParseGuid(temp);
         }
-        this.debug().Log('idOfSelect: ' + toReturn.asString);
+        this.debug().FuncEnd(this.GetIdOfSelectWindowSnapshot.name, 'idOfSelect: ' + toReturn.asString);
         return toReturn;
     }
     __populateStateSel() {
@@ -1195,7 +1430,7 @@ class UiManager extends ManagerBase {
                     var data = snapShots[idx];
                     this.debug().Log('data.Id.asString : ' + data.Id.asString);
                     var el = window.document.createElement('option');
-                    el.textContent = this.Xyyz.Utilities.TimeNicknameFavStr(data);
+                    el.innerHTML = this.Xyyz.Utilities.TimeNicknameFavStr(data);
                     el.value = data.Id.asString;
                     if (idx === this.__selectSnapshotIndex) {
                         el.selected = true;
@@ -1205,6 +1440,114 @@ class UiManager extends ManagerBase {
             }
         }
         this.debug().FuncEnd(this.__populateStateSel.name);
+    }
+}
+
+class PromiseChainRestoreDesktop extends ManagerBase {
+    constructor(xyyz) {
+        xyyz.debug.FuncStart(PromiseChainRestoreDesktop.name);
+        super(xyyz);
+        xyyz.debug.FuncEnd(PromiseChainRestoreDesktop.name);
+    }
+    __waitForAndClickRedStartButtonPromise(promiseBucket) {
+        return new Promise((resolve, reject) => {
+            this.debug().FuncStart(this.__waitForAndClickRedStartButtonPromise.name, 'tagetDoc not null: ' + (promiseBucket.targetDoc !== null));
+            var success = this.DesktopMan().WaitForAndClickRedStartButtonWorker(promiseBucket.targetWindow);
+            if (success) {
+                resolve(promiseBucket);
+            }
+            else {
+                reject();
+            }
+            this.debug().FuncEnd(this.__waitForAndClickRedStartButtonPromise.name);
+        });
+    }
+    __waitForIframeCountDiffPromise(promiseBucket) {
+        return new Promise((resolve, reject) => {
+            this.debug().FuncStart(this.__waitForIframeCountDiffPromise.name, 'promiseBucket not null: ' + (promiseBucket !== null));
+            this.__promiseBucketDebug(promiseBucket, this.__waitForIframeCountDiffPromise.name);
+            this.debug().MarkerA();
+            this.__promiseBucketDebug(promiseBucket, this.__waitForIframeCountDiffPromise.name);
+            var success = this.DesktopMan().WaitForIframeCountDiffWorker(promiseBucket.IFramesbefore, promiseBucket.targetWindow);
+            this.debug().MarkerB();
+            if (success) {
+                this.debug().MarkerC();
+                promiseBucket.NewIframe = success;
+                resolve(promiseBucket);
+            }
+            else {
+                reject();
+            }
+        });
+    }
+    IsNullOrUndefined(subject) {
+        var toReturn = '{unknown}';
+        if (subject) {
+            if ((typeof subject) == 'undefined') {
+                toReturn = 'Is Undefined';
+            }
+            else {
+                toReturn = subject;
+            }
+        }
+        else {
+            toReturn = 'Is Null';
+        }
+        return toReturn;
+    }
+    __promiseBucketDebug(promiseBucket, friendlyName) {
+        this.debug().FuncStart(this.__promiseBucketDebug.name, friendlyName);
+        this.debug().Log('promiseBucket : ' + this.IsNullOrUndefined(promiseBucket));
+        if (promiseBucket && typeof (promiseBucket) !== 'undefined') {
+            this.debug().Log('promiseBucket.IFramesbefore: ' + this.IsNullOrUndefined(promiseBucket.IFramesbefore));
+            this.debug().Log('promiseBucket.targetWindow: ' + this.IsNullOrUndefined(promiseBucket.targetWindow));
+            this.debug().Log('promiseBucket.oneCEdata: ' + this.IsNullOrUndefined(promiseBucket.oneCEdata));
+        }
+        this.debug().FuncEnd(this.__promiseBucketDebug.name, friendlyName);
+    }
+    __waitForAndThenClickCEFromMenuPromise(promiseBucket) {
+        return new Promise((resolve, reject) => {
+            var success = this.DesktopMan().WaitForAndThenClickCEFromMenuWorker(promiseBucket.targetWindow);
+            if (success) {
+                this.__promiseBucketDebug(promiseBucket, this.__waitForAndThenClickCEFromMenuPromise.name);
+                resolve(promiseBucket);
+            }
+            else {
+                reject();
+            }
+        });
+    }
+    __restoreDataToOneIframe(promiseBucket) {
+        return new Promise((resolve, reject) => {
+            this.debug().FuncStart(this.__restoreDataToOneIframe.name);
+            var success = this.DesktopMan().RestoreDataToOneIframeWorker(promiseBucket.oneCEdata, promiseBucket.NewIframe);
+            if (success) {
+                resolve(promiseBucket);
+            }
+            else {
+                reject();
+            }
+            this.debug().FuncEnd(this.__restoreDataToOneIframe.name);
+        });
+    }
+    RunOneChain(targetWindow, dataToRestore) {
+        var allIframeData = this.DesktopMan().GetAllLiveIframeData(targetWindow);
+        var dataBucket = {
+            targetWindow: targetWindow,
+            targetDoc: null,
+            IFramesbefore: allIframeData,
+            oneCEdata: dataToRestore,
+            NewIframe: null,
+            LastChainLinkSuccessful: false,
+        };
+        this.__promiseBucketDebug(dataBucket, this.RunOneChain.name);
+        this.__waitForAndClickRedStartButtonPromise(dataBucket)
+            .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
+            .then(dataBucketb => this.__waitForIframeCountDiffPromise(dataBucketb))
+            .then(dataBucketc => this.__restoreDataToOneIframe(dataBucketc))
+            .catch(ex => {
+            this.debug().Error(this.RunOneChain.name, ex);
+        });
     }
 }
 
@@ -1238,7 +1581,7 @@ class OneTreeManager extends ManagerBase {
                 var firstImg = targetNode.querySelector(this.Const().Selector.ContentTreeNodeGlyph);
                 if (firstImg) {
                     var srcAttr = firstImg.getAttribute('src');
-                    if (srcAttr.indexOf(this.Const().TreeExpandedPng) > -1) {
+                    if (srcAttr.indexOf(this.Const().Names.sc.scTreeExpandedPng) > -1) {
                         var friendlyName = this.GetFriendlyNameFromNode(firstImg);
                         var newData = { NodeFriendly: friendlyName, NodeId: this.Xyyz.GuidMan.ParseGuid(firstImg.id) };
                         toReturn.push(newData);
@@ -1256,11 +1599,11 @@ class OneTreeManager extends ManagerBase {
         return toReturn;
     }
     GetOneLiveTreeData(dataOneCe, targetDoc) {
-        this.debug().FuncStart(this.GetOneLiveTreeData.name + 'b idx: ' + dataOneCe.Id);
-        this.debug().Log('targetDoc isnull xx: ' + (targetDoc === null));
+        this.debug().FuncStart(this.GetOneLiveTreeData.name, 'id: ' + dataOneCe.Id.asShort);
+        this.debug().Log('targetDoc isnull: ' + (targetDoc === null));
         var toReturn = [];
         if (targetDoc) {
-            var rootNode = targetDoc.Document.getElementById(this.Const().ElemId.SitecoreRootNodeId);
+            var rootNode = targetDoc.Document.getElementById(this.Const().ElemId.sc.SitecoreRootNodeId);
             if (rootNode) {
                 this.debug().Log('rootNode: ' + rootNode.innerHTML);
                 var rootParent = rootNode.parentElement;

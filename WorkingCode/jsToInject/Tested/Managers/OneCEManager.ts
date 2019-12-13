@@ -53,11 +53,11 @@
   }
 
   private __collapseRootNode(targetCEDoc: IDataOneDoc) {
-    var rootElem: HTMLElement = targetCEDoc.Document.getElementById(this.Const().ElemId.SitecoreRootGlyphId);
+    var rootElem: HTMLElement = targetCEDoc.Document.getElementById(this.Const().ElemId.sc.SitecoreRootGlyphId);
     if (rootElem) {
       this.__collapseNode(rootElem);
     } else {
-      this.debug().Error(this.__collapseRootNode.name, 'Root glyph not found ' + this.Const().ElemId.SitecoreRootGlyphId);
+      this.debug().Error(this.__collapseRootNode.name, 'Root glyph not found ' + this.Const().ElemId.sc.SitecoreRootGlyphId);
     }
   }
 
@@ -86,14 +86,13 @@
     this.debug().FuncEnd(this.RestoreOneNodeAtATimeRecursive.name);
   }
 
-  RestoreCEState(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Boolean {
-    this.debug().FuncStart(this.RestoreCEState.name, this.GuidMan().ShortGuid(dataOneDocTarget.Id));
+  RestoreCEState(dataToRestore: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Boolean {
+    this.debug().FuncStart(this.RestoreCEState.name, dataOneDocTarget.Id.asShort);
 
     var toReturn: boolean = false;
 
-    //dataOneDocTarget.DataWinParent      .Window.document.body.innerHTML = 'uuuuuuuuuu';
 
-    this.debug().Log('Node Count in storage data: ' + storageData.AllTreeNodeAr.length);
+    this.debug().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
     this.__collapseRootNode(dataOneDocTarget);
 
     const maxIteration: number = this.Const().Iterations.MaxIterationLookingForNode
@@ -102,7 +101,7 @@
     var callBackOnSuccess: Function = function () {
     }
 
-    this.RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, 100, callBackOnSuccess);
+    this.RestoreOneNodeAtATimeRecursive(dataToRestore, dataOneDocTarget, 100, callBackOnSuccess);
 
     //for (var idx = 0; idx < storageData.AllTreeNodeAr.length; idx++) {
     //  var lookingFor: IGuid = storageData.AllTreeNodeAr[idx].NodeId;

@@ -57,6 +57,7 @@
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IGuid.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IConst.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IOneStorageData.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataBucketRestoreDesktop.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IScVerSpec.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Feedback.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\NewWindowDest.ts" />
@@ -74,17 +75,11 @@
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneWindow.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Utilities.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\debug.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\Managers\PageData.js">
-      <DependentUpon>PageDataManager.ts</DependentUpon>
-    </Content>
     <Content Include="WorkingCode\jsToInject\Tested\Classes\Utilities.js">
       <DependentUpon>Utilities.ts</DependentUpon>
     </Content>
     <Content Include="WorkingCode\jsToInject\Tested\Classes\WindowData.js">
-      <DependentUpon>WindowData.ts</DependentUpon>
-    </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\Enums\PageType.js">
-      <DependentUpon>WindowType.ts</DependentUpon>
+      <DependentUpon>IterationHelper.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\EventManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\WindowType.ts" />
@@ -92,11 +87,8 @@
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneWindowManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneDesktopManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Trees.One.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\WindowData.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\IterationHelper.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\zLast.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\Trees.One.js">
-      <DependentUpon>Trees.One.ts</DependentUpon>
-    </Content>
     <Content Include="WorkingCode\jsToInject\Tested\zLast.js">
       <DependentUpon>zLast.ts</DependentUpon>
     </Content>
@@ -111,20 +103,11 @@
     <None Include="WorkingCode\jsToInject\Tested\Classes\Feedback.js.map">
       <DependentUpon>Feedback.js</DependentUpon>
     </None>
-    <None Include="WorkingCode\jsToInject\Tested\Managers\PageData.js.map">
-      <DependentUpon>PageData.js</DependentUpon>
-    </None>
     <None Include="WorkingCode\jsToInject\Tested\Classes\Utilities.js.map">
       <DependentUpon>Utilities.js</DependentUpon>
     </None>
     <None Include="WorkingCode\jsToInject\Tested\Classes\WindowData.js.map">
       <DependentUpon>WindowData.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Enums\PageType.js.map">
-      <DependentUpon>PageType.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Trees.One.js.map">
-      <DependentUpon>Trees.One.js</DependentUpon>
     </None>
     <None Include="WorkingCode\jsToInject\Tested\zLast.js.map">
       <DependentUpon>zLast.js</DependentUpon>

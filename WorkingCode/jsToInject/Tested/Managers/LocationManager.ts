@@ -1,10 +1,7 @@
 class LocationManager extends ManagerBase {
-  EffortWait: 1000;
-
   constructor(xyyz: Hub) {
     super(xyyz);
     xyyz.debug.FuncStart(LocationManager.name);
-    this.EffortWait = 1000;
     xyyz.debug.FuncEnd(LocationManager.name);
   }
 
@@ -18,7 +15,7 @@ class LocationManager extends ManagerBase {
 
     if (effortCount > 0) {
       if (isCorrectHref && isReadyState) {
-        this.debug().Log('triggering callback');
+        this.debug().Log(this.SetHref.name,  'triggering callback');
         callback();
       } else {
         if (!isCorrectHref) {
@@ -27,7 +24,7 @@ class LocationManager extends ManagerBase {
 
         var self = this;
         setTimeout(function () {
-        this.debug().Log('setting timeout');
+          this.debug().Log('setting timeout');
           self.SetHref(href, callback, targetWindow, effortCount);
         }, self.Const().Timeouts.SetHrefEffortWait);
       }
@@ -38,8 +35,8 @@ class LocationManager extends ManagerBase {
 
     this.debug().FuncEnd(this.SetHref.name);
   }
-  ChangeLocationSwitchBoard(desiredPageType: WindowType, targetWindow: IDataBroswerWindow, iteration: number = 20) {
-    this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + WindowType[desiredPageType] + ' iteration: ' + iteration);
+  ChangeLocationSwitchBoard(desiredPageType: WindowType, targetWindow: IDataBroswerWindow, iteration: number = this.Const().Iterations.MaxIterationSwitchBoard) {
+    this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + WindowType[desiredPageType] + ' iteration: ' + iteration + ':' + this.Const().Iterations.MaxIterationSwitchBoard);
 
     if (iteration > 0) {
       iteration -= 1;
@@ -62,7 +59,6 @@ class LocationManager extends ManagerBase {
       }
 
       else if (currentState === WindowType.Launchpad || currentState === WindowType.ContentEditor || currentState === WindowType.Desktop) {
-
         var self = this;
         var callBackOnSuccessfulHrefChange: Function = function () {
           self.debug().Log('Callback triggered');
@@ -81,60 +77,12 @@ class LocationManager extends ManagerBase {
 
         else if (currentState === WindowType.Desktop && desiredPageType === WindowType.Desktop) {
           this.debug().Log('On Desktop');
-          //   this.debug().Log('owner: ' + JSON.stringify(ownerWindow));
 
-          //var pat = new RegExp('.*' + ownerWindow.location.hostname);
-          //   this.debug().Log('pat: ' + pat);
-          //var match = ownerWindow.location.href.match(pat);
-          //   this.debug().Log('match: ' + match);
-
-          //  this.Xyyz.PageData.WinData.Opener.Window.location.href =   this.Xyyz.InjectConst.Url.ShellDefaultAspx;
-          this.Xyyz.LocationMan.TriggerRedButton(targetWindow.DataDocSelf);
+          //todo this.DesktopMan().TriggerRedButton(targetWindow.DataDocSelf);
         }
       }
     }
-    this.debug().FuncEnd(this.Xyyz.LocationMan.ChangeLocationSwitchBoard.name);
-  }
-
-  GetBigRedButtonElem(targetDoc: IDataOneDoc) {
-    var toReturn: HTMLElement = <HTMLElement>targetDoc.Document.getElementById(this.Const().ElemId.scStartButton.sc920);
-    if (!toReturn) {
-      toReturn = <HTMLElement>targetDoc.Document.getElementById(this.Const().ElemId.scStartButton.sc820);
-    }
-
-    return toReturn;
-  }
-
-  RedButton(iteration: number, targetDoc: IDataOneDoc) {
-    this.debug().FuncStart(this.RedButton.name, iteration.toString());
-    iteration = iteration - 1;
-
-    if (iteration > 0) {
-      var found = this.GetBigRedButtonElem(targetDoc);
-      if (found) {
-        this.debug().Log('clicking it');
-        found.click();
-        var menuLeft: HTMLElement = targetDoc.Document.querySelector('.scStartMenuLeftOption');
-        if (menuLeft) {
-          menuLeft.click();
-        }
-      } else {
-        var self = this;
-        setTimeout(function () {
-          self.Xyyz.LocationMan.RedButton(iteration, targetDoc);
-        }, self.Const().Timeouts.TimeoutTriggerRedButton);
-      }
-    }
-    this.debug().FuncEnd(this.RedButton.name);
-  }
-  TriggerRedButton(targetDoc: IDataOneDoc) {
-    this.debug().FuncStart(this.Xyyz.LocationMan.TriggerRedButton.name);
-
-    var self = this;
-    setTimeout(function () {
-      self.Xyyz.LocationMan.RedButton(self.Const().Iterations.MaxIterationRedButton, targetDoc);
-    }, self.Const().Timeouts.TimeoutTriggerRedButton);
-    this.debug().FuncEnd(this.Xyyz.LocationMan.TriggerRedButton.name);
+    this.debug().FuncEnd(this.ChangeLocationSwitchBoard.name);
   }
 
   SetScMode(newValue) {
@@ -145,7 +93,7 @@ class LocationManager extends ManagerBase {
   GetLoginButton(targetDoc: IDataOneDoc): HTMLElement {
     this.debug().FuncStart(this.GetLoginButton.name);
 
-    var toReturn: HTMLElement = targetDoc.Document.getElementById(this.Const().ElemId.scLoginBtn.sc920);
+    var toReturn: HTMLElement = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginBtn.sc920);
 
     if (!toReturn) {
       toReturn = targetDoc.Document.querySelector(this.Const().Selector.scLoginBtn.sc820);
@@ -161,8 +109,8 @@ class LocationManager extends ManagerBase {
     this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.Id.asShort);
     this.debug().Log('callback passed: ' + (callbackOnComplete !== null));
 
-    var userNameElem = targetDoc.Document.getElementById(this.Const().ElemId.scLoginUserName);
-    var passwordElem = targetDoc.Document.getElementById(this.Const().ElemId.scLoginPassword);
+    var userNameElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginUserName);
+    var passwordElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginPassword);
 
     this.debug().Log('userNameElem: ' + userNameElem);
     this.debug().Log('passwordElem: ' + passwordElem);

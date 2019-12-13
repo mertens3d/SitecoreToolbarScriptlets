@@ -11,9 +11,8 @@ class OneWindowManager extends ManagerBase {
   SaveWindowState(targetWindow: IDataBroswerWindow) {
     this.debug().FuncStart(this.SaveWindowState.name);
 
-    this.Xyyz.OneWindowMan.CreateNewWindowSnapShot();
-
     var currentPageType = this.PageDataMan().GetCurrentPageType();
+    this.Xyyz.OneWindowMan.CreateNewWindowSnapShot(currentPageType);
 
     if (currentPageType === WindowType.ContentEditor) {
       this.debug().Log('is Content Editor');
@@ -55,36 +54,36 @@ class OneWindowManager extends ManagerBase {
   //  this.debug().FuncEnd(this.WaitForPageLoad.name);
   //}
 
-  RestoreWindowStateToTarget(targetWindow: IDataBroswerWindow, dataToREstore: IDataOneWindowStorage) {
+  RestoreWindowStateToTarget(targetWindow: IDataBroswerWindow, dataToRestore: IDataOneWindowStorage) {
     this.debug().FuncStart(this.RestoreWindowStateToTarget.name);
 
     //targetWindow.Window.location.href = 'https:\\bing.com?dog=3';
 
-    if (dataToREstore) {
-
+    if (dataToRestore) {
       //var postPageLoadCallback: Function = function () {
+      if (dataToRestore.WindowType === WindowType.ContentEditor) {
+        this.Xyyz.OneCEMan.RestoreCEState(dataToRestore.AllCEAr[0], targetWindow.DataDocSelf);
 
+      } else if (dataToRestore.WindowType === WindowType.Desktop) {
 
-        this.Xyyz.OneCEMan.RestoreCEState(dataToREstore.AllCEAr[0], targetWindow.DataDocSelf);
-      //};
+        //this.WaitForPageLoad(WindowType.ContentEditor, targetWindow, this.Const().Iterations.MaxIterationPageLoad, postPageLoadCallback)
 
-      //this.WaitForPageLoad(WindowType.ContentEditor, targetWindow, this.Const().Iterations.MaxIterationPageLoad, postPageLoadCallback)
+        //if (this.Xyyz.PageData.GetCurrentPageType() === PageType.ContentEditor) {
+        //  if (foundMatch.AllCEAr.length > 1) {
+        //    alert('This data has multiple Content Editor data. Only the first will be used');
+        //  }
 
-      //if (this.Xyyz.PageData.GetCurrentPageType() === PageType.ContentEditor) {
-      //  if (foundMatch.AllCEAr.length > 1) {
-      //    alert('This data has multiple Content Editor data. Only the first will be used');
-      //  }
+        //  this.Xyyz.OneCEMan.RestoreCEState(foundMatch.AllCEAr[0], this.Xyyz.PageData.OpenerDoc());
+        //} else {
+        this.Xyyz.OneDesktopMan.RestoreDesktopState(targetWindow, dataToRestore);
+        //}
 
-      //  this.Xyyz.OneCEMan.RestoreCEState(foundMatch.AllCEAr[0], this.Xyyz.PageData.OpenerDoc());
-      //} else {
-      //  this.Xyyz.OneDesktopMan.RestoreDesktopState(foundMatch);
-      //}
-
-      //var allData = this.Xyyz.OneDesktopMan.GetAllLiveIframeData()[treeIdx];
-    } else {
-      this.debug().Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
+        //var allData = this.Xyyz.OneDesktopMan.GetAllLiveIframeData()[treeIdx];
+      } else {
+        this.debug().Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
+      }
+      this.debug().FuncEnd(this.RestoreWindowStateToTarget.name);
     }
-    this.debug().FuncEnd(this.RestoreWindowStateToTarget.name);
   }
 
   PutCEDataToCurrentSnapShot(oneCeData: IDataOneStorageCE) {
@@ -148,9 +147,10 @@ class OneWindowManager extends ManagerBase {
   }
 
   Init() {
-    this.CreateNewWindowSnapShot();
+    var currentPageType = this.PageDataMan().GetCurrentPageType();
+    this.CreateNewWindowSnapShot(currentPageType);
   }
-  CreateNewWindowSnapShot() {
+  CreateNewWindowSnapShot(windowType: WindowType) {
     this.debug().FuncStart('CreateNewWindowSnapShot');
 
     var dateToUse: Date = new Date();
@@ -160,11 +160,13 @@ class OneWindowManager extends ManagerBase {
 
     this.__activeWindowSnapShot = {
       TimeStamp: dateToUse,
+      WindowType: windowType,
+      WindowFriendly: windowType[windowType],
       //TimeStampFriendly: friendly,
       AllCEAr: [],
       Id: newGuid,
       IsFavorite: false,
-      NickName: '__',
+      NickName: '',
       RawData: null
     }
 

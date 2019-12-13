@@ -12,6 +12,7 @@ class InjectConst {
       MaxIterationPageLoad: 10,
       MaxIterationRedButton: 10,
       MaxSetHrefEffort: 10,
+      MaxIterationSwitchBoard: 20,
     },
     Timeouts: {
       TimeoutChangeLocation: 1000,
@@ -22,27 +23,36 @@ class InjectConst {
       SetHrefEffortWait: 1000,
     },
     ElemId: {
+      Hs: {
+        btnClearDebugTextArea: 'btnClearDebugTextArea',
+      },
       BtnEdit: 'btnEdit',
       BtnRestoreWindowState: 'btnRestoreWindowState',
       BtnSaveWindowState: 'btnSaveWindowState',
       InputNickname: 'inputNickname',
-      scLoginBtn: {
-        sc920: 'LogInBtn',
-        sc820: null
-      },
-        
+      hsBtnBigRed: 'btnBigRed',
+
       SelStateSnapShot: 'selState',
       textAreaFeedback: 'ta-feedback',
-      SitecoreRootNodeId: 'Tree_Node_11111111111111111111111111111111',
-      SitecoreRootGlyphId: 'Tree_Glyph_11111111111111111111111111111111',
       btnUpdateNicknameB: 'btnUpdateNickname',
       btnToggleFavoriteB: 'btnToggleFavorite',
-      scLoginPassword: 'Password',
-      scLoginUserName: 'UserName',
       HindSiteParentInfo: 'spanParentInfo',
-      scStartButton: {
-        sc920: 'StartButton',
-        sc820: 'startButton'
+
+      sc: {
+        scLoginUserName: 'UserName',
+        scLoginPassword: 'Password',
+        SitecoreRootNodeId: 'Tree_Node_11111111111111111111111111111111',
+        SitecoreRootGlyphId: 'Tree_Glyph_11111111111111111111111111111111',
+
+        scLoginBtn: {
+          sc920: 'LogInBtn',
+          sc820: null
+        },
+
+        scStartButton: {
+          sc920: 'StartButton',
+          sc820: 'startButton'
+        },
       }
     },
 
@@ -54,13 +64,13 @@ class InjectConst {
       Desktop: '/sitecore/shell/default.aspx',
       Login: '/sitecore/login',
       ContentEditor: '/sitecore/shell/Applications/Content%20Editor.aspx',
-      LaunchPad:  '/client/applications/launchpad',
+      LaunchPad: '/client/applications/launchpad',
     },
 
     Selector: {
       ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
       IframeContent: 'iframe[src*=content]',
-      
+
       scLoginBtn: {
         sc920: null,
         sc820: 'input.btn',
@@ -70,7 +80,6 @@ class InjectConst {
     Storage: {
       WindowRoot: 'Xyyz.WindowSnapShot.'
     },
-    TreeExpandedPng: 'treemenu_expanded.png',
 
     MaxIter: 100,
 
@@ -81,6 +90,9 @@ class InjectConst {
     },
 
     Names: {
+      sc: {
+        scTreeExpandedPng: 'treemenu_expanded.png',
+      },
       HtmlToInject: 'HtmlToInject',
       StylesToInject: 'StylesToInject',
       TreeMenuExpandedPng: 'treemenu_expanded.png',

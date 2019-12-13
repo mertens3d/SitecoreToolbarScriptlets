@@ -1,15 +1,15 @@
-console.log( 'IConst loaded');
+console.log('IConst loaded');
 
 interface IConst {
   Numbers: {
     ShortGuidLength: number,
-    
   },
   Iterations: {
     MaxIterationLookingForNode: number,
     MaxIterationPageLoad: number,
     MaxIterationRedButton: number,
     MaxSetHrefEffort: number,
+    MaxIterationSwitchBoard: number,
   },
   Timeouts: {
     TimeoutChangeLocation: number, //1000
@@ -20,21 +20,27 @@ interface IConst {
     SetHrefEffortWait: number,
   },
   ElemId: {
+    Hs: {
+      btnClearDebugTextArea: string,
+    }
     BtnEdit: string,
     BtnRestoreWindowState: string,
     BtnSaveWindowState: string,
     InputNickname: string,
-    scLoginBtn:  IScVerSpec,
     SelStateSnapShot: string,
     textAreaFeedback: string,
-    SitecoreRootNodeId: string,
-    SitecoreRootGlyphId: string,
     btnUpdateNicknameB: string,
+    hsBtnBigRed: string,
     btnToggleFavoriteB: string,
-    scLoginUserName: string,
-    scLoginPassword: string,
-    scStartButton: IScVerSpec,
     HindSiteParentInfo: string,
+    sc: {
+      scLoginBtn: IScVerSpec,
+      SitecoreRootGlyphId: string,
+      SitecoreRootNodeId: string,
+      scLoginUserName: string,
+      scLoginPassword: string,
+      scStartButton: IScVerSpec,
+    }
   },
   ClassNames: {
     ContentTreeNode: string,
@@ -53,7 +59,6 @@ interface IConst {
   Storage: {
     WindowRoot: string
   },
-  TreeExpandedPng: string,
 
   MaxIter: number,
 
@@ -62,6 +67,9 @@ interface IConst {
     AllTreeData: string,
   },
   Names: {
+    sc: {
+      scTreeExpandedPng: string,
+    },
     HtmlToInject: string,
     StylesToInject: string,
     TreeMenuExpandedPng: string,
@@ -70,4 +78,3 @@ interface IConst {
     scDefaultAdminUserName: string,
   }
 }
-

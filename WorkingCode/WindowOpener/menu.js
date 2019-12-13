@@ -49,7 +49,7 @@ xyyz.ChildWindow = {
     console.log('Constants: ' + constants.taDebug);
 
     //'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=400,height=350')
-    window.mywindow = window.open('', 'mywindow', 'width=900, height=700');// options don't workin ff, titlebar=no, toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=no');
+    window.mywindow = window.open('', 'mywindow', 'width=900, height=900');// options don't workin ff, titlebar=no, toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=no');
     window.mywindow.Parent = this;
     this.WriteHtml(window.mywindow);
    //window.mywindow.WireMenuButtons();
