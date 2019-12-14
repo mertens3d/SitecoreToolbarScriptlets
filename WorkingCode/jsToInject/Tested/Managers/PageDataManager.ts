@@ -15,7 +15,7 @@ class PageDataManager extends ManagerBase {
         DataWinParent: null,
         Document: window.document,
         HasParentDesktop: false,
-        Id: this.GuidMan().NewGuid(),
+        XyyzId: this.GuidMan().NewGuid(),
         IsCEDoc: false,
         ParentDesktop: null
       },
@@ -43,7 +43,7 @@ class PageDataManager extends ManagerBase {
 
     var toReturn = this.SetWindowDataToCurrent(newWindow)
 
-    this.debug().FuncEnd(this.OpenNewBrowserWindow.name + ' : ' + toReturn.DataDocSelf.Id.asString);
+    this.debug().FuncEnd(this.OpenNewBrowserWindow.name + ' : ' + toReturn.DataDocSelf.XyyzId.asString);
 
     return toReturn;
   }
@@ -64,7 +64,7 @@ class PageDataManager extends ManagerBase {
           DataWinParent: null,
           Document: (<Window>(window.opener)).document,
           HasParentDesktop: false,
-          Id: this.GuidMan().NewGuid(),
+          XyyzId: this.GuidMan().NewGuid(),
           IsCEDoc: false,
           ParentDesktop: null,
         }

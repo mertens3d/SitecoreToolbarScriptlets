@@ -60,6 +60,7 @@
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataBucketRestoreDesktop.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IScVerSpec.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Feedback.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\IIterationResults.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\NewWindowDest.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\GuidManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\Hub.ts" />
@@ -71,6 +72,7 @@
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\PageDataManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\MiscManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\UiManager.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Promises\PromiseChainRestoreDesktop.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\_first\_ManagerBase.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneWindow.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Utilities.ts" />

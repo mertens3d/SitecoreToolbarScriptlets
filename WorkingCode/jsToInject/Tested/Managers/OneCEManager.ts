@@ -4,7 +4,7 @@
   }
 
   WaitForNode(needleId: IGuid, targetDoc: IDataOneDoc, currentIteration: number, timeout: number, callbackOnComplete: Function) {
-    this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.asString + ' on ' + this.GuidMan().ShortGuid(targetDoc.Id));
+    this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.asString + ' on ' + this.GuidMan().ShortGuid(targetDoc.XyyzId));
     currentIteration--;
 
     var foundOnPage: HTMLElement = targetDoc.Document.getElementById(needleId.asString);
@@ -15,7 +15,6 @@
       this.__expandNode(foundOnPage);
 
       callbackOnComplete(foundOnPage);
-
     } else {
       if (currentIteration > 0) {
         this.debug().Log('not found on page...setting timeout: ' + timeout);
@@ -61,47 +60,68 @@
     }
   }
 
-  RestoreOneNodeAtATimeRecursive(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc, nodeIteration: number, callBackOnNoNodesLeft: Function) {
-    this.debug().FuncStart(this.RestoreOneNodeAtATimeRecursive.name, nodeIteration.toString());
-    nodeIteration--;
-    while (storageData.AllTreeNodeAr.length > 0 && nodeIteration > 0) {
-      var nextNode = storageData.AllTreeNodeAr.shift();
+  async RestoreOneNodeAtATimeRecursive(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc, iterHelper: IterationHelper = null) {
+    this.debug().FuncStart(this.RestoreOneNodeAtATimeRecursive.name, dataOneDocTarget.XyyzId.asShort);
 
-      var lookingFor: IGuid = nextNode.NodeId;
-      var self = this;
-
-      var callbackOnNodeSearchComplete: Function = function () {
-        self.RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, nodeIteration, callBackOnNoNodesLeft);
-      }
-
-      this.WaitForNode(lookingFor,
-        dataOneDocTarget,
-        this.Const().Iterations.MaxIterationLookingForNode,
-        this.Const().Timeouts.TimeoutWaitForNodeToLoad,
-        callbackOnNodeSearchComplete);
+    if (!iterHelper) {
+      iterHelper = new IterationHelper(this.Xyyz, 500, 4, this.RestoreOneNodeAtATimeRecursive.name);
     }
 
-    callBackOnNoNodesLeft();
+    while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
+      var nextNode = storageData.AllTreeNodeAr.shift();
+      this.debug().Log('looking for: ' + nextNode.NodeId.asString + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
+      this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
+
+      //var lookingFor: IGuid = nextNode.NodeId;
+      //var self = this;
+
+      //var callbackOnNodeSearchComplete: Function = function () {
+      //  self.RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, iterHelper, callBackOnNoNodesLeft);
+      //}
+
+      var iterHelperTiny = new IterationHelper(this.Xyyz, 2, 1000, 'small');
+
+      var foundOnPage: HTMLElement = null;
+
+      while (!foundOnPage && iterHelperTiny.DecrementAndKeepGoing()) {
+        this.debug().Log('looking for: *' + nextNode.NodeId.asString + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
+
+        foundOnPage = dataOneDocTarget.Document.getElementById(nextNode.NodeId.asString);
+
+        if (foundOnPage) {
+          this.debug().Log('Found it: ');
+          this.__expandNode(foundOnPage);
+        } else {
+          this.debug().Log('not Found...waiting: ');
+          //dataOneDocTarget.Document.body.innerHTML = '<div>dog1111111111111111111</div>';
+          await iterHelperTiny.WaitAndThenB();
+        }
+      }
+
+      //this.WaitForNode(lookingFor,
+      //  dataOneDocTarget,
+      //  this.Const().Iterations.MaxIterationLookingForNode,
+      //  this.Const().Timeouts.TimeoutWaitForNodeToLoad,
+      //  callbackOnNodeSearchComplete);
+    }
+
+    //callBackOnNoNodesLeft();
 
     this.debug().FuncEnd(this.RestoreOneNodeAtATimeRecursive.name);
   }
 
   RestoreCEState(dataToRestore: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Boolean {
-    this.debug().FuncStart(this.RestoreCEState.name, dataOneDocTarget.Id.asShort);
+    this.debug().FuncStart(this.RestoreCEState.name, dataOneDocTarget.XyyzId.asShort);
 
     var toReturn: boolean = false;
 
-
     this.debug().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
-    this.__collapseRootNode(dataOneDocTarget);
+    //this.__collapseRootNode(dataOneDocTarget);
 
     const maxIteration: number = this.Const().Iterations.MaxIterationLookingForNode
     const timeout: number = this.Const().Timeouts.TimeoutWaitForNodeToLoad
 
-    var callBackOnSuccess: Function = function () {
-    }
-
-    this.RestoreOneNodeAtATimeRecursive(dataToRestore, dataOneDocTarget, 100, callBackOnSuccess);
+    this.RestoreOneNodeAtATimeRecursive(dataToRestore, dataOneDocTarget);
 
     //for (var idx = 0; idx < storageData.AllTreeNodeAr.length; idx++) {
     //  var lookingFor: IGuid = storageData.AllTreeNodeAr[idx].NodeId;

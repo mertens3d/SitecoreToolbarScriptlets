@@ -84,7 +84,7 @@ class EventManager extends ManagerBase {
     }
 
     targetWindow.WindowType = WindowType.ContentEditor;
-    this.debug().FuncEnd(this.__getTargetWindow.name, 'child window id: ' + targetWindow.DataDocSelf.Id.asShort);
+    this.debug().FuncEnd(this.__getTargetWindow.name, 'child window id: ' + targetWindow.DataDocSelf.XyyzId.asShort);
 
     return targetWindow;
   }

@@ -7,6 +7,7 @@ $scTextColorLight: #ccc;
 $scTextColorNorm: #131313;
 
 $selWidth: 500px;
+$scBackgroundImage: url(/sitecore/login/drop_wallpaper.jpg);
 
 // widths
 $padding: 4px;
@@ -17,15 +18,16 @@ $selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $
 
 //heights
 
-
 .light-text {
   color: $scTextColorLight;
 }
+
 .preview-icon {
   background-image: url(/~/icon/apps/32x32/Preview.png);
   background-repeat: no-repeat;
   background-position: top;
 }
+
 .admin-b-icon {
   background-image: url(/~/icon/office/32x32/log_in.png);
   background-repeat: no-repeat;
@@ -36,19 +38,23 @@ $selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $
   background-image: url(/temp/iconcache/apps/48x48/windows%20table.png);
   background-repeat: no-repeat;
   background-position: top;
+  
 }
 
 button {
+  /*border-radius: 5px;*/
   background: none;
   background-color: $scLaunchPadBtnBackground;
+  background-size: 30px 30px;
+  
   border: 0;
   border-radius: 0px;
-  /*border-radius: 5px;*/
   box-shadow: none;
   cursor: pointer;
   height: $scLaunchPageButtonHeight;
   height: 60px;
   margin: 7px;
+  padding-top: 26px;
   vertical-align: top;
   white-space: normal;
   width: $scLaunchPagebuttonWidth;
@@ -78,7 +84,23 @@ select {
 fieldset {
   display: flex;
   flex-wrap: wrap;
+  background-color: $scBackgroundColor;
+  padding-top: 14px;
 }
+
+
+legend {
+  position: relative;
+  float: left;
+  background: none;
+  /*background-color: green;*/
+  padding-top: 0;
+  margin-top: 0;
+  border: none;
+  top: -12px;
+  left: -12px;
+}
+
 
 .col-sel {
   display: flex;
@@ -103,22 +125,22 @@ fieldset {
   vertical-align: top;
 }
 
-legend {
-}
-
 body {
+  background-image: $scBackgroundImage;
+  background-size: cover;
   background-color: $scBackgroundColor;
   overflow: auto;
   color: $scTextColorNorm;
+  background-repeat:no-repeat;
 }
-.col-right{
 
+.col-right {
 }
+
 .col-left {
   display: inline-block;
   vertical-align: top;
   width: 75%;
-
   /*button {
     display: inline-block;
     width: 100px;

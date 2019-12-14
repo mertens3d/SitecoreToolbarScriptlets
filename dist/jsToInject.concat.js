@@ -217,6 +217,56 @@ class Debug {
         this.Log('\t\t** ERROR ** ' + container);
         this.Log('');
     }
+    IsNullOrUndefined(subject) {
+        var toReturn = '{unknown}';
+        if (subject) {
+            if ((typeof subject) == 'undefined') {
+                toReturn = 'Is Undefined';
+            }
+            else {
+                toReturn = subject;
+            }
+        }
+        else {
+            toReturn = 'Is Null';
+        }
+        return toReturn;
+    }
+    PromiseBucketDebug(promiseBucket, friendlyName) {
+        this.FuncStart(this.PromiseBucketDebug.name, friendlyName);
+        this.Log('promiseBucket : ' + this.IsNullOrUndefined(promiseBucket));
+        if (promiseBucket && typeof (promiseBucket) !== 'undefined') {
+            this.Log('promiseBucket.IFramesbefore: ' + this.IsNullOrUndefined(promiseBucket.IFramesbefore));
+            this.Log('promiseBucket.targetWindow: ' + this.IsNullOrUndefined(promiseBucket.targetWindow));
+            this.Log('promiseBucket.oneCEdata: ' + this.IsNullOrUndefined(promiseBucket.oneCEdata));
+            this.Log('promiseBucket.NewIframe: ' + this.IsNullOrUndefined(promiseBucket.NewIframe));
+            if (promiseBucket.NewIframe) {
+                this.DebugDataOneIframe(promiseBucket.NewIframe);
+            }
+        }
+        this.FuncEnd(this.PromiseBucketDebug.name, friendlyName);
+    }
+    DebugDataOneIframe(dataOneIframe) {
+        this.FuncStart(this.DebugDataOneIframe.name);
+        try {
+        }
+        catch (e) {
+        }
+        this.Log('dataOneIframe : ' + this.IsNullOrUndefined(dataOneIframe));
+        if (dataOneIframe) {
+            this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
+            if (dataOneIframe.IframeElem) {
+                this.Log('dataOneIframe.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
+            }
+            this.Log('dataOneIframe.ContentDoc: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc));
+            if (dataOneIframe.ContentDoc) {
+                this.Log('dataOneIframe.ContentDoc: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc));
+                this.Log('dataOneIframe.ContentDoc.XyyzId.asShort: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc.XyyzId.asShort));
+                this.Log('dataOneIframe.ContentDoc.Document: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc.Document));
+            }
+        }
+        this.FuncEnd(this.DebugDataOneIframe.name);
+    }
 }
 
 class FeedbackManager extends ManagerBase {
@@ -247,19 +297,24 @@ class FeedbackManager extends ManagerBase {
 class IterationHelper extends ManagerBase {
     constructor(xyyz, maxIterations, timeout, nickname) {
         super(xyyz);
-        xyyz.debug.FuncStart(IterationHelper.name, nickname);
+        xyyz.debug.FuncStart('ctor: ' + IterationHelper.name, nickname);
         this.__maxIterations = maxIterations;
         this.__currentIteration = maxIterations;
         this.__timeout = timeout;
         this.__nickName = nickname;
-        xyyz.debug.FuncEnd(IterationHelper.name);
+        xyyz.debug.FuncEnd('ctor: ' + IterationHelper.name);
     }
     DecrementAndKeepGoing() {
-        this.__currentIteration -= 1;
-        this.debug().Log('Iteration: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations);
-        var toReturn = this.__currentIteration > 0;
-        if (!toReturn) {
+        var toReturn = false;
+        if (this.__currentIteration > 0) {
+            this.__currentIteration -= 1;
+            this.__timeout += this.__timeout * 0.5;
+            this.debug().Log('DecrementAndKeepGoing: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations + ' | timeout: ' + this.__timeout);
+            toReturn = true;
+        }
+        else {
             this.NotifyExhausted();
+            toReturn = false;
         }
         return toReturn;
     }
@@ -267,7 +322,15 @@ class IterationHelper extends ManagerBase {
         this.debug().Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
     }
     WaitAndThen(timeoutFunction) {
-        setTimeout(timeoutFunction, this.__timeout);
+        this.debug().FuncStart(this.WaitAndThen.name, this.__nickName + ' ' + timeoutFunction.name);
+        var self = this;
+        setTimeout(timeoutFunction(), self.__timeout);
+        this.debug().FuncEnd(this.WaitAndThen.name, this.__nickName);
+    }
+    WaitAndThenB() {
+        return new Promise((resolve) => {
+            setTimeout(resolve, this.__timeout);
+        });
     }
 }
 
@@ -327,6 +390,14 @@ class Utilities extends ManagerBase {
         return toReturn;
     }
 }
+
+var iIterationResults;
+(function (iIterationResults) {
+    iIterationResults[iIterationResults['unknown'] = 0] = 'unknown';
+    iIterationResults[iIterationResults['BeepGoing'] = 1] = 'BeepGoing';
+    iIterationResults[iIterationResults['Exhausted'] = 2] = 'Exhausted';
+    iIterationResults[iIterationResults['Completed'] = 3] = 'Completed';
+})(iIterationResults || (iIterationResults = {}));
 
 var ChildWindowDest;
 (function (ChildWindowDest) {
@@ -624,7 +695,7 @@ class EventManager extends ManagerBase {
             }, false);
         }
         targetWindow.WindowType = WindowType.ContentEditor;
-        this.debug().FuncEnd(this.__getTargetWindow.name, 'child window id: ' + targetWindow.DataDocSelf.Id.asShort);
+        this.debug().FuncEnd(this.__getTargetWindow.name, 'child window id: ' + targetWindow.DataDocSelf.XyyzId.asShort);
         return targetWindow;
     }
     _handlerRestoreClick(evt) {
@@ -817,7 +888,7 @@ class LocationManager extends ManagerBase {
         return toReturn;
     }
     AdminB(targetDoc, callbackOnComplete) {
-        this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.Id.asShort);
+        this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.XyyzId.asShort);
         this.debug().Log('callback passed: ' + (callbackOnComplete !== null));
         var userNameElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginUserName);
         var passwordElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginPassword);
@@ -853,12 +924,21 @@ class MiscManager extends ManagerBase {
     }
 }
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator['throw'](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 class OneCEManager extends ManagerBase {
     constructor(xyyz) {
         super(xyyz);
     }
     WaitForNode(needleId, targetDoc, currentIteration, timeout, callbackOnComplete) {
-        this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.asString + ' on ' + this.GuidMan().ShortGuid(targetDoc.Id));
+        this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.asString + ' on ' + this.GuidMan().ShortGuid(targetDoc.XyyzId));
         currentIteration--;
         var foundOnPage = targetDoc.Document.getElementById(needleId.asString);
         if (foundOnPage) {
@@ -909,31 +989,41 @@ class OneCEManager extends ManagerBase {
             this.debug().Error(this.__collapseRootNode.name, 'Root glyph not found ' + this.Const().ElemId.sc.SitecoreRootGlyphId);
         }
     }
-    RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, nodeIteration, callBackOnNoNodesLeft) {
-        this.debug().FuncStart(this.RestoreOneNodeAtATimeRecursive.name, nodeIteration.toString());
-        nodeIteration--;
-        while (storageData.AllTreeNodeAr.length > 0 && nodeIteration > 0) {
-            var nextNode = storageData.AllTreeNodeAr.shift();
-            var lookingFor = nextNode.NodeId;
-            var self = this;
-            var callbackOnNodeSearchComplete = function () {
-                self.RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, nodeIteration, callBackOnNoNodesLeft);
-            };
-            this.WaitForNode(lookingFor, dataOneDocTarget, this.Const().Iterations.MaxIterationLookingForNode, this.Const().Timeouts.TimeoutWaitForNodeToLoad, callbackOnNodeSearchComplete);
-        }
-        callBackOnNoNodesLeft();
-        this.debug().FuncEnd(this.RestoreOneNodeAtATimeRecursive.name);
+    RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, iterHelper = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.RestoreOneNodeAtATimeRecursive.name, dataOneDocTarget.XyyzId.asShort);
+            if (!iterHelper) {
+                iterHelper = new IterationHelper(this.Xyyz, 500, 4, this.RestoreOneNodeAtATimeRecursive.name);
+            }
+            while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
+                var nextNode = storageData.AllTreeNodeAr.shift();
+                this.debug().Log('looking for: ' + nextNode.NodeId.asString + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
+                this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
+                var iterHelperTiny = new IterationHelper(this.Xyyz, 2, 1000, 'small');
+                var foundOnPage = null;
+                while (!foundOnPage && iterHelperTiny.DecrementAndKeepGoing()) {
+                    this.debug().Log('looking for: *' + nextNode.NodeId.asString + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
+                    foundOnPage = dataOneDocTarget.Document.getElementById(nextNode.NodeId.asString);
+                    if (foundOnPage) {
+                        this.debug().Log('Found it: ');
+                        this.__expandNode(foundOnPage);
+                    }
+                    else {
+                        this.debug().Log('not Found...waiting: ');
+                        yield iterHelperTiny.WaitAndThenB();
+                    }
+                }
+            }
+            this.debug().FuncEnd(this.RestoreOneNodeAtATimeRecursive.name);
+        });
     }
     RestoreCEState(dataToRestore, dataOneDocTarget) {
-        this.debug().FuncStart(this.RestoreCEState.name, dataOneDocTarget.Id.asShort);
+        this.debug().FuncStart(this.RestoreCEState.name, dataOneDocTarget.XyyzId.asShort);
         var toReturn = false;
         this.debug().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
-        this.__collapseRootNode(dataOneDocTarget);
         const maxIteration = this.Const().Iterations.MaxIterationLookingForNode;
         const timeout = this.Const().Timeouts.TimeoutWaitForNodeToLoad;
-        var callBackOnSuccess = function () {
-        };
-        this.RestoreOneNodeAtATimeRecursive(dataToRestore, dataOneDocTarget, 100, callBackOnSuccess);
+        this.RestoreOneNodeAtATimeRecursive(dataToRestore, dataOneDocTarget);
         this.debug().FuncEnd(this.RestoreCEState.name);
         return toReturn;
     }
@@ -979,6 +1069,15 @@ class OneCEManager extends ManagerBase {
     }
 }
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator['throw'](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 console.log('ManyTrees loaded');
 class OneDesktopManager extends ManagerBase {
     constructor(xyyz) {
@@ -987,20 +1086,23 @@ class OneDesktopManager extends ManagerBase {
         xyyz.debug.FuncEnd(OneDesktopManager.name);
     }
     RestoreDesktopState(targetWindow, dataToRestore) {
-        this.debug().FuncStart(this.RestoreDesktopState.name);
-        ;
-        for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
-            this.debug().Log('idx: ' + idx);
-            var desktopPromiser = new PromiseChainRestoreDesktop(this.Xyyz);
-            desktopPromiser.RunOneChain(targetWindow, dataToRestore.AllCEAr[idx]);
-            this.debug().FuncEnd(this.RestoreDesktopState.name);
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.RestoreDesktopState.name);
+            ;
+            for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
+                this.debug().Log('idx: ' + idx);
+                var desktopPromiser = new PromiseChainRestoreDesktop(this.Xyyz);
+                yield desktopPromiser.RunOneChain(targetWindow, dataToRestore.AllCEAr[idx]);
+                this.debug().FuncEnd(this.RestoreDesktopState.name);
+            }
+        });
     }
     RestoreDataToOneIframeWorker(oneCEdata, newIframe) {
-        this.debug().FuncStart(this.RestoreDataToOneIframeWorker.name, 'oneCEdata not null: ' + (oneCEdata != null) + ' newFrame not null: ' + (newIframe !== null));
+        this.debug().FuncStart(this.RestoreDataToOneIframeWorker.name, 'data not null: ' + (oneCEdata != null) + ' newFrame not null: ' + (newIframe !== null));
         var toReturn = false;
+        this.debug().DebugDataOneIframe(newIframe);
         if (oneCEdata && newIframe) {
-            this.Xyyz.OneCEMan.RestoreCEState(oneCEdata, newIframe.DocElem);
+            this.Xyyz.OneCEMan.RestoreCEState(oneCEdata, newIframe.ContentDoc);
             toReturn = true;
         }
         else {
@@ -1010,35 +1112,29 @@ class OneDesktopManager extends ManagerBase {
         this.debug().FuncEnd(this.RestoreDataToOneIframeWorker.name, toReturn.toString());
         return toReturn;
     }
-    WaitForIframeCountDiffWorker(IFramesbefore, targetWin, iterationJr = null) {
-        this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
-        var toReturn = null;
-        if (!iterationJr) {
-            iterationJr = new IterationHelper(this.Xyyz, 20, 1000, this.WaitForIframeCountDiffWorker.name);
-        }
-        if (iterationJr.DecrementAndKeepGoing()) {
-            var beforeCount = IFramesbefore.length;
-            var allIframesAfter = this.GetAllLiveIframeData(targetWin);
-            var count = allIframesAfter.length;
-            this.debug().Log('iFrame count before: ' + IFramesbefore.length);
-            this.debug().Log('iFrame count after: ' + allIframesAfter.length);
-            if (count > beforeCount) {
-                var newIframes = allIframesAfter.filter(e => !IFramesbefore.includes(e));
-                toReturn = newIframes[0];
+    WaitForIframeCountDiffWorker(IFramesbefore, targetWin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
+            var toReturn = null;
+            var iterationJr = new IterationHelper(this.Xyyz, 20, 1000, this.WaitForIframeCountDiffWorker.name);
+            while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
+                let beforeCount = IFramesbefore.length;
+                var allIframesAfter = this.GetAllLiveIframeData(targetWin);
+                var count = allIframesAfter.length;
+                this.debug().Log('iFrame count before: ' + IFramesbefore.length);
+                this.debug().Log('iFrame count after: ' + allIframesAfter.length);
+                if (count > beforeCount) {
+                    var newIframes = allIframesAfter.filter(e => !IFramesbefore.includes(e));
+                    toReturn = newIframes[0];
+                }
+                else {
+                    var self = this;
+                    yield iterationJr.WaitAndThenB();
+                }
             }
-            else {
-                var self = this;
-                iterationJr.WaitAndThen(function () {
-                    self.WaitForIframeCountDiffWorker(IFramesbefore, targetWin, iterationJr);
-                });
-            }
-        }
-        else {
-            iterationJr.NotifyExhausted();
-            toReturn = null;
-        }
-        this.debug().FuncEnd(this.WaitForIframeCountDiffWorker.name);
-        return toReturn;
+            this.debug().FuncEnd(this.WaitForIframeCountDiffWorker.name);
+            return toReturn;
+        });
     }
     __getBigRedButtonElem(targetWin) {
         this.debug().FuncStart(this.__getBigRedButtonElem.name, 'targetWin not null: ' + (targetWin !== null));
@@ -1074,6 +1170,40 @@ class OneDesktopManager extends ManagerBase {
         }
         this.debug().FuncEnd(this.WaitForAndClickRedStartButtonWorker.name);
         return toReturn;
+    }
+    WaitForReadyIframe(dataOneIframe, iterationJr = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Id.asShort);
+            this.debug().DebugDataOneIframe(dataOneIframe);
+            var toReturn = false;
+            if (!iterationJr) {
+                iterationJr = new IterationHelper(this.Xyyz, 20, 1000, this.WaitForReadyIframe.name);
+            }
+            this.debug().MarkerA();
+            while (iterationJr.DecrementAndKeepGoing() && toReturn === false) {
+                this.debug().MarkerB();
+                var currentReadyState = dataOneIframe.IframeElem.contentDocument.readyState.toString();
+                var isReadyStateComplete = currentReadyState === 'complete';
+                this.debug().Log('currentReadyState : ' + currentReadyState);
+                ;
+                this.debug().MarkerC();
+                this.debug().Log('isReadyStateComplete: ' + isReadyStateComplete);
+                if (isReadyStateComplete) {
+                    toReturn = true;
+                    this.debug().Log('toReturn A is ' + toReturn);
+                }
+                else {
+                    var self = this;
+                    this.debug().Log('about to Wait and then ');
+                    yield iterationJr.WaitAndThenB();
+                    this.debug().Log('toReturn C is ' + toReturn);
+                }
+                this.debug().Log('while is looping ' + toReturn);
+            }
+            this.debug().FuncEnd(this.WaitForReadyIframe.name, currentReadyState + ' ' + toReturn.toString());
+            ;
+            return toReturn;
+        });
     }
     WaitForAndThenClickCEFromMenuWorker(targetWin, iterationJr = null) {
         this.debug().FuncStart(this.WaitForAndThenClickCEFromMenuWorker.name);
@@ -1114,16 +1244,16 @@ class OneDesktopManager extends ManagerBase {
                 var id = this.GuidMan().ParseGuid(iframeElem.id);
                 var dataOneIframe = {
                     Index: ifrIdx,
-                    DocElem: {
+                    IframeElem: iframeElem,
+                    Id: this.GuidMan().NewGuid(),
+                    ContentDoc: {
                         DataWinParent: targetWindow,
                         Document: iframeElem.contentDocument,
                         HasParentDesktop: true,
-                        Id: this.GuidMan().NewGuid(),
+                        XyyzId: this.GuidMan().NewGuid(),
                         IsCEDoc: true,
                         ParentDesktop: null
                     },
-                    IframeElem: iframeElem,
-                    Id: this.GuidMan().NewGuid(),
                 };
                 toReturn.push(dataOneIframe);
             }
@@ -1141,7 +1271,7 @@ class OneDesktopManager extends ManagerBase {
             for (var iframeIdx = 0; iframeIdx < livingIframeAr.length; iframeIdx++) {
                 this.debug().Log('iframeIdx: ' + iframeIdx);
                 var targetIframeObj = livingIframeAr[iframeIdx];
-                this.Xyyz.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.DocElem);
+                this.Xyyz.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.ContentDoc);
             }
         }
         this.debug().Log('done gathering tree data');
@@ -1274,7 +1404,7 @@ class PageDataManager extends ManagerBase {
                 DataWinParent: null,
                 Document: window.document,
                 HasParentDesktop: false,
-                Id: this.GuidMan().NewGuid(),
+                XyyzId: this.GuidMan().NewGuid(),
                 IsCEDoc: false,
                 ParentDesktop: null
             },
@@ -1290,7 +1420,7 @@ class PageDataManager extends ManagerBase {
         var newWindowUrl = this.PageDataMan().__winDataParent.Window.location.href;
         var newWindow = this.__winDataParent.Window.open(newWindowUrl);
         var toReturn = this.SetWindowDataToCurrent(newWindow);
-        this.debug().FuncEnd(this.OpenNewBrowserWindow.name + ' : ' + toReturn.DataDocSelf.Id.asString);
+        this.debug().FuncEnd(this.OpenNewBrowserWindow.name + ' : ' + toReturn.DataDocSelf.XyyzId.asString);
         return toReturn;
     }
     Init() {
@@ -1304,7 +1434,7 @@ class PageDataManager extends ManagerBase {
                     DataWinParent: null,
                     Document: (window.opener).document,
                     HasParentDesktop: false,
-                    Id: this.GuidMan().NewGuid(),
+                    XyyzId: this.GuidMan().NewGuid(),
                     IsCEDoc: false,
                     ParentDesktop: null,
                 }
@@ -1368,7 +1498,7 @@ class UiManager extends ManagerBase {
     SetParentInfo(winDataParent) {
         var targetSpan = document.getElementById(this.Const().ElemId.HindSiteParentInfo);
         if (targetSpan) {
-            targetSpan.innerHTML = ' | Parent Id: ' + this.GuidMan().ShortGuid(winDataParent.DataDocSelf.Id) + ' | ' + winDataParent.Window.location.href;
+            targetSpan.innerHTML = ' | Parent Id: ' + this.GuidMan().ShortGuid(winDataParent.DataDocSelf.XyyzId) + ' | ' + winDataParent.Window.location.href;
         }
     }
     SelectChanged() {
@@ -1443,6 +1573,15 @@ class UiManager extends ManagerBase {
     }
 }
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator['throw'](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 class PromiseChainRestoreDesktop extends ManagerBase {
     constructor(xyyz) {
         xyyz.debug.FuncStart(PromiseChainRestoreDesktop.name);
@@ -1457,96 +1596,92 @@ class PromiseChainRestoreDesktop extends ManagerBase {
                 resolve(promiseBucket);
             }
             else {
-                reject();
+                reject(this.__waitForAndClickRedStartButtonPromise.name);
             }
             this.debug().FuncEnd(this.__waitForAndClickRedStartButtonPromise.name);
         });
     }
+    __waitForIframeReady(promiseBucket) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.__waitForIframeReady.name, 'promiseBucket not null: ' + (promiseBucket !== null));
+            this.debug().PromiseBucketDebug(promiseBucket, this.__waitForIframeReady.name);
+            var success = yield this.DesktopMan().WaitForReadyIframe(promiseBucket.NewIframe);
+            if (success) {
+                this.debug().Log('resolved! : ');
+                promiseBucket.NewIframe.ContentDoc.Document = promiseBucket.NewIframe.IframeElem.contentDocument;
+                this.debug().DebugDataOneIframe(promiseBucket.NewIframe);
+                resolve(promiseBucket);
+            }
+            else {
+                this.debug().Log('rejected ! : ');
+                reject(this.__waitForIframeReady.name);
+            }
+            this.debug().FuncEnd(this.__waitForIframeReady.name);
+        }));
+    }
     __waitForIframeCountDiffPromise(promiseBucket) {
-        return new Promise((resolve, reject) => {
-            this.debug().FuncStart(this.__waitForIframeCountDiffPromise.name, 'promiseBucket not null: ' + (promiseBucket !== null));
-            this.__promiseBucketDebug(promiseBucket, this.__waitForIframeCountDiffPromise.name);
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.__waitForIframeCountDiffPromise.name);
+            this.debug().ClearDebugText();
             this.debug().MarkerA();
-            this.__promiseBucketDebug(promiseBucket, this.__waitForIframeCountDiffPromise.name);
-            var success = this.DesktopMan().WaitForIframeCountDiffWorker(promiseBucket.IFramesbefore, promiseBucket.targetWindow);
+            var success = yield this.DesktopMan().WaitForIframeCountDiffWorker(promiseBucket.IFramesbefore, promiseBucket.targetWindow);
             this.debug().MarkerB();
             if (success) {
                 this.debug().MarkerC();
                 promiseBucket.NewIframe = success;
+                this.debug().DebugDataOneIframe(promiseBucket.NewIframe);
                 resolve(promiseBucket);
             }
             else {
-                reject();
+                reject(this.__waitForIframeCountDiffPromise.name);
             }
-        });
-    }
-    IsNullOrUndefined(subject) {
-        var toReturn = '{unknown}';
-        if (subject) {
-            if ((typeof subject) == 'undefined') {
-                toReturn = 'Is Undefined';
-            }
-            else {
-                toReturn = subject;
-            }
-        }
-        else {
-            toReturn = 'Is Null';
-        }
-        return toReturn;
-    }
-    __promiseBucketDebug(promiseBucket, friendlyName) {
-        this.debug().FuncStart(this.__promiseBucketDebug.name, friendlyName);
-        this.debug().Log('promiseBucket : ' + this.IsNullOrUndefined(promiseBucket));
-        if (promiseBucket && typeof (promiseBucket) !== 'undefined') {
-            this.debug().Log('promiseBucket.IFramesbefore: ' + this.IsNullOrUndefined(promiseBucket.IFramesbefore));
-            this.debug().Log('promiseBucket.targetWindow: ' + this.IsNullOrUndefined(promiseBucket.targetWindow));
-            this.debug().Log('promiseBucket.oneCEdata: ' + this.IsNullOrUndefined(promiseBucket.oneCEdata));
-        }
-        this.debug().FuncEnd(this.__promiseBucketDebug.name, friendlyName);
+            this.debug().FuncEnd(this.__waitForIframeCountDiffPromise.name);
+        }));
     }
     __waitForAndThenClickCEFromMenuPromise(promiseBucket) {
         return new Promise((resolve, reject) => {
             var success = this.DesktopMan().WaitForAndThenClickCEFromMenuWorker(promiseBucket.targetWindow);
             if (success) {
-                this.__promiseBucketDebug(promiseBucket, this.__waitForAndThenClickCEFromMenuPromise.name);
                 resolve(promiseBucket);
             }
             else {
-                reject();
+                reject(this.__waitForAndThenClickCEFromMenuPromise.name);
             }
         });
     }
     __restoreDataToOneIframe(promiseBucket) {
         return new Promise((resolve, reject) => {
             this.debug().FuncStart(this.__restoreDataToOneIframe.name);
+            this.debug().DebugDataOneIframe(promiseBucket.NewIframe);
             var success = this.DesktopMan().RestoreDataToOneIframeWorker(promiseBucket.oneCEdata, promiseBucket.NewIframe);
             if (success) {
                 resolve(promiseBucket);
             }
             else {
-                reject();
+                reject(this.__restoreDataToOneIframe.name);
             }
             this.debug().FuncEnd(this.__restoreDataToOneIframe.name);
         });
     }
     RunOneChain(targetWindow, dataToRestore) {
-        var allIframeData = this.DesktopMan().GetAllLiveIframeData(targetWindow);
-        var dataBucket = {
-            targetWindow: targetWindow,
-            targetDoc: null,
-            IFramesbefore: allIframeData,
-            oneCEdata: dataToRestore,
-            NewIframe: null,
-            LastChainLinkSuccessful: false,
-        };
-        this.__promiseBucketDebug(dataBucket, this.RunOneChain.name);
-        this.__waitForAndClickRedStartButtonPromise(dataBucket)
-            .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
-            .then(dataBucketb => this.__waitForIframeCountDiffPromise(dataBucketb))
-            .then(dataBucketc => this.__restoreDataToOneIframe(dataBucketc))
-            .catch(ex => {
-            this.debug().Error(this.RunOneChain.name, ex);
+        return __awaiter(this, void 0, void 0, function* () {
+            var allIframeData = this.DesktopMan().GetAllLiveIframeData(targetWindow);
+            var dataBucket = {
+                targetWindow: targetWindow,
+                targetDoc: null,
+                IFramesbefore: allIframeData,
+                oneCEdata: dataToRestore,
+                NewIframe: null,
+                LastChainLinkSuccessful: false,
+            };
+            yield this.__waitForAndClickRedStartButtonPromise(dataBucket)
+                .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
+                .then(dataBucket => this.__waitForIframeCountDiffPromise(dataBucket))
+                .then(dataBucket => this.__waitForIframeReady(dataBucket))
+                .then(dataBucket => this.__restoreDataToOneIframe(dataBucket))
+                .catch(ex => {
+                this.debug().Error(this.RunOneChain.name, ex);
+            });
         });
     }
 }

@@ -1,6 +1,6 @@
 interface IDataOneIframe {
   Index: number,
   IframeElem: HTMLIFrameElement,
-  DocElem: IDataOneDoc,
-  Id: IGuid
+  ContentDoc: IDataOneDoc,
+  Id: IGuid,
 }

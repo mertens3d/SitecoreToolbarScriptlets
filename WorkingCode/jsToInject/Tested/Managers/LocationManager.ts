@@ -106,7 +106,7 @@ class LocationManager extends ManagerBase {
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
     //callbackOnComplete();
-    this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.Id.asShort);
+    this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.XyyzId.asShort);
     this.debug().Log('callback passed: ' + (callbackOnComplete !== null));
 
     var userNameElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginUserName);

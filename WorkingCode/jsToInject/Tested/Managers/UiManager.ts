@@ -3,7 +3,7 @@
 
       var targetSpan = document.getElementById(this.Const().ElemId.HindSiteParentInfo);
       if (targetSpan) {
-        targetSpan.innerHTML = ' | Parent Id: ' + this.GuidMan().ShortGuid(winDataParent.DataDocSelf.Id) + ' | ' + winDataParent.Window.location.href;
+        targetSpan.innerHTML = ' | Parent Id: ' + this.GuidMan().ShortGuid(winDataParent.DataDocSelf.XyyzId) + ' | ' + winDataParent.Window.location.href;
       }
     }
   private __selectSnapshotIndex: number = 0;
