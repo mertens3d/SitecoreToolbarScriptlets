@@ -7,15 +7,24 @@ Shortcuts to the Sitecore interface
 1. Create a browser bookmark button  
        a. Firefox : https://support.mozilla.org/en-US/kb/bookmarks-firefox  
        b. Chrome : https://support.mozilla.org/en-US/kb/bookmarks-firefox
+2. Copy the text in `\dist\final\bookmark.js` to the Location field of the bookmark  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It will look something like:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`javascript:(function(){var newScript = ...`
+3. Browse to a sitecore site  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.g. `https://local.mySitecoreSite/sitecore/shell/default.aspx`
+4. Click the Bookmark button
 
 
 
 ## Purpose
-Create an interface that is disassociated enough with a given Sitecore site that expected shorts cuts work.
+A Sitecore interface tool that is disassociated enough with a given Sitecore site that expected shorts cuts work.
 
 1. It should never increase the number of clicks required for an action
 2. It should never destroy data or state without user acceptance 
 3. It should make life easier and therefore its function be as self-evident as possible. There should be short easy to understand instructions when helpful.
+4. It should make every reasonable effort to detect the current state and adjust for it
+5. It should never be dependant on anything except the script and a sitecore CM site. Settings and stored data will be created by the code as needed.
+6. It should work for Sitecore 8.x, 9.x. If differences in the two, it should try resolving with the newer version first. If that fails, then try the older versions.
 
 ## Usage
 
