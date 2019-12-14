@@ -18,6 +18,7 @@ interface IConst {
     WaitFogPageLoad: number,
     PostLoginBtnClick: number,
     SetHrefEffortWait: number,
+    IterationHelperInitial: number,
   },
   ElemId: {
     Hs: {
@@ -26,20 +27,21 @@ interface IConst {
     BtnEdit: string,
     BtnRestoreWindowState: string,
     BtnSaveWindowState: string,
+    btnToggleFavoriteB: string,
+    btnUpdateNicknameB: string,
+    HindSiteParentInfo: string,
+    hsBtnBigRed: string,
     InputNickname: string,
     SelStateSnapShot: string,
     textAreaFeedback: string,
-    btnUpdateNicknameB: string,
-    hsBtnBigRed: string,
-    btnToggleFavoriteB: string,
-    HindSiteParentInfo: string,
     sc: {
       scLoginBtn: IScVerSpec,
+      scLoginPassword: string,
+      scLoginUserName: string,
+      scStartButton: IScVerSpec,
       SitecoreRootGlyphId: string,
       SitecoreRootNodeId: string,
-      scLoginUserName: string,
-      scLoginPassword: string,
-      scStartButton: IScVerSpec,
+      
     }
   },
   ClassNames: {
@@ -53,8 +55,12 @@ interface IConst {
   },
   Selector: {
     ContentTreeNodeGlyph: string,
-    scLoginBtn: IScVerSpec,
+    
     IframeContent: string,
+    sc: {
+      StartMenuLeftOption: string,
+      LoginBtn: IScVerSpec,
+    }
   },
   Storage: {
     WindowRoot: string

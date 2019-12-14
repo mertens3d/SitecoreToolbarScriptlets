@@ -21,6 +21,7 @@ class InjectConst {
       WaitFogPageLoad: 1000,
       PostLoginBtnClick: 1000,
       SetHrefEffortWait: 1000,
+      IterationHelperInitial: 100,
     },
     ElemId: {
       Hs: {
@@ -70,10 +71,12 @@ class InjectConst {
     Selector: {
       ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
       IframeContent: 'iframe[src*=content]',
-
-      scLoginBtn: {
-        sc920: null,
-        sc820: 'input.btn',
+      sc: {
+        StartMenuLeftOption: '.scStartMenuLeftOption',
+        LoginBtn: {
+          sc920: null,
+          sc820: 'input.btn',
+        },
       },
     },
 

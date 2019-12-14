@@ -96,7 +96,7 @@ class LocationManager extends ManagerBase {
     var toReturn: HTMLElement = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginBtn.sc920);
 
     if (!toReturn) {
-      toReturn = targetDoc.Document.querySelector(this.Const().Selector.scLoginBtn.sc820);
+      toReturn = targetDoc.Document.querySelector(this.Const().Selector.sc.LoginBtn.sc820);
     }
 
     this.debug().Log('toReturn: ' + toReturn);

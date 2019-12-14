@@ -19,8 +19,6 @@
     });
   }
 
-
-
   private __waitForIframeReady(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
       this.debug().FuncStart(this.__waitForIframeReady.name, 'promiseBucket not null: ' + (promiseBucket !== null));
@@ -37,7 +35,7 @@
 
       if (success) {
         this.debug().Log('resolved! : ');
-        
+
         //promiseBucket.NewIframe.IframeElem.contentDocument.body.innerHTML = '<div>dog9999999999999999999</div>';
 
         promiseBucket.NewIframe.ContentDoc.Document = promiseBucket.NewIframe.IframeElem.contentDocument;
@@ -57,7 +55,7 @@
       this.debug().FuncStart(this.__waitForIframeCountDiffPromise.name);
       //this.debug().PromiseBucketDebug(promiseBucket, this.__waitForIframeCountDiffPromise.name);
 
-      this.debug().ClearDebugText();
+      //this.debug().ClearDebugText();
       this.debug().MarkerA();
       //var success: null;
 
@@ -66,8 +64,6 @@
       this.debug().MarkerB();
       if (success) {
         this.debug().MarkerC();
-
-
 
         promiseBucket.NewIframe = success;
 
@@ -82,8 +78,8 @@
   }
 
   private __waitForAndThenClickCEFromMenuPromise(promiseBucket: IDataBucketRestoreDesktop) {
-    return new Promise<IDataBucketRestoreDesktop>((resolve, reject) => {
-      var success = this.DesktopMan().WaitForAndThenClickCEFromMenuWorker(promiseBucket.targetWindow);
+    return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
+      var success = await this.DesktopMan().WaitForAndThenClickCEFromMenuWorker(promiseBucket.targetWindow);
       if (success) {
         //this.debug().PromiseBucketDebug(promiseBucket, this.__waitForAndThenClickCEFromMenuPromise.name);
 
@@ -95,12 +91,12 @@
   }
 
   private __restoreDataToOneIframe(promiseBucket: IDataBucketRestoreDesktop) {
-    return new Promise<IDataBucketRestoreDesktop>((resolve, reject) => {
+    return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
       this.debug().FuncStart(this.__restoreDataToOneIframe.name);
 
       this.debug().DebugDataOneIframe(promiseBucket.NewIframe);
 
-      var success = this.DesktopMan().RestoreDataToOneIframeWorker(promiseBucket.oneCEdata, promiseBucket.NewIframe);
+      var success = await this.DesktopMan().RestoreDataToOneIframeWorker(promiseBucket.oneCEdata, promiseBucket.NewIframe);
       if (success) {
         resolve(promiseBucket);
       } else {
@@ -124,7 +120,7 @@
     }
     //this.debug().PromiseBucketDebug(dataBucket, this.RunOneChain.name);
 
-  await  this.__waitForAndClickRedStartButtonPromise(dataBucket)
+    await this.__waitForAndClickRedStartButtonPromise(dataBucket)
       .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
       .then(dataBucket => this.__waitForIframeCountDiffPromise(dataBucket))
       .then(dataBucket => this.__waitForIframeReady(dataBucket))

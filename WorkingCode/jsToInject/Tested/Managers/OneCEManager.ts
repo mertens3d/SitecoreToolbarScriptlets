@@ -60,74 +60,62 @@
     }
   }
 
-  async RestoreOneNodeAtATimeRecursive(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc, iterHelper: IterationHelper = null) {
-    this.debug().FuncStart(this.RestoreOneNodeAtATimeRecursive.name, dataOneDocTarget.XyyzId.asShort);
+  async WaitForAndRestoreOneNode(nextNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
+    this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
+    this.debug().Log('looking for: ' + nextNode.NodeId.asString + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
+    this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
+
+    //var lookingFor: IGuid = nextNode.NodeId;
+    //var self = this;
+
+    //var callbackOnNodeSearchComplete: Function = function () {
+    //  self.RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, iterHelper, callBackOnNoNodesLeft);
+    //}
+
+    var iterHelper = new IterationHelper(this.Xyyz, 2, this.WaitForAndRestoreOneNode.name);
+
+    var foundOnPage: HTMLElement = null;
+
+    while (!foundOnPage && iterHelper.DecrementAndKeepGoing()) {
+      this.debug().Log('looking for: *' + nextNode.NodeId.asString + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
+
+      foundOnPage = dataOneDocTarget.Document.getElementById(nextNode.NodeId.asString);
+
+      if (foundOnPage) {
+        //this.debug().Log('Found it: ');
+        this.__expandNode(foundOnPage);
+      } else {
+        this.debug().Log('not Found...waiting: ');
+        await iterHelper.Wait();
+      }
+    }
+    this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
+  }
+
+  async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc, iterHelper: IterationHelper = null) {
+    this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.XyyzId.asShort);
 
     if (!iterHelper) {
-      iterHelper = new IterationHelper(this.Xyyz, 500, 4, this.RestoreOneNodeAtATimeRecursive.name);
+      iterHelper = new IterationHelper(this.Xyyz, 10, this.WaitForAndRestoreManyAllNodes.name);
     }
 
     while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
-      var nextNode = storageData.AllTreeNodeAr.shift();
-      this.debug().Log('looking for: ' + nextNode.NodeId.asString + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
-      this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
-
-      //var lookingFor: IGuid = nextNode.NodeId;
-      //var self = this;
-
-      //var callbackOnNodeSearchComplete: Function = function () {
-      //  self.RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, iterHelper, callBackOnNoNodesLeft);
-      //}
-
-      var iterHelperTiny = new IterationHelper(this.Xyyz, 2, 1000, 'small');
-
-      var foundOnPage: HTMLElement = null;
-
-      while (!foundOnPage && iterHelperTiny.DecrementAndKeepGoing()) {
-        this.debug().Log('looking for: *' + nextNode.NodeId.asString + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
-
-        foundOnPage = dataOneDocTarget.Document.getElementById(nextNode.NodeId.asString);
-
-        if (foundOnPage) {
-          this.debug().Log('Found it: ');
-          this.__expandNode(foundOnPage);
-        } else {
-          this.debug().Log('not Found...waiting: ');
-          //dataOneDocTarget.Document.body.innerHTML = '<div>dog1111111111111111111</div>';
-          await iterHelperTiny.WaitAndThenB();
-        }
-      }
-
-      //this.WaitForNode(lookingFor,
-      //  dataOneDocTarget,
-      //  this.Const().Iterations.MaxIterationLookingForNode,
-      //  this.Const().Timeouts.TimeoutWaitForNodeToLoad,
-      //  callbackOnNodeSearchComplete);
+      var nextNode: IDataOneTreeNode = storageData.AllTreeNodeAr.shift();
+      await this.WaitForAndRestoreOneNode(nextNode, dataOneDocTarget);
     }
 
-    //callBackOnNoNodesLeft();
-
-    this.debug().FuncEnd(this.RestoreOneNodeAtATimeRecursive.name);
+    this.debug().FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
   }
 
-  RestoreCEState(dataToRestore: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Boolean {
+  async RestoreCEState(dataToRestore: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Promise<Boolean> {
     this.debug().FuncStart(this.RestoreCEState.name, dataOneDocTarget.XyyzId.asShort);
 
     var toReturn: boolean = false;
 
     this.debug().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
-    //this.__collapseRootNode(dataOneDocTarget);
 
-    const maxIteration: number = this.Const().Iterations.MaxIterationLookingForNode
-    const timeout: number = this.Const().Timeouts.TimeoutWaitForNodeToLoad
+    await this.WaitForAndRestoreManyAllNodes(dataToRestore, dataOneDocTarget);
 
-    this.RestoreOneNodeAtATimeRecursive(dataToRestore, dataOneDocTarget);
-
-    //for (var idx = 0; idx < storageData.AllTreeNodeAr.length; idx++) {
-    //  var lookingFor: IGuid = storageData.AllTreeNodeAr[idx].NodeId;
-
-    //  this.WaitForNode(lookingFor, dataOneDocTarget, maxIteration, timeout);
-    //}
     this.debug().FuncEnd(this.RestoreCEState.name);
     return toReturn;
   }

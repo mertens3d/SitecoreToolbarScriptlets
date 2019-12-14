@@ -19,24 +19,31 @@ class OneDesktopManager extends ManagerBase {
 
   async RestoreDesktopState(targetWindow: IDataBroswerWindow, dataToRestore: IDataOneWindowStorage) {
     this.debug().FuncStart(this.RestoreDesktopState.name);;
+    var allFunc: Function[] = [];
 
     for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
       this.debug().Log('idx: ' + idx);
 
       var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.Xyyz);
+
+      allFunc.push(() => desktopPromiser.RunOneChain(targetWindow, dataToRestore.AllCEAr[idx]));
       await desktopPromiser.RunOneChain(targetWindow, dataToRestore.AllCEAr[idx]);
 
-      this.debug().FuncEnd(this.RestoreDesktopState.name);
     }
+    if (allFunc.length > 0) {
+      //await Promise.all(allFunc);
+    }
+
+      this.debug().FuncEnd(this.RestoreDesktopState.name);
   }
-  RestoreDataToOneIframeWorker(oneCEdata: IDataOneStorageCE, newIframe: IDataOneIframe) {
+  async RestoreDataToOneIframeWorker(oneCEdata: IDataOneStorageCE, newIframe: IDataOneIframe) {
     this.debug().FuncStart(this.RestoreDataToOneIframeWorker.name, 'data not null: ' + (oneCEdata != null) + ' newFrame not null: ' + (newIframe !== null));
     var toReturn: boolean = false;
 
     this.debug().DebugDataOneIframe(newIframe);
 
     if (oneCEdata && newIframe) {
-      this.Xyyz.OneCEMan.RestoreCEState(oneCEdata, newIframe.ContentDoc);
+      await this.Xyyz.OneCEMan.RestoreCEState(oneCEdata, newIframe.ContentDoc);
       toReturn = true;
     } else {
       this.debug().Error(this.RestoreDataToOneIframeWorker.name, 'bad data');
@@ -50,7 +57,7 @@ class OneDesktopManager extends ManagerBase {
     this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
     var toReturn: IDataOneIframe = null;
 
-    var iterationJr = new IterationHelper(this.Xyyz, 20, 1000, this.WaitForIframeCountDiffWorker.name)
+    var iterationJr = new IterationHelper(this.Xyyz, 10,this.WaitForIframeCountDiffWorker.name)
 
     while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
       let beforeCount: number = IFramesbefore.length;
@@ -73,7 +80,7 @@ class OneDesktopManager extends ManagerBase {
       } else {
         var self = this;
 
-        await iterationJr.WaitAndThenB();
+        await iterationJr.Wait();
         //iterationJr.WaitAndThen(
         //  function () {
         //    self.WaitForIframeCountDiffWorker(IFramesbefore, targetWin, iterationJr);
@@ -96,27 +103,28 @@ class OneDesktopManager extends ManagerBase {
     return toReturn;
   }
 
-  WaitForAndClickRedStartButtonWorker(targetWin: IDataBroswerWindow, iterationJr: IterationHelper = null) {
+  WaitForAndClickRedStartButtonWorker(targetWin: IDataBroswerWindow) {
+    //todo future...maybe just trigger scForm.postEvent(this, event, 'RunShortcut("{E28353A0-FB68-455B-9B2E-99AD280EF64E}")') - I don't know if the guid is always the same
+
+
     this.debug().FuncStart(this.WaitForAndClickRedStartButtonWorker.name, 'targetDoc not null: ' + (targetWin !== null));
     var toReturn: boolean = false;
 
-    if (!iterationJr) {
-      iterationJr = new IterationHelper(this.Xyyz, 10, 1000, this.WaitForAndClickRedStartButtonWorker.name);
-    }
-    if (iterationJr.DecrementAndKeepGoing()) {
+    var iterationJr = new IterationHelper(this.Xyyz, 10,this.WaitForAndClickRedStartButtonWorker.name);
+
+    while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
       var found = this.__getBigRedButtonElem(targetWin);
       if (found) {
         this.debug().Log('red button found, clicking it');
         found.click();
         toReturn = true;
       } else {
-        var self = this;
-        iterationJr.WaitAndThen(() => {
-          self.WaitForAndClickRedStartButtonWorker(targetWin, iterationJr);
-        });
+        //var self = this;
+        iterationJr.Wait();
+        //iterationJr.WaitAndThen(() => {
+        //  self.WaitForAndClickRedStartButtonWorker(targetWin, iterationJr);
+        //});
       }
-    } else {
-      toReturn = false;
     }
 
     this.debug().FuncEnd(this.WaitForAndClickRedStartButtonWorker.name);
@@ -131,7 +139,7 @@ class OneDesktopManager extends ManagerBase {
     var toReturn = false;
 
     if (!iterationJr) {
-      iterationJr = new IterationHelper(this.Xyyz, 20, 1000, this.WaitForReadyIframe.name);
+      iterationJr = new IterationHelper(this.Xyyz, 10, this.WaitForReadyIframe.name);
     }
     this.debug().MarkerA();
 
@@ -155,7 +163,7 @@ class OneDesktopManager extends ManagerBase {
         var self = this;
         this.debug().Log('about to Wait and then ');
 
-        await iterationJr.WaitAndThenB();
+        await iterationJr.Wait();
 
         this.debug().Log('toReturn C is ' + toReturn);
       }
@@ -165,29 +173,32 @@ class OneDesktopManager extends ManagerBase {
     return toReturn;
   }
 
-  WaitForAndThenClickCEFromMenuWorker(targetWin: IDataBroswerWindow, iterationJr: IterationHelper = null) {
+  async WaitForAndThenClickCEFromMenuWorker(targetWin: IDataBroswerWindow) {
     this.debug().FuncStart(this.WaitForAndThenClickCEFromMenuWorker.name);;
     var toReturn = false;
-    if (!iterationJr) {
-      iterationJr = new IterationHelper(this.Xyyz, 10, 1000, this.WaitForAndThenClickCEFromMenuWorker.name);
-    }
 
-    if (iterationJr.DecrementAndKeepGoing()) {
-      var menuLeft: HTMLElement = targetWin.Window.document.querySelector('.scStartMenuLeftOption');
+    var iterationJr = new IterationHelper(this.Xyyz, 10,  this.WaitForAndThenClickCEFromMenuWorker.name);
+
+    while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
+      var menuLeft: HTMLElement = targetWin.Window.document.querySelector(this.Const().Selector.sc.StartMenuLeftOption);
       if (menuLeft) {
+        this.debug().FuncStart('clicking it A');
         menuLeft.click();
         toReturn = true;
       } else {
-        var self = this;
-        iterationJr.WaitAndThen(
-          function () {
-            self.WaitForAndThenClickCEFromMenuWorker(targetWin, iterationJr);
-          }
-        );
+        await iterationJr.Wait();
+        //var self = this;
+
+        //iterationJr.WaitAndThen(
+        //  function () {
+        //    self.WaitForAndThenClickCEFromMenuWorker(targetWin, iterationJr);
+        //  }
+        //);
       }
-    } else {
-      toReturn = false;
     }
+    //else {
+    //  toReturn = false;
+    //}
 
     this.debug().FuncEnd(this.WaitForAndThenClickCEFromMenuWorker.name);;
     return toReturn;

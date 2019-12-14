@@ -43,6 +43,7 @@ InjectConst.const = {
         WaitFogPageLoad: 1000,
         PostLoginBtnClick: 1000,
         SetHrefEffortWait: 1000,
+        IterationHelperInitial: 100,
     },
     ElemId: {
         Hs: {
@@ -85,9 +86,12 @@ InjectConst.const = {
     Selector: {
         ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
         IframeContent: 'iframe[src*=content]',
-        scLoginBtn: {
-            sc920: null,
-            sc820: 'input.btn',
+        sc: {
+            StartMenuLeftOption: '.scStartMenuLeftOption',
+            LoginBtn: {
+                sc920: null,
+                sc820: 'input.btn',
+            },
         },
     },
     Storage: {
@@ -295,14 +299,12 @@ class FeedbackManager extends ManagerBase {
 }
 
 class IterationHelper extends ManagerBase {
-    constructor(xyyz, maxIterations, timeout, nickname) {
+    constructor(xyyz, maxIterations, nickname) {
         super(xyyz);
-        xyyz.debug.FuncStart('ctor: ' + IterationHelper.name, nickname);
         this.__maxIterations = maxIterations;
         this.__currentIteration = maxIterations;
-        this.__timeout = timeout;
+        this.__timeout = xyyz.Const.Timeouts.IterationHelperInitial;
         this.__nickName = nickname;
-        xyyz.debug.FuncEnd('ctor: ' + IterationHelper.name);
     }
     DecrementAndKeepGoing() {
         var toReturn = false;
@@ -327,7 +329,7 @@ class IterationHelper extends ManagerBase {
         setTimeout(timeoutFunction(), self.__timeout);
         this.debug().FuncEnd(this.WaitAndThen.name, this.__nickName);
     }
-    WaitAndThenB() {
+    Wait() {
         return new Promise((resolve) => {
             setTimeout(resolve, this.__timeout);
         });
@@ -881,7 +883,7 @@ class LocationManager extends ManagerBase {
         this.debug().FuncStart(this.GetLoginButton.name);
         var toReturn = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginBtn.sc920);
         if (!toReturn) {
-            toReturn = targetDoc.Document.querySelector(this.Const().Selector.scLoginBtn.sc820);
+            toReturn = targetDoc.Document.querySelector(this.Const().Selector.sc.LoginBtn.sc820);
         }
         this.debug().Log('toReturn: ' + toReturn);
         this.debug().FuncEnd(this.GetLoginButton.name);
@@ -993,13 +995,13 @@ class OneCEManager extends ManagerBase {
         return __awaiter(this, void 0, void 0, function* () {
             this.debug().FuncStart(this.RestoreOneNodeAtATimeRecursive.name, dataOneDocTarget.XyyzId.asShort);
             if (!iterHelper) {
-                iterHelper = new IterationHelper(this.Xyyz, 500, 4, this.RestoreOneNodeAtATimeRecursive.name);
+                iterHelper = new IterationHelper(this.Xyyz, 10, this.RestoreOneNodeAtATimeRecursive.name);
             }
             while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
                 var nextNode = storageData.AllTreeNodeAr.shift();
                 this.debug().Log('looking for: ' + nextNode.NodeId.asString + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
                 this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
-                var iterHelperTiny = new IterationHelper(this.Xyyz, 2, 1000, 'small');
+                var iterHelperTiny = new IterationHelper(this.Xyyz, 2, 'small');
                 var foundOnPage = null;
                 while (!foundOnPage && iterHelperTiny.DecrementAndKeepGoing()) {
                     this.debug().Log('looking for: *' + nextNode.NodeId.asString + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
@@ -1010,7 +1012,7 @@ class OneCEManager extends ManagerBase {
                     }
                     else {
                         this.debug().Log('not Found...waiting: ');
-                        yield iterHelperTiny.WaitAndThenB();
+                        yield iterHelperTiny.Wait();
                     }
                 }
             }
@@ -1089,34 +1091,40 @@ class OneDesktopManager extends ManagerBase {
         return __awaiter(this, void 0, void 0, function* () {
             this.debug().FuncStart(this.RestoreDesktopState.name);
             ;
+            var allFunc = [];
             for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
                 this.debug().Log('idx: ' + idx);
                 var desktopPromiser = new PromiseChainRestoreDesktop(this.Xyyz);
+                allFunc.push(() => desktopPromiser.RunOneChain(targetWindow, dataToRestore.AllCEAr[idx]));
                 yield desktopPromiser.RunOneChain(targetWindow, dataToRestore.AllCEAr[idx]);
-                this.debug().FuncEnd(this.RestoreDesktopState.name);
             }
+            if (allFunc.length > 0) {
+            }
+            this.debug().FuncEnd(this.RestoreDesktopState.name);
         });
     }
     RestoreDataToOneIframeWorker(oneCEdata, newIframe) {
-        this.debug().FuncStart(this.RestoreDataToOneIframeWorker.name, 'data not null: ' + (oneCEdata != null) + ' newFrame not null: ' + (newIframe !== null));
-        var toReturn = false;
-        this.debug().DebugDataOneIframe(newIframe);
-        if (oneCEdata && newIframe) {
-            this.Xyyz.OneCEMan.RestoreCEState(oneCEdata, newIframe.ContentDoc);
-            toReturn = true;
-        }
-        else {
-            this.debug().Error(this.RestoreDataToOneIframeWorker.name, 'bad data');
-            toReturn = false;
-        }
-        this.debug().FuncEnd(this.RestoreDataToOneIframeWorker.name, toReturn.toString());
-        return toReturn;
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.RestoreDataToOneIframeWorker.name, 'data not null: ' + (oneCEdata != null) + ' newFrame not null: ' + (newIframe !== null));
+            var toReturn = false;
+            this.debug().DebugDataOneIframe(newIframe);
+            if (oneCEdata && newIframe) {
+                yield this.Xyyz.OneCEMan.RestoreCEState(oneCEdata, newIframe.ContentDoc);
+                toReturn = true;
+            }
+            else {
+                this.debug().Error(this.RestoreDataToOneIframeWorker.name, 'bad data');
+                toReturn = false;
+            }
+            this.debug().FuncEnd(this.RestoreDataToOneIframeWorker.name, toReturn.toString());
+            return toReturn;
+        });
     }
     WaitForIframeCountDiffWorker(IFramesbefore, targetWin) {
         return __awaiter(this, void 0, void 0, function* () {
             this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
             var toReturn = null;
-            var iterationJr = new IterationHelper(this.Xyyz, 20, 1000, this.WaitForIframeCountDiffWorker.name);
+            var iterationJr = new IterationHelper(this.Xyyz, 10, this.WaitForIframeCountDiffWorker.name);
             while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
                 let beforeCount = IFramesbefore.length;
                 var allIframesAfter = this.GetAllLiveIframeData(targetWin);
@@ -1129,7 +1137,7 @@ class OneDesktopManager extends ManagerBase {
                 }
                 else {
                     var self = this;
-                    yield iterationJr.WaitAndThenB();
+                    yield iterationJr.Wait();
                 }
             }
             this.debug().FuncEnd(this.WaitForIframeCountDiffWorker.name);
@@ -1145,13 +1153,11 @@ class OneDesktopManager extends ManagerBase {
         this.debug().FuncEnd(this.__getBigRedButtonElem.name, 'toReturn: ' + (toReturn !== null));
         return toReturn;
     }
-    WaitForAndClickRedStartButtonWorker(targetWin, iterationJr = null) {
+    WaitForAndClickRedStartButtonWorker(targetWin) {
         this.debug().FuncStart(this.WaitForAndClickRedStartButtonWorker.name, 'targetDoc not null: ' + (targetWin !== null));
         var toReturn = false;
-        if (!iterationJr) {
-            iterationJr = new IterationHelper(this.Xyyz, 10, 1000, this.WaitForAndClickRedStartButtonWorker.name);
-        }
-        if (iterationJr.DecrementAndKeepGoing()) {
+        var iterationJr = new IterationHelper(this.Xyyz, 10, this.WaitForAndClickRedStartButtonWorker.name);
+        while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
             var found = this.__getBigRedButtonElem(targetWin);
             if (found) {
                 this.debug().Log('red button found, clicking it');
@@ -1159,14 +1165,8 @@ class OneDesktopManager extends ManagerBase {
                 toReturn = true;
             }
             else {
-                var self = this;
-                iterationJr.WaitAndThen(() => {
-                    self.WaitForAndClickRedStartButtonWorker(targetWin, iterationJr);
-                });
+                iterationJr.Wait();
             }
-        }
-        else {
-            toReturn = false;
         }
         this.debug().FuncEnd(this.WaitForAndClickRedStartButtonWorker.name);
         return toReturn;
@@ -1177,7 +1177,7 @@ class OneDesktopManager extends ManagerBase {
             this.debug().DebugDataOneIframe(dataOneIframe);
             var toReturn = false;
             if (!iterationJr) {
-                iterationJr = new IterationHelper(this.Xyyz, 20, 1000, this.WaitForReadyIframe.name);
+                iterationJr = new IterationHelper(this.Xyyz, 10, this.WaitForReadyIframe.name);
             }
             this.debug().MarkerA();
             while (iterationJr.DecrementAndKeepGoing() && toReturn === false) {
@@ -1195,7 +1195,7 @@ class OneDesktopManager extends ManagerBase {
                 else {
                     var self = this;
                     this.debug().Log('about to Wait and then ');
-                    yield iterationJr.WaitAndThenB();
+                    yield iterationJr.Wait();
                     this.debug().Log('toReturn C is ' + toReturn);
                 }
                 this.debug().Log('while is looping ' + toReturn);
@@ -1205,32 +1205,27 @@ class OneDesktopManager extends ManagerBase {
             return toReturn;
         });
     }
-    WaitForAndThenClickCEFromMenuWorker(targetWin, iterationJr = null) {
-        this.debug().FuncStart(this.WaitForAndThenClickCEFromMenuWorker.name);
-        ;
-        var toReturn = false;
-        if (!iterationJr) {
-            iterationJr = new IterationHelper(this.Xyyz, 10, 1000, this.WaitForAndThenClickCEFromMenuWorker.name);
-        }
-        if (iterationJr.DecrementAndKeepGoing()) {
-            var menuLeft = targetWin.Window.document.querySelector('.scStartMenuLeftOption');
-            if (menuLeft) {
-                menuLeft.click();
-                toReturn = true;
+    WaitForAndThenClickCEFromMenuWorker(targetWin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.WaitForAndThenClickCEFromMenuWorker.name);
+            ;
+            var toReturn = false;
+            var iterationJr = new IterationHelper(this.Xyyz, 10, this.WaitForAndThenClickCEFromMenuWorker.name);
+            while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
+                var menuLeft = targetWin.Window.document.querySelector(this.Const().Selector.sc.StartMenuLeftOption);
+                if (menuLeft) {
+                    this.debug().FuncStart('clicking it A');
+                    menuLeft.click();
+                    toReturn = true;
+                }
+                else {
+                    yield iterationJr.Wait();
+                }
             }
-            else {
-                var self = this;
-                iterationJr.WaitAndThen(function () {
-                    self.WaitForAndThenClickCEFromMenuWorker(targetWin, iterationJr);
-                });
-            }
-        }
-        else {
-            toReturn = false;
-        }
-        this.debug().FuncEnd(this.WaitForAndThenClickCEFromMenuWorker.name);
-        ;
-        return toReturn;
+            this.debug().FuncEnd(this.WaitForAndThenClickCEFromMenuWorker.name);
+            ;
+            return toReturn;
+        });
     }
     GetAllLiveIframeData(targetWindow) {
         this.debug().FuncStart(this.GetAllLiveIframeData.name);
@@ -1622,7 +1617,6 @@ class PromiseChainRestoreDesktop extends ManagerBase {
     __waitForIframeCountDiffPromise(promiseBucket) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             this.debug().FuncStart(this.__waitForIframeCountDiffPromise.name);
-            this.debug().ClearDebugText();
             this.debug().MarkerA();
             var success = yield this.DesktopMan().WaitForIframeCountDiffWorker(promiseBucket.IFramesbefore, promiseBucket.targetWindow);
             this.debug().MarkerB();
@@ -1639,21 +1633,21 @@ class PromiseChainRestoreDesktop extends ManagerBase {
         }));
     }
     __waitForAndThenClickCEFromMenuPromise(promiseBucket) {
-        return new Promise((resolve, reject) => {
-            var success = this.DesktopMan().WaitForAndThenClickCEFromMenuWorker(promiseBucket.targetWindow);
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            var success = yield this.DesktopMan().WaitForAndThenClickCEFromMenuWorker(promiseBucket.targetWindow);
             if (success) {
                 resolve(promiseBucket);
             }
             else {
                 reject(this.__waitForAndThenClickCEFromMenuPromise.name);
             }
-        });
+        }));
     }
     __restoreDataToOneIframe(promiseBucket) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             this.debug().FuncStart(this.__restoreDataToOneIframe.name);
             this.debug().DebugDataOneIframe(promiseBucket.NewIframe);
-            var success = this.DesktopMan().RestoreDataToOneIframeWorker(promiseBucket.oneCEdata, promiseBucket.NewIframe);
+            var success = yield this.DesktopMan().RestoreDataToOneIframeWorker(promiseBucket.oneCEdata, promiseBucket.NewIframe);
             if (success) {
                 resolve(promiseBucket);
             }
@@ -1661,7 +1655,7 @@ class PromiseChainRestoreDesktop extends ManagerBase {
                 reject(this.__restoreDataToOneIframe.name);
             }
             this.debug().FuncEnd(this.__restoreDataToOneIframe.name);
-        });
+        }));
     }
     RunOneChain(targetWindow, dataToRestore) {
         return __awaiter(this, void 0, void 0, function* () {

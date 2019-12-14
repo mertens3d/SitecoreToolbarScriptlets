@@ -4,15 +4,15 @@
   private __nickName: string;
   private __timeout: number;
 
-  constructor(xyyz: Hub, maxIterations: number, timeout: number, nickname: string) {
+  constructor(xyyz: Hub, maxIterations: number, nickname: string) {
     super(xyyz);
-    xyyz.debug.FuncStart('ctor: ' + IterationHelper.name, nickname);
+    //xyyz.debug.FuncStart('ctor: ' + IterationHelper.name, nickname);
     this.__maxIterations = maxIterations;
     this.__currentIteration = maxIterations;
-    this.__timeout = timeout;
+    this.__timeout = xyyz.Const.Timeouts.IterationHelperInitial;
     this.__nickName = nickname;
 
-    xyyz.debug.FuncEnd('ctor: ' + IterationHelper.name);
+    //xyyz.debug.FuncEnd('ctor: ' + IterationHelper.name);
   }
 
   DecrementAndKeepGoing() {
@@ -40,7 +40,7 @@
     this.debug().FuncEnd(this.WaitAndThen.name, this.__nickName);
   }
 
-  WaitAndThenB() {
+  Wait() {
     //self.debug().FuncStart(self.WaitAndThen.name, self.__nickName + ' ' + timeoutFunction.name);
     return new Promise((resolve) => {
        setTimeout(resolve, this.__timeout);
