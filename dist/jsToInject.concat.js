@@ -991,43 +991,49 @@ class OneCEManager extends ManagerBase {
             this.debug().Error(this.__collapseRootNode.name, 'Root glyph not found ' + this.Const().ElemId.sc.SitecoreRootGlyphId);
         }
     }
-    RestoreOneNodeAtATimeRecursive(storageData, dataOneDocTarget, iterHelper = null) {
+    WaitForAndRestoreOneNode(nextNode, dataOneDocTarget) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.debug().FuncStart(this.RestoreOneNodeAtATimeRecursive.name, dataOneDocTarget.XyyzId.asShort);
+            this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
+            this.debug().Log('looking for: ' + nextNode.NodeId.asString + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
+            this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
+            var iterHelper = new IterationHelper(this.Xyyz, 2, this.WaitForAndRestoreOneNode.name);
+            var foundOnPage = null;
+            while (!foundOnPage && iterHelper.DecrementAndKeepGoing()) {
+                this.debug().Log('looking for: *' + nextNode.NodeId.asString + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
+                foundOnPage = dataOneDocTarget.Document.getElementById(nextNode.NodeId.asString);
+                if (foundOnPage) {
+                    this.__expandNode(foundOnPage);
+                }
+                else {
+                    this.debug().Log('not Found...waiting: ');
+                    yield iterHelper.Wait();
+                }
+            }
+            this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
+        });
+    }
+    WaitForAndRestoreManyAllNodes(storageData, dataOneDocTarget, iterHelper = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.XyyzId.asShort);
             if (!iterHelper) {
-                iterHelper = new IterationHelper(this.Xyyz, 10, this.RestoreOneNodeAtATimeRecursive.name);
+                iterHelper = new IterationHelper(this.Xyyz, 10, this.WaitForAndRestoreManyAllNodes.name);
             }
             while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
                 var nextNode = storageData.AllTreeNodeAr.shift();
-                this.debug().Log('looking for: ' + nextNode.NodeId.asString + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
-                this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
-                var iterHelperTiny = new IterationHelper(this.Xyyz, 2, 'small');
-                var foundOnPage = null;
-                while (!foundOnPage && iterHelperTiny.DecrementAndKeepGoing()) {
-                    this.debug().Log('looking for: *' + nextNode.NodeId.asString + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
-                    foundOnPage = dataOneDocTarget.Document.getElementById(nextNode.NodeId.asString);
-                    if (foundOnPage) {
-                        this.debug().Log('Found it: ');
-                        this.__expandNode(foundOnPage);
-                    }
-                    else {
-                        this.debug().Log('not Found...waiting: ');
-                        yield iterHelperTiny.Wait();
-                    }
-                }
+                yield this.WaitForAndRestoreOneNode(nextNode, dataOneDocTarget);
             }
-            this.debug().FuncEnd(this.RestoreOneNodeAtATimeRecursive.name);
+            this.debug().FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
         });
     }
     RestoreCEState(dataToRestore, dataOneDocTarget) {
-        this.debug().FuncStart(this.RestoreCEState.name, dataOneDocTarget.XyyzId.asShort);
-        var toReturn = false;
-        this.debug().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
-        const maxIteration = this.Const().Iterations.MaxIterationLookingForNode;
-        const timeout = this.Const().Timeouts.TimeoutWaitForNodeToLoad;
-        this.RestoreOneNodeAtATimeRecursive(dataToRestore, dataOneDocTarget);
-        this.debug().FuncEnd(this.RestoreCEState.name);
-        return toReturn;
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.RestoreCEState.name, dataOneDocTarget.XyyzId.asShort);
+            var toReturn = false;
+            this.debug().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
+            yield this.WaitForAndRestoreManyAllNodes(dataToRestore, dataOneDocTarget);
+            this.debug().FuncEnd(this.RestoreCEState.name);
+            return toReturn;
+        });
     }
     SaveStateOneContentEditor(id, dataOneDoc) {
         this.debug().FuncStart('SaveOneContentEditor');
