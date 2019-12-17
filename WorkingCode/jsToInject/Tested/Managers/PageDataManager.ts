@@ -87,13 +87,18 @@ class PageDataManager extends ManagerBase {
 
     var currentLoc = targetWindow.location.href;
 
+
     if (currentLoc.indexOf(this.Const().Url.Login) > -1) {
       toReturn = WindowType.LoginPage;
     }
-    else if (currentLoc.indexOf(this.Const().Url.Desktop) > -1) {
+    else if (currentLoc.toLowerCase().indexOf(this.Const().Url.Desktop.toLowerCase()) > -1) {
+      this.debug().Log('Testing for Desktop editor');
+      this.debug().Log('currentLoc.toLowerCase()' + currentLoc.toLowerCase());
+      this.debug().Log('this.Const().Url.Desktop.toLowerCase()' + this.Const().Url.Desktop.toLowerCase());
       toReturn = WindowType.Desktop;
     }
-    else if (currentLoc.indexOf(this.Const().Url.ContentEditor) > -1) {
+    else if (new RegExp(this.Const().Url.ContentEditor).test(currentLoc)) {
+
       toReturn = WindowType.ContentEditor;
     }
     else if (currentLoc.toLowerCase().indexOf(this.Const().Url.LaunchPad.toLowerCase()) > -1) {

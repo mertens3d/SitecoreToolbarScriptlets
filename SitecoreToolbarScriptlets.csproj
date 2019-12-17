@@ -43,9 +43,23 @@
     <None Include=".jshintrc" />
     <None Include=".prettierrc" />
     <None Include=".vscode\tasks.json" />
+    <None Include="Browser Addons\Firefox\beastify\manifest.json" />
+    <None Include="Browser Addons\Firefox\borderify\manifest.json" />
+    <None Include="Browser Addons\Firefox\HindSite\manifest.json" />
     <None Include="jsconfig.json" />
+    <Content Include="Browser Addons\Firefox\borderify\icons\border-48.png" />
+    <Content Include="Browser Addons\Firefox\borderify\borderify.js" />
+    <Content Include="Browser Addons\Firefox\HindSite\content_scripts\beastify.js" />
+    <Content Include="Browser Addons\Firefox\HindSite\popup\beasts.html" />
+    <Content Include="Browser Addons\Firefox\HindSite\HindSite.js" />
+    <Content Include="Browser Addons\Firefox\HindSite\icons\border-48.png" />
+    <Content Include="Browser Addons\Firefox\HindSite\popup\options.html" />
+    <Content Include="Browser Addons\Firefox\HindSite\popup\options.js" />
+    <Content Include="Browser Addons\Firefox\HindSite\popup\choose_beast.css" />
+    <Content Include="Browser Addons\Firefox\HindSite\popup\choose_beast.html" />
+    <Content Include="Browser Addons\Firefox\HindSite\popup\choose_beast.js" />
     <Content Include="gulp.support\CommonBase.js" />
-    <Content Include="gulp.support\WindowOpener.js" />
+    <Content Include="gulp.support\HIndSiteWindowOpener.js" />
     <Content Include="gulpfile.js" />
     <Content Include="Help\Help.txt" />
     <Content Include="Other\RedButtonClick.js" />
@@ -97,8 +111,8 @@
     <Content Include="WorkingCode\jsToInject\Tested\_first.js">
       <DependentUpon>_first.ts</DependentUpon>
     </Content>
-    <Content Include="WorkingCode\WindowOpener\Constants.js" />
-    <Content Include="WorkingCode\WindowOpener\menu.js" />
+    <Content Include="WorkingCode\hindsiteWindowOpener\Constants.js" />
+    <Content Include="WorkingCode\hindsiteWindowOpener\menu.js" />
     <None Include="Readme.md" />
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
@@ -121,6 +135,7 @@
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\_first.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Browser Addons\Firefox\communication\" />
     <Folder Include="WorkingCode\jsToInject\Tested\Classes\Tree\" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\AtticManager.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Browser Addons\Firefox\HindSite\background.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

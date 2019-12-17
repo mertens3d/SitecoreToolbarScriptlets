@@ -12,7 +12,7 @@ const replace = require('gulp-replace');
 const sass = require('gulp-sass');
 const secrets = require('./gulp.support/Secrets.js');
 const uglify = require('gulp-terser'); //require('gulp-uglify-es');
-const WindowOpenerClass = require('./gulp.support/WindowOpener.js');
+const WindowOpenerClass = require('./gulp.support/HindSiteWindowOpener.js');
 var InjectableClass = require('./gulp.support/OneInjectable.js');
 var sort = require('gulp-sort');
 var ts = require('gulp-typescript');
@@ -127,6 +127,7 @@ gulp.task('buildJsToInject', function (done) {
 
 gulp.task('buildWindowOpener', function (done) {
   console.log('reading back');
+  console.log('Dest: ' + WindowOpener.dist);
 
   var cssToInjectWithVar = myResources(stylesToInject.dist + stylesToInject.MinFileName, stylesToInject.VarName);
   var htmlToInjectWithVar = myResources(htmlToInject.dist + htmlToInject.MinFileName, htmlToInject.VarName);
@@ -162,6 +163,12 @@ gulp.task('BookmarkText', function (done) {
     .pipe(rename(bookmarkFinal))
     .pipe(gulp.dest(WindowOpener.distFinal));
 });
+
+
+//pulp.task('putFilesToLocalB', function () {
+
+//});
+
 
 gulp.task('putWindowOpenerToLocal', function () {
   console.log('s) putWindowOpenerToLocal ');

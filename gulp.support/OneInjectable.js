@@ -28,7 +28,7 @@ class Injectable extends CommonBase
     console.log('----------');
     console.log('ShortName: ' + this.ShortName);
     console.log('SourceExt: ' + this.SourceExt);
-    console.log('SourceDirFilter: ' + this.SourceDirFilter);
+    console.log('SourceDirFilter: ' + this.SourceDirFilter());
     console.log('MinFileName: ' + this.MinFileName);
     console.log('NameConcatMin: ' + this.NameConcatMin);
   }

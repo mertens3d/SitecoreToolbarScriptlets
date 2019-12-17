@@ -50,7 +50,7 @@ interface IConst {
   Url: {
     Desktop: string,
     Login: string,
-    ContentEditor: string,
+    ContentEditor: RegExp,
     LaunchPad: string,
   },
   Selector: {

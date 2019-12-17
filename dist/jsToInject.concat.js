@@ -80,7 +80,7 @@ InjectConst.const = {
     Url: {
         Desktop: '/sitecore/shell/default.aspx',
         Login: '/sitecore/login',
-        ContentEditor: '/sitecore/shell/Applications/Content%20Editor.aspx',
+        ContentEditor: /Content.*?Editor/ig,
         LaunchPad: '/client/applications/launchpad',
     },
     Selector: {
@@ -1454,13 +1454,22 @@ class PageDataManager extends ManagerBase {
         this.debug().FuncStart(this.GetPageTypeOfTargetWindow.name, targetWindow.location.href);
         var toReturn;
         var currentLoc = targetWindow.location.href;
+        var regStr = /Content.*?Editor/ig;
+        var regEx = new RegExp(regStr);
+        var result = regEx.test(targetWindow.location.href.toLowerCase());
+        this.debug().Log('targetWindow.location.href.toLowerCase() ' + targetWindow.location.href.toLowerCase());
+        this.debug().Log('regStr ' + regStr);
+        this.debug().Log('result ' + result);
         if (currentLoc.indexOf(this.Const().Url.Login) > -1) {
             toReturn = WindowType.LoginPage;
         }
-        else if (currentLoc.indexOf(this.Const().Url.Desktop) > -1) {
+        else if (currentLoc.toLowerCase().indexOf(this.Const().Url.Desktop.toLowerCase()) > -1) {
+            this.debug().Log('Testing for Desktop editor');
+            this.debug().Log('currentLoc.toLowerCase()' + currentLoc.toLowerCase());
+            this.debug().Log('this.Const().Url.Desktop.toLowerCase()' + this.Const().Url.Desktop.toLowerCase());
             toReturn = WindowType.Desktop;
         }
-        else if (currentLoc.indexOf(this.Const().Url.ContentEditor) > -1) {
+        else if (new RegExp(this.Const().Url.ContentEditor).test(currentLoc)) {
             toReturn = WindowType.ContentEditor;
         }
         else if (currentLoc.toLowerCase().indexOf(this.Const().Url.LaunchPad.toLowerCase()) > -1) {

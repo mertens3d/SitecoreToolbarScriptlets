@@ -64,7 +64,7 @@ class InjectConst {
     Url: {
       Desktop: '/sitecore/shell/default.aspx',
       Login: '/sitecore/login',
-      ContentEditor: '/sitecore/shell/Applications/Content%20Editor.aspx',
+      ContentEditor: /Content.*?Editor/ig,
       LaunchPad: '/client/applications/launchpad',
     },
 
