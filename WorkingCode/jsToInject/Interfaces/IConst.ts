@@ -41,11 +41,13 @@ interface IConst {
       scStartButton: IScVerSpec,
       SitecoreRootGlyphId: string,
       SitecoreRootNodeId: string,
-      
     }
   },
   ClassNames: {
     ContentTreeNode: string,
+    SC: {
+      scContentTreeNodeActive: string,
+    }
   },
   Url: {
     Desktop: string,
@@ -54,11 +56,11 @@ interface IConst {
     LaunchPad: string,
   },
   Selector: {
-    ContentTreeNodeGlyph: string,
-    
     IframeContent: string,
-    sc: {
+    SC: {
+      ContentTreeNodeGlyph: string,
       StartMenuLeftOption: string,
+      IdStartsWithTreeNode: string,
       LoginBtn: IScVerSpec,
     }
   },
@@ -73,8 +75,10 @@ interface IConst {
     AllTreeData: string,
   },
   Names: {
-    sc: {
-      scTreeExpandedPng: string,
+    SC: {
+      TreeGlyphPrefix: string,
+      TreeNodePrefix: string,
+      TreeExpandedPng: IScVerSpec,
     },
     HtmlToInject: string,
     StylesToInject: string,

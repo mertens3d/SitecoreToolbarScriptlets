@@ -13,13 +13,55 @@ class OneTreeManager extends ManagerBase {
 
     var parentNode = inputNode.parentNode;
 
-    var treeNode = parentNode.querySelector('[id^=Tree_Node_]');
+    var treeNode = parentNode.querySelector(this.Const().Selector.SC.IdStartsWithTreeNode); // [id^=Tree_Node_]');
     if (treeNode) {
       toReturn = treeNode.innerText;
     } else {
       this.debug().Log('No treeNode');
     }
-    this.debug().FuncEnd(this.GetFriendlyNameFromNode.toString + ' ' + toReturn);
+    this.debug().FuncEnd(this.GetFriendlyNameFromNode.name, toReturn);
+    return toReturn;
+  }
+
+  private __isActive(targetNode: HTMLElement): boolean {
+    var toReturn: boolean = false;
+
+    var firstNodeActiveTest = targetNode.querySelector(this.Const().Selector.SC.IdStartsWithTreeNode);
+    if (firstNodeActiveTest) {
+      var className = firstNodeActiveTest.className;
+      if (className.indexOf(this.Const().ClassNames.SC.scContentTreeNodeActive) > -1) {
+        toReturn = true;
+        this.debug().Log('** isActive ' + targetNode.innerText);
+      }
+    }
+
+    //this.debug().Log(className);
+    //this.debug().Log(this.Const().ClassNames.SC.scContentTreeNodeActive);
+
+    return toReturn;
+  }
+
+  private __isExpanded(firstImg: HTMLElement) {
+    var toReturn: boolean = false;
+    if (firstImg) {
+      var srcAttr = firstImg.getAttribute('src');
+
+      if (srcAttr.indexOf(this.Const().Names.SC.TreeExpandedPng.sc920) > -1) {
+        //this.debug().Log('is Expanded');
+        toReturn = true;
+      }
+      return toReturn;
+    }
+  }
+
+  private __isContentTreeNode(targetNode: HTMLElement) {
+    var toReturn: boolean = false;
+
+    var className = targetNode.className;
+    if (className === this.Const().ClassNames.ContentTreeNode) {
+      //this.debug().Log('is Content Node');
+      toReturn = true;
+    }
     return toReturn;
   }
 
@@ -28,24 +70,36 @@ class OneTreeManager extends ManagerBase {
     depth = depth - 1;
 
     if (targetNode) {
-      var className = targetNode.className;
-      if (className === this.Const().ClassNames.ContentTreeNode) {
-        var firstImg = targetNode.querySelector(this.Const().Selector.ContentTreeNodeGlyph);
-        if (firstImg) {
-          var srcAttr = firstImg.getAttribute('src');
-          if (srcAttr.indexOf(this.Const().Names.sc.scTreeExpandedPng) > -1) {
-            var friendlyName = this.GetFriendlyNameFromNode(firstImg);
+      var firstImg: HTMLElement = targetNode.querySelector(this.Const().Selector.SC.ContentTreeNodeGlyph);
 
-            var newData: IDataOneTreeNode = { NodeFriendly: friendlyName, NodeId: this.Xyyz.GuidMan.ParseGuid( firstImg.id) }
-            toReturn.push(newData);
-          }
+      if (this.__isContentTreeNode(targetNode)) {
+        var newData: IDataOneTreeNode = {
+          IsExpanded: this.__isExpanded(firstImg),
+          IsActive: this.__isActive(targetNode),
+          NodeFriendly: '',
+          NodeId: null
+        }
+
+        if (newData.IsExpanded || newData.IsActive) {
+          this.debug().LogVal('isExpanded', newData.IsExpanded.toString());
+          this.debug().LogVal('isActive', newData.IsActive.toString());
+
+          newData.NodeFriendly = this.GetFriendlyNameFromNode(firstImg);
+
+          this.debug().LogVal('friendlyName', newData.NodeFriendly);
+
+          var apparentId = firstImg.id.replace(this.Const().Names.SC.TreeGlyphPrefix, '');
+
+          newData.NodeId = this.Xyyz.GuidMan.ParseGuid(apparentId);
+
+          toReturn.push(newData);
         }
       }
 
-      var childNodes: HTMLCollection = targetNode.children;
+      var childNodes: HTMLCollection = targetNode.children;//  querySelectorAll('.' + this.Const().ClassNames.ContentTreeNode);
       if (childNodes && childNodes.length > 0 && depth > 0) {
         for (var jdx = 0; jdx < childNodes.length; jdx++) {
-          var oneChild = <HTMLElement> childNodes[jdx];
+          var oneChild = <HTMLElement>childNodes[jdx];
           toReturn = toReturn.concat(this.WalkNodeRecursive(oneChild, depth));
         }
       }
@@ -67,7 +121,7 @@ class OneTreeManager extends ManagerBase {
         this.debug().Log('rootNode: ' + rootNode.innerHTML);
         var rootParent = rootNode.parentElement;
 
-        toReturn =  this.WalkNodeRecursive(rootParent, this.Const().MaxIter);
+        toReturn = this.WalkNodeRecursive(rootParent, this.Const().MaxIter);
         this.debug().Log('foundNodes count: ' + toReturn.length);
 
         //var nodesAsString = JSON.stringify(toReturn);

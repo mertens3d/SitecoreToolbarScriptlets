@@ -14,7 +14,9 @@ interface IDataOneStorageCE {
   AllTreeNodeAr: IDataOneTreeNode[]
 }
 interface IDataOneTreeNode {
+  IsActive: Boolean,
+  IsExpanded: Boolean,
+  NodeFriendly: string,
   NodeId: IGuid,
-  NodeFriendly: string
 }
 

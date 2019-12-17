@@ -180,7 +180,7 @@ class OneDesktopManager extends ManagerBase {
     var iterationJr = new IterationHelper(this.Xyyz, 10,  this.WaitForAndThenClickCEFromMenuWorker.name);
 
     while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
-      var menuLeft: HTMLElement = targetWin.Window.document.querySelector(this.Const().Selector.sc.StartMenuLeftOption);
+      var menuLeft: HTMLElement = targetWin.Window.document.querySelector(this.Const().Selector.SC.StartMenuLeftOption);
       if (menuLeft) {
         this.debug().FuncStart('clicking it A');
         menuLeft.click();
@@ -252,8 +252,6 @@ class OneDesktopManager extends ManagerBase {
       }
     }
 
-    this.debug().Log('done gathering tree data');
-    this.AtticMan().DrawDebugDataPretty(null);
     this.debug().FuncEnd(this.SaveStateOneDesktop.name);
   }
 };

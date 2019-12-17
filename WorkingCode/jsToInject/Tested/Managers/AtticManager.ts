@@ -1,8 +1,6 @@
 ﻿class AtticManager extends ManagerBase {
   eventAwesome: CustomEvent<string>;
 
-
-
   constructor(xyyz: Hub) {
     super(xyyz);
     xyyz.debug.FuncStart(AtticManager.name);
@@ -50,17 +48,19 @@
   }
 
   DrawDebugDataPretty(source: IDataOneWindowStorage): void {
+    this.debug().FuncStart(this.DrawDebugDataPretty.name, 'source not null: ' + this.debug().IsNullOrUndefined(source));
+
     var allDebugData: string[] = this.__buildDebugDataPretty(source);
 
     for (var ldx = 0; ldx < allDebugData.length; ldx++) {
       this.Xyyz.FeedbackMan.WriteLine(allDebugData[ldx]);
     }
 
-    //this.debug().Log(JSON.stringify(this.__activeWindowSnapShot));
+    this.debug().FuncEnd(this.DrawDebugDataPretty.name);
   }
 
   __buildDebugDataPretty(dataOneWindow: IDataOneWindowStorage) {
-    this.debug().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + (dataOneWindow !== null).toString());
+    this.debug().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + this.debug().IsNullOrUndefined(dataOneWindow));
 
     var toReturn: string[] = [];
     if (dataOneWindow) {
@@ -125,9 +125,8 @@
       candidate.key = window.localStorage.key(idx);
 
       if (candidate.key.startsWith(this.Const().Storage.WindowRoot)) {
-        this.debug().Log('candidate.key: ' + candidate.key);
+        //this.debug().Log('candidate.key: ' + candidate.key);
         candidate.data = window.localStorage.getItem(candidate.key);
-
         toReturn.push(candidate);
       }
     }
@@ -168,7 +167,7 @@
         //this.debug().Log('rawStorageData[idx].data : ' + rawStorageData[idx].data);
 
         if (candidate) {
-          this.debug().Log('candidate.AllCEAr.length : ' + candidate.AllCEAr.length);
+          //this.debug().Log('candidate.AllCEAr.length : ' + candidate.AllCEAr.length);
           candidate.TimeStamp = new Date(candidate.TimeStamp);
           candidate.Id = this.Xyyz.GuidMan.ParseGuid(candidate.Id.asString);
           candidate.RawData = oneRaw;
@@ -280,7 +279,6 @@
       }
     }
     if (DateOneWinStoreMatch) {
-
       this.debug().Log('found match', this.Utilites().TimeNicknameFavStr(DateOneWinStoreMatch));
     } else {
       this.debug().Error(this.GetFromStorageById.name, 'Match notfound')

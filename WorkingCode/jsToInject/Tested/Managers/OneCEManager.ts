@@ -31,6 +31,17 @@
     this.debug().FuncEnd(this.WaitForNode.name);
   }
 
+  private __activateNode(hotTreeNode: HTMLElement): void {
+    this.debug().FuncStart(this.__activateNode.name);
+    //var currentSrc = hotTreeNode.getAttribute('src');
+    //this.debug().Log('currentSrc' + currentSrc);
+
+    //if (currentSrc.indexOf(this.Const().Names.TreeMenuExpandedPng) < 0) {
+    this.debug().Log('clicking it');
+    hotTreeNode.click();
+    //}
+    this.debug().FuncEnd(this.__activateNode.name);
+  }
   private __expandNode(foundOnPage: HTMLElement): void {
     this.debug().FuncStart(this.__expandNode.name);
     var currentSrc = foundOnPage.getAttribute('src');
@@ -62,7 +73,10 @@
 
   async WaitForAndRestoreOneNode(nextNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
     this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
-    this.debug().Log('looking for: ' + nextNode.NodeId.asString + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
+
+    var treeGlyphTargetId: string = this.Const().Names.SC.TreeGlyphPrefix + nextNode.NodeId.asString;
+
+    this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
     this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
 
     //var lookingFor: IGuid = nextNode.NodeId;
@@ -74,16 +88,25 @@
 
     var iterHelper = new IterationHelper(this.Xyyz, 2, this.WaitForAndRestoreOneNode.name);
 
-    var foundOnPage: HTMLElement = null;
+    var foundOnPageTreeGlyph: HTMLElement = null;
 
-    while (!foundOnPage && iterHelper.DecrementAndKeepGoing()) {
-      this.debug().Log('looking for: *' + nextNode.NodeId.asString + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
+    while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
+      this.debug().Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
 
-      foundOnPage = dataOneDocTarget.Document.getElementById(nextNode.NodeId.asString);
+      foundOnPageTreeGlyph = dataOneDocTarget.Document.getElementById(treeGlyphTargetId);
 
-      if (foundOnPage) {
+      if (foundOnPageTreeGlyph) {
         //this.debug().Log('Found it: ');
-        this.__expandNode(foundOnPage);
+        if (nextNode.IsExpanded) {
+          this.__expandNode(foundOnPageTreeGlyph);
+        }
+        if (nextNode.IsActive) {
+          var hotTreeNodeId = this.Const().Names.SC.TreeNodePrefix + nextNode.NodeId.asString;
+          var hotTreeNode = dataOneDocTarget.Document.getElementById(hotTreeNodeId);
+          if (hotTreeNode) {
+            this.__activateNode(hotTreeNode);
+          }
+        }
       } else {
         this.debug().Log('not Found...waiting: ');
         await iterHelper.Wait();
@@ -101,6 +124,7 @@
 
     while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
       var nextNode: IDataOneTreeNode = storageData.AllTreeNodeAr.shift();
+
       await this.WaitForAndRestoreOneNode(nextNode, dataOneDocTarget);
     }
 
@@ -127,7 +151,6 @@
     var CeSnapShot: IDataOneStorageCE = this.Xyyz.OneCEMan.MakeNewData(id);
     CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(CeSnapShot, dataOneDoc);
 
-    this.AtticMan().DrawDebugDataPretty(null);
     this.Xyyz.OneWindowMan.PutCEDataToCurrentSnapShot(CeSnapShot);
 
     this.debug().FuncEnd('SaveOneContentEditor');
@@ -143,7 +166,10 @@
   }
   DebugDataOneNode(dataOneTreeNode: IDataOneTreeNode): string {
     this.debug().FuncStart(this.DebugDataOneNode.name);
-    var toReturn: string = dataOneTreeNode.NodeId.asString + ' ' + dataOneTreeNode.NodeFriendly;
+    var activeOrNot = dataOneTreeNode.IsActive ? '* ' : '  ';
+    var expandedOrNot = dataOneTreeNode.IsExpanded ? '+ ' : '  ';
+
+    var toReturn: string = activeOrNot + expandedOrNot + dataOneTreeNode.NodeId.asString + ' ' + dataOneTreeNode.NodeFriendly;
     this.debug().FuncEnd(this.DebugDataOneNode.name);
     return toReturn;
   }

@@ -2,8 +2,6 @@
   Hind&bull;Site
 
   <link href="/hindsite/stylestoinject.min.css" rel="stylesheet" type="text/css" />
-  
-
 </title>
 
 <body>
@@ -12,13 +10,15 @@
     <fieldset>
       <legend>Fore&bull;Site</legend>
 
-      <button id="btnEdit" type="button">sc_mode= edit</button>
-      <button id="btnPrev" type="button" class='preview-icon'>sc_mode= prev</button>
-      <button id="btnNorm" type="button">sc_mode= normal</button>
+      <button id="btnEdit" type="button">Edit</button>
+      <button id="btnPrev" type="button" class='preview-icon'>Preview</button>
+      <button id="btnNorm" type="button">Normal</button>
       <button id="btnAdminB" type="button">Admin B</button>
       <button id="btnDesktop" type="button" class='desktop-icon'>Desktop</button>
       <button id="btnCE" type="button">Content Editor</button>
       <button id="btnBigRed" type="button">Add CE Tab to DT</button>
+      <button id="btnQuickPublish" type="button">Quick Publish</button>
+      <button id="btnPresentationDetails" type="button">Presentation Details</button>
     </fieldset>
 
     <fieldset>
@@ -44,29 +44,30 @@
     <fieldset>
       <legend>In&bull;Site</legend>
       <div class="col-left">
-        <textarea id="ta-feedback"></textarea>
-      </div>
-      <div class='col-right'>
-        <button id="btnDrawLocalStorage" type="button">Draw Local Storage</button>
-      </div>
-    </fieldset>
+        <div class="scroller">
+          <textarea id="ta-feedback"></textarea>
+          </div>
+        </div>
+        <div class='col-right'>
+          <button id="btnDrawLocalStorage" type="button">Draw Local Storage</button>
+        </div>
+</fieldset>
 
     <fieldset>
       <legend>Debug Info <span id='spanParentInfo'></span></legend>
 
       <div class="col-left">
-        <textarea id="ta-debug"></textarea>
+        <div class="scroller">
+          <textarea id="ta-debug"></textarea>
+        </div>
       </div>
 
       <div class="col-right">
         <button id="btnClearDebugTextArea" type="button">Clear Debug Text</button>
-
       </div>
     </fieldset>
   </form>
 
-
   <script type="text/javascript" src="/hindsite/jstoinject.min.js">
-   
   </script>
 </body>

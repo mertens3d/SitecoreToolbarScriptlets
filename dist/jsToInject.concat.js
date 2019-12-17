@@ -15,6 +15,7 @@ class ManagerBase {
 }
 exports = ManagerBase;
 
+
 console.log('IConst loaded');
 
 
@@ -76,6 +77,9 @@ InjectConst.const = {
     },
     ClassNames: {
         ContentTreeNode: 'scContentTreeNode',
+        SC: {
+            scContentTreeNodeActive: 'scContentTreeNodeActive',
+        }
     },
     Url: {
         Desktop: '/sitecore/shell/default.aspx',
@@ -84,10 +88,11 @@ InjectConst.const = {
         LaunchPad: '/client/applications/launchpad',
     },
     Selector: {
-        ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
         IframeContent: 'iframe[src*=content]',
-        sc: {
+        SC: {
+            ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
             StartMenuLeftOption: '.scStartMenuLeftOption',
+            IdStartsWithTreeNode: '[id^=Tree_Node_]',
             LoginBtn: {
                 sc920: null,
                 sc820: 'input.btn',
@@ -103,8 +108,13 @@ InjectConst.const = {
         AllTreeData: 'AllTreeData',
     },
     Names: {
-        sc: {
-            scTreeExpandedPng: 'treemenu_expanded.png',
+        SC: {
+            TreeGlyphPrefix: 'Tree_Glyph_',
+            TreeNodePrefix: 'Tree_Node_',
+            TreeExpandedPng: {
+                sc920: 'treemenu_expanded.png',
+                sc820: 'todo'
+            }
         },
         HtmlToInject: 'HtmlToInject',
         StylesToInject: 'StylesToInject',
@@ -155,6 +165,9 @@ class Debug {
     }
     __markerRaw(marker) {
         this.Log('Marker ' + marker);
+    }
+    LogVal(textValName, textValVal) {
+        this.Log(textValName + ' : ' + textValVal);
     }
     Log(text, optionalValue = '', hasPrefix = false) {
         var indent = '  ';
@@ -228,7 +241,7 @@ class Debug {
                 toReturn = 'Is Undefined';
             }
             else {
-                toReturn = subject;
+                toReturn = 'Not Null';
             }
         }
         else {
@@ -455,13 +468,15 @@ class AtticManager extends ManagerBase {
         this.debug().FuncEnd(this.ToggleFavorite.name);
     }
     DrawDebugDataPretty(source) {
+        this.debug().FuncStart(this.DrawDebugDataPretty.name, 'source not null: ' + this.debug().IsNullOrUndefined(source));
         var allDebugData = this.__buildDebugDataPretty(source);
         for (var ldx = 0; ldx < allDebugData.length; ldx++) {
             this.Xyyz.FeedbackMan.WriteLine(allDebugData[ldx]);
         }
+        this.debug().FuncEnd(this.DrawDebugDataPretty.name);
     }
     __buildDebugDataPretty(dataOneWindow) {
-        this.debug().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + (dataOneWindow !== null).toString());
+        this.debug().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + this.debug().IsNullOrUndefined(dataOneWindow));
         var toReturn = [];
         if (dataOneWindow) {
             toReturn.push('------ One Window Snap Shot Start -----');
@@ -520,7 +535,6 @@ class AtticManager extends ManagerBase {
             };
             candidate.key = window.localStorage.key(idx);
             if (candidate.key.startsWith(this.Const().Storage.WindowRoot)) {
-                this.debug().Log('candidate.key: ' + candidate.key);
                 candidate.data = window.localStorage.getItem(candidate.key);
                 toReturn.push(candidate);
             }
@@ -545,7 +559,6 @@ class AtticManager extends ManagerBase {
                 var oneRaw = rawStorageData[idx];
                 var candidate = JSON.parse(oneRaw.data);
                 if (candidate) {
-                    this.debug().Log('candidate.AllCEAr.length : ' + candidate.AllCEAr.length);
                     candidate.TimeStamp = new Date(candidate.TimeStamp);
                     candidate.Id = this.Xyyz.GuidMan.ParseGuid(candidate.Id.asString);
                     candidate.RawData = oneRaw;
@@ -883,7 +896,7 @@ class LocationManager extends ManagerBase {
         this.debug().FuncStart(this.GetLoginButton.name);
         var toReturn = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginBtn.sc920);
         if (!toReturn) {
-            toReturn = targetDoc.Document.querySelector(this.Const().Selector.sc.LoginBtn.sc820);
+            toReturn = targetDoc.Document.querySelector(this.Const().Selector.SC.LoginBtn.sc820);
         }
         this.debug().Log('toReturn: ' + toReturn);
         this.debug().FuncEnd(this.GetLoginButton.name);
@@ -964,6 +977,12 @@ class OneCEManager extends ManagerBase {
         }
         this.debug().FuncEnd(this.WaitForNode.name);
     }
+    __activateNode(hotTreeNode) {
+        this.debug().FuncStart(this.__activateNode.name);
+        this.debug().Log('clicking it');
+        hotTreeNode.click();
+        this.debug().FuncEnd(this.__activateNode.name);
+    }
     __expandNode(foundOnPage) {
         this.debug().FuncStart(this.__expandNode.name);
         var currentSrc = foundOnPage.getAttribute('src');
@@ -994,15 +1013,25 @@ class OneCEManager extends ManagerBase {
     WaitForAndRestoreOneNode(nextNode, dataOneDocTarget) {
         return __awaiter(this, void 0, void 0, function* () {
             this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
-            this.debug().Log('looking for: ' + nextNode.NodeId.asString + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
+            var treeGlyphTargetId = this.Const().Names.SC.TreeGlyphPrefix + nextNode.NodeId.asString;
+            this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
             this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
             var iterHelper = new IterationHelper(this.Xyyz, 2, this.WaitForAndRestoreOneNode.name);
-            var foundOnPage = null;
-            while (!foundOnPage && iterHelper.DecrementAndKeepGoing()) {
-                this.debug().Log('looking for: *' + nextNode.NodeId.asString + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
-                foundOnPage = dataOneDocTarget.Document.getElementById(nextNode.NodeId.asString);
-                if (foundOnPage) {
-                    this.__expandNode(foundOnPage);
+            var foundOnPageTreeGlyph = null;
+            while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
+                this.debug().Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
+                foundOnPageTreeGlyph = dataOneDocTarget.Document.getElementById(treeGlyphTargetId);
+                if (foundOnPageTreeGlyph) {
+                    if (nextNode.IsExpanded) {
+                        this.__expandNode(foundOnPageTreeGlyph);
+                    }
+                    if (nextNode.IsActive) {
+                        var hotTreeNodeId = this.Const().Names.SC.TreeNodePrefix + nextNode.NodeId.asString;
+                        var hotTreeNode = dataOneDocTarget.Document.getElementById(hotTreeNodeId);
+                        if (hotTreeNode) {
+                            this.__activateNode(hotTreeNode);
+                        }
+                    }
                 }
                 else {
                     this.debug().Log('not Found...waiting: ');
@@ -1043,7 +1072,6 @@ class OneCEManager extends ManagerBase {
         ;
         var CeSnapShot = this.Xyyz.OneCEMan.MakeNewData(id);
         CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(CeSnapShot, dataOneDoc);
-        this.AtticMan().DrawDebugDataPretty(null);
         this.Xyyz.OneWindowMan.PutCEDataToCurrentSnapShot(CeSnapShot);
         this.debug().FuncEnd('SaveOneContentEditor');
     }
@@ -1058,7 +1086,9 @@ class OneCEManager extends ManagerBase {
     }
     DebugDataOneNode(dataOneTreeNode) {
         this.debug().FuncStart(this.DebugDataOneNode.name);
-        var toReturn = dataOneTreeNode.NodeId.asString + ' ' + dataOneTreeNode.NodeFriendly;
+        var activeOrNot = dataOneTreeNode.IsActive ? '* ' : '  ';
+        var expandedOrNot = dataOneTreeNode.IsExpanded ? '+ ' : '  ';
+        var toReturn = activeOrNot + expandedOrNot + dataOneTreeNode.NodeId.asString + ' ' + dataOneTreeNode.NodeFriendly;
         this.debug().FuncEnd(this.DebugDataOneNode.name);
         return toReturn;
     }
@@ -1218,7 +1248,7 @@ class OneDesktopManager extends ManagerBase {
             var toReturn = false;
             var iterationJr = new IterationHelper(this.Xyyz, 10, this.WaitForAndThenClickCEFromMenuWorker.name);
             while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
-                var menuLeft = targetWin.Window.document.querySelector(this.Const().Selector.sc.StartMenuLeftOption);
+                var menuLeft = targetWin.Window.document.querySelector(this.Const().Selector.SC.StartMenuLeftOption);
                 if (menuLeft) {
                     this.debug().FuncStart('clicking it A');
                     menuLeft.click();
@@ -1275,8 +1305,6 @@ class OneDesktopManager extends ManagerBase {
                 this.Xyyz.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.ContentDoc);
             }
         }
-        this.debug().Log('done gathering tree data');
-        this.AtticMan().DrawDebugDataPretty(null);
         this.debug().FuncEnd(this.SaveStateOneDesktop.name);
     }
 }
@@ -1454,12 +1482,6 @@ class PageDataManager extends ManagerBase {
         this.debug().FuncStart(this.GetPageTypeOfTargetWindow.name, targetWindow.location.href);
         var toReturn;
         var currentLoc = targetWindow.location.href;
-        var regStr = /Content.*?Editor/ig;
-        var regEx = new RegExp(regStr);
-        var result = regEx.test(targetWindow.location.href.toLowerCase());
-        this.debug().Log('targetWindow.location.href.toLowerCase() ' + targetWindow.location.href.toLowerCase());
-        this.debug().Log('regStr ' + regStr);
-        this.debug().Log('result ' + result);
         if (currentLoc.indexOf(this.Const().Url.Login) > -1) {
             toReturn = WindowType.LoginPage;
         }
@@ -1568,7 +1590,6 @@ class UiManager extends ManagerBase {
                 this.debug().Log('targetSel.options.length : ' + targetSel.options.length);
                 for (var idx = 0; idx < snapShots.length; idx++) {
                     var data = snapShots[idx];
-                    this.debug().Log('data.Id.asString : ' + data.Id.asString);
                     var el = window.document.createElement('option');
                     el.innerHTML = this.Xyyz.Utilities.TimeNicknameFavStr(data);
                     el.value = data.Id.asString;
@@ -1706,30 +1727,66 @@ class OneTreeManager extends ManagerBase {
         this.debug().FuncStart(this.GetFriendlyNameFromNode.name);
         var toReturn = 'unknown';
         var parentNode = inputNode.parentNode;
-        var treeNode = parentNode.querySelector('[id^=Tree_Node_]');
+        var treeNode = parentNode.querySelector(this.Const().Selector.SC.IdStartsWithTreeNode);
         if (treeNode) {
             toReturn = treeNode.innerText;
         }
         else {
             this.debug().Log('No treeNode');
         }
-        this.debug().FuncEnd(this.GetFriendlyNameFromNode.toString + ' ' + toReturn);
+        this.debug().FuncEnd(this.GetFriendlyNameFromNode.name, toReturn);
+        return toReturn;
+    }
+    __isActive(targetNode) {
+        var toReturn = false;
+        var firstNodeActiveTest = targetNode.querySelector(this.Const().Selector.SC.IdStartsWithTreeNode);
+        if (firstNodeActiveTest) {
+            var className = firstNodeActiveTest.className;
+            if (className.indexOf(this.Const().ClassNames.SC.scContentTreeNodeActive) > -1) {
+                toReturn = true;
+                this.debug().Log('** isActive ' + targetNode.innerText);
+            }
+        }
+        return toReturn;
+    }
+    __isExpanded(firstImg) {
+        var toReturn = false;
+        if (firstImg) {
+            var srcAttr = firstImg.getAttribute('src');
+            if (srcAttr.indexOf(this.Const().Names.SC.TreeExpandedPng.sc920) > -1) {
+                toReturn = true;
+            }
+            return toReturn;
+        }
+    }
+    __isContentTreeNode(targetNode) {
+        var toReturn = false;
+        var className = targetNode.className;
+        if (className === this.Const().ClassNames.ContentTreeNode) {
+            toReturn = true;
+        }
         return toReturn;
     }
     WalkNodeRecursive(targetNode, depth) {
         var toReturn = [];
         depth = depth - 1;
         if (targetNode) {
-            var className = targetNode.className;
-            if (className === this.Const().ClassNames.ContentTreeNode) {
-                var firstImg = targetNode.querySelector(this.Const().Selector.ContentTreeNodeGlyph);
-                if (firstImg) {
-                    var srcAttr = firstImg.getAttribute('src');
-                    if (srcAttr.indexOf(this.Const().Names.sc.scTreeExpandedPng) > -1) {
-                        var friendlyName = this.GetFriendlyNameFromNode(firstImg);
-                        var newData = { NodeFriendly: friendlyName, NodeId: this.Xyyz.GuidMan.ParseGuid(firstImg.id) };
-                        toReturn.push(newData);
-                    }
+            var firstImg = targetNode.querySelector(this.Const().Selector.SC.ContentTreeNodeGlyph);
+            if (this.__isContentTreeNode(targetNode)) {
+                var newData = {
+                    IsExpanded: this.__isExpanded(firstImg),
+                    IsActive: this.__isActive(targetNode),
+                    NodeFriendly: '',
+                    NodeId: null
+                };
+                if (newData.IsExpanded || newData.IsActive) {
+                    this.debug().LogVal('isExpanded', newData.IsExpanded.toString());
+                    this.debug().LogVal('isActive', newData.IsActive.toString());
+                    newData.NodeFriendly = this.GetFriendlyNameFromNode(firstImg);
+                    this.debug().LogVal('friendlyName', newData.NodeFriendly);
+                    var apparentId = firstImg.id.replace(this.Const().Names.SC.TreeGlyphPrefix, '');
+                    newData.NodeId = this.Xyyz.GuidMan.ParseGuid(apparentId);
+                    toReturn.push(newData);
                 }
             }
             var childNodes = targetNode.children;

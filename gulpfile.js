@@ -23,8 +23,8 @@ var local = {
 
 var mySecrete = new secrets();
 console.log('===================' + mySecrete);
-console.log('===================' + mySecrete.localWebRoot);
-local.Dest = mySecrete.localWebRoot;
+console.log('===================' + mySecrete.localWebRootAr);
+local.Dest = mySecrete.localWebRootAr;
 console.log('===================' + local.Dest);
 
 var htmlToInject = new InjectableClass('HtmlToInject', 'html', 'html');
@@ -164,11 +164,8 @@ gulp.task('BookmarkText', function (done) {
     .pipe(gulp.dest(WindowOpener.distFinal));
 });
 
-
 //pulp.task('putFilesToLocalB', function () {
-
 //});
-
 
 gulp.task('putWindowOpenerToLocal', function () {
   console.log('s) putWindowOpenerToLocal ');
@@ -178,8 +175,13 @@ gulp.task('putWindowOpenerToLocal', function () {
 
   var source = WindowOpener.dist + '/' + WindowOpener.NameConcatMinWithVar;
   console.log('source: ' + source);
-  return gulp.src(source)
-    .pipe(gulp.dest(local.Dest));
+
+  for (var idx = 0; idx < local.Dest.length; idx++) {
+    var oneDest = local.Dest[idx];
+
+    gulp.src(source)
+      .pipe(gulp.dest(oneDest));
+  }
 });
 
 //gulp.task('typescript', function ()){
@@ -190,6 +192,6 @@ gulp.task('putWindowOpenerToLocal', function () {
 
 //}
 
-gulp.task('default', gulp.series(['cleanDist', 'buildStylesToInject', 'buildTypeScript','combineJs', 'buildJsToInject', 'buildHtmlToInject', 'buildWindowOpener', 'BookmarkText', 'putWindowOpenerToLocal']), function (resolve) {
+gulp.task('default', gulp.series(['cleanDist', 'buildStylesToInject', 'buildTypeScript', 'combineJs', 'buildJsToInject', 'buildHtmlToInject', 'buildWindowOpener', 'BookmarkText', 'putWindowOpenerToLocal']), function (resolve) {
   resolve();
 });

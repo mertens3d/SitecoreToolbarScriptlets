@@ -44,6 +44,9 @@ class Debug {
     this.Log('Marker ' + marker);
   }
 
+  LogVal(textValName: string, textValVal: string) {
+    this.Log(textValName + ' : ' + textValVal);
+  }
   Log(text, optionalValue: string = '', hasPrefix = false) {
     var indent = '  ';
     //text =  indent.repeat(this.__indentCount) + text;
@@ -130,13 +133,13 @@ class Debug {
     this.Log('');
   }
 
-  private IsNullOrUndefined(subject) {
+  IsNullOrUndefined(subject) {
     var toReturn = '{unknown}';
     if (subject) {
       if ((typeof subject) == 'undefined') {
         toReturn = 'Is Undefined';
       } else {
-        toReturn = subject;
+        toReturn = 'Not Null';
       }
     } else {
       toReturn = 'Is Null';

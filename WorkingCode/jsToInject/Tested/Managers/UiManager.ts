@@ -91,7 +91,7 @@
         for (var idx: number = 0; idx < snapShots.length; idx++) {
           var data = snapShots[idx];
 
-          this.debug().Log('data.Id.asString : ' + data.Id.asString);
+          //this.debug().Log('data.Id.asString : ' + data.Id.asString);
 
           var el = <HTMLOptionElement>window.document.createElement('option');
           el.innerHTML =  this.Xyyz.Utilities.TimeNicknameFavStr(data);

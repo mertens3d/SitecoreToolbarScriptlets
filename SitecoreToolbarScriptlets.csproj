@@ -48,8 +48,9 @@
     <None Include="jsconfig.json" />
     <Content Include="Browser Addons\Firefox\borderify\icons\border-48.png" />
     <Content Include="Browser Addons\Firefox\borderify\borderify.js" />
+    <Content Include="Browser Addons\Firefox\HindSite\content_scripts\Bookmark.js" />
     <Content Include="Browser Addons\Firefox\HindSite\content_scripts\do-hind-site.js" />
-    <Content Include="Browser Addons\Firefox\HindSite\HindSite.js" />
+    <Content Include="Browser Addons\Firefox\HindSite\content_scripts\HindSite.js" />
     <Content Include="Browser Addons\Firefox\HindSite\icons\border-48.png" />
     <Content Include="Browser Addons\Firefox\HindSite\popup\choose_setting.css" />
     <Content Include="Browser Addons\Firefox\HindSite\popup\choose_setting.html" />

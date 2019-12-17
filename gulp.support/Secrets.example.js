@@ -1,6 +1,9 @@
 class secrets {
   constructor() {
-    this.localWebRoot = 'C:/inetpub/wwwroot/mySite.local/website';
+    this.localWebRootAr = [
+      'C:/inetpub/wwwroot/mySite.local/website',
+        'C:/inetpub/wwwroot/mySite.local/anotherWebsite'
+    ]
   }
 }
 

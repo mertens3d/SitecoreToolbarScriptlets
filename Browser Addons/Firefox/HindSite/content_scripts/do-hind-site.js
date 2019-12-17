@@ -10,6 +10,11 @@
   function removeAsHindSiteTarget() {
     console.log('remove as target');
   }
+  function doAsHindSiteTarget() {
+    console.log('do as target');
+    TestDog();
+  }
+
 
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "addAsHindSiteTarget") {
@@ -17,6 +22,9 @@
     }
     else if (message.command === "removeAsHindSiteTarget") {
       removeAsHindSiteTarget();
+    }
+    else if (message.command === "doHindSite") {
+      doAsHindSiteTarget();
     }
   });
 })();

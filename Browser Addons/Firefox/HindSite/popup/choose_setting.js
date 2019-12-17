@@ -1,5 +1,6 @@
 function listenForClicks() {
   document.addEventListener("click", (e) => {
+
     function addAsHindsiteTarget(tabs) {
       browser.tabs.sendMessage(tabs[0].id, {
         command: "addAsHindSiteTarget",
@@ -8,6 +9,12 @@ function listenForClicks() {
     function removeAsHindsiteTarget(tabs) {
       browser.tabs.sendMessage(tabs[0].id, {
         command: "removeAsHindSiteTarget",
+      });
+    }
+
+    function doAsHindsiteTarget(tabs) {
+      browser.tabs.sendMessage(tabs[0].id, {
+        command: "doHindSite",
       });
     }
 
@@ -23,6 +30,11 @@ function listenForClicks() {
     else if (e.target.classList.contains("hindsite-remove")) {
       browser.tabs.query({ active: true, currentWindow: true })
         .then(removeAsHindsiteTarget)
+        .catch(reportError);
+    }
+    else if (e.target.classList.contains("hindsite-do")) {
+      browser.tabs.query({ active: true, currentWindow: true })
+        .then(doAsHindsiteTarget)
         .catch(reportError);
     }
   });
