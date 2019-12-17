@@ -1,7 +1,4 @@
-﻿/*
-Open a new tab, and load "my-page.html" into it.
-*/
-function openMyPage() {
+﻿function openMyPage() {
   document.body.style.border = '10px solid green';
 
   var buttonElem = document.createElement('button');
@@ -9,16 +6,6 @@ function openMyPage() {
   buttonElem.style.cssText = "color: blue; border: 1px solid black; position: absolute; top: 50px; left: 50px; z-index: 999";
   
   document.body.appendChild(buttonElem);
-
-  browser.runtime.onMessage.addListener((message) => {
-    if (message.command === "beastify") {
-      insertBeast(message.beastURL);
-    } else if (message.command === "reset") {
-      removeExistingBeasts();
-    }
-  });
-
-
 
   document.onkeyup = function (e) {
     if (e.which == 77) {
@@ -37,12 +24,6 @@ function openMyPage() {
 
 console.log('here DD - this gets loaded with each page');
 openMyPage();
-/*
-Add openMyPage() as a listener to clicks on the browser action.
-//*/
-//browser.browserAction.onClicked.addListener(() => console.log('here B'));
-
-
 
 
 browser.browserAction.onClicked.addListener(() => {
