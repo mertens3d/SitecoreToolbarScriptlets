@@ -3,4 +3,5 @@ interface IDataOneIframe {
   IframeElem: HTMLIFrameElement,
   ContentDoc: IDataOneDoc,
   Id: IGuid,
+  Zindex: number,
 }

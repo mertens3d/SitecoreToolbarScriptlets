@@ -19,24 +19,19 @@
     });
   }
 
+
+
+
   private __waitForIframeReady(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
       this.debug().FuncStart(this.__waitForIframeReady.name, 'promiseBucket not null: ' + (promiseBucket !== null));
 
       this.debug().PromiseBucketDebug(promiseBucket, this.__waitForIframeReady.name);
 
-      //this.debug().Log(promiseBucket.NewIframe.IframeElem.id);
-
       var success = await this.DesktopMan().WaitForReadyIframe(promiseBucket.NewIframe);
-      //.then(() => resolve(promiseBucket))
-      //.catch(reject);
-
-      //this.debug().Log('success : ' + success);
 
       if (success) {
         this.debug().Log('resolved! : ');
-
-        //promiseBucket.NewIframe.IframeElem.contentDocument.body.innerHTML = '<div>dog9999999999999999999</div>';
 
         promiseBucket.NewIframe.ContentDoc.Document = promiseBucket.NewIframe.IframeElem.contentDocument;
         this.debug().DebugDataOneIframe(promiseBucket.NewIframe);

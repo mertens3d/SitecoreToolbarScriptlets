@@ -3,6 +3,7 @@
   private __maxIterations: number;
   private __nickName: string;
   private __timeout: number;
+    IsExhausted: boolean;
 
   constructor(xyyz: Hub, maxIterations: number, nickname: string) {
     super(xyyz);
@@ -11,6 +12,7 @@
     this.__currentIteration = maxIterations;
     this.__timeout = xyyz.Const.Timeouts.IterationHelperInitial;
     this.__nickName = nickname;
+    this.IsExhausted = false;
 
     //xyyz.debug.FuncEnd('ctor: ' + IterationHelper.name);
   }
@@ -25,6 +27,7 @@
 
       toReturn = true;
     } else {
+      this.IsExhausted = true;
       this.NotifyExhausted();
       toReturn = false;
     }

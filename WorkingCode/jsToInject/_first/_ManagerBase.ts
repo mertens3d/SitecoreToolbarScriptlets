@@ -13,6 +13,8 @@ class ManagerBase {
   DesktopMan(): OneDesktopManager { return this.Xyyz.OneDesktopMan; }
   GuidMan(): GuidManager { return this.Xyyz.GuidMan; }
   locMan(): LocationManager { return this.Xyyz.LocationMan; }
+  OneCEMan(): OneCEManager { return this.Xyyz.OneCEMan; }
+  OneWinMan(): OneWindowManager { return this.Xyyz.OneWindowMan; }
   PageDataMan(): PageDataManager { return this.Xyyz.PageDataMan; }
   UiMan(): UiManager { return this.Xyyz.UiMan; }
   Utilites(): Utilities { return this.Xyyz.Utilities; }

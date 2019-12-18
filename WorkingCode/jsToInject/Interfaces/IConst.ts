@@ -25,6 +25,7 @@ interface IConst {
       btnClearDebugTextArea: string,
     }
     BtnEdit: string,
+    btnQuickPublish: string,
     BtnRestoreWindowState: string,
     BtnSaveWindowState: string,
     btnToggleFavoriteB: string,

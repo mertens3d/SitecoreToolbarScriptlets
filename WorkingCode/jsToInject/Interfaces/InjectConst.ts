@@ -72,16 +72,16 @@ class InjectConst {
         btnClearDebugTextArea: 'btnClearDebugTextArea',
       },
       BtnEdit: 'btnEdit',
+      btnQuickPublish: 'btnQuickPublish',
       BtnRestoreWindowState: 'btnRestoreWindowState',
       BtnSaveWindowState: 'btnSaveWindowState',
-      InputNickname: 'inputNickname',
+      btnToggleFavoriteB: 'btnToggleFavorite',
+      btnUpdateNicknameB: 'btnUpdateNickname',
+      HindSiteParentInfo: 'spanParentInfo',
       hsBtnBigRed: 'btnBigRed',
-
+      InputNickname: 'inputNickname',
       SelStateSnapShot: 'selState',
       textAreaFeedback: 'ta-feedback',
-      btnUpdateNicknameB: 'btnUpdateNickname',
-      btnToggleFavoriteB: 'btnToggleFavorite',
-      HindSiteParentInfo: 'spanParentInfo',
 
       sc: {
         scLoginUserName: 'UserName',

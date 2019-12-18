@@ -9,14 +9,16 @@ class ManagerBase {
     DesktopMan() { return this.Xyyz.OneDesktopMan; }
     GuidMan() { return this.Xyyz.GuidMan; }
     locMan() { return this.Xyyz.LocationMan; }
+    OneCEMan() { return this.Xyyz.OneCEMan; }
+    OneWinMan() { return this.Xyyz.OneWindowMan; }
     PageDataMan() { return this.Xyyz.PageDataMan; }
     UiMan() { return this.Xyyz.UiMan; }
     Utilites() { return this.Xyyz.Utilities; }
 }
 exports = ManagerBase;
 
-
 console.log('IConst loaded');
+
 
 
 
@@ -51,15 +53,16 @@ InjectConst.const = {
             btnClearDebugTextArea: 'btnClearDebugTextArea',
         },
         BtnEdit: 'btnEdit',
+        btnQuickPublish: 'btnQuickPublish',
         BtnRestoreWindowState: 'btnRestoreWindowState',
         BtnSaveWindowState: 'btnSaveWindowState',
-        InputNickname: 'inputNickname',
+        btnToggleFavoriteB: 'btnToggleFavorite',
+        btnUpdateNicknameB: 'btnUpdateNickname',
+        HindSiteParentInfo: 'spanParentInfo',
         hsBtnBigRed: 'btnBigRed',
+        InputNickname: 'inputNickname',
         SelStateSnapShot: 'selState',
         textAreaFeedback: 'ta-feedback',
-        btnUpdateNicknameB: 'btnUpdateNickname',
-        btnToggleFavoriteB: 'btnToggleFavorite',
-        HindSiteParentInfo: 'spanParentInfo',
         sc: {
             scLoginUserName: 'UserName',
             scLoginPassword: 'Password',
@@ -318,6 +321,7 @@ class IterationHelper extends ManagerBase {
         this.__currentIteration = maxIterations;
         this.__timeout = xyyz.Const.Timeouts.IterationHelperInitial;
         this.__nickName = nickname;
+        this.IsExhausted = false;
     }
     DecrementAndKeepGoing() {
         var toReturn = false;
@@ -328,6 +332,7 @@ class IterationHelper extends ManagerBase {
             toReturn = true;
         }
         else {
+            this.IsExhausted = true;
             this.NotifyExhausted();
             toReturn = false;
         }
@@ -667,12 +672,17 @@ class EventManager extends ManagerBase {
         this.__ById(this.Const().ElemId.Hs.btnClearDebugTextArea).onclick = () => { this.Xyyz.debug.ClearDebugText(); };
         this.__ById(this.Const().ElemId.btnUpdateNicknameB).onclick = () => { this.Xyyz.AtticMan.UpdateNickname(); };
         this.__ById(this.Const().ElemId.hsBtnBigRed).onclick = () => { this.__addCETab(); };
+        this.__ById(this.Const().ElemId.btnQuickPublish).onclick = (evt) => { this.__quickPublish(evt); };
         this.__ById(this.Const().ElemId.BtnRestoreWindowState).onclick = (evt) => { this._handlerRestoreClick(evt); };
         this.__ById(this.Const().ElemId.SelStateSnapShot).onchange = () => { this.Xyyz.UiMan.SelectChanged(); };
         this.__ById(this.Const().ElemId.SelStateSnapShot).ondblclick = (evt) => { this._handlerRestoreClick(evt); };
         this.debug().FuncEnd(this.__wireMenuButtons.name);
     }
-    ;
+    __quickPublish(evt) {
+        this.debug().ClearDebugText();
+        var targetWin = this.PageDataMan().GetParentWindow();
+        this.OneWinMan().PublishActiveCE(targetWin);
+    }
     __takeSnapShot() {
         this.debug().ClearDebugText();
         this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().GetParentWindow());
@@ -952,6 +962,103 @@ class OneCEManager extends ManagerBase {
     constructor(xyyz) {
         super(xyyz);
     }
+    __debugDataPublishChain(dataPublishChain) {
+        this.debug().FuncStart(this.__debugDataPublishChain.name);
+        this.debug().LogVal('docToPublish', this.debug().IsNullOrUndefined(dataPublishChain.docToPublish));
+        this.debug().LogVal('jq', this.debug().IsNullOrUndefined(dataPublishChain.jq) + ' ' + (dataPublishChain.jq ? dataPublishChain.jq.src : ''));
+        this.debug().LogVal('blue', this.debug().IsNullOrUndefined(dataPublishChain.blue) + ' ' + (dataPublishChain.blue ? dataPublishChain.blue.src : ''));
+        this.debug().LogVal('red', this.debug().IsNullOrUndefined(dataPublishChain.red) + ' ' + (dataPublishChain.red ? dataPublishChain.red.src : ''));
+        this.debug().FuncEnd(this.__debugDataPublishChain.name);
+    }
+    __waitFor(selector, targetDoc, dataPublishChain, optionFunc = null) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.__waitFor.name, selector + targetDoc.location.href);
+            var found = null;
+            var iterationJr = new IterationHelper(this.Xyyz, 6, this.__waitFor.name);
+            while (!found && iterationJr.DecrementAndKeepGoing()) {
+                found = targetDoc.querySelector(selector);
+                if (found) {
+                    this.debug().Log('found');
+                    if (optionFunc) {
+                        this.debug().Log('executing func');
+                        dataPublishChain = yield optionFunc(found, dataPublishChain);
+                    }
+                    this.__debugDataPublishChain(dataPublishChain);
+                    this.debug().FuncEnd(this.__waitFor.name, selector + targetDoc.location.href);
+                    resolve(dataPublishChain);
+                }
+                else {
+                    yield iterationJr.Wait();
+                }
+            }
+            if (!found && iterationJr.IsExhausted) {
+                this.debug().FuncEnd(this.__waitFor.name, selector + targetDoc.location.href);
+                reject('exhausted');
+            }
+        }));
+    }
+    __waitForAndClick(selector, targetDoc, dataPublishChain) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.__waitForAndClick.name, selector);
+            var found = null;
+            var iterationJr = new IterationHelper(this.Xyyz, 10, this.__waitForAndClick.name);
+            while (!found && iterationJr.DecrementAndKeepGoing()) {
+                found = targetDoc.querySelector(selector);
+                if (found) {
+                    this.debug().Log('found and clicking');
+                    found.click();
+                    this.__debugDataPublishChain(dataPublishChain);
+                    this.debug().FuncEnd(this.__waitForAndClick.name, selector);
+                    resolve(dataPublishChain);
+                }
+                else {
+                    yield iterationJr.Wait();
+                }
+            }
+            this.debug().FuncEnd(this.__waitForAndClick.name, selector);
+            if (!found && iterationJr.IsExhausted) {
+                reject('exhausted');
+            }
+        }));
+    }
+    PublishCE(docToPublish) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.debug().FuncStart(this.PublishCE.name);
+            var targetDoc = docToPublish.Document;
+            var dataPublishChain = {
+                docToPublish: docToPublish,
+                blue: null,
+                jq: null,
+                red: null
+            };
+            yield this.__waitForAndClick('[id*=_Nav_PublishStrip]', targetDoc, dataPublishChain)
+                .then((dataPublishChain) => this.__waitForAndClick('[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_button]', targetDoc, dataPublishChain))
+                .then((dataPublishChain) => this.__waitForAndClick('[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]', targetDoc, dataPublishChain))
+                .then((dataPublishChain) => this.__waitFor('[id=jqueryModalDialogsFrame]', targetDoc, dataPublishChain, (found, dataPublishChain) => {
+                dataPublishChain.jq = found;
+                return dataPublishChain;
+            }))
+                .then((dataPublishChain) => this.__waitFor('[id=scContentIframeId0]', dataPublishChain.jq.contentDocument, dataPublishChain, (found, dataPublishChain) => {
+                this.debug().Log('before');
+                this.__debugDataPublishChain(dataPublishChain);
+                dataPublishChain.blue = found;
+                this.debug().Log('after');
+                this.__debugDataPublishChain(dataPublishChain);
+                return dataPublishChain;
+            }))
+                .then((dataPublishChain) => this.__waitFor('[id=NextButton]', dataPublishChain.blue.contentDocument, dataPublishChain))
+                .then((dataPublishChain) => this.__waitFor('[id=scContentIframeId1]', dataPublishChain.jq.contentDocument, dataPublishChain, (found, dataPublishChain) => {
+                dataPublishChain.red = found;
+                return dataPublishChain;
+            }))
+                .then((dataPublishChain) => this.__waitFor('[id=OK]', dataPublishChain.red.contentDocument, dataPublishChain))
+                .then((dataPublishChain) => this.__waitFor('[id=CancelButton]', dataPublishChain.blue.contentDocument, dataPublishChain))
+                .catch(ex => {
+                this.debug().Error(this.PublishCE.name, ex);
+            });
+            this.debug().FuncEnd(this.PublishCE.name);
+        });
+    }
     WaitForNode(needleId, targetDoc, currentIteration, timeout, callbackOnComplete) {
         this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.asString + ' on ' + this.GuidMan().ShortGuid(targetDoc.XyyzId));
         currentIteration--;
@@ -1038,7 +1145,7 @@ class OneCEManager extends ManagerBase {
                     yield iterHelper.Wait();
                 }
             }
-            this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
+            this.debug().FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
         });
     }
     WaitForAndRestoreManyAllNodes(storageData, dataOneDocTarget, iterHelper = null) {
@@ -1285,6 +1392,7 @@ class OneDesktopManager extends ManagerBase {
                         IsCEDoc: true,
                         ParentDesktop: null
                     },
+                    Zindex: iframeElem.style.zIndex ? parseInt(iframeElem.style.zIndex) : -1
                 };
                 toReturn.push(dataOneIframe);
             }
@@ -1335,6 +1443,40 @@ class OneWindowManager extends ManagerBase {
         }
         this.debug().FuncEnd(this.SaveWindowState.name);
         ;
+    }
+    __getTopLevelIframe(targetWindow) {
+        var toReturn = null;
+        var allIframe = this.DesktopMan().GetAllLiveIframeData(targetWindow);
+        var maxZVal = -1;
+        if (allIframe && allIframe.length > 0) {
+            for (var idx = 0; idx < allIframe.length; idx++) {
+                var candidateIframe = allIframe[idx];
+                if (candidateIframe && candidateIframe.Zindex > maxZVal) {
+                    toReturn = candidateIframe;
+                    maxZVal = candidateIframe.Zindex;
+                }
+            }
+        }
+        return toReturn;
+    }
+    PublishActiveCE(targetWindow) {
+        this.debug().FuncStart(this.PublishActiveCE.name);
+        var currentWindowType = this.PageDataMan().GetCurrentPageType();
+        var docToPublish = null;
+        if (currentWindowType == WindowType.Desktop) {
+            var topIframe = this.__getTopLevelIframe(targetWindow);
+            if (topIframe) {
+                docToPublish = topIframe.ContentDoc;
+            }
+        }
+        else {
+            docToPublish = this.PageDataMan().GetParentWindow().DataDocSelf;
+        }
+        this.debug().Log('docToPublish', this.debug().IsNullOrUndefined(docToPublish));
+        if (docToPublish) {
+            this.OneCEMan().PublishCE(docToPublish);
+        }
+        this.debug().FuncEnd(this.PublishActiveCE.name);
     }
     RestoreWindowStateToTarget(targetWindow, dataToRestore) {
         this.debug().FuncStart(this.RestoreWindowStateToTarget.name);

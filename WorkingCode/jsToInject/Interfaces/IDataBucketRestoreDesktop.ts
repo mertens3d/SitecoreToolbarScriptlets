@@ -1,4 +1,5 @@
-﻿interface IDataBucketRestoreDesktop {
+﻿
+interface IDataBucketRestoreDesktop {
   LastChainLinkSuccessful: boolean,
   targetWindow: IDataBroswerWindow,
   IFramesbefore: IDataOneIframe[],

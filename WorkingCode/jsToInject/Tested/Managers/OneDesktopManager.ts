@@ -228,6 +228,7 @@ class OneDesktopManager extends ManagerBase {
             IsCEDoc: true,
             ParentDesktop: null
           },
+          Zindex: iframeElem.style.zIndex ? parseInt( iframeElem.style.zIndex) : -1
         }
 
         toReturn.push(dataOneIframe);

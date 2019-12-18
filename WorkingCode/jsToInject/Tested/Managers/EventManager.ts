@@ -28,6 +28,8 @@ class EventManager extends ManagerBase {
 
     this.__ById(this.Const().ElemId.hsBtnBigRed).onclick = () => { this.__addCETab() };
 
+    this.__ById(this.Const().ElemId.btnQuickPublish).onclick = (evt) => { this.__quickPublish(evt) };
+
     this.__ById(this.Const().ElemId.BtnRestoreWindowState).onclick = (evt) => { this._handlerRestoreClick(evt); };
     (<HTMLSelectElement>this.__ById(this.Const().ElemId.SelStateSnapShot)).onchange = () => { this.Xyyz.UiMan.SelectChanged(); };
 
@@ -38,7 +40,13 @@ class EventManager extends ManagerBase {
     //this.__ById(this.Const().ElemId.SelSnapShot).onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
 
     this.debug().FuncEnd(this.__wireMenuButtons.name);
-  };
+  }
+
+  private __quickPublish(evt: MouseEvent) {
+    this.debug().ClearDebugText();
+    var targetWin = this.PageDataMan().GetParentWindow();
+    this.OneWinMan().PublishActiveCE(targetWin);
+  }
 
   private __takeSnapShot() {
     this.debug().ClearDebugText();
@@ -75,7 +83,7 @@ class EventManager extends ManagerBase {
           targetWindow.DataDocSelf.DataWinParent = targetWindow;
           targetWindow.DataDocSelf.Document = targetWindow.Window.document;
 
-          self.debug().Log(self.__getTargetWindow.name,'triggering callback');
+          self.debug().Log(self.__getTargetWindow.name, 'triggering callback');
           callbackOnLoaded(targetWindow);
         } else {
           self.debug().Error(self.__getTargetWindow, 'No target window');
@@ -105,9 +113,9 @@ class EventManager extends ManagerBase {
       var callbackOnLoaded: Function = function (targetWindow: IDataBroswerWindow) {
         self.debug().FuncStart(self._handlerRestoreClick.name, 'callback');
         if (targetWindow) {
-              self.Xyyz.OneWindowMan.RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage);
-            } else {
-              self.debug().Error(this._handlerRestoreClick.name, 'no target window');
+          self.Xyyz.OneWindowMan.RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage);
+        } else {
+          self.debug().Error(this._handlerRestoreClick.name, 'no target window');
         }
         self.debug().FuncEnd('callback');
       }

@@ -54,31 +54,55 @@ class OneWindowManager extends ManagerBase {
   //  this.debug().FuncEnd(this.WaitForPageLoad.name);
   //}
 
+  private __getTopLevelIframe(targetWindow: IDataBroswerWindow) {
+    var toReturn: IDataOneIframe = null;
+    var allIframe = this.DesktopMan().GetAllLiveIframeData(targetWindow);
+    var maxZVal = -1;
+    if (allIframe && allIframe.length > 0) {
+      for (var idx = 0; idx < allIframe.length; idx++) {
+        var candidateIframe = allIframe[idx];
+        if (candidateIframe && candidateIframe.Zindex > maxZVal) {
+          toReturn = candidateIframe;
+          maxZVal = candidateIframe.Zindex
+        }
+      }
+    }
+    return toReturn;
+  }
+
+  PublishActiveCE(targetWindow: IDataBroswerWindow) {
+    this.debug().FuncStart(this.PublishActiveCE.name);
+
+    var currentWindowType = this.PageDataMan().GetCurrentPageType();
+
+    var docToPublish: IDataOneDoc = null;
+
+    if (currentWindowType == WindowType.Desktop) {
+      var topIframe: IDataOneIframe = this.__getTopLevelIframe(targetWindow);
+      if (topIframe) {
+        docToPublish = topIframe.ContentDoc
+      }
+    } else {
+      docToPublish = this.PageDataMan().GetParentWindow().DataDocSelf;
+    }
+
+    this.debug().Log('docToPublish', this.debug().IsNullOrUndefined(docToPublish));
+
+    if (docToPublish) {
+      this.OneCEMan().PublishCE(docToPublish);
+    }
+
+    this.debug().FuncEnd(this.PublishActiveCE.name);
+  }
+
   RestoreWindowStateToTarget(targetWindow: IDataBroswerWindow, dataToRestore: IDataOneWindowStorage) {
     this.debug().FuncStart(this.RestoreWindowStateToTarget.name);
 
-    //targetWindow.Window.location.href = 'https:\\bing.com?dog=3';
-
     if (dataToRestore) {
-      //var postPageLoadCallback: Function = function () {
       if (dataToRestore.WindowType === WindowType.ContentEditor) {
         this.Xyyz.OneCEMan.RestoreCEState(dataToRestore.AllCEAr[0], targetWindow.DataDocSelf);
-
       } else if (dataToRestore.WindowType === WindowType.Desktop) {
-
-        //this.WaitForPageLoad(WindowType.ContentEditor, targetWindow, this.Const().Iterations.MaxIterationPageLoad, postPageLoadCallback)
-
-        //if (this.Xyyz.PageData.GetCurrentPageType() === PageType.ContentEditor) {
-        //  if (foundMatch.AllCEAr.length > 1) {
-        //    alert('This data has multiple Content Editor data. Only the first will be used');
-        //  }
-
-        //  this.Xyyz.OneCEMan.RestoreCEState(foundMatch.AllCEAr[0], this.Xyyz.PageData.OpenerDoc());
-        //} else {
         this.Xyyz.OneDesktopMan.RestoreDesktopState(targetWindow, dataToRestore);
-        //}
-
-        //var allData = this.Xyyz.OneDesktopMan.GetAllLiveIframeData()[treeIdx];
       } else {
         this.debug().Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
       }
