@@ -68,7 +68,7 @@
       toReturn.push('Id: ' + dataOneWindow.Id);
       toReturn.push('TimeStamp: ' + dataOneWindow.TimeStamp);
       toReturn.push('CE Count: ' + dataOneWindow.AllCEAr.length);
-      toReturn.push('Type: ' + WindowType[dataOneWindow.WindowType]);
+      toReturn.push('Type: ' + scWindowType[dataOneWindow.WindowType]);
       toReturn.push('Nickname: ' + dataOneWindow.NickName);
       for (var jdx = 0; jdx < dataOneWindow.AllCEAr.length; jdx++) {
         toReturn.push('\t------ One CE Start -----');
@@ -99,7 +99,7 @@
     this.debug().FuncEnd('DrawStorageRaw');
   }
   private __drawStoragePretty(ourData: IOneStorageData[]) {
-    this.debug().FuncStart('DrawStoragePretty');
+    this.debug().FuncStart(this.__drawStoragePretty.name);
 
     this.Xyyz.FeedbackMan.ClearTextArea();
     for (var idx = 0; idx < ourData.length; idx++) {
@@ -110,10 +110,72 @@
         this.debug().Log('------------');
       }
     }
-    this.debug().FuncEnd('DrawStoragePretty');
+    this.debug().FuncEnd(this.__drawStoragePretty.name);
   }
+
+  SetSettings(currentSettings: IDataSettings) {
+    this.debug().FuncStart(this.SetSettings.name);
+    window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SettingsSuffix, JSON.stringify(currentSettings));
+    this.debug().FuncEnd(this.SetSettings.name);
+  }
+
+  GetDefaultSettings(): IDataSettings {
+    let defaultDebugSettings: IDataDebugSettings = {
+      KeepDialogOpen: this.Const().Storage.DefaultDebugKeepDialogOpen,
+      ShowDebugData: this.Const().Storage.ShowDebugData,
+    }
+
+    let toReturn: IDataSettings = {
+      DebugSettings: defaultDebugSettings
+    };
+
+    return toReturn;
+  }
+
+  Settings(): IDataSettings {
+    this.debug().FuncStart(this.Settings.name);
+    var defaultSettings = this.GetDefaultSettings();
+    var toReturn: IDataSettings;
+
+    var settingsRaw = window.localStorage.getItem(this.Const().Storage.WindowRoot + this.Const().Storage.SettingsSuffix);
+    this.debug().LogVal('settingsRaw', settingsRaw);
+
+    if (settingsRaw) {
+      toReturn = <IDataSettings>JSON.parse(settingsRaw);
+    }
+
+    if (!toReturn) {
+      toReturn = defaultSettings;
+    }
+    this.debug().NotNullCheck('toReturn', toReturn);
+
+    if (!toReturn.DebugSettings) {
+      toReturn.DebugSettings = defaultSettings.DebugSettings;
+    }
+
+    if (!toReturn.DebugSettings.KeepDialogOpen) {
+      toReturn.DebugSettings.KeepDialogOpen = defaultSettings.DebugSettings.KeepDialogOpen;
+    }
+
+    if (!toReturn.DebugSettings.ShowDebugData) {
+      toReturn.DebugSettings.ShowDebugData = defaultSettings.DebugSettings.ShowDebugData;
+    }
+
+    this.DebugSettings(toReturn);
+
+    this.debug().FuncEnd(this.Settings.name);
+    return toReturn;
+  }
+  DebugSettings(toReturn: IDataSettings): void {
+    this.debug().FuncStart(this.DebugSettings.name);
+
+    this.debug().LogVal('Settings', JSON.stringify(toReturn));
+
+    this.debug().FuncEnd(this.DebugSettings.name);
+  }
+
   private __getAllLocalStorageAsIOneStorageData(): IOneStorageData[] {
-    this.debug().FuncStart('__GetAllLocalStorage ');
+    this.debug().FuncStart(this.__getAllLocalStorageAsIOneStorageData.name);
     var toReturn: IOneStorageData[] = [];
 
     for (var idx = 0; idx < window.localStorage.length; idx++) {
@@ -124,14 +186,13 @@
 
       candidate.key = window.localStorage.key(idx);
 
-      if (candidate.key.startsWith(this.Const().Storage.WindowRoot)) {
-        //this.debug().Log('candidate.key: ' + candidate.key);
+      if (candidate.key.startsWith(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotSuffix)) {
         candidate.data = window.localStorage.getItem(candidate.key);
         toReturn.push(candidate);
       }
     }
 
-    this.debug().FuncEnd('__GetAllLocalStorage ');
+    this.debug().FuncEnd(this.__getAllLocalStorageAsIOneStorageData.name);
     return toReturn;
   }
   WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
@@ -140,21 +201,13 @@
     var snapShotAsString = JSON.stringify(dataOneWindow);
     this.debug().Log('snapShotAsString: ' + snapShotAsString);
 
-    window.localStorage.setItem(this.Const().Storage.WindowRoot + dataOneWindow.Id.asString, snapShotAsString);
+    window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotSuffix + dataOneWindow.Id.asString, snapShotAsString);
+
 
     this.UiMan().RefreshUi();
-
     this.debug().FuncEnd(this.WriteToStorage.name);
   }
 
-  //GetAllStorageAsIOneStorageData(): IOneStorageData[] {
-  //  this.debug().FuncStartName(this.GetAllStorageAsIOneStorageData.name);
-  //  var toReturn: IOneStorageData[] = [];
-
-  //  this.debug().FuncEndName(this.GetAllStorageAsIOneStorageData.name);
-  //  return toReturn;
-
-  //}
   GetAllStorageAsIDataOneWindow(): IDataOneWindowStorage[] {
     this.debug().FuncStart(this.GetAllStorageAsIDataOneWindow.name);
     var toReturn: IDataOneWindowStorage[] = [];
@@ -164,17 +217,14 @@
         var oneRaw: IOneStorageData = rawStorageData[idx];
         var candidate: IDataOneWindowStorage = <IDataOneWindowStorage>JSON.parse(oneRaw.data);
 
-        //this.debug().Log('rawStorageData[idx].data : ' + rawStorageData[idx].data);
-
         if (candidate) {
-          //this.debug().Log('candidate.AllCEAr.length : ' + candidate.AllCEAr.length);
           candidate.TimeStamp = new Date(candidate.TimeStamp);
           candidate.Id = this.Xyyz.GuidMan.ParseGuid(candidate.Id.asString);
           candidate.RawData = oneRaw;
 
           if (!candidate.WindowType) {
-            candidate.WindowType = WindowType.Unknown;
-            candidate.WindowFriendly = WindowType[candidate.WindowType];
+            candidate.WindowType = scWindowType.Unknown;
+            candidate.WindowFriendly = scWindowType[candidate.WindowType];
           }
 
           if (!candidate.NickName) {
@@ -202,37 +252,11 @@
         var result: boolean = confirm('Remove ?: ' + this.Xyyz.Utilities.TimeNicknameFavStr(storageMatch));
         if (result === true) {
           window.localStorage.removeItem(storageMatch.RawData.key);
-
-          this.UiMan().RefreshUi();
         }
       }
     }
 
-    //if (result === true) {
-    //  var targets: IOneStorageData[] = this.__getAllLocalStorage();
-
-    //  if (targets) {
-    //    this.debug().Log('Target Count: ' + targets.length);
-
-    //    var countBefore: number = targets.length;
-
-    //    for (var idx = 0; idx < targets.length; idx++) {
-    //      this.debug().Log('idx: ' + idx);
-    //      var oneTarget: IOneStorageData = targets[idx];
-    //      this.debug().Log('key: ' + oneTarget.key);
-    //      window.localStorage.removeItem(oneTarget.key);
-    //    }
-
-    //    targets = this.__getAllLocalStorage()
-    //    var countAfter: number = targets.length;
-
-    //    alert('Count Before: ' + countBefore + ' Count After: ' + countAfter);
-    //  }
-    //  else {
-    //    alert('No local storage was found for Xyyz');
-    //  }
-    //}
-
+    this.UiMan().RefreshUi();
     this.debug().FuncEnd(this.RemoveOneFromStorage.name);
   }
   DrawStorage() {

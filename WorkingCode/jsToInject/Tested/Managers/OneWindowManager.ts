@@ -14,7 +14,7 @@ class OneWindowManager extends ManagerBase {
     var currentPageType = this.PageDataMan().GetCurrentPageType();
     this.Xyyz.OneWindowMan.CreateNewWindowSnapShot(currentPageType);
 
-    if (currentPageType === WindowType.ContentEditor) {
+    if (currentPageType === scWindowType.ContentEditor) {
       this.debug().Log('is Content Editor');
 
       var id = this.Xyyz.GuidMan.EmptyGuid();
@@ -22,7 +22,7 @@ class OneWindowManager extends ManagerBase {
 
       this.Xyyz.OneCEMan.SaveStateOneContentEditor(id, targetWindow.DataDocSelf);
     }
-    else if (currentPageType === WindowType.Desktop) {
+    else if (currentPageType === scWindowType.Desktop) {
       this.debug().Log('is Desktop');
       this.Xyyz.OneDesktopMan.SaveStateOneDesktop(targetWindow);
     } else {
@@ -77,7 +77,7 @@ class OneWindowManager extends ManagerBase {
 
     var docToPublish: IDataOneDoc = null;
 
-    if (currentWindowType == WindowType.Desktop) {
+    if (currentWindowType == scWindowType.Desktop) {
       var topIframe: IDataOneIframe = this.__getTopLevelIframe(targetWindow);
       if (topIframe) {
         docToPublish = topIframe.ContentDoc
@@ -89,21 +89,24 @@ class OneWindowManager extends ManagerBase {
     this.debug().Log('docToPublish', this.debug().IsNullOrUndefined(docToPublish));
 
     if (docToPublish) {
-      this.OneCEMan().PublishCE(docToPublish);
+      var publishChain: PromiseChainQuickPublish = new PromiseChainQuickPublish(this.Xyyz);
+      publishChain.PublishCE(docToPublish);
     }
 
     this.debug().FuncEnd(this.PublishActiveCE.name);
   }
 
-  RestoreWindowStateToTarget(targetWindow: IDataBroswerWindow, dataToRestore: IDataOneWindowStorage) {
+  async RestoreWindowStateToTarget(targetWindow: IDataBroswerWindow, dataToRestore: IDataOneWindowStorage) {
     this.debug().FuncStart(this.RestoreWindowStateToTarget.name);
 
     if (dataToRestore) {
-      if (dataToRestore.WindowType === WindowType.ContentEditor) {
-        this.Xyyz.OneCEMan.RestoreCEState(dataToRestore.AllCEAr[0], targetWindow.DataDocSelf);
-      } else if (dataToRestore.WindowType === WindowType.Desktop) {
-        this.Xyyz.OneDesktopMan.RestoreDesktopState(targetWindow, dataToRestore);
-      } else {
+      if (dataToRestore.WindowType === scWindowType.ContentEditor) {
+       await this.Xyyz.OneCEMan.RestoreCEStateAsync(dataToRestore.AllCEAr[0], targetWindow.DataDocSelf);
+      }
+      else if (dataToRestore.WindowType === scWindowType.Desktop) {
+       await this.Xyyz.OneDesktopMan.RestoreDesktopStateAsync(targetWindow, dataToRestore);
+      }
+      else {
         this.debug().Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
       }
       this.debug().FuncEnd(this.RestoreWindowStateToTarget.name);
@@ -149,10 +152,11 @@ class OneWindowManager extends ManagerBase {
   }
 
   UpdateStorage() {
-    this.debug().FuncStart('UpdateStorage');
+    this.debug().FuncStart(this.UpdateStorage.name);
     this.AtticMan().WriteToStorage(this.__activeWindowSnapShot);
+
     this.UiMan().RefreshUi();
-    this.debug().FuncEnd('UpdateStorage');
+    this.debug().FuncEnd(this.UpdateStorage.name);
   }
 
   FindMatchingCeData(oneCeData: IDataOneStorageCE): IDataOneStorageCE {
@@ -174,7 +178,7 @@ class OneWindowManager extends ManagerBase {
     var currentPageType = this.PageDataMan().GetCurrentPageType();
     this.CreateNewWindowSnapShot(currentPageType);
   }
-  CreateNewWindowSnapShot(windowType: WindowType) {
+  CreateNewWindowSnapShot(windowType: scWindowType) {
     this.debug().FuncStart('CreateNewWindowSnapShot');
 
     var dateToUse: Date = new Date();

@@ -7,6 +7,7 @@ const gulp = require('gulp');
 const header = require('gulp-header');
 const htmlmin = require('gulp-htmlmin');
 const minify = require('gulp-minify');
+const path = require('path');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
 const sass = require('gulp-sass');
@@ -69,13 +70,14 @@ gulp.task('buildStylesToInject', function () {
 gulp.task('buildHtmlToInject', () => {
   console.log('buildHtml');
 
+  var optionFlag = false;
+
   return gulp.src(htmlToInject.SourceDirFilter())
     .pipe(htmlmin({
-      collapseWhitespace: true,
+      collapseWhitespace: optionFlag,
       quoteCharacter: '\'',
-      removeComments: true,
+      removeComments: optionFlag,
     }))
-    // .pipe(gulp.dest(dest))
     .pipe(rename(htmlToInject.MinFileName))
     .pipe(gulp.dest(htmlToInject.dist));
 });
@@ -167,7 +169,7 @@ gulp.task('BookmarkText', function (done) {
 //pulp.task('putFilesToLocalB', function () {
 //});
 
-gulp.task('putWindowOpenerToLocal', function () {
+gulp.task('putWindowOpenerToLocal', function (done) {
   console.log('s) putWindowOpenerToLocal ');
   console.log('localWebRoot: ' + local.Dest);
   console.log('dest: ' + local.Dest);
@@ -177,20 +179,37 @@ gulp.task('putWindowOpenerToLocal', function () {
   console.log('source: ' + source);
 
   for (var idx = 0; idx < local.Dest.length; idx++) {
-    var oneDest = local.Dest[idx];
+    var oneLocalDest = local.Dest[idx];
+    console.log('localDest: ' + oneLocalDest);
 
     gulp.src(source)
-      .pipe(gulp.dest(oneDest));
+      .pipe(gulp.dest(oneLocalDest));
+
+    var sourceHtml = path.join(htmlToInject.dist, htmlToInject.MinFileName);
+
+    gulp.src(sourceHtml, { base: 'dist' })
+      .pipe(gulp.dest(oneLocalDest));
+
+    var sourceJs = path.join(jsToInject.dist, jsToInject.MinFileName);
+
+    gulp.src(sourceJs, { base: 'dist' })
+      .pipe(gulp.dest(oneLocalDest));
+
+    var sourceJs = path.join(stylesToInject.dist, stylesToInject.MinFileName);
+        gulp.src(sourceJs, { base: 'dist' })
+      .pipe(gulp.dest(oneLocalDest));
+
+
+    var sourceOpener = path.join(WindowOpener.dist, WindowOpener.NameConcat);
+    gulp.src(sourceOpener, { base: 'dist' })
+      .pipe(gulp.dest(oneLocalDest));
+
+
+
   }
+  done();
 });
 
-//gulp.task('typescript', function ()){
-//  var ts = require('gulp-typescript');
-
-//  return tsResult.js
-//    .pipe(gulp.dest())
-
-//}
 
 gulp.task('default', gulp.series(['cleanDist', 'buildStylesToInject', 'buildTypeScript', 'combineJs', 'buildJsToInject', 'buildHtmlToInject', 'buildWindowOpener', 'BookmarkText', 'putWindowOpenerToLocal']), function (resolve) {
   resolve();

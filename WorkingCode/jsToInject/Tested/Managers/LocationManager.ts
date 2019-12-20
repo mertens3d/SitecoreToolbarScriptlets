@@ -35,15 +35,15 @@ class LocationManager extends ManagerBase {
 
     this.debug().FuncEnd(this.SetHref.name);
   }
-  ChangeLocationSwitchBoard(desiredPageType: WindowType, targetWindow: IDataBroswerWindow, iteration: number = this.Const().Iterations.MaxIterationSwitchBoard) {
-    this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + WindowType[desiredPageType] + ' iteration: ' + iteration + ':' + this.Const().Iterations.MaxIterationSwitchBoard);
+  ChangeLocationSwitchBoard(desiredPageType: scWindowType, targetWindow: IDataBroswerWindow, iteration: number = this.Const().Iterations.MaxIterationSwitchBoard) {
+    this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType] + ' iteration: ' + iteration + ':' + this.Const().Iterations.MaxIterationSwitchBoard);
 
     if (iteration > 0) {
       iteration -= 1;
 
       var currentState = this.PageDataMan().GetCurrentPageType();
 
-      if (currentState === WindowType.LoginPage) {
+      if (currentState === scWindowType.LoginPage) {
         var self = this;
         var callbackOnComplete: Function = () => {
           this.debug().Log('callback triggered');
@@ -58,7 +58,7 @@ class LocationManager extends ManagerBase {
         //}, self.Const().Timeouts.TimeoutChangeLocation);
       }
 
-      else if (currentState === WindowType.Launchpad || currentState === WindowType.ContentEditor || currentState === WindowType.Desktop) {
+      else if (currentState === scWindowType.Launchpad || currentState === scWindowType.ContentEditor || currentState === scWindowType.Desktop) {
         var self = this;
         var callBackOnSuccessfulHrefChange: Function = function () {
           self.debug().Log('Callback triggered');
@@ -67,15 +67,15 @@ class LocationManager extends ManagerBase {
           self.ChangeLocationSwitchBoard(desiredPageType, targetWindow, iteration)
         }
 
-        if (desiredPageType === WindowType.Desktop && currentState !== WindowType.Desktop) {
-          this.SetHref(this.Const().Url.Desktop, callBackOnSuccessfulHrefChange, targetWindow);
+        if (desiredPageType === scWindowType.Desktop && currentState !== scWindowType.Desktop) {
+          this.SetHref(this.Const().UrlSuffix.Desktop, callBackOnSuccessfulHrefChange, targetWindow);
         }
 
-        else if (desiredPageType === WindowType.ContentEditor && currentState !== WindowType.ContentEditor) {
-          this.SetHref(this.Const().Url.ContentEditor, callBackOnSuccessfulHrefChange, targetWindow);
+        else if (desiredPageType === scWindowType.ContentEditor && currentState !== scWindowType.ContentEditor) {
+          this.SetHref(this.Const().UrlSuffix.CE, callBackOnSuccessfulHrefChange, targetWindow);
         }
 
-        else if (currentState === WindowType.Desktop && desiredPageType === WindowType.Desktop) {
+        else if (currentState === scWindowType.Desktop && desiredPageType === scWindowType.Desktop) {
           this.debug().Log('On Desktop');
 
           //todo this.DesktopMan().TriggerRedButton(targetWindow.DataDocSelf);

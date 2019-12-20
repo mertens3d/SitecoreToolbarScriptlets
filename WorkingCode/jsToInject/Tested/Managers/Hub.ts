@@ -1,20 +1,21 @@
 ﻿class Hub {
+  AtticMan: AtticManager;
+  Const: IConst;
   debug: Debug;
   EventMan: EventManager;
   FeedbackMan: FeedbackManager;
   GuidMan: GuidManager;
-  Const:  IConst;
   LocationMan: LocationManager;
+  MiscMan: MiscManager;
   OneCEMan: OneCEManager;
   OneDesktopMan: OneDesktopManager;
   OneTreeMan: OneTreeManager;
   OneWindowMan: OneWindowManager;
   PageDataMan: PageDataManager;
+  PromiseGeneric: PromiseGeneric;
+  SitecoreUiMan: SitecoreUiManager;
+  UiMan: UiManager;
   Utilities: Utilities;
-
-  MiscMan: MiscManager;
-    AtticMan: AtticManager;
-    UiMan: UiManager;
 
   constructor() {
     this.debug = new Debug(window.opener);
@@ -25,31 +26,21 @@
   Start() {
     this.debug.FuncStart(this.Start.name);
 
-    console.log('marker A');
-    this.PageDataMan = new PageDataManager( this);
-    console.log('marker B');
+    this.AtticMan = new AtticManager(this);
     this.EventMan = new EventManager(this);
-    console.log('marker C');
-    this.Utilities = new Utilities(this);
-    console.log('marker D');
-    //this.InjectConst = new InjectConst(this);
-    console.log('marker E');
-    this.LocationMan = new LocationManager(this);
-    console.log('marker F');
-    this.OneDesktopMan = new OneDesktopManager(this);
-    console.log('marker G');
-    this.OneTreeMan = new OneTreeManager(this);
-    console.log('marker H');
-    this.OneWindowMan = new OneWindowManager(this);
-    console.log('marker I');
-    this.OneCEMan = new OneCEManager(this);
-    console.log('marker J');
-
     this.FeedbackMan = new FeedbackManager(this);
     this.GuidMan = new GuidManager(this);
+    this.LocationMan = new LocationManager(this);
     this.MiscMan = new MiscManager(this);
-    this.AtticMan = new AtticManager(this);
+    this.OneCEMan = new OneCEManager(this);
+    this.OneDesktopMan = new OneDesktopManager(this);
+    this.OneTreeMan = new OneTreeManager(this);
+    this.OneWindowMan = new OneWindowManager(this);
+    this.PageDataMan = new PageDataManager(this);
+    this.PromiseGeneric = new PromiseGeneric(this);
+    this.SitecoreUiMan = new SitecoreUiManager(this);
     this.UiMan = new UiManager(this);
+    this.Utilities = new Utilities(this);
 
     this.init();
     this.debug.FuncEnd(this.Start.name);
@@ -57,6 +48,10 @@
   init() {
     this.debug.FuncStart(Hub.constructor.name + ' ' + this.init.name);
     this.Const = InjectConst.const;
+
+    this.AtticMan.Init();
+    this.debug.Enabled = this.AtticMan.Settings().DebugSettings.ShowDebugData;
+
     this.EventMan.Init();
     this.PageDataMan.Init();
     this.OneWindowMan.Init();

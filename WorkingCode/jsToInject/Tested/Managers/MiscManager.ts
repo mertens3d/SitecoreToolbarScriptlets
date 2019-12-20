@@ -3,44 +3,40 @@
     super(xyyz);
   }
 
-  //FillConst(): void {
-  //  this.Xyyz.InjectConst = {
-  //    ElemId: {
-  //      textAreaFeedback: 'ta-feedback',
-  //    },
+  NotNullOrUndefined(subjectAnyAr: any[], label?: string, iterationCheck?: number): boolean;
+  NotNullOrUndefined(subjectAny: any, label?: string, iterationCheck?: number);
+  NotNullOrUndefined(subjectAnyOrAr: any | any[], label: string = '', iterationCheck: number = null): boolean {
+    var toReturn: boolean = false;
 
-  //    ClassNames: {
-  //      ContentTreeNode: 'scContentTreeNode',
-  //    },
+    if (!iterationCheck) {
+      iterationCheck = this.Const().MaxNullOrUndefinedIter;
+    }
 
-  //    Url: {
-  //      Desktop: '/sitecore/shell/default.aspx',
-  //      Login: '/sitecore/login',
-  //      ContentEditor: '/sitecore/shell/Applications/Content%20Editor.aspx',
-  //      LaunchPad: '/sitecore/shell/sitecore/client/applications/launchpad',
-  //    },
+    iterationCheck -= 1;
 
-  //    Selector: {
-  //      ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
-  //      RootNodeId: 'Tree_Node_11111111111111111111111111111111'
-  //    },
+    if (iterationCheck > 0) {
+      if (label === '') {
+        label = this.NotNullOrUndefined.name + ' : no labelprovided';
+      }
 
-  //    Storage: {
-  //      WindowRoot: 'Xyyz.WindowSnapShot.'
-  //    },
-  //    TreeExpandedPng: 'treemenu_expanded.png',
+      if (subjectAnyOrAr === 'undefined') {
+        this.debug().Error(label, 'Is undefined');
+      } else if (!subjectAnyOrAr) {
+        this.debug().Error(label, 'Is Null');
+      } else {
+        this.debug().LogVal(label, 'Passed');
+        toReturn = true;
 
-  //    MaxIter: 100,
+        if (Array.isArray(subjectAnyOrAr)) {
+          for (var idx = 0; idx < subjectAnyOrAr.length; idx++) {
+            toReturn = toReturn && this.NotNullOrUndefined(subjectAnyOrAr[idx], (idx + 1) + ':' + subjectAnyOrAr.length + ' ' +  label, iterationCheck);
+          }
+        }
+      }
+    } else {
+      this.debug().Error(this.NotNullOrUndefined.name, 'max iteration hit');
+    }
 
-  //    GuidEmpty: this.Xyyz.GuidMan.ParseGuid('00000000-0000-0000-0000-000000000000'),
-
-  //    prop: {
-  //      AllTreeData: 'AllTreeData',
-  //    },
-
-  //    Names: {
-  //      HtmlToInject: 'HtmlToInject',
-  //      StylesToInject: 'StylesToInject'
-  //    }
-  //  }
+    return toReturn;
+  }
 }

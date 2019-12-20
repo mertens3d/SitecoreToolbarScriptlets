@@ -63,6 +63,8 @@
     <Content Include="gulp.support\Secrets.example.js" />
     <Content Include="gulp.support\Secrets.js" />
     <Content Include="WorkingCode\HtmlToInject\menu.html" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataDebugSettings.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataPublishChain.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataWindow.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\InjectConst.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IGuid.ts" />
@@ -70,6 +72,7 @@
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IOneStorageData.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataBucketRestoreDesktop.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IScVerSpec.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\SitecoreUiManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Feedback.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\IIterationResults.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\NewWindowDest.ts" />
@@ -82,8 +85,11 @@
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneIframe.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\PageDataManager.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\MiscManager.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataSettings.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\UiManager.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Promises\PromiseChainQuickPublish.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Promises\PromiseChainRestoreDesktop.ts" />
+    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Promises\PromiseGeneric.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\_first\_ManagerBase.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneWindow.ts" />
     <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Utilities.ts" />
@@ -133,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Browser Addons\Firefox\communication\" />
+    <Folder Include="WorkingCode\jsToInject\Tested\async\" />
     <Folder Include="WorkingCode\jsToInject\Tested\Classes\Tree\" />
   </ItemGroup>
   <ItemGroup>

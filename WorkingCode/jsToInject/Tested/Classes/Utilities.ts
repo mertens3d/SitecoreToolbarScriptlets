@@ -1,12 +1,13 @@
 ﻿class Utilities extends ManagerBase {
   TimeNicknameFavStr(data: IDataOneWindowStorage): string {
-    var typeStr: string = (data.WindowType === WindowType.Unknown) ? '?' : WindowType[data.WindowType];
+    var typeStr: string = (data.WindowType === scWindowType.Unknown) ? '?' : scWindowType[data.WindowType];
 
     return this.MakeFriendlyDate(data.TimeStamp)
-      + ' - ' + this.Buffer(typeStr, 9, ' ', false)
+      + ' - ' + this.Buffer(typeStr, 17, ' ', false)
       + ' - ' + this.Buffer(data.NickName, 16, ' ' , false) 
       + ' - ' + this.Buffer((data.IsFavorite ? '*' : ' '), 1);
   }
+
   constructor(xyyz: Hub) {
     super(xyyz);
     xyyz.debug.FuncStart(Utilities.name);

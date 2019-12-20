@@ -12,19 +12,12 @@ xyyz.ChildWindow = {
     console.log('s) WriteHtml');
     var fullMarkup = '<head>';
     fullMarkup += '<style>';
-    console.log('marker a');
     fullMarkup += StylesToInject;
-    console.log('marker b');
     fullMarkup += '</style>';
     fullMarkup += '<body>';
     fullMarkup += HtmlToInject;
-    console.log('marker c');
-    fullMarkup += '<script>';//console.log(\'before\')';
-    console.log('marker d');
+    fullMarkup += '<script>';
     fullMarkup += jsToInject;
-    console.log('marker e');
-    //fullMarkup += 'console.log(\'after\')
-    console.log('marker f');
     fullMarkup +='</script>';
     fullMarkup += '</body>';
 
@@ -36,10 +29,8 @@ xyyz.ChildWindow = {
     targetWindow.document.write(fullMarkup);
 
 
-    console.log('marker g');
     console.log(targetWindow);
     console.log(targetWindow.document);
-    //console.log(targetWindow.xyyz);
 
 
 

@@ -1,15 +1,15 @@
 ﻿interface IDataBroswerWindow {
-  readonly Window: Window,
+  Window: Window,
   DataDocSelf: IDataOneDoc;
   //Id: IGuid,
   Friendly: String,
-  WindowType: WindowType
+  WindowType: scWindowType
 }
 
 interface IDataOneDoc {
   DataWinParent: IDataBroswerWindow;
   XyyzId: IGuid,
-  
+
   IsCEDoc: Boolean,
   Document: Document,
   ParentDesktop: IGuid,

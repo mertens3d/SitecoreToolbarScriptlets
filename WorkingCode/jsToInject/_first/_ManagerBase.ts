@@ -18,6 +18,8 @@ class ManagerBase {
   PageDataMan(): PageDataManager { return this.Xyyz.PageDataMan; }
   UiMan(): UiManager { return this.Xyyz.UiMan; }
   Utilites(): Utilities { return this.Xyyz.Utilities; }
+  MiscMan(): MiscManager { return this.Xyyz.MiscMan; }
+  PromiseGen(): PromiseGeneric { return this.Xyyz.PromiseGeneric; }
 }
 
 exports = ManagerBase;

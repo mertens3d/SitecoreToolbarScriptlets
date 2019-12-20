@@ -6,21 +6,22 @@
   }
 
   private __waitForAndClickRedStartButtonPromise(promiseBucket: IDataBucketRestoreDesktop) {
-    return new Promise<IDataBucketRestoreDesktop>((resolve, reject) => {
-      this.debug().FuncStart(this.__waitForAndClickRedStartButtonPromise.name, 'tagetDoc not null: ' + (promiseBucket.targetDoc !== null));
+    return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
+      this.debug().FuncStart(this.__waitForAndClickRedStartButtonPromise.name);
 
-      var success = this.DesktopMan().WaitForAndClickRedStartButtonWorker(promiseBucket.targetWindow);
-      if (success) {
-        resolve(promiseBucket);
+      if (this.MiscMan().NotNullOrUndefined([promiseBucket, promiseBucket.targetDoc], this.__waitForAndClickRedStartButtonPromise.name)) {
+        await this.PromiseGen().RaceWaitAndClick(this.Const().Selector.SC.scStartButton, promiseBucket.targetDoc)
+          .then(() => resolve(promiseBucket))
+          .catch(ex => {
+            this.debug().Error(this.__waitForAndClickRedStartButtonPromise.name, ex);
+            reject();
+          });
       } else {
-        reject(this.__waitForAndClickRedStartButtonPromise.name);
+        reject();
       }
       this.debug().FuncEnd(this.__waitForAndClickRedStartButtonPromise.name);
     });
   }
-
-
-
 
   private __waitForIframeReady(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
@@ -74,14 +75,9 @@
 
   private __waitForAndThenClickCEFromMenuPromise(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      var success = await this.DesktopMan().WaitForAndThenClickCEFromMenuWorker(promiseBucket.targetWindow);
-      if (success) {
-        //this.debug().PromiseBucketDebug(promiseBucket, this.__waitForAndThenClickCEFromMenuPromise.name);
-
-        resolve(promiseBucket);
-      } else {
-        reject(this.__waitForAndThenClickCEFromMenuPromise.name);
-      }
+      await this.PromiseGen().WaitAndClick(this.Const().Selector.SC.StartMenuLeftOption, promiseBucket.targetWindow.DataDocSelf)
+        .then(() => { resolve(promiseBucket); })
+        .catch((ex) => { reject(this.__waitForAndThenClickCEFromMenuPromise.name); });
     });
   }
 
@@ -103,25 +99,34 @@
   }
 
   async RunOneChain(targetWindow: IDataBroswerWindow, dataToRestore: IDataOneStorageCE) {
-    var allIframeData = this.DesktopMan().GetAllLiveIframeData(targetWindow);
+    this.debug().FuncStart(this.RunOneChain.name);
 
-    var dataBucket: IDataBucketRestoreDesktop = {
-      targetWindow: targetWindow,
-      targetDoc: null,
-      IFramesbefore: allIframeData,
-      oneCEdata: dataToRestore,
-      NewIframe: null,
-      LastChainLinkSuccessful: false,
+    if (this.MiscMan().NotNullOrUndefined([targetWindow, dataToRestore], this.RunOneChain.name)) {
+      var allIframeData = this.DesktopMan().GetAllLiveIframeData(targetWindow);
+
+      var dataBucket: IDataBucketRestoreDesktop = {
+        targetWindow: targetWindow,
+        targetDoc: targetWindow.DataDocSelf,
+        IFramesbefore: allIframeData,
+        oneCEdata: dataToRestore,
+        NewIframe: null,
+        LastChainLinkSuccessful: false,
+      }
+      //this.debug().PromiseBucketDebug(dataBucket, this.RunOneChain.name);
+
+      await
+
+        this.__waitForAndClickRedStartButtonPromise(dataBucket)
+
+          .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
+          .then(dataBucket => this.__waitForIframeCountDiffPromise(dataBucket))
+          .then(dataBucket => this.__waitForIframeReady(dataBucket))
+          .then(dataBucket => this.__restoreDataToOneIframe(dataBucket))
+          .catch(ex => {
+            this.debug().Error(this.RunOneChain.name, ex);
+          });
+
+      this.debug().FuncEnd(this.RunOneChain.name);
     }
-    //this.debug().PromiseBucketDebug(dataBucket, this.RunOneChain.name);
-
-    await this.__waitForAndClickRedStartButtonPromise(dataBucket)
-      .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
-      .then(dataBucket => this.__waitForIframeCountDiffPromise(dataBucket))
-      .then(dataBucket => this.__waitForIframeReady(dataBucket))
-      .then(dataBucket => this.__restoreDataToOneIframe(dataBucket))
-      .catch(ex => {
-        this.debug().Error(this.RunOneChain.name, ex);
-      });
   }
 }

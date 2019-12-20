@@ -1,1 +1,93 @@
-<title>Hind&bull;Site<link href='/hindsite/stylestoinject.min.css' rel='stylesheet' type='text/css'></title><body><form><fieldset><legend>Fore&bull;Site</legend><button id='btnEdit' type='button'>Edit</button> <button id='btnPrev' type='button' class='preview-icon'>Preview</button> <button id='btnNorm' type='button'>Normal</button> <button id='btnAdminB' type='button'>Admin B</button> <button id='btnDesktop' type='button' class='desktop-icon'>Desktop</button> <button id='btnCE' type='button'>Content Editor</button> <button id='btnBigRed' type='button'>Add CE Tab to DT</button> <button id='btnQuickPublish' type='button'>Quick Publish</button> <button id='btnPresentationDetails' type='button'>Presentation Details</button></fieldset><fieldset><legend>Hind&bull;Site</legend><div class='col-sel'><button id='btnSaveWindowState' type='button'>Take Snapshot</button><div class='mono light-text'><pre> Time Stamp          - Page Type - Nickname       - Favorite?</pre></div><select id='selState' size='6'></select></div><div class='col-sel-btn'><input type='text' id='inputNickname' value='' placeholder='Nick Name'> <button id='btnUpdateNickname' type='button'>Set Nickname</button> <button id='btnToggleFavorite' type='button'>Toggle Favorite</button> <button id='btnRemoveOneFromLocalStorage' type='button'>Delete Snapshot</button> <button id='btnRestoreWindowState' type='button'>Restore Snapshot</button></div></fieldset><fieldset><legend>In&bull;Site</legend><div class='col-left'><div class='scroller'><textarea id='ta-feedback'></textarea></div></div><div class='col-right'><button id='btnDrawLocalStorage' type='button'>Draw Local Storage</button></div></fieldset><fieldset><legend>Debug Info <span id='spanParentInfo'></span></legend><div class='col-left'><div class='scroller'><textarea id='ta-debug'></textarea></div></div><div class='col-right'><button id='btnClearDebugTextArea' type='button'>Clear Debug Text</button></div></fieldset></form><script type='text/javascript' src='/hindsite/jstoinject.min.js'></script></body>
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>
+    Hind&bull;Site
+  </title>
+  <link href='stylestoinject.min.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <form>
+
+    <fieldset>
+      <legend>Fore&bull;Site</legend>
+      <div>
+        <button id='btnEdit' type='button'>Edit</button>
+        <button id='btnPrev' type='button' class='preview-icon'>Preview</button>
+        <button id='btnNorm' type='button'>Normal</button>
+        <button id='btnAdminB' type='button'>Admin B</button>
+        <button id='btnDesktop' type='button' class='desktop-icon'>Desktop</button>
+        <button id='btnCE' type='button'>Content Editor</button>
+        <button id='btnBigRed' type='button'>Add CE Tab to DT</button>
+        <button id='btnQuickPublish' type='button'>Quick Publish</button>
+        <button id='btnPresentationDetails' type='button'>Presentation Details</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Hind&bull;Site</legend>
+      <div>
+        <div class='col-sel'>
+          <button id='btnSaveWindowState' type='button'>Take Snapshot</button>
+          <div class='mono light-text'><pre> Time Stamp          - Page Type - Nickname       - Favorite?</pre></div>
+
+          <!--<input type='checkbox' /> todo favorites only-->
+          <select id='selState' size='6'>
+          </select>
+        </div>
+        <div class='col-sel-btn'>
+          <input type='text' id='inputNickname' value='' placeholder='Nick Name'>
+          <button id='btnUpdateNickname' type='button'>Set Nickname</button>
+          <button id='btnToggleFavorite' type='button'>Toggle Favorite</button>
+          <button id='btnRemoveOneFromLocalStorage' type='button'>Delete Snapshot</button>
+
+          <button id='btnRestoreWindowState' type='button'>Restore Snapshot</button>
+
+          <button id='btnCancel' type='button'>Cancel</button>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>In&bull;Site</legend>
+      <div>
+        <div class='col-left'>
+          <div class='scroller'>
+            <textarea id='ta-feedback'></textarea>
+          </div>
+        </div>
+        <div class='col-right'>
+          <button id='btnDrawLocalStorage' type='button'>Draw Local Storage</button>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset id='id-fieldset-debug'>
+      <legend>Debug Info <span id='spanParentInfo'></span></legend>
+      <div>
+        <div class='col-left'>
+          <div class='scroller'>
+            <textarea id='ta-debug'></textarea>
+          </div>
+        </div>
+
+        <div class='col-right'>
+          <button id='btnClearDebugTextArea' type='button'>Clear Debug Text</button>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Settings</legend>
+      <div>
+        <input type='checkbox' id='id-settings-show-debug-data'>
+        <label for='id-settings-show-debug-data'>Show Debug Data</label>
+      </div>
+    </fieldset>
+  </form>
+
+  <script type='text/javascript' src='jstoinject.min.js'>
+  </script>
+</body>
+</html>

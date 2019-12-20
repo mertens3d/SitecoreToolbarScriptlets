@@ -1,6 +1,7 @@
 class Debug {
   __indentCount: number;
   ParentWindow: Window;
+  Enabled: boolean = false;
 
   constructor(parentWindow: Window) {
     console.log('debug');
@@ -48,30 +49,35 @@ class Debug {
     this.Log(textValName + ' : ' + textValVal);
   }
   Log(text, optionalValue: string = '', hasPrefix = false) {
-    var indent = '  ';
-    //text =  indent.repeat(this.__indentCount) + text;
 
-    for (var idx = 0; idx < this.__indentCount; idx++) {
-      text = indent + text;
-    }
+    if (this.Enabled) {
 
-    var prefixLength = 3;
-    if (!hasPrefix) {
-      for (var idx = 0; idx < prefixLength; idx++) {
-        text = ' ' + text;
+
+      var indent = '  ';
+      //text =  indent.repeat(this.__indentCount) + text;
+
+      for (var idx = 0; idx < this.__indentCount; idx++) {
+        text = indent + text;
       }
-    }
 
-    console.log(text);
+      var prefixLength = 3;
+      if (!hasPrefix) {
+        for (var idx = 0; idx < prefixLength; idx++) {
+          text = ' ' + text;
+        }
+      }
 
-    var ta = this.__getTextArea();
-    if (ta) {
-      ta.value += text + '\\n';
-      ta.scrollTop = ta.scrollHeight;
-    }
+      console.log(text);
 
-    if (this.ParentWindow) {
-      this.ParentWindow.console.log(text);
+      var ta = this.__getTextArea();
+      if (ta) {
+        ta.value += text + '\\n';
+        ta.scrollTop = ta.scrollHeight;
+      }
+
+      if (this.ParentWindow) {
+        this.ParentWindow.console.log(text);
+      }
     }
   }
 
@@ -127,10 +133,20 @@ class Debug {
     this.Log('');
     this.Log('\t\t** ERROR ** ' + container);
     this.Log('');
-    this.Log(text);
+    this.Log('\t\t  ' + text);
     this.Log('');
     this.Log('\t\t** ERROR ** ' + container);
     this.Log('');
+  }
+
+  NotNullCheck(title: string, value: any): void {
+    if (typeof value === 'undefined') {
+      this.LogVal(title, 'Is Undefined');
+    } else if (!value) {
+      this.LogVal(title, 'Is Null');
+    } else {
+      this.LogVal(title, 'Is Not Null');
+    }
   }
 
   IsNullOrUndefined(subject) {

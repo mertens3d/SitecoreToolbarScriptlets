@@ -3,7 +3,7 @@
   private __maxIterations: number;
   private __nickName: string;
   private __timeout: number;
-    IsExhausted: boolean;
+  IsExhausted: boolean;
 
   constructor(xyyz: Hub, maxIterations: number, nickname: string) {
     super(xyyz);
@@ -20,7 +20,7 @@
   DecrementAndKeepGoing() {
     var toReturn = false;
 
-    if (this.__currentIteration > 0) {
+    if (!this.UiMan().OperationCancelled && this.__currentIteration > 0) {
       this.__currentIteration -= 1;
       this.__timeout += this.__timeout * 0.5;
       this.debug().Log('DecrementAndKeepGoing: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations + ' | timeout: ' + this.__timeout);
@@ -33,6 +33,7 @@
     }
     return toReturn
   }
+
   NotifyExhausted() {
     this.debug().Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
   }
@@ -43,12 +44,13 @@
     this.debug().FuncEnd(this.WaitAndThen.name, this.__nickName);
   }
 
-  Wait() {
+  Wait(): Promise<void>{
     //self.debug().FuncStart(self.WaitAndThen.name, self.__nickName + ' ' + timeoutFunction.name);
-    return new Promise((resolve) => {
-       setTimeout(resolve, this.__timeout);
-    });
-
+    if (!this.UiMan().OperationCancelled) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, this.__timeout);
+      });
+    }
     //this.debug().FuncEnd(this.WaitAndThen.name, self.__nickName);
   }
 }

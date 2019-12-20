@@ -1,4 +1,4 @@
-﻿enum WindowType {
+﻿enum scWindowType {
   Unknown = 0,
   LoginPage = 1,
   Desktop = 2,

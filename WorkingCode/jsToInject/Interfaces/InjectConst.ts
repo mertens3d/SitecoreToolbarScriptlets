@@ -59,17 +59,20 @@ class InjectConst {
       MaxIterationSwitchBoard: 20,
     },
     Timeouts: {
+      IterationHelperInitial: 100,
+      PostLoginBtnClick: 1000,
+      SetHrefEffortWait: 1000,
       TimeoutChangeLocation: 1000,
       TimeoutTriggerRedButton: 1500,
       TimeoutWaitForNodeToLoad: 500,
+      WaitBeforeRemovingCompleteFlag: 3000,
       WaitFogPageLoad: 1000,
-      PostLoginBtnClick: 1000,
-      SetHrefEffortWait: 1000,
-      IterationHelperInitial: 100,
     },
     ElemId: {
       Hs: {
         btnClearDebugTextArea: 'btnClearDebugTextArea',
+        SelStateSnapShot: 'selState',
+        BtnCancel: 'btnCancel',
       },
       BtnEdit: 'btnEdit',
       btnQuickPublish: 'btnQuickPublish',
@@ -80,7 +83,6 @@ class InjectConst {
       HindSiteParentInfo: 'spanParentInfo',
       hsBtnBigRed: 'btnBigRed',
       InputNickname: 'inputNickname',
-      SelStateSnapShot: 'selState',
       textAreaFeedback: 'ta-feedback',
 
       sc: {
@@ -93,11 +95,6 @@ class InjectConst {
           sc920: 'LogInBtn',
           sc820: null
         },
-
-        scStartButton: {
-          sc920: 'StartButton',
-          sc820: 'startButton'
-        },
       }
     },
 
@@ -108,16 +105,25 @@ class InjectConst {
       }
     },
 
-    Url: {
+    UrlSuffix: {
       Desktop: '/sitecore/shell/default.aspx',
       Login: '/sitecore/login',
-      ContentEditor: /Content.*?Editor/ig,
       LaunchPad: '/client/applications/launchpad',
+      CE: '/sitecore/shell/Applications/Content Editor.aspx?sc_bw=1',
+    },
+    Regex: {
+      ContentEditor: /Content.*?Editor/ig,
+
+
     },
 
     Selector: {
-      IframeContent: 'iframe[src*=content]',
+      XS: {
+        IdFieldSetDebug: '[id=id-fieldset-debug]',
+        iCBoxdSettingsShowDebugData: '[id=id-settings-show-debug-data]',
+      },
       SC: {
+        IframeContent: 'iframe[src*=content]',
         ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
         StartMenuLeftOption: '.scStartMenuLeftOption',
         IdStartsWithTreeNode: '[id^=Tree_Node_]',
@@ -125,14 +131,23 @@ class InjectConst {
           sc920: null,
           sc820: 'input.btn',
         },
+        scStartButton: {
+          sc920: '[id=StartButton]',
+          sc820: '[id=startButton]'
+        },
       },
     },
 
     Storage: {
-      WindowRoot: 'Xyyz.WindowSnapShot.'
+      DefaultDebugKeepDialogOpen: false,
+      SettingsSuffix: '.Settings',
+      ShowDebugData: false,
+      SnapShotSuffix: '.WindowSnapShot.',
+      WindowRoot: 'Xyyz',
     },
 
     MaxIter: 100,
+    MaxNullOrUndefinedIter: 100,
 
     GuidEmpty: '00000000-0000-0000-0000-000000000000',
 

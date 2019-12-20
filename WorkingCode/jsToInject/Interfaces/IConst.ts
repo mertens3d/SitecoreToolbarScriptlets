@@ -12,18 +12,22 @@ interface IConst {
     MaxIterationSwitchBoard: number,
   },
   Timeouts: {
+    IterationHelperInitial: number,
+    PostLoginBtnClick: number,
+    SetHrefEffortWait: number,
     TimeoutChangeLocation: number, //1000
     TimeoutTriggerRedButton: number, //1500
     TimeoutWaitForNodeToLoad: number,
+    WaitBeforeRemovingCompleteFlag: number,
     WaitFogPageLoad: number,
-    PostLoginBtnClick: number,
-    SetHrefEffortWait: number,
-    IterationHelperInitial: number,
   },
   ElemId: {
     Hs: {
+      BtnCancel: string,
       btnClearDebugTextArea: string,
+      SelStateSnapShot: string,
     }
+
     BtnEdit: string,
     btnQuickPublish: string,
     BtnRestoreWindowState: string,
@@ -33,13 +37,12 @@ interface IConst {
     HindSiteParentInfo: string,
     hsBtnBigRed: string,
     InputNickname: string,
-    SelStateSnapShot: string,
     textAreaFeedback: string,
     sc: {
       scLoginBtn: IScVerSpec,
       scLoginPassword: string,
       scLoginUserName: string,
-      scStartButton: IScVerSpec,
+
       SitecoreRootGlyphId: string,
       SitecoreRootNodeId: string,
     }
@@ -50,26 +53,40 @@ interface IConst {
       scContentTreeNodeActive: string,
     }
   },
-  Url: {
+  UrlSuffix: {
     Desktop: string,
     Login: string,
-    ContentEditor: RegExp,
     LaunchPad: string,
+    CE: string,
+  },
+  Regex: {
+    ContentEditor: RegExp,
+
   },
   Selector: {
-    IframeContent: string,
+    XS: {
+      IdFieldSetDebug: string,
+      iCBoxdSettingsShowDebugData: string,
+    }
     SC: {
       ContentTreeNodeGlyph: string,
-      StartMenuLeftOption: string,
       IdStartsWithTreeNode: string,
+      IframeContent: string,
       LoginBtn: IScVerSpec,
+      scStartButton: IScVerSpec,
+      StartMenuLeftOption: string,
     }
   },
   Storage: {
-    WindowRoot: string
+    DefaultDebugKeepDialogOpen: boolean,
+    SettingsSuffix: string,
+    ShowDebugData: boolean,
+    SnapShotSuffix: string,
+    WindowRoot: string,
   },
 
   MaxIter: number,
+  MaxNullOrUndefinedIter: number,
 
   GuidEmpty: string,
   prop: {
