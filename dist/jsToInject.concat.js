@@ -29,6 +29,7 @@ console.log('IConst loaded');
 
 
 
+
 console.log('InjectConst loaded');
 class InjectConst {
 }
@@ -58,6 +59,11 @@ InjectConst.const = {
             btnClearDebugTextArea: 'btnClearDebugTextArea',
             SelStateSnapShot: 'selState',
             BtnCancel: 'btnCancel',
+            LgndHindSite: 'lgnd-hind-site',
+            LgndInSite: 'lgnd-in-site',
+            LgndForeSite: 'lgnd-fore-site',
+            LgndDebug: 'lgnd-debug',
+            LgndSettings: 'lgnd-settings',
         },
         BtnEdit: 'btnEdit',
         btnQuickPublish: 'btnQuickPublish',
@@ -82,6 +88,9 @@ InjectConst.const = {
     },
     ClassNames: {
         ContentTreeNode: 'scContentTreeNode',
+        HS: {
+            Collapsed: 'in',
+        },
         SC: {
             scContentTreeNodeActive: 'scContentTreeNodeActive',
         }
@@ -564,6 +573,29 @@ class AtticManager extends ManagerBase {
         }
         this.debug().FuncEnd(this.__drawStoragePretty.name);
     }
+    UpdateAccodianState(needleKey, isCollapsed) {
+        this.debug().FuncStart(this.UpdateAccodianState.name, needleKey + ' ' + isCollapsed);
+        var settings = this.Settings();
+        var accordianPairs = settings.Accordian;
+        var found = null;
+        for (var idx = 0; idx < accordianPairs.length; idx++) {
+            var candidate = accordianPairs[idx];
+            if (candidate.ElemId === needleKey) {
+                found = true;
+                candidate.isCollapsed = isCollapsed;
+                break;
+            }
+        }
+        if (!found) {
+            var newSetting = {
+                ElemId: needleKey,
+                isCollapsed: isCollapsed
+            };
+            accordianPairs.push(newSetting);
+        }
+        this.SetSettings(settings);
+        this.debug().FuncStart(this.UpdateAccodianState.name);
+    }
     SetSettings(currentSettings) {
         this.debug().FuncStart(this.SetSettings.name);
         window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SettingsSuffix, JSON.stringify(currentSettings));
@@ -575,7 +607,8 @@ class AtticManager extends ManagerBase {
             ShowDebugData: this.Const().Storage.ShowDebugData,
         };
         let toReturn = {
-            DebugSettings: defaultDebugSettings
+            DebugSettings: defaultDebugSettings,
+            Accordian: []
         };
         return toReturn;
     }
@@ -600,6 +633,9 @@ class AtticManager extends ManagerBase {
         }
         if (!toReturn.DebugSettings.ShowDebugData) {
             toReturn.DebugSettings.ShowDebugData = defaultSettings.DebugSettings.ShowDebugData;
+        }
+        if (!toReturn.Accordian) {
+            toReturn.Accordian = [];
         }
         this.DebugSettings(toReturn);
         this.debug().FuncEnd(this.Settings.name);
@@ -741,11 +777,15 @@ class EventManager extends ManagerBase {
     constructor(xyyz) {
         super(xyyz);
     }
-    __ById(value) {
-        return document.getElementById(value);
-    }
     Init() {
         this.__wireMenuButtons();
+    }
+    __ById(value) {
+        var toReturn = document.getElementById(value);
+        if (!toReturn) {
+            this.debug().Error(this.__ById.name, 'No Id: ' + value);
+        }
+        return toReturn;
     }
     __wireMenuButtons() {
         this.debug().FuncStart(EventManager.name + ' ' + this.__wireMenuButtons.name);
@@ -767,7 +807,27 @@ class EventManager extends ManagerBase {
         this.__ById(this.Const().ElemId.Hs.SelStateSnapShot).onchange = () => { this.Xyyz.UiMan.SelectChanged(); };
         this.__ById(this.Const().ElemId.Hs.SelStateSnapShot).ondblclick = (evt) => { this.__hndlrRestoreClick(evt); };
         document.querySelector(this.Const().Selector.XS.iCBoxdSettingsShowDebugData).onclick = () => { this.UiMan().UpdateAtticFromUi(); };
+        this.__ById(this.Const().ElemId.Hs.LgndHindSite).onclick = (evt) => { this.__toggleAccordian(evt); };
+        this.__ById(this.Const().ElemId.Hs.LgndDebug).onclick = (evt) => { this.__toggleAccordian(evt); };
+        this.__ById(this.Const().ElemId.Hs.LgndForeSite).onclick = (evt) => { this.__toggleAccordian(evt); };
+        this.__ById(this.Const().ElemId.Hs.LgndInSite).onclick = (evt) => { this.__toggleAccordian(evt); };
+        this.__ById(this.Const().ElemId.Hs.LgndSettings).onclick = (evt) => { this.__toggleAccordian(evt); };
         this.debug().FuncEnd(this.__wireMenuButtons.name);
+    }
+    __toggleAccordian(evt) {
+        this.debug().FuncStart(this.__toggleAccordian.name);
+        var srcElem = (evt.target || evt.srcElement);
+        var foundContentSib = this.UiMan().GetAccordianContentElem(srcElem);
+        if (foundContentSib) {
+            var isCollapsed = foundContentSib.classList.contains(this.Const().ClassNames.HS.Collapsed);
+            var newVal = !isCollapsed;
+            this.UiMan().SetAccordianClass(foundContentSib, newVal);
+            this.AtticMan().UpdateAccodianState(srcElem.getAttribute('id'), newVal);
+        }
+        else {
+            this.debug().Error(this.__toggleAccordian.name, 'did not find sib');
+        }
+        this.debug().FuncEnd(this.__toggleAccordian.name);
     }
     __hndlrCancelOperation(evt) {
         this.UiMan().SetCancelFlag();
@@ -1698,7 +1758,6 @@ class UiManager extends ManagerBase {
     }
     NotifyComplete(targetWindow) {
         let bodyTag = targetWindow.DataDocSelf.Document.getElementsByTagName('body')[0];
-        alert(bodyTag);
         var flagElem = targetWindow.DataDocSelf.Document.createElement('div');
         flagElem.innerHTML = '<div>Complete</div>';
         flagElem.style.position = 'absolute';
@@ -1712,6 +1771,39 @@ class UiManager extends ManagerBase {
             flagElem.remove();
         }, this.Const().Timeouts.WaitBeforeRemovingCompleteFlag);
         bodyTag.appendChild(flagElem);
+    }
+    SetAccordianClass(targetElem, isCollapsed) {
+        if (!isCollapsed) {
+            targetElem.classList.remove(this.Const().ClassNames.HS.Collapsed);
+        }
+        else {
+            targetElem.classList.add(this.Const().ClassNames.HS.Collapsed);
+        }
+    }
+    GetAccordianContentElem(sib) {
+        this.debug().FuncStart(this.GetAccordianContentElem.name);
+        var toReturn;
+        if (sib) {
+            var siblings = sib.parentElement.getElementsByClassName('accordian-content');
+            if (siblings) {
+                var toReturn = siblings[0];
+            }
+        }
+        this.debug().FuncEnd(this.GetAccordianContentElem.name);
+        return toReturn;
+    }
+    RestoreAccordianStates() {
+        var accordianSettings = this.AtticMan().Settings().Accordian;
+        for (var idx = 0; idx < accordianSettings.length; idx++) {
+            var candidate = accordianSettings[idx];
+            var target = document.getElementById(candidate.ElemId);
+            if (target) {
+                var contentSib = this.GetAccordianContentElem(target);
+                if (contentSib) {
+                    this.SetAccordianClass(contentSib, candidate.isCollapsed);
+                }
+            }
+        }
     }
     UpdateAtticFromUi() {
         this.debug().FuncStart(this.UpdateAtticFromUi.name);
@@ -1776,6 +1868,7 @@ class UiManager extends ManagerBase {
         this.__populateStateSel();
         this.DrawCorrectNicknameInUI();
         this.__refreshSettings();
+        this.RestoreAccordianStates();
         this.debug().FuncEnd(this.DrawCorrectNicknameInUI.name);
     }
     DrawCorrectNicknameInUI() {

@@ -73,6 +73,11 @@ class InjectConst {
         btnClearDebugTextArea: 'btnClearDebugTextArea',
         SelStateSnapShot: 'selState',
         BtnCancel: 'btnCancel',
+        LgndHindSite: 'lgnd-hind-site',
+        LgndInSite: 'lgnd-in-site',
+        LgndForeSite: 'lgnd-fore-site',
+        LgndDebug: 'lgnd-debug',
+        LgndSettings: 'lgnd-settings',
       },
       BtnEdit: 'btnEdit',
       btnQuickPublish: 'btnQuickPublish',
@@ -100,6 +105,9 @@ class InjectConst {
 
     ClassNames: {
       ContentTreeNode: 'scContentTreeNode',
+      HS: {
+        Collapsed: 'in',
+      },
       SC: {
         scContentTreeNodeActive: 'scContentTreeNodeActive',
       }
@@ -113,8 +121,6 @@ class InjectConst {
     },
     Regex: {
       ContentEditor: /Content.*?Editor/ig,
-
-
     },
 
     Selector: {

@@ -1,6 +1,4 @@
 ﻿class UiManager extends ManagerBase {
-    
- 
   SetParentInfo(winDataParent: IDataBroswerWindow) {
     var targetSpan = document.getElementById(this.Const().ElemId.HindSiteParentInfo);
     if (targetSpan) {
@@ -18,7 +16,6 @@
   }
 
   NotifyComplete(targetWindow: IDataBroswerWindow): void {
-
     let bodyTag = targetWindow.DataDocSelf.Document.getElementsByTagName('body')[0];//(treeGlyphTargetId);
 
     var flagElem: HTMLElement = targetWindow.DataDocSelf.Document.createElement('div');
@@ -33,12 +30,48 @@
     console.log(flagElem.toString());
 
     setTimeout(function () {
-
       flagElem.remove();
-
     }, this.Const().Timeouts.WaitBeforeRemovingCompleteFlag);
 
     bodyTag.appendChild(flagElem);
+  }
+
+  SetAccordianClass(targetElem: HTMLElement, isCollapsed: boolean) {
+    if (!isCollapsed) {
+      targetElem.classList.remove(this.Const().ClassNames.HS.Collapsed);
+    } else {
+      targetElem.classList.add(this.Const().ClassNames.HS.Collapsed);
+    }
+  }
+
+  GetAccordianContentElem(sib: HTMLElement): HTMLElement {
+    this.debug().FuncStart(this.GetAccordianContentElem.name);
+    var toReturn: HTMLElement;
+    if (sib) {
+      var siblings = sib.parentElement.getElementsByClassName('accordian-content');
+
+      if (siblings) {
+        var toReturn = <HTMLElement>siblings[0];
+      }
+    }
+
+    this.debug().FuncEnd(this.GetAccordianContentElem.name);
+    return toReturn;
+  }
+
+  RestoreAccordianStates(): void {
+    var accordianSettings = this.AtticMan().Settings().Accordian;
+    for (var idx = 0; idx < accordianSettings.length; idx++) {
+      var candidate = accordianSettings[idx];
+      var target = document.getElementById(candidate.ElemId);
+
+      if (target) {
+        var contentSib = this.GetAccordianContentElem(target);
+        if (contentSib) {
+          this.SetAccordianClass(contentSib, candidate.isCollapsed)
+        }
+      }
+    }
   }
 
   UpdateAtticFromUi(): any {
@@ -116,6 +149,7 @@
     this.__populateStateSel();
     this.DrawCorrectNicknameInUI();
     this.__refreshSettings();
+    this.RestoreAccordianStates();
     this.debug().FuncEnd(this.DrawCorrectNicknameInUI.name);
   }
   DrawCorrectNicknameInUI() {
@@ -185,7 +219,6 @@
         }
       }
     }
-
 
     this.debug().FuncEnd(this.__populateStateSel.name);
   }

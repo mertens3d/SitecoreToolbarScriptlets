@@ -113,6 +113,34 @@
     this.debug().FuncEnd(this.__drawStoragePretty.name);
   }
 
+  UpdateAccodianState(needleKey: string, isCollapsed: boolean) {
+    this.debug().FuncStart(this.UpdateAccodianState.name, needleKey + ' ' + isCollapsed);
+    var settings: IDataSettings = this.Settings();
+
+    var accordianPairs: IDataOneSettingPair[] = settings.Accordian;
+
+    var found = null;
+    for (var idx = 0; idx < accordianPairs.length; idx++) {
+      var candidate = accordianPairs[idx];
+      if (candidate.ElemId === needleKey) {
+        found = true;
+        candidate.isCollapsed = isCollapsed;
+        break;
+      }
+    }
+
+    if (!found) {
+      var newSetting: IDataOneSettingPair = {
+        ElemId: needleKey,
+        isCollapsed: isCollapsed
+      }
+
+      accordianPairs.push(newSetting);
+    }
+    this.SetSettings(settings);
+    this.debug().FuncStart(this.UpdateAccodianState.name);
+  }
+
   SetSettings(currentSettings: IDataSettings) {
     this.debug().FuncStart(this.SetSettings.name);
     window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SettingsSuffix, JSON.stringify(currentSettings));
@@ -126,7 +154,8 @@
     }
 
     let toReturn: IDataSettings = {
-      DebugSettings: defaultDebugSettings
+      DebugSettings: defaultDebugSettings,
+      Accordian: []
     };
 
     return toReturn;
@@ -159,6 +188,10 @@
 
     if (!toReturn.DebugSettings.ShowDebugData) {
       toReturn.DebugSettings.ShowDebugData = defaultSettings.DebugSettings.ShowDebugData;
+    }
+
+    if (!toReturn.Accordian) {
+      toReturn.Accordian = [];
     }
 
     this.DebugSettings(toReturn);
@@ -202,7 +235,6 @@
     this.debug().Log('snapShotAsString: ' + snapShotAsString);
 
     window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotSuffix + dataOneWindow.Id.asString, snapShotAsString);
-
 
     this.UiMan().RefreshUi();
     this.debug().FuncEnd(this.WriteToStorage.name);

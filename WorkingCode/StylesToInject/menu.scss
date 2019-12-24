@@ -6,8 +6,11 @@ $scLaunchPagebuttonWidth: 96px;
 $scTextColorLight: #ccc;
 $scTextColorNorm: #131313;
 
+$scSectionBackgroundColor:rgb(71, 71, 71) ;
+
 $selWidth: 500px;
 $scBackgroundImage: url(/sitecore/login/drop_wallpaper.jpg);
+$scAccordianUp: "/sitecore/shell/themes/standard/Images/accordion_up.png";
 
 // widths
 $padding: 4px;
@@ -21,7 +24,8 @@ $selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $
 .light-text {
   color: $scTextColorLight;
 }
-.red{
+
+.red {
   background-color: red;
 }
 
@@ -41,7 +45,6 @@ $selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $
   background-image: url(/temp/iconcache/apps/48x48/windows%20table.png);
   background-repeat: no-repeat;
   background-position: top;
-  
 }
 
 button {
@@ -49,7 +52,6 @@ button {
   background: none;
   background-color: $scLaunchPadBtnBackground;
   background-size: 30px 30px;
-  
   border: 0;
   border-radius: 0px;
   box-shadow: none;
@@ -93,17 +95,28 @@ fieldset {
 
 
 legend {
-  position: relative;
-  float: left;
-  background: none;
   /*background-color: green;*/
-  padding-top: 0;
-  margin-top: 0;
+  background: none;
+  background-color: $scSectionBackgroundColor;
   border: none;
-  top: -12px;
+  color: white;
+  cursor: pointer;
+  float: left;
   left: -12px;
-}
+  margin-top: 0;
+  padding-top: 0;
+  position: relative;
+  top: -12px;
+  width: 100%;
 
+  &:after {
+    content: url($scAccordianUp);
+    font-size: 13px;
+    color: #777;
+    float: right;
+    margin-left: 5px;
+  }
+}
 
 .col-sel {
   display: flex;
@@ -113,6 +126,9 @@ legend {
   /*border: 1px solid black;*/
 }
 
+.in{
+  display: none;
+}
 .col-sel-btn {
   display: flex;
   flex-wrap: wrap;
@@ -135,7 +151,7 @@ body {
   background-color: $scBackgroundColor;
   overflow: auto;
   color: $scTextColorNorm;
-  background-repeat:no-repeat;
+  background-repeat: no-repeat;
 }
 
 .col-right {
@@ -162,12 +178,13 @@ body {
   }
 }
 
-.scroller{
+.scroller {
   height: 160px;
   display: inline-block;
   width: 650px;
   overflow: scroll;
 }
+
 textarea {
   border: 0;
   box-sizing: border-box;

@@ -11,8 +11,8 @@
   <form>
 
     <fieldset>
-      <legend>Fore&bull;Site</legend>
-      <div>
+      <legend id='lgnd-fore-site'>Fore&bull;Site</legend>
+      <div class='accordian-content'>
         <button id='btnEdit' type='button'>Edit</button>
         <button id='btnPrev' type='button' class='preview-icon'>Preview</button>
         <button id='btnNorm' type='button'>Normal</button>
@@ -26,8 +26,8 @@
     </fieldset>
 
     <fieldset>
-      <legend>Hind&bull;Site</legend>
-      <div>
+      <legend id='lgnd-hind-site' data-setting='lgnd-hind-site'>Hind&bull;Site</legend>
+      <div class='accordian-content'>
         <div class='col-sel'>
           <button id='btnSaveWindowState' type='button'>Take Snapshot</button>
           <div class='mono light-text'><pre> Time Stamp          - Page Type - Nickname       - Favorite?</pre></div>
@@ -50,8 +50,8 @@
     </fieldset>
 
     <fieldset>
-      <legend>In&bull;Site</legend>
-      <div>
+      <legend id='lgnd-in-site' data-setting='lgnd-in-site'>In&bull;Site</legend>
+      <div class='accordian-content'>
         <div class='col-left'>
           <div class='scroller'>
             <textarea id='ta-feedback'></textarea>
@@ -64,8 +64,8 @@
     </fieldset>
 
     <fieldset id='id-fieldset-debug'>
-      <legend>Debug Info <span id='spanParentInfo'></span></legend>
-      <div>
+      <legend id='lgnd-debug' data-setting='lgnd-debug'>Debug Info <span id='spanParentInfo'></span></legend>
+      <div class='accordian-content'>
         <div class='col-left'>
           <div class='scroller'>
             <textarea id='ta-debug'></textarea>
@@ -79,8 +79,8 @@
     </fieldset>
 
     <fieldset>
-      <legend>Settings</legend>
-      <div>
+      <legend id='lgnd-settings' data-setting='lgnd-settings'>Settings</legend>
+      <div class='accordian-content'>
         <input type='checkbox' id='id-settings-show-debug-data'>
         <label for='id-settings-show-debug-data'>Show Debug Data</label>
       </div>

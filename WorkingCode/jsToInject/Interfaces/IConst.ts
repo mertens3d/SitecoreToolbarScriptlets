@@ -26,6 +26,11 @@ interface IConst {
       BtnCancel: string,
       btnClearDebugTextArea: string,
       SelStateSnapShot: string,
+      LgndHindSite: string,
+      LgndInSite: string,
+      LgndForeSite: string,
+      LgndDebug: string,
+      LgndSettings: string,
     }
 
     BtnEdit: string,
@@ -49,6 +54,9 @@ interface IConst {
   },
   ClassNames: {
     ContentTreeNode: string,
+    HS: {
+      Collapsed: string,
+    },
     SC: {
       scContentTreeNodeActive: string,
     }

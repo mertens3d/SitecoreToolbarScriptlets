@@ -3,11 +3,16 @@ class EventManager extends ManagerBase {
   constructor(xyyz: Hub) {
     super(xyyz);
   }
-  __ById(value) {
-    return document.getElementById(value);
-  }
+
   Init() {
     this.__wireMenuButtons();
+  }
+  __ById(value) {
+    var toReturn = document.getElementById(value);
+    if (!toReturn) {
+      this.debug().Error(this.__ById.name, 'No Id: ' + value);
+    }
+    return toReturn;
   }
   private __wireMenuButtons() {
     this.debug().FuncStart(EventManager.name + ' ' + this.__wireMenuButtons.name);
@@ -42,7 +47,34 @@ class EventManager extends ManagerBase {
     //this.__ById(this.Const().ElemId.SelSnapShot).onclick = () => { thisObj.Xyyz.debug.ClearTextArea(); };
     (<HTMLElement>document.querySelector(this.Const().Selector.XS.iCBoxdSettingsShowDebugData)).onclick = () => { this.UiMan().UpdateAtticFromUi(); };
 
+    // Legends
+
+    this.__ById(this.Const().ElemId.Hs.LgndHindSite).onclick = (evt) => { this.__toggleAccordian(evt) };
+    this.__ById(this.Const().ElemId.Hs.LgndDebug).onclick = (evt) => { this.__toggleAccordian(evt) };
+    this.__ById(this.Const().ElemId.Hs.LgndForeSite).onclick = (evt) => { this.__toggleAccordian(evt) };
+    this.__ById(this.Const().ElemId.Hs.LgndInSite).onclick = (evt) => { this.__toggleAccordian(evt) };
+    this.__ById(this.Const().ElemId.Hs.LgndSettings).onclick = (evt) => { this.__toggleAccordian(evt) };
+
     this.debug().FuncEnd(this.__wireMenuButtons.name);
+  }
+
+  private __toggleAccordian(evt: MouseEvent) {
+    this.debug().FuncStart(this.__toggleAccordian.name);
+    var srcElem: HTMLElement = <HTMLElement>(evt.target || evt.srcElement);
+    var foundContentSib = this.UiMan().GetAccordianContentElem(srcElem);
+
+    if (foundContentSib) {
+
+      var isCollapsed = foundContentSib.classList.contains(this.Const().ClassNames.HS.Collapsed);
+
+      var newVal = !isCollapsed;
+      this.UiMan().SetAccordianClass(foundContentSib, newVal)
+
+      this.AtticMan().UpdateAccodianState(srcElem.getAttribute('id'), newVal);
+    } else {
+      this.debug().Error(this.__toggleAccordian.name, 'did not find sib');
+    }
+    this.debug().FuncEnd(this.__toggleAccordian.name);
   }
 
   private __hndlrCancelOperation(evt: MouseEvent) {
@@ -96,8 +128,6 @@ class EventManager extends ManagerBase {
         await self.Xyyz.OneWindowMan.RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage)
           .then(() => { this.UiMan().NotifyComplete(targetWindow); })
           .then(() => {
-
-          
           });
       } else {
         self.debug().Error(this.__hndlrRestoreClick.name, 'no target window');
