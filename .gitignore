@@ -16,3 +16,6 @@ node_modules
 /WorkingCode/jsToInject/Tested/**/*.js.map
 /WorkingCode/jsToInject/Tested/**/*.js.map
 /Browser Addons/webextensions-examples-master/
+/src/jsToInject/**/*.js
+/dist.TsTranspiled/*
+/src/jsToInject/**/*.js.map

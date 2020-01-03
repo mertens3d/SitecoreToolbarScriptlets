@@ -6,7 +6,8 @@
     "alwaysStrict": false,
     "noImplicitUseStrict": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES6"
+    "target": "ES6",
+    "moduleResolution": "node"
   },
   "exclude": [
     "node_modules"

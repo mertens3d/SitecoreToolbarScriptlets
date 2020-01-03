@@ -17,6 +17,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,6 +40,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="webpack.config.js" />
     <None Include=".editorconfig" />
     <None Include=".jshintrc" />
     <None Include=".prettierrc" />
@@ -48,7 +50,6 @@
     <None Include="jsconfig.json" />
     <Content Include="Browser Addons\Firefox\borderify\icons\border-48.png" />
     <Content Include="Browser Addons\Firefox\borderify\borderify.js" />
-    <Content Include="Browser Addons\Firefox\HindSite\content_scripts\Bookmark.js" />
     <Content Include="Browser Addons\Firefox\HindSite\content_scripts\do-hind-site.js" />
     <Content Include="Browser Addons\Firefox\HindSite\content_scripts\HindSite.js" />
     <Content Include="Browser Addons\Firefox\HindSite\icons\border-48.png" />
@@ -59,105 +60,89 @@
     <Content Include="gulp.support\HIndSiteWindowOpener.js" />
     <Content Include="gulpfile.js" />
     <Content Include="Help\Help.txt" />
+    <Content Include="jest.config.js" />
     <Content Include="Other\RedButtonClick.js" />
     <Content Include="gulp.support\Secrets.example.js" />
     <Content Include="gulp.support\Secrets.js" />
-    <Content Include="WorkingCode\BrowserBookmarkCode\Debug.txt" />
-    <Content Include="WorkingCode\hindsiteWindowOpener\menu.debug.js" />
-    <Content Include="WorkingCode\HtmlToInject\menu.html" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataDebugSettings.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataPublishChain.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataWindow.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\InjectConst.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IGuid.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IConst.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IOneStorageData.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataBucketRestoreDesktop.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IScVerSpec.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\SitecoreUiManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Feedback.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\IIterationResults.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\NewWindowDest.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\GuidManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\Hub.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\LocationManager.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\Feedback.js">
-      <DependentUpon>Feedback.ts</DependentUpon>
+    <Content Include="src\BrowserBookmarkCode\Debug.txt" />
+    <Content Include="src\hindsiteWindowOpener\menu.debug.js">
+      <DependentUpon>menu.js</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneIframe.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\PageDataManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\MiscManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataSettings.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\UiManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Promises\PromiseChainQuickPublish.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Promises\PromiseChainRestoreDesktop.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Promises\PromiseGeneric.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\_first\_ManagerBase.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IDataOneWindow.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\Utilities.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\debug.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\Utilities.js">
-      <DependentUpon>Utilities.ts</DependentUpon>
-    </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\Classes\WindowData.js">
-      <DependentUpon>IterationHelper.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\EventManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Enums\WindowType.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\Storage.js" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneWindowManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneDesktopManager.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Trees.One.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Classes\IterationHelper.ts" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\zLast.ts" />
-    <Content Include="WorkingCode\jsToInject\Tested\zLast.js">
-      <DependentUpon>zLast.ts</DependentUpon>
-    </Content>
-    <Content Include="WorkingCode\jsToInject\Tested\_first.js">
-      <DependentUpon>_first.ts</DependentUpon>
-    </Content>
-    <Content Include="WorkingCode\hindsiteWindowOpener\Constants.js" />
-    <Content Include="WorkingCode\hindsiteWindowOpener\menu.js" />
+    <Content Include="src\HtmlToInject\menu.html" />
+    <TypeScriptCompile Include="src\jsToInject\Enums\scMode.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\DebugCallback.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\ICallbackDataDebugTextChanged.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataMenuWindowPrefs.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataOneDoc.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataOneStorageCE.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataOneTreeNode.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IscMode.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\ISitecoreUiManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Promises\PromiseOneStep.ts" />
+    <TypeScriptCompile Include="src\tests\foo.test.ts" />
+    <TypeScriptCompile Include="src\tests\IterationHelper.test.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataDebugSettings.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataPublishChain.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataBrowserWindow.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\InjectConst.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IGuid.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IConst.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IOneStorageData.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataBucketRestoreDesktop.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IScVerSpec.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\SitecoreUiManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\FeedbackManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Enums\IIterationResults.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Enums\NewWindowDest.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\GuidManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\Hub.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\LocationManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataOneIframe.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\PageDataManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\MiscManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataSettings.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\UiManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Promises\PromiseChainQuickPublish.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Promises\PromiseChainRestoreDesktop.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Promises\PromiseGeneric.ts" />
+    <TypeScriptCompile Include="src\jsToInject\_first\_ManagerBase.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IDataOneWindowStorage.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Classes\Utilities.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Classes\debug.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\EventManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Enums\scWindowType.ts" />
+    <Content Include="src\jsToInject\Storage.js" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\OneWindowManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\OneDesktopManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\OneTreeManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Classes\IterationHelper.ts" />
+    <TypeScriptCompile Include="src\jsToInject\zLast.ts" />
+    <Content Include="src\hindsiteWindowOpener\Constants.js" />
+    <Content Include="src\hindsiteWindowOpener\menu.js" />
     <None Include="Readme.md" />
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
-    <None Include="WorkingCode\jsToInject\Tested\Classes\Feedback.js.map">
-      <DependentUpon>Feedback.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Classes\Utilities.js.map">
-      <DependentUpon>Utilities.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\Classes\WindowData.js.map">
-      <DependentUpon>WindowData.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\zLast.js.map">
-      <DependentUpon>zLast.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\jsToInject\Tested\_first.js.map">
-      <DependentUpon>_first.js</DependentUpon>
-    </None>
-    <None Include="WorkingCode\StylesToInject\menu.scss" />
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\_first.ts" />
+    <None Include="src\StylesToInject\menu.scss" />
+    <TypeScriptCompile Include="src\jsToInject\_first.ts" />
+    <TypeScriptCompile Include="src\tests\SitecoreUiManager.Fake.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Browser Addons\Firefox\communication\" />
-    <Folder Include="WorkingCode\jsToInject\Tested\async\" />
-    <Folder Include="WorkingCode\jsToInject\Tested\Classes\Tree\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\OneCEManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\OneCEManager.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="gulp.support\OneInjectable.js" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Tested\Managers\AtticManager.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Managers\AtticManager.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Browser Addons\Firefox\HindSite\background.js" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="WorkingCode\jsToInject\Interfaces\IdataOneSetting.ts" />
+    <TypeScriptCompile Include="src\jsToInject\Interfaces\IdataOneSetting.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

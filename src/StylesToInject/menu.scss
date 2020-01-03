@@ -1,0 +1,221 @@
+$scBackgroundColor: #f7f7f7;
+$scHoverColor: #E3E3E3;
+$scLaunchPadBtnBackground: white;
+$scLaunchPageButtonHeight: 96px;
+$scLaunchPagebuttonWidth: 96px;
+$scTextColorLight: #ccc;
+$scTextColorNorm: #131313;
+
+$scSectionBackgroundColor: rgb(71, 71, 71);
+
+$selWidth: 500px;
+$scBackgroundImage: url(/sitecore/login/drop_wallpaper.jpg);
+$scAccordianUp: "/sitecore/shell/themes/standard/Images/accordion_up.png";
+
+// widths
+$padding: 4px;
+$margin: 4px;
+
+$colWidthOneUnit: 96px;
+
+$oneColWidth: $padding + $colWidthOneUnit;
+
+$selColWidth: $margin + $padding + $selWidth + $padding +$margin;
+
+$selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $scLaunchPagebuttonWidth + $padding +$margin + 40px;
+
+//heights
+
+.light-text {
+  color: $scTextColorLight;
+}
+
+.red {
+  background-color: red;
+}
+
+.preview-icon {
+  background-image: url(/~/icon/apps/32x32/Preview.png);
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+.admin-b-icon {
+  background-image: url(/~/icon/office/32x32/log_in.png);
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+.desktop-icon {
+  background-image: url(/temp/iconcache/apps/48x48/windows%20table.png);
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+button {
+  /*border-radius: 5px;*/
+  background: none;
+  background-color: $scLaunchPadBtnBackground;
+  background-size: 30px 30px;
+  border: 0;
+  border-radius: 0px;
+  box-shadow: none;
+  cursor: pointer;
+  height: $scLaunchPageButtonHeight;
+  height: 60px;
+  margin: 7px;
+  padding-top: 26px;
+  vertical-align: top;
+  white-space: normal;
+  width: $scLaunchPagebuttonWidth;
+  word-wrap: break-word;
+
+  &:hover {
+    background-color: $scHoverColor;
+  }
+}
+
+select {
+  /*height: 50px;*/
+  width: 100%;
+  font-family: Courier New, Courier, monospace;
+}
+
+.mono {
+  font-family: Courier New, Courier, monospace;
+
+  div {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: $scBackgroundColor;
+  padding-top: 14px;
+}
+
+.accordian-content {
+  display: flex;
+}
+
+legend {
+  /*background-color: green;*/
+  background: none;
+  background-color: $scSectionBackgroundColor;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  float: left;
+  left: -12px;
+  margin-top: 0;
+  padding-top: 0;
+  position: relative;
+  top: -12px;
+  width: 100%;
+
+  &:after {
+    content: url($scAccordianUp);
+    font-size: 13px;
+    color: #777;
+    float: right;
+    margin-left: 5px;
+  }
+}
+
+option {
+  color: black;
+  font-family: Courier New, Courier, monospace;
+}
+
+optgroup {
+  color: $scTextColorLight;
+  font-family: Courier New, Courier, monospace;
+}
+
+.col-6 {
+  display: flex;
+  flex-wrap: wrap;
+  width: $oneColWidth * 6;
+  align-content: flex-start;
+}
+
+.in {
+  display: none;
+}
+
+.col-6-btn {
+  display: flex;
+  flex-wrap: wrap;
+  float: right;
+  width: $selButtonColWidth;
+  /*border: 1px solid black;*/
+}
+
+.group {
+  border: 1px solid lightgray;
+  display: flex;
+  margin: $margin;
+  padding: $padding;
+  vertical-align: top;
+}
+
+body {
+  background-image: $scBackgroundImage;
+  background-size: cover;
+  background-color: $scBackgroundColor;
+  overflow: auto;
+  color: $scTextColorNorm;
+  background-repeat: no-repeat;
+}
+
+.col-right {
+}
+
+.col-full {
+  width: 100%;
+}
+
+.col-left {
+  display: flex;
+  vertical-align: top;
+  width: 75%;
+  /*button {
+    display: inline-block;
+    width: 100px;
+  }*/
+}
+
+.ta-wrapper {
+  width: 60%;
+  display: inline-block;
+
+  .ta-feedback {
+    height: 100px;
+    display: inline-block;
+    width: auto;
+  }
+}
+
+.scroller {
+  height: 160px;
+  display: inline-block;
+  width: 800px;
+  overflow: scroll;
+}
+
+textarea {
+  border: 0;
+  box-sizing: border-box;
+  display: inline-block;
+  height: 160px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0;
+  width: 1500px;
+  white-space: pre-wrap;
+}

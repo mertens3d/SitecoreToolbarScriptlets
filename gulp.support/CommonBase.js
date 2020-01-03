@@ -1,11 +1,11 @@
 ﻿class CommonBase {
   constructor() {
-    this.WorkingCodeRootDir = './WorkingCode';
+    this.WorkingCodeRootDir = './src';
     this.dist = './dist/';
     this.distFinal = this.dist + 'final/';
   }
   debugInfo() {
-    console.log('WorkingCodeRootDir: ' + this.WorkingCodeRootDir);
+    console.log('src: ' + this.src);
     console.log('dist: ' + this.dist);
     console.log('distFinal: ' + this.distFinal);
   }

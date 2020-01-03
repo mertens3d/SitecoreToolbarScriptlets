@@ -17,6 +17,9 @@ const WindowOpenerClass = require('./gulp.support/HindSiteWindowOpener.js');
 var InjectableClass = require('./gulp.support/OneInjectable.js');
 var sort = require('gulp-sort');
 var ts = require('gulp-typescript');
+const webpack_stream = require('webpack-stream')
+const webpack_config = require('./webpack.config.js');
+const webpack = require('webpack');
 
 var local = {
   Dest: ''
@@ -30,7 +33,7 @@ console.log('===================' + local.Dest);
 
 var htmlToInject = new InjectableClass('HtmlToInject', 'html', 'html');
 var jsToInject = new InjectableClass('jsToInject', 'js', 'js');
-jsToInject.WorkingCodeRootDir = jsToInject.dist + '/WorkingCode';
+jsToInject.WorkingCodeRootDir = jsToInject.dist + '/src';
 
 //jsToInject.SourceDirFilter = './WorkingCode/jsToInject/**/**/*.js';
 
@@ -94,7 +97,7 @@ gulp.task('combineJs', function () {
 });
 
 gulp.task('buildTypeScript', function () {
-  return gulp.src('./**/jsToInject/**/*.ts')
+  return gulp.src(['./**/jsToInject/**/*.ts'])//, '!./**/jsToInject/**/tests/**/*.ts'])
     .pipe(sort())
     .pipe(ts({
       'removeComments': true,
@@ -103,9 +106,10 @@ gulp.task('buildTypeScript', function () {
       'noImplicitUseStrict': true,
       'allowSyntheticDefaultImports': true,
       'target': 'es6',
-      'module': 'es6'
+      'module': 'es6',
+      'moduleResolution' : 'node'
     }))
-    .pipe(gulp.dest(jsToInject.dist));
+    .pipe(gulp.dest('./dist.TsTranspiled'));
 });
 
 gulp.task('buildJsToInject', function (done) {
@@ -209,8 +213,13 @@ gulp.task('putWindowOpenerToLocal', function (done) {
   }
   done();
 });
+//'combineJs', 'buildJsToInject',
 
+gulp.task('webpack', () => {
+  return webpack_stream(webpack_config)
+    .pipe(gulp.dest('dist'));
+});
 
-gulp.task('default', gulp.series(['cleanDist', 'buildStylesToInject', 'buildTypeScript', 'combineJs', 'buildJsToInject', 'buildHtmlToInject', 'buildWindowOpener', 'BookmarkText', 'putWindowOpenerToLocal']), function (resolve) {
+gulp.task('default', gulp.series(['cleanDist', 'buildStylesToInject', 'buildTypeScript', 'webpack', 'buildHtmlToInject', 'buildWindowOpener', 'BookmarkText', 'putWindowOpenerToLocal']), function (resolve) {
   resolve();
 });
