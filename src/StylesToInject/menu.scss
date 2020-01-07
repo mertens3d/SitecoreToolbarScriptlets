@@ -26,6 +26,8 @@ $selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $
 
 //heights
 
+@import 'menu.buttons.scss';
+
 .light-text {
   color: $scTextColorLight;
 }
@@ -34,20 +36,8 @@ $selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $
   background-color: red;
 }
 
-.preview-icon {
-  background-image: url(/~/icon/apps/32x32/Preview.png);
-  background-repeat: no-repeat;
-  background-position: top;
-}
-
 .admin-b-icon {
   background-image: url(/~/icon/office/32x32/log_in.png);
-  background-repeat: no-repeat;
-  background-position: top;
-}
-
-.desktop-icon {
-  background-image: url(/temp/iconcache/apps/48x48/windows%20table.png);
   background-repeat: no-repeat;
   background-position: top;
 }
@@ -206,6 +196,35 @@ body {
   display: inline-block;
   width: 800px;
   overflow: scroll;
+}
+
+.menu-overlay {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 999;
+
+  .overlay-gray {
+    background-color: $scSectionBackgroundColor;
+    bottom: 0;
+    left: 0;
+    opacity: 0.8;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .overlay-solid {
+    background: white;
+    border: 5px solid black;
+    margin: auto auto;
+    padding: 20px;
+    position: relative;
+    top: 50px;
+    width: 60%;
+  }
 }
 
 textarea {

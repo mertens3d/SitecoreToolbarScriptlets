@@ -8,9 +8,14 @@ export class IterationHelper extends ManagerBase {
   private __timeout: number;
   IsExhausted: boolean;
 
-  constructor(xyyz: Hub, maxIterations: number, nickname: string) {
+  constructor(xyyz: Hub, nickname: string, maxIterations: number = null) {
     super(xyyz);
     //xyyz.debug.FuncStart('ctor: ' + IterationHelper.name, nickname);
+
+    if (!maxIterations) {
+      maxIterations = this.Const().IterHelper.MaxCount.Default;
+    }
+
     this.__maxIterations = maxIterations;
     this.__currentIteration = maxIterations;
     this.__timeout = xyyz.Const.IterHelper.Timeouts.Default;

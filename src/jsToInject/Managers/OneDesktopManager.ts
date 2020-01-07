@@ -60,7 +60,7 @@ export class OneDesktopManager extends ManagerBase {
     this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
     var toReturn: IDataOneIframe = null;
 
-    var iterationJr = new IterationHelper(this.Xyyz, 10, this.WaitForIframeCountDiffWorker.name)
+    var iterationJr = new IterationHelper(this.Xyyz,  this.WaitForIframeCountDiffWorker.name)
 
     while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
       let beforeCount: number = IFramesbefore.length;

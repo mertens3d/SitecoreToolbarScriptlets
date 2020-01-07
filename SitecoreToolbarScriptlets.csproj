@@ -1,6 +1,7 @@
 ﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{904A3DDE-396B-413F-B46E-C53FD4498BE6}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -8,6 +9,7 @@
     <AssemblyName>ClassLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +42,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="src\BrowserBookmarkCode\Debug.txt" />
+    <Content Include="src\BrowserBookmarkCode\Debug.txt.backup.txt" />
     <Content Include="webpack.config.js" />
     <None Include=".editorconfig" />
     <None Include=".jshintrc" />
@@ -64,7 +68,6 @@
     <Content Include="Other\RedButtonClick.js" />
     <Content Include="gulp.support\Secrets.example.js" />
     <Content Include="gulp.support\Secrets.js" />
-    <Content Include="src\BrowserBookmarkCode\Debug.txt" />
     <Content Include="src\hindsiteWindowOpener\menu.debug.js">
       <DependentUpon>menu.js</DependentUpon>
     </Content>
@@ -120,6 +123,7 @@
     <Content Include="src\hindsiteWindowOpener\Constants.js" />
     <Content Include="src\hindsiteWindowOpener\menu.js" />
     <None Include="Readme.md" />
+    <None Include="src\StylesToInject\menu.buttons.scss" />
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
     <None Include="src\StylesToInject\menu.scss" />

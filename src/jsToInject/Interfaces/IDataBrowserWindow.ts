@@ -1,4 +1,4 @@
-﻿import { scWindowType } from '../enums/WindowType';
+﻿import { scWindowType } from '../enums/scWindowType';
 import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
 
 export interface IDataBrowserWindow {

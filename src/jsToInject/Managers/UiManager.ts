@@ -8,6 +8,11 @@ import { IDataMenuWindowPrefs } from '../Interfaces/IDataMenuWindowPrefs';
 export class UiManager extends ManagerBase {
   private __selectSnapshotIndex: number = 0;
   OperationCancelled: any;
+  TabId: string;
+  ParentFocused: boolean = false;
+  MenuFocused: boolean = true;
+  OtherFocused: boolean = false;
+  MenuEnabled: boolean = true;
 
   constructor(xyyz: Hub) {
     super(xyyz);
@@ -20,30 +25,152 @@ export class UiManager extends ManagerBase {
     var self = this;
     this.debug().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
 
+    //this.WriteTabId();
     var prefs: IDataMenuWindowPrefs = this.AtticMan().CurrentSettings().MenuPrefs;
 
     if (prefs.MenuX && prefs.MenuY) {
       var currentX = window.screenLeft;
       var currentY = window.screenTop;
-      var deltaX = Math.abs( prefs.MenuX - currentX);
-      var deltaY = Math.abs( prefs.MenuY - currentY);
-
-
-
-
+      var deltaX = Math.abs(prefs.MenuX - currentX);
+      var deltaY = Math.abs(prefs.MenuY - currentY);
 
       window.moveTo(Math.abs(prefs.MenuX), Math.abs(prefs.MenuY));
     }
     if (prefs.MenuWidth && prefs.MenuHeight) {
-      window.resizeTo(Math.abs(prefs.MenuWidth), Math.abs(prefs.MenuHeight));
+      if (prefs.MenuHeight < this.Const().Numbers.MinMenuHeight) {
+        prefs.MenuHeight = this.Const().Numbers.MinMenuHeight;
+      }
 
+      if (prefs.MenuWidth < this.Const().Numbers.MinMenuWidth) {
+        prefs.MenuWidth = this.Const().Numbers.MinMenuWidth;
+      }
+      window.resizeTo(Math.abs(prefs.MenuWidth), Math.abs(prefs.MenuHeight));
     }
 
+    this.__wireParentFocusCheck();
+
     this.RefreshUi();
-    this.debug().LogVal('dddd', 'dddd');
   }
+
+  private __wireParentFocusCheck() {
+    //this.PageDataMan().TopLevelWindow().DataDocSelf.Document.addEventListener('focus', () => { alert('vis change'); })
+    this.PageDataMan().TopLevelWindow().DataDocSelf.Document.addEventListener('focus', () => { this.OnParentFocused(true); })
+    this.PageDataMan().TopLevelWindow().DataDocSelf.Document.addEventListener('blur', () => { this.OnParentFocused(false); })
+
+    window.addEventListener('focus', () => { this.OnMenuFocused(true); })
+    window.addEventListener('blur', () => { this.OnMenuFocused(false); })
+  }
+
+  OnParentFocused(isFocused: boolean) {
+    this.ParentFocused = isFocused;
+    this.CalculateMenuDisplay();
+  }
+
+  OnMenuFocused(isFocused: boolean) {
+    this.MenuFocused = isFocused;
+    this.CalculateMenuDisplay();
+  }
+
+  CalculateMenuDisplayDelayed(self: UiManager) {
+    // user opens sc -> nothing
+    // user opens Hs -> wire, set menuBlur = false, parentBlur = true;
+    // user selects parent -> trigger menu enabled
+    // user selects other window, unless it is menu -> blur menu
+
+    if (!self.ParentFocused && !self.MenuFocused) {
+      self.OtherFocused = true;
+    }
+
+    if (self.ParentFocused) {
+      self.OtherFocused = false;
+    }
+    self.MenuEnabled = !self.OtherFocused && (self.ParentFocused || self.MenuFocused);
+
+    self.debug().Log('');
+    self.debug().LogVal('ParentFocused', self.ParentFocused.toString());
+    self.debug().LogVal('MenuFocused', self.MenuFocused.toString());
+    self.debug().LogVal('OtherFocused', self.OtherFocused.toString());
+    self.debug().Log('');
+
+    //if (!this.ParentFocused && !this.MenuFocused) {
+    //  this.OtherFocused = true;
+    //}
+
+    //if (this.ParentFocused && !this.MenuFocused) {
+    //  this.MenuEnabled = true;
+    //}
+
+    //if (   this.MenuFocused)
+
+    var menuOverlay: HTMLElement = document.querySelector(self.Const().Selector.HS.menuOverlay);
+    if (menuOverlay) {
+      if (self.MenuEnabled) {
+        menuOverlay.style.display = 'none';
+      } else
+        menuOverlay.style.display = '';
+    }
+  }
+
+  CalculateMenuDisplay() {
+    var self = this;
+    setTimeout(() => { this.CalculateMenuDisplayDelayed(self); }, 100);
+    setTimeout(() => { this.CalculateMenuDisplayDelayed(self); }, 1000);
+  }
+
+  WriteTabId() {
+    this.TabId = new Date().getTime().toString();
+    this.WriteDocIdTo(this.PageDataMan().TopLevelWindow().Window.document, this.TabId);
+    //this.WriteDocIdTo(document, this.TabId);
+  }
+
+  WriteDocIdTo(targetDoc: Document, documentId: string) {
+    this.debug().FuncStart(this.WriteDocIdTo.name, documentId);
+    if (targetDoc) {
+      this.RemoveExistingTabId(targetDoc);
+      var foreSiteIdDivOrig = targetDoc.createElement('div');
+      foreSiteIdDivOrig.id = this.Const().ElemId.HS.TabId;
+      foreSiteIdDivOrig.innerText = documentId;
+      targetDoc.body.appendChild(foreSiteIdDivOrig);
+    } else {
+      this.debug().Error(this.WriteDocIdTo.name, 'no target window');
+    }
+
+    this.debug().FuncEnd(this.WriteDocIdTo.name, documentId.toString());
+  }
+
+  RemoveExistingTabId(targetDoc: Document) {
+    var foundTabId: HTMLElement = targetDoc.querySelector(this.Utilites().MakeSelectorFromId(this.Const().ElemId.HS.TabId));
+    if (foundTabId) {
+      targetDoc.removeChild(foundTabId);
+    }
+  }
+
+  VerifyTabMatch() {
+    //todo - maybe with communication between the two
+
+    //var parentIdWrapper = <HTMLElement>this.PageDataMan().TopLevelWindow().Window.document.querySelector(this.Utilites().MakeSelectorFromId(this.Const().ElemId.HS.TabId));
+    //var matches: boolean = false;
+
+    //if (parentIdWrapper) {
+    //  var parentId = parentIdWrapper.innerText;
+    //  this.debug().LogVal('id for match', parentId);
+
+    //  if (parentId && parentId === this.TabId) {
+    //    matches = true;
+    //  }
+    //}
+
+    //var menuOverlay: HTMLElement = document.querySelector(this.Const().Selector.HS.menuOverlay);
+    //if (menuOverlay) {
+    //  if (matches) {
+    //    menuOverlay.style.display = 'none';
+    //  } else
+    //    menuOverlay.style.display = '';
+    //}
+  }
+
   __getTextArea(): HTMLTextAreaElement {
-    return <HTMLTextAreaElement>document.getElementById(this.Const().ElemId.Hs.TaDebug);
+    return <HTMLTextAreaElement>document.getElementById(this.Const().ElemId.HS.TaDebug);
   }
 
   HndlrDebugTextChanged(caller: any, data: ICallbackDataDebugTextChanged) {
@@ -69,12 +196,9 @@ export class UiManager extends ManagerBase {
   }
 
   NotifyComplete(targetWindow: IDataBrowserWindow = null, Message: string = this.Const().Notify.Default): void {
-
-
     if (!targetWindow) {
       targetWindow = this.PageDataMan().TopLevelWindow();
     }
-
 
     let bodyTag = targetWindow.DataDocSelf.Document.getElementsByTagName('body')[0];//(treeGlyphTargetId);
 
@@ -86,8 +210,6 @@ export class UiManager extends ManagerBase {
     flagElem.style.backgroundColor = 'yellow';
     flagElem.style.zIndex = '999';
     flagElem.style.fontSize = '40px';
-
-    console.log(flagElem.toString());
 
     setTimeout(function () {
       flagElem.remove();
@@ -138,7 +260,7 @@ export class UiManager extends ManagerBase {
     this.debug().FuncStart(this.UpdateAtticFromUi.name);
 
     let currentSettings = this.AtticMan().CurrentSettings();
-    let currentVal = (<HTMLInputElement>document.querySelector(this.Const().Selector.XS.iCBoxdSettingsShowDebugData)).checked;
+    let currentVal = (<HTMLInputElement>document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowDebugData)).checked;
     this.debug().LogVal('currentVal', currentVal.toString())
     currentSettings.DebugSettings.ShowDebugData = currentVal;
 
@@ -161,7 +283,7 @@ export class UiManager extends ManagerBase {
   }
 
   private __GetCancelButton() {
-    return document.getElementById(this.Const().ElemId.Hs.BtnCancel);
+    return document.getElementById(this.Const().ElemId.HS.BtnCancel);
   }
 
   SetCancelFlag() {
@@ -182,7 +304,7 @@ export class UiManager extends ManagerBase {
 
   __refreshSettings() {
     this.debug().FuncStart(this.__refreshSettings.name);
-    let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(this.Const().Selector.XS.IdFieldSetDebug);
+    let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(this.Const().Selector.HS.IdFieldSetDebug);
 
     let currentSettings: IDataSettings = this.AtticMan().CurrentSettings();
     if (currentSettings) {
@@ -190,7 +312,7 @@ export class UiManager extends ManagerBase {
         let newDisplay = this.AtticMan().CurrentSettings().DebugSettings.ShowDebugData ? '' : 'none';
         debugFieldSet.style.display = newDisplay;
       }
-      let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(this.Const().Selector.XS.iCBoxdSettingsShowDebugData);
+      let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowDebugData);
       if (checkBoxShowDebug) {
         this.debug().LogVal('before', checkBoxShowDebug.checked.toString());
         checkBoxShowDebug.checked = currentSettings.DebugSettings.ShowDebugData;
@@ -237,7 +359,7 @@ export class UiManager extends ManagerBase {
   }
 
   private __getSelectElem(): HTMLSelectElement {
-    return <HTMLSelectElement>window.document.getElementById(this.Const().ElemId.Hs.SelStateSnapShot);
+    return <HTMLSelectElement>window.document.getElementById(this.Const().ElemId.HS.SelStateSnapShot);
   }
 
   GetIdOfSelectWindowSnapshot(): IGuid {
@@ -246,11 +368,15 @@ export class UiManager extends ManagerBase {
     var targetSel: HTMLSelectElement = this.__getSelectElem();
     var toReturn: IGuid = null;
     if (targetSel) {
-      var temp = targetSel.options[this.__selectSnapshotIndex].value;
-      //this.debug().Log('temp: ' + temp);
-      toReturn = this.GuidMan().ParseGuid(temp);
+      var optionsLength = targetSel.options.length;
+      if (this.__selectSnapshotIndex < optionsLength) {
+        var temp = targetSel.options[this.__selectSnapshotIndex].value;
+        //this.debug().Log('temp: ' + temp);
+        toReturn = this.GuidMan().ParseGuid(temp);
+        this.debug().LogVal('toReturn', toReturn.asString);
+      }
     }
-    this.debug().FuncEnd(this.GetIdOfSelectWindowSnapshot.name, 'idOfSelect: ' + toReturn.asString);
+    this.debug().FuncEnd(this.GetIdOfSelectWindowSnapshot.name);
     return toReturn;
   }
 

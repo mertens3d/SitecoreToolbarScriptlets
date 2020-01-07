@@ -1,3 +1,3 @@
 var constants = {
-    taDebug : 'ta-debug',
-}
+  taDebug: 'ta-debug'
+};

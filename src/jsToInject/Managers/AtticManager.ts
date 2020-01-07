@@ -15,15 +15,16 @@ export class AtticManager extends ManagerBase {
     xyyz.debug.FuncStart(AtticManager.name);
 
     xyyz.debug.FuncEnd(AtticManager.name);
+
   }
 
   Init() {
     this.eventAwesome = new CustomEvent('awesome', { detail: 'some detail' });
   }
 
-  functioneventHandler(e) {
-    console.log('this data is ' + e.detail);
-  }
+  //functioneventHandler(e) {
+  //  console.log('this data is ' + e.detail);
+  //}
 
   UpdateMenuCoords(menuData: IDataMenuWindowPrefs) {
     var settings: IDataSettings = this.CurrentSettings();
@@ -33,7 +34,7 @@ export class AtticManager extends ManagerBase {
 
 
   UpdateNickname(self: AtticManager) {
-    self.debug().FuncStart(self.UpdateNickname);
+    self.debug().FuncStart(self.UpdateNickname.name);
 
     var targetId: IGuid = self.UiMan().GetIdOfSelectWindowSnapshot();
     if (targetId) {
@@ -273,7 +274,7 @@ export class AtticManager extends ManagerBase {
     return toReturn;
   }
   WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
-    this.debug().FuncStart(this.WriteToStorage);
+    this.debug().FuncStart(this.WriteToStorage.name);
 
     var snapShotAsString = JSON.stringify(dataOneWindow);
     this.debug().Log('snapShotAsString: ' + snapShotAsString);

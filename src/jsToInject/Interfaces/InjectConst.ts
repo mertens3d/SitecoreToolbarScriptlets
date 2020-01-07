@@ -1,5 +1,5 @@
-import { IConst } from "./IConst";
-import { scMode } from "../Enums/scMode";
+import { IConst } from './IConst';
+import { scMode } from '../Enums/scMode';
 
 /* publish
  *
@@ -51,6 +51,8 @@ export class InjectConst {
   static const: IConst = {
     Numbers: {
       ShortGuidLength: 4,
+      MinMenuHeight: 600,
+      MinMenuWidth: 600,
     },
     Iterations: {
       MaxSetHrefEffort: 10,
@@ -65,8 +67,8 @@ export class InjectConst {
       GrowthPerIteration: 0.5,
 
       MaxCount: {
-      OverridePublishing: 15,
-        Default: 100,
+        Default: 10,
+        OverridePublishing: 15,
       },
       Timeouts: {
         Max: 10000,
@@ -74,7 +76,7 @@ export class InjectConst {
       },
     },
     ElemId: {
-      Hs: {
+      HS: {
         BtnAdminB: 'btnAdminB',
         BtnCancel: 'btnCancel',
         BtnCE: 'btnCE',
@@ -96,6 +98,7 @@ export class InjectConst {
         LgndInSite: 'lgnd-in-site',
         LgndSettings: 'lgnd-settings',
         SelStateSnapShot: 'selState',
+        TabId: 'orig-win-id',
         TaDebug: 'ta-debug',
       },
       HindSiteParentInfo: 'spanParentInfo',
@@ -145,9 +148,10 @@ export class InjectConst {
       PublishComplete: 'Publishing Complete',
     },
     Selector: {
-      XS: {
-        IdFieldSetDebug: '[id=id-fieldset-debug]',
+      HS: {
         iCBoxdSettingsShowDebugData: '[id=id-settings-show-debug-data]',
+        IdFieldSetDebug: '[id=id-fieldset-debug]',
+        menuOverlay: '[id=id-menu-overlay]',
       },
       SC: {
         ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',

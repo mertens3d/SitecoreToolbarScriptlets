@@ -28,7 +28,7 @@ export class Debug {
       this.Log(this.debugPrefix + 'dataOneDoc.Document: \t' + this.IsNullOrUndefined(dataOneDoc.Document));
 
       if (dataOneDoc.Document) {
-        this.LogVal(this.debugPrefix + 'dataOneDoc.Document.readyState:' ,dataOneDoc.Document.readyState);
+        this.LogVal(this.debugPrefix + 'dataOneDoc.Document.readyState:', dataOneDoc.Document.readyState);
         if (dataOneDoc.Document.location) {
           this.LogVal(this.debugPrefix + 'targetDoc.location.href', dataOneDoc.Document.location.href);
         } else {
@@ -44,7 +44,7 @@ export class Debug {
   }
 
   AddDebugTextChangedCallback(caller: any, callback: Function): void {
-    console.log('========================================');
+    //console.log('========================================');
     this.__debugTextChangedCallbacks.push({
       Caller: caller,
       Func: callback
@@ -130,21 +130,32 @@ export class Debug {
       oneCallback.Func(oneCallback.Caller, data);
     }
   }
-  //FuncStartFunc(func) {
-  //  this.FuncStartName(func.name);
-  //}
 
   CtorName(ctorName: string) {
     this.Log('Constructor: ' + ctorName);
   }
 
-  FuncStart(textOrFunc, optionalValue: string = '') {
+  //NotNullOrUndefined(subjectAnyAr: any[], label?: string, iterationCheck?: number): boolean;
+  //NotNullOrUndefined(subjectAny: any, label?: string, iterationCheck?: number);
+  //NotNullOrUndefined(subjectAnyOrAr: any | any[], label: string = '', iterationCheck: number = null): boolean {
+
+  FuncStart(textOrFunc: string, optionalValue?: number): void;
+  FuncStart(textOrFunc: string, optionalValue?: string ): void;
+  FuncStart(textOrFunc: string, optionalValue: number | string): void {
     textOrFunc = 's) ' + textOrFunc;
 
-    if (typeof (textOrFunc) === 'function') {
-      console.log('******* is func *************');
-      textOrFunc = textOrFunc.name;
+    
+
+    if (!optionalValue) {
+      optionalValue = '';
+    } else {
+      optionalValue = optionalValue.toString();
     }
+
+    //if (typeof (textOrFunc) === 'function') {
+    //  console.log('******* is func *************');
+    //  textOrFunc = textOrFunc.name;
+    //}
 
     if (optionalValue.length > 0) {
       textOrFunc = textOrFunc + ' : ' + optionalValue;

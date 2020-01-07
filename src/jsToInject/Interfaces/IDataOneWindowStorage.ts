@@ -1,4 +1,4 @@
-﻿import { scWindowType } from '../Enums/WindowType';
+﻿import { scWindowType } from '../Enums/scWindowType';
 import { IDataOneStorageCE } from '../Interfaces/IDataOneStorageCE';
 
 export interface IDataOneWindowStorage {

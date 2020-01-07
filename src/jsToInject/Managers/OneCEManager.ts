@@ -86,7 +86,7 @@ export class OneCEManager extends ManagerBase {
     this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
     this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
 
-    var iterHelper = new IterationHelper(this.Xyyz, 2, this.WaitForAndRestoreOneNode.name);
+    var iterHelper = new IterationHelper(this.Xyyz,this.WaitForAndRestoreOneNode.name);
 
     var foundOnPageTreeGlyph: HTMLElement = null;
 
@@ -120,7 +120,7 @@ export class OneCEManager extends ManagerBase {
     this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.XyyzId.asShort);
 
     if (!iterHelper) {
-      iterHelper = new IterationHelper(this.Xyyz, 10, this.WaitForAndRestoreManyAllNodes.name);
+      iterHelper = new IterationHelper(this.Xyyz, this.WaitForAndRestoreManyAllNodes.name);
     }
 
     while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {

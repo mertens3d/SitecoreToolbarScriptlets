@@ -8,7 +8,7 @@ test('basic', () => {
   let debug = new Debug(window.opener);
   let ScUiManFake: iSitecoreUiManager = new SitecoreUiManagerFake(debug);
   var hub = new Hub(ScUiManFake, debug);
-  var iterHelper = new IterationHelper(hub, 1, 'test-1');
+  var iterHelper = new IterationHelper(hub,  'test-1',1);
 
   expect(iterHelper.DecrementAndKeepGoing).toBe(true);
 });

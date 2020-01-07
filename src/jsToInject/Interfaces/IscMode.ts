@@ -1,4 +1,4 @@
-﻿import { scMode } from "../Enums/scMode";
+﻿import { scMode } from '../Enums/scMode';
 
 export interface IscMode {
     asEnum: scMode;

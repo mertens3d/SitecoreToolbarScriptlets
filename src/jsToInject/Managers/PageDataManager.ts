@@ -101,8 +101,7 @@ export class PageDataManager extends ManagerBase {
     }
 
     this.UiMan().SetParentInfo(this.__winDataParent);
-    console.log('PageData C');
-    this.DebugInfo();
+
     this.debug().FuncEnd(this.Init.name);
   }
 

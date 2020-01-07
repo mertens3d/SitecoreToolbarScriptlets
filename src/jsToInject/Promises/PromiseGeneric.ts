@@ -18,7 +18,7 @@ export class PromiseGeneric extends ManagerBase {
 
       this.debug().DebugDataOneIframe(dataOneIframe);
 
-      var iterationJr: IterationHelper = new IterationHelper(this.Xyyz, 10, this.WaitForReadyIframe.name);
+      var iterationJr: IterationHelper = new IterationHelper(this.Xyyz, this.WaitForReadyIframe.name);
 
       var isReady: boolean = false;
       this.debug().MarkerA();
@@ -81,7 +81,7 @@ export class PromiseGeneric extends ManagerBase {
 
       var found: HTMLElement = null;
 
-      var iterationJr = new IterationHelper(this.Xyyz, overrideIterCount, this.WaitForAndReturnFoundElem.name);
+      var iterationJr = new IterationHelper(this.Xyyz, this.WaitForAndReturnFoundElem.name, overrideIterCount);
 
       while (!found && iterationJr.DecrementAndKeepGoing()) {
         this.debug().LogVal('targetDoc.Document', targetDoc.Document.toString());
@@ -111,7 +111,7 @@ export class PromiseGeneric extends ManagerBase {
   async WaitForPageReadyNative(targetWindow: IDataBrowserWindow) {
     return new Promise(async (resolve, reject) => {
       this.debug().FuncStart(this.WaitForPageReadyNative.name);
-      let iterationJr = new IterationHelper(this.Xyyz, 5, this.WaitForThenClick.name);
+      let iterationJr = new IterationHelper(this.Xyyz,  this.WaitForThenClick.name, 5);
       var loaded: boolean = false;
 
       if (this.MiscMan().NotNullOrUndefined(targetWindow, this.WaitForPageReadyNative.name + ' document'))
@@ -180,7 +180,7 @@ export class PromiseGeneric extends ManagerBase {
 
         var found: HTMLElement = null;
 
-        var iterationJr = new IterationHelper(this.Xyyz, 10, this.WaitForThenClick.name);
+        var iterationJr = new IterationHelper(this.Xyyz,  this.WaitForThenClick.name);
 
         while (!found && iterationJr.DecrementAndKeepGoing() && !this.UiMan().OperationCancelled) {
           found = targetDoc.Document.querySelector(selector);

@@ -46,6 +46,7 @@ var myResources = function (fileName, varName) {
   console.log('s) myResources: fileName: ' + fileName + ' : ' + varName);
   var fileContent = fs.readFileSync(fileName, 'utf8');
   fileContent = fileContent.replace(/\r|\n/gi, '');
+  fileContent = fileContent.replace(/"/gi, '\'');
   var toReturn = 'var ' + varName + ' = \"' + fileContent + '\";'; // + '\r\n';
   console.log('-----------------------');
   //console.log(toReturn);
@@ -136,7 +137,24 @@ gulp.task('buildWindowOpener', function (done) {
   console.log('Dest: ' + WindowOpener.dist);
 
   var cssToInjectWithVar = myResources(stylesToInject.dist + stylesToInject.MinFileName, stylesToInject.VarName);
+
+
+  
+
   var htmlToInjectWithVar = myResources(htmlToInject.dist + htmlToInject.MinFileName, htmlToInject.VarName);
+
+  htmlToInjectWithVar = htmlToInjectWithVar.replace( /<!doctype html>/gi,'');
+  htmlToInjectWithVar = htmlToInjectWithVar.replace( /<html>/gi,'');
+  htmlToInjectWithVar = htmlToInjectWithVar.replace( /<head>.*<\/head>/gi,'');
+  htmlToInjectWithVar = htmlToInjectWithVar.replace( /<body>/gi,'');
+  htmlToInjectWithVar = htmlToInjectWithVar.replace( /<\/body>/gi,'');
+  htmlToInjectWithVar = htmlToInjectWithVar.replace( /<script.*\/script>/gi,'');
+  htmlToInjectWithVar = htmlToInjectWithVar.replace( /<\/html>/gi,'');
+  htmlToInjectWithVar = htmlToInjectWithVar.replace( />\s*?</gi,'><');
+  //let regex = /<!doctype html.*\/head>/gi;
+
+   //htmlToInjectWithVar = htmlToInjectWithVar.replace(regex, '');
+
   var jsToInjectWithVar = myResources(jsToInject.dist + jsToInject.MinFileName, jsToInject.VarName);
 
   console.log('compiling');

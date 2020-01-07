@@ -1,4 +1,4 @@
-﻿import { IDataMenuWindowPrefs } from "./IDataMenuWindowPrefs";
+﻿import { IDataMenuWindowPrefs } from './IDataMenuWindowPrefs';
 
 export interface IDataSettings {
   MenuPrefs: IDataMenuWindowPrefs;

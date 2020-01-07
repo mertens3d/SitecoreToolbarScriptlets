@@ -13,15 +13,15 @@
     <fieldset>
       <legend id='lgnd-fore-site'>Fore&bull;Site</legend>
       <div class='accordian-content'>
-        <button id='btnEdit' type='button'>Edit</button>
-        <button id='btnPrev' type='button' class='preview-icon'>Preview</button>
-        <button id='btnNorm' type='button'>Normal</button>
-        <button id='btnAdminB' type='button'>Admin B</button>
-        <button id='btnDesktop' type='button' class='desktop-icon'>Desktop</button>
-        <button id='btnCE' type='button'>Content Editor</button>
-        <button id='btnBigRed' type='button'>Add CE Tab to DT</button>
-        <button id='btnQuickPublish' type='button'>Quick Publish</button>
-        <button id='btnPresentationDetails' type='button'>Presentation Details</button>
+        <button id='btnEdit' type='button' class='icon edit'>Edit</button>
+        <button id='btnPrev' type='button' class='icon preview-icon'>Preview</button>
+        <button id='btnNorm' type='button' class='icon normal'>Normal</button>
+        <button id='btnAdminB' type='button' class='icon admin-b'>Admin B</button>
+        <button id='btnDesktop' type='button' class='icon desktop-icon'>Desktop</button>
+        <button id='btnCE' type='button' class='icon content-editor'>Content Editor</button>
+        <button id='btnBigRed' type='button' class='icon add-ce-tab'>Add CE Tab to DT</button>
+        <button id='btnQuickPublish' type='button' class='icon publish'>Quick Publish</button>
+        <button id='btnPresentationDetails' type='button' class='icon details'>Presentation Details</button>
       </div>
     </fieldset>
 
@@ -29,22 +29,20 @@
       <legend id='lgnd-hind-site' data-setting='lgnd-hind-site'>Hind&bull;Site</legend>
       <div class='accordian-content'>
         <div class='col-6'>
-          <button id='btnSaveWindowState' type='button'>Take Snapshot</button>
-          <div class='mono light-text'><pre> Time Stamp          - Page Type - Nickname       - Favorite?</pre></div>
-
+          <button id='btnSaveWindowState' type='button' class='icon take-snapshot'>Take Snapshot</button>
           <!--<input type='checkbox' /> todo favorites only-->
           <select id='selState' size='6'>
           </select>
         </div>
         <div class='col-6-btn'>
           <input type='text' id='inputNickname' value='' placeholder='Nick Name'>
-          <button id='btnUpdateNickname' type='button'>Set Nickname</button>
-          <button id='btnToggleFavorite' type='button'>Toggle Favorite</button>
-          <button id='btnRemoveOneFromLocalStorage' type='button'>Delete Snapshot</button>
+          <button id='btnUpdateNickname' type='button' class='icon set-nickname'>Set Nickname</button>
+          <button id='btnToggleFavorite' type='button' class='icon favorite'>Toggle Favorite</button>
+          <button id='btnRemoveOneFromLocalStorage' type='button' class='icon delete-snapshot'>Delete Snapshot</button>
 
-          <button id='btnRestoreWindowState' type='button'>Restore Snapshot</button>
+          <button id='btnRestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
 
-          <button id='btnCancel' type='button'>Cancel</button>
+          <button id='btnCancel' type='button' class='icon cancel'>Cancel</button>
         </div>
       </div>
     </fieldset>
@@ -58,7 +56,7 @@
           </div>
         </div>
         <div class='col-right'>
-          <button id='btnDrawLocalStorage' type='button'>Draw Local Storage</button>
+          <button id='btnDrawLocalStorage' type='button' class='icon draw-storage'>Draw Local Storage</button>
         </div>
       </div>
     </fieldset>
@@ -71,19 +69,35 @@
             <textarea id='ta-debug'></textarea>
           </div>
         </div>
-
       </div>
     </fieldset>
 
     <fieldset>
-      <legend id='lgnd-settings' data-setting='lgnd-settings'>Settings</legend>
+      <legend id='lgnd-settings' data-setting='lgnd-settings'>Settings/ Stats</legend>
       <div class='accordian-content'>
         <input type='checkbox' id='id-settings-show-debug-data'>
         <label for='id-settings-show-debug-data'>Show Debug Data</label>
+
+        <div id='stat-caller-id'></div>
+        <div id='stat-self-id'></div>
       </div>
     </fieldset>
   </form>
 
+  <div class='menu-overlay' id='id-menu-overlay' style=''>
+    <div class='overlay-gray'></div>
+    <div class='overlay-solid'>
+      This menu is not controlled by the previously selected window.
+      <br>
+      Options
+      <ul>
+        <li>Select the sitecore window that opened this menu and then click back here.</li>
+        <li>Rerun from the bookmarks button. That will hand over control to the current window</li>
+        <li>Close and rerun from the bookmarks button</li>
+      </ul>
+      This restriction is in place to avoid inadvertantly changing a hidden browser window.
+    </div>
+  </div>
   <script type='module' src='jstoinject.min.js'>
   </script>
 </body>

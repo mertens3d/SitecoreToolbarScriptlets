@@ -1,10 +1,10 @@
 import { IscMode } from '../Interfaces/IscMode';
 
-console.log('IConst loaded');
-
 export interface IConst {
   Numbers: {
     ShortGuidLength: number,
+    MinMenuHeight: number,
+    MinMenuWidth: number,
   },
   Iterations: {
     MaxSetHrefEffort: number,
@@ -28,7 +28,7 @@ export interface IConst {
   },
 
   ElemId: {
-    Hs: {
+    HS: {
       BtnAdminB: string,
       BtnCancel: string,
       BtnCE: string,
@@ -43,14 +43,15 @@ export interface IConst {
       BtnSaveWindowState: string,
       btnToggleFavoriteB: string,
       btnUpdateNicknameB: string,
+      HsBtnBigRed: string,
       LgndDebug: string,
       LgndForeSite: string,
       LgndHindSite: string,
       LgndInSite: string,
       LgndSettings: string,
       SelStateSnapShot: string,
+      TabId: string,
       TaDebug: string,
-      HsBtnBigRed: string,
     }
 
     HindSiteParentInfo: string,
@@ -89,9 +90,11 @@ export interface IConst {
     PublishComplete : string,
   },
   Selector: {
-    XS: {
-      IdFieldSetDebug: string,
+    HS: {
       iCBoxdSettingsShowDebugData: string,
+      IdFieldSetDebug: string,
+      menuOverlay: string,
+     
     }
     SC: {
       ContentTreeNodeGlyph: string,

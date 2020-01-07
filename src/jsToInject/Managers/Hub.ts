@@ -17,6 +17,7 @@ import { UiManager } from '../Managers/UiManager';
 import { Utilities } from '../Classes/Utilities';
 import { iSitecoreUiManager } from '../interfaces/ISitecoreUiManager';
 import { IConst } from '../Interfaces/IConst';
+import { IDataBrowserWindow } from '../Interfaces/IDataBrowserWindow';
 
 export class Hub {
   AtticMan: AtticManager;
@@ -45,6 +46,9 @@ export class Hub {
     this.Start();
     debug.FuncEnd(Hub.name);
   }
+
+
+
   Start() {
     this.debug.FuncStart(this.Start.name);
 
@@ -74,15 +78,18 @@ export class Hub {
 
     this.AtticMan.Init();
     this.debug.Enabled = this.AtticMan.CurrentSettings().DebugSettings.ShowDebugData;
-    this.UiMan.Init();
-
-
 
     this.EventMan.Init();
     this.PageDataMan.Init();
     this.OneWindowMan.Init();
 
+    this.UiMan.Init();
+
     this.debug.FuncEnd(Hub.constructor.name + ' ' + this.init.name);
   }
+
+
+ 
+
 }
 

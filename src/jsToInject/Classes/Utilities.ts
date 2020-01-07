@@ -7,6 +7,7 @@ import { IDataBrowserWindow } from '../Interfaces/IDataBrowserWindow';
 import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
 
 export class Utilities extends ManagerBase {
+   
   SelectHeaderStr(): string {
     let toReturn: string = '';
     // '    Time Stamp          - Page Type - Nickname       - Favorite?';
@@ -18,7 +19,9 @@ export class Utilities extends ManagerBase {
 
     return toReturn;
   }
-
+  MakeSelectorFromId(TabId: string): any {
+    return '[id=' + TabId + ']';
+  }
   DateOneIframeFactory(iframeElem: HTMLIFrameElement, parentDocument: IDataOneDoc, nickname: string): IDataOneIframe {
     var toReturn: IDataOneIframe = {
       Index: -1,

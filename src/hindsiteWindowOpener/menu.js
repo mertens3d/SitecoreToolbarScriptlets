@@ -8,6 +8,7 @@ xyyz.ChildWindow = {
 
     return toReturn;
   },
+
   WriteHtml: function (targetWindow) {
     console.log('s) WriteHtml');
     var fullMarkup = '<head>';
@@ -18,37 +19,42 @@ xyyz.ChildWindow = {
     fullMarkup += HtmlToInject;
     fullMarkup += '<script>';
     fullMarkup += jsToInject;
-    fullMarkup +='</script>';
+
+    fullMarkup += '</script>';
     fullMarkup += '</body>';
 
-    // the firefox addon does not like writing to document
-    
     targetWindow.document.innerHtml = '';
 
-    //xyyz.WireMenuButtons(); // console.log(fullMarkup);
     targetWindow.document.write(fullMarkup);
 
-
-    console.log(targetWindow);
-    console.log(targetWindow.document);
-
-
-
-    //targetWindow.document.xyyz.Hub.init();
     console.log('e) WriteHtml');
   },
+
   CreateWindow: function () {
     console.log('new window');
     console.log('Constants: ' + constants.taDebug);
 
-    //'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=400,height=350')
-    window.mywindow = window.open('', 'mywindow', 'width=400, height=800');// options don't workin ff, titlebar=no, toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=no');
+    var newWindow = window.open('', 'mywindow', 'width=400, height=800');
+    window.mywindow = newWindow;
 
-    
 
-    //window.mywindow.Parent = this;
-    this.WriteHtml(window.mywindow);
-   //window.mywindow.WireMenuButtons();
+    var documentId = new Date().getTime();
+
+    this.WriteHtml(window.mywindow, documentId);
+
+    //var foreSiteIdDivOrig = window.document.createElement('div');
+    //foreSiteIdDivOrig.id = 'orig-win-id';
+    //foreSiteIdDivOrig.innerText = documentId;
+    //window.document.body.appendChild(foreSiteIdDivOrig);
+
+
+
+    //var foreSiteIdDivChild = newWindow.document.createElement('div');
+    //foreSiteIdDivChild.id = 'orig-win-id';
+    //foreSiteIdDivChild.innerText = documentId;
+    //newWindow.document.body.appendChild(foreSiteIdDivChild);
+
+
   },
   FocusWindow: function () {
     console.log('existing window');
@@ -60,8 +66,5 @@ if (xyyz.ChildWindow.WindowExists()) {
   xyyz.ChildWindow.FocusWindow();
 } else {
   xyyz.ChildWindow.CreateWindow();
-  // window.mywindow.document.WireMenuButtons();
 }
 console.log('Menu Finished');
-//window.mywindow.document.xyyz.Hub.init();
-//console.log(jsToInject);

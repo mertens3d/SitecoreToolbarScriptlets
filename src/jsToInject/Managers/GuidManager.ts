@@ -6,7 +6,6 @@ export class GuidManager extends ManagerBase {
     super(xyyz);
   }
   EmptyGuid(): IGuid {
-    
     return this.ParseGuid(this.Const().GuidEmpty);
   }
   NewGuid(): IGuid {

@@ -18,7 +18,7 @@ import { PromiseGeneric } from '../Promises/PromiseGeneric';
 import { SitecoreUiManager } from '../Managers/SitecoreUiManager';
 import { UiManager } from '../Managers/UiManager';
 import { Utilities } from '../Classes/Utilities';
-import { scWindowType } from '../Enums/WindowType';
+import { scWindowType } from '../Enums/scWindowType';
 import { IConst } from '../Interfaces/IConst';
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
 

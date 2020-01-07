@@ -2,7 +2,7 @@
 
 module.exports = {
   entry: './dist.TsTranspiled/src/jstoInject/zLast.js',
-  mode: 'development',
+  mode: 'production',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'jsToInject.min.js'
