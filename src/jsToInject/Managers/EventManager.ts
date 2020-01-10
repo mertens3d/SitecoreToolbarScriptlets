@@ -25,25 +25,27 @@ export class EventManager extends ManagerBase {
 
     this.ScUiMan().AssignMenuWindowChanged((evt) => { this.__hndlrMenuWindowChanged(); });
 
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnAdminB, () => { this.__handlrB() });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnCancel, (evt) => { this.__hndlrCancelOperation(evt); });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnCE, () => { this.__hndlrOpenCE(); });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnDesktop, (evt) => { this.__hndlrDesktop(evt); });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnDrawStorage, this.AtticMan().DrawStorage);
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnModeEdit, (evt) => this.__hndlrSetScMode(this.Const().ScMode.edit, evt));
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnModeNorm, (evt) => this.__hndlrSetScMode(this.Const().ScMode.normal, evt));
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnModePrev, (evt) => this.__hndlrSetScMode(this.Const().ScMode.preview, evt));
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnQuickPublish, (evt) => { this.__hndlrQuickPublish(evt) });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnRemoveFromStorage, this.AtticMan().RemoveOneFromStorage);
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnRestoreWindowState, (evt) => { this.__hndlrRestoreClick(evt); });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.BtnSaveWindowState, this.__hndlrTakeSnapShot);
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.btnUpdateNicknameB, () => this.__updateNickName());
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.HsBtnBigRed, this.__hndlrAddCETab);
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.LgndDebug, (evt) => { this.__toggleAccordian(evt) });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.LgndForeSite, (evt) => { this.__toggleAccordian(evt) });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.LgndHindSite, (evt) => { this.__toggleAccordian(evt) });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.LgndInSite, (evt) => { this.__toggleAccordian(evt) });
-    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.LgndSettings, (evt) => { this.__toggleAccordian(evt) });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.AdminB, () => { this.__handlrB() });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.Cancel, (evt) => { this.__hndlrCancelOperation(evt); });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.CE, () => { this.__hndlrOpenCE(); });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.Desktop, (evt) => { this.__hndlrDesktop(evt); });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.DrawStorage, this.AtticMan().DrawStorage);
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.ModeEdit, (evt) => this.__hndlrSetScMode(this.Const().ScMode.edit, evt));
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.ModeNorm, (evt) => this.__hndlrSetScMode(this.Const().ScMode.normal, evt));
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.ModePrev, (evt) => this.__hndlrSetScMode(this.Const().ScMode.preview, evt));
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.QuickPublish, (evt) => { this.__hndlrQuickPublish(evt) });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.RemoveFromStorage, this.AtticMan().RemoveOneFromStorage);
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.RestoreWindowState, (evt) => { this.__hndlrRestoreClick(evt); });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.SaveWindowState, (evt) => { this.__hndlrTakeSnapShot(evt) });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.UpdateNicknameB, () => this.__updateNickName());
+
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.BigRed, () => this.__hndlrAddCETab);
+
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Legend.LgndDebug, (evt) => { this.__toggleAccordian(evt) });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Legend.LgndForeSite, (evt) => { this.__toggleAccordian(evt) });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Legend.LgndHindSite, (evt) => { this.__toggleAccordian(evt) });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Legend.LgndInSite, (evt) => { this.__toggleAccordian(evt) });
+    this.ScUiMan().AssignOnClickEvent(this.Const().ElemId.HS.Legend.LgndSettings, (evt) => { this.__toggleAccordian(evt) });
 
     this.debug().FuncEnd(this.__wireMenuButtons.name);
   }
@@ -121,11 +123,11 @@ export class EventManager extends ManagerBase {
     var targetWin = this.PageDataMan().TopLevelWindow();
     await this.OneWinMan().PublishActiveCE(targetWin)
       .then(() => {
-        this.UiMan().NotifyComplete(null,  this.Const().Notify.PublishComplete);
+        this.UiMan().NotifyComplete(null, this.Const().Notify.PublishComplete);
       })
   }
 
-  private __hndlrTakeSnapShot() {
+  private __hndlrTakeSnapShot(evt: MouseEvent) {
     this.__initNewOperation();
     this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().TopLevelWindow());
   }

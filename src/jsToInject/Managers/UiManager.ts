@@ -86,11 +86,11 @@ export class UiManager extends ManagerBase {
     }
     self.MenuEnabled = !self.OtherFocused && (self.ParentFocused || self.MenuFocused);
 
-    self.debug().Log('');
-    self.debug().LogVal('ParentFocused', self.ParentFocused.toString());
-    self.debug().LogVal('MenuFocused', self.MenuFocused.toString());
-    self.debug().LogVal('OtherFocused', self.OtherFocused.toString());
-    self.debug().Log('');
+    //self.debug().Log('');
+    //self.debug().LogVal('ParentFocused', self.ParentFocused.toString());
+    //self.debug().LogVal('MenuFocused', self.MenuFocused.toString());
+    //self.debug().LogVal('OtherFocused', self.OtherFocused.toString());
+    //self.debug().Log('');
 
     //if (!this.ParentFocused && !this.MenuFocused) {
     //  this.OtherFocused = true;
@@ -213,9 +213,12 @@ export class UiManager extends ManagerBase {
 
     setTimeout(function () {
       flagElem.remove();
+      window.close();
     }, this.Const().Timeouts.WaitBeforeRemovingCompleteFlag);
 
     bodyTag.appendChild(flagElem);
+
+    
   }
 
   SetAccordianClass(targetElem: HTMLElement, isCollapsed: boolean) {
@@ -283,7 +286,7 @@ export class UiManager extends ManagerBase {
   }
 
   private __GetCancelButton() {
-    return document.getElementById(this.Const().ElemId.HS.BtnCancel);
+    return document.getElementById(this.Const().ElemId.HS.Btn.Cancel);
   }
 
   SetCancelFlag() {

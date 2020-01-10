@@ -46,12 +46,10 @@ function reportExecuteScriptError(error) {
   console.error(`Failed to execute content script: ${error.message}`);
 }
 
+
+browser.tabs.executeScript({ file: "/autobuild/" });
+
+
 browser.tabs.executeScript({ file: "/content_scripts/do-hind-site.js" })
   .then(listenForClicks)
   .catch(reportExecuteScriptError);
-
-//function addAsHindsiteTargetBB(tabs) {
-//  browser.tabs.sendMessage(tabs[0].id, {
-//    command: "hindsiteTarget",
-//  });
-//}

@@ -16,7 +16,7 @@ export class PageDataManager extends ManagerBase {
     } else {
       this.debug().Log('target window is new');
 
-      let newWindowUrl = this.GetUrlForWindowType(windowType)
+      let newWindowUrl = this.__getUrlForWindowType(windowType)
 
       await this.__getNewTargetWindowAsync(newWindowUrl)
         .then((data) => targetWindow = data);
@@ -68,6 +68,7 @@ export class PageDataManager extends ManagerBase {
   SelfWindow: IDataBrowserWindow;
 
   TopLevelWindow(): IDataBrowserWindow {
+    console.log('marker c');
     return this.__winDataParent;
   }
 
@@ -134,7 +135,7 @@ export class PageDataManager extends ManagerBase {
     return toReturn;
   }
 
-  GetUrlForWindowType(windowType: scWindowType): string {
+  private __getUrlForWindowType(windowType: scWindowType): string {
     var toReturn: string;
 
 
@@ -160,7 +161,7 @@ export class PageDataManager extends ManagerBase {
         break;
       default:
         toReturn = hostName;
-        this.debug().Error(this.GetUrlForWindowType.name, 'unaccounted for window type');
+        this.debug().Error(this.__getUrlForWindowType.name, 'unaccounted for window type');
         break;
     }
 

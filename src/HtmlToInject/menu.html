@@ -13,15 +13,15 @@
     <fieldset>
       <legend id='lgnd-fore-site'>Fore&bull;Site</legend>
       <div class='accordian-content'>
-        <button id='btnEdit' type='button' class="icon edit">Edit</button>
-        <button id='btnPrev' type='button' class='icon preview-icon'>Preview</button>
-        <button id='btnNorm' type='button' class="icon normal">Normal</button>
-        <button id='btnAdminB' type='button' class="icon admin-b">Admin B</button>
-        <button id='btnDesktop' type='button' class='icon desktop-icon'>Desktop</button>
-        <button id='btnCE' type='button' class="icon content-editor">Content Editor</button>
-        <button id='btnBigRed' type='button' class="icon add-ce-tab">Add CE Tab to DT</button>
-        <button id='btnQuickPublish' type='button' class="icon publish">Quick Publish</button>
-        <button id='btnPresentationDetails' type='button' class="icon details">Presentation Details</button>
+        <button id='Edit' type='button' class="icon edit">Edit</button>
+        <button id='Prev' type='button' class='icon preview-icon'>Preview</button>
+        <button id='Norm' type='button' class="icon normal">Normal</button>
+        <button id='AdminB' type='button' class="icon admin-b">Admin B</button>
+        <button id='Desktop' type='button' class='icon desktop-icon'>Desktop</button>
+        <button id='CE' type='button' class="icon ce">Content Editor</button>
+        <button id='BigRed' type='button' class="icon add-ce-tab">Add CE Tab to DT</button>
+        <button id='QuickPublish' type='button' class="icon publish">Quick Publish</button>
+        <button id='PresentationDetails' type='button' class="icon details">Presentation Details</button>
       </div>
     </fieldset>
 
@@ -29,20 +29,20 @@
       <legend id='lgnd-hind-site' data-setting='lgnd-hind-site'>Hind&bull;Site</legend>
       <div class='accordian-content'>
         <div class='col-6'>
-          <button id='btnSaveWindowState' type='button' class="icon take-snapshot">Take Snapshot</button>
+          <button id='SaveWindowState' type='button' class="icon take-snapshot">Take Snapshot</button>
           <!--<input type='checkbox' /> todo favorites only-->
           <select id='selState' size='6'>
           </select>
         </div>
         <div class='col-6-btn'>
           <input type='text' id='inputNickname' value='' placeholder='Nick Name' />
-          <button id='btnUpdateNickname' type='button' class="icon set-nickname">Set Nickname</button>
-          <button id='btnToggleFavorite' type='button' class="icon favorite">Toggle Favorite</button>
-          <button id='btnRemoveOneFromLocalStorage' type='button' class="icon delete-snapshot">Delete Snapshot</button>
+          <button id='UpdateNickname' type='button' class="icon set-nickname">Set Nickname</button>
+          <button id='ToggleFavorite' type='button' class="icon favorite">Toggle Favorite</button>
+          <button id='RemoveOneFromLocalStorage' type='button' class="icon delete-snapshot">Delete Snapshot</button>
 
-          <button id='btnRestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
+          <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
 
-          <button id='btnCancel' type='button' class="icon cancel">Cancel</button>
+          <button id='Cancel' type='button' class="icon cancel">Cancel</button>
         </div>
       </div>
     </fieldset>
@@ -56,7 +56,7 @@
           </div>
         </div>
         <div class='col-right'>
-          <button id='btnDrawLocalStorage' type='button' class="icon draw-storage">Draw Local Storage</button>
+          <button id='DrawLocalStorage' type='button' class="icon draw-storage">Draw Local Storage</button>
         </div>
       </div>
     </fieldset>
@@ -77,6 +77,7 @@
       <div class='accordian-content'>
         <input type='checkbox' id='id-settings-show-debug-data' />
         <label for='id-settings-show-debug-data'>Show Debug Data</label>
+        <label for='id-settings-auto-login'>Auto login</label>
 
         <div id="stat-caller-id"></div>
         <div id="stat-self-id"></div>
@@ -100,7 +101,7 @@
       This restriction is in place to avoid inadvertantly changing a hidden browser window.
     </div>
   </div>
-  <script type='module' src='jstoinject.min.js'>
+  <script type='module' src='jsToInject.min.js'>
   </script>
 </body>
 </html>

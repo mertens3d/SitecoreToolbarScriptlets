@@ -57,7 +57,7 @@ export class Debug {
     if (verify) {
       proceed = confirm('Clear Debug TextArea ?');
     }
-
+    console.log('maker pink');
     if (proceed) {
       var newText = '--- Debug Text Reset ---';
       self.__triggerAllDebugTextChangedCallbacks({

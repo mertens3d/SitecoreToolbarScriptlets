@@ -12,7 +12,7 @@
   "content_scripts": [
     {
       "matches": [ "http://*/*" ],
-      "js": [ "content_scripts/hindsite.js","content_scripts/Bookmark.js" ]
+      "js": [ "content_scripts/hindsite.js" ]
 
     }
   ],

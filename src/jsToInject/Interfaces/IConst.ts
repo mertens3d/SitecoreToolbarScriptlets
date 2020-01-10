@@ -29,29 +29,33 @@ export interface IConst {
 
   ElemId: {
     HS: {
-      BtnAdminB: string,
-      BtnCancel: string,
-      BtnCE: string,
-      BtnDesktop: string,
-      BtnDrawStorage: string,
-      BtnModeEdit: string,
-      BtnModeNorm: string,
-      BtnModePrev: string,
-      BtnQuickPublish: string,
-      BtnRemoveFromStorage: string,
-      BtnRestoreWindowState: string,
-      BtnSaveWindowState: string,
-      btnToggleFavoriteB: string,
-      btnUpdateNicknameB: string,
-      HsBtnBigRed: string,
-      LgndDebug: string,
-      LgndForeSite: string,
-      LgndHindSite: string,
-      LgndInSite: string,
-      LgndSettings: string,
       SelStateSnapShot: string,
       TabId: string,
       TaDebug: string,
+      Btn: {
+        AdminB: string,
+        ToggleFavoriteB: string,
+        Cancel: string,
+        CE: string,
+        Desktop: string,
+        DrawStorage: string,
+        BigRed: string,
+        ModeEdit: string,
+        ModeNorm: string,
+        ModePrev: string,
+        QuickPublish: string,
+        RemoveFromStorage: string,
+        RestoreWindowState: string,
+        SaveWindowState: string,
+        UpdateNicknameB: string,
+      },
+      Legend: {
+        LgndDebug: string,
+        LgndForeSite: string,
+        LgndHindSite: string,
+        LgndInSite: string,
+        LgndSettings: string,
+      }
     }
 
     HindSiteParentInfo: string,
@@ -86,15 +90,15 @@ export interface IConst {
     ContentEditor: RegExp,
   },
   Notify: {
-    Default:string,
-    PublishComplete : string,
+    Default: string,
+    PublishComplete: string,
   },
   Selector: {
     HS: {
       iCBoxdSettingsShowDebugData: string,
       IdFieldSetDebug: string,
       menuOverlay: string,
-     
+      PrefAutoLogin: string,
     }
     SC: {
       ContentTreeNodeGlyph: string,

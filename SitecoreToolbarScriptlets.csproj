@@ -42,6 +42,16 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="gulp.support\Helper.js" />
+    <Content Include="gulp.support\tasks\cleanTasks.js" />
+    <Content Include="gulp.support\tasks\htmlTasks.js" />
+    <Content Include="gulp.support\tasks\openerTasks.js" />
+    <Content Include="gulp.support\tasks\otherTasks.js" />
+    <Content Include="gulp.support\tasks\putTasks.js" />
+    <Content Include="gulp.support\tasks\styleTasks.js" />
+    <Content Include="gulp.support\tasks\tsTasks.js" />
+    <Content Include="gulp.support\tasks\jstasks.js" />
+    <Content Include="gulp.support\vars.js" />
     <Content Include="src\BrowserBookmarkCode\Debug.txt" />
     <Content Include="src\BrowserBookmarkCode\Debug.txt.backup.txt" />
     <Content Include="webpack.config.js" />
@@ -55,7 +65,7 @@
     <Content Include="Browser Addons\Firefox\borderify\icons\border-48.png" />
     <Content Include="Browser Addons\Firefox\borderify\borderify.js" />
     <Content Include="Browser Addons\Firefox\HindSite\content_scripts\do-hind-site.js" />
-    <Content Include="Browser Addons\Firefox\HindSite\content_scripts\HindSite.js" />
+    <Content Include="Browser Addons\Firefox\HindSite\content_scripts\hindsite.js" />
     <Content Include="Browser Addons\Firefox\HindSite\icons\border-48.png" />
     <Content Include="Browser Addons\Firefox\HindSite\popup\choose_setting.css" />
     <Content Include="Browser Addons\Firefox\HindSite\popup\choose_setting.html" />
@@ -132,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Browser Addons\Firefox\communication\" />
+    <Folder Include="Browser Addons\Firefox\HindSite\AutoBuild\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\jsToInject\Managers\OneCEManager.ts" />

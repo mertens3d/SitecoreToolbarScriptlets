@@ -43,6 +43,7 @@ export class LocationManager extends ManagerBase {
 
     this.debug().FuncEnd(this.SetHref.name);
   }
+
   ChangeLocationSwitchBoard(desiredPageType: scWindowType, targetWindow: IDataBrowserWindow, iteration: number = this.Const().Iterations.MaxIterationSwitchBoard) {
     this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType] + ' iteration: ' + iteration + ':' + this.Const().Iterations.MaxIterationSwitchBoard);
 

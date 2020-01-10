@@ -10,20 +10,26 @@ xyyz.ChildWindow = {
   },
 
   WriteHtml: function (targetWindow) {
+    targetWindow.document.innerHtml = '';
+
     console.log('s) WriteHtml');
     var fullMarkup = '<head>';
     fullMarkup += '<style>';
+    console.log('Marker A');
     fullMarkup += StylesToInject;
     fullMarkup += '</style>';
     fullMarkup += '<body>';
+    console.log('Marker B');
     fullMarkup += HtmlToInject;
     fullMarkup += '<script>';
+    console.log('Marker C');
     fullMarkup += jsToInject;
 
     fullMarkup += '</script>';
     fullMarkup += '</body>';
 
-    targetWindow.document.innerHtml = '';
+    console.log('Marker D');
+    
 
     targetWindow.document.write(fullMarkup);
 
