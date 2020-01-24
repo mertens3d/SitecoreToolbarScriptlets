@@ -20,10 +20,10 @@ xyyz.ChildWindow = {
     fullMarkup += '</style>';
     fullMarkup += '<body>';
     console.log('Marker B');
-    fullMarkup += HtmlToInject;
+    fullMarkup += PopUp;
     fullMarkup += '<script>';
     console.log('Marker C');
-    fullMarkup += jsToInject;
+    fullMarkup += jsContent;
 
     fullMarkup += '</script>';
     fullMarkup += '</body>';

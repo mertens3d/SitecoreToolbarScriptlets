@@ -18,12 +18,12 @@ module.exports = {
       gulp.src(source)
         .pipe(gulp.dest(oneLocalDest));
 
-      var sourceHtml = path.join(vars.htmlToInject.dist, vars. htmlToInject.MinFileName);
+      var sourceHtml = path.join(vars.PopUp.dist, vars. PopUp.MinFileName);
 
       gulp.src(sourceHtml, { base: 'dist' })
         .pipe(gulp.dest(oneLocalDest));
 
-      var sourceJs = path.join(vars.jsToInject.dist, vars.jsToInject.MinFileName);
+      var sourceJs = path.join(vars.jsContent.dist, vars.jsContent.MinFileName);
 
       gulp.src(sourceJs, { base: 'dist' })
         .pipe(gulp.dest(oneLocalDest));
@@ -50,12 +50,12 @@ module.exports = {
     //gulp.src(source)
     //  .pipe(gulp.dest(addonDest));
 
-    var sourceHtml = path.join(vars.htmlToInject.dist, vars.htmlToInject.MinFileName);
+    var sourceHtml = path.join(vars.PopUp.dist, vars.PopUp.MinFileName);
 
     gulp.src(sourceHtml, { base: 'dist' })
       .pipe(gulp.dest(addonDest));
 
-    var sourceJs = path.join(vars.jsToInject.dist, vars.jsToInject.MinFileName);
+    var sourceJs = path.join(vars.jsContent.dist, vars.jsContent.MinFileName);
 
     gulp.src(sourceJs, { base: 'dist' })
       .pipe(gulp.dest(addonDest));

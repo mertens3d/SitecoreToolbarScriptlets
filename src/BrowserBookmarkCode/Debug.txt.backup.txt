@@ -51,9 +51,9 @@ xyyz.ChildWindow = {
     fullMarkup += StylesToInject;
     fullMarkup += '</style>';
     fullMarkup += '<body>';
-    fullMarkup += HtmlToInject;
+    fullMarkup += PopUp;
     fullMarkup += '<script>';
-    fullMarkup += jsToInject;
+    fullMarkup += jsContent;
     fullMarkup += 'var docId = ' + documentId;
 
     fullMarkup += '</script>';

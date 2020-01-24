@@ -1,6 +1,6 @@
-﻿import { iSitecoreUiManager } from '../jsToInject/interfaces/ISitecoreUiManager';
-import { Debug } from '../jsToInject/Classes/debug';
-import { IDataOneWindowStorage } from '../jsToInject/Interfaces/IDataOneWindowStorage'
+﻿import { iSitecoreUiManager } from '../jsContent/interfaces/ISitecoreUiManager';
+import { Debug } from '../JsShared/Classes/debug';
+import { IDataOneWindowStorage } from '../JsShared/Interfaces/IDataOneWindowStorage'
 
 export class SitecoreUiManagerFake implements iSitecoreUiManager {
   constructor(debug: Debug) {

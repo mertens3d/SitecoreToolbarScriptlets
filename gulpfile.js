@@ -17,15 +17,17 @@ var putTasks = require('./gulp.support/tasks/putTasks');
 var styleTasks = require('./gulp.support/tasks/styleTasks');
 var tsTasks = require('./gulp.support/tasks/tsTasks');
 
-//vars.jsToInject.SourceDirFilter = './WorkingCode/jsToInject/**/**/*.js';
+//vars.jsContent.SourceDirFilter = './WorkingCode/jsContent/**/**/*.js';
 
 var varsObj = new vars();
 
 gulp.task('BookmarkText', (cb) => otherTasks.BookmarkText(cb, varsObj));
-gulp.task('buildHtmlToInject', (cb) => htmlTasks.BuildHtml(cb, varsObj));
-gulp.task('buildJsToInject', (cb) => jstasks.buildJsToInject(cb, varsObj));
+gulp.task('buildPopUp', (cb) => htmlTasks.BuildHtml(cb, varsObj));
+gulp.task('buildjsContent', (cb) => jstasks.buildjsContent(cb, varsObj));
 gulp.task('buildStylesToInject', (cb) => styleTasks.BuildStylesToInject(cb, varsObj));
-gulp.task('BuildTypescript', (cb) => tsTasks.BuildTypeScript(cb, varsObj));
+gulp.task('BuildTypescriptShared', (cb) => tsTasks.BuildTypeScriptShared(cb, varsObj));
+gulp.task('BuildTypescriptContent', (cb) => tsTasks.BuildTypeScriptContent(cb, varsObj));
+gulp.task('BuildTypescriptPopUp', (cb) => tsTasks.BuildTypeScriptPopUp(cb, varsObj));
 gulp.task('buildWindowOpenerForBookMark', (cb) => openerTasks.buildWindowOpenerForBookMark(cb, varsObj));
 gulp.task('cleanAddons', (cb) => cleanTasks.cleanAddons(cb, varsObj));
 gulp.task('cleanDist', (cb) => cleanTasks.cleanDist(cb, varsObj));
@@ -34,8 +36,8 @@ gulp.task('putToAddon', (cb) => putTasks.PutToAddon(cb, varsObj));
 gulp.task('putWindowOpenerToLocal', (cb) => putTasks.putWindowOpenerToLocal(cb, varsObj));
 gulp.task('webpack', (cb) => otherTasks.webpack(cb, varsObj));
 
-//'combineJs', 'buildJsToInject',
+//'combineJs', 'buildjsContent',
 
-gulp.task('default', gulp.series(['cleanDist', 'cleanAddons', 'buildStylesToInject', 'BuildTypescript', 'webpack', 'buildHtmlToInject', 'buildWindowOpenerForBookMark', 'BookmarkText', 'putWindowOpenerToLocal', 'putToAddon']), function (resolve) {
+gulp.task('default', gulp.series(['cleanDist', 'cleanAddons', 'buildStylesToInject', 'BuildTypescriptShared', 'BuildTypescriptContent', 'BuildTypescriptPopUp', 'webpack', 'buildPopUp', 'buildWindowOpenerForBookMark', 'BookmarkText', 'putWindowOpenerToLocal', 'putToAddon']), function (resolve) {
   resolve();
 });

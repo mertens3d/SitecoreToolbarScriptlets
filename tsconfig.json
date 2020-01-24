@@ -6,11 +6,12 @@
     "alwaysStrict": false,
     "noImplicitUseStrict": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES6",
-    "moduleResolution": "node"
+    "target": "ES2017",
+    "moduleResolution": "node",
+    "typeRoots": [ "node_modules/@types", "node_modules/web-ext-types" ]
   },
   "exclude": [
     "node_modules",
-    "Managers"
+    "xxsrc/jsContent/Managers"
   ]
 }

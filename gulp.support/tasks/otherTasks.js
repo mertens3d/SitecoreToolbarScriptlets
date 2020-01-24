@@ -6,7 +6,6 @@ const webpack_stream = require('webpack-stream');
 const webpack_config = require('./../../webpack.config');
 const rename = require('gulp-rename');
 
-//gulp.task('buildTypeScript', function () {
 module.exports = {
   BookmarkText: function (cb,vars) {
     console.log('s) BookmarkText');

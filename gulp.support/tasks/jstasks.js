@@ -9,21 +9,21 @@ const replace = require('gulp-replace');
 module.exports = {
   combineJs: function (cb, vars) {
     console.log('s) combineJs');
-    console.log('source filter: ' + vars.jsToInject.SourceDirFilter());
-    return gulp.src(vars.jsToInject.SourceDirFilter())
+    console.log('source filter: ' + vars.jsContent.SourceDirFilter());
+    return gulp.src(vars.jsContent.SourceDirFilter())
       .pipe(sort())
-      .pipe(concat(vars.jsToInject.NameConcat))
-      .pipe(gulp.dest(vars.jsToInject.WorkingDest))
+      .pipe(concat(vars.jsContent.NameConcat))
+      .pipe(gulp.dest(vars.jsContent.WorkingDest))
       .pipe(replace('"', '\''))
-      .pipe(gulp.dest(vars.jsToInject.WorkingDest));
+      .pipe(gulp.dest(vars.jsContent.WorkingDest));
   },
-  buildJsToInject : function(cb, vars) {
-    console.log('s) buildJsToInject');
-    var thisDist = vars.jsToInject.dist + '/' + vars.jsToInject.NameConcat;
+  buildjsContent : function(cb, vars) {
+    console.log('s) buildjsContent');
+    var thisDist = vars.jsContent.dist + '/' + vars.jsContent.NameConcat;
     console.log('source filter: ' + thisDist);
-    console.log('dest: ' + vars.jsToInject.dist);
-    console.log('rename: ' + vars.jsToInject.MinFileName);
-    console.log('e) buildJsToInject');
+    console.log('dest: ' + vars.jsContent.dist);
+    console.log('rename: ' + vars.jsContent.MinFileName);
+    console.log('e) buildjsContent');
 
     return gulp.src(thisDist)
       .pipe(uglify({
@@ -32,7 +32,7 @@ module.exports = {
           quote_style: 1
         }
       }))
-      .pipe(rename(vars.jsToInject.MinFileName))
-      .pipe(gulp.dest(vars.jsToInject.WorkingDest));
+      .pipe(rename(vars.jsContent.MinFileName))
+      .pipe(gulp.dest(vars.jsContent.WorkingDest));
   }
 }

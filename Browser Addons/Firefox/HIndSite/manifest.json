@@ -22,6 +22,6 @@
   "browser_action": {
     "default_icon": "icons/border-48.png",
     "default_title": "Setting",
-    "default_popup": "popup/choose_setting.html"
+    "default_popup": "AutoBuild/PopUp.min.html"
   }
 }

@@ -5,9 +5,9 @@ const secrets = require('./../gulp.support/Secrets');
 module.exports = class Vars {
   constructor() {
     console.log('s) Constructing Vars');
-    this.htmlToInject = new InjectableClass('HtmlToInject', 'html', 'html');
+    this.PopUp = new InjectableClass('PopUp', 'html', 'html');
     this.stylesToInject = new InjectableClass('StylesToInject', 'scss', 'css');
-    this.jsToInject = this.buildJsToInject();
+    this.jsContent = this.buildjsContent();
     this.BrowserAddonData = { AutoBuildDest: './Browser Addons/Firefox/HindSite/AutoBuild' };
     this.WindowOpener = new WindowOpenerClass();
 
@@ -27,8 +27,8 @@ module.exports = class Vars {
     return toReturn;
   }
 
-  buildJsToInject() {
-    var toReturn = new InjectableClass('jsToInject', 'js', 'js');
+  buildjsContent() {
+    var toReturn = new InjectableClass('jsContent', 'js', 'js');
     toReturn.WorkingCodeRootDir = toReturn.dist + '/src';
     return toReturn;
   }

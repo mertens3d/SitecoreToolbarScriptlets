@@ -14,31 +14,31 @@ class Helper {
     return (toReturn);
   };
 
-  CleanHtml(htmlToInjectWithVar) {
-    htmlToInjectWithVar = htmlToInjectWithVar.replace(/<!doctype html>/gi, '');
-    htmlToInjectWithVar = htmlToInjectWithVar.replace(/<html>/gi, '');
-    htmlToInjectWithVar = htmlToInjectWithVar.replace(/<head>.*<\/head>/gi, '');
-    htmlToInjectWithVar = htmlToInjectWithVar.replace(/<body>/gi, '');
-    htmlToInjectWithVar = htmlToInjectWithVar.replace(/<\/body>/gi, '');
-    htmlToInjectWithVar = htmlToInjectWithVar.replace(/<script.*\/script>/gi, '');
-    htmlToInjectWithVar = htmlToInjectWithVar.replace(/<\/html>/gi, '');
-    htmlToInjectWithVar = htmlToInjectWithVar.replace(/>\s*?</gi, '><');
+  CleanHtml(PopUpWithVar) {
+    PopUpWithVar = PopUpWithVar.replace(/<!doctype html>/gi, '');
+    PopUpWithVar = PopUpWithVar.replace(/<html>/gi, '');
+    PopUpWithVar = PopUpWithVar.replace(/<head>.*<\/head>/gi, '');
+    PopUpWithVar = PopUpWithVar.replace(/<body>/gi, '');
+    PopUpWithVar = PopUpWithVar.replace(/<\/body>/gi, '');
+    PopUpWithVar = PopUpWithVar.replace(/<script.*\/script>/gi, '');
+    PopUpWithVar = PopUpWithVar.replace(/<\/html>/gi, '');
+    PopUpWithVar = PopUpWithVar.replace(/>\s*?</gi, '><');
 
-    return htmlToInjectWithVar
+    return PopUpWithVar
   }
 
   GetInjectData(vars) {
     var cssToInjectWithVar = this.MyResources(vars.stylesToInject.dist + vars.stylesToInject.MinFileName, vars.stylesToInject.VarName);
 
-    var htmlToInjectWithVar = this.MyResources(vars.htmlToInject.dist + vars.htmlToInject.MinFileName, vars.htmlToInject.VarName);
-    htmlToInjectWithVar = this.CleanHtml(htmlToInjectWithVar);
+    var PopUpWithVar = this.MyResources(vars.PopUp.dist + vars.PopUp.MinFileName, vars.PopUp.VarName);
+    PopUpWithVar = this.CleanHtml(PopUpWithVar);
 
-    var jsToInjectWithVar = this.MyResources(vars.jsToInject.dist + vars.jsToInject.MinFileName, vars.jsToInject.VarName);
+    var jsContentWithVar = this.MyResources(vars.jsContent.dist + vars.jsContent.MinFileName, vars.jsContent.VarName);
 
     return {
       'cssToInjectWithVar': cssToInjectWithVar,
-      'htmlToInjectWithVar': htmlToInjectWithVar,
-      'jsToInjectWithVar': jsToInjectWithVar
+      'PopUpWithVar': PopUpWithVar,
+      'jsContentWithVar': jsContentWithVar
     }
   }
 }

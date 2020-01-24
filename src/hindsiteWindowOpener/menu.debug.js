@@ -11,7 +11,7 @@ xyyz.ChildWindow = {
   
   CreateWindow: function () {
     console.log('new window');
-    window.mywindow = window.open('/hindsite/HtmlToInject.min.html', 'mywindow', 'width=900, height=900');
+    window.mywindow = window.open('/hindsite/PopUp.min.html', 'mywindow', 'width=900, height=900');
   },
   FocusWindow: function () {
     console.log('existing window');

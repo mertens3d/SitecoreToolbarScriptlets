@@ -5,7 +5,7 @@ const del = require('del');
 module.exports = {
   cleanDist: function (cb, vars) {
     return del([
-      vars.jsToInject.dist + '/**/*'
+      vars.jsContent.dist + '/**/*'
     ], cb);
 
   },

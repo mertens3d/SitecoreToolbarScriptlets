@@ -1,4 +1,4 @@
-﻿//import { sum } from '../jsToInject/Classes/foo';
+﻿//import { sum } from '../jsContent/Classes/foo';
 
 //test('basic', () => {
 //  expect(sum()).toBe(0);

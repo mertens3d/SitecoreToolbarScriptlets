@@ -8,14 +8,14 @@ module.exports = {
 
     var optionFlag = false;
 
-    return gulp.src(vars.htmlToInject.SourceDirFilter())
+    return gulp.src(vars.PopUp.SourceDirFilter())
       .pipe(htmlmin({
         collapseWhitespace: optionFlag,
         quoteCharacter: '\'',
         removeComments: optionFlag,
       }))
-      .pipe(rename(vars.htmlToInject.MinFileName))
-      .pipe(gulp.dest(vars.htmlToInject.dist));
+      .pipe(rename(vars.PopUp.MinFileName))
+      .pipe(gulp.dest(vars.PopUp.dist));
 
   }
 }
