@@ -24,6 +24,8 @@ export class PopUpHub {
 
   constructor() {
     this.debug = new PopUpDebug(window);
+    this.debug.Enabled = true;
+    console.log('enabled? ' + this.debug.Enabled);
     this.PopUpAtticMan = new PopUpAtticManager(this);
     console.log("asdfasdfsdafa");
     console.log("dafsadfdsafsdafsaasdfasdfsa");

@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var PopUpManagerBase_1 = require("./PopUpManagerBase");
+var MessageFlag_1 = require("../../../Shared/scripts/Enums/MessageFlag");
 var PopUpMessagesManager = /** @class */ (function (_super) {
     __extends(PopUpMessagesManager, _super);
     function PopUpMessagesManager() {
@@ -22,6 +23,7 @@ var PopUpMessagesManager = /** @class */ (function (_super) {
     PopUpMessagesManager.prototype.ReceiveMessage = function (msgPayload) {
     };
     PopUpMessagesManager.prototype.SendMessage = function (msgPlayload) {
+        this.debug().LogVal('Sending Message', MessageFlag_1.MsgFlag[msgPlayload.MsgFlag]);
     };
     PopUpMessagesManager.prototype.FromAtticDrawStorage = function () {
         //AtticMan().DrawStorage

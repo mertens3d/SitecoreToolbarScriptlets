@@ -12,6 +12,8 @@ var PopConst_1 = require("../Classes/PopConst");
 var PopUpHub = /** @class */ (function () {
     function PopUpHub() {
         this.debug = new PopUpDebug_1.PopUpDebug(window);
+        this.debug.Enabled = true;
+        console.log('enabled? ' + this.debug.Enabled);
         this.PopUpAtticMan = new PopUpAtticManager_1.PopUpAtticManager(this);
         console.log("asdfasdfsdafa");
         console.log("dafsadfdsafsdafsaasdfasdfsa");

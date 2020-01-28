@@ -43,11 +43,13 @@ var AbstractDebug = /** @class */ (function () {
     };
     AbstractDebug.prototype.HndlrClearDebugText = function (self, verify) {
         if (verify === void 0) { verify = false; }
+        this.FuncStart(this.HndlrClearDebugText.name);
         var proceed = true;
         if (verify) {
             proceed = confirm('Clear Debug TextArea ?');
         }
         console.log('maker pink');
+        console.log('enabled? ' + this.Enabled.toString());
         if (proceed) {
             var newText = '--- Debug Text Reset ---';
             self.__triggerAllDebugTextChangedCallbacks({
@@ -55,6 +57,7 @@ var AbstractDebug = /** @class */ (function () {
                 Append: false
             });
         }
+        this.FuncEnd(this.HndlrClearDebugText.name);
     };
     AbstractDebug.prototype.MarkerA = function () {
         this.__markerRaw('A');

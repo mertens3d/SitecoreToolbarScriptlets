@@ -51,12 +51,16 @@ export class AbstractDebug {
   }
 
   HndlrClearDebugText(self: AbstractDebug, verify: boolean = false): void {
+
+    this.FuncStart(this.HndlrClearDebugText.name);
     var proceed: boolean = true;
 
     if (verify) {
       proceed = confirm('Clear Debug TextArea ?');
     }
     console.log('maker pink');
+    console.log('enabled? ' + this.Enabled.toString());
+
     if (proceed) {
       var newText = '--- Debug Text Reset ---';
       self.__triggerAllDebugTextChangedCallbacks({
@@ -64,6 +68,7 @@ export class AbstractDebug {
         Append: false
       });
     }
+    this.FuncEnd(this.HndlrClearDebugText.name);
   }
 
   MarkerA() {
