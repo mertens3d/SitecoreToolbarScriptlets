@@ -19,3 +19,4 @@ node_modules
 /src/jsToInject/**/*.js
 /dist.TsTranspiled/*
 /src/jsToInject/**/*.js.map
+/AutoBuild/

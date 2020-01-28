@@ -3,70 +3,81 @@ const path = require('path');
 
 module.exports = {
   putWindowOpenerToLocal: function (cb, vars) {
-    console.log('s) putWindowOpenerToLocal ');
-    console.log('localWebRoot: ' + vars.local.Dest);
-    console.log('dest: ' + vars.local.Dest);
-    //C:/Users/GXM073/Documents/SitecoreToolbarScriptlets/dist/CodeToInject.js')}())
+  //  console.log('s) putWindowOpenerToLocal ');
+  //  console.log('localWebRoot: ' + vars.local.Dest);
+  //  console.log('dest: ' + vars.local.Dest);
+  //  //C:/Users/GXM073/Documents/SitecoreToolbarScriptlets/dist/CodeToInject.js')}())
 
-    var source = vars.WindowOpener.dist + '/' + vars.WindowOpener.NameConcatMinWithVar;
-    console.log('source: ' + source);
+  //  for (var idx = 0; idx < vars.local.Dest.length; idx++) {
+  //    var oneLocalDest = vars.local.Dest[idx];
+  //    console.log('localDest: ' + oneLocalDest);
 
-    for (var idx = 0; idx < vars.local.Dest.length; idx++) {
-      var oneLocalDest = vars.local.Dest[idx];
-      console.log('localDest: ' + oneLocalDest);
+  //    //var source = vars.WindowOpener.AutoBuildRoot + '/' + vars.WindowOpener.NameConcatMinWithVar;
+  //    //console.log('source: ' + source);
+  //    //gulp.src(source)
+  //    //  .pipe(gulp.dest(oneLocalDest));
 
-      gulp.src(source)
-        .pipe(gulp.dest(oneLocalDest));
+  //    //var sourceHtml = path.join(vars.PopUpHtml.AutoBuildRoot, vars.PopUpHtml.MinFileName());
 
-      var sourceHtml = path.join(vars.PopUp.dist, vars. PopUp.MinFileName);
+  //    gulp.src(vars.PopUpHtml.SourceFinalAuto(), { base: vars.AutoBuildRoot })
+  //      .pipe(gulp.dest(oneLocalDest));
 
-      gulp.src(sourceHtml, { base: 'dist' })
-        .pipe(gulp.dest(oneLocalDest));
+  //    //var sourceJs = path.join(vars.ContentJs.AutoBuildRoot, vars.ContentJs.MinFileName());
 
-      var sourceJs = path.join(vars.jsContent.dist, vars.jsContent.MinFileName);
+  //    gulp.src(vars.ContentJs.SourceFinalAuto(), { base: vars.AutoBuildRoot })
+  //      .pipe(gulp.dest(oneLocalDest));
 
-      gulp.src(sourceJs, { base: 'dist' })
-        .pipe(gulp.dest(oneLocalDest));
+  //    //var sourceJs = path.join(vars.PopUpStyles.AutoBuildRoot, vars.PopUpStyles.MinFileName());
+  //    gulp.src(vars.PopUpStyles.SourceFinalAuto(), { base: vars.AutoBuildRoot })
+  //      .pipe(gulp.dest(oneLocalDest));
 
-      var sourceJs = path.join(vars.stylesToInject.dist, vars.stylesToInject.MinFileName);
-      gulp.src(sourceJs, { base: 'dist' })
-        .pipe(gulp.dest(oneLocalDest));
-
-      var sourceOpener = path.join(vars.WindowOpener.dist, vars.WindowOpener.NameConcat);
-      gulp.src(sourceOpener, { base: 'dist' })
-        .pipe(gulp.dest(oneLocalDest));
-    }
+  //    //var sourceOpener = path.join(vars.WindowOpener.AutoBuildRoot, vars.WindowOpener.NameConcat());
+  //    gulp.src(vars.WindowOpener.SourceFinalAuto(), { base: vars.AutoBuildRoot })
+  //      .pipe(gulp.dest(oneLocalDest));
+  //  }
+  //  console.log('e) putWindowOpenerToLocal ');
     cb();
   },
-  PutToAddon: function (cb, vars) {
-    console.log('s) putToAddon ');
 
-    var source = vars.WindowOpener.dist + '/' + vars.WindowOpener.NameConcatMinWithVar;
-    console.log('source: ' + source);
+  FromTo: function (fromSrc, destFolder) {
+    console.log('s) FromTo ');
+    console.log('\tfromSrc: ' + fromSrc);
+    console.log('\ttoDest: ' + destFolder);
 
-    var addonDest = vars.BrowserAddonData.AutoBuildDest;
-    console.log('addonDest: ' + addonDest);
+    gulp.src(fromSrc, { base: destFolder.AutoBuildRoot })
+      .pipe(gulp.dest(destFolder));
 
-    //gulp.src(source)
-    //  .pipe(gulp.dest(addonDest));
+    console.log('e) FromTo ');
+  },
 
-    var sourceHtml = path.join(vars.PopUp.dist, vars.PopUp.MinFileName);
 
-    gulp.src(sourceHtml, { base: 'dist' })
-      .pipe(gulp.dest(addonDest));
+  PutToFinal: function (cb, vars) {
 
-    var sourceJs = path.join(vars.jsContent.dist, vars.jsContent.MinFileName);
+    //var sourceHtml = path.join(vars.PopUpHtml.HtmlFileFull, vars.PopUpHtml.MinFileName());
+    this.FromTo(vars.PopUpHtml.HtmlFileFull(), vars.PopUpHtml.FinalFolderNameFull());
 
-    gulp.src(sourceJs, { base: 'dist' })
-      .pipe(gulp.dest(addonDest));
+    //var sourceJs = path.join(vars.ContentJs.AutoBuildRoot, vars.ContentJs.WebpackFileFull());
+    this.FromTo(vars.ContentJs.WebpackFileFull(), vars.ContentJs.FinalFolderNameFull());
 
-    var sourceJs = path.join(vars.stylesToInject.dist, vars.stylesToInject.MinFileName);
-    gulp.src(sourceJs, { base: 'dist' })
-      .pipe(gulp.dest(addonDest));
+    //var sourceOpener = path.join(vars.WindowOpener.AutoBuildRoot, vars.WindowOpener.WebpackFileFull());
+    this.FromTo(vars.WindowOpener.WebpackFileFull(), vars.WindowOpener.FinalFolderNameFull());
+    cb();
+  },
 
-    var sourceOpener = path.join(vars.WindowOpener.dist, vars.WindowOpener.NameConcat);
-    gulp.src(sourceOpener, { base: 'dist' })
-      .pipe(gulp.dest(addonDest));
+  CopyFromFinalToAddon: function (cb, vars) {
+    console.log('s) CopyFromFinalToAddon ');
+
+    var addonDest = vars.BrowserExtensionFireFox.AutoBuildDest;
+    console.log('\taddonDest: ' + addonDest);
+
+    var sourceHtml = path.join(vars.PopUpHtml.AutoBuildRoot, vars.PopUpHtml.MinFileName());
+    this.FromTo(sourceHtml, addonDest);
+
+    var sourceJs = path.join(vars.ContentJs.AutoBuildRoot, vars.ContentJs.MinFileName());
+    this.FromTo(sourceJs, addonDest);
+
+    var sourceOpener = path.join(vars.WindowOpener.AutoBuildRoot, vars.WindowOpener.NameConcat());
+    this.FromTo(sourceOpener, addonDest);
 
     cb();
   }

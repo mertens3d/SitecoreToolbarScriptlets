@@ -5,14 +5,14 @@ const sass = require('gulp-sass');
 const rename = require('gulp-rename');
 
 module.exports = {
-  BuildStylesToInject: function (cb, vars) {
-    vars.stylesToInject.debugInfo();
+  BuildPopUpStyles: function (cb, vars) {
+    vars.PopUpStyles.debugInfo();
 
-    return gulp.src(vars.stylesToInject.SourceDirFilter())
+    return gulp.src(vars.PopUpStyles.SourceDirFilter())
       .pipe(sass({
         outputStyle: 'compressed'
       }).on('error', sass.logError))
-      .pipe(rename(vars.stylesToInject.MinFileName))
-      .pipe(gulp.dest(vars.stylesToInject.dist));
+      .pipe(rename(vars.PopUpStyles.MinFileName()))
+      .pipe(gulp.dest(vars.PopUpStyles.AutoBuildRoot));
   }
 }

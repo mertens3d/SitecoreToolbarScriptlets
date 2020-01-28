@@ -28,12 +28,12 @@ class Helper {
   }
 
   GetInjectData(vars) {
-    var cssToInjectWithVar = this.MyResources(vars.stylesToInject.dist + vars.stylesToInject.MinFileName, vars.stylesToInject.VarName);
+    var cssToInjectWithVar = this.MyResources(  vars.PopUpStyles.AutoBuildRoot + vars.PopUpStyles.MinFileName(), vars.PopUpStyles.VarName);
 
-    var PopUpWithVar = this.MyResources(vars.PopUp.dist + vars.PopUp.MinFileName, vars.PopUp.VarName);
+    var PopUpWithVar = this.MyResources(vars.PopUpHtml.AutoBuildRoot + vars.PopUpHtml.MinFileName(), vars.PopUpHtml.VarName);
     PopUpWithVar = this.CleanHtml(PopUpWithVar);
 
-    var jsContentWithVar = this.MyResources(vars.jsContent.dist + vars.jsContent.MinFileName, vars.jsContent.VarName);
+    var jsContentWithVar = this.MyResources(vars.ContentJs.AutoBuildRoot + vars.ContentJs.MinFileName(), vars.ContentJs.VarName);
 
     return {
       'cssToInjectWithVar': cssToInjectWithVar,

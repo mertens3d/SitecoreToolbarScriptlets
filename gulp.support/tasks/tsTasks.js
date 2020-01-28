@@ -16,23 +16,28 @@ module.exports = {
     'moduleResolution': 'node',
     "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"]
   },
-
-  BuildTypeScriptShared: function (cb, vars) {
-    return gulp.src(['./**/jsShared/**/*.ts'])//, '!./**/jsContent/**/tests/**/*.ts'])
+  BuildTypeScriptAll: function (cb, vars) {
+    return gulp.src([vars.SharedJs.Ts.SourceFilter()])
       .pipe(sort())
       .pipe(ts(this.CommonSettings))
-      .pipe(gulp.dest('./dist.TsTranspiled'));
+      .pipe(gulp.dest(vars.SharedJs.Ts.TranspiledFolder));
   },
-  BuildTypeScriptContent: function (cb, vars) {
-    return gulp.src(['./**/jsContent/**/*.ts'])//, '!./**/jsContent/**/tests/**/*.ts'])
-      .pipe(sort())
-      .pipe(ts(this.CommonSettings))
-      .pipe(gulp.dest('./dist.TsTranspiled'));
-  },
-   BuildTypeScriptPopUp: function (cb, vars) {
-    return gulp.src(['./**/PopUp/**/*.ts'])//, '!./**/jsContent/**/tests/**/*.ts'])
-      .pipe(sort())
-      .pipe(ts(this.CommonSettings))
-      .pipe(gulp.dest('./dist.TsTranspiled'));
-  }
+  //BuildTypeScriptShared: function (cb, vars) {
+  //  return gulp.src([vars.SharedJs.Ts.SourceFilter() ])
+  //    .pipe(sort())
+  //    .pipe(ts(this.CommonSettings))
+  //    .pipe(gulp.dest(vars.SharedJs. Ts.TranspiledDist));
+  //},
+  //BuildTypeScriptContent: function (cb, vars) {
+  //  return gulp.src([vars.ContentJs.Ts.SourceFilter()])
+  //    .pipe(sort())
+  //    .pipe(ts(this.CommonSettings))
+  //    .pipe(gulp.dest(vars.ContentJs.Ts.TranspiledDist));
+  //},
+  //BuildTypeScriptPopUp: function (cb, vars) {
+  //  return gulp.src([vars.PopUpJs.Ts.SourceFilter()])
+  //    .pipe(sort())
+  //    .pipe(ts(this.CommonSettings))
+  //    .pipe(gulp.dest(vars.PopUpJs.Ts.TranspiledDist));
+  //}
 };

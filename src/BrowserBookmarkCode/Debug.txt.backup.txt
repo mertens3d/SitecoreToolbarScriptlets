@@ -48,7 +48,7 @@ xyyz.ChildWindow = {
     console.log('s) WriteHtml');
     var fullMarkup = '<head>';
     fullMarkup += '<style>';
-    fullMarkup += StylesToInject;
+    fullMarkup += PopUpStyles;
     fullMarkup += '</style>';
     fullMarkup += '<body>';
     fullMarkup += PopUp;

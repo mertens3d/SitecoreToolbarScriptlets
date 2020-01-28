@@ -3,15 +3,15 @@ const del = require('del');
 
 
 module.exports = {
-  cleanDist: function (cb, vars) {
+  cleanAutoBuildFolder: function (cb, vars) {
     return del([
-      vars.jsContent.dist + '/**/*'
+      vars.ContentJs.AutoBuildRoot + '/**/*'
     ], cb);
 
   },
   cleanAddons: function (cb, vars) {
     return del([
-     vars.BrowserAddonData.AutoBuildDest + '/**/*'
+     vars.BrowserExtensionFireFox.AutoBuildDest + '/**/*'
     ], cb);
   }
 }

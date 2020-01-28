@@ -1,36 +1,84 @@
-﻿const CommonBase = require('./CommonBase.js');
+﻿const InjectableTs = require("./InjectableTs");
+const path = require('path');
 
-class Injectable extends CommonBase
-{
-  constructor(shortName, sourceExt, finalExt)
-  {
-    super();
-    this.ShortName = shortName;
+class Injectable {
+  constructor(name, sourceExt, finalExt, finalFolder) {
+    this.WorkingCodeRootDir = './src';
+    this.AutoBuildRoot = './AutoBuild';
+    this.FinalFolderNameShort = finalFolder
+
+    this.Name = name;
     this.SourceExt = sourceExt;
     this.FinalExt = finalExt;
-    this.VarName = shortName;
-    this.FileNameWithExt = this.ShortName + '.' + this.FinalExt;
-    this.MinFileName = this.ShortName + '.min.' + this.FinalExt;
-    this.WorkingDest = this.dist;
-    this.FinalDest = this.distFinal;
-    this.NameConcat = this.ShortName + '.concat.' + this.FinalExt;
-    this.NameConcatMin = this.ShortName + '.concat.min.' + this.FinalExt;
+    this.VarName = this.Name;
+
+    this.Ts = new InjectableTs(this.Name, this.AutoBuildRoot);
 
     this.debugInfo();
   }
 
-  SourceDirFilter() {
-    return this.WorkingCodeRootDir + '/' + this.ShortName + '/**/*.' + this.SourceExt;
+  FinalFolderNameFull() {
+    return this.AutoBuildRoot + '/' + this.FinalFolderNameShort ;
   }
-  debugInfo()
-  {
-    super.debugInfo();
+  SourceFinalAuto() {
+    return path.join(this.AutoBuildRoot, this.NameConcat());
+  }
+
+  FileNameWithExt() {
+    return this.Name + '.' + this.FinalExt;
+  }
+
+  MinFileName() {
+    return this.Name + '.min.' + this.FinalExt;
+  }
+
+  NameConcatMin() {
+    return this.Name + '.concat.min.' + this.FinalExt;
+  }
+
+  FolderConcat() {
+    return this.AutoBuildRoot + '/concat/';
+  }
+
+  NameConcat() {
+    return this.Name + '.concat.' + this.FinalExt;
+  }
+
+  SourceDirFilter() {
+    return this.WorkingCodeRootDir + '/' + this.Name + '/**/*.' + this.SourceExt;
+  }
+
+  HtmlFileFull() {
+    return this.AutoBuildRoot + '/' + this.MinFileName();
+
+  }
+
+  WebpackFileFull() {
+    return this.AutoBuildRoot + '/webpack/' + this.MinFileName();
+  }
+
+  WebpackContentOutputFilePathAbs() {
+    //return this.AutoBuildRoot;
+    return path.resolve( this.AutoBuildRoot + '/webpack');
+  }
+
+  debugInfo() {
     console.log('----------');
-    console.log('ShortName: ' + this.ShortName);
-    console.log('SourceExt: ' + this.SourceExt);
-    console.log('SourceDirFilter: ' + this.SourceDirFilter());
-    console.log('MinFileName: ' + this.MinFileName);
-    console.log('NameConcatMin: ' + this.NameConcatMin);
+    console.log('\AutoBuildRoot: ' + this.AutoBuildRoot);
+    console.log('\tFinalFull: ' + this.FinalFolderNameFull());
+
+    console.log('\tName: ' + this.Name);
+    console.log('\tSourceExt: ' + this.SourceExt);
+    console.log('\tSourceDirFilter: ' + this.SourceDirFilter());
+    console.log('\tMinFileName: ' + this.MinFileName());
+    console.log('\tNameConcatMin: ' + this.NameConcatMin());
+
+    console.log('\t');
+    console.log('\tWebpackContentOutputFilePathAbs: ' + this.WebpackContentOutputFilePathAbs());
+    console.log('\tTranspiledEntryPointFull: ' + this.Ts.TranspiledEntryPointFull());
+
+
+    console.log('----------');
   }
 }
 
