@@ -20,6 +20,7 @@ class Injectable {
   FinalFolderNameFull() {
     return this.AutoBuildRoot + '/' + this.FinalFolderNameShort ;
   }
+
   SourceFinalAuto() {
     return path.join(this.AutoBuildRoot, this.NameConcat());
   }

@@ -56,28 +56,32 @@ module.exports = {
     //var sourceHtml = path.join(vars.PopUpHtml.HtmlFileFull, vars.PopUpHtml.MinFileName());
     this.FromTo(vars.PopUpHtml.HtmlFileFull(), vars.PopUpHtml.FinalFolderNameFull());
 
-    //var sourceJs = path.join(vars.ContentJs.AutoBuildRoot, vars.ContentJs.WebpackFileFull());
     this.FromTo(vars.ContentJs.WebpackFileFull(), vars.ContentJs.FinalFolderNameFull());
-
-    //var sourceOpener = path.join(vars.WindowOpener.AutoBuildRoot, vars.WindowOpener.WebpackFileFull());
     this.FromTo(vars.WindowOpener.WebpackFileFull(), vars.WindowOpener.FinalFolderNameFull());
+    this.FromTo(vars.PopUpJs.WebpackFileFull(), vars.PopUpJs.FinalFolderNameFull());
+
+
     cb();
   },
 
   CopyFromFinalToAddon: function (cb, vars) {
     console.log('s) CopyFromFinalToAddon ');
 
-    var addonDest = vars.BrowserExtensionFireFox.AutoBuildDest;
+    var addonDest = vars.BrowserExtensionFireFox.Root;
     console.log('\taddonDest: ' + addonDest);
 
-    var sourceHtml = path.join(vars.PopUpHtml.AutoBuildRoot, vars.PopUpHtml.MinFileName());
+    var sourceHtml = path.join(vars.PopUpHtml.FinalFolderNameFull(), vars.PopUpHtml.MinFileName());
     this.FromTo(sourceHtml, addonDest);
 
-    var sourceJs = path.join(vars.ContentJs.AutoBuildRoot, vars.ContentJs.MinFileName());
+    var sourceJs = path.join(vars.ContentJs.FinalFolderNameFull(), vars.ContentJs.MinFileName());
     this.FromTo(sourceJs, addonDest);
 
-    var sourceOpener = path.join(vars.WindowOpener.AutoBuildRoot, vars.WindowOpener.NameConcat());
+    var sourceOpener = path.join(vars.ContentJs.FinalFolderNameFull(), vars.WindowOpener.MinFileName());
     this.FromTo(sourceOpener, addonDest);
+
+    var sourcePopUpJs = path.join(vars.PopUpJs.FinalFolderNameFull(), vars.PopUpJs.MinFileName());
+    this.FromTo(sourcePopUpJs, addonDest);
+
 
     cb();
   }

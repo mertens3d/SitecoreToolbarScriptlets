@@ -1,18 +1,15 @@
-﻿import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
-import { GuidHelper } from './GuidHelper';
+﻿import { GuidHelper } from './GuidHelper';
 import { AbstractDebug } from './debug';
-import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
 import { IDataOneWindowStorage } from '../Interfaces/IDataOneWindowStorage';
 import { scWindowType } from '../Enums/scWindowType';
 
 export class Utilities {
   GuidMan: GuidHelper;
-  Utilities: Utilities;
 
   constructor(debug: AbstractDebug) {
     debug.FuncStart(Utilities.name);
     this.GuidMan = new GuidHelper();
-    this.Utilities = new Utilities(debug);
+    //this.Utilities = new Utilities(debug);
     debug.FuncEnd(Utilities.name);
   }
 
@@ -76,15 +73,15 @@ export class Utilities {
   MakeFriendlyDate(date: Date) {
     var year = date.getFullYear();
     var month = date.getMonth();
-    var day = this.Utilities.Buffer(date.getDay().toString(), 2, '0');
-    var min = this.Utilities.Buffer(date.getMinutes().toString(), 2, '0');
+    var day = this.Buffer(date.getDay().toString(), 2, '0');
+    var min = this.Buffer(date.getMinutes().toString(), 2, '0');
     var hoursRaw = date.getHours();
     var ampm = hoursRaw >= 12 ? 'pm' : 'am';
 
     hoursRaw = hoursRaw % 12;
 
     var hourClean = hoursRaw ? hoursRaw : 12; // the hour '0' should be '12'
-    var hourCleanStr: string = this.Utilities.Buffer(hourClean.toString(), 2, '0');
+    var hourCleanStr: string = this.Buffer(hourClean.toString(), 2, '0');
 
     var toReturn = year + '.' + month + '.' + day + ' ' + hourCleanStr + ':' + min + ' ' + ampm;
     return toReturn;

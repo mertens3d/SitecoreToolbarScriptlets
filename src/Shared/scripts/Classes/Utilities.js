@@ -6,7 +6,7 @@ var Utilities = /** @class */ (function () {
     function Utilities(debug) {
         debug.FuncStart(Utilities.name);
         this.GuidMan = new GuidHelper_1.GuidHelper();
-        this.Utilities = new Utilities(debug);
+        //this.Utilities = new Utilities(debug);
         debug.FuncEnd(Utilities.name);
     }
     Utilities.prototype.SelectHeaderStr = function () {
@@ -63,13 +63,13 @@ var Utilities = /** @class */ (function () {
     Utilities.prototype.MakeFriendlyDate = function (date) {
         var year = date.getFullYear();
         var month = date.getMonth();
-        var day = this.Utilities.Buffer(date.getDay().toString(), 2, '0');
-        var min = this.Utilities.Buffer(date.getMinutes().toString(), 2, '0');
+        var day = this.Buffer(date.getDay().toString(), 2, '0');
+        var min = this.Buffer(date.getMinutes().toString(), 2, '0');
         var hoursRaw = date.getHours();
         var ampm = hoursRaw >= 12 ? 'pm' : 'am';
         hoursRaw = hoursRaw % 12;
         var hourClean = hoursRaw ? hoursRaw : 12; // the hour '0' should be '12'
-        var hourCleanStr = this.Utilities.Buffer(hourClean.toString(), 2, '0');
+        var hourCleanStr = this.Buffer(hourClean.toString(), 2, '0');
         var toReturn = year + '.' + month + '.' + day + ' ' + hourCleanStr + ':' + min + ' ' + ampm;
         return toReturn;
     };

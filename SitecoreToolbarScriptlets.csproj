@@ -93,7 +93,6 @@
     <Content Include="Browser Addons\Firefox\HindSite\popup\choose_setting.html" />
     <Content Include="Browser Addons\Firefox\HindSite\popup\choose_setting.js" />
     <Content Include="gulp.support\CommonBase.js" />
-    <Content Include="gulp.support\HindSiteWindowOpener.js" />
     <Content Include="gulpfile.js" />
     <Content Include="Help\Help.txt" />
     <Content Include="jest.config.js" />
@@ -164,7 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Browser Addons\Firefox\communication\" />
-    <Folder Include="Browser Addons\Firefox\HindSite\AutoBuild\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneCEManager.ts" />

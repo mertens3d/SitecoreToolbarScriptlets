@@ -49,7 +49,7 @@ module.exports = {
       .pipe(Webpack_stream(
       {
         entry: targetVar.Ts.TranspiledEntryPointFull(),
-        mode: 'production',
+          mode: 'production',//'development', //,
         output: {
           path: targetVar.WebpackContentOutputFilePathAbs(),
           filename: targetVar.MinFileName() // 'jsContent.min.js'

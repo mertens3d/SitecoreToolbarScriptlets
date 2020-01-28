@@ -23,6 +23,12 @@ export class PopUpHub {
   FeedbackMan: FeedbackManager;
 
   constructor() {
+    this.debug = new PopUpDebug(window);
+    this.PopUpAtticMan = new PopUpAtticManager(this);
+    console.log("asdfasdfsdafa");
+    console.log("dafsadfdsafsdafsaasdfasdfsa");
+    this.debug.LogVal("dddd", "eeee");
+    this.PopMsgMan = new PopUpMessagesManager(this);
     this.UiMan = new UiManager(this);
     this.EventMan = new EventManager(this);
     this.GuidMan = new GuidHelper();

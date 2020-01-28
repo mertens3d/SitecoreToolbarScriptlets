@@ -22,9 +22,12 @@ class Vars {
       this.SharedJs = new InjectableClass('Shared', 'js', 'js');
 
     this.WindowOpener = new InjectableClass('hindsiteWindowOpener', 'js', 'js', this.FinalFolderShort);
-    this.WindowOpener.Ts.TranspiledEntryPointFile = 'EntryPoint.js',
+    this.WindowOpener.Ts.TranspiledEntryPointFile = 'EntryPoint.js';
 
-      this.BrowserExtensionFireFox = { AutoBuildDest: './Browser Addons/Firefox/HindSite/AutoBuild' };
+    this.BrowserExtensionFireFox = {
+      Root: './Browser Addons/Firefox/HindSite',
+      AutoBuildDest: '/HindSite/AutoBuild'
+    };
 
     //this.WindowOpener = new WindowOpenerClass();
 
