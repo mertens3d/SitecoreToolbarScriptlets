@@ -33,6 +33,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   Init() {
+    this.debug().FuncStart(this.Init.name, UiManager.name);
     var self = this;
     this.debug().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
 
@@ -41,6 +42,7 @@ export class UiManager extends PopUpManagerBase {
     this.__wireParentFocusCheck();
 
     this.RefreshUiRequest();
+    this.debug().FuncEnd(this.Init.name);
   }
 
   private __drawStoragePretty(ourData: IOneStorageData[]) {
@@ -253,7 +255,7 @@ export class UiManager extends PopUpManagerBase {
   //}
 
   __getTextArea(): HTMLTextAreaElement {
-    return <HTMLTextAreaElement>document.getElementById(this.PopConst().ElemId.HS.TaDebug);
+    return <HTMLTextAreaElement>document.querySelector(this.PopConst().Selector.HS.TaDebug);
   }
 
   HndlrDebugTextChanged(caller: any, data: ICallbackDataDebugTextChanged) {
@@ -346,6 +348,7 @@ export class UiManager extends PopUpManagerBase {
 
     let currentSettings = this.PopAtticMan().CurrentSettings();
     let currentVal = (<HTMLInputElement>document.querySelector(this.PopConst().Selector.HS.iCBoxdSettingsShowDebugData)).checked;
+    currentVal = true; //todo - remove after debugging
     this.debug().LogVal('currentVal', currentVal.toString())
     currentSettings.DebugSettings.ShowDebugData = currentVal;
 
@@ -414,7 +417,7 @@ export class UiManager extends PopUpManagerBase {
   RefreshUiRequest() {
     this.debug().FuncStart(this.__drawCorrectNicknameInUI.name);
 
-    var payload = this.MsgMan().SendMessage(new MsgFromPopUp(MsgFlag.GiveCurrentData));
+    var payload = this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.GiveCurrentData));
 
     this.__refreshSettings();
     this.RestoreAccordianStates();
@@ -481,7 +484,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   private __getSelectElem(): HTMLSelectElement {
-    return <HTMLSelectElement>window.document.getElementById(this.PopConst().ElemId.HS.SelStateSnapShot);
+    return <HTMLSelectElement>window.document.querySelector(this.PopConst().Selector.HS.SelStateSnapShot);
   }
 
   GetIdOfSelectWindowSnapshot(): IGuid {
@@ -501,26 +504,45 @@ export class UiManager extends PopUpManagerBase {
     this.debug().FuncEnd(this.GetIdOfSelectWindowSnapshot.name);
     return toReturn;
   }
-  AssignOnClickEvent(targetId: string, handler: Function): void {
+
+  AssignOnCheckedEvent(targetId: string, handler: Function): void {
     var targetElem: HTMLElement = document.getElementById(targetId);
     if (!targetElem) {
+      this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
+    } else {
+      targetElem.addEventListener('checked', (evt) => { handler(evt) });
+    }
+  }
+
+
+  AssignOnClickEvent(targetId: string, handler: Function): void {
+    var targetElem: HTMLElement = document.querySelector(targetId);
+    if (!targetElem) {
+      targetElem = document.querySelector('[id=' + targetId + ']');
+    }
+
+
+    if (!targetElem) {
+
       this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
     } else {
       targetElem.addEventListener('click', (evt) => { handler(evt) });
     }
   }
-  AssignOnChangeEvent(targetId: string, handler: Function): void {
-    var targetElem: HTMLElement = document.getElementById(targetId);
+  AssignOnChangeEvent(selector: string, handler: Function): void {
+    this.debug().FuncStart(this.AssignOnChangeEvent.name, selector);
+    var targetElem: HTMLElement = document.querySelector(selector);
     if (!targetElem) {
-      this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
+      this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
     } else {
       targetElem.onchange = () => { handler };
     }
+    this.debug().FuncEnd(this.AssignOnChangeEvent.name, selector);
   }
-  AssignDblClickEvent(targetId: string, handler: Function): void {
-    var targetElem: HTMLElement = document.getElementById(targetId);
+  AssignDblClickEvent(selector: string, handler: Function): void {
+    var targetElem: HTMLElement = document.querySelector(selector);
     if (!targetElem) {
-      this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
+      this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
     } else {
       targetElem.ondblclick = (evt) => { handler(evt) };
     }

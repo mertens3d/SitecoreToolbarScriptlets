@@ -18,10 +18,10 @@ export class EventManager extends PopUpManagerBase {
   private __wireMenuButtons() {
     this.debug().FuncStart(this.__wireMenuButtons.name);
 
-    this.UiMan().AssignDblClickEvent(this.PopConst().ElemId.HS.SelStateSnapShot, (evt) => { this.__hndlrRestoreClick(evt); });
-    this.UiMan().AssignDblClickEvent(this.PopConst().ElemId.HS.TaDebug, () => { this.__cleardebugTextWithConfirm(); });
+    this.UiMan().AssignDblClickEvent(this.PopConst().Selector.HS.SelStateSnapShot, (evt) => { this.__hndlrRestoreClick(evt); });
+    this.UiMan().AssignDblClickEvent(this.PopConst().Selector.HS.TaDebug, () => { this.__cleardebugTextWithConfirm(); });
 
-    this.UiMan().AssignOnChangeEvent(this.PopConst().ElemId.HS.SelStateSnapShot, (evt) => { this.__hndlrSelectChange(evt) });
+    this.UiMan().AssignOnChangeEvent(this.PopConst().Selector.HS.SelStateSnapShot, (evt) => { this.__hndlrSelectChange(evt) });
 
     //this.UiMan().AssignMenuWindowChanged((evt) => { this.__hndlrMenuWindowChanged(); });
 
@@ -47,13 +47,16 @@ export class EventManager extends PopUpManagerBase {
     this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndInSite, (evt) => { this.__toggleAccordian(evt) });
     this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndSettings, (evt) => { this.__toggleAccordian(evt) });
 
+
+    this.UiMan().AssignOnClickEvent(this.PopConst().Selector.HS.iCBoxdSettingsShowDebugData, (evt) => { this.__showDebugButtonClicked(evt) });
+
     this.debug().FuncEnd(this.__wireMenuButtons.name);
   }
   __hndlrSelectChange(evt: any) {
     this.PopHub.UiMan.SelectChanged();
   }
   __RemoveFromStorage(evt: any) {
-    this.MsgMan().SendMessage(new MsgFromPopUp(MsgFlag.RemoveFromStorage));
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.RemoveFromStorage));
   }
   __DrawStorage(evt: any) {
     this.MsgMan().FromAtticDrawStorage();
@@ -67,7 +70,7 @@ export class EventManager extends PopUpManagerBase {
     payload.Data.ReqScMode = newMode;
     payload.Data.UseOriginalWindowLocation = evt.ctrlKey;
 
-    this.MsgMan().SendMessage(payload);
+    this.MsgMan().SendMessageHndlr(payload);
   }
 
   private __updateNickName() {
@@ -75,7 +78,7 @@ export class EventManager extends PopUpManagerBase {
     var payload = new MsgFromPopUp(MsgFlag.UpdateNickName);
     payload.Data.idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
     payload.Data.NewNickname = this.UiMan().GetValueInNickname();;
-    this.MsgMan().SendMessage(payload);
+    this.MsgMan().SendMessageHndlr(payload);
   }
 
   private __cleardebugTextWithConfirm() {
@@ -106,7 +109,7 @@ export class EventManager extends PopUpManagerBase {
   }
 
   private __handlrB() {
-    this.MsgMan().SendMessage(new MsgFromPopUp(MsgFlag.AdminB))
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.AdminB))
   }
 
   private __hndlrMenuWindowChanged() {
@@ -128,7 +131,7 @@ export class EventManager extends PopUpManagerBase {
 
   private __hndlrDesktop(evt: MouseEvent) {
     this.__initNewOperation();
-    this.MsgMan().SendMessage(new MsgFromPopUp(MsgFlag.GoDesktop))
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.GoDesktop))
   }
 
   private __hndlrCancelOperation(evt: MouseEvent) {
@@ -137,26 +140,33 @@ export class EventManager extends PopUpManagerBase {
 
   private async __hndlrQuickPublish(evt: MouseEvent) {
     this.__initNewOperation();
-    this.MsgMan().SendMessage(new MsgFromPopUp(MsgFlag.QuickPublish))
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.QuickPublish))
 
-    this.MsgMan().SendMessage(new MsgFromPopUp(MsgFlag.TaskSuccessful));
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.TaskSuccessful));
 
     
   }
 
+  private __showDebugButtonClicked(evt: MouseEvent) {
+    this.__initNewOperation();
+    this.debug().FuncStart(this.__showDebugButtonClicked.name);
+
+    this.debug().FuncEnd(this.__showDebugButtonClicked.name);
+  }
+
   private async __hndlrTakeSnapShot(evt: MouseEvent) {
     this.__initNewOperation();
-    this.MsgMan().SendMessage(new MsgFromPopUp(MsgFlag.TakeSnapShot));
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.TakeSnapShot));
   }
 
   private async __hndlrAddCETab() {
     this.__initNewOperation();
-    this.MsgMan().SendMessage(new MsgFromPopUp(MsgFlag.AddCETab));
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.AddCETab));
   }
 
   private async __hndlrOpenCE() {
     this.__initNewOperation();
-    this.MsgMan().SendMessage(new MsgFromPopUp(MsgFlag.OpenCE));
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.OpenCE));
   }
 
   private __initNewOperation() {
@@ -171,7 +181,7 @@ export class EventManager extends PopUpManagerBase {
     var payload = new MsgFromPopUp(MsgFlag.AddCETab);
     payload.Data.idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
 
-    this.MsgMan().SendMessage(payload);
+    this.MsgMan().SendMessageHndlr(payload);
 
     this.debug().FuncEnd(this.__hndlrRestoreClick.name);
   }

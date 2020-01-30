@@ -9,7 +9,7 @@ import { PageDataManager } from './PageDataManager';
 import { PromiseGeneric } from '../Promises/PromiseGeneric';
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
 import { Utilities } from '../../../Shared/scripts/Classes/Utilities';
-import { MessagesManager } from './MessagesManager';
+import { ContentMessageManager } from './ContentMessageManager';
 import { ContentDebug } from '../Classes/ContentDebug';
 import { IContentConst } from '../../../Shared/scripts/Interfaces/IContentConst';
 import { GuidHelper } from '../../../Shared/scripts/Classes/GuidHelper';
@@ -25,7 +25,7 @@ export class ContentHub {
 
   GuidMan: GuidHelper;
   LocationMan: LocationManager;
-  MsgMan: MessagesManager;
+  MsgMan: ContentMessageManager;
   MiscMan: MiscManager;
   OneCEMan: OneCEManager;
   OneDesktopMan: OneDesktopManager;
@@ -44,18 +44,18 @@ export class ContentHub {
     debug.FuncStart(ContentHub.name);
     this.debug = debug;
     this.SitecoreUiMan = sitecoreUiMan;
-    this.Init();
+    this.Instantiate();
     debug.FuncEnd(ContentHub.name);
   }
 
-  Init() {
-    this.debug.FuncStart(this.Init.name);
+  Instantiate() {
+    this.debug.FuncStart(this.Instantiate.name);
 
     this.AtticMan = new ContentAtticManager(this);
 
     this.GuidMan = new GuidHelper();
     this.LocationMan = new LocationManager(this);
-    this.MsgMan = new MessagesManager(this);
+    this.MsgMan = new ContentMessageManager(this);
     this.MiscMan = new MiscManager(this);
     this.OneCEMan = new OneCEManager(this);
     this.OneDesktopMan = new OneDesktopManager(this);
@@ -68,21 +68,22 @@ export class ContentHub {
 
     this.Utilities = new Utilities(this.debug);
 
-    this.init();
-    this.debug.FuncEnd(this.Init.name);
+    this.Init();
+    this.debug.FuncEnd(this.Instantiate.name);
   }
-  init() {
-    this.debug.FuncStart(ContentHub.constructor.name + ' ' + this.init.name);
+  Init() {
+    this.debug.FuncStart(ContentHub.constructor.name + ' ' + this.Init.name);
     this.Const = InjectConst.ContConst;
 
     this.AtticMan.Init();
+    this.MsgMan.Init();
+
     this.debug.Enabled = this.MsgMan.IsDebugEnabled();
 
     this.PageDataMan.Init();
     this.OneWindowMan.Init();
 
-    this.MsgMan.Init();
 
-    this.debug.FuncEnd(ContentHub.constructor.name + ' ' + this.init.name);
+    this.debug.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);
   }
 }

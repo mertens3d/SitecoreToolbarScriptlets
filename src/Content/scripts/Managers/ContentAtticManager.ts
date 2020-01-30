@@ -7,7 +7,6 @@ import { IDataSettings } from '../../../Shared/scripts/Interfaces/IDataSettings'
 import { IOneStorageData } from '../../../Shared/scripts/Interfaces/IOneStorageData';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 
-
 export class ContentAtticManager extends ContentManagerBase {
   //eventAwesome: CustomEvent<string>;
 
@@ -27,11 +26,9 @@ export class ContentAtticManager extends ContentManagerBase {
   UpdateNickname(payload: PayloadDataFromPopUp) {
     this.debug().FuncStart(this.UpdateNickname.name);
 
-
     if (payload.idOfSelect) {
       var storageMatch = this.GetFromStorageById(payload.idOfSelect)
       if (storageMatch) {
-
         storageMatch.NickName = payload.NewNickname;
         this.WriteToStorage(storageMatch);
       }
@@ -86,16 +83,6 @@ export class ContentAtticManager extends ContentManagerBase {
 
     this.debug().FuncEnd(this.GetFromStorageById.name);
     return DateOneWinStoreMatch;
-  }
-
-
-
-  DebugSettings(toReturn: IDataSettings): void {
-    this.debug().FuncStart(this.DebugSettings.name);
-
-    this.debug().LogVal('Settings', JSON.stringify(toReturn));
-
-    this.debug().FuncEnd(this.DebugSettings.name);
   }
 
   private __getAllLocalStorageAsIOneStorageData(): IOneStorageData[] {
@@ -169,7 +156,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
     this.debug().FuncEnd(this.RemoveOneFromStorage.name);
   }
- 
+
   GetRawFromStorageById(needleId: IGuid): IOneStorageData {
     this.debug().FuncStart(this.GetRawFromStorageById.name, needleId.asString);
     var toReturn: IOneStorageData = null;

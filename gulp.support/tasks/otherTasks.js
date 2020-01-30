@@ -23,7 +23,7 @@ module.exports = {
       .pipe(gulp.dest(vars.WindowOpener.AutoBuildRootFinal));
   },
 
-    //BuildTypeScriptShared: function (cb, vars) {
+  //BuildTypeScriptShared: function (cb, vars) {
   //  return gulp.src([vars.SharedJs.Ts.SourceFilter() ])
   //    .pipe(sort())
   //    .pipe(ts(this.CommonSettings))
@@ -47,24 +47,25 @@ module.exports = {
 
     return gulp.src(targetVar.Ts.TranspiledFolder)
       .pipe(Webpack_stream(
-      {
-        entry: targetVar.Ts.TranspiledEntryPointFull(),
+        {
+          entry: targetVar.Ts.TranspiledEntryPointFull(),
           mode: 'production',//'development', //,
-        output: {
-          path: targetVar.WebpackContentOutputFilePathAbs(),
-          filename: targetVar.MinFileName() // 'jsContent.min.js'
-        }
-      }))
+          output: {
+            path: targetVar.WebpackContentOutputFilePathAbs(),
+            filename: targetVar.MinFileName() // 'jsContent.min.js'
+          },
+          optimization: {
+            minimize: false
+          }
+        }))
       .pipe(gulp.dest(targetVar.WebpackContentOutputFilePathAbs()));
     //cb();
-
   },
 
   //WebpackContent: function (cb, vars) {
   //  //return Webpack_stream(WebpackContent_config)
 
   //  vars.ContentJs.debugInfo();
-
 
   //  return Webpack_stream(
   //    {

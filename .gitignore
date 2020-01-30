@@ -21,3 +21,8 @@ node_modules
 /src/jsToInject/**/*.js.map
 /AutoBuild/
 /src/**/*.map
+/src/PopUp/scripts/*.js
+/src/Content/scripts/*.js
+/src/Content/scripts/*.js
+/src/hindsiteWindowOpener/Scripts/*.js
+/src/Shared/scripts/*.js

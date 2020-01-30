@@ -2,7 +2,7 @@ import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
 import { IDataDebugCallback } from "../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../Interfaces/ICallbackDataDebugTextChanged";
 
-export class AbstractDebug {
+export class BaseDebug {
   __indentCount: number;
   ParentWindow: Window;
   Enabled: boolean = false;
@@ -50,7 +50,7 @@ export class AbstractDebug {
     });
   }
 
-  HndlrClearDebugText(self: AbstractDebug, verify: boolean = false): void {
+  HndlrClearDebugText(self: BaseDebug, verify: boolean = false): void {
 
     this.FuncStart(this.HndlrClearDebugText.name);
     var proceed: boolean = true;
@@ -121,9 +121,9 @@ export class AbstractDebug {
 
       console.log(text);
 
-      if (this.ParentWindow) {
-        this.ParentWindow.console.log(text);
-      }
+      //if (this.ParentWindow) {
+      //  this.ParentWindow.console.log(text);
+      //}
     }
   }
 

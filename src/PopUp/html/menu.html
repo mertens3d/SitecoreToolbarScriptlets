@@ -5,14 +5,14 @@
   <title>
     Hind&bull;Site POPUP
   </title>
-  <link href='PopUpStyles.min.css' rel='stylesheet' type='text/css' />
+  <link href='PopUp.min.css' rel='stylesheet' type='text/css' />
 </head>
 <body>
   <form>
 
     <fieldset>
       <legend id='lgnd-fore-site'>Fore&bull;Site</legend>
-      <div class='accordian-content'>
+      <div class='accordian-content flex-container'>
         <button id='Edit' type='button' class="icon edit">Edit</button>
         <button id='Prev' type='button' class='icon preview-icon'>Preview</button>
         <button id='Norm' type='button' class="icon normal">Normal</button>
@@ -28,21 +28,24 @@
     <fieldset>
       <legend id='lgnd-hind-site' data-setting='lgnd-hind-site'>Hind&bull;Site</legend>
       <div class='accordian-content'>
-        <div class='col-6'>
-          <button id='SaveWindowState' type='button' class="icon take-snapshot">Take Snapshot</button>
-          <!--<input type='checkbox' /> todo favorites only-->
-          <select id='selState' size='6'>
-          </select>
+        <div class="row flex-container">
+          <div class='col-6'>
+           
+            <!--<input type='checkbox' /> todo favorites only-->
+            <select id='selState' size='6'>
+            </select>
+          </div>
         </div>
-        <div class='col-6-btn'>
-          <input type='text' id='inputNickname' value='' placeholder='Nick Name' />
-          <button id='UpdateNickname' type='button' class="icon set-nickname">Set Nickname</button>
-          <button id='ToggleFavorite' type='button' class="icon favorite">Toggle Favorite</button>
-          <button id='RemoveOneFromLocalStorage' type='button' class="icon delete-snapshot">Delete Snapshot</button>
+        <div class="row flex-container">
+            <button id='SaveWindowState' type='button' class="icon take-snapshot">Take Snapshot</button>
+            <input type='text' id='inputNickname' value='' placeholder='Nick Name' />
+            <button id='UpdateNickname' type='button' class="icon set-nickname">Set Nickname</button>
+            <button id='ToggleFavorite' type='button' class="icon favorite">Toggle Favorite</button>
+            <button id='RemoveOneFromLocalStorage' type='button' class="icon delete-snapshot">Delete Snapshot</button>
 
-          <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
+            <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
 
-          <button id='Cancel' type='button' class="icon cancel">Cancel</button>
+            <button id='Cancel' type='button' class="icon cancel">Cancel</button>
         </div>
       </div>
     </fieldset>
@@ -75,7 +78,7 @@
     <fieldset>
       <legend id='lgnd-settings' data-setting='lgnd-settings'>Settings/ Stats</legend>
       <div class='accordian-content'>
-        <input type='checkbox' id='id-settings-show-debug-data' />
+        <input type='checkbox' id='id-settings-show-debug-data' checked="checked" />
         <label for='id-settings-show-debug-data'>Show Debug Data</label>
         <label for='id-settings-auto-login'>Auto login</label>
 

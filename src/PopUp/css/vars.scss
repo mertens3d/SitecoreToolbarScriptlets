@@ -1,0 +1,31 @@
+﻿$scBackgroundColor: #f7f7f7;
+$scHoverColor: #E3E3E3;
+$scLaunchPadBtnBackground: white;
+$scLaunchPageButtonHeight: 96px;
+$scLaunchPagebuttonWidth: 96px;
+$scTextColorLight: #ccc;
+$scTextColorNorm: #131313;
+
+$scSectionBackgroundColor: rgb(71, 71, 71);
+
+$browserExtMaxHeight: 600px;
+$browserExtMaxWidth: 800px;
+
+$selWidth: 500px;
+$scBackgroundImage: url(/sitecore/login/drop_wallpaper.jpg);
+$scAccordianUp: "/sitecore/shell/themes/standard/Images/accordion_up.png";
+
+// widths
+$padding: 4px;
+$margin: 4px;
+
+$colWidthOneUnit: 96px;
+
+$oneColWidth: $padding + $colWidthOneUnit;
+
+$selColWidth: $margin + $padding + $selWidth + $padding +$margin;
+
+$selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $scLaunchPagebuttonWidth + $padding +$margin + 40px;
+
+//heights
+

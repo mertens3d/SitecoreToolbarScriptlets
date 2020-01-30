@@ -2,13 +2,13 @@
 const path = require('path');
 
 class Injectable {
-  constructor(name, sourceExt, finalExt, finalFolder) {
+  constructor(name, sourceFilter, finalExt, finalFolder) {
     this.WorkingCodeRootDir = './src';
     this.AutoBuildRoot = './AutoBuild';
     this.FinalFolderNameShort = finalFolder
 
     this.Name = name;
-    this.SourceExt = sourceExt;
+    this.SourceFilter = sourceFilter;
     this.FinalExt = finalExt;
     this.VarName = this.Name;
 
@@ -46,10 +46,10 @@ class Injectable {
   }
 
   SourceDirFilter() {
-    return this.WorkingCodeRootDir + '/' + this.Name + '/**/*.' + this.SourceExt;
+    return this.WorkingCodeRootDir + '/' + this.Name + this.SourceFilter;
   }
 
-  HtmlFileFull() {
+  AutoBuildMinFileNameFull() {
     return this.AutoBuildRoot + '/' + this.MinFileName();
 
   }
@@ -69,7 +69,7 @@ class Injectable {
     console.log('\tFinalFull: ' + this.FinalFolderNameFull());
 
     console.log('\tName: ' + this.Name);
-    console.log('\tSourceExt: ' + this.SourceExt);
+    console.log('\SourceFilter: ' + this.SourceFilter);
     console.log('\tSourceDirFilter: ' + this.SourceDirFilter());
     console.log('\tMinFileName: ' + this.MinFileName());
     console.log('\tNameConcatMin: ' + this.NameConcatMin());

@@ -8,6 +8,10 @@ module.exports = {
   BuildPopUpStyles: function (cb, vars) {
     vars.PopUpStyles.debugInfo();
 
+    console.log('source: ' + vars.PopUpStyles.SourceDirFilter());
+    console.log('rename to: ' + vars.PopUpStyles.MinFileName());
+    console.log('dest: ' + vars.PopUpStyles.AutoBuildRoot);
+
     return gulp.src(vars.PopUpStyles.SourceDirFilter())
       .pipe(sass({
         outputStyle: 'compressed'

@@ -1,9 +1,10 @@
 ﻿import { iSitecoreUiManager } from "../Shared/scripts/Interfaces/ISitecoreUiManager";
-import { AbstractDebug } from "../Shared/scripts/Classes/debug";
+import { BaseDebug } from "../Shared/scripts/Classes/debug";
 import { IDataOneWindowStorage } from "../Shared/scripts/Interfaces/IDataOneWindowStorage";
 
 export class SitecoreUiManagerFake implements iSitecoreUiManager {
-  constructor(debug: AbstractDebug) {
+
+  constructor(debug: BaseDebug) {
     debug.FuncStart(SitecoreUiManagerFake.name);
 
     debug.FuncEnd(SitecoreUiManagerFake.name);
@@ -11,16 +12,15 @@ export class SitecoreUiManagerFake implements iSitecoreUiManager {
 
   __activeWindowSnapShot: IDataOneWindowStorage;
 
-  AssignOnClickEvent(targetId: string, handler: Function): void {
-    //do nothing
-  }
-  AssignOnChangeEvent(targetId: string, handler: Function): void {
-    //do nothing
-  }
-  AssignDblClickEvent(targetId: string, handler: Function): void {
-    //do nothing
-  }
+  //AssignOnClickEvent(targetId: string, handler: Function): void {
+  //  //do nothing
+  //}
+  //AssignOnChangeEvent(targetId: string, handler: Function): void {
+  //  //do nothing
+  //}
+  //AssignDblClickEvent(targetId: string, handler: Function): void {
+  //  //do nothing
+  //}
   AssignMenuWindowChanged(): void {
-
   }
 }

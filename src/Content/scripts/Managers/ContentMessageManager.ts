@@ -7,8 +7,9 @@ import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestF
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { MsgFromContent } from '../../../Shared/scripts/Classes/MsgPayloadResponseFromContent';
 import { PayloadDataFromPopUp } from '../../../Shared/scripts/Classes/PayloadDataReqPopUp';
+import { MessageRunner } from '../../../Shared/scripts/Classes/MsgRunner';
 
-var browser = browser || {};
+//var browser = browser || {};
 
 //browser.runtime.onMessage.addListener((message) => {
 //  if (message.command === "beastify") {
@@ -18,25 +19,26 @@ var browser = browser || {};
 //  }
 //});
 
-export class MessagesManager extends ContentManagerBase implements IMessageManager {
+export class ContentMessageManager extends ContentManagerBase implements IMessageManager {
+  MsgRunner: MessageRunner;
 
-  constructor(xyyz: ContentHub) {
-    super(xyyz);
-    xyyz.debug.FuncStart(MessagesManager.name);
+  constructor(contentHub: ContentHub) {
+    super(contentHub);
+    contentHub.debug.FuncStart(ContentMessageManager.name);
 
-    xyyz.debug.FuncEnd(MessagesManager.name);
+    contentHub.debug.FuncEnd(ContentMessageManager.name);
   }
 
   Init() {
-    browser.runtime.onMessage.addListener((message) => {
-      this.ReceiveMessage(message);
-    });
+    this.debug().FuncStart(this.Init.name + ' ' + ContentMessageManager.name);
+    this.MsgRunner = new MessageRunner(this.ReceiveMessageHndlr, this.SendMessageHndlr, this.debug(), 'Content');
+    this.debug().FuncEnd(this.Init.name);
   }
+
   NotifyCompleteOnContent(targetWindow: IDataBrowserWindow = null, Message: string): void {
     if (!targetWindow) {
       targetWindow = this.PageDataMan().TopLevelWindow();
     }
-
 
     let bodyTag = targetWindow.DataDocSelf.Document.getElementsByTagName('body')[0];//(treeGlyphTargetId);
 
@@ -56,7 +58,8 @@ export class MessagesManager extends ContentManagerBase implements IMessageManag
 
     bodyTag.appendChild(flagElem);
   }
-  async ReceiveMessage(payload: MsgFromPopUp) {
+  async ReceiveMessageHndlr(payload: MsgFromPopUp) {
+    this.debug().FuncStart(this.ReceiveMessageHndlr.name);
     //var message: MsgFlag = MsgFlag.Unknown;
     var response;
 
@@ -108,7 +111,6 @@ export class MessagesManager extends ContentManagerBase implements IMessageManag
 
       case MsgFlag.TaskSuccessful:
         this.NotifyCompleteOnContent(null, payload.Data.ScreenMessage);
-        
 
       case MsgFlag.TakeSnapShot:
         this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().TopLevelWindow());
@@ -120,14 +122,14 @@ export class MessagesManager extends ContentManagerBase implements IMessageManag
   }
 
   private respondSuccessful() {
-    this.MsgMan().SendMessage(new MsgFromContent(MsgFlag.TaskSuccessful))
+    this.SendMessageHndlr(new MsgFromContent(MsgFlag.TaskSuccessful))
   }
 
   private respondFail() {
-    this.MsgMan().SendMessage(new MsgFromContent(MsgFlag.TaskFailed));
+    this.SendMessageHndlr(new MsgFromContent(MsgFlag.TaskFailed));
   }
 
-  SendMessage(msgflag: MsgFromContent) {
+  SendMessageHndlr(msgflag: MsgFromContent) {
   }
 
   private __restoreClick(Data: PayloadDataFromPopUp) {
@@ -156,14 +158,12 @@ export class MessagesManager extends ContentManagerBase implements IMessageManag
 
   IsDebugEnabled(): boolean {
     //this.AtticMan.CurrentSettings().DebugSettings.ShowDebugData;
-    throw new Error("Method not implemented.");
+    return true;
   }
 
   OperationCancelled: any;
   SetParentInfo(__winDataParent: IDataBrowserWindow) {
   }
-
-  
 
   //  function insertBeast(beastURL) {
   //alert('insert beast');

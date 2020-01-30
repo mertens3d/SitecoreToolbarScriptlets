@@ -12,7 +12,7 @@ import { PromiseGeneric } from '../Promises/PromiseGeneric';
 import { Utilities } from '../../../Shared/scripts/Classes/Utilities';
 import { IContentConst } from '../../../Shared/scripts/Interfaces/IContentConst';
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
-import { MessagesManager } from '../Managers/MessagesManager';
+import { ContentMessageManager } from '../Managers/ContentMessageManager';
 import { ContentDebug } from '../Classes/ContentDebug';
 import { GuidHelper } from '../../../Shared/scripts/Classes/GuidHelper';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
@@ -34,7 +34,7 @@ export class ContentManagerBase {
   OneCEMan(): OneCEManager { return this.Xyyz.OneCEMan; }
   OneWinMan(): OneWindowManager { return this.Xyyz.OneWindowMan; }
   PageDataMan(): PageDataManager { return this.Xyyz.PageDataMan; }
-  MsgMan(): MessagesManager { return this.Xyyz.MsgMan; }
+  MsgMan(): ContentMessageManager { return this.Xyyz.MsgMan; }
   Utilites(): Utilities { return this.Xyyz.Utilities; }
   Factoryman(): Factories { return this.Xyyz.Factory; }
   MiscMan(): MiscManager { return this.Xyyz.MiscMan; }

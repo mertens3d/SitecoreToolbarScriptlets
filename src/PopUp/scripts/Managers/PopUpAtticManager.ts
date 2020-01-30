@@ -47,6 +47,7 @@ export class PopUpAtticManager extends PopUpManagerBase {
     return toReturn;
   }
   GetDefaultSettings(): IDataSettings {
+    this.debug().FuncStart(this.GetDefaultSettings.name);
     let defaultDebugSettings: IDataDebugSettings = {
       KeepDialogOpen: this.PopConst().Storage.DefaultDebugKeepDialogOpen,
       ShowDebugData: this.PopConst().Storage.DefaultShowDebugData,
@@ -65,10 +66,23 @@ export class PopUpAtticManager extends PopUpManagerBase {
       MenuPrefs: defaultMenuPrefs
     };
 
+    this.DebugSettings(toReturn);
+
+
+    this.debug().FuncEnd(this.GetDefaultSettings.name);
     return toReturn;
   }
+
+  DebugSettings(toReturn: IDataSettings): void {
+    this.debug().FuncStart(this.DebugSettings.name);
+
+    this.debug().LogVal('Settings', JSON.stringify(toReturn));
+
+    this.debug().FuncEnd(this.DebugSettings.name);
+  }
+
   CurrentSettings(): IDataSettings {
-    //this.debug().FuncStart(this.CurrentSettings.name);
+    this.debug().FuncStart(this.CurrentSettings.name);
     var defaultSettings = this.GetDefaultSettings();
     var toReturn: IDataSettings;
 
@@ -104,9 +118,9 @@ export class PopUpAtticManager extends PopUpManagerBase {
       toReturn.MenuPrefs = defaultSettings.MenuPrefs;
     }
 
-    //this.DebugSettings(toReturn);
+    
 
-    //this.debug().FuncEnd(this.CurrentSettings.name);
+    this.debug().FuncEnd(this.CurrentSettings.name);
     return toReturn;
   }
 

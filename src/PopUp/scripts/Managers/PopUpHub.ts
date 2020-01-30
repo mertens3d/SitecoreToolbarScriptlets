@@ -41,7 +41,10 @@ export class PopUpHub {
   }
 
   init() {
+    this.debug.FuncStart(this.init.name, PopUpHub.name);
     this.EventMan.Init();
     this.UiMan.Init();
+    this.PopMsgMan.Init();
+    this.debug.FuncEnd(this.init.name, PopUpHub.name);
   }
 }

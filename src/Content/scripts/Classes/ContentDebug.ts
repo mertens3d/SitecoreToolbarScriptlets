@@ -1,8 +1,8 @@
-﻿import { AbstractDebug } from "../../../Shared/scripts/Classes/debug";
+﻿import { BaseDebug } from "../../../Shared/scripts/Classes/debug";
 import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIframe";
 import { IDataBucketRestoreDesktop } from "../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop";
 
-export class ContentDebug  extends AbstractDebug {
+export class ContentDebug  extends BaseDebug {
 
   PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, friendlyName: string) {
     this.FuncStart(this.PromiseBucketDebug.name, friendlyName);

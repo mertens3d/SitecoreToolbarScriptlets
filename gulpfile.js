@@ -44,14 +44,14 @@ gulp.task('WebpackAll', gulp.series(['WebpackContent', 'WebpackPopUp', 'WebpackO
 //'combineJs', 'buildjsContent',
 
 //todo - put back if needed 'buildWindowOpenerForBookMark', 'BookmarkText',
-//todo - put back if needed 'cleanAutoBuildFolder', 'cleanAddons', 
+//todo - put back if needed 'cleanAutoBuildFolder', 'cleanAddons',
 
-gulp.task('builders', gulp.series(['BuildPopUpStyles', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml']), function (resolve) {
+gulp.task('builders', gulp.series(['BuildPopUpStyles', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml', 'PutToFinal']), function (resolve) {
   resolve();
 });
 
-gulp.task('putters', gulp.series(['PutToFinal', 'putWindowOpenerToLocal', 'CopyFromFinalToAddon']), function (resolve) {
+gulp.task('putters', gulp.series(['putWindowOpenerToLocal', 'CopyFromFinalToAddon']), function (resolve) {
   resolve();
 });
 
-gulp.task('default', gulp.series(['builders','putters']));
+gulp.task('default', gulp.series(['builders', 'putters']));

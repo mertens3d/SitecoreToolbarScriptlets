@@ -1,34 +1,12 @@
-@import 'menu.buttons.scss';
+@import "vars";
+@import 'menu.buttons';
+@import 'overlay.scss';
 
-$scBackgroundColor: #f7f7f7;
-$scHoverColor: #E3E3E3;
-$scLaunchPadBtnBackground: white;
-$scLaunchPageButtonHeight: 96px;
-$scLaunchPagebuttonWidth: 96px;
-$scTextColorLight: #ccc;
-$scTextColorNorm: #131313;
-
-$scSectionBackgroundColor: rgb(71, 71, 71);
-
-$selWidth: 500px;
-$scBackgroundImage: url(/sitecore/login/drop_wallpaper.jpg);
-$scAccordianUp: "/sitecore/shell/themes/standard/Images/accordion_up.png";
-
-// widths
-$padding: 4px;
-$margin: 4px;
-
-$colWidthOneUnit: 96px;
-
-$oneColWidth: $padding + $colWidthOneUnit;
-
-$selColWidth: $margin + $padding + $selWidth + $padding +$margin;
-
-$selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $scLaunchPagebuttonWidth + $padding +$margin + 40px;
-
-//heights
-
-
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 
 .light-text {
   color: $scTextColorLight;
@@ -42,29 +20,6 @@ $selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $
   background-image: url(/~/icon/office/32x32/log_in.png);
   background-repeat: no-repeat;
   background-position: top;
-}
-
-button {
-  /*border-radius: 5px;*/
-  background: none;
-  background-color: $scLaunchPadBtnBackground;
-  background-size: 30px 30px;
-  border: 0;
-  border-radius: 0px;
-  box-shadow: none;
-  cursor: pointer;
-  height: $scLaunchPageButtonHeight;
-  height: 60px;
-  margin: 7px;
-  padding-top: 26px;
-  vertical-align: top;
-  white-space: normal;
-  width: $scLaunchPagebuttonWidth;
-  word-wrap: break-word;
-
-  &:hover {
-    background-color: $scHoverColor;
-  }
 }
 
 select {
@@ -91,7 +46,7 @@ fieldset {
 }
 
 .accordian-content {
-  display: flex;
+  /*display: flex;*/
 }
 
 legend {
@@ -200,34 +155,6 @@ body {
   overflow: scroll;
 }
 
-.menu-overlay {
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 999;
-
-  .overlay-gray {
-    background-color: $scSectionBackgroundColor;
-    bottom: 0;
-    left: 0;
-    opacity: 0.8;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-
-  .overlay-solid {
-    background: white;
-    border: 5px solid black;
-    margin: auto auto;
-    padding: 20px;
-    position: relative;
-    top: 50px;
-    width: 60%;
-  }
-}
 
 textarea {
   border: 0;

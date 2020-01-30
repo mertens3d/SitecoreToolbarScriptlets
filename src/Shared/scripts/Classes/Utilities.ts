@@ -1,12 +1,12 @@
 ﻿import { GuidHelper } from './GuidHelper';
-import { AbstractDebug } from './debug';
+import { BaseDebug } from './debug';
 import { IDataOneWindowStorage } from '../Interfaces/IDataOneWindowStorage';
 import { scWindowType } from '../Enums/scWindowType';
 
 export class Utilities {
   GuidMan: GuidHelper;
 
-  constructor(debug: AbstractDebug) {
+  constructor(debug: BaseDebug) {
     debug.FuncStart(Utilities.name);
     this.GuidMan = new GuidHelper();
     //this.Utilities = new Utilities(debug);

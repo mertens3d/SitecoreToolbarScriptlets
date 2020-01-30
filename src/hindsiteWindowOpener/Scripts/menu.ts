@@ -41,12 +41,12 @@ xyyz.ChildWindow = {
     console.log('Constants: ' + constants.taDebug);
 
     var newWindow = window.open('', 'mywindow', 'width=400, height=800');
-    window.mywindow = newWindow;
+    //window.mywindow = newWindow;
 
 
     var documentId = new Date().getTime();
 
-    this.WriteHtml(window.mywindow, documentId);
+    //this.WriteHtml(window.mywindow, documentId);
 
     //var foreSiteIdDivOrig = window.document.createElement('div');
     //foreSiteIdDivOrig.id = 'orig-win-id';
@@ -64,7 +64,7 @@ xyyz.ChildWindow = {
   },
   FocusWindow: function () {
     console.log('existing window');
-    window.mywindow.focus();
+    //window.mywindow.focus();
   }
 };
 

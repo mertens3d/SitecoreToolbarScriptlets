@@ -1,6 +1,9 @@
 ﻿import { IMsgFromX } from "./IMsgPayload";
+import { MessageRunner } from "../Classes/MsgRunner";
 
 export interface IMessageManager {
-  ReceiveMessage(msgPayload: IMsgFromX);
-  SendMessage(msgPayload: IMsgFromX);
+  MsgRunner: MessageRunner;
+  ReceiveMessageHndlr(msgPayload: IMsgFromX);
+  SendMessageHndlr(msgPayload: IMsgFromX);
+  Init();
 }

@@ -14,9 +14,9 @@ export class PopConst {
       HindSiteParentInfo: 'spanParentInfo',
 
       HS: {
-        SelStateSnapShot: 'selState',
+       
         TabId: 'orig-win-id',
-        TaDebug: 'ta-debug',
+        
         Btn: {
           AdminB: 'AdminB',
           ToggleFavoriteB: 'ToggleFavorite',
@@ -24,7 +24,7 @@ export class PopConst {
           CE: 'CE',
           Desktop: 'Desktop',
           DrawStorage: 'DrawLocalStorage',
-          BigRed: 'btnBigRed',
+          BigRed: 'BigRed',
           ModeEdit: 'Edit',
           ModeNorm: 'Norm',
           ModePrev: 'Prev',
@@ -63,13 +63,15 @@ export class PopConst {
         IdFieldSetDebug: '[id=id-fieldset-debug]',
         menuOverlay: '[id=id-menu-overlay]',
         PrefAutoLogin: '[id=id-settings-auto-login]',
+        SelStateSnapShot: '[id=selState]',
+        TaDebug: '[id=ta-debug]',
       },
     },
     Storage: {
-      DefaultDebugKeepDialogOpen: false,
+      DefaultDebugKeepDialogOpen: true,
       WindowRoot: 'todo',
       SettingsSuffix: 'todo',
-      DefaultShowDebugData: false
+      DefaultShowDebugData: true
     },
     Timeouts: {
       WaitBeforeRemovingCompleteFlag: 1500,

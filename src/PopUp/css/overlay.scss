@@ -1,0 +1,32 @@
+﻿@import "vars";
+
+.menu-overlay {
+  bottom: 0;
+  display: none;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 999;
+
+  .overlay-gray {
+    background-color: $scSectionBackgroundColor;
+    bottom: 0;
+    left: 0;
+    opacity: 0.8;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .overlay-solid {
+    background: white;
+    border: 5px solid black;
+    display: none;
+    margin: auto auto;
+    padding: 20px;
+    position: relative;
+    top: 50px;
+    width: 60%;
+  }
+}

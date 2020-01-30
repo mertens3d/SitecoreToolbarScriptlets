@@ -11,9 +11,9 @@ export interface IPopUpConst {
     InputNickname: string,
     HindSiteParentInfo: string,
     HS: {
-      SelStateSnapShot: string,
+     
       TabId: string,
-      TaDebug: string,
+     
       Btn: {
         AdminB: string,
         ToggleFavoriteB: string,
@@ -61,6 +61,8 @@ export interface IPopUpConst {
       IdFieldSetDebug: string,
       menuOverlay: string,
       PrefAutoLogin: string,
+      SelStateSnapShot: string,
+      TaDebug: string,
     }
   }
   Storage: {

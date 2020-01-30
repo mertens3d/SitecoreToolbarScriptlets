@@ -8,20 +8,20 @@ class Vars {
 
     this.FinalFolderShort = 'final';
 
-    this.PopUpHtml = new InjectableClass('PopUp', 'html', 'html', this.FinalFolderShort);
+    this.PopUpHtml = new InjectableClass('PopUp', '/**/*.html', 'html', this.FinalFolderShort);
 
-    this.PopUpStyles = new InjectableClass('PopUp', 'scss', 'css', this.FinalFolderShort);
+    this.PopUpStyles = new InjectableClass('PopUp', '/**/popup.scss', 'css', this.FinalFolderShort);
 
-    this.PopUpJs = new InjectableClass('PopUp', 'js', 'js', this.FinalFolderShort);
+    this.PopUpJs = new InjectableClass('PopUp', '/**/*.js', 'js', this.FinalFolderShort);
     this.PopUpJs.Ts.TranspiledEntryPointFile = 'EntryPoint.js';
 
-    this.ContentJs = new InjectableClass('Content', 'js', 'js', this.FinalFolderShort);
+    this.ContentJs = new InjectableClass('Content', '/**/*.js', 'js', this.FinalFolderShort);
     //this.ContentJs.WorkingCodeRootDir = this.ContentJs.AutoBuildRoot + '/src';
     this.ContentJs.Ts.TranspiledEntryPointFile = 'zLast.js',
 
-      this.SharedJs = new InjectableClass('Shared', 'js', 'js');
+      this.SharedJs = new InjectableClass('Shared', '/**/*.js', 'js');
 
-    this.WindowOpener = new InjectableClass('hindsiteWindowOpener', 'js', 'js', this.FinalFolderShort);
+    this.WindowOpener = new InjectableClass('hindsiteWindowOpener', '/**/*.js', 'js', this.FinalFolderShort);
     this.WindowOpener.Ts.TranspiledEntryPointFile = 'EntryPoint.js';
 
     this.BrowserExtensionFireFox = {

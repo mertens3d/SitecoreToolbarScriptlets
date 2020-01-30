@@ -56,8 +56,9 @@
     <Content Include="src\BrowserBookmarkCode\Debug.txt" />
     <Content Include="src\BrowserBookmarkCode\Debug.txt.backup.txt" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
-    <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\__global.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\__global.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\EntryPoint.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgRunner.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMessageManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgPayloadRequestFromPopUp.ts" />
@@ -76,6 +77,7 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Classes\Factories.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.debug.ts" />
+    <Content Include="src\Shared\scripts\Enums\MessageFlag.js" />
     <Content Include="webpack.config.js" />
     <None Include=".editorconfig" />
     <None Include=".jshintrc" />
@@ -110,9 +112,10 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneTreeNode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IscMode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISitecoreUiManager.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\MessagesManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentMessageManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseOneStep.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPopUpConst.ts" />
+    <TypeScriptCompile Include="src\Shared\typdefs\browser.d.ts" />
     <TypeScriptCompile Include="src\tests\foo.test.ts" />
     <TypeScriptCompile Include="src\tests\IterationHelper.test.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataDebugSettings.ts" />
@@ -155,6 +158,11 @@
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.ts" />
     <None Include="Readme.md" />
     <None Include="src\PopUp\css\menu.buttons.scss" />
+    <None Include="src\PopUp\css\overlay.scss" />
+    <None Include="src\PopUp\css\vars.scss" />
+    <None Include="src\Shared\scripts\Enums\MessageFlag.js.map">
+      <DependentUpon>MessageFlag.js</DependentUpon>
+    </None>
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
     <None Include="src\PopUp\css\popup.scss" />
