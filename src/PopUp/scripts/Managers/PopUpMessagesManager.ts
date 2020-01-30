@@ -8,17 +8,28 @@ export class PopUpMessagesManager extends PopUpManagerBase implements IMessageMa
   MsgRunner: MessageRunner;
 
   Init() {
-    this.MsgRunner = new MessageRunner(this.ReceiveMessageHndlr, this.SendMessageHndlr, this.debug(), 'PopUp');
+    var self = this;
+    this.MsgRunner = new MessageRunner(
+      (msgPayload: IMsgFromX) => { self.ReceiveMessageHndlr(msgPayload)},
+       self.SendMessageHndlr, self.debug(), 'PopUp');
   }
 
   ReceiveMessageHndlr(msgPayload: IMsgFromX) {
+    
+    this.debug().FuncStart(this.ReceiveMessageHndlr.name, msgPayload.FlagAsString);
+
+    
+    this.debug().LogVal('greeting', msgPayload.greeting);
+
+
+    this.debug().FuncEnd(this.ReceiveMessageHndlr.name, msgPayload.FlagAsString);
   }
 
   SendMessageHndlr(msgPlayload: IMsgFromX) {
     this.debug().FuncStart(this.SendMessageHndlr.name, MsgFlag[msgPlayload.MsgFlag]);
     if (this.MsgRunner) {
+      msgPlayload.greeting = 'this is the greeting from the popup handler';
       this.MsgRunner.SendMessage(msgPlayload);
-
     } else {
       this.debug().Error(this.SendMessageHndlr.name, 'MsgRunner does not exist ' + MsgFlag[msgPlayload.MsgFlag]);
     }

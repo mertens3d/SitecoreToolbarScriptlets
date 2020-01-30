@@ -8,6 +8,7 @@ import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { MsgFromContent } from '../../../Shared/scripts/Classes/MsgPayloadResponseFromContent';
 import { PayloadDataFromPopUp } from '../../../Shared/scripts/Classes/PayloadDataReqPopUp';
 import { MessageRunner } from '../../../Shared/scripts/Classes/MsgRunner';
+import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
 
 //var browser = browser || {};
 
@@ -31,7 +32,14 @@ export class ContentMessageManager extends ContentManagerBase implements IMessag
 
   Init() {
     this.debug().FuncStart(this.Init.name + ' ' + ContentMessageManager.name);
-    this.MsgRunner = new MessageRunner(this.ReceiveMessageHndlr, this.SendMessageHndlr, this.debug(), 'Content');
+    var self = this;
+
+    this.MsgRunner = new MessageRunner(
+      (msg: IMsgFromX) => {
+        self.ReceiveMessageHndlr(msg)
+      },
+      this.SendMessageHndlr, this.debug(), 'Content');
+
     this.debug().FuncEnd(this.Init.name);
   }
 
@@ -59,7 +67,7 @@ export class ContentMessageManager extends ContentManagerBase implements IMessag
     bodyTag.appendChild(flagElem);
   }
   async ReceiveMessageHndlr(payload: MsgFromPopUp) {
-    this.debug().FuncStart(this.ReceiveMessageHndlr.name);
+    this.debug().FuncStart(ContentMessageManager.name + ' ' + this.ReceiveMessageHndlr.name);
     //var message: MsgFlag = MsgFlag.Unknown;
     var response;
 
@@ -70,6 +78,10 @@ export class ContentMessageManager extends ContentManagerBase implements IMessag
         break;
 
       case MsgFlag.AdminB:
+        this.debug().LogVal('flag is adminb', payload.FlagAsString);
+        this.debug().DebugPageDataMan(this.PageDataMan());
+
+
         this.locMan().AdminB(this.PageDataMan().TopLevelWindow().DataDocSelf, null);
         break;
 
@@ -117,6 +129,8 @@ export class ContentMessageManager extends ContentManagerBase implements IMessag
         break;
 
       default:
+        this.debug().LogVal('Unrecognized MsgFlag', payload.FlagAsString);
+
         break;
     }
   }

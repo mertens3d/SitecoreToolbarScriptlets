@@ -1,8 +1,37 @@
 ﻿import { BaseDebug } from "../../../Shared/scripts/Classes/debug";
 import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIframe";
 import { IDataBucketRestoreDesktop } from "../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop";
+import { PageDataManager } from "../Managers/PageDataManager";
+import { IDataBrowserWindow } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
+import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
+import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 
-export class ContentDebug  extends BaseDebug {
+export class ContentDebug extends BaseDebug {
+  DebugPageDataMan(pageDataMan: PageDataManager) {
+    if (this.IsNotNullOrUndefinedBool('pageDataMan', pageDataMan)) {
+      this.DebugIDataBrowserWindow(pageDataMan.TopLevelWindow());
+    }
+  }
+
+  DebugIDataBrowserWindow(browserWindow: IDataBrowserWindow) {
+    if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
+      this.LogVal('Friendly', browserWindow.Friendly);
+      this.LogVal('WindowType', scWindowType[browserWindow.WindowType]);
+
+      this.DebugIDataOneDoc(browserWindow.DataDocSelf);
+      this.DebugWindow(browserWindow.Window);
+    }
+  }
+
+  DebugWindow(window: Window) {
+    if (this.IsNotNullOrUndefinedBool('window', window)) {
+    }
+  }
+
+  DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
+    if (this.IsNotNullOrUndefinedBool('IDataOneDoc', dataOneDoc)) {
+    }
+  }
 
   PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, friendlyName: string) {
     this.FuncStart(this.PromiseBucketDebug.name, friendlyName);

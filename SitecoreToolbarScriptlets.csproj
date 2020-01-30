@@ -56,6 +56,7 @@
     <Content Include="src\BrowserBookmarkCode\Debug.txt" />
     <Content Include="src\BrowserBookmarkCode\Debug.txt.backup.txt" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\MsgFromXBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\__global.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\EntryPoint.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgRunner.ts" />

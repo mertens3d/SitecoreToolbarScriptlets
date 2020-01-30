@@ -5,7 +5,7 @@ export interface IDataBrowserWindow {
   Window: Window,
   DataDocSelf: IDataOneDoc;
   //Id: IGuid,
-  Friendly: String,
+  Friendly: string,
   WindowType: scWindowType
 }
 

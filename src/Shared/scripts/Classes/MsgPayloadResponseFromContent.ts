@@ -2,15 +2,13 @@
 //import { MsgFlag } from "../Enums/MessageFlag";
 import { PayloadDataFromContent } from "./PayloadDataFromContent";
 import { MsgFlag } from "../Enums/MessageFlag";
+import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
 
-
-export class MsgFromContent implements IMsgFromX {
-  MsgFlag: MsgFlag;
+export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
   Data: PayloadDataFromContent;
-
+  response: string;
 
   constructor(msgFlag: MsgFlag) {
-    this.MsgFlag = msgFlag;
+    super(msgFlag);
   }
-
 }

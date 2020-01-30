@@ -2,6 +2,7 @@
 import { BaseDebug } from "./debug";
 import { IMsgFromX } from "../Interfaces/IMsgPayload";
 import { MsgFlag } from "../Enums/MessageFlag";
+import { MsgFromContent } from "./MsgPayloadResponseFromContent";
 
 export class MessageRunner {
   ReceiveHndlr: Function;
@@ -15,8 +16,18 @@ export class MessageRunner {
 
     this.Debug.FuncStart(MessageRunner.name, 'new messageRunner ' + this.Nickname);
 
-    //this.ReceiveHndlr = receiveHndlr;
-    //this.SendHndlr = sendHndlr;
+    this.ReceiveHndlr = receiveHndlr;
+    if (this.ReceiveHndlr) {
+      this.Debug.Log('2222222222 has receive handler');
+      var self = this;
+      browser.runtime.onMessage.addListener(request => self.ContentReceiver(request));
+
+
+    } else {
+
+      this.Debug.Log('2222222222 has NO receive handler');
+    }
+    this.SendHndlr = sendHndlr;
 
     //this.Debug.LogVal('setting listener', (this.ReceiveHndlr && this.SendHndlr).toString())
 
@@ -36,35 +47,63 @@ export class MessageRunner {
     //  active: true
     //}).then(this.SendMessageToTabs).catch(this.onError);
 
-    browser.runtime.onMessage.addListener(request => {
-      console.log("Message from the background script:");
-      console.log(request.greeting);
-      return Promise.resolve({ response: "Hi from content script" });
-    });
-
-
-
+   
     this.Debug.FuncEnd(MessageRunner.name, this.Nickname);
   }
+
   onError(error) {
     console.error(`Error: ${error}`);
   }
 
-  SendMessageToTabs(tabs) {
+  ContentReceiver(requestMsg: IMsgFromX) {
+    this.Debug.FuncStart(this.ContentReceiver.name + " Message from the popup script yyyyy:", requestMsg.FlagAsString);
+    this.Debug.LogVal('Nickname bb', this.Nickname);
+    this.Debug.LogVal('greeting', requestMsg.greeting);
+    var response = new MsgFromContent(MsgFlag.TestResponse);
+    response.response = "Hi from content script";
+
+    if (this.ReceiveHndlr) {
+      this.Debug.Log('has receiver defined');
+      this.ReceiveHndlr(requestMsg);
+    } else {
+      this.Debug.Log('No handler assigned');
+    }
+
+
+    this.Debug.FuncEnd(this.ContentReceiver.name);
+    return Promise.resolve(response);
+  }
+
+  private SendMessageToTabs(tabs, messageToSend: IMsgFromX) {
+    this.Debug.FuncStart(this.SendMessageToTabs.name, messageToSend.FlagAsString)
     for (let tab of tabs) {
       browser.tabs.sendMessage(
         tab.id,
-        { greeting: "Hi from background script" }
+        messageToSend
       ).then(response => {
-        console.log("Message from the content script:");
-        console.log(response);
+        var asImsg: IMsgFromX = <IMsgFromX>response;
+        if (asImsg) {
+          this.Debug.Log("Message from the content script:");
+          this.Debug.Log(asImsg.FlagAsString);
+          this.Debug.Log(asImsg.greeting);
+
+          if (this.ReceiveHndlr) {
+            this.ReceiveHndlr(asImsg);
+          }
+
+        } else {
+          this.Debug.Error(this.SendMessageToTabs.name, 'response is not imsg');
+        }
       }).catch(this.onError);
     }
   }
-  HandleMessageExample(request, sender, sendResponse) {
+
+  HandleMessageExample(request: IMsgFromX, sender, sendResponse) {
+    this.Debug.FuncStart(this.HandleMessageExample.name, request.MsgFlag)
     console.log("Message from the content script: " + request.greeting);
     //sendResponse({ response: "Response from background script" });
   }
+
   private HandleMessage(message: IMsgFromX) {
     this.Debug.FuncStart(this.HandleMessage.name, this.Nickname);
     this.Debug.LogVal('Message Flag', MsgFlag[message.MsgFlag]);
@@ -85,25 +124,11 @@ export class MessageRunner {
     browser.tabs.query({
       currentWindow: true,
       active: true
-    }).then(this.SendMessageToTabs).catch(this.onError);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }).then((tabs) => this.SendMessageToTabs(tabs, msgPlayload)).catch(this.onError);
 
     //var tabs = browser.tabs.query({ active: true, currentWindow: true });
-    var sending = browser.runtime.sendMessage(msgPlayload);
-    sending.then(this.handleResponse, this.handleError);
+    //var sending = browser.runtime.sendMessage(msgPlayload);
+    //sending.then(this.handleResponse, this.handleError);
 
     //window.postMessage({
     //  direction: "from-content-script",

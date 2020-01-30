@@ -3,9 +3,7 @@ import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 
-
 export class PageDataManager extends ContentManagerBase {
-
   async GetTargetWindowAsync(useOrigWindow: boolean, windowType: scWindowType): Promise<IDataBrowserWindow> {
     this.debug().FuncStart(this.GetTargetWindowAsync.name);
     var targetWindow: IDataBrowserWindow;
@@ -68,7 +66,6 @@ export class PageDataManager extends ContentManagerBase {
   SelfWindow: IDataBrowserWindow;
 
   TopLevelWindow(): IDataBrowserWindow {
-    console.log('marker c');
     return this.__winDataParent;
   }
 
@@ -80,26 +77,27 @@ export class PageDataManager extends ContentManagerBase {
   Init() {
     this.debug().FuncStart(this.Init.name);
 
-    if (window.opener) {
-      this.__winDataParent = {
-        Window: window.opener,
-        Friendly: 'Parent Window',
-        WindowType: scWindowType.Unknown,
-        DataDocSelf: {
-          ParentDoc: null,
-          Document: (<Window>(window.opener)).document,
-          HasParentDesktop: false,
-          XyyzId: this.GuidMan().NewGuid(),
-          IsCEDoc: false,
-          ParentDesktop: null,
-          Nickname: 'Original Target Page'
-        }
+    //if (window.opener) {
+    this.__winDataParent = {
+      Window: window,
+      Friendly: 'Window',
+      WindowType: scWindowType.Unknown,
+      DataDocSelf: {
+        ParentDoc: null,
+        Document: (<Window>(window)).document,
+        HasParentDesktop: false,
+        XyyzId: this.GuidMan().NewGuid(),
+        IsCEDoc: false,
+        ParentDesktop: null,
+        Nickname: 'Original Target Page'
       }
-
-      this.__winDataParent.DataDocSelf.ParentDoc = this.__winDataParent.DataDocSelf
-    } else {
-      this.debug().Error(this.constructor.name, 'No Opener Page');
     }
+
+    this.__winDataParent.DataDocSelf.ParentDoc = this.__winDataParent.DataDocSelf
+    // }
+    //else {
+    //    this.debug().Error(this.constructor.name, 'No Opener Page');
+    //  }
 
     this.MsgMan().SetParentInfo(this.__winDataParent);
 
@@ -137,7 +135,6 @@ export class PageDataManager extends ContentManagerBase {
 
   private __getUrlForWindowType(windowType: scWindowType): string {
     var toReturn: string;
-
 
     this.debug().NotNullCheck('this.__winDataParent.DataDocSelf.Document', this.__winDataParent.DataDocSelf.Document);
 

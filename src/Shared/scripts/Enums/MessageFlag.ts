@@ -14,4 +14,5 @@
     SetScMode,
     TaskFailed,
     GiveCurrentData,
+    TestResponse
 }

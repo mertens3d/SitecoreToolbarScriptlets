@@ -98,6 +98,7 @@ export class BaseDebug {
   LogVal(textValName: string, textValVal: string) {
     this.Log(textValName + ' : ' + textValVal);
   }
+
   Log(text, optionalValue: string = '', hasPrefix = false) {
     if (this.Enabled) {
       var indent = '  ';
@@ -208,6 +209,22 @@ export class BaseDebug {
     } else {
       this.LogVal(title, 'Is Not Null');
     }
+  }
+
+  IsNotNullOrUndefinedBool(title, subject): boolean {
+    var toReturn: boolean = false;
+    if (subject) {
+      if ((typeof subject) == 'undefined') {
+        this.LogVal(title +  'Is Not Undefined', '*** false ***');
+      } else {
+        this.LogVal(title + 'Is Not Null', 'true');
+        toReturn = true;
+      }
+    } else {
+      this.LogVal(title + 'Is Not Null', '*** false ***');
+    }
+
+    return toReturn;
   }
 
   IsNullOrUndefined(subject) {
