@@ -17,5 +17,7 @@ var MsgFlag;
     MsgFlag[MsgFlag["SetScMode"] = 12] = "SetScMode";
     MsgFlag[MsgFlag["TaskFailed"] = 13] = "TaskFailed";
     MsgFlag[MsgFlag["GiveCurrentData"] = 14] = "GiveCurrentData";
+    MsgFlag[MsgFlag["TestResponse"] = 15] = "TestResponse";
+    MsgFlag[MsgFlag["ResponseCurrentSnapShots"] = 16] = "ResponseCurrentSnapShots";
 })(MsgFlag = exports.MsgFlag || (exports.MsgFlag = {}));
 //# sourceMappingURL=MessageFlag.js.map

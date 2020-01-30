@@ -90,6 +90,7 @@ export class OneTreeManager extends ContentManagerBase {
           newData.NodeFriendly = this.GetFriendlyNameFromNode(firstImg);
 
           this.debug().LogVal('friendlyName', newData.NodeFriendly);
+          this.debug().LogVal('id', firstImg.id);
 
           var apparentId = firstImg.id.replace(this.Const().Names.SC.TreeGlyphPrefix, '');
 

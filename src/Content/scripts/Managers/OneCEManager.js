@@ -57,7 +57,7 @@ var OneCEManager = /** @class */ (function (_super) {
         return _super.call(this, xyyz) || this;
     }
     OneCEManager.prototype.WaitForNode = function (needleId, targetDoc, currentIteration, timeout, callbackOnComplete) {
-        this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.asString + ' on ' + this.GuidMan().ShortGuid(targetDoc.XyyzId));
+        this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.asString + ' on ' + targetDoc.DocId.asShort);
         currentIteration--;
         var foundOnPage = targetDoc.Document.getElementById(needleId.asString);
         if (foundOnPage) {
@@ -124,16 +124,16 @@ var OneCEManager = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
+                        this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.asShort);
                         treeGlyphTargetId = this.Const().Names.SC.TreeGlyphPrefix + nextNode.NodeId.asString;
-                        this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.XyyzId.asShort);
+                        this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.asShort);
                         this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
                         iterHelper = new IterationHelper_1.IterationHelper(this.Xyyz, this.WaitForAndRestoreOneNode.name);
                         foundOnPageTreeGlyph = null;
                         _a.label = 1;
                     case 1:
                         if (!(!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing())) return [3 /*break*/, 5];
-                        this.debug().Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.XyyzId.asShort + '*');
+                        this.debug().Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.asShort + '*');
                         foundOnPageTreeGlyph = dataOneDocTarget.Document.getElementById(treeGlyphTargetId);
                         if (!foundOnPageTreeGlyph) return [3 /*break*/, 2];
                         //this.debug().Log('Found it: ');
@@ -156,7 +156,7 @@ var OneCEManager = /** @class */ (function (_super) {
                         _a.label = 4;
                     case 4: return [3 /*break*/, 1];
                     case 5:
-                        this.debug().FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.XyyzId.asShort);
+                        this.debug().FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.asShort);
                         return [2 /*return*/];
                 }
             });
@@ -169,7 +169,7 @@ var OneCEManager = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.XyyzId.asShort);
+                        this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.DocId.asShort);
                         if (!iterHelper) {
                             iterHelper = new IterationHelper_1.IterationHelper(this.Xyyz, this.WaitForAndRestoreManyAllNodes.name);
                         }
@@ -194,7 +194,7 @@ var OneCEManager = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.debug().FuncStart(this.RestoreCEStateAsync.name, dataOneDocTarget.XyyzId.asShort);
+                        this.debug().FuncStart(this.RestoreCEStateAsync.name, dataOneDocTarget.DocId.asShort);
                         toReturn = false;
                         this.debug().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
                         return [4 /*yield*/, this.WaitForAndRestoreManyAllNodes(dataToRestore, dataOneDocTarget)];

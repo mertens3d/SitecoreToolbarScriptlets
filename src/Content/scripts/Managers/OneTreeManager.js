@@ -87,6 +87,7 @@ var OneTreeManager = /** @class */ (function (_super) {
                     this.debug().LogVal('isActive', newData.IsActive.toString());
                     newData.NodeFriendly = this.GetFriendlyNameFromNode(firstImg);
                     this.debug().LogVal('friendlyName', newData.NodeFriendly);
+                    this.debug().LogVal('id', firstImg.id);
                     var apparentId = firstImg.id.replace(this.Const().Names.SC.TreeGlyphPrefix, '');
                     newData.NodeId = this.Xyyz.GuidMan.ParseGuid(apparentId);
                     toReturn.push(newData);

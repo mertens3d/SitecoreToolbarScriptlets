@@ -53,7 +53,7 @@ export class ContentHub {
 
     this.AtticMan = new ContentAtticManager(this);
 
-    this.GuidMan = new GuidHelper();
+    this.GuidMan = new GuidHelper(this.debug);
     this.LocationMan = new LocationManager(this);
     this.MsgMan = new ContentMessageManager(this);
     this.MiscMan = new MiscManager(this);

@@ -33,7 +33,7 @@ export class PopUpHub {
     this.PopMsgMan = new PopUpMessagesManager(this);
     this.UiMan = new UiManager(this);
     this.EventMan = new EventManager(this);
-    this.GuidMan = new GuidHelper();
+    this.GuidMan = new GuidHelper(this.debug);
     this.PopUpConst = PopConst.PopConst;
     this.Utilities = new Utilities(this.debug);
     this.FeedbackMan = new FeedbackManager(this);
@@ -43,8 +43,8 @@ export class PopUpHub {
   init() {
     this.debug.FuncStart(this.init.name, PopUpHub.name);
     this.EventMan.Init();
+    this.PopMsgMan.Init(); // before uiman.Init
     this.UiMan.Init();
-    this.PopMsgMan.Init();
     this.debug.FuncEnd(this.init.name, PopUpHub.name);
   }
 }

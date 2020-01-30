@@ -128,8 +128,6 @@ export class LocationManager extends ContentManagerBase {
       } else if (currentPageType == scWindowType.Edit
         || currentPageType == scWindowType.Normal
         || currentPageType == scWindowType.Preview) {
-
-
         if (targetWindow) {
           window.opener.location.href = window.opener.location.href.replace('=normal', newValue.asString).replace('=preview', newValue.asString).replace('=edit', newValue.asString);
         }
@@ -154,33 +152,39 @@ export class LocationManager extends ContentManagerBase {
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
     //callbackOnComplete();
-    this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.XyyzId.asShort);
+    this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.asShort);
     this.debug().Log('callback passed: ' + (callbackOnComplete !== null));
 
     var userNameElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginUserName);
     var passwordElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginPassword);
 
-    this.debug().Log('userNameElem: ' + userNameElem);
-    this.debug().Log('passwordElem: ' + passwordElem);
-    userNameElem.setAttribute('value', this.Const().Names.scDefaultAdminUserName);
-    passwordElem.setAttribute('value', this.Const().Names.scDefaultAdminPassword);
+    if (this.debug().IsNotNullOrUndefinedBool('userNameElem', userNameElem)
+      &&
+      this.debug().IsNotNullOrUndefinedBool('passwordElem', passwordElem)) {
+      userNameElem.setAttribute('value', this.Const().Names.scDefaultAdminUserName);
+      passwordElem.setAttribute('value', this.Const().Names.scDefaultAdminPassword);
 
-    var loginButton: HTMLElement = this.GetLoginButton(targetDoc);
+      var loginButton: HTMLElement = this.GetLoginButton(targetDoc);
 
-    if (loginButton) {
-      this.debug().Log('clicking');
-      loginButton.click();
+      if (this.debug().IsNotNullOrUndefinedBool('loginButton', loginButton)) {
+        this.debug().Log('clicking');
+        loginButton.click();
 
-      if (callbackOnComplete) {
-        this.debug().Log('Triggering callback');
+        if (callbackOnComplete) {
+          this.debug().Log('Triggering callback');
 
-        setTimeout(callbackOnComplete, this.Const().Timeouts.PostLoginBtnClick);
-      } else {
-        this.debug().Log('no callback passed');
+          setTimeout(callbackOnComplete, this.Const().Timeouts.PostLoginBtnClick);
+        } else {
+          this.debug().Log('no callback passed');
+        }
+      }
+      else {
+        this.debug().Error(this.AdminB.name, 'No loginButton');
       }
     }
     else {
-      this.debug().Error(this.AdminB.name, 'No loginButton');
+        this.debug().Error(this.AdminB.name, 'No Username or password field');
+
     }
     this.debug().FuncEnd(this.AdminB.name);
   }

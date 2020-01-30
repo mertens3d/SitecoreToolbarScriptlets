@@ -171,7 +171,7 @@ export class OneWindowManager extends ContentManagerBase {
     this.CreateNewWindowSnapShot(currentPageType);
   }
   CreateNewWindowSnapShot(windowType: scWindowType) {
-    this.debug().FuncStart('CreateNewWindowSnapShot');
+    this.debug().FuncStart(this.CreateNewWindowSnapShot.name);
 
     var dateToUse: Date = new Date();
     //var friendly: string = this.Xyyz.Utilities.MakeFriendlyDate(dateToUse);
@@ -190,6 +190,6 @@ export class OneWindowManager extends ContentManagerBase {
       RawData: null
     }
 
-    this.debug().FuncEnd('CreateNewWindowSnapShot');
+    this.debug().FuncEnd(this.CreateNewWindowSnapShot.name);
   }
 }

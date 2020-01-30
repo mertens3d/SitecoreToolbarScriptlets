@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var GuidHelper_1 = require("./GuidHelper");
 var scWindowType_1 = require("../Enums/scWindowType");
+var MessageFlag_1 = require("../Enums/MessageFlag");
 var Utilities = /** @class */ (function () {
     function Utilities(debug) {
         debug.FuncStart(Utilities.name);
-        this.GuidMan = new GuidHelper_1.GuidHelper();
+        this.Debug = debug;
+        this.GuidMan = new GuidHelper_1.GuidHelper(debug);
         //this.Utilities = new Utilities(debug);
         debug.FuncEnd(Utilities.name);
     }
@@ -20,6 +22,17 @@ var Utilities = /** @class */ (function () {
     };
     Utilities.prototype.MakeSelectorFromId = function (TabId) {
         return '[id=' + TabId + ']';
+    };
+    Utilities.prototype.MsgFlagAsString = function (msg) {
+        var toReturn = "{error}";
+        if (this.Debug.IsNotNullOrUndefinedBool('message', msg)) {
+            try {
+                toReturn = MessageFlag_1.MsgFlag[msg.MsgFlag];
+            }
+            catch (e) {
+            }
+        }
+        return 'flag: ' + toReturn;
     };
     Utilities.prototype.TimeNicknameFavStr = function (data) {
         var typeStr = (data.WindowType === scWindowType_1.scWindowType.Unknown) ? '?' : scWindowType_1.scWindowType[data.WindowType];

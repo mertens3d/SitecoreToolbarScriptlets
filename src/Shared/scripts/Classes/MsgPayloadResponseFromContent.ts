@@ -10,5 +10,7 @@ export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
 
   constructor(msgFlag: MsgFlag) {
     super(msgFlag);
+    this.Data = new PayloadDataFromContent();
+    this.Data.CurrentSnapShots = [];
   }
 }

@@ -54,9 +54,9 @@ export class ContentAtticManager extends ContentManagerBase {
     this.debug().FuncStart(this.WriteToStorage.name);
 
     var snapShotAsString = JSON.stringify(dataOneWindow);
-    this.debug().Log('snapShotAsString: ' + snapShotAsString);
+    this.debug().LogVal('snapShotAsString', snapShotAsString);
 
-    window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotSuffix + dataOneWindow.Id.asString, snapShotAsString);
+    window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotPrefix + dataOneWindow.Id.asString, snapShotAsString);
 
     this.debug().FuncEnd(this.WriteToStorage.name);
   }
@@ -89,7 +89,12 @@ export class ContentAtticManager extends ContentManagerBase {
     this.debug().FuncStart(this.__getAllLocalStorageAsIOneStorageData.name);
     var toReturn: IOneStorageData[] = [];
 
-    for (var idx = 0; idx < window.localStorage.length; idx++) {
+    var storageLength: number = window.localStorage.length;
+    this.debug().LogVal('storageLength', storageLength);
+
+    for (var idx: number = 0; idx < storageLength; idx++) {
+      this.debug().LogVal('Processing Index', idx);
+
       var candidate: IOneStorageData = {
         data: '',
         key: '',
@@ -97,13 +102,19 @@ export class ContentAtticManager extends ContentManagerBase {
 
       candidate.key = window.localStorage.key(idx);
 
-      if (candidate.key.startsWith(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotSuffix)) {
+      this.debug().LogVal('Candidate.key', candidate.key);
+
+      if (candidate.key.startsWith(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotPrefix)) {
+        this.debug().LogVal('valid candidate', true);
+
         candidate.data = window.localStorage.getItem(candidate.key);
-        toReturn.push(candidate);
+        if (this.debug().IsNotNullOrUndefinedBool('candidate.data', candidate.data)) {
+          toReturn.push(candidate);
+        }
       }
     }
 
-    this.debug().FuncEnd(this.__getAllLocalStorageAsIOneStorageData.name);
+    this.debug().FuncEnd(this.__getAllLocalStorageAsIOneStorageData.name, toReturn.length);
     return toReturn;
   }
 

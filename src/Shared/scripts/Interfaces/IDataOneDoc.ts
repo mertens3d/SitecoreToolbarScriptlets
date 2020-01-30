@@ -2,7 +2,7 @@
 
 export interface IDataOneDoc {
   ParentDoc: IDataOneDoc;
-  XyyzId: IGuid;
+  DocId: IGuid;
   IsCEDoc: Boolean;
   Document: Document;
   ParentDesktop: IGuid;

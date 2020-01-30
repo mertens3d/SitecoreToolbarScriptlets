@@ -211,7 +211,7 @@ var OneWindowManager = /** @class */ (function (_super) {
         this.CreateNewWindowSnapShot(currentPageType);
     };
     OneWindowManager.prototype.CreateNewWindowSnapShot = function (windowType) {
-        this.debug().FuncStart('CreateNewWindowSnapShot');
+        this.debug().FuncStart(this.CreateNewWindowSnapShot.name);
         var dateToUse = new Date();
         //var friendly: string = this.Xyyz.Utilities.MakeFriendlyDate(dateToUse);
         var newGuid = this.Xyyz.GuidMan.NewGuid();
@@ -226,7 +226,7 @@ var OneWindowManager = /** @class */ (function (_super) {
             NickName: '',
             RawData: null
         };
-        this.debug().FuncEnd('CreateNewWindowSnapShot');
+        this.debug().FuncEnd(this.CreateNewWindowSnapShot.name);
     };
     return OneWindowManager;
 }(_ContentManagerBase_1.ContentManagerBase));

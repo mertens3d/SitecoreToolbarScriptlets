@@ -15,8 +15,11 @@ import { PayloadDataFromContent } from '../../../Shared/scripts/Classes/PayloadD
 import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
+import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
+import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
 
 export class UiManager extends PopUpManagerBase {
+ 
   private __selectSnapshotIndex: number = 0;
   OperationCancelled: any;
   TabId: string;
@@ -44,6 +47,7 @@ export class UiManager extends PopUpManagerBase {
     this.RefreshUiRequest();
     this.debug().FuncEnd(this.Init.name);
   }
+
 
   private __drawStoragePretty(ourData: IOneStorageData[]) {
     this.debug().FuncStart(this.__drawStoragePretty.name);
@@ -276,7 +280,7 @@ export class UiManager extends PopUpManagerBase {
   SetParentInfo(winDataParent: IDataBrowserWindow) {
     var targetSpan = document.getElementById(this.PopConst().ElemId.HindSiteParentInfo);
     if (targetSpan) {
-      targetSpan.innerHTML = ' | Parent Id: ' + this.GuidMan().ShortGuid(winDataParent.DataDocSelf.XyyzId) + ' | ' + winDataParent.Window.location.href;
+      targetSpan.innerHTML = ' | Parent Id: ' + winDataParent.DataDocSelf.DocId.asShort + ' | ' + winDataParent.Window.location.href;
     }
   }
 
@@ -406,7 +410,7 @@ export class UiManager extends PopUpManagerBase {
         checkBoxShowDebug.checked = currentSettings.DebugSettings.ShowDebugData;
         this.debug().LogVal('after', checkBoxShowDebug.checked.toString());
       } else {
-        this.debug().Error(this.RefreshUiRequest.name, 'no checkbox found');
+        this.debug().Error(this.__refreshSettings.name, 'no checkbox found');
       }
     }
     else {
@@ -414,15 +418,15 @@ export class UiManager extends PopUpManagerBase {
     }
     this.debug().FuncEnd(this.__refreshSettings.name);
   }
-  RefreshUiRequest() {
-    this.debug().FuncStart(this.__drawCorrectNicknameInUI.name);
+  async RefreshUiRequest() {
+    this.debug().FuncStart(this.RefreshUiRequest.name);
 
-    var payload = this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.GiveCurrentData));
+    var payload = await this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.GiveCurrentData));
 
     this.__refreshSettings();
     this.RestoreAccordianStates();
 
-    this.debug().FuncEnd(this.__drawCorrectNicknameInUI.name);
+    this.debug().FuncEnd(this.RefreshUiRequest.name);
   }
 
   RefreshUiResponse(data: PayloadDataFromContent) {

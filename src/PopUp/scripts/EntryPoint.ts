@@ -2,4 +2,4 @@
 
 console.log('did it');
 
-var PopUpHubObj = new PopUpHub();
+new PopUpHub();

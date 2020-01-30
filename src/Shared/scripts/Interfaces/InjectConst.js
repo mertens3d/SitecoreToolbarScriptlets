@@ -135,7 +135,7 @@ var InjectConst = /** @class */ (function () {
         Storage: {
             SettingsSuffix: '.Settings',
             ShowDebugData: false,
-            SnapShotSuffix: '.WindowSnapShot.',
+            SnapShotPrefix: '.WindowSnapShot.',
             WindowRoot: 'Xyyz',
         },
         MaxIter: 100,

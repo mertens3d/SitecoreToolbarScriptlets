@@ -1,6 +1,7 @@
 import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
 import { IDataDebugCallback } from "../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../Interfaces/ICallbackDataDebugTextChanged";
+import { IGuid } from "../Interfaces/IGuid";
 
 export class BaseDebug {
   __indentCount: number;
@@ -15,6 +16,13 @@ export class BaseDebug {
 
   debugPrefix: string = '\t\t';
 
+  DebugIGuid(id: IGuid) {
+    if (this.IsNotNullOrUndefinedBool('IGuid', id)) {
+      this.LogVal('asShort', id.asShort);
+      this.LogVal('asString', id.asString);
+    }
+  }
+
   DebugIDataDoc(dataOneDoc: IDataOneDoc) {
     this.FuncStart(this.DebugIDataDoc.name);
 
@@ -23,7 +31,7 @@ export class BaseDebug {
 
     if (dataOneDoc) {
       this.Log(this.debugPrefix + 'dataOneDoc: \t' + this.IsNullOrUndefined(dataOneDoc));
-      this.Log(this.debugPrefix + 'dataOneDoc.XyyzId.asShort: \t' + this.IsNullOrUndefined(dataOneDoc.XyyzId.asShort));
+      this.Log(this.debugPrefix + 'dataOneDoc.XyyzId.asShort: \t' + this.IsNullOrUndefined(dataOneDoc.DocId.asShort));
       this.Log(this.debugPrefix + 'dataOneDoc.Document: \t' + this.IsNullOrUndefined(dataOneDoc.Document));
 
       if (dataOneDoc.Document) {
@@ -51,7 +59,6 @@ export class BaseDebug {
   }
 
   HndlrClearDebugText(self: BaseDebug, verify: boolean = false): void {
-
     this.FuncStart(this.HndlrClearDebugText.name);
     var proceed: boolean = true;
 
@@ -95,7 +102,17 @@ export class BaseDebug {
     this.Log('Marker ' + marker);
   }
 
-  LogVal(textValName: string, textValVal: string) {
+  LogVal(textValName: string, textValVal: string): void;
+  LogVal(textValName: string, textValVal: boolean): void;
+  LogVal(textValName: string, textValVal: number): void;
+  LogVal(textValName: string, textValVal: string | boolean | number): any {
+
+    if (!textValVal) {
+      textValVal = '{notVal}';
+    } else {
+      textValVal = textValVal.toString();
+    }
+
     this.Log(textValName + ' : ' + textValVal);
   }
 
@@ -170,8 +187,15 @@ export class BaseDebug {
     }
   }
 
-  FuncEnd(text, optionalValue: string = '') {
+  FuncEnd(text, optionalValueInput?: number)
+  FuncEnd(text, optionalValueInput?: string )
+  FuncEnd(text, optionalValueInput: string | number) {
     text = 'e) ' + text;
+    if (!optionalValueInput) {
+      optionalValueInput = '';
+    }
+
+    var optionalValue = optionalValueInput.toString();
 
     if (optionalValue.length > 0) {
       text = text + ' : ' + optionalValue;
@@ -215,7 +239,7 @@ export class BaseDebug {
     var toReturn: boolean = false;
     if (subject) {
       if ((typeof subject) == 'undefined') {
-        this.LogVal(title +  'Is Not Undefined', '*** false ***');
+        this.LogVal(title + 'Is Not Undefined', '*** false ***');
       } else {
         this.LogVal(title + 'Is Not Null', 'true');
         toReturn = true;

@@ -87,7 +87,7 @@ export interface IContentConst {
   Storage: {
     SettingsSuffix: string,
     ShowDebugData: boolean,
-    SnapShotSuffix: string,
+    SnapShotPrefix: string,
     WindowRoot: string,
   },
 

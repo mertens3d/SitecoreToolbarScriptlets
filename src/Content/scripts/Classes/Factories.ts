@@ -7,12 +7,13 @@ import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIfram
 import { GuidHelper } from "../../../Shared/scripts/Classes/GuidHelper";
 
 export class Factories extends ContentManagerBase{
-    GuidHelper: GuidHelper;
-  constructor(xyyz: ContentHub) {
-    xyyz.debug.FuncStart(PromiseGeneric.name);
-    super(xyyz);
-    this.GuidHelper = new GuidHelper();
-    xyyz.debug.FuncEnd(PromiseGeneric.name);
+  GuidHelper: GuidHelper;
+
+  constructor(contentHub: ContentHub) {
+    contentHub.debug.FuncStart(PromiseGeneric.name);
+    super(contentHub);
+    this.GuidHelper = new GuidHelper(contentHub.debug);
+    contentHub.debug.FuncEnd(PromiseGeneric.name);
   }
 
   DateOneIframeFactory(iframeElem: HTMLIFrameElement, parentDocument: IDataOneDoc, nickname: string): IDataOneIframe {
@@ -34,7 +35,7 @@ export class Factories extends ContentManagerBase{
       ParentDoc: parentDocument,
       Document: IframeElem.contentDocument,
       HasParentDesktop: false,
-      XyyzId: this.GuidHelper.NewGuid(),
+      DocId: this.GuidHelper.NewGuid(),
       IsCEDoc: false,
       ParentDesktop: null,
       Nickname: nickname + ' - content doc'

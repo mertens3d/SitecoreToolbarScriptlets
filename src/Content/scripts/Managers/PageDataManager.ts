@@ -20,7 +20,7 @@ export class PageDataManager extends ContentManagerBase {
         .then((data) => targetWindow = data);
     }
 
-    this.debug().FuncEnd(this.GetTargetWindowAsync.name, 'child window id: ' + targetWindow.DataDocSelf.XyyzId.asShort);
+    this.debug().FuncEnd(this.GetTargetWindowAsync.name, 'child window id: ' + targetWindow.DataDocSelf.DocId.asShort);
 
     return targetWindow;
   }
@@ -50,7 +50,7 @@ export class PageDataManager extends ContentManagerBase {
         ParentDoc: null,
         Document: window.document,
         HasParentDesktop: false,
-        XyyzId: this.GuidMan().NewGuid(),
+        DocId: this.GuidMan().NewGuid(),
         IsCEDoc: false,
         ParentDesktop: null,
         Nickname: nickname
@@ -86,7 +86,7 @@ export class PageDataManager extends ContentManagerBase {
         ParentDoc: null,
         Document: (<Window>(window)).document,
         HasParentDesktop: false,
-        XyyzId: this.GuidMan().NewGuid(),
+        DocId: this.GuidMan().NewGuid(),
         IsCEDoc: false,
         ParentDesktop: null,
         Nickname: 'Original Target Page'

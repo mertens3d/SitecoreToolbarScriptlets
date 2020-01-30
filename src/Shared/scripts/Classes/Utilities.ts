@@ -2,13 +2,17 @@
 import { BaseDebug } from './debug';
 import { IDataOneWindowStorage } from '../Interfaces/IDataOneWindowStorage';
 import { scWindowType } from '../Enums/scWindowType';
+import { MsgFromXBase } from '../Interfaces/MsgFromXBase';
+import { MsgFlag } from '../Enums/MessageFlag';
 
 export class Utilities {
-  GuidMan: GuidHelper;
+private  GuidMan: GuidHelper;
+   private Debug: BaseDebug;
 
   constructor(debug: BaseDebug) {
     debug.FuncStart(Utilities.name);
-    this.GuidMan = new GuidHelper();
+    this.Debug = debug;
+    this.GuidMan = new GuidHelper(debug);
     //this.Utilities = new Utilities(debug);
     debug.FuncEnd(Utilities.name);
   }
@@ -28,7 +32,20 @@ export class Utilities {
     return '[id=' + TabId + ']';
   }
 
+  MsgFlagAsString(msg: MsgFromXBase): string {
+    var toReturn: string = "{error}";
+    if (this.Debug.IsNotNullOrUndefinedBool('message', msg)) {
+      try {
+        toReturn =  MsgFlag[msg.MsgFlag];
 
+      } catch (e) {
+
+      }
+
+    }
+
+    return 'flag: ' + toReturn;
+  }
 
   TimeNicknameFavStr(data: IDataOneWindowStorage): string {
     var typeStr: string = (data.WindowType === scWindowType.Unknown) ? '?' : scWindowType[data.WindowType];

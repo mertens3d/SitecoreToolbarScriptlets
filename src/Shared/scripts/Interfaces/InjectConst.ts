@@ -150,7 +150,7 @@ export class InjectConst {
     
       SettingsSuffix: '.Settings',
       ShowDebugData: false,
-      SnapShotSuffix: '.WindowSnapShot.',
+      SnapShotPrefix: '.WindowSnapShot.',
       WindowRoot: 'Xyyz',
     },
 

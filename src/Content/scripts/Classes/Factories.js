@@ -18,12 +18,12 @@ var _ContentManagerBase_1 = require("../_first/_ContentManagerBase");
 var GuidHelper_1 = require("../../../Shared/scripts/Classes/GuidHelper");
 var Factories = /** @class */ (function (_super) {
     __extends(Factories, _super);
-    function Factories(xyyz) {
+    function Factories(contentHub) {
         var _this = this;
-        xyyz.debug.FuncStart(PromiseGeneric_1.PromiseGeneric.name);
-        _this = _super.call(this, xyyz) || this;
-        _this.GuidHelper = new GuidHelper_1.GuidHelper();
-        xyyz.debug.FuncEnd(PromiseGeneric_1.PromiseGeneric.name);
+        contentHub.debug.FuncStart(PromiseGeneric_1.PromiseGeneric.name);
+        _this = _super.call(this, contentHub) || this;
+        _this.GuidHelper = new GuidHelper_1.GuidHelper(contentHub.debug);
+        contentHub.debug.FuncEnd(PromiseGeneric_1.PromiseGeneric.name);
         return _this;
     }
     Factories.prototype.DateOneIframeFactory = function (iframeElem, parentDocument, nickname) {
@@ -42,7 +42,7 @@ var Factories = /** @class */ (function (_super) {
             ParentDoc: parentDocument,
             Document: IframeElem.contentDocument,
             HasParentDesktop: false,
-            XyyzId: this.GuidHelper.NewGuid(),
+            DocId: this.GuidHelper.NewGuid(),
             IsCEDoc: false,
             ParentDesktop: null,
             Nickname: nickname + ' - content doc'

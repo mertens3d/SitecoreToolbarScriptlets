@@ -1,14 +1,15 @@
 ﻿import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
-import { IMessageManager } from '../../../Shared/scripts/Interfaces/IMessageManager';
+//import { IMessageManager } from '../../../Shared/scripts/Interfaces/IMessageManager';
 import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { MsgFromContent } from '../../../Shared/scripts/Classes/MsgPayloadResponseFromContent';
 import { PayloadDataFromPopUp } from '../../../Shared/scripts/Classes/PayloadDataReqPopUp';
-import { MessageRunner } from '../../../Shared/scripts/Classes/MsgRunner';
+//import { MessageRunner } from '../../../Shared/scripts/Classes/MsgRunner';
 import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
+import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
 
 //var browser = browser || {};
 
@@ -20,25 +21,43 @@ import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
 //  }
 //});
 
-export class ContentMessageManager extends ContentManagerBase implements IMessageManager {
-  MsgRunner: MessageRunner;
+export class ContentMessageManager extends ContentManagerBase  {
+  //MsgRunner: MessageRunner;
 
   constructor(contentHub: ContentHub) {
     super(contentHub);
     contentHub.debug.FuncStart(ContentMessageManager.name);
 
+    var self = this;
+    browser.runtime.onMessage.addListener(request => self.ContentReceiveRequest(request));
+
     contentHub.debug.FuncEnd(ContentMessageManager.name);
   }
 
+  async ContentReceiveRequest(requestMsgFromPopup: MsgFromPopUp) {
+    this.debug().LogVal('requestMsgFromPopup', JSON.stringify(requestMsgFromPopup));
+    //this.debug().FuncStart(this.ContentReceiveRequest.name, requestMsgFromPopup.FlagAsString());
+    var response: MsgFromContent;// = new MsgFromContent(MsgFlag.TestResponse);
+    //response.response = "Hi from RunnerReceiver";
+
+    this.debug().Log('has receiver defined');
+    response = await this.ReceiveMessageHndlr(requestMsgFromPopup);
+    this.debug().LogVal('returned by ReceiveRequestHndlr', JSON.stringify(response));
+
+    this.debug().FuncEnd(this.ContentReceiveRequest.name);
+    return Promise.resolve(response);
+  }
   Init() {
     this.debug().FuncStart(this.Init.name + ' ' + ContentMessageManager.name);
     var self = this;
 
-    this.MsgRunner = new MessageRunner(
-      (msg: IMsgFromX) => {
-        self.ReceiveMessageHndlr(msg)
-      },
-      this.SendMessageHndlr, this.debug(), 'Content');
+    //this.MsgRunner = new MessageRunner(
+    //  (msg: IMsgFromX) => {
+    //    self.ReceiveMessageHndlr(msg)
+    //  },
+    //  this.SendMessageHndlr,
+    //  null,
+    //  this.debug(), 'Content');
 
     this.debug().FuncEnd(this.Init.name);
   }
@@ -69,7 +88,7 @@ export class ContentMessageManager extends ContentManagerBase implements IMessag
   async ReceiveMessageHndlr(payload: MsgFromPopUp) {
     this.debug().FuncStart(ContentMessageManager.name + ' ' + this.ReceiveMessageHndlr.name);
     //var message: MsgFlag = MsgFlag.Unknown;
-    var response;
+    var response = new MsgFromContent(MsgFlag.Unknown);
 
     switch (payload.MsgFlag) {
       case MsgFlag.AddCETab:
@@ -78,21 +97,23 @@ export class ContentMessageManager extends ContentManagerBase implements IMessag
         break;
 
       case MsgFlag.AdminB:
-        this.debug().LogVal('flag is adminb', payload.FlagAsString);
+        this.debug().LogVal('flag is adminb', this.Utilites().MsgFlagAsString(<MsgFromXBase>payload));
         this.debug().DebugPageDataMan(this.PageDataMan());
-
 
         this.locMan().AdminB(this.PageDataMan().TopLevelWindow().DataDocSelf, null);
         break;
 
-      case MsgFlag.GetAllStorageOneWindow:
+      //case MsgFlag.GetAllStorageOneWindow:
 
-        response = this.AtticMan().GetAllStorageAsIDataOneWindow();
-        break;
+      //  response.Data.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
+      //  response.MsgFlag = MsgFlag.ResponseCurrentSnapShots;
+      //  break;
 
       case MsgFlag.GiveCurrentData:
 
-        this.AtticMan().GetAllStorageAsIDataOneWindow();
+        response.Data.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
+        this.debug().LogVal('response', JSON.stringify(response));
+        response.MsgFlag= MsgFlag.ResponseCurrentSnapShots;
         break;
 
       case MsgFlag.GoDesktop:
@@ -129,10 +150,14 @@ export class ContentMessageManager extends ContentManagerBase implements IMessag
         break;
 
       default:
-        this.debug().LogVal('Unrecognized MsgFlag', payload.FlagAsString);
+        this.debug().LogVal('Unrecognized MsgFlag', this.Utilites().MsgFlagAsString(payload));
 
         break;
     }
+
+    this.debug().LogVal('Response at the end', JSON.stringify(response))
+    this.debug().FuncEnd(this.ReceiveMessageHndlr.name);
+    return response;
   }
 
   private respondSuccessful() {
