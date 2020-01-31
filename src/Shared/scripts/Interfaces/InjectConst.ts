@@ -107,11 +107,18 @@ export class InjectConst {
     },
     Regex: {
       ContentEditor: /Content.*?Editor/ig,
+      PageType: {
+        //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
+        Desktop: /.*default.aspx/ig,
+        Edit: /sc_itemid=.*sc_mode=edit/ig,
+        Normal: /sc_itemid=.*sc_mode=normal/ig,
+        Preview: /sc_itemid=.*sc_mode=preview/ig,
+      },
     },
     ScMode: {
-      edit: { asEnum: scMode.Edit, asString: 'edit' },
-      normal: { asEnum: scMode.Normal, asString: 'normal' },
-      preview: { asEnum: scMode.Preview, asString: 'preview' },
+      edit: { AsEnum: scMode.Edit, AsString: 'edit' },
+      normal: { AsEnum: scMode.Normal, AsString: 'normal' },
+      preview: { AsEnum: scMode.Preview, AsString: 'preview' },
     },
 
     Selector: {

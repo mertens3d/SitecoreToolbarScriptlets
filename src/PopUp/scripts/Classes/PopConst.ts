@@ -41,6 +41,7 @@ export class PopConst {
 
           LgndDebug: 'lgnd-debug',
           LgndForeSite: 'lgnd-fore-site',
+          LgndState: 'lgnd-state',
         }
       }
     },
@@ -53,9 +54,9 @@ export class PopConst {
       PublishComplete: 'Publishing Complete',
     },
     ScMode: {
-      edit: { asEnum: scMode.Edit, asString: 'edit' },
-      normal: { asEnum: scMode.Normal, asString: 'normal' },
-      preview: { asEnum: scMode.Preview, asString: 'preview' },
+      edit: { AsEnum: scMode.Edit, AsString: 'edit' },
+      normal: { AsEnum: scMode.Normal, AsString: 'normal' },
+      preview: { AsEnum: scMode.Preview, AsString: 'preview' },
     },
     Selector: {
       HS: {
@@ -65,6 +66,7 @@ export class PopConst {
         PrefAutoLogin: '[id=id-settings-auto-login]',
         SelStateSnapShot: '[id=selState]',
         TaDebug: '[id=ta-debug]',
+        TaState: '[id=ta-state]'
       },
     },
     Storage: {

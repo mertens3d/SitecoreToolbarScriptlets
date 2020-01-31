@@ -2,36 +2,70 @@ import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
 import { IDataDebugCallback } from "../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../Interfaces/ICallbackDataDebugTextChanged";
 import { IGuid } from "../Interfaces/IGuid";
+import { MsgFlag } from "../Enums/MessageFlag";
+import { Utilities } from "./Utilities";
+import { IError } from "../Interfaces/IError";
+import { StaticHelpers } from "./StaticHelpers";
 
 export class BaseDebug {
-  __indentCount: number;
-  ParentWindow: Window;
+  private __indentCount: number;
+  private ParentWindow: Window;
   Enabled: boolean = false;
+
+
+  ErrorStack: IError[] = [];
+
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
+  //protected Utilites: Utilities;
 
   constructor(parentWindow: Window) {
     this.__indentCount = 0;
     this.ParentWindow = parentWindow;
+    //this.Utilites = utilies;
   }
 
   debugPrefix: string = '\t\t';
 
+  //DebugObjVarVal(textValName: string, textVal: number)
+  //DebugObjVarVal(textValName: string, textVal: string)
+  //DebugObjVarVal(textValName: string, textVal: string | number) {
+  //  const debugPrefix = '   ~~~   ';
+
+  //  this.LogVal(debugPrefix + textValName, textVal.toString())
+  //}
+
+  IsNotNullOrUndefinedBool(title, subject): boolean {
+    var toReturn: boolean = false;
+    if (subject) {
+      if ((typeof subject) == 'undefined') {
+        this.LogVal(title + 'Is Not Undefined', '*** false ***');
+      } else {
+        this.LogVal(title + 'Is Not Null', 'true');
+        toReturn = true;
+      }
+    } else {
+      this.LogVal(title + 'Is Not Null', '*** false ***');
+    }
+
+    return toReturn;
+  }
+
   DebugIGuid(id: IGuid) {
     if (this.IsNotNullOrUndefinedBool('IGuid', id)) {
-      this.LogVal('asShort', id.asShort);
-      this.LogVal('asString', id.asString);
+      this.LogVal('asShort', id.AsShort);
+      this.LogVal('asString', id.AsString);
     }
   }
 
-  DebugIDataDoc(dataOneDoc: IDataOneDoc) {
-    this.FuncStart(this.DebugIDataDoc.name);
+  DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
+    this.FuncStart(this.DebugIDataOneDoc.name);
 
     this.Log('');
-    this.Log(this.debugPrefix + this.DebugIDataDoc.name);
+    this.Log(this.debugPrefix + this.DebugIDataOneDoc.name);
 
     if (dataOneDoc) {
       this.Log(this.debugPrefix + 'dataOneDoc: \t' + this.IsNullOrUndefined(dataOneDoc));
-      this.Log(this.debugPrefix + 'dataOneDoc.XyyzId.asShort: \t' + this.IsNullOrUndefined(dataOneDoc.DocId.asShort));
+      this.Log(this.debugPrefix + 'dataOneDoc.XyyzId.asShort: \t' + this.IsNullOrUndefined(dataOneDoc.DocId.AsShort));
       this.Log(this.debugPrefix + 'dataOneDoc.Document: \t' + this.IsNullOrUndefined(dataOneDoc.Document));
 
       if (dataOneDoc.Document) {
@@ -45,7 +79,7 @@ export class BaseDebug {
         this.Log(this.debugPrefix + 'dataOneDoc.Document - does not exist');
       }
     } else {
-      this.Error(this.DebugIDataDoc.name, 'no targetDoc');
+      this.Error(this.DebugIDataOneDoc.name, 'no targetDoc');
     }
     this.Log('');
   }
@@ -106,14 +140,17 @@ export class BaseDebug {
   LogVal(textValName: string, textValVal: boolean): void;
   LogVal(textValName: string, textValVal: number): void;
   LogVal(textValName: string, textValVal: string | boolean | number): any {
-
     if (!textValVal) {
       textValVal = '{notVal}';
     } else {
       textValVal = textValVal.toString();
     }
 
-    this.Log(textValName + ' : ' + textValVal);
+    textValName = StaticHelpers.BufferString(textValName.toString(), 26, ' ', false, false);
+
+    const debugPrefix = '  ~~~  ';
+
+    this.Log(debugPrefix +  textValName + ' : ' + textValVal);
   }
 
   Log(text, optionalValue: string = '', hasPrefix = false) {
@@ -188,7 +225,7 @@ export class BaseDebug {
   }
 
   FuncEnd(text, optionalValueInput?: number)
-  FuncEnd(text, optionalValueInput?: string )
+  FuncEnd(text, optionalValueInput?: string)
   FuncEnd(text, optionalValueInput: string | number) {
     text = 'e) ' + text;
     if (!optionalValueInput) {
@@ -210,12 +247,24 @@ export class BaseDebug {
   }
 
   Error(container, text) {
+
+    
+
+
     if (!container) {
       container = 'unknown';
     }
     if (!text) {
       text = 'unknown';
     }
+
+    this.ErrorStack.push(
+      {
+        ContainerFunc: container,
+        ErrorString: text
+      }
+    )
+
     this.Log('');
     this.Log('\t\t** ERROR ** ' + container);
     this.Log('');
@@ -233,22 +282,6 @@ export class BaseDebug {
     } else {
       this.LogVal(title, 'Is Not Null');
     }
-  }
-
-  IsNotNullOrUndefinedBool(title, subject): boolean {
-    var toReturn: boolean = false;
-    if (subject) {
-      if ((typeof subject) == 'undefined') {
-        this.LogVal(title + 'Is Not Undefined', '*** false ***');
-      } else {
-        this.LogVal(title + 'Is Not Null', 'true');
-        toReturn = true;
-      }
-    } else {
-      this.LogVal(title + 'Is Not Null', '*** false ***');
-    }
-
-    return toReturn;
   }
 
   IsNullOrUndefined(subject) {

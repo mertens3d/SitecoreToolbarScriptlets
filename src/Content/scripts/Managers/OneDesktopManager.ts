@@ -60,7 +60,7 @@ export class OneDesktopManager extends ContentManagerBase {
     this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
     var toReturn: IDataOneIframe = null;
 
-    var iterationJr = new IterationHelper(this.Xyyz,  this.WaitForIframeCountDiffWorker.name)
+    var iterationJr = new IterationHelper(this.Xyyz, this.WaitForIframeCountDiffWorker.name)
 
     while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
       let beforeCount: number = IFramesbefore.length;
@@ -95,8 +95,6 @@ export class OneDesktopManager extends ContentManagerBase {
     return toReturn;
   }
 
-  
-
   GetAllLiveIframeData(targetWindow: IDataBrowserWindow): IDataOneIframe[] {
     this.debug().FuncStart(this.GetAllLiveIframeData.name);
     var toReturn: IDataOneIframe[] = [];
@@ -114,6 +112,24 @@ export class OneDesktopManager extends ContentManagerBase {
       }
     }
     this.debug().FuncEnd(this.GetAllLiveIframeData.name, 'count:  ' + toReturn.length);
+    return toReturn;
+  }
+
+  GetActiveDesktopIframeData() {
+    this.debug().FuncStart(this.GetActiveDesktopIframeData.name);
+    var toReturn: IDataOneIframe = null;
+    var livingIframeAr: IDataOneIframe[] = this.GetAllLiveIframeData(this.PageDataMan().TopLevelWindow());
+
+    if (livingIframeAr) {
+      for (var idx = 0; idx < livingIframeAr.length; idx++) {
+        if (livingIframeAr[idx].Zindex === 1) {
+          toReturn = livingIframeAr[idx];
+          break;
+        }
+
+      }
+    }
+    this.debug().FuncEnd(this.GetActiveDesktopIframeData.name);
     return toReturn;
   }
 

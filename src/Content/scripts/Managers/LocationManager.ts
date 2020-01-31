@@ -97,7 +97,7 @@ export class LocationManager extends ContentManagerBase {
 
   SetScMode(newValue: IsScMode, useOrigWindow: boolean) {
     return new Promise(async () => {
-      this.debug().FuncStart(this.SetScMode.name, newValue.asString);
+      this.debug().FuncStart(this.SetScMode.name, newValue.AsString);
 
       var itemGuid: IGuid;
       var targetWindow: IDataBrowserWindow;
@@ -108,34 +108,48 @@ export class LocationManager extends ContentManagerBase {
         ||
         currentPageType === scWindowType.Desktop
       ) {
-        var dataOneDoc = this.PageDataMan().TopLevelWindow().DataDocSelf;
+        var dataOneDoc: IDataOneDoc = null;
 
-        var AllTreeNodeAr: IDataOneTreeNode[] = this.Xyyz.OneTreeMan.GetOneLiveTreeData(dataOneDoc);
-
-        for (var idx = 0; idx < AllTreeNodeAr.length; idx++) {
-          var candidate: IDataOneTreeNode = AllTreeNodeAr[idx];
-          if (candidate.IsActive) {
-            itemGuid = candidate.NodeId;
-            break;
+        if (currentPageType == scWindowType.Desktop) {
+          var currentIframe = this.DesktopMan().GetActiveDesktopIframeData();
+          if (currentIframe) {
+            dataOneDoc = currentIframe.ContentDoc;
           }
         }
-        await alert(itemGuid.asString);
-        // we should use the sitecore buttons
+        else {
+          dataOneDoc = this.PageDataMan().TopLevelWindow().DataDocSelf;
+        }
 
-        if (itemGuid) {
-          targetWindow = await this.PageDataMan().GetTargetWindowAsync(useOrigWindow, scWindowType.Edit);
+        if (dataOneDoc) {
+          var AllTreeNodeAr: IDataOneTreeNode[] = this.Xyyz.OneTreeMan.GetOneLiveTreeData(dataOneDoc);
+
+          for (var idx = 0; idx < AllTreeNodeAr.length; idx++) {
+            var candidate: IDataOneTreeNode = AllTreeNodeAr[idx];
+            if (candidate.IsActive) {
+              itemGuid = candidate.NodeId;
+              break;
+            }
+          }
+          await alert(itemGuid.AsString);
+          // we should use the sitecore buttons
+
+          if (itemGuid) {
+            targetWindow = await this.PageDataMan().GetTargetWindowAsync(useOrigWindow, scWindowType.Edit);
+          }
         }
       } else if (currentPageType == scWindowType.Edit
         || currentPageType == scWindowType.Normal
         || currentPageType == scWindowType.Preview) {
         if (targetWindow) {
-          window.opener.location.href = window.opener.location.href.replace('=normal', newValue.asString).replace('=preview', newValue.asString).replace('=edit', newValue.asString);
+          window.opener.location.href = window.opener.location.href.replace('=normal', newValue.AsString).replace('=preview', newValue.AsString).replace('=edit', newValue.AsString);
         }
       }
       this.debug().FuncEnd(this.SetScMode.name);
     });
   }
 
+  GetCurrentUrl(targ) {
+  }
   GetLoginButton(targetDoc: IDataOneDoc): HTMLElement {
     this.debug().FuncStart(this.GetLoginButton.name);
 
@@ -152,7 +166,7 @@ export class LocationManager extends ContentManagerBase {
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
     //callbackOnComplete();
-    this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.asShort);
+    this.debug().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.AsShort);
     this.debug().Log('callback passed: ' + (callbackOnComplete !== null));
 
     var userNameElem = targetDoc.Document.getElementById(this.Const().ElemId.sc.scLoginUserName);
@@ -183,8 +197,7 @@ export class LocationManager extends ContentManagerBase {
       }
     }
     else {
-        this.debug().Error(this.AdminB.name, 'No Username or password field');
-
+      this.debug().Error(this.AdminB.name, 'No Username or password field');
     }
     this.debug().FuncEnd(this.AdminB.name);
   }

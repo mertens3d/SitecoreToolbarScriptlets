@@ -21,7 +21,7 @@ import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
 //  }
 //});
 
-export class ContentMessageManager extends ContentManagerBase  {
+export class ContentMessageManager extends ContentManagerBase {
   //MsgRunner: MessageRunner;
 
   constructor(contentHub: ContentHub) {
@@ -34,15 +34,15 @@ export class ContentMessageManager extends ContentManagerBase  {
     contentHub.debug.FuncEnd(ContentMessageManager.name);
   }
 
-  async ContentReceiveRequest(requestMsgFromPopup: MsgFromPopUp) {
-    this.debug().LogVal('requestMsgFromPopup', JSON.stringify(requestMsgFromPopup));
+  async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp) {
+    this.debug().LogVal('requestMsgFromPopup', JSON.stringify(reqMsgFromPopup));
     //this.debug().FuncStart(this.ContentReceiveRequest.name, requestMsgFromPopup.FlagAsString());
     var response: MsgFromContent;// = new MsgFromContent(MsgFlag.TestResponse);
     //response.response = "Hi from RunnerReceiver";
 
     this.debug().Log('has receiver defined');
-    response = await this.ReceiveMessageHndlr(requestMsgFromPopup);
-    this.debug().LogVal('returned by ReceiveRequestHndlr', JSON.stringify(response));
+    response = await this.ReqMsgRouter(reqMsgFromPopup);
+    //this.debug().LogVal('returned by ReceiveRequestHndlr', JSON.stringify(response));
 
     this.debug().FuncEnd(this.ContentReceiveRequest.name);
     return Promise.resolve(response);
@@ -85,19 +85,24 @@ export class ContentMessageManager extends ContentManagerBase  {
 
     bodyTag.appendChild(flagElem);
   }
-  async ReceiveMessageHndlr(payload: MsgFromPopUp) {
-    this.debug().FuncStart(ContentMessageManager.name + ' ' + this.ReceiveMessageHndlr.name);
-    //var message: MsgFlag = MsgFlag.Unknown;
-    var response = new MsgFromContent(MsgFlag.Unknown);
+
+  async ReqMsgRouter(payload: MsgFromPopUp) {
+    this.debug().FuncStart(this.ReqMsgRouter.name, this.Utilites().MsgFlagAsString(payload.MsgFlag));
+
+    var response: MsgFromContent = await this.Factoryman().NewMsgFromContent();
 
     switch (payload.MsgFlag) {
-      case MsgFlag.AddCETab:
+      case MsgFlag.ReqRestoreToNewTab:
+        console.log('we are going to restore to this window');
+        break;
+
+      case MsgFlag.ReqAddCETab:
         await this.PromiseGen().RaceWaitAndClick(this.Const().Selector.SC.scStartButton, this.PageDataMan().TopLevelWindow().DataDocSelf)
           .then(() => { this.PromiseGen().WaitForThenClick(this.Const().Selector.SC.StartMenuLeftOption, this.PageDataMan().TopLevelWindow().DataDocSelf) });
         break;
 
-      case MsgFlag.AdminB:
-        this.debug().LogVal('flag is adminb', this.Utilites().MsgFlagAsString(<MsgFromXBase>payload));
+      case MsgFlag.ReqAdminB:
+        this.debug().LogVal('flag is adminb', this.Utilites().MsgFlagAsString(payload.MsgFlag));
         this.debug().DebugPageDataMan(this.PageDataMan());
 
         this.locMan().AdminB(this.PageDataMan().TopLevelWindow().DataDocSelf, null);
@@ -109,54 +114,63 @@ export class ContentMessageManager extends ContentManagerBase  {
       //  response.MsgFlag = MsgFlag.ResponseCurrentSnapShots;
       //  break;
 
-      case MsgFlag.GiveCurrentData:
+      case MsgFlag.ReqCurState:
 
-        response.Data.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
-        this.debug().LogVal('response', JSON.stringify(response));
-        response.MsgFlag= MsgFlag.ResponseCurrentSnapShots;
+        //response.State.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
+
+        //this.debug().LogVal('response', JSON.stringify(response));
+        response.MsgFlag = MsgFlag.RespCurState;
         break;
 
-      case MsgFlag.GoDesktop:
+      case MsgFlag.ReqGoDesktop:
         this.locMan().ChangeLocationSwitchBoard(scWindowType.Desktop, this.PageDataMan().TopLevelWindow());
         break;
 
-      case MsgFlag.OpenCE:
+      case MsgFlag.ReqOpenCE:
         this.locMan().ChangeLocationSwitchBoard(scWindowType.ContentEditor, this.PageDataMan().TopLevelWindow());
         break;
 
-      case MsgFlag.QuickPublish:
+      case MsgFlag.ReqQuickPublish:
         var targetWin = this.PageDataMan().TopLevelWindow();
         await this.OneWinMan().PublishActiveCE(targetWin);
         break;
 
-      case MsgFlag.SetScMode:
+      case MsgFlag.ReqSetScMode:
         this.locMan().SetScMode(payload.Data.ReqScMode, payload.Data.UseOriginalWindowLocation)
           .then(() => this.respondSuccessful())
           .catch(() => this.respondFail());
         break;
 
-      case MsgFlag.RestoreClick:
+      case MsgFlag.ReqRestoreClick:
 
         await this.__restoreClick(payload.Data)
           .then(() => this.respondSuccessful())
           .catch(() => this.respondFail());
         break;
 
-      case MsgFlag.TaskSuccessful:
-        this.NotifyCompleteOnContent(null, payload.Data.ScreenMessage);
-
-      case MsgFlag.TakeSnapShot:
+      case MsgFlag.ReqTakeSnapShot:
         this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().TopLevelWindow());
         break;
 
+      case MsgFlag.TaskSuccessful:
+        this.NotifyCompleteOnContent(null, payload.Data.ScreenMessage);
+
+      case MsgFlag.UpdateNickName:
+        this.AtticMan().UpdateNickname(payload.Data)
+        break;
+
       default:
-        this.debug().LogVal('Unrecognized MsgFlag', this.Utilites().MsgFlagAsString(payload));
+        this.debug().LogVal('Unrecognized MsgFlag', this.Utilites().MsgFlagAsString(payload.MsgFlag));
 
         break;
     }
 
-    this.debug().LogVal('Response at the end', JSON.stringify(response))
-    this.debug().FuncEnd(this.ReceiveMessageHndlr.name);
+    //this.debug().LogVal('Response at the end', JSON.stringify(response))
+
+    await this.Factoryman().UpdateContentState(response);
+    response.State.LastReq = payload.MsgFlag;
+
+    this.debug().FuncEnd(this.ReqMsgRouter.name);
     return response;
   }
 

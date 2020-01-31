@@ -111,17 +111,18 @@ export class OneTreeManager extends ContentManagerBase {
     return toReturn;
   }
 
+
+
+
   GetOneLiveTreeData(targetDoc: IDataOneDoc): IDataOneTreeNode[] {
     this.debug().FuncStart(this.GetOneLiveTreeData.name);
     this.debug().Log('targetDoc isnull: ' + (targetDoc === null));
-
-
-  
-
     var toReturn: IDataOneTreeNode[] = [];
 
     if (targetDoc) {
       //this.debug().Log(targetDoc);
+      this.debug().LogVal('Looking for node ID: ', this.Const().ElemId.sc.SitecoreRootNodeId);
+      this.debug().DebugIDataOneDoc(targetDoc);
       var rootNode = targetDoc.Document.getElementById(this.Const().ElemId.sc.SitecoreRootNodeId);
 
       if (rootNode) {
@@ -140,11 +141,7 @@ export class OneTreeManager extends ContentManagerBase {
       this.debug().Error(this.GetOneLiveTreeData.name, 'no targetDoc');
     }
 
-
-    
     this.debug().FuncEnd(this.GetOneLiveTreeData.name);
-
-
 
     return toReturn;
   }

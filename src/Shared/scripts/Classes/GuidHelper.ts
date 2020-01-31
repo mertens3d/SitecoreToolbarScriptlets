@@ -35,11 +35,11 @@ export class GuidHelper {
 
   private ShortGuid(Id: IGuid): string {
     var toReturn: string = '{error}';
-    if (Id && Id.asString.length > this.ShortGuidLength) {
-      toReturn = Id.asString.substr(0, this.ShortGuidLength);
+    if (Id && Id.AsString.length > this.ShortGuidLength) {
+      toReturn = Id.AsString.substr(0, this.ShortGuidLength);
     } else {
       this.Debug.DebugIGuid(Id);
-      this.Debug.LogVal('Length', Id.asString.length);
+      this.Debug.LogVal('Length', Id.AsString.length);
       this.Debug.LogVal('ShortLength', this.ShortGuidLength);
     }
     return toReturn;
@@ -47,11 +47,11 @@ export class GuidHelper {
 
   ParseGuid(val: string): IGuid {
     let toReturn: IGuid = {
-      asString: val,
-      asShort: ''
+      AsString: val,
+      AsShort: ''
     }
 
-    toReturn.asShort = this.ShortGuid(toReturn);
+    toReturn.AsShort = this.ShortGuid(toReturn);
 
     return toReturn
   }

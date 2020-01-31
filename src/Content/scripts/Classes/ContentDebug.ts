@@ -5,6 +5,7 @@ import { PageDataManager } from "../Managers/PageDataManager";
 import { IDataBrowserWindow } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
+import { ICurrState } from "../../../Shared/scripts/Interfaces/ICurrState";
 
 export class ContentDebug extends BaseDebug {
   DebugPageDataMan(pageDataMan: PageDataManager) {
@@ -23,6 +24,22 @@ export class ContentDebug extends BaseDebug {
     }
   }
 
+
+
+  DebugObjState(state: ICurrState) {
+    if (this.IsNotNullOrUndefinedBool('State', state)) {
+      if (this.IsNotNullOrUndefinedBool('CurrentSnapShots', state.CurrentSnapShots)) {
+        this.LogVal('Snapshot count', state.CurrentSnapShots.length);
+      }
+      if (this.IsNotNullOrUndefinedBool('PageType', state.WindowType)) {
+        this.LogVal('scWindowType : ', scWindowType[state.WindowType]);
+      }
+      if (this.IsNotNullOrUndefinedBool('PageType', state.Url)) {
+        this.LogVal('Url : ', state.Url);
+      }
+    }
+  }
+
   DebugWindow(window: Window) {
     if (this.IsNotNullOrUndefinedBool('window', window)) {
     }
@@ -30,6 +47,9 @@ export class ContentDebug extends BaseDebug {
 
   DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
     if (this.IsNotNullOrUndefinedBool('IDataOneDoc', dataOneDoc)) {
+      if (this.IsNotNullOrUndefinedBool('Document', dataOneDoc.Document)) {
+        this.LogVal('Doc Url', dataOneDoc.Document.location.href);
+      }
     }
   }
 
@@ -64,7 +84,7 @@ export class ContentDebug extends BaseDebug {
       }
       this.Log('dataOneIframe.ContentDoc: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc));
 
-      this.DebugIDataDoc(dataOneIframe.ContentDoc);
+      this.DebugIDataOneDoc(dataOneIframe.ContentDoc);
 
       //this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
 

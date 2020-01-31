@@ -1,12 +1,7 @@
 @import "vars";
 @import 'menu.buttons';
 @import 'overlay.scss';
-
-.flex-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
+@import 'Grid.scss';
 
 .light-text {
   color: $scTextColorLight;
@@ -84,23 +79,8 @@ optgroup {
   font-family: Courier New, Courier, monospace;
 }
 
-.col-6 {
-  display: flex;
-  flex-wrap: wrap;
-  width: $oneColWidth * 6;
-  align-content: flex-start;
-}
-
 .in {
   display: none;
-}
-
-.col-6-btn {
-  display: flex;
-  flex-wrap: wrap;
-  float: right;
-  width: $selButtonColWidth;
-  /*border: 1px solid black;*/
 }
 
 .group {
@@ -120,23 +100,6 @@ body {
   background-repeat: no-repeat;
 }
 
-.col-right {
-}
-
-.col-full {
-  width: 100%;
-}
-
-.col-left {
-  display: flex;
-  vertical-align: top;
-  width: 75%;
-  /*button {
-    display: inline-block;
-    width: 100px;
-  }*/
-}
-
 .ta-wrapper {
   width: 60%;
   display: inline-block;
@@ -151,10 +114,9 @@ body {
 .scroller {
   height: 160px;
   display: inline-block;
-  width: 800px;
+  width: $MaxScrollerWidth 754px;
   overflow: scroll;
 }
-
 
 textarea {
   border: 0;

@@ -53,6 +53,12 @@ export interface IContentConst {
   },
   Regex: {
     ContentEditor: RegExp,
+    PageType: {
+      Desktop: RegExp
+      Edit: RegExp
+      Normal: RegExp
+      Preview: RegExp
+    },
   },
 
   Selector: {

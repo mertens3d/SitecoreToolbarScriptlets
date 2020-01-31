@@ -5,10 +5,17 @@ import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestF
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { IsScMode } from '../../../Shared/scripts/Interfaces/IscMode';
 import { PayloadDataFromPopUp } from '../../../Shared/scripts/Classes/PayloadDataReqPopUp';
+import { ExternalEvents } from '../Classes/ExternalEvents';
+import { InternalEvents } from '../Classes/InternalEvents';
 
 export class EventManager extends PopUpManagerBase {
+  ExternalCall: ExternalEvents;
+  InternalCall: InternalEvents;
+
   constructor(popHub: PopUpHub) {
     super(popHub);
+    this.ExternalCall = new ExternalEvents(popHub);
+    this.InternalCall = new InternalEvents(popHub);
   }
 
   Init() {
@@ -18,171 +25,38 @@ export class EventManager extends PopUpManagerBase {
   private __wireMenuButtons() {
     this.debug().FuncStart(this.__wireMenuButtons.name);
 
-    this.UiMan().AssignDblClickEvent(this.PopConst().Selector.HS.SelStateSnapShot, (evt) => { this.__hndlrRestoreClick(evt); });
-    this.UiMan().AssignDblClickEvent(this.PopConst().Selector.HS.TaDebug, () => { this.__cleardebugTextWithConfirm(); });
+    this.UiMan().AssignDblClickEvent(this.PopConst().Selector.HS.SelStateSnapShot, (evt) => { this.ExternalCall.HndlrSnapShotRestore(evt); });
+    this.UiMan().AssignDblClickEvent(this.PopConst().Selector.HS.TaDebug, () => { this.InternalCall.__cleardebugTextWithConfirm(); });
 
-    this.UiMan().AssignOnChangeEvent(this.PopConst().Selector.HS.SelStateSnapShot, (evt) => { this.__hndlrSelectChange(evt) });
+    this.UiMan().AssignOnChangeEvent(this.PopConst().Selector.HS.SelStateSnapShot, (evt) => { this.InternalCall.HndlrSelectChange(evt) });
 
     //this.UiMan().AssignMenuWindowChanged((evt) => { this.__hndlrMenuWindowChanged(); });
 
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.AdminB, () => { this.__handlrB() });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.Cancel, (evt) => { this.__hndlrCancelOperation(evt); });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.CE, () => { this.__hndlrOpenCE(); });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.Desktop, (evt) => { this.__hndlrDesktop(evt); });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.DrawStorage, (evt) => this.__DrawStorage(evt));
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.ModeEdit, (evt) => this.__hndlrSetScMode(this.PopConst().ScMode.edit, evt));
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.ModeNorm, (evt) => this.__hndlrSetScMode(this.PopConst().ScMode.normal, evt));
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.ModePrev, (evt) => this.__hndlrSetScMode(this.PopConst().ScMode.preview, evt));
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.QuickPublish, (evt) => { this.__hndlrQuickPublish(evt) });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.RemoveFromStorage, (evt) => this.__RemoveFromStorage(evt));
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.RestoreWindowState, (evt) => { this.__hndlrRestoreClick(evt); });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.SaveWindowState, (evt) => { this.__hndlrTakeSnapShot(evt) });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.UpdateNicknameB, () => this.__updateNickName());
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.AdminB, () => { this.ExternalCall.HndlrAdminB() });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.Cancel, (evt) => { this.ExternalCall.__hndlrCancelOperation(evt); });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.CE, () => { this.ExternalCall.__hndlrOpenCE(); });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.Desktop, (evt) => { this.ExternalCall.__hndlrDesktop(evt); });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.DrawStorage, (evt) => this.ExternalCall.__DrawStorage(evt));
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.ModeEdit, (evt) => this.ExternalCall.__hndlrSetScMode(this.PopConst().ScMode.edit, evt));
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.ModeNorm, (evt) => this.ExternalCall.__hndlrSetScMode(this.PopConst().ScMode.normal, evt));
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.ModePrev, (evt) => this.ExternalCall.__hndlrSetScMode(this.PopConst().ScMode.preview, evt));
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.QuickPublish, (evt) => { this.ExternalCall.__hndlrQuickPublish(evt) });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.RemoveFromStorage, (evt) => this.ExternalCall.HndlrSnapShotRemove(evt));
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.RestoreWindowState, (evt) => { this.ExternalCall.HndlrSnapShotRestore(evt); });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.SaveWindowState, (evt) => { this.ExternalCall.__hndlrSnapShotCreate(evt) });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.UpdateNicknameB, () => this.ExternalCall.HndlrSnapShotUpdateNickName());
 
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.BigRed, () => this.__hndlrAddCETab);
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.BigRed, () => this.ExternalCall.__hndlrAddCETab);
 
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndDebug, (evt) => { this.__toggleAccordian(evt) });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndForeSite, (evt) => { this.__toggleAccordian(evt) });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndHindSite, (evt) => { this.__toggleAccordian(evt) });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndInSite, (evt) => { this.__toggleAccordian(evt) });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndSettings, (evt) => { this.__toggleAccordian(evt) });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndDebug, (evt) => { this.InternalCall.__toggleAccordian(evt) });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndForeSite, (evt) => { this.InternalCall.__toggleAccordian(evt) });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndHindSite, (evt) => { this.InternalCall.__toggleAccordian(evt) });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndInSite, (evt) => { this.InternalCall.__toggleAccordian(evt) });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndSettings, (evt) => { this.InternalCall.__toggleAccordian(evt) });
+    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Legend.LgndState, (evt) => { this.InternalCall.__toggleAccordian(evt) });
 
-
-    this.UiMan().AssignOnClickEvent(this.PopConst().Selector.HS.iCBoxdSettingsShowDebugData, (evt) => { this.__showDebugButtonClicked(evt) });
+    this.UiMan().AssignOnClickEvent(this.PopConst().Selector.HS.iCBoxdSettingsShowDebugData, (evt) => { this.InternalCall.__showDebugButtonClicked(evt) });
 
     this.debug().FuncEnd(this.__wireMenuButtons.name);
-  }
-  __hndlrSelectChange(evt: any) {
-    this.PopHub.UiMan.SelectChanged();
-  }
-  __RemoveFromStorage(evt: any) {
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.RemoveFromStorage));
-  }
-  __DrawStorage(evt: any) {
-    this.MsgMan().FromAtticDrawStorage();
-  }
-
-  private async __hndlrSetScMode(newMode: IsScMode, evt: MouseEvent) {
-    this.__initNewOperation();
-
-    var payload = new MsgFromPopUp(MsgFlag.SetScMode);
-    payload.Data = new PayloadDataFromPopUp();
-    payload.Data.ReqScMode = newMode;
-    payload.Data.UseOriginalWindowLocation = evt.ctrlKey;
-
-    this.MsgMan().SendMessageHndlr(payload);
-  }
-
-  private __updateNickName() {
-    var self = this.PopAtticMan;
-    var payload = new MsgFromPopUp(MsgFlag.UpdateNickName);
-    payload.Data.idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
-    payload.Data.NewNickname = this.UiMan().GetValueInNickname();;
-    this.MsgMan().SendMessageHndlr(payload);
-  }
-
-  private __cleardebugTextWithConfirm() {
-    this.debug().HndlrClearDebugText(this.debug(), true);
-  }
-
-  private __cleardebugText() {
-    this.debug().HndlrClearDebugText(this.debug());
-  }
-
-  private __toggleAccordian(evt: MouseEvent) {
-    this.debug().FuncStart(this.__toggleAccordian.name);
-
-    var srcElem: HTMLElement = <HTMLElement>(evt.target || evt.srcElement);
-    var foundContentSib = this.UiMan().GetAccordianContentElem(srcElem);
-
-    if (foundContentSib) {
-      var isCollapsed = foundContentSib.classList.contains(this.PopConst().ClassNames.HS.Collapsed);
-
-      var newVal = !isCollapsed;
-      this.UiMan().SetAccordianClass(foundContentSib, newVal)
-
-      this.PopAtticMan().UpdateAccodianState(srcElem.getAttribute('id'), newVal);
-    } else {
-      this.debug().Error(this.__toggleAccordian.name, 'did not find sib');
-    }
-    this.debug().FuncEnd(this.__toggleAccordian.name);
-  }
-
-  private __handlrB() {
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.AdminB))
-  }
-
-  private __hndlrMenuWindowChanged() {
-    var menuData: IDataMenuWindowPrefs = {
-      MenuX: (window.screenX || window.screenLeft || 0),
-      MenuY: (window.screenY || window.screenTop || 0),
-      MenuHeight: window.outerHeight,
-      MenuWidth: window.outerWidth,
-    }
-
-    this.PopAtticMan().UpdateMenuCoords(menuData);
-
-    this.__verifyMatchingTab();
-  }
-
-  private __verifyMatchingTab() {
-    //this.UiMan().VerifyTabMatch();
-  }
-
-  private __hndlrDesktop(evt: MouseEvent) {
-    this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.GoDesktop))
-  }
-
-  private __hndlrCancelOperation(evt: MouseEvent) {
-    this.UiMan().SetCancelFlag();
-  }
-
-  private async __hndlrQuickPublish(evt: MouseEvent) {
-    this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.QuickPublish))
-
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.TaskSuccessful));
-
-    
-  }
-
-  private __showDebugButtonClicked(evt: MouseEvent) {
-    this.__initNewOperation();
-    this.debug().FuncStart(this.__showDebugButtonClicked.name);
-
-    this.debug().FuncEnd(this.__showDebugButtonClicked.name);
-  }
-
-  private async __hndlrTakeSnapShot(evt: MouseEvent) {
-    this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.TakeSnapShot));
-  }
-
-  private async __hndlrAddCETab() {
-    this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.AddCETab));
-  }
-
-  private async __hndlrOpenCE() {
-    this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.OpenCE));
-  }
-
-  private __initNewOperation() {
-    this.__cleardebugText();
-    this.UiMan().ClearCancelFlag();
-  }
-
-  private async __hndlrRestoreClick(evt: MouseEvent) {
-    this.debug().FuncStart(this.__hndlrRestoreClick.name);
-    this.__initNewOperation();
-
-    var payload = new MsgFromPopUp(MsgFlag.AddCETab);
-    payload.Data.idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
-
-    this.MsgMan().SendMessageHndlr(payload);
-
-    this.debug().FuncEnd(this.__hndlrRestoreClick.name);
   }
 }

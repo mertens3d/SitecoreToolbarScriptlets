@@ -9,7 +9,16 @@
 </head>
 <body>
   <form>
-
+    <fieldset>
+      <legend id='lgnd-state' data-setting='lgnd-settings'>State</legend>
+      <div class='accordian-content flex-container'>
+        <div class='col-full'>
+          <div class='scroller'>
+            <textarea id='ta-state' disabled='disabled'></textarea>
+          </div>
+        </div>
+      </div>
+    </fieldset>
     <fieldset>
       <legend id='lgnd-fore-site'>Fore&bull;Site</legend>
       <div class='accordian-content flex-container'>
@@ -30,30 +39,30 @@
       <div class='accordian-content'>
         <div class='row flex-container'>
           <div class='col-6'>
-           
+
             <!--<input type='checkbox' /> todo favorites only-->
             <select id='selState' size='6'>
             </select>
           </div>
         </div>
         <div class='row flex-container'>
-            <button id='SaveWindowState' type='button' class='icon take-snapshot'>Take Snapshot</button>
-            <input type='text' id='inputNickname' value='' placeholder='Nick Name'>
-            <button id='UpdateNickname' type='button' class='icon set-nickname'>Set Nickname</button>
-            <button id='ToggleFavorite' type='button' class='icon favorite'>Toggle Favorite</button>
-            <button id='RemoveOneFromLocalStorage' type='button' class='icon delete-snapshot'>Delete Snapshot</button>
+          <button id='SaveWindowState' type='button' class='icon take-snapshot'>Take Snapshot</button>
+          <input type='text' id='inputNickname' value='' placeholder='Nick Name'>
+          <button id='UpdateNickname' type='button' class='icon set-nickname'>Set Nickname</button>
+          <button id='ToggleFavorite' type='button' class='icon favorite'>Toggle Favorite</button>
+          <button id='RemoveOneFromLocalStorage' type='button' class='icon delete-snapshot'>Delete Snapshot</button>
 
-            <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
+          <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
 
-            <button id='Cancel' type='button' class='icon cancel'>Cancel</button>
+          <button id='Cancel' type='button' class='icon cancel'>Cancel</button>
         </div>
       </div>
     </fieldset>
 
     <fieldset>
       <legend id='lgnd-in-site' data-setting='lgnd-in-site'>In&bull;Site</legend>
-      <div class='accordian-content'>
-        <div class='col-left'>
+      <div class='accordian-content flex-container'>
+        <div class='col-full'>
           <div class='scroller'>
             <textarea id='ta-feedback'></textarea>
           </div>
@@ -86,6 +95,8 @@
         <div id='stat-self-id'></div>
       </div>
     </fieldset>
+
+
   </form>
 
   <div class='menu-overlay' id='id-menu-overlay' style=''>

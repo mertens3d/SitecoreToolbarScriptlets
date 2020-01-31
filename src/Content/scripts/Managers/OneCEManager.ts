@@ -12,10 +12,10 @@ export class OneCEManager extends ContentManagerBase {
   }
 
   WaitForNode(needleId: IGuid, targetDoc: IDataOneDoc, currentIteration: number, timeout: number, callbackOnComplete: Function) {
-    this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.asString + ' on ' + targetDoc.DocId.asShort);
+    this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.AsString + ' on ' + targetDoc.DocId.AsShort);
     currentIteration--;
 
-    var foundOnPage: HTMLElement = targetDoc.Document.getElementById(needleId.asString);
+    var foundOnPage: HTMLElement = targetDoc.Document.getElementById(needleId.AsString);
 
     if (foundOnPage) {
       this.debug().Log('foundOnPage. Triggering callback on complete');
@@ -80,11 +80,11 @@ export class OneCEManager extends ContentManagerBase {
   }
 
   async WaitForAndRestoreOneNode(nextNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
-    this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.asShort);
+    this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
 
-    var treeGlyphTargetId: string = this.Const().Names.SC.TreeGlyphPrefix + nextNode.NodeId.asString;
+    var treeGlyphTargetId: string = this.Const().Names.SC.TreeGlyphPrefix + nextNode.NodeId.AsString;
 
-    this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.asShort);
+    this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.AsShort);
     this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
 
     var iterHelper = new IterationHelper(this.Xyyz,this.WaitForAndRestoreOneNode.name);
@@ -92,7 +92,7 @@ export class OneCEManager extends ContentManagerBase {
     var foundOnPageTreeGlyph: HTMLElement = null;
 
     while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
-      this.debug().Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.asShort + '*');
+      this.debug().Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.AsShort + '*');
 
       foundOnPageTreeGlyph = dataOneDocTarget.Document.getElementById(treeGlyphTargetId);
 
@@ -102,7 +102,7 @@ export class OneCEManager extends ContentManagerBase {
           this.__expandNode(foundOnPageTreeGlyph);
         }
         if (nextNode.IsActive) {
-          var hotTreeNodeId = this.Const().Names.SC.TreeNodePrefix + nextNode.NodeId.asString;
+          var hotTreeNodeId = this.Const().Names.SC.TreeNodePrefix + nextNode.NodeId.AsString;
           var hotTreeNode = dataOneDocTarget.Document.getElementById(hotTreeNodeId);
           if (hotTreeNode) {
             this.__activateNode(hotTreeNode);
@@ -114,11 +114,11 @@ export class OneCEManager extends ContentManagerBase {
       }
     }
 
-    this.debug().FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.asShort);
+    this.debug().FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
   }
 
   async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc, iterHelper: IterationHelper = null) {
-    this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.DocId.asShort);
+    this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.DocId.AsShort);
 
     if (!iterHelper) {
       iterHelper = new IterationHelper(this.Xyyz, this.WaitForAndRestoreManyAllNodes.name);
@@ -134,7 +134,7 @@ export class OneCEManager extends ContentManagerBase {
   }
 
   async RestoreCEStateAsync(dataToRestore: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Promise<Boolean> {
-    this.debug().FuncStart(this.RestoreCEStateAsync.name, dataOneDocTarget.DocId.asShort);
+    this.debug().FuncStart(this.RestoreCEStateAsync.name, dataOneDocTarget.DocId.AsShort);
 
     var toReturn: boolean = false;
 

@@ -54,22 +54,22 @@ export class ContentAtticManager extends ContentManagerBase {
     this.debug().FuncStart(this.WriteToStorage.name);
 
     var snapShotAsString = JSON.stringify(dataOneWindow);
-    this.debug().LogVal('snapShotAsString', snapShotAsString);
+    //this.debug().LogVal('snapShotAsString', snapShotAsString);
 
-    window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotPrefix + dataOneWindow.Id.asString, snapShotAsString);
+    window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotPrefix + dataOneWindow.Id.AsString, snapShotAsString);
 
     this.debug().FuncEnd(this.WriteToStorage.name);
   }
 
   GetFromStorageById(needleId: IGuid): IDataOneWindowStorage {
-    this.debug().FuncStart(this.GetFromStorageById.name, needleId.asString);
+    this.debug().FuncStart(this.GetFromStorageById.name, needleId.AsString);
     var foundStorage: IDataOneWindowStorage[] = this.GetAllStorageAsIDataOneWindow();
     var DateOneWinStoreMatch: IDataOneWindowStorage = null;
 
     if (foundStorage) {
       for (var idx = 0; idx < foundStorage.length; idx++) {
         var candidate = foundStorage[idx];
-        if (candidate.Id.asString === needleId.asString) {
+        if (candidate.Id.AsString === needleId.AsString) {
           DateOneWinStoreMatch = candidate;
           break;
         }
@@ -129,7 +129,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
         if (candidate) {
           candidate.TimeStamp = new Date(candidate.TimeStamp);
-          candidate.Id = this.Xyyz.GuidMan.ParseGuid(candidate.Id.asString);
+          candidate.Id = this.Xyyz.GuidMan.ParseGuid(candidate.Id.AsString);
           candidate.RawData = oneRaw;
 
           if (!candidate.WindowType) {
@@ -169,7 +169,7 @@ export class ContentAtticManager extends ContentManagerBase {
   }
 
   GetRawFromStorageById(needleId: IGuid): IOneStorageData {
-    this.debug().FuncStart(this.GetRawFromStorageById.name, needleId.asString);
+    this.debug().FuncStart(this.GetRawFromStorageById.name, needleId.AsString);
     var toReturn: IOneStorageData = null;
     var foundStorage: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
     if (foundStorage) {

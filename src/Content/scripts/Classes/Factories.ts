@@ -5,8 +5,11 @@ import { PromiseGeneric } from "../Promises/PromiseGeneric";
 import { ContentManagerBase } from "../_first/_ContentManagerBase";
 import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIframe";
 import { GuidHelper } from "../../../Shared/scripts/Classes/GuidHelper";
+import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 
 export class Factories extends ContentManagerBase{
+ 
   GuidHelper: GuidHelper;
 
   constructor(contentHub: ContentHub) {
@@ -16,6 +19,20 @@ export class Factories extends ContentManagerBase{
     contentHub.debug.FuncEnd(PromiseGeneric.name);
   }
 
+  async UpdateContentState(response: MsgFromContent) {
+    response.State.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
+    response.State.WindowType = await this.PageDataMan().GetCurrentPageType();
+    response.State.Url = this.PageDataMan().TopLevelWindow().DataDocSelf.Document.location.href;
+    response.State.ErrorStack = this.debug().ErrorStack;
+    this.debug().DebugObjState(response.State);
+  }
+
+  async NewMsgFromContent() {
+    var response = new MsgFromContent(MsgFlag.Unknown);
+    await this.UpdateContentState(response);
+    response.State.LastReq = MsgFlag.Unknown;
+    return response;
+  }
   DateOneIframeFactory(iframeElem: HTMLIFrameElement, parentDocument: IDataOneDoc, nickname: string): IDataOneIframe {
     var toReturn: IDataOneIframe = {
       Index: -1,

@@ -1,4 +1,4 @@
 ﻿export interface IGuid {
-  asString: string,
-  asShort: string
+  AsString: string,
+  AsShort: string
 }

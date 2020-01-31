@@ -17,9 +17,9 @@ import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
 import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
 import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
+import { ICurrState } from '../../../Shared/scripts/Interfaces/ICurrState';
 
 export class UiManager extends PopUpManagerBase {
- 
   private __selectSnapshotIndex: number = 0;
   OperationCancelled: any;
   TabId: string;
@@ -27,6 +27,7 @@ export class UiManager extends PopUpManagerBase {
   MenuFocused: boolean = true;
   OtherFocused: boolean = false;
   MenuEnabled: boolean = true;
+  currentState: ICurrState;
 
   constructor(popHub: PopUpHub) {
     super(popHub);
@@ -48,7 +49,6 @@ export class UiManager extends PopUpManagerBase {
     this.debug().FuncEnd(this.Init.name);
   }
 
-
   private __drawStoragePretty(ourData: IOneStorageData[]) {
     this.debug().FuncStart(this.__drawStoragePretty.name);
 
@@ -69,7 +69,7 @@ export class UiManager extends PopUpManagerBase {
     var activeOrNot = dataOneTreeNode.IsActive ? '* ' : '  ';
     var expandedOrNot = dataOneTreeNode.IsExpanded ? '+ ' : '  ';
 
-    var toReturn: string = activeOrNot + expandedOrNot + dataOneTreeNode.NodeId.asString + ' ' + dataOneTreeNode.NodeFriendly;
+    var toReturn: string = activeOrNot + expandedOrNot + dataOneTreeNode.NodeId.AsString + ' ' + dataOneTreeNode.NodeFriendly;
     this.debug().FuncEnd(this.DebugDataOneNode.name);
     return toReturn;
   }
@@ -102,7 +102,7 @@ export class UiManager extends PopUpManagerBase {
       for (var jdx = 0; jdx < dataOneWindow.AllCEAr.length; jdx++) {
         toReturn.push('\t------ One CE Start -----');
         var dataOneCE: IDataOneStorageCE = dataOneWindow.AllCEAr[jdx];
-        toReturn.push('\tId: ' + dataOneCE.Id.asString);
+        toReturn.push('\tId: ' + dataOneCE.Id.AsString);
 
         var allCeDebugDataAr = this.GetDebugDataOneCE(dataOneCE);
         for (var kdx = 0; kdx < allCeDebugDataAr.length; kdx++) {
@@ -280,7 +280,7 @@ export class UiManager extends PopUpManagerBase {
   SetParentInfo(winDataParent: IDataBrowserWindow) {
     var targetSpan = document.getElementById(this.PopConst().ElemId.HindSiteParentInfo);
     if (targetSpan) {
-      targetSpan.innerHTML = ' | Parent Id: ' + winDataParent.DataDocSelf.DocId.asShort + ' | ' + winDataParent.Window.location.href;
+      targetSpan.innerHTML = ' | Parent Id: ' + winDataParent.DataDocSelf.DocId.AsShort + ' | ' + winDataParent.Window.location.href;
     }
   }
 
@@ -312,7 +312,7 @@ export class UiManager extends PopUpManagerBase {
     try {
       //var ourData: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
 
-      if (data.CurrentSnapShots) {
+      if (data.State.CurrentSnapShots) {
         //this.__drawStorageRaw(data.CurrentSnapShots)
         //this.__drawStoragePretty(data.CurrentSnapShots)
       }
@@ -421,7 +421,7 @@ export class UiManager extends PopUpManagerBase {
   async RefreshUiRequest() {
     this.debug().FuncStart(this.RefreshUiRequest.name);
 
-    var payload = await this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.GiveCurrentData));
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqCurState));
 
     this.__refreshSettings();
     this.RestoreAccordianStates();
@@ -432,8 +432,8 @@ export class UiManager extends PopUpManagerBase {
   RefreshUiResponse(data: PayloadDataFromContent) {
     //var snapShots: IDataOneWindowStorage[] = this.MsgMan().SendMessage(MsgFlag.GetAllStorageOneWindow);
 
-    this.__populateStateOfSnapShotSelect(data.CurrentSnapShots);
-    this.__drawCorrectNicknameInUI(data.CurrentSnapShots);
+    this.PopulateStateOfSnapShotSelect(data.State.CurrentSnapShots);
+    this.__drawCorrectNicknameInUI(data.State.CurrentSnapShots);
   }
   ShowDebugDataOneWindow() {
     this.debug().FuncStart('ShowDebugDataOneWindow');
@@ -456,7 +456,7 @@ export class UiManager extends PopUpManagerBase {
     this.debug().FuncStart(this.__drawCorrectNicknameInUI.name);
     var targetId: IGuid = this.UiMan().GetIdOfSelectWindowSnapshot();
     if (targetId) {
-      this.debug().Log('targetId : ' + targetId.asString);
+      this.debug().Log('targetId : ' + targetId.AsString);
 
       var storageValues = snapShots;
       var currentSelectId = this.GetIdOfSelectWindowSnapshot();
@@ -465,7 +465,7 @@ export class UiManager extends PopUpManagerBase {
 
       for (var idx = 0; idx < storageValues.length; idx++) {
         var candidate = storageValues[idx];
-        if (candidate.Id.asString === currentSelectId.asString) {
+        if (candidate.Id.AsString === currentSelectId.AsString) {
           storageMatch = candidate;
           break;
         }
@@ -502,7 +502,7 @@ export class UiManager extends PopUpManagerBase {
         var temp = targetSel.options[this.__selectSnapshotIndex].value;
         //this.debug().Log('temp: ' + temp);
         toReturn = this.GuidMan().ParseGuid(temp);
-        this.debug().LogVal('toReturn', toReturn.asString);
+        this.debug().LogVal('toReturn', toReturn.AsString);
       }
     }
     this.debug().FuncEnd(this.GetIdOfSelectWindowSnapshot.name);
@@ -518,16 +518,13 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
-
   AssignOnClickEvent(targetId: string, handler: Function): void {
     var targetElem: HTMLElement = document.querySelector(targetId);
     if (!targetElem) {
       targetElem = document.querySelector('[id=' + targetId + ']');
     }
 
-
     if (!targetElem) {
-
       this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
     } else {
       targetElem.addEventListener('click', (evt) => { handler(evt) });
@@ -551,8 +548,38 @@ export class UiManager extends PopUpManagerBase {
       targetElem.ondblclick = (evt) => { handler(evt) };
     }
   }
-  private __populateStateOfSnapShotSelect(snapShots: IDataOneWindowStorage[]) {
-    this.debug().FuncStart(this.__populateStateOfSnapShotSelect.name, this.__selectSnapshotIndex.toString());
+
+  PopulateContentState(state: ICurrState) {
+    this.debug().FuncStart(this.PopulateContentState.name);
+    this.currentState = state;
+    if (this.debug().IsNotNullOrUndefinedBool('state', state)) {
+      this.UiMan().PopulateStateOfSnapShotSelect(state.CurrentSnapShots);
+
+      var targetCurrStateTa: HTMLTextAreaElement = <HTMLTextAreaElement>window.document.querySelector(this.PopConst().Selector.HS.TaState);
+      if (targetCurrStateTa) {
+        var allTaText: string = 'State as of: ' + this.Utilites().MakeFriendlyDate(new Date());
+        allTaText += '\n';
+        allTaText += 'Page Type: ' + scWindowType[state.WindowType]
+        allTaText += '\n';
+        allTaText += 'Url: ' + state.Url;
+        allTaText += '\n';
+        allTaText += 'Last Request: ' + MsgFlag[state.LastReq];
+
+        allTaText += '\n';
+        allTaText += 'Error Stack (' + state.ErrorStack.length + '):';
+        for (var idx = 0; idx < state.ErrorStack.length; idx++) {
+          allTaText += '\n';
+          allTaText += '\t' + idx + ' : ' + state.ErrorStack[idx].ContainerFunc + ' ' + state.ErrorStack[idx].ErrorString;
+        }
+
+        targetCurrStateTa.value = allTaText;
+      }
+    }
+    this.debug().FuncEnd(this.PopulateContentState.name);
+  }
+
+  PopulateStateOfSnapShotSelect(snapShots: IDataOneWindowStorage[]) {
+    this.debug().FuncStart(this.PopulateStateOfSnapShotSelect.name, this.__selectSnapshotIndex.toString());
 
     if (snapShots) {
       var targetSel: HTMLSelectElement = this.__getSelectElem();
@@ -571,7 +598,7 @@ export class UiManager extends PopUpManagerBase {
             var el = <HTMLOptionElement>window.document.createElement('option');
             el.innerHTML = this.PopHub.Utilities.TimeNicknameFavStr(data);
 
-            el.value = data.Id.asString;
+            el.value = data.Id.AsString;
             if (idx === this.__selectSnapshotIndex) {
               el.selected = true;
             }
@@ -582,6 +609,6 @@ export class UiManager extends PopUpManagerBase {
         targetSel.appendChild(header);
       }
     }
-    this.debug().FuncEnd(this.__populateStateOfSnapShotSelect.name);
+    this.debug().FuncEnd(this.PopulateStateOfSnapShotSelect.name);
   }
 }

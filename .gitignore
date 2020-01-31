@@ -29,3 +29,4 @@ node_modules
 /src/Content/scripts/**/*.js
 /src/PopUp/scripts/**/*.js
 /src/Shared/scripts/**/*.js
+/src/Content/scripts/**/*.js.map

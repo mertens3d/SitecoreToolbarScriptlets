@@ -102,7 +102,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   private __waitForThenFunc(selector: string, targetDoc: IDataOneDoc, dataPublishChain: IDataPublishChain, optionFunc: Function) {
     return new Promise<IDataPublishChain>(async (resolve, reject) => {
       this.debug().FuncStart(this.__waitForThenFunc.name, selector);
-      this.debug().DebugIDataDoc(targetDoc);
+      this.debug().DebugIDataOneDoc(targetDoc);
 
       var found: HTMLElement = null;
 

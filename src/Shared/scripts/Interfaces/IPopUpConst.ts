@@ -37,6 +37,7 @@ export interface IPopUpConst {
         LgndHindSite: string,
         LgndInSite: string,
         LgndSettings: string,
+        LgndState: string,
       }
     },
   }
@@ -63,6 +64,7 @@ export interface IPopUpConst {
       PrefAutoLogin: string,
       SelStateSnapShot: string,
       TaDebug: string,
+      TaState: string,
     }
   }
   Storage: {

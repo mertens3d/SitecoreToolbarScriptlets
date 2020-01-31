@@ -6,6 +6,8 @@ import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 export class PageDataManager extends ContentManagerBase {
   async GetTargetWindowAsync(useOrigWindow: boolean, windowType: scWindowType): Promise<IDataBrowserWindow> {
     this.debug().FuncStart(this.GetTargetWindowAsync.name);
+    useOrigWindow = true;
+
     var targetWindow: IDataBrowserWindow;
 
     if (useOrigWindow) {
@@ -20,7 +22,7 @@ export class PageDataManager extends ContentManagerBase {
         .then((data) => targetWindow = data);
     }
 
-    this.debug().FuncEnd(this.GetTargetWindowAsync.name, 'child window id: ' + targetWindow.DataDocSelf.DocId.asShort);
+    this.debug().FuncEnd(this.GetTargetWindowAsync.name, 'child window id: ' + targetWindow.DataDocSelf.DocId.AsShort);
 
     return targetWindow;
   }
@@ -113,18 +115,25 @@ export class PageDataManager extends ContentManagerBase {
     if (currentLoc.indexOf(this.Const().UrlSuffix.Login) > -1) {
       toReturn = scWindowType.LoginPage;
     }
-    else if (currentLoc.toLowerCase().indexOf(this.Const().UrlSuffix.Desktop.toLowerCase()) > -1) {
-      this.debug().Log('Testing for Desktop editor');
-      this.debug().Log('currentLoc.toLowerCase()' + currentLoc.toLowerCase());
-      this.debug().Log('this.Const().Url.Desktop.toLowerCase()' + this.Const().UrlSuffix.Desktop.toLowerCase());
-      toReturn = scWindowType.Desktop;
-    }
     else if (new RegExp(this.Const().Regex.ContentEditor).test(currentLoc)) {
       toReturn = scWindowType.ContentEditor;
     }
     else if (currentLoc.toLowerCase().indexOf(this.Const().UrlSuffix.LaunchPad.toLowerCase()) > -1) {
       toReturn = scWindowType.Launchpad;
     }
+    else if (this.__urlVsRegex(this.Const().Regex.PageType.Desktop, currentLoc)) {
+      toReturn = scWindowType.Desktop
+    }
+    else if (this.__urlVsRegex(this.Const().Regex.PageType.Preview, currentLoc)) {
+      toReturn = scWindowType.Preview
+    }
+    else if (this.__urlVsRegex(this.Const().Regex.PageType.Edit, currentLoc)) {
+      toReturn = scWindowType.Edit
+    }
+    else if (this.__urlVsRegex(this.Const().Regex.PageType.Normal, currentLoc)) {
+      toReturn = scWindowType.Normal
+    }
+
     else {
       toReturn = scWindowType.Unknown;
     }
@@ -133,6 +142,9 @@ export class PageDataManager extends ContentManagerBase {
     return toReturn;
   }
 
+  private __urlVsRegex(regexPattern: RegExp, url: string) {
+    return new RegExp(regexPattern).test(url);
+  }
   private __getUrlForWindowType(windowType: scWindowType): string {
     var toReturn: string;
 

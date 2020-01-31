@@ -15,7 +15,7 @@ export class PromiseGeneric extends ContentManagerBase {
 
   async  WaitForReadyIframe(dataOneIframe: IDataOneIframe) {
     return new Promise<IDataOneIframe>(async (resolve) => {
-      this.debug().FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.asShort);
+      this.debug().FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort);
 
       this.debug().DebugDataOneIframe(dataOneIframe);
 
