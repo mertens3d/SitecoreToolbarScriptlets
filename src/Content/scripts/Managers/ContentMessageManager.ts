@@ -10,6 +10,8 @@ import { PayloadDataFromPopUp } from '../../../Shared/scripts/Classes/PayloadDat
 //import { MessageRunner } from '../../../Shared/scripts/Classes/MsgRunner';
 import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
 import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
+import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
+import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 
 //var browser = browser || {};
 
@@ -22,6 +24,7 @@ import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
 //});
 
 export class ContentMessageManager extends ContentManagerBase {
+  AutoSaveHasBeenScheduled: boolean = false;
   //MsgRunner: MessageRunner;
 
   constructor(contentHub: ContentHub) {
@@ -34,19 +37,79 @@ export class ContentMessageManager extends ContentManagerBase {
     contentHub.debug.FuncEnd(ContentMessageManager.name);
   }
 
-  async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp) {
-    this.debug().LogVal('requestMsgFromPopup', JSON.stringify(reqMsgFromPopup));
-    //this.debug().FuncStart(this.ContentReceiveRequest.name, requestMsgFromPopup.FlagAsString());
-    var response: MsgFromContent;// = new MsgFromContent(MsgFlag.TestResponse);
-    //response.response = "Hi from RunnerReceiver";
+  //ValidateSnapShots(reqMsgFromPopup: MsgFromPopUp)
 
-    this.debug().Log('has receiver defined');
-    response = await this.ReqMsgRouter(reqMsgFromPopup);
-    //this.debug().LogVal('returned by ReceiveRequestHndlr', JSON.stringify(response));
+  ValidateRequest(reqMsgFromPopup: MsgFromPopUp): MsgFromPopUp {
+    this.debug().FuncStart(this.ValidateRequest.name);
+    var isValid: boolean = true;
+
+    if (reqMsgFromPopup) {
+      if (reqMsgFromPopup.CurrentContentPrefs) {
+        if (reqMsgFromPopup.Data) {
+        } else {
+          reqMsgFromPopup.Data = new PayloadDataFromPopUp();
+        }
+      } else {
+        this.debug().Error(this.ValidateRequest.name, 'No CurrentContentPrefs')
+        reqMsgFromPopup.IsValid = false;
+        isValid = false;
+      }
+    } else {
+      this.debug().Error(this.ValidateRequest.name, 'no reqMsgFromPopup');
+    }
+
+    reqMsgFromPopup.IsValid = isValid;
+    this.debug().FuncEnd(this.ValidateRequest.name, isValid.toString());
+    return reqMsgFromPopup;
+  }
+
+  ScheduleIntervalTasks(reqMsgFromPopup: MsgFromPopUp) {
+    if (true || reqMsgFromPopup.CurrentContentPrefs.AutoSave) {
+      if (!this.AutoSaveHasBeenScheduled) {
+        var self = this;
+        window.setInterval(() => {
+          self.AutoSaveSnapShot();
+        }, this.Const().Timeouts.AutoSaveInterval)
+
+        this.AutoSaveHasBeenScheduled = true;
+      }
+    }
+  }
+
+  AutoSaveSnapShot() {
+    this.debug().FuncStart(this.AutoSaveSnapShot.name);
+    var SnapShotSettings: IDataPayloadSnapShot = {
+      SnapShotNewNickname: 'Auto',
+      SnapShotIsAuto: true
+    }
+
+    this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().TopLevelWindow(), SnapShotSettings);
+    this.debug().FuncEnd(this.AutoSaveSnapShot.name);
+  }
+
+  async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp) {
+    this.debug().FuncStart(this.ContentReceiveRequest.name);
+
+    this.debug().DebugMsgFromPopUp(reqMsgFromPopup);
+
+    var response: MsgFromContent;// = new MsgFromContent(MsgFlag.TestResponse);
+
+    if (reqMsgFromPopup) {
+      reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
+      if (reqMsgFromPopup.IsValid) {
+        this.ScheduleIntervalTasks(reqMsgFromPopup);
+        response = await this.ReqMsgRouter(reqMsgFromPopup);
+      }
+    }
+    else {
+      response.MsgFlag = MsgFlag.RespError;
+      this.debug().Error(this.ValidateRequest.name, 'no request');
+    }
 
     this.debug().FuncEnd(this.ContentReceiveRequest.name);
     return Promise.resolve(response);
   }
+
   Init() {
     this.debug().FuncStart(this.Init.name + ' ' + ContentMessageManager.name);
     var self = this;
@@ -87,7 +150,7 @@ export class ContentMessageManager extends ContentManagerBase {
   }
 
   async ReqMsgRouter(payload: MsgFromPopUp) {
-    this.debug().FuncStart(this.ReqMsgRouter.name, this.Utilites().MsgFlagAsString(payload.MsgFlag));
+    this.debug().FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
     var response: MsgFromContent = await this.Factoryman().NewMsgFromContent();
 
@@ -102,7 +165,7 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqAdminB:
-        this.debug().LogVal('flag is adminb', this.Utilites().MsgFlagAsString(payload.MsgFlag));
+        this.debug().LogVal('flag is adminb', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
         this.debug().DebugPageDataMan(this.PageDataMan());
 
         this.locMan().AdminB(this.PageDataMan().TopLevelWindow().DataDocSelf, null);
@@ -149,18 +212,18 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqTakeSnapShot:
-        this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().TopLevelWindow());
+        this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().TopLevelWindow(), payload.Data.SnapShotSettings);
         break;
 
-      case MsgFlag.TaskSuccessful:
+      case MsgFlag.RespTaskSuccessful:
         this.NotifyCompleteOnContent(null, payload.Data.ScreenMessage);
 
-      case MsgFlag.UpdateNickName:
+      case MsgFlag.ReqUpdateNickName:
         this.AtticMan().UpdateNickname(payload.Data)
         break;
 
       default:
-        this.debug().LogVal('Unrecognized MsgFlag', this.Utilites().MsgFlagAsString(payload.MsgFlag));
+        this.debug().LogVal('Unrecognized MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
         break;
     }
@@ -175,11 +238,11 @@ export class ContentMessageManager extends ContentManagerBase {
   }
 
   private respondSuccessful() {
-    this.SendMessageHndlr(new MsgFromContent(MsgFlag.TaskSuccessful))
+    this.SendMessageHndlr(new MsgFromContent(MsgFlag.RespTaskSuccessful))
   }
 
   private respondFail() {
-    this.SendMessageHndlr(new MsgFromContent(MsgFlag.TaskFailed));
+    this.SendMessageHndlr(new MsgFromContent(MsgFlag.RespTaskFailed));
   }
 
   SendMessageHndlr(msgflag: MsgFromContent) {
@@ -189,7 +252,7 @@ export class ContentMessageManager extends ContentManagerBase {
     return new Promise(async () => {
       try {
         this.debug().MarkerA();
-        var dataOneWindowStorage = this.AtticMan().GetFromStorageById(Data.idOfSelect);
+        var dataOneWindowStorage = this.AtticMan().GetFromStorageById(Data.IdOfSelect);
         this.debug().MarkerB();
         var self = this;
 

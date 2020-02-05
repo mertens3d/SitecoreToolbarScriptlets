@@ -14,9 +14,9 @@ export class PopConst {
       HindSiteParentInfo: 'spanParentInfo',
 
       HS: {
-       
+        SelectHeader: 'sel-header',
         TabId: 'orig-win-id',
-        
+
         Btn: {
           AdminB: 'AdminB',
           ToggleFavoriteB: 'ToggleFavorite',
@@ -48,6 +48,7 @@ export class PopConst {
     Numbers: {
       MinMenuHeight: 600,
       MinMenuWidth: 600,
+      MaxAutoSaveCount: 10,
     },
     Notify: {
       Default: 'Complete',
@@ -61,22 +62,35 @@ export class PopConst {
     Selector: {
       HS: {
         iCBoxdSettingsShowDebugData: '[id=id-settings-show-debug-data]',
+        iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
+        PrefAutoLogin: '[id=id-settings-auto-login]',
+        SettingAutoSaveEnabled: '[id=id-settings-auto-save]',
+        SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',
+
         IdFieldSetDebug: '[id=id-fieldset-debug]',
         menuOverlay: '[id=id-menu-overlay]',
-        PrefAutoLogin: '[id=id-settings-auto-login]',
         SelStateSnapShot: '[id=selState]',
         TaDebug: '[id=ta-debug]',
-        TaState: '[id=ta-state]'
+        TaState: '[id=ta-state]',
+        BuildStamp: '[id=build-stamp]',
       },
     },
     Storage: {
-      DefaultDebugKeepDialogOpen: true,
       WindowRoot: 'todo',
       SettingsSuffix: 'todo',
-      DefaultShowDebugData: true
+      Defaults: {
+        bool: {
+          AutoSave: false,
+          AutoLogin: false,
+          DefaultDebugKeepDialogOpen: false,
+          DefaultShowDebugData: false
+        }
+      }
     },
     Timeouts: {
       WaitBeforeRemovingCompleteFlag: 1500,
+      AutoSaveInterval: 15000,
+      AutoLoginCheckInterval: 3000,
     },
   }
 }

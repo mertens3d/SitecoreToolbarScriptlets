@@ -9,10 +9,6 @@
     return './src/**/*.ts';
   }
 
-  //TranspiledFolderFullSource() {
-
-  //  return his.TranspiledFolder + '/' + this.Name + '**/*.js'
-  //}
   TranspiledEntryPointFull() {
     return this.TranspiledFolder + '/' + this.Name + '/scripts/' + this.TranspiledEntryPointFile;
   }

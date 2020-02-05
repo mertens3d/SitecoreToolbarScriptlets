@@ -26,24 +26,12 @@ export class Utilities {
     toReturn += StaticHelpers.BufferString('- Page Type', 20, '.', false, false);
     toReturn += StaticHelpers.BufferString('- Nickname', 16, '.', false, false);
     toReturn += StaticHelpers.BufferString('- Fav.', 4, '.', false);
+    toReturn += StaticHelpers.BufferString('- Node.', 10, '.', false);
 
     return toReturn;
   }
   MakeSelectorFromId(TabId: string): any {
     return '[id=' + TabId + ']';
-  }
-
-  
-
-  MsgFlagAsString(msg: MsgFlag): string {
-    var toReturn: string = "{error}";
-
-    try {
-      toReturn = MsgFlag[msg];
-    } catch (e) {
-    }
-
-    return 'flag: ' + toReturn;
   }
 
   TimeNicknameFavStr(data: IDataOneWindowStorage): string {
@@ -52,14 +40,13 @@ export class Utilities {
     return this.MakeFriendlyDate(data.TimeStamp)
       + ' - ' + StaticHelpers.BufferString(typeStr, 17, ' ', false)
       + ' - ' + StaticHelpers.BufferString(data.NickName, 16, ' ', false)
-      + ' - ' + StaticHelpers.BufferString((data.IsFavorite ? '*' : ' '), 1);
+      + ' - ' + StaticHelpers.BufferString((data.IsFavorite ? '*' : ' '), 1)
+      + ' - ' + StaticHelpers.BufferString((data.IsAutoSave ? 'A' : ' '), 1);
   }
-
- 
 
   MakeFriendlyDate(date: Date) {
     var year = date.getFullYear();
-    var month = date.getMonth();
+    var month = StaticHelpers.BufferString(date.getMonth().toString(), 2, '0');
     var day = StaticHelpers.BufferString(date.getDay().toString(), 2, '0');
     var min = StaticHelpers.BufferString(date.getMinutes().toString(), 2, '0');
     var hoursRaw = date.getHours();

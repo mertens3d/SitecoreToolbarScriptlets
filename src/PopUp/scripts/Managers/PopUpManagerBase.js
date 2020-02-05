@@ -12,6 +12,7 @@ var PopUpManagerBase = /** @class */ (function () {
     PopUpManagerBase.prototype.PopAtticMan = function () { return this.PopHub.PopUpAtticMan; };
     //MsgFlag(): MessageFlag { return this.PopHub.MessageFlag; }
     PopUpManagerBase.prototype.GuidMan = function () { return this.PopHub.GuidMan; };
+    PopUpManagerBase.prototype.SettingsMan = function () { return this.PopHub.SettingsMan; };
     return PopUpManagerBase;
 }());
 exports.PopUpManagerBase = PopUpManagerBase;

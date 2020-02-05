@@ -6,8 +6,34 @@ import { IDataBrowserWindow } from "../../../Shared/scripts/Interfaces/IDataBrow
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { ICurrState } from "../../../Shared/scripts/Interfaces/ICurrState";
+import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp";
+import { IDataContentPrefs } from "../../../Shared/scripts/Interfaces/IDataContentPrefs";
+import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDataReqPopUp";
+import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 
 export class ContentDebug extends BaseDebug {
+  DebugMsgFromPopUp(reqMsgFromPopup: MsgFromPopUp) {
+    if (this.IsNotNullOrUndefinedBool('MsgFromPopUp', reqMsgFromPopup)){
+      this.LogVal('requestMsgFromPopup', JSON.stringify(reqMsgFromPopup));
+      this.LogVal('MsgFlag', StaticHelpers. MsgFlagAsString( reqMsgFromPopup.MsgFlag));
+
+      this.DebugIDataContentPrefs(reqMsgFromPopup.CurrentContentPrefs);
+      this.DebugPayloadDataFromPopUp(reqMsgFromPopup.Data);
+    }
+  }
+
+  DebugPayloadDataFromPopUp(Data: PayloadDataFromPopUp) {
+    if (this.IsNotNullOrUndefinedBool('PayloadDataFromPopUp', Data)) {
+      this.LogVal('idOfSelect', Data.IdOfSelect);
+      this.DebugIGuid(Data.IdOfSelect);
+    }
+  }
+
+  DebugIDataContentPrefs(prefs: IDataContentPrefs) {
+    if (this.IsNotNullOrUndefinedBool('MaxAutoSaveCount', prefs.MaxAutoSaveCount)) {
+      this.LogVal('MaxAutoSaveCount', prefs.MaxAutoSaveCount);
+    }
+  }
   DebugPageDataMan(pageDataMan: PageDataManager) {
     if (this.IsNotNullOrUndefinedBool('pageDataMan', pageDataMan)) {
       this.DebugIDataBrowserWindow(pageDataMan.TopLevelWindow());
@@ -23,8 +49,6 @@ export class ContentDebug extends BaseDebug {
       this.DebugWindow(browserWindow.Window);
     }
   }
-
-
 
   DebugObjState(state: ICurrState) {
     if (this.IsNotNullOrUndefinedBool('State', state)) {

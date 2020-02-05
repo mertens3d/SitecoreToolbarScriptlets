@@ -5,6 +5,7 @@ import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneSt
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
+import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 
 export class OneCEManager extends ContentManagerBase {
   constructor(xyyz: ContentHub) {
@@ -146,7 +147,7 @@ export class OneCEManager extends ContentManagerBase {
     return toReturn;
   }
 
-  SaveStateOneContentEditor(id: IGuid, dataOneDoc: IDataOneDoc) {
+  SaveStateOneContentEditor(id: IGuid, dataOneDoc: IDataOneDoc, snapShotSettings: IDataPayloadSnapShot) {
     this.debug().FuncStart('SaveOneContentEditor');
     this.debug().Log('SaveOneContentEditor');;
     this.debug().Log('docElem is null: ' + (dataOneDoc === null));;
@@ -154,7 +155,9 @@ export class OneCEManager extends ContentManagerBase {
     var CeSnapShot: IDataOneStorageCE = this.Xyyz.OneCEMan.MakeNewData(id);
     CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(dataOneDoc);
 
-    this.Xyyz.OneWindowMan.PutCEDataToCurrentSnapShot(CeSnapShot);
+ 
+
+    this.Xyyz.OneWindowMan.PutCEDataToCurrentSnapShot(CeSnapShot, snapShotSettings);
 
     this.debug().FuncEnd('SaveOneContentEditor');
   }

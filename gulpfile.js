@@ -39,14 +39,20 @@ gulp.task('WebpackContent', (cb) => otherTasks.WebPackOne(cb, varsObj.ContentJs)
 gulp.task('WebpackPopUp', (cb) => otherTasks.WebPackOne(cb, varsObj.PopUpJs));
 gulp.task('WebpackOpener', (cb) => otherTasks.WebPackOne(cb, varsObj.WindowOpener));
 
+gulp.task('CleanBuildStamp', (cb) => tsTasks.CleanBuildStamp(cb, varsObj));
+gulp.task('PopulateBuildTimeStamp', (cb) => tsTasks.BuildBuildNumber(cb, varsObj));
+
+
+
 gulp.task('WebpackAll', gulp.series(['WebpackContent', 'WebpackPopUp', 'WebpackOpener']));
+gulp.task('TimeStampAll', gulp.series(['CleanBuildStamp', 'PopulateBuildTimeStamp']));
 
 //'combineJs', 'buildjsContent',
 
 //todo - put back if needed 'buildWindowOpenerForBookMark', 'BookmarkText',
 //todo - put back if needed 'cleanAutoBuildFolder', 'cleanAddons',
 
-gulp.task('builders', gulp.series(['BuildPopUpStyles', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml', 'PutToFinal']), function (resolve) {
+gulp.task('builders', gulp.series(['BuildPopUpStyles', 'TimeStampAll', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml', 'PutToFinal']), function (resolve) {
   resolve();
 });
 

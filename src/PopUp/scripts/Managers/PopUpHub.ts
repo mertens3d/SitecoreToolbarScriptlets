@@ -8,19 +8,19 @@ import { Utilities } from "../../../Shared/scripts/Classes/Utilities";
 import { FeedbackManager } from "./FeedbackManager";
 import { PopConst } from "../Classes/PopConst";
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
-
-
+import { SettingsManager } from "./SettingsManager";
 
 export class PopUpHub {
-  UiMan: UiManager;
   debug: PopUpDebug;
   EventMan: EventManager;
-  PopUpConst: IPopUpConst;
+  FeedbackMan: FeedbackManager;
+  GuidMan: GuidHelper;
   PopMsgMan: PopUpMessagesManager;
   PopUpAtticMan: PopUpAtticManager;
-  GuidMan: GuidHelper;
+  PopUpConst: IPopUpConst;
+  SettingsMan: SettingsManager;
+  UiMan: UiManager;
   Utilities: Utilities;
-  FeedbackMan: FeedbackManager;
 
   constructor() {
     this.debug = new PopUpDebug(window);
@@ -37,12 +37,14 @@ export class PopUpHub {
     this.PopUpConst = PopConst.PopConst;
     this.Utilities = new Utilities(this.debug);
     this.FeedbackMan = new FeedbackManager(this);
+    this.SettingsMan = new SettingsManager(this);
     this.init();
   }
 
   init() {
     this.debug.FuncStart(this.init.name, PopUpHub.name);
     this.EventMan.Init();
+    this.PopUpAtticMan.Init(); //before PopMsgMan
     this.PopMsgMan.Init(); // before uiman.Init
     this.UiMan.Init();
     this.debug.FuncEnd(this.init.name, PopUpHub.name);

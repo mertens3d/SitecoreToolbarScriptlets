@@ -1,5 +1,4 @@
-﻿import { IDataSettings } from '../../../Shared/scripts/Interfaces/IDataSettings';
-import { PopUpManagerBase } from './PopUpManagerBase';
+﻿import { PopUpManagerBase } from './PopUpManagerBase';
 import { PopUpHub } from './PopUpHub';
 
 import { IOneStorageData } from '../../../Shared/scripts/Interfaces/IOneStorageData';
@@ -18,6 +17,8 @@ import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
 import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
 import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
 import { ICurrState } from '../../../Shared/scripts/Interfaces/ICurrState';
+import { BuildDateStamp } from '../../../Shared/scripts/AutoBuild/BuildNum';
+import { IDataPopUpSettings } from '../../../Shared/scripts/Interfaces/IDataPopUpSettings';
 
 export class UiManager extends PopUpManagerBase {
   private __selectSnapshotIndex: number = 0;
@@ -41,13 +42,35 @@ export class UiManager extends PopUpManagerBase {
     var self = this;
     this.debug().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
 
+
+    this.WriteBuildNumToUi();
+
     //this.WriteTabId();
 
     this.__wireParentFocusCheck();
 
     this.RefreshUiRequest();
+
+
     this.debug().FuncEnd(this.Init.name);
+
+
   }
+
+  WriteBuildNumToUi() {
+    this.debug().LogVal('BuildDateStamp', BuildDateStamp);
+
+
+    var targetTag: HTMLElement = document.querySelector(this.PopConst().Selector.HS.BuildStamp);
+    if (targetTag) {
+      targetTag.innerText = 'build: ' + this.Utilites().MakeFriendlyDate(new Date(BuildDateStamp));
+    } else {
+      this.debug().Error(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
+    }
+
+
+  }
+
 
   private __drawStoragePretty(ourData: IOneStorageData[]) {
     this.debug().FuncStart(this.__drawStoragePretty.name);
@@ -332,8 +355,8 @@ export class UiManager extends PopUpManagerBase {
     this.debug().FuncEnd('DrawStorageRaw');
   }
 
-  RestoreAccordianStates(): void {
-    var accordianSettings = this.PopAtticMan().CurrentSettings().Accordian;
+  async RestoreAccordianStates(): Promise<void> {
+    var accordianSettings = (await this.PopAtticMan().CurrentSettings()).Accordian;
     for (var idx = 0; idx < accordianSettings.length; idx++) {
       var candidate = accordianSettings[idx];
       var target = document.getElementById(candidate.ElemId);
@@ -347,10 +370,10 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
-  UpdateAtticFromUi(): any {
+  async UpdateAtticFromUi(): Promise<any> {
     this.debug().FuncStart(this.UpdateAtticFromUi.name);
 
-    let currentSettings = this.PopAtticMan().CurrentSettings();
+    let currentSettings: IDataPopUpSettings = await this.PopAtticMan().CurrentSettings();
     let currentVal = (<HTMLInputElement>document.querySelector(this.PopConst().Selector.HS.iCBoxdSettingsShowDebugData)).checked;
     currentVal = true; //todo - remove after debugging
     this.debug().LogVal('currentVal', currentVal.toString())
@@ -394,14 +417,14 @@ export class UiManager extends PopUpManagerBase {
     this.UiMan().OperationCancelled = false;
   }
 
-  __refreshSettings() {
+  async __refreshSettings() {
     this.debug().FuncStart(this.__refreshSettings.name);
     let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(this.PopConst().Selector.HS.IdFieldSetDebug);
 
-    let currentSettings: IDataSettings = this.PopAtticMan().CurrentSettings();
+    let currentSettings: IDataPopUpSettings = await this.PopAtticMan().CurrentSettings();
     if (currentSettings) {
       if (debugFieldSet) {
-        let newDisplay = this.PopAtticMan().CurrentSettings().DebugSettings.ShowDebugData ? '' : 'none';
+        let newDisplay = currentSettings.DebugSettings.ShowDebugData ? '' : 'none';
         debugFieldSet.style.display = newDisplay;
       }
       let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(this.PopConst().Selector.HS.iCBoxdSettingsShowDebugData);
@@ -585,8 +608,14 @@ export class UiManager extends PopUpManagerBase {
       var targetSel: HTMLSelectElement = this.__getSelectElem();
 
       if (targetSel) {
+        var optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeader + ']')
+        if (optGroup) {
+          optGroup.remove();
+        }
+
         var header: HTMLOptGroupElement = <HTMLOptionElement>window.document.createElement('optgroup');
         header.label = this.Utilites().SelectHeaderStr();
+        header.id = this.PopConst().ElemId.HS.SelectHeader;
 
         if (snapShots && snapShots.length > 0) {
           targetSel.options.length = 0;

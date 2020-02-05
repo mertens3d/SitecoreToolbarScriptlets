@@ -27,7 +27,7 @@ export class InternalEvents extends CommonEvents{
       var newVal = !isCollapsed;
       this.UiMan().SetAccordianClass(foundContentSib, newVal)
 
-      this.PopAtticMan().UpdateAccodianState(srcElem.getAttribute('id'), newVal);
+       this.PopAtticMan().UpdateAccodianState(srcElem.getAttribute('id'), newVal);
     } else {
       this.debug().Error(this.__toggleAccordian.name, 'did not find sib');
     }

@@ -57,7 +57,8 @@ export class InjectConst {
     Timeouts: {
       PostLoginBtnClick: 1000,
       SetHrefEffortWait: 1000,
-      WaitBeforeRemovingCompleteFlagOnContent : 1500
+      WaitBeforeRemovingCompleteFlagOnContent : 1500,
+      AutoSaveInterval : 1000 * 60 * 15,
       
     },
     IterHelper: {

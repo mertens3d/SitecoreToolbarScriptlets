@@ -6,6 +6,7 @@ import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrow
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
+import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 
 export class OneDesktopManager extends ContentManagerBase {
   constructor(xyyz: ContentHub) {
@@ -133,7 +134,7 @@ export class OneDesktopManager extends ContentManagerBase {
     return toReturn;
   }
 
-  SaveStateOneDesktop(targetWindow: IDataBrowserWindow) {
+  SaveStateOneDesktop(targetWindow: IDataBrowserWindow, snapShotSettings: IDataPayloadSnapShot) {
     this.debug().FuncStart(this.SaveStateOneDesktop.name);;
     this.debug().Log('SaveOneDesktop');;
     var livingIframeAr: IDataOneIframe[] = this.GetAllLiveIframeData(targetWindow);
@@ -143,7 +144,7 @@ export class OneDesktopManager extends ContentManagerBase {
 
         var targetIframeObj = livingIframeAr[iframeIdx];
         //this.debug().Log('targetIframe: ' + JSON.stringify(targetIframeObj));
-        this.Xyyz.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.ContentDoc);
+        this.Xyyz.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.ContentDoc, snapShotSettings);
       }
     }
 

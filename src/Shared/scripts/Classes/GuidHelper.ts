@@ -48,7 +48,8 @@ export class GuidHelper {
   ParseGuid(val: string): IGuid {
     let toReturn: IGuid = {
       AsString: val,
-      AsShort: ''
+      AsShort: '',
+      Type: 'IGuid'
     }
 
     toReturn.AsShort = this.ShortGuid(toReturn);

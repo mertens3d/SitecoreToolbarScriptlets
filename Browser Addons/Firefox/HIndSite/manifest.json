@@ -12,16 +12,23 @@
   "content_scripts": [
     {
       "matches": [ "http://*/*" ],
-      "js": [ "content_scripts/hindsite.js", "AutoBuild/final/content.min.js"]
+      "js": [ "content_scripts/hindsite.js", "AutoBuild/final/content.min.js" ]
 
     }
   ],
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "idle",
+    "storage"
   ],
   "browser_action": {
     "default_icon": "icons/border-48.png",
     "default_title": "Setting",
     "default_popup": "/AutoBuild/final/PopUp.min.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{bab0003d-2d66-4b92-98d4-f5d53311166d}"
+    }
   }
 }

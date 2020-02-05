@@ -12,7 +12,6 @@ export class BaseDebug {
   private ParentWindow: Window;
   Enabled: boolean = false;
 
-
   ErrorStack: IError[] = [];
 
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
@@ -38,13 +37,13 @@ export class BaseDebug {
     var toReturn: boolean = false;
     if (subject) {
       if ((typeof subject) == 'undefined') {
-        this.LogVal(title + 'Is Not Undefined', '*** false ***');
+        this.LogVal(title + ' Is Not Undefined', '!!! false !!!');
       } else {
-        this.LogVal(title + 'Is Not Null', 'true');
+        this.LogVal(title + ' Is Not Null', 'true');
         toReturn = true;
       }
     } else {
-      this.LogVal(title + 'Is Not Null', '*** false ***');
+      this.LogVal(title + ' Is Not Null', '!!! false !!!');
     }
 
     return toReturn;
@@ -136,21 +135,27 @@ export class BaseDebug {
     this.Log('Marker ' + marker);
   }
 
-  LogVal(textValName: string, textValVal: string): void;
-  LogVal(textValName: string, textValVal: boolean): void;
-  LogVal(textValName: string, textValVal: number): void;
-  LogVal(textValName: string, textValVal: string | boolean | number): any {
-    if (!textValVal) {
-      textValVal = '{notVal}';
+  LogVal(textValName: string, textVal: IGuid): void;
+  LogVal(textValName: string, textVal: string): void;
+  LogVal(textValName: string, textVal: boolean): void;
+  LogVal(textValName: string, textVal: number): void;
+  LogVal(textValName: string, textVal: string | boolean | number | IGuid): any {
+    if (!textVal) {
+      textVal = '{notVal}';
     } else {
-      textValVal = textValVal.toString();
+      var asGuid = <IGuid>textVal;
+      if (asGuid.Type === 'IGuid') {
+        textVal = asGuid.AsString;
+      }
     }
+
+    textVal = textVal.toString();
 
     textValName = StaticHelpers.BufferString(textValName.toString(), 26, ' ', false, false);
 
     const debugPrefix = '  ~~~  ';
 
-    this.Log(debugPrefix +  textValName + ' : ' + textValVal);
+    this.Log(debugPrefix + textValName + ' : ' + textVal);
   }
 
   Log(text, optionalValue: string = '', hasPrefix = false) {
@@ -247,10 +252,6 @@ export class BaseDebug {
   }
 
   Error(container, text) {
-
-    
-
-
     if (!container) {
       container = 'unknown';
     }

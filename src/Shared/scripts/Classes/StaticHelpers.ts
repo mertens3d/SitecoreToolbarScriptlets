@@ -1,4 +1,6 @@
-﻿export class StaticHelpers {
+﻿import { MsgFlag } from "../Enums/MessageFlag";
+
+export class StaticHelpers {
   static BufferString(str: string, desiredLength: number, buffChar = ' ', bufferLEft: Boolean = true, useNbsp: boolean = true): string {
     var toReturn = str;
 
@@ -28,5 +30,17 @@
       }
     }
     return toReturn;
+  }
+
+  static MsgFlagAsString(msg: MsgFlag): string {
+    var toReturn: string = "{error}";
+    if (msg) {
+      try {
+        toReturn = MsgFlag[msg];
+      } catch (e) {
+      }
+    }
+
+    return 'flag: ' + toReturn;
   }
 }

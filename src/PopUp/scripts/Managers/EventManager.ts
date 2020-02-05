@@ -1,4 +1,3 @@
-import { IDataMenuWindowPrefs } from '../../../Shared/scripts/Interfaces/IDataMenuWindowPrefs';
 import { PopUpManagerBase } from './PopUpManagerBase';
 import { PopUpHub } from './PopUpHub';
 import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';

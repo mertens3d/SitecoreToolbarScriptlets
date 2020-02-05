@@ -3,7 +3,7 @@ import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { PayloadDataFromPopUp } from '../../../Shared/scripts/Classes/PayloadDataReqPopUp';
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
-import { IDataSettings } from '../../../Shared/scripts/Interfaces/IDataSettings';
+import { IDataPopUpSettings } from '../../../Shared/scripts/Interfaces/IDataSettings';
 import { IOneStorageData } from '../../../Shared/scripts/Interfaces/IOneStorageData';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 
@@ -26,10 +26,11 @@ export class ContentAtticManager extends ContentManagerBase {
   UpdateNickname(payload: PayloadDataFromPopUp) {
     this.debug().FuncStart(this.UpdateNickname.name);
 
-    if (payload.idOfSelect) {
-      var storageMatch = this.GetFromStorageById(payload.idOfSelect)
-      if (storageMatch) {
-        storageMatch.NickName = payload.NewNickname;
+    if (payload.IdOfSelect) {
+      var storageMatch = this.GetFromStorageById(payload.IdOfSelect)
+      if (storageMatch && payload.SnapShotSettings && payload.SnapShotSettings.SnapShotNewNickname) {
+
+        storageMatch.NickName = payload.SnapShotSettings.SnapShotNewNickname;
         this.WriteToStorage(storageMatch);
       }
     }
@@ -40,8 +41,8 @@ export class ContentAtticManager extends ContentManagerBase {
   ToggleFavorite(data: PayloadDataFromPopUp) {
     this.debug().FuncStart(this.ToggleFavorite.name);
 
-    if (data.idOfSelect) {
-      var storageMatch = this.GetFromStorageById(data.idOfSelect)
+    if (data.IdOfSelect) {
+      var storageMatch = this.GetFromStorageById(data.IdOfSelect)
       if (storageMatch) {
         storageMatch.IsFavorite = !storageMatch.IsFavorite;
         this.WriteToStorage(storageMatch);
@@ -126,6 +127,7 @@ export class ContentAtticManager extends ContentManagerBase {
       for (var idx = 0; idx < rawStorageData.length; idx++) {
         var oneRaw: IOneStorageData = rawStorageData[idx];
         var candidate: IDataOneWindowStorage = <IDataOneWindowStorage>JSON.parse(oneRaw.data);
+        console.log 
 
         if (candidate) {
           candidate.TimeStamp = new Date(candidate.TimeStamp);
@@ -141,6 +143,9 @@ export class ContentAtticManager extends ContentManagerBase {
             candidate.NickName = '';
           }
           toReturn.push(candidate);
+        }
+        else {
+          this.debug().Error(this.GetAllStorageAsIDataOneWindow.name, 'Saved data did not import correctly')
         }
       }
     }

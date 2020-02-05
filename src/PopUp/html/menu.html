@@ -8,6 +8,7 @@
   <link href='PopUp.min.css' rel='stylesheet' type='text/css' />
 </head>
 <body>
+  <div class="build-stamp" id="build-stamp"></div>
   <form>
     <fieldset>
       <legend id='lgnd-state' data-setting='lgnd-settings'>State</legend>
@@ -38,7 +39,7 @@
       <legend id='lgnd-hind-site' data-setting='lgnd-hind-site'>Hind&bull;Site</legend>
       <div class='accordian-content'>
         <div class="row flex-container">
-          <div class='col-6'>
+          <div class='col-full'>
 
             <!--<input type='checkbox' /> todo favorites only-->
             <select id='selState' size='6'>
@@ -87,34 +88,24 @@
     <fieldset>
       <legend id='lgnd-settings' data-setting='lgnd-settings'>Settings/ Stats</legend>
       <div class='accordian-content'>
+
         <input type='checkbox' id='id-settings-show-debug-data' checked="checked" />
         <label for='id-settings-show-debug-data'>Show Debug Data</label>
+
+        <input type="checkbox" id="id-settings-auto-login" checked="checked" />
         <label for='id-settings-auto-login'>Auto login</label>
+
+        <input type="checkbox" id="id-settings-auto-save" checked="checked" />
+        <label for='id-settings-auto-save'>Auto Save Enabled</label>
+
+        <input type="number" id="id-settings-auto-save-interval" min="0" max="100" value="0" />
+        <label for='id-settings-auto-save-interval'>Auto Save Interval (Minutes)</label>
 
         <div id="stat-caller-id"></div>
         <div id="stat-self-id"></div>
       </div>
     </fieldset>
-
-
   </form>
-
-  <div class="menu-overlay" id="id-menu-overlay" style="">
-    <div class="overlay-gray"></div>
-    <div class="overlay-solid">
-      POPUP
-      This menu is not controlled by the previously selected window.
-      <br />
-      Options:
-      <br />
-      <ul>
-        <li>Select the sitecore window that opened this menu and then click back here.</li>
-        <li>Rerun from the bookmarks button. That will hand over control to the current window</li>
-        <li>Close and rerun from the bookmarks button</li>
-      </ul>
-      This restriction is in place to avoid inadvertantly changing a hidden browser window.
-    </div>
-  </div>
   <!--type='module'-->
   <script src='popup.min.js'>
   </script>

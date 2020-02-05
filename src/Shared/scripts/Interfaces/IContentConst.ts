@@ -10,6 +10,7 @@ export interface IContentConst {
     PostLoginBtnClick: number,
     SetHrefEffortWait: number,
     WaitBeforeRemovingCompleteFlagOnContent: number,
+    AutoSaveInterval: number,
   },
   IterHelper: {
     GrowthPerIteration: number,

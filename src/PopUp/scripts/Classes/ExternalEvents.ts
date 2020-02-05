@@ -47,7 +47,7 @@ export class ExternalEvents extends CommonEvents {
     this.__initNewOperation();
     this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqQuickPublish))
 
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.TaskSuccessful));
+    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.RespTaskSuccessful));
   }
 
   HndlrSnapShotRemove(evt: any) {
@@ -57,7 +57,7 @@ export class ExternalEvents extends CommonEvents {
 
   CreateNewWindowIfRequired(evt: MouseEvent) {
     return new Promise(async (resolve, reject) => {
-      if (! evt.ctrlKey) {
+      if (!evt.ctrlKey) {
         browser.tabs.create({
           url: this.UiMan().currentState.Url,
         }).then((tab) => {
@@ -84,11 +84,11 @@ export class ExternalEvents extends CommonEvents {
       .then(() => {
         //var payload = new MsgFromPopUp(MsgFlag.NewWindowTest);
         var payload = new MsgFromPopUp(MsgFlag.ReqRestoreClick);
-        payload.Data.idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
+        payload.Data.IdOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
 
         this.MsgMan().SendMessageHndlr(payload);
       })
-      .catch(() => { this.debug().Error(this.HndlrSnapShotRestore.name, 'promise error' )});
+      .catch(() => { this.debug().Error(this.HndlrSnapShotRestore.name, 'promise error') });
 
     this.debug().FuncEnd(this.HndlrSnapShotRestore.name);
   }
@@ -97,9 +97,9 @@ export class ExternalEvents extends CommonEvents {
     this.__initNewOperation();
 
     var self = this.PopAtticMan;
-    var payload = new MsgFromPopUp(MsgFlag.UpdateNickName);
-    payload.Data.idOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
-    payload.Data.NewNickname = this.UiMan().GetValueInNickname();;
+    var payload = new MsgFromPopUp(MsgFlag.ReqUpdateNickName);
+    payload.Data.IdOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
+    payload.Data.SnapShotSettings.SnapShotNewNickname = this.UiMan().GetValueInNickname();;
     this.MsgMan().SendMessageHndlr(payload);
   }
   async __hndlrSnapShotCreate(evt: MouseEvent) {

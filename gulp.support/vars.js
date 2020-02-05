@@ -15,11 +15,14 @@ class Vars {
     this.PopUpJs = new InjectableClass('PopUp', '/**/*.js', 'js', this.FinalFolderShort);
     this.PopUpJs.Ts.TranspiledEntryPointFile = 'EntryPoint.js';
 
-    this.ContentJs = new InjectableClass('Content', '/**/*.js', 'js', this.FinalFolderShort);
-    //this.ContentJs.WorkingCodeRootDir = this.ContentJs.AutoBuildRoot + '/src';
-    this.ContentJs.Ts.TranspiledEntryPointFile = 'zLast.js',
 
-      this.SharedJs = new InjectableClass('Shared', '/**/*.js', 'js');
+    this.ContentJs = new InjectableClass('Content', '/**/*.js', 'js', this.FinalFolderShort);
+
+    this.ContentJs.Ts.TranspiledEntryPointFile = 'zLast.js';
+
+    this.SharedJs = new InjectableClass('Shared', '/**/*.js', 'js');
+
+
 
     this.WindowOpener = new InjectableClass('hindsiteWindowOpener', '/**/*.js', 'js', this.FinalFolderShort);
     this.WindowOpener.Ts.TranspiledEntryPointFile = 'EntryPoint.js';
@@ -28,8 +31,6 @@ class Vars {
       Root: './Browser Addons/Firefox/HindSite',
       AutoBuildDest: '/HindSite/AutoBuild'
     };
-
-    //this.WindowOpener = new WindowOpenerClass();
 
     this.mySecret = this.buildSecrets();
 

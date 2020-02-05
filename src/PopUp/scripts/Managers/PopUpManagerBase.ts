@@ -7,6 +7,7 @@ import { PopUpDebug } from "../Classes/PopUpDebug";
 import { Utilities } from "../../../Shared/scripts/Classes/Utilities";
 import { GuidHelper } from "../../../Shared/scripts/Classes/GuidHelper";
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
+import { SettingsManager } from "./SettingsManager";
 
 export class PopUpManagerBase {
 
@@ -24,5 +25,6 @@ export class PopUpManagerBase {
   PopAtticMan(): PopUpAtticManager { return this.PopHub.PopUpAtticMan; }
   //MsgFlag(): MessageFlag { return this.PopHub.MessageFlag; }
   GuidMan(): GuidHelper { return this.PopHub.GuidMan; }
+  SettingsMan(): SettingsManager { return this.PopHub.SettingsMan; }
 
 }

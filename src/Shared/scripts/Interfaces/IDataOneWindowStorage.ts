@@ -4,14 +4,13 @@ import { IDataOneStorageCE } from './IDataOneStorageCE';
 import { scWindowType } from '../Enums/scWindowType';
 
 export interface IDataOneWindowStorage {
-  RawData: IOneStorageData ,
-  TimeStamp: Date,
-  WindowType: scWindowType,
-  WindowFriendly: string,
   AllCEAr: IDataOneStorageCE[],
   Id: IGuid,
+  IsAutoSave: boolean;
   IsFavorite: Boolean,
   NickName: string
-
+  RawData: IOneStorageData,
+  TimeStamp: Date,
+  WindowFriendly: string,
+  WindowType: scWindowType,
 }
-

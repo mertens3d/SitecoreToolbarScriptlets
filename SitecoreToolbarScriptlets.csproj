@@ -55,7 +55,21 @@
     <Content Include="gulp.support\vars.js" />
     <Content Include="src\BrowserBookmarkCode\Debug.txt" />
     <Content Include="src\BrowserBookmarkCode\Debug.txt.backup.txt" />
+    <TypeScriptCompile Include="src\Content\scripts\Classes\VarDebug.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Classes\CommonEvents.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Classes\ExternalEvents.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Classes\InternalEvents.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\SettingsManager.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\IDataPayloadSnapShot.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\StaticHelpers.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingKey.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingType.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICurrState.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataContentPrefs.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IError.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\MsgFromXBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\__global.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\EntryPoint.ts" />
@@ -78,7 +92,6 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Classes\Factories.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.debug.ts" />
-    <Content Include="src\Shared\scripts\Enums\MessageFlag.js" />
     <Content Include="webpack.config.js" />
     <None Include=".editorconfig" />
     <None Include=".jshintrc" />
@@ -107,7 +120,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scMode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\DebugCallback.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICallbackDataDebugTextChanged.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataMenuWindowPrefs.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneDoc.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneStorageCE.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneTreeNode.ts" />
@@ -138,7 +150,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneIframe.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\PageDataManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\MiscManager.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataSettings.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataPopUpSettings.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseChainQuickPublish.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseChainRestoreDesktop.ts" />
@@ -158,12 +170,11 @@
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\Constants.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.ts" />
     <None Include="Readme.md" />
+    <None Include="src\PopUp\css\Grid.scss" />
     <None Include="src\PopUp\css\menu.buttons.scss" />
     <None Include="src\PopUp\css\overlay.scss" />
     <None Include="src\PopUp\css\vars.scss" />
-    <None Include="src\Shared\scripts\Enums\MessageFlag.js.map">
-      <DependentUpon>MessageFlag.js</DependentUpon>
-    </None>
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\OneSetting.ts" />
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
     <None Include="src\PopUp\css\popup.scss" />

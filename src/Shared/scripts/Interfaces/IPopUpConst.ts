@@ -11,9 +11,9 @@ export interface IPopUpConst {
     InputNickname: string,
     HindSiteParentInfo: string,
     HS: {
-     
+      SelectHeader: string;
       TabId: string,
-     
+
       Btn: {
         AdminB: string,
         ToggleFavoriteB: string,
@@ -50,6 +50,7 @@ export interface IPopUpConst {
   Numbers: {
     MinMenuHeight: number,
     MinMenuWidth: number,
+    MaxAutoSaveCount: number,
   },
   Notify: {
     Default: string,
@@ -59,21 +60,33 @@ export interface IPopUpConst {
   Selector: {
     HS: {
       iCBoxdSettingsShowDebugData: string,
+      iCBoxdSettingsAutoLogin: string,
       IdFieldSetDebug: string,
       menuOverlay: string,
       PrefAutoLogin: string,
+      SettingAutoSaveEnabled: string,
+      SettingAutoSaveInterval: string,
       SelStateSnapShot: string,
       TaDebug: string,
       TaState: string,
+      BuildStamp: string,
     }
-  }
+  },
   Storage: {
-    DefaultDebugKeepDialogOpen: boolean,
     WindowRoot: string,
     SettingsSuffix: string,
-    DefaultShowDebugData: boolean,
+    Defaults: {
+      bool: {
+        AutoSave: boolean,
+        AutoLogin: boolean,
+        DefaultDebugKeepDialogOpen: boolean,
+        DefaultShowDebugData: boolean,
+      }
+    }
   },
   Timeouts: {
     WaitBeforeRemovingCompleteFlag: number,
+    AutoSaveInterval: number,
+    AutoLoginCheckInterval: number,
   },
 }

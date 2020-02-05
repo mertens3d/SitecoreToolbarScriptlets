@@ -7,6 +7,7 @@ import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrow
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 
 
 export class OneWindowManager extends ContentManagerBase {
@@ -19,7 +20,7 @@ export class OneWindowManager extends ContentManagerBase {
     xyyz.debug.FuncEnd(OneWindowManager.name);
   }
 
-  SaveWindowState(targetWindow: IDataBrowserWindow) {
+  SaveWindowState(targetWindow: IDataBrowserWindow, snapShotSettings: IDataPayloadSnapShot) {
     this.debug().FuncStart(this.SaveWindowState.name);
 
     var currentPageType = this.PageDataMan().GetCurrentPageType();
@@ -31,11 +32,11 @@ export class OneWindowManager extends ContentManagerBase {
       var id = this.Xyyz.GuidMan.EmptyGuid();
       //var docElem = targetWindow.DataDocSelf;
 
-      this.Xyyz.OneCEMan.SaveStateOneContentEditor(id, targetWindow.DataDocSelf);
+      this.Xyyz.OneCEMan.SaveStateOneContentEditor(id, targetWindow.DataDocSelf, snapShotSettings);
     }
     else if (currentPageType === scWindowType.Desktop) {
       this.debug().Log('is Desktop');
-      this.Xyyz.OneDesktopMan.SaveStateOneDesktop(targetWindow);
+      this.Xyyz.OneDesktopMan.SaveStateOneDesktop(targetWindow, snapShotSettings);
     } else {
       this.debug().Error(this.SaveWindowState.name, 'Invalid page location ' + currentPageType);
     }
@@ -124,17 +125,34 @@ export class OneWindowManager extends ContentManagerBase {
     }
   }
 
-  PutCEDataToCurrentSnapShot(oneCeData: IDataOneStorageCE) {
+  PutCEDataToCurrentSnapShot(oneCeData: IDataOneStorageCE, snapShotSettings: IDataPayloadSnapShot) {
     this.debug().FuncStart(this.PutCEDataToCurrentSnapShot.name);
     this.debug().Log('PutCEDataToCurrentSnapShot');
 
     var matchingCeData = this.FindMatchingCeData(oneCeData);
+
+
+
 
     if (matchingCeData) {
       matchingCeData = oneCeData;
     } else {
       this.__activeWindowSnapShot.AllCEAr.push(oneCeData);
     }
+
+
+
+    if (snapShotSettings) {
+      if (snapShotSettings.SnapShotIsAuto) {
+        this.__activeWindowSnapShot.IsAutoSave = true;
+      }
+      if (snapShotSettings.SnapShotNewNickname) {
+        this.__activeWindowSnapShot.NickName = snapShotSettings.SnapShotNewNickname;
+      }
+    }
+
+
+    this.__activeWindowSnapShot = this.RemoveAutoFlagIfNotAuto(this.__activeWindowSnapShot, snapShotSettings);
 
     //this.__activeWindowTreeSnapShot.ShowDebugDataOneWindow();
 
@@ -143,6 +161,13 @@ export class OneWindowManager extends ContentManagerBase {
     //this.AtticMan().DrawDebugDataPretty(this.__activeWindowSnapShot);
 
     this.debug().FuncEnd(this.PutCEDataToCurrentSnapShot.name);
+  }
+
+  RemoveAutoFlagIfNotAuto(data: IDataOneWindowStorage, snapShotSettings: IDataPayloadSnapShot) {
+    if (!snapShotSettings || !snapShotSettings.SnapShotIsAuto) {
+      data.IsAutoSave = false;
+    }
+    return data;
   }
 
   UpdateStorage() {
@@ -187,7 +212,8 @@ export class OneWindowManager extends ContentManagerBase {
       Id: newGuid,
       IsFavorite: false,
       NickName: '',
-      RawData: null
+      RawData: null,
+      IsAutoSave: false
     }
 
     this.debug().FuncEnd(this.CreateNewWindowSnapShot.name);

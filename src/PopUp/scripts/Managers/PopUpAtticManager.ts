@@ -1,44 +1,20 @@
 ﻿import { PopUpManagerBase } from "./PopUpManagerBase";
-import { IDataSettings } from "../../../Shared/scripts/Interfaces/IDataSettings";
-import { IDataMenuWindowPrefs } from "../../../Shared/scripts/Interfaces/IDataMenuWindowPrefs";
 import { IDataDebugSettings } from "../../../Shared/scripts/Interfaces/IDataDebugSettings";
 import { IDataOneSettingPair } from "../../../Shared/scripts/Interfaces/IdataOneSetting";
+import { IDataPopUpSettings } from "../../../Shared/scripts/Interfaces/IDataPopUpSettings";
+import { IDataContentPrefs } from "../../../Shared/scripts/Interfaces/IDataContentPrefs";
+
 
 export class PopUpAtticManager extends PopUpManagerBase {
+  DefaultSettings: IDataPopUpSettings;
 
   Init() {
-    var prefs: IDataMenuWindowPrefs = this.CurrentSettings().MenuPrefs;
-
-    if (prefs.MenuX && prefs.MenuY) {
-      var currentX = window.screenLeft;
-      var currentY = window.screenTop;
-      var deltaX = Math.abs(prefs.MenuX - currentX);
-      var deltaY = Math.abs(prefs.MenuY - currentY);
-
-      window.moveTo(Math.abs(prefs.MenuX), Math.abs(prefs.MenuY));
-    }
-    if (prefs.MenuWidth && prefs.MenuHeight) {
-      if (prefs.MenuHeight < this.PopConst().Numbers.MinMenuHeight) {
-        prefs.MenuHeight = this.PopConst().Numbers.MinMenuHeight;
-      }
-
-      if (prefs.MenuWidth < this.PopConst().Numbers.MinMenuWidth) {
-        prefs.MenuWidth = this.PopConst().Numbers.MinMenuWidth;
-      }
-      window.resizeTo(Math.abs(prefs.MenuWidth), Math.abs(prefs.MenuHeight));
-    }
+    this.DefaultSettings = this.GetDefaultSettings();
   }
 
-
-  UpdateMenuCoords(menuData: IDataMenuWindowPrefs) {
-    var settings: IDataSettings = this.CurrentSettings();
-    settings.MenuPrefs = menuData;
-    this.StoreSettings(settings);
-  }
-  
-  private __drawSettings(): string[] {
+  private async __drawSettings(): Promise<string[]> {
     var toReturn: string[] = [];
-    var settings = this.CurrentSettings();
+    var settings = await this.CurrentSettings();
     toReturn.push('----- Settings - Accordian ------')
     for (var idx = 0; idx < settings.Accordian.length; idx++) {
       toReturn.push(settings.Accordian[idx].ElemId + ':' + settings.Accordian[idx].isCollapsed.toString());
@@ -46,34 +22,31 @@ export class PopUpAtticManager extends PopUpManagerBase {
 
     return toReturn;
   }
-  GetDefaultSettings(): IDataSettings {
+  GetDefaultSettings(): IDataPopUpSettings {
     this.debug().FuncStart(this.GetDefaultSettings.name);
     let defaultDebugSettings: IDataDebugSettings = {
-      KeepDialogOpen: this.PopConst().Storage.DefaultDebugKeepDialogOpen,
-      ShowDebugData: this.PopConst().Storage.DefaultShowDebugData,
+      KeepDialogOpen: this.PopConst().Storage.Defaults.bool.DefaultDebugKeepDialogOpen,
+      ShowDebugData: this.PopConst().Storage.Defaults.bool. DefaultShowDebugData,
     }
 
-    let defaultMenuPrefs: IDataMenuWindowPrefs = {
-      MenuHeight: null,
-      MenuWidth: null,
-      MenuX: null,
-      MenuY: null
+    let defaultContentPrefs: IDataContentPrefs = {
+      MaxAutoSaveCount: this.PopConst().Numbers.MaxAutoSaveCount,
+      AutoSave: true
     }
 
-    let toReturn: IDataSettings = {
+    let toReturn: IDataPopUpSettings = {
       DebugSettings: defaultDebugSettings,
       Accordian: [],
-      MenuPrefs: defaultMenuPrefs
+      ContentPrefs: defaultContentPrefs,
     };
 
     this.DebugSettings(toReturn);
-
 
     this.debug().FuncEnd(this.GetDefaultSettings.name);
     return toReturn;
   }
 
-  DebugSettings(toReturn: IDataSettings): void {
+  DebugSettings(toReturn: IDataPopUpSettings): void {
     this.debug().FuncStart(this.DebugSettings.name);
 
     this.debug().LogVal('Settings', JSON.stringify(toReturn));
@@ -81,58 +54,80 @@ export class PopUpAtticManager extends PopUpManagerBase {
     this.debug().FuncEnd(this.DebugSettings.name);
   }
 
-  CurrentSettings(): IDataSettings {
+  ValidateSettings(popSettings: IDataPopUpSettings): IDataPopUpSettings {
+    if (typeof popSettings === 'undefined' || !popSettings) {
+      popSettings = this.DefaultSettings;
+    }
+
+    if (!popSettings.DebugSettings) {
+      popSettings.DebugSettings = this.DefaultSettings.DebugSettings;
+    }
+
+    if (!popSettings.DebugSettings.KeepDialogOpen) {
+      popSettings.DebugSettings.KeepDialogOpen = this.DefaultSettings.DebugSettings.KeepDialogOpen;
+    }
+
+    if (!popSettings.DebugSettings.ShowDebugData) {
+      popSettings.DebugSettings.ShowDebugData = this.DefaultSettings.DebugSettings.ShowDebugData;
+    }
+
+    if (!popSettings.Accordian) {
+      popSettings.Accordian = [];
+    }
+
+    if (!popSettings.ContentPrefs) {
+      popSettings.ContentPrefs = this.DefaultSettings.ContentPrefs;
+    }
+
+    return popSettings;
+  }
+
+  async CurrentSettings(): Promise<IDataPopUpSettings> {
     this.debug().FuncStart(this.CurrentSettings.name);
-    var defaultSettings = this.GetDefaultSettings();
-    var toReturn: IDataSettings;
 
-    var settingsRaw = window.localStorage.getItem(this.PopConst().Storage.WindowRoot + this.PopConst().Storage.SettingsSuffix);
-    //this.debug().LogVal('settingsRaw', settingsRaw);
+    var toReturn: IDataPopUpSettings;
 
-    if (settingsRaw) {
-      toReturn = <IDataSettings>JSON.parse(settingsRaw);
-    }
+    await browser.storage.local.get().then((storageResults) => {
+      this.debug().LogVal('storageResults', JSON.stringify(storageResults));
+      var noteKeys = Object.keys(storageResults);
 
-    if (!toReturn) {
-      toReturn = defaultSettings;
-    }
+      for (let noteKey of noteKeys) {
+        var curValue = storageResults[noteKey];
+        this.debug().LogVal('noteKey', noteKey);
+        this.debug().LogVal('curValue', JSON.stringify(curValue));
+
+        if (noteKey === 'settings') {
+          this.debug().Log('storage match found');
+          toReturn = JSON.parse(curValue.toString());
+        }
+      }
+    });
+
+    this.debug().LogVal('toReturn', JSON.stringify(toReturn));
+
+    toReturn = this.ValidateSettings(toReturn);
+
     this.debug().NotNullCheck('toReturn', toReturn);
-
-    if (!toReturn.DebugSettings) {
-      toReturn.DebugSettings = defaultSettings.DebugSettings;
-    }
-
-    if (!toReturn.DebugSettings.KeepDialogOpen) {
-      toReturn.DebugSettings.KeepDialogOpen = defaultSettings.DebugSettings.KeepDialogOpen;
-    }
-
-    if (!toReturn.DebugSettings.ShowDebugData) {
-      toReturn.DebugSettings.ShowDebugData = defaultSettings.DebugSettings.ShowDebugData;
-    }
-
-    if (!toReturn.Accordian) {
-      toReturn.Accordian = [];
-    }
-
-    if (!toReturn.MenuPrefs) {
-      toReturn.MenuPrefs = defaultSettings.MenuPrefs;
-    }
-
-    
 
     this.debug().FuncEnd(this.CurrentSettings.name);
     return toReturn;
   }
 
-  StoreSettings(currentSettings: IDataSettings) {
-    //this.debug().FuncStart(this.StoreSettings.name);
-    window.localStorage.setItem(this.PopConst().Storage.WindowRoot + this.PopConst().Storage.SettingsSuffix, JSON.stringify(currentSettings));
-    //this.debug().FuncEnd(this.StoreSettings.name);
+  async StoreSettings(currentSettings: IDataPopUpSettings) {
+    this.debug().FuncStart(this.StoreSettings.name);
+
+    //browser.storage.sync.set({
+    //  currentSettings: JSON.stringify( currentSettings)
+    //})
+
+    await browser.storage.local.set({ settings: JSON.stringify(currentSettings) });
+
+    this.debug().FuncEnd(this.StoreSettings.name);
   }
 
-  UpdateAccodianState(needleKey: string, isCollapsed: boolean) {
+  async UpdateAccodianState(needleKey: string, isCollapsed: boolean) {
     this.debug().FuncStart(this.UpdateAccodianState.name, needleKey + ' ' + isCollapsed);
-    var settings: IDataSettings = this.CurrentSettings();
+    var settings: IDataPopUpSettings = await this.CurrentSettings();
 
     var accordianPairs: IDataOneSettingPair[] = settings.Accordian;
 
@@ -154,7 +149,7 @@ export class PopUpAtticManager extends PopUpManagerBase {
 
       accordianPairs.push(newSetting);
     }
-    this.StoreSettings(settings);
-    this.debug().FuncStart(this.UpdateAccodianState.name);
+    await this.StoreSettings(settings);
+    this.debug().FuncEnd(this.UpdateAccodianState.name);
   }
 }
