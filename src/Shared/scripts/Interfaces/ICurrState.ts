@@ -10,5 +10,6 @@ export interface ICurrStateContent {
   WindowType: scWindowType;
   Url: string;
   ErrorStack: IError[],
-  LastReqSuccessful: boolean
+  LastReqSuccessful: boolean,
+  LastReqFailReason: string
 }

@@ -6,6 +6,7 @@ import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIfram
 import { GuidHelper } from "../../../Shared/scripts/Classes/GuidHelper";
 import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
+import { CacheMode } from "../../../Shared/scripts/Enums/CacheMode";
 
 export class Factories extends ContentManagerBase{
  
@@ -19,17 +20,17 @@ export class Factories extends ContentManagerBase{
   }
 
   async UpdateContentState(response: MsgFromContent) {
-    response.State.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany();
-    response.State.WindowType = await this.PageDataMan().GetCurrentPageType();
-    response.State.Url = this.PageDataMan().TopLevelWindow().DataDocSelf.Document.location.href;
-    response.State.ErrorStack = this.debug().ErrorStack;
-    this.debug().DebugObjState(response.State);
+    response.ContentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
+    response.ContentState.WindowType = await this.PageDataMan().GetCurrentPageType();
+    response.ContentState.Url = this.PageDataMan().TopLevelWindow().DataDocSelf.Document.location.href;
+    response.ContentState.ErrorStack = this.debug().ErrorStack;
+    this.debug().DebugObjState(response.ContentState);
   }
 
   async NewMsgFromContent() {
     var response = new MsgFromContent(MsgFlag.Unknown);
     await this.UpdateContentState(response);
-    response.State.LastReq = MsgFlag.Unknown;
+    response.ContentState.LastReq = MsgFlag.Unknown;
     return response;
   }
   DateOneIframeFactory(iframeElem: HTMLIFrameElement, parentDocument: IDataOneDoc, nickname: string): IDataOneIframe {

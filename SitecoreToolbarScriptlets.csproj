@@ -66,7 +66,11 @@
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IDataPayloadSnapShot.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IMenuStateForMsg.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\ResultSuccessFail.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\StaticHelpers.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferChar.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferDirection.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\CacheMode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\MenuCommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingKey.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingType.ts" />
@@ -182,6 +186,7 @@
     <None Include="src\PopUp\css\Grid.scss" />
     <None Include="src\PopUp\css\menu.buttons.scss" />
     <None Include="src\PopUp\css\overlay.scss" />
+    <None Include="src\PopUp\css\SnapShotSelect.scss" />
     <None Include="src\PopUp\css\vars.scss" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\OneSetting.ts" />
     <None Include="tsconfig.json" />

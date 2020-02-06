@@ -10,7 +10,6 @@ import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 
-
 export class OneWindowManager extends ContentManagerBase {
   __activeWindowSnapShot: IDataOneWindowStorage;
 
@@ -25,13 +24,12 @@ export class OneWindowManager extends ContentManagerBase {
     this.debug().FuncStart(this.SaveWindowState.name);
 
     var currentPageType = this.PageDataMan().GetCurrentPageType();
-    this.Xyyz.OneWindowMan.CreateNewWindowSnapShot(currentPageType);
+    this.OneWinMan().CreateNewWindowSnapShot(currentPageType, snapShotSettings.Flavor);
 
     if (currentPageType === scWindowType.ContentEditor) {
       this.debug().Log('is Content Editor');
 
       var id = this.Xyyz.GuidMan.EmptyGuid();
-      //var docElem = targetWindow.DataDocSelf;
 
       this.Xyyz.OneCEMan.SaveStateOneContentEditor(id, targetWindow.DataDocSelf, snapShotSettings);
     }
@@ -132,24 +130,18 @@ export class OneWindowManager extends ContentManagerBase {
 
     var matchingCeData = this.FindMatchingCeData(oneCeData);
 
-
-
-
     if (matchingCeData) {
       matchingCeData = oneCeData;
     } else {
       this.__activeWindowSnapShot.AllCEAr.push(oneCeData);
     }
 
-
-
     if (snapShotSettings) {
       if (snapShotSettings.SnapShotNewNickname) {
         this.__activeWindowSnapShot.NickName = snapShotSettings.SnapShotNewNickname;
       }
+      this.__activeWindowSnapShot.Flavor = snapShotSettings.Flavor;
     }
-
-
 
     //this.__activeWindowTreeSnapShot.ShowDebugDataOneWindow();
 
@@ -159,8 +151,6 @@ export class OneWindowManager extends ContentManagerBase {
 
     this.debug().FuncEnd(this.PutCEDataToCurrentSnapShot.name);
   }
-
-  
 
   UpdateStorage() {
     this.debug().FuncStart(this.UpdateStorage.name);
@@ -185,9 +175,9 @@ export class OneWindowManager extends ContentManagerBase {
 
   Init() {
     var currentPageType = this.PageDataMan().GetCurrentPageType();
-    this.CreateNewWindowSnapShot(currentPageType);
+    this.CreateNewWindowSnapShot(currentPageType, SnapShotFlavor.Unknown);
   }
-  CreateNewWindowSnapShot(windowType: scWindowType) {
+  CreateNewWindowSnapShot(windowType: scWindowType, flavor: SnapShotFlavor) {
     this.debug().FuncStart(this.CreateNewWindowSnapShot.name);
 
     var dateToUse: Date = new Date();
@@ -204,7 +194,7 @@ export class OneWindowManager extends ContentManagerBase {
       Id: newGuid,
       NickName: '',
       RawData: null,
-      Flavor: SnapShotFlavor.Unknown,
+      Flavor: flavor,
     }
 
     this.debug().FuncEnd(this.CreateNewWindowSnapShot.name);

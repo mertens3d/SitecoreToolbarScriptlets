@@ -3,6 +3,7 @@
 @import 'overlay.scss';
 @import 'Grid.scss';
 @import 'header.scss';
+@import 'SnapShotSelect.scss';
 
 .light-text {
   color: $scTextColorLight;
@@ -19,11 +20,7 @@
   background-position: top;
 }
 
-select {
-  /*height: 50px;*/
-  width: 100%;
-  font-family: Courier New, Courier, monospace;
-}
+
 
 .mono {
   font-family: Courier New, Courier, monospace;
@@ -71,15 +68,7 @@ legend {
   }
 }
 
-option {
-  color: black;
-  font-family: Courier New, Courier, monospace;
-}
 
-optgroup {
-  color: $scTextColorLight;
-  font-family: Courier New, Courier, monospace;
-}
 
 .in {
   display: none;

@@ -1,0 +1,23 @@
+﻿@import "vars";
+
+select {
+  /*height: 50px;*/
+  font-family: Courier New, Courier, monospace;
+  width: 100%;
+
+  option {
+    color: black;
+    font-family: Courier New, Courier, monospace;
+    padding: 0;
+  }
+
+  optgroup {
+    color: $scTextColorLight;
+    font-family: Courier New, Courier, monospace;
+
+    &.title {
+      color: lightgreen;
+      font-family: Courier New, Courier, monospace;
+    }
+  }
+}

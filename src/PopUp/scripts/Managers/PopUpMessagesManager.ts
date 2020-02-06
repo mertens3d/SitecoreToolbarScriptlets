@@ -18,7 +18,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
   ReceiveResponseHndlr(response: MsgFromContent) {
     this.debug().FuncStart(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
     if (response) {
-      this.CachedState = response.State;
+      this.CachedState = response.ContentState;
 
       this.UiMan().RefreshUiFromCache();
 

@@ -7,6 +7,9 @@ import { IOneStorageData } from '../../../Shared/scripts/Interfaces/IOneStorageD
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ISnapShotsMany } from '../../../Shared/scripts/Interfaces/ISnapShotsMany';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
+import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
+import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
+import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 
 export class ContentAtticManager extends ContentManagerBase {
   private CachedWindowStorage: ISnapShotsMany;
@@ -28,7 +31,7 @@ export class ContentAtticManager extends ContentManagerBase {
     this.debug().FuncStart(this.UpdateNickname.name);
 
     if (payload.IdOfSelect) {
-      var storageMatch = this.GetFromStorageById(payload.IdOfSelect)
+      var storageMatch = this.GetFromStorageById(payload.IdOfSelect, CacheMode.OkToUseCache)
       if (storageMatch && payload.SnapShotSettings && payload.SnapShotSettings.SnapShotNewNickname) {
         storageMatch.NickName = payload.SnapShotSettings.SnapShotNewNickname;
         this.WriteToStorage(storageMatch);
@@ -39,32 +42,66 @@ export class ContentAtticManager extends ContentManagerBase {
   }
 
   MarkFavorite(data: PayloadDataFromPopUp) {
-    this.debug().FuncStart(this.MarkFavorite.name);
+    return new Promise(async (resolve, reject) => {
+      this.debug().FuncStart(this.MarkFavorite.name);
+      var result: ResultSuccessFail = new ResultSuccessFail();
 
-    if (data.IdOfSelect) {
-      var storageMatch = this.GetFromStorageById(data.IdOfSelect)
-      if (storageMatch) {
-        storageMatch.Flavor = SnapShotFlavor.Favorite;
-        this.WriteToStorage(storageMatch);
+      if (data.IdOfSelect) {
+        var storageMatch = this.GetFromStorageById(data.IdOfSelect, CacheMode.OkToUseCache)
+        if (storageMatch) {
+          storageMatch.Flavor = SnapShotFlavor.Favorite;
+          await this.WriteToStorage(storageMatch);
+          result.Succeeded = true;
+        } else {
+          result.Succeeded = false;
+          result.FailMessage = 'No storage match found';
+        }
+      } else {
+        result.Succeeded = false;
+        result.FailMessage = 'no id provided'
       }
-    }
 
-    this.debug().FuncEnd(this.MarkFavorite.name);
+      this.debug().FuncEnd(this.MarkFavorite.name);
+
+      if (result) {
+        resolve();
+      } else {
+        reject(result.FailMessage);
+      }
+    })
   }
-  WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
-    this.debug().FuncStart(this.WriteToStorage.name);
+  async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
+    return new Promise(async (resolve, reject) => {
+      this.debug().FuncStart(this.WriteToStorage.name);
+      var result: ResultSuccessFail = new ResultSuccessFail();
 
-    var snapShotAsString = JSON.stringify(dataOneWindow);
-    //this.debug().LogVal('snapShotAsString', snapShotAsString);
+      var snapShotAsString = JSON.stringify(dataOneWindow);
+      //this.debug().LogVal('snapShotAsString', snapShotAsString);
 
-    window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotPrefix + dataOneWindow.Id.AsString, snapShotAsString);
+      await window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotPrefix + dataOneWindow.Id.AsString, snapShotAsString)
 
-    this.debug().FuncEnd(this.WriteToStorage.name);
+      var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id, CacheMode.DoNotUseCach);
+
+      if (foundInStorage) {
+        result.Succeeded = true;
+      } else {
+        result.Succeeded = false;
+        result.FailMessage = 'Snap shot not successfully saved';
+      }
+
+      this.debug().FuncEnd(this.WriteToStorage.name);
+
+      if (result.Succeeded) {
+        resolve();
+      } else {
+        reject(result.FailMessage);
+      }
+    });
   }
 
-  GetFromStorageById(needleId: IGuid, noCache: boolean = false): IDataOneWindowStorage {
+  GetFromStorageById(needleId: IGuid, cacheMode: CacheMode): IDataOneWindowStorage {
     this.debug().FuncStart(this.GetFromStorageById.name, needleId.AsString);
-    var foundStorage: ISnapShotsMany = this.GetAllSnapShotsMany(noCache);
+    var foundStorage: ISnapShotsMany = this.GetAllSnapShotsMany(cacheMode);
     var DateOneWinStoreMatch: IDataOneWindowStorage = null;
 
     if (foundStorage) {
@@ -208,11 +245,11 @@ export class ContentAtticManager extends ContentManagerBase {
     this.debug().FuncEnd(this.CleanOutOldData.name);
   }
 
-  GetAllSnapShotsMany(noCache: boolean = false): ISnapShotsMany {
-    this.debug().FuncStart(this.GetAllSnapShotsMany.name);
+  GetAllSnapShotsMany(cacheMode: CacheMode): ISnapShotsMany {
+    this.debug().FuncStart(this.GetAllSnapShotsMany.name, StaticHelpers.CacheModeAsString(cacheMode));
     var toReturn: ISnapShotsMany;
 
-    if (noCache) {
+    if (cacheMode === CacheMode.DoNotUseCach) {
       this.CachedWindowStorage = null;
     }
 
@@ -277,21 +314,21 @@ export class ContentAtticManager extends ContentManagerBase {
       var failMsg: string = '';
       try {
         if (targetId) {
-          var storageMatch: IDataOneWindowStorage = await this.GetFromStorageById(targetId, true)
+          var storageMatch: IDataOneWindowStorage = await this.GetFromStorageById(targetId, CacheMode.OkToUseCache)
           if (storageMatch) {
             var result: boolean = confirm('Remove ?: ' + this.Xyyz.Utilities.TimeNicknameFavStrForConfirmation(storageMatch));
             if (result === true) {
               this.debug().LogVal('Key to Delete', storageMatch.RawData.key);
               await window.localStorage.removeItem(storageMatch.RawData.key);
 
-              var stillExists: IDataOneWindowStorage = await this.GetFromStorageById(targetId, true)
+              var stillExists: IDataOneWindowStorage = await this.GetFromStorageById(targetId, CacheMode.DoNotUseCach);
+
               if (stillExists) {
                 successful = false;
                 failMsg = 'Snapshot still exists after deleting';
               } else {
                 successful = true;
               }
-
 
               this.debug().Log('Attempting completed');
             } else {

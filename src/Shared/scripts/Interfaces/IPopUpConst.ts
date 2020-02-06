@@ -12,7 +12,9 @@ export interface IPopUpConst {
     HindSiteParentInfo: string,
     HS: {
       SelectHeaderAuto: string;
+      SelectHeaderAutoTitle: string;
       SelectHeaderFavorite: string;
+      SelectHeaderFavoriteTitle: string;
       TabId: string,
 
       Btn: {

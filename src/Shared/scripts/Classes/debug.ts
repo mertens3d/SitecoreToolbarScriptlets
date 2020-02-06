@@ -6,6 +6,8 @@ import { MsgFlag } from "../Enums/MessageFlag";
 import { Utilities } from "./Utilities";
 import { IError } from "../Interfaces/IError";
 import { StaticHelpers } from "./StaticHelpers";
+import { BufferChar } from "../Enums/BufferChar";
+import { BufferDirection } from "../Enums/BufferDirection";
 
 export class BaseDebug {
   private __indentCount: number;
@@ -151,7 +153,7 @@ export class BaseDebug {
 
     textVal = textVal.toString();
 
-    textValName = StaticHelpers.BufferString(textValName.toString(), 26, ' ', false, false);
+    textValName = StaticHelpers.BufferString(textValName.toString(), 26, BufferChar.space, BufferDirection.left);
 
     const debugPrefix = '  ~~~  ';
 

@@ -13,6 +13,7 @@ import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
+import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
 
 //var browser = browser || {};
 
@@ -68,9 +69,10 @@ export class ContentMessageManager extends ContentManagerBase {
     if (true || reqMsgFromPopup.CurrentContentPrefs.AutoSave) {
       if (!this.AutoSaveHasBeenScheduled) {
         var self = this;
+        var intervalMs = this.Const().Timeouts.AutoSaveIntervalMin * 60 * 1000;
         window.setInterval(() => {
           self.AutoSaveSnapShot();
-        }, this.Const().Timeouts.AutoSaveInterval)
+        }, intervalMs)
 
         this.AutoSaveHasBeenScheduled = true;
       }
@@ -196,6 +198,8 @@ export class ContentMessageManager extends ContentManagerBase {
 
       case MsgFlag.ReqMarkFavorite:
         this.AtticMan().MarkFavorite(payload.Data)
+          .then(() => this.respondSuccessful())
+          .catch((failMsg) => this.respondFail(failMsg));
         break;
 
       case MsgFlag.ReqQuickPublish:
@@ -206,14 +210,14 @@ export class ContentMessageManager extends ContentManagerBase {
       case MsgFlag.ReqSetScMode:
         this.locMan().SetScMode(payload.Data.ReqScMode, payload.Data.UseOriginalWindowLocation)
           .then(() => this.respondSuccessful())
-          .catch(() => this.respondFail());
+          .catch((failReason) => this.respondFail(failReason));
         break;
 
       case MsgFlag.ReqRestoreClick:
 
         await this.__restoreClick(payload.Data)
           .then(() => this.respondSuccessful())
-          .catch(() => this.respondFail());
+          .catch((failReason) => this.respondFail(failReason));
         break;
 
       case MsgFlag.ReqTakeSnapShot:
@@ -222,8 +226,8 @@ export class ContentMessageManager extends ContentManagerBase {
 
       case MsgFlag.RemoveFromStorage:
         await this.AtticMan().RemoveOneFromStorage(payload.Data.IdOfSelect)
-          .then(() => response.State.LastReqSuccessful = true)
-          .catch(() => response.State.LastReqSuccessful = false);
+          .then(() => response.ContentState.LastReqSuccessful = true)
+          .catch(() => response.ContentState.LastReqSuccessful = false);
         break;
 
       case MsgFlag.RespTaskSuccessful:
@@ -242,7 +246,7 @@ export class ContentMessageManager extends ContentManagerBase {
     //this.debug().LogVal('Response at the end', JSON.stringify(response))
 
     await this.Factoryman().UpdateContentState(response);
-    response.State.LastReq = payload.MsgFlag;
+    response.ContentState.LastReq = payload.MsgFlag;
 
     this.debug().FuncEnd(this.ReqMsgRouter.name);
     return response;
@@ -252,8 +256,10 @@ export class ContentMessageManager extends ContentManagerBase {
     this.SendMessageHndlr(new MsgFromContent(MsgFlag.RespTaskSuccessful))
   }
 
-  private respondFail() {
-    this.SendMessageHndlr(new MsgFromContent(MsgFlag.RespTaskFailed));
+  private respondFail(failReason: string) {
+    var msg = new MsgFromContent(MsgFlag.RespTaskFailed);
+    msg.ContentState.LastReqFailReason = failReason;
+    this.SendMessageHndlr(msg);
   }
 
   SendMessageHndlr(msgflag: MsgFromContent) {
@@ -263,7 +269,7 @@ export class ContentMessageManager extends ContentManagerBase {
     return new Promise(async () => {
       try {
         this.debug().MarkerA();
-        var dataOneWindowStorage = this.AtticMan().GetFromStorageById(Data.IdOfSelect);
+        var dataOneWindowStorage = this.AtticMan().GetFromStorageById(Data.IdOfSelect, CacheMode.OkToUseCache);
         this.debug().MarkerB();
         var self = this;
 
@@ -272,7 +278,7 @@ export class ContentMessageManager extends ContentManagerBase {
         if (targetWindow) {
           await self.Xyyz.OneWindowMan.RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage)
             .then(() => this.respondSuccessful())
-            .catch(() => this.respondFail())
+            .catch((failReason) => this.respondFail(failReason))
         }
         else {
           self.debug().Error(this.__restoreClick.name, 'no target window');

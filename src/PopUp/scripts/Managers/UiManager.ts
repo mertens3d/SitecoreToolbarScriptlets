@@ -550,11 +550,21 @@ export class UiManager extends PopUpManagerBase {
   }
 
   CleanExistingSelection(targetSel: HTMLSelectElement) {
-    var optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderAuto + ']')
+    var optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderAutoTitle + ']')
+    if (optGroup) {
+      optGroup.remove();
+    }
+
+    optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderAuto + ']')
     if (optGroup) {
       optGroup.remove();
     }
     optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderFavorite + ']')
+    if (optGroup) {
+      optGroup.remove();
+    }
+
+    optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderFavoriteTitle + ']')
     if (optGroup) {
       optGroup.remove();
     }
@@ -565,16 +575,28 @@ export class UiManager extends PopUpManagerBase {
   WriteHeaders(targetSel: HTMLSelectElement) {
     var toReturn: ISelectionHeaders = {
       Auto: null,
-      Favorite: null
+      Favorite: null,
+      AutoTitle: null,
+      FavoriteTitle: null,
     }
 
     toReturn.Auto = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.Auto.label = this.Utilites().SelectHeaderStr('Auto');
+    toReturn.Auto.label = this.Utilites().SelectHeaderStr('');
     toReturn.Auto.id = this.PopConst().ElemId.HS.SelectHeaderAuto;
 
+    toReturn.AutoTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.AutoTitle.label = 'Auto Snap Shots';
+    toReturn.AutoTitle.id = this.PopConst().ElemId.HS.SelectHeaderAutoTitle;
+    toReturn.AutoTitle.classList.add('title');
+
     toReturn.Favorite = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.Favorite.label = this.Utilites().SelectHeaderStr('Favorite');
+    toReturn.Favorite.label = this.Utilites().SelectHeaderStr('');
     toReturn.Favorite.id = this.PopConst().ElemId.HS.SelectHeaderFavorite;
+
+    toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.FavoriteTitle.label = 'Tyical Snap Shots';
+    toReturn.FavoriteTitle.id = this.PopConst().ElemId.HS.SelectHeaderFavoriteTitle;
+    toReturn.FavoriteTitle.classList.add('title');
 
     return toReturn;
   }
@@ -610,7 +632,9 @@ export class UiManager extends PopUpManagerBase {
           }
         }
 
+        targetSel.appendChild(headers.FavoriteTitle);
         targetSel.appendChild(headers.Favorite);
+        targetSel.appendChild(headers.AutoTitle);
         targetSel.appendChild(headers.Auto);
 
         if (!this.__selectSnapshotId || this.__selectSnapshotId === this.GuidMan().EmptyGuid()) {

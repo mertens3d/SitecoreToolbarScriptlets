@@ -8,14 +8,15 @@ import { scWindowType } from "../Enums/scWindowType";
 
 export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
   Data: PayloadDataFromContent;
-  State: ICurrStateContent;
+  ContentState: ICurrStateContent;
   response: string;
+  
 
   constructor(msgFlag: MsgFlag) {
     super(msgFlag);
     this.Data = new PayloadDataFromContent();
-    
-    this.State = {
+
+    this.ContentState = {
       SnapShotsMany: {
         CurrentSnapShots: [],
         FavoriteCount: 0,
@@ -28,6 +29,7 @@ export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
       LastReq: MsgFlag.Unknown,
       ErrorStack: [],
       LastReqSuccessful: false,
+      LastReqFailReason: ''
     };
   }
 }

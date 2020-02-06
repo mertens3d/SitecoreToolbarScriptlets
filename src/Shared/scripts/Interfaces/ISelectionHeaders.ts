@@ -1,4 +1,7 @@
 ﻿export interface ISelectionHeaders {
   Favorite: HTMLOptGroupElement,
-  Auto: HTMLOptGroupElement
+  Auto: HTMLOptGroupElement,
+  AutoTitle: HTMLOptGroupElement,
+  FavoriteTitle: HTMLOptGroupElement,
+
 }
