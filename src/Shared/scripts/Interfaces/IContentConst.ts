@@ -2,6 +2,9 @@ import { IsScMode } from './IscMode';
 import { IScVerSpec } from './IScVerSpec';
 
 export interface IContentConst {
+    MaxAutoSaveAgeDays: number;
+  MaxAutoToSave: number;
+  MaxCacheAgeMs: number;
   Iterations: {
     MaxSetHrefEffort: number,
     MaxIterationSwitchBoard: number,
@@ -25,8 +28,6 @@ export interface IContentConst {
   },
 
   ElemId: {
-
-
     sc: {
       scLoginBtn: IScVerSpec,
       scLoginPassword: string,
@@ -44,7 +45,6 @@ export interface IContentConst {
     }
   },
 
-
   UrlSuffix: {
     Desktop: string,
     Login: string,
@@ -54,6 +54,7 @@ export interface IContentConst {
   },
   Regex: {
     ContentEditor: RegExp,
+    NbSp: RegExp,
     PageType: {
       Desktop: RegExp
       Edit: RegExp

@@ -14,21 +14,24 @@ import { PayloadDataFromContent } from '../../../Shared/scripts/Classes/PayloadD
 import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
-import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
-import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
-import { ICurrState } from '../../../Shared/scripts/Interfaces/ICurrState';
+import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
 import { BuildDateStamp } from '../../../Shared/scripts/AutoBuild/BuildNum';
 import { IDataPopUpSettings } from '../../../Shared/scripts/Interfaces/IDataPopUpSettings';
+import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
+import { MenuCommand } from '../../../Shared/scripts/Enums/MenuCommand';
+import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
+import { ISelectionHeaders } from '../../../Shared/scripts/Interfaces/ISelectionHeaders';
+import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 
 export class UiManager extends PopUpManagerBase {
-  private __selectSnapshotIndex: number = 0;
+  private __selectSnapshotId: IGuid;
   OperationCancelled: any;
   TabId: string;
   ParentFocused: boolean = false;
   MenuFocused: boolean = true;
   OtherFocused: boolean = false;
   MenuEnabled: boolean = true;
-  currentState: ICurrState;
+  currentState: ICurrStateContent;
 
   constructor(popHub: PopUpHub) {
     super(popHub);
@@ -42,24 +45,15 @@ export class UiManager extends PopUpManagerBase {
     var self = this;
     this.debug().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
 
-
     this.WriteBuildNumToUi();
 
-    //this.WriteTabId();
-
-    this.__wireParentFocusCheck();
-
-    this.RefreshUiRequest();
-
+    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqCurState, this.PopHub));
 
     this.debug().FuncEnd(this.Init.name);
-
-
   }
 
   WriteBuildNumToUi() {
     this.debug().LogVal('BuildDateStamp', BuildDateStamp);
-
 
     var targetTag: HTMLElement = document.querySelector(this.PopConst().Selector.HS.BuildStamp);
     if (targetTag) {
@@ -67,10 +61,7 @@ export class UiManager extends PopUpManagerBase {
     } else {
       this.debug().Error(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
     }
-
-
   }
-
 
   private __drawStoragePretty(ourData: IOneStorageData[]) {
     this.debug().FuncStart(this.__drawStoragePretty.name);
@@ -111,6 +102,7 @@ export class UiManager extends PopUpManagerBase {
     this.debug().FuncEnd(this.GetDebugDataOneCE.name);
     return toReturn;
   }
+
   __buildDebugDataPretty(dataOneWindow: IDataOneWindowStorage) {
     this.debug().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + this.debug().IsNullOrUndefined(dataOneWindow));
 
@@ -163,123 +155,6 @@ export class UiManager extends PopUpManagerBase {
       this.debug().Error(this.ClearTextArea.name, 'No text area found');
     }
   }
-
-  private __wireParentFocusCheck() {
-    ////this.PageDataMan().TopLevelWindow().DataDocSelf.Document.addEventListener('focus', () => { alert('vis change'); })
-    //this.PageDataMan().TopLevelWindow().DataDocSelf.Document.addEventListener('focus', () => { this.OnParentFocused(true); })
-    //this.PageDataMan().TopLevelWindow().DataDocSelf.Document.addEventListener('blur', () => { this.OnParentFocused(false); })
-
-    window.addEventListener('focus', () => { this.OnMenuFocused(true); })
-    window.addEventListener('blur', () => { this.OnMenuFocused(false); })
-  }
-
-  OnParentFocused(isFocused: boolean) {
-    this.ParentFocused = isFocused;
-    this.CalculateMenuDisplay();
-  }
-
-  OnMenuFocused(isFocused: boolean) {
-    this.MenuFocused = isFocused;
-    this.CalculateMenuDisplay();
-  }
-
-  CalculateMenuDisplayDelayed(self: UiManager) {
-    // user opens sc -> nothing
-    // user opens Hs -> wire, set menuBlur = false, parentBlur = true;
-    // user selects parent -> trigger menu enabled
-    // user selects other window, unless it is menu -> blur menu
-
-    if (!self.ParentFocused && !self.MenuFocused) {
-      self.OtherFocused = true;
-    }
-
-    if (self.ParentFocused) {
-      self.OtherFocused = false;
-    }
-    self.MenuEnabled = !self.OtherFocused && (self.ParentFocused || self.MenuFocused);
-
-    //self.debug().Log('');
-    //self.debug().LogVal('ParentFocused', self.ParentFocused.toString());
-    //self.debug().LogVal('MenuFocused', self.MenuFocused.toString());
-    //self.debug().LogVal('OtherFocused', self.OtherFocused.toString());
-    //self.debug().Log('');
-
-    //if (!this.ParentFocused && !this.MenuFocused) {
-    //  this.OtherFocused = true;
-    //}
-
-    //if (this.ParentFocused && !this.MenuFocused) {
-    //  this.MenuEnabled = true;
-    //}
-
-    //if (   this.MenuFocused)
-
-    var menuOverlay: HTMLElement = document.querySelector(self.PopConst().Selector.HS.menuOverlay);
-    if (menuOverlay) {
-      if (self.MenuEnabled) {
-        menuOverlay.style.display = 'none';
-      } else
-        menuOverlay.style.display = '';
-    }
-  }
-
-  CalculateMenuDisplay() {
-    var self = this;
-    setTimeout(() => { this.CalculateMenuDisplayDelayed(self); }, 100);
-    setTimeout(() => { this.CalculateMenuDisplayDelayed(self); }, 1000);
-  }
-
-  //WriteTabId() {
-  //  this.TabId = new Date().getTime().toString();
-  //  this.WriteDocIdTo(this.PageDataMan().TopLevelWindow().Window.document, this.TabId);
-  //  //this.WriteDocIdTo(document, this.TabId);
-  //}
-
-  //WriteDocIdTo(targetDoc: Document, documentId: string) {
-  //  this.debug().FuncStart(this.WriteDocIdTo.name, documentId);
-  //  if (targetDoc) {
-  //    this.RemoveExistingTabId(targetDoc);
-  //    var foreSiteIdDivOrig = targetDoc.createElement('div');
-  //    foreSiteIdDivOrig.id = this.Const().ElemId.HS.TabId;
-  //    foreSiteIdDivOrig.innerText = documentId;
-  //    targetDoc.body.appendChild(foreSiteIdDivOrig);
-  //  } else {
-  //    this.debug().Error(this.WriteDocIdTo.name, 'no target window');
-  //  }
-
-  //  this.debug().FuncEnd(this.WriteDocIdTo.name, documentId.toString());
-  //}
-
-  //RemoveExistingTabId(targetDoc: Document) {
-  //  var foundTabId: HTMLElement = targetDoc.querySelector(this.Utilites().MakeSelectorFromId(this.Const().ElemId.HS.TabId));
-  //  if (foundTabId) {
-  //    targetDoc.removeChild(foundTabId);
-  //  }
-  //}
-
-  //VerifyTabMatch() {
-  //  //todo - maybe with communication between the two
-
-  //  //var parentIdWrapper = <HTMLElement>this.PageDataMan().TopLevelWindow().Window.document.querySelector(this.Utilites().MakeSelectorFromId(this.Const().ElemId.HS.TabId));
-  //  //var matches: boolean = false;
-
-  //  //if (parentIdWrapper) {
-  //  //  var parentId = parentIdWrapper.innerText;
-  //  //  this.debug().LogVal('id for match', parentId);
-
-  //  //  if (parentId && parentId === this.TabId) {
-  //  //    matches = true;
-  //  //  }
-  //  //}
-
-  //  //var menuOverlay: HTMLElement = document.querySelector(this.Const().Selector.HS.menuOverlay);
-  //  //if (menuOverlay) {
-  //  //  if (matches) {
-  //  //    menuOverlay.style.display = 'none';
-  //  //  } else
-  //  //    menuOverlay.style.display = '';
-  //  //}
-  //}
 
   __getTextArea(): HTMLTextAreaElement {
     return <HTMLTextAreaElement>document.querySelector(this.PopConst().Selector.HS.TaDebug);
@@ -335,7 +210,7 @@ export class UiManager extends PopUpManagerBase {
     try {
       //var ourData: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
 
-      if (data.State.CurrentSnapShots) {
+      if (data.State.SnapShotsMany.CurrentSnapShots) {
         //this.__drawStorageRaw(data.CurrentSnapShots)
         //this.__drawStoragePretty(data.CurrentSnapShots)
       }
@@ -380,25 +255,25 @@ export class UiManager extends PopUpManagerBase {
     currentSettings.DebugSettings.ShowDebugData = currentVal;
 
     this.PopAtticMan().StoreSettings(currentSettings);
-    this.RefreshUiRequest();
+    this.RefreshUiFromCache();
     this.debug().FuncEnd(this.UpdateAtticFromUi.name);
   }
 
   SelectChanged(): void {
     this.debug().FuncStart(this.SelectChanged.name);
-    this.__selectSnapshotIndex = this.__getSelectElem().selectedIndex;
-    this.debug().Log('new index :' + this.__selectSnapshotIndex);
+    this.__selectSnapshotId = this.GuidMan().ParseGuid(this.__getSelectElem().value);
+    //this.debug().Log('new index :' + this.__selectSnapshotId);
 
     //if (e.ctrlKey) {
     //  alert
     //}
 
-    this.RefreshUiRequest();
+    this.RefreshUiFromCache();
     this.debug().FuncEnd(this.SelectChanged.name);
   }
 
   private __GetCancelButton() {
-    return document.getElementById(this.PopConst().ElemId.HS.Btn.Cancel);
+    return document.getElementById(this.PopConst().ElemId.HS.Btn.HsCancel);
   }
 
   SetCancelFlag() {
@@ -437,26 +312,61 @@ export class UiManager extends PopUpManagerBase {
       }
     }
     else {
-      this.debug().Error(this.RefreshUiRequest.name, 'no settings found');
+      this.debug().Error(this.__refreshSettings.name, 'no settings found');
     }
     this.debug().FuncEnd(this.__refreshSettings.name);
   }
-  async RefreshUiRequest() {
-    this.debug().FuncStart(this.RefreshUiRequest.name);
 
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqCurState));
+  async RefreshUiFromCache() {
+    this.debug().FuncStart(this.RefreshUiFromCache.name);
 
     this.__refreshSettings();
+
     this.RestoreAccordianStates();
 
-    this.debug().FuncEnd(this.RefreshUiRequest.name);
+    this.UiMan().PopulateContentState(this.MsgMan().CachedState);
+
+    this.PopulateStateOfSnapShotSelect(this.MsgMan().CachedState.SnapShotsMany.CurrentSnapShots);
+
+    this.RefreshButtonStates();
+
+    this.__drawCorrectNicknameInUI(this.MsgMan().CachedState.SnapShotsMany.CurrentSnapShots);
+
+    this.debug().FuncEnd(this.RefreshUiFromCache.name);
   }
 
-  RefreshUiResponse(data: PayloadDataFromContent) {
-    //var snapShots: IDataOneWindowStorage[] = this.MsgMan().SendMessage(MsgFlag.GetAllStorageOneWindow);
+  RefreshButtonStates(): void {
+    this.debug().FuncStart(this.RefreshButtonStates.name, this.EventMan().AllMenuCommands.length);
+    for (var idx = 0; idx < this.EventMan().AllMenuCommands.length; idx++) {
+      var command = this.EventMan().AllMenuCommands[idx];
+      this.debug().LogVal('working on', MenuCommand[command.Command])
+      if (command.RequiredPageTypes.length > 0) {
+        this.debug().LogVal('required pages', command.RequiredPageTypes.toString());
 
-    this.PopulateStateOfSnapShotSelect(data.State.CurrentSnapShots);
-    this.__drawCorrectNicknameInUI(data.State.CurrentSnapShots);
+        var currentWindowType = this.MsgMan().CachedState.WindowType;
+        this.debug().LogVal('current', currentWindowType);
+        this.debug().LogVal('current', StaticHelpers.WindowTypeAsString(currentWindowType));
+        var targetButton: HTMLElement = this.GetButtonByIdOrSelector(command.ButtonSelector);
+
+        if (targetButton) {
+          var isMatch: boolean = command.RequiredPageTypes.indexOf(currentWindowType) >= 0;
+          this.debug().LogVal('isMatch', isMatch);
+
+          if (isMatch) {
+            targetButton.classList.remove('disabled');
+            targetButton.removeAttribute('disabled');
+          } else {
+            targetButton.classList.add('disabled');
+            targetButton.setAttribute('disabled', 'disabled');
+          }
+        } else {
+          this.debug().Error(this.RefreshButtonStates.name, 'target button not found');
+        }
+      } else {
+        this.debug().Log('no required pages');
+      }
+    }
+    this.debug().FuncEnd(this.RefreshButtonStates.name);
   }
   ShowDebugDataOneWindow() {
     this.debug().FuncStart('ShowDebugDataOneWindow');
@@ -520,15 +430,34 @@ export class UiManager extends PopUpManagerBase {
     var targetSel: HTMLSelectElement = this.__getSelectElem();
     var toReturn: IGuid = null;
     if (targetSel) {
-      var optionsLength = targetSel.options.length;
-      if (this.__selectSnapshotIndex < optionsLength) {
-        var temp = targetSel.options[this.__selectSnapshotIndex].value;
-        //this.debug().Log('temp: ' + temp);
-        toReturn = this.GuidMan().ParseGuid(temp);
-        this.debug().LogVal('toReturn', toReturn.AsString);
+      var selectedValue: string = targetSel.value;
+      if (selectedValue) {
+        toReturn = this.GuidMan().ParseGuid(selectedValue);
       }
+      //var optionsLength = targetSel.options.length;
+      //if (this.__selectSnapshotId < optionsLength) {
+      //  var temp = targetSel.options[this.__selectSnapshotId].value;
+      //  //this.debug().Log('temp: ' + temp);
+      //  toReturn = this.GuidMan().ParseGuid(temp);
+      //}
     }
-    this.debug().FuncEnd(this.GetIdOfSelectWindowSnapshot.name);
+
+    if (!toReturn) {
+      this.debug().Log('using empty guid');
+      toReturn = this.GuidMan().EmptyGuid();
+    }
+
+    this.debug().DebugIGuid(toReturn);
+
+    this.debug().FuncEnd(this.GetIdOfSelectWindowSnapshot.name, toReturn.AsString);
+    return toReturn;
+  }
+
+  GetButtonByIdOrSelector(targetId: string): HTMLElement {
+    var toReturn: HTMLElement = document.querySelector(targetId);
+    if (!toReturn) {
+      toReturn = document.querySelector('[id=' + targetId + ']');
+    }
     return toReturn;
   }
 
@@ -542,10 +471,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   AssignOnClickEvent(targetId: string, handler: Function): void {
-    var targetElem: HTMLElement = document.querySelector(targetId);
-    if (!targetElem) {
-      targetElem = document.querySelector('[id=' + targetId + ']');
-    }
+    var targetElem = this.GetButtonByIdOrSelector(targetId);
 
     if (!targetElem) {
       this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
@@ -553,6 +479,13 @@ export class UiManager extends PopUpManagerBase {
       targetElem.addEventListener('click', (evt) => { handler(evt) });
     }
   }
+
+  AssignOnClickEventFromCmd(command: IOneCommand, handler: Function): void {
+    if (command && command.Command !== MenuCommand.Unknown) {
+      this.AssignOnClickEvent(command.ButtonSelector, handler);
+    }
+  }
+
   AssignOnChangeEvent(selector: string, handler: Function): void {
     this.debug().FuncStart(this.AssignOnChangeEvent.name, selector);
     var targetElem: HTMLElement = document.querySelector(selector);
@@ -572,11 +505,11 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
-  PopulateContentState(state: ICurrState) {
+  PopulateContentState(state: ICurrStateContent) {
     this.debug().FuncStart(this.PopulateContentState.name);
     this.currentState = state;
     if (this.debug().IsNotNullOrUndefinedBool('state', state)) {
-      this.UiMan().PopulateStateOfSnapShotSelect(state.CurrentSnapShots);
+      this.UiMan().PopulateStateOfSnapShotSelect(state.SnapShotsMany.CurrentSnapShots);
 
       var targetCurrStateTa: HTMLTextAreaElement = <HTMLTextAreaElement>window.document.querySelector(this.PopConst().Selector.HS.TaState);
       if (targetCurrStateTa) {
@@ -585,8 +518,17 @@ export class UiManager extends PopUpManagerBase {
         allTaText += 'Page Type: ' + scWindowType[state.WindowType]
         allTaText += '\n';
         allTaText += 'Url: ' + state.Url;
+
         allTaText += '\n';
         allTaText += 'Last Request: ' + MsgFlag[state.LastReq];
+
+        allTaText += '\n';
+        allTaText += '\nSnap Shots: ';
+        allTaText += '\nBirthday: ' + state.SnapShotsMany.Birthday.toString();
+        allTaText += '\nTotal Snapshots: ' + state.SnapShotsMany.CurrentSnapShots.length;
+        allTaText += '\nFavorite Snapshots: ' + state.SnapShotsMany.FavoriteCount;
+        allTaText += '\nPlain Snapshots: ' + state.SnapShotsMany.PlainCount;
+        allTaText += '\nAuto Snapshots: ' + state.SnapShotsMany.SnapShotsAutoCount;
 
         allTaText += '\n';
         allTaText += 'Error Stack (' + state.ErrorStack.length + '):';
@@ -601,24 +543,53 @@ export class UiManager extends PopUpManagerBase {
     this.debug().FuncEnd(this.PopulateContentState.name);
   }
 
+  PopulateSnapShotsAuto() {
+  }
+
+  PopulateSnapShotsNotAuto() {
+  }
+
+  CleanExistingSelection(targetSel: HTMLSelectElement) {
+    var optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderAuto + ']')
+    if (optGroup) {
+      optGroup.remove();
+    }
+    optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderFavorite + ']')
+    if (optGroup) {
+      optGroup.remove();
+    }
+
+    targetSel.options.length = 0;
+  }
+
+  WriteHeaders(targetSel: HTMLSelectElement) {
+    var toReturn: ISelectionHeaders = {
+      Auto: null,
+      Favorite: null
+    }
+
+    toReturn.Auto = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.Auto.label = this.Utilites().SelectHeaderStr('Auto');
+    toReturn.Auto.id = this.PopConst().ElemId.HS.SelectHeaderAuto;
+
+    toReturn.Favorite = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.Favorite.label = this.Utilites().SelectHeaderStr('Favorite');
+    toReturn.Favorite.id = this.PopConst().ElemId.HS.SelectHeaderFavorite;
+
+    return toReturn;
+  }
+
   PopulateStateOfSnapShotSelect(snapShots: IDataOneWindowStorage[]) {
-    this.debug().FuncStart(this.PopulateStateOfSnapShotSelect.name, this.__selectSnapshotIndex.toString());
+    this.debug().FuncStart(this.PopulateStateOfSnapShotSelect.name);
 
     if (snapShots) {
       var targetSel: HTMLSelectElement = this.__getSelectElem();
 
       if (targetSel) {
-        var optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeader + ']')
-        if (optGroup) {
-          optGroup.remove();
-        }
-
-        var header: HTMLOptGroupElement = <HTMLOptionElement>window.document.createElement('optgroup');
-        header.label = this.Utilites().SelectHeaderStr();
-        header.id = this.PopConst().ElemId.HS.SelectHeader;
+        this.CleanExistingSelection(targetSel);
+        var headers: ISelectionHeaders = this.WriteHeaders(targetSel);
 
         if (snapShots && snapShots.length > 0) {
-          targetSel.options.length = 0;
           this.debug().Log('targetSel.options.length : ' + targetSel.options.length);
 
           for (var idx: number = 0; idx < snapShots.length; idx++) {
@@ -628,14 +599,23 @@ export class UiManager extends PopUpManagerBase {
             el.innerHTML = this.PopHub.Utilities.TimeNicknameFavStr(data);
 
             el.value = data.Id.AsString;
-            if (idx === this.__selectSnapshotIndex) {
+            if (data.Id === this.__selectSnapshotId) {
               el.selected = true;
             }
-            header.appendChild(el);
+            if (data.Flavor == SnapShotFlavor.Autosave) {
+              headers.Auto.appendChild(el);
+            } else {
+              headers.Favorite.appendChild(el);
+            }
           }
         }
 
-        targetSel.appendChild(header);
+        targetSel.appendChild(headers.Favorite);
+        targetSel.appendChild(headers.Auto);
+
+        if (!this.__selectSnapshotId || this.__selectSnapshotId === this.GuidMan().EmptyGuid()) {
+          targetSel.selectedIndex = 0;
+        }
       }
     }
     this.debug().FuncEnd(this.PopulateStateOfSnapShotSelect.name);

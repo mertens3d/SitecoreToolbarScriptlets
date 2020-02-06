@@ -7,52 +7,55 @@ import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDat
 export class ExternalEvents extends CommonEvents {
   async __hndlrAddCETab() {
     this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqAddCETab));
+    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqAddCETab, this.PopHub));
   }
 
   __hndlrCancelOperation(evt: MouseEvent) {
     this.UiMan().SetCancelFlag();
   }
 
-  __DrawStorage(evt: any) {
+  MarkFavorite(evt: MouseEvent) {
+    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqMarkFavorite, this.PopHub))
+  }
+  __DrawStorage(evt: MouseEvent) {
     this.MsgMan().FromAtticDrawStorage();
   }
 
   __hndlrDesktop(evt: MouseEvent) {
     this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqGoDesktop))
+    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqGoDesktop, this.PopHub))
   }
 
   HndlrAdminB() {
     this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqAdminB))
+    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqAdminB, this.PopHub))
   }
   async __hndlrSetScMode(newMode: IsScMode, evt: MouseEvent) {
     this.__initNewOperation();
 
-    var payload = new MsgFromPopUp(MsgFlag.ReqSetScMode);
+    var payload = new MsgFromPopUp(MsgFlag.ReqSetScMode, this.PopHub);
     payload.Data = new PayloadDataFromPopUp();
     payload.Data.ReqScMode = newMode;
     payload.Data.UseOriginalWindowLocation = evt.ctrlKey;
 
-    this.MsgMan().SendMessageHndlr(payload);
+    this.MsgMan().SendMessageToContent(payload);
   }
 
   async __hndlrOpenCE() {
     this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqOpenCE));
+    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqOpenCE, this.PopHub));
   }
 
   async __hndlrQuickPublish(evt: MouseEvent) {
     this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqQuickPublish))
+    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqQuickPublish, this.PopHub))
 
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.RespTaskSuccessful));
   }
 
   HndlrSnapShotRemove(evt: any) {
     this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.RemoveFromStorage));
+    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.RemoveFromStorage, this.PopHub);
+    this.MsgMan().SendMessageToContent(msg);
   }
 
   CreateNewWindowIfRequired(evt: MouseEvent) {
@@ -83,10 +86,10 @@ export class ExternalEvents extends CommonEvents {
     await this.CreateNewWindowIfRequired(evt)
       .then(() => {
         //var payload = new MsgFromPopUp(MsgFlag.NewWindowTest);
-        var payload = new MsgFromPopUp(MsgFlag.ReqRestoreClick);
+        var payload = new MsgFromPopUp(MsgFlag.ReqRestoreClick, this.PopHub);
         payload.Data.IdOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
 
-        this.MsgMan().SendMessageHndlr(payload);
+        this.MsgMan().SendMessageToContent(payload);
       })
       .catch(() => { this.debug().Error(this.HndlrSnapShotRestore.name, 'promise error') });
 
@@ -97,13 +100,13 @@ export class ExternalEvents extends CommonEvents {
     this.__initNewOperation();
 
     var self = this.PopAtticMan;
-    var payload = new MsgFromPopUp(MsgFlag.ReqUpdateNickName);
+    var payload = new MsgFromPopUp(MsgFlag.ReqUpdateNickName, this.PopHub);
     payload.Data.IdOfSelect = this.UiMan().GetIdOfSelectWindowSnapshot();
     payload.Data.SnapShotSettings.SnapShotNewNickname = this.UiMan().GetValueInNickname();;
-    this.MsgMan().SendMessageHndlr(payload);
+    this.MsgMan().SendMessageToContent(payload);
   }
   async __hndlrSnapShotCreate(evt: MouseEvent) {
     this.__initNewOperation();
-    this.MsgMan().SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqTakeSnapShot));
+    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqTakeSnapShot, this.PopHub));
   }
 }

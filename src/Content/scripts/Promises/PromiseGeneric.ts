@@ -5,11 +5,12 @@ import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { IScVerSpec } from '../../../Shared/scripts/Interfaces/IScVerSpec';
+import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 
 export class PromiseGeneric extends ContentManagerBase {
   constructor(xyyz: ContentHub) {
-    xyyz.debug.FuncStart(PromiseGeneric.name);
     super(xyyz)
+    xyyz.debug.FuncStart(PromiseGeneric.name);
     xyyz.debug.FuncEnd(PromiseGeneric.name);
   }
 
@@ -54,8 +55,6 @@ export class PromiseGeneric extends ContentManagerBase {
       resolve(dataOneIframe);
     });
   }
-
-
 
   async WaitForAndReturnReadyIframe(targetDoc: IDataOneDoc, selector: string, nickname: string) {
     return new Promise<IDataOneIframe>(async (resolve) => {
@@ -113,7 +112,7 @@ export class PromiseGeneric extends ContentManagerBase {
   async WaitForPageReadyNative(targetWindow: IDataBrowserWindow) {
     return new Promise(async (resolve, reject) => {
       this.debug().FuncStart(this.WaitForPageReadyNative.name);
-      let iterationJr = new IterationHelper(this.Xyyz,  this.WaitForThenClick.name, 5);
+      let iterationJr = new IterationHelper(this.Xyyz, this.WaitForThenClick.name, 5);
       var loaded: boolean = false;
 
       if (this.MiscMan().NotNullOrUndefined(targetWindow, this.WaitForPageReadyNative.name + ' document'))
@@ -135,7 +134,7 @@ export class PromiseGeneric extends ContentManagerBase {
     return new Promise<any>(async (resolve, reject) => {
       this.debug().FuncStart(this.WaitForAndClickWithPayload.name, selector);
 
-      await this.PromiseGen().WaitForThenClick(selector, targetDoc)
+      await this.PromiseGen().WaitForThenClick([selector], targetDoc)
         .then(() => resolve(payload))
         .catch(ex => {
           this.debug().Error(this.WaitForAndClickWithPayload.name, ex);
@@ -143,71 +142,110 @@ export class PromiseGeneric extends ContentManagerBase {
         });
     });
   }
+
+  async SetHrefAndWaitForReady(href, targetWindow: IDataBrowserWindow, targetWindowType: scWindowType) {
+    return new Promise(async (resolve, reject) => {
+      this.debug().FuncStart(this.SetHrefAndWaitForReady.name, href);
+
+      var isCorrectHref = targetWindow.Window.location.href = href;
+
+      if (targetWindow.WindowType !== targetWindowType) {
+        targetWindow.Window.location.href = href;
+      }
+
+      await this.WaitForPageReadyNative(targetWindow)
+        .then(() => resolve())
+        .catch(() => reject());
+
+      this.debug().FuncEnd(this.SetHrefAndWaitForReady.name);
+    });
+  }
+
+  //async SetPageAndWaitForReady(targetWindowType: scWindowType, targetWindow: IDataBrowserWindow) {
+  //  return new Promise<void>(async (resolve, reject) => {
+  //    var iterationJr = new IterationHelper(this.Xyyz, this.SetPageAndWaitForReady.name);
+  //    if (targetWindow.WindowType !== targetWindowType) {
+  //      targetWindow.DataDocSelf.Document.location.href =
+  //    }
+  //    while (!found && iterationJr.DecrementAndKeepGoing() && !this.MsgMan().OperationCancelled) {
+  //      if (targetWindow) {
+  //      } else {
+  //        reject();
+  //      }
+  //    }
+  //  }
+
   async WaitForPageReady(targetWindow: IDataBrowserWindow) {
-    return new Promise<void>(async (resolve, reject) => {
-      this.debug().FuncStart(this.WaitForPageReady.name);
+      return new Promise<void>(async (resolve, reject) => {
+        this.debug().FuncStart(this.WaitForPageReady.name);
 
-      this.debug().NotNullCheck('toReturn', targetWindow);
-      this.debug().NotNullCheck('toReturn', targetWindow.DataDocSelf);
-      this.debug().NotNullCheck('toReturn', targetWindow.DataDocSelf.Document);
-      this.debug().NotNullCheck('toReturn', targetWindow.DataDocSelf.Document.location);
-      this.debug().NotNullCheck('toReturn', targetWindow.DataDocSelf.Document.location.href);
-      this.debug().LogVal('targetWindow.DataDocSelf.Document.location.href', targetWindow.DataDocSelf.Document.location.href);
+        this.debug().DebugIDataBrowserWindow(targetWindow);
 
-      if (targetWindow) {
-        await this.WaitForPageReadyNative(targetWindow)
-          .then(() => resolve())
+        if (targetWindow) {
+          await this.WaitForPageReadyNative(targetWindow)
+            .then(() => resolve())
+            .catch((ex) => {
+              reject(ex);
+            })
+        }
+        this.debug().FuncEnd(this.WaitForPageReady.name);
+      });
+    }
+
+  async RaceWaitAndClick(selector: IScVerSpec, targetDoc: IDataOneDoc) {
+      return new Promise(async (resolve, reject) => {
+        this.debug().FuncStart(this.RaceWaitAndClick.name);
+
+        var raceFlag: boolean = false;
+
+        var prom1 = this.WaitForThenClick([selector.sc920, selector.sc820], targetDoc);
+
+        this.debug().FuncEnd(this.RaceWaitAndClick.name);
+        await prom1
+          .then(() => {
+            resolve();
+          })
           .catch((ex) => {
             reject(ex);
-          })
-      }
-      this.debug().FuncEnd(this.WaitForPageReady.name);
-    });
-  }
+          });
+      });
+    }
 
-  async RaceWaitAndClick(selector: IScVerSpec, targetDoc: IDataOneDoc, resolveFn: Function = null) {
-    this.debug().FuncStart(this.RaceWaitAndClick.name);
+  WaitForThenClick(selector: string[], targetDoc: IDataOneDoc) {
+      return new Promise<void>(async (resolve, reject) => {
+        if (targetDoc) {
+          this.debug().FuncStart(this.WaitForThenClick.name, selector.length);
 
-    var prom1 = this.WaitForThenClick(selector.sc920, targetDoc, resolveFn);
-    var prom2 = this.WaitForThenClick(selector.sc820, targetDoc, resolveFn);
+          var found: HTMLElement = null;
 
-    this.debug().FuncEnd(this.RaceWaitAndClick.name);
-    return await Promise.race([prom1, prom2]);
-  }
+          var iterationJr = new IterationHelper(this.Xyyz, this.WaitForThenClick.name);
 
-  WaitForThenClick(selector: string, targetDoc: IDataOneDoc, resolveFn: Function = null) {
-    return new Promise<void>(async (resolve, reject) => {
-      if (targetDoc) {
-        this.debug().FuncStart(this.WaitForThenClick.name, selector);
-
-        var found: HTMLElement = null;
-
-        var iterationJr = new IterationHelper(this.Xyyz,  this.WaitForThenClick.name);
-
-        while (!found && iterationJr.DecrementAndKeepGoing() && !this.MsgMan().OperationCancelled) {
-          found = targetDoc.Document.querySelector(selector);
-
-          if (found) {
-            this.debug().Log('found and clicking');
-            found.click();
-
-            this.debug().FuncEnd(this.WaitForThenClick.name, selector);
-            if (resolveFn) {
-              resolveFn();
+          while (!found && iterationJr.DecrementAndKeepGoing() && !this.MsgMan().OperationCancelled) {
+            for (var idx = 0; idx < selector.length; idx++) {
+              found = targetDoc.Document.querySelector(selector[idx]);
+              if (found) {
+                break;
+              }
             }
-            resolve();
-          } else {
-            await iterationJr.Wait()
-          }
-        }
-      } else {
-        reject();
-      }
 
-      this.debug().FuncEnd(this.WaitForThenClick.name, selector);
-      if (!found && iterationJr.IsExhausted) {
-        reject('exhausted');
-      }
-    });
-  }
+            if (found) {
+              this.debug().Log('found and clicking');
+              found.click();
+
+              this.debug().FuncEnd(this.WaitForThenClick.name, selector.length);
+              resolve();
+            } else {
+              await iterationJr.Wait()
+            }
+          }
+        } else {
+          reject();
+        }
+
+        this.debug().FuncEnd(this.WaitForThenClick.name, selector.length);
+        if (!found && iterationJr.IsExhausted) {
+          reject('exhausted');
+        }
+      });
+    }
 }

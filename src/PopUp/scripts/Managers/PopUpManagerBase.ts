@@ -8,6 +8,8 @@ import { Utilities } from "../../../Shared/scripts/Classes/Utilities";
 import { GuidHelper } from "../../../Shared/scripts/Classes/GuidHelper";
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 import { SettingsManager } from "./SettingsManager";
+import { EventManager } from "./EventManager";
+//import { PopUpFactoryManager } from "./FactoryManager";
 
 export class PopUpManagerBase {
 
@@ -26,5 +28,7 @@ export class PopUpManagerBase {
   //MsgFlag(): MessageFlag { return this.PopHub.MessageFlag; }
   GuidMan(): GuidHelper { return this.PopHub.GuidMan; }
   SettingsMan(): SettingsManager { return this.PopHub.SettingsMan; }
+  EventMan(): EventManager { return this.PopHub.EventMan; }
+  //FactMan(): PopUpFactoryManager { return this.PopHub.FactMan; }
 
 }

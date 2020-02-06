@@ -11,12 +11,12 @@ export class PromiseOneStep extends ContentManagerBase {
   }
 
   async ClickPublishOnNav(payload: IDataPublishChain) {
-    await this.PromiseGen().WaitForThenClick(this.Const().Selector.SC.NavPublishStrip, payload.docToPublish)
+    await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.NavPublishStrip], payload.docToPublish)
     return payload;
   }
 
   async ClickMenuButtonPublishDropDown(payload: IDataPublishChain = null) {
-    await this.PromiseGen().WaitForThenClick(this.Const().Selector.SC.MenuButtonPublish, payload.docToPublish);
+    await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.MenuButtonPublish], payload.docToPublish);
     return payload;
   }
 

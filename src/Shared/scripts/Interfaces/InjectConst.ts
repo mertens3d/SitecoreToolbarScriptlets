@@ -49,7 +49,9 @@ import { scMode } from '../Enums/scMode';
 
 export class InjectConst {
   static ContConst: IContentConst = {
-   
+    MaxAutoToSave: 10,
+    MaxAutoSaveAgeDays: 1,
+    MaxCacheAgeMs: 1000 * 60 * 10,
     Iterations: {
       MaxSetHrefEffort: 10,
       MaxIterationSwitchBoard: 20,
@@ -108,6 +110,7 @@ export class InjectConst {
     },
     Regex: {
       ContentEditor: /Content.*?Editor/ig,
+      NbSp: /&nbsp;/ig,
       PageType: {
         //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
         Desktop: /.*default.aspx/ig,

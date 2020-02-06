@@ -5,7 +5,7 @@ import { PageDataManager } from "../Managers/PageDataManager";
 import { IDataBrowserWindow } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
-import { ICurrState } from "../../../Shared/scripts/Interfaces/ICurrState";
+import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
 import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp";
 import { IDataContentPrefs } from "../../../Shared/scripts/Interfaces/IDataContentPrefs";
 import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDataReqPopUp";
@@ -34,6 +34,8 @@ export class ContentDebug extends BaseDebug {
       this.LogVal('MaxAutoSaveCount', prefs.MaxAutoSaveCount);
     }
   }
+
+
   DebugPageDataMan(pageDataMan: PageDataManager) {
     if (this.IsNotNullOrUndefinedBool('pageDataMan', pageDataMan)) {
       this.DebugIDataBrowserWindow(pageDataMan.TopLevelWindow());
@@ -50,10 +52,21 @@ export class ContentDebug extends BaseDebug {
     }
   }
 
-  DebugObjState(state: ICurrState) {
+
+
+  //DebugIDataBrowserWindow(targetWindow: IDataBrowserWindow) {
+  //  this.NotNullCheck('toReturn', targetWindow);
+  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf);
+  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document);
+  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document.location);
+  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document.location.href);
+  //  this.LogVal('targetWindow.DataDocSelf.Document.location.href', targetWindow.DataDocSelf.Document.location.href);
+  //}
+
+  DebugObjState(state: ICurrStateContent) {
     if (this.IsNotNullOrUndefinedBool('State', state)) {
-      if (this.IsNotNullOrUndefinedBool('CurrentSnapShots', state.CurrentSnapShots)) {
-        this.LogVal('Snapshot count', state.CurrentSnapShots.length);
+      if (this.IsNotNullOrUndefinedBool('CurrentSnapShots', state.SnapShotsMany.CurrentSnapShots)) {
+        this.LogVal('Snapshot count', state.SnapShotsMany.CurrentSnapShots.length);
       }
       if (this.IsNotNullOrUndefinedBool('PageType', state.WindowType)) {
         this.LogVal('scWindowType : ', scWindowType[state.WindowType]);

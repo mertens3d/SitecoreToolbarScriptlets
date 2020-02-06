@@ -2,6 +2,7 @@
 @import 'menu.buttons';
 @import 'overlay.scss';
 @import 'Grid.scss';
+@import 'header.scss';
 
 .light-text {
   color: $scTextColorLight;
@@ -11,12 +12,6 @@
   background-color: red;
 }
 
-
-.build-stamp {
-  text-align: right;
-  display: block;
-  font-size: 12px;
-}
 
 .admin-b-icon {
   background-image: url(/~/icon/office/32x32/log_in.png);
@@ -121,7 +116,7 @@ body {
 .scroller {
   height: 160px;
   display: inline-block;
-  width: $MaxScrollerWidth 754px;
+  width: $MaxScrollerWidth;
   overflow: scroll;
 }
 

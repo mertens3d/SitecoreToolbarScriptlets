@@ -41,6 +41,14 @@ button {
   }
 }
 
+.disabled{
+  cursor: default;
+  background-color: $buttonDisabledColor;
+    &:hover{
+    background-color: $buttonDisabledColor;
+  }
+}
+
 .icon {
   background-repeat: no-repeat;
   background-position: top;

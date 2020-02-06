@@ -3,24 +3,31 @@
 import { PayloadDataFromContent } from "./PayloadDataFromContent";
 import { MsgFlag } from "../Enums/MessageFlag";
 import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
-import { ICurrState } from "../Interfaces/ICurrState";
+import { ICurrStateContent } from "../Interfaces/ICurrState";
 import { scWindowType } from "../Enums/scWindowType";
 
 export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
   Data: PayloadDataFromContent;
-  State: ICurrState;
+  State: ICurrStateContent;
   response: string;
 
   constructor(msgFlag: MsgFlag) {
     super(msgFlag);
     this.Data = new PayloadDataFromContent();
+    
     this.State = {
-      CurrentSnapShots :[],
-      WindowType : scWindowType.Unknown,
+      SnapShotsMany: {
+        CurrentSnapShots: [],
+        FavoriteCount: 0,
+        SnapShotsAutoCount: 0,
+        PlainCount: 0,
+        Birthday: new Date(1970),
+      },
+      WindowType: scWindowType.Unknown,
       Url: '',
       LastReq: MsgFlag.Unknown,
-      ErrorStack: []
-
+      ErrorStack: [],
+      LastReqSuccessful: false,
     };
   }
 }

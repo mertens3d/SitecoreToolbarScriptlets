@@ -8,6 +8,7 @@ import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
+import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 
 
 export class OneWindowManager extends ContentManagerBase {
@@ -143,16 +144,12 @@ export class OneWindowManager extends ContentManagerBase {
 
 
     if (snapShotSettings) {
-      if (snapShotSettings.SnapShotIsAuto) {
-        this.__activeWindowSnapShot.IsAutoSave = true;
-      }
       if (snapShotSettings.SnapShotNewNickname) {
         this.__activeWindowSnapShot.NickName = snapShotSettings.SnapShotNewNickname;
       }
     }
 
 
-    this.__activeWindowSnapShot = this.RemoveAutoFlagIfNotAuto(this.__activeWindowSnapShot, snapShotSettings);
 
     //this.__activeWindowTreeSnapShot.ShowDebugDataOneWindow();
 
@@ -163,12 +160,7 @@ export class OneWindowManager extends ContentManagerBase {
     this.debug().FuncEnd(this.PutCEDataToCurrentSnapShot.name);
   }
 
-  RemoveAutoFlagIfNotAuto(data: IDataOneWindowStorage, snapShotSettings: IDataPayloadSnapShot) {
-    if (!snapShotSettings || !snapShotSettings.SnapShotIsAuto) {
-      data.IsAutoSave = false;
-    }
-    return data;
-  }
+  
 
   UpdateStorage() {
     this.debug().FuncStart(this.UpdateStorage.name);
@@ -210,10 +202,9 @@ export class OneWindowManager extends ContentManagerBase {
       //TimeStampFriendly: friendly,
       AllCEAr: [],
       Id: newGuid,
-      IsFavorite: false,
       NickName: '',
       RawData: null,
-      IsAutoSave: false
+      Flavor: SnapShotFlavor.Unknown,
     }
 
     this.debug().FuncEnd(this.CreateNewWindowSnapShot.name);

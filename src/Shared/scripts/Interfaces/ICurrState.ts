@@ -1,12 +1,14 @@
-﻿import { IDataOneWindowStorage } from "./IDataOneWindowStorage";
-import { scWindowType } from "../Enums/scWindowType";
+﻿import { scWindowType } from "../Enums/scWindowType";
 import { MsgFlag } from "../Enums/MessageFlag";
 import { IError } from "./IError";
+import { ISnapShotsMany } from "./ISnapShotsMany";
 
-export interface ICurrState {
-  LastReq: MsgFlag;
-  CurrentSnapShots: IDataOneWindowStorage[];
+
+export interface ICurrStateContent {
+  LastReq: MsgFlag,
+  SnapShotsMany: ISnapShotsMany,
   WindowType: scWindowType;
   Url: string;
-  ErrorStack: IError[];
+  ErrorStack: IError[],
+  LastReqSuccessful: boolean
 }

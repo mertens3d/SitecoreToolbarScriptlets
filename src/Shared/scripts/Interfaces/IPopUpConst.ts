@@ -11,24 +11,25 @@ export interface IPopUpConst {
     InputNickname: string,
     HindSiteParentInfo: string,
     HS: {
-      SelectHeader: string;
+      SelectHeaderAuto: string;
+      SelectHeaderFavorite: string;
       TabId: string,
 
       Btn: {
         AdminB: string,
-        ToggleFavoriteB: string,
-        Cancel: string,
+        BigRed: string,
         CE: string,
         Desktop: string,
-        DrawStorage: string,
-        BigRed: string,
+        HsCancel: string,
+        HsDrawStorage: string,
+        HsRemoveFromStorage: string,
+        HsRestoreWindowState: string,
+        HsSaveWindowState: string,
+        MarkFavorite: string,
         ModeEdit: string,
         ModeNorm: string,
         ModePrev: string,
         QuickPublish: string,
-        RemoveFromStorage: string,
-        RestoreWindowState: string,
-        SaveWindowState: string,
         UpdateNicknameB: string,
       }
       Legend: {
@@ -58,11 +59,13 @@ export interface IPopUpConst {
   },
 
   Selector: {
+    Btn: {
+      WindowClose: string,
+    }
     HS: {
       iCBoxdSettingsShowDebugData: string,
       iCBoxdSettingsAutoLogin: string,
       IdFieldSetDebug: string,
-      menuOverlay: string,
       PrefAutoLogin: string,
       SettingAutoSaveEnabled: string,
       SettingAutoSaveInterval: string,

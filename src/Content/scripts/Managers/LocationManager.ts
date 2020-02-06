@@ -14,36 +14,7 @@ export class LocationManager extends ContentManagerBase {
     xyyz.debug.FuncEnd(LocationManager.name);
   }
 
-  SetHref(href, callback, targetWindow: IDataBrowserWindow, effortCount = this.Const().Iterations.MaxSetHrefEffort) {
-    this.debug().FuncStart(this.SetHref.name, href + ' : ' + effortCount + ' : has callback? ' + (callback !== null));
 
-    effortCount -= 1
-
-    var isCorrectHref = targetWindow.Window.location.href = href;
-    var isReadyState = targetWindow.DataDocSelf.Document.readyState === 'complete';
-
-    if (effortCount > 0) {
-      if (isCorrectHref && isReadyState) {
-        this.debug().Log(this.SetHref.name, 'triggering callback');
-        callback();
-      } else {
-        if (!isCorrectHref) {
-          targetWindow.Window.location.href !== href
-        }
-
-        var self = this;
-        setTimeout(function () {
-          this.debug().Log('setting timeout');
-          self.SetHref(href, callback, targetWindow, effortCount);
-        }, self.Const().Timeouts.SetHrefEffortWait);
-      }
-    }
-    else {
-      this.debug().Log('changing href unsuccessful. Dying');
-    }
-
-    this.debug().FuncEnd(this.SetHref.name);
-  }
 
   ChangeLocationSwitchBoard(desiredPageType: scWindowType, targetWindow: IDataBrowserWindow, iteration: number = this.Const().Iterations.MaxIterationSwitchBoard) {
     this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType] + ' iteration: ' + iteration + ':' + this.Const().Iterations.MaxIterationSwitchBoard);
@@ -78,11 +49,13 @@ export class LocationManager extends ContentManagerBase {
         }
 
         if (desiredPageType === scWindowType.Desktop && currentState !== scWindowType.Desktop) {
-          this.SetHref(this.Const().UrlSuffix.Desktop, callBackOnSuccessfulHrefChange, targetWindow);
+          this.PromiseGen().SetHrefAndWaitForReady(this.Const().UrlSuffix.Desktop, targetWindow, desiredPageType)
+            .then(() => callBackOnSuccessfulHrefChange);
         }
 
         else if (desiredPageType === scWindowType.ContentEditor && currentState !== scWindowType.ContentEditor) {
-          this.SetHref(this.Const().UrlSuffix.CE, callBackOnSuccessfulHrefChange, targetWindow);
+          this.PromiseGen().SetHrefAndWaitForReady(this.Const().UrlSuffix.CE, targetWindow, desiredPageType)
+            .then(() => callbackOnComplete);
         }
 
         else if (currentState === scWindowType.Desktop && desiredPageType === scWindowType.Desktop) {

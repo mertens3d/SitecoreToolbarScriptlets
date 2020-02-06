@@ -5,6 +5,7 @@ import { scWindowType } from '../Enums/scWindowType';
 import { MsgFromXBase } from '../Interfaces/MsgFromXBase';
 import { MsgFlag } from '../Enums/MessageFlag';
 import { StaticHelpers } from './StaticHelpers';
+import { SnapShotFlavor } from '../Enums/SnapShotFlavor';
 
 export class Utilities {
   private GuidMan: GuidHelper;
@@ -18,10 +19,11 @@ export class Utilities {
     debug.FuncEnd(Utilities.name);
   }
 
-  SelectHeaderStr(): string {
+  SelectHeaderStr(prefix: string): string {
     let toReturn: string = '';
     // '    Time Stamp          - Page Type - Nickname       - Favorite?';
 
+    toReturn += StaticHelpers.BufferString(prefix, 6, ' ', false);
     toReturn += StaticHelpers.BufferString('...Time Stamp', 23, '.', false);
     toReturn += StaticHelpers.BufferString('- Page Type', 20, '.', false, false);
     toReturn += StaticHelpers.BufferString('- Nickname', 16, '.', false, false);
@@ -40,8 +42,15 @@ export class Utilities {
     return this.MakeFriendlyDate(data.TimeStamp)
       + ' - ' + StaticHelpers.BufferString(typeStr, 17, ' ', false)
       + ' - ' + StaticHelpers.BufferString(data.NickName, 16, ' ', false)
-      + ' - ' + StaticHelpers.BufferString((data.IsFavorite ? '*' : ' '), 1)
-      + ' - ' + StaticHelpers.BufferString((data.IsAutoSave ? 'A' : ' '), 1);
+      + ' - ' + StaticHelpers.BufferString((data.Flavor == SnapShotFlavor.Favorite ? '*' : ' '), 1)
+      + ' - ' + StaticHelpers.BufferString((data.Flavor == SnapShotFlavor.Autosave ? 'A' : ' '), 1);
+  }
+
+  TimeNicknameFavStrForConfirmation(data: IDataOneWindowStorage): string {
+    var result = this.TimeNicknameFavStr(data);
+    result = result.replace(new RegExp(/&nbsp;/ig), '');
+    return result;
+
   }
 
   MakeFriendlyDate(date: Date) {

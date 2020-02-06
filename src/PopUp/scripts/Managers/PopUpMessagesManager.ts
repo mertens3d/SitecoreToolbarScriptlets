@@ -4,11 +4,11 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp";
 import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { ICurrState } from "../../../Shared/scripts/Interfaces/ICurrState";
+import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 
 export class PopUpMessagesManager extends PopUpManagerBase {
-  CachedSate: ICurrState;
+  CachedState: ICurrStateContent;
 
   Init() {
     this.ScheduleAutoSaveSnapShot();
@@ -18,9 +18,9 @@ export class PopUpMessagesManager extends PopUpManagerBase {
   ReceiveResponseHndlr(response: MsgFromContent) {
     this.debug().FuncStart(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
     if (response) {
-      this.CachedSate = response.State;
+      this.CachedState = response.State;
 
-      this.UiMan().PopulateContentState(response.State);
+      this.UiMan().RefreshUiFromCache();
 
       switch (response.MsgFlag) {
         case MsgFlag.RespCurState:
@@ -53,8 +53,8 @@ export class PopUpMessagesManager extends PopUpManagerBase {
   }
 
   AutoLogin() {
-    if (this.CachedSate.WindowType === scWindowType.LoginPage) {
-      this.SendMessageHndlr(new MsgFromPopUp(MsgFlag.ReqLoginWithAdminB));
+    if (this.CachedState.WindowType === scWindowType.LoginPage) {
+      this.SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqLoginWithAdminB, this.PopHub));
     }
   }
 
@@ -77,7 +77,9 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       } else {
         this.debug().Error(this.SendMessageToTabs.name, 'response is not imsg');
       }
-    }).catch(this.onError);
+    })
+    
+      .catch(this.onError);
 
     this.debug().FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
   }
@@ -96,8 +98,8 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     console.error(`Error: ${error}`);
   }
 
-  async SendMessageHndlr(msgPlayload: MsgFromPopUp) {
-    this.debug().FuncStart(this.SendMessageHndlr.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+  async SendMessageToContent(msgPlayload: MsgFromPopUp) {
+    this.debug().FuncStart(this.SendMessageToContent.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
 
     msgPlayload.CurrentContentPrefs = await (await this.PopAtticMan().CurrentSettings()).ContentPrefs;
 
@@ -106,7 +108,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       active: true
     }).then((tabs) => this.SendMessageToTabs(tabs, msgPlayload)).catch(this.onError);
 
-    this.debug().FuncEnd(this.SendMessageHndlr.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+    this.debug().FuncEnd(this.SendMessageToContent.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
   }
 
   FromAtticDrawStorage() {

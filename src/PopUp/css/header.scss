@@ -1,0 +1,30 @@
+﻿@import "vars";
+
+.header {
+  text-align: right;
+
+  .build-stamp {
+    text-align: right;
+    display: inline-block;
+    font-size: 12px;
+  }
+
+  .close-window {
+    text-align: right;
+    display: inline-block;
+    padding: 4px;
+
+    &:hover {
+      background-color: $scHoverColor;
+      cursor: pointer;
+    }
+
+    &::before {
+      content: 'X';
+      color: black;
+      font-weight: 300;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+    }
+  }
+}

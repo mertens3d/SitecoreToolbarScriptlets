@@ -4,6 +4,7 @@ import { IDataBucketRestoreDesktop } from '../../../Shared/scripts/Interfaces/ID
 import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
+import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 
 export class PromiseChainRestoreDesktop extends ContentManagerBase {
   constructor(xyyz: ContentHub) {
@@ -82,7 +83,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
   private __waitForAndThenClickCEFromMenuPromise(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      await this.PromiseGen().WaitForThenClick(this.Const().Selector.SC.StartMenuLeftOption, promiseBucket.targetWindow.DataDocSelf)
+      await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.StartMenuLeftOption], promiseBucket.targetWindow.DataDocSelf)
         .then(() => { resolve(promiseBucket); })
         .catch((ex) => { reject(this.__waitForAndThenClickCEFromMenuPromise.name); });
     });
@@ -105,6 +106,14 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     });
   }
 
+  async GoToAndWaitForDesktopPage(promiseBucket: IDataBucketRestoreDesktop) {
+    return new Promise(async (resolve, reject) => {
+      await this.DesktopMan().PromiseGen().SetHrefAndWaitForReady(this.Const().UrlSuffix.Desktop, promiseBucket.targetWindow, scWindowType.Desktop)
+        .then((promiseBucket) => resolve(promiseBucket))
+        .catch((err) => reject(err))
+    });
+  }
+
   async RunOneChain(targetWindow: IDataBrowserWindow, dataToRestore: IDataOneStorageCE) {
     this.debug().FuncStart(this.RunOneChain.name);
 
@@ -121,17 +130,15 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       }
       //this.debug().PromiseBucketDebug(dataBucket, this.RunOneChain.name);
 
-      await
-
-        this.__waitForAndClickRedStartButtonPromise(dataBucket)
-
-          .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
-          .then(dataBucket => this.__waitForIframeCountDiffPromise(dataBucket))
-          .then(dataBucket => this.__waitForIframeReady(dataBucket))
-          .then(dataBucket => this.__restoreDataToOneIframe(dataBucket))
-          .catch(ex => {
-            this.debug().Error(this.RunOneChain.name, ex);
-          });
+      await this.GoToAndWaitForDesktopPage(dataBucket)
+        .then(databucket => this.__waitForAndClickRedStartButtonPromise(dataBucket))
+        .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
+        .then(dataBucket => this.__waitForIframeCountDiffPromise(dataBucket))
+        .then(dataBucket => this.__waitForIframeReady(dataBucket))
+        .then(dataBucket => this.__restoreDataToOneIframe(dataBucket))
+        .catch(ex => {
+          this.debug().Error(this.RunOneChain.name, ex);
+        });
 
       this.debug().FuncEnd(this.RunOneChain.name);
     }

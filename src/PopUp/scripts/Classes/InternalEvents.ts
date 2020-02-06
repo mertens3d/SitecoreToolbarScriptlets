@@ -15,6 +15,11 @@ export class InternalEvents extends CommonEvents{
     this.debug().HndlrClearDebugText(this.debug(), true);
   }
 
+
+  CloseWindow(evt: MouseEvent) {
+    window.close();
+  }
+
    __toggleAccordian(evt: MouseEvent) {
     this.debug().FuncStart(this.__toggleAccordian.name);
 

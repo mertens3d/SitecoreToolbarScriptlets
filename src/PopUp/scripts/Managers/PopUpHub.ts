@@ -9,6 +9,7 @@ import { FeedbackManager } from "./FeedbackManager";
 import { PopConst } from "../Classes/PopConst";
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 import { SettingsManager } from "./SettingsManager";
+//import { PopUpFactoryManager } from "./FactoryManager";
 
 export class PopUpHub {
   debug: PopUpDebug;
@@ -21,15 +22,13 @@ export class PopUpHub {
   SettingsMan: SettingsManager;
   UiMan: UiManager;
   Utilities: Utilities;
+  //FactMan: PopUpFactoryManager;
 
   constructor() {
     this.debug = new PopUpDebug(window);
     this.debug.Enabled = true;
     console.log('enabled? ' + this.debug.Enabled);
     this.PopUpAtticMan = new PopUpAtticManager(this);
-    console.log("asdfasdfsdafa");
-    console.log("dafsadfdsafsdafsaasdfasdfsa");
-    this.debug.LogVal("dddd", "eeee");
     this.PopMsgMan = new PopUpMessagesManager(this);
     this.UiMan = new UiManager(this);
     this.EventMan = new EventManager(this);
@@ -38,6 +37,7 @@ export class PopUpHub {
     this.Utilities = new Utilities(this.debug);
     this.FeedbackMan = new FeedbackManager(this);
     this.SettingsMan = new SettingsManager(this);
+    //this.FactMan = new PopUpFactoryManager(this);
     this.init();
   }
 

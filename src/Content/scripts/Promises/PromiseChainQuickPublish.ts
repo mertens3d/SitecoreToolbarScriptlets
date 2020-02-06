@@ -63,20 +63,20 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
         await this.PromiseGen().WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, this.Const().Selector.SC.Publish.TheItemHasBeenPublished, this.Const().IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
-        await this.PromiseGen().WaitForThenClick(this.Const().Selector.SC.Cancel, dataPublishChain.Iframe0Blue.ContentDoc);
+        await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.Cancel], dataPublishChain.Iframe0Blue.ContentDoc);
       });
 
     return dataPublishChain;
   }
 
   private async __waitForAndClickOk(dataPublishChain: IDataPublishChain) {
-    await this.PromiseGen().WaitForThenClick(this.Const().Selector.SC.Ok, dataPublishChain.messageDialogIframeRed.ContentDoc);
+    await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.Ok], dataPublishChain.messageDialogIframeRed.ContentDoc);
 
     return dataPublishChain;
   }
 
   async __WaitForAndClickPublishNextButton(dataPublishChain: IDataPublishChain) {
-    await this.PromiseGen().WaitForThenClick(this.Const().Selector.SC.NextButton, dataPublishChain.Iframe0Blue.ContentDoc);
+    await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.NextButton], dataPublishChain.Iframe0Blue.ContentDoc);
 
     return dataPublishChain;
   }

@@ -1,5 +1,4 @@
 ﻿import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
-import { IGuid } from "../../../Shared/scripts/Interfaces/IGuid";
 import { ContentHub } from "../Managers/ContentHub";
 import { PromiseGeneric } from "../Promises/PromiseGeneric";
 import { ContentManagerBase } from "../_first/_ContentManagerBase";
@@ -20,7 +19,7 @@ export class Factories extends ContentManagerBase{
   }
 
   async UpdateContentState(response: MsgFromContent) {
-    response.State.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
+    response.State.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany();
     response.State.WindowType = await this.PageDataMan().GetCurrentPageType();
     response.State.Url = this.PageDataMan().TopLevelWindow().DataDocSelf.Document.location.href;
     response.State.ErrorStack = this.debug().ErrorStack;

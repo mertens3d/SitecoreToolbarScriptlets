@@ -14,24 +14,25 @@ export class PopConst {
       HindSiteParentInfo: 'spanParentInfo',
 
       HS: {
-        SelectHeader: 'sel-header',
+        SelectHeaderAuto: 'sel-header-auto',
+        SelectHeaderFavorite: 'sel-header-favorite',
         TabId: 'orig-win-id',
 
         Btn: {
           AdminB: 'AdminB',
-          ToggleFavoriteB: 'ToggleFavorite',
-          Cancel: 'Cancel',
+          MarkFavorite: 'MarkFavorite',
+          HsCancel: 'Cancel',
           CE: 'CE',
           Desktop: 'Desktop',
-          DrawStorage: 'DrawLocalStorage',
+          HsDrawStorage: 'DrawLocalStorage',
           BigRed: 'BigRed',
           ModeEdit: 'Edit',
           ModeNorm: 'Norm',
           ModePrev: 'Prev',
           QuickPublish: 'QuickPublish',
-          RemoveFromStorage: 'RemoveOneFromLocalStorage',
-          RestoreWindowState: 'RestoreWindowState',
-          SaveWindowState: 'SaveWindowState',
+          HsRemoveFromStorage: 'RemoveOneFromLocalStorage',
+          HsRestoreWindowState: 'RestoreWindowState',
+          HsSaveWindowState: 'SaveWindowState',
           UpdateNicknameB: 'UpdateNickname',
         },
         Legend: {
@@ -60,6 +61,9 @@ export class PopConst {
       preview: { AsEnum: scMode.Preview, AsString: 'preview' },
     },
     Selector: {
+      Btn: {
+        WindowClose: '[id=close-window]',
+      },
       HS: {
         iCBoxdSettingsShowDebugData: '[id=id-settings-show-debug-data]',
         iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
@@ -68,7 +72,6 @@ export class PopConst {
         SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',
 
         IdFieldSetDebug: '[id=id-fieldset-debug]',
-        menuOverlay: '[id=id-menu-overlay]',
         SelStateSnapShot: '[id=selState]',
         TaDebug: '[id=ta-debug]',
         TaState: '[id=ta-state]',
@@ -89,7 +92,7 @@ export class PopConst {
     },
     Timeouts: {
       WaitBeforeRemovingCompleteFlag: 1500,
-      AutoSaveInterval: 15000,
+      AutoSaveInterval: 1000,
       AutoLoginCheckInterval: 3000,
     },
   }

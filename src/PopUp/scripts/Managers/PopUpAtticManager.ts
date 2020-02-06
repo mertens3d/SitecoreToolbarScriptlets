@@ -88,16 +88,16 @@ export class PopUpAtticManager extends PopUpManagerBase {
     var toReturn: IDataPopUpSettings;
 
     await browser.storage.local.get().then((storageResults) => {
-      this.debug().LogVal('storageResults', JSON.stringify(storageResults));
+      //this.debug().LogVal('storageResults', JSON.stringify(storageResults));
       var noteKeys = Object.keys(storageResults);
 
       for (let noteKey of noteKeys) {
         var curValue = storageResults[noteKey];
-        this.debug().LogVal('noteKey', noteKey);
-        this.debug().LogVal('curValue', JSON.stringify(curValue));
+        //this.debug().LogVal('noteKey', noteKey);
+        //this.debug().LogVal('curValue', JSON.stringify(curValue));
 
         if (noteKey === 'settings') {
-          this.debug().Log('storage match found');
+          //this.debug().Log('storage match found');
           toReturn = JSON.parse(curValue.toString());
         }
       }

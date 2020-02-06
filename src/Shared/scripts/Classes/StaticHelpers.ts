@@ -1,6 +1,11 @@
 ﻿import { MsgFlag } from "../Enums/MessageFlag";
+import { scWindowType } from "../Enums/scWindowType";
 
 export class StaticHelpers {
+  static WindowTypeAsString(windowType: scWindowType) {
+    return scWindowType[windowType];
+  }
+
   static BufferString(str: string, desiredLength: number, buffChar = ' ', bufferLEft: Boolean = true, useNbsp: boolean = true): string {
     var toReturn = str;
 

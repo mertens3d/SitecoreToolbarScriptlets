@@ -12,6 +12,7 @@ import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
 import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
+import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 
 //var browser = browser || {};
 
@@ -79,8 +80,8 @@ export class ContentMessageManager extends ContentManagerBase {
   AutoSaveSnapShot() {
     this.debug().FuncStart(this.AutoSaveSnapShot.name);
     var SnapShotSettings: IDataPayloadSnapShot = {
-      SnapShotNewNickname: 'Auto',
-      SnapShotIsAuto: true
+      SnapShotNewNickname: '',
+      Flavor: SnapShotFlavor.Autosave
     }
 
     this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().TopLevelWindow(), SnapShotSettings);
@@ -161,7 +162,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
       case MsgFlag.ReqAddCETab:
         await this.PromiseGen().RaceWaitAndClick(this.Const().Selector.SC.scStartButton, this.PageDataMan().TopLevelWindow().DataDocSelf)
-          .then(() => { this.PromiseGen().WaitForThenClick(this.Const().Selector.SC.StartMenuLeftOption, this.PageDataMan().TopLevelWindow().DataDocSelf) });
+          .then(() => { this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.StartMenuLeftOption], this.PageDataMan().TopLevelWindow().DataDocSelf) });
         break;
 
       case MsgFlag.ReqAdminB:
@@ -193,6 +194,10 @@ export class ContentMessageManager extends ContentManagerBase {
         this.locMan().ChangeLocationSwitchBoard(scWindowType.ContentEditor, this.PageDataMan().TopLevelWindow());
         break;
 
+      case MsgFlag.ReqMarkFavorite:
+        this.AtticMan().MarkFavorite(payload.Data)
+        break;
+
       case MsgFlag.ReqQuickPublish:
         var targetWin = this.PageDataMan().TopLevelWindow();
         await this.OneWinMan().PublishActiveCE(targetWin);
@@ -212,7 +217,13 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqTakeSnapShot:
-        this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().TopLevelWindow(), payload.Data.SnapShotSettings);
+        this.OneWinMan().SaveWindowState(this.PageDataMan().TopLevelWindow(), payload.Data.SnapShotSettings);
+        break;
+
+      case MsgFlag.RemoveFromStorage:
+        await this.AtticMan().RemoveOneFromStorage(payload.Data.IdOfSelect)
+          .then(() => response.State.LastReqSuccessful = true)
+          .catch(() => response.State.LastReqSuccessful = false);
         break;
 
       case MsgFlag.RespTaskSuccessful:
@@ -223,7 +234,7 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       default:
-        this.debug().LogVal('Unrecognized MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+        this.debug().Error('Unrecognized MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
         break;
     }

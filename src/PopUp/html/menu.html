@@ -8,7 +8,11 @@
   <link href='PopUp.min.css' rel='stylesheet' type='text/css' />
 </head>
 <body>
-  <div class="build-stamp" id="build-stamp"></div>
+  <div class="header">
+
+    <div class="build-stamp" id="build-stamp"></div>
+    <div class="close-window" id="close-window"></div>
+  </div>
   <form>
     <fieldset>
       <legend id='lgnd-state' data-setting='lgnd-settings'>State</legend>
@@ -50,7 +54,7 @@
           <button id='SaveWindowState' type='button' class="icon take-snapshot">Take Snapshot</button>
           <input type='text' id='inputNickname' value='' placeholder='Nick Name' />
           <button id='UpdateNickname' type='button' class="icon set-nickname">Set Nickname</button>
-          <button id='ToggleFavorite' type='button' class="icon favorite">Toggle Favorite</button>
+          <button id='MarkFavorite' type='button' class="icon favorite">Mark Favorite</button>
           <button id='RemoveOneFromLocalStorage' type='button' class="icon delete-snapshot">Delete Snapshot</button>
 
           <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
