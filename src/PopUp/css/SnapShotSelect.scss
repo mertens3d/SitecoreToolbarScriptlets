@@ -3,9 +3,14 @@
 select {
   /*height: 50px;*/
   font-family: Courier New, Courier, monospace;
-  width: 100%;
+  width: calc(100% - (2 * #{$hsTypMargin}) + 2px);
+  margin: $hsTypMargin;
 
   option {
+    &.favorite {
+      background-color: #E0B406;
+    }
+
     color: black;
     font-family: Courier New, Courier, monospace;
     padding: 0;
@@ -16,7 +21,7 @@ select {
     font-family: Courier New, Courier, monospace;
 
     &.title {
-      color: lightgreen;
+      color: $hsDarkerGray;
       font-family: Courier New, Courier, monospace;
     }
   }

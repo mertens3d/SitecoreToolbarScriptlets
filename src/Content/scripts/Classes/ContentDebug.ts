@@ -10,8 +10,10 @@ import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgPayloadRequestF
 import { IDataContentPrefs } from "../../../Shared/scripts/Interfaces/IDataContentPrefs";
 import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
+import { IDataPayloadSnapShot } from "../../../Shared/scripts/Classes/IDataPayloadSnapShot";
 
 export class ContentDebug extends BaseDebug {
+
   DebugMsgFromPopUp(reqMsgFromPopup: MsgFromPopUp) {
     if (this.IsNotNullOrUndefinedBool('MsgFromPopUp', reqMsgFromPopup)){
       this.LogVal('requestMsgFromPopup', JSON.stringify(reqMsgFromPopup));
@@ -22,12 +24,22 @@ export class ContentDebug extends BaseDebug {
     }
   }
 
-  DebugPayloadDataFromPopUp(Data: PayloadDataFromPopUp) {
-    if (this.IsNotNullOrUndefinedBool('PayloadDataFromPopUp', Data)) {
-      this.LogVal('idOfSelect', Data.IdOfSelect);
-      this.DebugIGuid(Data.IdOfSelect);
+  DebugPayloadDataFromPopUp(data: PayloadDataFromPopUp) {
+    if (this.IsNotNullOrUndefinedBool('PayloadDataFromPopUp', data)) {
+      this.LogVal('idOfSelect', data.IdOfSelect);
+      this.DebugIGuid(data.IdOfSelect);
+      this.DebugIDataPayloadSnapShot(data.SnapShotSettings);
     }
   }
+
+  DebugIDataPayloadSnapShot(snapShotSettings: IDataPayloadSnapShot) {
+    if (this.IsNotNullOrUndefinedBool('IDataPayloadSnapShot', snapShotSettings)) {
+      this.LogVal('Flavor', StaticHelpers.FlavorAsString(snapShotSettings.Flavor))
+      this.LogVal('Nickname', snapShotSettings.SnapShotNewNickname);
+
+    }
+  }
+
 
   DebugIDataContentPrefs(prefs: IDataContentPrefs) {
     if (this.IsNotNullOrUndefinedBool('MaxAutoSaveCount', prefs.MaxAutoSaveCount)) {

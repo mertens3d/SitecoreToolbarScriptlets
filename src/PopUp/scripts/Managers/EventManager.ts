@@ -45,8 +45,12 @@ export class EventManager extends PopUpManagerBase {
         Command: MenuCommand.MarkFavorite,
         ButtonSelector: this.PopConst().ElemId.HS.Btn.MarkFavorite,
         RequiredPageTypes: []
-      }
-
+      },
+      {
+        Command: MenuCommand.TakeSnapShot,
+        ButtonSelector: this.PopConst().ElemId.HS.Btn.HsSaveWindowState,
+        RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop]
+      },
     ]
     this.debug().FuncEnd(this.BuildAllCommands.name);
   }
@@ -85,16 +89,12 @@ export class EventManager extends PopUpManagerBase {
     this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.HsDrawStorage, (evt) => this.ExternalCall.__DrawStorage(evt));
     this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.HsRemoveFromStorage, (evt) => this.ExternalCall.HndlrSnapShotRemove(evt));
     this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.HsRestoreWindowState, (evt) => { this.ExternalCall.HndlrSnapShotRestore(evt); });
-    this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.HsSaveWindowState, (evt) => { this.ExternalCall.__hndlrSnapShotCreate(evt) });
+
 
     this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.MarkFavorite), (evt) => this.ExternalCall.MarkFavorite(evt));
+    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.TakeSnapShot), (evt) => { this.ExternalCall.__hndlrSnapShotCreate(evt) });
 
-
-
-
-
-
-
+          
 
     this.UiMan().AssignOnClickEvent(this.PopConst().ElemId.HS.Btn.BigRed, () => this.ExternalCall.__hndlrAddCETab);
 

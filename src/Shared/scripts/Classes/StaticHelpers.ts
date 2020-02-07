@@ -3,8 +3,13 @@ import { scWindowType } from "../Enums/scWindowType";
 import { CacheMode } from "../Enums/CacheMode";
 import { BufferDirection } from "../Enums/BufferDirection";
 import { BufferUseNbsp, BufferChar } from "../Enums/BufferChar";
+import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 
 export class StaticHelpers {
+  static FlavorAsString(flavor: SnapShotFlavor): string {
+    return 'Flavor.' + SnapShotFlavor[flavor] + '(' + flavor + ')';
+  }
+
   static CacheModeAsString(cacheMode: CacheMode): string {
     return 'CacheMode.' + CacheMode[cacheMode] + ' (' + cacheMode + ')';
   }
@@ -28,9 +33,6 @@ export class StaticHelpers {
     else if (buffCharEnum == BufferChar.Zero) {
       buffChar = '0';
     }
-
-
-
 
     if (toReturn.length > desiredLength) {
       if (desiredLength > 6) {

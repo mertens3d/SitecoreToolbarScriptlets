@@ -1,5 +1,6 @@
 ﻿export enum SnapShotFlavor {
     Unknown,
     Autosave,
-    Favorite
+    Favorite,
+    Manual
 }

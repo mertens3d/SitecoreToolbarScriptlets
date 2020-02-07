@@ -153,7 +153,7 @@ export class BaseDebug {
 
     textVal = textVal.toString();
 
-    textValName = StaticHelpers.BufferString(textValName.toString(), 26, BufferChar.space, BufferDirection.left);
+    textValName = StaticHelpers.BufferString(textValName.toString(), 26, BufferChar.space, BufferDirection.right);
 
     const debugPrefix = '  ~~~  ';
 

@@ -155,6 +155,9 @@ export class ContentMessageManager extends ContentManagerBase {
   async ReqMsgRouter(payload: MsgFromPopUp) {
     this.debug().FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
+    this.debug().DebugMsgFromPopUp(payload);
+
+
     var response: MsgFromContent = await this.Factoryman().NewMsgFromContent();
 
     switch (payload.MsgFlag) {

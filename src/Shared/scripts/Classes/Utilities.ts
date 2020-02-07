@@ -38,7 +38,7 @@ export class Utilities {
       + this.colSep + StaticHelpers.BufferString('Type', this.lenPageType, BufferChar.Period, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString('Nickname', this.lenNickname, BufferChar.Period, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString('Active Node.', this.lenActiveNode, BufferChar.Period, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString('Fav.',this. lenFavorite, BufferChar.Period, BufferDirection.right)
+      + this.colSep + StaticHelpers.BufferString('Fav.', this.lenFavorite, BufferChar.Period, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString('Id', this.lenShortId, BufferChar.Period, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString('#CE', this.lenCeCount, BufferChar.Period, BufferDirection.right)
 
@@ -55,11 +55,9 @@ export class Utilities {
     } else if (data.WindowType === scWindowType.Desktop) {
       typeStr = 'Desktop';
     }
-    
+
     //= (data.WindowType === scWindowType.Unknown) ? '?' : scWindowType[data.WindowType];
 
-
-    
     var activeCeNode: string = '';
 
     for (var idx = 0; idx < data.AllCEAr.length; idx++) {
@@ -67,12 +65,15 @@ export class Utilities {
       for (var jdx = 0; jdx < candidateCe.AllTreeNodeAr.length; jdx++) {
         var candidateNode = candidateCe.AllTreeNodeAr[jdx];
         if (candidateNode.IsActive) {
-          activeCeNode = candidateNode.NodeFriendly;
+          var lvl2Node: string = '';
+          if (jdx >= 2) {
+            lvl2Node = candidateCe.AllTreeNodeAr[1].NodeFriendly + '/';
+          }
+          activeCeNode = lvl2Node +  candidateNode.NodeFriendly;
           break;
         }
       }
     }
-
 
     let toReturn = StaticHelpers.BufferString(this.MakeFriendlyDate(data.TimeStamp), this.lenTimestamp, BufferChar.space, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString(typeStr, this.lenPageType, BufferChar.Nbsp, BufferDirection.right)
@@ -80,7 +81,6 @@ export class Utilities {
       + this.colSep + StaticHelpers.BufferString(activeCeNode, this.lenActiveNode, BufferChar.Nbsp, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString((data.Flavor == SnapShotFlavor.Favorite ? '*' : ''), this.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
       //+ this.colSep + StaticHelpers.BufferString((data.Flavor == SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
-
 
       + this.colSep + StaticHelpers.BufferString(data.Id.AsShort, this.lenShortId, BufferChar.Nbsp, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString(data.AllCEAr.length.toString(), this.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
@@ -107,7 +107,7 @@ export class Utilities {
     var hourClean = hoursRaw ? hoursRaw : 12; // the hour '0' should be '12'
     var hourCleanStr: string = StaticHelpers.BufferString(hourClean.toString(), 2, BufferChar.Zero, BufferDirection.left);
 
-    //year + '.' + 
+    //year + '.' +
     var toReturn = month + '.' + day + ' ' + hourCleanStr + ':' + min + ' ' + ampm;
     return toReturn;
   }

@@ -2,5 +2,6 @@
     Edit,
     Unknown,
     MarkFavorite,
-    CloseWindow
+    CloseWindow,
+    TakeSnapShot
 }

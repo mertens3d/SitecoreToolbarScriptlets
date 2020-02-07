@@ -620,6 +620,10 @@ export class UiManager extends PopUpManagerBase {
             var el = <HTMLOptionElement>window.document.createElement('option');
             el.innerHTML = this.PopHub.Utilities.TimeNicknameFavStr(data);
 
+            if (data.Flavor === SnapShotFlavor.Favorite) {
+              el.classList.add('favorite');
+            }
+
             el.value = data.Id.AsString;
             if (data.Id === this.__selectSnapshotId) {
               el.selected = true;

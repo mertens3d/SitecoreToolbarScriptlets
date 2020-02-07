@@ -5,6 +5,22 @@
 @import 'header.scss';
 @import 'SnapShotSelect.scss';
 
+body {
+  /*background-image: $scBackgroundImage;*/
+  /*background-size: cover;*/
+  background-color: none;
+  /*background-repeat: no-repeat;*/
+  color: $scTextColorNorm;
+  overflow: auto;
+  font-family: $scFontFamily;
+  margin: 0;
+}
+
+form {
+  margin: 5px;
+  background-color: $hsBackgroundColor;
+}
+
 .light-text {
   color: $scTextColorLight;
 }
@@ -13,14 +29,11 @@
   background-color: red;
 }
 
-
 .admin-b-icon {
   background-image: url(/~/icon/office/32x32/log_in.png);
   background-repeat: no-repeat;
   background-position: top;
 }
-
-
 
 .mono {
   font-family: Courier New, Courier, monospace;
@@ -33,14 +46,18 @@
 }
 
 fieldset {
+  background-color: $scBackgroundColor;
+  border: none;
   display: flex;
   flex-wrap: wrap;
-  background-color: $scBackgroundColor;
-  padding-top: 14px;
+  margin: 1px;
+  padding: 0;
 }
 
 .accordian-content {
   /*display: flex;*/
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 legend {
@@ -50,25 +67,34 @@ legend {
   border: none;
   color: white;
   cursor: pointer;
-  display: flex;
-  float: left;
-  left: -12px;
+  /*display: flex;*/
+  /*float: left;*/
+  /*left: -12px;*/
   margin-top: 0;
   padding-top: 0;
+  padding-left: 10px;
   position: relative;
   top: -12px;
-  width: 100%;
+  width: calc(100% - (2 * #{$hsTypMargin}) + 2px);
+  height: $scSectionTitleHeight;
+
+  .scEditorSectionCaptionGlyph {
+    float: right;
+    margin: 10px 15px 0 0;
+  }
+
+  &.expanded {
+    border-left: 5px solid $scRed;
+  }
 
   &:after {
-    content: url($scAccordianUp);
+    content: url($sc_AccordianUp);
     font-size: 13px;
     color: #777;
     float: right;
     margin-left: 5px;
   }
 }
-
-
 
 .in {
   display: none;
@@ -80,15 +106,6 @@ legend {
   margin: $margin;
   padding: $padding;
   vertical-align: top;
-}
-
-body {
-  background-image: $scBackgroundImage;
-  background-size: cover;
-  background-color: $scBackgroundColor;
-  overflow: auto;
-  color: $scTextColorNorm;
-  background-repeat: no-repeat;
 }
 
 .ta-wrapper {
@@ -107,6 +124,7 @@ body {
   display: inline-block;
   width: $MaxScrollerWidth;
   overflow: scroll;
+  margin: $hsTypMargin;
 }
 
 textarea {

@@ -3,6 +3,7 @@ import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgPayloadRequestF
 import { IsScMode } from "../../../Shared/scripts/Interfaces/IscMode";
 import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDataReqPopUp";
+import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 
 export class ExternalEvents extends CommonEvents {
   async __hndlrAddCETab() {
@@ -49,7 +50,6 @@ export class ExternalEvents extends CommonEvents {
   async __hndlrQuickPublish(evt: MouseEvent) {
     this.__initNewOperation();
     this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqQuickPublish, this.PopHub))
-
   }
 
   HndlrSnapShotRemove(evt: any) {
@@ -107,6 +107,8 @@ export class ExternalEvents extends CommonEvents {
   }
   async __hndlrSnapShotCreate(evt: MouseEvent) {
     this.__initNewOperation();
-    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqTakeSnapShot, this.PopHub));
+    var msg = new MsgFromPopUp(MsgFlag.ReqTakeSnapShot, this.PopHub);
+    msg.Data.SnapShotSettings.Flavor = SnapShotFlavor.Manual;
+    await this.MsgMan().SendMessageToContent(msg);
   }
 }

@@ -8,22 +8,16 @@
   <link href='PopUp.min.css' rel='stylesheet' type='text/css'>
 </head>
 <body>
-  <div class='header'>
 
-    <div class='build-stamp' id='build-stamp'></div>
-    <div class='close-window' id='close-window'></div>
-  </div>
   <form>
-    <fieldset>
-      <legend id='lgnd-state' data-setting='lgnd-settings'>State</legend>
-      <div class='accordian-content flex-container'>
-        <div class='col-full'>
-          <div class='scroller'>
-            <textarea id='ta-state' disabled='disabled'></textarea>
-          </div>
-        </div>
-      </div>
-    </fieldset>
+    <div class='header'>
+      <div class='build-stamp' id='build-stamp'></div>
+      <div class='close-window' id='close-window'></div>
+    </div>
+    <div class='header-push'></div>
+
+
+
     <fieldset>
       <legend id='lgnd-fore-site'>Fore&bull;Site</legend>
       <div class='accordian-content flex-container'>
@@ -46,7 +40,7 @@
           <div class='col-full'>
 
             <!--<input type='checkbox' /> todo favorites only-->
-            <select id='selState' size='6'>
+            <select id='selState' size='10'>
             </select>
           </div>
         </div>
@@ -54,7 +48,7 @@
           <button id='SaveWindowState' type='button' class='icon take-snapshot'>Take Snapshot</button>
           <input type='text' id='inputNickname' value='' placeholder='Nick Name'>
           <button id='UpdateNickname' type='button' class='icon set-nickname'>Set Nickname</button>
-          <button id='MarkFavorite' type='button' class='icon favorite'>Mark Favorite</button>
+          <button id='MarkFavorite' type='button' class='icon btn-favorite'>Mark Favorite</button>
           <button id='RemoveOneFromLocalStorage' type='button' class='icon delete-snapshot'>Delete Snapshot</button>
 
           <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
@@ -77,6 +71,23 @@
         </div>
       </div>
     </fieldset>
+
+    <fieldset>
+      <legend id='lgnd-state' data-setting='lgnd-settings'>
+        State
+
+        <img src='/icons/accordion_up.png' class='scEditorSectionCaptionGlyph' alt='' border='0'>
+      </legend>
+      <div class='accordian-content flex-container'>
+        <div class='col-full'>
+          <div class='scroller'>
+            <textarea id='ta-state' disabled='disabled'></textarea>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+
 
     <fieldset id='id-fieldset-debug'>
       <legend id='lgnd-debug' data-setting='lgnd-debug'>Debug Info <span id='spanParentInfo'></span></legend>

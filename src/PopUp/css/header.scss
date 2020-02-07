@@ -1,7 +1,23 @@
 ﻿@import "vars";
 
+
+
+.header-push {
+  height: 37px;// don't know why this isn't right $headerHeight;
+  position: relative;
+  
+}
+
 .header {
+  background-color: $sc_Black;
+  color: $sc_White;
+  height: $headerHeight;
+  left: 0;
+  position: fixed;
   text-align: right;
+  top: 0;
+  width: 100%;
+  z-index: 100;
 
   .build-stamp {
     text-align: right;
@@ -13,9 +29,11 @@
     text-align: right;
     display: inline-block;
     padding: 4px;
+    padding-right: 19px;
+    color: $sc_White;
 
     &:hover {
-      background-color: $scHoverColor;
+      background-color: $scRed;
       cursor: pointer;
     }
 

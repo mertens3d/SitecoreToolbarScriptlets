@@ -1,21 +1,6 @@
 ﻿@import 'vars.scss';
 
-$sc_add: url(/~/icon/applicationsv2/32x32/add.png);
-$sc_camera_1: url("/~/icon/apps/32x32/Camera (1).png");
-$sc_delete: url("/~/icon/applicationsv2/32x32/delete.png");
-$sc_desktop: url(/temp/iconcache/apps/48x48/windows%20table.png);
-$sc_heart: url("/~/icon/applicationsv2/32x32/heart.png");
-$sc_layout_details: url(/temp/iconcache/office/24x24/layout_details.png);
-$sc_log_in: url(/~/icon/office/32x32/log_in.png);
-$sc_open_document: url("/~/icon/core3/32x32/open_document.png");
-$sc_paint: url("/~/icon/apps/32x32/Paint.png");
-$sc_pencil: url(/temp/iconcache/apps/48x48/pencil.png);
-$sc_preview: url(/~/icon/apps/32x32/Preview.png);
-$sc_publish: url(/temp/iconcache/office/24x24/publish.png);
-$sc_rename: url( /~/icon/core/32x32/rename.png);
-$sc_sign_stop: url(/~/icon/applicationsv2/32x32/sign_stop.png);
-$sc_store: url( /~/icon/office/32x32/store.png);
-$sc_web: url("/~/icon/network/32x32/web.png");
+
 
 
 button {
@@ -29,7 +14,7 @@ button {
   cursor: pointer;
   height: $scLaunchPageButtonHeight;
   height: 60px;
-  margin: 7px;
+  margin: $hsTypMargin;
   padding-top: 26px;
   vertical-align: top;
   white-space: normal;
@@ -62,7 +47,7 @@ button {
   background-image: $sc_delete;
 }
 
-.favorite {
+.btn-favorite {
   background-image: $sc_heart;
 }
 
