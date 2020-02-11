@@ -162,7 +162,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      candidate.Id = this.Xyyz.GuidMan.ParseGuid(candidate.Id.AsString);
+      candidate.Id = this.ContentHub.GuidMan.ParseGuid(candidate.Id.AsString);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {
@@ -216,15 +216,15 @@ export class ContentAtticManager extends ContentManagerBase {
         var candidate = this.CachedWindowStorage.CurrentSnapShots[idx];
 
         if (candidate.Flavor) {
-          if (autoCount > this.Const().MaxAutoToSave) {
-            this.debug().LogVal('marking for delete (max count)', candidate.TimeStamp.toString());
+          if (autoCount > this.Const().MaxAutoToSaveCount) {
+            this.debug().LogVal('Delete (max count :' + this.Const().MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
             deleteFlag = true;
           }
           autoCount++;
         }
 
         if (now.getTime() - candidate.TimeStamp.getTime() > maxAutoSaveDiff) {
-          this.debug().LogVal('marking for delete (old)', candidate.TimeStamp.toString());
+          this.debug().LogVal('Delete (Old : max' + this.Const().MaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
           deleteFlag = true;
         }
 
@@ -316,7 +316,7 @@ export class ContentAtticManager extends ContentManagerBase {
         if (targetId) {
           var storageMatch: IDataOneWindowStorage = await this.GetFromStorageById(targetId, CacheMode.OkToUseCache)
           if (storageMatch) {
-            var result: boolean = confirm('Remove ?: ' + this.Xyyz.Utilities.TimeNicknameFavStrForConfirmation(storageMatch));
+            var result: boolean = confirm('Remove ?: ' + this.ContentHub.Utilities.TimeNicknameFavStrForConfirmation(storageMatch));
             if (result === true) {
               this.debug().LogVal('Key to Delete', storageMatch.RawData.key);
               await window.localStorage.removeItem(storageMatch.RawData.key);

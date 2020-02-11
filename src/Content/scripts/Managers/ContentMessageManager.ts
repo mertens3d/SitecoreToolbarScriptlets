@@ -86,31 +86,45 @@ export class ContentMessageManager extends ContentManagerBase {
       Flavor: SnapShotFlavor.Autosave
     }
 
-    this.Xyyz.OneWindowMan.SaveWindowState(this.PageDataMan().TopLevelWindow(), SnapShotSettings);
+    this.OneWinMan().SaveWindowState(this.PageDataMan().TopLevelWindow(), SnapShotSettings);
     this.debug().FuncEnd(this.AutoSaveSnapShot.name);
   }
 
   async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp) {
-    this.debug().FuncStart(this.ContentReceiveRequest.name);
+    return new Promise(async (resolve, reject) => {
+      this.debug().FuncStart(this.ContentReceiveRequest.name);
 
-    this.debug().DebugMsgFromPopUp(reqMsgFromPopup);
+      this.debug().DebugMsgFromPopUp(reqMsgFromPopup);
+      this.debug().MarkerA();
 
-    var response: MsgFromContent;// = new MsgFromContent(MsgFlag.TestResponse);
+      var response: MsgFromContent;// = new MsgFromContent(MsgFlag.TestResponse);
 
-    if (reqMsgFromPopup) {
-      reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
-      if (reqMsgFromPopup.IsValid) {
-        this.ScheduleIntervalTasks(reqMsgFromPopup);
-        response = await this.ReqMsgRouter(reqMsgFromPopup);
+      this.debug().MarkerB();
+      if (reqMsgFromPopup) {
+        this.debug().MarkerC();
+        reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
+        if (reqMsgFromPopup.IsValid) {
+          this.debug().MarkerD();
+          this.ScheduleIntervalTasks(reqMsgFromPopup);
+          response = await this.ReqMsgRouter(reqMsgFromPopup);
+        }
       }
-    }
-    else {
-      response.MsgFlag = MsgFlag.RespError;
-      this.debug().Error(this.ValidateRequest.name, 'no request');
-    }
+      else {
+        this.debug().MarkerE();
+        response = new MsgFromContent(MsgFlag.RespError);
+        this.debug().Error(this.ContentReceiveRequest.name, 'no request');
+      }
 
-    this.debug().FuncEnd(this.ContentReceiveRequest.name);
-    return Promise.resolve(response);
+      this.debug().MarkerF();
+      this.debug().FuncEnd(this.ContentReceiveRequest.name);
+
+      if (response.MsgFlag != MsgFlag.RespError) {
+        resolve(response);
+      } else {
+        reject(response);
+      }
+    })
+    //return Promise.resolve(response);
   }
 
   Init() {
@@ -157,7 +171,6 @@ export class ContentMessageManager extends ContentManagerBase {
 
     this.debug().DebugMsgFromPopUp(payload);
 
-
     var response: MsgFromContent = await this.Factoryman().NewMsgFromContent();
 
     switch (payload.MsgFlag) {
@@ -175,6 +188,13 @@ export class ContentMessageManager extends ContentManagerBase {
         this.debug().DebugPageDataMan(this.PageDataMan());
 
         this.locMan().AdminB(this.PageDataMan().TopLevelWindow().DataDocSelf, null);
+        break;
+
+      case MsgFlag.Ping:
+        this.debug().LogVal('Ping', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+        if (this.ReadyForMessages) {
+          response.MsgFlag = MsgFlag.RespListeningAndReady;
+        }
         break;
 
       //case MsgFlag.GetAllStorageOneWindow:
@@ -279,7 +299,7 @@ export class ContentMessageManager extends ContentManagerBase {
         var targetWindow: IDataBrowserWindow = await this.PageDataMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
 
         if (targetWindow) {
-          await self.Xyyz.OneWindowMan.RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage)
+          await self.OneWinMan().RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage)
             .then(() => this.respondSuccessful())
             .catch((failReason) => this.respondFail(failReason))
         }

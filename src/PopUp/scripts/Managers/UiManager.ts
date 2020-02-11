@@ -25,7 +25,7 @@ import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 
 export class UiManager extends PopUpManagerBase {
   private __selectSnapshotId: IGuid;
-  OperationCancelled: any;
+  
   TabId: string;
   ParentFocused: boolean = false;
   MenuFocused: boolean = true;
@@ -261,7 +261,7 @@ export class UiManager extends PopUpManagerBase {
 
   SelectChanged(): void {
     this.debug().FuncStart(this.SelectChanged.name);
-    this.__selectSnapshotId = this.GuidMan().ParseGuid(this.__getSelectElem().value);
+    this.__selectSnapshotId = this.GuidHelper().ParseGuid(this.__getSelectElem().value);
     //this.debug().Log('new index :' + this.__selectSnapshotId);
 
     //if (e.ctrlKey) {
@@ -277,7 +277,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   SetCancelFlag() {
-    this.OperationCancelled = true;
+    //todo this.OperationCancelled = true;
     var btn = this.__GetCancelButton();
     if (btn) {
       btn.classList.add('red');
@@ -289,7 +289,7 @@ export class UiManager extends PopUpManagerBase {
     if (btn) {
       btn.classList.remove('red');
     }
-    this.UiMan().OperationCancelled = false;
+   //todo this.UiMan().OperationCancelled = false;
   }
 
   async __refreshSettings() {
@@ -432,7 +432,7 @@ export class UiManager extends PopUpManagerBase {
     if (targetSel) {
       var selectedValue: string = targetSel.value;
       if (selectedValue) {
-        toReturn = this.GuidMan().ParseGuid(selectedValue);
+        toReturn = this.GuidHelper().ParseGuid(selectedValue);
       }
       //var optionsLength = targetSel.options.length;
       //if (this.__selectSnapshotId < optionsLength) {
@@ -444,7 +444,7 @@ export class UiManager extends PopUpManagerBase {
 
     if (!toReturn) {
       this.debug().Log('using empty guid');
-      toReturn = this.GuidMan().EmptyGuid();
+      toReturn = this.GuidHelper().EmptyGuid();
     }
 
     this.debug().DebugIGuid(toReturn);
@@ -641,7 +641,7 @@ export class UiManager extends PopUpManagerBase {
         targetSel.appendChild(headers.AutoTitle);
         targetSel.appendChild(headers.Auto);
 
-        if (!this.__selectSnapshotId || this.__selectSnapshotId === this.GuidMan().EmptyGuid()) {
+        if (!this.__selectSnapshotId || this.__selectSnapshotId === this.GuidHelper().EmptyGuid()) {
           targetSel.selectedIndex = 0;
         }
       }

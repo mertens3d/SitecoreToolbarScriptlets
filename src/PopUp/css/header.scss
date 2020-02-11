@@ -1,11 +1,8 @@
 ﻿@import "vars";
 
-
-
 .header-push {
-  height: 37px;// don't know why this isn't right $headerHeight;
+  height: 15px; // don't know why this isn't right $headerHeight;
   position: relative;
-  
 }
 
 .header {
@@ -20,17 +17,17 @@
   z-index: 100;
 
   .build-stamp {
-    text-align: right;
     display: inline-block;
     font-size: 12px;
+    text-align: right;
   }
 
   .close-window {
-    text-align: right;
+    color: $sc_White;
     display: inline-block;
     padding: 4px;
     padding-right: 19px;
-    color: $sc_White;
+    text-align: right;
 
     &:hover {
       background-color: $scRed;
@@ -38,11 +35,11 @@
     }
 
     &::before {
+      color: $sc_White;
       content: 'X';
-      color: black;
-      font-weight: 300;
       font-family: Arial, sans-serif;
       font-size: 16px;
+      font-weight: 300;
     }
   }
 }

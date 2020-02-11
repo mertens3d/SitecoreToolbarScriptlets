@@ -14,8 +14,6 @@ export class LocationManager extends ContentManagerBase {
     xyyz.debug.FuncEnd(LocationManager.name);
   }
 
-
-
   ChangeLocationSwitchBoard(desiredPageType: scWindowType, targetWindow: IDataBrowserWindow, iteration: number = this.Const().Iterations.MaxIterationSwitchBoard) {
     this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType] + ' iteration: ' + iteration + ':' + this.Const().Iterations.MaxIterationSwitchBoard);
 
@@ -49,12 +47,13 @@ export class LocationManager extends ContentManagerBase {
         }
 
         if (desiredPageType === scWindowType.Desktop && currentState !== scWindowType.Desktop) {
-          this.PromiseGen().SetHrefAndWaitForReady(this.Const().UrlSuffix.Desktop, targetWindow, desiredPageType)
+          this.PromiseGen().SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, targetWindow, desiredPageType)
+            //.then(() => this.MsgMan().wa)
             .then(() => callBackOnSuccessfulHrefChange);
         }
 
         else if (desiredPageType === scWindowType.ContentEditor && currentState !== scWindowType.ContentEditor) {
-          this.PromiseGen().SetHrefAndWaitForReady(this.Const().UrlSuffix.CE, targetWindow, desiredPageType)
+          this.PromiseGen().SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.CE, targetWindow, desiredPageType)
             .then(() => callbackOnComplete);
         }
 
@@ -94,7 +93,7 @@ export class LocationManager extends ContentManagerBase {
         }
 
         if (dataOneDoc) {
-          var AllTreeNodeAr: IDataOneTreeNode[] = this.Xyyz.OneTreeMan.GetOneLiveTreeData(dataOneDoc);
+          var AllTreeNodeAr: IDataOneTreeNode[] = this.ContentHub.OneTreeMan.GetOneLiveTreeData(dataOneDoc);
 
           for (var idx = 0; idx < AllTreeNodeAr.length; idx++) {
             var candidate: IDataOneTreeNode = AllTreeNodeAr[idx];
@@ -173,8 +172,5 @@ export class LocationManager extends ContentManagerBase {
       this.debug().Error(this.AdminB.name, 'No Username or password field');
     }
     this.debug().FuncEnd(this.AdminB.name);
-  }
-  QkID() {
-    return this.Const().ElemId;
   }
 }

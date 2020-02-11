@@ -29,13 +29,13 @@ export class OneWindowManager extends ContentManagerBase {
     if (currentPageType === scWindowType.ContentEditor) {
       this.debug().Log('is Content Editor');
 
-      var id = this.Xyyz.GuidMan.EmptyGuid();
+      var id = this.ContentHub.GuidMan.EmptyGuid();
 
-      this.Xyyz.OneCEMan.SaveStateOneContentEditor(id, targetWindow.DataDocSelf, snapShotSettings);
+      this.ContentHub.OneCEMan.SaveStateOneContentEditor(id, targetWindow.DataDocSelf, snapShotSettings);
     }
     else if (currentPageType === scWindowType.Desktop) {
       this.debug().Log('is Desktop');
-      this.Xyyz.OneDesktopMan.SaveStateOneDesktop(targetWindow, snapShotSettings);
+      this.ContentHub.OneDesktopMan.SaveStateOneDesktop(targetWindow, snapShotSettings);
     } else {
       this.debug().Error(this.SaveWindowState.name, 'Invalid page location ' + currentPageType);
     }
@@ -100,7 +100,7 @@ export class OneWindowManager extends ContentManagerBase {
     this.debug().Log('docToPublish', this.debug().IsNullOrUndefined(docToPublish));
 
     if (docToPublish) {
-      var publishChain: PromiseChainQuickPublish = new PromiseChainQuickPublish(this.Xyyz);
+      var publishChain: PromiseChainQuickPublish = new PromiseChainQuickPublish(this.ContentHub);
       await publishChain.PublishCE(docToPublish);
     }
 
@@ -112,10 +112,10 @@ export class OneWindowManager extends ContentManagerBase {
 
     if (dataToRestore) {
       if (dataToRestore.WindowType === scWindowType.ContentEditor) {
-        await this.Xyyz.OneCEMan.RestoreCEStateAsync(dataToRestore.AllCEAr[0], targetWindow.DataDocSelf);
+        await this.ContentHub.OneCEMan.RestoreCEStateAsync(dataToRestore.AllCEAr[0], targetWindow.DataDocSelf);
       }
       else if (dataToRestore.WindowType === scWindowType.Desktop) {
-        await this.Xyyz.OneDesktopMan.RestoreDesktopStateAsync(targetWindow, dataToRestore);
+        await this.ContentHub.OneDesktopMan.RestoreDesktopStateAsync(targetWindow, dataToRestore);
       }
       else {
         this.debug().Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
@@ -183,7 +183,7 @@ export class OneWindowManager extends ContentManagerBase {
     var dateToUse: Date = new Date();
     //var friendly: string = this.Xyyz.Utilities.MakeFriendlyDate(dateToUse);
 
-    var newGuid = this.Xyyz.GuidMan.NewGuid();
+    var newGuid = this.ContentHub.GuidMan.NewGuid();
 
     this.__activeWindowSnapShot = {
       TimeStamp: dateToUse,

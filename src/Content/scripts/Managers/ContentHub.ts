@@ -17,6 +17,9 @@ import { iSitecoreUiManager } from '../../../Shared/scripts/Interfaces/ISitecore
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { InjectConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { Factories } from '../Classes/Factories';
+import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseHelper';
+import { SharedConst } from '../../../Shared/scripts/SharedConst';
+import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 
 export class ContentHub {
   AtticMan: ContentAtticManager;
@@ -39,6 +42,9 @@ export class ContentHub {
   Utilities: Utilities;
   MessageFlag: MsgFlag;
   Factory: Factories;
+  PromiseHelper: PromiseHelper;
+  SharedConst: ISharedConst;
+  ReadyForMessages: boolean = false;
 
   constructor(sitecoreUiMan: iSitecoreUiManager, debug: ContentDebug) {
     debug.FuncStart(ContentHub.name);
@@ -67,8 +73,14 @@ export class ContentHub {
     this.Factory = new Factories(this);
 
     this.Utilities = new Utilities(this.debug);
+    this.PromiseHelper = new PromiseHelper(this.debug);
+
+    this.SharedConst = SharedConst.SharedConst;
 
     this.Init();
+
+    this.ReadyForMessages = true;
+
     this.debug.FuncEnd(this.Instantiate.name);
   }
   Init() {
@@ -82,7 +94,6 @@ export class ContentHub {
 
     this.PageDataMan.Init();
     this.OneWindowMan.Init();
-
 
     this.debug.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);
   }

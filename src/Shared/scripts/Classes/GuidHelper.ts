@@ -1,12 +1,13 @@
 ﻿import { IGuid } from "../Interfaces/IGuid";
 import { BaseDebug } from "./debug";
+import { HelperBase } from "./HelperBase";
 
-export class GuidHelper {
+export class GuidHelper  extends HelperBase {
   ShortGuidLength: number = 4;
-  private Debug: BaseDebug;
 
   constructor(debug: BaseDebug) {
-    this.Debug = debug;
+    super(debug);
+    
   }
 
   EmptyGuid(): IGuid {

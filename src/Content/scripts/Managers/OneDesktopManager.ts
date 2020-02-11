@@ -1,6 +1,6 @@
 import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { IterationHelper } from '../Classes/IterationHelper';
+import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
 import { PromiseChainRestoreDesktop } from '../Promises/PromiseChainRestoreDesktop';
 import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
@@ -32,7 +32,7 @@ export class OneDesktopManager extends ContentManagerBase {
       for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
         this.debug().Log('data idx: ' + idx + ':' + dataToRestore.AllCEAr.length);
 
-        var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.Xyyz);
+        var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.ContentHub);
 
         await desktopPromiser.RunOneChain(targetWindow, dataToRestore.AllCEAr[idx]);
       }
@@ -47,7 +47,7 @@ export class OneDesktopManager extends ContentManagerBase {
     this.debug().DebugDataOneIframe(newIframe);
 
     if (oneCEdata && newIframe) {
-      await this.Xyyz.OneCEMan.RestoreCEStateAsync(oneCEdata, newIframe.ContentDoc);
+      await this.ContentHub.OneCEMan.RestoreCEStateAsync(oneCEdata, newIframe.ContentDoc);
       toReturn = true;
     } else {
       this.debug().Error(this.RestoreDataToOneIframeWorker.name, 'bad data');
@@ -61,7 +61,7 @@ export class OneDesktopManager extends ContentManagerBase {
     this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
     var toReturn: IDataOneIframe = null;
 
-    var iterationJr = new IterationHelper(this.Xyyz, this.WaitForIframeCountDiffWorker.name)
+    var iterationJr = new IterationHelper(this.debug(), this.WaitForIframeCountDiffWorker.name)
 
     while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
       let beforeCount: number = IFramesbefore.length;
@@ -82,13 +82,8 @@ export class OneDesktopManager extends ContentManagerBase {
 
         toReturn = newIframes[0];
       } else {
-        var self = this;
 
         await iterationJr.Wait();
-        //iterationJr.WaitAndThen(
-        //  function () {
-        //    self.WaitForIframeCountDiffWorker(IFramesbefore, targetWin, iterationJr);
-        //  });
       }
     }
 
@@ -144,7 +139,7 @@ export class OneDesktopManager extends ContentManagerBase {
 
         var targetIframeObj = livingIframeAr[iframeIdx];
         //this.debug().Log('targetIframe: ' + JSON.stringify(targetIframeObj));
-        this.Xyyz.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.ContentDoc, snapShotSettings);
+        this.ContentHub.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.ContentDoc, snapShotSettings);
       }
     }
 

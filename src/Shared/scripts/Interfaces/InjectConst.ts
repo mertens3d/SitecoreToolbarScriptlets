@@ -49,7 +49,7 @@ import { scMode } from '../Enums/scMode';
 
 export class InjectConst {
   static ContConst: IContentConst = {
-    MaxAutoToSave: 10,
+    MaxAutoToSaveCount: 10,
     MaxAutoSaveAgeDays: 1,
     MaxCacheAgeMs: 1000 * 60 * 10,
     Iterations: {
@@ -63,18 +63,7 @@ export class InjectConst {
       AutoSaveIntervalMin : 1,
       
     },
-    IterHelper: {
-      GrowthPerIteration: 0.5,
-
-      MaxCount: {
-        Default: 10,
-        OverridePublishing: 15,
-      },
-      Timeouts: {
-        Max: 10000,
-        Default: 100,
-      },
-    },
+    
     ElemId: {
      
       

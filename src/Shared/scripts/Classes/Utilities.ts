@@ -69,7 +69,7 @@ export class Utilities {
           if (jdx >= 2) {
             lvl2Node = candidateCe.AllTreeNodeAr[1].NodeFriendly + '/';
           }
-          activeCeNode = lvl2Node +  candidateNode.NodeFriendly;
+          activeCeNode = lvl2Node + candidateNode.NodeFriendly;
           break;
         }
       }
@@ -94,21 +94,27 @@ export class Utilities {
     return result;
   }
 
-  MakeFriendlyDate(date: Date) {
-    var year = date.getFullYear();
-    var month = StaticHelpers.BufferString(date.getMonth().toString(), 2, BufferChar.Zero, BufferDirection.left);
-    var day = StaticHelpers.BufferString(date.getDay().toString(), 2, BufferChar.Zero, BufferDirection.left);
-    var min = StaticHelpers.BufferString(date.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);
-    var hoursRaw = date.getHours();
-    var ampm = hoursRaw >= 12 ? 'p' : 'a';
+  MakeFriendlyDate(date: Date): string {
+    var toReturn: string = '';
+    if (date) {
+      var year = date.getFullYear();
+      var month = StaticHelpers.BufferString(date.getMonth().toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var day = StaticHelpers.BufferString(date.getDay().toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var min = StaticHelpers.BufferString(date.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var hoursRaw = date.getHours();
+      var ampm = hoursRaw >= 12 ? 'p' : 'a';
 
-    hoursRaw = hoursRaw % 12;
+      hoursRaw = hoursRaw % 12;
 
-    var hourClean = hoursRaw ? hoursRaw : 12; // the hour '0' should be '12'
-    var hourCleanStr: string = StaticHelpers.BufferString(hourClean.toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var hourClean = hoursRaw ? hoursRaw : 12; // the hour '0' should be '12'
+      var hourCleanStr: string = StaticHelpers.BufferString(hourClean.toString(), 2, BufferChar.Zero, BufferDirection.left);
 
-    //year + '.' +
-    var toReturn = month + '.' + day + ' ' + hourCleanStr + ':' + min + ' ' + ampm;
+      //year + '.' +
+      toReturn = month + '.' + day + ' ' + hourCleanStr + ':' + min + ' ' + ampm;
+    } else {
+      toReturn = '{error}';
+      this.Debug.Error(this.MakeFriendlyDate.name, 'no date provided');
+    }
     return toReturn;
   }
 }

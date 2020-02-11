@@ -100,8 +100,6 @@ export class BaseDebug {
     if (verify) {
       proceed = confirm('Clear Debug TextArea ?');
     }
-    console.log('maker pink');
-    console.log('enabled? ' + this.Enabled.toString());
 
     if (proceed) {
       var newText = '--- Debug Text Reset ---';
@@ -129,9 +127,8 @@ export class BaseDebug {
     this.__markerRaw('D');
   }
 
-  MarkerE() {
-    this.__markerRaw('E');
-  }
+  MarkerE() {    this.__markerRaw('E');  }
+  MarkerF() {    this.__markerRaw('F');  }
 
   private __markerRaw(marker) {
     this.Log('Marker ' + marker);
@@ -153,7 +150,7 @@ export class BaseDebug {
 
     textVal = textVal.toString();
 
-    textValName = StaticHelpers.BufferString(textValName.toString(), 26, BufferChar.space, BufferDirection.right);
+    textValName = StaticHelpers.BufferString(textValName.toString(), 32, BufferChar.space, BufferDirection.right);
 
     const debugPrefix = '  ~~~  ';
 

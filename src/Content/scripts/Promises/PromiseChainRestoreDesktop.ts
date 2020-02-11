@@ -5,6 +5,7 @@ import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrow
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
 
 export class PromiseChainRestoreDesktop extends ContentManagerBase {
   constructor(xyyz: ContentHub) {
@@ -57,27 +58,31 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
   private __waitForIframeCountDiffPromise(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
       this.debug().FuncStart(this.__waitForIframeCountDiffPromise.name);
-      //this.debug().PromiseBucketDebug(promiseBucket, this.__waitForIframeCountDiffPromise.name);
 
-      //this.debug().ClearDebugText();
-      this.debug().MarkerA();
-      //var success: null;
+      var success: ResultSuccessFail = new ResultSuccessFail();
 
-      //this.debug().PromiseBucketDebug(promiseBucket, this.__waitForIframeCountDiffPromise.name);
-      var success: IDataOneIframe = await this.DesktopMan().WaitForIframeCountDiffWorker(promiseBucket.IFramesbefore, promiseBucket.targetWindow);
+      var iframeResult: IDataOneIframe = await this.DesktopMan().WaitForIframeCountDiffWorker(promiseBucket.IFramesbefore, promiseBucket.targetWindow);
       this.debug().MarkerB();
-      if (success) {
+      if (iframeResult) {
         this.debug().MarkerC();
 
-        promiseBucket.NewIframe = success;
+        promiseBucket.NewIframe = iframeResult;
 
         this.debug().DebugDataOneIframe(promiseBucket.NewIframe);
 
+        success.Succeeded = true;
+      } else {
+        success.Succeeded = false;
+        success.FailMessage = 'fail ' + this.__waitForIframeCountDiffPromise.name;
+      }
+
+      this.debug().FuncEnd(this.__waitForIframeCountDiffPromise.name);
+
+      if (success.Succeeded) {
         resolve(promiseBucket);
       } else {
-        reject(this.__waitForIframeCountDiffPromise.name);
+        reject(success.FailMessage);
       }
-      this.debug().FuncEnd(this.__waitForIframeCountDiffPromise.name);
     });
   }
 
@@ -108,7 +113,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
   async GoToAndWaitForDesktopPage(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise(async (resolve, reject) => {
-      await this.DesktopMan().PromiseGen().SetHrefAndWaitForReady(this.Const().UrlSuffix.Desktop, promiseBucket.targetWindow, scWindowType.Desktop)
+      await this.DesktopMan().PromiseGen().SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, promiseBucket.targetWindow, scWindowType.Desktop)
         .then((promiseBucket) => resolve(promiseBucket))
         .catch((err) => reject(err))
     });

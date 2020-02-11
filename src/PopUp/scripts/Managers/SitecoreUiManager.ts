@@ -2,10 +2,9 @@
 import { PopUpDebug } from '../Classes/PopUpDebug';
 import { iSitecoreUiManager } from '../../../Shared/scripts/Interfaces/ISitecoreUiManager';
 
-export class SitecoreUiManager implements iSitecoreUiManager  {
-    
+export class SitecoreUiManager implements iSitecoreUiManager {
   __activeWindowSnapShot: IDataOneWindowStorage;
-    debug: PopUpDebug;
+  debug: PopUpDebug;
 
   constructor(debug: PopUpDebug) {
     debug.FuncStart(SitecoreUiManager.name);
@@ -13,16 +12,11 @@ export class SitecoreUiManager implements iSitecoreUiManager  {
     debug.FuncEnd(SitecoreUiManager.name);
   }
 
-  AssignMenuWindowChanged(handler: Function): void {
-
-    window.addEventListener('click', (evt) => { handler(); });
-    window.addEventListener('resize', (evt) => { handler(); });
-    //window.onclick = () => {
-    //  alert('changed');
-    //}
-  }
-
-
-
-  
+  //AssignMenuWindowChanged(handler: Function): void {
+  //  window.addEventListener('click', (evt) => { handler(); });
+  //  window.addEventListener('resize', (evt) => { handler(); });
+  //  //window.onclick = () => {
+  //  //  alert('changed');
+  //  //}
+  //}
 }
