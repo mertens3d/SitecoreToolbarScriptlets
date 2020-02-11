@@ -1,6 +1,6 @@
 ﻿import { ContentHub } from '../Managers/ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { IterationHelper } from '../Classes/IterationHelper';
+import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPublishChain';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
@@ -60,7 +60,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
     await this.PromiseGen().WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, this.Const().Selector.SC.Publish.SettingsHidden)
       .then(async () => {
-        await this.PromiseGen().WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, this.Const().Selector.SC.Publish.TheItemHasBeenPublished, this.Const().IterHelper.MaxCount.OverridePublishing)
+        await this.PromiseGen().WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, this.Const().Selector.SC.Publish.TheItemHasBeenPublished, this.SharedConst().IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
         await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.Cancel], dataPublishChain.Iframe0Blue.ContentDoc);

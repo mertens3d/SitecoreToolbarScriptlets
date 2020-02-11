@@ -13,11 +13,10 @@ import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { IDataPayloadSnapShot } from "../../../Shared/scripts/Classes/IDataPayloadSnapShot";
 
 export class ContentDebug extends BaseDebug {
-
   DebugMsgFromPopUp(reqMsgFromPopup: MsgFromPopUp) {
-    if (this.IsNotNullOrUndefinedBool('MsgFromPopUp', reqMsgFromPopup)){
+    if (this.IsNotNullOrUndefinedBool('MsgFromPopUp', reqMsgFromPopup)) {
       this.LogVal('requestMsgFromPopup', JSON.stringify(reqMsgFromPopup));
-      this.LogVal('MsgFlag', StaticHelpers. MsgFlagAsString( reqMsgFromPopup.MsgFlag));
+      this.LogVal('MsgFlag', StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
       this.DebugIDataContentPrefs(reqMsgFromPopup.CurrentContentPrefs);
       this.DebugPayloadDataFromPopUp(reqMsgFromPopup.Data);
@@ -36,17 +35,16 @@ export class ContentDebug extends BaseDebug {
     if (this.IsNotNullOrUndefinedBool('IDataPayloadSnapShot', snapShotSettings)) {
       this.LogVal('Flavor', StaticHelpers.FlavorAsString(snapShotSettings.Flavor))
       this.LogVal('Nickname', snapShotSettings.SnapShotNewNickname);
-
     }
   }
-
 
   DebugIDataContentPrefs(prefs: IDataContentPrefs) {
-    if (this.IsNotNullOrUndefinedBool('MaxAutoSaveCount', prefs.MaxAutoSaveCount)) {
-      this.LogVal('MaxAutoSaveCount', prefs.MaxAutoSaveCount);
+    if (this.IsNotNullOrUndefinedBool('IDataContentPrefs', prefs)) {
+      if (this.IsNotNullOrUndefinedBool('MaxAutoSaveCount', prefs.MaxAutoSaveCount)) {
+        this.LogVal('MaxAutoSaveCount', prefs.MaxAutoSaveCount);
+      }
     }
   }
-
 
   DebugPageDataMan(pageDataMan: PageDataManager) {
     if (this.IsNotNullOrUndefinedBool('pageDataMan', pageDataMan)) {
@@ -63,8 +61,6 @@ export class ContentDebug extends BaseDebug {
       this.DebugWindow(browserWindow.Window);
     }
   }
-
-
 
   //DebugIDataBrowserWindow(targetWindow: IDataBrowserWindow) {
   //  this.NotNullCheck('toReturn', targetWindow);

@@ -1,6 +1,6 @@
 ﻿import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { IterationHelper } from '../Classes/IterationHelper';
+import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
@@ -88,7 +88,7 @@ export class OneCEManager extends ContentManagerBase {
     this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.AsShort);
     this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
 
-    var iterHelper = new IterationHelper(this.Xyyz,this.WaitForAndRestoreOneNode.name);
+    var iterHelper = new IterationHelper(this.debug(), this.WaitForAndRestoreOneNode.name);
 
     var foundOnPageTreeGlyph: HTMLElement = null;
 
@@ -118,12 +118,10 @@ export class OneCEManager extends ContentManagerBase {
     this.debug().FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
   }
 
-  async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc, iterHelper: IterationHelper = null) {
+  async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc) {
     this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.DocId.AsShort);
 
-    if (!iterHelper) {
-      iterHelper = new IterationHelper(this.Xyyz, this.WaitForAndRestoreManyAllNodes.name);
-    }
+    let iterHelper: IterationHelper = new IterationHelper(this.debug(), this.WaitForAndRestoreManyAllNodes.name);
 
     while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
       var nextNode: IDataOneTreeNode = storageData.AllTreeNodeAr.shift();
@@ -152,12 +150,12 @@ export class OneCEManager extends ContentManagerBase {
     this.debug().Log('SaveOneContentEditor');;
     this.debug().Log('docElem is null: ' + (dataOneDoc === null));;
 
-    var CeSnapShot: IDataOneStorageCE = this.Xyyz.OneCEMan.MakeNewData(id);
-    CeSnapShot.AllTreeNodeAr = this.Xyyz.OneTreeMan.GetOneLiveTreeData(dataOneDoc);
+    var CeSnapShot: IDataOneStorageCE = this.ContentHub.OneCEMan.MakeNewData(id);
+    CeSnapShot.AllTreeNodeAr = this.ContentHub.OneTreeMan.GetOneLiveTreeData(dataOneDoc);
 
  
 
-    this.Xyyz.OneWindowMan.PutCEDataToCurrentSnapShot(CeSnapShot, snapShotSettings);
+    this.ContentHub.OneWindowMan.PutCEDataToCurrentSnapShot(CeSnapShot, snapShotSettings);
 
     this.debug().FuncEnd('SaveOneContentEditor');
   }

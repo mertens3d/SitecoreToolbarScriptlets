@@ -1,3 +1,3 @@
 ﻿export interface iSitecoreUiManager {
-  AssignMenuWindowChanged( handler: Function) : void
+  //AssignMenuWindowChanged( handler: Function) : void
 }

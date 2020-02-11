@@ -1,0 +1,35 @@
+﻿@import "vars";
+
+.ta-wrapper {
+  width: 60%;
+  display: inline-block;
+
+  .ta-feedback {
+    height: 100px;
+    display: inline-block;
+    width: auto;
+  }
+}
+
+
+
+.group {
+  border: 1px solid lightgray;
+  display: flex;
+  margin: $margin;
+  padding: $padding;
+  vertical-align: top;
+}
+
+
+textarea {
+  border: 0;
+  box-sizing: border-box;
+  display: inline-block;
+  height: 160px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0;
+  width: 1500px;
+  white-space: pre-wrap;
+}

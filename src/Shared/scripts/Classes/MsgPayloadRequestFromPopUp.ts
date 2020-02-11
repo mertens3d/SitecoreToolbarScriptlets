@@ -20,5 +20,9 @@ export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
       SnapShotNewNickname: '',
       Flavor: SnapShotFlavor.Unknown
     }
+
+
+
+    popHub.debug.Log('constructor done msgfrompopup');
   }
 }

@@ -8,119 +8,122 @@
   <link href='PopUp.min.css' rel='stylesheet' type='text/css'>
 </head>
 <body>
-
-  <form>
-    <div class='header'>
-      <div class='build-stamp' id='build-stamp'></div>
-      <div class='close-window' id='close-window'></div>
-    </div>
-    <div class='header-push'></div>
-
-
-
-    <fieldset>
-      <legend id='lgnd-fore-site'>Fore&bull;Site</legend>
-      <div class='accordian-content flex-container'>
-        <button id='Edit' type='button' class='icon edit'>Edit</button>
-        <button id='Prev' type='button' class='icon preview-icon'>Preview</button>
-        <button id='Norm' type='button' class='icon normal'>Normal</button>
-        <button id='AdminB' type='button' class='icon admin-b'>Admin B</button>
-        <button id='Desktop' type='button' class='icon desktop-icon'>Desktop</button>
-        <button id='CE' type='button' class='icon ce'>Content Editor</button>
-        <button id='BigRed' type='button' class='icon add-ce-tab'>Add CE Tab to DT</button>
-        <button id='QuickPublish' type='button' class='icon publish'>Quick Publish</button>
-        <button id='PresentationDetails' type='button' class='icon details'>Presentation Details</button>
+  <div class='big-wrapper'>
+    <form>
+      <div class='header'>
+        <div class='build-stamp' id='build-stamp'></div>
+        <div class='close-window' id='close-window'></div>
       </div>
-    </fieldset>
+      <div class='header-push'></div>
 
-    <fieldset>
-      <legend id='lgnd-hind-site' data-setting='lgnd-hind-site'>Hind&bull;Site</legend>
-      <div class='accordian-content'>
-        <div class='row flex-container'>
+      <fieldset>
+        <legend id='lgnd-fore-site'>Fore&bull;Site</legend>
+        <div class='accordian-content'>
+          <div class='flex-container'>
+            <button id='Edit' type='button' class='icon edit'>Edit</button>
+            <button id='Prev' type='button' class='icon preview-icon'>Preview</button>
+            <button id='Norm' type='button' class='icon normal'>Normal</button>
+            <button id='AdminB' type='button' class='icon admin-b'>Admin B</button>
+            <button id='Desktop' type='button' class='icon desktop-icon'>Desktop</button>
+            <button id='CE' type='button' class='icon ce'>Content Editor</button>
+            <button id='BigRed' type='button' class='icon add-ce-tab'>Add CE Tab to DT</button>
+            <button id='QuickPublish' type='button' class='icon publish'>Quick Publish</button>
+            <button id='PresentationDetails' type='button' class='icon details'>Presentation Details</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend id='lgnd-hind-site' data-setting='lgnd-hind-site'>Hind&bull;Site</legend>
+        <div class='accordian-content'>
+          <div class='row flex-container'>
+            <div class='col-full'>
+
+              <!--<input type='checkbox' /> todo favorites only-->
+              <select id='selState' size='10'>
+              </select>
+            </div>
+          </div>
+          <div class='row flex-container'>
+            <button id='SaveWindowState' type='button' class='icon take-snapshot'>Take Snapshot</button>
+            <input type='text' id='inputNickname' value='' placeholder='Nick Name'>
+            <button id='UpdateNickname' type='button' class='icon set-nickname'>Set Nickname</button>
+            <button id='MarkFavorite' type='button' class='icon btn-favorite'>Mark Favorite</button>
+            <button id='RemoveOneFromLocalStorage' type='button' class='icon delete-snapshot'>Delete Snapshot</button>
+
+            <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
+
+            <button id='Cancel' type='button' class='icon cancel'>Cancel</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend id='lgnd-in-site' data-setting='lgnd-in-site'>In&bull;Site</legend>
+        <div class='accordian-content'>
+          <div class='flex-container'>
+            <div class='col-full'>
+              <div class='scroller'>
+                <textarea id='ta-feedback'></textarea>
+              </div>
+            </div>
+            <div class='col-right'>
+              <button id='DrawLocalStorage' type='button' class='icon draw-storage'>Draw Local Storage</button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend id='lgnd-state' data-setting='lgnd-settings'>
+          State
+
+          <img src='/icons/accordion_up.png' class='scEditorSectionCaptionGlyph' alt='' border='0'>
+        </legend> 
+        <div class='accordian-content'>
+          <div class='flex-container'>
+            <div class='col-full'>
+              <div class='scroller'>
+                <textarea id='ta-state' disabled='disabled'></textarea>
+              </div>
+            </div>
+          </div>
+          </div>
+      </fieldset>
+
+      <fieldset id='id-fieldset-debug'>
+        <legend id='lgnd-debug' data-setting='lgnd-debug'>Debug Info <span id='spanParentInfo'></span></legend>
+        <div class='accordian-content'>
           <div class='col-full'>
-
-            <!--<input type='checkbox' /> todo favorites only-->
-            <select id='selState' size='10'>
-            </select>
+            <div class='scroller'>
+              <textarea id='ta-debug'></textarea>
+            </div>
           </div>
         </div>
-        <div class='row flex-container'>
-          <button id='SaveWindowState' type='button' class='icon take-snapshot'>Take Snapshot</button>
-          <input type='text' id='inputNickname' value='' placeholder='Nick Name'>
-          <button id='UpdateNickname' type='button' class='icon set-nickname'>Set Nickname</button>
-          <button id='MarkFavorite' type='button' class='icon btn-favorite'>Mark Favorite</button>
-          <button id='RemoveOneFromLocalStorage' type='button' class='icon delete-snapshot'>Delete Snapshot</button>
+      </fieldset>
 
-          <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
+      <fieldset>
+        <legend id='lgnd-settings' data-setting='lgnd-settings'>Settings/ Stats</legend>
+        <div class='accordian-content'>
 
-          <button id='Cancel' type='button' class='icon cancel'>Cancel</button>
+          <input type='checkbox' id='id-settings-show-debug-data' checked='checked'>
+          <label for='id-settings-show-debug-data'>Show Debug Data</label>
+
+          <input type='checkbox' id='id-settings-auto-login' checked='checked'>
+          <label for='id-settings-auto-login'>Auto login</label>
+
+          <input type='checkbox' id='id-settings-auto-save' checked='checked'>
+          <label for='id-settings-auto-save'>Auto Save Enabled</label>
+
+          <input type='number' id='id-settings-auto-save-interval' min='0' max='100' value='0'>
+          <label for='id-settings-auto-save-interval'>Auto Save Interval (Minutes)</label>
+
+          <div id='stat-caller-id'></div>
+          <div id='stat-self-id'></div>
         </div>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend id='lgnd-in-site' data-setting='lgnd-in-site'>In&bull;Site</legend>
-      <div class='accordian-content flex-container'>
-        <div class='col-full'>
-          <div class='scroller'>
-            <textarea id='ta-feedback'></textarea>
-          </div>
-        </div>
-        <div class='col-right'>
-          <button id='DrawLocalStorage' type='button' class='icon draw-storage'>Draw Local Storage</button>
-        </div>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend id='lgnd-state' data-setting='lgnd-settings'>
-        State
-
-        <img src='/icons/accordion_up.png' class='scEditorSectionCaptionGlyph' alt='' border='0'>
-      </legend>
-      <div class='accordian-content flex-container'>
-        <div class='col-full'>
-          <div class='scroller'>
-            <textarea id='ta-state' disabled='disabled'></textarea>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-
-
-
-    <fieldset id='id-fieldset-debug'>
-      <legend id='lgnd-debug' data-setting='lgnd-debug'>Debug Info <span id='spanParentInfo'></span></legend>
-      <div class='accordian-content'>
-        <div class='col-full'>
-          <div class='scroller'>
-            <textarea id='ta-debug'></textarea>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend id='lgnd-settings' data-setting='lgnd-settings'>Settings/ Stats</legend>
-      <div class='accordian-content'>
-
-        <input type='checkbox' id='id-settings-show-debug-data' checked='checked'>
-        <label for='id-settings-show-debug-data'>Show Debug Data</label>
-
-        <input type='checkbox' id='id-settings-auto-login' checked='checked'>
-        <label for='id-settings-auto-login'>Auto login</label>
-
-        <input type='checkbox' id='id-settings-auto-save' checked='checked'>
-        <label for='id-settings-auto-save'>Auto Save Enabled</label>
-
-        <input type='number' id='id-settings-auto-save-interval' min='0' max='100' value='0'>
-        <label for='id-settings-auto-save-interval'>Auto Save Interval (Minutes)</label>
-
-        <div id='stat-caller-id'></div>
-        <div id='stat-self-id'></div>
-      </div>
-    </fieldset>
-  </form>
+      </fieldset>
+    </form>
+  </div>
   <!--type='module'-->
   <script src='popup.min.js'>
   </script>

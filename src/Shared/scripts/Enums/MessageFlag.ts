@@ -20,5 +20,7 @@
     RespTaskFailed,
     RespTaskSuccessful,
     RespTest,
-    ReqMarkFavorite
+    ReqMarkFavorite,
+    Ping,
+    RespListeningAndReady
 }

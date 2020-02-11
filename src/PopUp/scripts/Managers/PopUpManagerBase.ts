@@ -9,6 +9,7 @@ import { GuidHelper } from "../../../Shared/scripts/Classes/GuidHelper";
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 import { SettingsManager } from "./SettingsManager";
 import { EventManager } from "./EventManager";
+import { PromiseHelper } from "../../../Shared/scripts/Classes/PromiseHelper";
 //import { PopUpFactoryManager } from "./FactoryManager";
 
 export class PopUpManagerBase {
@@ -17,6 +18,7 @@ export class PopUpManagerBase {
 
   constructor(popHub: PopUpHub) {
     this.PopHub = popHub;
+    
   }
 
   Utilites(): Utilities { return this.PopHub.Utilities; }
@@ -26,9 +28,10 @@ export class PopUpManagerBase {
   MsgMan(): PopUpMessagesManager { return this.PopHub.PopMsgMan; }
   PopAtticMan(): PopUpAtticManager { return this.PopHub.PopUpAtticMan; }
   //MsgFlag(): MessageFlag { return this.PopHub.MessageFlag; }
-  GuidMan(): GuidHelper { return this.PopHub.GuidMan; }
+  GuidHelper(): GuidHelper { return this.PopHub.GuidHelper; }
   SettingsMan(): SettingsManager { return this.PopHub.SettingsMan; }
   EventMan(): EventManager { return this.PopHub.EventMan; }
+  PromiseHelp(): PromiseHelper { return this.PopHub.promHelper; }
   //FactMan(): PopUpFactoryManager { return this.PopHub.FactMan; }
 
 }

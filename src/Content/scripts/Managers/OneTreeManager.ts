@@ -94,7 +94,7 @@ export class OneTreeManager extends ContentManagerBase {
 
           var apparentId = firstImg.id.replace(this.Const().Names.SC.TreeGlyphPrefix, '');
 
-          newData.NodeId = this.Xyyz.GuidMan.ParseGuid(apparentId);
+          newData.NodeId = this.ContentHub.GuidMan.ParseGuid(apparentId);
 
           toReturn.push(newData);
         }

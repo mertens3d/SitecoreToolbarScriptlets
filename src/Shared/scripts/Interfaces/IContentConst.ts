@@ -3,7 +3,7 @@ import { IScVerSpec } from './IScVerSpec';
 
 export interface IContentConst {
     MaxAutoSaveAgeDays: number;
-  MaxAutoToSave: number;
+  MaxAutoToSaveCount: number;
   MaxCacheAgeMs: number;
   Iterations: {
     MaxSetHrefEffort: number,
@@ -15,17 +15,7 @@ export interface IContentConst {
     WaitBeforeRemovingCompleteFlagOnContent: number,
     AutoSaveIntervalMin: number,
   },
-  IterHelper: {
-    GrowthPerIteration: number,
-    MaxCount: {
-      OverridePublishing: number,
-      Default: number,
-    },
-    Timeouts: {
-      Max: number,
-      Default: number,
-    },
-  },
+
 
   ElemId: {
     sc: {

@@ -64,8 +64,10 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\SettingsManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\HelperBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IDataPayloadSnapShot.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IMenuStateForMsg.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\ResultSuccessFail.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\StaticHelpers.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferChar.ts" />
@@ -104,6 +106,7 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Classes\Factories.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.debug.ts" />
+    <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
     <Content Include="webpack.config.js" />
     <None Include=".editorconfig" />
@@ -141,6 +144,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentMessageManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseOneStep.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPopUpConst.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\SharedConst.ts" />
     <TypeScriptCompile Include="src\Shared\typdefs\browser.d.ts" />
     <TypeScriptCompile Include="src\tests\foo.test.ts" />
     <TypeScriptCompile Include="src\tests\IterationHelper.test.ts" />
@@ -178,14 +182,16 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneWindowManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneDesktopManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneTreeManager.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Classes\IterationHelper.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\IterationHelper.ts" />
     <TypeScriptCompile Include="src\Content\scripts\zLast.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\Constants.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.ts" />
     <None Include="Readme.md" />
     <None Include="src\PopUp\css\Grid.scss" />
+    <None Include="src\PopUp\css\FieldSetLevel.scss" />
     <None Include="src\PopUp\css\menu.buttons.scss" />
     <None Include="src\PopUp\css\overlay.scss" />
+    <None Include="src\PopUp\css\PageLevel.scss" />
     <None Include="src\PopUp\css\SnapShotSelect.scss" />
     <None Include="src\PopUp\css\vars.scss" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\OneSetting.ts" />
