@@ -3,11 +3,14 @@ import { IDataDebugCallback } from "../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../Interfaces/ICallbackDataDebugTextChanged";
 import { IGuid } from "../Interfaces/IGuid";
 import { MsgFlag } from "../Enums/MessageFlag";
-import { Utilities } from "./Utilities";
+import { UtilityHelper } from "./Utilities";
 import { IError } from "../Interfaces/IError";
 import { StaticHelpers } from "./StaticHelpers";
 import { BufferChar } from "../Enums/BufferChar";
 import { BufferDirection } from "../Enums/BufferDirection";
+import { IDataBrowserWindow } from "../Interfaces/IDataBrowserWindow";
+import { scWindowType } from "../Enums/scWindowType";
+import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
 
 export class BaseDebug {
   private __indentCount: number;
@@ -25,6 +28,37 @@ export class BaseDebug {
     //this.Utilites = utilies;
   }
 
+
+  DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
+    this.FuncStart(this.DebugDataOneIframe.name);
+
+    this.Log('dataOneIframe : ' + this.IsNullOrUndefined(dataOneIframe));
+
+    if (dataOneIframe) {
+      this.Log('dataOneIframe.Nickname : ' + dataOneIframe.Nickname);
+      this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
+      if (dataOneIframe.IframeElem) {
+        this.Log('dataOneIframe.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
+        //  //this.Log('dataOneIframe.IframeElem.src: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.src));
+        //  this.Log('dataOneIframe.IframeElem.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
+        //  //this.Log('dataOneIframe.IframeElem.name: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.name));
+      }
+      this.Log('dataOneIframe.ContentDoc: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc));
+
+      this.DebugIDataOneDoc(dataOneIframe.ContentDoc);
+
+      //this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
+
+      //this.Log('dataOneIframe.Id: \t' + this.IsNullOrUndefined(dataOneIframe.Id));
+      //if (dataOneIframe.Id) {
+      //  this.Log('dataOneIframe.Id.asShort: \t' + this.IsNullOrUndefined(dataOneIframe.Id.asShort));
+      //}
+
+      //this.Log('dataOneIframe.DocElem: \t' + this.IsNullOrUndefined(dataOneIframe.Index));
+    }
+    this.FuncEnd(this.DebugDataOneIframe.name);
+  }
+
   debugPrefix: string = '\t\t';
 
   //DebugObjVarVal(textValName: string, textVal: number)
@@ -35,6 +69,21 @@ export class BaseDebug {
   //  this.LogVal(debugPrefix + textValName, textVal.toString())
   //}
 
+
+  DebugIDataBrowserWindow(browserWindow: IDataBrowserWindow) {
+    if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
+      this.LogVal('Friendly', browserWindow.Friendly);
+      this.LogVal('WindowType', scWindowType[browserWindow.WindowType]);
+
+      this.DebugIDataOneDoc(browserWindow.DataDocSelf);
+      this.DebugWindow(browserWindow.Window);
+    }
+  }
+
+  DebugWindow(window: Window) {
+    if (this.IsNotNullOrUndefinedBool('window', window)) {
+    }
+  }
   IsNotNullOrUndefinedBool(title, subject): boolean {
     var toReturn: boolean = false;
     if (subject) {

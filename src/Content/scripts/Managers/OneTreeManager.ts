@@ -4,10 +4,10 @@ import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
 
 export class OneTreeManager extends ContentManagerBase {
-  constructor(xyyz: ContentHub) {
-    super(xyyz)
-    xyyz.debug.FuncStart(OneTreeManager.name);
-    xyyz.debug.FuncEnd(OneTreeManager.name);
+  constructor(hub: ContentHub) {
+    super(hub)
+    hub.debug.FuncStart(OneTreeManager.name);
+    hub.debug.FuncEnd(OneTreeManager.name);
   }
 
   GetFriendlyNameFromNode(inputNode) {
@@ -94,7 +94,7 @@ export class OneTreeManager extends ContentManagerBase {
 
           var apparentId = firstImg.id.replace(this.Const().Names.SC.TreeGlyphPrefix, '');
 
-          newData.NodeId = this.ContentHub.GuidMan.ParseGuid(apparentId);
+          newData.NodeId = this.ContentHub.Helpers.GuidHelp. ParseGuid(apparentId);
 
           toReturn.push(newData);
         }

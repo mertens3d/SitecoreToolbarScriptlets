@@ -1,17 +1,13 @@
-﻿import { GuidHelper } from './GuidHelper';
-import { BaseDebug } from './debug';
+﻿import { BaseDebug } from './debug';
 import { IDataOneWindowStorage } from '../Interfaces/IDataOneWindowStorage';
 import { scWindowType } from '../Enums/scWindowType';
-import { MsgFromXBase } from '../Interfaces/MsgFromXBase';
-import { MsgFlag } from '../Enums/MessageFlag';
 import { StaticHelpers } from './StaticHelpers';
 import { SnapShotFlavor } from '../Enums/SnapShotFlavor';
 import { BufferChar } from '../Enums/BufferChar';
 import { BufferDirection } from '../Enums/BufferDirection';
+import { HelperBase } from './HelperBase';
 
-export class Utilities {
-  private GuidMan: GuidHelper;
-  private Debug: BaseDebug;
+export class UtilityHelper extends HelperBase {
 
   lenTimestamp: number = 13;
 
@@ -23,14 +19,6 @@ export class Utilities {
   lenCeCount: number = 3;
   lenActiveNode: number = 16;
   lenFavorite: number = 3;
-
-  constructor(debug: BaseDebug) {
-    debug.FuncStart(Utilities.name);
-    this.Debug = debug;
-    this.GuidMan = new GuidHelper(debug);
-    //this.Utilities = new Utilities(debug);
-    debug.FuncEnd(Utilities.name);
-  }
 
   SelectHeaderStr(prefix: string): string {
     // '    Time Stamp          - Page Type - Nickname       - Favorite?';

@@ -1,14 +1,11 @@
-﻿import { SitecoreUiManagerFake } from './SitecoreUiManager.Fake';
-import { ContentDebug } from '../Content/scripts/Classes/ContentDebug';
-import { iSitecoreUiManager } from '../Shared/scripts/Interfaces/ISitecoreUiManager';
-import { ContentHub } from '../Content/scripts/Managers/ContentHub';
-import { IterationHelper } from '../Shared/scripts/Classes/IterationHelper';
+﻿//import { ContentDebug } from '../Content/scripts/Classes/ContentDebug';
+//import { IterationHelper } from '../Shared/scripts/Classes/IterationHelper';
 
-test('basic', () => {
-  let debug = new ContentDebug(window.opener);
-  let ScUiManFake: iSitecoreUiManager = new SitecoreUiManagerFake(debug);
-  var hub = new ContentHub(ScUiManFake, debug);
-  var iterHelper = new IterationHelper(debug, 'test-1', 1);
+//test('basic', () => {
+//  let debug = new ContentDebug(window.opener);
+//  //let ScUiManFake: iSitecoreUiManager = new SitecoreUiManagerFake(debug);
+//  //var hub = new ContentHub(ScUiManFake, debug);
+//  var iterHelper = new IterationHelper(debug, 'test-1', 1);
 
-  expect(iterHelper.DecrementAndKeepGoing).toBe(true);
-});
+//  expect(iterHelper.DecrementAndKeepGoing).toBe(true);
+//});

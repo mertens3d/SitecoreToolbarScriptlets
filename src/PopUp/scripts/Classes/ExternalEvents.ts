@@ -5,8 +5,7 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { ResultSuccessFail } from "../../../Shared/scripts/Classes/ResultSuccessFail";
-import { PromiseHelper } from "../../../Shared/scripts/Classes/PromiseHelper";
-import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
+import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 
 export class ExternalEvents extends CommonEvents {
   async __hndlrAddCETab() {
@@ -27,7 +26,9 @@ export class ExternalEvents extends CommonEvents {
 
   __hndlrDesktop(evt: MouseEvent) {
     this.__initNewOperation();
-    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqGoDesktop, this.PopHub))
+
+    this.locMan().ChangeLocationSwitchBoard(scWindowType.Desktop, this.PageMan().TopLevelWindow());
+    //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqGoDesktop, this.PopHub))
   }
 
   HndlrAdminB() {
@@ -42,12 +43,17 @@ export class ExternalEvents extends CommonEvents {
     payload.Data.ReqScMode = newMode;
     payload.Data.UseOriginalWindowLocation = evt.ctrlKey;
 
-    this.MsgMan().SendMessageToContent(payload);
+    this.locMan().SetScMode(payload.Data.ReqScMode, payload.Data.UseOriginalWindowLocation);
+      //.then(() => this.respondSuccessful())
+      //.catch((failReason) => this.respondFail(failReason));
+
+    //this.MsgMan().SendMessageToContent(payload);
   }
 
   async __hndlrOpenCE() {
     this.__initNewOperation();
-    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqOpenCE, this.PopHub));
+    this.locMan().ChangeLocationSwitchBoard(scWindowType.ContentEditor, this.PageMan().TopLevelWindow());
+    //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqOpenCE, this.PopHub));
   }
 
   async __hndlrQuickPublish(evt: MouseEvent) {
@@ -67,10 +73,10 @@ export class ExternalEvents extends CommonEvents {
 
       this.debug().FuncStart(this.CreateNewWindowIfRequired.name, 'ctrl key? ' + evt.ctrlKey.toString());
       if (!evt.ctrlKey) {
-        this.debug().LogVal('new page url', this.UiMan().currentState.Url);
+        //this.debug().LogVal('new page url', this.UiMan().currentState.Url);
 
         await browser.tabs.create({
-          url: this.UiMan().currentState.Url,
+          //url: this.UiMan().currentState.Url,
         })
           .then((tab) => {
             console.log(tab.status);
@@ -116,7 +122,7 @@ export class ExternalEvents extends CommonEvents {
             //})
           })
           .then(async () => {
-            await this.MsgMan().WaitForListening();
+            await this.MsgMan().WaitForListeningTab();
           })
           .catch((ex) => {
             console.log('fails here');

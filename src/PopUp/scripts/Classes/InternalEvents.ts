@@ -27,7 +27,7 @@ export class InternalEvents extends CommonEvents{
     var foundContentSib = this.UiMan().GetAccordianContentElem(srcElem);
 
     if (foundContentSib) {
-      var isCollapsed = foundContentSib.classList.contains(this.PopConst().ClassNames.HS.Collapsed);
+      var isCollapsed = foundContentSib.classList.contains(this.Const().ClassNames.HS.Collapsed);
 
       var newVal = !isCollapsed;
       this.UiMan().SetAccordianClass(foundContentSib, newVal)

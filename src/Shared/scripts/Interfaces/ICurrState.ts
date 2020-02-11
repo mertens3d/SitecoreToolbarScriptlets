@@ -7,8 +7,8 @@ import { ISnapShotsMany } from "./ISnapShotsMany";
 export interface ICurrStateContent {
   LastReq: MsgFlag,
   SnapShotsMany: ISnapShotsMany,
-  WindowType: scWindowType;
-  Url: string;
+  //WindowType: scWindowType;
+  //Url: string;
   ErrorStack: IError[],
   LastReqSuccessful: boolean,
   LastReqFailReason: string

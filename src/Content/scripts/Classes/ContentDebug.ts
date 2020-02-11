@@ -1,7 +1,6 @@
 ﻿import { BaseDebug } from "../../../Shared/scripts/Classes/debug";
 import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIframe";
 import { IDataBucketRestoreDesktop } from "../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop";
-import { PageDataManager } from "../Managers/PageDataManager";
 import { IDataBrowserWindow } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
@@ -46,21 +45,9 @@ export class ContentDebug extends BaseDebug {
     }
   }
 
-  DebugPageDataMan(pageDataMan: PageDataManager) {
-    if (this.IsNotNullOrUndefinedBool('pageDataMan', pageDataMan)) {
-      this.DebugIDataBrowserWindow(pageDataMan.TopLevelWindow());
-    }
-  }
 
-  DebugIDataBrowserWindow(browserWindow: IDataBrowserWindow) {
-    if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
-      this.LogVal('Friendly', browserWindow.Friendly);
-      this.LogVal('WindowType', scWindowType[browserWindow.WindowType]);
 
-      this.DebugIDataOneDoc(browserWindow.DataDocSelf);
-      this.DebugWindow(browserWindow.Window);
-    }
-  }
+
 
   //DebugIDataBrowserWindow(targetWindow: IDataBrowserWindow) {
   //  this.NotNullCheck('toReturn', targetWindow);
@@ -76,19 +63,16 @@ export class ContentDebug extends BaseDebug {
       if (this.IsNotNullOrUndefinedBool('CurrentSnapShots', state.SnapShotsMany.CurrentSnapShots)) {
         this.LogVal('Snapshot count', state.SnapShotsMany.CurrentSnapShots.length);
       }
-      if (this.IsNotNullOrUndefinedBool('PageType', state.WindowType)) {
-        this.LogVal('scWindowType : ', scWindowType[state.WindowType]);
-      }
-      if (this.IsNotNullOrUndefinedBool('PageType', state.Url)) {
-        this.LogVal('Url : ', state.Url);
-      }
+      //if (this.IsNotNullOrUndefinedBool('PageType', state.WindowType)) {
+      //  this.LogVal('scWindowType : ', scWindowType[state.WindowType]);
+      //}
+      //if (this.IsNotNullOrUndefinedBool('PageType', state.Url)) {
+      //  this.LogVal('Url : ', state.Url);
+      //}
     }
   }
 
-  DebugWindow(window: Window) {
-    if (this.IsNotNullOrUndefinedBool('window', window)) {
-    }
-  }
+
 
   DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
     if (this.IsNotNullOrUndefinedBool('IDataOneDoc', dataOneDoc)) {
@@ -113,33 +97,5 @@ export class ContentDebug extends BaseDebug {
     }
     this.FuncEnd(this.PromiseBucketDebug.name, friendlyName);
   }
-  DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
-    this.FuncStart(this.DebugDataOneIframe.name);
-
-    this.Log('dataOneIframe : ' + this.IsNullOrUndefined(dataOneIframe));
-
-    if (dataOneIframe) {
-      this.Log('dataOneIframe.Nickname : ' + dataOneIframe.Nickname);
-      this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
-      if (dataOneIframe.IframeElem) {
-        this.Log('dataOneIframe.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
-        //  //this.Log('dataOneIframe.IframeElem.src: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.src));
-        //  this.Log('dataOneIframe.IframeElem.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
-        //  //this.Log('dataOneIframe.IframeElem.name: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.name));
-      }
-      this.Log('dataOneIframe.ContentDoc: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc));
-
-      this.DebugIDataOneDoc(dataOneIframe.ContentDoc);
-
-      //this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
-
-      //this.Log('dataOneIframe.Id: \t' + this.IsNullOrUndefined(dataOneIframe.Id));
-      //if (dataOneIframe.Id) {
-      //  this.Log('dataOneIframe.Id.asShort: \t' + this.IsNullOrUndefined(dataOneIframe.Id.asShort));
-      //}
-
-      //this.Log('dataOneIframe.DocElem: \t' + this.IsNullOrUndefined(dataOneIframe.Index));
-    }
-    this.FuncEnd(this.DebugDataOneIframe.name);
-  }
+  
 }

@@ -13,23 +13,23 @@ import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 export class OneWindowManager extends ContentManagerBase {
   __activeWindowSnapShot: IDataOneWindowStorage;
 
-  constructor(xyyz: ContentHub) {
-    super(xyyz);
-    xyyz.debug.FuncStart(OneWindowManager.name);
+  constructor(hub: ContentHub) {
+    super(hub);
+    hub.debug.FuncStart(OneWindowManager.name);
 
-    xyyz.debug.FuncEnd(OneWindowManager.name);
+    hub.debug.FuncEnd(OneWindowManager.name);
   }
 
   SaveWindowState(targetWindow: IDataBrowserWindow, snapShotSettings: IDataPayloadSnapShot) {
     this.debug().FuncStart(this.SaveWindowState.name);
 
-    var currentPageType = this.PageDataMan().GetCurrentPageType();
+    var currentPageType = snapShotSettings.CurrentPageType;
     this.OneWinMan().CreateNewWindowSnapShot(currentPageType, snapShotSettings.Flavor);
 
     if (currentPageType === scWindowType.ContentEditor) {
       this.debug().Log('is Content Editor');
 
-      var id = this.ContentHub.GuidMan.EmptyGuid();
+      var id = this.ContentHub.Helpers.GuidHelp.EmptyGuid();
 
       this.ContentHub.OneCEMan.SaveStateOneContentEditor(id, targetWindow.DataDocSelf, snapShotSettings);
     }
@@ -48,7 +48,7 @@ export class OneWindowManager extends ContentManagerBase {
   //WaitForPageLoad(desiredPageType: WindowType, targetWindow: IDataBrowserWindow, iteration: number, successCallBack: Function) {
   //  this.debug().FuncStart(this.WaitForPageLoad.name, 'Iteration: ' + iteration + ' | Desired type: ' + WindowType[desiredPageType]);
 
-  //  var targetPageType: WindowType = this.PageDataMan().GetPageTypeOfTargetWindow(targetWindow.Window);
+  //  var targetPageType: WindowType = this.PageMan().GetPageTypeOfTargetWindow(targetWindow.Window);
 
   //  if (targetPageType !== desiredPageType) {
   //    var self = this;
@@ -84,7 +84,7 @@ export class OneWindowManager extends ContentManagerBase {
   async PublishActiveCE(targetWindow: IDataBrowserWindow) {
     this.debug().FuncStart(this.PublishActiveCE.name);
 
-    var currentWindowType = this.PageDataMan().GetCurrentPageType();
+    var currentWindowType = this.ScUiMan().GetCurrentPageType();
 
     var docToPublish: IDataOneDoc = null;
 
@@ -94,7 +94,7 @@ export class OneWindowManager extends ContentManagerBase {
         docToPublish = topIframe.ContentDoc
       }
     } else {
-      docToPublish = this.PageDataMan().TopLevelWindow().DataDocSelf;
+      docToPublish = this.ScUiMan().TopLevelWindow().DataDocSelf;
     }
 
     this.debug().Log('docToPublish', this.debug().IsNullOrUndefined(docToPublish));
@@ -174,8 +174,8 @@ export class OneWindowManager extends ContentManagerBase {
   }
 
   Init() {
-    var currentPageType = this.PageDataMan().GetCurrentPageType();
-    this.CreateNewWindowSnapShot(currentPageType, SnapShotFlavor.Unknown);
+    //todo put back ? var currentPageType = this.PageMan().GetCurrentPageType();
+    //todo put back ?  this.CreateNewWindowSnapShot(currentPageType, SnapShotFlavor.Unknown);
   }
   CreateNewWindowSnapShot(windowType: scWindowType, flavor: SnapShotFlavor) {
     this.debug().FuncStart(this.CreateNewWindowSnapShot.name);
@@ -183,7 +183,7 @@ export class OneWindowManager extends ContentManagerBase {
     var dateToUse: Date = new Date();
     //var friendly: string = this.Xyyz.Utilities.MakeFriendlyDate(dateToUse);
 
-    var newGuid = this.ContentHub.GuidMan.NewGuid();
+    var newGuid = this.ContentHub.Helpers.GuidHelp. NewGuid();
 
     this.__activeWindowSnapShot = {
       TimeStamp: dateToUse,

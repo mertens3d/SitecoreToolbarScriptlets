@@ -3,8 +3,10 @@ import { ContentManagerBase } from '../_first/_ContentManagerBase';
 
 
 export class MiscManager extends ContentManagerBase {
-  constructor(xyyz: ContentHub) {
-    super(xyyz);
+  constructor(hub: ContentHub) {
+    hub.debug.FuncStart(MiscManager.name);
+    super(hub);
+    hub.debug.FuncEnd(MiscManager.name);
   }
 
   NotNullOrUndefined(subjectAnyAr: any[], label?: string, iterationCheck?: number): boolean;

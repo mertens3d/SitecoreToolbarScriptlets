@@ -14,11 +14,11 @@ import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 export class ContentAtticManager extends ContentManagerBase {
   private CachedWindowStorage: ISnapShotsMany;
 
-  constructor(xyyz: ContentHub) {
-    super(xyyz);
-    xyyz.debug.FuncStart(ContentAtticManager.name);
+  constructor(hub: ContentHub) {
+    super(hub);
+    hub.debug.FuncStart(ContentAtticManager.name);
 
-    xyyz.debug.FuncEnd(ContentAtticManager.name);
+    hub.debug.FuncEnd(ContentAtticManager.name);
   }
 
   Init() {
@@ -162,7 +162,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      candidate.Id = this.ContentHub.GuidMan.ParseGuid(candidate.Id.AsString);
+      candidate.Id = this.ContentHub.Helpers.GuidHelp.ParseGuid(candidate.Id.AsString);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {

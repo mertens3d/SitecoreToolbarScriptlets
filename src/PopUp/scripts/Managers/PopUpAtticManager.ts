@@ -25,12 +25,12 @@ export class PopUpAtticManager extends PopUpManagerBase {
   GetDefaultSettings(): IDataPopUpSettings {
     this.debug().FuncStart(this.GetDefaultSettings.name);
     let defaultDebugSettings: IDataDebugSettings = {
-      KeepDialogOpen: this.PopConst().Storage.Defaults.bool.DefaultDebugKeepDialogOpen,
-      ShowDebugData: this.PopConst().Storage.Defaults.bool. DefaultShowDebugData,
+      KeepDialogOpen: this.Const().Storage.Defaults.bool.DefaultDebugKeepDialogOpen,
+      ShowDebugData: this.Const().Storage.Defaults.bool. DefaultShowDebugData,
     }
 
     let defaultContentPrefs: IDataContentPrefs = {
-      MaxAutoSaveCount: this.PopConst().Numbers.MaxAutoSaveCount,
+      MaxAutoSaveCount: this.Const().Numbers.MaxAutoSaveCount,
       AutoSave: true
     }
 

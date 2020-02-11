@@ -2,9 +2,22 @@ import { IsScMode } from './IscMode';
 import { IScVerSpec } from './IScVerSpec';
 
 export interface IContentConst {
-    MaxAutoSaveAgeDays: number;
+  MaxAutoSaveAgeDays: number;
   MaxAutoToSaveCount: number;
   MaxCacheAgeMs: number;
+
+  ElemId: {
+    sc: {
+      scLoginUserName: string,
+      scLoginPassword: string,
+      SitecoreRootNodeId: string,
+      SitecoreRootGlyphId: string,
+
+      scLoginBtn: IScVerSpec,
+
+    },
+  },
+
   Iterations: {
     MaxSetHrefEffort: number,
     MaxIterationSwitchBoard: number,
@@ -16,41 +29,12 @@ export interface IContentConst {
     AutoSaveIntervalMin: number,
   },
 
-
-  ElemId: {
-    sc: {
-      scLoginBtn: IScVerSpec,
-      scLoginPassword: string,
-      scLoginUserName: string,
-
-      SitecoreRootGlyphId: string,
-      SitecoreRootNodeId: string,
-    }
-  },
   ClassNames: {
     ContentTreeNode: string,
 
     SC: {
       scContentTreeNodeActive: string,
     }
-  },
-
-  UrlSuffix: {
-    Desktop: string,
-    Login: string,
-    LaunchPad: string,
-    CE: string,
-    None: string,
-  },
-  Regex: {
-    ContentEditor: RegExp,
-    NbSp: RegExp,
-    PageType: {
-      Desktop: RegExp
-      Edit: RegExp
-      Normal: RegExp
-      Preview: RegExp
-    },
   },
 
   Selector: {

@@ -24,8 +24,6 @@ export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
         PlainCount: 0,
         Birthday: new Date(1970),
       },
-      WindowType: scWindowType.Unknown,
-      Url: '',
       LastReq: MsgFlag.Unknown,
       ErrorStack: [],
       LastReqSuccessful: false,

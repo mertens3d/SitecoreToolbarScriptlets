@@ -61,7 +61,9 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\ExternalEvents.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\InternalEvents.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\FactoryManager.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\PageManagerPopUp.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\SettingsManager.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Promises\PromiseChainRestoreDTPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\HelperBase.ts" />
@@ -77,6 +79,8 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingKey.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingType.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SnapShotFlavor.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Helpers\FactoryHelper.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Helpers\Helpers.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICurrState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataCacheOneWindowStorage.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataContentPrefs.ts" />
@@ -157,13 +161,13 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneStorageData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataBucketRestoreDesktop.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IScVerSpec.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\SitecoreUiManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\SitecoreUiManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\FeedbackManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\IIterationResults.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\NewWindowDest.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\GuidHelper.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Helpers\GuidHelper.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentHub.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\LocationManager.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\LocationManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneIframe.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\PageDataManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\MiscManager.ts" />
@@ -171,7 +175,7 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseChainQuickPublish.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseChainRestoreDesktop.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseGeneric.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseGeneric.ts" />
     <TypeScriptCompile Include="src\Content\scripts\_first\_ContentManagerBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneWindowStorage.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Utilities.ts" />

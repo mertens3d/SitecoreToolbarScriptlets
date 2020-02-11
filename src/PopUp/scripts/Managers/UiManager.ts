@@ -55,9 +55,9 @@ export class UiManager extends PopUpManagerBase {
   WriteBuildNumToUi() {
     this.debug().LogVal('BuildDateStamp', BuildDateStamp);
 
-    var targetTag: HTMLElement = document.querySelector(this.PopConst().Selector.HS.BuildStamp);
+    var targetTag: HTMLElement = document.querySelector(this.Const().Selector.HS.BuildStamp);
     if (targetTag) {
-      targetTag.innerText = 'build: ' + this.Utilites().MakeFriendlyDate(new Date(BuildDateStamp));
+      targetTag.innerText = 'build: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date(BuildDateStamp));
     } else {
       this.debug().Error(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
     }
@@ -157,7 +157,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   __getTextArea(): HTMLTextAreaElement {
-    return <HTMLTextAreaElement>document.querySelector(this.PopConst().Selector.HS.TaDebug);
+    return <HTMLTextAreaElement>document.querySelector(this.Const().Selector.HS.TaDebug);
   }
 
   HndlrDebugTextChanged(caller: any, data: ICallbackDataDebugTextChanged) {
@@ -176,7 +176,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   SetParentInfo(winDataParent: IDataBrowserWindow) {
-    var targetSpan = document.getElementById(this.PopConst().ElemId.HindSiteParentInfo);
+    var targetSpan = document.getElementById(this.Const().ElemId.HindSiteParentInfo);
     if (targetSpan) {
       targetSpan.innerHTML = ' | Parent Id: ' + winDataParent.DataDocSelf.DocId.AsShort + ' | ' + winDataParent.Window.location.href;
     }
@@ -184,9 +184,9 @@ export class UiManager extends PopUpManagerBase {
 
   SetAccordianClass(targetElem: HTMLElement, isCollapsed: boolean) {
     if (!isCollapsed) {
-      targetElem.classList.remove(this.PopConst().ClassNames.HS.Collapsed);
+      targetElem.classList.remove(this.Const().ClassNames.HS.Collapsed);
     } else {
-      targetElem.classList.add(this.PopConst().ClassNames.HS.Collapsed);
+      targetElem.classList.add(this.Const().ClassNames.HS.Collapsed);
     }
   }
 
@@ -249,7 +249,7 @@ export class UiManager extends PopUpManagerBase {
     this.debug().FuncStart(this.UpdateAtticFromUi.name);
 
     let currentSettings: IDataPopUpSettings = await this.PopAtticMan().CurrentSettings();
-    let currentVal = (<HTMLInputElement>document.querySelector(this.PopConst().Selector.HS.iCBoxdSettingsShowDebugData)).checked;
+    let currentVal = (<HTMLInputElement>document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowDebugData)).checked;
     currentVal = true; //todo - remove after debugging
     this.debug().LogVal('currentVal', currentVal.toString())
     currentSettings.DebugSettings.ShowDebugData = currentVal;
@@ -261,7 +261,7 @@ export class UiManager extends PopUpManagerBase {
 
   SelectChanged(): void {
     this.debug().FuncStart(this.SelectChanged.name);
-    this.__selectSnapshotId = this.GuidHelper().ParseGuid(this.__getSelectElem().value);
+    this.__selectSnapshotId = this.Helpers().GuidHelp. ParseGuid(this.__getSelectElem().value);
     //this.debug().Log('new index :' + this.__selectSnapshotId);
 
     //if (e.ctrlKey) {
@@ -273,7 +273,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   private __GetCancelButton() {
-    return document.getElementById(this.PopConst().ElemId.HS.Btn.HsCancel);
+    return document.getElementById(this.Const().ElemId.HS.Btn.HsCancel);
   }
 
   SetCancelFlag() {
@@ -294,7 +294,7 @@ export class UiManager extends PopUpManagerBase {
 
   async __refreshSettings() {
     this.debug().FuncStart(this.__refreshSettings.name);
-    let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(this.PopConst().Selector.HS.IdFieldSetDebug);
+    let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(this.Const().Selector.HS.IdFieldSetDebug);
 
     let currentSettings: IDataPopUpSettings = await this.PopAtticMan().CurrentSettings();
     if (currentSettings) {
@@ -302,7 +302,7 @@ export class UiManager extends PopUpManagerBase {
         let newDisplay = currentSettings.DebugSettings.ShowDebugData ? '' : 'none';
         debugFieldSet.style.display = newDisplay;
       }
-      let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(this.PopConst().Selector.HS.iCBoxdSettingsShowDebugData);
+      let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowDebugData);
       if (checkBoxShowDebug) {
         this.debug().LogVal('before', checkBoxShowDebug.checked.toString());
         checkBoxShowDebug.checked = currentSettings.DebugSettings.ShowDebugData;
@@ -343,7 +343,7 @@ export class UiManager extends PopUpManagerBase {
       if (command.RequiredPageTypes.length > 0) {
         this.debug().LogVal('required pages', command.RequiredPageTypes.toString());
 
-        var currentWindowType = this.MsgMan().CachedState.WindowType;
+        var currentWindowType = this.PageMan().GetCurrentPageType();
         this.debug().LogVal('current', currentWindowType);
         this.debug().LogVal('current', StaticHelpers.WindowTypeAsString(currentWindowType));
         var targetButton: HTMLElement = this.GetButtonByIdOrSelector(command.ButtonSelector);
@@ -405,7 +405,7 @@ export class UiManager extends PopUpManagerBase {
       }
 
       if (storageMatch) {
-        var inputElem = <HTMLInputElement>window.document.getElementById(this.PopConst().ElemId.InputNickname);
+        var inputElem = <HTMLInputElement>window.document.getElementById(this.Const().ElemId.InputNickname);
         if (inputElem) {
           inputElem.value = storageMatch.NickName;
         }
@@ -416,12 +416,12 @@ export class UiManager extends PopUpManagerBase {
 
   GetValueInNickname(): string {
     var toReturn: string = '';
-    toReturn = (<HTMLInputElement>window.document.getElementById(this.PopConst().ElemId.InputNickname)).value;
+    toReturn = (<HTMLInputElement>window.document.getElementById(this.Const().ElemId.InputNickname)).value;
     return toReturn;
   }
 
   private __getSelectElem(): HTMLSelectElement {
-    return <HTMLSelectElement>window.document.querySelector(this.PopConst().Selector.HS.SelStateSnapShot);
+    return <HTMLSelectElement>window.document.querySelector(this.Const().Selector.HS.SelStateSnapShot);
   }
 
   GetIdOfSelectWindowSnapshot(): IGuid {
@@ -432,7 +432,7 @@ export class UiManager extends PopUpManagerBase {
     if (targetSel) {
       var selectedValue: string = targetSel.value;
       if (selectedValue) {
-        toReturn = this.GuidHelper().ParseGuid(selectedValue);
+        toReturn = this.Helpers().GuidHelp.ParseGuid(selectedValue);
       }
       //var optionsLength = targetSel.options.length;
       //if (this.__selectSnapshotId < optionsLength) {
@@ -444,7 +444,7 @@ export class UiManager extends PopUpManagerBase {
 
     if (!toReturn) {
       this.debug().Log('using empty guid');
-      toReturn = this.GuidHelper().EmptyGuid();
+      toReturn = this.Helpers().GuidHelp. EmptyGuid();
     }
 
     this.debug().DebugIGuid(toReturn);
@@ -511,13 +511,13 @@ export class UiManager extends PopUpManagerBase {
     if (this.debug().IsNotNullOrUndefinedBool('state', state)) {
       this.UiMan().PopulateStateOfSnapShotSelect(state.SnapShotsMany.CurrentSnapShots);
 
-      var targetCurrStateTa: HTMLTextAreaElement = <HTMLTextAreaElement>window.document.querySelector(this.PopConst().Selector.HS.TaState);
+      var targetCurrStateTa: HTMLTextAreaElement = <HTMLTextAreaElement>window.document.querySelector(this.Const().Selector.HS.TaState);
       if (targetCurrStateTa) {
-        var allTaText: string = 'State as of: ' + this.Utilites().MakeFriendlyDate(new Date());
-        allTaText += '\n';
-        allTaText += 'Page Type: ' + scWindowType[state.WindowType]
-        allTaText += '\n';
-        allTaText += 'Url: ' + state.Url;
+        var allTaText: string = 'State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
+        //allTaText += '\n';
+        //allTaText += 'Page Type: ' + scWindowType[state.WindowType]
+        //allTaText += '\n';
+        //allTaText += 'Url: ' + state.Url;
 
         allTaText += '\n';
         allTaText += 'Last Request: ' + MsgFlag[state.LastReq];
@@ -550,21 +550,21 @@ export class UiManager extends PopUpManagerBase {
   }
 
   CleanExistingSelection(targetSel: HTMLSelectElement) {
-    var optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderAutoTitle + ']')
+    var optGroup = targetSel.querySelector('[id=' + this.Const().ElemId.HS.SelectHeaderAutoTitle + ']')
     if (optGroup) {
       optGroup.remove();
     }
 
-    optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderAuto + ']')
+    optGroup = targetSel.querySelector('[id=' + this.Const().ElemId.HS.SelectHeaderAuto + ']')
     if (optGroup) {
       optGroup.remove();
     }
-    optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderFavorite + ']')
+    optGroup = targetSel.querySelector('[id=' + this.Const().ElemId.HS.SelectHeaderFavorite + ']')
     if (optGroup) {
       optGroup.remove();
     }
 
-    optGroup = targetSel.querySelector('[id=' + this.PopConst().ElemId.HS.SelectHeaderFavoriteTitle + ']')
+    optGroup = targetSel.querySelector('[id=' + this.Const().ElemId.HS.SelectHeaderFavoriteTitle + ']')
     if (optGroup) {
       optGroup.remove();
     }
@@ -581,21 +581,21 @@ export class UiManager extends PopUpManagerBase {
     }
 
     toReturn.Auto = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.Auto.label = this.Utilites().SelectHeaderStr('');
-    toReturn.Auto.id = this.PopConst().ElemId.HS.SelectHeaderAuto;
+    toReturn.Auto.label = this.Helpers().UtilityHelp.SelectHeaderStr('');
+    toReturn.Auto.id = this.Const().ElemId.HS.SelectHeaderAuto;
 
     toReturn.AutoTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
     toReturn.AutoTitle.label = 'Auto Snap Shots';
-    toReturn.AutoTitle.id = this.PopConst().ElemId.HS.SelectHeaderAutoTitle;
+    toReturn.AutoTitle.id = this.Const().ElemId.HS.SelectHeaderAutoTitle;
     toReturn.AutoTitle.classList.add('title');
 
     toReturn.Favorite = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.Favorite.label = this.Utilites().SelectHeaderStr('');
-    toReturn.Favorite.id = this.PopConst().ElemId.HS.SelectHeaderFavorite;
+    toReturn.Favorite.label = this.Helpers().UtilityHelp.SelectHeaderStr('');
+    toReturn.Favorite.id = this.Const().ElemId.HS.SelectHeaderFavorite;
 
     toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
     toReturn.FavoriteTitle.label = 'Tyical Snap Shots';
-    toReturn.FavoriteTitle.id = this.PopConst().ElemId.HS.SelectHeaderFavoriteTitle;
+    toReturn.FavoriteTitle.id = this.Const().ElemId.HS.SelectHeaderFavoriteTitle;
     toReturn.FavoriteTitle.classList.add('title');
 
     return toReturn;
@@ -618,7 +618,7 @@ export class UiManager extends PopUpManagerBase {
             var data = snapShots[idx];
 
             var el = <HTMLOptionElement>window.document.createElement('option');
-            el.innerHTML = this.PopHub.Utilities.TimeNicknameFavStr(data);
+            el.innerHTML = this.PopHub.Helpers.UtilityHelp.TimeNicknameFavStr(data);
 
             if (data.Flavor === SnapShotFlavor.Favorite) {
               el.classList.add('favorite');
@@ -641,7 +641,7 @@ export class UiManager extends PopUpManagerBase {
         targetSel.appendChild(headers.AutoTitle);
         targetSel.appendChild(headers.Auto);
 
-        if (!this.__selectSnapshotId || this.__selectSnapshotId === this.GuidHelper().EmptyGuid()) {
+        if (!this.__selectSnapshotId || this.__selectSnapshotId === this.Helpers().GuidHelp.EmptyGuid()) {
           targetSel.selectedIndex = 0;
         }
       }

@@ -1,6 +1,7 @@
 ﻿import { BaseDebug } from './debug';
 import { SharedConst } from '../SharedConst';
 import { HelperBase } from './HelperBase';
+import { HelperHub } from '../Helpers/Helpers';
 
 export class IterationHelper extends HelperBase{
   private __currentIteration: number;
@@ -11,8 +12,9 @@ export class IterationHelper extends HelperBase{
   IsExhaustedMsg: string = 'Iteration helper exhausted';
   OperationCancelled: any;
 
-  constructor(debug: BaseDebug, nickname: string, maxIterations: number = null) {
-    super(debug)
+  constructor(helperHub: HelperHub, nickname: string, maxIterations: number = null) {
+
+    super(helperHub)
     if (!maxIterations) {
       maxIterations = SharedConst.SharedConst.IterHelper.MaxCount.Default;
     }

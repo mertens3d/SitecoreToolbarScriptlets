@@ -18,7 +18,8 @@ export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
 
     this.Data.SnapShotSettings = {
       SnapShotNewNickname: '',
-      Flavor: SnapShotFlavor.Unknown
+      Flavor: SnapShotFlavor.Unknown,
+      CurrentPageType: popHub.PageMan.GetCurrentPageType()
     }
 
 

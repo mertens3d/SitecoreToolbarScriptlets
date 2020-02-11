@@ -1,13 +1,13 @@
 ﻿import { ContentHub } from '../Managers/ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { PromiseGeneric } from './PromiseGeneric';
+import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseGeneric';
 import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPublishChain';
 
 export class PromiseOneStep extends ContentManagerBase {
-  constructor(xyyz: ContentHub) {
-    xyyz.debug.FuncStart(PromiseGeneric.name);
-    super(xyyz);
-    xyyz.debug.FuncEnd(PromiseGeneric.name);
+  constructor(hub: ContentHub) {
+    hub.debug.FuncStart(PromiseHelper.name);
+    super(hub);
+    hub.debug.FuncEnd(PromiseHelper.name);
   }
 
   async ClickPublishOnNav(payload: IDataPublishChain) {

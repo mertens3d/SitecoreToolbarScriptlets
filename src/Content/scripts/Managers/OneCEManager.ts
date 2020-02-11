@@ -8,9 +8,6 @@ import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTre
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 
 export class OneCEManager extends ContentManagerBase {
-  constructor(xyyz: ContentHub) {
-    super(xyyz);
-  }
 
   WaitForNode(needleId: IGuid, targetDoc: IDataOneDoc, currentIteration: number, timeout: number, callbackOnComplete: Function) {
     this.debug().FuncStart(this.WaitForNode.name, 'looking for guid: iter: ' + currentIteration + ' ' + needleId.AsString + ' on ' + targetDoc.DocId.AsShort);
@@ -88,7 +85,7 @@ export class OneCEManager extends ContentManagerBase {
     this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.AsShort);
     this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
 
-    var iterHelper = new IterationHelper(this.debug(), this.WaitForAndRestoreOneNode.name);
+    var iterHelper = new IterationHelper(this.Helpers(), this.WaitForAndRestoreOneNode.name);
 
     var foundOnPageTreeGlyph: HTMLElement = null;
 
@@ -121,7 +118,7 @@ export class OneCEManager extends ContentManagerBase {
   async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc) {
     this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.DocId.AsShort);
 
-    let iterHelper: IterationHelper = new IterationHelper(this.debug(), this.WaitForAndRestoreManyAllNodes.name);
+    let iterHelper: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForAndRestoreManyAllNodes.name);
 
     while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
       var nextNode: IDataOneTreeNode = storageData.AllTreeNodeAr.shift();

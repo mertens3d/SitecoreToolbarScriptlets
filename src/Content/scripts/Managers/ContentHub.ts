@@ -1,55 +1,49 @@
 ﻿import { ContentAtticManager } from './ContentAtticManager';
-import { LocationManager } from './LocationManager';
 import { MiscManager } from './MiscManager';
 import { OneCEManager } from './OneCEManager';
 import { OneDesktopManager } from './OneDesktopManager';
 import { OneTreeManager } from './OneTreeManager';
 import { OneWindowManager } from './OneWindowManager';
-import { PageDataManager } from './PageDataManager';
-import { PromiseGeneric } from '../Promises/PromiseGeneric';
+import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseGeneric';
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
-import { Utilities } from '../../../Shared/scripts/Classes/Utilities';
+import { UtilityHelper } from '../../../Shared/scripts/Classes/Utilities';
 import { ContentMessageManager } from './ContentMessageManager';
 import { ContentDebug } from '../Classes/ContentDebug';
 import { IContentConst } from '../../../Shared/scripts/Interfaces/IContentConst';
-import { GuidHelper } from '../../../Shared/scripts/Classes/GuidHelper';
 import { iSitecoreUiManager } from '../../../Shared/scripts/Interfaces/ISitecoreUiManager';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { InjectConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { Factories } from '../Classes/Factories';
-import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseHelper';
 import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
+import { SitecoreUiManager } from './SitecoreUiManager';
+import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
 
 export class ContentHub {
   AtticMan: ContentAtticManager;
   Const: IContentConst;
   debug: ContentDebug;
 
-  GuidMan: GuidHelper;
-  LocationMan: LocationManager;
+  Helpers: HelperHub;
   MsgMan: ContentMessageManager;
   MiscMan: MiscManager;
   OneCEMan: OneCEManager;
   OneDesktopMan: OneDesktopManager;
   OneTreeMan: OneTreeManager;
   OneWindowMan: OneWindowManager;
-  PageDataMan: PageDataManager;
-  PromiseGeneric: PromiseGeneric;
+  PromiseHelper: PromiseHelper;
   PromiseOneStep: PromiseOneStep;
-  SitecoreUiMan: iSitecoreUiManager;
+  SitecoreUiMan: SitecoreUiManager;
 
-  Utilities: Utilities;
+  Utilities: UtilityHelper;
   MessageFlag: MsgFlag;
   Factory: Factories;
-  PromiseHelper: PromiseHelper;
   SharedConst: ISharedConst;
   ReadyForMessages: boolean = false;
 
-  constructor(sitecoreUiMan: iSitecoreUiManager, debug: ContentDebug) {
+  constructor( debug: ContentDebug) {
     debug.FuncStart(ContentHub.name);
     this.debug = debug;
-    this.SitecoreUiMan = sitecoreUiMan;
     this.Instantiate();
     debug.FuncEnd(ContentHub.name);
   }
@@ -59,26 +53,26 @@ export class ContentHub {
 
     this.AtticMan = new ContentAtticManager(this);
 
-    this.GuidMan = new GuidHelper(this.debug);
-    this.LocationMan = new LocationManager(this);
+    this.Helpers = new HelperHub(this.debug);
     this.MsgMan = new ContentMessageManager(this);
     this.MiscMan = new MiscManager(this);
     this.OneCEMan = new OneCEManager(this);
     this.OneDesktopMan = new OneDesktopManager(this);
+    this.debug.MarkerA();
+
     this.OneTreeMan = new OneTreeManager(this);
     this.OneWindowMan = new OneWindowManager(this);
-    this.PageDataMan = new PageDataManager(this);
-    this.PromiseGeneric = new PromiseGeneric(this);
+    
     this.PromiseOneStep = new PromiseOneStep(this);
     this.Factory = new Factories(this);
 
-    this.Utilities = new Utilities(this.debug);
-    this.PromiseHelper = new PromiseHelper(this.debug);
 
     this.SharedConst = SharedConst.SharedConst;
 
+    this.SitecoreUiMan = new SitecoreUiManager(this);
     this.Init();
 
+    this.debug.Log('ready for messages');
     this.ReadyForMessages = true;
 
     this.debug.FuncEnd(this.Instantiate.name);
@@ -92,7 +86,7 @@ export class ContentHub {
 
     this.debug.Enabled = this.MsgMan.IsDebugEnabled();
 
-    this.PageDataMan.Init();
+
     this.OneWindowMan.Init();
 
     this.debug.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);

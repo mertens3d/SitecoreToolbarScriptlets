@@ -54,9 +54,10 @@ export class PopUpMessagesManager extends PopUpManagerBase {
   }
 
   AutoLogin() {
-    if (this.CachedState.WindowType === scWindowType.LoginPage) {
-      this.SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqLoginWithAdminB, this.PopHub));
-    }
+    //todo - put back ?
+    //if (this.CachedState.WindowType === scWindowType.LoginPage) {
+    //  this.SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqLoginWithAdminB, this.PopHub));
+    //}
   }
 
   OnePing(targetTab: browser.tabs.Tab, msg: MsgFromPopUp) {
@@ -98,16 +99,27 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     });//promise
   }// function
 
-  async WaitForListening() {
+  async GetTargetTab() {
     return new Promise(async (resolve, reject) => {
-      this.debug().FuncStart(this.WaitForListening.name);
+
+      await browser.tabs.query({ currentWindow: true, active: true })
+        .then((tabs) => resolve(tabs[0]))
+        .catch((err) => reject(err));
+
+    });
+  }
+
+  async WaitForListeningTab() {
+    return new Promise(async (resolve, reject) => {
+      this.debug().FuncStart(this.WaitForListeningTab.name);
 
       var result: ResultSuccessFail = new ResultSuccessFail();
       result.Succeeded = false;
-      var iterationJr: IterationHelper = new IterationHelper(this.debug(), this.WaitForListening.name);
-      var targetTab: browser.tabs.Tab;
-      await browser.tabs.query({ currentWindow: true, active: true })
-        .then((tabs) => targetTab = tabs[0]);
+      var iterationJr: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForListeningTab.name);
+      var targetTab;
+
+      await this.GetTargetTab()
+        .then((tab) => { targetTab = tab });
 
       var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
 
@@ -138,10 +150,10 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       this.debug().Log('Done while');
 
       if (result.Succeeded) {
-        this.debug().FuncEnd(this.WaitForListening.name);
-        resolve();
+        this.debug().FuncEnd(this.WaitForListeningTab.name);
+        resolve(targetTab);
       } else {
-        this.debug().FuncEnd(this.WaitForListening.name);
+        this.debug().FuncEnd(this.WaitForListeningTab.name);
         if (iterationJr.IsExhausted) {
           result.FailMessage += '  ' + iterationJr.IsExhaustedMsg;
         }
@@ -192,13 +204,17 @@ export class PopUpMessagesManager extends PopUpManagerBase {
 
     msgPlayload.CurrentContentPrefs = await (await this.PopAtticMan().CurrentSettings()).ContentPrefs;
 
-    await browser.tabs.query({
-      currentWindow: true,
-      active: true
-    }).then((tabs) => this.SendMessageToTabs(tabs, msgPlayload))
-      .catch(
-        this.onError
-      );
+    this.WaitForListeningTab()
+      .then((tab) => this.SendMessageToSingleTab(tab, msgPlayload))
+        .catch((err) => this.onError(err));
+
+    //await browser.tabs.query({
+    //  currentWindow: true,
+    //  active: true
+    //}).then((tabs) => this.SendMessageToTabs(tabs, msgPlayload))
+    //  .catch(
+    //    this.onError
+    //  );
 
     this.debug().FuncEnd(this.SendMessageToContent.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
   }

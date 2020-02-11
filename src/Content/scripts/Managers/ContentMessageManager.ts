@@ -71,7 +71,7 @@ export class ContentMessageManager extends ContentManagerBase {
         var self = this;
         var intervalMs = this.Const().Timeouts.AutoSaveIntervalMin * 60 * 1000;
         window.setInterval(() => {
-          self.AutoSaveSnapShot();
+          self.AutoSaveSnapShot(this.ScUiMan().GetCurrentPageType());
         }, intervalMs)
 
         this.AutoSaveHasBeenScheduled = true;
@@ -79,14 +79,15 @@ export class ContentMessageManager extends ContentManagerBase {
     }
   }
 
-  AutoSaveSnapShot() {
+  AutoSaveSnapShot(pageType: scWindowType) {
     this.debug().FuncStart(this.AutoSaveSnapShot.name);
     var SnapShotSettings: IDataPayloadSnapShot = {
       SnapShotNewNickname: '',
-      Flavor: SnapShotFlavor.Autosave
+      Flavor: SnapShotFlavor.Autosave,
+      CurrentPageType: pageType
     }
 
-    this.OneWinMan().SaveWindowState(this.PageDataMan().TopLevelWindow(), SnapShotSettings);
+    this.OneWinMan().SaveWindowState(this.ScUiMan().TopLevelWindow(), SnapShotSettings);
     this.debug().FuncEnd(this.AutoSaveSnapShot.name);
   }
 
@@ -144,7 +145,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
   NotifyCompleteOnContent(targetWindow: IDataBrowserWindow = null, Message: string): void {
     if (!targetWindow) {
-      targetWindow = this.PageDataMan().TopLevelWindow();
+      targetWindow = this.ScUiMan().TopLevelWindow();
     }
 
     let bodyTag = targetWindow.DataDocSelf.Document.getElementsByTagName('body')[0];//(treeGlyphTargetId);
@@ -179,15 +180,15 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqAddCETab:
-        await this.PromiseGen().RaceWaitAndClick(this.Const().Selector.SC.scStartButton, this.PageDataMan().TopLevelWindow().DataDocSelf)
-          .then(() => { this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.StartMenuLeftOption], this.PageDataMan().TopLevelWindow().DataDocSelf) });
+        await this.PromiseGen().RaceWaitAndClick(this.Const().Selector.SC.scStartButton, this.ScUiMan().TopLevelWindow().DataDocSelf)
+          .then(() => { this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelWindow().DataDocSelf) });
         break;
 
       case MsgFlag.ReqAdminB:
         this.debug().LogVal('flag is adminb', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
-        this.debug().DebugPageDataMan(this.PageDataMan());
+        //this.debug().DebugPageMan(this.PageMan());
 
-        this.locMan().AdminB(this.PageDataMan().TopLevelWindow().DataDocSelf, null);
+        this.ScUiMan().AdminB(this.ScUiMan().TopLevelWindow().DataDocSelf, null);
         break;
 
       case MsgFlag.Ping:
@@ -210,13 +211,9 @@ export class ContentMessageManager extends ContentManagerBase {
         //this.debug().LogVal('response', JSON.stringify(response));
         response.MsgFlag = MsgFlag.RespCurState;
         break;
-
-      case MsgFlag.ReqGoDesktop:
-        this.locMan().ChangeLocationSwitchBoard(scWindowType.Desktop, this.PageDataMan().TopLevelWindow());
-        break;
-
+    
       case MsgFlag.ReqOpenCE:
-        this.locMan().ChangeLocationSwitchBoard(scWindowType.ContentEditor, this.PageDataMan().TopLevelWindow());
+      
         break;
 
       case MsgFlag.ReqMarkFavorite:
@@ -226,14 +223,8 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqQuickPublish:
-        var targetWin = this.PageDataMan().TopLevelWindow();
+        var targetWin = this.ScUiMan().TopLevelWindow();
         await this.OneWinMan().PublishActiveCE(targetWin);
-        break;
-
-      case MsgFlag.ReqSetScMode:
-        this.locMan().SetScMode(payload.Data.ReqScMode, payload.Data.UseOriginalWindowLocation)
-          .then(() => this.respondSuccessful())
-          .catch((failReason) => this.respondFail(failReason));
         break;
 
       case MsgFlag.ReqRestoreClick:
@@ -244,7 +235,7 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqTakeSnapShot:
-        this.OneWinMan().SaveWindowState(this.PageDataMan().TopLevelWindow(), payload.Data.SnapShotSettings);
+        this.OneWinMan().SaveWindowState(this.ScUiMan().TopLevelWindow(), payload.Data.SnapShotSettings);
         break;
 
       case MsgFlag.RemoveFromStorage:
@@ -296,7 +287,7 @@ export class ContentMessageManager extends ContentManagerBase {
         this.debug().MarkerB();
         var self = this;
 
-        var targetWindow: IDataBrowserWindow = await this.PageDataMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
+        var targetWindow: IDataBrowserWindow = this.ScUiMan().TopLevelWindow();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
 
         if (targetWindow) {
           await self.OneWinMan().RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage)

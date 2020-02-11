@@ -6,7 +6,7 @@ export class FeedbackManager extends PopUpManagerBase {
     super(popHub);
   }
   __getTextArea(): HTMLTextAreaElement {
-    return <HTMLTextAreaElement>document.getElementById(this.PopConst().ElemId.textAreaFeedback);
+    return <HTMLTextAreaElement>document.getElementById(this.Const().ElemId.textAreaFeedback);
   }
 
 

@@ -8,10 +8,10 @@ import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
 
 export class PromiseChainRestoreDesktop extends ContentManagerBase {
-  constructor(xyyz: ContentHub) {
-    xyyz.debug.FuncStart(PromiseChainRestoreDesktop.name);
-    super(xyyz)
-    xyyz.debug.FuncEnd(PromiseChainRestoreDesktop.name);
+  constructor(hub: ContentHub) {
+    hub.debug.FuncStart(PromiseChainRestoreDesktop.name);
+    super(hub)
+    hub.debug.FuncEnd(PromiseChainRestoreDesktop.name);
   }
 
   private __waitForAndClickRedStartButtonPromise(promiseBucket: IDataBucketRestoreDesktop) {
@@ -111,13 +111,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     });
   }
 
-  async GoToAndWaitForDesktopPage(promiseBucket: IDataBucketRestoreDesktop) {
-    return new Promise(async (resolve, reject) => {
-      await this.DesktopMan().PromiseGen().SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, promiseBucket.targetWindow, scWindowType.Desktop)
-        .then((promiseBucket) => resolve(promiseBucket))
-        .catch((err) => reject(err))
-    });
-  }
+
 
   async RunOneChain(targetWindow: IDataBrowserWindow, dataToRestore: IDataOneStorageCE) {
     this.debug().FuncStart(this.RunOneChain.name);
@@ -135,8 +129,8 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       }
       //this.debug().PromiseBucketDebug(dataBucket, this.RunOneChain.name);
 
-      await this.GoToAndWaitForDesktopPage(dataBucket)
-        .then(databucket => this.__waitForAndClickRedStartButtonPromise(dataBucket))
+      //guaranteed to be on the correct page
+      await this.__waitForAndClickRedStartButtonPromise(dataBucket)
         .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
         .then(dataBucket => this.__waitForIframeCountDiffPromise(dataBucket))
         .then(dataBucket => this.__waitForIframeReady(dataBucket))

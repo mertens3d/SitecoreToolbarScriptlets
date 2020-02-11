@@ -9,10 +9,10 @@ import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataO
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 
 export class OneDesktopManager extends ContentManagerBase {
-  constructor(xyyz: ContentHub) {
-    xyyz.debug.FuncStart(OneDesktopManager.name);
-    super(xyyz)
-    xyyz.debug.FuncEnd(OneDesktopManager.name);
+  constructor(hub: ContentHub) {
+    hub.debug.FuncStart(OneDesktopManager.name);
+    super(hub)
+    hub.debug.FuncEnd(OneDesktopManager.name);
   }
 
   //GetNewIframeData(index: number, docElem: Document, iframe: HTMLIFrameElement) {
@@ -61,7 +61,7 @@ export class OneDesktopManager extends ContentManagerBase {
     this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
     var toReturn: IDataOneIframe = null;
 
-    var iterationJr = new IterationHelper(this.debug(), this.WaitForIframeCountDiffWorker.name)
+    var iterationJr = new IterationHelper(this.Helpers(), this.WaitForIframeCountDiffWorker.name)
 
     while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
       let beforeCount: number = IFramesbefore.length;
@@ -114,7 +114,7 @@ export class OneDesktopManager extends ContentManagerBase {
   GetActiveDesktopIframeData() {
     this.debug().FuncStart(this.GetActiveDesktopIframeData.name);
     var toReturn: IDataOneIframe = null;
-    var livingIframeAr: IDataOneIframe[] = this.GetAllLiveIframeData(this.PageDataMan().TopLevelWindow());
+    var livingIframeAr: IDataOneIframe[] = this.GetAllLiveIframeData(this.ScUiMan().TopLevelWindow());
 
     if (livingIframeAr) {
       for (var idx = 0; idx < livingIframeAr.length; idx++) {

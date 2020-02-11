@@ -6,10 +6,10 @@ import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPubli
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 
 export class PromiseChainQuickPublish extends ContentManagerBase {
-  constructor(xyyz: ContentHub) {
-    //xyyz.debug.FuncStart(PromiseChainQuickPublish.name);
-    super(xyyz)
-    //xyyz.debug.FuncEnd(PromiseChainQuickPublish.name);
+  constructor(hub: ContentHub) {
+    //hub.debug.FuncStart(PromiseChainQuickPublish.name);
+    super(hub)
+    //hub.debug.FuncEnd(PromiseChainQuickPublish.name);
   }
 
   __debugDataPublishChain(dataPublishChain: IDataPublishChain, nickname: string) {
@@ -30,7 +30,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
 
     var dataPublishChain: IDataPublishChain = {
       docToPublish: docToPublish,
-      TopLevelDoc: this.PageDataMan().TopLevelWindow().DataDocSelf,
+      TopLevelDoc: this.ScUiMan().TopLevelWindow().DataDocSelf,
       Iframe0Blue: null,
       jqIframe: null,
       messageDialogIframeRed: null
@@ -82,7 +82,11 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   }
 
   async GetMessageDialog(dataPublishChain: IDataPublishChain) {
-    dataPublishChain.messageDialogIframeRed = await this.PromiseGen().WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, this.Const().Selector.SC.ContentIFrame1, 'iframeRed')
+
+    var IDataOneIframe: IDataOneIframe = this.Factoryman().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'iframeRed');
+
+    dataPublishChain.messageDialogIframeRed =
+      await this.PromiseGen().WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, this.Const().Selector.SC.ContentIFrame1,  IDataOneIframe)
 
     return dataPublishChain;
   }
@@ -90,7 +94,9 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   async GetDialogIframe0Blue(dataPublishChain: IDataPublishChain = null) {
     this.debug().FuncStart(this.GetDialogIframe0Blue.name);
 
-    dataPublishChain.Iframe0Blue = await this.PromiseGen().WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, this.Const().Selector.SC.ContentIframe0, 'Iframe0Blue');
+    var IDataOneIframe: IDataOneIframe = this.Factoryman().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
+
+    dataPublishChain.Iframe0Blue = await this.PromiseGen().WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, this.Const().Selector.SC.ContentIframe0, IDataOneIframe );
 
     this.debug().DebugDataOneIframe(dataPublishChain.Iframe0Blue);
 
