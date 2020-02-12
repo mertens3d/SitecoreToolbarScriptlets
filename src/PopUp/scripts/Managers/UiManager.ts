@@ -8,7 +8,7 @@ import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneSt
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ICallbackDataDebugTextChanged } from '../../../Shared/scripts/Interfaces/ICallbackDataDebugTextChanged';
 
-import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
+import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 
 import { PayloadDataFromContent } from '../../../Shared/scripts/Classes/PayloadDataFromContent';
 import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';
@@ -175,12 +175,12 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
-  SetParentInfo(winDataParent: IDataBrowserWindow) {
-    var targetSpan = document.getElementById(this.Const().ElemId.HindSiteParentInfo);
-    if (targetSpan) {
-      targetSpan.innerHTML = ' | Parent Id: ' + winDataParent.DataDocSelf.DocId.AsShort + ' | ' + winDataParent.Window.location.href;
-    }
-  }
+  //SetParentInfo(winDataParent: IDataBrowserTab) {
+  //  var targetSpan = document.getElementById(this.Const().ElemId.HindSiteParentInfo);
+  //  if (targetSpan) {
+  //    targetSpan.innerHTML = ' | Parent Id: ' + winDataParent.DataDocSelf.DocId.AsShort + ' | ' + winDataParent.Window.location.href;
+  //  }
+  //}
 
   SetAccordianClass(targetElem: HTMLElement, isCollapsed: boolean) {
     if (!isCollapsed) {
@@ -343,8 +343,7 @@ export class UiManager extends PopUpManagerBase {
       if (command.RequiredPageTypes.length > 0) {
         this.debug().LogVal('required pages', command.RequiredPageTypes.toString());
 
-        var currentWindowType = this.PageMan().GetCurrentPageType();
-        this.debug().LogVal('current', currentWindowType);
+        var currentWindowType = this.TabMan().CurrentTabData.ScWindowType;
         this.debug().LogVal('current', StaticHelpers.WindowTypeAsString(currentWindowType));
         var targetButton: HTMLElement = this.GetButtonByIdOrSelector(command.ButtonSelector);
 
@@ -505,7 +504,7 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
-  PopulateContentState(state: ICurrStateContent) {
+  async PopulateContentState(state: ICurrStateContent) {
     this.debug().FuncStart(this.PopulateContentState.name);
     this.currentState = state;
     if (this.debug().IsNotNullOrUndefinedBool('state', state)) {
@@ -514,10 +513,10 @@ export class UiManager extends PopUpManagerBase {
       var targetCurrStateTa: HTMLTextAreaElement = <HTMLTextAreaElement>window.document.querySelector(this.Const().Selector.HS.TaState);
       if (targetCurrStateTa) {
         var allTaText: string = 'State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
-        //allTaText += '\n';
-        //allTaText += 'Page Type: ' + scWindowType[state.WindowType]
-        //allTaText += '\n';
-        //allTaText += 'Url: ' + state.Url;
+        allTaText += '\n';
+        allTaText += 'Page Type: ' + StaticHelpers.WindowTypeAsString(await this.TabMan().GetCurrentPageType());
+        allTaText += '\n';
+        allTaText += 'Url: ' + this.TabMan().CurrentTabData.Tab.url;
 
         allTaText += '\n';
         allTaText += 'Last Request: ' + MsgFlag[state.LastReq];

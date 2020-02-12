@@ -1,11 +1,12 @@
 ﻿import { ContentHub } from '../Managers/ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { IDataBucketRestoreDesktop } from '../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop';
-import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
+import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
+import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 
 export class PromiseChainRestoreDesktop extends ContentManagerBase {
   constructor(hub: ContentHub) {
@@ -88,7 +89,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
   private __waitForAndThenClickCEFromMenuPromise(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.StartMenuLeftOption], promiseBucket.targetWindow.DataDocSelf)
+      await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.StartMenuLeftOption], promiseBucket.targetDoc)
         .then(() => { resolve(promiseBucket); })
         .catch((ex) => { reject(this.__waitForAndThenClickCEFromMenuPromise.name); });
     });
@@ -113,15 +114,14 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
 
 
-  async RunOneChain(targetWindow: IDataBrowserWindow, dataToRestore: IDataOneStorageCE) {
+  async RunOneChain(targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageCE) {
     this.debug().FuncStart(this.RunOneChain.name);
 
-    if (this.MiscMan().NotNullOrUndefined([targetWindow, dataToRestore], this.RunOneChain.name)) {
-      var allIframeData = this.DesktopMan().GetAllLiveIframeData(targetWindow);
+    if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore], this.RunOneChain.name)) {
+      var allIframeData = this.DesktopMan().GetAllLiveIframeData(targetDoc);
 
       var dataBucket: IDataBucketRestoreDesktop = {
-        targetWindow: targetWindow,
-        targetDoc: targetWindow.DataDocSelf,
+        targetDoc: targetDoc,
         IFramesbefore: allIframeData,
         oneCEdata: dataToRestore,
         NewIframe: null,

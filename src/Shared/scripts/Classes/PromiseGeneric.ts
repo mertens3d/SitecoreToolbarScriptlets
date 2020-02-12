@@ -1,6 +1,6 @@
 ﻿import { IterationHelper } from './IterationHelper';
 import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
-import { IDataBrowserWindow } from '../Interfaces/IDataBrowserWindow';
+import { IDataBrowserTab } from '../Interfaces/IDataBrowserWindow';
 import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { scWindowType } from '../Enums/scWindowType';
@@ -162,14 +162,14 @@ export class PromiseHelper extends HelperBase {
     });
   }
 
-  async SetHrefAndWaitForReadyStateComplete(href, targetWindow: IDataBrowserWindow, targetWindowType: scWindowType) {
+  async SetHrefAndWaitForReadyStateComplete(href :string, targetWindow: IDataBrowserTab, targetWindowType: scWindowType) {
     return new Promise(async (resolve, reject) => {
       this.Debug.FuncStart(this.SetHrefAndWaitForReadyStateComplete.name, href);
 
 
       var isCorrectHref = targetWindow.Window.location.href = href;
 
-      if (targetWindow.WindowType !== targetWindowType) {
+      if (targetWindow.ScWindowType !== targetWindowType) {
         targetWindow.Window.location.href = href;
       }
 
@@ -197,7 +197,7 @@ export class PromiseHelper extends HelperBase {
   //    }
   //  }
 
-  async WaitForPageReady(targetWindow: IDataBrowserWindow) {
+  async WaitForPageReady(targetWindow: IDataBrowserTab) {
     return new Promise<void>(async (resolve, reject) => {
       this.Debug.FuncStart(this.WaitForPageReady.name);
 

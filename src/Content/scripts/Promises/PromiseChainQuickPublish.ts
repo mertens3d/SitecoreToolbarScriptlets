@@ -30,7 +30,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
 
     var dataPublishChain: IDataPublishChain = {
       docToPublish: docToPublish,
-      TopLevelDoc: this.ScUiMan().TopLevelWindow().DataDocSelf,
+      TopLevelDoc: this.ScUiMan().TopLevelDoc(),
       Iframe0Blue: null,
       jqIframe: null,
       messageDialogIframeRed: null

@@ -1,12 +1,13 @@
 ﻿import { BaseDebug } from "../../../Shared/scripts/Classes/debug";
-import { PageManagerPopUp } from "../Managers/PageManagerPopUp";
+import { TabManager } from "../Managers/TabManager";
 
 export class PopUpDebug extends BaseDebug {
 
-  DebugPageMan(PageMan: PageManagerPopUp) {
-    if (this.IsNotNullOrUndefinedBool('PageMan', PageMan)) {
-      this.DebugIDataBrowserWindow(PageMan.TopLevelWindow());
-    }
-  }
+  //DebugPageMan(PageMan: PageManaTabManager)
+    
+  //  if(this.IsNotNullOrUndefinedBool('PageMan', PageMan)) {
+  //    this.DebugIDataBrowserWindow(PageMan.TopLevelWindow());
+  //  }
+  //}
 
 }

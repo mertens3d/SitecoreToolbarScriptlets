@@ -7,9 +7,10 @@ import { FeedbackManager } from "./FeedbackManager";
 import { PopConst } from "../Classes/PopConst";
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 import { SettingsManager } from "./SettingsManager";
-import { PageManagerPopUp } from "./PageManagerPopUp";
+import { TabManager } from "./TabManager";
 import { LocationManager } from "./LocationManager";
 import { HelperHub } from "../../../Shared/scripts/Helpers/Helpers";
+import { BrowserManager } from "./BrowserManager";
 //import { PopUpFactoryManager } from "./FactoryManager";
 
 export class PopUpHub {
@@ -21,13 +22,14 @@ export class PopUpHub {
   PopUpAtticMan: PopUpAtticManager;
   SettingsMan: SettingsManager;
   UiMan: UiManager;
-  PageMan: PageManagerPopUp;
+  TabMan: TabManager;
   LocMan: LocationManager;
   //FactMan: PopUpFactoryManager;
 
   PopUpConst: IPopUpConst;
 
   Helpers: HelperHub;
+    BrowserMan: BrowserManager;
 
   constructor() {
     this.debug = new PopUpDebug(window);
@@ -44,11 +46,12 @@ export class PopUpHub {
     this.FeedbackMan = new FeedbackManager(this);
     this.SettingsMan = new SettingsManager(this);
     //this.FactMan = new PopUpFactoryManager(this);
-    this.PageMan = new PageManagerPopUp(this);
+    this.TabMan = new TabManager(this);
+    this.BrowserMan = new BrowserManager(this);
     this.init();
   }
 
-  init() {
+  async init() {
     this.debug.FuncStart(this.init.name, PopUpHub.name);
     this.EventMan.Init();
     this.PopUpAtticMan.Init(); //before PopMsgMan
@@ -56,6 +59,8 @@ export class PopUpHub {
     this.UiMan.Init();
 
     //this.PageMan.Init();
+
+    await this.TabMan.Init();
 
     this.debug.FuncEnd(this.init.name, PopUpHub.name);
   }

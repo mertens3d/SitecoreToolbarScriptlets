@@ -2,7 +2,7 @@
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 //import { IMessageManager } from '../../../Shared/scripts/Interfaces/IMessageManager';
-import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
+import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { MsgFromContent } from '../../../Shared/scripts/Classes/MsgPayloadResponseFromContent';
@@ -14,6 +14,7 @@ import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
+import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 
 //var browser = browser || {};
 
@@ -87,7 +88,7 @@ export class ContentMessageManager extends ContentManagerBase {
       CurrentPageType: pageType
     }
 
-    this.OneWinMan().SaveWindowState(this.ScUiMan().TopLevelWindow(), SnapShotSettings);
+    this.OneWinMan().SaveWindowState(this.ScUiMan().TopLevelDoc(), SnapShotSettings);
     this.debug().FuncEnd(this.AutoSaveSnapShot.name);
   }
 
@@ -143,14 +144,14 @@ export class ContentMessageManager extends ContentManagerBase {
     this.debug().FuncEnd(this.Init.name);
   }
 
-  NotifyCompleteOnContent(targetWindow: IDataBrowserWindow = null, Message: string): void {
-    if (!targetWindow) {
-      targetWindow = this.ScUiMan().TopLevelWindow();
+  NotifyCompleteOnContent(targetDoc: IDataOneDoc = null, Message: string): void {
+    if (!targetDoc) {
+      targetDoc = this.ScUiMan().TopLevelDoc();
     }
 
-    let bodyTag = targetWindow.DataDocSelf.Document.getElementsByTagName('body')[0];//(treeGlyphTargetId);
+    let bodyTag = targetDoc.Document.getElementsByTagName('body')[0];//(treeGlyphTargetId);
 
-    var flagElem: HTMLElement = targetWindow.DataDocSelf.Document.createElement('div');
+    var flagElem: HTMLElement = targetDoc.Document.createElement('div');
     flagElem.innerHTML = '<div>' + Message + '</div>';
     flagElem.style.position = 'absolute';
     flagElem.style.top = '100px';
@@ -180,15 +181,15 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqAddCETab:
-        await this.PromiseGen().RaceWaitAndClick(this.Const().Selector.SC.scStartButton, this.ScUiMan().TopLevelWindow().DataDocSelf)
-          .then(() => { this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelWindow().DataDocSelf) });
+        await this.PromiseGen().RaceWaitAndClick(this.Const().Selector.SC.scStartButton, this.ScUiMan().TopLevelDoc())
+          .then(() => { this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelDoc()) });
         break;
 
       case MsgFlag.ReqAdminB:
         this.debug().LogVal('flag is adminb', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
         //this.debug().DebugPageMan(this.PageMan());
 
-        this.ScUiMan().AdminB(this.ScUiMan().TopLevelWindow().DataDocSelf, null);
+        this.ScUiMan().AdminB(this.ScUiMan().TopLevelDoc(), null);
         break;
 
       case MsgFlag.Ping:
@@ -223,7 +224,7 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqQuickPublish:
-        var targetWin = this.ScUiMan().TopLevelWindow();
+        var targetWin = this.ScUiMan().TopLevelDoc();
         await this.OneWinMan().PublishActiveCE(targetWin);
         break;
 
@@ -235,7 +236,7 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqTakeSnapShot:
-        this.OneWinMan().SaveWindowState(this.ScUiMan().TopLevelWindow(), payload.Data.SnapShotSettings);
+        this.OneWinMan().SaveWindowState(this.ScUiMan().TopLevelDoc(), payload.Data.SnapShotSettings);
         break;
 
       case MsgFlag.RemoveFromStorage:
@@ -287,10 +288,10 @@ export class ContentMessageManager extends ContentManagerBase {
         this.debug().MarkerB();
         var self = this;
 
-        var targetWindow: IDataBrowserWindow = this.ScUiMan().TopLevelWindow();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
+        var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
 
-        if (targetWindow) {
-          await self.OneWinMan().RestoreWindowStateToTarget(targetWindow, dataOneWindowStorage)
+        if (targetDoc) {
+          await self.OneWinMan().RestoreWindowStateToTarget(targetDoc, dataOneWindowStorage)
             .then(() => this.respondSuccessful())
             .catch((failReason) => this.respondFail(failReason))
         }
@@ -309,7 +310,7 @@ export class ContentMessageManager extends ContentManagerBase {
   }
 
   OperationCancelled: any;
-  SetParentInfo(__winDataParent: IDataBrowserWindow) {
+  SetParentInfo(__winDataParent: IDataOneDoc) {
   }
 
   //  function insertBeast(beastURL) {

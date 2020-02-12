@@ -8,7 +8,7 @@ import { IError } from "../Interfaces/IError";
 import { StaticHelpers } from "./StaticHelpers";
 import { BufferChar } from "../Enums/BufferChar";
 import { BufferDirection } from "../Enums/BufferDirection";
-import { IDataBrowserWindow } from "../Interfaces/IDataBrowserWindow";
+import { IDataBrowserTab } from "../Interfaces/IDataBrowserWindow";
 import { scWindowType } from "../Enums/scWindowType";
 import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
 
@@ -70,13 +70,13 @@ export class BaseDebug {
   //}
 
 
-  DebugIDataBrowserWindow(browserWindow: IDataBrowserWindow) {
+  DebugIDataBrowserWindow(browserWindow: IDataBrowserTab) {
     if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
       this.LogVal('Friendly', browserWindow.Friendly);
-      this.LogVal('WindowType', scWindowType[browserWindow.WindowType]);
+      this.LogVal('WindowType', scWindowType[browserWindow.ScWindowType]);
 
-      this.DebugIDataOneDoc(browserWindow.DataDocSelf);
-      this.DebugWindow(browserWindow.Window);
+      //this.DebugIDataOneDoc(browserWindow.DataDocSelf);
+      //this.DebugWindow(browserWindow.Window);
     }
   }
 

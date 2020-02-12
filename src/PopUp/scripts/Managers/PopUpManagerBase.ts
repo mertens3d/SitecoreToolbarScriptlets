@@ -8,9 +8,10 @@ import { PopUpDebug } from "../Classes/PopUpDebug";
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 import { SettingsManager } from "./SettingsManager";
 import { EventManager } from "./EventManager";
-import { PageManagerPopUp } from "./PageManagerPopUp";
+import { TabManager } from "./TabManager";
 import { LocationManager } from "./LocationManager";
 import { HelperHub } from "../../../Shared/scripts/Helpers/Helpers";
+import { BrowserManager } from "./BrowserManager";
 //import { PopUpFactoryManager } from "./FactoryManager";
 
 export class PopUpManagerBase {
@@ -31,6 +32,7 @@ export class PopUpManagerBase {
   SettingsMan(): SettingsManager { return this.PopHub.SettingsMan; }
   EventMan(): EventManager { return this.PopHub.EventMan; }
   locMan(): LocationManager { return this.PopHub.LocMan; }
-  PageMan(): PageManagerPopUp { return this.PopHub.PageMan; }
+  TabMan(): TabManager { return this.PopHub.TabMan; }
+  BrowserMan(): BrowserManager { return this.PopHub.BrowserMan; }
 
 }

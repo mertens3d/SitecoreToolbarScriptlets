@@ -64,7 +64,6 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     return new Promise(async (resolve, reject) => {
       this.debug().FuncStart(this.OnePing.name);
 
-
       var result: ResultSuccessFail = new ResultSuccessFail();
 
       await browser.tabs.sendMessage(targetTab.id, msg)
@@ -99,15 +98,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     });//promise
   }// function
 
-  async GetTargetTab() {
-    return new Promise(async (resolve, reject) => {
 
-      await browser.tabs.query({ currentWindow: true, active: true })
-        .then((tabs) => resolve(tabs[0]))
-        .catch((err) => reject(err));
-
-    });
-  }
 
   async WaitForListeningTab() {
     return new Promise(async (resolve, reject) => {
@@ -118,7 +109,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       var iterationJr: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForListeningTab.name);
       var targetTab;
 
-      await this.GetTargetTab()
+      await this.TabMan().GetAssociatedTab()
         .then((tab) => { targetTab = tab });
 
       var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
@@ -145,7 +136,6 @@ export class PopUpMessagesManager extends PopUpManagerBase {
           this.debug().Log('Ping succeeded');
         }
       }//while
-
 
       this.debug().Log('Done while');
 
@@ -206,7 +196,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
 
     this.WaitForListeningTab()
       .then((tab) => this.SendMessageToSingleTab(tab, msgPlayload))
-        .catch((err) => this.onError(err));
+      .catch((err) => this.onError(err));
 
     //await browser.tabs.query({
     //  currentWindow: true,

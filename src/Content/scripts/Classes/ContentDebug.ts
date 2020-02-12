@@ -1,7 +1,7 @@
 ﻿import { BaseDebug } from "../../../Shared/scripts/Classes/debug";
 import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIframe";
 import { IDataBucketRestoreDesktop } from "../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop";
-import { IDataBrowserWindow } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
+import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
@@ -88,7 +88,7 @@ export class ContentDebug extends BaseDebug {
 
     if (promiseBucket && typeof (promiseBucket) !== 'undefined') {
       this.Log('promiseBucket.IFramesbefore: ' + this.IsNullOrUndefined(promiseBucket.IFramesbefore));
-      this.Log('promiseBucket.targetWindow: ' + this.IsNullOrUndefined(promiseBucket.targetWindow));
+      //this.Log('promiseBucket.targetWindow: ' + this.IsNullOrUndefined(promiseBucket.targetWindow));
       this.Log('promiseBucket.oneCEdata: ' + this.IsNullOrUndefined(promiseBucket.oneCEdata));
       this.Log('promiseBucket.NewIframe: ' + this.IsNullOrUndefined(promiseBucket.NewIframe));
       if (promiseBucket.NewIframe) {

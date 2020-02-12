@@ -60,9 +60,11 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\CommonEvents.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\ExternalEvents.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\InternalEvents.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\BrowserManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\FactoryManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PageManagerPopUp.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\SettingsManager.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\TabManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Promises\PromiseChainRestoreDTPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />

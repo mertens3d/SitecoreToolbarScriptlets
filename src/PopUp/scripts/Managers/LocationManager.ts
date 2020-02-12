@@ -1,4 +1,4 @@
-import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
+import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
@@ -8,7 +8,6 @@ import { PopUpManagerBase } from './PopUpManagerBase';
 import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
 import { PopUpHub } from './PopUpHub';
 
-
 export class LocationManager extends PopUpManagerBase {
   constructor(hub: PopUpHub) {
     super(hub);
@@ -16,21 +15,19 @@ export class LocationManager extends PopUpManagerBase {
     hub.debug.FuncEnd(LocationManager.name);
   }
 
-  ChangeLocationSwitchBoard(desiredPageType: scWindowType, targetWindow: IDataBrowserWindow) {
-    this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType] );
-
+  ChangeLocationSwitchBoard(desiredPageType: scWindowType) {
+    this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType]);
 
     var iteration: IterationHelper = new IterationHelper(this.Helpers(), this.ChangeLocationSwitchBoard.name);
 
     if (iteration.DecrementAndKeepGoing()) {
+      var currentState = this.TabMan().CurrentTabData.ScWindowType;
 
-      var currentState = this.PageMan().GetCurrentPageType();
-
-      if (currentState === scWindowType.LoginPage) {
+      if (this.TabMan().CurrentTabData.ScWindowType === scWindowType.LoginPage) {
         var self = this;
         var callbackOnComplete: Function = () => {
           this.debug().Log('callback triggered');
-          self.ChangeLocationSwitchBoard(desiredPageType, targetWindow);
+          self.ChangeLocationSwitchBoard(desiredPageType);
         };
 
         //this.AdminB(targetWindow.DataDocSelf, callbackOnComplete);
@@ -46,9 +43,9 @@ export class LocationManager extends PopUpManagerBase {
         var self = this;
         var callBackOnSuccessfulHrefChange: Function = function () {
           self.debug().Log('Callback triggered');
-          targetWindow = self.PageMan().SetWindowDataToCurrent(targetWindow.Window, targetWindow.DataDocSelf.Nickname);
+          //targetWindow = self.TabMan().SetWindowDataToCurrent(targetWindow.Window, targetWindow.DataDocSelf.Nickname);
 
-          self.ChangeLocationSwitchBoard(desiredPageType, targetWindow)
+          self.ChangeLocationSwitchBoard(desiredPageType)
         }
 
         if (desiredPageType === scWindowType.Desktop && currentState !== scWindowType.Desktop) {
@@ -77,9 +74,9 @@ export class LocationManager extends PopUpManagerBase {
       this.debug().FuncStart(this.SetScMode.name, newValue.AsString);
 
       var itemGuid: IGuid;
-      var targetWindow: IDataBrowserWindow;
+      var targetWindow: IDataBrowserTab;
 
-      var currentPageType = this.PageMan().GetCurrentPageType();
+      var currentPageType: scWindowType = this.TabMan().CurrentTabData.ScWindowType;
 
       if (currentPageType === scWindowType.ContentEditor
         ||
@@ -95,11 +92,10 @@ export class LocationManager extends PopUpManagerBase {
           //}
         }
         else {
-          dataOneDoc = this.PageMan().TopLevelWindow().DataDocSelf;
+          //dataOneDoc = this.TabMan().CurrentTabData.DataDocSelf;
         }
 
         if (dataOneDoc) {
-
           //todo - put back?
           //var AllTreeNodeAr: IDataOneTreeNode[] = this.PopHub.OneTreeMan.GetOneLiveTreeData(dataOneDoc);
 
@@ -114,7 +110,7 @@ export class LocationManager extends PopUpManagerBase {
           // we should use the sitecore buttons
 
           if (itemGuid) {
-            targetWindow = await this.PageMan().GetTargetWindowAsync(useOrigWindow, scWindowType.Edit);
+            targetWindow = await this.TabMan().GetTargetWindowAsync(useOrigWindow, scWindowType.Edit);
           }
         }
       } else if (currentPageType == scWindowType.Edit
@@ -127,11 +123,4 @@ export class LocationManager extends PopUpManagerBase {
       this.debug().FuncEnd(this.SetScMode.name);
     });
   }
-
-  GetCurrentUrl(targ) {
-  }
-
-
-
-  
 }

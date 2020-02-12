@@ -3,23 +3,19 @@ import { iSitecoreUiManager } from '../../../Shared/scripts/Interfaces/ISitecore
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { ContentHub } from './ContentHub';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IDataBrowserWindow } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
+import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 
 export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUiManager {
-
-
   GetCurrentPageType(): scWindowType {
     throw new Error("Method not implemented.");
   }
   __activeWindowSnapShot: IDataOneWindowStorage;
 
-  private __winDataParent: IDataBrowserWindow;
+  private topDoc: IDataOneDoc;
 
-  
-
-  TopLevelWindow(): IDataBrowserWindow {
-    return this.__winDataParent;
+  TopLevelDoc(): IDataOneDoc {
+    return this.topDoc;
   }
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {

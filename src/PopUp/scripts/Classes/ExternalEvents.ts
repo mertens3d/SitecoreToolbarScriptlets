@@ -27,7 +27,7 @@ export class ExternalEvents extends CommonEvents {
   __hndlrDesktop(evt: MouseEvent) {
     this.__initNewOperation();
 
-    this.locMan().ChangeLocationSwitchBoard(scWindowType.Desktop, this.PageMan().TopLevelWindow());
+    this.locMan().ChangeLocationSwitchBoard(scWindowType.Desktop);
     //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqGoDesktop, this.PopHub))
   }
 
@@ -52,7 +52,7 @@ export class ExternalEvents extends CommonEvents {
 
   async __hndlrOpenCE() {
     this.__initNewOperation();
-    this.locMan().ChangeLocationSwitchBoard(scWindowType.ContentEditor, this.PageMan().TopLevelWindow());
+    this.locMan().ChangeLocationSwitchBoard(scWindowType.ContentEditor, this.TabMan().CurrentTabData);
     //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqOpenCE, this.PopHub));
   }
 
@@ -67,6 +67,7 @@ export class ExternalEvents extends CommonEvents {
     this.MsgMan().SendMessageToContent(msg);
   }
 
+
   CreateNewWindowIfRequired(evt: MouseEvent) {
     return new Promise(async (resolve, reject) => {
       let success: ResultSuccessFail = new ResultSuccessFail();
@@ -75,61 +76,9 @@ export class ExternalEvents extends CommonEvents {
       if (!evt.ctrlKey) {
         //this.debug().LogVal('new page url', this.UiMan().currentState.Url);
 
-        await browser.tabs.create({
-          //url: this.UiMan().currentState.Url,
-        })
-          .then((tab) => {
-            console.log(tab.status);
+      await  this.BrowserMan().CreateNewTab();
 
-            while (tab.status !== 'complete') {
-              console.log(tab.status);
-            }
-
-            console.log(tab.status);
-
-            success.Succeeded = true;
-
-            console.log('+++++++++++++++++++++++++ tab');
-            console.log(tab.url);
-            //console.log(document.location.href);
-
-            //console.log(typeof tab);
-            //console.log(JSON.stringify( tab));
-
-            //await browser.tabs.query({
-            //  currentWindow: true,
-            //  active: true
-            //}).then((tabs) => this.SendMessageToTabs(tabs, msgPlayload)).catch(this.onError);
-
-            //var oneDoc: IDataOneDoc = {
-            //  ParentDoc: null,
-            //  Document: document,
-            //  HasParentDesktop: false,
-            //  DocId: this.GuidHelper().NewGuid(),
-            //  IsCEDoc: false,
-            //  ParentDesktop: null,
-            //  Nickname: 'new window'
-            //}
-
-            //await this.PromiseHelp().WaitForPageReadyNative(oneDoc);
-
-            //this.debug().LogVal('adding listener to', tab.toString());
-            //browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-            //  console.log('status: ' + tab.status);
-            //  if (tab.status == 'complete' && tab.active) {
-            //    success.Succeeded = true;
-            //  }
-            //})
-          })
-          .then(async () => {
-            await this.MsgMan().WaitForListeningTab();
-          })
-          .catch((ex) => {
-            console.log('fails here');
-
-            success.Succeeded = false;
-            success.FailMessage = this.CreateNewWindowIfRequired.name + ' ' + ex.toString();
-          });
+       
       }
       else {
         success.Succeeded = true;
