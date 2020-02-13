@@ -1,5 +1,6 @@
 ﻿import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
+import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 
 
 export class MiscManager extends ContentManagerBase {
@@ -15,7 +16,7 @@ export class MiscManager extends ContentManagerBase {
     var toReturn: boolean = false;
 
     if (!iterationCheck) {
-      iterationCheck = this.Const().MaxNullOrUndefinedIter;
+      iterationCheck = ContentConst.Const.MaxNullOrUndefinedIter;
     }
 
     iterationCheck -= 1;
@@ -43,6 +44,7 @@ export class MiscManager extends ContentManagerBase {
       this.debug().Error(this.NotNullOrUndefined.name, 'max iteration hit');
     }
 
+    this.debug().LogVal('toReturn', toReturn);
     return toReturn;
   }
 }

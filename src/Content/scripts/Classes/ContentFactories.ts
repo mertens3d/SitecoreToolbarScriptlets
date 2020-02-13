@@ -6,28 +6,46 @@ import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIfram
 import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 import { CacheMode } from "../../../Shared/scripts/Enums/CacheMode";
+import { IDataOneStorageCE } from "../../../Shared/scripts/Interfaces/IDataOneStorageCE";
+import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 
-export class Factories extends ContentManagerBase{
- 
-
+export class ContentFactories extends ContentManagerBase {
   constructor(contentHub: ContentHub) {
     contentHub.debug.FuncStart(PromiseHelper.name);
     super(contentHub);
     contentHub.debug.FuncEnd(PromiseHelper.name);
   }
-
   async UpdateContentState(response: MsgFromContent) {
+    this.debug().FuncStart(this.UpdateContentState.name);
     response.ContentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
-    //response.ContentState.WindowType = await this.ScUiMan().GetCurrentPageType();
-    //response.ContentState.Url = this.PageMan().TopLevelWindow().DataDocSelf.Document.location.href;
     response.ContentState.ErrorStack = this.debug().ErrorStack;
     this.debug().DebugObjState(response.ContentState);
+    response.ContentState.CurrentCe = this.GetCurrentCeState();
+    this.debug().FuncEnd(this.UpdateContentState.name);
   }
 
-  async NewMsgFromContent() {
+  GetCurrentCeState() {
+    let toReturnCeState: IDataOneStorageCE = null;
+    let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
+
+    if (pageType === scWindowType.Desktop) {
+      var currState = this.OneScWinMan().OneDesktopMan.GetState();
+      if (currState) {
+        toReturnCeState = currState.ActiveCeMan.GetState(this.Helpers().GuidHelp.EmptyGuid());
+      }
+    }
+    else if (pageType == scWindowType.ContentEditor) {
+    } else {
+      toReturnCeState = null;
+    }
+    return toReturnCeState;
+  }
+  async NewMsgFromContentShell() {
+    this.debug().FuncStart(this.NewMsgFromContentShell.name);
     var response = new MsgFromContent(MsgFlag.Unknown);
     await this.UpdateContentState(response);
     response.ContentState.LastReq = MsgFlag.Unknown;
+    this.debug().FuncEnd(this.NewMsgFromContentShell.name);
     return response;
   }
   DateOneIframeFactory(iframeElem: HTMLIFrameElement, parentDocument: IDataOneDoc, nickname: string): IDataOneIframe {
@@ -39,10 +57,6 @@ export class Factories extends ContentManagerBase{
       Nickname: nickname,
       ContentDoc: this.Helpers().FactoryHelp.DataOneContentDocFactoryFromIframe(iframeElem, parentDocument, nickname),
     };
-
     return toReturn;
   }
-
-
- 
 }

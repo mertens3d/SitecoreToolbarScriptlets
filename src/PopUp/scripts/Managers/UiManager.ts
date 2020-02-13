@@ -41,15 +41,15 @@ export class UiManager extends PopUpManagerBase {
   }
 
   Init() {
-    this.debug().FuncStart(this.Init.name, UiManager.name);
+    this.debug().FuncStart(UiManager.name, this.Init.name);
     var self = this;
     this.debug().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
 
     this.WriteBuildNumToUi();
 
-    this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqCurState, this.PopHub));
+    this.MsgMan().SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqCurState, this.PopHub), this.TabMan().CurrentTabData);
 
-    this.debug().FuncEnd(this.Init.name);
+    this.debug().FuncEnd(UiManager.name, this.Init.name);
   }
 
   WriteBuildNumToUi() {
@@ -504,36 +504,41 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
-  async PopulateContentState(state: ICurrStateContent) {
+  async PopulateContentState(contentState: ICurrStateContent) {
     this.debug().FuncStart(this.PopulateContentState.name);
-    this.currentState = state;
-    if (this.debug().IsNotNullOrUndefinedBool('state', state)) {
-      this.UiMan().PopulateStateOfSnapShotSelect(state.SnapShotsMany.CurrentSnapShots);
+
+
+    this.debug().DebugIDataBrowserTab(this.TabMan().CurrentTabData);
+
+
+    this.currentState = contentState;
+    if (this.debug().IsNotNullOrUndefinedBool('state', contentState)) {
+      this.UiMan().PopulateStateOfSnapShotSelect(contentState.SnapShotsMany.CurrentSnapShots);
 
       var targetCurrStateTa: HTMLTextAreaElement = <HTMLTextAreaElement>window.document.querySelector(this.Const().Selector.HS.TaState);
       if (targetCurrStateTa) {
         var allTaText: string = 'State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
         allTaText += '\n';
-        allTaText += 'Page Type: ' + StaticHelpers.WindowTypeAsString(await this.TabMan().GetCurrentPageType());
+        allTaText += 'Page Type: ' + StaticHelpers.WindowTypeAsString(this.TabMan().CurrentTabData.ScWindowType);
         allTaText += '\n';
         allTaText += 'Url: ' + this.TabMan().CurrentTabData.Tab.url;
 
         allTaText += '\n';
-        allTaText += 'Last Request: ' + MsgFlag[state.LastReq];
+        allTaText += 'Last Request: ' + MsgFlag[contentState.LastReq];
 
         allTaText += '\n';
         allTaText += '\nSnap Shots: ';
-        allTaText += '\nBirthday: ' + state.SnapShotsMany.Birthday.toString();
-        allTaText += '\nTotal Snapshots: ' + state.SnapShotsMany.CurrentSnapShots.length;
-        allTaText += '\nFavorite Snapshots: ' + state.SnapShotsMany.FavoriteCount;
-        allTaText += '\nPlain Snapshots: ' + state.SnapShotsMany.PlainCount;
-        allTaText += '\nAuto Snapshots: ' + state.SnapShotsMany.SnapShotsAutoCount;
+        allTaText += '\nBirthday: ' + contentState.SnapShotsMany.Birthday.toString();
+        allTaText += '\nTotal Snapshots: ' + contentState.SnapShotsMany.CurrentSnapShots.length;
+        allTaText += '\nFavorite Snapshots: ' + contentState.SnapShotsMany.FavoriteCount;
+        allTaText += '\nPlain Snapshots: ' + contentState.SnapShotsMany.PlainCount;
+        allTaText += '\nAuto Snapshots: ' + contentState.SnapShotsMany.SnapShotsAutoCount;
 
         allTaText += '\n';
-        allTaText += 'Error Stack (' + state.ErrorStack.length + '):';
-        for (var idx = 0; idx < state.ErrorStack.length; idx++) {
+        allTaText += 'Error Stack (' + contentState.ErrorStack.length + '):';
+        for (var idx = 0; idx < contentState.ErrorStack.length; idx++) {
           allTaText += '\n';
-          allTaText += '\t' + idx + ' : ' + state.ErrorStack[idx].ContainerFunc + ' ' + state.ErrorStack[idx].ErrorString;
+          allTaText += '\t' + idx + ' : ' + contentState.ErrorStack[idx].ContainerFunc + ' ' + contentState.ErrorStack[idx].ErrorString;
         }
 
         targetCurrStateTa.value = allTaText;

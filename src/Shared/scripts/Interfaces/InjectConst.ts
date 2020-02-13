@@ -47,8 +47,8 @@ import { scMode } from '../Enums/scMode';
 
 //https://sitecore.stackexchange.com/questions/338/what-are-the-ways-to-find-the-sitecore-version-on-sitecore-installations
 
-export class InjectConst {
-  static ContConst: IContentConst = {
+export class ContentConst {
+  static Const: IContentConst = {
     MaxAutoToSaveCount: 10,
     MaxAutoSaveAgeDays: 1,
     MaxCacheAgeMs: 1000 * 60 * 10,

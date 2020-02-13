@@ -3,17 +3,17 @@ import { MiscManager } from './MiscManager';
 import { OneCEManager } from './OneCEManager';
 import { OneDesktopManager } from './OneDesktopManager';
 import { OneTreeManager } from './OneTreeManager';
-import { OneWindowManager } from './OneWindowManager';
+import { OneScWindowManager } from "./OneScWindowManager";
 import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseGeneric';
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
-import { UtilityHelper } from '../../../Shared/scripts/Classes/Utilities';
+import { UtilityHelper } from "../../../Shared/scripts/Helpers/UtilityHelper";
 import { ContentMessageManager } from './ContentMessageManager';
 import { ContentDebug } from '../Classes/ContentDebug';
 import { IContentConst } from '../../../Shared/scripts/Interfaces/IContentConst';
 import { iSitecoreUiManager } from '../../../Shared/scripts/Interfaces/ISitecoreUiManager';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
-import { InjectConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { Factories } from '../Classes/Factories';
+import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { ContentFactories } from "../Classes/ContentFactories";
 import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from './SitecoreUiManager';
@@ -27,17 +27,14 @@ export class ContentHub {
   Helpers: HelperHub;
   MsgMan: ContentMessageManager;
   MiscMan: MiscManager;
-  OneCEMan: OneCEManager;
-  OneDesktopMan: OneDesktopManager;
-  OneTreeMan: OneTreeManager;
-  OneWindowMan: OneWindowManager;
+  OneWindowMan: OneScWindowManager;
   PromiseHelper: PromiseHelper;
   PromiseOneStep: PromiseOneStep;
   SitecoreUiMan: SitecoreUiManager;
 
   Utilities: UtilityHelper;
   MessageFlag: MsgFlag;
-  Factory: Factories;
+  Factory: ContentFactories;
   SharedConst: ISharedConst;
   ReadyForMessages: boolean = false;
 
@@ -56,15 +53,15 @@ export class ContentHub {
     this.Helpers = new HelperHub(this.debug);
     this.MsgMan = new ContentMessageManager(this);
     this.MiscMan = new MiscManager(this);
-    this.OneCEMan = new OneCEManager(this);
-    this.OneDesktopMan = new OneDesktopManager(this);
+    
+
     this.debug.MarkerA();
 
-    this.OneTreeMan = new OneTreeManager(this);
-    this.OneWindowMan = new OneWindowManager(this);
+    
+    this.OneWindowMan = new OneScWindowManager(this);
     
     this.PromiseOneStep = new PromiseOneStep(this);
-    this.Factory = new Factories(this);
+    this.Factory = new ContentFactories(this);
 
 
     this.SharedConst = SharedConst.SharedConst;
@@ -79,7 +76,7 @@ export class ContentHub {
   }
   Init() {
     this.debug.FuncStart(ContentHub.constructor.name + ' ' + this.Init.name);
-    this.Const = InjectConst.ContConst;
+    this.Const = ContentConst.Const;
 
     this.AtticMan.Init();
     this.MsgMan.Init();

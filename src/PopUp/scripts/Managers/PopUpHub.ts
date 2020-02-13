@@ -45,23 +45,32 @@ export class PopUpHub {
     
     this.FeedbackMan = new FeedbackManager(this);
     this.SettingsMan = new SettingsManager(this);
-    //this.FactMan = new PopUpFactoryManager(this);
     this.TabMan = new TabManager(this);
+    //this.FactMan = new PopUpFactoryManager(this);
     this.BrowserMan = new BrowserManager(this);
     this.init();
   }
 
   async init() {
-    this.debug.FuncStart(this.init.name, PopUpHub.name);
+    this.debug.FuncStart(PopUpHub.name, this.init.name);
+    await this.TabMan.Init(); 
+    this.debug.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
     this.EventMan.Init();
+    this.debug.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
     this.PopUpAtticMan.Init(); //before PopMsgMan
+    this.debug.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
+
     this.PopMsgMan.Init(); // before uiman.Init
+
     this.UiMan.Init();
 
     //this.PageMan.Init();
 
-    await this.TabMan.Init();
 
-    this.debug.FuncEnd(this.init.name, PopUpHub.name);
+    this.debug.FuncEnd(PopUpHub.name, this.init.name);
+
+
+    this.debug.Log('');
+    this.debug.Log('');
   }
 }

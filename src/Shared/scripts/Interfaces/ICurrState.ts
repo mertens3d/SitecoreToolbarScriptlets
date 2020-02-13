@@ -1,7 +1,7 @@
-﻿import { scWindowType } from "../Enums/scWindowType";
-import { MsgFlag } from "../Enums/MessageFlag";
+﻿import { MsgFlag } from "../Enums/MessageFlag";
 import { IError } from "./IError";
 import { ISnapShotsMany } from "./ISnapShotsMany";
+import { IDataOneStorageCE } from "./IDataOneStorageCE";
 
 
 export interface ICurrStateContent {
@@ -11,5 +11,6 @@ export interface ICurrStateContent {
   //Url: string;
   ErrorStack: IError[],
   LastReqSuccessful: boolean,
-  LastReqFailReason: string
+  LastReqFailReason: string,
+  CurrentCe: IDataOneStorageCE
 }

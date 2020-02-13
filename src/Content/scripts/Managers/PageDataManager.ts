@@ -21,7 +21,6 @@ export class PageManager extends ContentManagerBase {
       Document: (<Window>(window)).document,
       HasParentDesktop: false,
       DocId: this.Helpers().GuidHelp.NewGuid(),
-      IsCEDoc: false,
       ParentDesktop: null,
       Nickname: 'Original Target Page'
     }

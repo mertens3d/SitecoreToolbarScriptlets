@@ -55,7 +55,9 @@
     <Content Include="gulp.support\vars.js" />
     <Content Include="src\BrowserBookmarkCode\Debug.txt" />
     <Content Include="src\BrowserBookmarkCode\Debug.txt.backup.txt" />
+    <TypeScriptCompile Include="src\Content\scripts\Classes\ContentFactories.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Classes\VarDebug.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\CommonEvents.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\ExternalEvents.ts" />
@@ -74,6 +76,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\ResultSuccessFail.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\StaticHelpers.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Helpers\UtilityHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferChar.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferDirection.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\CacheMode.ts" />
@@ -110,7 +113,6 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpHub.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpManagerBase.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesManager.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Classes\Factories.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.debug.ts" />
     <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
@@ -180,12 +182,9 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseGeneric.ts" />
     <TypeScriptCompile Include="src\Content\scripts\_first\_ContentManagerBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneWindowStorage.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\Utilities.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\debug.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\EventManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
-    <Content Include="src\Content\scripts\Storage.js" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\OneWindowManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneDesktopManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneTreeManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IterationHelper.ts" />

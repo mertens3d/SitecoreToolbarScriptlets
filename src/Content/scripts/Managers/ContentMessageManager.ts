@@ -15,20 +15,10 @@ import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPaylo
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
-
-//var browser = browser || {};
-
-//browser.runtime.onMessage.addListener((message) => {
-//  if (message.command === "beastify") {
-//    //insertBeast(message.beastURL);
-//  } else if (message.command === "reset") {
-//    //removeExistingBeasts();
-//  }
-//});
+import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 
 export class ContentMessageManager extends ContentManagerBase {
   AutoSaveHasBeenScheduled: boolean = false;
-  //MsgRunner: MessageRunner;
 
   constructor(contentHub: ContentHub) {
     super(contentHub);
@@ -39,8 +29,6 @@ export class ContentMessageManager extends ContentManagerBase {
 
     contentHub.debug.FuncEnd(ContentMessageManager.name);
   }
-
-  //ValidateSnapShots(reqMsgFromPopup: MsgFromPopUp)
 
   ValidateRequest(reqMsgFromPopup: MsgFromPopUp): MsgFromPopUp {
     this.debug().FuncStart(this.ValidateRequest.name);
@@ -67,17 +55,26 @@ export class ContentMessageManager extends ContentManagerBase {
   }
 
   ScheduleIntervalTasks(reqMsgFromPopup: MsgFromPopUp) {
+    this.debug().FuncStart(this.ScheduleIntervalTasks.name );
+    this.debug().LogVal('Has been scheduled: ' , this.AutoSaveHasBeenScheduled)
+    this.debug().LogVal('reqMsgFromPopup.CurrentContentPrefs.AutoSave: ', reqMsgFromPopup.CurrentContentPrefs.AutoSave)
     if (true || reqMsgFromPopup.CurrentContentPrefs.AutoSave) {
       if (!this.AutoSaveHasBeenScheduled) {
+        this.debug().MarkerA();
         var self = this;
-        var intervalMs = this.Const().Timeouts.AutoSaveIntervalMin * 60 * 1000;
+        this.debug().MarkerB();
+        var intervalMs = StaticHelpers.MinToMs(ContentConst.Const.Timeouts.AutoSaveIntervalMin);
+
+        this.debug().MarkerC();
         window.setInterval(() => {
           self.AutoSaveSnapShot(this.ScUiMan().GetCurrentPageType());
         }, intervalMs)
 
+        this.debug().MarkerD();
         this.AutoSaveHasBeenScheduled = true;
       }
     }
+    this.debug().FuncEnd(this.ScheduleIntervalTasks.name);
   }
 
   AutoSaveSnapShot(pageType: scWindowType) {
@@ -88,37 +85,35 @@ export class ContentMessageManager extends ContentManagerBase {
       CurrentPageType: pageType
     }
 
-    this.OneWinMan().SaveWindowState(this.ScUiMan().TopLevelDoc(), SnapShotSettings);
+    this.OneScWinMan().SaveWindowState(SnapShotSettings);
+
     this.debug().FuncEnd(this.AutoSaveSnapShot.name);
   }
 
   async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
-      this.debug().FuncStart(this.ContentReceiveRequest.name);
+      this.debug().FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
       this.debug().DebugMsgFromPopUp(reqMsgFromPopup);
       this.debug().MarkerA();
 
       var response: MsgFromContent;// = new MsgFromContent(MsgFlag.TestResponse);
 
-      this.debug().MarkerB();
       if (reqMsgFromPopup) {
-        this.debug().MarkerC();
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
-          this.debug().MarkerD();
           this.ScheduleIntervalTasks(reqMsgFromPopup);
           response = await this.ReqMsgRouter(reqMsgFromPopup);
+        } else {
+          this.debug().Error(this.ContentReceiveRequest.name, 'reqMsgFromPopup is not valid');
         }
       }
       else {
-        this.debug().MarkerE();
         response = new MsgFromContent(MsgFlag.RespError);
         this.debug().Error(this.ContentReceiveRequest.name, 'no request');
       }
 
-      this.debug().MarkerF();
-      this.debug().FuncEnd(this.ContentReceiveRequest.name);
+      this.debug().FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
       if (response.MsgFlag != MsgFlag.RespError) {
         resolve(response);
@@ -163,7 +158,7 @@ export class ContentMessageManager extends ContentManagerBase {
     setTimeout(function () {
       flagElem.remove();
       window.close();
-    }, this.Const().Timeouts.WaitBeforeRemovingCompleteFlagOnContent);
+    }, ContentConst.Const.Timeouts.WaitBeforeRemovingCompleteFlagOnContent);
 
     bodyTag.appendChild(flagElem);
   }
@@ -171,24 +166,24 @@ export class ContentMessageManager extends ContentManagerBase {
   async ReqMsgRouter(payload: MsgFromPopUp) {
     this.debug().FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
+    this.debug().MarkerA();
     this.debug().DebugMsgFromPopUp(payload);
+    this.debug().MarkerB();
 
-    var response: MsgFromContent = await this.Factoryman().NewMsgFromContent();
-
+    //need to reference content factory
+    var response: MsgFromContent = await this.Helpers().cont.NewMsgFromContentShell();
+    this.debug().MarkerC();
     switch (payload.MsgFlag) {
       case MsgFlag.ReqRestoreToNewTab:
         console.log('we are going to restore to this window');
         break;
 
       case MsgFlag.ReqAddCETab:
-        await this.PromiseGen().RaceWaitAndClick(this.Const().Selector.SC.scStartButton, this.ScUiMan().TopLevelDoc())
-          .then(() => { this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelDoc()) });
+        await this.Helpers().PromiseHelp.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.ScUiMan().TopLevelDoc())
+          .then(() => { this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelDoc()) });
         break;
 
       case MsgFlag.ReqAdminB:
-        this.debug().LogVal('flag is adminb', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
-        //this.debug().DebugPageMan(this.PageMan());
-
         this.ScUiMan().AdminB(this.ScUiMan().TopLevelDoc(), null);
         break;
 
@@ -212,9 +207,9 @@ export class ContentMessageManager extends ContentManagerBase {
         //this.debug().LogVal('response', JSON.stringify(response));
         response.MsgFlag = MsgFlag.RespCurState;
         break;
-    
+
       case MsgFlag.ReqOpenCE:
-      
+
         break;
 
       case MsgFlag.ReqMarkFavorite:
@@ -225,7 +220,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
       case MsgFlag.ReqQuickPublish:
         var targetWin = this.ScUiMan().TopLevelDoc();
-        await this.OneWinMan().PublishActiveCE(targetWin);
+        await this.OneScWinMan().PublishActiveCE(targetWin);
         break;
 
       case MsgFlag.ReqRestoreClick:
@@ -236,7 +231,7 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqTakeSnapShot:
-        this.OneWinMan().SaveWindowState(this.ScUiMan().TopLevelDoc(), payload.Data.SnapShotSettings);
+        this.OneScWinMan().SaveWindowState(payload.Data.SnapShotSettings);
         break;
 
       case MsgFlag.RemoveFromStorage:
@@ -291,7 +286,7 @@ export class ContentMessageManager extends ContentManagerBase {
         var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
 
         if (targetDoc) {
-          await self.OneWinMan().RestoreWindowStateToTarget(targetDoc, dataOneWindowStorage)
+          await self.OneScWinMan().RestoreWindowStateToTarget(targetDoc, dataOneWindowStorage)
             .then(() => this.respondSuccessful())
             .catch((failReason) => this.respondFail(failReason))
         }

@@ -1,6 +1,12 @@
 ﻿import { HelperBase } from "../Classes/HelperBase";
 import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
+import { IDataOneWindowStorage } from "../Interfaces/IDataOneWindowStorage";
+import { scWindowType } from "../Enums/scWindowType";
+import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
+import { IGuid } from "../Interfaces/IGuid";
+import { IDataDtState } from "../Interfaces/IDataDtState";
 export class FactoryHelper extends HelperBase {
+    
 
   DataOneContentDocFactoryFromIframe(IframeElem: HTMLIFrameElement, parentDocument: IDataOneDoc, nickname: string): IDataOneDoc {
     var toReturn: IDataOneDoc = {
@@ -8,11 +14,40 @@ export class FactoryHelper extends HelperBase {
       Document: IframeElem.contentDocument,
       HasParentDesktop: false,
       DocId: this.HelperHub.GuidHelp.NewGuid(),
-      IsCEDoc: false,
       ParentDesktop: null,
       Nickname: nickname + ' - content doc'
     }
     return toReturn;
   }
+  CreateNewDtDataShell(): IDataDtState {
 
+    var toReturn: IDataDtState = {
+      AllCeData: [],
+      livingIframeAr: [],
+      ActiveCeMan: null
+    }
+
+    return toReturn;
+  }
+
+
+  CreateNewWindowSnapShotShell(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
+    this.Debug.FuncStart(this.CreateNewWindowSnapShotShell.name);
+    var dateToUse: Date = new Date();
+    var newGuid: IGuid = this.GuidHelp().NewGuid();
+
+    var activeWindowSnapShot: IDataOneWindowStorage = {
+      TimeStamp: dateToUse,
+      WindowType: windowType,
+      WindowFriendly: windowType[windowType],
+      AllCEAr: [],
+      Id: newGuid,
+      NickName: '',
+      RawData: null,
+      Flavor: flavor,
+    };
+    this.Debug.FuncEnd(this.CreateNewWindowSnapShotShell.name);
+
+    return activeWindowSnapShot;
+  }
 }

@@ -3,5 +3,6 @@ import { IDataOneTreeNode } from './IDataOneTreeNode';
 
 export interface IDataOneStorageCE {
   Id: IGuid,
-  AllTreeNodeAr: IDataOneTreeNode[]
+  AllTreeNodeAr: IDataOneTreeNode[],
+  ActiveNode: IDataOneTreeNode
 }

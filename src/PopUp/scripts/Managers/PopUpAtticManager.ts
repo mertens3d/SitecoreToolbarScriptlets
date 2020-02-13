@@ -9,7 +9,9 @@ export class PopUpAtticManager extends PopUpManagerBase {
   DefaultSettings: IDataPopUpSettings;
 
   Init() {
+    this.debug().FuncStart(PopUpAtticManager.name, this.Init.name);
     this.DefaultSettings = this.GetDefaultSettings();
+    this.debug().FuncEnd(PopUpAtticManager.name, this.Init.name);
   }
 
   private async __drawSettings(): Promise<string[]> {
@@ -40,19 +42,13 @@ export class PopUpAtticManager extends PopUpManagerBase {
       ContentPrefs: defaultContentPrefs,
     };
 
-    this.DebugSettings(toReturn);
+    //this.DebugSettings(toReturn);
 
     this.debug().FuncEnd(this.GetDefaultSettings.name);
     return toReturn;
   }
 
-  DebugSettings(toReturn: IDataPopUpSettings): void {
-    this.debug().FuncStart(this.DebugSettings.name);
 
-    this.debug().LogVal('Settings', JSON.stringify(toReturn));
-
-    this.debug().FuncEnd(this.DebugSettings.name);
-  }
 
   ValidateSettings(popSettings: IDataPopUpSettings): IDataPopUpSettings {
     if (typeof popSettings === 'undefined' || !popSettings) {
@@ -103,7 +99,7 @@ export class PopUpAtticManager extends PopUpManagerBase {
       }
     });
 
-    this.debug().LogVal('toReturn', JSON.stringify(toReturn));
+    //this.debug().DebugIdataPopUpSettings(toReturn);
 
     toReturn = this.ValidateSettings(toReturn);
 

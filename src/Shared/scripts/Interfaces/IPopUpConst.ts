@@ -59,16 +59,7 @@ export interface IPopUpConst {
     Default: string,
     PublishComplete: string,
   },
-  Regex: {
-    ContentEditor: RegExp,
-    NbSp: RegExp,
-    PageType: {
-      Desktop: RegExp
-      Edit: RegExp
-      Normal: RegExp
-      Preview: RegExp
-    },
-  },
+ 
   Selector: {
     Btn: {
       WindowClose: string,
@@ -103,11 +94,5 @@ export interface IPopUpConst {
     AutoSaveInterval: number,
     AutoLoginCheckInterval: number,
   },
-  UrlSuffix: {
-    Desktop: string,
-    Login: string,
-    LaunchPad: string,
-    CE: string,
-    None: string,
-  },
+ 
 }

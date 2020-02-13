@@ -2,11 +2,14 @@ import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
+import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 
 export class OneTreeManager extends ContentManagerBase {
-  constructor(hub: ContentHub) {
+  AssociatedDoc: IDataOneDoc;
+  constructor(hub: ContentHub, associatedDoc: IDataOneDoc) {
     super(hub)
     hub.debug.FuncStart(OneTreeManager.name);
+    this.AssociatedDoc = associatedDoc;
     hub.debug.FuncEnd(OneTreeManager.name);
   }
 
@@ -16,7 +19,7 @@ export class OneTreeManager extends ContentManagerBase {
 
     var parentNode = inputNode.parentNode;
 
-    var treeNode = parentNode.querySelector(this.Const().Selector.SC.IdStartsWithTreeNode); // [id^=Tree_Node_]');
+    var treeNode = parentNode.querySelector(ContentConst.Const.Selector.SC.IdStartsWithTreeNode); // [id^=Tree_Node_]');
     if (treeNode) {
       toReturn = treeNode.innerText;
     } else {
@@ -26,20 +29,35 @@ export class OneTreeManager extends ContentManagerBase {
     return toReturn;
   }
 
+  GetActiveNode(): IDataOneTreeNode {
+    let toReturn: IDataOneTreeNode = null;
+
+    var AllTreeNodeAr: IDataOneTreeNode[] = this.GetOneLiveTreeData();
+
+    for (var idx = 0; idx < AllTreeNodeAr.length; idx++) {
+      var candidate: IDataOneTreeNode = AllTreeNodeAr[idx];
+      if (candidate.IsActive) {
+        toReturn = candidate;
+        break;
+      }
+    }
+
+    return toReturn;
+  }
   private __isActive(targetNode: HTMLElement): boolean {
     var toReturn: boolean = false;
 
-    var firstNodeActiveTest = targetNode.querySelector(this.Const().Selector.SC.IdStartsWithTreeNode);
+    var firstNodeActiveTest = targetNode.querySelector(ContentConst.Const.Selector.SC.IdStartsWithTreeNode);
     if (firstNodeActiveTest) {
       var className = firstNodeActiveTest.className;
-      if (className.indexOf(this.Const().ClassNames.SC.scContentTreeNodeActive) > -1) {
+      if (className.indexOf(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive) > -1) {
         toReturn = true;
         this.debug().Log('** isActive ' + targetNode.innerText);
       }
     }
 
     //this.debug().Log(className);
-    //this.debug().Log(this.Const().ClassNames.SC.scContentTreeNodeActive);
+    //this.debug().Log(InjectConst.ContConst.ClassNames.SC.scContentTreeNodeActive);
 
     return toReturn;
   }
@@ -49,7 +67,7 @@ export class OneTreeManager extends ContentManagerBase {
     if (firstImg) {
       var srcAttr = firstImg.getAttribute('src');
 
-      if (srcAttr.indexOf(this.Const().Names.SC.TreeExpandedPng.sc920) > -1) {
+      if (srcAttr.indexOf(ContentConst.Const.Names.SC.TreeExpandedPng.sc920) > -1) {
         //this.debug().Log('is Expanded');
         toReturn = true;
       }
@@ -61,7 +79,7 @@ export class OneTreeManager extends ContentManagerBase {
     var toReturn: boolean = false;
 
     var className = targetNode.className;
-    if (className === this.Const().ClassNames.ContentTreeNode) {
+    if (className === ContentConst.Const.ClassNames.ContentTreeNode) {
       //this.debug().Log('is Content Node');
       toReturn = true;
     }
@@ -73,7 +91,7 @@ export class OneTreeManager extends ContentManagerBase {
     depth = depth - 1;
 
     if (targetNode) {
-      var firstImg: HTMLElement = targetNode.querySelector(this.Const().Selector.SC.ContentTreeNodeGlyph);
+      var firstImg: HTMLElement = targetNode.querySelector(ContentConst.Const.Selector.SC.ContentTreeNodeGlyph);
 
       if (this.__isContentTreeNode(targetNode)) {
         var newData: IDataOneTreeNode = {
@@ -92,15 +110,15 @@ export class OneTreeManager extends ContentManagerBase {
           //this.debug().LogVal('friendlyName', newData.NodeFriendly);
           //this.debug().LogVal('id', firstImg.id);
 
-          var apparentId = firstImg.id.replace(this.Const().Names.SC.TreeGlyphPrefix, '');
+          var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
 
-          newData.NodeId = this.ContentHub.Helpers.GuidHelp. ParseGuid(apparentId);
+          newData.NodeId = this.ContentHub.Helpers.GuidHelp.ParseGuid(apparentId);
 
           toReturn.push(newData);
         }
       }
 
-      var childNodes: HTMLCollection = targetNode.children;//  querySelectorAll('.' + this.Const().ClassNames.ContentTreeNode);
+      var childNodes: HTMLCollection = targetNode.children;//  querySelectorAll('.' + InjectConst.ContConst.ClassNames.ContentTreeNode);
       if (childNodes && childNodes.length > 0 && depth > 0) {
         for (var jdx = 0; jdx < childNodes.length; jdx++) {
           var oneChild = <HTMLElement>childNodes[jdx];
@@ -111,25 +129,22 @@ export class OneTreeManager extends ContentManagerBase {
     return toReturn;
   }
 
-
-
-
-  GetOneLiveTreeData(targetDoc: IDataOneDoc): IDataOneTreeNode[] {
+  GetOneLiveTreeData(): IDataOneTreeNode[] {
     this.debug().FuncStart(this.GetOneLiveTreeData.name);
-    this.debug().Log('targetDoc isnull: ' + (targetDoc === null));
+    this.debug().Log('targetDoc isnull: ' + (this.AssociatedDoc === null));
     var toReturn: IDataOneTreeNode[] = [];
 
-    if (targetDoc) {
+    if (this.AssociatedDoc) {
       //this.debug().Log(targetDoc);
-      this.debug().LogVal('Looking for node ID: ', this.Const().ElemId.sc.SitecoreRootNodeId);
-      this.debug().DebugIDataOneDoc(targetDoc);
-      var rootNode = targetDoc.Document.getElementById(this.Const().ElemId.sc.SitecoreRootNodeId);
+      this.debug().LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
+      this.debug().DebugIDataOneDoc(this.AssociatedDoc);
+      var rootNode = this.AssociatedDoc.Document.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
 
       if (rootNode) {
         this.debug().Log('rootNode: ' + rootNode.innerHTML);
         var rootParent = rootNode.parentElement;
 
-        toReturn = this.WalkNodeRecursive(rootParent, this.Const().MaxIter);
+        toReturn = this.WalkNodeRecursive(rootParent, ContentConst.Const.MaxIter);
         this.debug().Log('foundNodes count: ' + toReturn.length);
 
         //var nodesAsString = JSON.stringify(toReturn);

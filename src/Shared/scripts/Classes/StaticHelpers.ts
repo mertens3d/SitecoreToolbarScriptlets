@@ -6,6 +6,9 @@ import { BufferUseNbsp, BufferChar } from "../Enums/BufferChar";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 
 export class StaticHelpers {
+  static MinToMs(minutes: number) {
+    return minutes * 60 * 1000;
+    }
   static FlavorAsString(flavor: SnapShotFlavor): string {
     return 'Flavor.' + SnapShotFlavor[flavor] + '(' + flavor + ')';
   }

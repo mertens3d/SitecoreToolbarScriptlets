@@ -1,9 +1,9 @@
 ﻿export class ResultSuccessFail {
-  FailMessage: string;
+  RejectMessage: string;
   Succeeded: boolean;
 
   constructor() {
     this.Succeeded = false;
-    this.FailMessage = '';
+    this.RejectMessage = '';
   }
 }

@@ -8,11 +8,17 @@ import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIfram
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { OneCEManager } from './OneCEManager';
+import { IDataDtState } from '../../../Shared/scripts/Interfaces/IDataDtState';
+import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 
 export class OneDesktopManager extends ContentManagerBase {
-  constructor(hub: ContentHub) {
+  associatedDoc: IDataOneDoc;
+
+  constructor(hub: ContentHub, associatedDoc: IDataOneDoc) {
     hub.debug.FuncStart(OneDesktopManager.name);
-    super(hub)
+    super(hub);
+    this.associatedDoc = associatedDoc;
     hub.debug.FuncEnd(OneDesktopManager.name);
   }
 
@@ -26,10 +32,10 @@ export class OneDesktopManager extends ContentManagerBase {
   //  return toReturn;
   //}
 
-  async RestoreDesktopStateAsync(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage) {
-    this.debug().FuncStart(this.RestoreDesktopStateAsync.name);;
+  async RestoreDesktopState(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage) {
+    this.debug().FuncStart(this.RestoreDesktopState.name);;
 
-    if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.RestoreDesktopStateAsync.name)) {
+    if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.RestoreDesktopState.name)) {
       for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
         this.debug().Log('data idx: ' + idx + ':' + dataToRestore.AllCEAr.length);
 
@@ -39,7 +45,7 @@ export class OneDesktopManager extends ContentManagerBase {
       }
     }
 
-    this.debug().FuncEnd(this.RestoreDesktopStateAsync.name);
+    this.debug().FuncEnd(this.RestoreDesktopState.name);
   }
   async RestoreDataToOneIframeWorker(oneCEdata: IDataOneStorageCE, newIframe: IDataOneIframe) {
     this.debug().FuncStart(this.RestoreDataToOneIframeWorker.name, 'data not null: ' + (oneCEdata != null) + ' newFrame not null: ' + (newIframe !== null));
@@ -48,7 +54,7 @@ export class OneDesktopManager extends ContentManagerBase {
     this.debug().DebugDataOneIframe(newIframe);
 
     if (oneCEdata && newIframe) {
-      await this.ContentHub.OneCEMan.RestoreCEStateAsync(oneCEdata, newIframe.ContentDoc);
+      await this.OneScWinMan().OneCEMan.RestoreCEStateAsync(oneCEdata, newIframe.ContentDoc);
       toReturn = true;
     } else {
       this.debug().Error(this.RestoreDataToOneIframeWorker.name, 'bad data');
@@ -58,7 +64,7 @@ export class OneDesktopManager extends ContentManagerBase {
     return toReturn;
   }
 
-  async WaitForIframeCountDiffWorker(IFramesbefore: IDataOneIframe[], targetDoc: IDataOneDoc) {
+  async WaitForIframeCountDiffWorker(IFramesbefore: IDataOneIframe[]) {
     this.debug().FuncStart(this.WaitForIframeCountDiffWorker.name);
     var toReturn: IDataOneIframe = null;
 
@@ -67,13 +73,8 @@ export class OneDesktopManager extends ContentManagerBase {
     while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
       let beforeCount: number = IFramesbefore.length;
 
-      var allIframesAfter: IDataOneIframe[] = this.GetAllLiveIframeData(targetDoc);
-      //var allIframesAfter: IDataOneIframe[];
-      //if (result && result.length) {
-      //  for (var idx = 0; idx < result.length; idx++) {
-      //    allIframesAfter.push(<IDataOneIframe> result[idx]);
-      //  }
-      //}
+      var allIframesAfter: IDataOneIframe[] = this.GetAllLiveIframeData();
+
       var count: number = allIframesAfter.length;
       this.debug().Log('iFrame count before: ' + IFramesbefore.length);
       this.debug().Log('iFrame count after: ' + allIframesAfter.length);
@@ -83,7 +84,6 @@ export class OneDesktopManager extends ContentManagerBase {
 
         toReturn = newIframes[0];
       } else {
-
         await iterationJr.Wait();
       }
     }
@@ -92,19 +92,21 @@ export class OneDesktopManager extends ContentManagerBase {
     return toReturn;
   }
 
-  GetAllLiveIframeData(targetDoc: IDataOneDoc): IDataOneIframe[] {
+  GetAllLiveIframeData(): IDataOneIframe[] {
     this.debug().FuncStart(this.GetAllLiveIframeData.name);
+
+    this.debug().DebugIDataOneDoc(this.associatedDoc);
+
     var toReturn: IDataOneIframe[] = [];
-    var iframeAr = targetDoc.Document.querySelectorAll(this.Const().Selector.SC.IframeContent);
+    var iframeAr = this.associatedDoc.Document.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent);
     if (iframeAr) {
       this.debug().Log('iframeAr: ' + iframeAr.length);
       for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
         this.debug().Log('pushing: ' + ifrIdx);
 
         var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        var dataOneIframe: IDataOneIframe = this.Factoryman().DateOneIframeFactory(iframeElem, targetDoc, 'desktop Iframe_' + ifrIdx);
+        var dataOneIframe: IDataOneIframe = this.Factoryman().DateOneIframeFactory(iframeElem, this.associatedDoc, 'desktop Iframe_' + ifrIdx);
         dataOneIframe.ContentDoc.HasParentDesktop = true;
-        dataOneIframe.ContentDoc.IsCEDoc = true;
         toReturn.push(dataOneIframe);
       }
     }
@@ -112,38 +114,34 @@ export class OneDesktopManager extends ContentManagerBase {
     return toReturn;
   }
 
-  GetActiveDesktopIframeData() {
-    this.debug().FuncStart(this.GetActiveDesktopIframeData.name);
-    var toReturn: IDataOneIframe = null;
-    var livingIframeAr: IDataOneIframe[] = this.GetAllLiveIframeData(this.ScUiMan().TopLevelDoc());
+  GetState(): IDataDtState {
+    this.debug().FuncStart(this.GetState.name);
+    this.debug().DebugIDataOneDoc(this.associatedDoc);
 
-    if (livingIframeAr) {
-      for (var idx = 0; idx < livingIframeAr.length; idx++) {
-        if (livingIframeAr[idx].Zindex === 1) {
-          toReturn = livingIframeAr[idx];
-          break;
-        }
+    var toReturnAllCeState: IDataDtState = this.Helpers().FactoryHelp.CreateNewDtDataShell();
+    toReturnAllCeState.livingIframeAr = this.GetAllLiveIframeData();
 
-      }
-    }
-    this.debug().FuncEnd(this.GetActiveDesktopIframeData.name);
-    return toReturn;
-  }
-
-  SaveStateOneDesktop(targetDoc: IDataOneDoc, snapShotSettings: IDataPayloadSnapShot) {
-    this.debug().FuncStart(this.SaveStateOneDesktop.name);;
-    this.debug().Log('SaveOneDesktop');;
-    var livingIframeAr: IDataOneIframe[] = this.GetAllLiveIframeData(targetDoc);
-    if (livingIframeAr && livingIframeAr.length > 0) {
-      for (var iframeIdx = 0; iframeIdx < livingIframeAr.length; iframeIdx++) {
+    if (toReturnAllCeState.livingIframeAr && toReturnAllCeState.livingIframeAr.length > 0) {
+      for (var iframeIdx = 0; iframeIdx < toReturnAllCeState.livingIframeAr.length; iframeIdx++) {
         this.debug().Log('iframeIdx: ' + iframeIdx);
 
-        var targetIframeObj = livingIframeAr[iframeIdx];
-        //this.debug().Log('targetIframe: ' + JSON.stringify(targetIframeObj));
-        this.ContentHub.OneCEMan.SaveStateOneContentEditor(targetIframeObj.Id, targetIframeObj.ContentDoc, snapShotSettings);
+        var targetIframeObj = toReturnAllCeState.livingIframeAr[iframeIdx];
+
+        
+        var oneCeMan = new OneCEManager(this.ContentHub, targetIframeObj.ContentDoc);
+
+        //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
+        if (targetIframeObj.Zindex === 1) {
+          toReturnAllCeState.ActiveCeMan = oneCeMan;
+        }
+
+        var oneCeState = oneCeMan.GetState(this.Helpers().GuidHelp.EmptyGuid());
+        toReturnAllCeState.AllCeData.push(oneCeState);
       }
     }
 
-    this.debug().FuncEnd(this.SaveStateOneDesktop.name);
+    this.debug().FuncEnd(this.GetState.name);
+
+    return toReturnAllCeState;
   }
 };

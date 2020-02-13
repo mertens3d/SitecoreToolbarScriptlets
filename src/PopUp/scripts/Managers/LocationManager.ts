@@ -7,6 +7,7 @@ import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { PopUpManagerBase } from './PopUpManagerBase';
 import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
 import { PopUpHub } from './PopUpHub';
+import { SharedConst } from '../../../Shared/scripts/SharedConst';
 
 export class LocationManager extends PopUpManagerBase {
   constructor(hub: PopUpHub) {
@@ -49,13 +50,16 @@ export class LocationManager extends PopUpManagerBase {
         }
 
         if (desiredPageType === scWindowType.Desktop && currentState !== scWindowType.Desktop) {
-          this.Helpers().PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, targetWindow, desiredPageType)
+          this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(SharedConst.SharedConst.UrlSuffix.CE, this.TabMan().CurrentTabData)
+            //this.Helpers().PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, targetWindow, desiredPageType)
+            .then(() => this.MsgMan().WaitForListeningTab(this.TabMan().CurrentTabData))
             //.then(() => this.MsgMan().wa)
             .then(() => callBackOnSuccessfulHrefChange);
         }
 
         else if (desiredPageType === scWindowType.ContentEditor && currentState !== scWindowType.ContentEditor) {
-          this.Helpers().PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.CE, targetWindow, desiredPageType)
+          this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(SharedConst.SharedConst.UrlSuffix.CE, this.TabMan().CurrentTabData)
+            //this.Helpers().PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.CE, targetWindow, desiredPageType)
             .then(() => callbackOnComplete);
         }
 
@@ -67,6 +71,27 @@ export class LocationManager extends PopUpManagerBase {
       }
     }
     this.debug().FuncEnd(this.ChangeLocationSwitchBoard.name);
+  }
+
+  async SetScModeFromEditPrevNorm(newValue: IsScMode, currentPageType: scWindowType) {
+    var currentTabHref: string = this.TabMan().CurrentTabData.Tab.url;
+    var newHref = currentTabHref.replace('=normal', newValue.AsString).replace('=preview', newValue.AsString).replace('=edit', newValue.AsString);
+    await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData);
+  }
+  SetScModeFromCeDt(newValue: IsScMode, currentPageType: scWindowType) {
+    var dataOneDoc: IDataOneDoc = null;
+
+    if (currentPageType == scWindowType.Desktop) {
+      let currentNodeId: IDataOneTreeNode;
+
+      //await this.MsgMan().SendMessageToContentTab()
+
+      //todo - put back?
+      //var currentIframe = this.DesktopMan().GetActiveDesktopIframeData();
+      //if (currentIframe) {
+      //  dataOneDoc = currentIframe.ContentDoc;
+      //}
+    }
   }
 
   SetScMode(newValue: IsScMode, useOrigWindow: boolean) {
@@ -82,43 +107,12 @@ export class LocationManager extends PopUpManagerBase {
         ||
         currentPageType === scWindowType.Desktop
       ) {
-        var dataOneDoc: IDataOneDoc = null;
-
-        if (currentPageType == scWindowType.Desktop) {
-          //todo - put back?
-          //var currentIframe = this.DesktopMan().GetActiveDesktopIframeData();
-          //if (currentIframe) {
-          //  dataOneDoc = currentIframe.ContentDoc;
-          //}
-        }
-        else {
-          //dataOneDoc = this.TabMan().CurrentTabData.DataDocSelf;
-        }
-
-        if (dataOneDoc) {
-          //todo - put back?
-          //var AllTreeNodeAr: IDataOneTreeNode[] = this.PopHub.OneTreeMan.GetOneLiveTreeData(dataOneDoc);
-
-          //for (var idx = 0; idx < AllTreeNodeAr.length; idx++) {
-          //  var candidate: IDataOneTreeNode = AllTreeNodeAr[idx];
-          //  if (candidate.IsActive) {
-          //    itemGuid = candidate.NodeId;
-          //    break;
-          //  }
-          //}
-          await alert(itemGuid.AsString);
-          // we should use the sitecore buttons
-
-          if (itemGuid) {
-            targetWindow = await this.TabMan().GetTargetWindowAsync(useOrigWindow, scWindowType.Edit);
-          }
-        }
-      } else if (currentPageType == scWindowType.Edit
+        await this.SetScModeFromCeDt(newValue, currentPageType);
+      }
+      else if (currentPageType == scWindowType.Edit
         || currentPageType == scWindowType.Normal
         || currentPageType == scWindowType.Preview) {
-        if (targetWindow) {
-          window.opener.location.href = window.opener.location.href.replace('=normal', newValue.AsString).replace('=preview', newValue.AsString).replace('=edit', newValue.AsString);
-        }
+        await this.SetScModeFromEditPrevNorm(newValue, currentPageType);
       }
       this.debug().FuncEnd(this.SetScMode.name);
     });

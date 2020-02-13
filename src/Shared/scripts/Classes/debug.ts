@@ -3,7 +3,7 @@ import { IDataDebugCallback } from "../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../Interfaces/ICallbackDataDebugTextChanged";
 import { IGuid } from "../Interfaces/IGuid";
 import { MsgFlag } from "../Enums/MessageFlag";
-import { UtilityHelper } from "./Utilities";
+import { UtilityHelper } from "../Helpers/UtilityHelper";
 import { IError } from "../Interfaces/IError";
 import { StaticHelpers } from "./StaticHelpers";
 import { BufferChar } from "../Enums/BufferChar";
@@ -11,6 +11,7 @@ import { BufferDirection } from "../Enums/BufferDirection";
 import { IDataBrowserTab } from "../Interfaces/IDataBrowserWindow";
 import { scWindowType } from "../Enums/scWindowType";
 import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
+import { IDataPopUpSettings } from "../Interfaces/IDataPopUpSettings";
 
 export class BaseDebug {
   private __indentCount: number;
@@ -27,7 +28,6 @@ export class BaseDebug {
     this.ParentWindow = parentWindow;
     //this.Utilites = utilies;
   }
-
 
   DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
     this.FuncStart(this.DebugDataOneIframe.name);
@@ -69,10 +69,15 @@ export class BaseDebug {
   //  this.LogVal(debugPrefix + textValName, textVal.toString())
   //}
 
+  DebugIdataPopUpSettings(toReturn: IDataPopUpSettings): void {
+    //this.FuncStart(this.DebugSettings.name);
 
-  DebugIDataBrowserWindow(browserWindow: IDataBrowserTab) {
+    this.LogVal('Settings', JSON.stringify(toReturn));
+
+    //this.FuncEnd(this.DebugSettings.name);
+  }
+  DebugIDataBrowserTab(browserWindow: IDataBrowserTab) {
     if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
-      this.LogVal('Friendly', browserWindow.Friendly);
       this.LogVal('WindowType', scWindowType[browserWindow.ScWindowType]);
 
       //this.DebugIDataOneDoc(browserWindow.DataDocSelf);
@@ -176,8 +181,8 @@ export class BaseDebug {
     this.__markerRaw('D');
   }
 
-  MarkerE() {    this.__markerRaw('E');  }
-  MarkerF() {    this.__markerRaw('F');  }
+  MarkerE() { this.__markerRaw('E'); }
+  MarkerF() { this.__markerRaw('F'); }
 
   private __markerRaw(marker) {
     this.Log('Marker ' + marker);
@@ -188,9 +193,13 @@ export class BaseDebug {
   LogVal(textValName: string, textVal: boolean): void;
   LogVal(textValName: string, textVal: number): void;
   LogVal(textValName: string, textVal: string | boolean | number | IGuid): any {
-    if (!textVal) {
-      textVal = '{notVal}';
-    } else {
+    if (typeof textVal === 'undefined') {
+      textVal = '{undefined}';
+    }
+    else if (textVal === null) {
+      textVal = '{null}';
+    }
+    else {
       var asGuid = <IGuid>textVal;
       if (asGuid.Type === 'IGuid') {
         textVal = asGuid.AsString;

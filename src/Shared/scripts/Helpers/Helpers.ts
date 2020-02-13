@@ -1,6 +1,6 @@
 ﻿import { GuidHelper } from "./GuidHelper";
 import { BaseDebug } from "../Classes/debug";
-import { UtilityHelper } from "../Classes/Utilities";
+import { UtilityHelper } from "./UtilityHelper";
 import { PromiseHelper } from "../Classes/PromiseGeneric";
 import { FactoryHelper } from "./FactoryHelper";
 

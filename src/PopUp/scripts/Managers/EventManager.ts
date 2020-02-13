@@ -22,8 +22,10 @@ export class EventManager extends PopUpManagerBase {
   }
 
   Init() {
+    this.debug().FuncStart(EventManager.name + this.Init.name);
     this.BuildAllCommands();
     this.__wireMenuButtons();
+    this.debug().FuncEnd(EventManager.name + this.Init.name);
   }
 
   BuildAllCommands() {

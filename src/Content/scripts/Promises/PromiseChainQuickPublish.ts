@@ -4,6 +4,7 @@ import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPublishChain';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
+import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 
 export class PromiseChainQuickPublish extends ContentManagerBase {
   constructor(hub: ContentHub) {
@@ -58,25 +59,25 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   }
 
   async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await this.PromiseGen().WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, this.Const().Selector.SC.Publish.SettingsHidden)
+    await this.Helpers().PromiseHelp.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.SettingsHidden)
       .then(async () => {
-        await this.PromiseGen().WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, this.Const().Selector.SC.Publish.TheItemHasBeenPublished, this.SharedConst().IterHelper.MaxCount.OverridePublishing)
+        await this.Helpers().PromiseHelp.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, this.SharedConst().IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
-        await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.Cancel], dataPublishChain.Iframe0Blue.ContentDoc);
+        await this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.Cancel], dataPublishChain.Iframe0Blue.ContentDoc);
       });
 
     return dataPublishChain;
   }
 
   private async __waitForAndClickOk(dataPublishChain: IDataPublishChain) {
-    await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.Ok], dataPublishChain.messageDialogIframeRed.ContentDoc);
+    await this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.Ok], dataPublishChain.messageDialogIframeRed.ContentDoc);
 
     return dataPublishChain;
   }
 
   async __WaitForAndClickPublishNextButton(dataPublishChain: IDataPublishChain) {
-    await this.PromiseGen().WaitForThenClick([this.Const().Selector.SC.NextButton], dataPublishChain.Iframe0Blue.ContentDoc);
+    await this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.NextButton], dataPublishChain.Iframe0Blue.ContentDoc);
 
     return dataPublishChain;
   }
@@ -86,7 +87,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
     var IDataOneIframe: IDataOneIframe = this.Factoryman().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'iframeRed');
 
     dataPublishChain.messageDialogIframeRed =
-      await this.PromiseGen().WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, this.Const().Selector.SC.ContentIFrame1,  IDataOneIframe)
+      await this.Helpers().PromiseHelp.WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIFrame1,  IDataOneIframe)
 
     return dataPublishChain;
   }
@@ -96,7 +97,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
 
     var IDataOneIframe: IDataOneIframe = this.Factoryman().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
 
-    dataPublishChain.Iframe0Blue = await this.PromiseGen().WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, this.Const().Selector.SC.ContentIframe0, IDataOneIframe );
+    dataPublishChain.Iframe0Blue = await this.Helpers().PromiseHelp.WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIframe0, IDataOneIframe );
 
     this.debug().DebugDataOneIframe(dataPublishChain.Iframe0Blue);
 
@@ -112,7 +113,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
 
       var found: HTMLElement = null;
 
-      var found = await this.PromiseGen().WaitForAndReturnFoundElem(targetDoc, selector);
+      var found = await this.Helpers().PromiseHelp.WaitForAndReturnFoundElem(targetDoc, selector);
 
       if (found) {
         this.debug().Log('found');

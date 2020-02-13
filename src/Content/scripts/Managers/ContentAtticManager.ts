@@ -10,6 +10,7 @@ import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
 import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
+import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 
 export class ContentAtticManager extends ContentManagerBase {
   private CachedWindowStorage: ISnapShotsMany;
@@ -54,11 +55,11 @@ export class ContentAtticManager extends ContentManagerBase {
           result.Succeeded = true;
         } else {
           result.Succeeded = false;
-          result.FailMessage = 'No storage match found';
+          result.RejectMessage = 'No storage match found';
         }
       } else {
         result.Succeeded = false;
-        result.FailMessage = 'no id provided'
+        result.RejectMessage = 'no id provided'
       }
 
       this.debug().FuncEnd(this.MarkFavorite.name);
@@ -66,7 +67,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (result) {
         resolve();
       } else {
-        reject(result.FailMessage);
+        reject(result.RejectMessage);
       }
     })
   }
@@ -78,7 +79,7 @@ export class ContentAtticManager extends ContentManagerBase {
       var snapShotAsString = JSON.stringify(dataOneWindow);
       //this.debug().LogVal('snapShotAsString', snapShotAsString);
 
-      await window.localStorage.setItem(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotPrefix + dataOneWindow.Id.AsString, snapShotAsString)
+      await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.Id.AsString, snapShotAsString)
 
       var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id, CacheMode.DoNotUseCach);
 
@@ -86,7 +87,7 @@ export class ContentAtticManager extends ContentManagerBase {
         result.Succeeded = true;
       } else {
         result.Succeeded = false;
-        result.FailMessage = 'Snap shot not successfully saved';
+        result.RejectMessage = 'Snap shot not successfully saved';
       }
 
       this.debug().FuncEnd(this.WriteToStorage.name);
@@ -94,7 +95,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (result.Succeeded) {
         resolve();
       } else {
-        reject(result.FailMessage);
+        reject(result.RejectMessage);
       }
     });
   }
@@ -114,7 +115,7 @@ export class ContentAtticManager extends ContentManagerBase {
       }
     }
     if (DateOneWinStoreMatch) {
-      this.debug().Log('found match', this.Utilites().TimeNicknameFavStr(DateOneWinStoreMatch));
+      this.debug().Log('found match', this.Helpers().UtilityHelp.TimeNicknameFavStr(DateOneWinStoreMatch));
     } else {
       this.debug().LogVal(this.GetFromStorageById.name, 'Match notfound')
     }
@@ -142,7 +143,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
       this.debug().LogVal('Candidate.key', candidate.key);
 
-      if (candidate.key.startsWith(this.Const().Storage.WindowRoot + this.Const().Storage.SnapShotPrefix)) {
+      if (candidate.key.startsWith(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix)) {
         this.debug().LogVal('valid candidate', true);
 
         candidate.data = window.localStorage.getItem(candidate.key);
@@ -206,7 +207,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
     var cleanData: IDataOneWindowStorage[] = [];
     var now: Date = new Date();
-    var maxAutoSaveDiff: number = this.Const().MaxAutoSaveAgeDays * 24 * 60 * 60 * 1000;
+    var maxAutoSaveDiff: number = ContentConst.Const.MaxAutoSaveAgeDays * 24 * 60 * 60 * 1000;
 
     if (this.CachedWindowStorage) {
       var cacheLength = this.CachedWindowStorage.CurrentSnapShots.length;
@@ -216,15 +217,15 @@ export class ContentAtticManager extends ContentManagerBase {
         var candidate = this.CachedWindowStorage.CurrentSnapShots[idx];
 
         if (candidate.Flavor) {
-          if (autoCount > this.Const().MaxAutoToSaveCount) {
-            this.debug().LogVal('Delete (max count :' + this.Const().MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
+          if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
+            this.debug().LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
             deleteFlag = true;
           }
           autoCount++;
         }
 
         if (now.getTime() - candidate.TimeStamp.getTime() > maxAutoSaveDiff) {
-          this.debug().LogVal('Delete (Old : max' + this.Const().MaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
+          this.debug().LogVal('Delete (Old : max' + ContentConst.Const.MaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
           deleteFlag = true;
         }
 
@@ -265,8 +266,8 @@ export class ContentAtticManager extends ContentManagerBase {
 
     var timeDiff: number = Date.now() - this.CachedWindowStorage.Birthday.getTime();
 
-    this.debug().LogVal('cached timeDiff', timeDiff + ' : ' + this.Const().MaxCacheAgeMs);
-    if (timeDiff > (this.Const().MaxCacheAgeMs)) {
+    this.debug().LogVal('cached timeDiff', timeDiff + ' : ' + ContentConst.Const.MaxCacheAgeMs);
+    if (timeDiff > (ContentConst.Const.MaxCacheAgeMs)) {
       this.debug().Log('updating cache');
 
       this.CachedWindowStorage.CurrentSnapShots = this.__getAllStorageReal();
