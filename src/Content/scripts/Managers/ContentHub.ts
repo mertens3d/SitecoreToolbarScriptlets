@@ -34,7 +34,7 @@ export class ContentHub {
 
   Utilities: UtilityHelper;
   MessageFlag: MsgFlag;
-  Factory: ContentFactories;
+  ContentFactory: ContentFactories;
   SharedConst: ISharedConst;
   ReadyForMessages: boolean = false;
 
@@ -53,6 +53,7 @@ export class ContentHub {
     this.Helpers = new HelperHub(this.debug);
     this.MsgMan = new ContentMessageManager(this);
     this.MiscMan = new MiscManager(this);
+    this.ContentFactory = new ContentFactories(this);
     
 
     this.debug.MarkerA();
@@ -61,7 +62,6 @@ export class ContentHub {
     this.OneWindowMan = new OneScWindowManager(this);
     
     this.PromiseOneStep = new PromiseOneStep(this);
-    this.Factory = new ContentFactories(this);
 
 
     this.SharedConst = SharedConst.SharedConst;

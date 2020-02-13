@@ -84,7 +84,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
 
   async GetMessageDialog(dataPublishChain: IDataPublishChain) {
 
-    var IDataOneIframe: IDataOneIframe = this.Factoryman().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'iframeRed');
+    var IDataOneIframe: IDataOneIframe = this.ContentFactory().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'iframeRed');
 
     dataPublishChain.messageDialogIframeRed =
       await this.Helpers().PromiseHelp.WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIFrame1,  IDataOneIframe)
@@ -95,7 +95,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   async GetDialogIframe0Blue(dataPublishChain: IDataPublishChain = null) {
     this.debug().FuncStart(this.GetDialogIframe0Blue.name);
 
-    var IDataOneIframe: IDataOneIframe = this.Factoryman().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
+    var IDataOneIframe: IDataOneIframe = this.ContentFactory().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
 
     dataPublishChain.Iframe0Blue = await this.Helpers().PromiseHelp.WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIframe0, IDataOneIframe );
 

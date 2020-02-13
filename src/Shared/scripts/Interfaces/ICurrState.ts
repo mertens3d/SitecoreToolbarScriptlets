@@ -12,5 +12,5 @@ export interface ICurrStateContent {
   ErrorStack: IError[],
   LastReqSuccessful: boolean,
   LastReqFailReason: string,
-  CurrentCe: IDataOneStorageCE
+  ActiveCe: IDataOneStorageCE
 }

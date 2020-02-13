@@ -19,23 +19,32 @@ export class OneScWindowManager extends ContentManagerBase {
     super(hub);
     hub.debug.FuncStart(OneScWindowManager.name);
 
-    let currPageType = this.ScUiMan().GetCurrentPageType();
-    if (currPageType === scWindowType.Desktop) {
-      this.OneDesktopMan = new OneDesktopManager(hub, this.ScUiMan().TopLevelDoc());
-    } else if (currPageType === scWindowType.ContentEditor) {
-      this.OneCEMan = new OneCEManager(hub, this.ScUiMan().TopLevelDoc());
-    }
+    
 
     hub.debug.FuncEnd(OneScWindowManager.name);
   }
+
+  Init() {
+    //Init() {
+    //  //todo put back ? var currentPageType = this.PageMan().GetCurrentPageType();
+    //  //todo put back ?  this.CreateNewWindowSnapShot(currentPageType, SnapShotFlavor.Unknown);
+    //}
+    let currPageType = this.ScUiMan().GetCurrentPageType();
+    if (currPageType === scWindowType.Desktop) {
+      this.OneDesktopMan = new OneDesktopManager(this.ContentHub, this.ScUiMan().TopLevelDoc());
+    } else if (currPageType === scWindowType.ContentEditor) {
+      this.OneCEMan = new OneCEManager(this.ContentHub, this.ScUiMan().TopLevelDoc());
+    }
+  }
+
 
   SaveWindowState(snapShotSettings: IDataPayloadSnapShot) {
     this.debug().FuncStart(this.SaveWindowState.name);
     var currentPageType = snapShotSettings.CurrentPageType;
 
-    this.Helpers().FactoryHelp.CreateNewWindowSnapShotShell(currentPageType, snapShotSettings.Flavor);
+    this.Helpers().FactoryHelp.CreateShellIDataOneWindowStorage(currentPageType, snapShotSettings.Flavor);
 
-    var snapShot: IDataOneWindowStorage;
+    var snapShot: IDataOneWindowStorage = this.Helpers().FactoryHelp.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
 
     if (snapShotSettings) {
       if (snapShotSettings.SnapShotNewNickname) {
@@ -46,12 +55,13 @@ export class OneScWindowManager extends ContentManagerBase {
 
 
     if (currentPageType === scWindowType.ContentEditor) {
-      this.debug().Log('is Content Editor');
+      this.debug().MarkerA();
       var id = this.ContentHub.Helpers.GuidHelp.EmptyGuid();
-      snapShot.AllCEAr.push( this.OneCEMan.GetState(id));
+      snapShot.AllCEAr.push( this.OneCEMan.GetStateCe(id));
     }
     else if (currentPageType === scWindowType.Desktop) {
-      snapShot.AllCEAr = this.OneDesktopMan.GetState().AllCeData;
+      this.debug().MarkerB();
+      snapShot.AllCEAr = this.OneDesktopMan.GetStateDesktop().AllCeData;
     }
     else {
       this.debug().Error(this.SaveWindowState.name, 'Invalid page location ' + currentPageType);
@@ -146,9 +156,6 @@ export class OneScWindowManager extends ContentManagerBase {
   //  this.debug().Log('match found :' + (toReturn !== null));
   //  return toReturn;
   //}
-  Init() {
-    //todo put back ? var currentPageType = this.PageMan().GetCurrentPageType();
-    //todo put back ?  this.CreateNewWindowSnapShot(currentPageType, SnapShotFlavor.Unknown);
-  }
+
   
 }

@@ -16,6 +16,7 @@ export class SharedConst {
     },
     Regex: {
       ContentEditor: /Content.*?Editor/ig,
+      CleanGuid: /{|-|}/ig,
       NbSp: /&nbsp;/ig,
       PageType: {
         //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website

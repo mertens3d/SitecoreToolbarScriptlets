@@ -170,8 +170,7 @@ export class ContentMessageManager extends ContentManagerBase {
     this.debug().DebugMsgFromPopUp(payload);
     this.debug().MarkerB();
 
-    //need to reference content factory
-    var response: MsgFromContent = await this.Helpers().cont.NewMsgFromContentShell();
+    var response: MsgFromContent = await this.ContentFactory().NewMsgFromContentShell();
     this.debug().MarkerC();
     switch (payload.MsgFlag) {
       case MsgFlag.ReqRestoreToNewTab:
@@ -255,7 +254,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
     //this.debug().LogVal('Response at the end', JSON.stringify(response))
 
-    await this.Factoryman().UpdateContentState(response);
+    await this.ContentFactory().UpdateContentState(response);
     response.ContentState.LastReq = payload.MsgFlag;
 
     this.debug().FuncEnd(this.ReqMsgRouter.name);

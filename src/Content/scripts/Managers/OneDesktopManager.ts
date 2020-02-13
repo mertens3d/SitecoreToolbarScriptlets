@@ -105,7 +105,7 @@ export class OneDesktopManager extends ContentManagerBase {
         this.debug().Log('pushing: ' + ifrIdx);
 
         var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        var dataOneIframe: IDataOneIframe = this.Factoryman().DateOneIframeFactory(iframeElem, this.associatedDoc, 'desktop Iframe_' + ifrIdx);
+        var dataOneIframe: IDataOneIframe = this.ContentFactory().DateOneIframeFactory(iframeElem, this.associatedDoc, 'desktop Iframe_' + ifrIdx);
         dataOneIframe.ContentDoc.HasParentDesktop = true;
         toReturn.push(dataOneIframe);
       }
@@ -114,8 +114,8 @@ export class OneDesktopManager extends ContentManagerBase {
     return toReturn;
   }
 
-  GetState(): IDataDtState {
-    this.debug().FuncStart(this.GetState.name);
+  GetStateDesktop(): IDataDtState {
+    this.debug().FuncStart(this.GetStateDesktop.name);
     this.debug().DebugIDataOneDoc(this.associatedDoc);
 
     var toReturnAllCeState: IDataDtState = this.Helpers().FactoryHelp.CreateNewDtDataShell();
@@ -135,12 +135,12 @@ export class OneDesktopManager extends ContentManagerBase {
           toReturnAllCeState.ActiveCeMan = oneCeMan;
         }
 
-        var oneCeState = oneCeMan.GetState(this.Helpers().GuidHelp.EmptyGuid());
+        var oneCeState = oneCeMan.GetStateCe(this.Helpers().GuidHelp.EmptyGuid());
         toReturnAllCeState.AllCeData.push(oneCeState);
       }
     }
 
-    this.debug().FuncEnd(this.GetState.name);
+    this.debug().FuncEnd(this.GetStateDesktop.name);
 
     return toReturnAllCeState;
   }

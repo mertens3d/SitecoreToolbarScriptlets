@@ -12,6 +12,8 @@
   },
   Regex: {
     ContentEditor: RegExp,
+    CleanGuid: RegExp,
+
     NbSp: RegExp,
     PageType: {
       Desktop: RegExp

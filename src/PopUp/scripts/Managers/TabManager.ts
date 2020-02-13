@@ -3,6 +3,7 @@ import { PopUpHub } from './PopUpHub';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { SharedConst } from '../../../Shared/scripts/SharedConst';
+import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 
 export class TabManager extends PopUpManagerBase {
   
@@ -18,7 +19,12 @@ export class TabManager extends PopUpManagerBase {
 
     let toReturn: IDataBrowserTab = {
       ScWindowType: scWindowType.Unknown,
-      Tab: rawTab
+      Tab: rawTab,
+      UrlParts: {
+        FullUrl: '',
+        Hostname: '',
+        QueryString: ''
+      }
     }
 
     return toReturn;
@@ -29,7 +35,16 @@ export class TabManager extends PopUpManagerBase {
     this.debug().FuncStart(TabManager.name, this.Init.name);
 
     await this.GetAssociatedTab()
-      .then((tabData: IDataBrowserTab) => this.CurrentTabData = tabData);
+      .then((tabData: IDataBrowserTab) => {
+
+
+        this.CurrentTabData = tabData;
+        this.CurrentTabData.UrlParts = StaticHelpers.MakeUrlParts(tabData.Tab.url);
+      }
+
+
+    );
+    
       //.then((tab: IDataBrowserTab) => this.CurrentTabData = this.SetWindowDataToCurrent(tab, 'tab from init'));
 
     this.debug().DebugIDataBrowserTab(this.CurrentTabData);
@@ -46,7 +61,8 @@ export class TabManager extends PopUpManagerBase {
         .then(async (tabs) => {
            toReturn = {
             ScWindowType: scWindowType.Unknown,
-            Tab: tabs[0]
+             Tab: tabs[0],
+             UrlParts: StaticHelpers.MakeUrlParts(tabs[0].url)
           }
 
           toReturn.ScWindowType = this.Helpers().UtilityHelp.CalcPageTypeFromHref(toReturn.Tab.url);
@@ -67,6 +83,11 @@ export class TabManager extends PopUpManagerBase {
       Tab: tab,
       //Window: window,
       ScWindowType: scWindowType.Unknown,
+      UrlParts: {
+        FullUrl: '',
+        Hostname: '',
+        QueryString:''
+      }
       //DataDocSelf: {
       //  ParentDoc: null,
       //  Document: window.document,

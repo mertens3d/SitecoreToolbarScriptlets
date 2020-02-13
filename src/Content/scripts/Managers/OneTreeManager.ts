@@ -29,21 +29,21 @@ export class OneTreeManager extends ContentManagerBase {
     return toReturn;
   }
 
-  GetActiveNode(): IDataOneTreeNode {
-    let toReturn: IDataOneTreeNode = null;
+  //GetActiveNode(): IDataOneTreeNode {
+  //  let toReturn: IDataOneTreeNode = null;
 
-    var AllTreeNodeAr: IDataOneTreeNode[] = this.GetOneLiveTreeData();
+  //  var AllTreeNodeAr: IDataOneTreeNode[] = this.GetOneLiveTreeData();
 
-    for (var idx = 0; idx < AllTreeNodeAr.length; idx++) {
-      var candidate: IDataOneTreeNode = AllTreeNodeAr[idx];
-      if (candidate.IsActive) {
-        toReturn = candidate;
-        break;
-      }
-    }
+  //  for (var idx = 0; idx < AllTreeNodeAr.length; idx++) {
+  //    var candidate: IDataOneTreeNode = AllTreeNodeAr[idx];
+  //    if (candidate.IsActive) {
+  //      toReturn = candidate;
+  //      break;
+  //    }
+  //  }
 
-    return toReturn;
-  }
+  //  return toReturn;
+  //}
   private __isActive(targetNode: HTMLElement): boolean {
     var toReturn: boolean = false;
 

@@ -28,7 +28,7 @@ export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
       ErrorStack: [],
       LastReqSuccessful: false,
       LastReqFailReason: '',
-      CurrentCe: null
+      ActiveCe: null
     };
   }
 }

@@ -1,5 +1,6 @@
 ﻿import { IGuid } from "../Interfaces/IGuid";
 import { HelperBase } from "../Classes/HelperBase";
+import { SharedConst } from "../SharedConst";
 
 
 export class GuidHelper  extends HelperBase {
@@ -42,9 +43,32 @@ export class GuidHelper  extends HelperBase {
     return toReturn;
   }
 
+
+  FormatJustNumbers(str: string): string{
+    return str.replace(SharedConst.SharedConst.Regex.CleanGuid, '');
+  }
+
+  FormatAsBracedGuid(str: string) :string {
+    //https://stackoverflow.com/questions/25131143/javascript-string-to-guid
+    var parts = [];
+    parts.push(str.slice(0, 8));
+    parts.push(str.slice(8, 12));
+    parts.push(str.slice(12, 16));
+    parts.push(str.slice(16, 20));
+    parts.push(str.slice(20, 32));
+    var GUID = '{' + parts.join('-') + '}'; 
+
+    return GUID;
+  }
+
   ParseGuid(val: string): IGuid {
+
+    let justNumbers = this.FormatJustNumbers(val);
+    let guidFormat = this.FormatAsBracedGuid(justNumbers);
+
     let toReturn: IGuid = {
-      AsString: val,
+      AsString: justNumbers,
+      AsBracedGuid: guidFormat,
       AsShort: '',
       Type: 'IGuid'
     }

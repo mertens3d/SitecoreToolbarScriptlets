@@ -31,8 +31,8 @@ export class FactoryHelper extends HelperBase {
   }
 
 
-  CreateNewWindowSnapShotShell(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
-    this.Debug.FuncStart(this.CreateNewWindowSnapShotShell.name);
+  CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
+    this.Debug.FuncStart(this.CreateShellIDataOneWindowStorage.name);
     var dateToUse: Date = new Date();
     var newGuid: IGuid = this.GuidHelp().NewGuid();
 
@@ -46,7 +46,7 @@ export class FactoryHelper extends HelperBase {
       RawData: null,
       Flavor: flavor,
     };
-    this.Debug.FuncEnd(this.CreateNewWindowSnapShotShell.name);
+    this.Debug.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
 
     return activeWindowSnapShot;
   }

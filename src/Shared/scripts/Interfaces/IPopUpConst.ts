@@ -65,16 +65,16 @@ export interface IPopUpConst {
       WindowClose: string,
     }
     HS: {
-      iCBoxdSettingsShowDebugData: string,
+      BuildStamp: string,
+      DivState: string,
       iCBoxdSettingsAutoLogin: string,
+      iCBoxdSettingsShowDebugData: string,
       IdFieldSetDebug: string,
       PrefAutoLogin: string,
+      SelStateSnapShot: string,
       SettingAutoSaveEnabled: string,
       SettingAutoSaveInterval: string,
-      SelStateSnapShot: string,
       TaDebug: string,
-      TaState: string,
-      BuildStamp: string,
     }
   },
   Storage: {

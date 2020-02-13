@@ -1,11 +1,13 @@
 ﻿import { ContentAtticManager } from '../Managers/ContentAtticManager';
 import { ContentHub } from '../Managers/ContentHub';
+import { iSitecoreUiManager } from '../../../Shared/scripts/Interfaces/ISitecoreUiManager';
 import { MiscManager } from '../Managers/MiscManager';
 import { OneScWindowManager } from "../Managers/OneScWindowManager";
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
 import { ContentMessageManager } from '../Managers/ContentMessageManager';
 import { ContentDebug } from '../Classes/ContentDebug';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
+import { ContentFactories } from "../Classes/ContentFactories";
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from '../Managers/SitecoreUiManager';
 import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
@@ -24,6 +26,7 @@ export class ContentManagerBase {
   OneScWinMan(): OneScWindowManager { return this.ContentHub.OneWindowMan; }
   ScUiMan(): SitecoreUiManager { return this.ContentHub.SitecoreUiMan; }
   MsgMan(): ContentMessageManager { return this.ContentHub.MsgMan; }
+  ContentFactory(): ContentFactories { return this.ContentHub.ContentFactory; }
   MiscMan(): MiscManager { return this.ContentHub.MiscMan; }
   PromiseOneStep(): PromiseOneStep { return this.ContentHub.PromiseOneStep; }
   MsgFlag(): MsgFlag { return this.ContentHub.MessageFlag; }

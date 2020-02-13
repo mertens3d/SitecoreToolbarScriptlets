@@ -30,7 +30,7 @@ export class PromiseOneStep extends ContentManagerBase {
      await this.Helpers().PromiseHelp.WaitForAndReturnFoundElem(dataPublishChain.TopLevelDoc, ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
       .then(
         (found: HTMLElement) => {
-          dataPublishChain.jqIframe = this.Factoryman().DateOneIframeFactory(<HTMLIFrameElement>found, dataPublishChain.docToPublish.ParentDoc, 'jqIframe');
+          dataPublishChain.jqIframe = this.ContentFactory().DateOneIframeFactory(<HTMLIFrameElement>found, dataPublishChain.docToPublish.ParentDoc, 'jqIframe');
           return dataPublishChain;
         }
       ) // opens publish item dialog

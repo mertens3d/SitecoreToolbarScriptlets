@@ -4,6 +4,7 @@ import { CacheMode } from "../Enums/CacheMode";
 import { BufferDirection } from "../Enums/BufferDirection";
 import { BufferUseNbsp, BufferChar } from "../Enums/BufferChar";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
+import { UrlParts } from "../Interfaces/UrlParts";
 
 export class StaticHelpers {
   static MinToMs(minutes: number) {
@@ -11,6 +12,32 @@ export class StaticHelpers {
     }
   static FlavorAsString(flavor: SnapShotFlavor): string {
     return 'Flavor.' + SnapShotFlavor[flavor] + '(' + flavor + ')';
+  }
+
+  static MakeUrlParts(url: string): UrlParts {
+    let toReturn: UrlParts = {
+      FullUrl : url,
+      Hostname : StaticHelpers.ExtractHostName(url),
+      QueryString: ''
+    }
+
+    return toReturn;
+  }
+
+  static ExtractHostName(url: string): string {
+    //https://stackoverflow.com/questions/8498592/extract-hostname-name-from-string/54947757
+    let toReturn: string = '';
+
+    if (url.indexOf('//') > -1) {
+      toReturn = url.split('/')[2];
+    } else {
+      toReturn = url.split('/')[0];
+    }
+    toReturn = toReturn.split(':')[0];
+    toReturn = toReturn.split('?')[0];
+
+
+    return toReturn;
   }
 
   static CacheModeAsString(cacheMode: CacheMode): string {

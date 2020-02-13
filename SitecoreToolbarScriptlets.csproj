@@ -89,6 +89,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICurrState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataCacheOneWindowStorage.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataContentPrefs.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataDtState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IError.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneCommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISelectionHeaders.ts" />

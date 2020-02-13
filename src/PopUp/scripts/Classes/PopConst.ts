@@ -74,11 +74,11 @@ export class PopConst {
         SettingAutoSaveEnabled: '[id=id-settings-auto-save]',
         SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',
 
+        BuildStamp: '[id=build-stamp]',
+        DivState: '[id=div-state]',
         IdFieldSetDebug: '[id=id-fieldset-debug]',
         SelStateSnapShot: '[id=selState]',
         TaDebug: '[id=ta-debug]',
-        TaState: '[id=ta-state]',
-        BuildStamp: '[id=build-stamp]',
       },
     },
     Storage: {

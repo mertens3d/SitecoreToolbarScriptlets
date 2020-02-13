@@ -20,31 +20,35 @@ export class ContentFactories extends ContentManagerBase {
     response.ContentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
     response.ContentState.ErrorStack = this.debug().ErrorStack;
     this.debug().DebugObjState(response.ContentState);
-    response.ContentState.CurrentCe = this.GetCurrentCeState();
+    response.ContentState.ActiveCe = this.GetCurrentCeState();
     this.debug().FuncEnd(this.UpdateContentState.name);
   }
 
   GetCurrentCeState() {
+    this.debug().FuncStart(this.GetCurrentCeState.name);
     let toReturnCeState: IDataOneStorageCE = null;
     let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
 
     if (pageType === scWindowType.Desktop) {
-      var currState = this.OneScWinMan().OneDesktopMan.GetState();
+      var currState = this.OneScWinMan().OneDesktopMan.GetStateDesktop();
       if (currState) {
-        toReturnCeState = currState.ActiveCeMan.GetState(this.Helpers().GuidHelp.EmptyGuid());
+        toReturnCeState = currState.ActiveCeMan.GetStateCe(this.Helpers().GuidHelp.EmptyGuid());
+      } else {
+        this.debug().Error(this.GetCurrentCeState.name, 'No current state returned');
       }
     }
     else if (pageType == scWindowType.ContentEditor) {
     } else {
       toReturnCeState = null;
     }
+    this.debug().FuncEnd(this.GetCurrentCeState.name);
     return toReturnCeState;
   }
   async NewMsgFromContentShell() {
     this.debug().FuncStart(this.NewMsgFromContentShell.name);
     var response = new MsgFromContent(MsgFlag.Unknown);
-    await this.UpdateContentState(response);
-    response.ContentState.LastReq = MsgFlag.Unknown;
+    //await this.UpdateContentState(response);
+    //response.ContentState.LastReq = MsgFlag.Unknown;
     this.debug().FuncEnd(this.NewMsgFromContentShell.name);
     return response;
   }

@@ -25,13 +25,13 @@ import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 
 export class UiManager extends PopUpManagerBase {
   private __selectSnapshotId: IGuid;
-  
+
   TabId: string;
   ParentFocused: boolean = false;
   MenuFocused: boolean = true;
   OtherFocused: boolean = false;
   MenuEnabled: boolean = true;
-  currentState: ICurrStateContent;
+  CurrContentState: ICurrStateContent;
 
   constructor(popHub: PopUpHub) {
     super(popHub);
@@ -261,7 +261,7 @@ export class UiManager extends PopUpManagerBase {
 
   SelectChanged(): void {
     this.debug().FuncStart(this.SelectChanged.name);
-    this.__selectSnapshotId = this.Helpers().GuidHelp. ParseGuid(this.__getSelectElem().value);
+    this.__selectSnapshotId = this.Helpers().GuidHelp.ParseGuid(this.__getSelectElem().value);
     //this.debug().Log('new index :' + this.__selectSnapshotId);
 
     //if (e.ctrlKey) {
@@ -289,7 +289,7 @@ export class UiManager extends PopUpManagerBase {
     if (btn) {
       btn.classList.remove('red');
     }
-   //todo this.UiMan().OperationCancelled = false;
+    //todo this.UiMan().OperationCancelled = false;
   }
 
   async __refreshSettings() {
@@ -443,7 +443,7 @@ export class UiManager extends PopUpManagerBase {
 
     if (!toReturn) {
       this.debug().Log('using empty guid');
-      toReturn = this.Helpers().GuidHelp. EmptyGuid();
+      toReturn = this.Helpers().GuidHelp.EmptyGuid();
     }
 
     this.debug().DebugIGuid(toReturn);
@@ -504,45 +504,67 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
+  PopulateContentStateDiv(contentState: ICurrStateContent) {
+    var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(this.Const().Selector.HS.DivState);
+    var allTaText: string = 'State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
+
+    if (targetCurrStateDiv) {
+      allTaText += '\n';
+      allTaText += 'Page Type: ' + StaticHelpers.WindowTypeAsString(this.TabMan().CurrentTabData.ScWindowType);
+
+      if (contentState.ActiveCe) {
+        allTaText += '\n';
+        allTaText += 'Active Ce: ' + contentState.ActiveCe.Id.AsShort;
+
+        if (contentState.ActiveCe.ActiveNode) {
+          allTaText += '\n';
+          allTaText += 'Active Node: ' + contentState.ActiveCe.ActiveNode.NodeFriendly + ' ' + contentState.ActiveCe.ActiveNode.NodeId.AsBracedGuid;
+        } else {
+          allTaText += '\n';
+          allTaText += '{no active node in CE}';
+        }
+      } else {
+        allTaText += '\n';
+        allTaText += '{no active CE}';
+      }
+
+      allTaText += '\n';
+      allTaText += 'Url Full: ' + this.TabMan().CurrentTabData.UrlParts.FullUrl;
+      allTaText += '\n';
+      allTaText += 'Host Name: ' + this.TabMan().CurrentTabData.UrlParts.Hostname;
+
+      allTaText += '\n';
+      allTaText += 'Last Request: ' + MsgFlag[contentState.LastReq];
+
+      allTaText += '\n';
+      allTaText += '\nSnap Shots: ';
+      allTaText += '\nBirthday: ' + contentState.SnapShotsMany.Birthday.toString();
+      allTaText += '\nTotal Snapshots: ' + contentState.SnapShotsMany.CurrentSnapShots.length;
+      allTaText += '\nFavorite Snapshots: ' + contentState.SnapShotsMany.FavoriteCount;
+      allTaText += '\nPlain Snapshots: ' + contentState.SnapShotsMany.PlainCount;
+      allTaText += '\nAuto Snapshots: ' + contentState.SnapShotsMany.SnapShotsAutoCount;
+
+      allTaText += '\n';
+      allTaText += 'Error Stack (' + contentState.ErrorStack.length + '):';
+      for (var idx = 0; idx < contentState.ErrorStack.length; idx++) {
+        allTaText += '\n';
+        allTaText += '\t' + idx + ' : ' + contentState.ErrorStack[idx].ContainerFunc + ' ' + contentState.ErrorStack[idx].ErrorString;
+      }
+
+      targetCurrStateDiv.innerText = allTaText;
+    }
+  }
+
+
   async PopulateContentState(contentState: ICurrStateContent) {
     this.debug().FuncStart(this.PopulateContentState.name);
 
-
     this.debug().DebugIDataBrowserTab(this.TabMan().CurrentTabData);
 
-
-    this.currentState = contentState;
+    this.CurrContentState = contentState;
     if (this.debug().IsNotNullOrUndefinedBool('state', contentState)) {
       this.UiMan().PopulateStateOfSnapShotSelect(contentState.SnapShotsMany.CurrentSnapShots);
-
-      var targetCurrStateTa: HTMLTextAreaElement = <HTMLTextAreaElement>window.document.querySelector(this.Const().Selector.HS.TaState);
-      if (targetCurrStateTa) {
-        var allTaText: string = 'State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
-        allTaText += '\n';
-        allTaText += 'Page Type: ' + StaticHelpers.WindowTypeAsString(this.TabMan().CurrentTabData.ScWindowType);
-        allTaText += '\n';
-        allTaText += 'Url: ' + this.TabMan().CurrentTabData.Tab.url;
-
-        allTaText += '\n';
-        allTaText += 'Last Request: ' + MsgFlag[contentState.LastReq];
-
-        allTaText += '\n';
-        allTaText += '\nSnap Shots: ';
-        allTaText += '\nBirthday: ' + contentState.SnapShotsMany.Birthday.toString();
-        allTaText += '\nTotal Snapshots: ' + contentState.SnapShotsMany.CurrentSnapShots.length;
-        allTaText += '\nFavorite Snapshots: ' + contentState.SnapShotsMany.FavoriteCount;
-        allTaText += '\nPlain Snapshots: ' + contentState.SnapShotsMany.PlainCount;
-        allTaText += '\nAuto Snapshots: ' + contentState.SnapShotsMany.SnapShotsAutoCount;
-
-        allTaText += '\n';
-        allTaText += 'Error Stack (' + contentState.ErrorStack.length + '):';
-        for (var idx = 0; idx < contentState.ErrorStack.length; idx++) {
-          allTaText += '\n';
-          allTaText += '\t' + idx + ' : ' + contentState.ErrorStack[idx].ContainerFunc + ' ' + contentState.ErrorStack[idx].ErrorString;
-        }
-
-        targetCurrStateTa.value = allTaText;
-      }
+      this.PopulateContentStateDiv(contentState);
     }
     this.debug().FuncEnd(this.PopulateContentState.name);
   }

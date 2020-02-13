@@ -152,8 +152,26 @@ export class OneCEManager extends ContentManagerBase {
     return toReturn;
   }
 
-  GetState(id: IGuid): IDataOneStorageCE {
-    this.debug().FuncStart(this.GetState.name);
+  GetActiveNode(allTreeNodeAr: IDataOneTreeNode[]) {
+    let toReturn: IDataOneTreeNode = null;
+    if (allTreeNodeAr) {
+      for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
+        let candidate: IDataOneTreeNode = allTreeNodeAr[idx];
+        if (candidate.IsActive) {
+          toReturn = candidate;
+          break;
+        }
+      }
+
+    } else {
+      this.debug().Error(this.GetActiveNode.name, 'No tree data provided');
+    }
+
+    return toReturn;
+  }
+
+  GetStateCe(id: IGuid): IDataOneStorageCE {
+    this.debug().FuncStart(this.GetStateCe.name);
 
     var toReturnCEData: IDataOneStorageCE = {
       Id: id,
@@ -161,7 +179,11 @@ export class OneCEManager extends ContentManagerBase {
       ActiveNode: null
     }
 
-    this.debug().FuncEnd(this.GetState.name);
+    toReturnCEData.ActiveNode = this.GetActiveNode(toReturnCEData.AllTreeNodeAr);
+
+
+
+    this.debug().FuncEnd(this.GetStateCe.name);
     return toReturnCEData;
   }
 

@@ -8,6 +8,8 @@ import { PopUpManagerBase } from './PopUpManagerBase';
 import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
 import { PopUpHub } from './PopUpHub';
 import { SharedConst } from '../../../Shared/scripts/SharedConst';
+import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
+import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 
 export class LocationManager extends PopUpManagerBase {
   constructor(hub: PopUpHub) {
@@ -79,10 +81,21 @@ export class LocationManager extends PopUpManagerBase {
     await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData);
   }
   SetScModeFromCeDt(newValue: IsScMode, currentPageType: scWindowType) {
+    this.debug().FuncStart(this.SetScModeFromCeDt.name, newValue.AsString);
     var dataOneDoc: IDataOneDoc = null;
 
     if (currentPageType == scWindowType.Desktop) {
-      let currentNodeId: IDataOneTreeNode;
+
+      let contState: ICurrStateContent = this.UiMan().CurrContentState;
+      if (contState && contState.ActiveCe && contState.ActiveCe.ActiveNode) {
+
+        let currentNodeId: IDataOneTreeNode = contState.ActiveCe.ActiveNode;
+        //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
+        let editUrl = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
+          + '/?sc_itemid=' + contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid + '&sc_mode=preview&sc_lang=en&sc_site=website';
+
+
+        this.BrowserMan().CreateNewTab(editUrl);
 
       //await this.MsgMan().SendMessageToContentTab()
 
@@ -91,7 +104,9 @@ export class LocationManager extends PopUpManagerBase {
       //if (currentIframe) {
       //  dataOneDoc = currentIframe.ContentDoc;
       //}
+      }
     }
+    this.debug().FuncEnd(this.SetScModeFromCeDt.name, newValue.AsString);
   }
 
   SetScMode(newValue: IsScMode, useOrigWindow: boolean) {
