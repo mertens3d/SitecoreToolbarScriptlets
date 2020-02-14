@@ -14,7 +14,7 @@ export class OneTreeManager extends ContentManagerBase {
   }
 
   GetFriendlyNameFromNode(inputNode) {
-    this.debug().FuncStart(this.GetFriendlyNameFromNode.name);
+    this.Log().FuncStart(this.GetFriendlyNameFromNode.name);
     var toReturn = 'unknown';
 
     var parentNode = inputNode.parentNode;
@@ -23,9 +23,9 @@ export class OneTreeManager extends ContentManagerBase {
     if (treeNode) {
       toReturn = treeNode.innerText;
     } else {
-      this.debug().Log('No treeNode');
+      this.Log().Log('No treeNode');
     }
-    this.debug().FuncEnd(this.GetFriendlyNameFromNode.name, toReturn);
+    this.Log().FuncEnd(this.GetFriendlyNameFromNode.name, toReturn);
     return toReturn;
   }
 
@@ -52,7 +52,7 @@ export class OneTreeManager extends ContentManagerBase {
       var className = firstNodeActiveTest.className;
       if (className.indexOf(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive) > -1) {
         toReturn = true;
-        this.debug().Log('** isActive ' + targetNode.innerText);
+        this.Log().Log('** isActive ' + targetNode.innerText);
       }
     }
 
@@ -130,33 +130,33 @@ export class OneTreeManager extends ContentManagerBase {
   }
 
   GetOneLiveTreeData(): IDataOneTreeNode[] {
-    this.debug().FuncStart(this.GetOneLiveTreeData.name);
-    this.debug().Log('targetDoc isnull: ' + (this.AssociatedDoc === null));
+    this.Log().FuncStart(this.GetOneLiveTreeData.name);
+    this.Log().Log('targetDoc isnull: ' + (this.AssociatedDoc === null));
     var toReturn: IDataOneTreeNode[] = [];
 
     if (this.AssociatedDoc) {
       //this.debug().Log(targetDoc);
-      this.debug().LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
-      this.debug().DebugIDataOneDoc(this.AssociatedDoc);
+      this.Log().LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
+      this.Log().DebugIDataOneDoc(this.AssociatedDoc);
       var rootNode = this.AssociatedDoc.Document.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
 
       if (rootNode) {
-        this.debug().Log('rootNode: ' + rootNode.innerHTML);
+        this.Log().Log('rootNode: ' + rootNode.innerHTML);
         var rootParent = rootNode.parentElement;
 
         toReturn = this.WalkNodeRecursive(rootParent, ContentConst.Const.MaxIter);
-        this.debug().Log('foundNodes count: ' + toReturn.length);
+        this.Log().Log('foundNodes count: ' + toReturn.length);
 
         //var nodesAsString = JSON.stringify(toReturn);
         //this.debug().Log('toReturn as string: ' + nodesAsString);
       } else {
-        this.debug().Error(this.GetOneLiveTreeData.name, 'no root node');
+        this.Log().Error(this.GetOneLiveTreeData.name, 'no root node');
       }
     } else {
-      this.debug().Error(this.GetOneLiveTreeData.name, 'no targetDoc');
+      this.Log().Error(this.GetOneLiveTreeData.name, 'no targetDoc');
     }
 
-    this.debug().FuncEnd(this.GetOneLiveTreeData.name);
+    this.Log().FuncEnd(this.GetOneLiveTreeData.name);
 
     return toReturn;
   }

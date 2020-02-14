@@ -1,3 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+//export interface IDataLogSettings {
+//  ShowDebugData: boolean;
+//  KeepDialogOpen: boolean;
+//}
 //# sourceMappingURL=IDataDebugSettings.js.map

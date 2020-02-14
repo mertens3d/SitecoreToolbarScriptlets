@@ -2,12 +2,12 @@
 import { PayloadDataFromPopUp } from "./PayloadDataReqPopUp";
 import { IMsgFromX } from "../Interfaces/IMsgPayload";
 import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
-import { IDataContentPrefs } from "../Interfaces/IDataContentPrefs";
 import { PopUpHub } from "../../../PopUp/scripts/Managers/PopUpHub";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
+import { IOneGenericSetting } from "./OneSetting";
 
 export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
-  CurrentContentPrefs: IDataContentPrefs;
+  CurrentContentPrefs: IOneGenericSetting[];
   Data: PayloadDataFromPopUp;
   IsValid: boolean;
 
@@ -22,6 +22,6 @@ export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
       CurrentPageType: popHub.TabMan.CurrentTabData.ScWindowType
     }
 
-    popHub.debug.Log('constructor done msgfrompopup');
+    popHub.Log.Log('constructor done msgfrompopup');
   }
 }

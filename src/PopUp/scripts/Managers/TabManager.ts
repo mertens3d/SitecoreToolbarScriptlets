@@ -11,8 +11,8 @@ export class TabManager extends PopUpManagerBase {
 
   constructor(hub: PopUpHub) {
     super(hub);
-    hub.debug.FuncStart(TabManager.name);
-    hub.debug.FuncEnd(TabManager.name);
+    hub.Log.FuncStart(TabManager.name);
+    hub.Log.FuncEnd(TabManager.name);
   }
 
   MakeTabData(rawTab: browser.tabs.Tab): IDataBrowserTab {
@@ -32,7 +32,7 @@ export class TabManager extends PopUpManagerBase {
   }
 
   async Init() {
-    this.debug().FuncStart(TabManager.name, this.Init.name);
+    this.Log().FuncStart(TabManager.name, this.Init.name);
 
     await this.GetAssociatedTab()
       .then((tabData: IDataBrowserTab) => {
@@ -47,14 +47,14 @@ export class TabManager extends PopUpManagerBase {
     
       //.then((tab: IDataBrowserTab) => this.CurrentTabData = this.SetWindowDataToCurrent(tab, 'tab from init'));
 
-    this.debug().DebugIDataBrowserTab(this.CurrentTabData);
+    this.Log().DebugIDataBrowserTab(this.CurrentTabData);
 
-    this.debug().FuncEnd(TabManager.name, this.Init.name);
+    this.Log().FuncEnd(TabManager.name, this.Init.name);
   }
 
   async GetAssociatedTab() {
     return new Promise(async (resolve, reject) => {
-      this.debug().FuncStart(this.GetAssociatedTab.name);
+      this.Log().FuncStart(this.GetAssociatedTab.name);
       var toReturn: IDataBrowserTab;
 
       await browser.tabs.query({ currentWindow: true, active: true })
@@ -67,9 +67,9 @@ export class TabManager extends PopUpManagerBase {
 
           toReturn.ScWindowType = this.Helpers().UtilityHelp.CalcPageTypeFromHref(toReturn.Tab.url);
 
-          this.debug().DebugIDataBrowserTab(toReturn);
+          this.Log().DebugIDataBrowserTab(toReturn);
 
-          this.debug().FuncEnd(this.GetAssociatedTab.name);
+          this.Log().FuncEnd(this.GetAssociatedTab.name);
           resolve(toReturn);
         })
         .catch((err) => reject(err));
@@ -141,7 +141,7 @@ export class TabManager extends PopUpManagerBase {
         break;
       default:
         toReturn = hostName;
-        this.debug().Error(this.__getUrlForWindowType.name, 'unaccounted for window type');
+        this.Log().Error(this.__getUrlForWindowType.name, 'unaccounted for window type');
         break;
     }
     return toReturn;

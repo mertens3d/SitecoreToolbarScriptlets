@@ -16,16 +16,16 @@ export class ContentFactories extends ContentManagerBase {
     contentHub.debug.FuncEnd(PromiseHelper.name);
   }
   async UpdateContentState(response: MsgFromContent) {
-    this.debug().FuncStart(this.UpdateContentState.name);
+    this.Log().FuncStart(this.UpdateContentState.name);
     response.ContentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
-    response.ContentState.ErrorStack = this.debug().ErrorStack;
-    this.debug().DebugObjState(response.ContentState);
+    response.ContentState.ErrorStack = this.Log().ErrorStack;
+    this.Log().DebugObjState(response.ContentState);
     response.ContentState.ActiveCe = this.GetCurrentCeState();
-    this.debug().FuncEnd(this.UpdateContentState.name);
+    this.Log().FuncEnd(this.UpdateContentState.name);
   }
 
   GetCurrentCeState() {
-    this.debug().FuncStart(this.GetCurrentCeState.name);
+    this.Log().FuncStart(this.GetCurrentCeState.name);
     let toReturnCeState: IDataOneStorageCE = null;
     let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
 
@@ -34,22 +34,22 @@ export class ContentFactories extends ContentManagerBase {
       if (currState) {
         toReturnCeState = currState.ActiveCeMan.GetStateCe(this.Helpers().GuidHelp.EmptyGuid());
       } else {
-        this.debug().Error(this.GetCurrentCeState.name, 'No current state returned');
+        this.Log().Error(this.GetCurrentCeState.name, 'No current state returned');
       }
     }
     else if (pageType == scWindowType.ContentEditor) {
     } else {
       toReturnCeState = null;
     }
-    this.debug().FuncEnd(this.GetCurrentCeState.name);
+    this.Log().FuncEnd(this.GetCurrentCeState.name);
     return toReturnCeState;
   }
   async NewMsgFromContentShell() {
-    this.debug().FuncStart(this.NewMsgFromContentShell.name);
+    this.Log().FuncStart(this.NewMsgFromContentShell.name);
     var response = new MsgFromContent(MsgFlag.Unknown);
     //await this.UpdateContentState(response);
     //response.ContentState.LastReq = MsgFlag.Unknown;
-    this.debug().FuncEnd(this.NewMsgFromContentShell.name);
+    this.Log().FuncEnd(this.NewMsgFromContentShell.name);
     return response;
   }
   DateOneIframeFactory(iframeElem: HTMLIFrameElement, parentDocument: IDataOneDoc, nickname: string): IDataOneIframe {

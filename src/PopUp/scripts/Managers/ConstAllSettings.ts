@@ -1,0 +1,121 @@
+﻿import { IOneGenericSetting } from "../../../Shared/scripts/Classes/OneSetting";
+import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
+import { SettingType } from "../../../Shared/scripts/Enums/SettingType";
+import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
+import { PopConst } from "../Classes/PopConst";
+export class ConstAllSettings {
+  static AllSettings: IOneGenericSetting[] = [
+    {
+      SettingKey: SettingKey.Test,
+      DataType: SettingType.BoolCheckBox,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.HS.GenericSettingTest,
+      DefaultValue: false,
+      SettingFlavor: SettingFlavor.PopUp,
+    },
+    {
+      SettingKey: SettingKey.ShowLogData,
+      DataType: SettingType.BoolCheckBox,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.HS.iCBoxdSettingsShowLogData,
+      DefaultValue: PopConst.PopConst.Storage.Defaults.bool.DefaultShowLogData,
+      SettingFlavor: SettingFlavor.Content,
+    },
+    {
+      SettingKey: SettingKey.AutoSaveEnabled,
+      DataType: SettingType.BoolCheckBox,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.HS.SettingAutoSaveEnabled,
+      DefaultValue: PopConst.PopConst.Storage.Defaults.bool.AutoSaveEnabled,
+      SettingFlavor: SettingFlavor.Content,
+    },
+    {
+      SettingKey: SettingKey.AutoLogin,
+      DataType: SettingType.BoolCheckBox,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.HS.iCBoxdSettingsAutoLogin,
+      DefaultValue: PopConst.PopConst.Storage.Defaults.bool.AutoLogin,
+      SettingFlavor: SettingFlavor.Content,
+    },
+    {
+      SettingKey: SettingKey.LgndDebug,
+      DataType: SettingType.Accordian,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.Legend.LgndDebug,
+      DefaultValue: PopConst.PopConst.Settings.Defaults.LgndDebug,
+      SettingFlavor: SettingFlavor.PopUp,
+    },
+    {
+      SettingKey: SettingKey.LgndForeSite,
+      DataType: SettingType.Accordian,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.Legend.LgndForeSite,
+      DefaultValue: PopConst.PopConst.Settings.Defaults.LgndForeSite,
+      SettingFlavor: SettingFlavor.PopUp,
+    },
+    {
+      SettingKey: SettingKey.LgndHindSite,
+      DataType: SettingType.Accordian,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.Legend.LgndHindSite,
+      DefaultValue: PopConst.PopConst.Settings.Defaults.LgndHindSite,
+      SettingFlavor: SettingFlavor.PopUp,
+    },
+    {
+      SettingKey: SettingKey.LgndHindSite,
+      DataType: SettingType.Accordian,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.Legend.LgndInSite,
+      DefaultValue: PopConst.PopConst.Settings.Defaults.LgndInSite,
+      SettingFlavor: SettingFlavor.PopUp,
+    },
+    {
+      SettingKey: SettingKey.LgndSettings,
+      DataType: SettingType.Accordian,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.Legend.LgndSettings,
+      DefaultValue: PopConst.PopConst.Settings.Defaults.LgndSettings,
+      SettingFlavor: SettingFlavor.PopUp,
+    },
+    {
+      SettingKey: SettingKey.LgndState,
+      DataType: SettingType.Accordian,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.Legend.LgndState,
+      DefaultValue: PopConst.PopConst.Settings.Defaults.LgndState,
+      SettingFlavor: SettingFlavor.PopUp,
+    },
+    {
+      SettingKey: SettingKey.MaxAutoSaveCount,
+      DataType: SettingType.Number,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.HS.SettingAutoSaveMaxCount,
+      DefaultValue: PopConst.PopConst.Numbers.MaxAutoSaveCount,
+      SettingFlavor: SettingFlavor.Content,
+    },
+    {
+      SettingKey: SettingKey.AutoSaveIntervalMin,
+      DataType: SettingType.Number,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.HS.SettingAutoSaveInterval,
+      DefaultValue: PopConst.PopConst.Numbers.AutoSaveIntervalMin,
+      SettingFlavor: SettingFlavor.Content,
+    },
+    {
+      SettingKey: SettingKey.AutoSaveEnabled,
+      DataType: SettingType.BoolCheckBox,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.HS.SettingAutoSaveEnabled,
+      DefaultValue: PopConst.PopConst.Settings.Defaults.AutoSaveEnabled,
+      SettingFlavor: SettingFlavor.Content,
+    },
+    {
+      SettingKey: SettingKey.DebugKeepDialogOpen,
+      DataType: SettingType.BoolCheckBox,
+      ValueAsObj: null,
+      UiSelector: PopConst.PopConst.Selector.HS.SettingDebugKeepDialogOpen,
+      DefaultValue: PopConst.PopConst.Settings.Defaults.DebugKeepDialogOpen,
+      SettingFlavor: SettingFlavor.Content,
+    },
+  ];
+}

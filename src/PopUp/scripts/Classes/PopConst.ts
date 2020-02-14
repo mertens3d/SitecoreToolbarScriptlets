@@ -37,21 +37,14 @@ export class PopConst {
           HsSaveWindowState: 'SaveWindowState',
           UpdateNicknameB: 'UpdateNickname',
         },
-        Legend: {
-          LgndSettings: 'lgnd-settings',
-          LgndInSite: 'lgnd-in-site',
-          LgndHindSite: 'lgnd-hind-site',
-
-          LgndDebug: 'lgnd-debug',
-          LgndForeSite: 'lgnd-fore-site',
-          LgndState: 'lgnd-state',
-        }
+        
       }
     },
     Numbers: {
       MinMenuHeight: 600,
       MinMenuWidth: 600,
       MaxAutoSaveCount: 10,
+      AutoSaveIntervalMin: 1000,
     },
     Notify: {
       Default: 'Complete',
@@ -67,35 +60,61 @@ export class PopConst {
       Btn: {
         WindowClose: '[id=close-window]',
       },
+      Legend: {
+        LgndSettings: '[id=lgnd-settings]',
+        LgndInSite: '[id=lgnd-in-site]',
+        LgndHindSite: '[id=lgnd-hind-site]',
+
+        LgndDebug: '[id=lgnd-log]',
+        LgndForeSite: '[id=lgnd-fore-site]',
+        LgndState: '[id=lgnd-state]',
+      },
       HS: {
-        iCBoxdSettingsShowDebugData: '[id=id-settings-show-debug-data]',
+        GenericSettingTest: '[id=id-generic-setting-test]',
+        iCBoxdSettingsShowLogData: '[id=id-settings-show-log-data]',
         iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
         PrefAutoLogin: '[id=id-settings-auto-login]',
-        SettingAutoSaveEnabled: '[id=id-settings-auto-save]',
+        SettingAutoSaveEnabled: '[id=id-settings-auto-save-enabled]',
         SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',
+        SettingAutoSaveMaxCount: '[id=id-settings-auto-save-max-count]',
+
+        SettingDebugKeepDialogOpen: '[id=id-settings-debug-keep-dialog-open]',
 
         BuildStamp: '[id=build-stamp]',
         DivState: '[id=div-state]',
         IdFieldSetDebug: '[id=id-fieldset-debug]',
         SelStateSnapShot: '[id=selState]',
-        TaDebug: '[id=ta-debug]',
+        TaDebug: '[id=ta-log]',
       },
+    },
+    Settings: {
+      Defaults: {
+        LgndDebug: false,
+        LgndForeSite: true,
+        LgndHindSite: true,
+        LgndInSite: true,
+        LgndSettings: false,
+        LgndState: false,
+        DebugKeepDialogOpen: false,
+        AutoSaveEnabled: false,
+      }
     },
     Storage: {
       WindowRoot: 'todo',
       SettingsSuffix: 'todo',
+      KeyGenericSettings: 'GenericSettings',
       Defaults: {
         bool: {
-          AutoSave: false,
+          AutoSaveEnabled: false,
           AutoLogin: false,
           DefaultDebugKeepDialogOpen: false,
-          DefaultShowDebugData: false
+          DefaultShowLogData: false
         }
       }
     },
     Timeouts: {
       WaitBeforeRemovingCompleteFlag: 1500,
-      AutoSaveInterval: 1000,
+      
       AutoLoginCheckInterval: 3000,
     },
   }

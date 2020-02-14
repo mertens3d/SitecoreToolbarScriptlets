@@ -5,12 +5,13 @@ import { MiscManager } from '../Managers/MiscManager';
 import { OneScWindowManager } from "../Managers/OneScWindowManager";
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
 import { ContentMessageManager } from '../Managers/ContentMessageManager';
-import { ContentDebug } from '../Classes/ContentDebug';
+import { LoggerContent } from "../Classes/LoggerContent";
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { ContentFactories } from "../Classes/ContentFactories";
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from '../Managers/SitecoreUiManager';
 import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
+import { ContentSettingsMan } from '../Managers/ContentSettingsMan';
 
 export class ContentManagerBase {
   protected ContentHub: ContentHub;
@@ -21,7 +22,7 @@ export class ContentManagerBase {
 
   AtticMan(): ContentAtticManager { return this.ContentHub.AtticMan; }
   //Const(): IContentConst { return this.ContentHub.Const; }
-  debug(): ContentDebug { return this.ContentHub.debug; }
+  Log(): LoggerContent { return this.ContentHub.debug; }
   Helpers(): HelperHub { return this.ContentHub.Helpers; }
   OneScWinMan(): OneScWindowManager { return this.ContentHub.OneWindowMan; }
   ScUiMan(): SitecoreUiManager { return this.ContentHub.SitecoreUiMan; }

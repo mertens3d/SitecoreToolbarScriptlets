@@ -48,32 +48,32 @@ export class OneCEManager extends ContentManagerBase {
   //}
 
   private __activateNode(hotTreeNode: HTMLElement): void {
-    this.debug().FuncStart(this.__activateNode.name);
+    this.Log().FuncStart(this.__activateNode.name);
     //var currentSrc = hotTreeNode.getAttribute('src');
     //this.debug().Log('currentSrc' + currentSrc);
 
     //if (currentSrc.indexOf(InjectConst.ContConst.Names.TreeMenuExpandedPng) < 0) {
-    this.debug().Log('clicking it');
+    this.Log().Log('clicking it');
     hotTreeNode.click();
     //}
-    this.debug().FuncEnd(this.__activateNode.name);
+    this.Log().FuncEnd(this.__activateNode.name);
   }
   private __expandNode(foundOnPage: HTMLElement): void {
-    this.debug().FuncStart(this.__expandNode.name);
+    this.Log().FuncStart(this.__expandNode.name);
     var currentSrc = foundOnPage.getAttribute('src');
-    this.debug().Log('currentSrc' + currentSrc);
+    this.Log().Log('currentSrc' + currentSrc);
     if (currentSrc.indexOf(ContentConst.Const.Names.TreeMenuExpandedPng) < 0) {
-      this.debug().Log('clicking it');
+      this.Log().Log('clicking it');
       foundOnPage.click();
     }
-    this.debug().FuncEnd(this.__expandNode.name);
+    this.Log().FuncEnd(this.__expandNode.name);
   }
 
   private __collapseNode(element: HTMLElement): void {
     var currentSrc = element.getAttribute('src');
-    this.debug().Log('currentSrc' + currentSrc);
+    this.Log().Log('currentSrc' + currentSrc);
     if (currentSrc.indexOf(ContentConst.Const.Names.TreeMenuExpandedPng) > -1) {
-      this.debug().Log('clicking it');
+      this.Log().Log('clicking it');
       element.click();
     }
   }
@@ -83,24 +83,24 @@ export class OneCEManager extends ContentManagerBase {
     if (rootElem) {
       this.__collapseNode(rootElem);
     } else {
-      this.debug().Error(this.__collapseRootNode.name, 'Root glyph not found ' + ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
+      this.Log().Error(this.__collapseRootNode.name, 'Root glyph not found ' + ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
     }
   }
 
   async WaitForAndRestoreOneNode(nextNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
-    this.debug().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
+    this.Log().FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
 
     var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + nextNode.NodeId.AsString;
 
-    this.debug().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.AsShort);
-    this.debug().Log('document not null ' + (dataOneDocTarget.Document != null));
+    this.Log().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.AsShort);
+    this.Log().Log('document not null ' + (dataOneDocTarget.Document != null));
 
     var iterHelper = new IterationHelper(this.Helpers(), this.WaitForAndRestoreOneNode.name);
 
     var foundOnPageTreeGlyph: HTMLElement = null;
 
     while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
-      this.debug().Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.AsShort + '*');
+      this.Log().Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.AsShort + '*');
 
       foundOnPageTreeGlyph = dataOneDocTarget.Document.getElementById(treeGlyphTargetId);
 
@@ -117,16 +117,16 @@ export class OneCEManager extends ContentManagerBase {
           }
         }
       } else {
-        this.debug().Log('not Found...waiting: ');
+        this.Log().Log('not Found...waiting: ');
         await iterHelper.Wait();
       }
     }
 
-    this.debug().FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
+    this.Log().FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
   }
 
   async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc) {
-    this.debug().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.DocId.AsShort);
+    this.Log().FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.DocId.AsShort);
 
     let iterHelper: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForAndRestoreManyAllNodes.name);
 
@@ -136,19 +136,19 @@ export class OneCEManager extends ContentManagerBase {
       await this.WaitForAndRestoreOneNode(nextNode, dataOneDocTarget);
     }
 
-    this.debug().FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
+    this.Log().FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
   }
 
   async RestoreCEStateAsync(dataToRestore: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Promise<Boolean> {
-    this.debug().FuncStart(this.RestoreCEStateAsync.name, dataOneDocTarget.DocId.AsShort);
+    this.Log().FuncStart(this.RestoreCEStateAsync.name, dataOneDocTarget.DocId.AsShort);
 
     var toReturn: boolean = false;
 
-    this.debug().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
+    this.Log().Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
 
     await this.WaitForAndRestoreManyAllNodes(dataToRestore, dataOneDocTarget);
 
-    this.debug().FuncEnd(this.RestoreCEStateAsync.name);
+    this.Log().FuncEnd(this.RestoreCEStateAsync.name);
     return toReturn;
   }
 
@@ -164,14 +164,14 @@ export class OneCEManager extends ContentManagerBase {
       }
 
     } else {
-      this.debug().Error(this.GetActiveNode.name, 'No tree data provided');
+      this.Log().Error(this.GetActiveNode.name, 'No tree data provided');
     }
 
     return toReturn;
   }
 
   GetStateCe(id: IGuid): IDataOneStorageCE {
-    this.debug().FuncStart(this.GetStateCe.name);
+    this.Log().FuncStart(this.GetStateCe.name);
 
     var toReturnCEData: IDataOneStorageCE = {
       Id: id,
@@ -183,7 +183,7 @@ export class OneCEManager extends ContentManagerBase {
 
 
 
-    this.debug().FuncEnd(this.GetStateCe.name);
+    this.Log().FuncEnd(this.GetStateCe.name);
     return toReturnCEData;
   }
 

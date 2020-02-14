@@ -2,7 +2,7 @@
 import { UiManager } from "./UiManager";
 import { PopUpMessagesManager } from "./PopUpMessagesManager";
 import { PopUpAtticManager } from "./PopUpAtticManager";
-import { PopUpDebug } from "../Classes/PopUpDebug";
+import { LoggerPopUp } from "../Classes/LoggerPopUp";
 
 
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
@@ -21,18 +21,19 @@ export class PopUpManagerBase {
   constructor(popHub: PopUpHub) {
     this.PopHub = popHub;
     
+    
   }
 
   UiMan(): UiManager { return this.PopHub.UiMan; }
-  debug(): PopUpDebug { return this.PopHub.debug; }
+  Log(): LoggerPopUp { return this.PopHub.Log; }
   Const(): IPopUpConst { return this.PopHub.PopUpConst; }
   MsgMan(): PopUpMessagesManager { return this.PopHub.PopMsgMan; }
   PopAtticMan(): PopUpAtticManager { return this.PopHub.PopUpAtticMan; }
   Helpers(): HelperHub { return this.PopHub.Helpers; }
-  SettingsMan(): SettingsManager { return this.PopHub.SettingsMan; }
   EventMan(): EventManager { return this.PopHub.EventMan; }
   locMan(): LocationManager { return this.PopHub.LocMan; }
   TabMan(): TabManager { return this.PopHub.TabMan; }
   BrowserMan(): BrowserManager { return this.PopHub.BrowserMan; }
+  SettingsMan(): SettingsManager { return this.PopHub.SettingsMan; }
 
 }

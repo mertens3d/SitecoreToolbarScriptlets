@@ -27,11 +27,11 @@ export class MiscManager extends ContentManagerBase {
       }
 
       if (subjectAnyOrAr === 'undefined') {
-        this.debug().Error(label, 'Is undefined');
+        this.Log().Error(label, 'Is undefined');
       } else if (!subjectAnyOrAr) {
-        this.debug().Error(label, 'Is Null');
+        this.Log().Error(label, 'Is Null');
       } else {
-        this.debug().LogVal(label, 'Passed');
+        this.Log().LogVal(label, 'Passed');
         toReturn = true;
 
         if (Array.isArray(subjectAnyOrAr)) {
@@ -41,10 +41,10 @@ export class MiscManager extends ContentManagerBase {
         }
       }
     } else {
-      this.debug().Error(this.NotNullOrUndefined.name, 'max iteration hit');
+      this.Log().Error(this.NotNullOrUndefined.name, 'max iteration hit');
     }
 
-    this.debug().LogVal('toReturn', toReturn);
+    this.Log().LogVal('toReturn', toReturn);
     return toReturn;
   }
 }

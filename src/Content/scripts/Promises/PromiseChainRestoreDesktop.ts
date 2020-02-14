@@ -18,63 +18,63 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
   private __waitForAndClickRedStartButtonPromise(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      this.debug().FuncStart(this.__waitForAndClickRedStartButtonPromise.name);
+      this.Log().FuncStart(this.__waitForAndClickRedStartButtonPromise.name);
 
       if (this.MiscMan().NotNullOrUndefined([promiseBucket, promiseBucket.targetDoc], this.__waitForAndClickRedStartButtonPromise.name)) {
 
-        this.debug().MarkerB();
+        this.Log().MarkerB();
 
         await this.Helpers().PromiseHelp.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, promiseBucket.targetDoc)
           .then(() => resolve(promiseBucket))
           .catch(ex => {
-            this.debug().Error(this.__waitForAndClickRedStartButtonPromise.name, ex);
+            this.Log().Error(this.__waitForAndClickRedStartButtonPromise.name, ex);
             reject(ex);
           });
 
       } else {
         reject(this.__waitForAndClickRedStartButtonPromise.name + ' something was null or undefined');
       }
-      this.debug().FuncEnd(this.__waitForAndClickRedStartButtonPromise.name);
+      this.Log().FuncEnd(this.__waitForAndClickRedStartButtonPromise.name);
     });
   }
 
   private __waitForIframeReady(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      this.debug().FuncStart(this.__waitForIframeReady.name, 'promiseBucket not null: ' + (promiseBucket !== null));
+      this.Log().FuncStart(this.__waitForIframeReady.name, 'promiseBucket not null: ' + (promiseBucket !== null));
 
-      this.debug().PromiseBucketDebug(promiseBucket, this.__waitForIframeReady.name);
+      this.Log().PromiseBucketDebug(promiseBucket, this.__waitForIframeReady.name);
 
       var success = await this.Helpers().PromiseHelp.WaitForReadyIframe(promiseBucket.NewIframe);
 
       if (success) {
-        this.debug().Log('resolved! : ');
+        this.Log().Log('resolved! : ');
 
         promiseBucket.NewIframe.ContentDoc.Document = promiseBucket.NewIframe.IframeElem.contentDocument;
-        this.debug().DebugDataOneIframe(promiseBucket.NewIframe);
+        this.Log().DebugDataOneIframe(promiseBucket.NewIframe);
 
         resolve(promiseBucket);
       } else {
-        this.debug().Log('rejected ! : ');
+        this.Log().Log('rejected ! : ');
         reject(this.__waitForIframeReady.name);
       }
-      this.debug().FuncEnd(this.__waitForIframeReady.name);
+      this.Log().FuncEnd(this.__waitForIframeReady.name);
     });
   }
 
   private __waitForIframeCountDiffPromise(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      this.debug().FuncStart(this.__waitForIframeCountDiffPromise.name);
+      this.Log().FuncStart(this.__waitForIframeCountDiffPromise.name);
 
       var success: ResultSuccessFail = new ResultSuccessFail();
 
       var iframeResult: IDataOneIframe = await this.OneScWinMan().OneDesktopMan.WaitForIframeCountDiffWorker(promiseBucket.IFramesbefore);
-      this.debug().MarkerB();
+      this.Log().MarkerB();
       if (iframeResult) {
-        this.debug().MarkerC();
+        this.Log().MarkerC();
 
         promiseBucket.NewIframe = iframeResult;
 
-        this.debug().DebugDataOneIframe(promiseBucket.NewIframe);
+        this.Log().DebugDataOneIframe(promiseBucket.NewIframe);
 
         success.Succeeded = true;
       } else {
@@ -82,7 +82,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
         success.RejectMessage = 'fail ' + this.__waitForIframeCountDiffPromise.name;
       }
 
-      this.debug().FuncEnd(this.__waitForIframeCountDiffPromise.name);
+      this.Log().FuncEnd(this.__waitForIframeCountDiffPromise.name);
 
       if (success.Succeeded) {
         resolve(promiseBucket);
@@ -102,9 +102,9 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
   private __restoreDataToOneIframe(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      this.debug().FuncStart(this.__restoreDataToOneIframe.name);
+      this.Log().FuncStart(this.__restoreDataToOneIframe.name);
 
-      this.debug().DebugDataOneIframe(promiseBucket.NewIframe);
+      this.Log().DebugDataOneIframe(promiseBucket.NewIframe);
 
       var success = await this.OneScWinMan().OneDesktopMan.RestoreDataToOneIframeWorker(promiseBucket.oneCEdata, promiseBucket.NewIframe);
       if (success) {
@@ -113,14 +113,14 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
         reject(this.__restoreDataToOneIframe.name);
       }
 
-      this.debug().FuncEnd(this.__restoreDataToOneIframe.name);
+      this.Log().FuncEnd(this.__restoreDataToOneIframe.name);
     });
   }
 
 
 
   async RunOneChain(targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageCE) {
-    this.debug().FuncStart(this.RunOneChain.name);
+    this.Log().FuncStart(this.RunOneChain.name);
 
     if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore], this.RunOneChain.name)) {
       var allIframeData = this.OneScWinMan().OneDesktopMan.GetAllLiveIframeData();
@@ -141,10 +141,10 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
         .then(dataBucket => this.__waitForIframeReady(dataBucket))
         .then(dataBucket => this.__restoreDataToOneIframe(dataBucket))
         .catch(ex => {
-          this.debug().Error(this.RunOneChain.name, ex);
+          this.Log().Error(this.RunOneChain.name, ex);
         });
 
-      this.debug().FuncEnd(this.RunOneChain.name);
+      this.Log().FuncEnd(this.RunOneChain.name);
     }
   }
 }

@@ -1,8 +1,8 @@
-﻿import { BaseDebug } from "./debug";
+﻿import { LoggerBase } from "./LoggerBase";
 import { GuidHelper } from "../Helpers/GuidHelper";
 import { HelperHub } from "../Helpers/Helpers";
 export class HelperBase {
-  protected Debug: BaseDebug;
+  protected Debug: LoggerBase;
   HelperHub: HelperHub;
 
   constructor(helperHub: HelperHub) {

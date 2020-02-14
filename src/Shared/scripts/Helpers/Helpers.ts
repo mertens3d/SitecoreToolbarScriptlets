@@ -1,17 +1,19 @@
 ﻿import { GuidHelper } from "./GuidHelper";
-import { BaseDebug } from "../Classes/debug";
+import { LoggerBase } from "../Classes/LoggerBase";
 import { UtilityHelper } from "./UtilityHelper";
 import { PromiseHelper } from "../Classes/PromiseGeneric";
 import { FactoryHelper } from "./FactoryHelper";
+import { SettingsHelper } from "./SettingsHelper";
 
 export class HelperHub {
-  Debug: BaseDebug;
+  Debug: LoggerBase;
   GuidHelp: GuidHelper;
   UtilityHelp: UtilityHelper;
   PromiseHelp: PromiseHelper;
   FactoryHelp: FactoryHelper;
+  SettingsHelp: SettingsHelper;
 
-  constructor(debug: BaseDebug) {
+  constructor(debug: LoggerBase) {
     debug.FuncStart(HelperHub.name);
     this.Debug = debug;
     this.Init();
@@ -23,5 +25,6 @@ export class HelperHub {
     this.UtilityHelp = new UtilityHelper(this);
     this.PromiseHelp = new PromiseHelper(this);
     this.FactoryHelp = new FactoryHelper(this);
+    this.SettingsHelp = new SettingsHelper(this);
   }
 } 

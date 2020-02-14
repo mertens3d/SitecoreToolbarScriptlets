@@ -2,9 +2,11 @@
 import { scWindowType } from "../Enums/scWindowType";
 import { CacheMode } from "../Enums/CacheMode";
 import { BufferDirection } from "../Enums/BufferDirection";
-import { BufferUseNbsp, BufferChar } from "../Enums/BufferChar";
+import { BufferChar } from "../Enums/BufferChar";
+import { BufferUseNbsp } from "../Enums/BufferUseNbsp";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 import { UrlParts } from "../Interfaces/UrlParts";
+import { SettingKey } from "../Enums/SettingKey";
 
 export class StaticHelpers {
   static MinToMs(minutes: number) {
@@ -12,6 +14,10 @@ export class StaticHelpers {
     }
   static FlavorAsString(flavor: SnapShotFlavor): string {
     return 'Flavor.' + SnapShotFlavor[flavor] + '(' + flavor + ')';
+  }
+
+  static SettingKeyAsString(settingKey: SettingKey) {
+    return 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
   }
 
   static MakeUrlParts(url: string): UrlParts {

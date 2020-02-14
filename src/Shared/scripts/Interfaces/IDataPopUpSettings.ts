@@ -1,9 +1,6 @@
-﻿import { IDataDebugSettings } from '../../../Shared/Scripts/Interfaces/IDataDebugSettings';
-import { IDataOneSettingPair } from './IdataOneSetting';
-import { IDataContentPrefs } from './IDataContentPrefs';
+﻿//import { IDataOneSettingPair } from './IdataOneSetting';
+//import { IAllGenericSettings } from '../Classes/IAllSettings';
 
-export interface IDataPopUpSettings {
-  DebugSettings: IDataDebugSettings,
-  Accordian: IDataOneSettingPair[]
-  ContentPrefs: IDataContentPrefs;
-}
+//export interface IDataPopUpSettings {
+//  LogSettings: IDataLogSettings,
+//}

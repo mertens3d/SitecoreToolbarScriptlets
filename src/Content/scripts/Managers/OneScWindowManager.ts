@@ -39,7 +39,7 @@ export class OneScWindowManager extends ContentManagerBase {
 
 
   SaveWindowState(snapShotSettings: IDataPayloadSnapShot) {
-    this.debug().FuncStart(this.SaveWindowState.name);
+    this.Log().FuncStart(this.SaveWindowState.name);
     var currentPageType = snapShotSettings.CurrentPageType;
 
     this.Helpers().FactoryHelp.CreateShellIDataOneWindowStorage(currentPageType, snapShotSettings.Flavor);
@@ -55,19 +55,19 @@ export class OneScWindowManager extends ContentManagerBase {
 
 
     if (currentPageType === scWindowType.ContentEditor) {
-      this.debug().MarkerA();
+      this.Log().MarkerA();
       var id = this.ContentHub.Helpers.GuidHelp.EmptyGuid();
       snapShot.AllCEAr.push( this.OneCEMan.GetStateCe(id));
     }
     else if (currentPageType === scWindowType.Desktop) {
-      this.debug().MarkerB();
+      this.Log().MarkerB();
       snapShot.AllCEAr = this.OneDesktopMan.GetStateDesktop().AllCeData;
     }
     else {
-      this.debug().Error(this.SaveWindowState.name, 'Invalid page location ' + currentPageType);
+      this.Log().Error(this.SaveWindowState.name, 'Invalid page location ' + currentPageType);
     }
     //this.PopulateStateSel();
-    this.debug().FuncEnd(this.SaveWindowState.name);
+    this.Log().FuncEnd(this.SaveWindowState.name);
     ;
   }
   //WaitForPageLoad(desiredPageType: WindowType, targetWindow: IDataBrowserWindow, iteration: number, successCallBack: Function) {
@@ -103,7 +103,7 @@ export class OneScWindowManager extends ContentManagerBase {
     return toReturn;
   }
   async PublishActiveCE(targetDoc: IDataOneDoc) {
-    this.debug().FuncStart(this.PublishActiveCE.name);
+    this.Log().FuncStart(this.PublishActiveCE.name);
     var currentWindowType = this.ScUiMan().GetCurrentPageType();
     var docToPublish: IDataOneDoc = null;
     if (currentWindowType == scWindowType.Desktop) {
@@ -115,15 +115,15 @@ export class OneScWindowManager extends ContentManagerBase {
     else {
       docToPublish = this.ScUiMan().TopLevelDoc();
     }
-    this.debug().Log('docToPublish', this.debug().IsNullOrUndefined(docToPublish));
+    this.Log().Log('docToPublish', this.Log().IsNullOrUndefined(docToPublish));
     if (docToPublish) {
       var publishChain: PromiseChainQuickPublish = new PromiseChainQuickPublish(this.ContentHub);
       await publishChain.PublishCE(docToPublish);
     }
-    this.debug().FuncEnd(this.PublishActiveCE.name);
+    this.Log().FuncEnd(this.PublishActiveCE.name);
   }
   async RestoreWindowStateToTarget(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage) {
-    this.debug().FuncStart(this.RestoreWindowStateToTarget.name);
+    this.Log().FuncStart(this.RestoreWindowStateToTarget.name);
     if (dataToRestore) {
       if (dataToRestore.WindowType === scWindowType.ContentEditor) {
         await this.OneCEMan.RestoreCEStateAsync(dataToRestore.AllCEAr[0], targetDoc);
@@ -132,9 +132,9 @@ export class OneScWindowManager extends ContentManagerBase {
         await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore);
       }
       else {
-        this.debug().Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
+        this.Log().Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
       }
-      this.debug().FuncEnd(this.RestoreWindowStateToTarget.name);
+      this.Log().FuncEnd(this.RestoreWindowStateToTarget.name);
     }
   }
 

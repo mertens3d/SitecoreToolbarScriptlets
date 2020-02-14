@@ -8,7 +8,7 @@ export class CommonEvents extends PopUpManagerBase{
   }
 
   protected __cleardebugText() {
-    this.debug().HndlrClearDebugText(this.debug());
+    this.Log().HndlrClearDebugText(this.Log());
   }
 
   protected __initNewOperation() {

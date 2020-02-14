@@ -4,7 +4,3 @@
     Period,
     Zero
 }
-export enum BufferUseNbsp {
-    space,
-    nbsp
-}

@@ -10,16 +10,17 @@ import { PopUpHub } from './PopUpHub';
 import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
+import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 
 export class LocationManager extends PopUpManagerBase {
   constructor(hub: PopUpHub) {
     super(hub);
-    hub.debug.FuncStart(LocationManager.name);
-    hub.debug.FuncEnd(LocationManager.name);
+    hub.Log.FuncStart(LocationManager.name);
+    hub.Log.FuncEnd(LocationManager.name);
   }
 
   ChangeLocationSwitchBoard(desiredPageType: scWindowType) {
-    this.debug().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType]);
+    this.Log().FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType]);
 
     var iteration: IterationHelper = new IterationHelper(this.Helpers(), this.ChangeLocationSwitchBoard.name);
 
@@ -29,7 +30,7 @@ export class LocationManager extends PopUpManagerBase {
       if (this.TabMan().CurrentTabData.ScWindowType === scWindowType.LoginPage) {
         var self = this;
         var callbackOnComplete: Function = () => {
-          this.debug().Log('callback triggered');
+          this.Log().Log('callback triggered');
           self.ChangeLocationSwitchBoard(desiredPageType);
         };
 
@@ -45,7 +46,7 @@ export class LocationManager extends PopUpManagerBase {
       else if (currentState === scWindowType.Launchpad || currentState === scWindowType.ContentEditor || currentState === scWindowType.Desktop) {
         var self = this;
         var callBackOnSuccessfulHrefChange: Function = function () {
-          self.debug().Log('Callback triggered');
+          self.Log().Log('Callback triggered');
           //targetWindow = self.TabMan().SetWindowDataToCurrent(targetWindow.Window, targetWindow.DataDocSelf.Nickname);
 
           self.ChangeLocationSwitchBoard(desiredPageType)
@@ -66,13 +67,13 @@ export class LocationManager extends PopUpManagerBase {
         }
 
         else if (currentState === scWindowType.Desktop && desiredPageType === scWindowType.Desktop) {
-          this.debug().Log('On Desktop');
+          this.Log().Log('On Desktop');
 
           //todo this.DesktopMan().TriggerRedButton(targetWindow.DataDocSelf);
         }
       }
     }
-    this.debug().FuncEnd(this.ChangeLocationSwitchBoard.name);
+    this.Log().FuncEnd(this.ChangeLocationSwitchBoard.name);
   }
 
   async SetScModeFromEditPrevNorm(newValue: IsScMode, currentPageType: scWindowType) {
@@ -80,8 +81,23 @@ export class LocationManager extends PopUpManagerBase {
     var newHref = currentTabHref.replace('=normal', newValue.AsString).replace('=preview', newValue.AsString).replace('=edit', newValue.AsString);
     await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData);
   }
+
+
+  BuildEditPrevNormUrl(scMode: IsScMode) {
+    let contState: ICurrStateContent = this.UiMan().CurrContentState;
+
+    let toReturn:string = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
+      + '/?sc_itemid=' + contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid
+      + '&sc_mode=' + scMode.AsString
+      + '&sc_lang=en'
+      + 'sc_site=website';
+
+    return toReturn;
+  }
+
+
   SetScModeFromCeDt(newValue: IsScMode, currentPageType: scWindowType) {
-    this.debug().FuncStart(this.SetScModeFromCeDt.name, newValue.AsString);
+    this.Log().FuncStart(this.SetScModeFromCeDt.name, newValue.AsString);
     var dataOneDoc: IDataOneDoc = null;
 
     if (currentPageType == scWindowType.Desktop) {
@@ -91,9 +107,10 @@ export class LocationManager extends PopUpManagerBase {
 
         let currentNodeId: IDataOneTreeNode = contState.ActiveCe.ActiveNode;
         //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
-        let editUrl = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
-          + '/?sc_itemid=' + contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid + '&sc_mode=preview&sc_lang=en&sc_site=website';
+        //let editUrl = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
+        //  + '/?sc_itemid=' + contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid + '&sc_mode=preview&sc_lang=en&sc_site=website';
 
+        let editUrl = this.BuildEditPrevNormUrl(newValue);
 
         this.BrowserMan().CreateNewTab(editUrl);
 
@@ -106,12 +123,12 @@ export class LocationManager extends PopUpManagerBase {
       //}
       }
     }
-    this.debug().FuncEnd(this.SetScModeFromCeDt.name, newValue.AsString);
+    this.Log().FuncEnd(this.SetScModeFromCeDt.name, newValue.AsString);
   }
 
   SetScMode(newValue: IsScMode, useOrigWindow: boolean) {
     return new Promise(async () => {
-      this.debug().FuncStart(this.SetScMode.name, newValue.AsString);
+      this.Log().FuncStart(this.SetScMode.name, newValue.AsString);
 
       var itemGuid: IGuid;
       var targetWindow: IDataBrowserTab;
@@ -129,7 +146,7 @@ export class LocationManager extends PopUpManagerBase {
         || currentPageType == scWindowType.Preview) {
         await this.SetScModeFromEditPrevNorm(newValue, currentPageType);
       }
-      this.debug().FuncEnd(this.SetScMode.name);
+      this.Log().FuncEnd(this.SetScMode.name);
     });
   }
 }

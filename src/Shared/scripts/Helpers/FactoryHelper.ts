@@ -5,6 +5,8 @@ import { scWindowType } from "../Enums/scWindowType";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 import { IGuid } from "../Interfaces/IGuid";
 import { IDataDtState } from "../Interfaces/IDataDtState";
+
+
 export class FactoryHelper extends HelperBase {
     
 
@@ -12,7 +14,6 @@ export class FactoryHelper extends HelperBase {
     var toReturn: IDataOneDoc = {
       ParentDoc: parentDocument,
       Document: IframeElem.contentDocument,
-      HasParentDesktop: false,
       DocId: this.HelperHub.GuidHelp.NewGuid(),
       ParentDesktop: null,
       Nickname: nickname + ' - content doc'

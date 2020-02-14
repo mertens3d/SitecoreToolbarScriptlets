@@ -3,7 +3,7 @@
 
 
 var constants = {
-  taDebug: 'ta-debug'
+  taDebug: 'ta-log'
 };
 var xyyz = xyyz || {};
 

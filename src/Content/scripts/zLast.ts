@@ -1,11 +1,6 @@
 import { ContentHub } from './Managers/ContentHub';
-import { ContentDebug } from './Classes/ContentDebug';
+import { LoggerContent } from "./Classes/LoggerContent";
+import { LogLevel } from '../../Shared/scripts/Enums/LogLevel';
 
-//var xyyz = xyyz || {};
-
-let debug = new ContentDebug(window.opener);
-debug.Enabled = true;
-//let SitecoreUiMan = new SitecoreUiManager(debug);
-
-//xyyz.HubObj =
-new ContentHub( debug);
+let logger = new LoggerContent(LogLevel.Enabled);
+new ContentHub( logger);

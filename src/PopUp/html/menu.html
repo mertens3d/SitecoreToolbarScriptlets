@@ -77,9 +77,7 @@
       <fieldset>
         <legend id='lgnd-state' data-setting='lgnd-settings'>
           State
-
-          <img src="/icons/accordion_up.png" class="scEditorSectionCaptionGlyph" alt="" border="0">
-        </legend> 
+        </legend>
         <div class='accordian-content'>
           <div class='flex-container'>
             <div class='col-full'>
@@ -88,15 +86,15 @@
               </div>
             </div>
           </div>
-          </div>
+        </div>
       </fieldset>
 
       <fieldset id='id-fieldset-debug'>
-        <legend id='lgnd-debug' data-setting='lgnd-debug'>Debug Info <span id='spanParentInfo'></span></legend>
+        <legend id='lgnd-log' data-setting='lgnd-log'>Debug Info <span id='spanParentInfo'></span></legend>
         <div class='accordian-content'>
           <div class='col-full'>
             <div class='scroller'>
-              <textarea id='ta-debug'></textarea>
+              <textarea id='ta-log'></textarea>
             </div>
           </div>
         </div>
@@ -106,18 +104,38 @@
         <legend id='lgnd-settings' data-setting='lgnd-settings'>Settings/ Stats</legend>
         <div class='accordian-content'>
 
-          <input type='checkbox' id='id-settings-show-debug-data' checked="checked" />
-          <label for='id-settings-show-debug-data'>Show Debug Data</label>
+          <br />
+          <input type='checkbox' id='id-generic-setting-test' checked="checked" />
+          <label for='id-generic-setting-test'>Generic Setting Test</label>
 
+
+          <br />
+          <input type='checkbox' id='id-settings-show-log-data' checked="checked" />
+          <label for='id-settings-show-log-data'>Show Log Data</label>
+
+          <br />
           <input type="checkbox" id="id-settings-auto-login" checked="checked" />
           <label for='id-settings-auto-login'>Auto login</label>
 
-          <input type="checkbox" id="id-settings-auto-save" checked="checked" />
-          <label for='id-settings-auto-save'>Auto Save Enabled</label>
+          <br />
+          <input type="checkbox" id="id-settings-auto-save-enabled" checked="checked" />
+          <label for='id-settings-auto-save-enabled'>Auto Save Enabled</label>
 
+          <br />
+          <input type="checkbox" id="id-settings-debug-keep-dialog-open" checked="checked" />
+          <label for='id-settings-debug-keep-dialog-open'>(Debug) Keep Dialog Open</label>
+
+
+          <br />
           <input type="number" id="id-settings-auto-save-interval" min="0" max="100" value="0" />
           <label for='id-settings-auto-save-interval'>Auto Save Interval (Minutes)</label>
 
+          <br />
+          <input type="number" id="id-settings-auto-save-max-count" min="0" max="100" value="0" />
+          <label for='id-settings-auto-save-max-count'>Auto Save Max Count</label>
+
+
+          <br />
           <div id="stat-caller-id"></div>
           <div id="stat-self-id"></div>
         </div>

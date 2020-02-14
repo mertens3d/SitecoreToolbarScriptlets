@@ -5,7 +5,7 @@ import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowser
 export class BrowserManager extends PopUpManagerBase {
   async CreateNewTab(tabUrl: string) {
     return new Promise(async (resolve, reject) => {
-      this.debug().FuncStart(this.CreateNewTab.name, tabUrl);
+      this.Log().FuncStart(this.CreateNewTab.name, tabUrl);
 
       let result: ResultSuccessFail = new ResultSuccessFail();
 
@@ -19,16 +19,16 @@ export class BrowserManager extends PopUpManagerBase {
         .then(() => this.MsgMan().WaitForListeningTab(newTab))
         .then(() => result.Succeeded = true)
         .catch((ex) => {
-          this.debug().Error(this.CreateNewTab.name, 'fails here ' + ex);
+          this.Log().Error(this.CreateNewTab.name, 'fails here ' + ex);
           result.Succeeded = false;
           result.RejectMessage = this.CreateNewTab.name + ' ' + ex.toString();
         });
 
       if (result.Succeeded) {
-        this.debug().FuncEnd(this.CreateNewTab.name, tabUrl);
+        this.Log().FuncEnd(this.CreateNewTab.name, tabUrl);
         resolve(newTab);
       } else {
-        this.debug().FuncEnd(this.CreateNewTab.name, tabUrl);
+        this.Log().FuncEnd(this.CreateNewTab.name, tabUrl);
         reject(result.RejectMessage);
       }
     })

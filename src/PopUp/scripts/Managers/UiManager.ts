@@ -7,21 +7,19 @@ import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataO
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ICallbackDataDebugTextChanged } from '../../../Shared/scripts/Interfaces/ICallbackDataDebugTextChanged';
-
-import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
-
 import { PayloadDataFromContent } from '../../../Shared/scripts/Classes/PayloadDataFromContent';
 import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
 import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
-import { BuildDateStamp } from '../../../Shared/scripts/AutoBuild/BuildNum';
-import { IDataPopUpSettings } from '../../../Shared/scripts/Interfaces/IDataPopUpSettings';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { MenuCommand } from '../../../Shared/scripts/Enums/MenuCommand';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ISelectionHeaders } from '../../../Shared/scripts/Interfaces/ISelectionHeaders';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
+import { IOneGenericSetting } from '../../../Shared/scripts/Classes/OneSetting';
+import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
+import { BuildDateStamp } from '../../../Shared/scripts/AutoBuild/BuildNum';
 
 export class UiManager extends PopUpManagerBase {
   private __selectSnapshotId: IGuid;
@@ -35,76 +33,76 @@ export class UiManager extends PopUpManagerBase {
 
   constructor(popHub: PopUpHub) {
     super(popHub);
-    popHub.debug.FuncStart(UiManager.name);
+    popHub.Log.FuncStart(UiManager.name);
 
-    popHub.debug.FuncEnd(UiManager.name);
+    popHub.Log.FuncEnd(UiManager.name);
   }
 
   Init() {
-    this.debug().FuncStart(UiManager.name, this.Init.name);
+    this.Log().FuncStart(UiManager.name, this.Init.name);
     var self = this;
-    this.debug().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
+    this.Log().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
 
     this.WriteBuildNumToUi();
 
     this.MsgMan().SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqCurState, this.PopHub), this.TabMan().CurrentTabData);
 
-    this.debug().FuncEnd(UiManager.name, this.Init.name);
+    this.Log().FuncEnd(UiManager.name, this.Init.name);
   }
 
   WriteBuildNumToUi() {
-    this.debug().LogVal('BuildDateStamp', BuildDateStamp);
+    this.Log().LogVal('BuildDateStamp', BuildDateStamp);
 
     var targetTag: HTMLElement = document.querySelector(this.Const().Selector.HS.BuildStamp);
     if (targetTag) {
       targetTag.innerText = 'build: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date(BuildDateStamp));
     } else {
-      this.debug().Error(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
+      this.Log().Error(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
     }
   }
 
   private __drawStoragePretty(ourData: IOneStorageData[]) {
-    this.debug().FuncStart(this.__drawStoragePretty.name);
+    this.Log().FuncStart(this.__drawStoragePretty.name);
 
     this.ClearTextArea();
 
     for (var idx = 0; idx < ourData.length; idx++) {
-      this.debug().Log('key: \t' + ourData[idx].key);
+      this.Log().Log('key: \t' + ourData[idx].key);
       var parsed: IDataOneWindowStorage = <IDataOneWindowStorage>JSON.parse(ourData[idx].data);
       if (parsed) {
         this.DrawDebugDataPretty(parsed);
-        this.debug().Log('------------');
+        this.Log().Log('------------');
       }
     }
-    this.debug().FuncEnd(this.__drawStoragePretty.name);
+    this.Log().FuncEnd(this.__drawStoragePretty.name);
   }
   DebugDataOneNode(dataOneTreeNode: IDataOneTreeNode): string {
-    this.debug().FuncStart(this.DebugDataOneNode.name);
+    this.Log().FuncStart(this.DebugDataOneNode.name);
     var activeOrNot = dataOneTreeNode.IsActive ? '* ' : '  ';
     var expandedOrNot = dataOneTreeNode.IsExpanded ? '+ ' : '  ';
 
     var toReturn: string = activeOrNot + expandedOrNot + dataOneTreeNode.NodeId.AsString + ' ' + dataOneTreeNode.NodeFriendly;
-    this.debug().FuncEnd(this.DebugDataOneNode.name);
+    this.Log().FuncEnd(this.DebugDataOneNode.name);
     return toReturn;
   }
   GetDebugDataOneCE(dataOneCe: IDataOneStorageCE): string[] {
-    this.debug().FuncStart('GetDebugDataOneCE');
+    this.Log().FuncStart('GetDebugDataOneCE');
     var toReturn: string[] = [];
     toReturn.push('------ All Tree Nodes -----');
 
     for (var idx = 0; idx < dataOneCe.AllTreeNodeAr.length; idx++) {
-      this.debug().Log('idx: ' + idx);
+      this.Log().Log('idx: ' + idx);
       var oneVal = this.DebugDataOneNode(dataOneCe.AllTreeNodeAr[idx]);
-      this.debug().Log('oneVal : ' + oneVal);
+      this.Log().Log('oneVal : ' + oneVal);
       toReturn.push(oneVal);
     }
 
-    this.debug().FuncEnd(this.GetDebugDataOneCE.name);
+    this.Log().FuncEnd(this.GetDebugDataOneCE.name);
     return toReturn;
   }
 
   __buildDebugDataPretty(dataOneWindow: IDataOneWindowStorage) {
-    this.debug().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + this.debug().IsNullOrUndefined(dataOneWindow));
+    this.Log().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + this.Log().IsNullOrUndefined(dataOneWindow));
 
     var toReturn: string[] = [];
     if (dataOneWindow) {
@@ -127,14 +125,14 @@ export class UiManager extends PopUpManagerBase {
       }
       toReturn.push('------ One Window Snap Shot End -----');
 
-      this.debug().FuncEnd(this.__buildDebugDataPretty.name);
+      this.Log().FuncEnd(this.__buildDebugDataPretty.name);
     } else {
-      this.debug().Error(this.__buildDebugDataPretty.name, 'missing data')
+      this.Log().Error(this.__buildDebugDataPretty.name, 'missing data')
     }
     return toReturn;
   }
   DrawDebugDataPretty(source: IDataOneWindowStorage): void {
-    this.debug().FuncStart(this.DrawDebugDataPretty.name, 'source not null: ' + this.debug().IsNullOrUndefined(source));
+    this.Log().FuncStart(this.DrawDebugDataPretty.name, 'source not null: ' + this.Log().IsNullOrUndefined(source));
 
     var allDebugData: string[] = this.__buildDebugDataPretty(source);
 
@@ -144,7 +142,7 @@ export class UiManager extends PopUpManagerBase {
       this.PopHub.FeedbackMan.WriteLine(allDebugData[ldx]);
     }
 
-    this.debug().FuncEnd(this.DrawDebugDataPretty.name);
+    this.Log().FuncEnd(this.DrawDebugDataPretty.name);
   }
 
   ClearTextArea(): void {
@@ -152,7 +150,7 @@ export class UiManager extends PopUpManagerBase {
     if (ta) {
       ta.value = '';
     } else {
-      this.debug().Error(this.ClearTextArea.name, 'No text area found');
+      this.Log().Error(this.ClearTextArea.name, 'No text area found');
     }
   }
 
@@ -206,7 +204,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   DrawStorageResponse(data: PayloadDataFromContent) {
-    this.debug().FuncStart('DrawStorage');
+    this.Log().FuncStart('DrawStorage');
     try {
       //var ourData: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
 
@@ -215,52 +213,48 @@ export class UiManager extends PopUpManagerBase {
         //this.__drawStoragePretty(data.CurrentSnapShots)
       }
     } catch (e) {
-      this.debug().Error(this.DrawStorageResponse.name, e.message);
+      this.Log().Error(this.DrawStorageResponse.name, e.message);
     }
-    this.debug().FuncEnd('DrawStorage');
+    this.Log().FuncEnd('DrawStorage');
   }
 
   private __drawStorageRaw(ourData: IOneStorageData[]) {
-    this.debug().FuncStart('DrawStorageRaw');
+    this.Log().FuncStart('DrawStorageRaw');
     for (var idx = 0; idx < ourData.length; idx++) {
-      this.debug().Log('key: \t' + ourData[idx].key);
-      this.debug().Log('data: \t' + ourData[idx].data);
-      this.debug().Log('------------');
+      this.Log().Log('key: \t' + ourData[idx].key);
+      this.Log().Log('data: \t' + ourData[idx].data);
+      this.Log().Log('------------');
     }
-    this.debug().FuncEnd('DrawStorageRaw');
+    this.Log().FuncEnd('DrawStorageRaw');
   }
 
-  async RestoreAccordianStates(): Promise<void> {
-    var accordianSettings = (await this.PopAtticMan().CurrentSettings()).Accordian;
-    for (var idx = 0; idx < accordianSettings.length; idx++) {
-      var candidate = accordianSettings[idx];
-      var target = document.getElementById(candidate.ElemId);
-
-      if (target) {
-        var contentSib = this.GetAccordianContentElem(target);
-        if (contentSib) {
-          this.SetAccordianClass(contentSib, candidate.isCollapsed)
-        }
-      }
+  async RestoreAccordianState(oneSetting: IOneGenericSetting, foundElem: HTMLElement): Promise<void> {
+    this.Log().FuncStart(this.RestoreAccordianState.name);
+    var contentSib = this.GetAccordianContentElem(foundElem);
+    if (contentSib) {
+      this.SetAccordianClass(contentSib, <boolean>oneSetting.ValueAsObj)
+    } else {
+      this.Log().Error(this.RestoreAccordianState.name, 'Sibling not found');
     }
+    this.Log().FuncEnd(this.RestoreAccordianState.name);
   }
 
   async UpdateAtticFromUi(): Promise<any> {
-    this.debug().FuncStart(this.UpdateAtticFromUi.name);
+    this.Log().FuncStart(this.UpdateAtticFromUi.name);
 
-    let currentSettings: IDataPopUpSettings = await this.PopAtticMan().CurrentSettings();
-    let currentVal = (<HTMLInputElement>document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowDebugData)).checked;
-    currentVal = true; //todo - remove after debugging
-    this.debug().LogVal('currentVal', currentVal.toString())
-    currentSettings.DebugSettings.ShowDebugData = currentVal;
+    //let currentSettings: IDataPopUpSettings = await this.PopAtticMan().CurrentSettings();
+    //let currentVal = (<HTMLInputElement>document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowLogData)).checked;
+    //currentVal = true; //todo - remove after debugging
+    //this.Log().LogVal('currentVal', currentVal.toString())
+    //currentSettings.LogSettings.ShowDebugData = currentVal;
 
-    this.PopAtticMan().StoreSettings(currentSettings);
+    //this.PopAtticMan().StoreSettings(currentSettings);
     this.RefreshUiFromCache();
-    this.debug().FuncEnd(this.UpdateAtticFromUi.name);
+    this.Log().FuncEnd(this.UpdateAtticFromUi.name);
   }
 
   SelectChanged(): void {
-    this.debug().FuncStart(this.SelectChanged.name);
+    this.Log().FuncStart(this.SelectChanged.name);
     this.__selectSnapshotId = this.Helpers().GuidHelp.ParseGuid(this.__getSelectElem().value);
     //this.debug().Log('new index :' + this.__selectSnapshotId);
 
@@ -269,7 +263,7 @@ export class UiManager extends PopUpManagerBase {
     //}
 
     this.RefreshUiFromCache();
-    this.debug().FuncEnd(this.SelectChanged.name);
+    this.Log().FuncEnd(this.SelectChanged.name);
   }
 
   private __GetCancelButton() {
@@ -292,37 +286,57 @@ export class UiManager extends PopUpManagerBase {
     //todo this.UiMan().OperationCancelled = false;
   }
 
-  async __refreshSettings() {
-    this.debug().FuncStart(this.__refreshSettings.name);
-    let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(this.Const().Selector.HS.IdFieldSetDebug);
+  //async __refreshSettings() {
+  //  this.Log().FuncStart(this.__refreshSettings.name);
+  //  let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(this.Const().Selector.HS.IdFieldSetDebug);
 
-    let currentSettings: IDataPopUpSettings = await this.PopAtticMan().CurrentSettings();
-    if (currentSettings) {
-      if (debugFieldSet) {
-        let newDisplay = currentSettings.DebugSettings.ShowDebugData ? '' : 'none';
-        debugFieldSet.style.display = newDisplay;
-      }
-      let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowDebugData);
-      if (checkBoxShowDebug) {
-        this.debug().LogVal('before', checkBoxShowDebug.checked.toString());
-        checkBoxShowDebug.checked = currentSettings.DebugSettings.ShowDebugData;
-        this.debug().LogVal('after', checkBoxShowDebug.checked.toString());
+  //  let currentSettings: IDataPopUpSettings =  await this.PopAtticMan().CurrentSettings();
+  //  if (currentSettings) {
+  //    if (debugFieldSet) {
+  //      let newDisplay = currentSettings.LogSettings.ShowDebugData ? '' : 'none';
+  //      debugFieldSet.style.display = newDisplay;
+  //    }
+  //    let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowLogData);
+  //    if (checkBoxShowDebug) {
+  //      this.Log().LogVal('before', checkBoxShowDebug.checked.toString());
+  //      checkBoxShowDebug.checked = currentSettings.LogSettings.ShowDebugData;
+  //      this.Log().LogVal('after', checkBoxShowDebug.checked.toString());
+  //    } else {
+  //      this.Log().Error(this.__refreshSettings.name, 'no checkbox found');
+  //    }
+  //  }
+  //  else {
+  //    this.Log().Error(this.__refreshSettings.name, 'no settings found');
+  //  }
+  //  this.Log().FuncEnd(this.__refreshSettings.name);
+  //}
+
+  RefreshUiGenericSettings() {
+    this.Log().FuncStart(this.RefreshUiGenericSettings.name);
+    for (var idx = 0; idx < this.SettingsMan().AllSettings.SettingsAr.length; idx++) {
+      var oneSetting: IOneGenericSetting = this.SettingsMan().AllSettings.SettingsAr[idx];
+      this.Log().LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
+      var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
+      if (foundElem) {
+        if (oneSetting.DataType === SettingType.BoolCheckBox) {
+          let valueToDisplay: boolean = <boolean>(oneSetting.ValueAsObj || oneSetting.DefaultValue);
+          this.Log().LogVal('valueToDisplay', valueToDisplay);
+          (<HTMLInputElement>foundElem).checked = valueToDisplay;
+        }
+        if (oneSetting.DataType === SettingType.Accordian) {
+          this.RestoreAccordianState(oneSetting, foundElem);
+        }
       } else {
-        this.debug().Error(this.__refreshSettings.name, 'no checkbox found');
+        this.Log().Error(this.RefreshUiGenericSettings.name, 'ui element not found: ' + oneSetting.UiSelector);
       }
     }
-    else {
-      this.debug().Error(this.__refreshSettings.name, 'no settings found');
-    }
-    this.debug().FuncEnd(this.__refreshSettings.name);
+    this.Log().FuncEnd(this.RefreshUiGenericSettings.name);
   }
 
   async RefreshUiFromCache() {
-    this.debug().FuncStart(this.RefreshUiFromCache.name);
+    this.Log().FuncStart(this.RefreshUiFromCache.name);
 
-    this.__refreshSettings();
-
-    this.RestoreAccordianStates();
+    this.RefreshUiGenericSettings();
 
     this.UiMan().PopulateContentState(this.MsgMan().CachedState);
 
@@ -332,24 +346,24 @@ export class UiManager extends PopUpManagerBase {
 
     this.__drawCorrectNicknameInUI(this.MsgMan().CachedState.SnapShotsMany.CurrentSnapShots);
 
-    this.debug().FuncEnd(this.RefreshUiFromCache.name);
+    this.Log().FuncEnd(this.RefreshUiFromCache.name);
   }
 
   RefreshButtonStates(): void {
-    this.debug().FuncStart(this.RefreshButtonStates.name, this.EventMan().AllMenuCommands.length);
+    this.Log().FuncStart(this.RefreshButtonStates.name, this.EventMan().AllMenuCommands.length);
     for (var idx = 0; idx < this.EventMan().AllMenuCommands.length; idx++) {
       var command = this.EventMan().AllMenuCommands[idx];
-      this.debug().LogVal('working on', MenuCommand[command.Command])
+      this.Log().LogVal('working on', MenuCommand[command.Command])
       if (command.RequiredPageTypes.length > 0) {
-        this.debug().LogVal('required pages', command.RequiredPageTypes.toString());
+        this.Log().LogVal('required pages', command.RequiredPageTypes.toString());
 
         var currentWindowType = this.TabMan().CurrentTabData.ScWindowType;
-        this.debug().LogVal('current', StaticHelpers.WindowTypeAsString(currentWindowType));
+        this.Log().LogVal('current', StaticHelpers.WindowTypeAsString(currentWindowType));
         var targetButton: HTMLElement = this.GetButtonByIdOrSelector(command.ButtonSelector);
 
         if (targetButton) {
           var isMatch: boolean = command.RequiredPageTypes.indexOf(currentWindowType) >= 0;
-          this.debug().LogVal('isMatch', isMatch);
+          this.Log().LogVal('isMatch', isMatch);
 
           if (isMatch) {
             targetButton.classList.remove('disabled');
@@ -359,16 +373,16 @@ export class UiManager extends PopUpManagerBase {
             targetButton.setAttribute('disabled', 'disabled');
           }
         } else {
-          this.debug().Error(this.RefreshButtonStates.name, 'target button not found');
+          this.Log().Error(this.RefreshButtonStates.name, 'target button not found');
         }
       } else {
-        this.debug().Log('no required pages');
+        this.Log().Log('no required pages');
       }
     }
-    this.debug().FuncEnd(this.RefreshButtonStates.name);
+    this.Log().FuncEnd(this.RefreshButtonStates.name);
   }
   ShowDebugDataOneWindow() {
-    this.debug().FuncStart('ShowDebugDataOneWindow');
+    this.Log().FuncStart('ShowDebugDataOneWindow');
     var toReturn: string[] = [];
 
     //toReturn.push(this.__activeWindowSnapShot.TimeStamp.toJSON());
@@ -378,17 +392,17 @@ export class UiManager extends PopUpManagerBase {
     //}
 
     for (var kdx = 0; kdx < toReturn.length; kdx++) {
-      this.debug().Log(toReturn[kdx]);
+      this.Log().Log(toReturn[kdx]);
     }
 
-    this.debug().FuncEnd('ShowDebugDataOneWindow');
+    this.Log().FuncEnd('ShowDebugDataOneWindow');
     return toReturn;
   }
   private __drawCorrectNicknameInUI(snapShots: IDataOneWindowStorage[]) {
-    this.debug().FuncStart(this.__drawCorrectNicknameInUI.name);
+    this.Log().FuncStart(this.__drawCorrectNicknameInUI.name);
     var targetId: IGuid = this.UiMan().GetIdOfSelectWindowSnapshot();
     if (targetId) {
-      this.debug().Log('targetId : ' + targetId.AsString);
+      this.Log().Log('targetId : ' + targetId.AsString);
 
       var storageValues = snapShots;
       var currentSelectId = this.GetIdOfSelectWindowSnapshot();
@@ -410,7 +424,7 @@ export class UiManager extends PopUpManagerBase {
         }
       }
     }
-    this.debug().FuncEnd(this.__drawCorrectNicknameInUI.name);
+    this.Log().FuncEnd(this.__drawCorrectNicknameInUI.name);
   }
 
   GetValueInNickname(): string {
@@ -424,7 +438,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   GetIdOfSelectWindowSnapshot(): IGuid {
-    this.debug().FuncStart(this.GetIdOfSelectWindowSnapshot.name);
+    this.Log().FuncStart(this.GetIdOfSelectWindowSnapshot.name);
 
     var targetSel: HTMLSelectElement = this.__getSelectElem();
     var toReturn: IGuid = null;
@@ -442,13 +456,13 @@ export class UiManager extends PopUpManagerBase {
     }
 
     if (!toReturn) {
-      this.debug().Log('using empty guid');
+      this.Log().Log('using empty guid');
       toReturn = this.Helpers().GuidHelp.EmptyGuid();
     }
 
-    this.debug().DebugIGuid(toReturn);
+    this.Log().DebugIGuid(toReturn);
 
-    this.debug().FuncEnd(this.GetIdOfSelectWindowSnapshot.name, toReturn.AsString);
+    this.Log().FuncEnd(this.GetIdOfSelectWindowSnapshot.name, toReturn.AsString);
     return toReturn;
   }
 
@@ -463,7 +477,7 @@ export class UiManager extends PopUpManagerBase {
   AssignOnCheckedEvent(targetId: string, handler: Function): void {
     var targetElem: HTMLElement = document.getElementById(targetId);
     if (!targetElem) {
-      this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
+      this.Log().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
     } else {
       targetElem.addEventListener('checked', (evt) => { handler(evt) });
     }
@@ -473,7 +487,7 @@ export class UiManager extends PopUpManagerBase {
     var targetElem = this.GetButtonByIdOrSelector(targetId);
 
     if (!targetElem) {
-      this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
+      this.Log().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
     } else {
       targetElem.addEventListener('click', (evt) => { handler(evt) });
     }
@@ -486,19 +500,19 @@ export class UiManager extends PopUpManagerBase {
   }
 
   AssignOnChangeEvent(selector: string, handler: Function): void {
-    this.debug().FuncStart(this.AssignOnChangeEvent.name, selector);
+    this.Log().FuncStart(this.AssignOnChangeEvent.name, selector);
     var targetElem: HTMLElement = document.querySelector(selector);
     if (!targetElem) {
-      this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
+      this.Log().Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
     } else {
       targetElem.onchange = () => { handler };
     }
-    this.debug().FuncEnd(this.AssignOnChangeEvent.name, selector);
+    this.Log().FuncEnd(this.AssignOnChangeEvent.name, selector);
   }
   AssignDblClickEvent(selector: string, handler: Function): void {
     var targetElem: HTMLElement = document.querySelector(selector);
     if (!targetElem) {
-      this.debug().Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
+      this.Log().Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
     } else {
       targetElem.ondblclick = (evt) => { handler(evt) };
     }
@@ -555,18 +569,17 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
-
   async PopulateContentState(contentState: ICurrStateContent) {
-    this.debug().FuncStart(this.PopulateContentState.name);
+    this.Log().FuncStart(this.PopulateContentState.name);
 
-    this.debug().DebugIDataBrowserTab(this.TabMan().CurrentTabData);
+    this.Log().DebugIDataBrowserTab(this.TabMan().CurrentTabData);
 
     this.CurrContentState = contentState;
-    if (this.debug().IsNotNullOrUndefinedBool('state', contentState)) {
+    if (this.Log().IsNotNullOrUndefinedBool('state', contentState)) {
       this.UiMan().PopulateStateOfSnapShotSelect(contentState.SnapShotsMany.CurrentSnapShots);
       this.PopulateContentStateDiv(contentState);
     }
-    this.debug().FuncEnd(this.PopulateContentState.name);
+    this.Log().FuncEnd(this.PopulateContentState.name);
   }
 
   PopulateSnapShotsAuto() {
@@ -628,7 +641,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   PopulateStateOfSnapShotSelect(snapShots: IDataOneWindowStorage[]) {
-    this.debug().FuncStart(this.PopulateStateOfSnapShotSelect.name);
+    this.Log().FuncStart(this.PopulateStateOfSnapShotSelect.name);
 
     if (snapShots) {
       var targetSel: HTMLSelectElement = this.__getSelectElem();
@@ -638,7 +651,7 @@ export class UiManager extends PopUpManagerBase {
         var headers: ISelectionHeaders = this.WriteHeaders(targetSel);
 
         if (snapShots && snapShots.length > 0) {
-          this.debug().Log('targetSel.options.length : ' + targetSel.options.length);
+          this.Log().Log('targetSel.options.length : ' + targetSel.options.length);
 
           for (var idx: number = 0; idx < snapShots.length; idx++) {
             var data = snapShots[idx];
@@ -672,6 +685,6 @@ export class UiManager extends PopUpManagerBase {
         }
       }
     }
-    this.debug().FuncEnd(this.PopulateStateOfSnapShotSelect.name);
+    this.Log().FuncEnd(this.PopulateStateOfSnapShotSelect.name);
   }
 }

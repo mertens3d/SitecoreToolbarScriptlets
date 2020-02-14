@@ -9,17 +9,16 @@ export class PageManager extends ContentManagerBase {
 
   constructor(hub: ContentHub) {
     super(hub);
-    this.debug().CtorName(this.constructor.name);
+    this.Log().CtorName(this.constructor.name);
   }
 
   Init() {
-    this.debug().FuncStart(this.Init.name);
+    this.Log().FuncStart(this.Init.name);
 
     //if (window.opener) {
     this.topLevelDoc = {
       ParentDoc: null,
       Document: (<Window>(window)).document,
-      HasParentDesktop: false,
       DocId: this.Helpers().GuidHelp.NewGuid(),
       ParentDesktop: null,
       Nickname: 'Original Target Page'
@@ -28,6 +27,6 @@ export class PageManager extends ContentManagerBase {
     this.topLevelDoc.ParentDoc = this.topLevelDoc;
     this.MsgMan().SetParentInfo(this.topLevelDoc);
 
-    this.debug().FuncEnd(this.Init.name);
+    this.Log().FuncEnd(this.Init.name);
   }
 }

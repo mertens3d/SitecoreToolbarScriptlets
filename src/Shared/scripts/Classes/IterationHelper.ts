@@ -1,4 +1,4 @@
-﻿import { BaseDebug } from './debug';
+﻿import { LoggerBase } from "./LoggerBase";
 import { SharedConst } from '../SharedConst';
 import { HelperBase } from './HelperBase';
 import { HelperHub } from '../Helpers/Helpers';

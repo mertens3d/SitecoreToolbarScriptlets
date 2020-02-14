@@ -14,20 +14,20 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   }
 
   __debugDataPublishChain(dataPublishChain: IDataPublishChain, nickname: string) {
-    this.debug().FuncStart(this.__debugDataPublishChain.name, nickname);
+    this.Log().FuncStart(this.__debugDataPublishChain.name, nickname);
 
-    this.debug().LogVal('docToPublish', this.debug().IsNullOrUndefined(dataPublishChain.docToPublish));
-    this.debug().LogVal('jqIframe', this.debug().IsNullOrUndefined(dataPublishChain.jqIframe) + ' ' + (dataPublishChain.jqIframe ? dataPublishChain.jqIframe.IframeElem.src : ''));
-    this.debug().LogVal('Iframe0blueIframe', this.debug().IsNullOrUndefined(dataPublishChain.Iframe0Blue) + ' ' + (dataPublishChain.Iframe0Blue ? dataPublishChain.Iframe0Blue.IframeElem.src : ''));
-    this.debug().LogVal('messageDialogIframeRed', this.debug().IsNullOrUndefined(dataPublishChain.messageDialogIframeRed) + ' ' + (dataPublishChain.messageDialogIframeRed ? dataPublishChain.messageDialogIframeRed.IframeElem.src : ''));
+    this.Log().LogVal('docToPublish', this.Log().IsNullOrUndefined(dataPublishChain.docToPublish));
+    this.Log().LogVal('jqIframe', this.Log().IsNullOrUndefined(dataPublishChain.jqIframe) + ' ' + (dataPublishChain.jqIframe ? dataPublishChain.jqIframe.IframeElem.src : ''));
+    this.Log().LogVal('Iframe0blueIframe', this.Log().IsNullOrUndefined(dataPublishChain.Iframe0Blue) + ' ' + (dataPublishChain.Iframe0Blue ? dataPublishChain.Iframe0Blue.IframeElem.src : ''));
+    this.Log().LogVal('messageDialogIframeRed', this.Log().IsNullOrUndefined(dataPublishChain.messageDialogIframeRed) + ' ' + (dataPublishChain.messageDialogIframeRed ? dataPublishChain.messageDialogIframeRed.IframeElem.src : ''));
 
-    this.debug().FuncEnd(this.__debugDataPublishChain.name);
+    this.Log().FuncEnd(this.__debugDataPublishChain.name);
 
     return dataPublishChain;
   }
 
   async PublishCE(docToPublish: IDataOneDoc) {
-    this.debug().FuncStart(this.PublishCE.name);
+    this.Log().FuncStart(this.PublishCE.name);
 
     var dataPublishChain: IDataPublishChain = {
       docToPublish: docToPublish,
@@ -52,10 +52,10 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
       .then((dataPublishChain: IDataPublishChain) => this.__waitForAndClickClose(dataPublishChain))
 
       .catch(ex => {
-        this.debug().Error(this.PublishCE.name, ex);
+        this.Log().Error(this.PublishCE.name, ex);
       });
 
-    this.debug().FuncEnd(this.PublishCE.name);
+    this.Log().FuncEnd(this.PublishCE.name);
   }
 
   async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
@@ -93,37 +93,37 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   }
 
   async GetDialogIframe0Blue(dataPublishChain: IDataPublishChain = null) {
-    this.debug().FuncStart(this.GetDialogIframe0Blue.name);
+    this.Log().FuncStart(this.GetDialogIframe0Blue.name);
 
     var IDataOneIframe: IDataOneIframe = this.ContentFactory().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
 
     dataPublishChain.Iframe0Blue = await this.Helpers().PromiseHelp.WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIframe0, IDataOneIframe );
 
-    this.debug().DebugDataOneIframe(dataPublishChain.Iframe0Blue);
+    this.Log().DebugDataOneIframe(dataPublishChain.Iframe0Blue);
 
-    this.debug().FuncEnd(this.GetDialogIframe0Blue.name);
+    this.Log().FuncEnd(this.GetDialogIframe0Blue.name);
 
     return dataPublishChain;
   }
 
   private __waitForThenFunc(selector: string, targetDoc: IDataOneDoc, dataPublishChain: IDataPublishChain, optionFunc: Function) {
     return new Promise<IDataPublishChain>(async (resolve, reject) => {
-      this.debug().FuncStart(this.__waitForThenFunc.name, selector);
-      this.debug().DebugIDataOneDoc(targetDoc);
+      this.Log().FuncStart(this.__waitForThenFunc.name, selector);
+      this.Log().DebugIDataOneDoc(targetDoc);
 
       var found: HTMLElement = null;
 
       var found = await this.Helpers().PromiseHelp.WaitForAndReturnFoundElem(targetDoc, selector);
 
       if (found) {
-        this.debug().Log('found');
+        this.Log().Log('found');
         if (optionFunc) {
-          this.debug().Log('executing func');
+          this.Log().Log('executing func');
           dataPublishChain = await optionFunc(found, dataPublishChain);
         }
         this.__debugDataPublishChain(dataPublishChain, this.__waitForThenFunc.name);
 
-        this.debug().FuncEnd(this.__waitForThenFunc.name, selector);
+        this.Log().FuncEnd(this.__waitForThenFunc.name, selector);
 
         resolve(dataPublishChain)
       } else {

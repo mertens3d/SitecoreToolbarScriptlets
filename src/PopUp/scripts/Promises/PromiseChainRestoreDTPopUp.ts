@@ -7,9 +7,9 @@ import { SharedConst } from "../../../Shared/scripts/SharedConst";
 
 export class PromiseChainRestoreDtPopUp extends PopUpManagerBase {
   constructor(hub: PopUpHub) {
-    hub.debug.FuncStart(PromiseChainRestoreDtPopUp.name);
+    hub.Log.FuncStart(PromiseChainRestoreDtPopUp.name);
     super(hub)
-    hub.debug.FuncEnd(PromiseChainRestoreDtPopUp.name);
+    hub.Log.FuncEnd(PromiseChainRestoreDtPopUp.name);
   }
 
   async GoToAndWaitForDesktopPage(promiseBucket: IDataBucketRestoreDesktop) {

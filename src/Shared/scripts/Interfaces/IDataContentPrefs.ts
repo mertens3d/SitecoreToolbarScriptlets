@@ -1,4 +1,4 @@
-﻿export interface IDataContentPrefs {
-  AutoSave: boolean;
-  MaxAutoSaveCount: number
-}
+﻿//export interface IDataContentPrefs {
+//  AutoSave: boolean;
+//  MaxAutoSaveCount: number
+//}

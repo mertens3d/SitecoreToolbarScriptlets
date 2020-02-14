@@ -1,4 +1,4 @@
-﻿export interface IDataDebugSettings {
-  ShowDebugData: boolean;
-  KeepDialogOpen: boolean;
-}
+﻿//export interface IDataLogSettings {
+//  ShowDebugData: boolean;
+//  KeepDialogOpen: boolean;
+//}

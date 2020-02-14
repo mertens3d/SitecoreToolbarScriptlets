@@ -34,14 +34,7 @@ export interface IPopUpConst {
         QuickPublish: string,
         UpdateNicknameB: string,
       }
-      Legend: {
-        LgndDebug: string,
-        LgndForeSite: string,
-        LgndHindSite: string,
-        LgndInSite: string,
-        LgndSettings: string,
-        LgndState: string,
-      }
+     
     },
   }
 
@@ -54,6 +47,7 @@ export interface IPopUpConst {
     MinMenuHeight: number,
     MinMenuWidth: number,
     MaxAutoSaveCount: number,
+    AutoSaveIntervalMin: number,
   },
   Notify: {
     Default: string,
@@ -63,35 +57,60 @@ export interface IPopUpConst {
   Selector: {
     Btn: {
       WindowClose: string,
-    }
+    },
+    Legend: {
+      LgndDebug: string,
+      LgndForeSite: string,
+      LgndHindSite: string,
+      LgndInSite: string,
+      LgndSettings: string,
+      LgndState: string,
+    },
     HS: {
       BuildStamp: string,
+      GenericSettingTest: string,
       DivState: string,
       iCBoxdSettingsAutoLogin: string,
-      iCBoxdSettingsShowDebugData: string,
+      iCBoxdSettingsShowLogData: string,
       IdFieldSetDebug: string,
       PrefAutoLogin: string,
       SelStateSnapShot: string,
       SettingAutoSaveEnabled: string,
+      SettingDebugKeepDialogOpen: string,
       SettingAutoSaveInterval: string,
+      SettingAutoSaveMaxCount: string,
       TaDebug: string,
+    }
+  },
+  Settings: {
+    Defaults: {
+      LgndDebug: boolean,
+      LgndForeSite: boolean,
+      LgndHindSite: boolean,
+      LgndInSite: boolean,
+      LgndSettings: boolean,
+      LgndState: boolean,
+      AutoSaveEnabled: boolean,
+      DebugKeepDialogOpen: boolean,
+
     }
   },
   Storage: {
     WindowRoot: string,
     SettingsSuffix: string,
+    KeyGenericSettings: string,
     Defaults: {
       bool: {
-        AutoSave: boolean,
+        AutoSaveEnabled: boolean,
         AutoLogin: boolean,
         DefaultDebugKeepDialogOpen: boolean,
-        DefaultShowDebugData: boolean,
+        DefaultShowLogData: boolean,
       }
     }
   },
   Timeouts: {
     WaitBeforeRemovingCompleteFlag: number,
-    AutoSaveInterval: number,
+    
     AutoLoginCheckInterval: number,
   },
  
