@@ -1,4 +1,4 @@
-import { IsScMode } from './IscMode';
+import { IScMode } from './IscMode';
 import { IScVerSpec } from './IScVerSpec';
 
 export interface IContentConst {
@@ -62,9 +62,9 @@ export interface IContentConst {
     }
   },
   ScMode: {
-    edit: IsScMode,
-    normal: IsScMode,
-    preview: IsScMode,
+    edit: IScMode,
+    normal: IScMode,
+    preview: IScMode,
   }
   Storage: {
     SettingsSuffix: string,

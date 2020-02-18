@@ -1,1 +1,0 @@
-{"version":3,"file":"SitecoreUiManager.js","sourceRoot":"","sources":["SitecoreUiManager.ts"],"names":[],"mappings":";;AAIA;IAIE,2BAAY,KAAiB;QAC3B,KAAK,CAAC,SAAS,CAAC,iBAAiB,CAAC,IAAI,CAAC,CAAC;QACxC,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;QACnB,KAAK,CAAC,OAAO,CAAC,iBAAiB,CAAC,IAAI,CAAC,CAAC;IACxC,CAAC;IASH,wBAAC;AAAD,CAAC,AAjBD,IAiBC;AAjBY,8CAAiB"}

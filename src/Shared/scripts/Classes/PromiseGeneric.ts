@@ -6,35 +6,36 @@ import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { scWindowType } from '../Enums/scWindowType';
 import { ResultSuccessFail } from './ResultSuccessFail';
 import { HelperBase } from './HelperBase';
+import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 
 export class PromiseHelper extends HelperBase {
   async  WaitForReadyIframe(dataOneIframe: IDataOneIframe) {
     return new Promise<IDataOneIframe>(async (resolve) => {
-      this.Debug.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort);
+      this.Log.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort);
 
-      this.Debug.DebugDataOneIframe(dataOneIframe);
+      this.Log.DebugDataOneIframe(dataOneIframe);
 
       var iterationJr: IterationHelper = new IterationHelper(this.HelperHub, this.WaitForReadyIframe.name);
 
       var isReady: boolean = false;
-      this.Debug.MarkerA();
+      this.Log.MarkerA();
 
       while (iterationJr.DecrementAndKeepGoing() && !isReady) {
-        this.Debug.MarkerB();
+        this.Log.MarkerB();
         var currentReadyState: string = dataOneIframe.IframeElem.contentDocument.readyState.toString();
         var isReadyStateComplete = currentReadyState === 'complete';
-        this.Debug.Log('currentReadyState : ' + currentReadyState);;
+        this.Log.Log('currentReadyState : ' + currentReadyState);;
 
         //if (currentReadyState !== 'uninitialized') {
         //  this.Debug.Log('id: ' + dataOneIframe.IframeElem.id)
         //}
 
-        this.Debug.MarkerC();
+        this.Log.MarkerC();
 
-        this.Debug.Log('isReadyStateComplete: ' + isReadyStateComplete);
+        this.Log.Log('isReadyStateComplete: ' + isReadyStateComplete);
 
         if (isReadyStateComplete) {
-          this.Debug.Log('toReturn A is true');
+          this.Log.Log('toReturn A is true');
           isReady = true;
           dataOneIframe.ContentDoc = this.HelperHub.FactoryHelp.DataOneContentDocFactoryFromIframe(dataOneIframe.IframeElem, dataOneIframe.ContentDoc.ParentDoc,
             dataOneIframe.Nickname);
@@ -43,32 +44,32 @@ export class PromiseHelper extends HelperBase {
         }
       }
 
-      this.Debug.DebugDataOneIframe(dataOneIframe);
+      this.Log.DebugDataOneIframe(dataOneIframe);
 
-      this.Debug.FuncEnd(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' : ' + currentReadyState + ' is ready: ' + isReady.toString());;
+      this.Log.FuncEnd(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' : ' + currentReadyState + ' is ready: ' + isReady.toString());;
       resolve(dataOneIframe);
     });
   }
 
   async WaitForPageReadyNative(targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {
-      this.Debug.FuncStart(this.WaitForPageReadyNative.name);
+      this.Log.FuncStart(this.WaitForPageReadyNative.name);
 
       var result: ResultSuccessFail = new ResultSuccessFail();
 
-      this.Debug.DebugIDataOneDoc(targetDoc);
+      this.Log.DebugIDataOneDoc(targetDoc);
 
       var iterationJr: IterationHelper = new IterationHelper(this.HelperHub, this.WaitForPageReadyNative.name);
 
       var isReady: boolean = false;
-      this.Debug.MarkerA();
+      this.Log.MarkerA();
 
       while (iterationJr.DecrementAndKeepGoing() && !isReady) {
-        this.Debug.MarkerB();
+        this.Log.MarkerB();
         var currentReadyState: string = targetDoc.Document.readyState.toString();
         var isReadyStateComplete = currentReadyState === 'complete';
-        this.Debug.LogVal('readyState', currentReadyState);;
-        this.Debug.LogVal('isReadyStateComplete', isReadyStateComplete);
+        this.Log.LogVal('readyState', currentReadyState);;
+        this.Log.LogVal('isReadyStateComplete', isReadyStateComplete);
 
         if (isReadyStateComplete) {
           isReady = true;
@@ -83,7 +84,7 @@ export class PromiseHelper extends HelperBase {
         result.RejectMessage = iterationJr.IsExhaustedMsg;
       }
 
-      this.Debug.FuncEnd(this.WaitForPageReadyNative.name, 'ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());;
+      this.Log.FuncEnd(this.WaitForPageReadyNative.name, 'ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());;
 
       if (result.Succeeded) {
         resolve();
@@ -101,7 +102,7 @@ export class PromiseHelper extends HelperBase {
           if (foundElem) {
             iframeObj.IframeElem = <HTMLIFrameElement>foundElem;
 
-            this.Debug.DebugDataOneIframe(iframeData);
+            this.Log.DebugDataOneIframe(iframeData);
             return iframeData;
           }
         })
@@ -115,23 +116,23 @@ export class PromiseHelper extends HelperBase {
 
   async WaitForAndReturnFoundElem(targetDoc: IDataOneDoc, selector: string, overrideIterCount = 8) {
     return new Promise<HTMLElement>(async (resolve, reject) => {
-      this.Debug.FuncStart(this.WaitForAndReturnFoundElem.name, 'selector: ' + selector + ' nickname: ' + targetDoc.Nickname);
+      this.Log.FuncStart(this.WaitForAndReturnFoundElem.name, 'selector: ' + selector + ' nickname: ' + targetDoc.Nickname);
 
       var found: HTMLElement = null;
 
       var iterationJr = new IterationHelper(this.HelperHub, this.WaitForAndReturnFoundElem.name, overrideIterCount);
 
       while (!found && iterationJr.DecrementAndKeepGoing()) {
-        this.Debug.LogVal('targetDoc.Document', targetDoc.Document.toString());
-        this.Debug.LogVal('targetDoc.Document.location', targetDoc.Document.location.toString());
-        this.Debug.LogVal('targetDoc.Document.location.href', targetDoc.Document.location.href);
+        this.Log.LogVal('targetDoc.Document', targetDoc.Document.toString());
+        this.Log.LogVal('targetDoc.Document.location', targetDoc.Document.location.toString());
+        this.Log.LogVal('targetDoc.Document.location.href', targetDoc.Document.location.href);
         found = targetDoc.Document.querySelector(selector);
 
         if (found) {
-          this.Debug.Log('found');
+          this.Log.Log('found');
 
-          this.Debug.LogVal('found.style.display', found.style.display);
-          this.Debug.FuncEnd(this.WaitForAndReturnFoundElem.name, selector + targetDoc.Document.location.href);
+          this.Log.LogVal('found.style.display', found.style.display);
+          this.Log.FuncEnd(this.WaitForAndReturnFoundElem.name, selector + targetDoc.Document.location.href);
 
           resolve(found);
         } else {
@@ -140,7 +141,7 @@ export class PromiseHelper extends HelperBase {
       }
 
       if (!found && iterationJr.IsExhausted) {
-        this.Debug.FuncEnd(this.WaitForAndReturnFoundElem.name, selector + targetDoc.Document.location.href);
+        this.Log.FuncEnd(this.WaitForAndReturnFoundElem.name, selector + targetDoc.Document.location.href);
         reject('exhausted');
       }
     });
@@ -148,12 +149,12 @@ export class PromiseHelper extends HelperBase {
 
   WaitForAndClickWithPayload(selector: string, targetDoc: IDataOneDoc, payload: any) {
     return new Promise<any>(async (resolve, reject) => {
-      this.Debug.FuncStart(this.WaitForAndClickWithPayload.name, selector);
+      this.Log.FuncStart(this.WaitForAndClickWithPayload.name, selector);
 
       await this.WaitForThenClick([selector], targetDoc)
         .then(() => resolve(payload))
         .catch(ex => {
-          this.Debug.Error(this.WaitForAndClickWithPayload.name, ex);
+          this.Log.Error(this.WaitForAndClickWithPayload.name, ex);
           reject(ex);
         });
     });
@@ -166,7 +167,7 @@ export class PromiseHelper extends HelperBase {
       let success: ResultSuccessFail = new ResultSuccessFail();
 
       while (browserTab.status !== 'complete' && iterHelper.DecrementAndKeepGoing()) {
-        this.Debug.LogVal('tab status', browserTab.status);
+        this.Log.LogVal('tab status', browserTab.status);
         await iterHelper.Wait;
       }
 
@@ -187,14 +188,20 @@ export class PromiseHelper extends HelperBase {
     });
   }
 
-  TabChainSetHrefWaitForComplete(href: string, targetTab: IDataBrowserTab) {
+  TabChainSetHrefWaitForComplete(href: AbsoluteUrl, targetTab: IDataBrowserTab) {
     return new Promise(async (resolve, reject) => {
-      this.Debug.FuncStart(this.TabChainSetHrefWaitForComplete.name, href);
+      this.Log.FuncStart(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
 
-      await browser.tabs.update(targetTab.Tab.id, { url: href })
-        .then(() => this.TabWaitForReadyStateCompleteNative(targetTab.Tab))
-
-      this.Debug.FuncEnd(this.TabChainSetHrefWaitForComplete.name, href);
+      try {
+        await browser.tabs.update(targetTab.Tab.id, { url: href.AbsUrl })
+          .then(() => this.TabWaitForReadyStateCompleteNative(targetTab.Tab))
+          .then(resolve)
+          .catch(reject);
+      } catch (e) {
+        this.Log.Error(this.TabChainSetHrefWaitForComplete.name, e.toString());
+        reject(e);
+      }
+      this.Log.FuncEnd(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
     });
   }
 
@@ -254,15 +261,15 @@ export class PromiseHelper extends HelperBase {
 
   async RaceWaitAndClick(selector: IScVerSpec, targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {
-      this.Debug.FuncStart(this.RaceWaitAndClick.name);
+      this.Log.FuncStart(this.RaceWaitAndClick.name);
 
-     await this.WaitForThenClick([selector.sc920, selector.sc820], targetDoc)
+      await this.WaitForThenClick([selector.sc920, selector.sc820], targetDoc)
         .then(() => {
-          this.Debug.FuncEnd(this.RaceWaitAndClick.name);
+          this.Log.FuncEnd(this.RaceWaitAndClick.name);
           resolve();
         })
         .catch((ex) => {
-          this.Debug.FuncEnd(this.RaceWaitAndClick.name);
+          this.Log.FuncEnd(this.RaceWaitAndClick.name);
           reject(ex);
         });
     });
@@ -271,7 +278,7 @@ export class PromiseHelper extends HelperBase {
   WaitForThenClick(selector: string[], targetDoc: IDataOneDoc) {
     return new Promise<void>(async (resolve, reject) => {
       if (targetDoc) {
-        this.Debug.FuncStart(this.WaitForThenClick.name, selector.length);
+        this.Log.FuncStart(this.WaitForThenClick.name, selector.length);
 
         var found: HTMLElement = null;
 
@@ -286,10 +293,10 @@ export class PromiseHelper extends HelperBase {
           }
 
           if (found) {
-            this.Debug.Log('found and clicking');
+            this.Log.Log('found and clicking');
             found.click();
 
-            this.Debug.FuncEnd(this.WaitForThenClick.name, selector.length);
+            this.Log.FuncEnd(this.WaitForThenClick.name, selector.length);
             resolve();
           } else {
             await iterationJr.Wait()
@@ -299,7 +306,7 @@ export class PromiseHelper extends HelperBase {
         reject();
       }
 
-      this.Debug.FuncEnd(this.WaitForThenClick.name, selector.length);
+      this.Log.FuncEnd(this.WaitForThenClick.name, selector.length);
       if (!found && iterationJr.IsExhausted) {
         reject('exhausted');
       }

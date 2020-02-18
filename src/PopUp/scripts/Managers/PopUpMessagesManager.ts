@@ -103,8 +103,6 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     });//promise
   }// function
 
-
-
   async WaitForListeningTab(targetTab: IDataBrowserTab) {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.WaitForListeningTab.name);
@@ -117,18 +115,19 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       msg.CurrentContentPrefs = this.SettingsMan().GetOnlyContentPrefs();
 
       while (iterationJr.DecrementAndKeepGoing() && !result.Succeeded) {
+        this.Log().Log('Pinging');
         await this.OnePing(targetTab, msg)
           .then(() => {
-            this.Log().Log('succeeded a');
+            //this.Log().Log('succeeded a');
             result.Succeeded = true;
           })
           .catch((ex) => {
-            this.Log().Log('failed a ' + ex.toString());
+            this.Log().LogVal('failed', ex.toString());
             result.Succeeded = false;
           });
 
         if (!result.Succeeded) {
-          this.Log().Log('Ping did not succeed, trying again');
+          this.Log().Log('Ping did not succeed, waiting');
           await iterationJr.Wait();
           this.Log().Log('Done waiting');
         }
@@ -193,7 +192,6 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     this.Log().FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
 
     msgPlayload.CurrentContentPrefs = await (await this.SettingsMan().GetOnlyContentPrefs());// this.PopAtticMan().CurrentSettings()).ContentPrefs;
-
 
     this.WaitForListeningTab(targetTab)
       .then(() => this.SendMessageToSingleTab(targetTab, msgPlayload))

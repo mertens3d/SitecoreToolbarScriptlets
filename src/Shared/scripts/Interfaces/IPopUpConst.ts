@@ -1,10 +1,10 @@
-﻿import { IsScMode } from "../../../Shared/Scripts/Interfaces/IscMode";
+﻿import { IScMode } from "../../../Shared/Scripts/Interfaces/IscMode";
 
 export interface IPopUpConst {
   ScMode: {
-    edit: IsScMode,
-    normal: IsScMode,
-    preview: IsScMode,
+    edit: IScMode,
+    normal: IScMode,
+    preview: IScMode,
   },
   ElemId: {
     textAreaFeedback: string,

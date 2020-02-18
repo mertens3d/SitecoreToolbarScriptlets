@@ -19,7 +19,7 @@ export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
     this.Data.SnapShotSettings = {
       SnapShotNewNickname: '',
       Flavor: SnapShotFlavor.Unknown,
-      CurrentPageType: popHub.TabMan.CurrentTabData.ScWindowType
+      CurrentPageType: popHub.TabMan.CurrentTabData.UrlParts.ScWindowType
     }
 
     popHub.Log.Log('constructor done msgfrompopup');

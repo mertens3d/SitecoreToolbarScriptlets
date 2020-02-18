@@ -16,12 +16,12 @@ export class IterationHelper extends HelperBase{
 
     super(helperHub)
     if (!maxIterations) {
-      maxIterations = SharedConst.SharedConst.IterHelper.MaxCount.Default;
+      maxIterations = SharedConst.Const.IterHelper.MaxCount.Default;
     }
 
     this.__maxIterations = maxIterations;
     this.__currentIteration = maxIterations;
-    this.__timeout = SharedConst.SharedConst.IterHelper.Timeouts.Default;
+    this.__timeout = SharedConst.Const.IterHelper.Timeouts.Default;
     this.__nickName = nickname;
     this.IsExhausted = false;
 
@@ -34,11 +34,11 @@ export class IterationHelper extends HelperBase{
 
     if ( this.__currentIteration > 0) {
       this.__currentIteration -= 1;
-      this.__timeout += this.__timeout * SharedConst.SharedConst.IterHelper.GrowthPerIteration;
-      if (this.__timeout > SharedConst.SharedConst.IterHelper.Timeouts.Max) {
-        this.__timeout = SharedConst.SharedConst.IterHelper.Timeouts.Max;
+      this.__timeout += this.__timeout * SharedConst.Const.IterHelper.GrowthPerIteration;
+      if (this.__timeout > SharedConst.Const.IterHelper.Timeouts.Max) {
+        this.__timeout = SharedConst.Const.IterHelper.Timeouts.Max;
       }
-      this.Debug.Log('DecrementAndKeepGoing: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations + ' | timeout: ' + this.__timeout);
+      this.Log.Log('DecrementAndKeepGoing: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations + ' | timeout: ' + this.__timeout);
 
       toReturn = true;
     } else {
@@ -50,23 +50,23 @@ export class IterationHelper extends HelperBase{
   }
 
   NotifyExhausted() {
-    this.Debug.Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
+    this.Log.Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
   }
   WaitAndThen(timeoutFunction: Function) {
-    this.Debug.FuncStart(this.WaitAndThen.name, this.__nickName + ' ' + timeoutFunction.name);
+    this.Log.FuncStart(this.WaitAndThen.name, this.__nickName + ' ' + timeoutFunction.name);
     var self = this;
     setTimeout(timeoutFunction(), self.__timeout);
-    this.Debug.FuncEnd(this.WaitAndThen.name, this.__nickName);
+    this.Log.FuncEnd(this.WaitAndThen.name, this.__nickName);
   }
 
   Wait(): Promise<void> {
-    this.Debug.FuncStart(this.Wait.name, this.__nickName);
+    //this.Log.FuncStart(this.Wait.name, this.__nickName);
 
     if (!this.OperationCancelled) {
       return new Promise((resolve) => {
         setTimeout(resolve, this.__timeout);
       });
     }
-    this.Debug.FuncEnd(this.WaitAndThen.name, this.__nickName);
+    //this.Log.FuncEnd(this.WaitAndThen.name, this.__nickName);
   }
 }

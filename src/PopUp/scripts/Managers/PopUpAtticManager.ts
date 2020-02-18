@@ -3,7 +3,6 @@ import { PopConst } from "../Classes/PopConst";
 import { IOneGenericSettingForStorage } from "../../../Shared/scripts/Classes/IOneGenericSettingForStorage";
 
 export class PopUpAtticManager extends PopUpManagerBase {
-
   Init() {
     this.Log().FuncStart(PopUpAtticManager.name, this.Init.name);
     this.Log().FuncEnd(PopUpAtticManager.name, this.Init.name);
@@ -21,30 +20,36 @@ export class PopUpAtticManager extends PopUpManagerBase {
   //}
 
   async ReadGenericSettings(): Promise<IOneGenericSettingForStorage[]> {
-    let toReturn: IOneGenericSettingForStorage[];
+    this.Log().FuncStart(this.ReadGenericSettings.name);
+    let toReturn: IOneGenericSettingForStorage[] = [];
 
-    await browser.storage.local.get().then((storageResults: browser.storage.StorageObject) => {
-      var storageKeys: string[] = Object.keys(storageResults);
+    try {
+      await browser.storage.local.get().then((storageResults: browser.storage.StorageObject) => {
+        var storageKeys: string[] = Object.keys(storageResults);
 
-      for (let oneKey of storageKeys) {
-        if (oneKey === PopConst.PopConst.Storage.KeyGenericSettings) {
-          let storedValue: browser.storage.StorageValue = storageResults[oneKey];
-          if (storedValue) {
-            toReturn = <IOneGenericSettingForStorage[]>JSON.parse(storedValue.toString());
+        for (let oneKey of storageKeys) {
+          if (oneKey === PopConst.Const.Storage.KeyGenericSettings) {
+            let storedValue: browser.storage.StorageValue = storageResults[oneKey];
+            if (storedValue) {
+              toReturn = <IOneGenericSettingForStorage[]>JSON.parse(storedValue.toString());
+            }
           }
         }
-      }
-    });
+      });
+    } catch (e) {
+      this.Log().Error(this.ReadGenericSettings.name, e.toString());
+    }
 
+    this.Log().FuncEnd(this.ReadGenericSettings.name);
     return toReturn;
   }
 
-  WriteGenericSettings(settingsToWrite: IOneGenericSettingForStorage[]) :void{
+  WriteGenericSettings(settingsToWrite: IOneGenericSettingForStorage[]): void {
     this.Log().FuncStart(this.WriteGenericSettings.name);
     this.Log().LogAsJsonPretty('settings', settingsToWrite);
 
     let storageObj: browser.storage.StorageObject = {
-      [PopConst.PopConst.Storage.KeyGenericSettings]: JSON.stringify(settingsToWrite)
+      [PopConst.Const.Storage.KeyGenericSettings]: JSON.stringify(settingsToWrite)
     }
     browser.storage.local.set(storageObj);
     this.Log().FuncEnd(this.WriteGenericSettings.name);
@@ -56,7 +61,6 @@ export class PopUpAtticManager extends PopUpManagerBase {
   //    KeepDialogOpen: this.Const().Storage.Defaults.bool.DefaultDebugKeepDialogOpen,
   //    ShowDebugData: this.Const().Storage.Defaults.bool.DefaultShowLogData,
   //  }
-
 
   //  let toReturn: IDataPopUpSettings = {
   //    LogSettings: defaultDebugSettings,

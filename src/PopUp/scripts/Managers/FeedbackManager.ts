@@ -1,12 +1,13 @@
 ﻿import { PopUpManagerBase } from './PopUpManagerBase';
 import { PopUpHub } from './PopUpHub';
+import { PopConst } from '../Classes/PopConst';
 
 export class FeedbackManager extends PopUpManagerBase {
   constructor(popHub: PopUpHub) {
     super(popHub);
   }
   __getTextArea(): HTMLTextAreaElement {
-    return <HTMLTextAreaElement>document.getElementById(this.Const().ElemId.textAreaFeedback);
+    return <HTMLTextAreaElement>document.getElementById(PopConst.Const.ElemId.textAreaFeedback);
   }
 
 

@@ -4,7 +4,6 @@ import { PopUpMessagesManager } from "./PopUpMessagesManager";
 import { PopUpAtticManager } from "./PopUpAtticManager";
 import { LoggerPopUp } from "../Classes/LoggerPopUp";
 
-
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 import { SettingsManager } from "./SettingsManager";
 import { EventManager } from "./EventManager";
@@ -15,18 +14,16 @@ import { BrowserManager } from "./BrowserManager";
 //import { PopUpFactoryManager } from "./FactoryManager";
 
 export class PopUpManagerBase {
-
   PopHub: PopUpHub;
+  IsInit: Boolean = false;
 
   constructor(popHub: PopUpHub) {
     this.PopHub = popHub;
-    
-    
   }
 
   UiMan(): UiManager { return this.PopHub.UiMan; }
   Log(): LoggerPopUp { return this.PopHub.Log; }
-  Const(): IPopUpConst { return this.PopHub.PopUpConst; }
+  //Const(): IPopUpConst { return this.PopHub.PopUpConst; }
   MsgMan(): PopUpMessagesManager { return this.PopHub.PopMsgMan; }
   PopAtticMan(): PopUpAtticManager { return this.PopHub.PopUpAtticMan; }
   Helpers(): HelperHub { return this.PopHub.Helpers; }
@@ -35,5 +32,4 @@ export class PopUpManagerBase {
   TabMan(): TabManager { return this.PopHub.TabMan; }
   BrowserMan(): BrowserManager { return this.PopHub.BrowserMan; }
   SettingsMan(): SettingsManager { return this.PopHub.SettingsMan; }
-
 }

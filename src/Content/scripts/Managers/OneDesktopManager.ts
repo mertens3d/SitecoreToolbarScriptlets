@@ -11,6 +11,7 @@ import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { OneCEManager } from './OneCEManager';
 import { IDataDtState } from '../../../Shared/scripts/Interfaces/IDataDtState';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 
 export class OneDesktopManager extends ContentManagerBase {
   associatedDoc: IDataOneDoc;
@@ -99,6 +100,7 @@ export class OneDesktopManager extends ContentManagerBase {
 
     var toReturn: IDataOneIframe[] = [];
     var iframeAr = this.associatedDoc.Document.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent);
+    this.Log().LogVal('found iframes count', iframeAr.length);
     if (iframeAr) {
       this.Log().Log('iframeAr: ' + iframeAr.length);
       for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
@@ -108,7 +110,12 @@ export class OneDesktopManager extends ContentManagerBase {
         var dataOneIframe: IDataOneIframe = this.ContentFactory().DateOneIframeFactory(iframeElem, this.associatedDoc, 'desktop Iframe_' + ifrIdx);
         toReturn.push(dataOneIframe);
       }
+    } else {
+      this.Log().Log('no iframes found');
     }
+
+    this.Log().LogVal('iframe count', toReturn.length);
+
     this.Log().FuncEnd(this.GetAllLiveIframeData.name, 'count:  ' + toReturn.length);
     return toReturn;
   }

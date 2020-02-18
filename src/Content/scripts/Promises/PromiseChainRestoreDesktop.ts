@@ -8,6 +8,7 @@ import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 
 export class PromiseChainRestoreDesktop extends ContentManagerBase {
   constructor(hub: ContentHub) {

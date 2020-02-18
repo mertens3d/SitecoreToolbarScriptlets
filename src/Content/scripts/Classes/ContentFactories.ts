@@ -32,7 +32,9 @@ export class ContentFactories extends ContentManagerBase {
     if (pageType === scWindowType.Desktop) {
       var currState = this.OneScWinMan().OneDesktopMan.GetStateDesktop();
       if (currState) {
-        toReturnCeState = currState.ActiveCeMan.GetStateCe(this.Helpers().GuidHelp.EmptyGuid());
+        if (currState.ActiveCeMan) {
+          toReturnCeState = currState.ActiveCeMan.GetStateCe(this.Helpers().GuidHelp.EmptyGuid());
+        }
       } else {
         this.Log().Error(this.GetCurrentCeState.name, 'No current state returned');
       }

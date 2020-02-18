@@ -1,7 +1,7 @@
 ﻿import { ISharedConst } from "./Interfaces/ISharedConst";
 
 export class SharedConst {
-  static SharedConst: ISharedConst = {
+  static Const: ISharedConst = {
     IterHelper: {
       GrowthPerIteration: 0.5,
 
@@ -18,6 +18,7 @@ export class SharedConst {
       ContentEditor: /Content.*?Editor/ig,
       CleanGuid: /{|-|}/ig,
       NbSp: /&nbsp;/ig,
+      QueryStrSeparatorQuest: /\?/gi,
       PageType: {
         //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
         Desktop: /.*default.aspx/ig,

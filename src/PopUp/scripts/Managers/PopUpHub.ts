@@ -26,7 +26,7 @@ export class PopUpHub {
   LocMan: LocationManager;
   //FactMan: PopUpFactoryManager;
 
-  PopUpConst: IPopUpConst;
+  //PopUpConst: IPopUpConst;
 
   Helpers: HelperHub;
   BrowserMan: BrowserManager;
@@ -40,7 +40,7 @@ export class PopUpHub {
     this.EventMan = new EventManager(this);
     this.Helpers = new HelperHub(this.Log);
     this.LocMan = new LocationManager(this);
-    this.PopUpConst = PopConst.PopConst;
+    //this.PopUpConst = PopConst.Const;
 
     this.FeedbackMan = new FeedbackManager(this);
     this.SettingsMan = new SettingsManager(this);
@@ -53,11 +53,11 @@ export class PopUpHub {
   async init() {
     this.Log.FuncStart(PopUpHub.name, this.init.name);
     await this.TabMan.Init();
-   await this.SettingsMan.Init();
+    this.PopUpAtticMan.Init(); //before PopMsgMan
+   await this.SettingsMan.Init();//after attic (?)
     this.Log.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
     this.EventMan.Init();
     this.Log.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
-    this.PopUpAtticMan.Init(); //before PopMsgMan
     this.Log.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
 
     this.PopMsgMan.Init(); // before uiman.Init

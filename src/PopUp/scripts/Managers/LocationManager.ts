@@ -2,7 +2,7 @@ import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowser
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
-import { IsScMode } from '../../../Shared/scripts/Interfaces/IscMode';
+import { IScMode } from '../../../Shared/scripts/Interfaces/IscMode';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { PopUpManagerBase } from './PopUpManagerBase';
 import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
@@ -11,6 +11,7 @@ import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
+import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 
 export class LocationManager extends PopUpManagerBase {
   constructor(hub: PopUpHub) {
@@ -25,9 +26,9 @@ export class LocationManager extends PopUpManagerBase {
     var iteration: IterationHelper = new IterationHelper(this.Helpers(), this.ChangeLocationSwitchBoard.name);
 
     if (iteration.DecrementAndKeepGoing()) {
-      var currentState = this.TabMan().CurrentTabData.ScWindowType;
+      var currentScWindowType: scWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
 
-      if (this.TabMan().CurrentTabData.ScWindowType === scWindowType.LoginPage) {
+      if (this.TabMan().CurrentTabData.UrlParts.ScWindowType === scWindowType.LoginPage) {
         var self = this;
         var callbackOnComplete: Function = () => {
           this.Log().Log('callback triggered');
@@ -43,108 +44,79 @@ export class LocationManager extends PopUpManagerBase {
         //}, self.Const().Timeouts.TimeoutChangeLocation);
       }
 
-      else if (currentState === scWindowType.Launchpad || currentState === scWindowType.ContentEditor || currentState === scWindowType.Desktop) {
+      else if (currentScWindowType === scWindowType.Launchpad || currentScWindowType === scWindowType.ContentEditor || currentScWindowType === scWindowType.Desktop) {
         var self = this;
+        this.TabMan().CurrentTabData.UrlParts = this.Helpers().UrlHelp.SetFilePathFromWindowType(this.TabMan().CurrentTabData.UrlParts, desiredPageType);
+        var absUrl: AbsoluteUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
+
         var callBackOnSuccessfulHrefChange: Function = function () {
           self.Log().Log('Callback triggered');
-          //targetWindow = self.TabMan().SetWindowDataToCurrent(targetWindow.Window, targetWindow.DataDocSelf.Nickname);
-
           self.ChangeLocationSwitchBoard(desiredPageType)
         }
 
-        if (desiredPageType === scWindowType.Desktop && currentState !== scWindowType.Desktop) {
-          this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(SharedConst.SharedConst.UrlSuffix.CE, this.TabMan().CurrentTabData)
-            //this.Helpers().PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, targetWindow, desiredPageType)
-            .then(() => this.MsgMan().WaitForListeningTab(this.TabMan().CurrentTabData))
-            //.then(() => this.MsgMan().wa)
-            .then(() => callBackOnSuccessfulHrefChange);
-        }
-
-        else if (desiredPageType === scWindowType.ContentEditor && currentState !== scWindowType.ContentEditor) {
-          this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(SharedConst.SharedConst.UrlSuffix.CE, this.TabMan().CurrentTabData)
-            //this.Helpers().PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.CE, targetWindow, desiredPageType)
-            .then(() => callbackOnComplete);
-        }
-
-        else if (currentState === scWindowType.Desktop && desiredPageType === scWindowType.Desktop) {
-          this.Log().Log('On Desktop');
-
-          //todo this.DesktopMan().TriggerRedButton(targetWindow.DataDocSelf);
-        }
+        this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(absUrl, this.TabMan().CurrentTabData)
+          .then(() => this.MsgMan().WaitForListeningTab(this.TabMan().CurrentTabData))
+          .then(() => callBackOnSuccessfulHrefChange);
       }
     }
     this.Log().FuncEnd(this.ChangeLocationSwitchBoard.name);
   }
 
-  async SetScModeFromEditPrevNorm(newValue: IsScMode, currentPageType: scWindowType) {
-    var currentTabHref: string = this.TabMan().CurrentTabData.Tab.url;
-    var newHref = currentTabHref.replace('=normal', newValue.AsString).replace('=preview', newValue.AsString).replace('=edit', newValue.AsString);
-    await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData);
-  }
 
 
-  BuildEditPrevNormUrl(scMode: IsScMode) {
-    let contState: ICurrStateContent = this.UiMan().CurrContentState;
-
-    let toReturn:string = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
-      + '/?sc_itemid=' + contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid
-      + '&sc_mode=' + scMode.AsString
-      + '&sc_lang=en'
-      + 'sc_site=website';
-
-    return toReturn;
-  }
-
-
-  SetScModeFromCeDt(newValue: IsScMode, currentPageType: scWindowType) {
+  async SetScModeFromCeDt(newValue: IScMode, currentPageType: scWindowType) {
     this.Log().FuncStart(this.SetScModeFromCeDt.name, newValue.AsString);
     var dataOneDoc: IDataOneDoc = null;
 
     if (currentPageType == scWindowType.Desktop) {
-
       let contState: ICurrStateContent = this.UiMan().CurrContentState;
       if (contState && contState.ActiveCe && contState.ActiveCe.ActiveNode) {
-
         let currentNodeId: IDataOneTreeNode = contState.ActiveCe.ActiveNode;
         //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
         //let editUrl = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
         //  + '/?sc_itemid=' + contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid + '&sc_mode=preview&sc_lang=en&sc_site=website';
 
-        let editUrl = this.BuildEditPrevNormUrl(newValue);
+        let newUrlParts = this.Helpers().UrlHelp.CloneUrlParts(this.TabMan().CurrentTabData.UrlParts);
+        newUrlParts = this.Helpers().UrlHelp.BuildEditPrevNormUrl(newValue, contState, this.TabMan().CurrentTabData.UrlParts);
+        let editUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(newUrlParts)
 
-        this.BrowserMan().CreateNewTab(editUrl);
+        await this.BrowserMan().CreateNewTab(editUrl);
 
-      //await this.MsgMan().SendMessageToContentTab()
+        //await this.MsgMan().SendMessageToContentTab()
 
-      //todo - put back?
-      //var currentIframe = this.DesktopMan().GetActiveDesktopIframeData();
-      //if (currentIframe) {
-      //  dataOneDoc = currentIframe.ContentDoc;
-      //}
+        //todo - put back?
+        //var currentIframe = this.DesktopMan().GetActiveDesktopIframeData();
+        //if (currentIframe) {
+        //  dataOneDoc = currentIframe.ContentDoc;
+        //}
       }
     }
     this.Log().FuncEnd(this.SetScModeFromCeDt.name, newValue.AsString);
   }
 
-  SetScMode(newValue: IsScMode, useOrigWindow: boolean) {
-    return new Promise(async () => {
+  SetScMode(newValue: IScMode) {
+    return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.SetScMode.name, newValue.AsString);
 
-      var itemGuid: IGuid;
-      var targetWindow: IDataBrowserTab;
-
-      var currentPageType: scWindowType = this.TabMan().CurrentTabData.ScWindowType;
+      var currentPageType: scWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
 
       if (currentPageType === scWindowType.ContentEditor
         ||
         currentPageType === scWindowType.Desktop
       ) {
-        await this.SetScModeFromCeDt(newValue, currentPageType);
+        await this.SetScModeFromCeDt(newValue, currentPageType)
+          .then(resolve)
+          .catch(reject);
       }
       else if (currentPageType == scWindowType.Edit
         || currentPageType == scWindowType.Normal
         || currentPageType == scWindowType.Preview) {
-        await this.SetScModeFromEditPrevNorm(newValue, currentPageType);
+        this.TabMan().CurrentTabData.UrlParts = this.Helpers().UrlHelp.SetScModeFromEditPrevNorm(newValue, this.TabMan().CurrentTabData.UrlParts);
+
+        let newHref: AbsoluteUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
+        await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData)
+          .then(resolve)
+          .catch(reject);
       }
       this.Log().FuncEnd(this.SetScMode.name);
     });

@@ -1,7 +1,10 @@
 ﻿export enum MenuCommand {
-    Edit,
+    ScModeEdit,
     Unknown,
     MarkFavorite,
     CloseWindow,
-    TakeSnapShot
+    TakeSnapShot,
+    AddCeTab,
+    ScModeNormal,
+    ScModePrev
 }

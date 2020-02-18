@@ -2,6 +2,8 @@
 import { SettingType } from "../Enums/SettingType";
 import { SettingFlavor } from "../Enums/SettingFlavor";
 
+
+
 export interface IOneGenericSetting {
   DataType: SettingType,
   ValueAsObj: any,

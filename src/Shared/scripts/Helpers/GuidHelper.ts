@@ -36,16 +36,16 @@ export class GuidHelper  extends HelperBase {
     if (Id && Id.AsString.length > this.ShortGuidLength) {
       toReturn = Id.AsString.substr(0, this.ShortGuidLength);
     } else {
-      this.Debug.DebugIGuid(Id);
-      this.Debug.LogVal('Length', Id.AsString.length);
-      this.Debug.LogVal('ShortLength', this.ShortGuidLength);
+      this.Log.DebugIGuid(Id);
+      this.Log.LogVal('Length', Id.AsString.length);
+      this.Log.LogVal('ShortLength', this.ShortGuidLength);
     }
     return toReturn;
   }
 
 
   FormatJustNumbers(str: string): string{
-    return str.replace(SharedConst.SharedConst.Regex.CleanGuid, '');
+    return str.replace(SharedConst.Const.Regex.CleanGuid, '');
   }
 
   FormatAsBracedGuid(str: string) :string {

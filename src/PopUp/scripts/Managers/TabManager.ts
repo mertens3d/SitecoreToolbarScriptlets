@@ -2,11 +2,8 @@
 import { PopUpHub } from './PopUpHub';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
-import { SharedConst } from '../../../Shared/scripts/SharedConst';
-import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 
 export class TabManager extends PopUpManagerBase {
-  
   CurrentTabData: IDataBrowserTab;
 
   constructor(hub: PopUpHub) {
@@ -16,19 +13,12 @@ export class TabManager extends PopUpManagerBase {
   }
 
   MakeTabData(rawTab: browser.tabs.Tab): IDataBrowserTab {
-
     let toReturn: IDataBrowserTab = {
-      ScWindowType: scWindowType.Unknown,
       Tab: rawTab,
-      UrlParts: {
-        FullUrl: '',
-        Hostname: '',
-        QueryString: ''
-      }
+      UrlParts: this.Helpers().UrlHelp.MakeUrlParts({ AbsUrl: rawTab.url }),
     }
 
     return toReturn;
-
   }
 
   async Init() {
@@ -36,16 +26,13 @@ export class TabManager extends PopUpManagerBase {
 
     await this.GetAssociatedTab()
       .then((tabData: IDataBrowserTab) => {
-
-
         this.CurrentTabData = tabData;
-        this.CurrentTabData.UrlParts = StaticHelpers.MakeUrlParts(tabData.Tab.url);
+        this.CurrentTabData.UrlParts = this.Helpers().UrlHelp.MakeUrlParts({ AbsUrl: tabData.Tab.url });
       }
 
+      );
 
-    );
-    
-      //.then((tab: IDataBrowserTab) => this.CurrentTabData = this.SetWindowDataToCurrent(tab, 'tab from init'));
+    //.then((tab: IDataBrowserTab) => this.CurrentTabData = this.SetWindowDataToCurrent(tab, 'tab from init'));
 
     this.Log().DebugIDataBrowserTab(this.CurrentTabData);
 
@@ -59,13 +46,10 @@ export class TabManager extends PopUpManagerBase {
 
       await browser.tabs.query({ currentWindow: true, active: true })
         .then(async (tabs) => {
-           toReturn = {
-            ScWindowType: scWindowType.Unknown,
-             Tab: tabs[0],
-             UrlParts: StaticHelpers.MakeUrlParts(tabs[0].url)
+          toReturn = {
+            Tab: tabs[0],
+            UrlParts: this.Helpers().UrlHelp.MakeUrlParts({ AbsUrl: tabs[0].url })
           }
-
-          toReturn.ScWindowType = this.Helpers().UtilityHelp.CalcPageTypeFromHref(toReturn.Tab.url);
 
           this.Log().DebugIDataBrowserTab(toReturn);
 
@@ -74,32 +58,6 @@ export class TabManager extends PopUpManagerBase {
         })
         .catch((err) => reject(err));
     });
-  }
-
-
-
-  SetWindowDataToCurrent(tab: browser.tabs.Tab, nickname: string): IDataBrowserTab {
-    var toReturn: IDataBrowserTab = {
-      Tab: tab,
-      //Window: window,
-      ScWindowType: scWindowType.Unknown,
-      UrlParts: {
-        FullUrl: '',
-        Hostname: '',
-        QueryString:''
-      }
-      //DataDocSelf: {
-      //  ParentDoc: null,
-      //  Document: window.document,
-      //  HasParentDesktop: false,
-      //  DocId: this.Helpers().GuidHelp.NewGuid(),
-      //  IsCEDoc: false,
-      //  ParentDesktop: null,
-      //  Nickname: nickname
-      //},
-    };
-    //toReturn.DataDocSelf.ParentDoc = toReturn.DataDocSelf;
-    return toReturn;
   }
 
   //todo - put back?
@@ -118,34 +76,7 @@ export class TabManager extends PopUpManagerBase {
   //  });
   //}
 
-
-  private __getUrlForWindowType(windowType: scWindowType): string {
-    var toReturn: string;
-    //this.debug().NotNullCheck('this.__winDataParent.DataDocSelf.Document', this.CurrentTabData.DataDocSelf.Document);
-    var hostName = '';//this.CurrentTabData.Tab.url;// this.CurrentTabData.DataDocSelf.Document.location.origin;
-    switch (windowType) {
-      case scWindowType.ContentEditor:
-        toReturn = hostName + SharedConst.SharedConst.UrlSuffix.CE;
-        break;
-      case scWindowType.Desktop:
-        toReturn = hostName + SharedConst.SharedConst.UrlSuffix.Desktop;
-        break;
-      case scWindowType.Edit:
-        toReturn = hostName + SharedConst.SharedConst.UrlSuffix.None;
-        break;
-      case scWindowType.Preview:
-        toReturn = hostName + SharedConst.SharedConst.UrlSuffix.None;
-        break;
-      case scWindowType.Normal:
-        toReturn = hostName + SharedConst.SharedConst.UrlSuffix.None;
-        break;
-      default:
-        toReturn = hostName;
-        this.Log().Error(this.__getUrlForWindowType.name, 'unaccounted for window type');
-        break;
-    }
-    return toReturn;
-  }
+  
 
   //todo - put back?
   //async GetTargetWindowAsync(useOrigWindow: boolean, windowType: scWindowType): Promise<IDataBrowserTab> {
@@ -167,5 +98,4 @@ export class TabManager extends PopUpManagerBase {
   //  this.debug().FuncEnd(this.GetTargetWindowAsync.name);//, 'child window id: ' + targetTab.DataDocSelf.DocId.AsShort);
   //  return targetTab;
   //}
-  
 }

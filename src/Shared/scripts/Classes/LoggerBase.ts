@@ -13,14 +13,14 @@ import { LogLevel } from "../Enums/LogLevel";
 import { IOneGenericSetting } from "./OneSetting";
 export class LoggerBase {
 
-  private __indentCount: number;
+  private __callDepth: number;
   LogLevel: LogLevel = LogLevel.Unknown;
   ErrorStack: IError[] = [];
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
 
   constructor(logLevel: LogLevel) {
     this.LogLevel = logLevel;
-    this.__indentCount = 0;
+    this.__callDepth = -1;
   }
   DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
     this.FuncStart(this.DebugDataOneIframe.name);
@@ -59,7 +59,7 @@ export class LoggerBase {
   }
   DebugIDataBrowserTab(browserWindow: IDataBrowserTab) {
     if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
-      this.LogVal('WindowType', scWindowType[browserWindow.ScWindowType]);
+      this.LogVal('WindowType', scWindowType[browserWindow.UrlParts.ScWindowType]);
       //this.DebugIDataOneDoc(browserWindow.DataDocSelf);
       //this.DebugWindow(browserWindow.Window);
     }
@@ -186,7 +186,7 @@ export class LoggerBase {
     if (this.LogLevel) {
       var indent = '  ';
       //text =  indent.repeat(this.__indentCount) + text;
-      for (var idx = 0; idx < this.__indentCount; idx++) {
+      for (var idx = 0; idx < this.__callDepth; idx++) {
         text = indent + text;
       }
       var prefixLength = 3;
@@ -220,7 +220,7 @@ export class LoggerBase {
   FuncStart(textOrFunc: string, optionalValue?: number): void;
   FuncStart(textOrFunc: string, optionalValue?: string): void;
   FuncStart(textOrFunc: string, optionalValue: number | string): void {
-    textOrFunc = 's) ' + textOrFunc;
+    textOrFunc = 's' + ' ' + this.__callDepth + ') ' + textOrFunc;
     if (!optionalValue) {
       optionalValue = '';
     }
@@ -235,15 +235,21 @@ export class LoggerBase {
       textOrFunc = textOrFunc + ' : ' + optionalValue;
     }
     this.Log(textOrFunc, '', true);
-    this.__indentCount++;
-    if (this.__indentCount > 10) {
-      this.__indentCount = 10;
+    this.__callDepth++;
+    if (this.__callDepth > 10) {
+      this.__callDepth = 10;
     }
   }
   FuncEnd(text, optionalValueInput?: number);
   FuncEnd(text, optionalValueInput?: string);
   FuncEnd(text, optionalValueInput: string | number) {
-    text = 'e) ' + text;
+
+    this.__callDepth--;
+    if (this.__callDepth < 0) {
+      this.__callDepth = 0;
+    }
+
+    text = 'e' + ' ' + this.__callDepth + ') ' + text;
     if (!optionalValueInput) {
       optionalValueInput = '';
     }
@@ -251,10 +257,7 @@ export class LoggerBase {
     if (optionalValue.length > 0) {
       text = text + ' : ' + optionalValue;
     }
-    this.__indentCount--;
-    if (this.__indentCount < 0) {
-      this.__indentCount = 0;
-    }
+    
     this.Log(text, optionalValue, true);
   }
   Error(container, text) {

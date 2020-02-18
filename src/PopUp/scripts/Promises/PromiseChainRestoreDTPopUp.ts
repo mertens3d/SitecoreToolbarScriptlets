@@ -4,6 +4,7 @@ import { IDataBucketRestoreDesktop } from "../../../Shared/scripts/Interfaces/ID
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
+import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 
 export class PromiseChainRestoreDtPopUp extends PopUpManagerBase {
   constructor(hub: PopUpHub) {
@@ -12,17 +13,21 @@ export class PromiseChainRestoreDtPopUp extends PopUpManagerBase {
     hub.Log.FuncEnd(PromiseChainRestoreDtPopUp.name);
   }
 
-  async GoToAndWaitForDesktopPage(promiseBucket: IDataBucketRestoreDesktop) {
-    return new Promise(async (resolve, reject) => {
+  //async GoToAndWaitForDesktopPage(promiseBucket: IDataBucketRestoreDesktop) {
+  //  return new Promise(async (resolve, reject) => {
 
-      await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(SharedConst.SharedConst.UrlSuffix.Desktop, this.TabMan().CurrentTabData)
-        .then((promiseBucket) => resolve(promiseBucket))
-        .catch((err) => reject(err))
+  //    promiseBucket.UrlParts = this.Helpers().UrlHelp.SetFilePathFromWindowType(promiseBucket.UrlParts, scWindowType.Desktop );
+
+  //    let absUrl: AbsoluteUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(promiseBucket.UrlParts)
+
+  //    await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(absUrl, this.TabMan().CurrentTabData)
+  //      .then((promiseBucket) => resolve(promiseBucket))
+  //      .catch((err) => reject(err))
 
 
-      //await this.Helpers().PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, promiseBucket.targetWindow, scWindowType.Desktop)
-      //  .then((promiseBucket) => resolve(promiseBucket))
-      //  .catch((err) => reject(err))
-    });
-  }
+  //    //await this.Helpers().PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, promiseBucket.targetWindow, scWindowType.Desktop)
+  //    //  .then((promiseBucket) => resolve(promiseBucket))
+  //    //  .catch((err) => reject(err))
+  //  });
+  //}
 }

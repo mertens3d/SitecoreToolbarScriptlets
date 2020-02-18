@@ -4,24 +4,30 @@ import { HandlersExternal } from "../Classes/HandlersExternal";
 import { HandlersInternal } from "../Classes/HandlersInternal";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { MenuCommand } from '../../../Shared/scripts/Enums/MenuCommand';
-import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { IOneGenericSetting } from '../../../Shared/scripts/Classes/OneSetting';
 import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
+import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { AllCommands } from '../Classes/AllCommands';
+import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
+import { Handlers } from './Handlers';
+import { IEventHandlerData } from "../../../Shared/scripts/Interfaces/IEventHandlerData";
+import { PopConst } from '../Classes/PopConst';
 
 export class EventManager extends PopUpManagerBase {
-  HandlersExternal: HandlersExternal;
-  HandlersInternal: HandlersInternal;
+  Handlers: Handlers
+
   AllMenuCommands: IOneCommand[];
 
   constructor(popHub: PopUpHub) {
     super(popHub);
-    this.HandlersExternal = new HandlersExternal(popHub);
-    this.HandlersInternal = new HandlersInternal(popHub);
+    this.Handlers = new Handlers();
+    this.Handlers.External = new HandlersExternal(popHub);
+    this.Handlers.Internal = new HandlersInternal(popHub);
   }
 
   Init() {
     this.Log().FuncStart(EventManager.name + this.Init.name);
-    this.BuildAllCommands();
+    this.AllMenuCommands = AllCommands.BuildAllCommands(this.PopHub, this.Handlers);
     this.__wireMenuButtons();
     this.WireAllGenericSettings();
     this.Log().FuncEnd(EventManager.name + this.Init.name);
@@ -43,7 +49,7 @@ export class EventManager extends PopUpManagerBase {
         else if (oneSetting.DataType === SettingType.Accordian) {
           let self = this;
           uiElem.addEventListener('click', (evt) => {
-            self.HandlersInternal.__toggleAccordian(evt, oneSetting.SettingKey);
+            self.Handlers.Internal.__toggleAccordian(evt, oneSetting.SettingKey);
             //self.SettingsMan().SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
           }
           )
@@ -53,77 +59,66 @@ export class EventManager extends PopUpManagerBase {
       }
     }
   }
-  BuildAllCommands() {
-    this.Log().FuncStart(this.BuildAllCommands.name);
-    this.AllMenuCommands = [
-      {
-        Command: MenuCommand.CloseWindow,
-        ButtonSelector: this.Const().Selector.Btn.WindowClose,
-        RequiredPageTypes: []
-      },
-
-      {
-        Command: MenuCommand.Edit,
-        ButtonSelector: this.Const().ElemId.HS.Btn.ModeEdit,
-        RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop, scWindowType.Normal, scWindowType.Preview]
-      },
-      {
-        Command: MenuCommand.MarkFavorite,
-        ButtonSelector: this.Const().ElemId.HS.Btn.MarkFavorite,
-        RequiredPageTypes: []
-      },
-      {
-        Command: MenuCommand.TakeSnapShot,
-        ButtonSelector: this.Const().ElemId.HS.Btn.HsSaveWindowState,
-        RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop]
-      },
-    ]
-    this.Log().FuncEnd(this.BuildAllCommands.name);
-  }
 
   private __wireMenuButtons() {
     this.Log().FuncStart(this.__wireMenuButtons.name);
 
-    this.UiMan().AssignDblClickEvent(this.Const().Selector.HS.SelStateSnapShot, (evt) => { this.HandlersExternal.HndlrSnapShotRestore(evt); });
-    this.UiMan().AssignDblClickEvent(this.Const().Selector.HS.TaDebug, () => { this.HandlersInternal.__cleardebugTextWithConfirm(); });
+    this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestore(evt); });
+    this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.TaDebug, () => { this.Handlers.Internal.__cleardebugTextWithConfirm(); });
 
-    this.UiMan().AssignOnChangeEvent(this.Const().Selector.HS.SelStateSnapShot, (evt) => { this.HandlersInternal.HndlrSelectChange(evt) });
+    this.UiMan().AssignOnChangeEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.Internal.HndlrSelectChange(evt) });
 
     //this.UiMan().AssignMenuWindowChanged((evt) => { this.__hndlrMenuWindowChanged(); });
 
     // ------------- Header
 
-    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.CloseWindow), (evt) => this.HandlersInternal.CloseWindow(evt));
+    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.CloseWindow), (evt) => this.Handlers.Internal.CloseWindow(evt));
 
     // ------------- Foresite
 
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.AdminB, () => { this.HandlersExternal.HndlrAdminB() });
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.CE, () => { this.HandlersExternal.__hndlrOpenCE(); });
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.Desktop, (evt) => { this.HandlersExternal.__hndlrDesktop(evt); });
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.ModeNorm, (evt) => this.HandlersExternal.__hndlrSetScMode(this.Const().ScMode.normal, evt));
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.ModePrev, (evt) => this.HandlersExternal.__hndlrSetScMode(this.Const().ScMode.preview, evt));
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.QuickPublish, (evt) => { this.HandlersExternal.__hndlrQuickPublish(evt) });
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.UpdateNicknameB, () => this.HandlersExternal.HndlrSnapShotUpdateNickName());
+    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.AdminB, () => { this.Handlers.External.HndlrAdminB() });
+    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.CE, () => { this.Handlers.External.__hndlrOpenCE(); });
+    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.Desktop, (evt) => { this.Handlers.External.__hndlrDesktop(evt); });
+    
 
-    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.Edit), (evt) => this.HandlersExternal.__hndlrSetScMode(this.Const().ScMode.edit, evt));
+    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.QuickPublish, (evt) => { this.Handlers.External.__hndlrQuickPublish(evt) });
+    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.UpdateNicknameB, () => this.Handlers.External.HndlrSnapShotUpdateNickName());
+
+    
 
     // --------------- hindsite
 
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.HsCancel, (evt) => { this.HandlersExternal.__hndlrCancelOperation(evt); });
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.HsDrawStorage, (evt) => this.HandlersExternal.__DrawStorage(evt));
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.HsRemoveFromStorage, (evt) => this.HandlersExternal.HndlrSnapShotRemove(evt));
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.HsRestoreWindowState, (evt) => { this.HandlersExternal.HndlrSnapShotRestore(evt); });
+    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.HsCancel, (evt) => { this.Handlers.External.__hndlrCancelOperation(evt); });
+    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.HsDrawStorage, (evt) => this.Handlers.External.__DrawStorage(evt));
+    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.HsRemoveFromStorage, (evt) => this.Handlers.External.HndlrSnapShotRemove(evt));
+    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.HsRestoreWindowState, (evt) => { this.Handlers.External.HndlrSnapShotRestore(evt); });
 
-    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.MarkFavorite), (evt) => this.HandlersExternal.MarkFavorite(evt));
-    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.TakeSnapShot), (evt) => { this.HandlersExternal.__hndlrSnapShotCreate(evt) });
+    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.MarkFavorite), (evt) => this.Handlers.External.MarkFavorite(evt));
+    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.TakeSnapShot), (evt) => { this.Handlers.External.__hndlrSnapShotCreate(evt) });
 
-    this.UiMan().AssignOnClickEvent(this.Const().ElemId.HS.Btn.BigRed, () => this.HandlersExternal.__hndlrAddCETab);
+    //this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.BigRed, () => this.Handlers.External.__hndlrAddCETab);
 
     // --------------- fieldsets
 
+    //this.UiMan().AssignOnClickEvent(PopConst.Const.Selector.HS.iCBoxdSettingsShowLogData, (evt) => { this.Handlers.Internal.__showDebugButtonClicked(evt) });
 
+    for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
+      let oneCommand: IOneCommand = this.AllMenuCommands[idx];
+      for (var jdx = 0; jdx < oneCommand.Events.length; jdx++) {
+        let oneEvent: IEventHandlerData = oneCommand.Events[jdx];
+        if (oneEvent.Event === CommandButtonEvents.OnClick) {
 
-    //this.UiMan().AssignOnClickEvent(this.Const().Selector.HS.iCBoxdSettingsShowLogData, (evt) => { this.HandlersInternal.__showDebugButtonClicked(evt) });
+          var targetElem = this.UiMan().GetButtonByIdOrSelector(oneCommand.ButtonSelector);
+
+          if (targetElem) {
+            var popHub: PopUpHub = this.PopHub;
+            targetElem.addEventListener('click', (evt) => { oneEvent.Handler(evt, this.PopHub, oneEvent.ParameterData) });
+          } else {
+            this.Log().Error(this.__wireMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
+          }
+        }
+      }
+    }
 
     this.Log().FuncEnd(this.__wireMenuButtons.name);
   }

@@ -15,6 +15,7 @@
     CleanGuid: RegExp,
 
     NbSp: RegExp,
+    QueryStrSeparatorQuest: RegExp,
     PageType: {
       Desktop: RegExp
       Edit: RegExp

@@ -11,39 +11,13 @@ import { SettingKey } from "../Enums/SettingKey";
 export class StaticHelpers {
   static MinToMs(minutes: number) {
     return minutes * 60 * 1000;
-    }
+  }
   static FlavorAsString(flavor: SnapShotFlavor): string {
     return 'Flavor.' + SnapShotFlavor[flavor] + '(' + flavor + ')';
   }
 
   static SettingKeyAsString(settingKey: SettingKey) {
     return 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
-  }
-
-  static MakeUrlParts(url: string): UrlParts {
-    let toReturn: UrlParts = {
-      FullUrl : url,
-      Hostname : StaticHelpers.ExtractHostName(url),
-      QueryString: ''
-    }
-
-    return toReturn;
-  }
-
-  static ExtractHostName(url: string): string {
-    //https://stackoverflow.com/questions/8498592/extract-hostname-name-from-string/54947757
-    let toReturn: string = '';
-
-    if (url.indexOf('//') > -1) {
-      toReturn = url.split('/')[2];
-    } else {
-      toReturn = url.split('/')[0];
-    }
-    toReturn = toReturn.split(':')[0];
-    toReturn = toReturn.split('?')[0];
-
-
-    return toReturn;
   }
 
   static CacheModeAsString(cacheMode: CacheMode): string {

@@ -61,7 +61,7 @@ export class ContentHub {
 
     this.PromiseOneStep = new PromiseOneStep(this);
 
-    this.SharedConst = SharedConst.SharedConst;
+    this.SharedConst = SharedConst.Const;
 
     this.SitecoreUiMan = new SitecoreUiManager(this);
     this.Init();

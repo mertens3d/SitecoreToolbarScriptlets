@@ -33,7 +33,7 @@ export class FactoryHelper extends HelperBase {
 
 
   CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
-    this.Debug.FuncStart(this.CreateShellIDataOneWindowStorage.name);
+    this.Log.FuncStart(this.CreateShellIDataOneWindowStorage.name);
     var dateToUse: Date = new Date();
     var newGuid: IGuid = this.GuidHelp().NewGuid();
 
@@ -47,7 +47,7 @@ export class FactoryHelper extends HelperBase {
       RawData: null,
       Flavor: flavor,
     };
-    this.Debug.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
+    this.Log.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
 
     return activeWindowSnapShot;
   }

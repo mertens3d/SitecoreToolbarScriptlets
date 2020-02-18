@@ -1,18 +1,19 @@
 ﻿import { PopUpManagerBase } from './PopUpManagerBase';
 import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
-import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
+import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 export class BrowserManager extends PopUpManagerBase {
-  async CreateNewTab(tabUrl: string) {
+
+  async CreateNewTab(tabUrl: AbsoluteUrl) {
     return new Promise(async (resolve, reject) => {
-      this.Log().FuncStart(this.CreateNewTab.name, tabUrl);
+      this.Log().FuncStart(this.CreateNewTab.name, tabUrl.AbsUrl);
 
       let result: ResultSuccessFail = new ResultSuccessFail();
 
       let newTab: IDataBrowserTab;
 
       await browser.tabs.create({
-        url: tabUrl
+        url: tabUrl.AbsUrl
       })
         .then((rawTab: browser.tabs.Tab) => { newTab = this.TabMan().MakeTabData(rawTab) })
         .then(() => { this.Helpers().PromiseHelp.TabWaitForReadyStateCompleteNative(newTab.Tab) })
@@ -25,10 +26,10 @@ export class BrowserManager extends PopUpManagerBase {
         });
 
       if (result.Succeeded) {
-        this.Log().FuncEnd(this.CreateNewTab.name, tabUrl);
+        this.Log().FuncEnd(this.CreateNewTab.name, tabUrl.AbsUrl);
         resolve(newTab);
       } else {
-        this.Log().FuncEnd(this.CreateNewTab.name, tabUrl);
+        this.Log().FuncEnd(this.CreateNewTab.name, tabUrl.AbsUrl);
         reject(result.RejectMessage);
       }
     })

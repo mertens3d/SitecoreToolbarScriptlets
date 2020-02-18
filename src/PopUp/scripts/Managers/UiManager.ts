@@ -20,6 +20,9 @@ import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { IOneGenericSetting } from '../../../Shared/scripts/Classes/OneSetting';
 import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
 import { BuildDateStamp } from '../../../Shared/scripts/AutoBuild/BuildNum';
+import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
+import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
+import { PopConst } from '../Classes/PopConst';
 
 export class UiManager extends PopUpManagerBase {
   private __selectSnapshotId: IGuid;
@@ -49,11 +52,19 @@ export class UiManager extends PopUpManagerBase {
 
     this.Log().FuncEnd(UiManager.name, this.Init.name);
   }
-
+  CloseWindow(): void {
+    this.Log().FuncStart(this.CloseWindow.name);
+    try {
+      window.close();
+    } catch (ex) {
+      this.Log().Error(this.CloseWindow.name, ex.toString());
+    }
+    this.Log().FuncEnd(this.CloseWindow.name);
+  }
   WriteBuildNumToUi() {
     this.Log().LogVal('BuildDateStamp', BuildDateStamp);
 
-    var targetTag: HTMLElement = document.querySelector(this.Const().Selector.HS.BuildStamp);
+    var targetTag: HTMLElement = document.querySelector(PopConst.Const.Selector.HS.BuildStamp);
     if (targetTag) {
       targetTag.innerText = 'build: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date(BuildDateStamp));
     } else {
@@ -155,7 +166,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   __getTextArea(): HTMLTextAreaElement {
-    return <HTMLTextAreaElement>document.querySelector(this.Const().Selector.HS.TaDebug);
+    return <HTMLTextAreaElement>document.querySelector(PopConst.Const.Selector.HS.TaDebug);
   }
 
   HndlrDebugTextChanged(caller: any, data: ICallbackDataDebugTextChanged) {
@@ -174,7 +185,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   //SetParentInfo(winDataParent: IDataBrowserTab) {
-  //  var targetSpan = document.getElementById(this.Const().ElemId.HindSiteParentInfo);
+  //  var targetSpan = document.getElementById(PopConst.Const.ElemId.HindSiteParentInfo);
   //  if (targetSpan) {
   //    targetSpan.innerHTML = ' | Parent Id: ' + winDataParent.DataDocSelf.DocId.AsShort + ' | ' + winDataParent.Window.location.href;
   //  }
@@ -182,9 +193,9 @@ export class UiManager extends PopUpManagerBase {
 
   SetAccordianClass(targetElem: HTMLElement, isCollapsed: boolean) {
     if (!isCollapsed) {
-      targetElem.classList.remove(this.Const().ClassNames.HS.Collapsed);
+      targetElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
     } else {
-      targetElem.classList.add(this.Const().ClassNames.HS.Collapsed);
+      targetElem.classList.add(PopConst.Const.ClassNames.HS.Collapsed);
     }
   }
 
@@ -243,7 +254,7 @@ export class UiManager extends PopUpManagerBase {
     this.Log().FuncStart(this.UpdateAtticFromUi.name);
 
     //let currentSettings: IDataPopUpSettings = await this.PopAtticMan().CurrentSettings();
-    //let currentVal = (<HTMLInputElement>document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowLogData)).checked;
+    //let currentVal = (<HTMLInputElement>document.querySelector(PopConst.Const.Selector.HS.iCBoxdSettingsShowLogData)).checked;
     //currentVal = true; //todo - remove after debugging
     //this.Log().LogVal('currentVal', currentVal.toString())
     //currentSettings.LogSettings.ShowDebugData = currentVal;
@@ -267,7 +278,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   private __GetCancelButton() {
-    return document.getElementById(this.Const().ElemId.HS.Btn.HsCancel);
+    return document.getElementById(PopConst.Const.ElemId.HS.Btn.HsCancel);
   }
 
   SetCancelFlag() {
@@ -288,7 +299,7 @@ export class UiManager extends PopUpManagerBase {
 
   //async __refreshSettings() {
   //  this.Log().FuncStart(this.__refreshSettings.name);
-  //  let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(this.Const().Selector.HS.IdFieldSetDebug);
+  //  let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(PopConst.Const.Selector.HS.IdFieldSetDebug);
 
   //  let currentSettings: IDataPopUpSettings =  await this.PopAtticMan().CurrentSettings();
   //  if (currentSettings) {
@@ -296,7 +307,7 @@ export class UiManager extends PopUpManagerBase {
   //      let newDisplay = currentSettings.LogSettings.ShowDebugData ? '' : 'none';
   //      debugFieldSet.style.display = newDisplay;
   //    }
-  //    let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(this.Const().Selector.HS.iCBoxdSettingsShowLogData);
+  //    let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(PopConst.Const.Selector.HS.iCBoxdSettingsShowLogData);
   //    if (checkBoxShowDebug) {
   //      this.Log().LogVal('before', checkBoxShowDebug.checked.toString());
   //      checkBoxShowDebug.checked = currentSettings.LogSettings.ShowDebugData;
@@ -357,7 +368,7 @@ export class UiManager extends PopUpManagerBase {
       if (command.RequiredPageTypes.length > 0) {
         this.Log().LogVal('required pages', command.RequiredPageTypes.toString());
 
-        var currentWindowType = this.TabMan().CurrentTabData.ScWindowType;
+        var currentWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
         this.Log().LogVal('current', StaticHelpers.WindowTypeAsString(currentWindowType));
         var targetButton: HTMLElement = this.GetButtonByIdOrSelector(command.ButtonSelector);
 
@@ -418,7 +429,7 @@ export class UiManager extends PopUpManagerBase {
       }
 
       if (storageMatch) {
-        var inputElem = <HTMLInputElement>window.document.getElementById(this.Const().ElemId.InputNickname);
+        var inputElem = <HTMLInputElement>window.document.getElementById(PopConst.Const.ElemId.InputNickname);
         if (inputElem) {
           inputElem.value = storageMatch.NickName;
         }
@@ -429,12 +440,12 @@ export class UiManager extends PopUpManagerBase {
 
   GetValueInNickname(): string {
     var toReturn: string = '';
-    toReturn = (<HTMLInputElement>window.document.getElementById(this.Const().ElemId.InputNickname)).value;
+    toReturn = (<HTMLInputElement>window.document.getElementById(PopConst.Const.ElemId.InputNickname)).value;
     return toReturn;
   }
 
   private __getSelectElem(): HTMLSelectElement {
-    return <HTMLSelectElement>window.document.querySelector(this.Const().Selector.HS.SelStateSnapShot);
+    return <HTMLSelectElement>window.document.querySelector(PopConst.Const.Selector.HS.SelStateSnapShot);
   }
 
   GetIdOfSelectWindowSnapshot(): IGuid {
@@ -489,7 +500,8 @@ export class UiManager extends PopUpManagerBase {
     if (!targetElem) {
       this.Log().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
     } else {
-      targetElem.addEventListener('click', (evt) => { handler(evt) });
+      var popHub: PopUpHub = this.PopHub;
+      targetElem.addEventListener('click', (evt) => { handler(evt, popHub) });
     }
   }
 
@@ -519,53 +531,87 @@ export class UiManager extends PopUpManagerBase {
   }
 
   PopulateContentStateDiv(contentState: ICurrStateContent) {
-    var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(this.Const().Selector.HS.DivState);
+    var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.DivState);
+
+    //this.Log().LogVal('now', new Date().toString());
+    var allTaText: string = 'State as of: ' + (new Date()).toString();
     var allTaText: string = 'State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
 
+    var lineBreak = '<br/>';
+
     if (targetCurrStateDiv) {
-      allTaText += '\n';
-      allTaText += 'Page Type: ' + StaticHelpers.WindowTypeAsString(this.TabMan().CurrentTabData.ScWindowType);
+      allTaText += lineBreak;
+      allTaText += 'Page Type: ' + StaticHelpers.WindowTypeAsString(this.TabMan().CurrentTabData.UrlParts.ScWindowType);
 
       if (contentState.ActiveCe) {
-        allTaText += '\n';
+        allTaText += lineBreak;
         allTaText += 'Active Ce: ' + contentState.ActiveCe.Id.AsShort;
 
         if (contentState.ActiveCe.ActiveNode) {
-          allTaText += '\n';
+          allTaText += lineBreak;
           allTaText += 'Active Node: ' + contentState.ActiveCe.ActiveNode.NodeFriendly + ' ' + contentState.ActiveCe.ActiveNode.NodeId.AsBracedGuid;
         } else {
-          allTaText += '\n';
+          allTaText += lineBreak;
           allTaText += '{no active node in CE}';
         }
       } else {
-        allTaText += '\n';
+        allTaText += lineBreak;
         allTaText += '{no active CE}';
       }
 
-      allTaText += '\n';
-      allTaText += 'Url Full: ' + this.TabMan().CurrentTabData.UrlParts.FullUrl;
-      allTaText += '\n';
-      allTaText += 'Host Name: ' + this.TabMan().CurrentTabData.UrlParts.Hostname;
+      let urlParts: UrlParts = this.TabMan().CurrentTabData.UrlParts;
 
-      allTaText += '\n';
-      allTaText += 'Last Request: ' + MsgFlag[contentState.LastReq];
+      allTaText += lineBreak;
+      allTaText += 'Url Full (raw  ): ' + urlParts.OriginalRaw;
 
-      allTaText += '\n';
-      allTaText += '\nSnap Shots: ';
-      allTaText += '\nBirthday: ' + contentState.SnapShotsMany.Birthday.toString();
-      allTaText += '\nTotal Snapshots: ' + contentState.SnapShotsMany.CurrentSnapShots.length;
-      allTaText += '\nFavorite Snapshots: ' + contentState.SnapShotsMany.FavoriteCount;
-      allTaText += '\nPlain Snapshots: ' + contentState.SnapShotsMany.PlainCount;
-      allTaText += '\nAuto Snapshots: ' + contentState.SnapShotsMany.SnapShotsAutoCount;
+      allTaText += lineBreak;
+      allTaText += 'Url Full (parts): ' + this.Helpers().UrlHelp.BuildFullUrlFromParts(urlParts).AbsUrl;
 
-      allTaText += '\n';
-      allTaText += 'Error Stack (' + contentState.ErrorStack.length + '):';
-      for (var idx = 0; idx < contentState.ErrorStack.length; idx++) {
-        allTaText += '\n';
-        allTaText += '\t' + idx + ' : ' + contentState.ErrorStack[idx].ContainerFunc + ' ' + contentState.ErrorStack[idx].ErrorString;
+      allTaText += lineBreak;
+      allTaText += 'Protocol: ' + urlParts.Protocol;
+
+      allTaText += lineBreak;
+      allTaText += 'Host & Port: ' + urlParts.HostAndPort;
+
+      allTaText += lineBreak;
+      allTaText += 'File Path: ' + urlParts.FilePath;
+      //if (urlParts.FilePaths) {
+      //  for (var idx = 0; idx < urlParts.FilePaths.length; idx++) {
+      //    allTaText += lineBreak + '&nbsp;&nbsp;&nbsp;';
+      //    allTaText += urlParts.FilePaths[idx];
+      //  }
+      //}
+
+      allTaText += lineBreak;
+      allTaText += 'Parameters: ';
+      if (urlParts.Parameters) {
+        for (var idx = 0; idx < urlParts.Parameters.length; idx++) {
+          allTaText += lineBreak + '&nbsp;&nbsp;&nbsp;';
+          allTaText += urlParts.Parameters[idx].Key;
+          allTaText += '&nbsp; : &nbsp;';
+          allTaText += urlParts.Parameters[idx].value || '';
+        }
       }
 
-      targetCurrStateDiv.innerText = allTaText;
+      allTaText += lineBreak;
+      allTaText += 'Last Request: ' + MsgFlag[contentState.LastReq];
+
+      allTaText += lineBreak;
+      allTaText += lineBreak + 'Snap Shots: ';
+      allTaText += lineBreak + 'Birthday: ' + contentState.SnapShotsMany.Birthday.toString();
+      allTaText += lineBreak + 'Total Snapshots: ' + contentState.SnapShotsMany.CurrentSnapShots.length;
+      allTaText += lineBreak + 'Favorite Snapshots: ' + contentState.SnapShotsMany.FavoriteCount;
+      allTaText += lineBreak + 'Plain Snapshots: ' + contentState.SnapShotsMany.PlainCount;
+      allTaText += lineBreak + 'Auto Snapshots: ' + contentState.SnapShotsMany.SnapShotsAutoCount;
+
+      allTaText += lineBreak;
+      allTaText += 'Error Stack (' + contentState.ErrorStack.length + '):';
+      for (var idx = 0; idx < contentState.ErrorStack.length; idx++) {
+        allTaText += lineBreak;
+        allTaText += '&nbsp;nbsp;nbsp;' + idx + ' : ' + contentState.ErrorStack[idx].ContainerFunc + ' ' + contentState.ErrorStack[idx].ErrorString;
+      }
+
+      targetCurrStateDiv.innerHTML = allTaText;
     }
   }
 
@@ -589,21 +635,21 @@ export class UiManager extends PopUpManagerBase {
   }
 
   CleanExistingSelection(targetSel: HTMLSelectElement) {
-    var optGroup = targetSel.querySelector('[id=' + this.Const().ElemId.HS.SelectHeaderAutoTitle + ']')
+    var optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderAutoTitle + ']')
     if (optGroup) {
       optGroup.remove();
     }
 
-    optGroup = targetSel.querySelector('[id=' + this.Const().ElemId.HS.SelectHeaderAuto + ']')
+    optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderAuto + ']')
     if (optGroup) {
       optGroup.remove();
     }
-    optGroup = targetSel.querySelector('[id=' + this.Const().ElemId.HS.SelectHeaderFavorite + ']')
+    optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderFavorite + ']')
     if (optGroup) {
       optGroup.remove();
     }
 
-    optGroup = targetSel.querySelector('[id=' + this.Const().ElemId.HS.SelectHeaderFavoriteTitle + ']')
+    optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle + ']')
     if (optGroup) {
       optGroup.remove();
     }
@@ -621,20 +667,20 @@ export class UiManager extends PopUpManagerBase {
 
     toReturn.Auto = <HTMLOptGroupElement>window.document.createElement('optgroup');
     toReturn.Auto.label = this.Helpers().UtilityHelp.SelectHeaderStr('');
-    toReturn.Auto.id = this.Const().ElemId.HS.SelectHeaderAuto;
+    toReturn.Auto.id = PopConst.Const.ElemId.HS.SelectHeaderAuto;
 
     toReturn.AutoTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
     toReturn.AutoTitle.label = 'Auto Snap Shots';
-    toReturn.AutoTitle.id = this.Const().ElemId.HS.SelectHeaderAutoTitle;
+    toReturn.AutoTitle.id = PopConst.Const.ElemId.HS.SelectHeaderAutoTitle;
     toReturn.AutoTitle.classList.add('title');
 
     toReturn.Favorite = <HTMLOptGroupElement>window.document.createElement('optgroup');
     toReturn.Favorite.label = this.Helpers().UtilityHelp.SelectHeaderStr('');
-    toReturn.Favorite.id = this.Const().ElemId.HS.SelectHeaderFavorite;
+    toReturn.Favorite.id = PopConst.Const.ElemId.HS.SelectHeaderFavorite;
 
     toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
     toReturn.FavoriteTitle.label = 'Tyical Snap Shots';
-    toReturn.FavoriteTitle.id = this.Const().ElemId.HS.SelectHeaderFavoriteTitle;
+    toReturn.FavoriteTitle.id = PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle;
     toReturn.FavoriteTitle.classList.add('title');
 
     return toReturn;

@@ -2,7 +2,7 @@
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 
 export class PopConst {
-  static PopConst: IPopUpConst = {
+  static Const: IPopUpConst = {
     ClassNames: {
       HS: {
         Collapsed: 'in',
@@ -28,7 +28,7 @@ export class PopConst {
           Desktop: 'Desktop',
           HsDrawStorage: 'DrawLocalStorage',
           BigRed: 'BigRed',
-          ModeEdit: 'Edit',
+          ModeEdit: 'sc-mode-edit',
           ModeNorm: 'Norm',
           ModePrev: 'Prev',
           QuickPublish: 'QuickPublish',

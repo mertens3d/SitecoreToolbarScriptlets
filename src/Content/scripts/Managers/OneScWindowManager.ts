@@ -61,7 +61,7 @@ export class OneScWindowManager extends ContentManagerBase {
     }
     else if (currentPageType === scWindowType.Desktop) {
       this.Log().MarkerB();
-      snapShot.AllCEAr = this.OneDesktopMan.GetStateDesktop().AllCeData;
+     snapShot.AllCEAr = this.OneDesktopMan.GetStateDesktop().AllCeData;
     }
     else {
       this.Log().Error(this.SaveWindowState.name, 'Invalid page location ' + currentPageType);

@@ -6,8 +6,10 @@ import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 
 export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUiManager {
+
   GetCurrentPageType(): scWindowType {
-    return this.Helpers().UtilityHelp.CalcPageTypeFromHref(document.location.href);
+
+    return this.Helpers().UrlHelp.CalcPageTypeFromHref({ AbsUrl: document.location.href });
   }
 
   __activeWindowSnapShot: IDataOneWindowStorage;

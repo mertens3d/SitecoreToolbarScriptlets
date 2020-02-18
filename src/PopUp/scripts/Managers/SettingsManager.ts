@@ -26,12 +26,22 @@ export class SettingsManager extends PopUpManagerBase {
 
   async HarvestNonDefaultGenericSettingsFromStorage() {
     this.Log().FuncStart(this.HarvestNonDefaultGenericSettingsFromStorage.name);
-    let foundSettings: IOneGenericSettingForStorage[] = await this.PopAtticMan().ReadGenericSettings();
+    let foundSettings: IOneGenericSettingForStorage[];
+
+    try {
+    foundSettings = await this.PopAtticMan().ReadGenericSettings();
+
+    } catch (e) {
+      this.Log().Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, e.toString());
+    }
+
+
     this.Log().LogAsJsonPretty('settings from storage', foundSettings);
 
     if (foundSettings) {
       for (var idx = 0; idx < foundSettings.length; idx++) {
         let storageSetting: IOneGenericSettingForStorage = foundSettings[idx];
+        this.Log().LogVal('setting key', storageSetting.SettingKeyFriendly);
         let matchingSetting: IOneGenericSetting = this.Helpers().SettingsHelp.GetByKey(storageSetting.SettingKey, this.AllSettings.SettingsAr);
         if (matchingSetting) {
           matchingSetting.ValueAsObj = storageSetting.ValueAsObj;

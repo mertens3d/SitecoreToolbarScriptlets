@@ -70,11 +70,12 @@ export class UtilityHelper extends HelperBase {
     return result;
   }
   MakeFriendlyDate(date: Date): string {
+
     var toReturn: string = '';
     if (date) {
       var year = date.getFullYear();
-      var month = StaticHelpers.BufferString(date.getMonth().toString(), 2, BufferChar.Zero, BufferDirection.left);
-      var day = StaticHelpers.BufferString(date.getDay().toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var month = StaticHelpers.BufferString((date.getMonth() + 1).toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var day =StaticHelpers.BufferString(date.getDate().toString(), 2, BufferChar.Zero, BufferDirection.left);
       var min = StaticHelpers.BufferString(date.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);
       var hoursRaw = date.getHours();
       var ampm = hoursRaw >= 12 ? 'p' : 'a';
@@ -86,45 +87,11 @@ export class UtilityHelper extends HelperBase {
     }
     else {
       toReturn = '{error}';
-      this.Debug.Error(this.MakeFriendlyDate.name, 'no date provided');
+      this.Log.Error(this.MakeFriendlyDate.name, 'no date provided');
     }
     return toReturn;
   }
 
-  private __urlVsRegex(regexPattern: RegExp, url: string) {
-    return new RegExp(regexPattern).test(url);
-  }
+ 
 
-  CalcPageTypeFromHref(currentLocHref: string): scWindowType {
-    this.Debug.FuncStart(this.CalcPageTypeFromHref.name);
-    var toReturn: scWindowType = scWindowType.Unknown;
-    //let currentLocHref = this.TabMan().CurrentTabData.Tab.url;
-    this.Debug.LogVal('current url', currentLocHref);
-    if (currentLocHref.indexOf(SharedConst.SharedConst.UrlSuffix.Login) > -1) {
-      toReturn = scWindowType.LoginPage;
-    }
-    else if (new RegExp(SharedConst.SharedConst.Regex.ContentEditor).test(currentLocHref)) {
-      toReturn = scWindowType.ContentEditor;
-    }
-    else if (currentLocHref.toLowerCase().indexOf(SharedConst.SharedConst.UrlSuffix.LaunchPad.toLowerCase()) > -1) {
-      toReturn = scWindowType.Launchpad;
-    }
-    else if (this.__urlVsRegex(SharedConst.SharedConst.Regex.PageType.Desktop, currentLocHref)) {
-      toReturn = scWindowType.Desktop;
-    }
-    else if (this.__urlVsRegex(SharedConst.SharedConst.Regex.PageType.Preview, currentLocHref)) {
-      toReturn = scWindowType.Preview;
-    }
-    else if (this.__urlVsRegex(SharedConst.SharedConst.Regex.PageType.Edit, currentLocHref)) {
-      toReturn = scWindowType.Edit;
-    }
-    else if (this.__urlVsRegex(SharedConst.SharedConst.Regex.PageType.Normal, currentLocHref)) {
-      toReturn = scWindowType.Normal;
-    }
-    else {
-      toReturn = scWindowType.Unknown;
-    }
-    this.Debug.FuncEnd(this.CalcPageTypeFromHref.name, scWindowType[toReturn]);
-    return toReturn;
-  }
 }
