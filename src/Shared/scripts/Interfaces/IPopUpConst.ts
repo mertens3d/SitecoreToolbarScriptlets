@@ -31,6 +31,7 @@ export interface IPopUpConst {
         ModeEdit: string,
         ModeNorm: string,
         ModePrev: string,
+        PresentationDetails: string,
         QuickPublish: string,
         UpdateNicknameB: string,
       }
@@ -69,13 +70,15 @@ export interface IPopUpConst {
     HS: {
       BuildStamp: string,
       GenericSettingTest: string,
-      DivState: string,
+      DivStatePopUp: string,
+      DivStateContent: string,
       iCBoxdSettingsAutoLogin: string,
       LogToConsole: string,
       IdFieldSetDebug: string,
       PrefAutoLogin: string,
       SelStateSnapShot: string,
-      SettingAutoSaveEnabled: string,
+      SettingNotUsed: string,
+      AutoSnapshotBeforeWindowChange: string,
       SettingDebugKeepDialogOpen: string,
       SettingAutoSaveInterval: string,
       SettingAutoSaveMaxCount: string,
@@ -102,6 +105,7 @@ export interface IPopUpConst {
     Defaults: {
       bool: {
         AutoSaveEnabled: boolean,
+        AutoSnapshotBeforeWindowChange: boolean,
         AutoLogin: boolean,
         DefaultDebugKeepDialogOpen: boolean,
    

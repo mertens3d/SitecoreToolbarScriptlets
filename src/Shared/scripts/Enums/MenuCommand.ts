@@ -1,5 +1,5 @@
 ﻿export enum MenuCommand {
-    ScModeEdit,
+    GoScModeEdit,
     Unknown,
     MarkFavorite,
     CloseWindow,
@@ -15,5 +15,6 @@
     QuickPublish,
     GoDesktop,
     GoContentEditor,
-    PutAdminB
+    PutAdminB,
+    PresentationDetails
 }

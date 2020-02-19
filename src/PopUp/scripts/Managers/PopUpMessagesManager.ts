@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../../../node_modules/web-ext-types/global/index.d.ts" />
 import { PopUpManagerBase } from "./PopUpManagerBase";
 import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
-import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp";
+import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
@@ -186,8 +186,12 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     console.error(`Error: ${error}`);
   }
 
-  async SendMessageToContentTab(msgPlayload: MsgFromPopUp, targetTab: IDataBrowserTab) {
+  async SendMessageToContentTab(msgPlayload: MsgFromPopUp, targetTab: IDataBrowserTab = null) {
     return new Promise(async (resolve, reject) => {
+      if (!targetTab) {
+        targetTab = this.TabMan().CurrentTabData;
+      }
+
       this.Log().FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
       var result: PromiseResult = new PromiseResult(this.SendMessageToContentTab.name, this.Log());
 

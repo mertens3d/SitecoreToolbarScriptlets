@@ -73,6 +73,7 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PageManagerPopUp.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\SettingsManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\TabManager.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiButtonStateManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Promises\PromiseChainRestoreDTPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
@@ -89,6 +90,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferUseNbsp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\LogLevel.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingFlavor.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\VisibilityType.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\SettingsHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\UrlHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\UtilityHelper.ts" />
@@ -109,6 +111,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataDtState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IError.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IEventHandlerData.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMenuState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneCommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISelectionHeaders.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISnapShotsMany.ts" />

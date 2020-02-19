@@ -1,7 +1,7 @@
 ﻿import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
-import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';
+import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { MsgFromContent } from '../../../Shared/scripts/Classes/MsgPayloadResponseFromContent';
 import { PayloadDataFromPopUp } from '../../../Shared/scripts/Classes/PayloadDataReqPopUp';
@@ -57,9 +57,9 @@ export class ContentMessageManager extends ContentManagerBase {
     this.Log().FuncStart(this.ScheduleIntervalTasks.name);
     this.Log().LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
 
-    let autoSaveSetting: OneGenericSetting = this.Helpers().SettingsHelp.GetByKey(SettingKey.AutoSaveEnabled, reqMsgFromPopup.CurrentContentPrefs)
+    let autoSaveSetting: OneGenericSetting = this.Helpers().SettingsHelp.GetByKey(SettingKey.AutoSaveIntervalMin, reqMsgFromPopup.CurrentContentPrefs)
 
-    if (<boolean>autoSaveSetting.ValueAsObj) {
+    if (SettingsHelper.ValueAsInteger(autoSaveSetting) > 0) {
       if (!this.AutoSaveHasBeenScheduled) {
         this.Log().MarkerA();
         var self = this;
@@ -97,7 +97,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
       //console.log(JSON.stringify(reqMsgFromPopup.CurrentContentPrefs, null, 1));
       if (currSetting) {
-        logSetting = SettingsHelper.ValueAsBool( currSetting);
+        logSetting = SettingsHelper.ValueAsBool(currSetting);
         console.log('setting value as bool ' + logSetting);
       } else {
         console.log('no currsetting');
@@ -113,8 +113,7 @@ export class ContentMessageManager extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
-      this.Log().DebugMsgFromPopUp(reqMsgFromPopup);
-      this.Log().MarkerA();
+      this.Log().LogAsJsonPretty(MsgFromPopUp.name, reqMsgFromPopup);
 
       var response: MsgFromContent;// = new MsgFromContent(MsgFlag.TestResponse);
 
@@ -189,9 +188,7 @@ export class ContentMessageManager extends ContentManagerBase {
   async ReqMsgRouter(payload: MsgFromPopUp) {
     this.Log().FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
-    this.Log().MarkerA();
-    this.Log().DebugMsgFromPopUp(payload);
-    this.Log().MarkerB();
+    this.Log().LogAsJsonPretty(MsgFromPopUp.name, payload);
 
     var response: MsgFromContent = await this.ContentFactory().NewMsgFromContentShell();
     this.Log().MarkerC();
@@ -253,7 +250,9 @@ export class ContentMessageManager extends ContentManagerBase {
         break;
 
       case MsgFlag.ReqTakeSnapShot:
-        this.OneScWinMan().SaveWindowState(payload.Data.SnapShotSettings);
+        await this.OneScWinMan().SaveWindowState(payload.Data.SnapShotSettings)
+          .then(() => response.ContentState.LastReqSuccessful = true)
+          .catch(() => response.ContentState.LastReqSuccessful = false);
         break;
 
       case MsgFlag.RemoveFromStorage:

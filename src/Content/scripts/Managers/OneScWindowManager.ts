@@ -10,6 +10,8 @@ import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPaylo
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { OneDesktopManager } from './OneDesktopManager';
 import { OneCEManager } from './OneCEManager';
+import { IDataDtState } from '../../../Shared/scripts/Interfaces/IDataDtState';
+import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 
 export class OneScWindowManager extends ContentManagerBase {
   OneDesktopMan: OneDesktopManager = null;
@@ -18,8 +20,6 @@ export class OneScWindowManager extends ContentManagerBase {
   constructor(hub: ContentHub) {
     super(hub);
     hub.Logger.FuncStart(OneScWindowManager.name);
-
-    
 
     hub.Logger.FuncEnd(OneScWindowManager.name);
   }
@@ -37,38 +37,63 @@ export class OneScWindowManager extends ContentManagerBase {
     }
   }
 
-
   SaveWindowState(snapShotSettings: IDataPayloadSnapShot) {
-    this.Log().FuncStart(this.SaveWindowState.name);
-    var currentPageType = snapShotSettings.CurrentPageType;
+    return new Promise(async (resolve, reject) => {
+      this.Log().FuncStart(this.SaveWindowState.name);
 
-    this.Helpers().FactoryHelp.CreateShellIDataOneWindowStorage(currentPageType, snapShotSettings.Flavor);
+      let promiseResult: PromiseResult = new PromiseResult(this.SaveWindowState.name, this.Log());
 
-    var snapShot: IDataOneWindowStorage = this.Helpers().FactoryHelp.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
+      var snapShot: IDataOneWindowStorage = this.Helpers().FactoryHelp.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
 
-    if (snapShotSettings) {
-      if (snapShotSettings.SnapShotNewNickname) {
-        snapShot.NickName = snapShotSettings.SnapShotNewNickname;
+      if (snapShotSettings) {
+        if (snapShotSettings.SnapShotNewNickname) {
+          snapShot.NickName = snapShotSettings.SnapShotNewNickname;
+        }
+        snapShot.Flavor = snapShotSettings.Flavor;
       }
-      snapShot.Flavor = snapShotSettings.Flavor;
-    }
+
+      if (snapShotSettings.CurrentPageType === scWindowType.ContentEditor) {
+        this.Log().MarkerA();
+        var id = this.ContentHub.Helpers.GuidHelp.EmptyGuid();
+
+        await this.OneCEMan.GetStateCe(id)
+          .then((state: IDataOneStorageCE) => {
+            snapShot.AllCEAr.push(state);
+            promiseResult.MarkSuccessful();
+          }
+          )
+          .catch((err) => promiseResult.MarkFailed(err));
+      }
+      else if (snapShotSettings.CurrentPageType === scWindowType.Desktop) {
+        this.Log().MarkerB();
+
+        await this.OneDesktopMan.GetStateDesktop()
+          .then((states: IDataDtState) => {
+            snapShot.AllCEAr = states.AllCeData;
+            promiseResult.MarkSuccessful();
+          })
+          .catch((err) => promiseResult.MarkFailed(err));
+      }
+      else {
+        this.Log().Error(this.SaveWindowState.name, 'Invalid page location ' + snapShotSettings.CurrentPageType);
+      }
+
+      this.Log().FuncEnd(this.SaveWindowState.name);
+
+      if (promiseResult.WasSuccessful) {
+        await this.AtticMan().WriteToStorage(snapShot)
+          .then(promiseResult.MarkSuccessful)
+          .catch((err) => promiseResult.MarkFailed(err));
+      }
 
 
-    if (currentPageType === scWindowType.ContentEditor) {
-      this.Log().MarkerA();
-      var id = this.ContentHub.Helpers.GuidHelp.EmptyGuid();
-      snapShot.AllCEAr.push( this.OneCEMan.GetStateCe(id));
-    }
-    else if (currentPageType === scWindowType.Desktop) {
-      this.Log().MarkerB();
-     snapShot.AllCEAr = this.OneDesktopMan.GetStateDesktop().AllCeData;
-    }
-    else {
-      this.Log().Error(this.SaveWindowState.name, 'Invalid page location ' + currentPageType);
-    }
-    //this.PopulateStateSel();
-    this.Log().FuncEnd(this.SaveWindowState.name);
-    ;
+
+      if (promiseResult.WasSuccessful()) {
+        resolve();
+      } else {
+        reject(promiseResult.RejectMessage);
+      }
+    });
   }
   //WaitForPageLoad(desiredPageType: WindowType, targetWindow: IDataBrowserWindow, iteration: number, successCallBack: Function) {
   //  this.debug().FuncStart(this.WaitForPageLoad.name, 'Iteration: ' + iteration + ' | Desired type: ' + WindowType[desiredPageType]);
@@ -156,6 +181,4 @@ export class OneScWindowManager extends ContentManagerBase {
   //  this.debug().Log('match found :' + (toReturn !== null));
   //  return toReturn;
   //}
-
-  
 }

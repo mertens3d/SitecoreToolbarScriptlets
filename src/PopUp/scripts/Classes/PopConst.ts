@@ -31,6 +31,7 @@ export class PopConst {
           ModeEdit: 'sc-mode-edit',
           ModeNorm: 'Norm',
           ModePrev: 'Prev',
+          PresentationDetails: 'PresentationDetails',
           QuickPublish: 'QuickPublish',
           HsRemoveFromStorage: 'RemoveOneFromLocalStorage',
           HsRestoreWindowState: 'RestoreWindowState',
@@ -44,7 +45,7 @@ export class PopConst {
       MinMenuHeight: 600,
       MinMenuWidth: 600,
       MaxAutoSaveCount: 10,
-      AutoSaveIntervalMin: 1000,
+      AutoSaveIntervalMin: 5,
     },
     Notify: {
       Default: 'Complete',
@@ -74,14 +75,16 @@ export class PopConst {
         LogToConsole: '[id=id-settings-show-log-data]',
         iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
         PrefAutoLogin: '[id=id-settings-auto-login]',
-        SettingAutoSaveEnabled: '[id=id-settings-auto-save-enabled]',
+        SettingNotUsed: '[id=id-settings-not-used]',
+        AutoSnapshotBeforeWindowChange: '[id=id-settings-auto-snapshot-on-window-change]',
         SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',
         SettingAutoSaveMaxCount: '[id=id-settings-auto-save-max-count]',
 
         SettingDebugKeepDialogOpen: '[id=id-settings-debug-keep-dialog-open]',
 
         BuildStamp: '[id=build-stamp]',
-        DivState: '[id=div-state]',
+        DivStatePopUp: '[id=div-state-pop-up]',
+        DivStateContent: '[id=div-state-content]',
         IdFieldSetDebug: '[id=id-fieldset-debug]',
         SelStateSnapShot: '[id=selState]',
         TaDebug: '[id=ta-log]',
@@ -109,6 +112,7 @@ export class PopConst {
           AutoSaveEnabled: false,
           AutoLogin: false,
           DefaultDebugKeepDialogOpen: false,
+          AutoSnapshotBeforeWindowChange: true,
         
         }
       }

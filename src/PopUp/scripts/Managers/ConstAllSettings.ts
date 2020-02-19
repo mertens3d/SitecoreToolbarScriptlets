@@ -25,15 +25,24 @@ export class ConstAllSettings {
       SettingFlavor.ContentAndPopUp,
       'Log to Console',
     ),
-    new OneGenericSetting(
-      SettingKey.AutoSaveEnabled,
-      SettingType.BoolCheckBox,
-      null,
-      PopConst.Const.Selector.HS.SettingAutoSaveEnabled,
-      PopConst.Const.Storage.Defaults.bool.AutoSaveEnabled,
-      SettingFlavor.ContentAndPopUp,
-      'Auto Save Snapshot',
-    ),
+    //new OneGenericSetting(
+    //  SettingKey.AutoSaveEnabled,
+    //  SettingType.BoolCheckBox,
+    //  null,
+    //  PopConst.Const.Selector.HS.SettingAutoSaveEnabled,
+    //  PopConst.Const.Storage.Defaults.bool.AutoSaveEnabled,
+    //  SettingFlavor.ContentAndPopUp,
+    //  'Auto Save Snapshot',
+    // ),
+     new OneGenericSetting(
+       SettingKey.AutoSnapshotBeforeWindowChange,
+       SettingType.BoolCheckBox,
+       null,
+       PopConst.Const.Selector.HS.AutoSnapshotBeforeWindowChange,
+       PopConst.Const.Storage.Defaults.bool.AutoSnapshotBeforeWindowChange,
+       SettingFlavor.ContentAndPopUp,
+       'Auto Save Snapshot on HindSite Window Change',
+     ),
     //new OneGenericSetting(
     //  SettingKey.NotUsed,
     //  SettingType.BoolCheckBox,
@@ -122,7 +131,7 @@ export class ConstAllSettings {
       PopConst.Const.Selector.HS.SettingAutoSaveInterval,
       PopConst.Const.Numbers.AutoSaveIntervalMin,
       SettingFlavor.ContentAndPopUp,
-      'Auto Save Interval (Minutes)',
+      'Auto Save Interval (Min) - 0 to disable',
     ),
    
     new OneGenericSetting(

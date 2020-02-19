@@ -1,41 +1,59 @@
 ﻿import { CommonEvents } from "./CommonEvents";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
 import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
+import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
+import { PopUpHub } from "../Managers/PopUpHub";
+import { IScMode } from "../../../Shared/scripts/Interfaces/IscMode";
 export class HandlersInternal extends CommonEvents {
-  HndlrSelectChange(evt: any) {
+
+  HndlrSelectChange(evt: any, popHub: PopUpHub) {
     this.PopHub.UiMan.SelectChanged();
   }
   //__showDebugButtonClicked(evt: MouseEvent) {
   //    this.__initNewOperation();
-  //    this.Log().FuncStart(this.__showDebugButtonClicked.name);
-  //    this.Log().FuncEnd(this.__showDebugButtonClicked.name);
+  //    popHub.Log.FuncStart(this.__showDebugButtonClicked.name);
+  //    popHub.Log.FuncEnd(this.__showDebugButtonClicked.name);
   //}
-  __cleardebugTextWithConfirm() {
-    this.Log().HndlrClearDebugText(this.Log(), true);
+  __cleardebugTextWithConfirm(evt: any, popHub: PopUpHub) {
+    popHub.Log.HndlrClearDebugText(popHub.Log, true);
   }
   GenericSettingChanged() {
   }
-  CloseWindow(evt: MouseEvent) {
+  CloseWindow(evt: any, popHub: PopUpHub) {
     window.close();
   }
-  __toggleAccordian(evt: MouseEvent, settingKey: SettingKey) {
-    this.Log().FuncStart(this.__toggleAccordian.name);
+  async GoCeInternal(evt: any, popHub: PopUpHub) {
+    popHub.LocMan.ChangeLocationSwitchBoard(scWindowType.ContentEditor);
+    //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqOpenCE, this.PopHub));
+  }
+  GoDesktopInternal(evt: any, popHub: PopUpHub) {
+    popHub.LocMan.ChangeLocationSwitchBoard(scWindowType.Desktop);
+    //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqGoDesktop, this.PopHub))
+  }
+  async SetScModeInternal(evt: MouseEvent, popHub: PopUpHub, parameters: any[]) {
+    let newMode: IScMode = parameters[0];
+    await  popHub.LocMan.SetScMode(newMode)
+      .then(() => popHub.UiMan.OnSuccessfullCommand());
+    //.catch((ex) => popHub.Log.Error(popHub.EventMan.Handlers.External.SetScMode.name, ex));
+  }
+  ToggleAccordian(evt: any, popHub: PopUpHub, settingKey: SettingKey) {
+    popHub.Log.FuncStart(this.ToggleAccordian.name);
     var srcElem: HTMLElement = <HTMLElement>(evt.target || evt.srcElement);
-    var foundContentSib = this.UiMan().GetAccordianContentElem(srcElem);
+    var foundContentSib = popHub.UiMan.GetAccordianContentElem(srcElem);
     if (foundContentSib) {
-      var oldValue: OneGenericSetting = this.Helpers().SettingsHelp.GetByKey(settingKey, this.SettingsMan().AllSettings.SettingsAr);
+      var oldValue: OneGenericSetting = popHub.Helpers.SettingsHelp.GetByKey(settingKey, popHub.SettingsMan.AllSettings.SettingsAr);
       if (oldValue) {
         var oldValueBool: boolean = <boolean>oldValue.ValueAsObj;
         var newVal: boolean = !oldValue;
-        this.UiMan().SetAccordianClass(foundContentSib, newVal);
+        popHub.UiMan.SetAccordianClass(foundContentSib, newVal);
       }
       //this.PopAtticMan().UpdateAccodianState(srcElem.getAttribute('id'), newVal);
 
-      this.SettingsMan().SetByKey(settingKey, newVal);
+      popHub.SettingsMan.SetByKey(settingKey, newVal);
     }
     else {
-      this.Log().Error(this.__toggleAccordian.name, 'did not find sib');
+      popHub.Log.Error(this.ToggleAccordian.name, 'did not find sib');
     }
-    this.Log().FuncEnd(this.__toggleAccordian.name);
+    popHub.Log.FuncEnd(this.ToggleAccordian.name);
   }
 }

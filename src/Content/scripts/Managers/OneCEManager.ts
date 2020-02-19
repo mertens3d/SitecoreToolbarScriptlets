@@ -8,6 +8,7 @@ import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTre
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 import { OneTreeManager } from './OneTreeManager';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 
 export class OneCEManager extends ContentManagerBase {
   OneTreeMan: OneTreeManager;
@@ -162,7 +163,6 @@ export class OneCEManager extends ContentManagerBase {
           break;
         }
       }
-
     } else {
       this.Log().Error(this.GetActiveNode.name, 'No tree data provided');
     }
@@ -170,21 +170,33 @@ export class OneCEManager extends ContentManagerBase {
     return toReturn;
   }
 
-  GetStateCe(id: IGuid): IDataOneStorageCE {
-    this.Log().FuncStart(this.GetStateCe.name);
+  GetStateCe(id: IGuid) {
+    return new Promise((resolve, reject) => {
+      this.Log().FuncStart(this.GetStateCe.name);
+      let result: PromiseResult = new PromiseResult(this.GetStateCe.name, this.Log());
 
-    var toReturnCEData: IDataOneStorageCE = {
-      Id: id,
-      AllTreeNodeAr: this.OneTreeMan.GetOneLiveTreeData(),
-      ActiveNode: null
-    }
+      var toReturnCEData: IDataOneStorageCE = {
+        Id: id,
+        AllTreeNodeAr: this.OneTreeMan.GetOneLiveTreeData(),
+        ActiveNode: null
+      }
 
-    toReturnCEData.ActiveNode = this.GetActiveNode(toReturnCEData.AllTreeNodeAr);
+      toReturnCEData.ActiveNode = this.GetActiveNode(toReturnCEData.AllTreeNodeAr);
 
+      if (toReturnCEData) {
+        result.MarkSuccessful()
+      } else {
+        result.MarkFailed('todo why would this fail?');
+      }
 
+      this.Log().FuncEnd(this.GetStateCe.name);
 
-    this.Log().FuncEnd(this.GetStateCe.name);
-    return toReturnCEData;
+      if (result.WasSuccessful()) {
+        resolve(toReturnCEData)
+      } else {
+        reject(result.RejectMessage);
+      }
+
+    });
   }
-
 }

@@ -60,7 +60,7 @@ export class EventManager extends PopUpManagerBase {
         else if (oneSetting.DataType === SettingType.Accordian) {
           let self = this;
           uiElem.addEventListener('click', (evt) => {
-            self.Handlers.Internal.__toggleAccordian(evt, oneSetting.SettingKey);
+            self.Handlers.Internal.ToggleAccordian(evt, this.PopHub, oneSetting.SettingKey);
             //self.SettingsMan().SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
           }
           )
@@ -74,10 +74,10 @@ export class EventManager extends PopUpManagerBase {
   private __wireMenuButtons() {
     this.Log().FuncStart(this.__wireMenuButtons.name);
 
-    this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestore(evt); });
-    this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.TaDebug, () => { this.Handlers.Internal.__cleardebugTextWithConfirm(); });
+    this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestore(evt, this.PopHub); });
+    this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.TaDebug, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
 
-    this.UiMan().AssignOnChangeEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.Internal.HndlrSelectChange(evt) });
+    this.UiMan().AssignOnChangeEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.Internal.HndlrSelectChange(evt, this.PopHub) });
 
     //this.UiMan().AssignMenuWindowChanged((evt) => { this.__hndlrMenuWindowChanged(); });
 

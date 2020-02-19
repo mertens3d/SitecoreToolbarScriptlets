@@ -18,6 +18,7 @@ import { SettingsHelper } from "../../../Shared/scripts/Helpers/SettingsHelper";
 //import { PopUpFactoryManager } from "./FactoryManager";
 
 export class PopUpHub {
+    [x: string]: any;
   Log: LoggerPopUp;
 
   EventMan: EventManager;

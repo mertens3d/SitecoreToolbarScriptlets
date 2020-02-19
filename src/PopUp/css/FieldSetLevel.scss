@@ -1,38 +1,53 @@
 ﻿@import "vars";
 
-legend {
-  /*background-color: green;*/
-  background: none;
-  background-color: $scSectionBackgroundColor;
+fieldset {
+  &.top{
+
+  background-color: $scBackgroundColor;
   border: none;
-  color: white;
-  cursor: pointer;
-  /*display: flex;*/
-  /*float: left;*/
-  /*left: -12px;*/
-  margin-top: 0;
-  padding-top: 15px;
-  padding-left: 10px;
-  position: relative;
-  top: 5px;
-  width: calc(100% - (2 * #{$hsTypMargin}) + 2px);
-  height: $scSectionTitleHeight;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  margin-top: 5px;
+  padding: 0;
 
-  .scEditorSectionCaptionGlyph {
-    float: right;
-    margin: 10px 15px 0 0;
   }
+  > legend {
+    &.section {
+      /*background-color: green;*/
+      background: none;
+      background-color: $scSectionBackgroundColor;
+      border: none;
+      color: white;
+      cursor: pointer;
+      /*display: flex;*/
+      /*float: left;*/
+      /*left: -12px;*/
+      margin-top: 0;
+      padding-top: 15px;
+      padding-left: 10px;
+      position: relative;
+      top: 5px;
+      width: calc(100% - (2 * #{$hsTypMargin}) + 2px);
+      height: $scSectionTitleHeight;
 
-  &.expanded {
-    border-left: 5px solid $scRed;
-  }
+      .scEditorSectionCaptionGlyph {
+        float: right;
+        margin: 10px 15px 0 0;
+      }
 
-  &:after {
-    content: url($sc_AccordianUp);
-    font-size: 13px;
-    color: #777;
-    float: right;
-    margin-left: 5px;
+      &.expanded {
+        border-left: 5px solid $scRed;
+      }
+
+      &:after {
+        content: url($sc_AccordianUp);
+        font-size: 13px;
+        color: #777;
+        float: right;
+        margin-left: 5px;
+      }
+    }
   }
 }
 
@@ -46,17 +61,6 @@ legend {
   width: $MaxScrollerWidth;
   overflow: scroll;
   margin: $hsTypMargin;
-  
-}
-
-fieldset {
-  background-color: $scBackgroundColor;
-  border: none;
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  margin-top: 5px;
-  padding: 0;
 }
 
 .accordian-content {

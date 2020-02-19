@@ -2,19 +2,12 @@
 import { IDataBucketRestoreDesktop } from "../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
-import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp";
+import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { IDataPayloadSnapShot } from "../../../Shared/scripts/Classes/IDataPayloadSnapShot";
 export class LoggerContent extends LoggerBase {
-    DebugMsgFromPopUp(reqMsgFromPopup: MsgFromPopUp) {
-        if (this.IsNotNullOrUndefinedBool('MsgFromPopUp', reqMsgFromPopup)) {
-            this.LogVal('requestMsgFromPopup', JSON.stringify(reqMsgFromPopup));
-            this.LogVal('MsgFlag', StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
-            //this.DebugIDataContentPrefs(reqMsgFromPopup.CurrentContentPrefs);
-            this.DebugPayloadDataFromPopUp(reqMsgFromPopup.Data);
-        }
-    }
+
     DebugPayloadDataFromPopUp(data: PayloadDataFromPopUp) {
         if (this.IsNotNullOrUndefinedBool('PayloadDataFromPopUp', data)) {
             this.LogVal('idOfSelect', data.IdOfSelect);

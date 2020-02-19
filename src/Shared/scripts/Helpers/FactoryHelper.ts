@@ -25,7 +25,8 @@ export class FactoryHelper extends HelperBase {
     var toReturn: IDataDtState = {
       AllCeData: [],
       livingIframeAr: [],
-      ActiveCeMan: null
+      ActiveCeMan: null,
+      ActiveCeState: null
     }
 
     return toReturn;

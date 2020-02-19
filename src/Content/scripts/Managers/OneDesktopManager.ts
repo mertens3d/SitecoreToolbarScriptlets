@@ -12,6 +12,7 @@ import { OneCEManager } from './OneCEManager';
 import { IDataDtState } from '../../../Shared/scripts/Interfaces/IDataDtState';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
+import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 
 export class OneDesktopManager extends ContentManagerBase {
   associatedDoc: IDataOneDoc;
@@ -120,34 +121,55 @@ export class OneDesktopManager extends ContentManagerBase {
     return toReturn;
   }
 
-  GetStateDesktop(): IDataDtState {
-    this.Log().FuncStart(this.GetStateDesktop.name);
-    this.Log().DebugIDataOneDoc(this.associatedDoc);
+  GetStateDesktop() {
+    return new Promise(async (resolve, reject) => {
+      this.Log().FuncStart(this.GetStateDesktop.name);
+      this.Log().DebugIDataOneDoc(this.associatedDoc);
 
-    var toReturnAllCeState: IDataDtState = this.Helpers().FactoryHelp.CreateNewDtDataShell();
-    toReturnAllCeState.livingIframeAr = this.GetAllLiveIframeData();
+      let promiseResult: PromiseResult = new PromiseResult(this.GetStateDesktop.name, this.Log());
 
-    if (toReturnAllCeState.livingIframeAr && toReturnAllCeState.livingIframeAr.length > 0) {
-      for (var iframeIdx = 0; iframeIdx < toReturnAllCeState.livingIframeAr.length; iframeIdx++) {
-        this.Log().Log('iframeIdx: ' + iframeIdx);
+      var toReturnAllCeState: IDataDtState = this.Helpers().FactoryHelp.CreateNewDtDataShell();
+      toReturnAllCeState.livingIframeAr = this.GetAllLiveIframeData();
 
-        var targetIframeObj = toReturnAllCeState.livingIframeAr[iframeIdx];
+      if (toReturnAllCeState.livingIframeAr && toReturnAllCeState.livingIframeAr.length > 0) {
+        for (var iframeIdx = 0; iframeIdx < toReturnAllCeState.livingIframeAr.length; iframeIdx++) {
+          this.Log().LogVal('iframeIdx: ', iframeIdx);
 
-        
-        var oneCeMan = new OneCEManager(this.ContentHub, targetIframeObj.ContentDoc);
+          var targetIframeObj = toReturnAllCeState.livingIframeAr[iframeIdx];
 
-        //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
-        if (targetIframeObj.Zindex === 1) {
-          toReturnAllCeState.ActiveCeMan = oneCeMan;
+          var oneCeMan = new OneCEManager(this.ContentHub, targetIframeObj.ContentDoc);
+
+          //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
+
+          await oneCeMan.GetStateCe(this.Helpers().GuidHelp.EmptyGuid())
+            .then((oneCeState: IDataOneStorageCE) => {
+              toReturnAllCeState.AllCeData.push(oneCeState);
+
+              if (targetIframeObj.Zindex === 1) {
+                toReturnAllCeState.ActiveCeMan = oneCeMan;
+                toReturnAllCeState.ActiveCeState = oneCeState;
+              }
+
+              promiseResult.MarkSuccessful();
+            }
+            )
+            .catch((err) => promiseResult.MarkFailed(err));
+
+          if (!promiseResult.WasSuccessful) {
+            break;
+          }
         }
-
-        var oneCeState = oneCeMan.GetStateCe(this.Helpers().GuidHelp.EmptyGuid());
-        toReturnAllCeState.AllCeData.push(oneCeState);
+      } else {
+        promiseResult.MarkSuccessful();
       }
-    }
 
-    this.Log().FuncEnd(this.GetStateDesktop.name);
+      this.Log().FuncEnd(this.GetStateDesktop.name);
 
-    return toReturnAllCeState;
+      if (promiseResult.WasSuccessful()) {
+        resolve(toReturnAllCeState);
+      } else {
+        reject(promiseResult.RejectMessage);
+      }
+    })
   }
 };

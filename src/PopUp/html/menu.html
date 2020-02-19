@@ -16,8 +16,8 @@
       </div>
       <div class="header-push"></div>
 
-      <fieldset>
-        <legend id='lgnd-fore-site'>{error}</legend>
+      <fieldset class='top'>
+        <legend id='lgnd-fore-site' class="section">{error}</legend>
         <div class="accordian-content">
           <div class=' flex-container'>
             <button id='sc-mode-edit' type='button' class="icon edit">Edit</button>
@@ -33,8 +33,8 @@
         </div>
       </fieldset>
 
-      <fieldset>
-        <legend id='lgnd-hind-site' data-setting='lgnd-hind-site'>{error}</legend>
+      <fieldset  class='top'>
+        <legend id='lgnd-hind-site' data-setting='lgnd-hind-site' class="section">{error}</legend>
         <div class='accordian-content'>
           <div class="row flex-container">
             <div class='col-full'>
@@ -58,21 +58,22 @@
         </div>
       </fieldset>
 
-      <fieldset>
-        <legend id='lgnd-state' data-setting='lgnd-state'>{error}</legend>
+      <fieldset class='top'>
+        <legend id='lgnd-state' data-setting='lgnd-state' class="section">{error}</legend>
         <div class='accordian-content'>
           <div class='flex-container'>
             <div class='col-full'>
               <div class='scroller'>
-                <div id='div-state'></div>
+                <div id='div-state-pop-up'></div>
+                <div id='div-state-content'></div>
               </div>
             </div>
           </div>
         </div>
       </fieldset>
 
-      <fieldset id='id-fieldset-debug'>
-        <legend id='lgnd-log' data-setting='lgnd-log'>{error}</legend>
+      <fieldset id='id-fieldset-debug'  class='top'>
+        <legend id='lgnd-log' data-setting='lgnd-log' class="section">{error}</legend>
         <span id='spanParentInfo'></span>
         <div class='accordian-content'>
           <div class='col-full'>
@@ -83,8 +84,8 @@
         </div>
       </fieldset>
 
-      <fieldset>
-        <legend id='lgnd-in-site' data-setting='lgnd-in-site'>{error}</legend>
+      <fieldset class='top'>
+        <legend id='lgnd-in-site' data-setting='lgnd-in-site' class="section">{error}</legend>
         <div class='accordian-content'>
           <div class='flex-container'>
             <div class='col-full'>
@@ -99,37 +100,51 @@
         </div>
       </fieldset>
 
-      <fieldset>
-        <legend id='lgnd-settings' data-setting='lgnd-settings'>Settings/ Stats</legend>
+      <fieldset class='top'>
+        <legend id='lgnd-settings' data-setting='lgnd-settings' class="section">Settings/ Stats</legend>
         <div class='accordian-content'>
 
           <br />
           <input type='checkbox' id='id-generic-setting-test' checked="checked" />
           <label for='id-generic-setting-test'>{error}</label>
 
-          <br />
-          <input type='checkbox' id='id-settings-show-log-data' checked="checked" />
-          <label for='id-settings-show-log-data'>{error}</label>
 
           <br />
           <input type="checkbox" id="id-settings-auto-login" checked="checked" />
           <label for='id-settings-auto-login'>{error}</label>
 
-          <br />
-          <input type="checkbox" id="id-settings-auto-save-enabled" checked="checked" />
-          <label for='id-settings-auto-save-enabled'>{error}</label>
+          <fieldset>
+            <legend>Debug</legend>
+            <input type="checkbox" id="id-settings-debug-keep-dialog-open" checked="checked" />
+            <label for='id-settings-debug-keep-dialog-open'>{error}</label>
+
+            <br />
+            <input type='checkbox' id='id-settings-show-log-data' checked="checked" />
+            <label for='id-settings-show-log-data'>{error}</label>
+
+
+
+          </fieldset>
 
           <br />
-          <input type="checkbox" id="id-settings-debug-keep-dialog-open" checked="checked" />
-          <label for='id-settings-debug-keep-dialog-open'>{error}</label>
+          
+          <fieldset>
+            <legend>Auto Snapshot</legend>
+            
+            <!--<input type="checkbox" id="id-settings-not-used" checked="checked" />
+            <label for='id-settings-not-used'>{error}</label>
+            <br />-->
+            <input type="checkbox" id="id-settings-auto-snapshot-on-window-change" checked="checked" />
+            <label for='id-settings-auto-snapshot-on-window-change'>{error}</label>
 
-          <br />
-          <input type="number" id="id-settings-auto-save-interval" min="0" max="100" value="0" />
-          <label for='id-settings-auto-save-interval'>{error}</label>
+            <br />
+            <input type="number" id="id-settings-auto-save-interval" min="0" max="100" value="15" />
+            <label for='id-settings-auto-save-interval'>{error}</label>
 
-          <br />
-          <input type="number" id="id-settings-auto-save-max-count" min="0" max="100" value="0" />
-          <label for='id-settings-auto-save-max-count'>{error}</label>
+            <br />
+            <input type="number" id="id-settings-auto-save-max-count" min="3" max="100" value="3" />
+            <label for='id-settings-auto-save-max-count'>{error}</label>
+          </fieldset>
 
           <br />
           <div id="stat-caller-id"></div>

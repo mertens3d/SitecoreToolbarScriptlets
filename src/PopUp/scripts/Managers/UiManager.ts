@@ -8,7 +8,7 @@ import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneSt
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ICallbackDataDebugTextChanged } from '../../../Shared/scripts/Interfaces/ICallbackDataDebugTextChanged';
 import { PayloadDataFromContent } from '../../../Shared/scripts/Classes/PayloadDataFromContent';
-import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';
+import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
 import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
@@ -24,26 +24,36 @@ import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 import { PopConst } from '../Classes/PopConst';
 import { SettingKey } from '../../../Shared/scripts/Enums/SettingKey';
 import { SettingsHelper } from '../../../Shared/scripts/Helpers/SettingsHelper';
+import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
+import { UiButtonStateManager } from './UiButtonStateManager';
+import { IMenuState } from '../../../Shared/scripts/Interfaces/IMenuState';
 
 export class UiManager extends PopUpManagerBase {
-  private __selectSnapshotId: IGuid;
-
   TabId: string;
   ParentFocused: boolean = false;
   MenuFocused: boolean = true;
   OtherFocused: boolean = false;
   MenuEnabled: boolean = true;
   CurrContentState: ICurrStateContent;
+  ButtonStateManager: UiButtonStateManager;
+  lineBreak = '<br/>';
+  indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';
+
+  CurrentMenuState: IMenuState = {
+    SelectSnapshotId: null,
+  }
 
   constructor(popHub: PopUpHub) {
     super(popHub);
     popHub.Log.FuncStart(UiManager.name);
 
+    this.ButtonStateManager = new UiButtonStateManager(this.PopHub);
     popHub.Log.FuncEnd(UiManager.name);
   }
 
   Init() {
     this.Log().FuncStart(UiManager.name, this.Init.name);
+
     var self = this;
     this.Log().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
 
@@ -273,7 +283,7 @@ export class UiManager extends PopUpManagerBase {
 
   SelectChanged(): void {
     this.Log().FuncStart(this.SelectChanged.name);
-    this.__selectSnapshotId = this.Helpers().GuidHelp.ParseGuid(this.__getSelectElem().value);
+    this.CurrentMenuState.SelectSnapshotId = this.Helpers().GuidHelp.ParseGuid(this.__getSelectElem().value);
     //this.debug().Log('new index :' + this.__selectSnapshotId);
 
     //if (e.ctrlKey) {
@@ -356,49 +366,17 @@ export class UiManager extends PopUpManagerBase {
 
     this.RefreshUiGenericSettings();
 
-    this.UiMan().PopulateContentState(this.MsgMan().LastKnownContentState);
+    this.UiMan().PopulateState(this.MsgMan().LastKnownContentState);
 
     this.PopulateStateOfSnapShotSelect(this.MsgMan().LastKnownContentState.SnapShotsMany.CurrentSnapShots);
 
-    this.RefreshButtonStates();
+    this.ButtonStateManager.RefreshButtonStates();
 
     this.__drawCorrectNicknameInUI(this.MsgMan().LastKnownContentState.SnapShotsMany.CurrentSnapShots);
 
     this.Log().FuncEnd(this.RefreshUiFromCache.name);
   }
 
-  RefreshButtonStates(): void {
-    this.Log().FuncStart(this.RefreshButtonStates.name, this.EventMan().AllMenuCommands.length);
-    for (var idx = 0; idx < this.EventMan().AllMenuCommands.length; idx++) {
-      var command = this.EventMan().AllMenuCommands[idx];
-      //this.Log().LogVal('working on', MenuCommand[command.Command])
-      if (command.RequiredPageTypes.length > 0) {
-        //this.Log().LogVal('required pages', command.RequiredPageTypes.toString());
-
-        var currentWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
-        //this.Log().LogVal('current', StaticHelpers.WindowTypeAsString(currentWindowType));
-        var targetButton: HTMLElement = this.GetButtonByIdOrSelector(command.ButtonSelector);
-
-        if (targetButton) {
-          var isMatch: boolean = command.RequiredPageTypes.indexOf(currentWindowType) >= 0;
-          //this.Log().LogVal('isMatch', isMatch);
-
-          if (isMatch) {
-            targetButton.classList.remove('disabled');
-            targetButton.removeAttribute('disabled');
-          } else {
-            targetButton.classList.add('disabled');
-            targetButton.setAttribute('disabled', 'disabled');
-          }
-        } else {
-          this.Log().Error(this.RefreshButtonStates.name, 'target button not found');
-        }
-      } else {
-        //this.Log().Log('no required pages');
-      }
-    }
-    this.Log().FuncEnd(this.RefreshButtonStates.name);
-  }
   ShowDebugDataOneWindow() {
     this.Log().FuncStart('ShowDebugDataOneWindow');
     var toReturn: string[] = [];
@@ -418,18 +396,17 @@ export class UiManager extends PopUpManagerBase {
   }
   private __drawCorrectNicknameInUI(snapShots: IDataOneWindowStorage[]) {
     this.Log().FuncStart(this.__drawCorrectNicknameInUI.name);
-    var targetId: IGuid = this.UiMan().GetIdOfSelectWindowSnapshot();
+    var targetId: IGuid = this.UiMan().CurrentMenuState.SelectSnapshotId;
     if (targetId) {
       this.Log().Log('targetId : ' + targetId.AsString);
 
       var storageValues = snapShots;
-      var currentSelectId = this.GetIdOfSelectWindowSnapshot();
 
       var storageMatch;
 
       for (var idx = 0; idx < storageValues.length; idx++) {
         var candidate = storageValues[idx];
-        if (candidate.Id.AsString === currentSelectId.AsString) {
+        if (candidate.Id.AsString === this.CurrentMenuState.SelectSnapshotId.AsString) {
           storageMatch = candidate;
           break;
         }
@@ -455,34 +432,34 @@ export class UiManager extends PopUpManagerBase {
     return <HTMLSelectElement>window.document.querySelector(PopConst.Const.Selector.HS.SelStateSnapShot);
   }
 
-  GetIdOfSelectWindowSnapshot(): IGuid {
-    this.Log().FuncStart(this.GetIdOfSelectWindowSnapshot.name);
+  //GetIdOfSelectWindowSnapshot(): IGuid {
+  //  this.Log().FuncStart(this.GetIdOfSelectWindowSnapshot.name);
 
-    var targetSel: HTMLSelectElement = this.__getSelectElem();
-    var toReturn: IGuid = null;
-    if (targetSel) {
-      var selectedValue: string = targetSel.value;
-      if (selectedValue) {
-        toReturn = this.Helpers().GuidHelp.ParseGuid(selectedValue);
-      }
-      //var optionsLength = targetSel.options.length;
-      //if (this.__selectSnapshotId < optionsLength) {
-      //  var temp = targetSel.options[this.__selectSnapshotId].value;
-      //  //this.debug().Log('temp: ' + temp);
-      //  toReturn = this.GuidMan().ParseGuid(temp);
-      //}
-    }
+  //  var targetSel: HTMLSelectElement = this.__getSelectElem();
+  //  var toReturn: IGuid = null;
+  //  if (targetSel) {
+  //    var selectedValue: string = targetSel.value;
+  //    if (selectedValue) {
+  //      toReturn = this.Helpers().GuidHelp.ParseGuid(selectedValue);
+  //    }
+  //    //var optionsLength = targetSel.options.length;
+  //    //if (this.__selectSnapshotId < optionsLength) {
+  //    //  var temp = targetSel.options[this.__selectSnapshotId].value;
+  //    //  //this.debug().Log('temp: ' + temp);
+  //    //  toReturn = this.GuidMan().ParseGuid(temp);
+  //    //}
+  //  }
 
-    if (!toReturn) {
-      this.Log().Log('using empty guid');
-      toReturn = this.Helpers().GuidHelp.EmptyGuid();
-    }
+  //  if (!toReturn) {
+  //    this.Log().Log('using empty guid');
+  //    toReturn = this.Helpers().GuidHelp.EmptyGuid();
+  //  }
 
-    this.Log().DebugIGuid(toReturn);
+  //  this.Log().DebugIGuid(toReturn);
 
-    this.Log().FuncEnd(this.GetIdOfSelectWindowSnapshot.name, toReturn.AsString);
-    return toReturn;
-  }
+  //  this.Log().FuncEnd(this.GetIdOfSelectWindowSnapshot.name, toReturn.AsString);
+  //  return toReturn;
+  //}
 
   GetButtonByIdOrSelector(targetId: string): HTMLElement {
     var toReturn: HTMLElement = document.querySelector(targetId);
@@ -536,103 +513,110 @@ export class UiManager extends PopUpManagerBase {
       targetElem.ondblclick = (evt) => { handler(evt) };
     }
   }
-
-  PopulateContentStateDiv(contentState: ICurrStateContent) {
-    var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.DivState);
-
-    //this.Log().LogVal('now', new Date().toString());
-    var allTaText: string = 'State as of: ' + (new Date()).toString();
-    var allTaText: string = 'State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
-
-    var lineBreak = '<br/>';
+  PopulateContentStateDivContent(contentState: ICurrStateContent) {
+    var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.DivStateContent);
+    var allStateText: string = this.lineBreak  + 'Content State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
 
     if (targetCurrStateDiv) {
-      allTaText += lineBreak;
-      allTaText += 'Page Type: ' + StaticHelpers.WindowTypeAsString(this.TabMan().CurrentTabData.UrlParts.ScWindowType);
-
+      allStateText += this.lineBreak + 'Editor:';
+      allStateText += this.indentedLineBreak + 'Active Ce: '
       if (contentState.ActiveCe) {
-        allTaText += lineBreak;
-        allTaText += 'Active Ce: ' + contentState.ActiveCe.Id.AsShort;
+        allStateText += contentState.ActiveCe.Id.AsShort;
 
+        allStateText += this.indentedLineBreak + 'Active Node: '
         if (contentState.ActiveCe.ActiveNode) {
-          allTaText += lineBreak;
-          allTaText += 'Active Node: ' + contentState.ActiveCe.ActiveNode.NodeFriendly + ' ' + contentState.ActiveCe.ActiveNode.NodeId.AsBracedGuid;
+          allStateText += contentState.ActiveCe.ActiveNode.NodeFriendly + ' ' + contentState.ActiveCe.ActiveNode.NodeId.AsBracedGuid;
         } else {
-          allTaText += lineBreak;
-          allTaText += '{no active node in CE}';
+          allStateText += '{no active node in CE}';
         }
       } else {
-        allTaText += lineBreak;
-        allTaText += '{no active CE}';
+        allStateText += '{no active CE}';
+      }
+      allStateText += this.lineBreak;
+      allStateText += this.lineBreak + 'Snap Shots: ';
+      allStateText += this.indentedLineBreak + 'Birthday: ' + contentState.SnapShotsMany.Birthday.toString();
+      allStateText += this.indentedLineBreak + 'Total Snapshots: ' + contentState.SnapShotsMany.CurrentSnapShots.length;
+      allStateText += this.indentedLineBreak + 'Favorite Snapshots: ' + contentState.SnapShotsMany.FavoriteCount;
+      allStateText += this.indentedLineBreak + 'Plain Snapshots: ' + contentState.SnapShotsMany.PlainCount;
+      allStateText += this.indentedLineBreak + 'Auto Snapshots: ' + contentState.SnapShotsMany.SnapShotsAutoCount;
+
+      allStateText += this.lineBreak;
+      allStateText += 'Last Request: ' + MsgFlag[contentState.LastReq];
+
+      allStateText += this.lineBreak;
+      allStateText += 'Error Stack (' + contentState.ErrorStack.length + '):';
+      for (var idx = 0; idx < contentState.ErrorStack.length; idx++) {
+        allStateText += this.indentedLineBreak + idx + ' : ' + contentState.ErrorStack[idx].ContainerFunc + ' ' + contentState.ErrorStack[idx].ErrorString;
       }
 
+      targetCurrStateDiv.innerHTML = allStateText;
+    }
+  }
+  PopulateContentStateDivPopUp() {
+    var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.DivStatePopUp);
+
+    //this.Log().LogVal('now', new Date().toString());
+    //var allTaText: string = 'State as of: ' + (new Date()).toString();
+    var allStateText: string = this.lineBreak  + 'PopUp State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
+
+
+    if (targetCurrStateDiv) {
+
+      allStateText += this.lineBreak + 'UI';
+      
+      allStateText += this.indentedLineBreak + 'Select Snapshot: ';
+      if (this.CurrentMenuState.SelectSnapshotId) {
+        allStateText += this.CurrentMenuState.SelectSnapshotId.AsShort;
+      } else {
+        allStateText += 'none selected';
+      }
+
+      allStateText += this.lineBreak + 'URL Parts';
       let urlParts: UrlParts = this.TabMan().CurrentTabData.UrlParts;
+      allStateText += this.indentedLineBreak + 'Page Type: ' + StaticHelpers.WindowTypeAsString(urlParts.ScWindowType);
 
-      allTaText += lineBreak;
-      allTaText += 'Url Full (raw  ): ' + urlParts.OriginalRaw;
 
-      allTaText += lineBreak;
-      allTaText += 'Url Full (parts): ' + this.Helpers().UrlHelp.BuildFullUrlFromParts(urlParts).AbsUrl;
+      allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + urlParts.OriginalRaw;
 
-      allTaText += lineBreak;
-      allTaText += 'Protocol: ' + urlParts.Protocol;
+      allStateText += this.indentedLineBreak + 'Url Full (parts): ' + this.Helpers().UrlHelp.BuildFullUrlFromParts(urlParts).AbsUrl;
 
-      allTaText += lineBreak;
-      allTaText += 'Host & Port: ' + urlParts.HostAndPort;
+      allStateText += this.indentedLineBreak + 'Protocol: ' + urlParts.Protocol;
 
-      allTaText += lineBreak;
-      allTaText += 'File Path: ' + urlParts.FilePath;
+      allStateText += this.indentedLineBreak + 'Host & Port: ' + urlParts.HostAndPort;
+
+      allStateText += this.indentedLineBreak + 'File Path: ' + urlParts.FilePath;
       //if (urlParts.FilePaths) {
       //  for (var idx = 0; idx < urlParts.FilePaths.length; idx++) {
-      //    allTaText += lineBreak + '&nbsp;&nbsp;&nbsp;';
+      //    allTaText += this.lineBreak + '&nbsp;&nbsp;&nbsp;';
       //    allTaText += urlParts.FilePaths[idx];
       //  }
       //}
 
-      allTaText += lineBreak;
-      allTaText += 'Parameters: ';
+      allStateText += this.lineBreak + 'Parameters: ';
       if (urlParts.Parameters) {
         for (var idx = 0; idx < urlParts.Parameters.length; idx++) {
-          allTaText += lineBreak + '&nbsp;&nbsp;&nbsp;';
-          allTaText += urlParts.Parameters[idx].Key;
-          allTaText += '&nbsp; : &nbsp;';
-          allTaText += urlParts.Parameters[idx].value || '';
+          allStateText += this.indentedLineBreak + this.indentedLineBreak + urlParts.Parameters[idx].Key;
+          allStateText += '&nbsp; : &nbsp;';
+          allStateText += urlParts.Parameters[idx].value || '';
         }
       }
 
-      allTaText += lineBreak;
-      allTaText += 'Last Request: ' + MsgFlag[contentState.LastReq];
-
-      allTaText += lineBreak;
-      allTaText += lineBreak + 'Snap Shots: ';
-      allTaText += lineBreak + 'Birthday: ' + contentState.SnapShotsMany.Birthday.toString();
-      allTaText += lineBreak + 'Total Snapshots: ' + contentState.SnapShotsMany.CurrentSnapShots.length;
-      allTaText += lineBreak + 'Favorite Snapshots: ' + contentState.SnapShotsMany.FavoriteCount;
-      allTaText += lineBreak + 'Plain Snapshots: ' + contentState.SnapShotsMany.PlainCount;
-      allTaText += lineBreak + 'Auto Snapshots: ' + contentState.SnapShotsMany.SnapShotsAutoCount;
-
-      allTaText += lineBreak;
-      allTaText += 'Error Stack (' + contentState.ErrorStack.length + '):';
-      for (var idx = 0; idx < contentState.ErrorStack.length; idx++) {
-        allTaText += lineBreak;
-        allTaText += '&nbsp;nbsp;nbsp;' + idx + ' : ' + contentState.ErrorStack[idx].ContainerFunc + ' ' + contentState.ErrorStack[idx].ErrorString;
-      }
-
-      targetCurrStateDiv.innerHTML = allTaText;
+      targetCurrStateDiv.innerHTML = allStateText;
     }
   }
 
-  async PopulateContentState(contentState: ICurrStateContent) {
-    this.Log().FuncStart(this.PopulateContentState.name);
+  async PopulateState(contentState: ICurrStateContent) {
+    this.Log().FuncStart(this.PopulateState.name);
 
     this.Log().DebugIDataBrowserTab(this.TabMan().CurrentTabData);
 
     this.CurrContentState = contentState;
     if (this.Log().IsNotNullOrUndefinedBool('state', contentState)) {
       this.UiMan().PopulateStateOfSnapShotSelect(contentState.SnapShotsMany.CurrentSnapShots);
-      this.PopulateContentStateDiv(contentState);
+      this.PopulateContentStateDivPopUp();
+      this.PopulateContentStateDivContent(contentState);
     }
-    this.Log().FuncEnd(this.PopulateContentState.name);
+    this.Log().FuncEnd(this.PopulateState.name);
   }
 
   PopulateSnapShotsAuto() {
@@ -717,7 +701,7 @@ export class UiManager extends PopUpManagerBase {
             }
 
             el.value = data.Id.AsString;
-            if (data.Id === this.__selectSnapshotId) {
+            if (data.Id === this.CurrentMenuState.SelectSnapshotId) {
               el.selected = true;
             }
             if (data.Flavor == SnapShotFlavor.Autosave) {
@@ -733,7 +717,7 @@ export class UiManager extends PopUpManagerBase {
         targetSel.appendChild(headers.AutoTitle);
         targetSel.appendChild(headers.Auto);
 
-        if (!this.__selectSnapshotId || this.__selectSnapshotId === this.Helpers().GuidHelp.EmptyGuid()) {
+        if (!this.CurrentMenuState.SelectSnapshotId || this.CurrentMenuState.SelectSnapshotId === this.Helpers().GuidHelp.EmptyGuid()) {
           targetSel.selectedIndex = 0;
         }
       }

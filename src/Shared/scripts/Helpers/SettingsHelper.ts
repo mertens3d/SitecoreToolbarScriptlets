@@ -1,8 +1,8 @@
 ﻿import { HelperBase } from "../Classes/HelperBase";
 import { SettingKey } from "../Enums/SettingKey";
 import { OneGenericSetting } from "../Classes/OneGenericSetting";
-import { StaticHelpers } from "../Classes/StaticHelpers";
 export class SettingsHelper extends HelperBase {
+
 
   GetByKey(settingKey: SettingKey, settingAr: OneGenericSetting[]): OneGenericSetting {
     var toReturn: OneGenericSetting;
@@ -10,21 +10,25 @@ export class SettingsHelper extends HelperBase {
     for (var idx = 0; idx < settingAr.length; idx++) {
       if (settingAr[idx].SettingKey === settingKey) {
         toReturn = settingAr[idx];
-        console.log('found it ' + StaticHelpers.SettingKeyAsString(settingKey));
         break;
       }
     }
     return toReturn;
   }
+
+  static ValueAsInteger(setting: OneGenericSetting): number {
+    let toReturn: number = 0;
+    if (setting) {
+      toReturn = <number>setting.ValueAsObj;
+    }
+    return toReturn;
+  }
+
   static ValueAsBool(setting: OneGenericSetting): boolean {
     let toReturn: boolean = false;
     if (setting) {
       toReturn = <boolean>setting.ValueAsObj;
     }
-    else {
-      console.log('no value as obj');
-    }
-    console.log('returning ' + toReturn);
     return toReturn;
   }
 }

@@ -8,6 +8,8 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 import { CacheMode } from "../../../Shared/scripts/Enums/CacheMode";
 import { IDataOneStorageCE } from "../../../Shared/scripts/Interfaces/IDataOneStorageCE";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
+import { IDataDtState } from "../../../Shared/scripts/Interfaces/IDataDtState";
+import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 
 export class ContentFactories extends ContentManagerBase {
   constructor(contentHub: ContentHub) {
@@ -20,32 +22,46 @@ export class ContentFactories extends ContentManagerBase {
     response.ContentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
     response.ContentState.ErrorStack = this.Log().ErrorStack;
     this.Log().DebugObjState(response.ContentState);
-    response.ContentState.ActiveCe = this.GetCurrentCeState();
+    await this.GetCurrentDtOrCeState()
+      .then((result: IDataOneStorageCE) => response.ContentState.ActiveCe = result)
+      .catch((ex) => this.Log().Error(this.UpdateContentState.name, ex.toString()));
+
     this.Log().FuncEnd(this.UpdateContentState.name);
   }
 
-  GetCurrentCeState() {
-    this.Log().FuncStart(this.GetCurrentCeState.name);
-    let toReturnCeState: IDataOneStorageCE = null;
-    let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
+  GetCurrentDtOrCeState() {
+    return new Promise(async (resolve, reject) => {
+      this.Log().FuncStart(this.GetCurrentDtOrCeState.name);
 
-    if (pageType === scWindowType.Desktop) {
-      var currState = this.OneScWinMan().OneDesktopMan.GetStateDesktop();
-      if (currState) {
-        if (currState.ActiveCeMan) {
-          toReturnCeState = currState.ActiveCeMan.GetStateCe(this.Helpers().GuidHelp.EmptyGuid());
-        }
-      } else {
-        this.Log().Error(this.GetCurrentCeState.name, 'No current state returned');
+      let promiseResult: PromiseResult = new PromiseResult(this.GetCurrentDtOrCeState.name, this.Log());
+
+      let toReturnCeState: IDataOneStorageCE = null;
+      let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
+
+      if (pageType === scWindowType.Desktop) {
+        var currState: IDataDtState;
+
+        await this.OneScWinMan().OneDesktopMan.GetStateDesktop()
+          .then((result: IDataDtState) => {
+            toReturnCeState = result.ActiveCeState;
+            promiseResult.MarkSuccessful();
+          })
+          .catch((ex) => promiseResult.MarkFailed(ex));
       }
-    }
-    else if (pageType == scWindowType.ContentEditor) {
-    } else {
-      toReturnCeState = null;
-    }
-    this.Log().FuncEnd(this.GetCurrentCeState.name);
-    return toReturnCeState;
+      else if (pageType == scWindowType.ContentEditor) {
+      } else {
+        toReturnCeState = null;
+      }
+      this.Log().FuncEnd(this.GetCurrentDtOrCeState.name);
+
+      if (promiseResult.WasSuccessful()) {
+        resolve(toReturnCeState);
+      } else {
+        reject(promiseResult.RejectMessage);
+      }
+    });
   }
+
   async NewMsgFromContentShell() {
     this.Log().FuncStart(this.NewMsgFromContentShell.name);
     var response = new MsgFromContent(MsgFlag.Unknown);

@@ -5,7 +5,7 @@
     unknown = 0,
     //content settings - 100's
     AutoLogin = 100,
-    AutoSaveEnabled = 101,
+    __dead101 = 101,
     DebugKeepDialogOpen = 102,
     AutoSaveIntervalMin = 103,
     //popup settings - 200's
@@ -18,5 +18,6 @@
     LgndHindSite = 302,
     LgndSettings = 303,
     LgndState = 304,
-    NotUsed
+    NotUsed,
+    AutoSnapshotBeforeWindowChange
 }
