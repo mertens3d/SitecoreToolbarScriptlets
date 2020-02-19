@@ -11,7 +11,10 @@ import { TabManager } from "./TabManager";
 import { LocationManager } from "./LocationManager";
 import { HelperHub } from "../../../Shared/scripts/Helpers/Helpers";
 import { BrowserManager } from "./BrowserManager";
-import { LogLevel } from "../../../Shared/scripts/Enums/LogLevel";
+import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
+import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
+import { SharedConst } from "../../../Shared/scripts/SharedConst";
+import { SettingsHelper } from "../../../Shared/scripts/Helpers/SettingsHelper";
 //import { PopUpFactoryManager } from "./FactoryManager";
 
 export class PopUpHub {
@@ -33,7 +36,9 @@ export class PopUpHub {
   SettingsMan: SettingsManager;
 
   constructor() {
-    this.Log = new LoggerPopUp(LogLevel.Enabled);
+    this.Log = new LoggerPopUp();
+    this.SettingsMan = new SettingsManager(this);
+
     this.PopUpAtticMan = new PopUpAtticManager(this);
     this.PopMsgMan = new PopUpMessagesManager(this);
     this.UiMan = new UiManager(this);
@@ -43,7 +48,6 @@ export class PopUpHub {
     //this.PopUpConst = PopConst.Const;
 
     this.FeedbackMan = new FeedbackManager(this);
-    this.SettingsMan = new SettingsManager(this);
     this.TabMan = new TabManager(this);
     this.BrowserMan = new BrowserManager(this);
 
@@ -52,9 +56,25 @@ export class PopUpHub {
 
   async init() {
     this.Log.FuncStart(PopUpHub.name, this.init.name);
+
+    await this.PopUpAtticMan.Init(); //before PopMsgMan
+    await this.SettingsMan.Init();//after attic (?)
+
+
+
+    let setting: OneGenericSetting = await this.SettingsMan.GetByKey(SettingKey.LogToConsole);
+    if (setting) {
+      this.Log.Init(SettingsHelper.ValueAsBool(setting))
+    } else {
+      this.Log.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
+    }
+
+
+
+
     await this.TabMan.Init();
-    this.PopUpAtticMan.Init(); //before PopMsgMan
-   await this.SettingsMan.Init();//after attic (?)
+    
+
     this.Log.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
     this.EventMan.Init();
     this.Log.DebugIDataBrowserTab(this.TabMan.CurrentTabData);

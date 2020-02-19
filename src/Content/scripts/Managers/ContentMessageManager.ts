@@ -1,36 +1,32 @@
 ﻿import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
-//import { IMessageManager } from '../../../Shared/scripts/Interfaces/IMessageManager';
-import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgPayloadRequestFromPopUp';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { MsgFromContent } from '../../../Shared/scripts/Classes/MsgPayloadResponseFromContent';
 import { PayloadDataFromPopUp } from '../../../Shared/scripts/Classes/PayloadDataReqPopUp';
-//import { MessageRunner } from '../../../Shared/scripts/Classes/MsgRunner';
-import { IMsgFromX } from '../../../Shared/scripts/Interfaces/IMsgPayload';
-import { MsgFromXBase } from '../../../Shared/scripts/Interfaces/MsgFromXBase';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { LogLevel } from '../../../Shared/scripts/Enums/LogLevel';
-import { IOneGenericSetting } from '../../../Shared/scripts/Classes/OneSetting';
+import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
 import { SettingKey } from '../../../Shared/scripts/Enums/SettingKey';
+import { SharedConst } from '../../../Shared/scripts/SharedConst';
+import { SettingsHelper } from '../../../Shared/scripts/Helpers/SettingsHelper';
 
 export class ContentMessageManager extends ContentManagerBase {
   AutoSaveHasBeenScheduled: boolean = false;
 
   constructor(contentHub: ContentHub) {
     super(contentHub);
-    contentHub.debug.FuncStart(ContentMessageManager.name);
+    contentHub.Logger.FuncStart(ContentMessageManager.name);
 
     var self = this;
     browser.runtime.onMessage.addListener(request => self.ContentReceiveRequest(request));
 
-    contentHub.debug.FuncEnd(ContentMessageManager.name);
+    contentHub.Logger.FuncEnd(ContentMessageManager.name);
   }
 
   ValidateRequest(reqMsgFromPopup: MsgFromPopUp): MsgFromPopUp {
@@ -58,12 +54,12 @@ export class ContentMessageManager extends ContentManagerBase {
   }
 
   ScheduleIntervalTasks(reqMsgFromPopup: MsgFromPopUp) {
-    this.Log().FuncStart(this.ScheduleIntervalTasks.name );
+    this.Log().FuncStart(this.ScheduleIntervalTasks.name);
     this.Log().LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
 
-    let autoSaveSetting: IOneGenericSetting = this.Helpers().SettingsHelp.GetByKey(SettingKey.AutoSaveEnabled, reqMsgFromPopup.CurrentContentPrefs)
+    let autoSaveSetting: OneGenericSetting = this.Helpers().SettingsHelp.GetByKey(SettingKey.AutoSaveEnabled, reqMsgFromPopup.CurrentContentPrefs)
 
-    if (<boolean> autoSaveSetting.ValueAsObj) {
+    if (<boolean>autoSaveSetting.ValueAsObj) {
       if (!this.AutoSaveHasBeenScheduled) {
         this.Log().MarkerA();
         var self = this;
@@ -94,6 +90,24 @@ export class ContentMessageManager extends ContentManagerBase {
 
     this.Log().FuncEnd(this.AutoSaveSnapShot.name);
   }
+  SetLoggerFromMessage(reqMsgFromPopup: MsgFromPopUp) {
+    let currSetting: OneGenericSetting = this.Helpers().SettingsHelp.GetByKey(SettingKey.LogToConsole, reqMsgFromPopup.CurrentContentPrefs);
+    if (currSetting) {
+      let logSetting: boolean = SharedConst.Const.Settings.Defaults.LogToConsole;
+
+      //console.log(JSON.stringify(reqMsgFromPopup.CurrentContentPrefs, null, 1));
+      if (currSetting) {
+        logSetting = SettingsHelper.ValueAsBool( currSetting);
+        console.log('setting value as bool ' + logSetting);
+      } else {
+        console.log('no currsetting');
+      }
+      console.log('setting it to ' + logSetting);
+      this.Log().Init(logSetting);
+    } else {
+      console.log('curr setting not found');
+    }
+  }
 
   async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
@@ -107,12 +121,12 @@ export class ContentMessageManager extends ContentManagerBase {
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
+          this.SetLoggerFromMessage(reqMsgFromPopup);
+          ``
           this.ScheduleIntervalTasks(reqMsgFromPopup);
           response = await this.ReqMsgRouter(reqMsgFromPopup);
 
           this.Log().LogVal('msgFlag', StaticHelpers.MsgFlagAsString(response.MsgFlag));
-
-
         } else {
           this.Log().Error(this.ContentReceiveRequest.name, 'reqMsgFromPopup is not valid');
         }
@@ -307,8 +321,8 @@ export class ContentMessageManager extends ContentManagerBase {
     });
   }
 
-  IsLogEnabled(): LogLevel {
-    return LogLevel.Enabled;
+  IsLogEnabled(): boolean {
+    return this.Log().LogToConsoleEnabled;
   }
 
   OperationCancelled: any;

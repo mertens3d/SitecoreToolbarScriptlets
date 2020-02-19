@@ -6,9 +6,9 @@ import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 
 export class PromiseOneStep extends ContentManagerBase {
   constructor(hub: ContentHub) {
-    hub.debug.FuncStart(PromiseHelper.name);
+    hub.Logger.FuncStart(PromiseHelper.name);
     super(hub);
-    hub.debug.FuncEnd(PromiseHelper.name);
+    hub.Logger.FuncEnd(PromiseHelper.name);
   }
 
   async ClickPublishOnNav(payload: IDataPublishChain) {

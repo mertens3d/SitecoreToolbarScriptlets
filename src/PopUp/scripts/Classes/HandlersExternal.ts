@@ -4,16 +4,28 @@ import { IScMode } from "../../../Shared/scripts/Interfaces/IscMode";
 import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
-import { ResultSuccessFail } from "../../../Shared/scripts/Classes/ResultSuccessFail";
+import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { PopUpHub } from "../Managers/PopUpHub";
+
 export class HandlersExternal extends CommonEvents {
   async __hndlrAddCETab(evt: MouseEvent, popHub: PopUpHub) {
     popHub.EventMan.Handlers.External.__initNewOperation();
-    popHub.PopMsgMan.SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqAddCETab, popHub), popHub.TabMan.CurrentTabData);
+    await popHub.PopMsgMan.SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqAddCETab, popHub), popHub.TabMan.CurrentTabData)
+    popHub.UiMan.OnSuccessfullCommand();
+    ;
+    //.catch((ex) =>  popHub.Log.Error(popHub.EventMan.Handlers.External.__hndlrAddCETab.name, ex.toString()));
   }
+  async HndlrSnapShotCreate(evt: MouseEvent, popHub: PopUpHub) {
+    popHub.EventMan.Handlers.External.__initNewOperation();
+    var msg = new MsgFromPopUp(MsgFlag.ReqTakeSnapShot, popHub);
+    msg.Data.SnapShotSettings.Flavor = SnapShotFlavor.Manual;
+    await popHub.PopMsgMan.SendMessageToContentTab(msg, popHub.TabMan.CurrentTabData);
+    popHub.UiMan.OnSuccessfullCommand();
+  }
+
   __hndlrCancelOperation(evt: MouseEvent) {
     this.UiMan().SetCancelFlag();
   }
@@ -23,29 +35,28 @@ export class HandlersExternal extends CommonEvents {
   __DrawStorage(evt: MouseEvent) {
     this.MsgMan().FromAtticDrawStorage();
   }
-  __hndlrDesktop(evt: MouseEvent) {
+  GoDesktop(evt: MouseEvent) {
     this.__initNewOperation();
     this.locMan().ChangeLocationSwitchBoard(scWindowType.Desktop);
     //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqGoDesktop, this.PopHub))
   }
-  HndlrAdminB() {
+  PutAdminB() {
     this.__initNewOperation();
     this.MsgMan().SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqAdminB, this.PopHub), this.TabMan().CurrentTabData);
   }
-  async __hndlrSetScMode(evt: MouseEvent, popHub: PopUpHub, parameters: any[]) {
+  async SetScMode(evt: MouseEvent, popHub: PopUpHub, parameters: any[]) {
     let newMode: IScMode = parameters[0];
-    popHub.EventMan.Handlers.External.__initNewOperation();
-    await popHub.LocMan.SetScMode(newMode);
-    window.close();
-    popHub.UiMan.CloseWindow();
-      //.catch((er) => popHub.Log.Error(this.__hndlrSetScMode.name, SetScModeer));
+    await popHub.EventMan.Handlers.External.__initNewOperation()
+      .then(() => popHub.LocMan.SetScMode(newMode))
+      .then(() => popHub.UiMan.OnSuccessfullCommand());
+      //.catch((ex) => popHub.Log.Error(popHub.EventMan.Handlers.External.SetScMode.name, ex));
   }
-  async __hndlrOpenCE() {
+  async GoCe() {
     this.__initNewOperation();
     this.locMan().ChangeLocationSwitchBoard(scWindowType.ContentEditor);
     //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqOpenCE, this.PopHub));
   }
-  async __hndlrQuickPublish(evt: MouseEvent) {
+  async QuickPublish(evt: MouseEvent) {
     this.__initNewOperation();
     this.MsgMan().SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqQuickPublish, this.PopHub), this.TabMan().CurrentTabData);
   }
@@ -57,7 +68,7 @@ export class HandlersExternal extends CommonEvents {
   CreateNewWindowIfRequired(evt: MouseEvent, tabUrl: AbsoluteUrl) {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.CreateNewWindowIfRequired.name, 'ctrl key? ' + evt.ctrlKey.toString() + ' ' + tabUrl);
-      let result: ResultSuccessFail = new ResultSuccessFail();
+      let result: PromiseResult = new PromiseResult(this.CreateNewWindowIfRequired.name, this.Log());
       let toReturn: IDataBrowserTab;
       if (!evt.ctrlKey) {
         await this.BrowserMan().CreateNewTab(tabUrl)
@@ -66,19 +77,18 @@ export class HandlersExternal extends CommonEvents {
             toReturn = newTab;
           });
         this.Log().DebugIDataBrowserTab(toReturn);
-        result.Succeeded = true;
+        result.MarkSuccessful();
       }
       else {
         toReturn = this.TabMan().CurrentTabData;
-        result.Succeeded = true;
+        result.MarkSuccessful();
       }
-      this.Log().LogVal('Success', result.Succeeded);
-      if (result.Succeeded) {
-        this.Log().FuncEnd(this.CreateNewWindowIfRequired.name);
+
+      this.Log().FuncEnd(this.CreateNewWindowIfRequired.name);
+      if (result.WasSuccessful) {
         resolve(toReturn);
       }
       else {
-        this.Log().FuncEnd(this.CreateNewWindowIfRequired.name);
         reject(result.RejectMessage);
       }
     });
@@ -109,11 +119,5 @@ export class HandlersExternal extends CommonEvents {
     payload.Data.SnapShotSettings.SnapShotNewNickname = this.UiMan().GetValueInNickname();
     ;
     this.MsgMan().SendMessageToContentTab(payload, this.TabMan().CurrentTabData);
-  }
-  async __hndlrSnapShotCreate(evt: MouseEvent) {
-    this.__initNewOperation();
-    var msg = new MsgFromPopUp(MsgFlag.ReqTakeSnapShot, this.PopHub);
-    msg.Data.SnapShotSettings.Flavor = SnapShotFlavor.Manual;
-    await this.MsgMan().SendMessageToContentTab(msg, this.TabMan().CurrentTabData);
   }
 }

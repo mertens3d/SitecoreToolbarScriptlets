@@ -20,13 +20,13 @@ export interface IPopUpConst {
       Btn: {
         AdminB: string,
         BigRed: string,
-        CE: string,
+        GoCE: string,
         Desktop: string,
         HsCancel: string,
         HsDrawStorage: string,
         HsRemoveFromStorage: string,
         HsRestoreWindowState: string,
-        HsSaveWindowState: string,
+        TakeSnapshot: string,
         MarkFavorite: string,
         ModeEdit: string,
         ModeNorm: string,
@@ -71,7 +71,7 @@ export interface IPopUpConst {
       GenericSettingTest: string,
       DivState: string,
       iCBoxdSettingsAutoLogin: string,
-      iCBoxdSettingsShowLogData: string,
+      LogToConsole: string,
       IdFieldSetDebug: string,
       PrefAutoLogin: string,
       SelStateSnapShot: string,
@@ -104,7 +104,7 @@ export interface IPopUpConst {
         AutoSaveEnabled: boolean,
         AutoLogin: boolean,
         DefaultDebugKeepDialogOpen: boolean,
-        DefaultShowLogData: boolean,
+   
       }
     }
   },

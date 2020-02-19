@@ -5,12 +5,12 @@ import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgPayloadRequestF
 import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
-import { ResultSuccessFail } from "../../../Shared/scripts/Classes/ResultSuccessFail";
+import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IterationHelper } from "../../../Shared/scripts/Classes/IterationHelper";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 
 export class PopUpMessagesManager extends PopUpManagerBase {
-  CachedState: ICurrStateContent;
+  LastKnownContentState: ICurrStateContent;
 
   Init() {
     this.ScheduleAutoSaveSnapShot();
@@ -20,7 +20,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
   ReceiveResponseHndlr(response: MsgFromContent) {
     this.Log().FuncStart(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
     if (response) {
-      this.CachedState = response.ContentState;
+      this.LastKnownContentState = response.ContentState;
 
       this.UiMan().RefreshUiFromCache();
 
@@ -37,7 +37,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
           break;
       }
 
-      this.Log().LogVal('response', JSON.stringify(response, null, 1));
+      //this.Log().LogVal('response', JSON.stringify(response, null, 1));
 
       this.Log().FuncEnd(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
     }
@@ -67,37 +67,34 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.OnePing.name);
 
-      var result: ResultSuccessFail = new ResultSuccessFail();
+      var result: PromiseResult = new PromiseResult(this.OnePing.name, this.Log());
 
       this.Log().LogVal('sending to tab id', targetTab.Tab.id);
+      //this.Log().LogAsJsonPretty('msg', msg);
 
       await browser.tabs.sendMessage(targetTab.Tab.id, msg)
         .then((response) => {
           //was successful?
-          //this.debug().LogVal('response', JSON.stringify(response));
+          this.Log().LogAsJsonPretty('response', response);
+
           var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
           if (asMsgFromContent) {
             this.Log().Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
             if (asMsgFromContent.MsgFlag = MsgFlag.RespListeningAndReady) {
-              result.Succeeded = true;
+              result.MarkSuccessful();
             }
           } else {
-            result.Succeeded = false;
+            result.MarkFailed('no message from content');
             result.RejectMessage = 'response is not imsg';
           }
         })
-        .catch((err) => {
-          this.Log().LogVal('catch err', err.toString());
-          result.Succeeded = false;
-          result.RejectMessage = 'error on ping';
-        }
-        );
+        .catch((err) => result.MarkFailed(err));
 
-      if (result.Succeeded) {
-        this.Log().FuncEnd(this.OnePing.name, 'succeeded');
+      this.Log().FuncEnd(this.OnePing.name);
+
+      if (result.WasSuccessful()) {
         resolve();
       } else {
-        this.Log().FuncEnd(this.OnePing.name, 'failed');
         reject(result.RejectMessage);
       }
     });//promise
@@ -107,26 +104,20 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.WaitForListeningTab.name);
 
-      var result: ResultSuccessFail = new ResultSuccessFail();
+      var result: PromiseResult = new PromiseResult(this.WaitForListeningTab.name, this.Log());
       var iterationJr: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForListeningTab.name);
 
       var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
 
       msg.CurrentContentPrefs = this.SettingsMan().GetOnlyContentPrefs();
 
-      while (iterationJr.DecrementAndKeepGoing() && !result.Succeeded) {
+      while (iterationJr.DecrementAndKeepGoing() && !result.WasSuccessful()) {
         this.Log().Log('Pinging');
         await this.OnePing(targetTab, msg)
-          .then(() => {
-            //this.Log().Log('succeeded a');
-            result.Succeeded = true;
-          })
-          .catch((ex) => {
-            this.Log().LogVal('failed', ex.toString());
-            result.Succeeded = false;
-          });
+          .then(() => result.MarkSuccessful())
+          .catch((ex) => result.MarkFailed(ex));
 
-        if (!result.Succeeded) {
+        if (!result.WasSuccessful()) {
           this.Log().Log('Ping did not succeed, waiting');
           await iterationJr.Wait();
           this.Log().Log('Done waiting');
@@ -136,13 +127,11 @@ export class PopUpMessagesManager extends PopUpManagerBase {
         }
       }//while
 
-      this.Log().Log('Done while');
+      this.Log().FuncEnd(this.WaitForListeningTab.name);
 
-      if (result.Succeeded) {
-        this.Log().FuncEnd(this.WaitForListeningTab.name);
+      if (result.WasSuccessful()) {
         resolve(targetTab);
       } else {
-        this.Log().FuncEnd(this.WaitForListeningTab.name);
         if (iterationJr.IsExhausted) {
           result.RejectMessage += '  ' + iterationJr.IsExhaustedMsg;
         }
@@ -151,29 +140,38 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     });//promise
   }
   private SendMessageToSingleTab(tab: IDataBrowserTab, messageToSend: MsgFromPopUp) {
-    this.Log().FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
+    return new Promise((resolve, reject) => {
+      this.Log().FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
 
-    browser.tabs.sendMessage(
-      tab.Tab.id,
-      messageToSend
-    ).then((response) => {
-      this.Log().LogVal('response', JSON.stringify(response, null, 1));
+      var result: PromiseResult = new PromiseResult(this.SendMessageToSingleTab.name, this.Log());
 
-      var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
-      if (asMsgFromContent) {
-        this.Log().Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
+      browser.tabs.sendMessage(
+        tab.Tab.id,
+        messageToSend
+      ).then(async (response) => {
+        //this.Log().LogVal('response', JSON.stringify(response, null, 1));
 
-        this.ReceiveResponseHndlr(asMsgFromContent);
+        var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
+        if (asMsgFromContent) {
+          this.Log().Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
+          await this.ReceiveResponseHndlr(asMsgFromContent);
+        } else {
+          this.Log().Error(this.SendMessageToSingleTab.name, 'response is not imsg');
+        }
+      }).then(() => result.MarkSuccessful)
+        //.catch(this.onError);
+        .catch((ex) => {
+          result.MarkFailed(ex);
+        });
+
+      this.Log().FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
+      if (result.WasSuccessful()) {
+        resolve();
       } else {
-        this.Log().Error(this.SendMessageToSingleTab.name, 'response is not imsg');
+        reject(result.RejectMessage);
       }
-    })
-
-      .catch(this.onError);
-
-    this.Log().FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
+    });
   }
-
   //private SendMessageToTabs(tabs, messageToSend: MsgFromPopUp) {
   //  this.debug().FuncStart(this.SendMessageToTabs.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
 
@@ -189,23 +187,25 @@ export class PopUpMessagesManager extends PopUpManagerBase {
   }
 
   async SendMessageToContentTab(msgPlayload: MsgFromPopUp, targetTab: IDataBrowserTab) {
-    this.Log().FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+    return new Promise(async (resolve, reject) => {
+      this.Log().FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      var result: PromiseResult = new PromiseResult(this.SendMessageToContentTab.name, this.Log());
 
-    msgPlayload.CurrentContentPrefs = await (await this.SettingsMan().GetOnlyContentPrefs());// this.PopAtticMan().CurrentSettings()).ContentPrefs;
+      msgPlayload.CurrentContentPrefs = await this.SettingsMan().GetOnlyContentPrefs();
 
-    this.WaitForListeningTab(targetTab)
-      .then(() => this.SendMessageToSingleTab(targetTab, msgPlayload))
-      .catch((err) => this.onError(err));
+      await this.WaitForListeningTab(targetTab)
+        .then(() => this.SendMessageToSingleTab(targetTab, msgPlayload))
+        .then(() => result.MarkSuccessful)
+        .catch((err) => result.MarkFailed(err));
 
-    //await browser.tabs.query({
-    //  currentWindow: true,
-    //  active: true
-    //}).then((tabs) => this.SendMessageToTabs(tabs, msgPlayload))
-    //  .catch(
-    //    this.onError
-    //  );
+      this.Log().FuncEnd(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
 
-    this.Log().FuncEnd(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      if (result.MarkSuccessful) {
+        resolve();
+      } else {
+        (reject(result.RejectMessage));
+      }
+    });
   }
 
   FromAtticDrawStorage() {

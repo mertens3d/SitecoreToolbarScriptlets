@@ -7,7 +7,7 @@ import { IOneStorageData } from '../../../Shared/scripts/Interfaces/IOneStorageD
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ISnapShotsMany } from '../../../Shared/scripts/Interfaces/ISnapShotsMany';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
-import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
+import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
@@ -17,9 +17,9 @@ export class ContentAtticManager extends ContentManagerBase {
 
   constructor(hub: ContentHub) {
     super(hub);
-    hub.debug.FuncStart(ContentAtticManager.name);
+    hub.Logger.FuncStart(ContentAtticManager.name);
 
-    hub.debug.FuncEnd(ContentAtticManager.name);
+    hub.Logger.FuncEnd(ContentAtticManager.name);
   }
 
   Init() {
@@ -45,20 +45,20 @@ export class ContentAtticManager extends ContentManagerBase {
   MarkFavorite(data: PayloadDataFromPopUp) {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.MarkFavorite.name);
-      var result: ResultSuccessFail = new ResultSuccessFail();
+      var result: PromiseResult = new PromiseResult(this.MarkFavorite.name, this.Log());
 
       if (data.IdOfSelect) {
         var storageMatch = this.GetFromStorageById(data.IdOfSelect, CacheMode.OkToUseCache)
         if (storageMatch) {
           storageMatch.Flavor = SnapShotFlavor.Favorite;
           await this.WriteToStorage(storageMatch);
-          result.Succeeded = true;
+          result.MarkSuccessful();
         } else {
-          result.Succeeded = false;
+          result.MarkFailed('no storage match');
           result.RejectMessage = 'No storage match found';
         }
       } else {
-        result.Succeeded = false;
+        result.MarkFailed('no data.idofselect');
         result.RejectMessage = 'no id provided'
       }
 
@@ -74,7 +74,7 @@ export class ContentAtticManager extends ContentManagerBase {
   async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.WriteToStorage.name);
-      var result: ResultSuccessFail = new ResultSuccessFail();
+      var result: PromiseResult = new PromiseResult(this.WriteToStorage.name, this.Log());
 
       var snapShotAsString = JSON.stringify(dataOneWindow);
       //this.debug().LogVal('snapShotAsString', snapShotAsString);
@@ -84,15 +84,15 @@ export class ContentAtticManager extends ContentManagerBase {
       var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id, CacheMode.DoNotUseCach);
 
       if (foundInStorage) {
-        result.Succeeded = true;
+        result.MarkSuccessful();
       } else {
-        result.Succeeded = false;
+        result.MarkFailed('not found in storage');
         result.RejectMessage = 'Snap shot not successfully saved';
       }
 
       this.Log().FuncEnd(this.WriteToStorage.name);
 
-      if (result.Succeeded) {
+      if (result.WasSuccessful()) {
         resolve();
       } else {
         reject(result.RejectMessage);

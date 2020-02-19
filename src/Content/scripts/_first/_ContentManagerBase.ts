@@ -22,7 +22,7 @@ export class ContentManagerBase {
 
   AtticMan(): ContentAtticManager { return this.ContentHub.AtticMan; }
   //Const(): IContentConst { return this.ContentHub.Const; }
-  Log(): LoggerContent { return this.ContentHub.debug; }
+  Log(): LoggerContent { return this.ContentHub.Logger; }
   Helpers(): HelperHub { return this.ContentHub.Helpers; }
   OneScWinMan(): OneScWindowManager { return this.ContentHub.OneWindowMan; }
   ScUiMan(): SitecoreUiManager { return this.ContentHub.SitecoreUiMan; }

@@ -4,10 +4,10 @@ import { IMsgFromX } from "../Interfaces/IMsgPayload";
 import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
 import { PopUpHub } from "../../../PopUp/scripts/Managers/PopUpHub";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
-import { IOneGenericSetting } from "./OneSetting";
+import { OneGenericSetting } from "./OneGenericSetting";
 
 export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
-  CurrentContentPrefs: IOneGenericSetting[];
+  CurrentContentPrefs: OneGenericSetting[];
   Data: PayloadDataFromPopUp;
   IsValid: boolean;
 

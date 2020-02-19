@@ -17,11 +17,11 @@ export class OneScWindowManager extends ContentManagerBase {
 
   constructor(hub: ContentHub) {
     super(hub);
-    hub.debug.FuncStart(OneScWindowManager.name);
+    hub.Logger.FuncStart(OneScWindowManager.name);
 
     
 
-    hub.debug.FuncEnd(OneScWindowManager.name);
+    hub.Logger.FuncEnd(OneScWindowManager.name);
   }
 
   Init() {

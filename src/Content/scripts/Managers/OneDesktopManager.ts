@@ -17,10 +17,10 @@ export class OneDesktopManager extends ContentManagerBase {
   associatedDoc: IDataOneDoc;
 
   constructor(hub: ContentHub, associatedDoc: IDataOneDoc) {
-    hub.debug.FuncStart(OneDesktopManager.name);
+    hub.Logger.FuncStart(OneDesktopManager.name);
     super(hub);
     this.associatedDoc = associatedDoc;
-    hub.debug.FuncEnd(OneDesktopManager.name);
+    hub.Logger.FuncEnd(OneDesktopManager.name);
   }
 
   //GetNewIframeData(index: number, docElem: Document, iframe: HTMLIFrameElement) {

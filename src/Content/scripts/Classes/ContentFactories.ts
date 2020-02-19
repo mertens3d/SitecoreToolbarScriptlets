@@ -11,9 +11,9 @@ import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 
 export class ContentFactories extends ContentManagerBase {
   constructor(contentHub: ContentHub) {
-    contentHub.debug.FuncStart(PromiseHelper.name);
+    contentHub.Logger.FuncStart(PromiseHelper.name);
     super(contentHub);
-    contentHub.debug.FuncEnd(PromiseHelper.name);
+    contentHub.Logger.FuncEnd(PromiseHelper.name);
   }
   async UpdateContentState(response: MsgFromContent) {
     this.Log().FuncStart(this.UpdateContentState.name);

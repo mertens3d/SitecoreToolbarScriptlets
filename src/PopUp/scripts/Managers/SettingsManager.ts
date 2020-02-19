@@ -1,5 +1,5 @@
 ﻿import { PopUpManagerBase } from "./PopUpManagerBase";
-import { IOneGenericSetting } from "../../../Shared/scripts/Classes/OneSetting";
+import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
 import { IAllGenericSettings } from "../../../Shared/scripts/Classes/IAllSettings";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
@@ -13,13 +13,13 @@ export class SettingsManager extends PopUpManagerBase {
 
   async Init() {
     this.AllSettings = {
-      SettingsAr: ConstAllSettings.AllSettings
+      SettingsAr: new ConstAllSettings().AllSettings
     }
 
     await this.HarvestNonDefaultGenericSettingsFromStorage();
   }
 
-
+  
   //take in a setting
   // if get, spit back it's value
   // if set, update the cache and write to storage
@@ -42,7 +42,7 @@ export class SettingsManager extends PopUpManagerBase {
       for (var idx = 0; idx < foundSettings.length; idx++) {
         let storageSetting: IOneGenericSettingForStorage = foundSettings[idx];
         this.Log().LogVal('setting key', storageSetting.SettingKeyFriendly);
-        let matchingSetting: IOneGenericSetting = this.Helpers().SettingsHelp.GetByKey(storageSetting.SettingKey, this.AllSettings.SettingsAr);
+        let matchingSetting: OneGenericSetting = this.Helpers().SettingsHelp.GetByKey(storageSetting.SettingKey, this.AllSettings.SettingsAr);
         if (matchingSetting) {
           matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
         } else {
@@ -56,18 +56,14 @@ export class SettingsManager extends PopUpManagerBase {
     this.Log().FuncEnd(this.HarvestNonDefaultGenericSettingsFromStorage.name);
   }
 
-  CreateAllSettingsDefault() {
-    this.AllSettings = {
-      SettingsAr: ConstAllSettings.AllSettings
-    }
-  }
 
-  GetOnlyContentPrefs(): IOneGenericSetting[] {
-    let toReturn: IOneGenericSetting[] = [];
+
+  GetOnlyContentPrefs(): OneGenericSetting[] {
+    let toReturn: OneGenericSetting[] = [];
 
     for (var idx = 0; idx < this.AllSettings.SettingsAr.length; idx++) {
-      let candidate: IOneGenericSetting = this.AllSettings.SettingsAr[idx];
-      if (candidate.SettingFlavor = SettingFlavor.Content) {
+      let candidate: OneGenericSetting = this.AllSettings.SettingsAr[idx];
+      if (candidate.SettingFlavor === SettingFlavor.ContentAndPopUp) {
         toReturn.push(candidate);
       }
     }
@@ -80,6 +76,13 @@ export class SettingsManager extends PopUpManagerBase {
     this.Log().LogVal('valueAsObj', valueAsObj.toString());
     this.SetByKey(SettingKey, valueAsObj);
   }
+
+  GetByKey(settingKey: SettingKey): OneGenericSetting {
+    let foundSetting = this.Helpers().SettingsHelp.GetByKey(settingKey, this.AllSettings.SettingsAr);
+    console.log(foundSetting.Friendly);
+    return foundSetting;
+  }
+
 
   SetByKey(settingKey: SettingKey, value: any): void {
     this.Log().FuncStart(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));

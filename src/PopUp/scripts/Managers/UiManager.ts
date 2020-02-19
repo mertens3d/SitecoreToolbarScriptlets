@@ -17,12 +17,13 @@ import { MenuCommand } from '../../../Shared/scripts/Enums/MenuCommand';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ISelectionHeaders } from '../../../Shared/scripts/Interfaces/ISelectionHeaders';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
-import { IOneGenericSetting } from '../../../Shared/scripts/Classes/OneSetting';
+import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
 import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
 import { BuildDateStamp } from '../../../Shared/scripts/AutoBuild/BuildNum';
-import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 import { PopConst } from '../Classes/PopConst';
+import { SettingKey } from '../../../Shared/scripts/Enums/SettingKey';
+import { SettingsHelper } from '../../../Shared/scripts/Helpers/SettingsHelper';
 
 export class UiManager extends PopUpManagerBase {
   private __selectSnapshotId: IGuid;
@@ -52,14 +53,20 @@ export class UiManager extends PopUpManagerBase {
 
     this.Log().FuncEnd(UiManager.name, this.Init.name);
   }
-  CloseWindow(): void {
-    this.Log().FuncStart(this.CloseWindow.name);
+  OnSuccessfullCommand(): void {
+    this.Log().FuncStart(this.OnSuccessfullCommand.name);
     try {
-      window.close();
+      let setting: OneGenericSetting = this.SettingsMan().GetByKey(SettingKey.DebugKeepDialogOpen);
+      if (!SettingsHelper.ValueAsBool(setting)) {
+        window.close();
+      } else {
+        this.Log().Log('Window not closed because of setting: ' + setting.Friendly)
+      }
     } catch (ex) {
-      this.Log().Error(this.CloseWindow.name, ex.toString());
+      console.log(ex.toString());
+      //this.Log().Error(this.CloseWindow.name, ex.toString());
     }
-    this.Log().FuncEnd(this.CloseWindow.name);
+    this.Log().FuncEnd(this.OnSuccessfullCommand.name);
   }
   WriteBuildNumToUi() {
     this.Log().LogVal('BuildDateStamp', BuildDateStamp);
@@ -239,7 +246,7 @@ export class UiManager extends PopUpManagerBase {
     this.Log().FuncEnd('DrawStorageRaw');
   }
 
-  async RestoreAccordianState(oneSetting: IOneGenericSetting, foundElem: HTMLElement): Promise<void> {
+  async RestoreAccordianState(oneSetting: OneGenericSetting, foundElem: HTMLElement): Promise<void> {
     this.Log().FuncStart(this.RestoreAccordianState.name);
     var contentSib = this.GetAccordianContentElem(foundElem);
     if (contentSib) {
@@ -325,13 +332,13 @@ export class UiManager extends PopUpManagerBase {
   RefreshUiGenericSettings() {
     this.Log().FuncStart(this.RefreshUiGenericSettings.name);
     for (var idx = 0; idx < this.SettingsMan().AllSettings.SettingsAr.length; idx++) {
-      var oneSetting: IOneGenericSetting = this.SettingsMan().AllSettings.SettingsAr[idx];
-      this.Log().LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
+      var oneSetting: OneGenericSetting = this.SettingsMan().AllSettings.SettingsAr[idx];
+      //this.Log().LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
       var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
       if (foundElem) {
         if (oneSetting.DataType === SettingType.BoolCheckBox) {
           let valueToDisplay: boolean = <boolean>(oneSetting.ValueAsObj || oneSetting.DefaultValue);
-          this.Log().LogVal('valueToDisplay', valueToDisplay);
+          //this.Log().LogVal('valueToDisplay', valueToDisplay);
           (<HTMLInputElement>foundElem).checked = valueToDisplay;
         }
         if (oneSetting.DataType === SettingType.Accordian) {
@@ -349,13 +356,13 @@ export class UiManager extends PopUpManagerBase {
 
     this.RefreshUiGenericSettings();
 
-    this.UiMan().PopulateContentState(this.MsgMan().CachedState);
+    this.UiMan().PopulateContentState(this.MsgMan().LastKnownContentState);
 
-    this.PopulateStateOfSnapShotSelect(this.MsgMan().CachedState.SnapShotsMany.CurrentSnapShots);
+    this.PopulateStateOfSnapShotSelect(this.MsgMan().LastKnownContentState.SnapShotsMany.CurrentSnapShots);
 
     this.RefreshButtonStates();
 
-    this.__drawCorrectNicknameInUI(this.MsgMan().CachedState.SnapShotsMany.CurrentSnapShots);
+    this.__drawCorrectNicknameInUI(this.MsgMan().LastKnownContentState.SnapShotsMany.CurrentSnapShots);
 
     this.Log().FuncEnd(this.RefreshUiFromCache.name);
   }
@@ -364,17 +371,17 @@ export class UiManager extends PopUpManagerBase {
     this.Log().FuncStart(this.RefreshButtonStates.name, this.EventMan().AllMenuCommands.length);
     for (var idx = 0; idx < this.EventMan().AllMenuCommands.length; idx++) {
       var command = this.EventMan().AllMenuCommands[idx];
-      this.Log().LogVal('working on', MenuCommand[command.Command])
+      //this.Log().LogVal('working on', MenuCommand[command.Command])
       if (command.RequiredPageTypes.length > 0) {
-        this.Log().LogVal('required pages', command.RequiredPageTypes.toString());
+        //this.Log().LogVal('required pages', command.RequiredPageTypes.toString());
 
         var currentWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
-        this.Log().LogVal('current', StaticHelpers.WindowTypeAsString(currentWindowType));
+        //this.Log().LogVal('current', StaticHelpers.WindowTypeAsString(currentWindowType));
         var targetButton: HTMLElement = this.GetButtonByIdOrSelector(command.ButtonSelector);
 
         if (targetButton) {
           var isMatch: boolean = command.RequiredPageTypes.indexOf(currentWindowType) >= 0;
-          this.Log().LogVal('isMatch', isMatch);
+          //this.Log().LogVal('isMatch', isMatch);
 
           if (isMatch) {
             targetButton.classList.remove('disabled');
@@ -387,7 +394,7 @@ export class UiManager extends PopUpManagerBase {
           this.Log().Error(this.RefreshButtonStates.name, 'target button not found');
         }
       } else {
-        this.Log().Log('no required pages');
+        //this.Log().Log('no required pages');
       }
     }
     this.Log().FuncEnd(this.RefreshButtonStates.name);

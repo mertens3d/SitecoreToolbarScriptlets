@@ -14,6 +14,11 @@ export class SharedConst {
         Default: 100,
       },
     },
+    Settings: {
+      Defaults: {
+        LogToConsole: false,
+      }
+    },
     Regex: {
       ContentEditor: /Content.*?Editor/ig,
       CleanGuid: /{|-|}/ig,
@@ -35,5 +40,4 @@ export class SharedConst {
       None: '/',
     },
   }
-
 }

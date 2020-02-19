@@ -20,27 +20,8 @@ export class AllCommands {
           ParameterData: [],
         }]
       },
-    
-      {
-        Command: MenuCommand.MarkFavorite,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.MarkFavorite,
-        RequiredPageTypes: [],
-        Events: [{
-          Handler: null,
-          Event: null,
-          ParameterData: [],
-        }]
-      },
-      {
-        Command: MenuCommand.TakeSnapShot,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsSaveWindowState,
-        RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop],
-        Events: [{
-          Handler: null,
-          Event: null,
-          ParameterData: [],
-        }]
-      },
+      
+      
       {
         Command: MenuCommand.AddCeTab,
         ButtonSelector: PopConst.Const.ElemId.HS.Btn.BigRed,
@@ -57,7 +38,7 @@ export class AllCommands {
         RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop, scWindowType.Normal, scWindowType.Preview],
         Events: [{
           Event: CommandButtonEvents.OnClick,
-          Handler: popHub.EventMan.Handlers.External.__hndlrSetScMode,
+          Handler: popHub.EventMan.Handlers.External.SetScMode,
           ParameterData: [PopConst.Const.ScMode.edit],
         }]
       },
@@ -67,7 +48,7 @@ export class AllCommands {
         RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop, scWindowType.Edit, scWindowType.Preview, scWindowType.Normal],
         Events: [{
           Event: CommandButtonEvents.OnClick,
-          Handler: popHub.EventMan.Handlers.External.__hndlrSetScMode,
+          Handler: popHub.EventMan.Handlers.External.SetScMode,
           ParameterData: [PopConst.Const.ScMode.normal],
         }]
       },
@@ -77,7 +58,7 @@ export class AllCommands {
         RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop, scWindowType.Edit, scWindowType.Preview, scWindowType.Normal],
         Events: [{
           Event: CommandButtonEvents.OnClick,
-          Handler: popHub.EventMan.Handlers.External.__hndlrSetScMode,
+          Handler: popHub.EventMan.Handlers.External.SetScMode,
           ParameterData: [PopConst.Const.ScMode.preview],
         }]
       },
@@ -92,9 +73,129 @@ export class AllCommands {
       //  }]
       //},
 
+      // ---- fore site
+
+      {
+        Command: MenuCommand.UpdateNickname,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.UpdateNicknameB,
+        RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotUpdateNickName,
+          ParameterData: [],
+        }]
+      },
+
+      {
+        Command: MenuCommand.PutAdminB,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.AdminB,
+        RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.PutAdminB,
+          ParameterData: [],
+        }]
+      },
 
 
-      //this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.Edit), (evt) => this.Handlers.External.__hndlrSetScMode(PopConst.Const.ScMode.edit, evt, this.PopHub));
+      {
+        Command: MenuCommand.GoContentEditor,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.GoCE,
+        RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.GoCe,
+          ParameterData: [],
+        }]
+      },
+
+
+
+      {
+        Command: MenuCommand.QuickPublish,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.QuickPublish,
+        RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.QuickPublish,
+          ParameterData: [],
+        }]
+      },
+      {
+        Command: MenuCommand.GoDesktop,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.Desktop,
+        RequiredPageTypes: [],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.GoDesktop,
+          ParameterData: [],
+        }]
+      },
+      // ------ hind site
+      {
+        Command: MenuCommand.TakeSnapShot,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.TakeSnapshot,
+        RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop, scWindowType.Edit, scWindowType.Preview, scWindowType.Normal],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotCreate,
+          ParameterData: [],
+        }]
+      },
+     
+      {
+        Command: MenuCommand.MarkFavorite,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.MarkFavorite,
+        RequiredPageTypes: [],
+        Events: [{
+          Handler: popHub.EventMan.Handlers.External.MarkFavorite,
+          Event: null,
+          ParameterData: [],
+        }]
+      },
+      {
+        Command: MenuCommand.Cancel,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsCancel,
+        RequiredPageTypes: [],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.__hndlrCancelOperation,
+          ParameterData: [],
+        }]
+      },
+      {
+        Command: MenuCommand.Remove,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsRemoveFromStorage,
+        RequiredPageTypes: [],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotRemove,
+          ParameterData: [],
+        }]
+      },
+      {
+        Command: MenuCommand.RestoreState,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsRestoreWindowState,
+        RequiredPageTypes: [],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotRestore,
+          ParameterData: [],
+        }]
+      },
+
+
+      //------------ insite
+      {
+        Command: MenuCommand.DrawStorage,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsDrawStorage,
+        RequiredPageTypes: [],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.__DrawStorage,
+          ParameterData: [],
+        }]
+      },
 
       /*
        

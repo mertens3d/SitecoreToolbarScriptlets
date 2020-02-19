@@ -5,9 +5,9 @@ import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 
 export class MiscManager extends ContentManagerBase {
   constructor(hub: ContentHub) {
-    hub.debug.FuncStart(MiscManager.name);
+    hub.Logger.FuncStart(MiscManager.name);
     super(hub);
-    hub.debug.FuncEnd(MiscManager.name);
+    hub.Logger.FuncEnd(MiscManager.name);
   }
 
   NotNullOrUndefined(subjectAnyAr: any[], label?: string, iterationCheck?: number): boolean;

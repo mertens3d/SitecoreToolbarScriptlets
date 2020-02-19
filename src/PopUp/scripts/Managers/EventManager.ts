@@ -4,7 +4,7 @@ import { HandlersExternal } from "../Classes/HandlersExternal";
 import { HandlersInternal } from "../Classes/HandlersInternal";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { MenuCommand } from '../../../Shared/scripts/Enums/MenuCommand';
-import { IOneGenericSetting } from '../../../Shared/scripts/Classes/OneSetting';
+import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
 import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { AllCommands } from '../Classes/AllCommands';
@@ -33,12 +33,23 @@ export class EventManager extends PopUpManagerBase {
     this.Log().FuncEnd(EventManager.name + this.Init.name);
   }
   WireAllGenericSettings() {
-    let genericSettings: IOneGenericSetting[] = this.SettingsMan().AllSettings.SettingsAr;
+    let genericSettings: OneGenericSetting[] = this.SettingsMan().AllSettings.SettingsAr;
 
     for (var idx = 0; idx < genericSettings.length; idx++) {
       let oneSetting = genericSettings[idx];
       let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
       if (uiElem) {
+
+        //if has label
+        let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
+        if (uiLabel) {
+          uiLabel.innerHTML = oneSetting.Friendly;
+        } else {
+          uiElem.innerHTML = oneSetting.Friendly;
+
+        }
+        
+
         if (oneSetting.DataType === SettingType.BoolCheckBox) {
           let self = this;
           uiElem.addEventListener('change', (evt) => {
@@ -70,38 +81,8 @@ export class EventManager extends PopUpManagerBase {
 
     //this.UiMan().AssignMenuWindowChanged((evt) => { this.__hndlrMenuWindowChanged(); });
 
-    // ------------- Header
-
-    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.CloseWindow), (evt) => this.Handlers.Internal.CloseWindow(evt));
-
-    // ------------- Foresite
-
-    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.AdminB, () => { this.Handlers.External.HndlrAdminB() });
-    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.CE, () => { this.Handlers.External.__hndlrOpenCE(); });
-    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.Desktop, (evt) => { this.Handlers.External.__hndlrDesktop(evt); });
-    
-
-    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.QuickPublish, (evt) => { this.Handlers.External.__hndlrQuickPublish(evt) });
-    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.UpdateNicknameB, () => this.Handlers.External.HndlrSnapShotUpdateNickName());
-
-    
 
     // --------------- hindsite
-
-    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.HsCancel, (evt) => { this.Handlers.External.__hndlrCancelOperation(evt); });
-    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.HsDrawStorage, (evt) => this.Handlers.External.__DrawStorage(evt));
-    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.HsRemoveFromStorage, (evt) => this.Handlers.External.HndlrSnapShotRemove(evt));
-    this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.HsRestoreWindowState, (evt) => { this.Handlers.External.HndlrSnapShotRestore(evt); });
-
-    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.MarkFavorite), (evt) => this.Handlers.External.MarkFavorite(evt));
-    this.UiMan().AssignOnClickEventFromCmd(this.GetCommandByKey(MenuCommand.TakeSnapShot), (evt) => { this.Handlers.External.__hndlrSnapShotCreate(evt) });
-
-    //this.UiMan().AssignOnClickEvent(PopConst.Const.ElemId.HS.Btn.BigRed, () => this.Handlers.External.__hndlrAddCETab);
-
-    // --------------- fieldsets
-
-    //this.UiMan().AssignOnClickEvent(PopConst.Const.Selector.HS.iCBoxdSettingsShowLogData, (evt) => { this.Handlers.Internal.__showDebugButtonClicked(evt) });
-
     for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
       let oneCommand: IOneCommand = this.AllMenuCommands[idx];
       for (var jdx = 0; jdx < oneCommand.Events.length; jdx++) {

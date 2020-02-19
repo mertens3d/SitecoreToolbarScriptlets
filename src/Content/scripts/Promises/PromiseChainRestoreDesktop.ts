@@ -5,16 +5,16 @@ import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowser
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
+import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 
 export class PromiseChainRestoreDesktop extends ContentManagerBase {
   constructor(hub: ContentHub) {
-    hub.debug.FuncStart(PromiseChainRestoreDesktop.name);
+    hub.Logger.FuncStart(PromiseChainRestoreDesktop.name);
     super(hub)
-    hub.debug.FuncEnd(PromiseChainRestoreDesktop.name);
+    hub.Logger.FuncEnd(PromiseChainRestoreDesktop.name);
   }
 
   private __waitForAndClickRedStartButtonPromise(promiseBucket: IDataBucketRestoreDesktop) {
@@ -62,11 +62,11 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     });
   }
 
-  private __waitForIframeCountDiffPromise(promiseBucket: IDataBucketRestoreDesktop) {
+  private __waitForIframeCountDiff(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      this.Log().FuncStart(this.__waitForIframeCountDiffPromise.name);
+      this.Log().FuncStart(this.__waitForIframeCountDiff.name);
 
-      var success: ResultSuccessFail = new ResultSuccessFail();
+      var result: PromiseResult = new PromiseResult(this.__waitForIframeCountDiff.name, this.Log());
 
       var iframeResult: IDataOneIframe = await this.OneScWinMan().OneDesktopMan.WaitForIframeCountDiffWorker(promiseBucket.IFramesbefore);
       this.Log().MarkerB();
@@ -77,18 +77,18 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
         this.Log().DebugDataOneIframe(promiseBucket.NewIframe);
 
-        success.Succeeded = true;
+        result.MarkSuccessful();
       } else {
-        success.Succeeded = false;
-        success.RejectMessage = 'fail ' + this.__waitForIframeCountDiffPromise.name;
+        result.MarkFailed('no iframe result')
+        result.RejectMessage = 'fail ' + this.__waitForIframeCountDiff.name;
       }
 
-      this.Log().FuncEnd(this.__waitForIframeCountDiffPromise.name);
+      this.Log().FuncEnd(this.__waitForIframeCountDiff.name);
 
-      if (success.Succeeded) {
+      if (result.WasSuccessful) {
         resolve(promiseBucket);
       } else {
-        reject(success.RejectMessage);
+        reject(result.RejectMessage);
       }
     });
   }
@@ -138,7 +138,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       //guaranteed to be on the correct page
       await this.__waitForAndClickRedStartButtonPromise(dataBucket)
         .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
-        .then(dataBucket => this.__waitForIframeCountDiffPromise(dataBucket))
+        .then(dataBucket => this.__waitForIframeCountDiff(dataBucket))
         .then(dataBucket => this.__waitForIframeReady(dataBucket))
         .then(dataBucket => this.__restoreDataToOneIframe(dataBucket))
         .catch(ex => {

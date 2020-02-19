@@ -1,5 +1,5 @@
 ﻿import { PopUpManagerBase } from './PopUpManagerBase';
-import { ResultSuccessFail } from '../../../Shared/scripts/Classes/ResultSuccessFail';
+import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 export class BrowserManager extends PopUpManagerBase {
@@ -8,7 +8,7 @@ export class BrowserManager extends PopUpManagerBase {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.CreateNewTab.name, tabUrl.AbsUrl);
 
-      let result: ResultSuccessFail = new ResultSuccessFail();
+      let result: PromiseResult = new PromiseResult(this.CreateNewTab.name, this.Log());
 
       let newTab: IDataBrowserTab;
 
@@ -18,14 +18,12 @@ export class BrowserManager extends PopUpManagerBase {
         .then((rawTab: browser.tabs.Tab) => { newTab = this.TabMan().MakeTabData(rawTab) })
         .then(() => { this.Helpers().PromiseHelp.TabWaitForReadyStateCompleteNative(newTab.Tab) })
         .then(() => this.MsgMan().WaitForListeningTab(newTab))
-        .then(() => result.Succeeded = true)
+        .then(() => result.MarkSuccessful())
         .catch((ex) => {
-          this.Log().Error(this.CreateNewTab.name, 'fails here ' + ex);
-          result.Succeeded = false;
-          result.RejectMessage = this.CreateNewTab.name + ' ' + ex.toString();
+          result.MarkFailed(ex);
         });
 
-      if (result.Succeeded) {
+      if (result.WasSuccessful()) {
         this.Log().FuncEnd(this.CreateNewTab.name, tabUrl.AbsUrl);
         resolve(newTab);
       } else {

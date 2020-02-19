@@ -12,6 +12,7 @@ import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
+import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 
 export class LocationManager extends PopUpManagerBase {
   constructor(hub: PopUpHub) {
@@ -62,41 +63,64 @@ export class LocationManager extends PopUpManagerBase {
     this.Log().FuncEnd(this.ChangeLocationSwitchBoard.name);
   }
 
-
-
   async SetScModeFromCeDt(newValue: IScMode, currentPageType: scWindowType) {
-    this.Log().FuncStart(this.SetScModeFromCeDt.name, newValue.AsString);
-    var dataOneDoc: IDataOneDoc = null;
+    return new Promise(async (resolve, reject) => {
+      this.Log().FuncStart(this.SetScModeFromCeDt.name, newValue.AsString);
+      this.Log().LogVal('WindowType', StaticHelpers.WindowTypeAsString(currentPageType));
 
-    if (currentPageType == scWindowType.Desktop) {
-      let contState: ICurrStateContent = this.UiMan().CurrContentState;
-      if (contState && contState.ActiveCe && contState.ActiveCe.ActiveNode) {
-        let currentNodeId: IDataOneTreeNode = contState.ActiveCe.ActiveNode;
-        //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
-        //let editUrl = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
-        //  + '/?sc_itemid=' + contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid + '&sc_mode=preview&sc_lang=en&sc_site=website';
+      let result: PromiseResult = new PromiseResult(this.SetScModeFromCeDt.name, this.Log());
 
-        let newUrlParts = this.Helpers().UrlHelp.CloneUrlParts(this.TabMan().CurrentTabData.UrlParts);
-        newUrlParts = this.Helpers().UrlHelp.BuildEditPrevNormUrl(newValue, contState, this.TabMan().CurrentTabData.UrlParts);
-        let editUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(newUrlParts)
+      this.Log().MarkerA();
 
-        await this.BrowserMan().CreateNewTab(editUrl);
+      if (currentPageType === scWindowType.Desktop) {
+        this.Log().MarkerB();
+        let contState: ICurrStateContent = this.UiMan().CurrContentState;
+        this.Log().MarkerC();
+        if (contState && contState.ActiveCe && contState.ActiveCe.ActiveNode) {
+          this.Log().MarkerD();
+          let currentNodeId: IDataOneTreeNode = contState.ActiveCe.ActiveNode;
+          //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
+          //let editUrl = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
+          //  + '/?sc_itemid=' + contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid + '&sc_mode=preview&sc_lang=en&sc_site=website';
 
-        //await this.MsgMan().SendMessageToContentTab()
+          let newUrlParts = this.Helpers().UrlHelp.CloneUrlParts(this.TabMan().CurrentTabData.UrlParts);
+          newUrlParts = this.Helpers().UrlHelp.BuildEditPrevNormUrl(newValue, contState, this.TabMan().CurrentTabData.UrlParts);
+          let editUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(newUrlParts)
 
-        //todo - put back?
-        //var currentIframe = this.DesktopMan().GetActiveDesktopIframeData();
-        //if (currentIframe) {
-        //  dataOneDoc = currentIframe.ContentDoc;
-        //}
+          await this.BrowserMan().CreateNewTab(editUrl)
+            .then(() => result.MarkSuccessful())
+            .catch((ex) => result.MarkFailed(ex));
+
+          //await this.MsgMan().SendMessageToContentTab()
+
+          //todo - put back?
+          //var currentIframe = this.DesktopMan().GetActiveDesktopIframeData();
+          //if (currentIframe) {
+          //  dataOneDoc = currentIframe.ContentDoc;
+          //}
+        } else {
+          this.Log().Log('unknown case');
+          this.Log().LogAsJsonPretty('contState', contState);
+        }
+      } else {
+
+        this.Log().Log('need to handle ce case');
+
       }
-    }
-    this.Log().FuncEnd(this.SetScModeFromCeDt.name, newValue.AsString);
+      this.Log().FuncEnd(this.SetScModeFromCeDt.name, newValue.AsString);
+      if (result.WasSuccessful()) {
+        resolve();
+      } else {
+        reject(result.RejectMessage);
+      }
+    });
   }
 
   SetScMode(newValue: IScMode) {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.SetScMode.name, newValue.AsString);
+
+      let result: PromiseResult = new PromiseResult(this.SetScMode.name, this.Log());
 
       var currentPageType: scWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
 
@@ -105,8 +129,8 @@ export class LocationManager extends PopUpManagerBase {
         currentPageType === scWindowType.Desktop
       ) {
         await this.SetScModeFromCeDt(newValue, currentPageType)
-          .then(resolve)
-          .catch(reject);
+          .then(() => result.MarkSuccessful())
+          .catch((ex) => result.MarkFailed(ex));
       }
       else if (currentPageType == scWindowType.Edit
         || currentPageType == scWindowType.Normal
@@ -115,10 +139,17 @@ export class LocationManager extends PopUpManagerBase {
 
         let newHref: AbsoluteUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
         await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData)
-          .then(resolve)
-          .catch(reject);
+          .then(() => result.MarkSuccessful())
+          .catch((ex) => result.MarkFailed(ex));
       }
+
       this.Log().FuncEnd(this.SetScMode.name);
+
+      if (result.MarkSuccessful) {
+        resolve();
+      } else {
+        reject(result.RejectMessage);
+      }
     });
   }
 }

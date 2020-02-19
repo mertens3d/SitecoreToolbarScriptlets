@@ -24,7 +24,7 @@ export class PopConst {
           AdminB: 'AdminB',
           MarkFavorite: 'MarkFavorite',
           HsCancel: 'Cancel',
-          CE: 'CE',
+          GoCE: 'CE',
           Desktop: 'Desktop',
           HsDrawStorage: 'DrawLocalStorage',
           BigRed: 'BigRed',
@@ -34,7 +34,7 @@ export class PopConst {
           QuickPublish: 'QuickPublish',
           HsRemoveFromStorage: 'RemoveOneFromLocalStorage',
           HsRestoreWindowState: 'RestoreWindowState',
-          HsSaveWindowState: 'SaveWindowState',
+          TakeSnapshot: 'SaveWindowState',
           UpdateNicknameB: 'UpdateNickname',
         },
         
@@ -71,7 +71,7 @@ export class PopConst {
       },
       HS: {
         GenericSettingTest: '[id=id-generic-setting-test]',
-        iCBoxdSettingsShowLogData: '[id=id-settings-show-log-data]',
+        LogToConsole: '[id=id-settings-show-log-data]',
         iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
         PrefAutoLogin: '[id=id-settings-auto-login]',
         SettingAutoSaveEnabled: '[id=id-settings-auto-save-enabled]',
@@ -97,6 +97,7 @@ export class PopConst {
         LgndState: false,
         DebugKeepDialogOpen: false,
         AutoSaveEnabled: false,
+        
       }
     },
     Storage: {
@@ -108,7 +109,7 @@ export class PopConst {
           AutoSaveEnabled: false,
           AutoLogin: false,
           DefaultDebugKeepDialogOpen: false,
-          DefaultShowLogData: false
+        
         }
       }
     },

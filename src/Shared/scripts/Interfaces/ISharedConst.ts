@@ -10,6 +10,11 @@
       Default: number,
     },
   },
+  Settings: {
+    Defaults: {
+      LogToConsole: boolean,
+    }
+  },
   Regex: {
     ContentEditor: RegExp,
     CleanGuid: RegExp,

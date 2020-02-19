@@ -9,19 +9,37 @@ import { BufferDirection } from "../Enums/BufferDirection";
 import { IDataBrowserTab } from "../Interfaces/IDataBrowserWindow";
 import { scWindowType } from "../Enums/scWindowType";
 import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
-import { LogLevel } from "../Enums/LogLevel";
-import { IOneGenericSetting } from "./OneSetting";
+import { OneGenericSetting } from "./OneGenericSetting";
+import { SharedConst } from "../SharedConst";
 export class LoggerBase {
-
   private __callDepth: number;
-  LogLevel: LogLevel = LogLevel.Unknown;
+  LogToConsoleEnabled: boolean;
+  LogHasBeenInit: boolean = false;
   ErrorStack: IError[] = [];
+  LogPreInitBuffer: string[] = [];
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
 
-  constructor(logLevel: LogLevel) {
-    this.LogLevel = logLevel;
+  constructor() {
     this.__callDepth = -1;
+    this.LogToConsoleEnabled = SharedConst.Const.Settings.Defaults.LogToConsole;
+    this.LogHasBeenInit = false;
   }
+
+  Init(val: boolean) {
+    this.LogToConsoleEnabled = val;
+    this.LogHasBeenInit = true;
+
+    console.log('Logger Enabled:' + this.LogToConsoleEnabled);
+
+    if (this.LogToConsoleEnabled) {
+      var iterMax = 1000;
+      while (this.LogPreInitBuffer.length > 0 && iterMax > 0) {
+        iterMax--;
+        this.Log(this.LogPreInitBuffer.shift());
+      }
+    }
+  }
+
   DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
     this.FuncStart(this.DebugDataOneIframe.name);
     this.Log('dataOneIframe : ' + this.IsNullOrUndefined(dataOneIframe));
@@ -52,7 +70,7 @@ export class LoggerBase {
   //  const debugPrefix = '   ~~~   ';
   //  this.LogVal(debugPrefix + textValName, textVal.toString())
   //}
-  DebugIdataPopUpSettings(toReturn: IOneGenericSetting): void {
+  DebugIdataPopUpSettings(toReturn: OneGenericSetting): void {
     //this.FuncStart(this.DebugSettings.name);
     this.LogVal('Settings', JSON.stringify(toReturn));
     //this.FuncEnd(this.DebugSettings.name);
@@ -183,7 +201,7 @@ export class LoggerBase {
     this.Log(debugPrefix + textValName + ' : ' + textVal);
   }
   Log(text, optionalValue: string = '', hasPrefix = false) {
-    if (this.LogLevel) {
+    if (this.LogToConsoleEnabled || !this.LogHasBeenInit) {
       var indent = '  ';
       //text =  indent.repeat(this.__indentCount) + text;
       for (var idx = 0; idx < this.__callDepth; idx++) {
@@ -199,10 +217,12 @@ export class LoggerBase {
         NewText: text,
         Append: true
       });
-      console.log(text);
-      //if (this.ParentWindow) {
-      //  this.ParentWindow.console.log(text);
-      //}
+
+      if (this.LogToConsoleEnabled) {
+        console.log(text);
+      } else if (!this.LogHasBeenInit) {
+        this.LogPreInitBuffer.push(text);
+      }
     }
   }
   private __triggerAllDebugTextChangedCallbacks(data: ICallbackDataDebugTextChanged) {
@@ -243,7 +263,6 @@ export class LoggerBase {
   FuncEnd(text, optionalValueInput?: number);
   FuncEnd(text, optionalValueInput?: string);
   FuncEnd(text, optionalValueInput: string | number) {
-
     this.__callDepth--;
     if (this.__callDepth < 0) {
       this.__callDepth = 0;
@@ -257,7 +276,7 @@ export class LoggerBase {
     if (optionalValue.length > 0) {
       text = text + ' : ' + optionalValue;
     }
-    
+
     this.Log(text, optionalValue, true);
   }
   Error(container, text) {

@@ -1,6 +1,6 @@
-﻿import { IOneGenericSetting } from "./OneSetting";
+﻿import { OneGenericSetting } from "./OneGenericSetting";
 
 export interface IAllGenericSettings {
-  SettingsAr: IOneGenericSetting[];
+  SettingsAr: OneGenericSetting[];
 
 }

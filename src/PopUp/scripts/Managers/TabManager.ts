@@ -27,7 +27,7 @@ export class TabManager extends PopUpManagerBase {
     await this.GetAssociatedTab()
       .then((tabData: IDataBrowserTab) => {
         this.CurrentTabData = tabData;
-        this.CurrentTabData.UrlParts = this.Helpers().UrlHelp.MakeUrlParts({ AbsUrl: tabData.Tab.url });
+        //this.CurrentTabData.UrlParts = this.Helpers().UrlHelp.MakeUrlParts({ AbsUrl: tabData.Tab.url });
       }
 
       );

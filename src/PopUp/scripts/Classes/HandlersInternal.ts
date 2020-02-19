@@ -1,6 +1,6 @@
 ﻿import { CommonEvents } from "./CommonEvents";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
-import { IOneGenericSetting } from "../../../Shared/scripts/Classes/OneSetting";
+import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
 export class HandlersInternal extends CommonEvents {
   HndlrSelectChange(evt: any) {
     this.PopHub.UiMan.SelectChanged();
@@ -23,7 +23,7 @@ export class HandlersInternal extends CommonEvents {
     var srcElem: HTMLElement = <HTMLElement>(evt.target || evt.srcElement);
     var foundContentSib = this.UiMan().GetAccordianContentElem(srcElem);
     if (foundContentSib) {
-      var oldValue: IOneGenericSetting = this.Helpers().SettingsHelp.GetByKey(settingKey, this.SettingsMan().AllSettings.SettingsAr);
+      var oldValue: OneGenericSetting = this.Helpers().SettingsHelp.GetByKey(settingKey, this.SettingsMan().AllSettings.SettingsAr);
       if (oldValue) {
         var oldValueBool: boolean = <boolean>oldValue.ValueAsObj;
         var newVal: boolean = !oldValue;

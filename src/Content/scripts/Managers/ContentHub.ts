@@ -22,7 +22,7 @@ import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
 export class ContentHub {
   AtticMan: ContentAtticManager;
   Const: IContentConst;
-  debug: LoggerContent;
+  Logger: LoggerContent;
 
   Helpers: HelperHub;
   MsgMan: ContentMessageManager;
@@ -38,24 +38,25 @@ export class ContentHub {
   SharedConst: ISharedConst;
   ReadyForMessages: boolean = false;
 
-  constructor(debug: LoggerContent) {
-    debug.FuncStart(ContentHub.name);
-    this.debug = debug;
+  constructor(logger: LoggerContent) {
+    logger.FuncStart(ContentHub.name);
+    this.Logger = logger;
+    console.log('logger enabled ' + this.Logger.LogToConsoleEnabled)
     this.Instantiate();
-    debug.FuncEnd(ContentHub.name);
+    logger.FuncEnd(ContentHub.name);
   }
 
   Instantiate() {
-    this.debug.FuncStart(this.Instantiate.name);
+    this.Logger.FuncStart(this.Instantiate.name);
 
     this.AtticMan = new ContentAtticManager(this);
 
-    this.Helpers = new HelperHub(this.debug);
+    this.Helpers = new HelperHub(this.Logger);
     this.MsgMan = new ContentMessageManager(this);
     this.MiscMan = new MiscManager(this);
     this.ContentFactory = new ContentFactories(this);
 
-    this.debug.MarkerA();
+    this.Logger.MarkerA();
 
     this.OneWindowMan = new OneScWindowManager(this);
 
@@ -66,22 +67,22 @@ export class ContentHub {
     this.SitecoreUiMan = new SitecoreUiManager(this);
     this.Init();
 
-    this.debug.Log('ready for messages');
+    this.Logger.Log('ready for messages');
     this.ReadyForMessages = true;
 
-    this.debug.FuncEnd(this.Instantiate.name);
+    this.Logger.FuncEnd(this.Instantiate.name);
   }
   Init() {
-    this.debug.FuncStart(ContentHub.constructor.name + ' ' + this.Init.name);
+    this.Logger.FuncStart(ContentHub.constructor.name + ' ' + this.Init.name);
     this.Const = ContentConst.Const;
 
     this.AtticMan.Init();
     this.MsgMan.Init();
 
-    this.debug.LogLevel = this.MsgMan.IsLogEnabled();
+    this.Logger.LogToConsoleEnabled = this.MsgMan.IsLogEnabled();
 
     this.OneWindowMan.Init();
 
-    this.debug.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);
+    this.Logger.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);
   }
 }

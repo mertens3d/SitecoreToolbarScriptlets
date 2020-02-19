@@ -15,6 +15,7 @@ button {
   height: $scLaunchPageButtonHeight;
   height: 60px;
   margin: $hsTypMargin;
+  opacity: 1;
   padding-top: 26px;
   vertical-align: top;
   white-space: normal;
@@ -29,6 +30,7 @@ button {
 .disabled{
   cursor: default;
   background-color: $buttonDisabledColor;
+  opacity: 0.3;
     &:hover{
     background-color: $buttonDisabledColor;
   }

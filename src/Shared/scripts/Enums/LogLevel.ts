@@ -1,5 +1,6 @@
-﻿export enum LogLevel {
-    Unknown,
-    Enabled,
-    Disabled
-}
+﻿//export enum LogLevel {
+//    Unknown,
+//    Enabled,
+//    Disabled,
+//    TempEnabled
+//}

@@ -8,9 +8,9 @@ export class OneTreeManager extends ContentManagerBase {
   AssociatedDoc: IDataOneDoc;
   constructor(hub: ContentHub, associatedDoc: IDataOneDoc) {
     super(hub)
-    hub.debug.FuncStart(OneTreeManager.name);
+    hub.Logger.FuncStart(OneTreeManager.name);
     this.AssociatedDoc = associatedDoc;
-    hub.debug.FuncEnd(OneTreeManager.name);
+    hub.Logger.FuncEnd(OneTreeManager.name);
   }
 
   GetFriendlyNameFromNode(inputNode) {

@@ -28,6 +28,8 @@ export class StaticHelpers {
     return scWindowType[windowType];
   }
 
+  
+
   static BufferString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
     var toReturn = str;
     var buffChar: string = ' ';

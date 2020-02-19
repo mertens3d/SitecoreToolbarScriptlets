@@ -6,5 +6,14 @@
     TakeSnapShot,
     AddCeTab,
     ScModeNormal,
-    ScModePrev
+    ScModePrev,
+    Cancel,
+    DrawStorage,
+    Remove,
+    RestoreState,
+    UpdateNickname,
+    QuickPublish,
+    GoDesktop,
+    GoContentEditor,
+    PutAdminB
 }

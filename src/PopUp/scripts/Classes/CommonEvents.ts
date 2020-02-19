@@ -1,8 +1,7 @@
 ﻿import { PopUpHub } from "../Managers/PopUpHub";
 import { PopUpManagerBase } from "../Managers/PopUpManagerBase";
 
-export class CommonEvents extends PopUpManagerBase{
-
+export class CommonEvents extends PopUpManagerBase {
   constructor(hub: PopUpHub) {
     super(hub);
   }
@@ -12,7 +11,13 @@ export class CommonEvents extends PopUpManagerBase{
   }
 
   protected __initNewOperation() {
-    this.__cleardebugText();
-    this.UiMan().ClearCancelFlag();
+    return new Promise((resolve, reject) => {
+      this.Log().FuncStart(this.__initNewOperation.name);
+      this.__cleardebugText();
+      this.UiMan().ClearCancelFlag();
+      this.Log().FuncEnd(this.__initNewOperation.name);
+
+      resolve();
+    });
   }
 }

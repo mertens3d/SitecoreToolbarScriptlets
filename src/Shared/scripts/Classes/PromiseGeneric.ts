@@ -4,7 +4,7 @@ import { IDataBrowserTab } from '../Interfaces/IDataBrowserWindow';
 import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { scWindowType } from '../Enums/scWindowType';
-import { ResultSuccessFail } from './ResultSuccessFail';
+import { PromiseResult } from "./PromiseResult";
 import { HelperBase } from './HelperBase';
 import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 
@@ -55,7 +55,7 @@ export class PromiseHelper extends HelperBase {
     return new Promise(async (resolve, reject) => {
       this.Log.FuncStart(this.WaitForPageReadyNative.name);
 
-      var result: ResultSuccessFail = new ResultSuccessFail();
+      var result: PromiseResult = new PromiseResult(this.WaitForPageReadyNative.name, this.Log);
 
       this.Log.DebugIDataOneDoc(targetDoc);
 
@@ -73,20 +73,20 @@ export class PromiseHelper extends HelperBase {
 
         if (isReadyStateComplete) {
           isReady = true;
-          result.Succeeded = true;
+          result.MarkSuccessful();
         } else {
           await iterationJr.Wait();
         }
       }
 
       if (iterationJr.IsExhausted) {
-        result.Succeeded = false;
+        result.MarkFailed(iterationJr.IsExhaustedMsg);
         result.RejectMessage = iterationJr.IsExhaustedMsg;
       }
 
       this.Log.FuncEnd(this.WaitForPageReadyNative.name, 'ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());;
 
-      if (result.Succeeded) {
+      if (result.WasSuccessful()) {
         resolve();
       } else {
         reject(result.RejectMessage);
@@ -164,7 +164,7 @@ export class PromiseHelper extends HelperBase {
     return new Promise(async (resolve, reject) => {
       let iterHelper = new IterationHelper(this.HelperHub, this.TabWaitForReadyStateCompleteNative.name);
 
-      let success: ResultSuccessFail = new ResultSuccessFail();
+      let result: PromiseResult = new PromiseResult(this.TabWaitForReadyStateCompleteNative.name, this.Log);
 
       while (browserTab.status !== 'complete' && iterHelper.DecrementAndKeepGoing()) {
         this.Log.LogVal('tab status', browserTab.status);
@@ -172,18 +172,18 @@ export class PromiseHelper extends HelperBase {
       }
 
       if (browserTab.status === 'complete') {
-        success.Succeeded = true;
+        result.MarkSuccessful();
       } else {
-        success.Succeeded = false;
+        result.MarkFailed('browser status: ' + browserTab.status)
         if (iterHelper.IsExhausted) {
-          success.RejectMessage = iterHelper.IsExhaustedMsg;
+          result.RejectMessage = iterHelper.IsExhaustedMsg;
         }
       }
 
-      if (success.Succeeded) {
+      if (result.WasSuccessful()) {
         resolve()
       } else {
-        reject(success.RejectMessage);
+        reject(result.RejectMessage);
       }
     });
   }
