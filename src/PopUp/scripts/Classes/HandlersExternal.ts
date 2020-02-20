@@ -20,7 +20,9 @@ export class HandlersExternal extends CommonEvents {
   }
 
   async QuickPublish(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqQuickPublish, this.PopHub));
+    await popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqQuickPublish, popHub))
+      .then(popHub.UiMan.OnSuccessfullCommand)
+      .catch((ex) => popHub.Log.Error(popHub.EventMan.Handlers.External.QuickPublish.name, ex));
   }
 
 
@@ -57,14 +59,14 @@ export class HandlersExternal extends CommonEvents {
     popHub.UiMan.SetCancelFlag();
   }
   MarkFavorite(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.PopMsgMan.SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqMarkFavorite, this.PopHub));
+    popHub.PopMsgMan.SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqMarkFavorite, popHub));
   }
   __DrawStorage(evt: MouseEvent, popHub: PopUpHub) {
     popHub.PopMsgMan.FromAtticDrawStorage();
   }
 
   HndlrSnapShotRemove(evt: any, popHub: PopUpHub) {
-    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.RemoveFromStorage, this.PopHub);
+    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.RemoveFromStorage, popHub);
     this.GoContentCommand(msg);
   }
 
@@ -92,7 +94,7 @@ export class HandlersExternal extends CommonEvents {
         resolve(toReturn);
       }
       else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     });
   }
@@ -104,7 +106,7 @@ export class HandlersExternal extends CommonEvents {
 
 
   HndlrSnapShotUpdateNickName(evt: MouseEvent, popHub: PopUpHub) {
-    var msg = new MsgFromPopUp(MsgFlag.ReqUpdateNickName, this.PopHub);
+    var msg = new MsgFromPopUp(MsgFlag.ReqUpdateNickName, popHub);
     msg.Data.IdOfSelect = popHub.UiMan.CurrentMenuState.SelectSnapshotId;
     msg.Data.SnapShotSettings.SnapShotNewNickname = popHub.UiMan.GetValueInNickname();
     this.GoContentCommand(msg);

@@ -138,7 +138,7 @@ export class OneTreeManager extends ContentManagerBase {
       //this.debug().Log(targetDoc);
       this.Log().LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
       this.Log().DebugIDataOneDoc(this.AssociatedDoc);
-      var rootNode = this.AssociatedDoc.Document.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
+      var rootNode = this.AssociatedDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
 
       if (rootNode) {
         this.Log().Log('rootNode: ' + rootNode.innerHTML);

@@ -12,12 +12,20 @@ export class BrowserManager extends PopUpManagerBase {
 
       let newTab: IDataBrowserTab;
 
+      this.UiMan().UpdateMsgStatusStack('Opening new tab');
+
       await browser.tabs.create({
         url: tabUrl.AbsUrl
       })
         .then((rawTab: browser.tabs.Tab) => { newTab = this.TabMan().MakeTabData(rawTab) })
-        .then(() => { this.Helpers().PromiseHelp.TabWaitForReadyStateCompleteNative(newTab.Tab) })
-        .then(() => this.MsgMan().WaitForListeningTab(newTab))
+        .then(() => {
+          this.UiMan().UpdateMsgStatusStack('Waiting for Tab Ready State ');
+          this.Helpers().PromiseHelp.TabWaitForReadyStateCompleteNative(newTab.Tab)
+        })
+        .then(() => {
+          this.UiMan().UpdateMsgStatusStack('Waiting for Tab Listening ');
+          this.MsgMan().WaitForListeningTab(newTab);
+        })
         .then(() => result.MarkSuccessful())
         .catch((ex) => {
           result.MarkFailed(ex);
@@ -28,7 +36,7 @@ export class BrowserManager extends PopUpManagerBase {
         resolve(newTab);
       } else {
         this.Log().FuncEnd(this.CreateNewTab.name, tabUrl.AbsUrl);
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     })
   }

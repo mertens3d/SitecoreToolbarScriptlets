@@ -100,7 +100,7 @@ export class OneDesktopManager extends ContentManagerBase {
     this.Log().DebugIDataOneDoc(this.associatedDoc);
 
     var toReturn: IDataOneIframe[] = [];
-    var iframeAr = this.associatedDoc.Document.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent);
+    var iframeAr = this.associatedDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent);
     this.Log().LogVal('found iframes count', iframeAr.length);
     if (iframeAr) {
       this.Log().Log('iframeAr: ' + iframeAr.length);
@@ -108,7 +108,7 @@ export class OneDesktopManager extends ContentManagerBase {
         this.Log().Log('pushing: ' + ifrIdx);
 
         var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        var dataOneIframe: IDataOneIframe = this.ContentFactory().DateOneIframeFactory(iframeElem, this.associatedDoc, 'desktop Iframe_' + ifrIdx);
+        var dataOneIframe: IDataOneIframe = this.Helpers().FactoryHelp.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
         toReturn.push(dataOneIframe);
       }
     } else {
@@ -168,7 +168,7 @@ export class OneDesktopManager extends ContentManagerBase {
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnAllCeState);
       } else {
-        reject(promiseResult.RejectMessage);
+        reject(promiseResult.RejectReason);
       }
     })
   }

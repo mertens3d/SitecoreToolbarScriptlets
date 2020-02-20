@@ -41,7 +41,7 @@ export class ContentHub {
   constructor(logger: LoggerContent) {
     logger.FuncStart(ContentHub.name);
     this.Logger = logger;
-    console.log('logger enabled ' + this.Logger.LogToConsoleEnabled)
+    //console.log('logger enabled ' + this.Logger.LogToConsoleEnabled)
     this.Instantiate();
     logger.FuncEnd(ContentHub.name);
   }

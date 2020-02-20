@@ -49,15 +49,21 @@ export class ContentFactories extends ContentManagerBase {
           .catch((ex) => promiseResult.MarkFailed(ex));
       }
       else if (pageType == scWindowType.ContentEditor) {
-      } else {
         toReturnCeState = null;
+
+        await this.OneScWinMan().OneCEMan.GetStateCe(this.Helpers().GuidHelp.NewGuid())
+          .then((result: IDataOneStorageCE) => {
+            toReturnCeState = result;
+            promiseResult.MarkSuccessful();
+          })
+          .catch((ex) => promiseResult.MarkFailed(ex));
       }
       this.Log().FuncEnd(this.GetCurrentDtOrCeState.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnCeState);
       } else {
-        reject(promiseResult.RejectMessage);
+        reject(promiseResult.RejectReason);
       }
     });
   }
@@ -70,15 +76,5 @@ export class ContentFactories extends ContentManagerBase {
     this.Log().FuncEnd(this.NewMsgFromContentShell.name);
     return response;
   }
-  DateOneIframeFactory(iframeElem: HTMLIFrameElement, parentDocument: IDataOneDoc, nickname: string): IDataOneIframe {
-    var toReturn: IDataOneIframe = {
-      Index: -1,
-      IframeElem: iframeElem,
-      Id: this.Helpers().GuidHelp.NewGuid(),
-      Zindex: iframeElem.style.zIndex ? parseInt(iframeElem.style.zIndex) : -1,
-      Nickname: nickname,
-      ContentDoc: this.Helpers().FactoryHelp.DataOneContentDocFactoryFromIframe(iframeElem, parentDocument, nickname),
-    };
-    return toReturn;
-  }
+  
 }

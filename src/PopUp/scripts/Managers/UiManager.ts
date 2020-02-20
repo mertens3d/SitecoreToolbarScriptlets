@@ -42,6 +42,7 @@ export class UiManager extends PopUpManagerBase {
   CurrentMenuState: IMenuState = {
     SelectSnapshotId: null,
   }
+  MsgStatusDiv: HTMLDivElement;
 
   constructor(popHub: PopUpHub) {
     super(popHub);
@@ -57,15 +58,29 @@ export class UiManager extends PopUpManagerBase {
     var self = this;
     this.Log().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
 
+    this.LookForMsgStatusDiv();
     this.WriteBuildNumToUi();
 
     this.MsgMan().SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqCurState, this.PopHub), this.TabMan().CurrentTabData);
 
     this.Log().FuncEnd(UiManager.name, this.Init.name);
   }
+  LookForMsgStatusDiv() {
+    this.MsgStatusDiv = document.querySelector(PopConst.Const.Selector.HS.DivMsgStatus);
+  }
+  UpdateMsgStatusStack(textToShow: string) {
+    if (this.MsgStatusDiv) {
+      this.MsgStatusDiv.innerHTML = textToShow + '</br>' + this.MsgStatusDiv.innerHTML ;
+    }
+    this.Log().Log('msg stat: ' + textToShow);
+  }
+
   OnSuccessfullCommand(): void {
     this.Log().FuncStart(this.OnSuccessfullCommand.name);
     try {
+      this.UpdateMsgStatusStack('Command Completed Successfully');
+
+
       let setting: OneGenericSetting = this.SettingsMan().GetByKey(SettingKey.DebugKeepDialogOpen);
       if (!SettingsHelper.ValueAsBool(setting)) {
         window.close();
@@ -515,7 +530,7 @@ export class UiManager extends PopUpManagerBase {
   }
   PopulateContentStateDivContent(contentState: ICurrStateContent) {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.DivStateContent);
-    var allStateText: string = this.lineBreak  + 'Content State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
+    var allStateText: string = this.lineBreak + 'Content State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
 
     if (targetCurrStateDiv) {
       allStateText += this.lineBreak + 'Editor:';
@@ -557,13 +572,11 @@ export class UiManager extends PopUpManagerBase {
 
     //this.Log().LogVal('now', new Date().toString());
     //var allTaText: string = 'State as of: ' + (new Date()).toString();
-    var allStateText: string = this.lineBreak  + 'PopUp State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
-
+    var allStateText: string = this.lineBreak + 'PopUp State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
 
     if (targetCurrStateDiv) {
-
       allStateText += this.lineBreak + 'UI';
-      
+
       allStateText += this.indentedLineBreak + 'Select Snapshot: ';
       if (this.CurrentMenuState.SelectSnapshotId) {
         allStateText += this.CurrentMenuState.SelectSnapshotId.AsShort;
@@ -574,7 +587,6 @@ export class UiManager extends PopUpManagerBase {
       allStateText += this.lineBreak + 'URL Parts';
       let urlParts: UrlParts = this.TabMan().CurrentTabData.UrlParts;
       allStateText += this.indentedLineBreak + 'Page Type: ' + StaticHelpers.WindowTypeAsString(urlParts.ScWindowType);
-
 
       allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + urlParts.OriginalRaw;
 

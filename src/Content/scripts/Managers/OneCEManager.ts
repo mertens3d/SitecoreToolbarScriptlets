@@ -80,7 +80,7 @@ export class OneCEManager extends ContentManagerBase {
   }
 
   private __collapseRootNode(targetCEDoc: IDataOneDoc) {
-    var rootElem: HTMLElement = targetCEDoc.Document.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
+    var rootElem: HTMLElement = targetCEDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
     if (rootElem) {
       this.__collapseNode(rootElem);
     } else {
@@ -94,7 +94,7 @@ export class OneCEManager extends ContentManagerBase {
     var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + nextNode.NodeId.AsString;
 
     this.Log().Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.AsShort);
-    this.Log().Log('document not null ' + (dataOneDocTarget.Document != null));
+    this.Log().Log('document not null ' + (dataOneDocTarget.ContentDoc != null));
 
     var iterHelper = new IterationHelper(this.Helpers(), this.WaitForAndRestoreOneNode.name);
 
@@ -103,7 +103,7 @@ export class OneCEManager extends ContentManagerBase {
     while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
       this.Log().Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.AsShort + '*');
 
-      foundOnPageTreeGlyph = dataOneDocTarget.Document.getElementById(treeGlyphTargetId);
+      foundOnPageTreeGlyph = dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
 
       if (foundOnPageTreeGlyph) {
         //this.debug().Log('Found it: ');
@@ -112,7 +112,7 @@ export class OneCEManager extends ContentManagerBase {
         }
         if (nextNode.IsActive) {
           var hotTreeNodeId = ContentConst.Const.Names.SC.TreeNodePrefix + nextNode.NodeId.AsString;
-          var hotTreeNode = dataOneDocTarget.Document.getElementById(hotTreeNodeId);
+          var hotTreeNode = dataOneDocTarget.ContentDoc.getElementById(hotTreeNodeId);
           if (hotTreeNode) {
             this.__activateNode(hotTreeNode);
           }
@@ -194,7 +194,7 @@ export class OneCEManager extends ContentManagerBase {
       if (result.WasSuccessful()) {
         resolve(toReturnCEData)
       } else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
 
     });

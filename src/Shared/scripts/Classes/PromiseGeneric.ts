@@ -1,53 +1,44 @@
 ﻿import { IterationHelper } from './IterationHelper';
 import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
-import { IDataBrowserTab } from '../Interfaces/IDataBrowserWindow';
 import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
-import { IScVerSpec } from '../Interfaces/IScVerSpec';
-import { scWindowType } from '../Enums/scWindowType';
 import { PromiseResult } from "./PromiseResult";
 import { HelperBase } from './HelperBase';
+import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
+import { IDataBrowserTab } from '../Interfaces/IDataBrowserWindow';
 
 export class PromiseHelper extends HelperBase {
   async  WaitForReadyIframe(dataOneIframe: IDataOneIframe) {
-    return new Promise<IDataOneIframe>(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
       this.Log.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort);
 
-      this.Log.DebugDataOneIframe(dataOneIframe);
-
       var iterationJr: IterationHelper = new IterationHelper(this.HelperHub, this.WaitForReadyIframe.name);
+      let promiseResult: PromiseResult = new PromiseResult(this.WaitForReadyIframe.name, this.Log);
 
-      var isReady: boolean = false;
-      this.Log.MarkerA();
-
-      while (iterationJr.DecrementAndKeepGoing() && !isReady) {
-        this.Log.MarkerB();
+      while (iterationJr.DecrementAndKeepGoing() && !promiseResult.WasSuccessful()) {
         var currentReadyState: string = dataOneIframe.IframeElem.contentDocument.readyState.toString();
         var isReadyStateComplete = currentReadyState === 'complete';
-        this.Log.Log('currentReadyState : ' + currentReadyState);;
-
-        //if (currentReadyState !== 'uninitialized') {
-        //  this.Debug.Log('id: ' + dataOneIframe.IframeElem.id)
-        //}
-
-        this.Log.MarkerC();
-
-        this.Log.Log('isReadyStateComplete: ' + isReadyStateComplete);
 
         if (isReadyStateComplete) {
-          this.Log.Log('toReturn A is true');
-          isReady = true;
-          dataOneIframe.ContentDoc = this.HelperHub.FactoryHelp.DataOneContentDocFactoryFromIframe(dataOneIframe.IframeElem, dataOneIframe.ContentDoc.ParentDoc,
-            dataOneIframe.Nickname);
+          promiseResult.MarkSuccessful();
         } else {
           await iterationJr.Wait();
         }
       }
 
-      this.Log.DebugDataOneIframe(dataOneIframe);
+      if (iterationJr.IsExhausted) {
+        promiseResult.RejectReason = iterationJr.IsExhaustedMsg;
+      }
 
-      this.Log.FuncEnd(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' : ' + currentReadyState + ' is ready: ' + isReady.toString());;
-      resolve(dataOneIframe);
+      this.Log.LogAsJsonPretty('dataOneIframe', dataOneIframe);
+
+      this.Log.FuncEnd(this.WaitForReadyIframe.name);
+
+      if (promiseResult.WasSuccessful()) {
+        resolve();
+      } else {
+        reject(promiseResult.RejectReason);
+      }
     });
   }
 
@@ -66,7 +57,7 @@ export class PromiseHelper extends HelperBase {
 
       while (iterationJr.DecrementAndKeepGoing() && !isReady) {
         this.Log.MarkerB();
-        var currentReadyState: string = targetDoc.Document.readyState.toString();
+        var currentReadyState: string = targetDoc.ContentDoc.readyState.toString();
         var isReadyStateComplete = currentReadyState === 'complete';
         this.Log.LogVal('readyState', currentReadyState);;
         this.Log.LogVal('isReadyStateComplete', isReadyStateComplete);
@@ -81,7 +72,7 @@ export class PromiseHelper extends HelperBase {
 
       if (iterationJr.IsExhausted) {
         result.MarkFailed(iterationJr.IsExhaustedMsg);
-        result.RejectMessage = iterationJr.IsExhaustedMsg;
+        result.RejectReason = iterationJr.IsExhaustedMsg;
       }
 
       this.Log.FuncEnd(this.WaitForPageReadyNative.name, 'ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());;
@@ -89,60 +80,77 @@ export class PromiseHelper extends HelperBase {
       if (result.WasSuccessful()) {
         resolve();
       } else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     });
   }
-  async WaitForAndReturnReadyIframe(targetDoc: IDataOneDoc, selector: string, iframeObj: IDataOneIframe) {
-    return new Promise<IDataOneIframe>(async (resolve) => {
-      var iframeData: IDataOneIframe;
+  async WaitForIframeElemAndReturnWhenReady(haystackDoc: IDataOneDoc, selector: string, iframeNickName: string) {
+    return new Promise<IDataOneIframe>(async (resolve, reject) => {
+      this.Log.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
 
-      await this.WaitForAndReturnFoundElem(targetDoc, selector)
-        .then(async (foundElem) => {
+      var toReturnIframeData: IDataOneIframe = null;
+
+      let promiseResult: PromiseResult = new PromiseResult(this.WaitForIframeElemAndReturnWhenReady.name, this.Log);
+
+      await this.WaitForAndReturnFoundElem(haystackDoc, selector)
+        .then(async (foundElem: HTMLIFrameElement) => {
           if (foundElem) {
-            iframeObj.IframeElem = <HTMLIFrameElement>foundElem;
-
-            this.Log.DebugDataOneIframe(iframeData);
-            return iframeData;
+            toReturnIframeData = this.HelperHub.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>foundElem, iframeNickName);
           }
         })
-        .then(async (iframeData) => {
-          iframeData = await this.WaitForReadyIframe(iframeData);
+        .then(() => this.WaitForReadyIframe(toReturnIframeData))
+        .then(() => {
+          toReturnIframeData.ContentDoc = this.HelperHub.FactoryHelp.DataOneContentDocFactoryFromIframe(toReturnIframeData);
+          promiseResult.MarkSuccessful();
+        })
+        .catch((err) => promiseResult.MarkFailed(err));
 
-          resolve(iframeData);
-        });
+      this.Log.FuncEnd(this.WaitForIframeElemAndReturnWhenReady.name);
+      if (promiseResult.WasSuccessful()) {
+        resolve(toReturnIframeData);
+      } else {
+        reject(promiseResult.RejectReason);
+      }
     });
   }
 
-  async WaitForAndReturnFoundElem(targetDoc: IDataOneDoc, selector: string, overrideIterCount = 8) {
+  async WaitForAndReturnFoundElem(haystackDoc: IDataOneDoc, selector: string, overrideIterCount = 8) {
     return new Promise<HTMLElement>(async (resolve, reject) => {
-      this.Log.FuncStart(this.WaitForAndReturnFoundElem.name, 'selector: ' + selector + ' nickname: ' + targetDoc.Nickname);
+      this.Log.FuncStart(this.WaitForAndReturnFoundElem.name);
+      this.Log.LogVal('selector', selector);
+      this.Log.LogVal('doc nickname', haystackDoc.Nickname);
 
-      var found: HTMLElement = null;
+      var toReturnFoundElem: HTMLElement = null;
+      let promiseResult: PromiseResult = new PromiseResult(this.WaitForAndReturnFoundElem.name, this.Log);
 
       var iterationJr = new IterationHelper(this.HelperHub, this.WaitForAndReturnFoundElem.name, overrideIterCount);
 
-      while (!found && iterationJr.DecrementAndKeepGoing()) {
-        this.Log.LogVal('targetDoc.Document', targetDoc.Document.toString());
-        this.Log.LogVal('targetDoc.Document.location', targetDoc.Document.location.toString());
-        this.Log.LogVal('targetDoc.Document.location.href', targetDoc.Document.location.href);
-        found = targetDoc.Document.querySelector(selector);
+      while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
+        this.Log.LogVal('targetDoc.Document', haystackDoc.ContentDoc.toString());
+        this.Log.LogVal('targetDoc.Document.location', haystackDoc.ContentDoc.location.toString());
+        this.Log.LogVal('targetDoc.Document.location.href', haystackDoc.ContentDoc.location.href);
+        toReturnFoundElem = haystackDoc.ContentDoc.querySelector(selector);
 
-        if (found) {
+        if (toReturnFoundElem) {
           this.Log.Log('found');
 
-          this.Log.LogVal('found.style.display', found.style.display);
-          this.Log.FuncEnd(this.WaitForAndReturnFoundElem.name, selector + targetDoc.Document.location.href);
+          this.Log.LogVal('found.style.display', toReturnFoundElem.style.display);
 
-          resolve(found);
+          promiseResult.MarkSuccessful();
         } else {
-          await iterationJr.Wait()
+          await iterationJr.Wait();
         }
       }
 
-      if (!found && iterationJr.IsExhausted) {
-        this.Log.FuncEnd(this.WaitForAndReturnFoundElem.name, selector + targetDoc.Document.location.href);
-        reject('exhausted');
+      if (!toReturnFoundElem && iterationJr.IsExhausted) {
+        promiseResult.MarkFailed(iterationJr.IsExhaustedMsg);
+      }
+      this.Log.FuncEnd(this.WaitForAndReturnFoundElem.name);
+
+      if (promiseResult.WasSuccessful()) {
+        resolve(toReturnFoundElem);
+      } else {
+        reject(promiseResult.RejectReason);
       }
     });
   }
@@ -167,6 +175,8 @@ export class PromiseHelper extends HelperBase {
       let result: PromiseResult = new PromiseResult(this.TabWaitForReadyStateCompleteNative.name, this.Log);
 
       while (browserTab.status !== 'complete' && iterHelper.DecrementAndKeepGoing()) {
+       
+
         this.Log.LogVal('tab status', browserTab.status);
         await iterHelper.Wait;
       }
@@ -176,14 +186,14 @@ export class PromiseHelper extends HelperBase {
       } else {
         result.MarkFailed('browser status: ' + browserTab.status)
         if (iterHelper.IsExhausted) {
-          result.RejectMessage = iterHelper.IsExhaustedMsg;
+          result.RejectReason = iterHelper.IsExhaustedMsg;
         }
       }
 
       if (result.WasSuccessful()) {
         resolve()
       } else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     });
   }
@@ -275,40 +285,48 @@ export class PromiseHelper extends HelperBase {
     });
   }
 
-  WaitForThenClick(selector: string[], targetDoc: IDataOneDoc) {
+  WaitForThenClick(selectorAr: string[], targetDoc: IDataOneDoc) {
     return new Promise<void>(async (resolve, reject) => {
+      this.Log.FuncStart(this.WaitForThenClick.name);
+      let promiseResults: PromiseResult = new PromiseResult(this.WaitForThenClick.name, this.Log);
+
       if (targetDoc) {
-        this.Log.FuncStart(this.WaitForThenClick.name, selector.length);
+        this.Log.LogAsJsonPretty('selectors', selectorAr);
 
         var found: HTMLElement = null;
-
         var iterationJr = new IterationHelper(this.HelperHub, this.WaitForThenClick.name);
 
         while (!found && iterationJr.DecrementAndKeepGoing()) {// todo put back && !this.MsgMan().OperationCancelled) {
-          for (var idx = 0; idx < selector.length; idx++) {
-            found = targetDoc.Document.querySelector(selector[idx]);
+          for (var idx = 0; idx < selectorAr.length; idx++) {
+            found = targetDoc.ContentDoc.querySelector(selectorAr[idx]);
             if (found) {
+              this.Log.LogVal('found target', selectorAr[idx]);
               break;
             }
           }
 
           if (found) {
-            this.Log.Log('found and clicking');
+            this.Log.Log('clicking');
             found.click();
-
-            this.Log.FuncEnd(this.WaitForThenClick.name, selector.length);
-            resolve();
+            promiseResults.MarkSuccessful();
           } else {
             await iterationJr.Wait()
           }
         }
       } else {
-        reject();
+        promiseResults.MarkFailed('no target doc');
       }
 
-      this.Log.FuncEnd(this.WaitForThenClick.name, selector.length);
       if (!found && iterationJr.IsExhausted) {
-        reject('exhausted');
+        promiseResults.MarkFailed(iterationJr.IsExhaustedMsg);
+      }
+
+      this.Log.FuncEnd(this.WaitForThenClick.name);
+
+      if (promiseResults.WasSuccessful()) {
+        resolve();
+      } else {
+        reject(promiseResults.RejectReason);
       }
     });
   }

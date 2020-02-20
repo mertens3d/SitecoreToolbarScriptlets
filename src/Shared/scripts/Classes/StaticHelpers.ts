@@ -72,7 +72,7 @@ export class StaticHelpers {
     var toReturn: string = "{error}";
     if (msg) {
       try {
-        toReturn = MsgFlag[msg];
+        toReturn = 'MsgFlag.' +  MsgFlag[msg] + '(' + msg + ')';
       } catch (e) {
       }
     }

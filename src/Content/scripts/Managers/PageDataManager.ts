@@ -17,14 +17,13 @@ export class PageManager extends ContentManagerBase {
 
     //if (window.opener) {
     this.topLevelDoc = {
-      ParentDoc: null,
-      Document: (<Window>(window)).document,
+      //ParentDoc: null,
+      ContentDoc: (<Window>(window)).document,
       DocId: this.Helpers().GuidHelp.NewGuid(),
-      ParentDesktop: null,
       Nickname: 'Original Target Page'
     }
 
-    this.topLevelDoc.ParentDoc = this.topLevelDoc;
+    //this.topLevelDoc.ParentDoc = this.topLevelDoc;
     this.MsgMan().SetParentInfo(this.topLevelDoc);
 
     this.Log().FuncEnd(this.Init.name);

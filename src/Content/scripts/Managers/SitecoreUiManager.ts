@@ -19,10 +19,9 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
   TopLevelDoc(): IDataOneDoc {
     if (!this.topDoc) {
       this.topDoc = {
-        ParentDoc: null,
-        Document: window.document,
+        //ParentDoc: null,
+        ContentDoc: window.document,
         DocId: this.Helpers().GuidHelp.NewGuid(),
-        ParentDesktop: null,
         Nickname: 'top doc'
       }
     }
@@ -34,8 +33,8 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
     this.Log().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.AsShort);
     this.Log().Log('callback passed: ' + (callbackOnComplete !== null));
 
-    var userNameElem = targetDoc.Document.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);
-    var passwordElem = targetDoc.Document.getElementById(ContentConst.Const.ElemId.sc.scLoginPassword);
+    var userNameElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);
+    var passwordElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginPassword);
 
     if (this.Log().IsNotNullOrUndefinedBool('userNameElem', userNameElem)
       &&
@@ -69,10 +68,10 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
   GetLoginButton(targetDoc: IDataOneDoc): HTMLElement {
     this.Log().FuncStart(this.GetLoginButton.name);
 
-    var toReturn: HTMLElement = targetDoc.Document.getElementById(ContentConst.Const.ElemId.sc.scLoginBtn.sc920);
+    var toReturn: HTMLElement = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginBtn.sc920);
 
     if (!toReturn) {
-      toReturn = targetDoc.Document.querySelector(ContentConst.Const.Selector.SC.LoginBtn.sc820);
+      toReturn = targetDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.LoginBtn.sc820);
     }
 
     this.Log().Log('toReturn: ' + toReturn);

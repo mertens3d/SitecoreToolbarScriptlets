@@ -11,8 +11,15 @@
   <div class='big-wrapper'>
     <form>
       <div class='header'>
-        <div class='build-stamp' id='build-stamp'></div>
-        <div class='close-window' id='close-window'></div>
+        <div class='left-side'>
+          <div class='scroller-msg-stat'>
+            <div class='msg-status' id='msg-status'></div>
+          </div>
+        </div>
+        <div class='right-side'>
+          <div class='build-stamp' id='build-stamp'></div>
+          <div class='close-window' id='close-window'></div>
+        </div>
       </div>
       <div class='header-push'></div>
 
@@ -108,7 +115,6 @@
           <input type='checkbox' id='id-generic-setting-test' checked='checked'>
           <label for='id-generic-setting-test'>{error}</label>
 
-
           <br>
           <input type='checkbox' id='id-settings-auto-login' checked='checked'>
           <label for='id-settings-auto-login'>{error}</label>
@@ -121,16 +127,13 @@
             <br>
             <input type='checkbox' id='id-settings-show-log-data' checked='checked'>
             <label for='id-settings-show-log-data'>{error}</label>
-
-
-
           </fieldset>
 
           <br>
-          
+
           <fieldset>
             <legend>Auto Snapshot</legend>
-            
+
             <!--<input type="checkbox" id="id-settings-not-used" checked="checked" />
             <label for='id-settings-not-used'>{error}</label>
             <br />-->

@@ -73,7 +73,7 @@ export class UtilityHelper extends HelperBase {
 
     var toReturn: string = '';
     if (date) {
-      var year = date.getFullYear();
+      //var year = date.getFullYear();
       var month = StaticHelpers.BufferString((date.getMonth() + 1).toString(), 2, BufferChar.Zero, BufferDirection.left);
       var day =StaticHelpers.BufferString(date.getDate().toString(), 2, BufferChar.Zero, BufferDirection.left);
       var min = StaticHelpers.BufferString(date.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);

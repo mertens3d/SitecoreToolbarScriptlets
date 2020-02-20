@@ -6,11 +6,9 @@ import { IError } from "../Interfaces/IError";
 import { StaticHelpers } from "./StaticHelpers";
 import { BufferChar } from "../Enums/BufferChar";
 import { BufferDirection } from "../Enums/BufferDirection";
-import { IDataBrowserTab } from "../Interfaces/IDataBrowserWindow";
-import { scWindowType } from "../Enums/scWindowType";
-import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
 import { OneGenericSetting } from "./OneGenericSetting";
 import { SharedConst } from "../SharedConst";
+
 export class LoggerBase {
   private __callDepth: number;
   LogToConsoleEnabled: boolean;
@@ -29,40 +27,18 @@ export class LoggerBase {
     this.LogToConsoleEnabled = val;
     this.LogHasBeenInit = true;
 
-    console.log('Logger Enabled:' + this.LogToConsoleEnabled);
+    //console.log('Logger Enabled:' + this.LogToConsoleEnabled);
 
     if (this.LogToConsoleEnabled) {
-      var iterMax = 1000;
-      while (this.LogPreInitBuffer.length > 0 && iterMax > 0) {
-        iterMax--;
+      var iterCheckMax = 1000;
+      while (this.LogPreInitBuffer.length > 0 && iterCheckMax > 0) {
+        iterCheckMax--;
         this.Log(this.LogPreInitBuffer.shift());
       }
     }
   }
 
-  DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
-    this.FuncStart(this.DebugDataOneIframe.name);
-    this.Log('dataOneIframe : ' + this.IsNullOrUndefined(dataOneIframe));
-    if (dataOneIframe) {
-      this.Log('dataOneIframe.Nickname : ' + dataOneIframe.Nickname);
-      this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
-      if (dataOneIframe.IframeElem) {
-        this.Log('dataOneIframe.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
-        //  //this.Log('dataOneIframe.IframeElem.src: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.src));
-        //  this.Log('dataOneIframe.IframeElem.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
-        //  //this.Log('dataOneIframe.IframeElem.name: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.name));
-      }
-      this.Log('dataOneIframe.ContentDoc: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc));
-      this.DebugIDataOneDoc(dataOneIframe.ContentDoc);
-      //this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
-      //this.Log('dataOneIframe.Id: \t' + this.IsNullOrUndefined(dataOneIframe.Id));
-      //if (dataOneIframe.Id) {
-      //  this.Log('dataOneIframe.Id.asShort: \t' + this.IsNullOrUndefined(dataOneIframe.Id.asShort));
-      //}
-      //this.Log('dataOneIframe.DocElem: \t' + this.IsNullOrUndefined(dataOneIframe.Index));
-    }
-    this.FuncEnd(this.DebugDataOneIframe.name);
-  }
+  
   debugPrefix: string = '\t\t';
   //DebugObjVarVal(textValName: string, textVal: number)
   //DebugObjVarVal(textValName: string, textVal: string)
@@ -75,13 +51,7 @@ export class LoggerBase {
     this.LogVal('Settings', JSON.stringify(toReturn));
     //this.FuncEnd(this.DebugSettings.name);
   }
-  DebugIDataBrowserTab(browserWindow: IDataBrowserTab) {
-    if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
-      this.LogVal('WindowType', scWindowType[browserWindow.UrlParts.ScWindowType]);
-      //this.DebugIDataOneDoc(browserWindow.DataDocSelf);
-      //this.DebugWindow(browserWindow.Window);
-    }
-  }
+
   DebugWindow(window: Window) {
     if (this.IsNotNullOrUndefinedBool('window', window)) {
     }
@@ -115,11 +85,11 @@ export class LoggerBase {
     if (dataOneDoc) {
       this.Log(this.debugPrefix + 'dataOneDoc: \t' + this.IsNullOrUndefined(dataOneDoc));
       this.Log(this.debugPrefix + 'dataOneDoc.XyyzId.asShort: \t' + this.IsNullOrUndefined(dataOneDoc.DocId.AsShort));
-      this.Log(this.debugPrefix + 'dataOneDoc.Document: \t' + this.IsNullOrUndefined(dataOneDoc.Document));
-      if (dataOneDoc.Document) {
-        this.LogVal(this.debugPrefix + 'dataOneDoc.Document.readyState:', dataOneDoc.Document.readyState);
-        if (dataOneDoc.Document.location) {
-          this.LogVal(this.debugPrefix + 'targetDoc.location.href', dataOneDoc.Document.location.href);
+      this.Log(this.debugPrefix + 'dataOneDoc.Document: \t' + this.IsNullOrUndefined(dataOneDoc.ContentDoc));
+      if (dataOneDoc.ContentDoc) {
+        this.LogVal(this.debugPrefix + 'dataOneDoc.Document.readyState:', dataOneDoc.ContentDoc.readyState);
+        if (dataOneDoc.ContentDoc.location) {
+          this.LogVal(this.debugPrefix + 'targetDoc.location.href', dataOneDoc.ContentDoc.location.href);
         }
         else {
           this.Log(this.debugPrefix + 'dataOneDoc.Document.location - does not exist');
@@ -196,7 +166,7 @@ export class LoggerBase {
       }
     }
     textVal = textVal.toString();
-    textValName = StaticHelpers.BufferString(textValName.toString(), 32, BufferChar.space, BufferDirection.right);
+    textValName = StaticHelpers.BufferString(textValName.toString(), 50, BufferChar.space, BufferDirection.right);
     const debugPrefix = '  ~~~  ';
     this.Log(debugPrefix + textValName + ' : ' + textVal);
   }

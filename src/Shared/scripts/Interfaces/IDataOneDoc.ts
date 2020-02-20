@@ -1,9 +1,8 @@
 ﻿import { IGuid } from "./IGuid";
 
 export interface IDataOneDoc {
-  ParentDoc: IDataOneDoc;
+  //ParentDoc: IDataOneDoc;
   DocId: IGuid;
-  Document: Document;
-  ParentDesktop: IGuid;
+  ContentDoc: Document;
   Nickname: string;
 }

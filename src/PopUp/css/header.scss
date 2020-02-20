@@ -1,7 +1,7 @@
 ﻿@import "vars";
 
 .header-push {
-  height: 15px; // don't know why this isn't right $headerHeight;
+  height: $headerHeight; // don't know why this isn't right $headerHeight;
   position: relative;
 }
 
@@ -9,16 +9,40 @@
   background-color: $sc_Black;
   color: $sc_White;
   height: $headerHeight;
+  font-size: 11px;
   left: 0;
+  padding-top: 6px;
+  padding-left: 6px;
   position: fixed;
   text-align: right;
   top: 0;
   width: 100%;
   z-index: 100;
 
+  .left-side {
+    float: left;
+  }
+
+  .right-side {
+    float: right;
+  }
+
+  .scroller-msg-stat {
+    height: $headerHeight;
+    display: inline-block;
+    width: 400px;
+    overflow-x: hidden;
+    overflow-y:scroll;
+    margin: 0;
+  }
+
+  .msg-status {
+    text-align: left;
+    height: $headerHeight;
+  }
+
   .build-stamp {
     display: inline-block;
-    font-size: 12px;
     text-align: right;
   }
 

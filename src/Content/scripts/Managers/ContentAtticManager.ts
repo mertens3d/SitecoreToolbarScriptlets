@@ -29,17 +29,32 @@ export class ContentAtticManager extends ContentManagerBase {
   //}
 
   UpdateNickname(payload: PayloadDataFromPopUp) {
-    this.Log().FuncStart(this.UpdateNickname.name);
+    return new Promise((resolve, reject) => {
+      this.Log().FuncStart(this.UpdateNickname.name);
+      var promResult: PromiseResult = new PromiseResult(this.UpdateNickname.name, this.Log());
 
-    if (payload.IdOfSelect) {
-      var storageMatch = this.GetFromStorageById(payload.IdOfSelect, CacheMode.OkToUseCache)
-      if (storageMatch && payload.SnapShotSettings && payload.SnapShotSettings.SnapShotNewNickname) {
-        storageMatch.NickName = payload.SnapShotSettings.SnapShotNewNickname;
-        this.WriteToStorage(storageMatch);
+      if (payload.IdOfSelect) {
+        var storageMatch = this.GetFromStorageById(payload.IdOfSelect, CacheMode.OkToUseCache)
+        if (storageMatch && payload.SnapShotSettings && payload.SnapShotSettings.SnapShotNewNickname) {
+          storageMatch.NickName = payload.SnapShotSettings.SnapShotNewNickname;
+          this.WriteToStorage(storageMatch);
+          promResult.MarkSuccessful();
+        } else {
+          promResult.MarkFailed('something was missing');
+        }
+      } else {
+        promResult.MarkFailed('no payload or id');
+        this.Log().LogAsJsonPretty(this.UpdateNickname.name,  payload);
+
       }
-    }
 
-    this.Log().FuncEnd(this.UpdateNickname);
+      this.Log().FuncEnd(this.UpdateNickname);
+      if (promResult.WasSuccessful()) {
+        resolve();
+      } else {
+        reject(promResult.RejectReason);
+      }
+    });
   }
 
   MarkFavorite(data: PayloadDataFromPopUp) {
@@ -55,11 +70,11 @@ export class ContentAtticManager extends ContentManagerBase {
           result.MarkSuccessful();
         } else {
           result.MarkFailed('no storage match');
-          result.RejectMessage = 'No storage match found';
+          result.RejectReason = 'No storage match found';
         }
       } else {
         result.MarkFailed('no data.idofselect');
-        result.RejectMessage = 'no id provided'
+        result.RejectReason = 'no id provided'
       }
 
       this.Log().FuncEnd(this.MarkFavorite.name);
@@ -67,7 +82,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (result) {
         resolve();
       } else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     })
   }
@@ -87,7 +102,7 @@ export class ContentAtticManager extends ContentManagerBase {
         result.MarkSuccessful();
       } else {
         result.MarkFailed('not found in storage');
-        result.RejectMessage = 'Snap shot not successfully saved';
+        result.RejectReason = 'Snap shot not successfully saved';
       }
 
       this.Log().FuncEnd(this.WriteToStorage.name);
@@ -95,7 +110,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (result.WasSuccessful()) {
         resolve();
       } else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     });
   }

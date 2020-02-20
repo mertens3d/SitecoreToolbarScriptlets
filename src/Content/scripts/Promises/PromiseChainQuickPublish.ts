@@ -5,6 +5,7 @@ import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPublishChain';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 
 export class PromiseChainQuickPublish extends ContentManagerBase {
   constructor(hub: ContentHub) {
@@ -40,11 +41,12 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
     await this.PromiseOneStep().ClickPublishOnNav(dataPublishChain)
 
       .then((dataPublishChain: IDataPublishChain) => this.PromiseOneStep().ClickMenuButtonPublishDropDown(dataPublishChain))
-      .then((dataPublishChain: IDataPublishChain) => this.__debugDataPublishChain(dataPublishChain, 'post ClickMenuButtonPublishDropDown'))
+      //.then((dataPublishChain: IDataPublishChain) => this.__debugDataPublishChain(dataPublishChain, 'post ClickMenuButtonPublishDropDown'))
       .then((dataPublishChain: IDataPublishChain) => this.PromiseOneStep().ClickMenuDropDownPublishItem(dataPublishChain))
-      .then((dataPublishChain: IDataPublishChain) => this.__debugDataPublishChain(dataPublishChain, 'post MenuDropDownPublishItem'))
+      //.then((dataPublishChain: IDataPublishChain) => this.__debugDataPublishChain(dataPublishChain, 'post MenuDropDownPublishItem'))
       .then((dataPublishChain: IDataPublishChain) => this.PromiseOneStep().GetThePublishItemDialog(dataPublishChain))
-      .then((dataPublishChain: IDataPublishChain) => this.__debugDataPublishChain(dataPublishChain, 'post PublishItemDialog'))
+      //.then((dataPublishChain: IDataPublishChain) => this.__debugDataPublishChain(dataPublishChain, 'post PublishItemDialog'))
+
       .then((dataPublishChain: IDataPublishChain) => this.GetDialogIframe0Blue(dataPublishChain))
       .then((dataPublishChain: IDataPublishChain) => this.__WaitForAndClickPublishNextButton(dataPublishChain))
       .then((dataPublishChain: IDataPublishChain) => this.GetMessageDialog(dataPublishChain))
@@ -83,27 +85,46 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   }
 
   async GetMessageDialog(dataPublishChain: IDataPublishChain) {
+    let toReturnPublishChain: IDataPublishChain = dataPublishChain;
 
-    var IDataOneIframe: IDataOneIframe = this.ContentFactory().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'iframeRed');
+    await this.Helpers().PromiseHelp.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
+      .then((result) => toReturnPublishChain.messageDialogIframeRed = result)
+      .catch((err) => this.Log().Error(this.GetMessageDialog, err));
 
-    dataPublishChain.messageDialogIframeRed =
-      await this.Helpers().PromiseHelp.WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIFrame1,  IDataOneIframe)
-
-    return dataPublishChain;
+    return toReturnPublishChain;
   }
 
   async GetDialogIframe0Blue(dataPublishChain: IDataPublishChain = null) {
-    this.Log().FuncStart(this.GetDialogIframe0Blue.name);
+    return new Promise(async (resolve, reject) => {
+      this.Log().FuncStart(this.GetDialogIframe0Blue.name);
 
-    var IDataOneIframe: IDataOneIframe = this.ContentFactory().DateOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
+      let promiseResult: PromiseResult = new PromiseResult(this.GetDialogIframe0Blue.name, this.Log());
 
-    dataPublishChain.Iframe0Blue = await this.Helpers().PromiseHelp.WaitForAndReturnReadyIframe(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIframe0, IDataOneIframe );
+      //why is this null?
+      //var IDataOneIframe: IDataOneIframe = this.Helpers().FactoryHelp.DataOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
 
-    this.Log().DebugDataOneIframe(dataPublishChain.Iframe0Blue);
+      //this.Log().MarkerA();
+      this.Log().LogAsJsonPretty('dataPublishChain', dataPublishChain);
+      //this.Log().MarkerB();
 
-    this.Log().FuncEnd(this.GetDialogIframe0Blue.name);
+      await this.Helpers().PromiseHelp.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
+        .then((result) => {
+          this.Log().MarkerC();
+          dataPublishChain.Iframe0Blue = result;
+          promiseResult.MarkSuccessful();
+        })
+        .catch((err) => promiseResult.MarkFailed(err));
 
-    return dataPublishChain;
+      this.Log().LogAsJsonPretty('dataPublishChain.Iframe0Blue', dataPublishChain.Iframe0Blue);
+      //this.Log().DebugDataOneIframe(dataPublishChain.Iframe0Blue);
+
+      this.Log().FuncEnd(this.GetDialogIframe0Blue.name);
+      if (promiseResult.WasSuccessful()) {
+        resolve(dataPublishChain);
+      } else {
+        reject(promiseResult.RejectReason)
+      }
+    });
   }
 
   private __waitForThenFunc(selector: string, targetDoc: IDataOneDoc, dataPublishChain: IDataPublishChain, optionFunc: Function) {

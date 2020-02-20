@@ -83,6 +83,7 @@ export class PopConst {
         SettingDebugKeepDialogOpen: '[id=id-settings-debug-keep-dialog-open]',
 
         BuildStamp: '[id=build-stamp]',
+        DivMsgStatus: '[id=msg-status]',
         DivStatePopUp: '[id=div-state-pop-up]',
         DivStateContent: '[id=div-state-content]',
         IdFieldSetDebug: '[id=id-fieldset-debug]',

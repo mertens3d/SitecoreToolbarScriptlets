@@ -50,7 +50,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       if (success) {
         this.Log().Log('resolved! : ');
 
-        promiseBucket.NewIframe.ContentDoc.Document = promiseBucket.NewIframe.IframeElem.contentDocument;
+        promiseBucket.NewIframe.ContentDoc.ContentDoc = promiseBucket.NewIframe.IframeElem.contentDocument;
         this.Log().DebugDataOneIframe(promiseBucket.NewIframe);
 
         resolve(promiseBucket);
@@ -80,7 +80,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
         result.MarkSuccessful();
       } else {
         result.MarkFailed('no iframe result')
-        result.RejectMessage = 'fail ' + this.__waitForIframeCountDiff.name;
+        result.RejectReason = 'fail ' + this.__waitForIframeCountDiff.name;
       }
 
       this.Log().FuncEnd(this.__waitForIframeCountDiff.name);
@@ -88,7 +88,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       if (result.WasSuccessful) {
         resolve(promiseBucket);
       } else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     });
   }

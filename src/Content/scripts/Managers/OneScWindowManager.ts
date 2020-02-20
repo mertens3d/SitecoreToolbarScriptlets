@@ -91,7 +91,7 @@ export class OneScWindowManager extends ContentManagerBase {
       if (promiseResult.WasSuccessful()) {
         resolve();
       } else {
-        reject(promiseResult.RejectMessage);
+        reject(promiseResult.RejectReason);
       }
     });
   }

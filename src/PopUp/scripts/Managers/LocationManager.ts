@@ -90,14 +90,6 @@ export class LocationManager extends PopUpManagerBase {
           await this.BrowserMan().CreateNewTab(editUrl)
             .then(() => result.MarkSuccessful())
             .catch((ex) => result.MarkFailed(ex));
-
-          //await this.MsgMan().SendMessageToContentTab()
-
-          //todo - put back?
-          //var currentIframe = this.DesktopMan().GetActiveDesktopIframeData();
-          //if (currentIframe) {
-          //  dataOneDoc = currentIframe.ContentDoc;
-          //}
         } else {
           this.Log().Log('unknown case');
           this.Log().LogAsJsonPretty('contState', contState);
@@ -111,7 +103,7 @@ export class LocationManager extends PopUpManagerBase {
       if (result.WasSuccessful()) {
         resolve();
       } else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     });
   }
@@ -148,7 +140,7 @@ export class LocationManager extends PopUpManagerBase {
       if (result.MarkSuccessful) {
         resolve();
       } else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     });
   }

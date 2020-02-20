@@ -6,7 +6,33 @@ import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { IDataPayloadSnapShot } from "../../../Shared/scripts/Classes/IDataPayloadSnapShot";
+import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIframe";
 export class LoggerContent extends LoggerBase {
+
+  DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
+    this.FuncStart(this.DebugDataOneIframe.name);
+    this.Log('dataOneIframe : ' + this.IsNullOrUndefined(dataOneIframe));
+    if (dataOneIframe) {
+      this.Log('dataOneIframe.Nickname : ' + dataOneIframe.Nickname);
+      this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
+      if (dataOneIframe.IframeElem) {
+        this.Log('dataOneIframe.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
+        //  //this.Log('dataOneIframe.IframeElem.src: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.src));
+        //  this.Log('dataOneIframe.IframeElem.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
+        //  //this.Log('dataOneIframe.IframeElem.name: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.name));
+      }
+      this.Log('dataOneIframe.ContentDoc: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc));
+      this.DebugIDataOneDoc(dataOneIframe.ContentDoc);
+      //this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
+      //this.Log('dataOneIframe.Id: \t' + this.IsNullOrUndefined(dataOneIframe.Id));
+      //if (dataOneIframe.Id) {
+      //  this.Log('dataOneIframe.Id.asShort: \t' + this.IsNullOrUndefined(dataOneIframe.Id.asShort));
+      //}
+      //this.Log('dataOneIframe.DocElem: \t' + this.IsNullOrUndefined(dataOneIframe.Index));
+    }
+    this.FuncEnd(this.DebugDataOneIframe.name);
+  }
+
 
     DebugPayloadDataFromPopUp(data: PayloadDataFromPopUp) {
         if (this.IsNotNullOrUndefinedBool('PayloadDataFromPopUp', data)) {
@@ -51,8 +77,8 @@ export class LoggerContent extends LoggerBase {
     }
     DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
         if (this.IsNotNullOrUndefinedBool('IDataOneDoc', dataOneDoc)) {
-            if (this.IsNotNullOrUndefinedBool('Document', dataOneDoc.Document)) {
-                this.LogVal('Doc Url', dataOneDoc.Document.location.href);
+            if (this.IsNotNullOrUndefinedBool('Document', dataOneDoc.ContentDoc)) {
+                this.LogVal('Doc Url', dataOneDoc.ContentDoc.location.href);
             }
         }
     }

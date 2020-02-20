@@ -17,28 +17,36 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     this.ScheduleAutoLogin();
   }
 
-  ReceiveResponseHndlr(response: MsgFromContent) {
+  ReceiveResponseHndlr(response: any) {
     this.Log().FuncStart(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
+
     if (response) {
-      this.LastKnownContentState = response.ContentState;
+      this.UiMan().UpdateMsgStatusStack('Response Received: ' + StaticHelpers.MsgFlagAsString(response.MsgFlag));
 
-      this.UiMan().RefreshUiFromCache();
+      var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
+      if (asMsgFromContent) {
+        this.LastKnownContentState = response.ContentState;
+        this.Log().Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
 
-      switch (response.MsgFlag) {
-        case MsgFlag.RespCurState:
+        this.UiMan().RefreshUiFromCache();
 
-          break;
+        switch (response.MsgFlag) {
+          case MsgFlag.RespCurState:
+            break;
+          case MsgFlag.RespTaskSuccessful:
+            break;
+          case MsgFlag.RespError:
+            this.Log().Error(this.ReceiveResponseHndlr.name, response.ContentState.ErrorStack);
+            break;
+          default:
+            this.Log().LogVal('Unrecognized MsgFlag', StaticHelpers.MsgFlagAsString(response.MsgFlag));
+            break;
+        }
 
-        case MsgFlag.RespError:
-          this.Log().Error(this.ReceiveResponseHndlr.name, response.ContentState.ErrorStack);
-          break;
-        default:
-          this.Log().LogVal('Unrecognized MsgFlag', StaticHelpers.MsgFlagAsString(response.MsgFlag));
-          break;
+        //this.Log().LogVal('response', JSON.stringify(response, null, 1));
+      } else {
+        this.Log().Error(this.ReceiveResponseHndlr.name, 'response is not imsg');
       }
-
-      //this.Log().LogVal('response', JSON.stringify(response, null, 1));
-
       this.Log().FuncEnd(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
     }
   }
@@ -67,35 +75,41 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.OnePing.name);
 
-      var result: PromiseResult = new PromiseResult(this.OnePing.name, this.Log());
+      var promResult: PromiseResult = new PromiseResult(this.OnePing.name, this.Log());
 
       this.Log().LogVal('sending to tab id', targetTab.Tab.id);
       //this.Log().LogAsJsonPretty('msg', msg);
 
+      this.UiMan().UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(msg.MsgFlag));
+
       await browser.tabs.sendMessage(targetTab.Tab.id, msg)
         .then((response) => {
           //was successful?
+          this.Log().MarkerC();
           this.Log().LogAsJsonPretty('response', response);
 
           var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
           if (asMsgFromContent) {
             this.Log().Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
             if (asMsgFromContent.MsgFlag = MsgFlag.RespListeningAndReady) {
-              result.MarkSuccessful();
+              promResult.MarkSuccessful();
             }
           } else {
-            result.MarkFailed('no message from content');
-            result.RejectMessage = 'response is not imsg';
+            promResult.MarkFailed('no message from content');
+            promResult.RejectReason = 'response is not imsg';
           }
         })
-        .catch((err) => result.MarkFailed(err));
+        .catch((err) => {
+          this.Log().MarkerB();
+          promResult.MarkFailed(err)
+        });
 
       this.Log().FuncEnd(this.OnePing.name);
 
-      if (result.WasSuccessful()) {
+      if (promResult.WasSuccessful()) {
         resolve();
       } else {
-        reject(result.RejectMessage);
+        reject(promResult.RejectReason);
       }
     });//promise
   }// function
@@ -104,71 +118,68 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.WaitForListeningTab.name);
 
-      var result: PromiseResult = new PromiseResult(this.WaitForListeningTab.name, this.Log());
+      var promResult: PromiseResult = new PromiseResult(this.WaitForListeningTab.name, this.Log());
       var iterationJr: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForListeningTab.name);
 
       var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
 
       msg.CurrentContentPrefs = this.SettingsMan().GetOnlyContentPrefs();
 
-      while (iterationJr.DecrementAndKeepGoing() && !result.WasSuccessful()) {
+      while (iterationJr.DecrementAndKeepGoing() && !promResult.WasSuccessful()) {
         this.Log().Log('Pinging');
         await this.OnePing(targetTab, msg)
-          .then(() => result.MarkSuccessful())
-          .catch((ex) => result.MarkFailed(ex));
+          .then(() => promResult.MarkSuccessful())
+          .catch((ex) => {
+            this.Log().MarkerA();
+            promResult.MarkFailed(ex)
+          });
 
-        if (!result.WasSuccessful()) {
-          this.Log().Log('Ping did not succeed, waiting');
+        if (!promResult.WasSuccessful()) {
+          this.UiMan().UpdateMsgStatusStack('Ping did not succeed, waiting');
           await iterationJr.Wait();
           this.Log().Log('Done waiting');
+          msg
         }
         else {
-          this.Log().Log('Ping succeeded');
+          this.UiMan().UpdateMsgStatusStack('Ping succeeded');
         }
       }//while
 
       this.Log().FuncEnd(this.WaitForListeningTab.name);
 
-      if (result.WasSuccessful()) {
+      if (promResult.WasSuccessful()) {
         resolve(targetTab);
       } else {
         if (iterationJr.IsExhausted) {
-          result.RejectMessage += '  ' + iterationJr.IsExhaustedMsg;
+          promResult.RejectReason += '  ' + iterationJr.IsExhaustedMsg;
         }
-        reject(result.RejectMessage);
+        reject(promResult.RejectReason);
       }
     });//promise
   }
-  private SendMessageToSingleTab(tab: IDataBrowserTab, messageToSend: MsgFromPopUp) {
+  private SendMessageToSingleTab(dataBrowserTab: IDataBrowserTab, messageToSend: MsgFromPopUp) {
     return new Promise((resolve, reject) => {
       this.Log().FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
 
       var result: PromiseResult = new PromiseResult(this.SendMessageToSingleTab.name, this.Log());
 
-      browser.tabs.sendMessage(
-        tab.Tab.id,
-        messageToSend
-      ).then(async (response) => {
-        //this.Log().LogVal('response', JSON.stringify(response, null, 1));
+      this.UiMan().UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
 
-        var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
-        if (asMsgFromContent) {
-          this.Log().Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
-          await this.ReceiveResponseHndlr(asMsgFromContent);
-        } else {
-          this.Log().Error(this.SendMessageToSingleTab.name, 'response is not imsg');
-        }
-      }).then(() => result.MarkSuccessful)
-        //.catch(this.onError);
+      browser.tabs.sendMessage(
+        dataBrowserTab.Tab.id,
+        messageToSend
+        )
+        .then((response: any) => this.ReceiveResponseHndlr(response))
+        .then(() => result.MarkSuccessful)
         .catch((ex) => {
-          result.MarkFailed(ex);
+          result.MarkFailed('likely no response yet');
         });
 
       this.Log().FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
       if (result.WasSuccessful()) {
         resolve();
       } else {
-        reject(result.RejectMessage);
+        reject(result.RejectReason);
       }
     });
   }
@@ -207,7 +218,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       if (result.MarkSuccessful) {
         resolve();
       } else {
-        (reject(result.RejectMessage));
+        (reject(result.RejectReason));
       }
     });
   }

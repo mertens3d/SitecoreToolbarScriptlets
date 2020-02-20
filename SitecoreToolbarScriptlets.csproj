@@ -83,6 +83,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IMenuStateForMsg.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IOneGenericSettingForStorage.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\LoggerBase.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgFromPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\OneGenericSetting.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseResult.ts" />
@@ -123,7 +124,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgRunner.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMessageManager.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgPayloadRequestFromPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgPayloadResponseFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataReqPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\MessageFlag.ts" />

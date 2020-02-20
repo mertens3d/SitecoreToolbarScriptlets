@@ -15,6 +15,7 @@ import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSet
 import { SettingKey } from '../../../Shared/scripts/Enums/SettingKey';
 import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { SettingsHelper } from '../../../Shared/scripts/Helpers/SettingsHelper';
+import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 
 export class ContentMessageManager extends ContentManagerBase {
   AutoSaveHasBeenScheduled: boolean = false;
@@ -112,34 +113,44 @@ export class ContentMessageManager extends ContentManagerBase {
   async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
       this.Log().FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
-
+      var promResult: PromiseResult = new PromiseResult(this.ContentReceiveRequest.name, this.Log());
       this.Log().LogAsJsonPretty(MsgFromPopUp.name, reqMsgFromPopup);
 
-      var response: MsgFromContent;// = new MsgFromContent(MsgFlag.TestResponse);
+      var response: MsgFromContent = null;
 
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
-          this.SetLoggerFromMessage(reqMsgFromPopup);
-          ``
-          this.ScheduleIntervalTasks(reqMsgFromPopup);
-          response = await this.ReqMsgRouter(reqMsgFromPopup);
 
-          this.Log().LogVal('msgFlag', StaticHelpers.MsgFlagAsString(response.MsgFlag));
+          this.SetLoggerFromMessage(reqMsgFromPopup);
+          
+          this.ScheduleIntervalTasks(reqMsgFromPopup);
+
+          await this.ReqMsgRouter(reqMsgFromPopup)
+            .then((result: MsgFromContent) => {
+              response = result;
+              promResult.MarkSuccessful();
+            })
+            .catch((err) => promResult.MarkFailed(err))
         } else {
-          this.Log().Error(this.ContentReceiveRequest.name, 'reqMsgFromPopup is not valid');
+          promResult.MarkFailed('reqMsgFromPopup is not valid')
         }
       }
       else {
-        response = new MsgFromContent(MsgFlag.RespError);
-        this.Log().Error(this.ContentReceiveRequest.name, 'no request');
+        promResult.MarkFailed('no request')
+       
       }
 
+      this.Log().LogVal('responding', StaticHelpers.MsgFlagAsString(response.MsgFlag));
       this.Log().FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
-      if (response.MsgFlag != MsgFlag.RespError) {
+      // response.MsgFlag != MsgFlag.RespError
+
+      if (promResult.WasSuccessful()) {
         resolve(response);
       } else {
+        response = new MsgFromContent(MsgFlag.RespError);
+        response.ContentState.LastReqFailReason = promResult.RejectReason;
         reject(response);
       }
     })
@@ -166,9 +177,9 @@ export class ContentMessageManager extends ContentManagerBase {
       targetDoc = this.ScUiMan().TopLevelDoc();
     }
 
-    let bodyTag = targetDoc.Document.getElementsByTagName('body')[0];//(treeGlyphTargetId);
+    let bodyTag = targetDoc.ContentDoc.getElementsByTagName('body')[0];//(treeGlyphTargetId);
 
-    var flagElem: HTMLElement = targetDoc.Document.createElement('div');
+    var flagElem: HTMLElement = targetDoc.ContentDoc.createElement('div');
     flagElem.innerHTML = '<div>' + Message + '</div>';
     flagElem.style.position = 'absolute';
     flagElem.style.top = '100px';
@@ -186,118 +197,137 @@ export class ContentMessageManager extends ContentManagerBase {
   }
 
   async ReqMsgRouter(payload: MsgFromPopUp) {
-    this.Log().FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+    return new Promise(async (resolve, reject) => {
+      this.Log().FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+      this.Log().LogAsJsonPretty(MsgFromPopUp.name, payload);
 
-    this.Log().LogAsJsonPretty(MsgFromPopUp.name, payload);
+      let promiseResult: PromiseResult = new PromiseResult(this.ReqMsgRouter.name, this.Log());
 
-    var response: MsgFromContent = await this.ContentFactory().NewMsgFromContentShell();
-    this.Log().MarkerC();
-    switch (payload.MsgFlag) {
-      case MsgFlag.ReqRestoreToNewTab:
-        console.log('we are going to restore to this window');
-        break;
+      var response: MsgFromContent = await this.ContentFactory().NewMsgFromContentShell();
 
-      case MsgFlag.ReqAddCETab:
-        await this.Helpers().PromiseHelp.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.ScUiMan().TopLevelDoc())
-          .then(() => { this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelDoc()) });
-        break;
+      switch (payload.MsgFlag) {
+        case MsgFlag.ReqRestoreToNewTab:
+          console.log('we are going to restore to this window');
+          break;
 
-      case MsgFlag.ReqAdminB:
-        this.ScUiMan().AdminB(this.ScUiMan().TopLevelDoc(), null);
-        break;
+        case MsgFlag.ReqAddCETab:
+          await this.Helpers().PromiseHelp.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.ScUiMan().TopLevelDoc())
+            .then(() => { this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelDoc()) })
+            .then(promiseResult.MarkSuccessful)
+            .catch((err) => promiseResult.MarkFailed(err));
+          break;
 
-      case MsgFlag.Ping:
-        this.Log().LogVal('Ping', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
-        if (this.ReadyForMessages) {
-          response.MsgFlag = MsgFlag.RespListeningAndReady;
-        }
-        break;
+        case MsgFlag.ReqAdminB:
+          this.ScUiMan().AdminB(this.ScUiMan().TopLevelDoc(), null);
 
-      //case MsgFlag.GetAllStorageOneWindow:
+          break;
 
-      //  response.Data.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
-      //  response.MsgFlag = MsgFlag.ResponseCurrentSnapShots;
-      //  break;
+        case MsgFlag.Ping:
+          this.Log().LogVal('Ping', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+          if (this.ReadyForMessages) {
+            response.MsgFlag = MsgFlag.RespListeningAndReady;
+            promiseResult.MarkSuccessful();
+          } else {
+            promiseResult.MarkFailed('not ready');
+          }
+          break;
 
-      case MsgFlag.ReqCurState:
+        //case MsgFlag.GetAllStorageOneWindow:
 
-        //response.State.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
+        //  response.Data.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
+        //  response.MsgFlag = MsgFlag.ResponseCurrentSnapShots;
+        //  break;
 
-        //this.debug().LogVal('response', JSON.stringify(response));
-        response.MsgFlag = MsgFlag.RespCurState;
-        break;
+        case MsgFlag.ReqCurState:
 
-      case MsgFlag.ReqOpenCE:
+          //response.State.CurrentSnapShots = await this.AtticMan().GetAllStorageAsIDataOneWindow();
 
-        break;
+          //this.debug().LogVal('response', JSON.stringify(response));
+          response.MsgFlag = MsgFlag.RespCurState;
+          promiseResult.MarkSuccessful();
+          break;
 
-      case MsgFlag.ReqMarkFavorite:
-        this.AtticMan().MarkFavorite(payload.Data)
-          .then(() => this.respondSuccessful())
-          .catch((failMsg) => this.respondFail(failMsg));
-        break;
+        case MsgFlag.ReqOpenCE:
 
-      case MsgFlag.ReqQuickPublish:
-        var targetWin = this.ScUiMan().TopLevelDoc();
-        await this.OneScWinMan().PublishActiveCE(targetWin);
-        break;
+          break;
 
-      case MsgFlag.ReqRestoreClick:
+        case MsgFlag.ReqMarkFavorite:
+          this.AtticMan().MarkFavorite(payload.Data)
+            .then(promiseResult.MarkSuccessful)
+            .catch((err) => promiseResult.MarkFailed(err));
+          break;
 
-        await this.__restoreClick(payload.Data)
-          .then(() => this.respondSuccessful())
-          .catch((failReason) => this.respondFail(failReason));
-        break;
+        case MsgFlag.ReqQuickPublish:
+          await this.OneScWinMan().PublishActiveCE(this.ScUiMan().TopLevelDoc())
+            .then(promiseResult.MarkSuccessful)
+            .catch((err) => promiseResult.MarkFailed(err));
+          break;
 
-      case MsgFlag.ReqTakeSnapShot:
-        await this.OneScWinMan().SaveWindowState(payload.Data.SnapShotSettings)
-          .then(() => response.ContentState.LastReqSuccessful = true)
-          .catch(() => response.ContentState.LastReqSuccessful = false);
-        break;
+        case MsgFlag.ReqRestoreClick:
+          await this.__restoreClick(payload.Data)
+            .then(promiseResult.MarkSuccessful)
+            .catch((err) => promiseResult.MarkFailed(err));
+          break;
 
-      case MsgFlag.RemoveFromStorage:
-        await this.AtticMan().RemoveOneFromStorage(payload.Data.IdOfSelect)
-          .then(() => response.ContentState.LastReqSuccessful = true)
-          .catch(() => response.ContentState.LastReqSuccessful = false);
-        break;
+        case MsgFlag.ReqTakeSnapShot:
+          await this.OneScWinMan().SaveWindowState(payload.Data.SnapShotSettings)
+            .then(promiseResult.MarkSuccessful)
+            .catch((err) => promiseResult.MarkFailed(err));
+          break;
 
-      case MsgFlag.RespTaskSuccessful:
-        this.NotifyCompleteOnContent(null, payload.Data.ScreenMessage);
+        case MsgFlag.RemoveFromStorage:
+          await this.AtticMan().RemoveOneFromStorage(payload.Data.IdOfSelect)
+            .then(promiseResult.MarkSuccessful)
+            .catch((err) => promiseResult.MarkFailed(err));
+          break;
 
-      case MsgFlag.ReqUpdateNickName:
-        this.AtticMan().UpdateNickname(payload.Data)
-        break;
+        case MsgFlag.RespTaskSuccessful:
+          this.NotifyCompleteOnContent(null, payload.Data.ScreenMessage);
 
-      default:
-        this.Log().Error('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+        case MsgFlag.ReqUpdateNickName:
+          await this.AtticMan().UpdateNickname(payload.Data)
+            .then(promiseResult.MarkSuccessful)
+            .catch((err) => promiseResult.MarkFailed(err));
+          break;
 
-        break;
-    }
+        default:
+          this.Log().Error('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+          promiseResult.MarkFailed('Unhandled MsgFlag ' + StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+          break;
+      }
 
-    //this.debug().LogVal('Response at the end', JSON.stringify(response))
+      //this.debug().LogVal('Response at the end', JSON.stringify(response))
 
-    await this.ContentFactory().UpdateContentState(response);
-    response.ContentState.LastReq = payload.MsgFlag;
+      await this.ContentFactory().UpdateContentState(response);
 
-    this.Log().FuncEnd(this.ReqMsgRouter.name);
-    return response;
+      response.ContentState.LastReq = payload.MsgFlag;
+
+      this.Log().FuncEnd(this.ReqMsgRouter.name);
+
+      if (promiseResult.WasSuccessful()) {
+        response.MsgFlag = MsgFlag.RespTaskSuccessful;
+        resolve(response);
+      } else {
+        reject( promiseResult.RejectReason);
+      }
+    });
   }
 
-  private respondSuccessful() {
-    this.SendMessageHndlr(new MsgFromContent(MsgFlag.RespTaskSuccessful))
-  }
+  
 
-  private respondFail(failReason: string) {
-    var msg = new MsgFromContent(MsgFlag.RespTaskFailed);
-    msg.ContentState.LastReqFailReason = failReason;
-    this.SendMessageHndlr(msg);
-  }
+  //private respondFail(failReason: string) {
+  //  var msg = new MsgFromContent(MsgFlag.RespTaskFailed);
+  //  msg.ContentState.LastReqFailReason = failReason;
+  //  this.SendMessageHndlr(msg);
+  //}
 
-  SendMessageHndlr(msgflag: MsgFromContent) {
-  }
+ 
 
   private __restoreClick(Data: PayloadDataFromPopUp) {
-    return new Promise(async () => {
+    return new Promise(async (resolve, reject) => {
+
+      let promiseResult: PromiseResult = new PromiseResult(this.__restoreClick.name, this.Log());
+
       try {
         this.Log().MarkerA();
         var dataOneWindowStorage = this.AtticMan().GetFromStorageById(Data.IdOfSelect, CacheMode.OkToUseCache);
@@ -308,8 +338,8 @@ export class ContentMessageManager extends ContentManagerBase {
 
         if (targetDoc) {
           await self.OneScWinMan().RestoreWindowStateToTarget(targetDoc, dataOneWindowStorage)
-            .then(() => this.respondSuccessful())
-            .catch((failReason) => this.respondFail(failReason))
+            .then(promiseResult.MarkSuccessful)
+            .catch((err) => promiseResult.MarkFailed(err))
         }
         else {
           self.Log().Error(this.__restoreClick.name, 'no target window');
@@ -317,6 +347,13 @@ export class ContentMessageManager extends ContentManagerBase {
       } catch (ex) {
         this.Log().Error(this.__restoreClick.name, ex)
       }
+
+      if (promiseResult.WasSuccessful()) {
+        resolve();
+      } else {
+        reject(promiseResult.RejectReason);
+      }
+
     });
   }
 

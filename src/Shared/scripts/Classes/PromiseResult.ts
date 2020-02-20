@@ -1,6 +1,6 @@
 ﻿import { LoggerBase } from "./LoggerBase";
 export class PromiseResult {
-  RejectMessage: string;
+  RejectReason: string;
   private Success: boolean;
   private Log: LoggerBase;
   NickName: string;
@@ -8,7 +8,7 @@ export class PromiseResult {
   constructor(nickname: string, logger: LoggerBase) {
     this.Success = false;
     this.NickName = nickname;
-    this.RejectMessage = '';
+    this.RejectReason = '';
     this.Log = logger;
   }
   WasSuccessful() {
@@ -29,7 +29,7 @@ export class PromiseResult {
     else {
       ex = '{no fail message}';
     }
-    this.RejectMessage = ex;
+    this.RejectReason = ex;
     this.Success = false;
     if (this.Log) {
       this.Log.Error(this.prefix + this.NickName, ex);
