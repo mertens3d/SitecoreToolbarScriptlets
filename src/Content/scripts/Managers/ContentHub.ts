@@ -1,8 +1,5 @@
 ﻿import { ContentAtticManager } from './ContentAtticManager';
 import { MiscManager } from './MiscManager';
-import { OneCEManager } from './OneCEManager';
-import { OneDesktopManager } from './OneDesktopManager';
-import { OneTreeManager } from './OneTreeManager';
 import { OneScWindowManager } from "./OneScWindowManager";
 import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseGeneric';
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
@@ -10,7 +7,6 @@ import { UtilityHelper } from "../../../Shared/scripts/Helpers/UtilityHelper";
 import { ContentMessageManager } from './ContentMessageManager';
 import { LoggerContent } from "../Classes/LoggerContent";
 import { IContentConst } from '../../../Shared/scripts/Interfaces/IContentConst';
-import { iSitecoreUiManager } from '../../../Shared/scripts/Interfaces/ISitecoreUiManager';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { ContentFactories } from "../Classes/ContentFactories";
@@ -41,7 +37,7 @@ export class ContentHub {
   constructor(logger: LoggerContent) {
     logger.FuncStart(ContentHub.name);
     this.Logger = logger;
-    //console.log('logger enabled ' + this.Logger.LogToConsoleEnabled)
+    console.log('(ctor) logger enabled ' + this.Logger.EnabledStatus());
     this.Instantiate();
     logger.FuncEnd(ContentHub.name);
   }
@@ -79,7 +75,7 @@ export class ContentHub {
     this.AtticMan.Init();
     this.MsgMan.Init();
 
-    this.Logger.LogToConsoleEnabled = this.MsgMan.IsLogEnabled();
+    this.Logger.SetEnabled(this.MsgMan.IsLogEnabled());
 
     this.OneWindowMan.Init();
 

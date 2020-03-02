@@ -27,7 +27,7 @@ export class PromiseHelper extends HelperBase {
       }
 
       if (iterationJr.IsExhausted) {
-        promiseResult.RejectReason = iterationJr.IsExhaustedMsg;
+        promiseResult.MarkFailed( iterationJr.IsExhaustedMsg);
       }
 
       this.Log.LogAsJsonPretty('dataOneIframe', dataOneIframe);
@@ -37,7 +37,7 @@ export class PromiseHelper extends HelperBase {
       if (promiseResult.WasSuccessful()) {
         resolve();
       } else {
-        reject(promiseResult.RejectReason);
+        reject(promiseResult.RejectReasons);
       }
     });
   }
@@ -72,7 +72,6 @@ export class PromiseHelper extends HelperBase {
 
       if (iterationJr.IsExhausted) {
         result.MarkFailed(iterationJr.IsExhaustedMsg);
-        result.RejectReason = iterationJr.IsExhaustedMsg;
       }
 
       this.Log.FuncEnd(this.WaitForPageReadyNative.name, 'ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());;
@@ -80,7 +79,7 @@ export class PromiseHelper extends HelperBase {
       if (result.WasSuccessful()) {
         resolve();
       } else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     });
   }
@@ -109,7 +108,7 @@ export class PromiseHelper extends HelperBase {
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnIframeData);
       } else {
-        reject(promiseResult.RejectReason);
+        reject(promiseResult.RejectReasons);
       }
     });
   }
@@ -150,7 +149,7 @@ export class PromiseHelper extends HelperBase {
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnFoundElem);
       } else {
-        reject(promiseResult.RejectReason);
+        reject(promiseResult.RejectReasons);
       }
     });
   }
@@ -186,14 +185,14 @@ export class PromiseHelper extends HelperBase {
       } else {
         result.MarkFailed('browser status: ' + browserTab.status)
         if (iterHelper.IsExhausted) {
-          result.RejectReason = iterHelper.IsExhaustedMsg;
+          result.MarkFailed( iterHelper.IsExhaustedMsg);
         }
       }
 
       if (result.WasSuccessful()) {
         resolve()
       } else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     });
   }
@@ -326,7 +325,7 @@ export class PromiseHelper extends HelperBase {
       if (promiseResults.WasSuccessful()) {
         resolve();
       } else {
-        reject(promiseResults.RejectReason);
+        reject(promiseResults.RejectReasons);
       }
     });
   }

@@ -122,7 +122,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
       if (promiseResult.WasSuccessful()) {
         resolve(dataPublishChain);
       } else {
-        reject(promiseResult.RejectReason)
+        reject(promiseResult.RejectReasons)
       }
     });
   }

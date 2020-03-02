@@ -16,6 +16,7 @@ import { SettingKey } from '../../../Shared/scripts/Enums/SettingKey';
 import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { SettingsHelper } from '../../../Shared/scripts/Helpers/SettingsHelper';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
+import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
 
 export class ContentMessageManager extends ContentManagerBase {
   AutoSaveHasBeenScheduled: boolean = false;
@@ -93,18 +94,16 @@ export class ContentMessageManager extends ContentManagerBase {
   }
   SetLoggerFromMessage(reqMsgFromPopup: MsgFromPopUp) {
     let currSetting: OneGenericSetting = this.Helpers().SettingsHelp.GetByKey(SettingKey.LogToConsole, reqMsgFromPopup.CurrentContentPrefs);
+    let valueToUse: boolean = SharedConst.Const.Settings.Defaults.LogToConsole;
     if (currSetting) {
-      let logSetting: boolean = SharedConst.Const.Settings.Defaults.LogToConsole;
-
-      //console.log(JSON.stringify(reqMsgFromPopup.CurrentContentPrefs, null, 1));
-      if (currSetting) {
-        logSetting = SettingsHelper.ValueAsBool(currSetting);
-        console.log('setting value as bool ' + logSetting);
+      let candidate = SettingsHelper.ValueAsBool(currSetting);
+      if (candidate) {
+        console.log('setting value as bool ' + valueToUse);
+        console.log('setting it to ' + valueToUse);
       } else {
-        console.log('no currsetting');
+        console.log('candidate was null');
       }
-      console.log('setting it to ' + logSetting);
-      this.Log().Init(logSetting);
+      this.Log().Init(valueToUse);
     } else {
       console.log('curr setting not found');
     }
@@ -121,9 +120,8 @@ export class ContentMessageManager extends ContentManagerBase {
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
-
           this.SetLoggerFromMessage(reqMsgFromPopup);
-          
+
           this.ScheduleIntervalTasks(reqMsgFromPopup);
 
           await this.ReqMsgRouter(reqMsgFromPopup)
@@ -138,7 +136,6 @@ export class ContentMessageManager extends ContentManagerBase {
       }
       else {
         promResult.MarkFailed('no request')
-       
       }
 
       this.Log().LogVal('responding', StaticHelpers.MsgFlagAsString(response.MsgFlag));
@@ -150,8 +147,8 @@ export class ContentMessageManager extends ContentManagerBase {
         resolve(response);
       } else {
         response = new MsgFromContent(MsgFlag.RespError);
-        response.ContentState.LastReqFailReason = promResult.RejectReason;
-        reject(response);
+        response.ContentState.LastReqFailReason = promResult.RejectReasons;
+        reject(promResult.RejectReasons);
       }
     })
     //return Promise.resolve(response);
@@ -298,7 +295,9 @@ export class ContentMessageManager extends ContentManagerBase {
 
       //this.debug().LogVal('Response at the end', JSON.stringify(response))
 
-      await this.ContentFactory().UpdateContentState(response);
+      await this.ContentFactory().UpdateContentState(response.ContentState)
+        .then((result: ICurrStateContent) => response.ContentState = result)
+        .catch((err) => promiseResult.MarkFailed(err));
 
       response.ContentState.LastReq = payload.MsgFlag;
 
@@ -308,24 +307,13 @@ export class ContentMessageManager extends ContentManagerBase {
         response.MsgFlag = MsgFlag.RespTaskSuccessful;
         resolve(response);
       } else {
-        reject( promiseResult.RejectReason);
+        reject(promiseResult.RejectReasons);
       }
     });
   }
 
-  
-
-  //private respondFail(failReason: string) {
-  //  var msg = new MsgFromContent(MsgFlag.RespTaskFailed);
-  //  msg.ContentState.LastReqFailReason = failReason;
-  //  this.SendMessageHndlr(msg);
-  //}
-
- 
-
   private __restoreClick(Data: PayloadDataFromPopUp) {
     return new Promise(async (resolve, reject) => {
-
       let promiseResult: PromiseResult = new PromiseResult(this.__restoreClick.name, this.Log());
 
       try {
@@ -351,25 +339,16 @@ export class ContentMessageManager extends ContentManagerBase {
       if (promiseResult.WasSuccessful()) {
         resolve();
       } else {
-        reject(promiseResult.RejectReason);
+        reject(promiseResult.RejectReasons);
       }
-
     });
   }
 
   IsLogEnabled(): boolean {
-    return this.Log().LogToConsoleEnabled;
+    return this.Log().EnabledStatus();
   }
 
   OperationCancelled: any;
   SetParentInfo(__winDataParent: IDataOneDoc) {
   }
-
-  //  function insertBeast(beastURL) {
-  //alert('insert beast');
-  //let beastImage = document.createElement("img");
-  //beastImage.setAttribute("src", beastURL);
-  //beastImage.style.height = "100vh";
-  //beastImage.className = "beastify-image";
-  //document.body.appendChild(beastImage);
 }

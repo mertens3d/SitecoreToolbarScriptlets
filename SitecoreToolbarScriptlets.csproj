@@ -228,6 +228,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Browser Addons\Firefox\communication\" />
+    <Folder Include="src\Browser-PolyFill\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneCEManager.ts" />

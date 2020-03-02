@@ -10,6 +10,8 @@ import { IDataOneStorageCE } from "../../../Shared/scripts/Interfaces/IDataOneSt
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { IDataDtState } from "../../../Shared/scripts/Interfaces/IDataDtState";
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
+import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
+import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 
 export class ContentFactories extends ContentManagerBase {
   constructor(contentHub: ContentHub) {
@@ -17,16 +19,30 @@ export class ContentFactories extends ContentManagerBase {
     super(contentHub);
     contentHub.Logger.FuncEnd(PromiseHelper.name);
   }
-  async UpdateContentState(response: MsgFromContent) {
-    this.Log().FuncStart(this.UpdateContentState.name);
-    response.ContentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
-    response.ContentState.ErrorStack = this.Log().ErrorStack;
-    this.Log().DebugObjState(response.ContentState);
-    await this.GetCurrentDtOrCeState()
-      .then((result: IDataOneStorageCE) => response.ContentState.ActiveCe = result)
-      .catch((ex) => this.Log().Error(this.UpdateContentState.name, ex.toString()));
+  UpdateContentState(contentState: ICurrStateContent) {
+    return new Promise(async (resolve, reject) => {
+      this.Log().FuncStart(this.UpdateContentState.name);
+      let promiseResult: PromiseResult = new PromiseResult(this.UpdateContentState.name, this.Log());
+      contentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
+      contentState.ErrorStack = this.Log().ErrorStack;
 
-    this.Log().FuncEnd(this.UpdateContentState.name);
+      this.Log().LogAsJsonPretty('ContentState', contentState);
+
+      await this.GetCurrentDtOrCeState()
+        .then((result: IDataOneStorageCE) => {
+          contentState.ActiveCe = result;
+          promiseResult.MarkSuccessful();
+        })
+        .catch((err) => promiseResult.MarkFailed(err));
+
+      this.Log().FuncEnd(this.UpdateContentState.name);
+
+      if (promiseResult.WasSuccessful()) {
+        resolve(contentState);
+      } else {
+        reject(promiseResult.RejectReasons);
+      }
+    });
   }
 
   GetCurrentDtOrCeState() {
@@ -48,7 +64,7 @@ export class ContentFactories extends ContentManagerBase {
           })
           .catch((ex) => promiseResult.MarkFailed(ex));
       }
-      else if (pageType == scWindowType.ContentEditor) {
+      else if (pageType === scWindowType.ContentEditor) {
         toReturnCeState = null;
 
         await this.OneScWinMan().OneCEMan.GetStateCe(this.Helpers().GuidHelp.NewGuid())
@@ -58,12 +74,23 @@ export class ContentFactories extends ContentManagerBase {
           })
           .catch((ex) => promiseResult.MarkFailed(ex));
       }
+      else if (pageType === scWindowType.LoginPage
+        || pageType === scWindowType.Launchpad
+
+      ) {
+        toReturnCeState = null;
+        promiseResult.MarkSuccessful();
+      } else {
+        toReturnCeState = null;
+        promiseResult.MarkFailed('not a known page type ' + StaticHelpers.WindowTypeAsString(pageType));
+      }
+
       this.Log().FuncEnd(this.GetCurrentDtOrCeState.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnCeState);
       } else {
-        reject(promiseResult.RejectReason);
+        reject(promiseResult.RejectReasons);
       }
     });
   }
@@ -76,5 +103,4 @@ export class ContentFactories extends ContentManagerBase {
     this.Log().FuncEnd(this.NewMsgFromContentShell.name);
     return response;
   }
-  
 }

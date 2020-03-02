@@ -6,6 +6,7 @@ const Webpack_stream = require('Webpack-stream');
 //const WebpackContent_config = require('./../../Webpack.config');
 const rename = require('gulp-rename');
 const vars = require('../vars');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   BookmarkText: function (cb, vars) {
@@ -56,7 +57,14 @@ module.exports = {
           },
           optimization: {
             minimize: false
-          }
+          }, 
+          plugins: [
+            new CopyWebpackPlugin([
+              {
+                from: 'node_modules/webextension-polyfill/dist/browser-polyfill.js'
+              }
+            ])
+          ]
         }))
       .pipe(gulp.dest(targetVar.WebpackContentOutputFilePathAbs()));
     //cb();

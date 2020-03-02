@@ -58,8 +58,8 @@ export class UtilityHelper extends HelperBase {
       + this.colSep + StaticHelpers.BufferString(typeStr, this.lenPageType, BufferChar.Nbsp, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString(data.NickName, this.lenNickname, BufferChar.Nbsp, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString(activeCeNode, this.lenActiveNode, BufferChar.Nbsp, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString((data.Flavor == SnapShotFlavor.Favorite ? '*' : ''), this.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
-      //+ this.colSep + StaticHelpers.BufferString((data.Flavor == SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
+      + this.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Favorite ? '*' : ''), this.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
+      //+ this.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString(data.Id.AsShort, this.lenShortId, BufferChar.Nbsp, BufferDirection.right)
       + this.colSep + StaticHelpers.BufferString(data.AllCEAr.length.toString(), this.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
     return toReturn;

@@ -91,7 +91,7 @@ export class OneScWindowManager extends ContentManagerBase {
       if (promiseResult.WasSuccessful()) {
         resolve();
       } else {
-        reject(promiseResult.RejectReason);
+        reject(promiseResult.RejectReasons);
       }
     });
   }
@@ -131,7 +131,7 @@ export class OneScWindowManager extends ContentManagerBase {
     this.Log().FuncStart(this.PublishActiveCE.name);
     var currentWindowType = this.ScUiMan().GetCurrentPageType();
     var docToPublish: IDataOneDoc = null;
-    if (currentWindowType == scWindowType.Desktop) {
+    if (currentWindowType === scWindowType.Desktop) {
       var topIframe: IDataOneIframe = this.__getTopLevelIframe(targetDoc);
       if (topIframe) {
         docToPublish = topIframe.ContentDoc;

@@ -80,7 +80,6 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
         result.MarkSuccessful();
       } else {
         result.MarkFailed('no iframe result')
-        result.RejectReason = 'fail ' + this.__waitForIframeCountDiff.name;
       }
 
       this.Log().FuncEnd(this.__waitForIframeCountDiff.name);
@@ -88,7 +87,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       if (result.WasSuccessful) {
         resolve(promiseBucket);
       } else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     });
   }

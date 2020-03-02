@@ -11,7 +11,7 @@ import { SharedConst } from "../SharedConst";
 
 export class LoggerBase {
   private __callDepth: number;
-  LogToConsoleEnabled: boolean;
+  private LogToConsoleEnabled: boolean;
   LogHasBeenInit: boolean = false;
   ErrorStack: IError[] = [];
   LogPreInitBuffer: string[] = [];
@@ -19,8 +19,10 @@ export class LoggerBase {
 
   constructor() {
     this.__callDepth = -1;
+    console.log('default: ' +  SharedConst.Const.Settings.Defaults.LogToConsole);
     this.LogToConsoleEnabled = SharedConst.Const.Settings.Defaults.LogToConsole;
     this.LogHasBeenInit = false;
+    console.log('(ctor) Logger log to console enabled: ' + this.LogToConsoleEnabled);
   }
 
   Init(val: boolean) {
@@ -36,9 +38,19 @@ export class LoggerBase {
         this.Log(this.LogPreInitBuffer.shift());
       }
     }
+
+    console.log('(init) Logger log to console enabled: ' + this.LogToConsoleEnabled);
+
   }
 
-  
+  SetEnabled(newValue: boolean) {
+    this.LogToConsoleEnabled = newValue;
+    console.log('Logging set to: ' + newValue);
+  }
+
+  EnabledStatus(): boolean {
+    return this.LogToConsoleEnabled;
+  }
   debugPrefix: string = '\t\t';
   //DebugObjVarVal(textValName: string, textVal: number)
   //DebugObjVarVal(textValName: string, textVal: string)
@@ -59,7 +71,7 @@ export class LoggerBase {
   IsNotNullOrUndefinedBool(title, subject): boolean {
     var toReturn: boolean = false;
     if (subject) {
-      if ((typeof subject) == 'undefined') {
+      if ((typeof subject) === 'undefined') {
         this.LogVal(title + ' Is Not Undefined', '!!! false !!!');
       }
       else {
@@ -282,7 +294,7 @@ export class LoggerBase {
   IsNullOrUndefined(subject) {
     var toReturn = '{unknown}';
     if (subject) {
-      if ((typeof subject) == 'undefined') {
+      if ((typeof subject) === 'undefined') {
         toReturn = 'Is Undefined';
       }
       else {

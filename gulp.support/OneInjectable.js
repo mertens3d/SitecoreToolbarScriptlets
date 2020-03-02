@@ -6,6 +6,7 @@ class Injectable {
     this.WorkingCodeRootDir = './src';
     this.AutoBuildRoot = './AutoBuild';
     this.FinalFolderNameShort = finalFolder
+    this.MinSuffix = '.min';
 
     this.Name = name;
     this.SourceFilter = sourceFilter;
@@ -30,11 +31,11 @@ class Injectable {
   }
 
   MinFileName() {
-    return this.Name + '.min.' + this.FinalExt;
+    return this.Name + this.MinSuffix + '.' + this.FinalExt;
   }
 
   NameConcatMin() {
-    return this.Name + '.concat.min.' + this.FinalExt;
+    return this.Name + '.concat' + this.MinSuffix + + this.FinalExt;
   }
 
   FolderConcat() {

@@ -17,6 +17,8 @@ class Vars {
 
 
     this.ContentJs = new InjectableClass('Content', '/**/*.js', 'js', this.FinalFolderShort);
+    this.BrowserPolyFillJs = new InjectableClass('browser-polyfill', '/**/*.js', 'js', this.FinalFolderShort);
+    this.BrowserPolyFillJs.MinSuffix = '';
 
     this.ContentJs.Ts.TranspiledEntryPointFile = 'zLast.js';
 

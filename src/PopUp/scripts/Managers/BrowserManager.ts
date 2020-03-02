@@ -36,7 +36,7 @@ export class BrowserManager extends PopUpManagerBase {
         resolve(newTab);
       } else {
         this.Log().FuncEnd(this.CreateNewTab.name, tabUrl.AbsUrl);
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     })
   }

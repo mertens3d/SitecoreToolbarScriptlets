@@ -103,7 +103,7 @@ export class LocationManager extends PopUpManagerBase {
       if (result.WasSuccessful()) {
         resolve();
       } else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     });
   }
@@ -124,9 +124,9 @@ export class LocationManager extends PopUpManagerBase {
           .then(() => result.MarkSuccessful())
           .catch((ex) => result.MarkFailed(ex));
       }
-      else if (currentPageType == scWindowType.Edit
-        || currentPageType == scWindowType.Normal
-        || currentPageType == scWindowType.Preview) {
+      else if (currentPageType === scWindowType.Edit
+        || currentPageType === scWindowType.Normal
+        || currentPageType === scWindowType.Preview) {
         this.TabMan().CurrentTabData.UrlParts = this.Helpers().UrlHelp.SetScModeFromEditPrevNorm(newValue, this.TabMan().CurrentTabData.UrlParts);
 
         let newHref: AbsoluteUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
@@ -140,7 +140,7 @@ export class LocationManager extends PopUpManagerBase {
       if (result.MarkSuccessful) {
         resolve();
       } else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     });
   }

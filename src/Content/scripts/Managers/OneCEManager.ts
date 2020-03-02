@@ -194,7 +194,7 @@ export class OneCEManager extends ContentManagerBase {
       if (result.WasSuccessful()) {
         resolve(toReturnCEData)
       } else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
 
     });

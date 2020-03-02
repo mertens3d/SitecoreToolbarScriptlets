@@ -716,7 +716,7 @@ export class UiManager extends PopUpManagerBase {
             if (data.Id === this.CurrentMenuState.SelectSnapshotId) {
               el.selected = true;
             }
-            if (data.Flavor == SnapShotFlavor.Autosave) {
+            if (data.Flavor === SnapShotFlavor.Autosave) {
               headers.Auto.appendChild(el);
             } else {
               headers.Favorite.appendChild(el);

@@ -52,7 +52,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (promResult.WasSuccessful()) {
         resolve();
       } else {
-        reject(promResult.RejectReason);
+        reject(promResult.RejectReasons);
       }
     });
   }
@@ -70,11 +70,9 @@ export class ContentAtticManager extends ContentManagerBase {
           result.MarkSuccessful();
         } else {
           result.MarkFailed('no storage match');
-          result.RejectReason = 'No storage match found';
         }
       } else {
         result.MarkFailed('no data.idofselect');
-        result.RejectReason = 'no id provided'
       }
 
       this.Log().FuncEnd(this.MarkFavorite.name);
@@ -82,7 +80,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (result) {
         resolve();
       } else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     })
   }
@@ -102,7 +100,7 @@ export class ContentAtticManager extends ContentManagerBase {
         result.MarkSuccessful();
       } else {
         result.MarkFailed('not found in storage');
-        result.RejectReason = 'Snap shot not successfully saved';
+        result.MarkFailed( 'Snap shot not successfully saved');
       }
 
       this.Log().FuncEnd(this.WriteToStorage.name);
@@ -110,7 +108,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (result.WasSuccessful()) {
         resolve();
       } else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     });
   }
@@ -307,9 +305,9 @@ export class ContentAtticManager extends ContentManagerBase {
 
     for (var idx = 0; idx < this.CachedWindowStorage.CurrentSnapShots.length; idx++) {
       var candidate = this.CachedWindowStorage.CurrentSnapShots[idx];
-      if (candidate.Flavor == SnapShotFlavor.Autosave) {
+      if (candidate.Flavor === SnapShotFlavor.Autosave) {
         this.CachedWindowStorage.SnapShotsAutoCount++;
-      } else if (candidate.Flavor == SnapShotFlavor.Favorite) {
+      } else if (candidate.Flavor === SnapShotFlavor.Favorite) {
         this.CachedWindowStorage.FavoriteCount++;
       } else {
         this.CachedWindowStorage.PlainCount++;

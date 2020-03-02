@@ -16,7 +16,7 @@ export class SharedConst {
     },
     Settings: {
       Defaults: {
-        LogToConsole: false,
+        LogToConsole: true,
       }
     },
     Regex: {

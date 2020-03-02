@@ -94,7 +94,7 @@ export class HandlersExternal extends CommonEvents {
         resolve(toReturn);
       }
       else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     });
   }

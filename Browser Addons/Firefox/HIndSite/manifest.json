@@ -1,7 +1,7 @@
 ﻿{
   "manifest_version": 2,
   "name": "Hind•Site",
-  "version": "1.0",
+  "version": "1.1",
 
   "description": "Sitecore Tools",
 
@@ -12,7 +12,11 @@
   "content_scripts": [
     {
       "matches": [ "http://*/*" ],
-      "js": [ "content_scripts/hindsite.js", "AutoBuild/final/content.min.js" ]
+      "js": [
+        "AutoBuild/final/hindsite.js",
+        "AutoBuild/final/browser-polyfill.js",
+        "AutoBuild/final/content.min.js"
+      ]
 
     }
   ],
@@ -23,15 +27,10 @@
   ],
   "browser_action": {
     "default_icon": "icons/border-48.png",
-    "default_title": "Setting",
+    "default_title": "Hind•Site",
     "default_popup": "/AutoBuild/final/PopUp.min.html"
   },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "{bab0003d-2d66-4b92-98d4-f5d53311166d}"
-    }
-  },
-  "commands": {
+    "commands": {
     "_execute_browser_action": {
       "suggested_key": {
         "default": "Ctrl+Shift+Y"

@@ -168,7 +168,7 @@ export class OneDesktopManager extends ContentManagerBase {
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnAllCeState);
       } else {
-        reject(promiseResult.RejectReason);
+        reject(promiseResult.RejectReasons);
       }
     })
   }

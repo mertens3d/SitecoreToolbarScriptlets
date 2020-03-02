@@ -96,7 +96,6 @@ export class PopUpMessagesManager extends PopUpManagerBase {
             }
           } else {
             promResult.MarkFailed('no message from content');
-            promResult.RejectReason = 'response is not imsg';
           }
         })
         .catch((err) => {
@@ -109,7 +108,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       if (promResult.WasSuccessful()) {
         resolve();
       } else {
-        reject(promResult.RejectReason);
+        reject(promResult.RejectReasons);
       }
     });//promise
   }// function
@@ -151,9 +150,9 @@ export class PopUpMessagesManager extends PopUpManagerBase {
         resolve(targetTab);
       } else {
         if (iterationJr.IsExhausted) {
-          promResult.RejectReason += '  ' + iterationJr.IsExhaustedMsg;
+          promResult.MarkFailed( iterationJr.IsExhaustedMsg);
         }
-        reject(promResult.RejectReason);
+        reject(promResult.RejectReasons);
       }
     });//promise
   }
@@ -179,7 +178,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       if (result.WasSuccessful()) {
         resolve();
       } else {
-        reject(result.RejectReason);
+        reject(result.RejectReasons);
       }
     });
   }
@@ -218,7 +217,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       if (result.MarkSuccessful) {
         resolve();
       } else {
-        (reject(result.RejectReason));
+        (reject(result.RejectReasons));
       }
     });
   }
