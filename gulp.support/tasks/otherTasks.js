@@ -69,21 +69,4 @@ module.exports = {
       .pipe(gulp.dest(targetVar.WebpackContentOutputFilePathAbs()));
     //cb();
   },
-
-  //WebpackContent: function (cb, vars) {
-  //  //return Webpack_stream(WebpackContent_config)
-
-  //  vars.ContentJs.debugInfo();
-
-  //  return Webpack_stream(
-  //    {
-  //      entry: vars.ContentJs.Ts.TranspiledEntryPointFull(),
-  //      mode: 'production',
-  //      output: {
-  //        path: vars.ContentJs.WebpackContentOutputFilePathAbs(),
-  //        filename: vars.ContentJs.MinFileName() // 'jsContent.min.js'
-  //      }
-  //    })
-  //    .pipe(gulp.dest(vars.ContentJs.AutoBuildRoot));
-  //}
 }

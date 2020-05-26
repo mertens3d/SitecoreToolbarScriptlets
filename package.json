@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@types/jest": "25.2.3",
-    "copy-webpack-plugin": "6.0.1",
+    "copy-webpack-plugin": "^5.1.1",
     "del": "5.1.0",
     "gulp-concat": "2.6.1",
     "gulp-if": "3.0.0",
