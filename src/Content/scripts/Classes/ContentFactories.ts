@@ -28,6 +28,8 @@ export class ContentFactories extends ContentManagerBase {
 
       this.Log().LogAsJsonPretty('ContentState', contentState);
 
+
+
       await this.GetCurrentDtOrCeState()
         .then((result: IDataOneStorageCE) => {
           contentState.ActiveCe = result;
@@ -76,6 +78,10 @@ export class ContentFactories extends ContentManagerBase {
       }
       else if (pageType === scWindowType.LoginPage
         || pageType === scWindowType.Launchpad
+        || pageType === scWindowType.Edit
+        || pageType === scWindowType.Preview
+        || pageType === scWindowType.Normal
+
 
       ) {
         toReturnCeState = null;

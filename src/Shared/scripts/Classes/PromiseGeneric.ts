@@ -306,8 +306,14 @@ export class PromiseHelper extends HelperBase {
 
           if (found) {
             this.Log.Log('clicking');
+            try {
             found.click();
+
             promiseResults.MarkSuccessful();
+            } catch (e) {
+              promiseResults.MarkFailed(e);
+            }
+
           } else {
             await iterationJr.Wait()
           }

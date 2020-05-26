@@ -11,7 +11,7 @@
 
   "content_scripts": [
     {
-      "matches": [ "http://*/*" ],
+      "matches": [ "http://*/*", "https://*/*" ],
       "js": [
         "AutoBuild/final/hindsite.js",
         "AutoBuild/final/browser-polyfill.js",

@@ -72,12 +72,16 @@ export class UtilityHelper extends HelperBase {
   MakeFriendlyDate(date: Date): string {
 
     var toReturn: string = '';
-    if (date) {
+
+
+    var workingDate = new Date(date);
+
+    if (workingDate) {
       //var year = date.getFullYear();
-      var month = StaticHelpers.BufferString((date.getMonth() + 1).toString(), 2, BufferChar.Zero, BufferDirection.left);
-      var day =StaticHelpers.BufferString(date.getDate().toString(), 2, BufferChar.Zero, BufferDirection.left);
-      var min = StaticHelpers.BufferString(date.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);
-      var hoursRaw = date.getHours();
+      var month = StaticHelpers.BufferString((workingDate.getMonth() + 1).toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var day =StaticHelpers.BufferString(workingDate.getDate().toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var min = StaticHelpers.BufferString(workingDate.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var hoursRaw = workingDate.getHours();
       var ampm = hoursRaw >= 12 ? 'p' : 'a';
       hoursRaw = hoursRaw % 12;
       var hourClean = hoursRaw ? hoursRaw : 12; // the hour '0' should be '12'

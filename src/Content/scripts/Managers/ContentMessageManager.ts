@@ -138,10 +138,11 @@ export class ContentMessageManager extends ContentManagerBase {
         promResult.MarkFailed('no request')
       }
 
-      this.Log().LogVal('responding', StaticHelpers.MsgFlagAsString(response.MsgFlag));
-      this.Log().FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
+      if (response !== null) {
+        this.Log().LogVal('responding', StaticHelpers.MsgFlagAsString(response.MsgFlag));
+      }
 
-      // response.MsgFlag != MsgFlag.RespError
+      this.Log().FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
       if (promResult.WasSuccessful()) {
         resolve(response);
@@ -151,7 +152,6 @@ export class ContentMessageManager extends ContentManagerBase {
         reject(promResult.RejectReasons);
       }
     })
-    //return Promise.resolve(response);
   }
 
   Init() {
