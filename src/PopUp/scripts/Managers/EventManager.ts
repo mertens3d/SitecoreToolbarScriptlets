@@ -12,25 +12,27 @@ import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandB
 import { Handlers } from './Handlers';
 import { IEventHandlerData } from "../../../Shared/scripts/Interfaces/IEventHandlerData";
 import { PopConst } from '../Classes/PopConst';
+import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
 
 export class EventManager extends PopUpManagerBase {
   Handlers: Handlers
 
   AllMenuCommands: IOneCommand[];
 
-  constructor(popHub: PopUpHub) {
-    super(popHub);
+  constructor(popHub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
+    
+    super(popHub, allPopUpAgents);
     this.Handlers = new Handlers();
-    this.Handlers.External = new HandlersExternal(popHub);
-    this.Handlers.Internal = new HandlersInternal(popHub);
+    this.Handlers.External = new HandlersExternal(popHub, this.AllPopUpAgents);
+    this.Handlers.Internal = new HandlersInternal(popHub, this.AllPopUpAgents);
   }
 
   Init() {
-    this.Log().FuncStart(EventManager.name + this.Init.name);
+    this.AllPopUpAgents.Logger.FuncStart(EventManager.name + this.Init.name);
     this.AllMenuCommands = AllCommands.BuildAllCommands(this.PopHub, this.Handlers);
     this.__wireMenuButtons();
     this.WireAllGenericSettings();
-    this.Log().FuncEnd(EventManager.name + this.Init.name);
+    this.AllPopUpAgents.Logger.FuncEnd(EventManager.name + this.Init.name);
   }
   WireAllGenericSettings() {
     let genericSettings: OneGenericSetting[] = this.SettingsMan().AllSettings.SettingsAr;
@@ -66,13 +68,13 @@ export class EventManager extends PopUpManagerBase {
           )
         }
       } else {
-        this.Log().Error(this.WireAllGenericSettings.name, 'ui generic element not found');
+        this.AllPopUpAgents.Logger.Error(this.WireAllGenericSettings.name, 'ui generic element not found');
       }
     }
   }
 
   private __wireMenuButtons() {
-    this.Log().FuncStart(this.__wireMenuButtons.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.__wireMenuButtons.name);
 
     this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestore(evt, this.PopHub); });
     this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.TaDebug, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
@@ -95,13 +97,13 @@ export class EventManager extends PopUpManagerBase {
             var popHub: PopUpHub = this.PopHub;
             targetElem.addEventListener('click', (evt) => { oneEvent.Handler(evt, this.PopHub, oneEvent.ParameterData) });
           } else {
-            this.Log().Error(this.__wireMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
+            this.AllPopUpAgents.Logger.Error(this.__wireMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
           }
         }
       }
     }
 
-    this.Log().FuncEnd(this.__wireMenuButtons.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.__wireMenuButtons.name);
   }
   GetCommandByKey(menuCommand: MenuCommand): IOneCommand {
     var toReturn: IOneCommand;
@@ -110,12 +112,12 @@ export class EventManager extends PopUpManagerBase {
       var candidate = this.AllMenuCommands[idx];
       if (candidate.Command === menuCommand) {
         toReturn = candidate;
-        this.Log().LogVal('Command', MenuCommand[toReturn.Command]);
+        this.AllPopUpAgents.Logger.LogVal('Command', MenuCommand[toReturn.Command]);
         break;
       }
     }
     if (!toReturn) {
-      this.Log().Error(this.GetCommandByKey.name, 'matching command not found ' + MenuCommand[menuCommand]);
+      this.AllPopUpAgents.Logger.Error(this.GetCommandByKey.name, 'matching command not found ' + MenuCommand[menuCommand]);
     }
     return toReturn;
   }

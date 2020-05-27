@@ -5,7 +5,6 @@ import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseGeneric';
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
 import { UtilityHelper } from "../../../Shared/scripts/Helpers/UtilityHelper";
 import { ContentMessageManager } from './ContentMessageManager';
-import { LoggerContent } from "../Classes/LoggerContent";
 import { IContentConst } from '../../../Shared/scripts/Interfaces/IContentConst';
 import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
@@ -14,11 +13,12 @@ import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from './SitecoreUiManager';
 import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
+import { IContentLoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentLogger";
 
 export class ContentHub {
   AtticMan: ContentAtticManager;
   Const: IContentConst;
-  Logger: LoggerContent;
+  Logger: IContentLoggerAgent;
 
   Helpers: HelperHub;
   MsgMan: ContentMessageManager;
@@ -34,7 +34,7 @@ export class ContentHub {
   SharedConst: ISharedConst;
   ReadyForMessages: boolean = false;
 
-  constructor(logger: LoggerContent) {
+  constructor(logger: IContentLoggerAgent) {
     logger.FuncStart(ContentHub.name);
     this.Logger = logger;
     console.log('(ctor) logger enabled ' + this.Logger.EnabledStatus());
@@ -45,22 +45,22 @@ export class ContentHub {
   Instantiate() {
     this.Logger.FuncStart(this.Instantiate.name);
 
-    this.AtticMan = new ContentAtticManager(this);
+    this.AtticMan = new ContentAtticManager(this, this.Logger);
 
     this.Helpers = new HelperHub(this.Logger);
-    this.MsgMan = new ContentMessageManager(this);
-    this.MiscMan = new MiscManager(this);
-    this.ContentFactory = new ContentFactories(this);
+    this.MsgMan = new ContentMessageManager(this, this.Logger);
+    this.MiscMan = new MiscManager(this, this.Logger);
+    this.ContentFactory = new ContentFactories(this, this.Logger);
 
     this.Logger.MarkerA();
 
-    this.OneWindowMan = new OneScWindowManager(this);
+    this.OneWindowMan = new OneScWindowManager(this, this.Logger);
 
-    this.PromiseOneStep = new PromiseOneStep(this);
+    this.PromiseOneStep = new PromiseOneStep(this, this.Logger);
 
     this.SharedConst = SharedConst.Const;
 
-    this.SitecoreUiMan = new SitecoreUiManager(this);
+    this.SitecoreUiMan = new SitecoreUiManager(this, this.Logger);
     this.Init();
 
     this.Logger.Log('ready for messages');

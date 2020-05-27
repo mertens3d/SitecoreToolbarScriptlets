@@ -8,6 +8,8 @@ import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { PopUpHub } from "../Managers/PopUpHub";
 
 export class HandlersExternal extends CommonEvents {
+
+
   async AddCETab(evt: MouseEvent, popHub: PopUpHub) {
     popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqAddCETab, popHub));
  
@@ -22,7 +24,7 @@ export class HandlersExternal extends CommonEvents {
   async QuickPublish(evt: MouseEvent, popHub: PopUpHub) {
     await popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqQuickPublish, popHub))
       .then(popHub.UiMan.OnSuccessfullCommand)
-      .catch((ex) => popHub.Log.Error(popHub.EventMan.Handlers.External.QuickPublish.name, ex));
+      .catch((ex) => this.AllPopUpAgents.Logger.Error(popHub.EventMan.Handlers.External.QuickPublish.name, ex));
   }
 
 
@@ -34,7 +36,7 @@ export class HandlersExternal extends CommonEvents {
   }
 
   async HndlrSnapShotRestore(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.Log.FuncStart(this.HndlrSnapShotRestore.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.HndlrSnapShotRestore.name);
 
     await popHub.EventMan.Handlers.External.CreateNewWindowIfRequired(evt,
       popHub,
@@ -47,11 +49,11 @@ export class HandlersExternal extends CommonEvents {
         this.GoContentCommand(msg, newTab);
       })
       .catch((ex) => {
-        popHub.Log.Error(this.HndlrSnapShotRestore.name, ex.toString());
+        this.AllPopUpAgents.Logger.Error(this.HndlrSnapShotRestore.name, ex.toString());
       });
 
 
-    popHub.Log.FuncEnd(this.HndlrSnapShotRestore.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.HndlrSnapShotRestore.name);
   }
 
 
@@ -72,16 +74,16 @@ export class HandlersExternal extends CommonEvents {
 
   CreateNewWindowIfRequired(evt: MouseEvent, popHub: PopUpHub, tabUrl: AbsoluteUrl, ) {
     return new Promise(async (resolve, reject) => {
-      popHub.Log.FuncStart(this.CreateNewWindowIfRequired.name, 'ctrl key? ' + evt.ctrlKey.toString() + ' ' + tabUrl);
-      let result: PromiseResult = new PromiseResult(this.CreateNewWindowIfRequired.name, popHub.Log);
+      this.AllPopUpAgents.Logger.FuncStart(this.CreateNewWindowIfRequired.name, 'ctrl key? ' + evt.ctrlKey.toString() + ' ' + tabUrl);
+      let result: PromiseResult = new PromiseResult(this.CreateNewWindowIfRequired.name, this.AllPopUpAgents.Logger);
       let toReturn: IDataBrowserTab;
       if (!evt.ctrlKey) {
         await popHub.BrowserMan.CreateNewTab(tabUrl)
           .then((newTab: IDataBrowserTab) => {
-            popHub.Log.MarkerA();
+            this.AllPopUpAgents.Logger.MarkerA();
             toReturn = newTab;
           });
-        popHub.Log.DebugIDataBrowserTab(toReturn);
+        this.AllPopUpAgents.Logger.DebugIDataBrowserTab(toReturn);
         result.MarkSuccessful();
       }
       else {
@@ -89,7 +91,7 @@ export class HandlersExternal extends CommonEvents {
         result.MarkSuccessful();
       }
 
-      popHub.Log.FuncEnd(this.CreateNewWindowIfRequired.name);
+      this.AllPopUpAgents.Logger.FuncEnd(this.CreateNewWindowIfRequired.name);
       if (result.WasSuccessful) {
         resolve(toReturn);
       }
@@ -101,7 +103,7 @@ export class HandlersExternal extends CommonEvents {
 
 
   HndlrPresentationDetails(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.Log.Error(this.HndlrPresentationDetails.name, 'to do');
+    this.AllPopUpAgents.Logger.Error(this.HndlrPresentationDetails.name, 'to do');
   }
 
 

@@ -12,21 +12,22 @@ import { IDataDtState } from "../../../Shared/scripts/Interfaces/IDataDtState";
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
+import { IContentLoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentLogger";
 
 export class ContentFactories extends ContentManagerBase {
-  constructor(contentHub: ContentHub) {
-    contentHub.Logger.FuncStart(PromiseHelper.name);
-    super(contentHub);
-    contentHub.Logger.FuncEnd(PromiseHelper.name);
+  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
+    super(hub, logger);
+    hub.Logger.FuncStart(PromiseHelper.name);
+    hub.Logger.FuncEnd(PromiseHelper.name);
   }
   UpdateContentState(contentState: ICurrStateContent) {
     return new Promise(async (resolve, reject) => {
-      this.Log().FuncStart(this.UpdateContentState.name);
-      let promiseResult: PromiseResult = new PromiseResult(this.UpdateContentState.name, this.Log());
+      this.ContentLogger.FuncStart(this.UpdateContentState.name);
+      let promiseResult: PromiseResult = new PromiseResult(this.UpdateContentState.name, this.ContentLogger);
       contentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
-      contentState.ErrorStack = this.Log().ErrorStack;
+      contentState.ErrorStack = this.ContentLogger.ErrorStack;
 
-      this.Log().LogAsJsonPretty('ContentState', contentState);
+      this.ContentLogger.LogAsJsonPretty('ContentState', contentState);
 
 
 
@@ -37,7 +38,7 @@ export class ContentFactories extends ContentManagerBase {
         })
         .catch((err) => promiseResult.MarkFailed(err));
 
-      this.Log().FuncEnd(this.UpdateContentState.name);
+      this.ContentLogger.FuncEnd(this.UpdateContentState.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve(contentState);
@@ -49,9 +50,9 @@ export class ContentFactories extends ContentManagerBase {
 
   GetCurrentDtOrCeState() {
     return new Promise(async (resolve, reject) => {
-      this.Log().FuncStart(this.GetCurrentDtOrCeState.name);
+      this.ContentLogger.FuncStart(this.GetCurrentDtOrCeState.name);
 
-      let promiseResult: PromiseResult = new PromiseResult(this.GetCurrentDtOrCeState.name, this.Log());
+      let promiseResult: PromiseResult = new PromiseResult(this.GetCurrentDtOrCeState.name, this.ContentLogger);
 
       let toReturnCeState: IDataOneStorageCE = null;
       let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
@@ -91,7 +92,7 @@ export class ContentFactories extends ContentManagerBase {
         promiseResult.MarkFailed('not a known page type ' + StaticHelpers.WindowTypeAsString(pageType));
       }
 
-      this.Log().FuncEnd(this.GetCurrentDtOrCeState.name);
+      this.ContentLogger.FuncEnd(this.GetCurrentDtOrCeState.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnCeState);
@@ -102,11 +103,11 @@ export class ContentFactories extends ContentManagerBase {
   }
 
   async NewMsgFromContentShell() {
-    this.Log().FuncStart(this.NewMsgFromContentShell.name);
+    this.ContentLogger.FuncStart(this.NewMsgFromContentShell.name);
     var response = new MsgFromContent(MsgFlag.Unknown);
     //await this.UpdateContentState(response);
     //response.ContentState.LastReq = MsgFlag.Unknown;
-    this.Log().FuncEnd(this.NewMsgFromContentShell.name);
+    this.ContentLogger.FuncEnd(this.NewMsgFromContentShell.name);
     return response;
   }
 }

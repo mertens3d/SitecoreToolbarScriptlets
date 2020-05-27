@@ -3,13 +3,14 @@ import { IDataDebugCallback } from "../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../Interfaces/ICallbackDataDebugTextChanged";
 import { IGuid } from "../Interfaces/IGuid";
 import { IError } from "../Interfaces/IError";
-import { StaticHelpers } from "./StaticHelpers";
+import { StaticHelpers } from "../Classes/StaticHelpers";
 import { BufferChar } from "../Enums/BufferChar";
 import { BufferDirection } from "../Enums/BufferDirection";
-import { OneGenericSetting } from "./OneGenericSetting";
+import { OneGenericSetting } from "../Classes/OneGenericSetting";
 import { SharedConst } from "../SharedConst";
+import { ILoggerAgentBase } from "../Interfaces/Agents/ILoggerBase";
 
-export class LoggerBase {
+export class LoggerAgentBase implements ILoggerAgentBase {
   private __callDepth: number;
   private LogToConsoleEnabled: boolean;
   LogHasBeenInit: boolean = false;
@@ -123,7 +124,7 @@ export class LoggerBase {
       Func: callback
     });
   }
-  HndlrClearDebugText(self: LoggerBase, verify: boolean = false): void {
+  HndlrClearDebugText(self: LoggerAgentBase, verify: boolean = false): void {
     this.FuncStart(this.HndlrClearDebugText.name);
     var proceed: boolean = true;
     if (verify) {
@@ -291,7 +292,7 @@ export class LoggerBase {
       this.LogVal(title, 'Is Not Null');
     }
   }
-  IsNullOrUndefined(subject) {
+  IsNullOrUndefined(subject): string {
     var toReturn = '{unknown}';
     if (subject) {
       if ((typeof subject) === 'undefined') {

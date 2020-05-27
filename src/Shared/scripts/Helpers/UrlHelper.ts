@@ -158,7 +158,7 @@ export class UrlHelper extends HelperBase {
         break;
       default:
         toReturn.FilePath = '';
-        this.Log.Error(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
+        this.LoggerAgentBase.Error(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
         break;
     }
 
@@ -225,7 +225,7 @@ export class UrlHelper extends HelperBase {
     //if (ar.length > 1) {
     //  toReturn = ar[1];
     //} else {
-    //  this.Log.Error(this.ExtractFilePath.name, 'unable to extract path from ' + url);
+    //  this.LoggerAgentBase.Error(this.ExtractFilePath.name, 'unable to extract path from ' + url);
     //}
 
     return toReturn;
@@ -261,11 +261,11 @@ export class UrlHelper extends HelperBase {
     return new RegExp(regexPattern).test(url);
   }
   CalcPageTypeFromHref(absUrl: AbsoluteUrl): scWindowType {
-    this.Log.FuncStart(this.CalcPageTypeFromHref.name);
+    this.LoggerAgentBase.FuncStart(this.CalcPageTypeFromHref.name);
     var toReturn: scWindowType = scWindowType.Unknown;
 
     if (absUrl && absUrl.AbsUrl) {
-      this.Log.LogVal('current url', absUrl.AbsUrl);
+      this.LoggerAgentBase.LogVal('current url', absUrl.AbsUrl);
       if (absUrl.AbsUrl.indexOf(SharedConst.Const.UrlSuffix.Login) > -1) {
         toReturn = scWindowType.LoginPage;
       }
@@ -291,9 +291,9 @@ export class UrlHelper extends HelperBase {
         toReturn = scWindowType.Unknown;
       }
     } else {
-      this.Log.Error(this.CalcPageTypeFromHref.name, 'null url');
+      this.LoggerAgentBase.Error(this.CalcPageTypeFromHref.name, 'null url');
     }
-    this.Log.FuncEnd(this.CalcPageTypeFromHref.name, scWindowType[toReturn]);
+    this.LoggerAgentBase.FuncEnd(this.CalcPageTypeFromHref.name, scWindowType[toReturn]);
     return toReturn;
   }
 }

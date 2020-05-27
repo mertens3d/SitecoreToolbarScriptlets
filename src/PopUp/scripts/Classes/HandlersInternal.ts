@@ -15,7 +15,7 @@ export class HandlersInternal extends CommonEvents {
   //    popHub.Log.FuncEnd(this.__showDebugButtonClicked.name);
   //}
   __cleardebugTextWithConfirm(evt: any, popHub: PopUpHub) {
-    popHub.Log.HndlrClearDebugText(popHub.Log, true);
+    this.AllPopUpAgents.Logger.HndlrClearDebugText(this.AllPopUpAgents.Logger, true);
   }
   GenericSettingChanged() {
   }
@@ -37,7 +37,7 @@ export class HandlersInternal extends CommonEvents {
     //.catch((ex) => popHub.Log.Error(popHub.EventMan.Handlers.External.SetScMode.name, ex));
   }
   ToggleAccordian(evt: any, popHub: PopUpHub, settingKey: SettingKey) {
-    popHub.Log.FuncStart(this.ToggleAccordian.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.ToggleAccordian.name);
     var srcElem: HTMLElement = <HTMLElement>(evt.target || evt.srcElement);
     var foundContentSib = popHub.UiMan.GetAccordianContentElem(srcElem);
     if (foundContentSib) {
@@ -52,8 +52,8 @@ export class HandlersInternal extends CommonEvents {
       popHub.SettingsMan.SetByKey(settingKey, newVal);
     }
     else {
-      popHub.Log.Error(this.ToggleAccordian.name, 'did not find sib');
+      this.AllPopUpAgents.Logger.Error(this.ToggleAccordian.name, 'did not find sib');
     }
-    popHub.Log.FuncEnd(this.ToggleAccordian.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.ToggleAccordian.name);
   }
 }

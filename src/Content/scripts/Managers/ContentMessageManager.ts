@@ -17,12 +17,13 @@ import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { SettingsHelper } from '../../../Shared/scripts/Helpers/SettingsHelper';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 export class ContentMessageManager extends ContentManagerBase {
   AutoSaveHasBeenScheduled: boolean = false;
 
-  constructor(contentHub: ContentHub) {
-    super(contentHub);
+  constructor(contentHub: ContentHub, logger: IContentLoggerAgent) {
+    super(contentHub, logger);
     contentHub.Logger.FuncStart(ContentMessageManager.name);
 
     var self = this;

@@ -27,6 +27,7 @@ import { SettingsHelper } from '../../../Shared/scripts/Helpers/SettingsHelper';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { UiButtonStateManager } from './UiButtonStateManager';
 import { IMenuState } from '../../../Shared/scripts/Interfaces/IMenuState';
+import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
 
 export class UiManager extends PopUpManagerBase {
   TabId: string;
@@ -44,26 +45,27 @@ export class UiManager extends PopUpManagerBase {
   }
   MsgStatusDiv: HTMLDivElement;
 
-  constructor(popHub: PopUpHub) {
-    super(popHub);
-    popHub.Log.FuncStart(UiManager.name);
+  constructor(popHub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
+    super(popHub, allPopUpAgents);
 
-    this.ButtonStateManager = new UiButtonStateManager(this.PopHub);
-    popHub.Log.FuncEnd(UiManager.name);
+    this.AllPopUpAgents.Logger.FuncStart(UiManager.name);
+
+    this.ButtonStateManager = new UiButtonStateManager(this.PopHub, this.AllPopUpAgents);
+    this.AllPopUpAgents.Logger.FuncEnd(UiManager.name);
   }
 
   Init() {
-    this.Log().FuncStart(UiManager.name, this.Init.name);
+    this.AllPopUpAgents.Logger.FuncStart(UiManager.name, this.Init.name);
 
     var self = this;
-    this.Log().AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
+    this.AllPopUpAgents.Logger.AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
 
     this.LookForMsgStatusDiv();
     this.WriteBuildNumToUi();
 
     this.MsgMan().SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqCurState, this.PopHub), this.TabMan().CurrentTabData);
 
-    this.Log().FuncEnd(UiManager.name, this.Init.name);
+    this.AllPopUpAgents.Logger.FuncEnd(UiManager.name, this.Init.name);
   }
   LookForMsgStatusDiv() {
     this.MsgStatusDiv = document.querySelector(PopConst.Const.Selector.HS.DivMsgStatus);
@@ -72,11 +74,11 @@ export class UiManager extends PopUpManagerBase {
     if (this.MsgStatusDiv) {
       this.MsgStatusDiv.innerHTML = textToShow + '</br>' + this.MsgStatusDiv.innerHTML ;
     }
-    this.Log().Log('msg stat: ' + textToShow);
+    this.AllPopUpAgents.Logger.Log('msg stat: ' + textToShow);
   }
 
   OnSuccessfullCommand(): void {
-    this.Log().FuncStart(this.OnSuccessfullCommand.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.OnSuccessfullCommand.name);
     try {
       this.UpdateMsgStatusStack('Command Completed Successfully');
 
@@ -85,67 +87,67 @@ export class UiManager extends PopUpManagerBase {
       if (!SettingsHelper.ValueAsBool(setting)) {
         window.close();
       } else {
-        this.Log().Log('Window not closed because of setting: ' + setting.Friendly)
+        this.AllPopUpAgents.Logger.Log('Window not closed because of setting: ' + setting.Friendly)
       }
     } catch (ex) {
       console.log(ex.toString());
-      //this.Log().Error(this.CloseWindow.name, ex.toString());
+      //this.AllPopUpAgents.Logger.Error(this.CloseWindow.name, ex.toString());
     }
-    this.Log().FuncEnd(this.OnSuccessfullCommand.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.OnSuccessfullCommand.name);
   }
   WriteBuildNumToUi() {
-    this.Log().LogVal('BuildDateStamp', BuildDateStamp);
+    this.AllPopUpAgents.Logger.LogVal('BuildDateStamp', BuildDateStamp);
 
     var targetTag: HTMLElement = document.querySelector(PopConst.Const.Selector.HS.BuildStamp);
     if (targetTag) {
       targetTag.innerText = 'build: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date(BuildDateStamp));
     } else {
-      this.Log().Error(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
+      this.AllPopUpAgents.Logger.Error(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
     }
   }
 
   private __drawStoragePretty(ourData: IOneStorageData[]) {
-    this.Log().FuncStart(this.__drawStoragePretty.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.__drawStoragePretty.name);
 
     this.ClearTextArea();
 
     for (var idx = 0; idx < ourData.length; idx++) {
-      this.Log().Log('key: \t' + ourData[idx].key);
+      this.AllPopUpAgents.Logger.Log('key: \t' + ourData[idx].key);
       var parsed: IDataOneWindowStorage = <IDataOneWindowStorage>JSON.parse(ourData[idx].data);
       if (parsed) {
         this.DrawDebugDataPretty(parsed);
-        this.Log().Log('------------');
+        this.AllPopUpAgents.Logger.Log('------------');
       }
     }
-    this.Log().FuncEnd(this.__drawStoragePretty.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.__drawStoragePretty.name);
   }
   DebugDataOneNode(dataOneTreeNode: IDataOneTreeNode): string {
-    this.Log().FuncStart(this.DebugDataOneNode.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.DebugDataOneNode.name);
     var activeOrNot = dataOneTreeNode.IsActive ? '* ' : '  ';
     var expandedOrNot = dataOneTreeNode.IsExpanded ? '+ ' : '  ';
 
     var toReturn: string = activeOrNot + expandedOrNot + dataOneTreeNode.NodeId.AsString + ' ' + dataOneTreeNode.NodeFriendly;
-    this.Log().FuncEnd(this.DebugDataOneNode.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.DebugDataOneNode.name);
     return toReturn;
   }
   GetDebugDataOneCE(dataOneCe: IDataOneStorageCE): string[] {
-    this.Log().FuncStart('GetDebugDataOneCE');
+    this.AllPopUpAgents.Logger.FuncStart('GetDebugDataOneCE');
     var toReturn: string[] = [];
     toReturn.push('------ All Tree Nodes -----');
 
     for (var idx = 0; idx < dataOneCe.AllTreeNodeAr.length; idx++) {
-      this.Log().Log('idx: ' + idx);
+      this.AllPopUpAgents.Logger.Log('idx: ' + idx);
       var oneVal = this.DebugDataOneNode(dataOneCe.AllTreeNodeAr[idx]);
-      this.Log().Log('oneVal : ' + oneVal);
+      this.AllPopUpAgents.Logger.Log('oneVal : ' + oneVal);
       toReturn.push(oneVal);
     }
 
-    this.Log().FuncEnd(this.GetDebugDataOneCE.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.GetDebugDataOneCE.name);
     return toReturn;
   }
 
   __buildDebugDataPretty(dataOneWindow: IDataOneWindowStorage) {
-    this.Log().FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + this.Log().IsNullOrUndefined(dataOneWindow));
+    this.AllPopUpAgents.Logger.FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + this.AllPopUpAgents.Logger.IsNullOrUndefined(dataOneWindow));
 
     var toReturn: string[] = [];
     if (dataOneWindow) {
@@ -168,14 +170,14 @@ export class UiManager extends PopUpManagerBase {
       }
       toReturn.push('------ One Window Snap Shot End -----');
 
-      this.Log().FuncEnd(this.__buildDebugDataPretty.name);
+      this.AllPopUpAgents.Logger.FuncEnd(this.__buildDebugDataPretty.name);
     } else {
-      this.Log().Error(this.__buildDebugDataPretty.name, 'missing data')
+      this.AllPopUpAgents.Logger.Error(this.__buildDebugDataPretty.name, 'missing data')
     }
     return toReturn;
   }
   DrawDebugDataPretty(source: IDataOneWindowStorage): void {
-    this.Log().FuncStart(this.DrawDebugDataPretty.name, 'source not null: ' + this.Log().IsNullOrUndefined(source));
+    this.AllPopUpAgents.Logger.FuncStart(this.DrawDebugDataPretty.name, 'source not null: ' + this.AllPopUpAgents.Logger.IsNullOrUndefined(source));
 
     var allDebugData: string[] = this.__buildDebugDataPretty(source);
 
@@ -185,7 +187,7 @@ export class UiManager extends PopUpManagerBase {
       this.PopHub.FeedbackMan.WriteLine(allDebugData[ldx]);
     }
 
-    this.Log().FuncEnd(this.DrawDebugDataPretty.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.DrawDebugDataPretty.name);
   }
 
   ClearTextArea(): void {
@@ -193,7 +195,7 @@ export class UiManager extends PopUpManagerBase {
     if (ta) {
       ta.value = '';
     } else {
-      this.Log().Error(this.ClearTextArea.name, 'No text area found');
+      this.AllPopUpAgents.Logger.Error(this.ClearTextArea.name, 'No text area found');
     }
   }
 
@@ -247,7 +249,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   DrawStorageResponse(data: PayloadDataFromContent) {
-    this.Log().FuncStart('DrawStorage');
+    this.AllPopUpAgents.Logger.FuncStart('DrawStorage');
     try {
       //var ourData: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
 
@@ -256,48 +258,48 @@ export class UiManager extends PopUpManagerBase {
         //this.__drawStoragePretty(data.CurrentSnapShots)
       }
     } catch (e) {
-      this.Log().Error(this.DrawStorageResponse.name, e.message);
+      this.AllPopUpAgents.Logger.Error(this.DrawStorageResponse.name, e.message);
     }
-    this.Log().FuncEnd('DrawStorage');
+    this.AllPopUpAgents.Logger.FuncEnd('DrawStorage');
   }
 
   private __drawStorageRaw(ourData: IOneStorageData[]) {
-    this.Log().FuncStart('DrawStorageRaw');
+    this.AllPopUpAgents.Logger.FuncStart('DrawStorageRaw');
     for (var idx = 0; idx < ourData.length; idx++) {
-      this.Log().Log('key: \t' + ourData[idx].key);
-      this.Log().Log('data: \t' + ourData[idx].data);
-      this.Log().Log('------------');
+      this.AllPopUpAgents.Logger.Log('key: \t' + ourData[idx].key);
+      this.AllPopUpAgents.Logger.Log('data: \t' + ourData[idx].data);
+      this.AllPopUpAgents.Logger.Log('------------');
     }
-    this.Log().FuncEnd('DrawStorageRaw');
+    this.AllPopUpAgents.Logger.FuncEnd('DrawStorageRaw');
   }
 
   async RestoreAccordianState(oneSetting: OneGenericSetting, foundElem: HTMLElement): Promise<void> {
-    this.Log().FuncStart(this.RestoreAccordianState.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.RestoreAccordianState.name);
     var contentSib = this.GetAccordianContentElem(foundElem);
     if (contentSib) {
       this.SetAccordianClass(contentSib, <boolean>oneSetting.ValueAsObj)
     } else {
-      this.Log().Error(this.RestoreAccordianState.name, 'Sibling not found');
+      this.AllPopUpAgents.Logger.Error(this.RestoreAccordianState.name, 'Sibling not found');
     }
-    this.Log().FuncEnd(this.RestoreAccordianState.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.RestoreAccordianState.name);
   }
 
   async UpdateAtticFromUi(): Promise<any> {
-    this.Log().FuncStart(this.UpdateAtticFromUi.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.UpdateAtticFromUi.name);
 
     //let currentSettings: IDataPopUpSettings = await this.PopAtticMan().CurrentSettings();
     //let currentVal = (<HTMLInputElement>document.querySelector(PopConst.Const.Selector.HS.iCBoxdSettingsShowLogData)).checked;
     //currentVal = true; //todo - remove after debugging
-    //this.Log().LogVal('currentVal', currentVal.toString())
+    //this.AllPopUpAgents.Logger.LogVal('currentVal', currentVal.toString())
     //currentSettings.LogSettings.ShowDebugData = currentVal;
 
     //this.PopAtticMan().StoreSettings(currentSettings);
     this.RefreshUiFromCache();
-    this.Log().FuncEnd(this.UpdateAtticFromUi.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.UpdateAtticFromUi.name);
   }
 
   SelectChanged(): void {
-    this.Log().FuncStart(this.SelectChanged.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.SelectChanged.name);
     this.CurrentMenuState.SelectSnapshotId = this.Helpers().GuidHelp.ParseGuid(this.__getSelectElem().value);
     //this.debug().Log('new index :' + this.__selectSnapshotId);
 
@@ -306,7 +308,7 @@ export class UiManager extends PopUpManagerBase {
     //}
 
     this.RefreshUiFromCache();
-    this.Log().FuncEnd(this.SelectChanged.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.SelectChanged.name);
   }
 
   private __GetCancelButton() {
@@ -330,7 +332,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   //async __refreshSettings() {
-  //  this.Log().FuncStart(this.__refreshSettings.name);
+  //  this.AllPopUpAgents.Logger.FuncStart(this.__refreshSettings.name);
   //  let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(PopConst.Const.Selector.HS.IdFieldSetDebug);
 
   //  let currentSettings: IDataPopUpSettings =  await this.PopAtticMan().CurrentSettings();
@@ -341,43 +343,43 @@ export class UiManager extends PopUpManagerBase {
   //    }
   //    let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(PopConst.Const.Selector.HS.iCBoxdSettingsShowLogData);
   //    if (checkBoxShowDebug) {
-  //      this.Log().LogVal('before', checkBoxShowDebug.checked.toString());
+  //      this.AllPopUpAgents.Logger.LogVal('before', checkBoxShowDebug.checked.toString());
   //      checkBoxShowDebug.checked = currentSettings.LogSettings.ShowDebugData;
-  //      this.Log().LogVal('after', checkBoxShowDebug.checked.toString());
+  //      this.AllPopUpAgents.Logger.LogVal('after', checkBoxShowDebug.checked.toString());
   //    } else {
-  //      this.Log().Error(this.__refreshSettings.name, 'no checkbox found');
+  //      this.AllPopUpAgents.Logger.Error(this.__refreshSettings.name, 'no checkbox found');
   //    }
   //  }
   //  else {
-  //    this.Log().Error(this.__refreshSettings.name, 'no settings found');
+  //    this.AllPopUpAgents.Logger.Error(this.__refreshSettings.name, 'no settings found');
   //  }
-  //  this.Log().FuncEnd(this.__refreshSettings.name);
+  //  this.AllPopUpAgents.Logger.FuncEnd(this.__refreshSettings.name);
   //}
 
   RefreshUiGenericSettings() {
-    this.Log().FuncStart(this.RefreshUiGenericSettings.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.RefreshUiGenericSettings.name);
     for (var idx = 0; idx < this.SettingsMan().AllSettings.SettingsAr.length; idx++) {
       var oneSetting: OneGenericSetting = this.SettingsMan().AllSettings.SettingsAr[idx];
-      //this.Log().LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
+      //this.AllPopUpAgents.Logger.LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
       var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
       if (foundElem) {
         if (oneSetting.DataType === SettingType.BoolCheckBox) {
           let valueToDisplay: boolean = <boolean>(oneSetting.ValueAsObj || oneSetting.DefaultValue);
-          //this.Log().LogVal('valueToDisplay', valueToDisplay);
+          //this.AllPopUpAgents.Logger.LogVal('valueToDisplay', valueToDisplay);
           (<HTMLInputElement>foundElem).checked = valueToDisplay;
         }
         if (oneSetting.DataType === SettingType.Accordian) {
           this.RestoreAccordianState(oneSetting, foundElem);
         }
       } else {
-        this.Log().Error(this.RefreshUiGenericSettings.name, 'ui element not found: ' + oneSetting.UiSelector);
+        this.AllPopUpAgents.Logger.Error(this.RefreshUiGenericSettings.name, 'ui element not found: ' + oneSetting.UiSelector);
       }
     }
-    this.Log().FuncEnd(this.RefreshUiGenericSettings.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.RefreshUiGenericSettings.name);
   }
 
   async RefreshUiFromCache() {
-    this.Log().FuncStart(this.RefreshUiFromCache.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.RefreshUiFromCache.name);
 
     this.RefreshUiGenericSettings();
 
@@ -389,11 +391,11 @@ export class UiManager extends PopUpManagerBase {
 
     this.__drawCorrectNicknameInUI(this.MsgMan().LastKnownContentState.SnapShotsMany.CurrentSnapShots);
 
-    this.Log().FuncEnd(this.RefreshUiFromCache.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.RefreshUiFromCache.name);
   }
 
   ShowDebugDataOneWindow() {
-    this.Log().FuncStart('ShowDebugDataOneWindow');
+    this.AllPopUpAgents.Logger.FuncStart('ShowDebugDataOneWindow');
     var toReturn: string[] = [];
 
     //toReturn.push(this.__activeWindowSnapShot.TimeStamp.toJSON());
@@ -403,17 +405,17 @@ export class UiManager extends PopUpManagerBase {
     //}
 
     for (var kdx = 0; kdx < toReturn.length; kdx++) {
-      this.Log().Log(toReturn[kdx]);
+      this.AllPopUpAgents.Logger.Log(toReturn[kdx]);
     }
 
-    this.Log().FuncEnd('ShowDebugDataOneWindow');
+    this.AllPopUpAgents.Logger.FuncEnd('ShowDebugDataOneWindow');
     return toReturn;
   }
   private __drawCorrectNicknameInUI(snapShots: IDataOneWindowStorage[]) {
-    this.Log().FuncStart(this.__drawCorrectNicknameInUI.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.__drawCorrectNicknameInUI.name);
     var targetId: IGuid = this.UiMan().CurrentMenuState.SelectSnapshotId;
     if (targetId) {
-      this.Log().Log('targetId : ' + targetId.AsString);
+      this.AllPopUpAgents.Logger.Log('targetId : ' + targetId.AsString);
 
       var storageValues = snapShots;
 
@@ -434,7 +436,7 @@ export class UiManager extends PopUpManagerBase {
         }
       }
     }
-    this.Log().FuncEnd(this.__drawCorrectNicknameInUI.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.__drawCorrectNicknameInUI.name);
   }
 
   GetValueInNickname(): string {
@@ -448,7 +450,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   //GetIdOfSelectWindowSnapshot(): IGuid {
-  //  this.Log().FuncStart(this.GetIdOfSelectWindowSnapshot.name);
+  //  this.AllPopUpAgents.Logger.FuncStart(this.GetIdOfSelectWindowSnapshot.name);
 
   //  var targetSel: HTMLSelectElement = this.__getSelectElem();
   //  var toReturn: IGuid = null;
@@ -466,13 +468,13 @@ export class UiManager extends PopUpManagerBase {
   //  }
 
   //  if (!toReturn) {
-  //    this.Log().Log('using empty guid');
+  //    this.AllPopUpAgents.Logger.Log('using empty guid');
   //    toReturn = this.Helpers().GuidHelp.EmptyGuid();
   //  }
 
-  //  this.Log().DebugIGuid(toReturn);
+  //  this.AllPopUpAgents.Logger.DebugIGuid(toReturn);
 
-  //  this.Log().FuncEnd(this.GetIdOfSelectWindowSnapshot.name, toReturn.AsString);
+  //  this.AllPopUpAgents.Logger.FuncEnd(this.GetIdOfSelectWindowSnapshot.name, toReturn.AsString);
   //  return toReturn;
   //}
 
@@ -487,7 +489,7 @@ export class UiManager extends PopUpManagerBase {
   AssignOnCheckedEvent(targetId: string, handler: Function): void {
     var targetElem: HTMLElement = document.getElementById(targetId);
     if (!targetElem) {
-      this.Log().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
+      this.AllPopUpAgents.Logger.Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
     } else {
       targetElem.addEventListener('checked', (evt) => { handler(evt) });
     }
@@ -497,7 +499,7 @@ export class UiManager extends PopUpManagerBase {
     var targetElem = this.GetButtonByIdOrSelector(targetId);
 
     if (!targetElem) {
-      this.Log().Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
+      this.AllPopUpAgents.Logger.Error(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
     } else {
       var popHub: PopUpHub = this.PopHub;
       targetElem.addEventListener('click', (evt) => { handler(evt, popHub) });
@@ -511,19 +513,19 @@ export class UiManager extends PopUpManagerBase {
   }
 
   AssignOnChangeEvent(selector: string, handler: Function): void {
-    this.Log().FuncStart(this.AssignOnChangeEvent.name, selector);
+    this.AllPopUpAgents.Logger.FuncStart(this.AssignOnChangeEvent.name, selector);
     var targetElem: HTMLElement = document.querySelector(selector);
     if (!targetElem) {
-      this.Log().Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
+      this.AllPopUpAgents.Logger.Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
     } else {
       targetElem.onchange = () => { handler };
     }
-    this.Log().FuncEnd(this.AssignOnChangeEvent.name, selector);
+    this.AllPopUpAgents.Logger.FuncEnd(this.AssignOnChangeEvent.name, selector);
   }
   AssignDblClickEvent(selector: string, handler: Function): void {
     var targetElem: HTMLElement = document.querySelector(selector);
     if (!targetElem) {
-      this.Log().Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
+      this.AllPopUpAgents.Logger.Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
     } else {
       targetElem.ondblclick = (evt) => { handler(evt) };
     }
@@ -570,7 +572,7 @@ export class UiManager extends PopUpManagerBase {
   PopulateContentStateDivPopUp() {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.DivStatePopUp);
 
-    //this.Log().LogVal('now', new Date().toString());
+    //this.AllPopUpAgents.Logger.LogVal('now', new Date().toString());
     //var allTaText: string = 'State as of: ' + (new Date()).toString();
     var allStateText: string = this.lineBreak + 'PopUp State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
 
@@ -618,17 +620,17 @@ export class UiManager extends PopUpManagerBase {
   }
 
   async PopulateState(contentState: ICurrStateContent) {
-    this.Log().FuncStart(this.PopulateState.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.PopulateState.name);
 
-    this.Log().DebugIDataBrowserTab(this.TabMan().CurrentTabData);
+    this.AllPopUpAgents.Logger.DebugIDataBrowserTab(this.TabMan().CurrentTabData);
 
     this.CurrContentState = contentState;
-    if (this.Log().IsNotNullOrUndefinedBool('state', contentState)) {
+    if (this.AllPopUpAgents.Logger.IsNotNullOrUndefinedBool('state', contentState)) {
       this.UiMan().PopulateStateOfSnapShotSelect(contentState.SnapShotsMany.CurrentSnapShots);
       this.PopulateContentStateDivPopUp();
       this.PopulateContentStateDivContent(contentState);
     }
-    this.Log().FuncEnd(this.PopulateState.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.PopulateState.name);
   }
 
   PopulateSnapShotsAuto() {
@@ -690,7 +692,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   PopulateStateOfSnapShotSelect(snapShots: IDataOneWindowStorage[]) {
-    this.Log().FuncStart(this.PopulateStateOfSnapShotSelect.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.PopulateStateOfSnapShotSelect.name);
 
     if (snapShots) {
       var targetSel: HTMLSelectElement = this.__getSelectElem();
@@ -700,7 +702,7 @@ export class UiManager extends PopUpManagerBase {
         var headers: ISelectionHeaders = this.WriteHeaders(targetSel);
 
         if (snapShots && snapShots.length > 0) {
-          this.Log().Log('targetSel.options.length : ' + targetSel.options.length);
+          this.AllPopUpAgents.Logger.Log('targetSel.options.length : ' + targetSel.options.length);
 
           for (var idx: number = 0; idx < snapShots.length; idx++) {
             var data = snapShots[idx];
@@ -734,6 +736,6 @@ export class UiManager extends PopUpManagerBase {
         }
       }
     }
-    this.Log().FuncEnd(this.PopulateStateOfSnapShotSelect.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.PopulateStateOfSnapShotSelect.name);
   }
 }

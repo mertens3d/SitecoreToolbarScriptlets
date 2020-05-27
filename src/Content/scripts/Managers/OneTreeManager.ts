@@ -3,11 +3,12 @@ import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 export class OneTreeManager extends ContentManagerBase {
   AssociatedDoc: IDataOneDoc;
-  constructor(hub: ContentHub, associatedDoc: IDataOneDoc) {
-    super(hub)
+  constructor(hub: ContentHub, associatedDoc: IDataOneDoc, logger: IContentLoggerAgent) {
+    super(hub, logger);
     hub.Logger.FuncStart(OneTreeManager.name);
     this.AssociatedDoc = associatedDoc;
     hub.Logger.FuncEnd(OneTreeManager.name);

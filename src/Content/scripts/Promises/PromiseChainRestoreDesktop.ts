@@ -9,11 +9,12 @@ import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 export class PromiseChainRestoreDesktop extends ContentManagerBase {
-  constructor(hub: ContentHub) {
+  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
+    super(hub, logger);
     hub.Logger.FuncStart(PromiseChainRestoreDesktop.name);
-    super(hub)
     hub.Logger.FuncEnd(PromiseChainRestoreDesktop.name);
   }
 

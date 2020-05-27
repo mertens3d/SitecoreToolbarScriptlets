@@ -10,10 +10,10 @@ import { IDataBrowserTab } from '../Interfaces/IDataBrowserWindow';
 export class PromiseHelper extends HelperBase {
   async  WaitForReadyIframe(dataOneIframe: IDataOneIframe) {
     return new Promise(async (resolve, reject) => {
-      this.Log.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort);
+      this.LoggerAgentBase.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort);
 
       var iterationJr: IterationHelper = new IterationHelper(this.HelperHub, this.WaitForReadyIframe.name);
-      let promiseResult: PromiseResult = new PromiseResult(this.WaitForReadyIframe.name, this.Log);
+      let promiseResult: PromiseResult = new PromiseResult(this.WaitForReadyIframe.name, this.LoggerAgentBase);
 
       while (iterationJr.DecrementAndKeepGoing() && !promiseResult.WasSuccessful()) {
         var currentReadyState: string = dataOneIframe.IframeElem.contentDocument.readyState.toString();
@@ -30,9 +30,9 @@ export class PromiseHelper extends HelperBase {
         promiseResult.MarkFailed( iterationJr.IsExhaustedMsg);
       }
 
-      this.Log.LogAsJsonPretty('dataOneIframe', dataOneIframe);
+      this.LoggerAgentBase.LogAsJsonPretty('dataOneIframe', dataOneIframe);
 
-      this.Log.FuncEnd(this.WaitForReadyIframe.name);
+      this.LoggerAgentBase.FuncEnd(this.WaitForReadyIframe.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve();
@@ -44,23 +44,23 @@ export class PromiseHelper extends HelperBase {
 
   async WaitForPageReadyNative(targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {
-      this.Log.FuncStart(this.WaitForPageReadyNative.name);
+      this.LoggerAgentBase.FuncStart(this.WaitForPageReadyNative.name);
 
-      var result: PromiseResult = new PromiseResult(this.WaitForPageReadyNative.name, this.Log);
+      var result: PromiseResult = new PromiseResult(this.WaitForPageReadyNative.name, this.LoggerAgentBase);
 
-      this.Log.DebugIDataOneDoc(targetDoc);
+      this.LoggerAgentBase.DebugIDataOneDoc(targetDoc);
 
       var iterationJr: IterationHelper = new IterationHelper(this.HelperHub, this.WaitForPageReadyNative.name);
 
       var isReady: boolean = false;
-      this.Log.MarkerA();
+      this.LoggerAgentBase.MarkerA();
 
       while (iterationJr.DecrementAndKeepGoing() && !isReady) {
-        this.Log.MarkerB();
+        this.LoggerAgentBase.MarkerB();
         var currentReadyState: string = targetDoc.ContentDoc.readyState.toString();
         var isReadyStateComplete = currentReadyState === 'complete';
-        this.Log.LogVal('readyState', currentReadyState);;
-        this.Log.LogVal('isReadyStateComplete', isReadyStateComplete);
+        this.LoggerAgentBase.LogVal('readyState', currentReadyState);;
+        this.LoggerAgentBase.LogVal('isReadyStateComplete', isReadyStateComplete);
 
         if (isReadyStateComplete) {
           isReady = true;
@@ -74,7 +74,7 @@ export class PromiseHelper extends HelperBase {
         result.MarkFailed(iterationJr.IsExhaustedMsg);
       }
 
-      this.Log.FuncEnd(this.WaitForPageReadyNative.name, 'ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());;
+      this.LoggerAgentBase.FuncEnd(this.WaitForPageReadyNative.name, 'ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());;
 
       if (result.WasSuccessful()) {
         resolve();
@@ -85,11 +85,11 @@ export class PromiseHelper extends HelperBase {
   }
   async WaitForIframeElemAndReturnWhenReady(haystackDoc: IDataOneDoc, selector: string, iframeNickName: string) {
     return new Promise<IDataOneIframe>(async (resolve, reject) => {
-      this.Log.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
+      this.LoggerAgentBase.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
 
       var toReturnIframeData: IDataOneIframe = null;
 
-      let promiseResult: PromiseResult = new PromiseResult(this.WaitForIframeElemAndReturnWhenReady.name, this.Log);
+      let promiseResult: PromiseResult = new PromiseResult(this.WaitForIframeElemAndReturnWhenReady.name, this.LoggerAgentBase);
 
       await this.WaitForAndReturnFoundElem(haystackDoc, selector)
         .then(async (foundElem: HTMLIFrameElement) => {
@@ -104,7 +104,7 @@ export class PromiseHelper extends HelperBase {
         })
         .catch((err) => promiseResult.MarkFailed(err));
 
-      this.Log.FuncEnd(this.WaitForIframeElemAndReturnWhenReady.name);
+      this.LoggerAgentBase.FuncEnd(this.WaitForIframeElemAndReturnWhenReady.name);
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnIframeData);
       } else {
@@ -115,25 +115,25 @@ export class PromiseHelper extends HelperBase {
 
   async WaitForAndReturnFoundElem(haystackDoc: IDataOneDoc, selector: string, overrideIterCount = 8) {
     return new Promise<HTMLElement>(async (resolve, reject) => {
-      this.Log.FuncStart(this.WaitForAndReturnFoundElem.name);
-      this.Log.LogVal('selector', selector);
-      this.Log.LogVal('doc nickname', haystackDoc.Nickname);
+      this.LoggerAgentBase.FuncStart(this.WaitForAndReturnFoundElem.name);
+      this.LoggerAgentBase.LogVal('selector', selector);
+      this.LoggerAgentBase.LogVal('doc nickname', haystackDoc.Nickname);
 
       var toReturnFoundElem: HTMLElement = null;
-      let promiseResult: PromiseResult = new PromiseResult(this.WaitForAndReturnFoundElem.name, this.Log);
+      let promiseResult: PromiseResult = new PromiseResult(this.WaitForAndReturnFoundElem.name, this.LoggerAgentBase);
 
       var iterationJr = new IterationHelper(this.HelperHub, this.WaitForAndReturnFoundElem.name, overrideIterCount);
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
-        this.Log.LogVal('targetDoc.Document', haystackDoc.ContentDoc.toString());
-        this.Log.LogVal('targetDoc.Document.location', haystackDoc.ContentDoc.location.toString());
-        this.Log.LogVal('targetDoc.Document.location.href', haystackDoc.ContentDoc.location.href);
+        this.LoggerAgentBase.LogVal('targetDoc.Document', haystackDoc.ContentDoc.toString());
+        this.LoggerAgentBase.LogVal('targetDoc.Document.location', haystackDoc.ContentDoc.location.toString());
+        this.LoggerAgentBase.LogVal('targetDoc.Document.location.href', haystackDoc.ContentDoc.location.href);
         toReturnFoundElem = haystackDoc.ContentDoc.querySelector(selector);
 
         if (toReturnFoundElem) {
-          this.Log.Log('found');
+          this.LoggerAgentBase.Log('found');
 
-          this.Log.LogVal('found.style.display', toReturnFoundElem.style.display);
+          this.LoggerAgentBase.LogVal('found.style.display', toReturnFoundElem.style.display);
 
           promiseResult.MarkSuccessful();
         } else {
@@ -144,7 +144,7 @@ export class PromiseHelper extends HelperBase {
       if (!toReturnFoundElem && iterationJr.IsExhausted) {
         promiseResult.MarkFailed(iterationJr.IsExhaustedMsg);
       }
-      this.Log.FuncEnd(this.WaitForAndReturnFoundElem.name);
+      this.LoggerAgentBase.FuncEnd(this.WaitForAndReturnFoundElem.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnFoundElem);
@@ -156,12 +156,12 @@ export class PromiseHelper extends HelperBase {
 
   WaitForAndClickWithPayload(selector: string, targetDoc: IDataOneDoc, payload: any) {
     return new Promise<any>(async (resolve, reject) => {
-      this.Log.FuncStart(this.WaitForAndClickWithPayload.name, selector);
+      this.LoggerAgentBase.FuncStart(this.WaitForAndClickWithPayload.name, selector);
 
       await this.WaitForThenClick([selector], targetDoc)
         .then(() => resolve(payload))
         .catch(ex => {
-          this.Log.Error(this.WaitForAndClickWithPayload.name, ex);
+          this.LoggerAgentBase.Error(this.WaitForAndClickWithPayload.name, ex);
           reject(ex);
         });
     });
@@ -171,12 +171,12 @@ export class PromiseHelper extends HelperBase {
     return new Promise(async (resolve, reject) => {
       let iterHelper = new IterationHelper(this.HelperHub, this.TabWaitForReadyStateCompleteNative.name);
 
-      let result: PromiseResult = new PromiseResult(this.TabWaitForReadyStateCompleteNative.name, this.Log);
+      let result: PromiseResult = new PromiseResult(this.TabWaitForReadyStateCompleteNative.name, this.LoggerAgentBase);
 
       while (browserTab.status !== 'complete' && iterHelper.DecrementAndKeepGoing()) {
        
 
-        this.Log.LogVal('tab status', browserTab.status);
+        this.LoggerAgentBase.LogVal('tab status', browserTab.status);
         await iterHelper.Wait;
       }
 
@@ -199,7 +199,7 @@ export class PromiseHelper extends HelperBase {
 
   TabChainSetHrefWaitForComplete(href: AbsoluteUrl, targetTab: IDataBrowserTab) {
     return new Promise(async (resolve, reject) => {
-      this.Log.FuncStart(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
+      this.LoggerAgentBase.FuncStart(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
 
       try {
         await browser.tabs.update(targetTab.Tab.id, { url: href.AbsUrl })
@@ -207,10 +207,10 @@ export class PromiseHelper extends HelperBase {
           .then(resolve)
           .catch(reject);
       } catch (e) {
-        this.Log.Error(this.TabChainSetHrefWaitForComplete.name, e.toString());
+        this.LoggerAgentBase.Error(this.TabChainSetHrefWaitForComplete.name, e.toString());
         reject(e);
       }
-      this.Log.FuncEnd(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
+      this.LoggerAgentBase.FuncEnd(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
     });
   }
 
@@ -270,15 +270,15 @@ export class PromiseHelper extends HelperBase {
 
   async RaceWaitAndClick(selector: IScVerSpec, targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {
-      this.Log.FuncStart(this.RaceWaitAndClick.name);
+      this.LoggerAgentBase.FuncStart(this.RaceWaitAndClick.name);
 
       await this.WaitForThenClick([selector.sc920, selector.sc820], targetDoc)
         .then(() => {
-          this.Log.FuncEnd(this.RaceWaitAndClick.name);
+          this.LoggerAgentBase.FuncEnd(this.RaceWaitAndClick.name);
           resolve();
         })
         .catch((ex) => {
-          this.Log.FuncEnd(this.RaceWaitAndClick.name);
+          this.LoggerAgentBase.FuncEnd(this.RaceWaitAndClick.name);
           reject(ex);
         });
     });
@@ -286,11 +286,11 @@ export class PromiseHelper extends HelperBase {
 
   WaitForThenClick(selectorAr: string[], targetDoc: IDataOneDoc) {
     return new Promise<void>(async (resolve, reject) => {
-      this.Log.FuncStart(this.WaitForThenClick.name);
-      let promiseResults: PromiseResult = new PromiseResult(this.WaitForThenClick.name, this.Log);
+      this.LoggerAgentBase.FuncStart(this.WaitForThenClick.name);
+      let promiseResults: PromiseResult = new PromiseResult(this.WaitForThenClick.name, this.LoggerAgentBase);
 
       if (targetDoc) {
-        this.Log.LogAsJsonPretty('selectors', selectorAr);
+        this.LoggerAgentBase.LogAsJsonPretty('selectors', selectorAr);
 
         var found: HTMLElement = null;
         var iterationJr = new IterationHelper(this.HelperHub, this.WaitForThenClick.name);
@@ -299,13 +299,13 @@ export class PromiseHelper extends HelperBase {
           for (var idx = 0; idx < selectorAr.length; idx++) {
             found = targetDoc.ContentDoc.querySelector(selectorAr[idx]);
             if (found) {
-              this.Log.LogVal('found target', selectorAr[idx]);
+              this.LoggerAgentBase.LogVal('found target', selectorAr[idx]);
               break;
             }
           }
 
           if (found) {
-            this.Log.Log('clicking');
+            this.LoggerAgentBase.Log('clicking');
             try {
             found.click();
 
@@ -326,7 +326,7 @@ export class PromiseHelper extends HelperBase {
         promiseResults.MarkFailed(iterationJr.IsExhaustedMsg);
       }
 
-      this.Log.FuncEnd(this.WaitForThenClick.name);
+      this.LoggerAgentBase.FuncEnd(this.WaitForThenClick.name);
 
       if (promiseResults.WasSuccessful()) {
         resolve();

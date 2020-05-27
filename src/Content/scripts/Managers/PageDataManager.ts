@@ -1,14 +1,15 @@
 ﻿import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 export class PageManager extends ContentManagerBase {
   private topLevelDoc: IDataOneDoc;
   ChildPage: IDataOneDoc;
   SelfWindow: IDataOneDoc;
 
-  constructor(hub: ContentHub) {
-    super(hub);
+  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
+    super(hub, logger);
     this.Log().CtorName(this.constructor.name);
   }
 

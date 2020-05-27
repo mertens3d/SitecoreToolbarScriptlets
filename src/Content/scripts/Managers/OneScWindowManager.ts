@@ -12,13 +12,14 @@ import { OneDesktopManager } from './OneDesktopManager';
 import { OneCEManager } from './OneCEManager';
 import { IDataDtState } from '../../../Shared/scripts/Interfaces/IDataDtState';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 export class OneScWindowManager extends ContentManagerBase {
   OneDesktopMan: OneDesktopManager = null;
   OneCEMan: OneCEManager = null;
 
-  constructor(hub: ContentHub) {
-    super(hub);
+  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
+    super(hub, logger);
     hub.Logger.FuncStart(OneScWindowManager.name);
 
     hub.Logger.FuncEnd(OneScWindowManager.name);
@@ -31,9 +32,9 @@ export class OneScWindowManager extends ContentManagerBase {
     //}
     let currPageType = this.ScUiMan().GetCurrentPageType();
     if (currPageType === scWindowType.Desktop) {
-      this.OneDesktopMan = new OneDesktopManager(this.ContentHub, this.ScUiMan().TopLevelDoc());
+      this.OneDesktopMan = new OneDesktopManager(this.ContentHub, this.ScUiMan().TopLevelDoc(), this.ContentLogger);
     } else if (currPageType === scWindowType.ContentEditor) {
-      this.OneCEMan = new OneCEManager(this.ContentHub, this.ScUiMan().TopLevelDoc());
+      this.OneCEMan = new OneCEManager(this.ContentHub, this.ScUiMan().TopLevelDoc(), this.ContentLogger);
     }
   }
 
@@ -142,7 +143,7 @@ export class OneScWindowManager extends ContentManagerBase {
     }
     this.Log().Log('docToPublish', this.Log().IsNullOrUndefined(docToPublish));
     if (docToPublish) {
-      var publishChain: PromiseChainQuickPublish = new PromiseChainQuickPublish(this.ContentHub);
+      var publishChain: PromiseChainQuickPublish = new PromiseChainQuickPublish(this.ContentHub, this.ContentLogger);
       await publishChain.PublishCE(docToPublish);
     }
     this.Log().FuncEnd(this.PublishActiveCE.name);

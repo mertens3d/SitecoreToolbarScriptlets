@@ -31,12 +31,12 @@ export class FactoryHelper extends HelperBase {
         Nickname: dataOneIframe.Nickname + ' - content doc'
       }
     } else {
-      this.Log.Error(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
+      this.LoggerAgentBase.Error(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
     }
     return toReturn;
   }
   DataOneIframeFactory(iframeElem: HTMLIFrameElement, nickname: string): IDataOneIframe {
-    this.Log.FuncStart(this.DataOneIframeFactory.name);
+    this.LoggerAgentBase.FuncStart(this.DataOneIframeFactory.name);
     var toReturn: IDataOneIframe = null;
 
     if (iframeElem && nickname) {
@@ -56,16 +56,16 @@ export class FactoryHelper extends HelperBase {
 
       toReturn.ContentDoc = this.DataOneContentDocFactoryFromIframe(toReturn);
 
-      this.Log.FuncEnd(this.DataOneIframeFactory.name);
+      this.LoggerAgentBase.FuncEnd(this.DataOneIframeFactory.name);
     } else {
-      this.Log.Error(this.DataOneIframeFactory.name, 'one of these is null');
-      this.Log.LogAsJsonPretty('iframeElem', iframeElem);
-      this.Log.LogAsJsonPretty('nickname', nickname);
+      this.LoggerAgentBase.Error(this.DataOneIframeFactory.name, 'one of these is null');
+      this.LoggerAgentBase.LogAsJsonPretty('iframeElem', iframeElem);
+      this.LoggerAgentBase.LogAsJsonPretty('nickname', nickname);
     }
     return toReturn;
   }
   CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
-    this.Log.FuncStart(this.CreateShellIDataOneWindowStorage.name);
+    this.LoggerAgentBase.FuncStart(this.CreateShellIDataOneWindowStorage.name);
     var dateToUse: Date = new Date();
     var newGuid: IGuid = this.GuidHelp().NewGuid();
 
@@ -79,7 +79,7 @@ export class FactoryHelper extends HelperBase {
       RawData: null,
       Flavor: flavor,
     };
-    this.Log.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
+    this.LoggerAgentBase.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
 
     return activeWindowSnapShot;
   }

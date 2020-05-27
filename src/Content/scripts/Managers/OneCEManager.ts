@@ -9,15 +9,16 @@ import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPaylo
 import { OneTreeManager } from './OneTreeManager';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 export class OneCEManager extends ContentManagerBase {
   OneTreeMan: OneTreeManager;
   AssociatedDoc: IDataOneDoc;
 
-  constructor(hub: ContentHub, associatedDoc: IDataOneDoc) {
-    super(hub);
+  constructor(hub: ContentHub, associatedDoc: IDataOneDoc, logger: IContentLoggerAgent) {
+    super(hub, logger);
     this.AssociatedDoc = associatedDoc;
-    this.OneTreeMan = new OneTreeManager(hub, this.AssociatedDoc);
+    this.OneTreeMan = new OneTreeManager(hub, this.AssociatedDoc, logger);
   }
 
   //WaitForNode(needleId: IGuid, targetDoc: IDataOneDoc, currentIteration: number, timeout: number, callbackOnComplete: Function) {

@@ -6,11 +6,12 @@ import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPubli
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 export class PromiseChainQuickPublish extends ContentManagerBase {
-  constructor(hub: ContentHub) {
+  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
     //hub.debug.FuncStart(PromiseChainQuickPublish.name);
-    super(hub)
+    super(hub, logger)
     //hub.debug.FuncEnd(PromiseChainQuickPublish.name);
   }
 

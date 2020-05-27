@@ -1,4 +1,4 @@
 import { ContentHub } from './Managers/ContentHub';
-import { LoggerContent } from "./Classes/LoggerContent";
+import { LoggerContentAgent } from './Agents/LoggerContent';
 
-new ContentHub(new LoggerContent());
+new ContentHub(new LoggerContentAgent());

@@ -91,7 +91,7 @@ export class UtilityHelper extends HelperBase {
     }
     else {
       toReturn = '{error}';
-      this.Log.Error(this.MakeFriendlyDate.name, 'no date provided');
+      this.LoggerAgentBase.Error(this.MakeFriendlyDate.name, 'no date provided');
     }
     return toReturn;
   }

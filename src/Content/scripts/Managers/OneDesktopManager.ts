@@ -2,24 +2,22 @@ import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
 import { PromiseChainRestoreDesktop } from '../Promises/PromiseChainRestoreDesktop';
-import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
-import { IDataPayloadSnapShot } from '../../../Shared/scripts/Classes/IDataPayloadSnapShot';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { OneCEManager } from './OneCEManager';
 import { IDataDtState } from '../../../Shared/scripts/Interfaces/IDataDtState';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 export class OneDesktopManager extends ContentManagerBase {
   associatedDoc: IDataOneDoc;
 
-  constructor(hub: ContentHub, associatedDoc: IDataOneDoc) {
+  constructor(hub: ContentHub, associatedDoc: IDataOneDoc, logger: IContentLoggerAgent) {
+    super(hub, logger);
     hub.Logger.FuncStart(OneDesktopManager.name);
-    super(hub);
     this.associatedDoc = associatedDoc;
     hub.Logger.FuncEnd(OneDesktopManager.name);
   }
@@ -41,7 +39,7 @@ export class OneDesktopManager extends ContentManagerBase {
       for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
         this.Log().Log('data idx: ' + idx + ':' + dataToRestore.AllCEAr.length);
 
-        var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.ContentHub);
+        var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.ContentHub, this.ContentLogger);
 
         await desktopPromiser.RunOneChain(targetDoc, dataToRestore.AllCEAr[idx]);
       }
@@ -137,7 +135,7 @@ export class OneDesktopManager extends ContentManagerBase {
 
           var targetIframeObj = toReturnAllCeState.livingIframeAr[iframeIdx];
 
-          var oneCeMan = new OneCEManager(this.ContentHub, targetIframeObj.ContentDoc);
+          var oneCeMan = new OneCEManager(this.ContentHub, targetIframeObj.ContentDoc, this.ContentLogger);
 
           //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 

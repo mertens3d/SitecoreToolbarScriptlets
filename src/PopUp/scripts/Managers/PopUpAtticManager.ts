@@ -4,8 +4,8 @@ import { IOneGenericSettingForStorage } from "../../../Shared/scripts/Classes/IO
 
 export class PopUpAtticManager extends PopUpManagerBase {
   Init() {
-    this.Log().FuncStart(PopUpAtticManager.name, this.Init.name);
-    this.Log().FuncEnd(PopUpAtticManager.name, this.Init.name);
+    this.AllPopUpAgents.Logger.FuncStart(PopUpAtticManager.name, this.Init.name);
+    this.AllPopUpAgents.Logger.FuncEnd(PopUpAtticManager.name, this.Init.name);
   }
 
   //private async __drawSettings(): Promise<string[]> {
@@ -20,7 +20,7 @@ export class PopUpAtticManager extends PopUpManagerBase {
   //}
 
   async ReadGenericSettings(): Promise<IOneGenericSettingForStorage[]> {
-    this.Log().FuncStart(this.ReadGenericSettings.name);
+    this.AllPopUpAgents.Logger.FuncStart(this.ReadGenericSettings.name);
     let toReturn: IOneGenericSettingForStorage[] = [];
 
     try {
@@ -37,26 +37,26 @@ export class PopUpAtticManager extends PopUpManagerBase {
         }
       });
     } catch (e) {
-      this.Log().Error(this.ReadGenericSettings.name, e.toString());
+      this.AllPopUpAgents.Logger.Error(this.ReadGenericSettings.name, e.toString());
     }
 
-    this.Log().FuncEnd(this.ReadGenericSettings.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.ReadGenericSettings.name);
     return toReturn;
   }
 
   WriteGenericSettings(settingsToWrite: IOneGenericSettingForStorage[]): void {
-    this.Log().FuncStart(this.WriteGenericSettings.name);
-    this.Log().LogAsJsonPretty('settings', settingsToWrite);
+    this.AllPopUpAgents.Logger.FuncStart(this.WriteGenericSettings.name);
+    this.AllPopUpAgents.Logger.LogAsJsonPretty('settings', settingsToWrite);
 
     let storageObj: browser.storage.StorageObject = {
       [PopConst.Const.Storage.KeyGenericSettings]: JSON.stringify(settingsToWrite)
     }
     browser.storage.local.set(storageObj);
-    this.Log().FuncEnd(this.WriteGenericSettings.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.WriteGenericSettings.name);
   }
 
   //GetDefaultSettings(): IDataPopUpSettings {
-  //  this.Log().FuncStart(this.GetDefaultSettings.name);
+  //  this.AllPopUpAgents.Logger.FuncStart(this.GetDefaultSettings.name);
   //  let defaultDebugSettings: IDataLogSettings = {
   //    KeepDialogOpen: this.Const().Storage.Defaults.bool.DefaultDebugKeepDialogOpen,
   //    ShowDebugData: this.Const().Storage.Defaults.bool.DefaultShowLogData,
@@ -68,7 +68,7 @@ export class PopUpAtticManager extends PopUpManagerBase {
 
   //  //this.DebugSettings(toReturn);
 
-  //  this.Log().FuncEnd(this.GetDefaultSettings.name);
+  //  this.AllPopUpAgents.Logger.FuncEnd(this.GetDefaultSettings.name);
   //  return toReturn;
   //}
 
@@ -97,7 +97,7 @@ export class PopUpAtticManager extends PopUpManagerBase {
   //}
 
   //async CurrentSettings(): Promise<IDataPopUpSettings> {
-  //  this.Log().FuncStart(this.CurrentSettings.name);
+  //  this.AllPopUpAgents.Logger.FuncStart(this.CurrentSettings.name);
 
   //  var toReturn: IDataPopUpSettings;
 
@@ -121,14 +121,14 @@ export class PopUpAtticManager extends PopUpManagerBase {
 
   //  toReturn = this.ValidateSettings(toReturn);
 
-  //  this.Log().NotNullCheck('toReturn', toReturn);
+  //  this.AllPopUpAgents.Logger.NotNullCheck('toReturn', toReturn);
 
-  //  this.Log().FuncEnd(this.CurrentSettings.name);
+  //  this.AllPopUpAgents.Logger.FuncEnd(this.CurrentSettings.name);
   //  return toReturn;
   //}
 
   //async StoreSettings(currentSettings: IDataPopUpSettings) {
-  //  this.Log().FuncStart(this.StoreSettings.name);
+  //  this.AllPopUpAgents.Logger.FuncStart(this.StoreSettings.name);
 
   //  //browser.storage.sync.set({
   //  //  currentSettings: JSON.stringify( currentSettings)
@@ -136,11 +136,11 @@ export class PopUpAtticManager extends PopUpManagerBase {
 
   //  await browser.storage.local.set({ settings: JSON.stringify(currentSettings) });
 
-  //  this.Log().FuncEnd(this.StoreSettings.name);
+  //  this.AllPopUpAgents.Logger.FuncEnd(this.StoreSettings.name);
   //}
 
   //async UpdateAccodianState(needleKey: string, isCollapsed: boolean) {
-  //  this.Log().FuncStart(this.UpdateAccodianState.name, needleKey + ' ' + isCollapsed);
+  //  this.AllPopUpAgents.Logger.FuncStart(this.UpdateAccodianState.name, needleKey + ' ' + isCollapsed);
   //  //var settings: IDataPopUpSettings = await this.CurrentSettings();
 
   //  var accordianPairs: IDataOneSettingPair[] = settings.Accordian;
@@ -164,6 +164,6 @@ export class PopUpAtticManager extends PopUpManagerBase {
   //    accordianPairs.push(newSetting);
   //  }
   //  await this.StoreSettings(settings);
-  //  this.Log().FuncEnd(this.UpdateAccodianState.name);
+  //  this.AllPopUpAgents.Logger.FuncEnd(this.UpdateAccodianState.name);
   //}
 }

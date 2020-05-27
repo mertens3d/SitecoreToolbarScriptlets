@@ -3,11 +3,12 @@ import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseGeneric';
 import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPublishChain';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 export class PromiseOneStep extends ContentManagerBase {
-  constructor(hub: ContentHub) {
+  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
+    super(hub, logger);
     hub.Logger.FuncStart(PromiseHelper.name);
-    super(hub);
     hub.Logger.FuncEnd(PromiseHelper.name);
   }
 

@@ -1,14 +1,14 @@
-﻿import { LoggerBase } from "./LoggerBase";
+﻿import { ILoggerAgentBase } from "../Interfaces/Agents/ILoggerBase";
 export class PromiseResult {
-  private RejectReasonArPvt: string[] ;
+  private RejectReasonArPvt: string[];
   private Success: boolean;
-  private Log: LoggerBase;
+  privaILoggerAgentBaseggerBase;
   NickName: string;
   private prefix: string = 'Promise Successful? -> ';
-  RejectReasons: string 
+  RejectReasons: string
+    Log: ILoggerAgentBase;
 
-
-  constructor(nickname: string, logger: LoggerBase) {
+  constructor(nickname: string, logger: ILoggerAgentBase) {
     this.Success = false;
     this.NickName = nickname;
     this.RejectReasonArPvt = [];
@@ -20,14 +20,12 @@ export class PromiseResult {
   MarkSuccessful() {
     this.Success = true;
     if (this.Log) {
-
       this.Log.LogVal(this.prefix + this.NickName, this.Success);
     } else {
       console.log('no logger success');
     }
   }
 
-  
   MarkFailed(ex: string) {
     if (ex) {
       ex = ex.toString();
@@ -38,7 +36,7 @@ export class PromiseResult {
     this.RejectReasons += ', ' + ex;
     this.Success = false;
     if (this.Log) {
-      this.Log.Error(this.prefix + this.NickName, this.Success + '  err: ' +  ex);
+      this.Log.Error(this.prefix + this.NickName, this.Success + '  err: ' + ex);
     } else {
       console.log('no logger fail ' + ex);
     }

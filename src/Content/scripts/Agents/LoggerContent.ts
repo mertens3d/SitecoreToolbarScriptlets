@@ -1,4 +1,4 @@
-﻿import { LoggerBase } from "../../../Shared/scripts/Classes/LoggerBase";
+﻿import { LoggerBase } from "../../../Shared/scripts/Agents/LoggerBase";
 import { IDataBucketRestoreDesktop } from "../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
@@ -7,7 +7,9 @@ import { PayloadDataFromPopUp } from "../../../Shared/scripts/Classes/PayloadDat
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { IDataPayloadSnapShot } from "../../../Shared/scripts/Classes/IDataPayloadSnapShot";
 import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIframe";
-export class LoggerContent extends LoggerBase {
+import { IContentLoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentLogger";
+import { LoggerAgentBase } from "../../../Shared/scripts/Agents/LoggerAgentBase";
+export class LoggerContentAgent extends LoggerAgentBase implements IContentLoggerAgent {
 
   DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
     this.FuncStart(this.DebugDataOneIframe.name);

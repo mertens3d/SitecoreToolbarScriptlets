@@ -1,5 +1,4 @@
-﻿import { LoggerBase } from "./LoggerBase";
-import { SharedConst } from '../SharedConst';
+﻿import { SharedConst } from '../SharedConst';
 import { HelperBase } from './HelperBase';
 import { HelperHub } from '../Helpers/Helpers';
 
@@ -38,7 +37,7 @@ export class IterationHelper extends HelperBase{
       if (this.__timeout > SharedConst.Const.IterHelper.Timeouts.Max) {
         this.__timeout = SharedConst.Const.IterHelper.Timeouts.Max;
       }
-      this.Log.Log('DecrementAndKeepGoing: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations + ' | timeout: ' + this.__timeout);
+      this.LoggerAgentBase.Log('DecrementAndKeepGoing: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations + ' | timeout: ' + this.__timeout);
 
       toReturn = true;
     } else {
@@ -50,23 +49,23 @@ export class IterationHelper extends HelperBase{
   }
 
   NotifyExhausted() {
-    this.Log.Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
+    this.LoggerAgentBase.Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
   }
   WaitAndThen(timeoutFunction: Function) {
-    this.Log.FuncStart(this.WaitAndThen.name, this.__nickName + ' ' + timeoutFunction.name);
+    this.LoggerAgentBase.FuncStart(this.WaitAndThen.name, this.__nickName + ' ' + timeoutFunction.name);
     var self = this;
     setTimeout(timeoutFunction(), self.__timeout);
-    this.Log.FuncEnd(this.WaitAndThen.name, this.__nickName);
+    this.LoggerAgentBase.FuncEnd(this.WaitAndThen.name, this.__nickName);
   }
 
   Wait(): Promise<void> {
-    //this.Log.FuncStart(this.Wait.name, this.__nickName);
+    //this.LoggerAgentBase.FuncStart(this.Wait.name, this.__nickName);
 
     if (!this.OperationCancelled) {
       return new Promise((resolve) => {
         setTimeout(resolve, this.__timeout);
       });
     }
-    //this.Log.FuncEnd(this.WaitAndThen.name, this.__nickName);
+    //this.LoggerAgentBase.FuncEnd(this.WaitAndThen.name, this.__nickName);
   }
 }

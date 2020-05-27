@@ -1,12 +1,13 @@
 ﻿import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
 
 
 export class MiscManager extends ContentManagerBase {
-  constructor(hub: ContentHub) {
+  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
+    super(hub, logger);
     hub.Logger.FuncStart(MiscManager.name);
-    super(hub);
     hub.Logger.FuncEnd(MiscManager.name);
   }
 

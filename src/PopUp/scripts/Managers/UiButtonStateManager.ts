@@ -4,11 +4,12 @@ import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
+import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
 export class UiButtonStateManager extends PopUpManagerBase {
-    constructor(popHub: PopUpHub) {
-        super(popHub);
-        popHub.Log.FuncStart(UiButtonStateManager.name);
-        popHub.Log.FuncEnd(UiButtonStateManager.name);
+  constructor(popHub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
+    super(popHub, allPopUpAgents);
+    this.AllPopUpAgents.Logger.FuncStart(UiButtonStateManager.name);
+        this.AllPopUpAgents.Logger.FuncEnd(UiButtonStateManager.name);
   }
   VisibilityTestWindowType(windowType: scWindowType): boolean {
     let toReturn: boolean = false;
@@ -72,11 +73,11 @@ export class UiButtonStateManager extends PopUpManagerBase {
             break;
 
           case VisibilityType.Unknown:
-            this.Log().Error(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+            this.AllPopUpAgents.Logger.Error(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
             break;
 
           default:
-            this.Log().Error(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+            this.AllPopUpAgents.Logger.Error(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
             break;
         }
 
@@ -123,21 +124,21 @@ export class UiButtonStateManager extends PopUpManagerBase {
       targetButton.setAttribute('disabled', 'disabled');
     }
   }
-
+  
   RefreshButtonStates(): void {
-    this.Log().FuncStart(this.RefreshButtonStates.name, this.EventMan().AllMenuCommands.length);
+    this.AllPopUpAgents.Logger.FuncStart(this.RefreshButtonStates.name, this.EventMan().AllMenuCommands.length);
     for (var idx = 0; idx < this.EventMan().AllMenuCommands.length; idx++) {
       var oneCommand = this.EventMan().AllMenuCommands[idx];
-      //this.Log().LogVal('working on', MenuCommand[command.Command])
+      //this.AllPopUpAgents.Logger.LogVal('working on', MenuCommand[command.Command])
       let passesOneTest: boolean = false;
       var targetButton: HTMLElement = this.UiMan().GetButtonByIdOrSelector(oneCommand.ButtonSelector);
       if (targetButton) {
         passesOneTest = this.TestAgainstAllSetControllers(oneCommand);
       } else {
-        this.Log().Error(this.RefreshButtonStates.name, 'target button not found');
+        this.AllPopUpAgents.Logger.Error(this.RefreshButtonStates.name, 'target button not found');
       }
       this.SetOneButtonVisibility(targetButton, passesOneTest);
     }
-    this.Log().FuncEnd(this.RefreshButtonStates.name);
+    this.AllPopUpAgents.Logger.FuncEnd(this.RefreshButtonStates.name);
   }
 }

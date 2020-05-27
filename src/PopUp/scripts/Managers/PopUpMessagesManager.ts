@@ -18,7 +18,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
   }
 
   ReceiveResponseHndlr(response: any) {
-    this.Log().FuncStart(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
+    this.AllPopUpAgents.Logger.FuncStart(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
 
     if (response) {
       this.UiMan().UpdateMsgStatusStack('Response Received: ' + StaticHelpers.MsgFlagAsString(response.MsgFlag));
@@ -26,7 +26,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
       if (asMsgFromContent) {
         this.LastKnownContentState = response.ContentState;
-        this.Log().Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
+        this.AllPopUpAgents.Logger.Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
 
         this.UiMan().RefreshUiFromCache();
 
@@ -36,18 +36,18 @@ export class PopUpMessagesManager extends PopUpManagerBase {
           case MsgFlag.RespTaskSuccessful:
             break;
           case MsgFlag.RespError:
-            this.Log().Error(this.ReceiveResponseHndlr.name, response.ContentState.ErrorStack);
+            this.AllPopUpAgents.Logger.Error(this.ReceiveResponseHndlr.name, response.ContentState.ErrorStack);
             break;
           default:
-            this.Log().LogVal('Unrecognized MsgFlag', StaticHelpers.MsgFlagAsString(response.MsgFlag));
+            this.AllPopUpAgents.Logger.LogVal('Unrecognized MsgFlag', StaticHelpers.MsgFlagAsString(response.MsgFlag));
             break;
         }
 
-        //this.Log().LogVal('response', JSON.stringify(response, null, 1));
+        //this.AllPopUpAgents.Logger.LogVal('response', JSON.stringify(response, null, 1));
       } else {
-        this.Log().Error(this.ReceiveResponseHndlr.name, 'response is not imsg');
+        this.AllPopUpAgents.Logger.Error(this.ReceiveResponseHndlr.name, 'response is not imsg');
       }
-      this.Log().FuncEnd(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
+      this.AllPopUpAgents.Logger.FuncEnd(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
     }
   }
 
@@ -73,24 +73,24 @@ export class PopUpMessagesManager extends PopUpManagerBase {
 
   OnePing(targetTab: IDataBrowserTab, msg: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
-      this.Log().FuncStart(this.OnePing.name);
+      this.AllPopUpAgents.Logger.FuncStart(this.OnePing.name);
 
-      var promResult: PromiseResult = new PromiseResult(this.OnePing.name, this.Log());
+      var promResult: PromiseResult = new PromiseResult(this.OnePing.name, this.AllPopUpAgents.Logger);
 
-      this.Log().LogVal('sending to tab id', targetTab.Tab.id);
-      //this.Log().LogAsJsonPretty('msg', msg);
+      this.AllPopUpAgents.Logger.LogVal('sending to tab id', targetTab.Tab.id);
+      //this.AllPopUpAgents.Logger.LogAsJsonPretty('msg', msg);
 
       this.UiMan().UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(msg.MsgFlag));
 
       await browser.tabs.sendMessage(targetTab.Tab.id, msg)
         .then((response) => {
           //was successful?
-          this.Log().MarkerC();
-          this.Log().LogAsJsonPretty('response', response);
+          this.AllPopUpAgents.Logger.MarkerC();
+          this.AllPopUpAgents.Logger.LogAsJsonPretty('response', response);
 
           var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
           if (asMsgFromContent) {
-            this.Log().Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
+            this.AllPopUpAgents.Logger.Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
             if (asMsgFromContent.MsgFlag = MsgFlag.RespListeningAndReady) {
               promResult.MarkSuccessful();
             }
@@ -99,11 +99,11 @@ export class PopUpMessagesManager extends PopUpManagerBase {
           }
         })
         .catch((err) => {
-          this.Log().MarkerB();
+          this.AllPopUpAgents.Logger.MarkerB();
           promResult.MarkFailed(err)
         });
 
-      this.Log().FuncEnd(this.OnePing.name);
+      this.AllPopUpAgents.Logger.FuncEnd(this.OnePing.name);
 
       if (promResult.WasSuccessful()) {
         resolve();
@@ -115,9 +115,9 @@ export class PopUpMessagesManager extends PopUpManagerBase {
 
   async WaitForListeningTab(targetTab: IDataBrowserTab) {
     return new Promise(async (resolve, reject) => {
-      this.Log().FuncStart(this.WaitForListeningTab.name);
+      this.AllPopUpAgents.Logger.FuncStart(this.WaitForListeningTab.name);
 
-      var promResult: PromiseResult = new PromiseResult(this.WaitForListeningTab.name, this.Log());
+      var promResult: PromiseResult = new PromiseResult(this.WaitForListeningTab.name, this.AllPopUpAgents.Logger);
       var iterationJr: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForListeningTab.name);
 
       var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
@@ -125,18 +125,18 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       msg.CurrentContentPrefs = this.SettingsMan().GetOnlyContentPrefs();
 
       while (iterationJr.DecrementAndKeepGoing() && !promResult.WasSuccessful()) {
-        this.Log().Log('Pinging');
+        this.AllPopUpAgents.Logger.Log('Pinging');
         await this.OnePing(targetTab, msg)
           .then(() => promResult.MarkSuccessful())
           .catch((ex) => {
-            this.Log().MarkerA();
+            this.AllPopUpAgents.Logger.MarkerA();
             promResult.MarkFailed(ex)
           });
 
         if (!promResult.WasSuccessful()) {
           this.UiMan().UpdateMsgStatusStack('Ping did not succeed, waiting');
           await iterationJr.Wait();
-          this.Log().Log('Done waiting');
+          this.AllPopUpAgents.Logger.Log('Done waiting');
           msg
         }
         else {
@@ -144,7 +144,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
         }
       }//while
 
-      this.Log().FuncEnd(this.WaitForListeningTab.name);
+      this.AllPopUpAgents.Logger.FuncEnd(this.WaitForListeningTab.name);
 
       if (promResult.WasSuccessful()) {
         resolve(targetTab);
@@ -158,9 +158,9 @@ export class PopUpMessagesManager extends PopUpManagerBase {
   }
   private SendMessageToSingleTab(dataBrowserTab: IDataBrowserTab, messageToSend: MsgFromPopUp) {
     return new Promise((resolve, reject) => {
-      this.Log().FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
+      this.AllPopUpAgents.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
 
-      var result: PromiseResult = new PromiseResult(this.SendMessageToSingleTab.name, this.Log());
+      var result: PromiseResult = new PromiseResult(this.SendMessageToSingleTab.name, this.AllPopUpAgents.Logger);
 
       this.UiMan().UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
 
@@ -174,7 +174,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
           result.MarkFailed('likely no response yet');
         });
 
-      this.Log().FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
+      this.AllPopUpAgents.Logger.FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
       if (result.WasSuccessful()) {
         resolve();
       } else {
@@ -202,8 +202,8 @@ export class PopUpMessagesManager extends PopUpManagerBase {
         targetTab = this.TabMan().CurrentTabData;
       }
 
-      this.Log().FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
-      var result: PromiseResult = new PromiseResult(this.SendMessageToContentTab.name, this.Log());
+      this.AllPopUpAgents.Logger.FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      var result: PromiseResult = new PromiseResult(this.SendMessageToContentTab.name, this.AllPopUpAgents.Logger);
 
       msgPlayload.CurrentContentPrefs = await this.SettingsMan().GetOnlyContentPrefs();
 
@@ -212,7 +212,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
         .then(() => result.MarkSuccessful)
         .catch((err) => result.MarkFailed(err));
 
-      this.Log().FuncEnd(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      this.AllPopUpAgents.Logger.FuncEnd(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
 
       if (result.MarkSuccessful) {
         resolve();

@@ -13,11 +13,12 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MiscManager = void 0;
 var PopUpManagerBase_1 = require("./PopUpManagerBase");
 var MiscManager = /** @class */ (function (_super) {
     __extends(MiscManager, _super);
-    function MiscManager(popHub) {
-        return _super.call(this, popHub) || this;
+    function MiscManager(popHub, allPopUpAgents) {
+        return _super.call(this, popHub, allPopUpAgents) || this;
     }
     return MiscManager;
 }(PopUpManagerBase_1.PopUpManagerBase));
