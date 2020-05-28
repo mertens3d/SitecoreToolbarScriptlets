@@ -1,32 +1,32 @@
 ﻿import { PopUpHub } from "../Managers/PopUpHub";
-import { PopUpManagerBase } from "../Managers/PopUpManagerBase";
 import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
-import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
+import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 
 export class CommonEvents {
   protected PopHub: PopUpHub; //extends PopUpManagerBase
-  protected AllPopUpAgents: IAllPopUpAgents;
+  protected AllAgents: IAllAgents;
 
-  constructor(hub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
+  constructor(hub: PopUpHub, allAgents: IAllAgents) {
     //super(hub);
     this.PopHub = hub;
-    this.AllPopUpAgents = allPopUpAgents;
+    this.AllAgents = allAgents;
   }
 
   protected __cleardebugText() {
-    this.AllPopUpAgents.Logger.HndlrClearDebugText(this.AllPopUpAgents.Logger);
+    this.AllAgents.Logger.HndlrClearDebugText(this.AllAgents.Logger);
+    this.AllAgents.Logger.Log('does this work?');
   }
 
   protected GoContentCommand(msgPlayload: MsgFromPopUp, targetTab: IDataBrowserTab = null) {
     return new Promise(async (resolve, reject) => {
-      this.AllPopUpAgents.Logger.FuncStart(this.GoContentCommand.name);
+      this.AllAgents.Logger.FuncStart(this.GoContentCommand.name);
       this.__cleardebugText();
       this.PopHub.UiMan.ClearCancelFlag();
 
       await this.PopHub.PopMsgMan.SendMessageToContentTab(msgPlayload, targetTab);
 
-      this.AllPopUpAgents.Logger.FuncEnd(this.GoContentCommand.name);
+      this.AllAgents.Logger.FuncEnd(this.GoContentCommand.name);
 
       resolve();
     });

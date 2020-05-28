@@ -1,20 +1,21 @@
 ﻿import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
+
+import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
 
 export class PageManager extends ContentManagerBase {
   private topLevelDoc: IDataOneDoc;
   ChildPage: IDataOneDoc;
   SelfWindow: IDataOneDoc;
 
-  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
-    super(hub, logger);
-    this.Log().CtorName(this.constructor.name);
+  constructor(hub: ContentHub, contentAgents: IAllConentAgents) {
+    super(hub, contentAgents);
+    this.ContentAgents.Logger.CtorName(this.constructor.name);
   }
 
   Init() {
-    this.Log().FuncStart(this.Init.name);
+    this.ContentAgents.Logger.FuncStart(this.Init.name);
 
     //if (window.opener) {
     this.topLevelDoc = {
@@ -27,6 +28,6 @@ export class PageManager extends ContentManagerBase {
     //this.topLevelDoc.ParentDoc = this.topLevelDoc;
     this.MsgMan().SetParentInfo(this.topLevelDoc);
 
-    this.Log().FuncEnd(this.Init.name);
+    this.ContentAgents.Logger.FuncEnd(this.Init.name);
   }
 }

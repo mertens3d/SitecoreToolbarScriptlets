@@ -95,7 +95,11 @@ export class ContentConst {
       SC: {
         ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
         IdStartsWithTreeNode: '[id^=Tree_Node_]',
-        IframeContent: 'iframe[src*=content]',
+        IframeContent: {
+          sc820: null,
+         sc920: 'iframe[src*=Content]'
+        },
+          
         JqueryModalDialogsFrame: '[id=jqueryModalDialogsFrame]',
         ContentIframe0: '[id=scContentIframeId0]',
         NextButton: '[id=NextButton]',

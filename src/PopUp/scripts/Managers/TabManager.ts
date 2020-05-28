@@ -1,16 +1,15 @@
 ﻿import { PopUpManagerBase } from './PopUpManagerBase';
 import { PopUpHub } from './PopUpHub';
-import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
-import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
+import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 
 export class TabManager extends PopUpManagerBase {
   CurrentTabData: IDataBrowserTab;
 
-  constructor(hub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
-    super(hub, allPopUpAgents);
-    this.AllPopUpAgents.Logger.FuncStart(TabManager.name);
-    this.AllPopUpAgents.Logger.FuncEnd(TabManager.name);
+  constructor(hub: PopUpHub, allAgents: IAllAgents) {
+    super(hub, allAgents);
+    this.AllAgents.Logger.FuncStart(TabManager.name);
+    this.AllAgents.Logger.FuncEnd(TabManager.name);
   }
 
   MakeTabData(rawTab: browser.tabs.Tab): IDataBrowserTab {
@@ -23,7 +22,7 @@ export class TabManager extends PopUpManagerBase {
   }
 
   async Init() {
-    this.AllPopUpAgents.Logger.FuncStart(TabManager.name, this.Init.name);
+    this.AllAgents.Logger.FuncStart(TabManager.name, this.Init.name);
 
     await this.GetAssociatedTab()
       .then((tabData: IDataBrowserTab) => {
@@ -35,14 +34,14 @@ export class TabManager extends PopUpManagerBase {
 
     //.then((tab: IDataBrowserTab) => this.CurrentTabData = this.SetWindowDataToCurrent(tab, 'tab from init'));
 
-    this.AllPopUpAgents.Logger.DebugIDataBrowserTab(this.CurrentTabData);
+    this.AllAgents.Logger.DebugIDataBrowserTab(this.CurrentTabData);
 
-    this.AllPopUpAgents.Logger.FuncEnd(TabManager.name, this.Init.name);
+    this.AllAgents.Logger.FuncEnd(TabManager.name, this.Init.name);
   }
 
   async GetAssociatedTab() {
     return new Promise(async (resolve, reject) => {
-      this.AllPopUpAgents.Logger.FuncStart(this.GetAssociatedTab.name);
+      this.AllAgents.Logger.FuncStart(this.GetAssociatedTab.name);
       var toReturn: IDataBrowserTab;
 
       await browser.tabs.query({ currentWindow: true, active: true })
@@ -52,9 +51,9 @@ export class TabManager extends PopUpManagerBase {
             UrlParts: this.Helpers().UrlHelp.MakeUrlParts({ AbsUrl: tabs[0].url })
           }
 
-          this.AllPopUpAgents.Logger.DebugIDataBrowserTab(toReturn);
+          this.AllAgents.Logger.DebugIDataBrowserTab(toReturn);
 
-          this.AllPopUpAgents.Logger.FuncEnd(this.GetAssociatedTab.name);
+          this.AllAgents.Logger.FuncEnd(this.GetAssociatedTab.name);
           resolve(toReturn);
         })
         .catch((err) => reject(err));

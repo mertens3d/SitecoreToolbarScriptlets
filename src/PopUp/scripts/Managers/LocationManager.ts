@@ -1,31 +1,26 @@
-import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
-import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
-import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
 import { IScMode } from '../../../Shared/scripts/Interfaces/IscMode';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { PopUpManagerBase } from './PopUpManagerBase';
 import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
 import { PopUpHub } from './PopUpHub';
-import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
-import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
-import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
+import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 
 export class LocationManager extends PopUpManagerBase {
-  constructor(hub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
-    super(hub, allPopUpAgents);
-    this.AllPopUpAgents.Logger.FuncStart(LocationManager.name);
-    this.AllPopUpAgents.Logger.FuncEnd(LocationManager.name);
+  constructor(hub: PopUpHub, allAgents: IAllAgents) {
+    super(hub, allAgents);
+    this.AllAgents.Logger.FuncStart(LocationManager.name);
+    this.AllAgents.Logger.FuncEnd(LocationManager.name);
   }
     
   ChangeLocationSwitchBoard(desiredPageType: scWindowType) {
-    this.AllPopUpAgents.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType]);
+    this.AllAgents.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType]);
 
-    var iteration: IterationHelper = new IterationHelper(this.Helpers(), this.ChangeLocationSwitchBoard.name);
+    var iteration: IterationHelper = new IterationHelper(this.Helpers(), this.ChangeLocationSwitchBoard.name, this.AllAgents.HelperAgents);
 
     if (iteration.DecrementAndKeepGoing()) {
       var currentScWindowType: scWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
@@ -33,7 +28,7 @@ export class LocationManager extends PopUpManagerBase {
       if (this.TabMan().CurrentTabData.UrlParts.ScWindowType === scWindowType.LoginPage) {
         var self = this;
         var callbackOnComplete: Function = () => {
-          this.AllPopUpAgents.Logger.Log('callback triggered');
+          this.AllAgents.Logger.Log('callback triggered');
           self.ChangeLocationSwitchBoard(desiredPageType);
         };
 
@@ -52,7 +47,7 @@ export class LocationManager extends PopUpManagerBase {
         var absUrl: AbsoluteUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
 
         var callBackOnSuccessfulHrefChange: Function = function () {
-          self.AllPopUpAgents.Logger.Log('Callback triggered');
+          self.AllAgents.Logger.Log('Callback triggered');
           self.ChangeLocationSwitchBoard(desiredPageType)
         }
 
@@ -61,24 +56,24 @@ export class LocationManager extends PopUpManagerBase {
           .then(() => callBackOnSuccessfulHrefChange);
       }
     }
-    this.AllPopUpAgents.Logger.FuncEnd(this.ChangeLocationSwitchBoard.name);
+    this.AllAgents.Logger.FuncEnd(this.ChangeLocationSwitchBoard.name);
   }
 
   async SetScModeFromCeDt(newValue: IScMode, currentPageType: scWindowType) {
     return new Promise(async (resolve, reject) => {
-      this.AllPopUpAgents.Logger.FuncStart(this.SetScModeFromCeDt.name, newValue.AsString);
-      this.AllPopUpAgents.Logger.LogVal('WindowType', StaticHelpers.WindowTypeAsString(currentPageType));
+      this.AllAgents.Logger.FuncStart(this.SetScModeFromCeDt.name, newValue.AsString);
+      this.AllAgents.Logger.LogVal('WindowType', StaticHelpers.WindowTypeAsString(currentPageType));
 
-      let result: PromiseResult = new PromiseResult(this.SetScModeFromCeDt.name, this.AllPopUpAgents.Logger);
+      let result: PromiseResult = new PromiseResult(this.SetScModeFromCeDt.name, this.AllAgents.Logger);
 
-      this.AllPopUpAgents.Logger.MarkerA();
+      this.AllAgents.Logger.MarkerA();
 
       if (currentPageType === scWindowType.Desktop) {
-        this.AllPopUpAgents.Logger.MarkerB();
+        this.AllAgents.Logger.MarkerB();
         let contState: ICurrStateContent = this.UiMan().CurrContentState;
-        this.AllPopUpAgents.Logger.MarkerC();
+        this.AllAgents.Logger.MarkerC();
         if (contState && contState.ActiveCe && contState.ActiveCe.ActiveNode) {
-          this.AllPopUpAgents.Logger.MarkerD();
+          this.AllAgents.Logger.MarkerD();
           let currentNodeId: IDataOneTreeNode = contState.ActiveCe.ActiveNode;
           //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
           //let editUrl = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
@@ -92,13 +87,13 @@ export class LocationManager extends PopUpManagerBase {
             .then(() => result.MarkSuccessful())
             .catch((ex) => result.MarkFailed(ex));
         } else {
-          this.AllPopUpAgents.Logger.Log('unknown case');
-          this.AllPopUpAgents.Logger.LogAsJsonPretty('contState', contState);
+          this.AllAgents.Logger.Log('unknown case');
+          this.AllAgents.Logger.LogAsJsonPretty('contState', contState);
         }
       } else {
-        this.AllPopUpAgents.Logger.Log('need to handle ce case');
+        this.AllAgents.Logger.Log('need to handle ce case');
       }
-      this.AllPopUpAgents.Logger.FuncEnd(this.SetScModeFromCeDt.name, newValue.AsString);
+      this.AllAgents.Logger.FuncEnd(this.SetScModeFromCeDt.name, newValue.AsString);
       if (result.WasSuccessful()) {
         resolve();
       } else {
@@ -109,9 +104,9 @@ export class LocationManager extends PopUpManagerBase {
 
   SetScMode(newValue: IScMode) {
     return new Promise(async (resolve, reject) => {
-      this.AllPopUpAgents.Logger.FuncStart(this.SetScMode.name, newValue.AsString);
+      this.AllAgents.Logger.FuncStart(this.SetScMode.name, newValue.AsString);
 
-      let result: PromiseResult = new PromiseResult(this.SetScMode.name, this.AllPopUpAgents.Logger);
+      let result: PromiseResult = new PromiseResult(this.SetScMode.name, this.AllAgents.Logger);
 
       var currentPageType: scWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
 
@@ -134,7 +129,7 @@ export class LocationManager extends PopUpManagerBase {
           .catch((ex) => result.MarkFailed(ex));
       }
 
-      this.AllPopUpAgents.Logger.FuncEnd(this.SetScMode.name);
+      this.AllAgents.Logger.FuncEnd(this.SetScMode.name);
 
       if (result.MarkSuccessful) {
         resolve();

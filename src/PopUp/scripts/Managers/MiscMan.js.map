@@ -1,1 +1,1 @@
-{"version":3,"file":"MiscMan.js","sourceRoot":"","sources":["MiscMan.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;AAAA,uDAAsD;AAKtD;IAAiC,+BAAgB;IAC/C,qBAAY,MAAgB,EAAE,cAA+B;eAE3D,kBAAM,MAAM,EAAE,cAAc,CAAC;IAC/B,CAAC;IAEH,kBAAC;AAAD,CAAC,AAND,CAAiC,mCAAgB,GAMhD;AANY,kCAAW"}
+{"version":3,"file":"MiscMan.js","sourceRoot":"","sources":["MiscMan.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;AAAA,uDAAsD;AAItD;IAAiC,+BAAgB;IAC/C,qBAAY,MAAgB,EAAE,SAAqB;eAEjD,kBAAM,MAAM,EAAE,SAAS,CAAC;IAC1B,CAAC;IAEH,kBAAC;AAAD,CAAC,AAND,CAAiC,mCAAgB,GAMhD;AANY,kCAAW"}

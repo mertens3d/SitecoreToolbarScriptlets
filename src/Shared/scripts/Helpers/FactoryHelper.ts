@@ -31,12 +31,12 @@ export class FactoryHelper extends HelperBase {
         Nickname: dataOneIframe.Nickname + ' - content doc'
       }
     } else {
-      this.LoggerAgentBase.Error(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
+      this.AllHelperAgents.LoggerAgent.Error(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
     }
     return toReturn;
   }
   DataOneIframeFactory(iframeElem: HTMLIFrameElement, nickname: string): IDataOneIframe {
-    this.LoggerAgentBase.FuncStart(this.DataOneIframeFactory.name);
+    this.AllHelperAgents.LoggerAgent.FuncStart(this.DataOneIframeFactory.name);
     var toReturn: IDataOneIframe = null;
 
     if (iframeElem && nickname) {
@@ -56,16 +56,16 @@ export class FactoryHelper extends HelperBase {
 
       toReturn.ContentDoc = this.DataOneContentDocFactoryFromIframe(toReturn);
 
-      this.LoggerAgentBase.FuncEnd(this.DataOneIframeFactory.name);
+      this.AllHelperAgents.LoggerAgent.FuncEnd(this.DataOneIframeFactory.name);
     } else {
-      this.LoggerAgentBase.Error(this.DataOneIframeFactory.name, 'one of these is null');
-      this.LoggerAgentBase.LogAsJsonPretty('iframeElem', iframeElem);
-      this.LoggerAgentBase.LogAsJsonPretty('nickname', nickname);
+      this.AllHelperAgents.LoggerAgent.Error(this.DataOneIframeFactory.name, 'one of these is null');
+      this.AllHelperAgents.LoggerAgent.LogAsJsonPretty('iframeElem', iframeElem);
+      this.AllHelperAgents.LoggerAgent.LogAsJsonPretty('nickname', nickname);
     }
     return toReturn;
   }
   CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
-    this.LoggerAgentBase.FuncStart(this.CreateShellIDataOneWindowStorage.name);
+    this.AllHelperAgents.LoggerAgent.FuncStart(this.CreateShellIDataOneWindowStorage.name);
     var dateToUse: Date = new Date();
     var newGuid: IGuid = this.GuidHelp().NewGuid();
 
@@ -79,7 +79,7 @@ export class FactoryHelper extends HelperBase {
       RawData: null,
       Flavor: flavor,
     };
-    this.LoggerAgentBase.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
+    this.AllHelperAgents.LoggerAgent.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
 
     return activeWindowSnapShot;
   }

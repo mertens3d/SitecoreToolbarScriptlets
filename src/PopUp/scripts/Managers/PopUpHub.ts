@@ -1,74 +1,74 @@
 ﻿import { UiManager } from "./UiManager";
-import { LoggerPopUpAgent } from "../Agents/LoggerPopUpAgent";
 import { EventManager } from "./EventManager";
 import { PopUpMessagesManager } from "./PopUpMessagesManager";
 import { PopUpAtticManager } from "./PopUpAtticManager";
 import { FeedbackManager } from "./FeedbackManager";
-import { PopConst } from "../Classes/PopConst";
-import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 import { SettingsManager } from "./SettingsManager";
 import { TabManager } from "./TabManager";
 import { LocationManager } from "./LocationManager";
 import { HelperHub } from "../../../Shared/scripts/Helpers/Helpers";
 import { BrowserManager } from "./BrowserManager";
-import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
-import { SettingsHelper } from "../../../Shared/scripts/Helpers/SettingsHelper";
-import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
-//import { PopUpFactoryManager } from "./FactoryManager";
+import { SettingsAgent } from "../../../Shared/scripts/Agents/SettingsAgent/SettingsAgent";
+import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
+import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 
 export class PopUpHub {
     [x: string]: any;
 
 
-  //FactMan: PopUpFactoryManager;
-  //PopUpConst: IPopUpConst;
   BrowserMan: BrowserManager;
   EventMan: EventManager;
   FeedbackMan: FeedbackManager;
   Helpers: HelperHub;
   LocMan: LocationManager;
-  private AllPopUpAgents: IAllPopUpAgents;
+  private _allAgents: IAllAgents;
   PopMsgMan: PopUpMessagesManager;
   PopUpAtticMan: PopUpAtticManager;
   SettingsMan: SettingsManager;
   TabMan: TabManager;
   UiMan: UiManager;
 
-  constructor(allPopUpAgents: IAllPopUpAgents) {
+  constructor(allAgents: IAllAgents) {
 
-    this.AllPopUpAgents = allPopUpAgents;
-    this.SettingsMan = new SettingsManager(this, this.AllPopUpAgents);
+    this._allAgents = allAgents;
+    this.SettingsMan = new SettingsManager(this, this._allAgents);
 
-    this.PopUpAtticMan = new PopUpAtticManager(this, this.AllPopUpAgents);
-    this.PopMsgMan = new PopUpMessagesManager(this, this.AllPopUpAgents);
-    this.UiMan = new UiManager(this, this.AllPopUpAgents);
-    this.EventMan = new EventManager(this, this.AllPopUpAgents);
-    this.Helpers = new HelperHub(this.AllPopUpAgents.Logger);
-    this.LocMan = new LocationManager(this, this.AllPopUpAgents);
+    this.PopUpAtticMan = new PopUpAtticManager(this, this._allAgents);
+    this.PopMsgMan = new PopUpMessagesManager(this, this._allAgents);
+    this.UiMan = new UiManager(this, this._allAgents);
+    this.EventMan = new EventManager(this, this._allAgents);
+    
+    this.LocMan = new LocationManager(this, this._allAgents);
     //this.PopUpConst = PopConst.Const;
 
-    this.FeedbackMan = new FeedbackManager(this, this.AllPopUpAgents);
-    this.TabMan = new TabManager(this, this.AllPopUpAgents);
-    this.BrowserMan = new BrowserManager(this, this.logger);
+    this.FeedbackMan = new FeedbackManager(this, this._allAgents);
+    this.TabMan = new TabManager(this, this._allAgents);
+    this.BrowserMan = new BrowserManager(this, this._allAgents);
+
+    this.Helpers = new HelperHub(allAgents.HelperAgents);
 
     this.init();
   }
 
   async init() {
-    this.AllPopUpAgents.Logger.FuncStart(PopUpHub.name, this.init.name);
+    this._allAgents.Logger.FuncStart(PopUpHub.name, this.init.name);
 
     await this.PopUpAtticMan.Init(); //before PopMsgMan
     await this.SettingsMan.Init();//after attic (?)
 
 
 
-    let setting: OneGenericSetting = await this.SettingsMan.GetByKey(SettingKey.LogToConsole);
+    let setting: IOneGenericSetting = await this.SettingsMan.GetByKey(SettingKey.LogToConsole);
+
+    console.log("setting");
+    console.log(setting);
+
     if (setting) {
-      this.AllPopUpAgents.Logger.Init(SettingsHelper.ValueAsBool(setting))
+      this._allAgents.Logger.Init(SettingsAgent.ValueAsBool(setting))
     } else {
-      this.AllPopUpAgents.Logger.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
+      this._allAgents.Logger.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
     }
 
 
@@ -77,10 +77,10 @@ export class PopUpHub {
     await this.TabMan.Init();
     
 
-    this.AllPopUpAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
+    this._allAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
     this.EventMan.Init();
-    this.AllPopUpAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
-    this.AllPopUpAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
+    this._allAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
+    this._allAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
 
     this.PopMsgMan.Init(); // before uiman.Init
 
@@ -88,9 +88,9 @@ export class PopUpHub {
 
     //this.PageMan.Init();
 
-    this.AllPopUpAgents.Logger.FuncEnd(PopUpHub.name, this.init.name);
+    this._allAgents.Logger.FuncEnd(PopUpHub.name, this.init.name);
 
-    this.AllPopUpAgents.Logger.Log('');
-    this.AllPopUpAgents.Logger.Log('');
+    this._allAgents.Logger.Log('');
+    this._allAgents.Logger.Log('');
   }
 }

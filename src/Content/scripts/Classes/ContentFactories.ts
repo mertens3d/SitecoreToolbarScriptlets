@@ -1,8 +1,6 @@
-﻿import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/IDataOneDoc";
-import { ContentHub } from "../Managers/ContentHub";
+﻿import { ContentHub } from "../Managers/ContentHub";
 import { PromiseHelper } from "../../../Shared/scripts/Classes/PromiseGeneric";
 import { ContentManagerBase } from "../_first/_ContentManagerBase";
-import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/IDataOneIframe";
 import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 import { CacheMode } from "../../../Shared/scripts/Enums/CacheMode";
@@ -12,24 +10,22 @@ import { IDataDtState } from "../../../Shared/scripts/Interfaces/IDataDtState";
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { IContentLoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentLogger";
+import { IAllConentAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllConentAgents";
 
 export class ContentFactories extends ContentManagerBase {
-  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
-    super(hub, logger);
-    hub.Logger.FuncStart(PromiseHelper.name);
-    hub.Logger.FuncEnd(PromiseHelper.name);
+  constructor(hub: ContentHub, contentAgents: IAllConentAgents) {
+    super(hub, contentAgents);
+    this.ContentAgents.Logger.FuncStart(PromiseHelper.name);
+    this.ContentAgents.Logger.FuncEnd(PromiseHelper.name);
   }
   UpdateContentState(contentState: ICurrStateContent) {
     return new Promise(async (resolve, reject) => {
-      this.ContentLogger.FuncStart(this.UpdateContentState.name);
-      let promiseResult: PromiseResult = new PromiseResult(this.UpdateContentState.name, this.ContentLogger);
+      this.ContentAgents.Logger.FuncStart(this.UpdateContentState.name);
+      let promiseResult: PromiseResult = new PromiseResult(this.UpdateContentState.name, this.ContentAgents.Logger);
       contentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
-      contentState.ErrorStack = this.ContentLogger.ErrorStack;
+      contentState.ErrorStack = this.ContentAgents.Logger.ErrorStack;
 
-      this.ContentLogger.LogAsJsonPretty('ContentState', contentState);
-
-
+      this.ContentAgents.Logger.LogAsJsonPretty('ContentState', contentState);
 
       await this.GetCurrentDtOrCeState()
         .then((result: IDataOneStorageCE) => {
@@ -38,7 +34,7 @@ export class ContentFactories extends ContentManagerBase {
         })
         .catch((err) => promiseResult.MarkFailed(err));
 
-      this.ContentLogger.FuncEnd(this.UpdateContentState.name);
+      this.ContentAgents.Logger.FuncEnd(this.UpdateContentState.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve(contentState);
@@ -50,9 +46,9 @@ export class ContentFactories extends ContentManagerBase {
 
   GetCurrentDtOrCeState() {
     return new Promise(async (resolve, reject) => {
-      this.ContentLogger.FuncStart(this.GetCurrentDtOrCeState.name);
+      this.ContentAgents.Logger.FuncStart(this.GetCurrentDtOrCeState.name);
 
-      let promiseResult: PromiseResult = new PromiseResult(this.GetCurrentDtOrCeState.name, this.ContentLogger);
+      let promiseResult: PromiseResult = new PromiseResult(this.GetCurrentDtOrCeState.name, this.ContentAgents.Logger);
 
       let toReturnCeState: IDataOneStorageCE = null;
       let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
@@ -92,7 +88,7 @@ export class ContentFactories extends ContentManagerBase {
         promiseResult.MarkFailed('not a known page type ' + StaticHelpers.WindowTypeAsString(pageType));
       }
 
-      this.ContentLogger.FuncEnd(this.GetCurrentDtOrCeState.name);
+      this.ContentAgents.Logger.FuncEnd(this.GetCurrentDtOrCeState.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve(toReturnCeState);
@@ -103,11 +99,11 @@ export class ContentFactories extends ContentManagerBase {
   }
 
   async NewMsgFromContentShell() {
-    this.ContentLogger.FuncStart(this.NewMsgFromContentShell.name);
+    this.ContentAgents.Logger.FuncStart(this.NewMsgFromContentShell.name);
     var response = new MsgFromContent(MsgFlag.Unknown);
     //await this.UpdateContentState(response);
     //response.ContentState.LastReq = MsgFlag.Unknown;
-    this.ContentLogger.FuncEnd(this.NewMsgFromContentShell.name);
+    this.ContentAgents.Logger.FuncEnd(this.NewMsgFromContentShell.name);
     return response;
   }
 }

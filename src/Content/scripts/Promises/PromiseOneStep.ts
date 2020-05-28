@@ -3,13 +3,13 @@ import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseGeneric';
 import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPublishChain';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
+import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
 
 export class PromiseOneStep extends ContentManagerBase {
-  constructor(hub: ContentHub, logger: IContentLoggerAgent) {
-    super(hub, logger);
-    hub.Logger.FuncStart(PromiseHelper.name);
-    hub.Logger.FuncEnd(PromiseHelper.name);
+  constructor(hub: ContentHub, contentAgents: IAllConentAgents) {
+    super(hub, contentAgents);
+    this.ContentAgents.Logger.FuncStart(PromiseHelper.name);
+    this.ContentAgents.Logger.FuncEnd(PromiseHelper.name);
   }
 
   async ClickPublishOnNav(payload: IDataPublishChain) {

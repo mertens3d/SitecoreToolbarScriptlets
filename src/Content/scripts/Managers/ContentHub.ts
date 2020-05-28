@@ -13,12 +13,13 @@ import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from './SitecoreUiManager';
 import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
-import { IContentLoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentLogger";
+import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
+import { AllHelperAgents } from '../../../Shared/scripts/Classes/AllHelperAgents';
 
 export class ContentHub {
   AtticMan: ContentAtticManager;
   Const: IContentConst;
-  Logger: IContentLoggerAgent;
+  ContentAgents: IAllConentAgents;
 
   Helpers: HelperHub;
   MsgMan: ContentMessageManager;
@@ -34,51 +35,53 @@ export class ContentHub {
   SharedConst: ISharedConst;
   ReadyForMessages: boolean = false;
 
-  constructor(logger: IContentLoggerAgent) {
-    logger.FuncStart(ContentHub.name);
-    this.Logger = logger;
-    console.log('(ctor) logger enabled ' + this.Logger.EnabledStatus());
+  constructor(contentAgents: IAllConentAgents) {
+    this.ContentAgents = contentAgents;
+    this.ContentAgents.Logger.FuncStart(ContentHub.name);
+    console.log('(ctor) logger enabled ' + this.ContentAgents.Logger.EnabledStatus());
     this.Instantiate();
-    logger.FuncEnd(ContentHub.name);
+    this.ContentAgents.Logger.FuncEnd(ContentHub.name);
   }
 
   Instantiate() {
-    this.Logger.FuncStart(this.Instantiate.name);
+    this.ContentAgents.Logger.FuncStart(this.Instantiate.name);
 
-    this.AtticMan = new ContentAtticManager(this, this.Logger);
+    this.AtticMan = new ContentAtticManager(this, this.ContentAgents);
 
-    this.Helpers = new HelperHub(this.Logger);
-    this.MsgMan = new ContentMessageManager(this, this.Logger);
-    this.MiscMan = new MiscManager(this, this.Logger);
-    this.ContentFactory = new ContentFactories(this, this.Logger);
 
-    this.Logger.MarkerA();
 
-    this.OneWindowMan = new OneScWindowManager(this, this.Logger);
+    this.Helpers = new HelperHub(this.ContentAgents.HelperAgents    );
+    this.MsgMan = new ContentMessageManager(this, this.ContentAgents);
+    this.MiscMan = new MiscManager(this, this.ContentAgents);
+    this.ContentFactory = new ContentFactories(this, this.ContentAgents);
 
-    this.PromiseOneStep = new PromiseOneStep(this, this.Logger);
+    this.ContentAgents.Logger.MarkerA();
+
+    this.OneWindowMan = new OneScWindowManager(this, this.ContentAgents);
+
+    this.PromiseOneStep = new PromiseOneStep(this, this.ContentAgents);
 
     this.SharedConst = SharedConst.Const;
 
-    this.SitecoreUiMan = new SitecoreUiManager(this, this.Logger);
+    this.SitecoreUiMan = new SitecoreUiManager(this, this.ContentAgents);
     this.Init();
 
-    this.Logger.Log('ready for messages');
+    this.ContentAgents.Logger.Log('ready for messages');
     this.ReadyForMessages = true;
 
-    this.Logger.FuncEnd(this.Instantiate.name);
+    this.ContentAgents.Logger.FuncEnd(this.Instantiate.name);
   }
   Init() {
-    this.Logger.FuncStart(ContentHub.constructor.name + ' ' + this.Init.name);
+    this.ContentAgents.Logger.FuncStart(ContentHub.constructor.name + ' ' + this.Init.name);
     this.Const = ContentConst.Const;
 
     this.AtticMan.Init();
     this.MsgMan.Init();
 
-    this.Logger.SetEnabled(this.MsgMan.IsLogEnabled());
+    this.ContentAgents.Logger.SetEnabled(this.MsgMan.IsLogEnabled());
 
     this.OneWindowMan.Init();
 
-    this.Logger.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);
+    this.ContentAgents.Logger.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);
   }
 }

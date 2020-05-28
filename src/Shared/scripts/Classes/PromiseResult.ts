@@ -1,4 +1,4 @@
-﻿import { ILoggerAgentBase } from "../Interfaces/Agents/ILoggerBase";
+﻿import { ILoggerAgent } from "../Interfaces/Agents/ILoggerBase";
 export class PromiseResult {
   private RejectReasonArPvt: string[];
   private Success: boolean;
@@ -6,9 +6,9 @@ export class PromiseResult {
   NickName: string;
   private prefix: string = 'Promise Successful? -> ';
   RejectReasons: string
-    Log: ILoggerAgentBase;
+    Log: ILoggerAgent;
 
-  constructor(nickname: string, logger: ILoggerAgentBase) {
+  constructor(nickname: string, logger: ILoggerAgent) {
     this.Success = false;
     this.NickName = nickname;
     this.RejectReasonArPvt = [];

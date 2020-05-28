@@ -7,6 +7,9 @@ import { OneParamPair } from "../Interfaces/OneParamPair";
 import { AbsoluteUrl } from "../Interfaces/AbsoluteUrl";
 import { ICurrStateContent } from "../Interfaces/ICurrState";
 export class UrlHelper extends HelperBase {
+
+
+
   MakeUrlParts(url: AbsoluteUrl): UrlParts {
     var parser = document.createElement('a');
     parser.href = url.AbsUrl;
@@ -158,7 +161,7 @@ export class UrlHelper extends HelperBase {
         break;
       default:
         toReturn.FilePath = '';
-        this.LoggerAgentBase.Error(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
+        this.AllHelperAgents.LoggerAgent.Error(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
         break;
     }
 
@@ -225,7 +228,7 @@ export class UrlHelper extends HelperBase {
     //if (ar.length > 1) {
     //  toReturn = ar[1];
     //} else {
-    //  this.LoggerAgentBase.Error(this.ExtractFilePath.name, 'unable to extract path from ' + url);
+    //  this.AllHelperAgents.LoggerAgent.Error(this.ExtractFilePath.name, 'unable to extract path from ' + url);
     //}
 
     return toReturn;
@@ -261,11 +264,11 @@ export class UrlHelper extends HelperBase {
     return new RegExp(regexPattern).test(url);
   }
   CalcPageTypeFromHref(absUrl: AbsoluteUrl): scWindowType {
-    this.LoggerAgentBase.FuncStart(this.CalcPageTypeFromHref.name);
+    this.AllHelperAgents.LoggerAgent.FuncStart(this.CalcPageTypeFromHref.name);
     var toReturn: scWindowType = scWindowType.Unknown;
 
     if (absUrl && absUrl.AbsUrl) {
-      this.LoggerAgentBase.LogVal('current url', absUrl.AbsUrl);
+      this.AllHelperAgents.LoggerAgent.LogVal('current url', absUrl.AbsUrl);
       if (absUrl.AbsUrl.indexOf(SharedConst.Const.UrlSuffix.Login) > -1) {
         toReturn = scWindowType.LoginPage;
       }
@@ -291,9 +294,9 @@ export class UrlHelper extends HelperBase {
         toReturn = scWindowType.Unknown;
       }
     } else {
-      this.LoggerAgentBase.Error(this.CalcPageTypeFromHref.name, 'null url');
+      this.AllHelperAgents.LoggerAgent.Error(this.CalcPageTypeFromHref.name, 'null url');
     }
-    this.LoggerAgentBase.FuncEnd(this.CalcPageTypeFromHref.name, scWindowType[toReturn]);
+    this.AllHelperAgents.LoggerAgent.FuncEnd(this.CalcPageTypeFromHref.name, scWindowType[toReturn]);
     return toReturn;
   }
 }

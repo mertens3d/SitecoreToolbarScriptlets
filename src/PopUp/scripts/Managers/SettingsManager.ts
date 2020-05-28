@@ -1,11 +1,11 @@
 ﻿import { PopUpManagerBase } from "./PopUpManagerBase";
-import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
-import { IAllGenericSettings } from "../../../Shared/scripts/Classes/IAllSettings";
+import { IAllGenericSettings } from "../../../Shared/scripts/Interfaces/IAllSettings";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { IOneGenericSettingForStorage } from "../../../Shared/scripts/Classes/IOneGenericSettingForStorage";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 import { ConstAllSettings } from "./ConstAllSettings";
+import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 
 export class SettingsManager extends PopUpManagerBase {
   AllSettings: IAllGenericSettings;
@@ -25,44 +25,44 @@ export class SettingsManager extends PopUpManagerBase {
   // if set, update the cache and write to storage
 
   async HarvestNonDefaultGenericSettingsFromStorage() {
-    this.AllPopUpAgents.Logger.FuncStart(this.HarvestNonDefaultGenericSettingsFromStorage.name);
+    this.AllAgents.Logger.FuncStart(this.HarvestNonDefaultGenericSettingsFromStorage.name);
     let foundSettings: IOneGenericSettingForStorage[];
 
     try {
     foundSettings = await this.PopAtticMan().ReadGenericSettings();
 
     } catch (e) {
-      this.AllPopUpAgents.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, e.toString());
+      this.AllAgents.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, e.toString());
     }
 
 
-    this.AllPopUpAgents.Logger.LogAsJsonPretty('settings from storage', foundSettings);
+    this.AllAgents.Logger.LogAsJsonPretty('settings from storage', foundSettings);
 
     if (foundSettings) {
       for (var idx = 0; idx < foundSettings.length; idx++) {
         let storageSetting: IOneGenericSettingForStorage = foundSettings[idx];
-        this.AllPopUpAgents.Logger.LogVal('setting key', storageSetting.SettingKeyFriendly);
-        let matchingSetting: OneGenericSetting = this.Helpers().SettingsHelp.GetByKey(storageSetting.SettingKey, this.AllSettings.SettingsAr);
+        this.AllAgents.Logger.LogVal('setting key', storageSetting.SettingKeyFriendly);
+        let matchingSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(storageSetting.SettingKey, this.AllSettings.SettingsAr);
         if (matchingSetting) {
           matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
         } else {
-          this.AllPopUpAgents.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+          this.AllAgents.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
         }
       }
     } else {
-      this.AllPopUpAgents.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'settings not found');
+      this.AllAgents.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'settings not found');
     }
 
-    this.AllPopUpAgents.Logger.FuncEnd(this.HarvestNonDefaultGenericSettingsFromStorage.name);
+    this.AllAgents.Logger.FuncEnd(this.HarvestNonDefaultGenericSettingsFromStorage.name);
   }
 
 
 
-  GetOnlyContentPrefs(): OneGenericSetting[] {
-    let toReturn: OneGenericSetting[] = [];
+  GetOnlyContentPrefs(): IOneGenericSetting[] {
+    let toReturn: IOneGenericSetting[] = [];
 
     for (var idx = 0; idx < this.AllSettings.SettingsAr.length; idx++) {
-      let candidate: OneGenericSetting = this.AllSettings.SettingsAr[idx];
+      let candidate: IOneGenericSetting = this.AllSettings.SettingsAr[idx];
       if (candidate.SettingFlavor === SettingFlavor.ContentAndPopUp) {
         toReturn.push(candidate);
       }
@@ -72,21 +72,21 @@ export class SettingsManager extends PopUpManagerBase {
   }
   SettingChanged(SettingKey: SettingKey, valueAsObj: any): void {
     //this.SetByKey(SettingKey, target.)
-    this.AllPopUpAgents.Logger.Log(StaticHelpers.SettingKeyAsString(SettingKey));
-    this.AllPopUpAgents.Logger.LogVal('valueAsObj', valueAsObj.toString());
+    this.AllAgents.Logger.Log(StaticHelpers.SettingKeyAsString(SettingKey));
+    this.AllAgents.Logger.LogVal('valueAsObj', valueAsObj.toString());
     this.SetByKey(SettingKey, valueAsObj);
   }
 
-  GetByKey(settingKey: SettingKey): OneGenericSetting {
-    let foundSetting = this.Helpers().SettingsHelp.GetByKey(settingKey, this.AllSettings.SettingsAr);
+  GetByKey(settingKey: SettingKey): IOneGenericSetting {
+    let foundSetting = this.AllAgents.SettingsAgent.GetByKey(settingKey, this.AllSettings.SettingsAr);
     console.log(foundSetting.Friendly);
     return foundSetting;
   }
 
 
   SetByKey(settingKey: SettingKey, value: any): void {
-    this.AllPopUpAgents.Logger.FuncStart(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
-    let foundSetting = this.Helpers().SettingsHelp.GetByKey(settingKey, this.AllSettings.SettingsAr);
+    this.AllAgents.Logger.FuncStart(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
+    let foundSetting =this.AllAgents.SettingsAgent.GetByKey(settingKey, this.AllSettings.SettingsAr);
     if (foundSetting) {
       if (foundSetting.DefaultValue !== value) {
         foundSetting.ValueAsObj = value;
@@ -101,7 +101,7 @@ export class SettingsManager extends PopUpManagerBase {
 
 
       //  default:
-      //    this.AllPopUpAgents.Logger.Error(this.SetByKey.name, 'setting type not found');
+      //    this.allAgents.Logger.Error(this.SetByKey.name, 'setting type not found');
       //    break;
       //}
 
@@ -120,8 +120,8 @@ export class SettingsManager extends PopUpManagerBase {
 
       this.PopAtticMan().WriteGenericSettings(nonDefaultSettings);
     } else {
-      this.AllPopUpAgents.Logger.Error(this.SetByKey.name, 'setting match not found');
+      this.AllAgents.Logger.Error(this.SetByKey.name, 'setting match not found');
     }
-    this.AllPopUpAgents.Logger.FuncEnd(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
+    this.AllAgents.Logger.FuncEnd(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
   }
 }

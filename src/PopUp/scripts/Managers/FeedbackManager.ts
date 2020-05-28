@@ -1,11 +1,11 @@
 ﻿import { PopUpManagerBase } from './PopUpManagerBase';
 import { PopUpHub } from './PopUpHub';
 import { PopConst } from '../Classes/PopConst';
-import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
+import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class FeedbackManager extends PopUpManagerBase {
-  constructor(popHub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
-    super(popHub, allPopUpAgents);
+  constructor(popHub: PopUpHub, allAgents: IAllAgents) {
+    super(popHub, allAgents);
   }
   __getTextArea(): HTMLTextAreaElement {
     return <HTMLTextAreaElement>document.getElementById(PopConst.Const.ElemId.textAreaFeedback);

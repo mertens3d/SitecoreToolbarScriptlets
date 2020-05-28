@@ -1,13 +1,16 @@
 ﻿import { GuidHelper } from "../Helpers/GuidHelper";
 import { HelperHub } from "../Helpers/Helpers";
-import { ILoggerAgentBase } from "../Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../Interfaces/Agents/ILoggerBase";
+import { IAllHelperAgents } from "../Interfaces/Agents/IAllHelperAgents";
 export class HelperBase {
-  protected LoggerAgentBase: ILoggerAgentBase;
+  protected LoggerAgentBase: ILoggerAgent;
   HelperHub: HelperHub;
+  AllHelperAgents: IAllHelperAgents;
 
-  constructor(helperHub: HelperHub) {
+  constructor(helperHub: HelperHub, helperAgents: IAllHelperAgents) {
     this.HelperHub = helperHub;
-    this.LoggerAgentBase = helperHub.Log;
+    this.AllHelperAgents = helperAgents;
+  
   }
 
   GuidHelp(): GuidHelper { return this.HelperHub.GuidHelp; }

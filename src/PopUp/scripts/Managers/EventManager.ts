@@ -4,38 +4,37 @@ import { HandlersExternal } from "../Classes/HandlersExternal";
 import { HandlersInternal } from "../Classes/HandlersInternal";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { MenuCommand } from '../../../Shared/scripts/Enums/MenuCommand';
-import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
 import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
-import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { AllCommands } from '../Classes/AllCommands';
 import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
 import { Handlers } from './Handlers';
 import { IEventHandlerData } from "../../../Shared/scripts/Interfaces/IEventHandlerData";
 import { PopConst } from '../Classes/PopConst';
-import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
+import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { IOneGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
 
 export class EventManager extends PopUpManagerBase {
   Handlers: Handlers
 
   AllMenuCommands: IOneCommand[];
 
-  constructor(popHub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
+  constructor(popHub: PopUpHub, allAgents: IAllAgents) {
     
-    super(popHub, allPopUpAgents);
+    super(popHub, allAgents);
     this.Handlers = new Handlers();
-    this.Handlers.External = new HandlersExternal(popHub, this.AllPopUpAgents);
-    this.Handlers.Internal = new HandlersInternal(popHub, this.AllPopUpAgents);
+    this.Handlers.External = new HandlersExternal(popHub, this.AllAgents);
+    this.Handlers.Internal = new HandlersInternal(popHub, this.AllAgents);
   }
 
   Init() {
-    this.AllPopUpAgents.Logger.FuncStart(EventManager.name + this.Init.name);
+    this.AllAgents.Logger.FuncStart(EventManager.name + this.Init.name);
     this.AllMenuCommands = AllCommands.BuildAllCommands(this.PopHub, this.Handlers);
     this.__wireMenuButtons();
     this.WireAllGenericSettings();
-    this.AllPopUpAgents.Logger.FuncEnd(EventManager.name + this.Init.name);
+    this.AllAgents.Logger.FuncEnd(EventManager.name + this.Init.name);
   }
   WireAllGenericSettings() {
-    let genericSettings: OneGenericSetting[] = this.SettingsMan().AllSettings.SettingsAr;
+    let genericSettings: IOneGenericSetting[] = this.SettingsMan().AllSettings.SettingsAr;
 
     for (var idx = 0; idx < genericSettings.length; idx++) {
       let oneSetting = genericSettings[idx];
@@ -68,13 +67,13 @@ export class EventManager extends PopUpManagerBase {
           )
         }
       } else {
-        this.AllPopUpAgents.Logger.Error(this.WireAllGenericSettings.name, 'ui generic element not found');
+        this.AllAgents.Logger.Error(this.WireAllGenericSettings.name, 'ui generic element not found');
       }
     }
   }
 
   private __wireMenuButtons() {
-    this.AllPopUpAgents.Logger.FuncStart(this.__wireMenuButtons.name);
+    this.AllAgents.Logger.FuncStart(this.__wireMenuButtons.name);
 
     this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestore(evt, this.PopHub); });
     this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.TaDebug, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
@@ -97,13 +96,13 @@ export class EventManager extends PopUpManagerBase {
             var popHub: PopUpHub = this.PopHub;
             targetElem.addEventListener('click', (evt) => { oneEvent.Handler(evt, this.PopHub, oneEvent.ParameterData) });
           } else {
-            this.AllPopUpAgents.Logger.Error(this.__wireMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
+            this.AllAgents.Logger.Error(this.__wireMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
           }
         }
       }
     }
 
-    this.AllPopUpAgents.Logger.FuncEnd(this.__wireMenuButtons.name);
+    this.AllAgents.Logger.FuncEnd(this.__wireMenuButtons.name);
   }
   GetCommandByKey(menuCommand: MenuCommand): IOneCommand {
     var toReturn: IOneCommand;
@@ -112,12 +111,12 @@ export class EventManager extends PopUpManagerBase {
       var candidate = this.AllMenuCommands[idx];
       if (candidate.Command === menuCommand) {
         toReturn = candidate;
-        this.AllPopUpAgents.Logger.LogVal('Command', MenuCommand[toReturn.Command]);
+        this.AllAgents.Logger.LogVal('Command', MenuCommand[toReturn.Command]);
         break;
       }
     }
     if (!toReturn) {
-      this.AllPopUpAgents.Logger.Error(this.GetCommandByKey.name, 'matching command not found ' + MenuCommand[menuCommand]);
+      this.AllAgents.Logger.Error(this.GetCommandByKey.name, 'matching command not found ' + MenuCommand[menuCommand]);
     }
     return toReturn;
   }

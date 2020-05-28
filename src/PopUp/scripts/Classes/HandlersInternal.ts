@@ -1,11 +1,10 @@
 ﻿import { CommonEvents } from "./CommonEvents";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
-import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { PopUpHub } from "../Managers/PopUpHub";
 import { IScMode } from "../../../Shared/scripts/Interfaces/IscMode";
+import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 export class HandlersInternal extends CommonEvents {
-
   HndlrSelectChange(evt: any, popHub: PopUpHub) {
     this.PopHub.UiMan.SelectChanged();
   }
@@ -15,7 +14,7 @@ export class HandlersInternal extends CommonEvents {
   //    popHub.Log.FuncEnd(this.__showDebugButtonClicked.name);
   //}
   __cleardebugTextWithConfirm(evt: any, popHub: PopUpHub) {
-    this.AllPopUpAgents.Logger.HndlrClearDebugText(this.AllPopUpAgents.Logger, true);
+    this.AllAgents.Logger.HndlrClearDebugText(this.AllAgents.Logger, true);
   }
   GenericSettingChanged() {
   }
@@ -32,16 +31,16 @@ export class HandlersInternal extends CommonEvents {
   }
   async SetScModeInternal(evt: MouseEvent, popHub: PopUpHub, parameters: any[]) {
     let newMode: IScMode = parameters[0];
-    await  popHub.LocMan.SetScMode(newMode)
+    await popHub.LocMan.SetScMode(newMode)
       .then(() => popHub.UiMan.OnSuccessfullCommand());
     //.catch((ex) => popHub.Log.Error(popHub.EventMan.Handlers.External.SetScMode.name, ex));
   }
   ToggleAccordian(evt: any, popHub: PopUpHub, settingKey: SettingKey) {
-    this.AllPopUpAgents.Logger.FuncStart(this.ToggleAccordian.name);
+    this.AllAgents.Logger.FuncStart(this.ToggleAccordian.name);
     var srcElem: HTMLElement = <HTMLElement>(evt.target || evt.srcElement);
     var foundContentSib = popHub.UiMan.GetAccordianContentElem(srcElem);
     if (foundContentSib) {
-      var oldValue: OneGenericSetting = popHub.Helpers.SettingsHelp.GetByKey(settingKey, popHub.SettingsMan.AllSettings.SettingsAr);
+      var oldValue: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(settingKey, popHub.SettingsMan.AllSettings.SettingsAr);
       if (oldValue) {
         var oldValueBool: boolean = <boolean>oldValue.ValueAsObj;
         var newVal: boolean = !oldValue;
@@ -52,8 +51,8 @@ export class HandlersInternal extends CommonEvents {
       popHub.SettingsMan.SetByKey(settingKey, newVal);
     }
     else {
-      this.AllPopUpAgents.Logger.Error(this.ToggleAccordian.name, 'did not find sib');
+      this.AllAgents.Logger.Error(this.ToggleAccordian.name, 'did not find sib');
     }
-    this.AllPopUpAgents.Logger.FuncEnd(this.ToggleAccordian.name);
+    this.AllAgents.Logger.FuncEnd(this.ToggleAccordian.name);
   }
 }

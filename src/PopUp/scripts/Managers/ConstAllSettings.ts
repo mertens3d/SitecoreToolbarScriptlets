@@ -1,12 +1,13 @@
-﻿import { OneGenericSetting } from "../../../Shared/scripts/Classes/OneGenericSetting";
+﻿import { OneGenericSetting } from "../../../Shared/scripts/Agents/SettingsAgent/OneGenericSetting";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
 import { SettingType } from "../../../Shared/scripts/Enums/SettingType";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 import { PopConst } from "../Classes/PopConst";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
+import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 
 export class ConstAllSettings {
-   AllSettings: OneGenericSetting[] = [
+   AllSettings: IOneGenericSetting[] = [
     new OneGenericSetting(
       SettingKey.Test,
       SettingType.BoolCheckBox,
@@ -19,7 +20,7 @@ export class ConstAllSettings {
     new OneGenericSetting(
       SettingKey.LogToConsole,
       SettingType.BoolCheckBox,
-      null,
+      true,
       PopConst.Const.Selector.HS.LogToConsole,
       SharedConst.Const.Settings.Defaults.LogToConsole,
       SettingFlavor.ContentAndPopUp,

@@ -1,12 +1,11 @@
 ﻿import { PopUpManagerBase } from "./PopUpManagerBase";
 import { PopUpHub } from "./PopUpHub";
-import { LoggerPopUpAgent } from "../Agents/LoggerPopUpAgent";
-import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
+import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 
 export class MiscManager extends PopUpManagerBase {
-  constructor(popHub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
+  constructor(popHub: PopUpHub, allAgents: IAllAgents) {
 
-    super(popHub, allPopUpAgents);
+    super(popHub, allAgents);
   }
 
 }

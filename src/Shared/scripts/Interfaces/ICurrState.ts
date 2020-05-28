@@ -3,7 +3,6 @@ import { IError } from "./IError";
 import { ISnapShotsMany } from "./ISnapShotsMany";
 import { IDataOneStorageCE } from "./IDataOneStorageCE";
 
-
 export interface ICurrStateContent {
   LastReq: MsgFlag,
   SnapShotsMany: ISnapShotsMany,

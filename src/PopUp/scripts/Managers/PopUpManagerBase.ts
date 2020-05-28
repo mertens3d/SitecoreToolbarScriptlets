@@ -1,31 +1,27 @@
-﻿import { PopUpHub } from "./PopUpHub";
-import { UiManager } from "./UiManager";
-import { PopUpMessagesManager } from "./PopUpMessagesManager";
-import { PopUpAtticManager } from "./PopUpAtticManager";
-import { LoggerPopUpAgent } from "../Agents/LoggerPopUpAgent";
-
-import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
-import { SettingsManager } from "./SettingsManager";
+﻿import { BrowserManager } from "./BrowserManager";
 import { EventManager } from "./EventManager";
-import { TabManager } from "./TabManager";
-import { LocationManager } from "./LocationManager";
 import { HelperHub } from "../../../Shared/scripts/Helpers/Helpers";
-import { BrowserManager } from "./BrowserManager";
-import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
-//import { PopUpFactoryManager } from "./FactoryManager";
+import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
+import { LocationManager } from "./LocationManager";
+import { PopUpAtticManager } from "./PopUpAtticManager";
+import { PopUpHub } from "./PopUpHub";
+import { PopUpMessagesManager } from "./PopUpMessagesManager";
+import { SettingsManager } from "./SettingsManager";
+import { TabManager } from "./TabManager";
+import { UiManager } from "./UiManager";
 
 export class PopUpManagerBase {
   PopHub: PopUpHub;
   IsInit: Boolean = false;
-  AllPopUpAgents: IAllPopUpAgents;
+  AllAgents: IAllAgents;
 
-  constructor(popHub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
+  constructor(popHub: PopUpHub, allAgents: IAllAgents) {
     this.PopHub = popHub;
-    this.AllPopUpAgents = allPopUpAgents;
+    this.AllAgents = allAgents;
+    
   }
 
   UiMan(): UiManager { return this.PopHub.UiMan; }
-  //Const(): IPopUpConst { return this.PopHub.PopUpConst; }
   MsgMan(): PopUpMessagesManager { return this.PopHub.PopMsgMan; }
   PopAtticMan(): PopUpAtticManager { return this.PopHub.PopUpAtticMan; }
   Helpers(): HelperHub { return this.PopHub.Helpers; }

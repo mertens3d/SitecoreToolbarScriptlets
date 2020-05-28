@@ -1,10 +1,19 @@
 ﻿import { IGuid } from "../IGuid";
 import { IDataOneDoc } from "../IDataOneDoc";
 import { IError } from "../IError";
+import { IDataBrowserTab } from "../IDataBrowserWindow";
+import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
+import { IDataOneIframe } from "../IDataOneIframe";
 
-export interface ILoggerAgentBase {
-  HndlrClearDebugText(self: ILoggerAgentBase): void
-  HndlrClearDebugText(self: ILoggerAgentBase, verify: boolean ): void
+export interface ILoggerAgent {
+  DebugIDataOneDoc(associatedDoc: IDataOneDoc);
+  PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
+  DebugDataOneIframe(NewIframe: IDataOneIframe);
+  CtorName(name: string);
+
+
+  HndlrClearDebugText(self: ILoggerAgent): void
+  HndlrClearDebugText(self: ILoggerAgent, verify: boolean ): void
   DebugIDataOneDoc(targetDoc: IDataOneDoc);
   DebugIGuid(Id: IGuid);
   EnabledStatus();
@@ -30,4 +39,5 @@ export interface ILoggerAgentBase {
   MarkerC();
   MarkerD();
   SetEnabled(arg0: boolean);
+  DebugIDataBrowserTab(tabData: IDataBrowserTab);
 }

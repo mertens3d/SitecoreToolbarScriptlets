@@ -6,9 +6,9 @@ export class BrowserManager extends PopUpManagerBase {
 
   async CreateNewTab(tabUrl: AbsoluteUrl) {
     return new Promise(async (resolve, reject) => {
-      this.AllPopUpAgents.Logger.FuncStart(this.CreateNewTab.name, tabUrl.AbsUrl);
+      this.AllAgents.Logger.FuncStart(this.CreateNewTab.name, tabUrl.AbsUrl);
 
-      let result: PromiseResult = new PromiseResult(this.CreateNewTab.name, this.AllPopUpAgents.Logger);
+      let result: PromiseResult = new PromiseResult(this.CreateNewTab.name, this.AllAgents.Logger);
 
       let newTab: IDataBrowserTab;
 
@@ -32,10 +32,10 @@ export class BrowserManager extends PopUpManagerBase {
         });
 
       if (result.WasSuccessful()) {
-        this.AllPopUpAgents.Logger.FuncEnd(this.CreateNewTab.name, tabUrl.AbsUrl);
+        this.AllAgents.Logger.FuncEnd(this.CreateNewTab.name, tabUrl.AbsUrl);
         resolve(newTab);
       } else {
-        this.AllPopUpAgents.Logger.FuncEnd(this.CreateNewTab.name, tabUrl.AbsUrl);
+        this.AllAgents.Logger.FuncEnd(this.CreateNewTab.name, tabUrl.AbsUrl);
         reject(result.RejectReasons);
       }
     })

@@ -30,43 +30,43 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
     //callbackOnComplete();
-    this.Log().FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.AsShort);
-    this.Log().Log('callback passed: ' + (callbackOnComplete !== null));
+    this.ContentAgents.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.AsShort);
+    this.ContentAgents.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
     var userNameElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);
     var passwordElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginPassword);
 
-    if (this.Log().IsNotNullOrUndefinedBool('userNameElem', userNameElem)
+    if (this.ContentAgents.Logger.IsNotNullOrUndefinedBool('userNameElem', userNameElem)
       &&
-      this.Log().IsNotNullOrUndefinedBool('passwordElem', passwordElem)) {
+      this.ContentAgents.Logger.IsNotNullOrUndefinedBool('passwordElem', passwordElem)) {
       userNameElem.setAttribute('value', ContentConst.Const.Names.scDefaultAdminUserName);
       passwordElem.setAttribute('value', ContentConst.Const.Names.scDefaultAdminPassword);
 
       var loginButton: HTMLElement = this.GetLoginButton(targetDoc);
 
-      if (this.Log().IsNotNullOrUndefinedBool('loginButton', loginButton)) {
-        this.Log().Log('clicking');
+      if (this.ContentAgents.Logger.IsNotNullOrUndefinedBool('loginButton', loginButton)) {
+        this.ContentAgents.Logger.Log('clicking');
         loginButton.click();
 
         if (callbackOnComplete) {
-          this.Log().Log('Triggering callback');
+          this.ContentAgents.Logger.Log('Triggering callback');
 
           setTimeout(callbackOnComplete, ContentConst.Const.Timeouts.PostLoginBtnClick);
         } else {
-          this.Log().Log('no callback passed');
+          this.ContentAgents.Logger.Log('no callback passed');
         }
       }
       else {
-        this.Log().Error(this.AdminB.name, 'No loginButton');
+        this.ContentAgents.Logger.Error(this.AdminB.name, 'No loginButton');
       }
     }
     else {
-      this.Log().Error(this.AdminB.name, 'No Username or password field');
+      this.ContentAgents.Logger.Error(this.AdminB.name, 'No Username or password field');
     }
-    this.Log().FuncEnd(this.AdminB.name);
+    this.ContentAgents.Logger.FuncEnd(this.AdminB.name);
   }
   GetLoginButton(targetDoc: IDataOneDoc): HTMLElement {
-    this.Log().FuncStart(this.GetLoginButton.name);
+    this.ContentAgents.Logger.FuncStart(this.GetLoginButton.name);
 
     var toReturn: HTMLElement = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginBtn.sc920);
 
@@ -74,8 +74,8 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
       toReturn = targetDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.LoginBtn.sc820);
     }
 
-    this.Log().Log('toReturn: ' + toReturn);
-    this.Log().FuncEnd(this.GetLoginButton.name);
+    this.ContentAgents.Logger.Log('toReturn: ' + toReturn);
+    this.ContentAgents.Logger.FuncEnd(this.GetLoginButton.name);
     return toReturn;
   }
 }

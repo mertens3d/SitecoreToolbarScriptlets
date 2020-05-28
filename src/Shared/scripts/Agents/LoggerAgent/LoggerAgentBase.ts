@@ -1,16 +1,23 @@
-﻿import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
-import { IDataDebugCallback } from "../Interfaces/DebugCallback";
-import { ICallbackDataDebugTextChanged } from "../Interfaces/ICallbackDataDebugTextChanged";
-import { IGuid } from "../Interfaces/IGuid";
-import { IError } from "../Interfaces/IError";
-import { StaticHelpers } from "../Classes/StaticHelpers";
-import { BufferChar } from "../Enums/BufferChar";
-import { BufferDirection } from "../Enums/BufferDirection";
-import { OneGenericSetting } from "../Classes/OneGenericSetting";
-import { SharedConst } from "../SharedConst";
-import { ILoggerAgentBase } from "../Interfaces/Agents/ILoggerBase";
+﻿import { IDataOneDoc } from "../../Interfaces/IDataOneDoc";
+import { IDataDebugCallback } from "../../Interfaces/DebugCallback";
+import { ICallbackDataDebugTextChanged } from "../../Interfaces/ICallbackDataDebugTextChanged";
+import { IGuid } from "../../Interfaces/IGuid";
+import { IError } from "../../Interfaces/IError";
+import { StaticHelpers } from "../../Classes/StaticHelpers";
+import { BufferChar } from "../../Enums/BufferChar";
+import { BufferDirection } from "../../Enums/BufferDirection";
+import { SharedConst } from "../../SharedConst";
+import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerBase";
+import { IOneGenericSetting } from "../../Interfaces/Agents/IOneGenericSetting";
+import { IDataBrowserTab } from "../../Interfaces/IDataBrowserWindow";
+import { scWindowType } from "../../Enums/scWindowType";
+import { IDataBucketRestoreDesktop } from "../../Interfaces/IDataBucketRestoreDesktop";
+import { PayloadDataFromPopUp } from "../../Classes/PayloadDataReqPopUp";
+import { IDataPayloadSnapShot } from "../../Interfaces/IDataPayloadSnapShot";
+import { IDataOneIframe } from "../../Interfaces/IDataOneIframe";
+import { ICurrStateContent } from "../../Interfaces/ICurrState";
 
-export class LoggerAgentBase implements ILoggerAgentBase {
+export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;
   private LogToConsoleEnabled: boolean;
   LogHasBeenInit: boolean = false;
@@ -48,7 +55,13 @@ export class LoggerAgentBase implements ILoggerAgentBase {
     this.LogToConsoleEnabled = newValue;
     console.log('Logging set to: ' + newValue);
   }
-
+  DebugIDataBrowserTab(browserWindow: IDataBrowserTab) {
+    if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
+      this.LogVal('WindowType', scWindowType[browserWindow.UrlParts.ScWindowType]);
+      //this.DebugIDataOneDoc(browserWindow.DataDocSelf);
+      //this.DebugWindow(browserWindow.Window);
+    }
+  }
   EnabledStatus(): boolean {
     return this.LogToConsoleEnabled;
   }
@@ -59,7 +72,7 @@ export class LoggerAgentBase implements ILoggerAgentBase {
   //  const debugPrefix = '   ~~~   ';
   //  this.LogVal(debugPrefix + textValName, textVal.toString())
   //}
-  DebugIdataPopUpSettings(toReturn: OneGenericSetting): void {
+  DebugIdataPopUpSettings(toReturn: IOneGenericSetting): void {
     //this.FuncStart(this.DebugSettings.name);
     this.LogVal('Settings', JSON.stringify(toReturn));
     //this.FuncEnd(this.DebugSettings.name);
@@ -91,6 +104,13 @@ export class LoggerAgentBase implements ILoggerAgentBase {
       this.LogVal('asString', id.AsString);
     }
   }
+  //DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
+  //  if (this.IsNotNullOrUndefinedBool('IDataOneDoc', dataOneDoc)) {
+  //    if (this.IsNotNullOrUndefinedBool('Document', dataOneDoc.ContentDoc)) {
+  //      this.LogVal('Doc Url', dataOneDoc.ContentDoc.location.href);
+  //    }
+  //  }
+  //}
   DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
     this.FuncStart(this.DebugIDataOneDoc.name);
     this.Log('');
@@ -124,7 +144,7 @@ export class LoggerAgentBase implements ILoggerAgentBase {
       Func: callback
     });
   }
-  HndlrClearDebugText(self: LoggerAgentBase, verify: boolean = false): void {
+  HndlrClearDebugText(self: LoggerAgent, verify: boolean = false): void {
     this.FuncStart(this.HndlrClearDebugText.name);
     var proceed: boolean = true;
     if (verify) {
@@ -207,6 +227,87 @@ export class LoggerAgentBase implements ILoggerAgentBase {
         this.LogPreInitBuffer.push(text);
       }
     }
+  }
+  DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
+    this.FuncStart(this.DebugDataOneIframe.name);
+    this.Log('dataOneIframe : ' + this.IsNullOrUndefined(dataOneIframe));
+    if (dataOneIframe) {
+      this.Log('dataOneIframe.Nickname : ' + dataOneIframe.Nickname);
+      this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
+      if (dataOneIframe.IframeElem) {
+        this.Log('dataOneIframe.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
+        //  //this.Log('dataOneIframe.IframeElem.src: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.src));
+        //  this.Log('dataOneIframe.IframeElem.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
+        //  //this.Log('dataOneIframe.IframeElem.name: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.name));
+      }
+      this.Log('dataOneIframe.ContentDoc: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc));
+      this.DebugIDataOneDoc(dataOneIframe.ContentDoc);
+      //this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
+      //this.Log('dataOneIframe.Id: \t' + this.IsNullOrUndefined(dataOneIframe.Id));
+      //if (dataOneIframe.Id) {
+      //  this.Log('dataOneIframe.Id.asShort: \t' + this.IsNullOrUndefined(dataOneIframe.Id.asShort));
+      //}
+      //this.Log('dataOneIframe.DocElem: \t' + this.IsNullOrUndefined(dataOneIframe.Index));
+    }
+    this.FuncEnd(this.DebugDataOneIframe.name);
+  }
+
+
+  DebugPayloadDataFromPopUp(data: PayloadDataFromPopUp) {
+    if (this.IsNotNullOrUndefinedBool('PayloadDataFromPopUp', data)) {
+      this.LogVal('idOfSelect', data.IdOfSelect);
+      this.DebugIGuid(data.IdOfSelect);
+      this.DebugIDataPayloadSnapShot(data.SnapShotSettings);
+    }
+  }
+  DebugIDataPayloadSnapShot(snapShotSettings: IDataPayloadSnapShot) {
+    if (this.IsNotNullOrUndefinedBool('IDataPayloadSnapShot', snapShotSettings)) {
+      this.LogVal('Flavor', StaticHelpers.FlavorAsString(snapShotSettings.Flavor));
+      this.LogVal('Nickname', snapShotSettings.SnapShotNewNickname);
+    }
+  }
+  //DebugIDataContentPrefs(prefs: IOneGenericSetting) {
+  //      if (this.IsNotNullOrUndefinedBool('IDataContentPrefs', prefs)) {
+  //          if (this.IsNotNullOrUndefinedBool('MaxAutoSaveCount', prefs.MaxAutoSaveCount)) {
+  //              this.LogVal('MaxAutoSaveCount', prefs.MaxAutoSaveCount);
+  //          }
+  //      }
+  //  }
+  //DebugIDataBrowserWindow(targetWindow: IDataBrowserWindow) {
+  //  this.NotNullCheck('toReturn', targetWindow);
+  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf);
+  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document);
+  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document.location);
+  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document.location.href);
+  //  this.LogVal('targetWindow.DataDocSelf.Document.location.href', targetWindow.DataDocSelf.Document.location.href);
+  //}
+  DebugObjState(state: ICurrStateContent) {
+    if (this.IsNotNullOrUndefinedBool('State', state)) {
+      if (this.IsNotNullOrUndefinedBool('CurrentSnapShots', state.SnapShotsMany.CurrentSnapShots)) {
+        this.LogVal('Snapshot count', state.SnapShotsMany.CurrentSnapShots.length);
+      }
+      //if (this.IsNotNullOrUndefinedBool('PageType', state.WindowType)) {
+      //  this.LogVal('scWindowType : ', scWindowType[state.WindowType]);
+      //}
+      //if (this.IsNotNullOrUndefinedBool('PageType', state.Url)) {
+      //  this.LogVal('Url : ', state.Url);
+      //}
+    }
+  }
+ 
+  PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, friendlyName: string) {
+    this.FuncStart(this.PromiseBucketDebug.name, friendlyName);
+    this.Log('promiseBucket : ' + this.IsNullOrUndefined(promiseBucket));
+    if (promiseBucket && typeof (promiseBucket) !== 'undefined') {
+      this.Log('promiseBucket.IFramesbefore: ' + this.IsNullOrUndefined(promiseBucket.IFramesbefore));
+      //this.Log('promiseBucket.targetWindow: ' + this.IsNullOrUndefined(promiseBucket.targetWindow));
+      this.Log('promiseBucket.oneCEdata: ' + this.IsNullOrUndefined(promiseBucket.oneCEdata));
+      this.Log('promiseBucket.NewIframe: ' + this.IsNullOrUndefined(promiseBucket.NewIframe));
+      if (promiseBucket.NewIframe) {
+        this.DebugDataOneIframe(promiseBucket.NewIframe);
+      }
+    }
+    this.FuncEnd(this.PromiseBucketDebug.name, friendlyName);
   }
   private __triggerAllDebugTextChangedCallbacks(data: ICallbackDataDebugTextChanged) {
     for (var idx = 0; idx < this.__debugTextChangedCallbacks.length; idx++) {

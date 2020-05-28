@@ -5,13 +5,13 @@ import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
-import { IAllPopUpAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllPopUpAgents";
+import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 
 export class PromiseChainRestoreDtPopUp extends PopUpManagerBase {
-  constructor(hub: PopUpHub, allPopUpAgents: IAllPopUpAgents) {
-    super(hub, allPopUpAgents)
-    this.AllPopUpAgents.Logger.FuncStart(PromiseChainRestoreDtPopUp.name);
-    this.AllPopUpAgents.Logger.FuncEnd(PromiseChainRestoreDtPopUp.name);
+  constructor(hub: PopUpHub, allAgents: IAllAgents) {
+    super(hub, allAgents)
+    this.AllAgents.Logger.FuncStart(PromiseChainRestoreDtPopUp.name);
+    this.AllAgents.Logger.FuncEnd(PromiseChainRestoreDtPopUp.name);
   }
 
   //async GoToAndWaitForDesktopPage(promiseBucket: IDataBucketRestoreDesktop) {

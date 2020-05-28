@@ -41,7 +41,7 @@ export interface IContentConst {
     SC: {
       ContentTreeNodeGlyph: string,
       IdStartsWithTreeNode: string,
-      IframeContent: string,
+      IframeContent: IScVerSpec,
       JqueryModalDialogsFrame: string,
       ContentIframe0: string,
       NextButton: string,

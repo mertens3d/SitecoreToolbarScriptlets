@@ -3,19 +3,19 @@ import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { IContentLoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/IContentLogger';
+import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
 
 export class OneTreeManager extends ContentManagerBase {
   AssociatedDoc: IDataOneDoc;
-  constructor(hub: ContentHub, associatedDoc: IDataOneDoc, logger: IContentLoggerAgent) {
-    super(hub, logger);
-    hub.Logger.FuncStart(OneTreeManager.name);
+  constructor(hub: ContentHub, associatedDoc: IDataOneDoc, contentAgents: IAllConentAgents) {
+    super(hub, contentAgents);
+    this.ContentAgents.Logger.FuncStart(OneTreeManager.name);
     this.AssociatedDoc = associatedDoc;
-    hub.Logger.FuncEnd(OneTreeManager.name);
+    this.ContentAgents.Logger.FuncEnd(OneTreeManager.name);
   }
 
   GetFriendlyNameFromNode(inputNode) {
-    this.Log().FuncStart(this.GetFriendlyNameFromNode.name);
+    this.ContentAgents.Logger.FuncStart(this.GetFriendlyNameFromNode.name);
     var toReturn = 'unknown';
 
     var parentNode = inputNode.parentNode;
@@ -24,9 +24,9 @@ export class OneTreeManager extends ContentManagerBase {
     if (treeNode) {
       toReturn = treeNode.innerText;
     } else {
-      this.Log().Log('No treeNode');
+      this.ContentAgents.Logger.Log('No treeNode');
     }
-    this.Log().FuncEnd(this.GetFriendlyNameFromNode.name, toReturn);
+    this.ContentAgents.Logger.FuncEnd(this.GetFriendlyNameFromNode.name, toReturn);
     return toReturn;
   }
 
@@ -53,7 +53,7 @@ export class OneTreeManager extends ContentManagerBase {
       var className = firstNodeActiveTest.className;
       if (className.indexOf(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive) > -1) {
         toReturn = true;
-        this.Log().Log('** isActive ' + targetNode.innerText);
+        this.ContentAgents.Logger.Log('** isActive ' + targetNode.innerText);
       }
     }
 
@@ -131,33 +131,33 @@ export class OneTreeManager extends ContentManagerBase {
   }
 
   GetOneLiveTreeData(): IDataOneTreeNode[] {
-    this.Log().FuncStart(this.GetOneLiveTreeData.name);
-    this.Log().Log('targetDoc isnull: ' + (this.AssociatedDoc === null));
+    this.ContentAgents.Logger.FuncStart(this.GetOneLiveTreeData.name);
+    this.ContentAgents.Logger.Log('targetDoc isnull: ' + (this.AssociatedDoc === null));
     var toReturn: IDataOneTreeNode[] = [];
 
     if (this.AssociatedDoc) {
       //this.debug().Log(targetDoc);
-      this.Log().LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
-      this.Log().DebugIDataOneDoc(this.AssociatedDoc);
+      this.ContentAgents.Logger.LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
+      this.ContentAgents.Logger.DebugIDataOneDoc(this.AssociatedDoc);
       var rootNode = this.AssociatedDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
 
       if (rootNode) {
-        this.Log().Log('rootNode: ' + rootNode.innerHTML);
+        this.ContentAgents.Logger.Log('rootNode: ' + rootNode.innerHTML);
         var rootParent = rootNode.parentElement;
 
         toReturn = this.WalkNodeRecursive(rootParent, ContentConst.Const.MaxIter);
-        this.Log().Log('foundNodes count: ' + toReturn.length);
+        this.ContentAgents.Logger.Log('foundNodes count: ' + toReturn.length);
 
         //var nodesAsString = JSON.stringify(toReturn);
         //this.debug().Log('toReturn as string: ' + nodesAsString);
       } else {
-        this.Log().Error(this.GetOneLiveTreeData.name, 'no root node');
+        this.ContentAgents.Logger.Error(this.GetOneLiveTreeData.name, 'no root node');
       }
     } else {
-      this.Log().Error(this.GetOneLiveTreeData.name, 'no targetDoc');
+      this.ContentAgents.Logger.Error(this.GetOneLiveTreeData.name, 'no targetDoc');
     }
 
-    this.Log().FuncEnd(this.GetOneLiveTreeData.name);
+    this.ContentAgents.Logger.FuncEnd(this.GetOneLiveTreeData.name);
 
     return toReturn;
   }

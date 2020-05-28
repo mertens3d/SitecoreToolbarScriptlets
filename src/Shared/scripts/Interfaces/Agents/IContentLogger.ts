@@ -1,11 +1,8 @@
 ﻿import { IDataOneDoc } from "../IDataOneDoc";
 import { IDataOneIframe } from "../IDataOneIframe";
 import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
-import { ILoggerAgentBase } from "./ILoggerBase";
-export interface IContentLoggerAgent extends ILoggerAgentBase {
+import { ILoggerAgent } from "./ILoggerBase";
+export interface ILoggerAgentBase extends ILoggerAgent {
 
-  DebugIDataOneDoc(associatedDoc: IDataOneDoc);
-  PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
-  DebugDataOneIframe(NewIframe: IDataOneIframe);
-  CtorName(name: string);
+  
 }

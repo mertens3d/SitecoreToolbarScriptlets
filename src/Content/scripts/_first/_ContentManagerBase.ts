@@ -9,20 +9,19 @@ import { ContentFactories } from "../Classes/ContentFactories";
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from '../Managers/SitecoreUiManager';
 import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
-import { IContentLoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentLogger";
+import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
 
 export class ContentManagerBase {
   protected ContentHub: ContentHub;
-    ContentLogger: IContentLoggerAgent;
+  ContentAgents: IAllConentAgents;
 
-  constructor(contentHub: ContentHub, logger: IContentLoggerAgent) {
+  constructor(contentHub: ContentHub, allContentAgents: IAllConentAgents) {
     this.ContentHub = contentHub;
-    this.ContentLogger = logger;
+    this.ContentAgents = allContentAgents;
   }
 
   AtticMan(): ContentAtticManager { return this.ContentHub.AtticMan; }
   //Const(): IContentConst { return this.ContentHub.Const; }
-  Log(): IContentLoggerAgent { return this.ContentHub.Logger; }
   Helpers(): HelperHub { return this.ContentHub.Helpers; }
   OneScWinMan(): OneScWindowManager { return this.ContentHub.OneWindowMan; }
   ScUiMan(): SitecoreUiManager { return this.ContentHub.SitecoreUiMan; }
