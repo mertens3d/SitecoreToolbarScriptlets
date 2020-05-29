@@ -12,15 +12,16 @@ import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
+import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class ContentAtticManager extends ContentManagerBase{ 
   private CachedWindowStorage: ISnapShotsMany;
 
-  constructor(hub: ContentHub ,  contentAgents: IAllConentAgents) {
-    super(hub, contentAgents);
-    this.ContentAgents.Logger.FuncStart(ContentAtticManager.name);
+  constructor(hub: ContentHub, AllAgents: IAllAgents) {
+    super(hub, AllAgents);
+    this.AllAgents.Logger.FuncStart(ContentAtticManager.name);
 
-    this.ContentAgents.Logger.FuncEnd(ContentAtticManager.name);
+    this.AllAgents.Logger.FuncEnd(ContentAtticManager.name);
   }
 
   Init() {
@@ -31,8 +32,8 @@ export class ContentAtticManager extends ContentManagerBase{
 
   UpdateNickname(payload: PayloadDataFromPopUp) {
     return new Promise((resolve, reject) => {
-      this.ContentAgents.Logger.FuncStart(this.UpdateNickname.name);
-      var promResult: PromiseResult = new PromiseResult(this.UpdateNickname.name, this.ContentAgents.Logger);
+      this.AllAgents.Logger.FuncStart(this.UpdateNickname.name);
+      var promResult: PromiseResult = new PromiseResult(this.UpdateNickname.name, this.AllAgents.Logger);
 
       if (payload.IdOfSelect) {
         var storageMatch = this.GetFromStorageById(payload.IdOfSelect, CacheMode.OkToUseCache)
@@ -45,10 +46,10 @@ export class ContentAtticManager extends ContentManagerBase{
         }
       } else {
         promResult.MarkFailed('no payload or id');
-        this.ContentAgents.Logger.LogAsJsonPretty(this.UpdateNickname.name, payload);
+        this.AllAgents.Logger.LogAsJsonPretty(this.UpdateNickname.name, payload);
       }
 
-      this.ContentAgents.Logger.FuncEnd(this.UpdateNickname);
+      this.AllAgents.Logger.FuncEnd(this.UpdateNickname);
       if (promResult.WasSuccessful()) {
         resolve();
       } else {
@@ -59,8 +60,8 @@ export class ContentAtticManager extends ContentManagerBase{
 
   MarkFavorite(data: PayloadDataFromPopUp) {
     return new Promise(async (resolve, reject) => {
-      this.ContentAgents.Logger.FuncStart(this.MarkFavorite.name);
-      var result: PromiseResult = new PromiseResult(this.MarkFavorite.name, this.ContentAgents.Logger);
+      this.AllAgents.Logger.FuncStart(this.MarkFavorite.name);
+      var result: PromiseResult = new PromiseResult(this.MarkFavorite.name, this.AllAgents.Logger);
 
       if (data.IdOfSelect) {
         var storageMatch = this.GetFromStorageById(data.IdOfSelect, CacheMode.OkToUseCache)
@@ -75,7 +76,7 @@ export class ContentAtticManager extends ContentManagerBase{
         result.MarkFailed('no data.idofselect');
       }
 
-      this.ContentAgents.Logger.FuncEnd(this.MarkFavorite.name);
+      this.AllAgents.Logger.FuncEnd(this.MarkFavorite.name);
 
       if (result) {
         resolve();
@@ -86,8 +87,8 @@ export class ContentAtticManager extends ContentManagerBase{
   }
   async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
     return new Promise(async (resolve, reject) => {
-      this.ContentAgents.Logger.FuncStart(this.WriteToStorage.name);
-      var result: PromiseResult = new PromiseResult(this.WriteToStorage.name, this.ContentAgents.Logger);
+      this.AllAgents.Logger.FuncStart(this.WriteToStorage.name);
+      var result: PromiseResult = new PromiseResult(this.WriteToStorage.name, this.AllAgents.Logger);
 
       var snapShotAsString = JSON.stringify(dataOneWindow);
       //this.debug().LogVal('snapShotAsString', snapShotAsString);
@@ -103,7 +104,7 @@ export class ContentAtticManager extends ContentManagerBase{
         result.MarkFailed('Snap shot not successfully saved');
       }
 
-      this.ContentAgents.Logger.FuncEnd(this.WriteToStorage.name);
+      this.AllAgents.Logger.FuncEnd(this.WriteToStorage.name);
 
       if (result.WasSuccessful()) {
         resolve();
@@ -114,7 +115,7 @@ export class ContentAtticManager extends ContentManagerBase{
   }
 
   GetFromStorageById(needleId: IGuid, cacheMode: CacheMode): IDataOneWindowStorage {
-    this.ContentAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.AsString);
+    this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.AsString);
     var foundStorage: ISnapShotsMany = this.GetAllSnapShotsMany(cacheMode);
     var DateOneWinStoreMatch: IDataOneWindowStorage = null;
 
@@ -128,24 +129,24 @@ export class ContentAtticManager extends ContentManagerBase{
       }
     }
     if (DateOneWinStoreMatch) {
-      this.ContentAgents.Logger.Log('found match', this.Helpers().UtilityHelp.TimeNicknameFavStr(DateOneWinStoreMatch));
+      this.AllAgents.Logger.Log('found match', this.Helpers().UtilityHelp.TimeNicknameFavStr(DateOneWinStoreMatch));
     } else {
-      this.ContentAgents.Logger.LogVal(this.GetFromStorageById.name, 'Match notfound')
+      this.AllAgents.Logger.LogVal(this.GetFromStorageById.name, 'Match notfound')
     }
 
-    this.ContentAgents.Logger.FuncEnd(this.GetFromStorageById.name);
+    this.AllAgents.Logger.FuncEnd(this.GetFromStorageById.name);
     return DateOneWinStoreMatch;
   }
 
   private __getAllLocalStorageAsIOneStorageData(): IOneStorageData[] {
-    this.ContentAgents.Logger.FuncStart(this.__getAllLocalStorageAsIOneStorageData.name);
+    this.AllAgents.Logger.FuncStart(this.__getAllLocalStorageAsIOneStorageData.name);
     var toReturn: IOneStorageData[] = [];
 
     var storageLength: number = window.localStorage.length;
-    this.ContentAgents.Logger.LogVal('storageLength', storageLength);
+    this.AllAgents.Logger.LogVal('storageLength', storageLength);
 
     for (var idx: number = 0; idx < storageLength; idx++) {
-      this.ContentAgents.Logger.LogVal('Processing Index', idx);
+      this.AllAgents.Logger.LogVal('Processing Index', idx);
 
       var candidate: IOneStorageData = {
         data: '',
@@ -154,19 +155,19 @@ export class ContentAtticManager extends ContentManagerBase{
 
       candidate.key = window.localStorage.key(idx);
 
-      this.ContentAgents.Logger.LogVal('Candidate.key', candidate.key);
+      this.AllAgents.Logger.LogVal('Candidate.key', candidate.key);
 
       if (candidate.key.startsWith(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix)) {
-        this.ContentAgents.Logger.LogVal('valid candidate', true);
+        this.AllAgents.Logger.LogVal('valid candidate', true);
 
         candidate.data = window.localStorage.getItem(candidate.key);
-        if (this.ContentAgents.Logger.IsNotNullOrUndefinedBool('candidate.data', candidate.data)) {
+        if (this.AllAgents.Logger.IsNotNullOrUndefinedBool('candidate.data', candidate.data)) {
           toReturn.push(candidate);
         }
       }
     }
 
-    this.ContentAgents.Logger.FuncEnd(this.__getAllLocalStorageAsIOneStorageData.name, toReturn.length);
+    this.AllAgents.Logger.FuncEnd(this.__getAllLocalStorageAsIOneStorageData.name, toReturn.length);
     return toReturn;
   }
 
@@ -188,13 +189,13 @@ export class ContentAtticManager extends ContentManagerBase{
         candidate.NickName = '';
       }
     } else {
-      this.ContentAgents.Logger.Error(this.__parseRawData.name, 'Saved data did not import correctly')
+      this.AllAgents.Logger.Error(this.__parseRawData.name, 'Saved data did not import correctly')
     }
     return candidate
   }
 
   private __getAllStorageReal() {
-    this.ContentAgents.Logger.FuncStart(this.__getAllStorageReal.name);
+    this.AllAgents.Logger.FuncStart(this.__getAllStorageReal.name);
     var toReturn: IDataOneWindowStorage[] = [];
 
     var rawStorageData: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
@@ -211,12 +212,12 @@ export class ContentAtticManager extends ContentManagerBase{
 
     toReturn = this.FilterOutOldData(toReturn);
 
-    this.ContentAgents.Logger.FuncEnd(this.__getAllStorageReal.name);
+    this.AllAgents.Logger.FuncEnd(this.__getAllStorageReal.name);
     return toReturn;
   }
 
   CleanOutOldData(): void {
-    this.ContentAgents.Logger.FuncStart(this.CleanOutOldData.name);
+    this.AllAgents.Logger.FuncStart(this.CleanOutOldData.name);
 
     var cleanData: IDataOneWindowStorage[] = [];
     var now: Date = new Date();
@@ -231,14 +232,14 @@ export class ContentAtticManager extends ContentManagerBase{
 
         if (candidate.Flavor) {
           if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
-            this.ContentAgents.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
+            this.AllAgents.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
             deleteFlag = true;
           }
           autoCount++;
         }
 
         if (now.getTime() - candidate.TimeStamp.getTime() > maxAutoSaveDiff) {
-          this.ContentAgents.Logger.LogVal('Delete (Old : max' + ContentConst.Const.MaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
+          this.AllAgents.Logger.LogVal('Delete (Old : max' + ContentConst.Const.MaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
           deleteFlag = true;
         }
 
@@ -246,21 +247,21 @@ export class ContentAtticManager extends ContentManagerBase{
           cleanData.push(candidate);
         } else {
           try {
-            this.ContentAgents.Logger.LogVal('Cleaning old autosave', candidate.RawData.key);
+            this.AllAgents.Logger.LogVal('Cleaning old autosave', candidate.RawData.key);
             window.localStorage.removeItem(candidate.RawData.key);
           } catch (e) {
-            this.ContentAgents.Logger.Error(this.CleanOutOldData.name, 'unable to delete key: ' + candidate.RawData.key)
+            this.AllAgents.Logger.Error(this.CleanOutOldData.name, 'unable to delete key: ' + candidate.RawData.key)
           }
         }
       }
       this.CachedWindowStorage.CurrentSnapShots = cleanData;
     }
 
-    this.ContentAgents.Logger.FuncEnd(this.CleanOutOldData.name);
+    this.AllAgents.Logger.FuncEnd(this.CleanOutOldData.name);
   }
 
   GetAllSnapShotsMany(cacheMode: CacheMode): ISnapShotsMany {
-    this.ContentAgents.Logger.FuncStart(this.GetAllSnapShotsMany.name, StaticHelpers.CacheModeAsString(cacheMode));
+    this.AllAgents.Logger.FuncStart(this.GetAllSnapShotsMany.name, StaticHelpers.CacheModeAsString(cacheMode));
     var toReturn: ISnapShotsMany;
 
     if (cacheMode === CacheMode.DoNotUseCach) {
@@ -279,21 +280,21 @@ export class ContentAtticManager extends ContentManagerBase{
 
     var timeDiff: number = Date.now() - this.CachedWindowStorage.Birthday.getTime();
 
-    this.ContentAgents.Logger.LogVal('cached timeDiff', timeDiff + ' : ' + ContentConst.Const.MaxCacheAgeMs);
+    this.AllAgents.Logger.LogVal('cached timeDiff', timeDiff + ' : ' + ContentConst.Const.MaxCacheAgeMs);
     if (timeDiff > (ContentConst.Const.MaxCacheAgeMs)) {
-      this.ContentAgents.Logger.Log('updating cache');
+      this.AllAgents.Logger.Log('updating cache');
 
       this.CachedWindowStorage.CurrentSnapShots = this.__getAllStorageReal();
       this.CachedWindowStorage.Birthday = new Date();
     } else {
-      this.ContentAgents.Logger.Log('using cache');
+      this.AllAgents.Logger.Log('using cache');
     }
 
     this.CleanOutOldData();
     this.UpdateCounts();
 
     toReturn = this.CachedWindowStorage;
-    this.ContentAgents.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
+    this.AllAgents.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
 
     return toReturn;
   }
@@ -323,7 +324,7 @@ export class ContentAtticManager extends ContentManagerBase{
 
   RemoveOneFromStorage(targetId: IGuid) {
     return new Promise(async (resolve, reject) => {
-      this.ContentAgents.Logger.FuncStart(this.RemoveOneFromStorage.name);
+      this.AllAgents.Logger.FuncStart(this.RemoveOneFromStorage.name);
       var successful: boolean = true;
       var failMsg: string = '';
       try {
@@ -332,7 +333,7 @@ export class ContentAtticManager extends ContentManagerBase{
           if (storageMatch) {
             var result: boolean = confirm('Remove ?: ' + this.ContentHub.Utilities.TimeNicknameFavStrForConfirmation(storageMatch));
             if (result === true) {
-              this.ContentAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
+              this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
               await window.localStorage.removeItem(storageMatch.RawData.key);
 
               var stillExists: IDataOneWindowStorage = await this.GetFromStorageById(targetId, CacheMode.DoNotUseCach);
@@ -344,7 +345,7 @@ export class ContentAtticManager extends ContentManagerBase{
                 successful = true;
               }
 
-              this.ContentAgents.Logger.Log('Attempting completed');
+              this.AllAgents.Logger.Log('Attempting completed');
             } else {
               successful = false;
               failMsg = 'Confirmation not received';
@@ -362,13 +363,13 @@ export class ContentAtticManager extends ContentManagerBase{
         failMsg = e.toString();
       }
 
-      this.ContentAgents.Logger.FuncEnd(this.RemoveOneFromStorage.name);
+      this.AllAgents.Logger.FuncEnd(this.RemoveOneFromStorage.name);
 
       if (successful) {
-        this.ContentAgents.Logger.Log('resolving');
+        this.AllAgents.Logger.Log('resolving');
         resolve();
       } else {
-        this.ContentAgents.Logger.Log('rejecting');
+        this.AllAgents.Logger.Log('rejecting');
         reject(failMsg);
       }
     })

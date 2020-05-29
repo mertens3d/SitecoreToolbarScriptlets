@@ -9,15 +9,15 @@ import { ContentFactories } from "../Classes/ContentFactories";
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from '../Managers/SitecoreUiManager';
 import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
-import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
+import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class ContentManagerBase {
   protected ContentHub: ContentHub;
-  ContentAgents: IAllConentAgents;
+  AllAgents: IAllAgents;
 
-  constructor(contentHub: ContentHub, allContentAgents: IAllConentAgents) {
+  constructor(contentHub: ContentHub, allAgents: IAllAgents) {
     this.ContentHub = contentHub;
-    this.ContentAgents = allContentAgents;
+    this.AllAgents = allAgents;
   }
 
   AtticMan(): ContentAtticManager { return this.ContentHub.AtticMan; }

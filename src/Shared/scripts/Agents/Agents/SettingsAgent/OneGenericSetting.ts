@@ -1,7 +1,7 @@
-﻿import { SettingKey } from "../../Enums/SettingKey";
-import { SettingType } from "../../Enums/SettingType";
-import { SettingFlavor } from "../../Enums/SettingFlavor";
-import { IOneGenericSetting } from "../../Interfaces/Agents/IOneGenericSetting";
+﻿import { SettingKey } from "../../../Enums/SettingKey";
+import { SettingType } from "../../../Enums/SettingType";
+import { SettingFlavor } from "../../../Enums/SettingFlavor";
+import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
 export class OneGenericSetting implements IOneGenericSetting {
     Friendly: string;
     DataType: SettingType;

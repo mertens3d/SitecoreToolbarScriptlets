@@ -2,5 +2,8 @@
 import { IOneGenericSetting } from "./IOneGenericSetting";
 
 export interface ISettingsAgent {
-  GetByKey(AutoSaveIntervalMin: SettingKey, CurrentContentPrefs: any[]): IOneGenericSetting;
+  ValueAsInteger(autoSaveSetting: IOneGenericSetting);
+  ValueAsBool(setting: IOneGenericSetting): boolean;
+  SetContentSettings(CurrentContentPrefs: IOneGenericSetting[]);
+  GetByKey(AutoSaveIntervalMin: SettingKey): IOneGenericSetting;
 }

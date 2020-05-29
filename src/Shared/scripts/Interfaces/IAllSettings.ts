@@ -2,5 +2,4 @@
 
 export interface IAllGenericSettings {
   SettingsAr: IOneGenericSetting[];
-
 }

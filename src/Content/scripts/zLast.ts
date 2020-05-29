@@ -1,13 +1,13 @@
 import { ContentHub } from './Managers/ContentHub';
-import { ContentAgents } from './_first/ContentAgents';
-import { IAllConentAgents } from '../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
-import { AllHelperAgents } from '../../Shared/scripts/Classes/AllHelperAgents';
-import { SettingsAgent } from '../../Shared/scripts/Agents/SettingsAgent/SettingsAgent';
-import { LoggerAgent } from '../../Shared/scripts/Agents/LoggerAgent/LoggerAgentBase';
+import { IAllAgents } from '../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
+import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgentBase';
+import { RepoAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent';
+import { AllAgents } from '../../Shared/scripts/Agents/Agents/AllAgents';
 
-var allContentAgents: IAllConentAgents = new ContentAgents();
-allContentAgents.Logger = new LoggerAgent();
-allContentAgents.SettingsAgent = new SettingsAgent();
-allContentAgents.HelperAgents = new AllHelperAgents(allContentAgents.Logger, allContentAgents.SettingsAgent);
+var allAgents: IAllAgents = new AllAgents();
+allAgents.Logger = new LoggerAgent();
+allAgents.SettingsAgent = new SettingsAgent();
+allAgents.RepoAgent = new RepoAgent(allAgents.Logger);
 
-new ContentHub(allContentAgents);
+new ContentHub(allAgents);

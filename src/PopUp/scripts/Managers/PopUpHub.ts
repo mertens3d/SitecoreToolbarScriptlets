@@ -1,7 +1,6 @@
 ﻿import { UiManager } from "./UiManager";
 import { EventManager } from "./EventManager";
 import { PopUpMessagesManager } from "./PopUpMessagesManager";
-import { PopUpAtticManager } from "./PopUpAtticManager";
 import { FeedbackManager } from "./FeedbackManager";
 import { SettingsManager } from "./SettingsManager";
 import { TabManager } from "./TabManager";
@@ -10,7 +9,6 @@ import { HelperHub } from "../../../Shared/scripts/Helpers/Helpers";
 import { BrowserManager } from "./BrowserManager";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
-import { SettingsAgent } from "../../../Shared/scripts/Agents/SettingsAgent/SettingsAgent";
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 
@@ -25,7 +23,6 @@ export class PopUpHub {
   LocMan: LocationManager;
   private _allAgents: IAllAgents;
   PopMsgMan: PopUpMessagesManager;
-  PopUpAtticMan: PopUpAtticManager;
   SettingsMan: SettingsManager;
   TabMan: TabManager;
   UiMan: UiManager;
@@ -35,7 +32,6 @@ export class PopUpHub {
     this._allAgents = allAgents;
     this.SettingsMan = new SettingsManager(this, this._allAgents);
 
-    this.PopUpAtticMan = new PopUpAtticManager(this, this._allAgents);
     this.PopMsgMan = new PopUpMessagesManager(this, this._allAgents);
     this.UiMan = new UiManager(this, this._allAgents);
     this.EventMan = new EventManager(this, this._allAgents);
@@ -47,7 +43,7 @@ export class PopUpHub {
     this.TabMan = new TabManager(this, this._allAgents);
     this.BrowserMan = new BrowserManager(this, this._allAgents);
 
-    this.Helpers = new HelperHub(allAgents.HelperAgents);
+    this.Helpers = new HelperHub(allAgents);
 
     this.init();
   }
@@ -55,7 +51,6 @@ export class PopUpHub {
   async init() {
     this._allAgents.Logger.FuncStart(PopUpHub.name, this.init.name);
 
-    await this.PopUpAtticMan.Init(); //before PopMsgMan
     await this.SettingsMan.Init();//after attic (?)
 
 
@@ -66,7 +61,7 @@ export class PopUpHub {
     console.log(setting);
 
     if (setting) {
-      this._allAgents.Logger.Init(SettingsAgent.ValueAsBool(setting))
+      this._allAgents.Logger.Init(this._allAgents. SettingsAgent.ValueAsBool(setting))
     } else {
       this._allAgents.Logger.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
     }

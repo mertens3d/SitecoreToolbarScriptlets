@@ -24,6 +24,9 @@ export class CommonEvents {
       this.__cleardebugText();
       this.PopHub.UiMan.ClearCancelFlag();
 
+
+      this.AllAgents.Logger.LogAsJsonPretty("msgPayload", msgPlayload);
+
       await this.PopHub.PopMsgMan.SendMessageToContentTab(msgPlayload, targetTab);
 
       this.AllAgents.Logger.FuncEnd(this.GoContentCommand.name);

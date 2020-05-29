@@ -2,13 +2,14 @@
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
+import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 
 export class MiscManager extends ContentManagerBase {
-  constructor(hub: ContentHub, contentAgents: IAllConentAgents) {
-    super(hub, contentAgents);
-    this.ContentAgents.Logger.FuncStart(MiscManager.name);
-    this.ContentAgents.Logger.FuncEnd(MiscManager.name);
+  constructor(hub: ContentHub, AllAgents: IAllAgents) {
+    super(hub, AllAgents);
+    this.AllAgents.Logger.FuncStart(MiscManager.name);
+    this.AllAgents.Logger.FuncEnd(MiscManager.name);
   }
 
   NotNullOrUndefined(subjectAnyAr: any[], label?: string, iterationCheck?: number): boolean;
@@ -24,15 +25,15 @@ export class MiscManager extends ContentManagerBase {
 
     if (iterationCheck > 0) {
       if (label === '') {
-        label = this.NotNullOrUndefined.name + ' : no labelprovided';
+        label = this.NotNullOrUndefined.name + ' : no label provided';
       }
 
       if (subjectAnyOrAr === 'undefined') {
-        this.ContentAgents.Logger.Error(label, 'Is undefined');
+        this.AllAgents.Logger.Error(label, 'Is undefined');
       } else if (!subjectAnyOrAr) {
-        this.ContentAgents.Logger.Error(label, 'Is Null');
+        this.AllAgents.Logger.Error(label, 'Is Null');
       } else {
-        this.ContentAgents.Logger.LogVal(label, 'Passed');
+        this.AllAgents.Logger.LogVal(label, 'Passed');
         toReturn = true;
 
         if (Array.isArray(subjectAnyOrAr)) {
@@ -42,10 +43,10 @@ export class MiscManager extends ContentManagerBase {
         }
       }
     } else {
-      this.ContentAgents.Logger.Error(this.NotNullOrUndefined.name, 'max iteration hit');
+      this.AllAgents.Logger.Error(this.NotNullOrUndefined.name, 'max iteration hit');
     }
 
-    this.ContentAgents.Logger.LogVal('toReturn', toReturn);
+    this.AllAgents.Logger.LogVal('toReturn', toReturn);
     return toReturn;
   }
 }

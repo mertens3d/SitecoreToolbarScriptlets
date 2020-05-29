@@ -4,6 +4,7 @@ import { PromiseHelper } from "../Classes/PromiseGeneric";
 import { FactoryHelper } from "./FactoryHelper";
 import { UrlHelper } from "./UrlHelper";
 import { IAllHelperAgents } from "../Interfaces/Agents/IAllHelperAgents";
+import { IAllAgents } from "../Interfaces/Agents/IAllAgents";
 
 export class HelperHub {
   
@@ -14,10 +15,10 @@ export class HelperHub {
   FactoryHelp: FactoryHelper;
   UrlHelp: UrlHelper;
 
-  constructor(helperAgents: IAllHelperAgents){
-    helperAgents.LoggerAgent.FuncStart(HelperHub.name);
-    this.Init(helperAgents);
-    helperAgents.LoggerAgent.FuncEnd(HelperHub.name);
+  constructor(allAgents: IAllAgents) {
+    allAgents.Logger.FuncStart(HelperHub.name);
+    this.Init(allAgents);
+    allAgents.Logger.FuncEnd(HelperHub.name);
   }
 
   Init(helperAgents: IAllHelperAgents) {

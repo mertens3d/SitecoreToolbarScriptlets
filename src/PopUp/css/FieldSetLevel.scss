@@ -41,7 +41,7 @@ fieldset {
       }
 
       &:after {
-        content: url($sc_AccordianUp);
+        content: url($sc_accordionUp);
         font-size: 13px;
         color: #777;
         float: right;
@@ -63,7 +63,7 @@ fieldset {
   margin: $hsTypMargin;
 }
 
-.accordian-content {
+.accordion-content {
   /*display: flex;*/
   margin-top: 0px;
   margin-bottom: 15px;

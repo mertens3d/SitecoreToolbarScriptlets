@@ -78,7 +78,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       var promResult: PromiseResult = new PromiseResult(this.OnePing.name, this.AllAgents.Logger);
 
       this.AllAgents.Logger.LogVal('sending to tab id', targetTab.Tab.id);
-      //this.allAgents.Logger.LogAsJsonPretty('msg', msg);
+      this.AllAgents.Logger.LogAsJsonPretty('msg', msg);
 
       this.UiMan().UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(msg.MsgFlag));
 
@@ -118,7 +118,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       this.AllAgents.Logger.FuncStart(this.WaitForListeningTab.name);
 
       var promResult: PromiseResult = new PromiseResult(this.WaitForListeningTab.name, this.AllAgents.Logger);
-      var iterationJr: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForListeningTab.name, this.AllAgents.HelperAgents);
+      var iterationJr: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForListeningTab.name, this.AllAgents);
 
       var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
 
@@ -163,6 +163,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       var result: PromiseResult = new PromiseResult(this.SendMessageToSingleTab.name, this.AllAgents.Logger);
 
       this.UiMan().UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
+      this.AllAgents.Logger.LogAsJsonPretty("messageToSend", messageToSend);
 
       browser.tabs.sendMessage(
         dataBrowserTab.Tab.id,
@@ -171,6 +172,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
         .then((response: any) => this.ReceiveResponseHndlr(response))
         .then(() => result.MarkSuccessful)
         .catch((ex) => {
+          result.MarkFailed(ex);
           result.MarkFailed('likely no response yet');
         });
 

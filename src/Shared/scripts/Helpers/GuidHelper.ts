@@ -36,9 +36,9 @@ export class GuidHelper  extends HelperBase {
     if (Id && Id.AsString.length > this.ShortGuidLength) {
       toReturn = Id.AsString.substr(0, this.ShortGuidLength);
     } else {
-      this.AllHelperAgents.LoggerAgent.DebugIGuid(Id);
-      this.AllHelperAgents.LoggerAgent.LogVal('Length', Id.AsString.length);
-      this.AllHelperAgents.LoggerAgent.LogVal('ShortLength', this.ShortGuidLength);
+      this.AllHelperAgents.Logger.DebugIGuid(Id);
+      this.AllHelperAgents.Logger.LogVal('Length', Id.AsString.length);
+      this.AllHelperAgents.Logger.LogVal('ShortLength', this.ShortGuidLength);
     }
     return toReturn;
   }

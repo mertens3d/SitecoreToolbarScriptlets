@@ -8,14 +8,14 @@ import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTre
 import { OneTreeManager } from './OneTreeManager';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
-import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
+import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class OneCEManager extends ContentManagerBase {
   OneTreeMan: OneTreeManager;
   AssociatedDoc: IDataOneDoc;
     
 
-  constructor(hub: ContentHub, associatedDoc: IDataOneDoc, allContentAgents: IAllConentAgents) {
+  constructor(hub: ContentHub, associatedDoc: IDataOneDoc, allContentAgents: IAllAgents) {
     super(hub, allContentAgents);
     this.AssociatedDoc = associatedDoc;
     this.OneTreeMan = new OneTreeManager(hub, this.AssociatedDoc, allContentAgents);
@@ -50,32 +50,32 @@ export class OneCEManager extends ContentManagerBase {
   //}
 
   private __activateNode(hotTreeNode: HTMLElement): void {
-    this.ContentAgents.Logger.FuncStart(this.__activateNode.name);
+    this.AllAgents.Logger.FuncStart(this.__activateNode.name);
     //var currentSrc = hotTreeNode.getAttribute('src');
     //this.debug().Log('currentSrc' + currentSrc);
 
     //if (currentSrc.indexOf(InjectConst.ContConst.Names.TreeMenuExpandedPng) < 0) {
-    this.ContentAgents.Logger.Log('clicking it');
+    this.AllAgents.Logger.Log('clicking it');
     hotTreeNode.click();
     //}
-    this.ContentAgents.Logger.FuncEnd(this.__activateNode.name);
+    this.AllAgents.Logger.FuncEnd(this.__activateNode.name);
   }
   private __expandNode(foundOnPage: HTMLElement): void {
-    this.ContentAgents.Logger.FuncStart(this.__expandNode.name);
+    this.AllAgents.Logger.FuncStart(this.__expandNode.name);
     var currentSrc = foundOnPage.getAttribute('src');
-    this.ContentAgents.Logger.Log('currentSrc' + currentSrc);
+    this.AllAgents.Logger.Log('currentSrc' + currentSrc);
     if (currentSrc.indexOf(ContentConst.Const.Names.TreeMenuExpandedPng) < 0) {
-      this.ContentAgents.Logger.Log('clicking it');
+      this.AllAgents.Logger.Log('clicking it');
       foundOnPage.click();
     }
-    this.ContentAgents.Logger.FuncEnd(this.__expandNode.name);
+    this.AllAgents.Logger.FuncEnd(this.__expandNode.name);
   }
 
   private __collapseNode(element: HTMLElement): void {
     var currentSrc = element.getAttribute('src');
-    this.ContentAgents.Logger.Log('currentSrc' + currentSrc);
+    this.AllAgents.Logger.Log('currentSrc' + currentSrc);
     if (currentSrc.indexOf(ContentConst.Const.Names.TreeMenuExpandedPng) > -1) {
-      this.ContentAgents.Logger.Log('clicking it');
+      this.AllAgents.Logger.Log('clicking it');
       element.click();
     }
   }
@@ -85,24 +85,24 @@ export class OneCEManager extends ContentManagerBase {
     if (rootElem) {
       this.__collapseNode(rootElem);
     } else {
-      this.ContentAgents.Logger.Error(this.__collapseRootNode.name, 'Root glyph not found ' + ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
+      this.AllAgents.Logger.Error(this.__collapseRootNode.name, 'Root glyph not found ' + ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
     }
   }
 
   async WaitForAndRestoreOneNode(nextNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
-    this.ContentAgents.Logger.FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
+    this.AllAgents.Logger.FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
 
     var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + nextNode.NodeId.AsString;
 
-    this.ContentAgents.Logger.Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.AsShort);
-    this.ContentAgents.Logger.Log('document not null ' + (dataOneDocTarget.ContentDoc != null));
+    this.AllAgents.Logger.Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.AsShort);
+    this.AllAgents.Logger.Log('document not null ' + (dataOneDocTarget.ContentDoc != null));
 
-    var iterHelper = new IterationHelper(this.Helpers(), this.WaitForAndRestoreOneNode.name, this.ContentAgents.HelperAgents);
+    var iterHelper = new IterationHelper(this.Helpers(), this.WaitForAndRestoreOneNode.name, this.AllAgents);
 
     var foundOnPageTreeGlyph: HTMLElement = null;
 
     while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
-      this.ContentAgents.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.AsShort + '*');
+      this.AllAgents.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.AsShort + '*');
 
       foundOnPageTreeGlyph = dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
 
@@ -119,18 +119,18 @@ export class OneCEManager extends ContentManagerBase {
           }
         }
       } else {
-        this.ContentAgents.Logger.Log('not Found...waiting: ');
+        this.AllAgents.Logger.Log('not Found...waiting: ');
         await iterHelper.Wait();
       }
     }
 
-    this.ContentAgents.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
+    this.AllAgents.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
   }
 
   async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc) {
-    this.ContentAgents.Logger.FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.DocId.AsShort);
+    this.AllAgents.Logger.FuncStart(this.WaitForAndRestoreManyAllNodes.name, dataOneDocTarget.DocId.AsShort);
 
-    let iterHelper: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForAndRestoreManyAllNodes.name, this.ContentAgents.HelperAgents);
+    let iterHelper: IterationHelper = new IterationHelper(this.Helpers(), this.WaitForAndRestoreManyAllNodes.name, this.AllAgents);
 
     while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
       var nextNode: IDataOneTreeNode = storageData.AllTreeNodeAr.shift();
@@ -138,19 +138,19 @@ export class OneCEManager extends ContentManagerBase {
       await this.WaitForAndRestoreOneNode(nextNode, dataOneDocTarget);
     }
 
-    this.ContentAgents.Logger.FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
+    this.AllAgents.Logger.FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
   }
 
   async RestoreCEStateAsync(dataToRestore: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Promise<Boolean> {
-    this.ContentAgents.Logger.FuncStart(this.RestoreCEStateAsync.name, dataOneDocTarget.DocId.AsShort);
+    this.AllAgents.Logger.FuncStart(this.RestoreCEStateAsync.name, dataOneDocTarget.DocId.AsShort);
 
     var toReturn: boolean = false;
 
-    this.ContentAgents.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
+    this.AllAgents.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
 
     await this.WaitForAndRestoreManyAllNodes(dataToRestore, dataOneDocTarget);
 
-    this.ContentAgents.Logger.FuncEnd(this.RestoreCEStateAsync.name);
+    this.AllAgents.Logger.FuncEnd(this.RestoreCEStateAsync.name);
     return toReturn;
   }
 
@@ -165,7 +165,7 @@ export class OneCEManager extends ContentManagerBase {
         }
       }
     } else {
-      this.ContentAgents.Logger.Error(this.GetActiveNode.name, 'No tree data provided');
+      this.AllAgents.Logger.Error(this.GetActiveNode.name, 'No tree data provided');
     }
 
     return toReturn;
@@ -173,8 +173,8 @@ export class OneCEManager extends ContentManagerBase {
 
   GetStateCe(id: IGuid) {
     return new Promise((resolve, reject) => {
-      this.ContentAgents.Logger.FuncStart(this.GetStateCe.name);
-      let result: PromiseResult = new PromiseResult(this.GetStateCe.name, this.ContentAgents.Logger);
+      this.AllAgents.Logger.FuncStart(this.GetStateCe.name);
+      let result: PromiseResult = new PromiseResult(this.GetStateCe.name, this.AllAgents.Logger);
 
       var toReturnCEData: IDataOneStorageCE = {
         Id: id,
@@ -190,7 +190,7 @@ export class OneCEManager extends ContentManagerBase {
         result.MarkFailed('todo why would this fail?');
       }
 
-      this.ContentAgents.Logger.FuncEnd(this.GetStateCe.name);
+      this.AllAgents.Logger.FuncEnd(this.GetStateCe.name);
 
       if (result.WasSuccessful()) {
         resolve(toReturnCEData)

@@ -58,10 +58,10 @@ export class EventManager extends PopUpManagerBase {
           }
           )
         }
-        else if (oneSetting.DataType === SettingType.Accordian) {
+        else if (oneSetting.DataType === SettingType.Accordion) {
           let self = this;
           uiElem.addEventListener('click', (evt) => {
-            self.Handlers.Internal.ToggleAccordian(evt, this.PopHub, oneSetting.SettingKey);
+            self.Handlers.Internal.Toggleaccordion(evt, this.PopHub, oneSetting.SettingKey);
             //self.SettingsMan().SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
           }
           )

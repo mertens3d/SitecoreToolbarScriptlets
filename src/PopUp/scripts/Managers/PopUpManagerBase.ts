@@ -3,7 +3,7 @@ import { EventManager } from "./EventManager";
 import { HelperHub } from "../../../Shared/scripts/Helpers/Helpers";
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 import { LocationManager } from "./LocationManager";
-import { PopUpAtticManager } from "./PopUpAtticManager";
+import { RepoAgent } from "../../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
 import { PopUpHub } from "./PopUpHub";
 import { PopUpMessagesManager } from "./PopUpMessagesManager";
 import { SettingsManager } from "./SettingsManager";
@@ -23,7 +23,6 @@ export class PopUpManagerBase {
 
   UiMan(): UiManager { return this.PopHub.UiMan; }
   MsgMan(): PopUpMessagesManager { return this.PopHub.PopMsgMan; }
-  PopAtticMan(): PopUpAtticManager { return this.PopHub.PopUpAtticMan; }
   Helpers(): HelperHub { return this.PopHub.Helpers; }
   EventMan(): EventManager { return this.PopHub.EventMan; }
   locMan(): LocationManager { return this.PopHub.LocMan; }

@@ -1,8 +1,9 @@
 ﻿import { IAllHelperAgents } from "./IAllHelperAgents";
 import { ISettingsAgent } from "./ISettingsAgent";
 import { ILoggerAgent } from "./ILoggerBase";
+import { IRepositoryAgent } from "./IRepositoryAgent";
 export interface IAllAgents {
-    HelperAgents: IAllHelperAgents;
-    Logger: ILoggerAgent;
-    SettingsAgent: ISettingsAgent;
+  RepoAgent: IRepositoryAgent;
+  Logger: ILoggerAgent;
+  SettingsAgent: ISettingsAgent;
 }

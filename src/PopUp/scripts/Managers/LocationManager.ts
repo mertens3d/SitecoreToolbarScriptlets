@@ -20,7 +20,7 @@ export class LocationManager extends PopUpManagerBase {
   ChangeLocationSwitchBoard(desiredPageType: scWindowType) {
     this.AllAgents.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType]);
 
-    var iteration: IterationHelper = new IterationHelper(this.Helpers(), this.ChangeLocationSwitchBoard.name, this.AllAgents.HelperAgents);
+    var iteration: IterationHelper = new IterationHelper(this.Helpers(), this.ChangeLocationSwitchBoard.name, this.AllAgents);
 
     if (iteration.DecrementAndKeepGoing()) {
       var currentScWindowType: scWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;

@@ -13,27 +13,26 @@ import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { SettingKey } from '../../../Shared/scripts/Enums/SettingKey';
 import { SharedConst } from '../../../Shared/scripts/SharedConst';
-import { SettingsAgent } from '../../../Shared/scripts/Agents/SettingsAgent/SettingsAgent';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
-import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
+import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IOneGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
 
 export class ContentMessageManager extends ContentManagerBase {
   AutoSaveHasBeenScheduled: boolean = false;
 
-  constructor(contentHub: ContentHub, contentAgents: IAllConentAgents) {
+  constructor(contentHub: ContentHub, contentAgents: IAllAgents) {
     super(contentHub, contentAgents);
-    this.ContentAgents.Logger.FuncStart(ContentMessageManager.name);
+    this.AllAgents.Logger.FuncStart(ContentMessageManager.name);
 
     var self = this;
     browser.runtime.onMessage.addListener(request => self.ContentReceiveRequest(request));
 
-    this.ContentAgents.Logger.FuncEnd(ContentMessageManager.name);
+    this.AllAgents.Logger.FuncEnd(ContentMessageManager.name);
   }
 
   ValidateRequest(reqMsgFromPopup: MsgFromPopUp): MsgFromPopUp {
-    this.ContentAgents.Logger.FuncStart(this.ValidateRequest.name);
+    this.AllAgents.Logger.FuncStart(this.ValidateRequest.name);
     var isValid: boolean = true;
 
     if (reqMsgFromPopup) {
@@ -43,46 +42,46 @@ export class ContentMessageManager extends ContentManagerBase {
           reqMsgFromPopup.Data = new PayloadDataFromPopUp();
         }
       } else {
-        this.ContentAgents.Logger.Error(this.ValidateRequest.name, 'No CurrentContentPrefs')
+        this.AllAgents.Logger.Error(this.ValidateRequest.name, 'No CurrentContentPrefs')
         reqMsgFromPopup.IsValid = false;
         isValid = false;
       }
     } else {
-      this.ContentAgents.Logger.Error(this.ValidateRequest.name, 'no reqMsgFromPopup');
+      this.AllAgents.Logger.Error(this.ValidateRequest.name, 'no reqMsgFromPopup');
     }
 
     reqMsgFromPopup.IsValid = isValid;
-    this.ContentAgents.Logger.FuncEnd(this.ValidateRequest.name, isValid.toString());
+    this.AllAgents.Logger.FuncEnd(this.ValidateRequest.name, isValid.toString());
     return reqMsgFromPopup;
   }
 
   ScheduleIntervalTasks(reqMsgFromPopup: MsgFromPopUp) {
-    this.ContentAgents.Logger.FuncStart(this.ScheduleIntervalTasks.name);
-    this.ContentAgents.Logger.LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
+    this.AllAgents.Logger.FuncStart(this.ScheduleIntervalTasks.name);
+    this.AllAgents.Logger.LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
 
-    let autoSaveSetting: IOneGenericSetting = this.ContentAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin, reqMsgFromPopup.CurrentContentPrefs)
+    let autoSaveSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin)
 
-    if (SettingsAgent.ValueAsInteger(autoSaveSetting) > 0) {
+    if (this.AllAgents. SettingsAgent.ValueAsInteger(autoSaveSetting) > 0) {
       if (!this.AutoSaveHasBeenScheduled) {
-        this.ContentAgents.Logger.MarkerA();
+        this.AllAgents.Logger.MarkerA();
         var self = this;
-        this.ContentAgents.Logger.MarkerB();
+        this.AllAgents.Logger.MarkerB();
         var intervalMs = StaticHelpers.MinToMs(ContentConst.Const.Timeouts.AutoSaveIntervalMin);
 
-        this.ContentAgents.Logger.MarkerC();
+        this.AllAgents.Logger.MarkerC();
         window.setInterval(() => {
           self.AutoSaveSnapShot(this.ScUiMan().GetCurrentPageType());
         }, intervalMs)
 
-        this.ContentAgents.Logger.MarkerD();
+        this.AllAgents.Logger.MarkerD();
         this.AutoSaveHasBeenScheduled = true;
       }
     }
-    this.ContentAgents.Logger.FuncEnd(this.ScheduleIntervalTasks.name);
+    this.AllAgents.Logger.FuncEnd(this.ScheduleIntervalTasks.name);
   }
 
   AutoSaveSnapShot(pageType: scWindowType) {
-    this.ContentAgents.Logger.FuncStart(this.AutoSaveSnapShot.name);
+    this.AllAgents.Logger.FuncStart(this.AutoSaveSnapShot.name);
     var SnapShotSettings: IDataPayloadSnapShot = {
       SnapShotNewNickname: '',
       Flavor: SnapShotFlavor.Autosave,
@@ -91,30 +90,33 @@ export class ContentMessageManager extends ContentManagerBase {
 
     this.OneScWinMan().SaveWindowState(SnapShotSettings);
 
-    this.ContentAgents.Logger.FuncEnd(this.AutoSaveSnapShot.name);
+    this.AllAgents.Logger.FuncEnd(this.AutoSaveSnapShot.name);
   }
   SetLoggerFromMessage(reqMsgFromPopup: MsgFromPopUp) {
-    let currSetting: IOneGenericSetting = this.ContentAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole, reqMsgFromPopup.CurrentContentPrefs);
+    let currSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole);
     let valueToUse: boolean = SharedConst.Const.Settings.Defaults.LogToConsole;
     if (currSetting) {
-      let candidate = SettingsAgent.ValueAsBool(currSetting);
+      let candidate = this.AllAgents. SettingsAgent.ValueAsBool(currSetting);
       if (candidate) {
         console.log('setting value as bool ' + valueToUse);
         console.log('setting it to ' + valueToUse);
       } else {
         console.log('candidate was null');
       }
-      this.ContentAgents.Logger.Init(valueToUse);
+      this.AllAgents.Logger.Init(valueToUse);
     } else {
       console.log('curr setting not found');
     }
   }
 
   async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp) {
+
+    this.AllAgents.SettingsAgent.SetContentSettings(reqMsgFromPopup.CurrentContentPrefs);
+
     return new Promise(async (resolve, reject) => {
-      this.ContentAgents.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
-      var promResult: PromiseResult = new PromiseResult(this.ContentReceiveRequest.name, this.ContentAgents.Logger);
-      this.ContentAgents.Logger.LogAsJsonPretty(MsgFromPopUp.name, reqMsgFromPopup);
+      this.AllAgents.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
+      var promResult: PromiseResult = new PromiseResult(this.ContentReceiveRequest.name, this.AllAgents.Logger);
+      this.AllAgents.Logger.LogAsJsonPretty(MsgFromPopUp.name, reqMsgFromPopup);
 
       var response: MsgFromContent = null;
 
@@ -140,10 +142,10 @@ export class ContentMessageManager extends ContentManagerBase {
       }
 
       if (response !== null) {
-        this.ContentAgents.Logger.LogVal('responding', StaticHelpers.MsgFlagAsString(response.MsgFlag));
+        this.AllAgents.Logger.LogVal('responding', StaticHelpers.MsgFlagAsString(response.MsgFlag));
       }
 
-      this.ContentAgents.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
+      this.AllAgents.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
       if (promResult.WasSuccessful()) {
         resolve(response);
@@ -156,7 +158,7 @@ export class ContentMessageManager extends ContentManagerBase {
   }
 
   Init() {
-    this.ContentAgents.Logger.FuncStart(this.Init.name + ' ' + ContentMessageManager.name);
+    this.AllAgents.Logger.FuncStart(this.Init.name + ' ' + ContentMessageManager.name);
     var self = this;
 
     //this.MsgRunner = new MessageRunner(
@@ -167,7 +169,7 @@ export class ContentMessageManager extends ContentManagerBase {
     //  null,
     //  this.debug(), 'Content');
 
-    this.ContentAgents.Logger.FuncEnd(this.Init.name);
+    this.AllAgents.Logger.FuncEnd(this.Init.name);
   }
 
   NotifyCompleteOnContent(targetDoc: IDataOneDoc = null, Message: string): void {
@@ -196,10 +198,10 @@ export class ContentMessageManager extends ContentManagerBase {
 
   async ReqMsgRouter(payload: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
-      this.ContentAgents.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
-      this.ContentAgents.Logger.LogAsJsonPretty(MsgFromPopUp.name, payload);
+      this.AllAgents.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+      this.AllAgents.Logger.LogAsJsonPretty(MsgFromPopUp.name, payload);
 
-      let promiseResult: PromiseResult = new PromiseResult(this.ReqMsgRouter.name, this.ContentAgents.Logger);
+      let promiseResult: PromiseResult = new PromiseResult(this.ReqMsgRouter.name, this.AllAgents.Logger);
 
       var response: MsgFromContent = await this.ContentFactory().NewMsgFromContentShell();
 
@@ -221,7 +223,7 @@ export class ContentMessageManager extends ContentManagerBase {
           break;
 
         case MsgFlag.Ping:
-          this.ContentAgents.Logger.LogVal('Ping', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+          this.AllAgents.Logger.LogVal('Ping', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
           if (this.ReadyForMessages) {
             response.MsgFlag = MsgFlag.RespListeningAndReady;
             promiseResult.MarkSuccessful();
@@ -289,7 +291,7 @@ export class ContentMessageManager extends ContentManagerBase {
           break;
 
         default:
-          this.ContentAgents.Logger.Error('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+          this.AllAgents.Logger.Error('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
           promiseResult.MarkFailed('Unhandled MsgFlag ' + StaticHelpers.MsgFlagAsString(payload.MsgFlag));
           break;
       }
@@ -302,7 +304,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
       response.ContentState.LastReq = payload.MsgFlag;
 
-      this.ContentAgents.Logger.FuncEnd(this.ReqMsgRouter.name);
+      this.AllAgents.Logger.FuncEnd(this.ReqMsgRouter.name);
 
       if (promiseResult.WasSuccessful()) {
         response.MsgFlag = MsgFlag.RespTaskSuccessful;
@@ -315,12 +317,14 @@ export class ContentMessageManager extends ContentManagerBase {
 
   private __restoreClick(Data: PayloadDataFromPopUp) {
     return new Promise(async (resolve, reject) => {
-      let promiseResult: PromiseResult = new PromiseResult(this.__restoreClick.name, this.ContentAgents.Logger);
+      let promiseResult: PromiseResult = new PromiseResult(this.__restoreClick.name, this.AllAgents.Logger);
 
       try {
-        this.ContentAgents.Logger.MarkerA();
+        this.AllAgents.Logger.MarkerA();
+        this.AllAgents.Logger.LogAsJsonPretty("Data", Data);
+        this.AllAgents.Logger.Log(Data.IdOfSelect);
         var dataOneWindowStorage = this.AtticMan().GetFromStorageById(Data.IdOfSelect, CacheMode.OkToUseCache);
-        this.ContentAgents.Logger.MarkerB();
+        this.AllAgents.Logger.MarkerB();
         var self = this;
 
         var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
@@ -331,10 +335,10 @@ export class ContentMessageManager extends ContentManagerBase {
             .catch((err) => promiseResult.MarkFailed(err))
         }
         else {
-          self.ContentAgents.Logger.Error(this.__restoreClick.name, 'no target window');
+          self.AllAgents.Logger.Error(this.__restoreClick.name, 'no target window');
         }
       } catch (ex) {
-        this.ContentAgents.Logger.Error(this.__restoreClick.name, ex)
+        this.AllAgents.Logger.Error(this.__restoreClick.name, ex)
       }
 
       if (promiseResult.WasSuccessful()) {
@@ -346,7 +350,7 @@ export class ContentMessageManager extends ContentManagerBase {
   }
 
   IsLogEnabled(): boolean {
-    return this.ContentAgents.Logger.EnabledStatus();
+    return this.AllAgents.Logger.EnabledStatus();
   }
 
   OperationCancelled: any;

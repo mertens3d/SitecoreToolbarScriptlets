@@ -46,6 +46,8 @@ export class HandlersExternal extends CommonEvents {
         var msg = new MsgFromPopUp(MsgFlag.ReqRestoreClick, popHub);
         msg.Data.IdOfSelect = popHub.UiMan.CurrentMenuState.SelectSnapshotId;
 
+        this.AllAgents.Logger.LogAsJsonPretty("msg.Data", msg.Data);
+
         this.GoContentCommand(msg, newTab);
       })
       .catch((ex) => {
@@ -109,7 +111,11 @@ export class HandlersExternal extends CommonEvents {
 
   HndlrSnapShotUpdateNickName(evt: MouseEvent, popHub: PopUpHub) {
     var msg = new MsgFromPopUp(MsgFlag.ReqUpdateNickName, popHub);
+
+    //the problem seems to be here that the select element is not being set instead it's null
     msg.Data.IdOfSelect = popHub.UiMan.CurrentMenuState.SelectSnapshotId;
+
+
     msg.Data.SnapShotSettings.SnapShotNewNickname = popHub.UiMan.GetValueInNickname();
     this.GoContentCommand(msg);
   }

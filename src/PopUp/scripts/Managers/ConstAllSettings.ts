@@ -1,4 +1,4 @@
-﻿import { OneGenericSetting } from "../../../Shared/scripts/Agents/SettingsAgent/OneGenericSetting";
+﻿import { OneGenericSetting } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
 import { SettingType } from "../../../Shared/scripts/Enums/SettingType";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
@@ -64,7 +64,7 @@ export class ConstAllSettings {
     ),
     new OneGenericSetting(
       SettingKey.LgndLog,
-      SettingType.Accordian,
+      SettingType.Accordion,
       null,
       PopConst.Const.Selector.Legend.LgndDebug,
       PopConst.Const.Settings.Defaults.LgndDebug,
@@ -73,7 +73,7 @@ export class ConstAllSettings {
     ),
     new OneGenericSetting(
       SettingKey.LgndForeSite,
-      SettingType.Accordian,
+      SettingType.Accordion,
       null,
       PopConst.Const.Selector.Legend.LgndForeSite,
       PopConst.Const.Settings.Defaults.LgndForeSite,
@@ -82,7 +82,7 @@ export class ConstAllSettings {
     ),
     new OneGenericSetting(
       SettingKey.LgndHindSite,
-      SettingType.Accordian,
+      SettingType.Accordion,
       null,
       PopConst.Const.Selector.Legend.LgndHindSite,
       PopConst.Const.Settings.Defaults.LgndHindSite,
@@ -91,7 +91,7 @@ export class ConstAllSettings {
     ),
     new OneGenericSetting(
       SettingKey.LgndHindSite,
-      SettingType.Accordian,
+      SettingType.Accordion,
       null,
       PopConst.Const.Selector.Legend.LgndInSite,
       PopConst.Const.Settings.Defaults.LgndInSite,
@@ -100,7 +100,7 @@ export class ConstAllSettings {
     ),
     new OneGenericSetting(
       SettingKey.LgndSettings,
-      SettingType.Accordian,
+      SettingType.Accordion,
       null,
       PopConst.Const.Selector.Legend.LgndSettings,
       PopConst.Const.Settings.Defaults.LgndSettings,
@@ -109,7 +109,7 @@ export class ConstAllSettings {
     ),
     new OneGenericSetting(
       SettingKey.LgndState,
-      SettingType.Accordian,
+      SettingType.Accordion,
       null,
       PopConst.Const.Selector.Legend.LgndState,
       PopConst.Const.Settings.Defaults.LgndState,

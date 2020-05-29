@@ -29,7 +29,7 @@ export class SettingsManager extends PopUpManagerBase {
     let foundSettings: IOneGenericSettingForStorage[];
 
     try {
-    foundSettings = await this.PopAtticMan().ReadGenericSettings();
+      foundSettings = await this.AllAgents.RepoAgent.ReadGenericSettings();
 
     } catch (e) {
       this.AllAgents.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, e.toString());
@@ -42,7 +42,7 @@ export class SettingsManager extends PopUpManagerBase {
       for (var idx = 0; idx < foundSettings.length; idx++) {
         let storageSetting: IOneGenericSettingForStorage = foundSettings[idx];
         this.AllAgents.Logger.LogVal('setting key', storageSetting.SettingKeyFriendly);
-        let matchingSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(storageSetting.SettingKey, this.AllSettings.SettingsAr);
+        let matchingSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(storageSetting.SettingKey);
         if (matchingSetting) {
           matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
         } else {
@@ -78,7 +78,7 @@ export class SettingsManager extends PopUpManagerBase {
   }
 
   GetByKey(settingKey: SettingKey): IOneGenericSetting {
-    let foundSetting = this.AllAgents.SettingsAgent.GetByKey(settingKey, this.AllSettings.SettingsAr);
+    let foundSetting = this.AllAgents.SettingsAgent.GetByKey(settingKey);
     console.log(foundSetting.Friendly);
     return foundSetting;
   }
@@ -86,7 +86,7 @@ export class SettingsManager extends PopUpManagerBase {
 
   SetByKey(settingKey: SettingKey, value: any): void {
     this.AllAgents.Logger.FuncStart(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
-    let foundSetting =this.AllAgents.SettingsAgent.GetByKey(settingKey, this.AllSettings.SettingsAr);
+    let foundSetting =this.AllAgents.SettingsAgent.GetByKey(settingKey);
     if (foundSetting) {
       if (foundSetting.DefaultValue !== value) {
         foundSetting.ValueAsObj = value;
@@ -97,7 +97,7 @@ export class SettingsManager extends PopUpManagerBase {
       //  case SettingType.BoolCheckBox:
           
       //    break;
-      //  case SettingType.Accordian:
+      //  case SettingType.Accordion:
 
 
       //  default:
@@ -118,7 +118,7 @@ export class SettingsManager extends PopUpManagerBase {
         }
       }
 
-      this.PopAtticMan().WriteGenericSettings(nonDefaultSettings);
+      this.AllAgents.RepoAgent.WriteGenericSettings(nonDefaultSettings);
     } else {
       this.AllAgents.Logger.Error(this.SetByKey.name, 'setting match not found');
     }

@@ -22,8 +22,7 @@ import { BuildDateStamp } from '../../../Shared/scripts/AutoBuild/BuildNum';
 import { UrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 import { PopConst } from '../Classes/PopConst';
 import { SettingKey } from '../../../Shared/scripts/Enums/SettingKey';
-import { SettingsAgent } from '../../../Shared/scripts/Agents/SettingsAgent/SettingsAgent';
-import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
+import { SettingsAgent } from '../../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { UiButtonStateManager } from './UiButtonStateManager';
 import { IMenuState } from '../../../Shared/scripts/Interfaces/IMenuState';
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
@@ -72,7 +71,7 @@ export class UiManager extends PopUpManagerBase {
   }
   UpdateMsgStatusStack(textToShow: string) {
     if (this.MsgStatusDiv) {
-      this.MsgStatusDiv.innerHTML = textToShow + '</br>' + this.MsgStatusDiv.innerHTML ;
+      this.MsgStatusDiv.innerHTML = textToShow + '</br>' + this.MsgStatusDiv.innerHTML;
     }
     this.AllAgents.Logger.Log('msg stat: ' + textToShow);
   }
@@ -82,9 +81,9 @@ export class UiManager extends PopUpManagerBase {
     try {
       this.UpdateMsgStatusStack('Command Completed Successfully');
 
-
       let setting: IOneGenericSetting = this.SettingsMan().GetByKey(SettingKey.DebugKeepDialogOpen);
-      if (!SettingsAgent.ValueAsBool(setting)) {
+      if (!this.AllAgents
+        .SettingsAgent.ValueAsBool(setting)) {
         window.close();
       } else {
         this.AllAgents.Logger.Log('Window not closed because of setting: ' + setting.Friendly)
@@ -225,7 +224,7 @@ export class UiManager extends PopUpManagerBase {
   //  }
   //}
 
-  SetAccordianClass(targetElem: HTMLElement, isCollapsed: boolean) {
+  SetaccordionClass(targetElem: HTMLElement, isCollapsed: boolean) {
     if (!isCollapsed) {
       targetElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
     } else {
@@ -233,18 +232,18 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
-  GetAccordianContentElem(sib: HTMLElement): HTMLElement {
-    //this.debug().FuncStart(this.GetAccordianContentElem.name);
+  GetaccordionContentElem(sib: HTMLElement): HTMLElement {
+    //this.debug().FuncStart(this.GetaccordionContentElem.name);
     var toReturn: HTMLElement;
     if (sib) {
-      var siblings = sib.parentElement.getElementsByClassName('accordian-content');
+      var siblings = sib.parentElement.getElementsByClassName('accordion-content');
 
       if (siblings) {
         var toReturn = <HTMLElement>siblings[0];
       }
     }
 
-    //this.debug().FuncEnd(this.GetAccordianContentElem.name);
+    //this.debug().FuncEnd(this.GetaccordionContentElem.name);
     return toReturn;
   }
 
@@ -273,15 +272,15 @@ export class UiManager extends PopUpManagerBase {
     this.AllAgents.Logger.FuncEnd('DrawStorageRaw');
   }
 
-  async RestoreAccordianState(oneSetting: IOneGenericSetting, foundElem: HTMLElement): Promise<void> {
-    this.AllAgents.Logger.FuncStart(this.RestoreAccordianState.name);
-    var contentSib = this.GetAccordianContentElem(foundElem);
+  async RestoreaccordionState(oneSetting: IOneGenericSetting, foundElem: HTMLElement): Promise<void> {
+    this.AllAgents.Logger.FuncStart(this.RestoreaccordionState.name);
+    var contentSib = this.GetaccordionContentElem(foundElem);
     if (contentSib) {
-      this.SetAccordianClass(contentSib, <boolean>oneSetting.ValueAsObj)
+      this.SetaccordionClass(contentSib, <boolean>oneSetting.ValueAsObj)
     } else {
-      this.AllAgents.Logger.Error(this.RestoreAccordianState.name, 'Sibling not found');
+      this.AllAgents.Logger.Error(this.RestoreaccordionState.name, 'Sibling not found');
     }
-    this.AllAgents.Logger.FuncEnd(this.RestoreAccordianState.name);
+    this.AllAgents.Logger.FuncEnd(this.RestoreaccordionState.name);
   }
 
   async UpdateAtticFromUi(): Promise<any> {
@@ -368,8 +367,8 @@ export class UiManager extends PopUpManagerBase {
           //this.allAgents.Logger.LogVal('valueToDisplay', valueToDisplay);
           (<HTMLInputElement>foundElem).checked = valueToDisplay;
         }
-        if (oneSetting.DataType === SettingType.Accordian) {
-          this.RestoreAccordianState(oneSetting, foundElem);
+        if (oneSetting.DataType === SettingType.Accordion) {
+          this.RestoreaccordionState(oneSetting, foundElem);
         }
       } else {
         this.AllAgents.Logger.Error(this.RefreshUiGenericSettings.name, 'ui element not found: ' + oneSetting.UiSelector);
@@ -518,7 +517,8 @@ export class UiManager extends PopUpManagerBase {
     if (!targetElem) {
       this.AllAgents.Logger.Error(this.AssignOnClickEvent.name, 'No Id: ' + selector);
     } else {
-      targetElem.onchange = () => { handler };
+      var popHub: PopUpHub = this.PopHub;
+      targetElem.onchange = (evt) => { handler(evt, popHub) };
     }
     this.AllAgents.Logger.FuncEnd(this.AssignOnChangeEvent.name, selector);
   }
@@ -715,8 +715,10 @@ export class UiManager extends PopUpManagerBase {
             }
 
             el.value = data.Id.AsString;
-            if (data.Id === this.CurrentMenuState.SelectSnapshotId) {
-              el.selected = true;
+            if (data.Id && this.CurrentMenuState.SelectSnapshotId) {
+              if (data.Id.AsString === this.CurrentMenuState.SelectSnapshotId.AsString) {
+                el.selected = true;
+              }
             }
             if (data.Flavor === SnapShotFlavor.Autosave) {
               headers.Auto.appendChild(el);

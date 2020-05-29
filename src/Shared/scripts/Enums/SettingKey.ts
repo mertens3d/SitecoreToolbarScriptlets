@@ -12,7 +12,7 @@
     MaxAutoSaveCount = 200,
     LogToConsole = 201,
     Test = 202,
-    //accordian - 300's
+    //accordion - 300's
     LgndLog = 300,
     LgndForeSite = 301,
     LgndHindSite = 302,
