@@ -1,9 +1,7 @@
-﻿import { SharedConst } from '../SharedConst';
-import { HelperBase } from './HelperBase';
-import { HelperHub } from '../Helpers/Helpers';
-import { IAllHelperAgents } from '../Interfaces/Agents/IAllHelperAgents';
+﻿import { SharedConst } from '../../SharedConst';
+import { ILoggerAgent } from '../../Interfaces/Agents/ILoggerBase';
 
-export class IterationHelper extends HelperBase{
+export class IterationDrone {
   private __currentIteration: number;
   private __maxIterations: number;
   private __nickName: string;
@@ -11,10 +9,11 @@ export class IterationHelper extends HelperBase{
   IsExhausted: boolean;
   IsExhaustedMsg: string = 'Iteration helper exhausted';
   OperationCancelled: any;
+ private   Logger: ILoggerAgent;
 
-  constructor(helperHub: HelperHub, nickname: string, allHelperAgents: IAllHelperAgents, maxIterations: number = null ) {
+  constructor(logger: ILoggerAgent, nickname: string, maxIterations: number = null) {
 
-    super(helperHub, allHelperAgents)
+    this.Logger = logger;
     if (!maxIterations) {
       maxIterations = SharedConst.Const.IterHelper.MaxCount.Default;
     }
@@ -38,7 +37,7 @@ export class IterationHelper extends HelperBase{
       if (this.__timeout > SharedConst.Const.IterHelper.Timeouts.Max) {
         this.__timeout = SharedConst.Const.IterHelper.Timeouts.Max;
       }
-      this.AllHelperAgents.Logger.Log('DecrementAndKeepGoing: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations + ' | timeout: ' + this.__timeout);
+      this.Logger.Log('DecrementAndKeepGoing: ' + this.__nickName + ' ' + this.__currentIteration + ':' + this.__maxIterations + ' | timeout: ' + this.__timeout);
 
       toReturn = true;
     } else {
@@ -50,13 +49,13 @@ export class IterationHelper extends HelperBase{
   }
 
   NotifyExhausted() {
-    this.AllHelperAgents.Logger.Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
+    this.Logger.Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
   }
   WaitAndThen(timeoutFunction: Function) {
-    this.AllHelperAgents.Logger.FuncStart(this.WaitAndThen.name, this.__nickName + ' ' + timeoutFunction.name);
+    this.Logger.FuncStart(this.WaitAndThen.name, this.__nickName + ' ' + timeoutFunction.name);
     var self = this;
     setTimeout(timeoutFunction(), self.__timeout);
-    this.AllHelperAgents.Logger.FuncEnd(this.WaitAndThen.name, this.__nickName);
+    this.Logger.FuncEnd(this.WaitAndThen.name, this.__nickName);
   }
 
   Wait(): Promise<void> {

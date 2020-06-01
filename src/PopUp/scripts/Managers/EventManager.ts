@@ -19,7 +19,6 @@ export class EventManager extends PopUpManagerBase {
   AllMenuCommands: IOneCommand[];
 
   constructor(popHub: PopUpHub, allAgents: IAllAgents) {
-    
     super(popHub, allAgents);
     this.Handlers = new Handlers();
     this.Handlers.External = new HandlersExternal(popHub, this.AllAgents);
@@ -34,27 +33,24 @@ export class EventManager extends PopUpManagerBase {
     this.AllAgents.Logger.FuncEnd(EventManager.name + this.Init.name);
   }
   WireAllGenericSettings() {
-    let genericSettings: IOneGenericSetting[] = this.SettingsMan().AllSettings.SettingsAr;
+    let genericSettings: IOneGenericSetting[] = this.AllAgents.SettingsAgent.SettingsAr;
 
     for (var idx = 0; idx < genericSettings.length; idx++) {
       let oneSetting = genericSettings[idx];
       let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
       if (uiElem) {
-
         //if has label
         let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
         if (uiLabel) {
           uiLabel.innerHTML = oneSetting.Friendly;
         } else {
           uiElem.innerHTML = oneSetting.Friendly;
-
         }
-        
 
         if (oneSetting.DataType === SettingType.BoolCheckBox) {
           let self = this;
           uiElem.addEventListener('change', (evt) => {
-            self.SettingsMan().SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
+            self.AllAgents.SettingsAgent.SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
           }
           )
         }
@@ -62,7 +58,6 @@ export class EventManager extends PopUpManagerBase {
           let self = this;
           uiElem.addEventListener('click', (evt) => {
             self.Handlers.Internal.Toggleaccordion(evt, this.PopHub, oneSetting.SettingKey);
-            //self.SettingsMan().SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
           }
           )
         }
@@ -82,14 +77,12 @@ export class EventManager extends PopUpManagerBase {
 
     //this.UiMan().AssignMenuWindowChanged((evt) => { this.__hndlrMenuWindowChanged(); });
 
-
     // --------------- hindsite
     for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
       let oneCommand: IOneCommand = this.AllMenuCommands[idx];
       for (var jdx = 0; jdx < oneCommand.Events.length; jdx++) {
         let oneEvent: IEventHandlerData = oneCommand.Events[jdx];
         if (oneEvent.Event === CommandButtonEvents.OnClick) {
-
           var targetElem = this.UiMan().GetButtonByIdOrSelector(oneCommand.ButtonSelector);
 
           if (targetElem) {

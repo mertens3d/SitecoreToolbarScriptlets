@@ -1,16 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var PopUpHub_1 = require("./Managers/PopUpHub");
-var AllHelperAgents_1 = require("../../Shared/scripts/Classes/AllHelperAgents");
 var SettingsAgent_1 = require("../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent");
 var LoggerAgentBase_1 = require("../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgentBase");
 var RepoAgent_1 = require("../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent");
 var AllAgents_1 = require("../../Shared/scripts/Agents/Agents/AllAgents");
-//console.log('did it');
+var ConstAllSettings_1 = require("../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings");
+var Helpers_1 = require("../../Shared/scripts/Helpers/Helpers");
 var allAgents = new AllAgents_1.AllAgents();
 allAgents.Logger = new LoggerAgentBase_1.LoggerAgent();
-allAgents.SettingsAgent = new SettingsAgent_1.SettingsAgent();
 allAgents.RepoAgent = new RepoAgent_1.RepoAgent(allAgents.Logger);
-allAgents.HelperAgents = new AllHelperAgents_1.AllHelperAgents(allAgents.Logger, allAgents.SettingsAgent);
+allAgents.SettingsAgent = new SettingsAgent_1.SettingsAgent(allAgents.Logger, allAgents.RepoAgent);
+var allSettings = new ConstAllSettings_1.ConstAllSettings().AllSettings;
+allAgents.Logger.LogAsJsonPretty("allSettings", allSettings);
+allAgents.SettingsAgent.Init(allSettings);
+allAgents.HelperAgent = new Helpers_1.HelperAgent(allAgents.Logger);
 new PopUpHub_1.PopUpHub(allAgents);
 //# sourceMappingURL=EntryPoint.js.map

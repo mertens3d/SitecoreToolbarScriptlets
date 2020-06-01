@@ -1,15 +1,24 @@
 ﻿import { PopUpHub } from "./Managers/PopUpHub";
-import { AllHelperAgents } from "../../Shared/scripts/Classes/AllHelperAgents";
 import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
 import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgentBase";
 import { RepoAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
 import { AllAgents } from "../../Shared/scripts/Agents/Agents/AllAgents";
+import { ConstAllSettings } from "../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings";
+import { IOneGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
+import { HelperAgent } from "../../Shared/scripts/Helpers/Helpers";
 
-//console.log('did it');
 var allAgents = new AllAgents();
 allAgents.Logger = new LoggerAgent();
-allAgents.SettingsAgent = new SettingsAgent();
 allAgents.RepoAgent = new RepoAgent(allAgents.Logger);
+allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, allAgents.RepoAgent);
 
-allAgents.HelperAgents = new AllHelperAgents(allAgents.Logger, allAgents.SettingsAgent );
+
+var allSettings: IOneGenericSetting[] = new ConstAllSettings().AllSettings;
+allAgents.Logger.LogAsJsonPretty("allSettings", allSettings);
+allAgents.SettingsAgent.Init(allSettings);
+
+
+allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
+
+
 new PopUpHub(allAgents);

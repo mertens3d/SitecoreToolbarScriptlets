@@ -97,7 +97,7 @@ export class UiButtonStateManager extends PopUpManagerBase {
     let toReturn: boolean = false;
     let currSelSnapshot: IGuid = this.UiMan().CurrentMenuState.SelectSnapshotId;
 
-    if (currSelSnapshot && currSelSnapshot.AsBracedGuid !== this.Helpers().GuidHelp.EmptyGuid().AsBracedGuid) {
+    if (currSelSnapshot && currSelSnapshot.AsBracedGuid !== this.AllAgents.HelperAgent.GuidHelp.EmptyGuid().AsBracedGuid) {
       toReturn = true;
     }
     return toReturn;

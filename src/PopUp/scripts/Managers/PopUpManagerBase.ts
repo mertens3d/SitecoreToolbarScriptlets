@@ -1,12 +1,11 @@
 ﻿import { BrowserManager } from "./BrowserManager";
 import { EventManager } from "./EventManager";
-import { HelperHub } from "../../../Shared/scripts/Helpers/Helpers";
+import { HelperAgent } from "../../../Shared/scripts/Helpers/Helpers";
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 import { LocationManager } from "./LocationManager";
 import { RepoAgent } from "../../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
 import { PopUpHub } from "./PopUpHub";
 import { PopUpMessagesManager } from "./PopUpMessagesManager";
-import { SettingsManager } from "./SettingsManager";
 import { TabManager } from "./TabManager";
 import { UiManager } from "./UiManager";
 
@@ -23,10 +22,9 @@ export class PopUpManagerBase {
 
   UiMan(): UiManager { return this.PopHub.UiMan; }
   MsgMan(): PopUpMessagesManager { return this.PopHub.PopMsgMan; }
-  Helpers(): HelperHub { return this.PopHub.Helpers; }
+  Helpers(): HelperAgent { return this.PopHub.Helpers; }
   EventMan(): EventManager { return this.PopHub.EventMan; }
   locMan(): LocationManager { return this.PopHub.LocMan; }
   TabMan(): TabManager { return this.PopHub.TabMan; }
   BrowserMan(): BrowserManager { return this.PopHub.BrowserMan; }
-  SettingsMan(): SettingsManager { return this.PopHub.SettingsMan; }
 }

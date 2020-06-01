@@ -1,21 +1,26 @@
-import { ContentHub } from './ContentHub';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { IHelperAgent } from '../../../Shared/scripts/Interfaces/Agents/IHelperAgent';
 
-export class OneTreeManager extends ContentManagerBase {
+export class OneTreeDrone {
   AssociatedDoc: IDataOneDoc;
-  constructor(hub: ContentHub, associatedDoc: IDataOneDoc, AllAgents: IAllAgents) {
-    super(hub, AllAgents);
-    this.AllAgents.Logger.FuncStart(OneTreeManager.name);
+  private Logger: ILoggerAgent;
+  private  HelperAgent: IHelperAgent;
+
+  constructor(logger: ILoggerAgent, helperAgent: IHelperAgent, associatedDoc: IDataOneDoc) {
+    this.Logger = logger;
+    this.HelperAgent = helperAgent;
+
+    this.Logger.FuncStart(OneTreeDrone.name);
     this.AssociatedDoc = associatedDoc;
-    this.AllAgents.Logger.FuncEnd(OneTreeManager.name);
+    this.Logger.FuncEnd(OneTreeDrone.name);
   }
 
   GetFriendlyNameFromNode(inputNode) {
-    this.AllAgents.Logger.FuncStart(this.GetFriendlyNameFromNode.name);
+    this.Logger.FuncStart(this.GetFriendlyNameFromNode.name);
     var toReturn = 'unknown';
 
     var parentNode = inputNode.parentNode;
@@ -24,9 +29,9 @@ export class OneTreeManager extends ContentManagerBase {
     if (treeNode) {
       toReturn = treeNode.innerText;
     } else {
-      this.AllAgents.Logger.Log('No treeNode');
+      this.Logger.Log('No treeNode');
     }
-    this.AllAgents.Logger.FuncEnd(this.GetFriendlyNameFromNode.name, toReturn);
+    this.Logger.FuncEnd(this.GetFriendlyNameFromNode.name, toReturn);
     return toReturn;
   }
 
@@ -53,7 +58,7 @@ export class OneTreeManager extends ContentManagerBase {
       var className = firstNodeActiveTest.className;
       if (className.indexOf(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive) > -1) {
         toReturn = true;
-        this.AllAgents.Logger.Log('** isActive ' + targetNode.innerText);
+        this.Logger.Log('** isActive ' + targetNode.innerText);
       }
     }
 
@@ -113,7 +118,7 @@ export class OneTreeManager extends ContentManagerBase {
 
           var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
 
-          newData.NodeId = this.ContentHub.Helpers.GuidHelp.ParseGuid(apparentId);
+          newData.NodeId = this.HelperAgent.GuidHelp.ParseGuid(apparentId);
 
           toReturn.push(newData);
         }
@@ -131,33 +136,34 @@ export class OneTreeManager extends ContentManagerBase {
   }
 
   GetOneLiveTreeData(): IDataOneTreeNode[] {
-    this.AllAgents.Logger.FuncStart(this.GetOneLiveTreeData.name);
-    this.AllAgents.Logger.Log('targetDoc isnull: ' + (this.AssociatedDoc === null));
+    this.Logger.FuncStart(this.GetOneLiveTreeData.name);
+    this.Logger.Log('targetDoc isnull: ' + (this.AssociatedDoc === null));
     var toReturn: IDataOneTreeNode[] = [];
 
     if (this.AssociatedDoc) {
       //this.debug().Log(targetDoc);
-      this.AllAgents.Logger.LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
-      this.AllAgents.Logger.DebugIDataOneDoc(this.AssociatedDoc);
+      this.Logger.LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
+      this.Logger.DebugIDataOneDoc(this.AssociatedDoc);
+
       var rootNode = this.AssociatedDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
 
       if (rootNode) {
-        this.AllAgents.Logger.Log('rootNode: ' + rootNode.innerHTML);
+        this.Logger.Log('rootNode: ' + rootNode.innerHTML);
         var rootParent = rootNode.parentElement;
 
         toReturn = this.WalkNodeRecursive(rootParent, ContentConst.Const.MaxIter);
-        this.AllAgents.Logger.Log('foundNodes count: ' + toReturn.length);
+        this.Logger.Log('foundNodes count: ' + toReturn.length);
 
         //var nodesAsString = JSON.stringify(toReturn);
         //this.debug().Log('toReturn as string: ' + nodesAsString);
       } else {
-        this.AllAgents.Logger.Error(this.GetOneLiveTreeData.name, 'no root node');
+        this.Logger.Error(this.GetOneLiveTreeData.name, 'no root node');
       }
     } else {
-      this.AllAgents.Logger.Error(this.GetOneLiveTreeData.name, 'no targetDoc');
+      this.Logger.Error(this.GetOneLiveTreeData.name, 'no targetDoc');
     }
 
-    this.AllAgents.Logger.FuncEnd(this.GetOneLiveTreeData.name);
+    this.Logger.FuncEnd(this.GetOneLiveTreeData.name);
 
     return toReturn;
   }

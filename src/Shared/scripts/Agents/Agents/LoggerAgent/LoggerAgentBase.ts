@@ -116,9 +116,11 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log('');
     this.Log(this.debugPrefix + this.DebugIDataOneDoc.name);
     if (dataOneDoc) {
-      this.Log(this.debugPrefix + 'dataOneDoc: \t' + this.IsNullOrUndefined(dataOneDoc));
-      this.Log(this.debugPrefix + 'dataOneDoc.XyyzId.asShort: \t' + this.IsNullOrUndefined(dataOneDoc.DocId.AsShort));
-      this.Log(this.debugPrefix + 'dataOneDoc.Document: \t' + this.IsNullOrUndefined(dataOneDoc.ContentDoc));
+      this.LogVal(this.debugPrefix +'dataOneDoc',this.IsNullOrUndefined(dataOneDoc));
+      this.LogVal(this.debugPrefix +'dataOneDoc.XyyzId.asShort:' , this.IsNullOrUndefined(dataOneDoc.DocId.AsShort));
+      this.LogVal(this.debugPrefix +'dataOneDoc.Document:'  , this.IsNullOrUndefined(dataOneDoc.ContentDoc));
+      this.LogVal(this.debugPrefix + 'dataOneDoc.DocId.AsBracedGuid ' , dataOneDoc.DocId.AsBracedGuid);
+
       if (dataOneDoc.ContentDoc) {
         this.LogVal(this.debugPrefix + 'dataOneDoc.Document.readyState:', dataOneDoc.ContentDoc.readyState);
         if (dataOneDoc.ContentDoc.location) {

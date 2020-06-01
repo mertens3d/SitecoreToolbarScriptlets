@@ -61,7 +61,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
     let autoSaveSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin)
 
-    if (this.AllAgents. SettingsAgent.ValueAsInteger(autoSaveSetting) > 0) {
+    if (this.AllAgents.SettingsAgent.ValueAsInteger(autoSaveSetting) > 0) {
       if (!this.AutoSaveHasBeenScheduled) {
         this.AllAgents.Logger.MarkerA();
         var self = this;
@@ -96,7 +96,7 @@ export class ContentMessageManager extends ContentManagerBase {
     let currSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole);
     let valueToUse: boolean = SharedConst.Const.Settings.Defaults.LogToConsole;
     if (currSetting) {
-      let candidate = this.AllAgents. SettingsAgent.ValueAsBool(currSetting);
+      let candidate = this.AllAgents.SettingsAgent.ValueAsBool(currSetting);
       if (candidate) {
         console.log('setting value as bool ' + valueToUse);
         console.log('setting it to ' + valueToUse);
@@ -110,28 +110,32 @@ export class ContentMessageManager extends ContentManagerBase {
   }
 
   async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp) {
-
     this.AllAgents.SettingsAgent.SetContentSettings(reqMsgFromPopup.CurrentContentPrefs);
 
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
       var promResult: PromiseResult = new PromiseResult(this.ContentReceiveRequest.name, this.AllAgents.Logger);
-      this.AllAgents.Logger.LogAsJsonPretty(MsgFromPopUp.name, reqMsgFromPopup);
+      //this.AllAgents.Logger.LogAsJsonPretty(MsgFromPopUp.name, reqMsgFromPopup);
 
       var response: MsgFromContent = null;
 
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
-          this.SetLoggerFromMessage(reqMsgFromPopup);
+          //this.SetLoggerFromMessage(reqMsgFromPopup);
 
-          this.ScheduleIntervalTasks(reqMsgFromPopup);
+          //this.ScheduleIntervalTasks(reqMsgFromPopup);
 
+          this.AllAgents.Logger.Log('about to call it');
           await this.ReqMsgRouter(reqMsgFromPopup)
             .then((result: MsgFromContent) => {
+              this.AllAgents.Logger.MarkerD();
+              this.AllAgents.Logger.MarkerD();
               response = result;
-              promResult.MarkSuccessful();
             })
+            .then(() => { this.AllAgents.Logger.MarkerA() })
+            .then(() => { promResult.MarkSuccessful() })
+            .then(() => { this.AllAgents.Logger.MarkerB() })
             .catch((err) => promResult.MarkFailed(err))
         } else {
           promResult.MarkFailed('reqMsgFromPopup is not valid')
@@ -199,9 +203,9 @@ export class ContentMessageManager extends ContentManagerBase {
   async ReqMsgRouter(payload: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
-      this.AllAgents.Logger.LogAsJsonPretty(MsgFromPopUp.name, payload);
+      //this.AllAgents.Logger.LogAsJsonPretty(MsgFromPopUp.name, payload);
 
-      let promiseResult: PromiseResult = new PromiseResult(this.ReqMsgRouter.name, this.AllAgents.Logger);
+      let promResult: PromiseResult = new PromiseResult(this.ReqMsgRouter.name, this.AllAgents.Logger);
 
       var response: MsgFromContent = await this.ContentFactory().NewMsgFromContentShell();
 
@@ -211,10 +215,12 @@ export class ContentMessageManager extends ContentManagerBase {
           break;
 
         case MsgFlag.ReqAddCETab:
-          await this.Helpers().PromiseHelp.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.ScUiMan().TopLevelDoc())
-            .then(() => { this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelDoc()) })
-            .then(promiseResult.MarkSuccessful)
-            .catch((err) => promiseResult.MarkFailed(err));
+          await this.AllAgents.HelperAgent.PromiseHelper.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.ScUiMan().TopLevelDoc())
+
+            .then(() => { this.AllAgents.HelperAgent.PromiseHelper.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelDoc()) })
+
+            .then(() => { promResult.MarkSuccessful(); })
+            .catch((err) => promResult.MarkFailed(err));
           break;
 
         case MsgFlag.ReqAdminB:
@@ -226,9 +232,9 @@ export class ContentMessageManager extends ContentManagerBase {
           this.AllAgents.Logger.LogVal('Ping', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
           if (this.ReadyForMessages) {
             response.MsgFlag = MsgFlag.RespListeningAndReady;
-            promiseResult.MarkSuccessful();
+            promResult.MarkSuccessful();
           } else {
-            promiseResult.MarkFailed('not ready');
+            promResult.MarkFailed('not ready');
           }
           break;
 
@@ -244,7 +250,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
           //this.debug().LogVal('response', JSON.stringify(response));
           response.MsgFlag = MsgFlag.RespCurState;
-          promiseResult.MarkSuccessful();
+          promResult.MarkSuccessful();
           break;
 
         case MsgFlag.ReqOpenCE:
@@ -253,32 +259,36 @@ export class ContentMessageManager extends ContentManagerBase {
 
         case MsgFlag.ReqMarkFavorite:
           this.AtticMan().MarkFavorite(payload.Data)
-            .then(promiseResult.MarkSuccessful)
-            .catch((err) => promiseResult.MarkFailed(err));
+            .then(promResult.MarkSuccessful)
+            .catch((err) => promResult.MarkFailed(err));
           break;
 
         case MsgFlag.ReqQuickPublish:
           await this.OneScWinMan().PublishActiveCE(this.ScUiMan().TopLevelDoc())
-            .then(promiseResult.MarkSuccessful)
-            .catch((err) => promiseResult.MarkFailed(err));
+            .then(() => promResult.MarkSuccessful())
+            .catch((err) => promResult.MarkFailed(err));
           break;
 
         case MsgFlag.ReqRestoreClick:
           await this.__restoreClick(payload.Data)
-            .then(promiseResult.MarkSuccessful)
-            .catch((err) => promiseResult.MarkFailed(err));
+            .then(() => promResult.MarkSuccessful())
+            .catch((err) => promResult.MarkFailed(err));
           break;
 
         case MsgFlag.ReqTakeSnapShot:
-          await this.OneScWinMan().SaveWindowState(payload.Data.SnapShotSettings)
-            .then(promiseResult.MarkSuccessful)
-            .catch((err) => promiseResult.MarkFailed(err));
+        await this.OneScWinMan().SaveWindowState(payload.Data.SnapShotSettings)
+            .then(() => { this.AllAgents.Logger.MarkerA() })
+            .then(() => { this.AllAgents.Logger.MarkerA() })
+            .then(() => promResult.MarkSuccessful())
+            .catch((err) => promResult.MarkFailed(err));
+
+          promResult.MarkSuccessful();
           break;
 
         case MsgFlag.RemoveFromStorage:
           await this.AtticMan().RemoveOneFromStorage(payload.Data.IdOfSelect)
-            .then(promiseResult.MarkSuccessful)
-            .catch((err) => promiseResult.MarkFailed(err));
+            .then(promResult.MarkSuccessful)
+            .catch((err) => promResult.MarkFailed(err));
           break;
 
         case MsgFlag.RespTaskSuccessful:
@@ -286,13 +296,13 @@ export class ContentMessageManager extends ContentManagerBase {
 
         case MsgFlag.ReqUpdateNickName:
           await this.AtticMan().UpdateNickname(payload.Data)
-            .then(promiseResult.MarkSuccessful)
-            .catch((err) => promiseResult.MarkFailed(err));
+            .then(promResult.MarkSuccessful)
+            .catch((err) => promResult.MarkFailed(err));
           break;
 
         default:
           this.AllAgents.Logger.Error('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
-          promiseResult.MarkFailed('Unhandled MsgFlag ' + StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+          promResult.MarkFailed('Unhandled MsgFlag ' + StaticHelpers.MsgFlagAsString(payload.MsgFlag));
           break;
       }
 
@@ -300,46 +310,54 @@ export class ContentMessageManager extends ContentManagerBase {
 
       await this.ContentFactory().UpdateContentState(response.ContentState)
         .then((result: ICurrStateContent) => response.ContentState = result)
-        .catch((err) => promiseResult.MarkFailed(err));
+        .catch((err) => promResult.MarkFailed(err));
 
       response.ContentState.LastReq = payload.MsgFlag;
 
-      this.AllAgents.Logger.FuncEnd(this.ReqMsgRouter.name);
-
-      if (promiseResult.WasSuccessful()) {
+      if (promResult.WasSuccessful()) {
         response.MsgFlag = MsgFlag.RespTaskSuccessful;
         resolve(response);
       } else {
-        reject(promiseResult.RejectReasons);
+        reject(promResult.RejectReasons);
       }
+
+      this.AllAgents.Logger.FuncEnd(this.ReqMsgRouter.name);
     });
   }
 
   private __restoreClick(Data: PayloadDataFromPopUp) {
     return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.__restoreClick.name);
+
       let promiseResult: PromiseResult = new PromiseResult(this.__restoreClick.name, this.AllAgents.Logger);
 
       try {
         this.AllAgents.Logger.MarkerA();
-        this.AllAgents.Logger.LogAsJsonPretty("Data", Data);
-        this.AllAgents.Logger.Log(Data.IdOfSelect);
-        var dataOneWindowStorage = this.AtticMan().GetFromStorageById(Data.IdOfSelect, CacheMode.OkToUseCache);
-        this.AllAgents.Logger.MarkerB();
-        var self = this;
 
-        var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
+        if (Data.IdOfSelect) {
+          this.AllAgents.Logger.LogVal("IdOfSelect", Data.IdOfSelect);
 
-        if (targetDoc) {
-          await self.OneScWinMan().RestoreWindowStateToTarget(targetDoc, dataOneWindowStorage)
-            .then(promiseResult.MarkSuccessful)
-            .catch((err) => promiseResult.MarkFailed(err))
-        }
-        else {
-          self.AllAgents.Logger.Error(this.__restoreClick.name, 'no target window');
+          var dataOneWindowStorage = this.AtticMan().GetFromStorageById(Data.IdOfSelect, CacheMode.OkToUseCache);
+          var self = this;
+
+          var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
+
+          if (targetDoc) {
+            await self.OneScWinMan().RestoreWindowStateToTargetDoc(targetDoc, dataOneWindowStorage)
+              .then(promiseResult.MarkSuccessful)
+              .catch((err) => promiseResult.MarkFailed(err))
+          }
+          else {
+            self.AllAgents.Logger.Error(this.__restoreClick.name, 'no target window');
+          }
+        } else {
+          promiseResult.MarkFailed('No IdOfSelect');
         }
       } catch (ex) {
         this.AllAgents.Logger.Error(this.__restoreClick.name, ex)
       }
+
+      this.AllAgents.Logger.FuncEnd(this.__restoreClick.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve();

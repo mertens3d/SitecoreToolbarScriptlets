@@ -9,7 +9,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
 
   GetCurrentPageType(): scWindowType {
 
-    return this.Helpers().UrlHelp.CalcPageTypeFromHref({ AbsUrl: document.location.href });
+    return this.AllAgents.HelperAgent.UrlHelp.CalcPageTypeFromHref({ AbsUrl: document.location.href });
   }
 
   __activeWindowSnapShot: IDataOneWindowStorage;
@@ -21,7 +21,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
       this.topDoc = {
         //ParentDoc: null,
         ContentDoc: window.document,
-        DocId: this.Helpers().GuidHelp.NewGuid(),
+        DocId: this.AllAgents.HelperAgent.GuidHelp.NewGuid(),
         Nickname: 'top doc'
       }
     }

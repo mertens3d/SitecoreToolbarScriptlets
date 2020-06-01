@@ -48,7 +48,7 @@ export class HandlersInternal extends CommonEvents {
       }
       //this.PopAtticMan().UpdateAccodianState(srcElem.getAttribute('id'), newVal);
 
-      popHub.SettingsMan.SetByKey(settingKey, newVal);
+      this.AllAgents.SettingsAgent.SetByKey(settingKey, newVal);
     }
     else {
       this.AllAgents.Logger.Error(this.Toggleaccordion.name, 'did not find sib');

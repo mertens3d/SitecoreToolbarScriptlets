@@ -6,7 +6,6 @@ import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
 import { IDataOneIframe } from "../IDataOneIframe";
 
 export interface ILoggerAgent {
-  DebugIDataOneDoc(associatedDoc: IDataOneDoc);
   PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
   DebugDataOneIframe(NewIframe: IDataOneIframe);
   CtorName(name: string);

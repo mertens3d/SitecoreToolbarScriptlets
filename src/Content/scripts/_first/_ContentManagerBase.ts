@@ -8,7 +8,7 @@ import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
 import { ContentFactories } from "../Classes/ContentFactories";
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from '../Managers/SitecoreUiManager';
-import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
+import { HelperAgent } from '../../../Shared/scripts/Helpers/Helpers';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class ContentManagerBase {
@@ -21,8 +21,6 @@ export class ContentManagerBase {
   }
 
   AtticMan(): ContentAtticManager { return this.ContentHub.AtticMan; }
-  //Const(): IContentConst { return this.ContentHub.Const; }
-  Helpers(): HelperHub { return this.ContentHub.Helpers; }
   OneScWinMan(): OneScWindowManager { return this.ContentHub.OneWindowMan; }
   ScUiMan(): SitecoreUiManager { return this.ContentHub.SitecoreUiMan; }
   MsgMan(): ContentMessageManager { return this.ContentHub.MsgMan; }

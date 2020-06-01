@@ -59,9 +59,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Classes\ContentFactories.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Agents\LoggerContent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Classes\VarDebug.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentSettingsMan.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\_first\ContentAgents.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\AllAgents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerPopUpAgent.ts" />
@@ -70,18 +68,17 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersInternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\AllCommands.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\BrowserManager.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\ConstAllSettings.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\ConstAllSettings.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\Handlers.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PageManagerPopUp.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\SettingsManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\TabManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiButtonStateManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Promises\PromiseChainRestoreDTPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\AllHelperAgents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\HelperBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IRepositoryAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IAllSettings.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataPayloadSnapShot.ts" />
@@ -90,7 +87,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgentBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgFromPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\OneGenericSetting.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseResult.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\StaticHelpers.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferUseNbsp.ts" />
@@ -110,8 +106,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\FactoryHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\Helpers.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\AbsoluteUrl.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllConentAgents.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllHelperAgents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentLogger.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ILoggerBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ILoggerPopupAgent.ts" />
@@ -124,10 +118,14 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataDtState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IError.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IEventHandlerData.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IFactoryHelper.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IGuidHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMenuState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneCommand.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISelectionHeaders.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISnapShotsMany.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUrlHelp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\MsgFromXBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\OneParamPair.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\UrlParts.ts" />
@@ -219,8 +217,8 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\EventManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneDesktopManager.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\OneTreeManager.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\IterationHelper.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Drones\OneTreeDrone.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\IterationDrone.ts" />
     <TypeScriptCompile Include="src\Content\scripts\zLast.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\Constants.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.ts" />
@@ -241,9 +239,10 @@
   <ItemGroup>
     <Folder Include="Browser Addons\Firefox\communication\" />
     <Folder Include="src\Browser-PolyFill\" />
+    <Folder Include="src\Shared\scripts\Agents\Agents\HelperAgent\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\Content\scripts\Managers\OneCEManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\OneCEAgent.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="gulp.support\OneInjectable.js" />

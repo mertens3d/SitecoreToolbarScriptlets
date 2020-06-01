@@ -2,7 +2,7 @@ import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTre
 import { IScMode } from '../../../Shared/scripts/Interfaces/IscMode';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { PopUpManagerBase } from './PopUpManagerBase';
-import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
+import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationHelper';
 import { PopUpHub } from './PopUpHub';
 import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
@@ -20,7 +20,7 @@ export class LocationManager extends PopUpManagerBase {
   ChangeLocationSwitchBoard(desiredPageType: scWindowType) {
     this.AllAgents.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType]);
 
-    var iteration: IterationHelper = new IterationHelper(this.Helpers(), this.ChangeLocationSwitchBoard.name, this.AllAgents);
+    var iteration: IterationDrone = new IterationDrone(this.Helpers(), this.ChangeLocationSwitchBoard.name, this.AllAgents);
 
     if (iteration.DecrementAndKeepGoing()) {
       var currentScWindowType: scWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
@@ -43,15 +43,15 @@ export class LocationManager extends PopUpManagerBase {
 
       else if (currentScWindowType === scWindowType.Launchpad || currentScWindowType === scWindowType.ContentEditor || currentScWindowType === scWindowType.Desktop) {
         var self = this;
-        this.TabMan().CurrentTabData.UrlParts = this.Helpers().UrlHelp.SetFilePathFromWindowType(this.TabMan().CurrentTabData.UrlParts, desiredPageType);
-        var absUrl: AbsoluteUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
+        this.TabMan().CurrentTabData.UrlParts = this.AllAgents.HelperAgent.UrlHelp.SetFilePathFromWindowType(this.TabMan().CurrentTabData.UrlParts, desiredPageType);
+        var absUrl: AbsoluteUrl = this.AllAgents.HelperAgent.UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
 
         var callBackOnSuccessfulHrefChange: Function = function () {
           self.AllAgents.Logger.Log('Callback triggered');
           self.ChangeLocationSwitchBoard(desiredPageType)
         }
 
-        this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(absUrl, this.TabMan().CurrentTabData)
+        this.AllAgents.HelperAgent.PromiseHelper.TabChainSetHrefWaitForComplete(absUrl, this.TabMan().CurrentTabData)
           .then(() => this.MsgMan().WaitForListeningTab(this.TabMan().CurrentTabData))
           .then(() => callBackOnSuccessfulHrefChange);
       }
@@ -79,9 +79,9 @@ export class LocationManager extends PopUpManagerBase {
           //let editUrl = 'http://' + this.TabMan().CurrentTabData.UrlParts.Hostname
           //  + '/?sc_itemid=' + contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid + '&sc_mode=preview&sc_lang=en&sc_site=website';
 
-          let newUrlParts = this.Helpers().UrlHelp.CloneUrlParts(this.TabMan().CurrentTabData.UrlParts);
-          newUrlParts = this.Helpers().UrlHelp.BuildEditPrevNormUrl(newValue, contState, this.TabMan().CurrentTabData.UrlParts);
-          let editUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(newUrlParts)
+          let newUrlParts = this.AllAgents.HelperAgent.UrlHelp.CloneUrlParts(this.TabMan().CurrentTabData.UrlParts);
+          newUrlParts = this.AllAgents.HelperAgent.UrlHelp.BuildEditPrevNormUrl(newValue, contState, this.TabMan().CurrentTabData.UrlParts);
+          let editUrl = this.AllAgents.HelperAgent.UrlHelp.BuildFullUrlFromParts(newUrlParts)
 
           await this.BrowserMan().CreateNewTab(editUrl)
             .then(() => result.MarkSuccessful())
@@ -121,10 +121,10 @@ export class LocationManager extends PopUpManagerBase {
       else if (currentPageType === scWindowType.Edit
         || currentPageType === scWindowType.Normal
         || currentPageType === scWindowType.Preview) {
-        this.TabMan().CurrentTabData.UrlParts = this.Helpers().UrlHelp.SetScModeFromEditPrevNorm(newValue, this.TabMan().CurrentTabData.UrlParts);
+        this.TabMan().CurrentTabData.UrlParts = this.AllAgents.HelperAgent.UrlHelp.SetScModeFromEditPrevNorm(newValue, this.TabMan().CurrentTabData.UrlParts);
 
-        let newHref: AbsoluteUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
-        await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData)
+        let newHref: AbsoluteUrl = this.AllAgents.HelperAgent.UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
+        await this.AllAgents.HelperAgent.PromiseHelper.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData)
           .then(() => result.MarkSuccessful())
           .catch((ex) => result.MarkFailed(ex));
       }

@@ -12,7 +12,6 @@ import { ContentFactories } from "../Classes/ContentFactories";
 import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from './SitecoreUiManager';
-import { HelperHub } from '../../../Shared/scripts/Helpers/Helpers';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class ContentHub {
@@ -20,7 +19,6 @@ export class ContentHub {
   Const: IContentConst;
   private AllAgents: IAllAgents;
 
-  Helpers: HelperHub;
   MsgMan: ContentMessageManager;
   MiscMan: MiscManager;
   OneWindowMan: OneScWindowManager;
@@ -47,7 +45,6 @@ export class ContentHub {
 
     this.AtticMan = new ContentAtticManager(this, this.AllAgents);
 
-    this.Helpers = new HelperHub(this.AllAgents);
     this.MsgMan = new ContentMessageManager(this, this.AllAgents);
     this.MiscMan = new MiscManager(this, this.AllAgents);
     this.ContentFactory = new ContentFactories(this, this.AllAgents);

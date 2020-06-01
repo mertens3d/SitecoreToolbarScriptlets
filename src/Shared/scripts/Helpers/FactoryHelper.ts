@@ -4,12 +4,13 @@ import { IDataOneWindowStorage } from "../Interfaces/IDataOneWindowStorage";
 import { scWindowType } from "../Enums/scWindowType";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 import { IGuid } from "../Interfaces/IGuid";
-import { IDataDtState } from "../Interfaces/IDataDtState";
+import { IDataDesktopState } from "../Interfaces/IDataDtState";
 import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
+import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
 
-export class FactoryHelper extends HelperBase {
-  CreateNewDtDataShell(): IDataDtState {
-    var toReturn: IDataDtState = {
+export class FactoryHelper extends HelperBase implements IFactoryHelper {
+  CreateNewDtDataShell(): IDataDesktopState {
+    var toReturn: IDataDesktopState = {
       AllCeData: [],
       livingIframeAr: [],
       ActiveCeMan: null,
@@ -27,16 +28,16 @@ export class FactoryHelper extends HelperBase {
       {
         //ParentDoc: parentDocument,
         ContentDoc: dataOneIframe.IframeElem.contentDocument,
-        DocId: this.HelperHub.GuidHelp.NewGuid(),
+        DocId: this.HelperAgent.GuidHelp.NewGuid(),
         Nickname: dataOneIframe.Nickname + ' - content doc'
       }
     } else {
-      this.AllHelperAgents.Logger.Error(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
+      this.Logger.Error(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
     }
     return toReturn;
   }
   DataOneIframeFactory(iframeElem: HTMLIFrameElement, nickname: string): IDataOneIframe {
-    this.AllHelperAgents.Logger.FuncStart(this.DataOneIframeFactory.name);
+    this.Logger.FuncStart(this.DataOneIframeFactory.name);
     var toReturn: IDataOneIframe = null;
 
     if (iframeElem && nickname) {
@@ -48,26 +49,26 @@ export class FactoryHelper extends HelperBase {
       var toReturn: IDataOneIframe = {
         Index: -1,
         IframeElem: iframeElem,
-        Id: this.HelperHub.GuidHelp.NewGuid(),
+        Id: this.HelperAgent.GuidHelp.NewGuid(),
         Zindex: zIndex,
         Nickname: nickname,
-        ContentDoc:null,
+        ContentDoc: null,
       };
 
       toReturn.ContentDoc = this.DataOneContentDocFactoryFromIframe(toReturn);
 
-      this.AllHelperAgents.Logger.FuncEnd(this.DataOneIframeFactory.name);
+      this.Logger.FuncEnd(this.DataOneIframeFactory.name);
     } else {
-      this.AllHelperAgents.Logger.Error(this.DataOneIframeFactory.name, 'one of these is null');
-      this.AllHelperAgents.Logger.LogAsJsonPretty('iframeElem', iframeElem);
-      this.AllHelperAgents.Logger.LogAsJsonPretty('nickname', nickname);
+      this.Logger.Error(this.DataOneIframeFactory.name, 'one of these is null');
+      this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
+      this.Logger.LogAsJsonPretty('nickname', nickname);
     }
     return toReturn;
   }
   CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
-    this.AllHelperAgents.Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
+    this.Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
     var dateToUse: Date = new Date();
-    var newGuid: IGuid = this.GuidHelp().NewGuid();
+    var newGuid: IGuid = this.HelperAgent.GuidHelp.NewGuid();
 
     var activeWindowSnapShot: IDataOneWindowStorage = {
       TimeStamp: dateToUse,
@@ -79,7 +80,7 @@ export class FactoryHelper extends HelperBase {
       RawData: null,
       Flavor: flavor,
     };
-    this.AllHelperAgents.Logger.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
+    this.Logger.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
 
     return activeWindowSnapShot;
   }

@@ -81,7 +81,7 @@ export class UiManager extends PopUpManagerBase {
     try {
       this.UpdateMsgStatusStack('Command Completed Successfully');
 
-      let setting: IOneGenericSetting = this.SettingsMan().GetByKey(SettingKey.DebugKeepDialogOpen);
+      let setting: IOneGenericSetting = this.AllAgents. SettingsAgent.GetByKey(SettingKey.DebugKeepDialogOpen);
       if (!this.AllAgents
         .SettingsAgent.ValueAsBool(setting)) {
         window.close();
@@ -99,7 +99,7 @@ export class UiManager extends PopUpManagerBase {
 
     var targetTag: HTMLElement = document.querySelector(PopConst.Const.Selector.HS.BuildStamp);
     if (targetTag) {
-      targetTag.innerText = 'build: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date(BuildDateStamp));
+      targetTag.innerText = 'build: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date(BuildDateStamp));
     } else {
       this.AllAgents.Logger.Error(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
     }
@@ -299,7 +299,7 @@ export class UiManager extends PopUpManagerBase {
 
   SelectChanged(): void {
     this.AllAgents.Logger.FuncStart(this.SelectChanged.name);
-    this.CurrentMenuState.SelectSnapshotId = this.Helpers().GuidHelp.ParseGuid(this.__getSelectElem().value);
+    this.CurrentMenuState.SelectSnapshotId = this.AllAgents.HelperAgent.GuidHelp.ParseGuid(this.__getSelectElem().value);
     //this.debug().Log('new index :' + this.__selectSnapshotId);
 
     //if (e.ctrlKey) {
@@ -357,8 +357,8 @@ export class UiManager extends PopUpManagerBase {
 
   RefreshUiGenericSettings() {
     this.AllAgents.Logger.FuncStart(this.RefreshUiGenericSettings.name);
-    for (var idx = 0; idx < this.SettingsMan().AllSettings.SettingsAr.length; idx++) {
-      var oneSetting: IOneGenericSetting = this.SettingsMan().AllSettings.SettingsAr[idx];
+    for (var idx = 0; idx < this.AllAgents. SettingsAgent.SettingsAr.length; idx++) {
+      var oneSetting: IOneGenericSetting = this.AllAgents. SettingsAgent.SettingsAr[idx];
       //this.allAgents.Logger.LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
       var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
       if (foundElem) {
@@ -385,6 +385,8 @@ export class UiManager extends PopUpManagerBase {
     this.UiMan().PopulateState(this.MsgMan().LastKnownContentState);
 
     this.PopulateStateOfSnapShotSelect(this.MsgMan().LastKnownContentState.SnapShotsMany.CurrentSnapShots);
+
+  
 
     this.ButtonStateManager.RefreshButtonStates();
 
@@ -456,7 +458,7 @@ export class UiManager extends PopUpManagerBase {
   //  if (targetSel) {
   //    var selectedValue: string = targetSel.value;
   //    if (selectedValue) {
-  //      toReturn = this.Helpers().GuidHelp.ParseGuid(selectedValue);
+  //      toReturn = this.AllAgents.HelperAgent.GuidHelp.ParseGuid(selectedValue);
   //    }
   //    //var optionsLength = targetSel.options.length;
   //    //if (this.__selectSnapshotId < optionsLength) {
@@ -468,7 +470,7 @@ export class UiManager extends PopUpManagerBase {
 
   //  if (!toReturn) {
   //    this.allAgents.Logger.Log('using empty guid');
-  //    toReturn = this.Helpers().GuidHelp.EmptyGuid();
+  //    toReturn = this.AllAgents.HelperAgent.GuidHelp.EmptyGuid();
   //  }
 
   //  this.allAgents.Logger.DebugIGuid(toReturn);
@@ -532,7 +534,7 @@ export class UiManager extends PopUpManagerBase {
   }
   PopulateContentStateDivContent(contentState: ICurrStateContent) {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.DivStateContent);
-    var allStateText: string = this.lineBreak + 'Content State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
+    var allStateText: string = this.lineBreak + 'Content State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());
 
     if (targetCurrStateDiv) {
       allStateText += this.lineBreak + 'Editor:';
@@ -574,7 +576,7 @@ export class UiManager extends PopUpManagerBase {
 
     //this.allAgents.Logger.LogVal('now', new Date().toString());
     //var allTaText: string = 'State as of: ' + (new Date()).toString();
-    var allStateText: string = this.lineBreak + 'PopUp State as of: ' + this.Helpers().UtilityHelp.MakeFriendlyDate(new Date());
+    var allStateText: string = this.lineBreak + 'PopUp State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());
 
     if (targetCurrStateDiv) {
       allStateText += this.lineBreak + 'UI';
@@ -592,7 +594,7 @@ export class UiManager extends PopUpManagerBase {
 
       allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + urlParts.OriginalRaw;
 
-      allStateText += this.indentedLineBreak + 'Url Full (parts): ' + this.Helpers().UrlHelp.BuildFullUrlFromParts(urlParts).AbsUrl;
+      allStateText += this.indentedLineBreak + 'Url Full (parts): ' + this.AllAgents.HelperAgent.UrlHelp.BuildFullUrlFromParts(urlParts).AbsUrl;
 
       allStateText += this.indentedLineBreak + 'Protocol: ' + urlParts.Protocol;
 
@@ -671,7 +673,7 @@ export class UiManager extends PopUpManagerBase {
     }
 
     toReturn.Auto = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.Auto.label = this.Helpers().UtilityHelp.SelectHeaderStr('');
+    toReturn.Auto.label = this.AllAgents.HelperAgent.UtilityHelp.SelectHeaderStr('');
     toReturn.Auto.id = PopConst.Const.ElemId.HS.SelectHeaderAuto;
 
     toReturn.AutoTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
@@ -680,7 +682,7 @@ export class UiManager extends PopUpManagerBase {
     toReturn.AutoTitle.classList.add('title');
 
     toReturn.Favorite = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.Favorite.label = this.Helpers().UtilityHelp.SelectHeaderStr('');
+    toReturn.Favorite.label = this.AllAgents.HelperAgent.UtilityHelp.SelectHeaderStr('');
     toReturn.Favorite.id = PopConst.Const.ElemId.HS.SelectHeaderFavorite;
 
     toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
@@ -705,6 +707,9 @@ export class UiManager extends PopUpManagerBase {
           this.AllAgents.Logger.Log('targetSel.options.length : ' + targetSel.options.length);
 
           for (var idx: number = 0; idx < snapShots.length; idx++) {
+
+            this.AllAgents.Logger.Log('snapShots:' + idx + ":" + snapShots.length);
+
             var data = snapShots[idx];
 
             var el = <HTMLOptionElement>window.document.createElement('option');
@@ -715,8 +720,12 @@ export class UiManager extends PopUpManagerBase {
             }
 
             el.value = data.Id.AsString;
+            this.AllAgents.Logger.LogVal('data.Id:', data.Id);
+            this.AllAgents.Logger.LogVal('this.CurrentMenuState.SelectSnapshotId:', this.CurrentMenuState.SelectSnapshotId);
+
             if (data.Id && this.CurrentMenuState.SelectSnapshotId) {
               if (data.Id.AsString === this.CurrentMenuState.SelectSnapshotId.AsString) {
+                this.AllAgents.Logger.LogVal("selected", data.Id.AsString);
                 el.selected = true;
               }
             }
@@ -733,7 +742,7 @@ export class UiManager extends PopUpManagerBase {
         targetSel.appendChild(headers.AutoTitle);
         targetSel.appendChild(headers.Auto);
 
-        if (!this.CurrentMenuState.SelectSnapshotId || this.CurrentMenuState.SelectSnapshotId === this.Helpers().GuidHelp.EmptyGuid()) {
+        if (!this.CurrentMenuState.SelectSnapshotId || this.CurrentMenuState.SelectSnapshotId === this.AllAgents.HelperAgent.GuidHelp.EmptyGuid()) {
           targetSel.selectedIndex = 0;
         }
       }

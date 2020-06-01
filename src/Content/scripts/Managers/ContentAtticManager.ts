@@ -129,7 +129,7 @@ export class ContentAtticManager extends ContentManagerBase{
       }
     }
     if (DateOneWinStoreMatch) {
-      this.AllAgents.Logger.Log('found match', this.Helpers().UtilityHelp.TimeNicknameFavStr(DateOneWinStoreMatch));
+      this.AllAgents.Logger.Log('found match', this.AllAgents.HelperAgent.UtilityHelp.TimeNicknameFavStr(DateOneWinStoreMatch));
     } else {
       this.AllAgents.Logger.LogVal(this.GetFromStorageById.name, 'Match notfound')
     }
@@ -177,7 +177,7 @@ export class ContentAtticManager extends ContentManagerBase{
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      candidate.Id = this.ContentHub.Helpers.GuidHelp.ParseGuid(candidate.Id.AsString);
+      candidate.Id = this.AllAgents.HelperAgent.GuidHelp.ParseGuid(candidate.Id.AsString);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {

@@ -7,7 +7,7 @@ import { AllAgents } from '../../Shared/scripts/Agents/Agents/AllAgents';
 
 var allAgents: IAllAgents = new AllAgents();
 allAgents.Logger = new LoggerAgent();
-allAgents.SettingsAgent = new SettingsAgent();
 allAgents.RepoAgent = new RepoAgent(allAgents.Logger);
+allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, allAgents.RepoAgent);
 
 new ContentHub(allAgents);

@@ -1,10 +1,10 @@
-﻿import { OneGenericSetting } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting";
-import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
-import { SettingType } from "../../../Shared/scripts/Enums/SettingType";
-import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
-import { PopConst } from "../Classes/PopConst";
-import { SharedConst } from "../../../Shared/scripts/SharedConst";
-import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
+﻿import { OneGenericSetting } from "./OneGenericSetting";
+import { SettingKey } from "../../../Enums/SettingKey";
+import { SettingType } from "../../../Enums/SettingType";
+import { SettingFlavor } from "../../../Enums/SettingFlavor";
+import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
+import { SharedConst } from "../../../SharedConst";
+import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
 
 export class ConstAllSettings {
    AllSettings: IOneGenericSetting[] = [

@@ -16,15 +16,15 @@ export class PromiseChainRestoreDtPopUp extends PopUpManagerBase {
 
   //async GoToAndWaitForDesktopPage(promiseBucket: IDataBucketRestoreDesktop) {
   //  return new Promise(async (resolve, reject) => {
-  //    promiseBucket.UrlParts = this.Helpers().UrlHelp.SetFilePathFromWindowType(promiseBucket.UrlParts, scWindowType.Desktop );
+  //    promiseBucket.UrlParts = this.AllAgents.HelperAgent.UrlHelp.SetFilePathFromWindowType(promiseBucket.UrlParts, scWindowType.Desktop );
 
-  //    let absUrl: AbsoluteUrl = this.Helpers().UrlHelp.BuildFullUrlFromParts(promiseBucket.UrlParts)
+  //    let absUrl: AbsoluteUrl = this.AllAgents.HelperAgent.UrlHelp.BuildFullUrlFromParts(promiseBucket.UrlParts)
 
-  //    await this.Helpers().PromiseHelp.TabChainSetHrefWaitForComplete(absUrl, this.TabMan().CurrentTabData)
+  //    await this.AllAgents.HelperAgent.PromiseHelp.TabChainSetHrefWaitForComplete(absUrl, this.TabMan().CurrentTabData)
   //      .then((promiseBucket) => resolve(promiseBucket))
   //      .catch((err) => reject(err))
 
-  //    //await this.Helpers().PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, promiseBucket.targetWindow, scWindowType.Desktop)
+  //    //await this.AllAgents.HelperAgent.PromiseHelp.SetHrefAndWaitForReadyStateComplete(this.Const().UrlSuffix.Desktop, promiseBucket.targetWindow, scWindowType.Desktop)
   //    //  .then((promiseBucket) => resolve(promiseBucket))
   //    //  .catch((err) => reject(err))
   //  });

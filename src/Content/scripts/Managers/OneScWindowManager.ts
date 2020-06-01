@@ -8,15 +8,14 @@ import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataO
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Interfaces/IDataPayloadSnapShot';
 import { OneDesktopManager } from './OneDesktopManager';
-import { OneCEManager } from './OneCEManager';
-import { IDataDtState } from '../../../Shared/scripts/Interfaces/IDataDtState';
+import { OneCEAgent } from './OneCEAgent';
+import { IDataDesktopState } from '../../../Shared/scripts/Interfaces/IDataDtState';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
-import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class OneScWindowManager extends ContentManagerBase {
   OneDesktopMan: OneDesktopManager = null;
-  OneCEMan: OneCEManager = null;
+  OneCEAgent: OneCEAgent = null;
 
   constructor(hub: ContentHub, AllAgents: IAllAgents) {
     super(hub, AllAgents);
@@ -26,15 +25,13 @@ export class OneScWindowManager extends ContentManagerBase {
   }
 
   Init() {
-    //Init() {
-    //  //todo put back ? var currentPageType = this.PageMan().GetCurrentPageType();
-    //  //todo put back ?  this.CreateNewWindowSnapShot(currentPageType, SnapShotFlavor.Unknown);
-    //}
+
     let currPageType = this.ScUiMan().GetCurrentPageType();
+
     if (currPageType === scWindowType.Desktop) {
       this.OneDesktopMan = new OneDesktopManager(this.ContentHub, this.ScUiMan().TopLevelDoc(), this.AllAgents);
     } else if (currPageType === scWindowType.ContentEditor) {
-      this.OneCEMan = new OneCEManager(this.ContentHub, this.ScUiMan().TopLevelDoc(), this.AllAgents);
+      this.OneCEAgent = new OneCEAgent(this.ScUiMan().TopLevelDoc(), this.AllAgents.Logger, this.AllAgents.HelperAgent);
     }
   }
 
@@ -44,7 +41,7 @@ export class OneScWindowManager extends ContentManagerBase {
 
       let promiseResult: PromiseResult = new PromiseResult(this.SaveWindowState.name, this.AllAgents.Logger);
 
-      var snapShot: IDataOneWindowStorage = this.Helpers().FactoryHelp.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
+      var snapShot: IDataOneWindowStorage = this.AllAgents.HelperAgent.FactoryHelp.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
 
       if (snapShotSettings) {
         if (snapShotSettings.SnapShotNewNickname) {
@@ -55,9 +52,9 @@ export class OneScWindowManager extends ContentManagerBase {
 
       if (snapShotSettings.CurrentPageType === scWindowType.ContentEditor) {
         this.AllAgents.Logger.MarkerA();
-        var id = this.ContentHub.Helpers.GuidHelp.EmptyGuid();
+        var id = this.AllAgents.HelperAgent.GuidHelp.EmptyGuid();
 
-        await this.OneCEMan.GetStateCe(id)
+        await this.OneCEAgent.GetStateCe(id)
           .then((state: IDataOneStorageCE) => {
             snapShot.AllCEAr.push(state);
             promiseResult.MarkSuccessful();
@@ -69,7 +66,7 @@ export class OneScWindowManager extends ContentManagerBase {
         this.AllAgents.Logger.MarkerB();
 
         await this.OneDesktopMan.GetStateDesktop()
-          .then((states: IDataDtState) => {
+          .then((states: IDataDesktopState) => {
             snapShot.AllCEAr = states.AllCeData;
             promiseResult.MarkSuccessful();
           })
@@ -148,19 +145,19 @@ export class OneScWindowManager extends ContentManagerBase {
     }
     this.AllAgents.Logger.FuncEnd(this.PublishActiveCE.name);
   }
-  async RestoreWindowStateToTarget(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage) {
-    this.AllAgents.Logger.FuncStart(this.RestoreWindowStateToTarget.name);
+  async RestoreWindowStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage) {
+    this.AllAgents.Logger.FuncStart(this.RestoreWindowStateToTargetDoc.name);
     if (dataToRestore) {
       if (dataToRestore.WindowType === scWindowType.ContentEditor) {
-        await this.OneCEMan.RestoreCEStateAsync(dataToRestore.AllCEAr[0], targetDoc);
+        await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0], targetDoc);
       }
       else if (dataToRestore.WindowType === scWindowType.Desktop) {
         await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore);
       }
       else {
-        this.AllAgents.Logger.Error(this.RestoreWindowStateToTarget.name, 'No match found for snap shot');
+        this.AllAgents.Logger.Error(this.RestoreWindowStateToTargetDoc.name, 'No match found for snap shot');
       }
-      this.AllAgents.Logger.FuncEnd(this.RestoreWindowStateToTarget.name);
+      this.AllAgents.Logger.FuncEnd(this.RestoreWindowStateToTargetDoc.name);
     }
   }
 

@@ -6,7 +6,7 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 import { CacheMode } from "../../../Shared/scripts/Enums/CacheMode";
 import { IDataOneStorageCE } from "../../../Shared/scripts/Interfaces/IDataOneStorageCE";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
-import { IDataDtState } from "../../../Shared/scripts/Interfaces/IDataDtState";
+import { IDataDesktopState } from "../../../Shared/scripts/Interfaces/IDataDtState";
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
@@ -18,20 +18,27 @@ export class ContentFactories extends ContentManagerBase {
     this.AllAgents.Logger.FuncStart(PromiseHelper.name);
     this.AllAgents.Logger.FuncEnd(PromiseHelper.name);
   }
+
   UpdateContentState(contentState: ICurrStateContent) {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.UpdateContentState.name);
       let promiseResult: PromiseResult = new PromiseResult(this.UpdateContentState.name, this.AllAgents.Logger);
+      this.AllAgents.Logger.MarkerC();
       contentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
       contentState.ErrorStack = this.AllAgents.Logger.ErrorStack;
 
-      this.AllAgents.Logger.LogAsJsonPretty('ContentState', contentState);
+      //this.AllAgents.Logger.LogAsJsonPretty('ContentState', contentState);
+
+
+      this.AllAgents.Logger.MarkerA();
 
       await this.GetCurrentDtOrCeState()
         .then((result: IDataOneStorageCE) => {
+          this.AllAgents.Logger.MarkerB();
           contentState.ActiveCe = result;
-          promiseResult.MarkSuccessful();
+          this.AllAgents.Logger.MarkerB();
         })
+        .then(() => promiseResult.MarkSuccessful())
         .catch((err) => promiseResult.MarkFailed(err));
 
       this.AllAgents.Logger.FuncEnd(this.UpdateContentState.name);
@@ -54,10 +61,10 @@ export class ContentFactories extends ContentManagerBase {
       let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
 
       if (pageType === scWindowType.Desktop) {
-        var currState: IDataDtState;
+        var currState: IDataDesktopState;
 
         await this.OneScWinMan().OneDesktopMan.GetStateDesktop()
-          .then((result: IDataDtState) => {
+          .then((result: IDataDesktopState) => {
             toReturnCeState = result.ActiveCeState;
             promiseResult.MarkSuccessful();
           })
@@ -66,7 +73,7 @@ export class ContentFactories extends ContentManagerBase {
       else if (pageType === scWindowType.ContentEditor) {
         toReturnCeState = null;
 
-        await this.OneScWinMan().OneCEMan.GetStateCe(this.Helpers().GuidHelp.NewGuid())
+        await this.OneScWinMan().OneCEAgent.GetStateCe(this.AllAgents.HelperAgent.GuidHelp.NewGuid())
           .then((result: IDataOneStorageCE) => {
             toReturnCeState = result;
             promiseResult.MarkSuccessful();

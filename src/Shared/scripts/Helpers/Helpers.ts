@@ -3,29 +3,27 @@ import { UtilityHelper } from "./UtilityHelper";
 import { PromiseHelper } from "../Classes/PromiseGeneric";
 import { FactoryHelper } from "./FactoryHelper";
 import { UrlHelper } from "./UrlHelper";
-import { IAllHelperAgents } from "../Interfaces/Agents/IAllHelperAgents";
-import { IAllAgents } from "../Interfaces/Agents/IAllAgents";
+import { IHelperAgent } from "../Interfaces/Agents/IHelperAgent";
+import { ILoggerAgent } from "../Interfaces/Agents/ILoggerBase";
 
-export class HelperHub {
-  
-  
+export class HelperAgent implements IHelperAgent {
   GuidHelp: GuidHelper;
   UtilityHelp: UtilityHelper;
-  PromiseHelp: PromiseHelper;
+  PromiseHelper: PromiseHelper;
   FactoryHelp: FactoryHelper;
   UrlHelp: UrlHelper;
 
-  constructor(allAgents: IAllAgents) {
-    allAgents.Logger.FuncStart(HelperHub.name);
-    this.Init(allAgents);
-    allAgents.Logger.FuncEnd(HelperHub.name);
+  constructor(logger: ILoggerAgent) {
+    logger.FuncStart(HelperAgent.name);
+    this.Init(logger, this);
+    logger.FuncEnd(HelperAgent.name);
   }
 
-  Init(helperAgents: IAllHelperAgents) {
-    this.GuidHelp = new GuidHelper(this, helperAgents);
-    this.UtilityHelp = new UtilityHelper(this, helperAgents);
-    this.PromiseHelp = new PromiseHelper(this, helperAgents);
-    this.FactoryHelp = new FactoryHelper(this, helperAgents);
-    this.UrlHelp = new UrlHelper(this, helperAgents);
+  Init(logger: ILoggerAgent, helperAgent: IHelperAgent): void {
+    this.GuidHelp = new GuidHelper(logger, helperAgent);
+    this.UtilityHelp = new UtilityHelper(logger, helperAgent);
+    this.PromiseHelper = new PromiseHelper(logger, helperAgent);
+    this.FactoryHelp = new FactoryHelper(logger, helperAgent);
+    this.UrlHelp = new UrlHelper(logger, helperAgent);
   }
 } 

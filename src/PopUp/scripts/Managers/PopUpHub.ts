@@ -2,10 +2,9 @@
 import { EventManager } from "./EventManager";
 import { PopUpMessagesManager } from "./PopUpMessagesManager";
 import { FeedbackManager } from "./FeedbackManager";
-import { SettingsManager } from "./SettingsManager";
 import { TabManager } from "./TabManager";
 import { LocationManager } from "./LocationManager";
-import { HelperHub } from "../../../Shared/scripts/Helpers/Helpers";
+import { HelperAgent } from "../../../Shared/scripts/Helpers/Helpers";
 import { BrowserManager } from "./BrowserManager";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
@@ -19,18 +18,16 @@ export class PopUpHub {
   BrowserMan: BrowserManager;
   EventMan: EventManager;
   FeedbackMan: FeedbackManager;
-  Helpers: HelperHub;
+  Helpers: HelperAgent;
   LocMan: LocationManager;
   private _allAgents: IAllAgents;
   PopMsgMan: PopUpMessagesManager;
-  SettingsMan: SettingsManager;
   TabMan: TabManager;
   UiMan: UiManager;
 
   constructor(allAgents: IAllAgents) {
 
     this._allAgents = allAgents;
-    this.SettingsMan = new SettingsManager(this, this._allAgents);
 
     this.PopMsgMan = new PopUpMessagesManager(this, this._allAgents);
     this.UiMan = new UiManager(this, this._allAgents);
@@ -43,7 +40,7 @@ export class PopUpHub {
     this.TabMan = new TabManager(this, this._allAgents);
     this.BrowserMan = new BrowserManager(this, this._allAgents);
 
-    this.Helpers = new HelperHub(allAgents);
+    this.Helpers = new HelperAgent(allAgents.Logger);
 
     this.init();
   }
@@ -51,11 +48,7 @@ export class PopUpHub {
   async init() {
     this._allAgents.Logger.FuncStart(PopUpHub.name, this.init.name);
 
-    await this.SettingsMan.Init();//after attic (?)
-
-
-
-    let setting: IOneGenericSetting = await this.SettingsMan.GetByKey(SettingKey.LogToConsole);
+    let setting: IOneGenericSetting = await this._allAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole);
 
     console.log("setting");
     console.log(setting);

@@ -1,13 +1,13 @@
 import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { IterationHelper } from '../../../Shared/scripts/Classes/IterationHelper';
+import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone';
 import { PromiseChainRestoreDesktop } from '../Promises/PromiseChainRestoreDesktop';
 import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { OneCEManager } from './OneCEManager';
-import { IDataDtState } from '../../../Shared/scripts/Interfaces/IDataDtState';
+import { OneCEAgent } from './OneCEAgent';
+import { IDataDesktopState } from '../../../Shared/scripts/Interfaces/IDataDtState';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
@@ -47,14 +47,15 @@ export class OneDesktopManager extends ContentManagerBase {
 
     this.AllAgents.Logger.FuncEnd(this.RestoreDesktopState.name);
   }
-  async RestoreDataToOneIframeWorker(oneCEdata: IDataOneStorageCE, newIframe: IDataOneIframe) {
-    this.AllAgents.Logger.FuncStart(this.RestoreDataToOneIframeWorker.name, 'data not null: ' + (oneCEdata != null) + ' newFrame not null: ' + (newIframe !== null));
+
+  async RestoreDataToOneIframeWorker(oneCEdata: IDataOneStorageCE, targetIframe: IDataOneIframe) {
+    this.AllAgents.Logger.FuncStart(this.RestoreDataToOneIframeWorker.name, 'data not null: ' + (oneCEdata != null) + ' newFrame not null: ' + (targetIframe !== null));
     var toReturn: boolean = false;
 
-    this.AllAgents.Logger.DebugDataOneIframe(newIframe);
+    this.AllAgents.Logger.DebugDataOneIframe(targetIframe);
 
-    if (oneCEdata && newIframe) {
-      await this.OneScWinMan().OneCEMan.RestoreCEStateAsync(oneCEdata, newIframe.ContentDoc);
+    if (oneCEdata && targetIframe) {
+      await this.OneScWinMan().OneCEAgent.RestoreCEStateAsync(oneCEdata, targetIframe.ContentDoc);
       toReturn = true;
     } else {
       this.AllAgents.Logger.Error(this.RestoreDataToOneIframeWorker.name, 'bad data');
@@ -68,7 +69,7 @@ export class OneDesktopManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncStart(this.WaitForIframeCountDiffWorker.name);
     var toReturn: IDataOneIframe = null;
 
-    var iterationJr = new IterationHelper(this.Helpers(), this.WaitForIframeCountDiffWorker.name, this.AllAgents)
+    var iterationJr = new IterationDrone(this.AllAgents.Logger, this.WaitForIframeCountDiffWorker.name)
 
     while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
       let beforeCount: number = IFramesbefore.length;
@@ -114,7 +115,7 @@ export class OneDesktopManager extends ContentManagerBase {
         this.AllAgents.Logger.Log('pushing: ' + ifrIdx);
 
         var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        var dataOneIframe: IDataOneIframe = this.Helpers().FactoryHelp.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
+        var dataOneIframe: IDataOneIframe = this.AllAgents.HelperAgent.FactoryHelp.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
         toReturn.push(dataOneIframe);
       }
     } else {
@@ -134,7 +135,7 @@ export class OneDesktopManager extends ContentManagerBase {
 
       let promiseResult: PromiseResult = new PromiseResult(this.GetStateDesktop.name, this.AllAgents.Logger);
 
-      var toReturnAllCeState: IDataDtState = this.Helpers().FactoryHelp.CreateNewDtDataShell();
+      var toReturnAllCeState: IDataDesktopState = this.AllAgents.HelperAgent.FactoryHelp.CreateNewDtDataShell();
       toReturnAllCeState.livingIframeAr = this.GetAllLiveIframeData();
 
       if (toReturnAllCeState.livingIframeAr && toReturnAllCeState.livingIframeAr.length > 0) {
@@ -143,11 +144,11 @@ export class OneDesktopManager extends ContentManagerBase {
 
           var targetIframeObj = toReturnAllCeState.livingIframeAr[iframeIdx];
 
-          var oneCeMan = new OneCEManager(this.ContentHub, targetIframeObj.ContentDoc, this.AllAgents);
+          var oneCeMan = new OneCEAgent(targetIframeObj.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
 
           //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
-          await oneCeMan.GetStateCe(this.Helpers().GuidHelp.EmptyGuid())
+          await oneCeMan.GetStateCe(this.AllAgents.HelperAgent.GuidHelp.EmptyGuid())
             .then((oneCeState: IDataOneStorageCE) => {
               toReturnAllCeState.AllCeData.push(oneCeState);
 

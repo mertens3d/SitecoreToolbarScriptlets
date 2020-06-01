@@ -20,7 +20,7 @@ export class BrowserManager extends PopUpManagerBase {
         .then((rawTab: browser.tabs.Tab) => { newTab = this.TabMan().MakeTabData(rawTab) })
         .then(() => {
           this.UiMan().UpdateMsgStatusStack('Waiting for Tab Ready State ');
-          this.Helpers().PromiseHelp.TabWaitForReadyStateCompleteNative(newTab.Tab)
+          this.AllAgents.HelperAgent.PromiseHelper.TabWaitForReadyStateCompleteNative(newTab.Tab)
         })
         .then(() => {
           this.UiMan().UpdateMsgStatusStack('Waiting for Tab Listening ');

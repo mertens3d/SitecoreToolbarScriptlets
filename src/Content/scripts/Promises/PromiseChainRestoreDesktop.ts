@@ -15,23 +15,23 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     this.AllAgents.Logger.FuncEnd(PromiseChainRestoreDesktop.name);
   }
 
-  private __waitForAndClickRedStartButtonPromise(promiseBucket: IDataBucketRestoreDesktop) {
+  private __waitForAndClickRedStartButton(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.__waitForAndClickRedStartButtonPromise.name);
+      this.AllAgents.Logger.FuncStart(this.__waitForAndClickRedStartButton.name);
 
-      if (this.MiscMan().NotNullOrUndefined([promiseBucket, promiseBucket.targetDoc], this.__waitForAndClickRedStartButtonPromise.name)) {
+      if (this.MiscMan().NotNullOrUndefined([promiseBucket, promiseBucket.targetDoc], this.__waitForAndClickRedStartButton.name)) {
         this.AllAgents.Logger.MarkerB();
 
-        await this.Helpers().PromiseHelp.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, promiseBucket.targetDoc)
+        await this.AllAgents.HelperAgent.PromiseHelper.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, promiseBucket.targetDoc)
           .then(() => resolve(promiseBucket))
           .catch(ex => {
-            this.AllAgents.Logger.Error(this.__waitForAndClickRedStartButtonPromise.name, ex);
+            this.AllAgents.Logger.Error(this.__waitForAndClickRedStartButton.name, ex);
             reject(ex);
           });
       } else {
-        reject(this.__waitForAndClickRedStartButtonPromise.name + ' something was null or undefined');
+        reject(this.__waitForAndClickRedStartButton.name + ' something was null or undefined');
       }
-      this.AllAgents.Logger.FuncEnd(this.__waitForAndClickRedStartButtonPromise.name);
+      this.AllAgents.Logger.FuncEnd(this.__waitForAndClickRedStartButton.name);
     });
   }
 
@@ -41,19 +41,24 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
       this.AllAgents.Logger.PromiseBucketDebug(promiseBucket, this.__waitForIframeReady.name);
 
-      var success = await this.Helpers().PromiseHelp.WaitForReadyIframe(promiseBucket.NewIframe);
+    //  var promResult: PromiseResult = new PromiseResult(this.__waitForIframeCountDiff.name, this.AllAgents.Logger);
 
-      if (success) {
-        this.AllAgents.Logger.Log('resolved! : ');
+      await this.AllAgents.HelperAgent.PromiseHelper.WaitForReadyIframe(promiseBucket.NewIframe)
+        .then((result) => {
+          this.AllAgents.Logger.Log('resolved! : ');
 
-        promiseBucket.NewIframe.ContentDoc.ContentDoc = promiseBucket.NewIframe.IframeElem.contentDocument;
-        this.AllAgents.Logger.DebugDataOneIframe(promiseBucket.NewIframe);
+          promiseBucket.NewIframe.ContentDoc.ContentDoc = promiseBucket.NewIframe.IframeElem.contentDocument;
+          this.AllAgents.Logger.DebugDataOneIframe(promiseBucket.NewIframe);
 
-        resolve(promiseBucket);
-      } else {
-        this.AllAgents.Logger.Log('rejected ! : ');
-        reject(this.__waitForIframeReady.name);
-      }
+          resolve(promiseBucket);
+        })
+        .catch((err) => {
+          this.AllAgents.Logger.Log('rejected ! : ');
+          reject(this.__waitForIframeReady.name + ' ' + err);
+
+        })
+
+
       this.AllAgents.Logger.FuncEnd(this.__waitForIframeReady.name);
     });
   }
@@ -88,11 +93,11 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     });
   }
 
-  private __waitForAndThenClickCEFromMenuPromise(promiseBucket: IDataBucketRestoreDesktop) {
+  private __waitForAndThenClickCEFromMenu(promiseBucket: IDataBucketRestoreDesktop) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      await this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], promiseBucket.targetDoc)
+      await this.AllAgents.HelperAgent.PromiseHelper.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], promiseBucket.targetDoc)
         .then(() => { resolve(promiseBucket); })
-        .catch((ex) => { reject(this.__waitForAndThenClickCEFromMenuPromise.name); });
+        .catch((ex) => { reject(this.__waitForAndThenClickCEFromMenu.name); });
     });
   }
 
@@ -103,6 +108,8 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       this.AllAgents.Logger.DebugDataOneIframe(promiseBucket.NewIframe);
 
       var success = await this.OneScWinMan().OneDesktopMan.RestoreDataToOneIframeWorker(promiseBucket.oneCEdata, promiseBucket.NewIframe);
+
+
       if (success) {
         resolve(promiseBucket);
       } else {
@@ -129,8 +136,8 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       //this.debug().PromiseBucketDebug(dataBucket, this.RunOneChain.name);
 
       //guaranteed to be on the correct page
-      await this.__waitForAndClickRedStartButtonPromise(dataBucket)
-        .then(dataBucket => this.__waitForAndThenClickCEFromMenuPromise(dataBucket))
+      await this.__waitForAndClickRedStartButton(dataBucket)
+        .then(dataBucket => this.__waitForAndThenClickCEFromMenu(dataBucket))
         .then(dataBucket => this.__waitForIframeCountDiff(dataBucket))
         .then(dataBucket => this.__waitForIframeReady(dataBucket))
         .then(dataBucket => this.__restoreDataToOneIframe(dataBucket))

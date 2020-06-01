@@ -1,5 +1,5 @@
-﻿import { IOneGenericSetting } from "./Agents/IOneGenericSetting";
+﻿//import { IOneGenericSetting } from "./Agents/IOneGenericSetting";
 
-export interface IAllGenericSettings {
-  SettingsAr: IOneGenericSetting[];
-}
+//export interface IAllGenericSettings {
+//  SettingsAr: IOneGenericSetting[];
+//}

@@ -61,25 +61,25 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   }
 
   async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await this.Helpers().PromiseHelp.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.SettingsHidden)
+    await this.AllAgents.HelperAgent.PromiseHelper.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.SettingsHidden)
       .then(async () => {
-        await this.Helpers().PromiseHelp.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, this.SharedConst().IterHelper.MaxCount.OverridePublishing)
+        await this.AllAgents.HelperAgent.PromiseHelper.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, this.SharedConst().IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
-        await this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.Cancel], dataPublishChain.Iframe0Blue.ContentDoc);
+        await this.AllAgents.HelperAgent.PromiseHelper.WaitForThenClick([ContentConst.Const.Selector.SC.Cancel], dataPublishChain.Iframe0Blue.ContentDoc);
       });
 
     return dataPublishChain;
   }
 
   private async __waitForAndClickOk(dataPublishChain: IDataPublishChain) {
-    await this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.Ok], dataPublishChain.messageDialogIframeRed.ContentDoc);
+    await this.AllAgents.HelperAgent.PromiseHelper.WaitForThenClick([ContentConst.Const.Selector.SC.Ok], dataPublishChain.messageDialogIframeRed.ContentDoc);
 
     return dataPublishChain;
   }
 
   async __WaitForAndClickPublishNextButton(dataPublishChain: IDataPublishChain) {
-    await this.Helpers().PromiseHelp.WaitForThenClick([ContentConst.Const.Selector.SC.NextButton], dataPublishChain.Iframe0Blue.ContentDoc);
+    await this.AllAgents.HelperAgent.PromiseHelper.WaitForThenClick([ContentConst.Const.Selector.SC.NextButton], dataPublishChain.Iframe0Blue.ContentDoc);
 
     return dataPublishChain;
   }
@@ -87,7 +87,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
   async GetMessageDialog(dataPublishChain: IDataPublishChain) {
     let toReturnPublishChain: IDataPublishChain = dataPublishChain;
 
-    await this.Helpers().PromiseHelp.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
+    await this.AllAgents.HelperAgent.PromiseHelper.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
       .then((result) => toReturnPublishChain.messageDialogIframeRed = result)
       .catch((err) => this.AllAgents.Logger.Error(this.GetMessageDialog, err));
 
@@ -101,13 +101,13 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
       let promiseResult: PromiseResult = new PromiseResult(this.GetDialogIframe0Blue.name, this.AllAgents.Logger);
 
       //why is this null?
-      //var IDataOneIframe: IDataOneIframe = this.Helpers().FactoryHelp.DataOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
+      //var IDataOneIframe: IDataOneIframe = this.AllAgents.HelperAgent.FactoryHelp.DataOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
 
       //this.ContentAgents.Logger.MarkerA();
       this.AllAgents.Logger.LogAsJsonPretty('dataPublishChain', dataPublishChain);
       //this.ContentAgents.Logger.MarkerB();
 
-      await this.Helpers().PromiseHelp.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
+      await this.AllAgents.HelperAgent.PromiseHelper.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
         .then((result) => {
           this.AllAgents.Logger.MarkerC();
           dataPublishChain.Iframe0Blue = result;
@@ -133,8 +133,8 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
       this.AllAgents.Logger.DebugIDataOneDoc(targetDoc);
 
       var found: HTMLElement = null;
-
-      var found = await this.Helpers().PromiseHelp.WaitForAndReturnFoundElem(targetDoc, selector);
+      await this.AllAgents.HelperAgent.PromiseHelper.WaitForAndReturnFoundElem(targetDoc, selector)
+        .then((result) => found = result);
 
       if (found) {
         this.AllAgents.Logger.Log('found');

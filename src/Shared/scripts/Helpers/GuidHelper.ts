@@ -2,10 +2,12 @@
 import { HelperBase } from "../Classes/HelperBase";
 import { SharedConst } from "../SharedConst";
 
-
-export class GuidHelper  extends HelperBase {
+export class GuidHelper extends HelperBase {
   ShortGuidLength: number = 4;
 
+  EmptyGuidJustNumbers(): string {
+    return '00000000000000000000000000000000'
+  }
 
   EmptyGuid(): IGuid {
     return this.ParseGuid('00000000-0000-0000-0000-000000000000');
@@ -36,33 +38,42 @@ export class GuidHelper  extends HelperBase {
     if (Id && Id.AsString.length > this.ShortGuidLength) {
       toReturn = Id.AsString.substr(0, this.ShortGuidLength);
     } else {
-      this.AllHelperAgents.Logger.DebugIGuid(Id);
-      this.AllHelperAgents.Logger.LogVal('Length', Id.AsString.length);
-      this.AllHelperAgents.Logger.LogVal('ShortLength', this.ShortGuidLength);
+      this.Logger.DebugIGuid(Id);
+      this.Logger.LogVal('Length', Id.AsString.length);
+      this.Logger.LogVal('ShortLength', this.ShortGuidLength);
     }
     return toReturn;
   }
 
-
-  FormatJustNumbers(str: string): string{
+  FormatJustNumbers(str: string): string {
     return str.replace(SharedConst.Const.Regex.CleanGuid, '');
   }
 
-  FormatAsBracedGuid(str: string) :string {
+  FormatAsBracedGuid(str: string): string {
     //https://stackoverflow.com/questions/25131143/javascript-string-to-guid
-    var parts = [];
-    parts.push(str.slice(0, 8));
-    parts.push(str.slice(8, 12));
-    parts.push(str.slice(12, 16));
-    parts.push(str.slice(16, 20));
-    parts.push(str.slice(20, 32));
-    var GUID = '{' + parts.join('-') + '}'; 
 
+    var GUID;
+
+    try {
+      var parts = [];
+      if (str.length !== 32) {
+        str = this.EmptyGuidJustNumbers();
+      }
+
+      parts.push(str.slice(0, 8));
+      parts.push(str.slice(8, 12));
+      parts.push(str.slice(12, 16));
+      parts.push(str.slice(16, 20));
+      parts.push(str.slice(20, 32));
+
+      GUID = '{' + parts.join('-') + '}';
+    } catch (ex) {
+      this.Logger.Error(this.FormatAsBracedGuid.name, ex);
+    }
     return GUID;
   }
 
   ParseGuid(val: string): IGuid {
-
     let justNumbers = this.FormatJustNumbers(val);
     let guidFormat = this.FormatAsBracedGuid(justNumbers);
 

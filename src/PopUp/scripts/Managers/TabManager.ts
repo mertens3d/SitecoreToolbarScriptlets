@@ -15,7 +15,7 @@ export class TabManager extends PopUpManagerBase {
   MakeTabData(rawTab: browser.tabs.Tab): IDataBrowserTab {
     let toReturn: IDataBrowserTab = {
       Tab: rawTab,
-      UrlParts: this.Helpers().UrlHelp.MakeUrlParts({ AbsUrl: rawTab.url }),
+      UrlParts: this.AllAgents.HelperAgent.UrlHelp.MakeUrlParts({ AbsUrl: rawTab.url }),
     }
 
     return toReturn;
@@ -27,7 +27,7 @@ export class TabManager extends PopUpManagerBase {
     await this.GetAssociatedTab()
       .then((tabData: IDataBrowserTab) => {
         this.CurrentTabData = tabData;
-        //this.CurrentTabData.UrlParts = this.Helpers().UrlHelp.MakeUrlParts({ AbsUrl: tabData.Tab.url });
+        //this.CurrentTabData.UrlParts = this.AllAgents.HelperAgent.UrlHelp.MakeUrlParts({ AbsUrl: tabData.Tab.url });
       }
 
       );
@@ -48,7 +48,7 @@ export class TabManager extends PopUpManagerBase {
         .then(async (tabs) => {
           toReturn = {
             Tab: tabs[0],
-            UrlParts: this.Helpers().UrlHelp.MakeUrlParts({ AbsUrl: tabs[0].url })
+            UrlParts: this.AllAgents.HelperAgent.UrlHelp.MakeUrlParts({ AbsUrl: tabs[0].url })
           }
 
           this.AllAgents.Logger.DebugIDataBrowserTab(toReturn);
