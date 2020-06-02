@@ -73,11 +73,11 @@ export class UiButtonStateManager extends PopUpManagerBase {
             break;
 
           case VisibilityType.Unknown:
-            this.AllAgents.Logger.Error(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+            this.AllAgents.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
             break;
 
           default:
-            this.AllAgents.Logger.Error(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+            this.AllAgents.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
             break;
         }
 
@@ -97,7 +97,7 @@ export class UiButtonStateManager extends PopUpManagerBase {
     let toReturn: boolean = false;
     let currSelSnapshot: IGuid = this.UiMan().CurrentMenuState.SelectSnapshotId;
 
-    if (currSelSnapshot && currSelSnapshot.AsBracedGuid !== this.AllAgents.HelperAgent.GuidHelp.EmptyGuid().AsBracedGuid) {
+    if (currSelSnapshot && currSelSnapshot.AsBracedGuid !== this.AllAgents.HelperAgent.GuidHelper.EmptyGuid().AsBracedGuid) {
       toReturn = true;
     }
     return toReturn;
@@ -135,7 +135,7 @@ export class UiButtonStateManager extends PopUpManagerBase {
       if (targetButton) {
         passesOneTest = this.TestAgainstAllSetControllers(oneCommand);
       } else {
-        this.AllAgents.Logger.Error(this.RefreshButtonStates.name, 'target button not found');
+        this.AllAgents.Logger.ErrorAndThrow(this.RefreshButtonStates.name, 'target button not found');
       }
       this.SetOneButtonVisibility(targetButton, passesOneTest);
     }

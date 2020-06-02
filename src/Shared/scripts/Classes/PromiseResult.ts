@@ -36,7 +36,7 @@ export class PromiseResult {
     this.RejectReasons += ', ' + ex;
     this.Success = false;
     if (this.Log) {
-      this.Log.Error(this.prefix + this.NickName, this.Success + '  err: ' + ex);
+      this.Log.ErrorAndThrow(this.prefix + this.NickName, this.Success + '  err: ' + ex);
     } else {
       console.log('no logger fail ' + ex);
     }

@@ -21,7 +21,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
       this.topDoc = {
         //ParentDoc: null,
         ContentDoc: window.document,
-        DocId: this.AllAgents.HelperAgent.GuidHelp.NewGuid(),
+        DocId: this.AllAgents.HelperAgent.GuidHelper.NewGuid(),
         Nickname: 'top doc'
       }
     }
@@ -57,11 +57,11 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
         }
       }
       else {
-        this.AllAgents.Logger.Error(this.AdminB.name, 'No loginButton');
+        this.AllAgents.Logger.ErrorAndThrow(this.AdminB.name, 'No loginButton');
       }
     }
     else {
-      this.AllAgents.Logger.Error(this.AdminB.name, 'No Username or password field');
+      this.AllAgents.Logger.ErrorAndThrow(this.AdminB.name, 'No Username or password field');
     }
     this.AllAgents.Logger.FuncEnd(this.AdminB.name);
   }

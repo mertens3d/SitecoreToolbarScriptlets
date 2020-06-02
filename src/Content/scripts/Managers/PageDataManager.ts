@@ -22,7 +22,7 @@ export class PageManager extends ContentManagerBase {
     this.topLevelDoc = {
       //ParentDoc: null,
       ContentDoc: (<Window>(window)).document,
-      DocId: this.AllAgents.HelperAgent.GuidHelp.NewGuid(),
+      DocId: this.AllAgents.HelperAgent.GuidHelper.NewGuid(),
       Nickname: 'Original Target Page'
     }
 

@@ -8,5 +8,5 @@ export interface IHelperAgent {
   UrlHelp: IUrlHelper;
   PromiseHelper: IPromiseHelper;
   FactoryHelp: IFactoryHelper;
-  GuidHelp: IGuidHelper;
+  GuidHelper: IGuidHelper;
 }

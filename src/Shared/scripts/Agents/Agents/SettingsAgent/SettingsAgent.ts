@@ -39,7 +39,7 @@ export class SettingsAgent implements ISettingsAgent {
     try {
       foundSettings = await this.RepoAgent.ReadGenericSettings();
     } catch (e) {
-      this.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, e.toString());
+      this.Logger.ErrorAndThrow(this.HarvestNonDefaultGenericSettingsFromStorage.name, e.toString());
     }
 
     this.Logger.LogAsJsonPretty('settings from storage', foundSettings);
@@ -52,11 +52,11 @@ export class SettingsAgent implements ISettingsAgent {
         if (matchingSetting) {
           matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
         } else {
-          this.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+          this.Logger.ErrorAndThrow(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
         }
       }
     } else {
-      this.Logger.Error(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'settings not found');
+      this.Logger.ErrorAndThrow(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'settings not found');
     }
 
     this.Logger.FuncEnd(this.HarvestNonDefaultGenericSettingsFromStorage.name);
@@ -137,7 +137,7 @@ export class SettingsAgent implements ISettingsAgent {
 
       this.RepoAgent.WriteGenericSettings(nonDefaultSettings);
     } else {
-      this.Logger.Error(this.SetByKey.name, 'setting match not found');
+      this.Logger.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
     }
     this.Logger.FuncEnd(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
   }

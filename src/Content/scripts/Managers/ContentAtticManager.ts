@@ -11,7 +11,6 @@ import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class ContentAtticManager extends ContentManagerBase{ 
@@ -20,6 +19,8 @@ export class ContentAtticManager extends ContentManagerBase{
   constructor(hub: ContentHub, AllAgents: IAllAgents) {
     super(hub, AllAgents);
     this.AllAgents.Logger.FuncStart(ContentAtticManager.name);
+
+    this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
 
     this.AllAgents.Logger.FuncEnd(ContentAtticManager.name);
   }
@@ -177,7 +178,7 @@ export class ContentAtticManager extends ContentManagerBase{
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      candidate.Id = this.AllAgents.HelperAgent.GuidHelp.ParseGuid(candidate.Id.AsString);
+      candidate.Id = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(candidate.Id.AsString);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {
@@ -189,7 +190,7 @@ export class ContentAtticManager extends ContentManagerBase{
         candidate.NickName = '';
       }
     } else {
-      this.AllAgents.Logger.Error(this.__parseRawData.name, 'Saved data did not import correctly')
+      this.AllAgents.Logger.ErrorAndThrow(this.__parseRawData.name, 'Saved data did not import correctly')
     }
     return candidate
   }
@@ -250,7 +251,7 @@ export class ContentAtticManager extends ContentManagerBase{
             this.AllAgents.Logger.LogVal('Cleaning old autosave', candidate.RawData.key);
             window.localStorage.removeItem(candidate.RawData.key);
           } catch (e) {
-            this.AllAgents.Logger.Error(this.CleanOutOldData.name, 'unable to delete key: ' + candidate.RawData.key)
+            this.AllAgents.Logger.ErrorAndThrow(this.CleanOutOldData.name, 'unable to delete key: ' + candidate.RawData.key)
           }
         }
       }

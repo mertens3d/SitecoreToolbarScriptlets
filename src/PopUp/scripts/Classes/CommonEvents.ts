@@ -24,14 +24,13 @@ export class CommonEvents {
       this.__cleardebugText();
       this.PopHub.UiMan.ClearCancelFlag();
 
+      //this.AllAgents.Logger.LogAsJsonPretty("msgPayload", msgPlayload);
 
-      this.AllAgents.Logger.LogAsJsonPretty("msgPayload", msgPlayload);
-
-      await this.PopHub.PopMsgMan.SendMessageToContentTab(msgPlayload, targetTab);
+      await this.PopHub.PopMsgMan.SendMessageToContentTab(msgPlayload, targetTab)
+        .then(() => resolve())
+        .catch((err) => reject(err));
 
       this.AllAgents.Logger.FuncEnd(this.GoContentCommand.name);
-
-      resolve();
     });
   }
 }

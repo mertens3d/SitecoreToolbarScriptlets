@@ -2,13 +2,13 @@ import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTre
 import { IScMode } from '../../../Shared/scripts/Interfaces/IscMode';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { PopUpManagerBase } from './PopUpManagerBase';
-import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationHelper';
 import { PopUpHub } from './PopUpHub';
 import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
+import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone';
 
 export class LocationManager extends PopUpManagerBase {
   constructor(hub: PopUpHub, allAgents: IAllAgents) {
@@ -20,7 +20,7 @@ export class LocationManager extends PopUpManagerBase {
   ChangeLocationSwitchBoard(desiredPageType: scWindowType) {
     this.AllAgents.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType]);
 
-    var iteration: IterationDrone = new IterationDrone(this.Helpers(), this.ChangeLocationSwitchBoard.name, this.AllAgents);
+    var iteration: IterationDrone = new IterationDrone(this.AllAgents.Logger, this.ChangeLocationSwitchBoard.name);
 
     if (iteration.DecrementAndKeepGoing()) {
       var currentScWindowType: scWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;

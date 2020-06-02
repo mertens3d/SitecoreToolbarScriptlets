@@ -118,7 +118,7 @@ export class OneTreeDrone {
 
           var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
 
-          newData.NodeId = this.HelperAgent.GuidHelp.ParseGuid(apparentId);
+          newData.NodeId = this.HelperAgent.GuidHelper.ParseGuid(apparentId);
 
           toReturn.push(newData);
         }
@@ -157,10 +157,10 @@ export class OneTreeDrone {
         //var nodesAsString = JSON.stringify(toReturn);
         //this.debug().Log('toReturn as string: ' + nodesAsString);
       } else {
-        this.Logger.Error(this.GetOneLiveTreeData.name, 'no root node');
+        this.Logger.ErrorAndThrow(this.GetOneLiveTreeData.name, 'no root node');
       }
     } else {
-      this.Logger.Error(this.GetOneLiveTreeData.name, 'no targetDoc');
+      this.Logger.ErrorAndThrow(this.GetOneLiveTreeData.name, 'no targetDoc');
     }
 
     this.Logger.FuncEnd(this.GetOneLiveTreeData.name);

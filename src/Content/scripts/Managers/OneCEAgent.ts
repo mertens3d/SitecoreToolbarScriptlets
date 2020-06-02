@@ -1,5 +1,5 @@
 ﻿import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone';
-import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
+import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
 import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTreeNode';
@@ -21,6 +21,10 @@ export class OneCEAgent {
     this.HelperAgent = helperAgent;
 
     this.Logger.FuncStart(this.constructor.name);
+
+    this.Logger.IsNotNullOrUndefinedBool("helperAgent", helperAgent);
+    this.Logger.IsNotNullOrUndefinedBool("associatedDoc", associatedDoc);
+
     this.ContextDoc = associatedDoc;
 
     this.OneTreeDrone = new OneTreeDrone(this.Logger, this.HelperAgent, this.ContextDoc);
@@ -61,7 +65,7 @@ export class OneCEAgent {
     if (rootElem) {
       this.__collapseNode(rootElem);
     } else {
-      this.Logger.Error(this.__collapseRootNode.name, 'Root glyph not found ' + ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
+      this.Logger.ErrorAndThrow(this.__collapseRootNode.name, 'Root glyph not found ' + ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
     }
   }
 
@@ -102,7 +106,7 @@ export class OneCEAgent {
     this.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
   }
 
-  async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageCE, targetDoc: IDataOneDoc) {
+  async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageOneTreeState, targetDoc: IDataOneDoc) {
     this.Logger.FuncStart(this.WaitForAndRestoreManyAllNodes.name, targetDoc.DocId.AsShort);
 
     let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.WaitForAndRestoreManyAllNodes.name);
@@ -116,17 +120,20 @@ export class OneCEAgent {
     this.Logger.FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
   }
 
-  async RestoreCEStateAsync(dataToRestore: IDataOneStorageCE, dataOneDocTarget: IDataOneDoc): Promise<Boolean> {
-    this.Logger.FuncStart(this.RestoreCEStateAsync.name, dataOneDocTarget.DocId.AsShort);
+  async RestoreCEStateAsync(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
+    return new Promise<boolean>(async (resolve, reject) => {
+      this.Logger.FuncStart(this.RestoreCEStateAsync.name, this.ContextDoc.DocId.AsShort);
 
-    var toReturn: boolean = false;
+      var toReturn: boolean = false;
 
-    this.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
+      this.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
 
-    await this.WaitForAndRestoreManyAllNodes(dataToRestore, dataOneDocTarget);
+      await this.WaitForAndRestoreManyAllNodes(dataToRestore, this.ContextDoc)
+        .then(() => resolve(true))
+        .catch((err) => reject(this.RestoreCEStateAsync.name + " " + err));
 
-    this.Logger.FuncEnd(this.RestoreCEStateAsync.name);
-    return toReturn;
+      this.Logger.FuncEnd(this.RestoreCEStateAsync.name);
+    });
   }
 
   GetActiveNode(allTreeNodeAr: IDataOneTreeNode[]) {
@@ -140,35 +147,35 @@ export class OneCEAgent {
         }
       }
     } else {
-      this.Logger.Error(this.GetActiveNode.name, 'No tree data provided');
+      this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
     }
 
     return toReturn;
   }
 
-  GetStateCe(id: IGuid) {
-    return new Promise((resolve, reject) => {
-      this.Logger.FuncStart(this.GetStateCe.name);
-      let result: PromiseResult = new PromiseResult(this.GetStateCe.name, this.Logger);
+  GetTreeState(id: IGuid) {
+    return new Promise<IDataOneStorageOneTreeState>((resolve, reject) => {
+      this.Logger.FuncStart(this.GetTreeState.name);
+      let result: PromiseResult = new PromiseResult(this.GetTreeState.name, this.Logger);
 
-      var toReturnCEData: IDataOneStorageCE = {
+      var toReturnOneTreeState: IDataOneStorageOneTreeState = {
         Id: id,
         AllTreeNodeAr: this.OneTreeDrone.GetOneLiveTreeData(),
         ActiveNode: null
       }
 
-      toReturnCEData.ActiveNode = this.GetActiveNode(toReturnCEData.AllTreeNodeAr);
+      toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
 
-      if (toReturnCEData) {
+      if (toReturnOneTreeState) {
         result.MarkSuccessful()
       } else {
         result.MarkFailed('todo why would this fail?');
       }
 
-      this.Logger.FuncEnd(this.GetStateCe.name);
+      this.Logger.FuncEnd(this.GetTreeState.name);
 
       if (result.WasSuccessful()) {
-        resolve(toReturnCEData)
+        resolve(toReturnOneTreeState)
       } else {
         reject(result.RejectReasons);
       }

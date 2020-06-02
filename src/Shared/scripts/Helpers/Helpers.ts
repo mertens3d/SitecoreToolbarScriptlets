@@ -7,7 +7,7 @@ import { IHelperAgent } from "../Interfaces/Agents/IHelperAgent";
 import { ILoggerAgent } from "../Interfaces/Agents/ILoggerBase";
 
 export class HelperAgent implements IHelperAgent {
-  GuidHelp: GuidHelper;
+  GuidHelper: GuidHelper;
   UtilityHelp: UtilityHelper;
   PromiseHelper: PromiseHelper;
   FactoryHelp: FactoryHelper;
@@ -20,7 +20,7 @@ export class HelperAgent implements IHelperAgent {
   }
 
   Init(logger: ILoggerAgent, helperAgent: IHelperAgent): void {
-    this.GuidHelp = new GuidHelper(logger, helperAgent);
+    this.GuidHelper = new GuidHelper(logger, helperAgent);
     this.UtilityHelp = new UtilityHelper(logger, helperAgent);
     this.PromiseHelper = new PromiseHelper(logger, helperAgent);
     this.FactoryHelp = new FactoryHelper(logger, helperAgent);

@@ -62,7 +62,7 @@ export class EventManager extends PopUpManagerBase {
           )
         }
       } else {
-        this.AllAgents.Logger.Error(this.WireAllGenericSettings.name, 'ui generic element not found');
+        this.AllAgents.Logger.ErrorAndThrow(this.WireAllGenericSettings.name, 'ui generic element not found');
       }
     }
   }
@@ -89,7 +89,7 @@ export class EventManager extends PopUpManagerBase {
             var popHub: PopUpHub = this.PopHub;
             targetElem.addEventListener('click', (evt) => { oneEvent.Handler(evt, this.PopHub, oneEvent.ParameterData) });
           } else {
-            this.AllAgents.Logger.Error(this.__wireMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
+            this.AllAgents.Logger.ErrorAndThrow(this.__wireMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
           }
         }
       }
@@ -109,7 +109,7 @@ export class EventManager extends PopUpManagerBase {
       }
     }
     if (!toReturn) {
-      this.AllAgents.Logger.Error(this.GetCommandByKey.name, 'matching command not found ' + MenuCommand[menuCommand]);
+      this.AllAgents.Logger.ErrorAndThrow(this.GetCommandByKey.name, 'matching command not found ' + MenuCommand[menuCommand]);
     }
     return toReturn;
   }

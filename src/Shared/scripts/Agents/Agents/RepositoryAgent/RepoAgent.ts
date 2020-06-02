@@ -53,7 +53,7 @@ export class RepoAgent implements IRepositoryAgent {
           }
         });
     } catch (e) {
-      this.Logger.Error(this.ReadGenericSettings.name, e.toString());
+      this.Logger.ErrorAndThrow(this.ReadGenericSettings.name, e.toString());
     }
 
     this.Logger.FuncEnd(this.ReadGenericSettings.name);

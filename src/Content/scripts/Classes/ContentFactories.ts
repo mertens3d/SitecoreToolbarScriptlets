@@ -4,7 +4,7 @@ import { ContentManagerBase } from "../_first/_ContentManagerBase";
 import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
 import { CacheMode } from "../../../Shared/scripts/Enums/CacheMode";
-import { IDataOneStorageCE } from "../../../Shared/scripts/Interfaces/IDataOneStorageCE";
+import { IDataOneStorageOneTreeState } from "../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { IDataDesktopState } from "../../../Shared/scripts/Interfaces/IDataDtState";
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
@@ -33,7 +33,7 @@ export class ContentFactories extends ContentManagerBase {
       this.AllAgents.Logger.MarkerA();
 
       await this.GetCurrentDtOrCeState()
-        .then((result: IDataOneStorageCE) => {
+        .then((result: IDataOneStorageOneTreeState) => {
           this.AllAgents.Logger.MarkerB();
           contentState.ActiveCe = result;
           this.AllAgents.Logger.MarkerB();
@@ -57,7 +57,7 @@ export class ContentFactories extends ContentManagerBase {
 
       let promiseResult: PromiseResult = new PromiseResult(this.GetCurrentDtOrCeState.name, this.AllAgents.Logger);
 
-      let toReturnCeState: IDataOneStorageCE = null;
+      let toReturnOneTreeState: IDataOneStorageOneTreeState = null;
       let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
 
       if (pageType === scWindowType.Desktop) {
@@ -65,17 +65,17 @@ export class ContentFactories extends ContentManagerBase {
 
         await this.OneScWinMan().OneDesktopMan.GetStateDesktop()
           .then((result: IDataDesktopState) => {
-            toReturnCeState = result.ActiveCeState;
+            toReturnOneTreeState = result.ActiveCeState;
             promiseResult.MarkSuccessful();
           })
           .catch((ex) => promiseResult.MarkFailed(ex));
       }
       else if (pageType === scWindowType.ContentEditor) {
-        toReturnCeState = null;
+        toReturnOneTreeState = null;
 
-        await this.OneScWinMan().OneCEAgent.GetStateCe(this.AllAgents.HelperAgent.GuidHelp.NewGuid())
-          .then((result: IDataOneStorageCE) => {
-            toReturnCeState = result;
+        await this.OneScWinMan().OneCEAgent.GetTreeState(this.AllAgents.HelperAgent.GuidHelper.NewGuid())
+          .then((result: IDataOneStorageOneTreeState) => {
+            toReturnOneTreeState = result;
             promiseResult.MarkSuccessful();
           })
           .catch((ex) => promiseResult.MarkFailed(ex));
@@ -88,17 +88,17 @@ export class ContentFactories extends ContentManagerBase {
 
 
       ) {
-        toReturnCeState = null;
+        toReturnOneTreeState = null;
         promiseResult.MarkSuccessful();
       } else {
-        toReturnCeState = null;
+        toReturnOneTreeState = null;
         promiseResult.MarkFailed('not a known page type ' + StaticHelpers.WindowTypeAsString(pageType));
       }
 
       this.AllAgents.Logger.FuncEnd(this.GetCurrentDtOrCeState.name);
 
       if (promiseResult.WasSuccessful()) {
-        resolve(toReturnCeState);
+        resolve(toReturnOneTreeState);
       } else {
         reject(promiseResult.RejectReasons);
       }

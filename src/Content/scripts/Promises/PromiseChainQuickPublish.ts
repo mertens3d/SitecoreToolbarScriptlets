@@ -54,7 +54,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
       .then((dataPublishChain: IDataPublishChain) => this.__waitForAndClickClose(dataPublishChain))
 
       .catch(ex => {
-        this.AllAgents.Logger.Error(this.PublishCE.name, ex);
+        this.AllAgents.Logger.ErrorAndThrow(this.PublishCE.name, ex);
       });
 
     this.AllAgents.Logger.FuncEnd(this.PublishCE.name);
@@ -89,7 +89,7 @@ export class PromiseChainQuickPublish extends ContentManagerBase {
 
     await this.AllAgents.HelperAgent.PromiseHelper.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
       .then((result) => toReturnPublishChain.messageDialogIframeRed = result)
-      .catch((err) => this.AllAgents.Logger.Error(this.GetMessageDialog, err));
+      .catch((err) => this.AllAgents.Logger.ErrorAndThrow(this.GetMessageDialog.name, err));
 
     return toReturnPublishChain;
   }

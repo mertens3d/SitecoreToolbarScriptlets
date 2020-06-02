@@ -4,8 +4,11 @@ import { IError } from "../IError";
 import { IDataBrowserTab } from "../IDataBrowserWindow";
 import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
 import { IDataOneIframe } from "../IDataOneIframe";
+import { IAllAgents } from "./IAllAgents";
 
 export interface ILoggerAgent {
+  __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
+  IsNotNullOrUndefinedThrow(arg0: string, allAgents: any);
   PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
   DebugDataOneIframe(NewIframe: IDataOneIframe);
   CtorName(name: string);
@@ -16,7 +19,7 @@ export interface ILoggerAgent {
   DebugIDataOneDoc(targetDoc: IDataOneDoc);
   DebugIGuid(Id: IGuid);
   EnabledStatus();
-  Error(container, text);
+  ErrorAndThrow(container: string, text: any): void
   ErrorStack: IError[];
   AddDebugTextChangedCallback(caller: any, callback: Function): void
   FuncEnd(text, optionalValueInput: string | number);
@@ -28,6 +31,7 @@ export interface ILoggerAgent {
   Init(valueToUse: boolean);
   IsNotNullOrUndefinedBool(title: string, dataToCheck: any);
   IsNullOrUndefined(dataToCheck: any): string;
+  IsNotNullOrUndefinedThrow(title: string, dataToCheck: any): void;
   Log(text);
   Log(text, optionalValue: string);
   Log(text, optionalValue: string, hasPrefix: boolean);

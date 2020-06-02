@@ -32,8 +32,11 @@ export class ContentHub {
   SharedConst: ISharedConst;
   ReadyForMessages: boolean = false;
 
-  constructor(contentAgents: IAllAgents) {
-    this.AllAgents = contentAgents;
+  constructor(allAgents: IAllAgents) {
+    this.AllAgents = allAgents;
+
+    this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
+
     this.AllAgents.Logger.FuncStart(ContentHub.name);
     console.log('(ctor) logger enabled ' + this.AllAgents.Logger.EnabledStatus());
     this.Instantiate();

@@ -8,11 +8,9 @@ import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { PopUpHub } from "../Managers/PopUpHub";
 
 export class HandlersExternal extends CommonEvents {
-
-
   async AddCETab(evt: MouseEvent, popHub: PopUpHub) {
     popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqAddCETab, popHub));
- 
+
     popHub.UiMan.OnSuccessfullCommand();
     ;
     //.catch((ex) =>  popHub.Log.Error(popHub.EventMan.Handlers.External.__hndlrAddCETab.name, ex.toString()));
@@ -24,9 +22,8 @@ export class HandlersExternal extends CommonEvents {
   async QuickPublish(evt: MouseEvent, popHub: PopUpHub) {
     await popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqQuickPublish, popHub))
       .then(popHub.UiMan.OnSuccessfullCommand)
-      .catch((ex) => this.AllAgents.Logger.Error(popHub.EventMan.Handlers.External.QuickPublish.name, ex));
+      .catch((ex) => this.AllAgents.Logger.ErrorAndThrow(popHub.EventMan.Handlers.External.QuickPublish.name, ex));
   }
-
 
   async HndlrSnapShotCreate(evt: MouseEvent, popHub: PopUpHub) {
     var msg = new MsgFromPopUp(MsgFlag.ReqTakeSnapShot, popHub);
@@ -42,23 +39,33 @@ export class HandlersExternal extends CommonEvents {
       popHub,
       popHub.Helpers.UrlHelp.BuildFullUrlFromParts(popHub.TabMan.CurrentTabData.UrlParts))
       .then((newTab: IDataBrowserTab) => {
-
         var msg = new MsgFromPopUp(MsgFlag.ReqRestoreClick, popHub);
         msg.Data.IdOfSelect = popHub.UiMan.CurrentMenuState.SelectSnapshotId;
 
-        this.AllAgents.Logger.LogAsJsonPretty("msg.Data", msg.Data);
+        //this.AllAgents.Logger.LogAsJsonPretty("msg.Data", msg.Data);
 
         this.GoContentCommand(msg, newTab);
       })
       .catch((ex) => {
-        this.AllAgents.Logger.Error(this.HndlrSnapShotRestore.name, ex.toString());
+        this.AllAgents.Logger.ErrorAndThrow(this.HndlrSnapShotRestore.name, ex.toString());
       });
-
 
     this.AllAgents.Logger.FuncEnd(this.HndlrSnapShotRestore.name);
   }
 
+  async HndlrSnapShotUpdateNickName(evt: MouseEvent, popHub: PopUpHub) {
+    return new Promise<void>(async (resolve, reject) => {
+      var msg = new MsgFromPopUp(MsgFlag.ReqUpdateNickName, popHub);
 
+      //the problem seems to be here that the select element is not being set instead it's null
+      msg.Data.IdOfSelect = popHub.UiMan.CurrentMenuState.SelectSnapshotId;
+
+      msg.Data.SnapShotSettings.SnapShotNewNickname = popHub.UiMan.GetValueInNickname();
+      await popHub.EventMan.Handlers.External.GoContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    })
+  }
   __hndlrCancelOperation(evt: MouseEvent, popHub: PopUpHub) {
     popHub.UiMan.SetCancelFlag();
   }
@@ -74,7 +81,7 @@ export class HandlersExternal extends CommonEvents {
     this.GoContentCommand(msg);
   }
 
-  CreateNewWindowIfRequired(evt: MouseEvent, popHub: PopUpHub, tabUrl: AbsoluteUrl, ) {
+  CreateNewWindowIfRequired(evt: MouseEvent, popHub: PopUpHub, tabUrl: AbsoluteUrl,) {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.CreateNewWindowIfRequired.name, 'ctrl key? ' + evt.ctrlKey.toString() + ' ' + tabUrl);
       let result: PromiseResult = new PromiseResult(this.CreateNewWindowIfRequired.name, this.AllAgents.Logger);
@@ -103,20 +110,7 @@ export class HandlersExternal extends CommonEvents {
     });
   }
 
-
   HndlrPresentationDetails(evt: MouseEvent, popHub: PopUpHub) {
-    this.AllAgents.Logger.Error(this.HndlrPresentationDetails.name, 'to do');
-  }
-
-
-  HndlrSnapShotUpdateNickName(evt: MouseEvent, popHub: PopUpHub) {
-    var msg = new MsgFromPopUp(MsgFlag.ReqUpdateNickName, popHub);
-
-    //the problem seems to be here that the select element is not being set instead it's null
-    msg.Data.IdOfSelect = popHub.UiMan.CurrentMenuState.SelectSnapshotId;
-
-
-    msg.Data.SnapShotSettings.SnapShotNewNickname = popHub.UiMan.GetValueInNickname();
-    this.GoContentCommand(msg);
+    this.AllAgents.Logger.ErrorAndThrow(this.HndlrPresentationDetails.name, 'to do');
   }
 }

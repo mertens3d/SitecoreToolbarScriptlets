@@ -1,7 +1,7 @@
 ﻿import { MsgFlag } from "../Enums/MessageFlag";
 import { IError } from "./IError";
 import { ISnapShotsMany } from "./ISnapShotsMany";
-import { IDataOneStorageCE } from "./IDataOneStorageCE";
+import { IDataOneStorageOneTreeState } from "./IDataOneStorageOneTreeState";
 
 export interface ICurrStateContent {
   LastReq: MsgFlag,
@@ -11,5 +11,5 @@ export interface ICurrStateContent {
   ErrorStack: IError[],
   LastReqSuccessful: boolean,
   LastReqFailReason: string,
-  ActiveCe: IDataOneStorageCE
+  ActiveCe: IDataOneStorageOneTreeState
 }

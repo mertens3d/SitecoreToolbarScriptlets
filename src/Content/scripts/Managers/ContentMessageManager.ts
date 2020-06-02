@@ -42,12 +42,12 @@ export class ContentMessageManager extends ContentManagerBase {
           reqMsgFromPopup.Data = new PayloadDataFromPopUp();
         }
       } else {
-        this.AllAgents.Logger.Error(this.ValidateRequest.name, 'No CurrentContentPrefs')
+        this.AllAgents.Logger.ErrorAndThrow(this.ValidateRequest.name, 'No CurrentContentPrefs')
         reqMsgFromPopup.IsValid = false;
         isValid = false;
       }
     } else {
-      this.AllAgents.Logger.Error(this.ValidateRequest.name, 'no reqMsgFromPopup');
+      this.AllAgents.Logger.ErrorAndThrow(this.ValidateRequest.name, 'no reqMsgFromPopup');
     }
 
     reqMsgFromPopup.IsValid = isValid;
@@ -301,7 +301,7 @@ export class ContentMessageManager extends ContentManagerBase {
           break;
 
         default:
-          this.AllAgents.Logger.Error('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
+          this.AllAgents.Logger.ErrorAndThrow('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
           promResult.MarkFailed('Unhandled MsgFlag ' + StaticHelpers.MsgFlagAsString(payload.MsgFlag));
           break;
       }
@@ -344,17 +344,17 @@ export class ContentMessageManager extends ContentManagerBase {
 
           if (targetDoc) {
             await self.OneScWinMan().RestoreWindowStateToTargetDoc(targetDoc, dataOneWindowStorage)
-              .then(promiseResult.MarkSuccessful)
+              .then(() => promiseResult.MarkSuccessful())
               .catch((err) => promiseResult.MarkFailed(err))
           }
           else {
-            self.AllAgents.Logger.Error(this.__restoreClick.name, 'no target window');
+            self.AllAgents.Logger.ErrorAndThrow(this.__restoreClick.name, 'no target window');
           }
         } else {
           promiseResult.MarkFailed('No IdOfSelect');
         }
       } catch (ex) {
-        this.AllAgents.Logger.Error(this.__restoreClick.name, ex)
+        this.AllAgents.Logger.ErrorAndThrow(this.__restoreClick.name, ex)
       }
 
       this.AllAgents.Logger.FuncEnd(this.__restoreClick.name);

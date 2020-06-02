@@ -161,7 +161,7 @@ export class UrlHelper extends HelperBase {
         break;
       default:
         toReturn.FilePath = '';
-        this.Logger.Error(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
+        this.Logger.ErrorAndThrow(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
         break;
     }
 
@@ -294,7 +294,7 @@ export class UrlHelper extends HelperBase {
         toReturn = scWindowType.Unknown;
       }
     } else {
-      this.Logger.Error(this.CalcPageTypeFromHref.name, 'null url');
+      this.Logger.ErrorAndThrow(this.CalcPageTypeFromHref.name, 'null url');
     }
     this.Logger.FuncEnd(this.CalcPageTypeFromHref.name, scWindowType[toReturn]);
     return toReturn;

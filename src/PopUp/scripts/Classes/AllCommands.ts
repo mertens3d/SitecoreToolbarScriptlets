@@ -91,7 +91,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         Events: [{
           Event: CommandButtonEvents.OnClick,
-          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotUpdateNickName,
+          Handler: popHub.EventMan.Handlers.External.HndlrPresentationDetails,
           ParameterData: [],
         }]
       },
@@ -148,6 +148,11 @@ export class AllCommands {
           ParameterData: [],
         }]
       },
+
+
+
+
+
 
       {
         Command: MenuCommand.MarkFavorite,

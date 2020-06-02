@@ -1,10 +1,7 @@
-﻿export interface IGuidHelper {
-    ParseGuid(AsString: string): import("./IGuid").IGuid;
-    ParseGuid(AsString: string): import("./IGuid").IGuid;
-    ParseGuid(AsString: string): import("./IGuid").IGuid;
-    EmptyGuid();
+﻿import { IGuid } from "./IGuid";
 
-    NewGuid(): import("./IGuid").IGuid;
-
-    NewGuid(): import("./IGuid").IGuid;
+export interface IGuidHelper {
+  ParseGuid(AsString: string): IGuid;
+  EmptyGuid(): IGuid;
+  NewGuid(): IGuid;
 }

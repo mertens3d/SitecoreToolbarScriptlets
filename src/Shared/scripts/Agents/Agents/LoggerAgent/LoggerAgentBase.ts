@@ -27,11 +27,12 @@ export class LoggerAgent implements ILoggerAgent {
 
   constructor() {
     this.__callDepth = -1;
-    console.log('default: ' +  SharedConst.Const.Settings.Defaults.LogToConsole);
+    console.log('default: ' + SharedConst.Const.Settings.Defaults.LogToConsole);
     this.LogToConsoleEnabled = SharedConst.Const.Settings.Defaults.LogToConsole;
     this.LogHasBeenInit = false;
     console.log('(ctor) Logger log to console enabled: ' + this.LogToConsoleEnabled);
   }
+   
 
   Init(val: boolean) {
     this.LogToConsoleEnabled = val;
@@ -48,7 +49,6 @@ export class LoggerAgent implements ILoggerAgent {
     }
 
     console.log('(init) Logger log to console enabled: ' + this.LogToConsoleEnabled);
-
   }
 
   SetEnabled(newValue: boolean) {
@@ -82,6 +82,13 @@ export class LoggerAgent implements ILoggerAgent {
     if (this.IsNotNullOrUndefinedBool('window', window)) {
     }
   }
+
+  IsNotNullOrUndefinedThrow(title: string, subject :any): void {
+    if (!this.IsNotNullOrUndefinedBool(title, subject)) {
+      throw 'Failed';
+    }
+  }
+
   IsNotNullOrUndefinedBool(title, subject): boolean {
     var toReturn: boolean = false;
     if (subject) {
@@ -116,10 +123,10 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log('');
     this.Log(this.debugPrefix + this.DebugIDataOneDoc.name);
     if (dataOneDoc) {
-      this.LogVal(this.debugPrefix +'dataOneDoc',this.IsNullOrUndefined(dataOneDoc));
-      this.LogVal(this.debugPrefix +'dataOneDoc.XyyzId.asShort:' , this.IsNullOrUndefined(dataOneDoc.DocId.AsShort));
-      this.LogVal(this.debugPrefix +'dataOneDoc.Document:'  , this.IsNullOrUndefined(dataOneDoc.ContentDoc));
-      this.LogVal(this.debugPrefix + 'dataOneDoc.DocId.AsBracedGuid ' , dataOneDoc.DocId.AsBracedGuid);
+      this.LogVal(this.debugPrefix + 'dataOneDoc', this.IsNullOrUndefined(dataOneDoc));
+      this.LogVal(this.debugPrefix + 'dataOneDoc.XyyzId.asShort:', this.IsNullOrUndefined(dataOneDoc.DocId.AsShort));
+      this.LogVal(this.debugPrefix + 'dataOneDoc.Document:', this.IsNullOrUndefined(dataOneDoc.ContentDoc));
+      this.LogVal(this.debugPrefix + 'dataOneDoc.DocId.AsBracedGuid ', dataOneDoc.DocId.AsBracedGuid);
 
       if (dataOneDoc.ContentDoc) {
         this.LogVal(this.debugPrefix + 'dataOneDoc.Document.readyState:', dataOneDoc.ContentDoc.readyState);
@@ -135,9 +142,11 @@ export class LoggerAgent implements ILoggerAgent {
       }
     }
     else {
-      this.Error(this.DebugIDataOneDoc.name, 'no targetDoc');
+      this.ErrorAndThrow(this.DebugIDataOneDoc.name, 'no targetDoc');
     }
     this.Log('');
+
+    this.FuncEnd(this.DebugIDataOneDoc.name);
   }
   AddDebugTextChangedCallback(caller: any, callback: Function): void {
     //console.log('========================================');
@@ -146,7 +155,7 @@ export class LoggerAgent implements ILoggerAgent {
       Func: callback
     });
   }
-  HndlrClearDebugText(self: LoggerAgent, verify: boolean = false): void {
+  HndlrClearDebugText(self: ILoggerAgent, verify: boolean = false): void {
     this.FuncStart(this.HndlrClearDebugText.name);
     var proceed: boolean = true;
     if (verify) {
@@ -254,7 +263,6 @@ export class LoggerAgent implements ILoggerAgent {
     this.FuncEnd(this.DebugDataOneIframe.name);
   }
 
-
   DebugPayloadDataFromPopUp(data: PayloadDataFromPopUp) {
     if (this.IsNotNullOrUndefinedBool('PayloadDataFromPopUp', data)) {
       this.LogVal('idOfSelect', data.IdOfSelect);
@@ -296,22 +304,23 @@ export class LoggerAgent implements ILoggerAgent {
       //}
     }
   }
- 
+
   PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, friendlyName: string) {
     this.FuncStart(this.PromiseBucketDebug.name, friendlyName);
     this.Log('promiseBucket : ' + this.IsNullOrUndefined(promiseBucket));
     if (promiseBucket && typeof (promiseBucket) !== 'undefined') {
       this.Log('promiseBucket.IFramesbefore: ' + this.IsNullOrUndefined(promiseBucket.IFramesbefore));
       //this.Log('promiseBucket.targetWindow: ' + this.IsNullOrUndefined(promiseBucket.targetWindow));
-      this.Log('promiseBucket.oneCEdata: ' + this.IsNullOrUndefined(promiseBucket.oneCEdata));
-      this.Log('promiseBucket.NewIframe: ' + this.IsNullOrUndefined(promiseBucket.NewIframe));
-      if (promiseBucket.NewIframe) {
-        this.DebugDataOneIframe(promiseBucket.NewIframe);
-      }
+      this.Log('promiseBucket.oneTreeState: ' + this.IsNullOrUndefined(promiseBucket.oneTreeState));
+      //this.Log('promiseBucket.NewIframe: ' + this.IsNullOrUndefined(promiseBucket.NewIframe));
+      //if (promiseBucket.NewIframe) {
+      //  this.DebugDataOneIframe(promiseBucket.NewIframe);
+      //}
     }
     this.FuncEnd(this.PromiseBucketDebug.name, friendlyName);
   }
-  private __triggerAllDebugTextChangedCallbacks(data: ICallbackDataDebugTextChanged) {
+
+  __triggerAllDebugTextChangedCallbacks(data: ICallbackDataDebugTextChanged) {
     for (var idx = 0; idx < this.__debugTextChangedCallbacks.length; idx++) {
       var oneCallback: IDataDebugCallback = this.__debugTextChangedCallbacks[idx];
       oneCallback.Func(oneCallback.Caller, data);
@@ -365,7 +374,7 @@ export class LoggerAgent implements ILoggerAgent {
 
     this.Log(text, optionalValue, true);
   }
-  Error(container, text) {
+  ErrorAndThrow(container :string, text:any):void {
     if (!container) {
       container = 'unknown';
     }
@@ -383,6 +392,8 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log('');
     this.Log('\t\t** ERROR ** ' + container);
     this.Log('');
+
+    throw container + " " + text
   }
   NotNullCheck(title: string, value: any): void {
     if (typeof value === 'undefined') {

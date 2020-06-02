@@ -1,7 +1,7 @@
 ﻿import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { PromiseChainQuickPublish } from '../Promises/PromiseChainQuickPublish';
-import { IDataOneStorageCE } from '../../../Shared/scripts/Interfaces/IDataOneStorageCE';
+import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
@@ -52,10 +52,10 @@ export class OneScWindowManager extends ContentManagerBase {
 
       if (snapShotSettings.CurrentPageType === scWindowType.ContentEditor) {
         this.AllAgents.Logger.MarkerA();
-        var id = this.AllAgents.HelperAgent.GuidHelp.EmptyGuid();
+        var id = this.AllAgents.HelperAgent.GuidHelper.EmptyGuid();
 
-        await this.OneCEAgent.GetStateCe(id)
-          .then((state: IDataOneStorageCE) => {
+        await this.OneCEAgent.GetTreeState(id)
+          .then((state: IDataOneStorageOneTreeState) => {
             snapShot.AllCEAr.push(state);
             promiseResult.MarkSuccessful();
           }
@@ -73,7 +73,7 @@ export class OneScWindowManager extends ContentManagerBase {
           .catch((err) => promiseResult.MarkFailed(err));
       }
       else {
-        this.AllAgents.Logger.Error(this.SaveWindowState.name, 'Invalid page location ' + snapShotSettings.CurrentPageType);
+        this.AllAgents.Logger.ErrorAndThrow(this.SaveWindowState.name, 'Invalid page location ' + snapShotSettings.CurrentPageType);
       }
 
       this.AllAgents.Logger.FuncEnd(this.SaveWindowState.name);
@@ -149,34 +149,15 @@ export class OneScWindowManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncStart(this.RestoreWindowStateToTargetDoc.name);
     if (dataToRestore) {
       if (dataToRestore.WindowType === scWindowType.ContentEditor) {
-        await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0], targetDoc);
+        await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0]);
       }
       else if (dataToRestore.WindowType === scWindowType.Desktop) {
         await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore);
       }
       else {
-        this.AllAgents.Logger.Error(this.RestoreWindowStateToTargetDoc.name, 'No match found for snap shot');
+        this.AllAgents.Logger.ErrorAndThrow(this.RestoreWindowStateToTargetDoc.name, 'No match found for snap shot');
       }
       this.AllAgents.Logger.FuncEnd(this.RestoreWindowStateToTargetDoc.name);
     }
   }
-
-  //UpdateStorage() {
-  //  this.debug().FuncStart(this.UpdateStorage.name);
-  //  this.AtticMan().WriteToStorage(this.__activeWindowSnapShot);
-  //  this.debug().FuncEnd(this.UpdateStorage.name);
-  //}
-
-  //FindMatchingCeData(oneCeData: IDataOneStorageCE): IDataOneStorageCE {
-  //  var toReturn: IDataOneStorageCE = null;
-  //  for (var idx = 0; idx < this.__activeWindowSnapShot.AllCEAr.length; idx++) {
-  //    var candidate: IDataOneStorageCE = this.__activeWindowSnapShot.AllCEAr[idx];
-  //    if (candidate.Id === oneCeData.Id) {
-  //      toReturn = candidate;
-  //      break;
-  //    }
-  //  }
-  //  this.debug().Log('match found :' + (toReturn !== null));
-  //  return toReturn;
-  //}
 }

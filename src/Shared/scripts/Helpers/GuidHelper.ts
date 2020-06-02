@@ -1,8 +1,9 @@
 ﻿import { IGuid } from "../Interfaces/IGuid";
 import { HelperBase } from "../Classes/HelperBase";
 import { SharedConst } from "../SharedConst";
+import { IGuidHelper } from "../Interfaces/IGuidHelper";
 
-export class GuidHelper extends HelperBase {
+export class GuidHelper extends HelperBase implements IGuidHelper {
   ShortGuidLength: number = 4;
 
   EmptyGuidJustNumbers(): string {
@@ -57,7 +58,8 @@ export class GuidHelper extends HelperBase {
     try {
       var parts = [];
       if (str.length !== 32) {
-        str = this.EmptyGuidJustNumbers();
+        //str = this.EmptyGuidJustNumbers();
+        this.Logger.ErrorAndThrow(this.FormatAsBracedGuid.name, 'Wrong count wanted: ' + 32 + " got: " + str.length);
       }
 
       parts.push(str.slice(0, 8));
@@ -68,7 +70,8 @@ export class GuidHelper extends HelperBase {
 
       GUID = '{' + parts.join('-') + '}';
     } catch (ex) {
-      this.Logger.Error(this.FormatAsBracedGuid.name, ex);
+      this.Logger.ErrorAndThrow(this.FormatAsBracedGuid.name, ex);
+      
     }
     return GUID;
   }

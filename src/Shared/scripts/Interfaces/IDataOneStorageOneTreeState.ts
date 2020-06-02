@@ -1,7 +1,7 @@
-﻿import { IGuid } from '../../../Shared/Scripts/Interfaces/IGuid';
+﻿import { IGuid } from './IGuid';
 import { IDataOneTreeNode } from './IDataOneTreeNode';
 
-export interface IDataOneStorageCE {
+export interface IDataOneStorageOneTreeState {
   Id: IGuid,
   AllTreeNodeAr: IDataOneTreeNode[],
   ActiveNode: IDataOneTreeNode

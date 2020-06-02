@@ -29,9 +29,9 @@ export class MiscManager extends ContentManagerBase {
       }
 
       if (subjectAnyOrAr === 'undefined') {
-        this.AllAgents.Logger.Error(label, 'Is undefined');
+        this.AllAgents.Logger.ErrorAndThrow(label, 'Is undefined');
       } else if (!subjectAnyOrAr) {
-        this.AllAgents.Logger.Error(label, 'Is Null');
+        this.AllAgents.Logger.ErrorAndThrow(label, 'Is Null');
       } else {
         this.AllAgents.Logger.LogVal(label, 'Passed');
         toReturn = true;
@@ -43,7 +43,7 @@ export class MiscManager extends ContentManagerBase {
         }
       }
     } else {
-      this.AllAgents.Logger.Error(this.NotNullOrUndefined.name, 'max iteration hit');
+      this.AllAgents.Logger.ErrorAndThrow(this.NotNullOrUndefined.name, 'max iteration hit');
     }
 
     this.AllAgents.Logger.LogVal('toReturn', toReturn);

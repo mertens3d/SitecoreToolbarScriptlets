@@ -51,7 +51,7 @@ export class HandlersInternal extends CommonEvents {
       this.AllAgents.SettingsAgent.SetByKey(settingKey, newVal);
     }
     else {
-      this.AllAgents.Logger.Error(this.Toggleaccordion.name, 'did not find sib');
+      this.AllAgents.Logger.ErrorAndThrow(this.Toggleaccordion.name, 'did not find sib');
     }
     this.AllAgents.Logger.FuncEnd(this.Toggleaccordion.name);
   }

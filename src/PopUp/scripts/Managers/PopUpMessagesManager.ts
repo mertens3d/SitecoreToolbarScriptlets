@@ -36,7 +36,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
           case MsgFlag.RespTaskSuccessful:
             break;
           case MsgFlag.RespError:
-            this.AllAgents.Logger.Error(this.ReceiveResponseHndlr.name, response.ContentState.ErrorStack);
+            this.AllAgents.Logger.ErrorAndThrow(this.ReceiveResponseHndlr.name, response.ContentState.ErrorStack);
             break;
           default:
             this.AllAgents.Logger.LogVal('Unrecognized MsgFlag', StaticHelpers.MsgFlagAsString(response.MsgFlag));
@@ -45,7 +45,7 @@ export class PopUpMessagesManager extends PopUpManagerBase {
 
         //this.allAgents.Logger.LogVal('response', JSON.stringify(response, null, 1));
       } else {
-        this.AllAgents.Logger.Error(this.ReceiveResponseHndlr.name, 'response is not imsg');
+        this.AllAgents.Logger.ErrorAndThrow(this.ReceiveResponseHndlr.name, 'response is not imsg');
       }
       this.AllAgents.Logger.FuncEnd(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
     }
@@ -165,15 +165,12 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       this.UiMan().UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
       //this.AllAgents.Logger.LogAsJsonPretty("messageToSend", messageToSend);
 
-      await browser.tabs.sendMessage(
-        dataBrowserTab.Tab.id,
-        messageToSend
-      )
+      await browser.tabs.sendMessage(dataBrowserTab.Tab.id, messageToSend)
         .then((response: any) => this.ReceiveResponseHndlr(response))
         .then(() => result.MarkSuccessful())
         .catch((ex) => {
           result.MarkFailed(ex);
-          result.MarkFailed('likely no response yet');
+          //result.MarkFailed('likely no response yet');
         });
 
       this.AllAgents.Logger.FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag))
@@ -200,14 +197,14 @@ export class PopUpMessagesManager extends PopUpManagerBase {
 
   async SendMessageToContentTab(msgPlayload: MsgFromPopUp, targetTab: IDataBrowserTab = null) {
     return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
       if (!targetTab) {
         targetTab = this.TabMan().CurrentTabData;
       }
 
-      this.AllAgents.Logger.FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
       var promResult: PromiseResult = new PromiseResult(this.SendMessageToContentTab.name, this.AllAgents.Logger);
 
-      msgPlayload.CurrentContentPrefs = await this.AllAgents.SettingsAgent.GetOnlyContentPrefs();
+      msgPlayload.CurrentContentPrefs = this.AllAgents.SettingsAgent.GetOnlyContentPrefs();
 
       await this.WaitForListeningTab(targetTab)
         .then(() => this.SendMessageToSingleTab(targetTab, msgPlayload))

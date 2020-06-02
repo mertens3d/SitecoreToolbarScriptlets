@@ -177,7 +177,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\DebugCallback.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICallbackDataDebugTextChanged.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneDoc.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneStorageCE.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneStorageOneTreeState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneTreeNode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IscMode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISitecoreUiManager.ts" />

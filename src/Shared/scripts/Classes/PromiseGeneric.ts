@@ -19,8 +19,10 @@ export class PromiseHelper extends HelperBase implements IPromiseHelper {
       while (iterationJr.DecrementAndKeepGoing() && !promiseResult.WasSuccessful()) {
         var currentReadyState: string = dataOneIframe.IframeElem.contentDocument.readyState.toString();
         var isReadyStateComplete = currentReadyState === 'complete';
+        var currentDocName = dataOneIframe.IframeElem.contentDocument.location.href;
 
-        if (isReadyStateComplete) {
+        if (isReadyStateComplete && (currentDocName !== 'about:blank')) {
+          this.Logger.LogVal('doc name', dataOneIframe.IframeElem.contentDocument.location.href);
           promiseResult.MarkSuccessful();
         } else {
           await iterationJr.Wait();
@@ -162,7 +164,7 @@ export class PromiseHelper extends HelperBase implements IPromiseHelper {
       await this.WaitForThenClick([selector], targetDoc)
         .then(() => resolve(payload))
         .catch(ex => {
-          this.Logger.Error(this.WaitForAndClickWithPayload.name, ex);
+          this.Logger.ErrorAndThrow(this.WaitForAndClickWithPayload.name, ex);
           reject(ex);
         });
     });
@@ -206,7 +208,7 @@ export class PromiseHelper extends HelperBase implements IPromiseHelper {
           .then(resolve)
           .catch(reject);
       } catch (e) {
-        this.Logger.Error(this.TabChainSetHrefWaitForComplete.name, e.toString());
+        this.Logger.ErrorAndThrow(this.TabChainSetHrefWaitForComplete.name, e.toString());
         reject(e);
       }
       this.Logger.FuncEnd(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
