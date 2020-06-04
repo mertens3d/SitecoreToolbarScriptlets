@@ -9,6 +9,7 @@
     ScModePrev,
     Cancel,
     DrawStorage,
+    DrawStoragePopUpLogStorage,
     Remove,
     RestoreState,
     UpdateNickname,

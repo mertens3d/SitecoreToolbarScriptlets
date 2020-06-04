@@ -8,6 +8,7 @@ import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationDrone";
+import { PopConst } from "../Classes/PopConst";
 
 export class PopUpMessagesManager extends PopUpManagerBase {
   LastKnownContentState: ICurrStateContent;
@@ -221,7 +222,33 @@ export class PopUpMessagesManager extends PopUpManagerBase {
       }
     });
   }
+  async FromAtticDrawPopUpLogStorage() {
+    
+    try {
+      await browser.storage.local.get()
+        .then((storageResults: browser.storage.StorageObject) => {
+          let lastId = storageResults[PopConst.Const.Storage.StorageLastKeyKey];
+          let keyToUse = PopConst.Const.Storage.StorageLogKeyPrefix + lastId;
+          console.log("keyToUse: " + keyToUse);
+          let storedValue: browser.storage.StorageValue = storageResults[keyToUse];
+          if (storedValue) {
+            let valueSplit: string[] = storedValue.toString().split('|||');
+            if (valueSplit) {
+              console.log("length " + valueSplit.length);
+              for (var idx = 0; idx < valueSplit.length; idx++) {
+                console.log(valueSplit[idx]);
 
+              }
+            }
+          }
+        });
+    } catch (e) {
+      this.AllAgents.Logger.ErrorAndThrow(this.FromAtticDrawPopUpLogStorage.name, e.toString());
+    }
+
+
+
+  }
   FromAtticDrawStorage() {
     //AtticMan().DrawStorage
   }

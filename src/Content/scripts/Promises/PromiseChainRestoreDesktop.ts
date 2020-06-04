@@ -33,10 +33,9 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     });
   }
 
-  private __waitForIframeReady( targetIframe: IDataOneIframe) {
+  private __waitForIframeReady(targetIframe: IDataOneIframe) {
     return new Promise<void>(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.__waitForIframeReady.name, 'targetIframe not null: ' + (targetIframe !== null));
-
 
       //  var promResult: PromiseResult = new PromiseResult(this.__waitForIframeCountDiff.name, this.AllAgents.Logger);
 
@@ -58,25 +57,25 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     });
   }
 
-  private __waitForNewIframe(iframesBefore: IDataOneIframe[]) {
-    return new Promise<IDataOneIframe>(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.__waitForNewIframe.name);
+  //private __waitForNewIframe(iframesBefore: IDataOneIframe[]) {
+  //  return new Promise<IDataOneIframe>(async (resolve, reject) => {
+  //    this.AllAgents.Logger.FuncStart(this.__waitForNewIframe.name);
 
-      var result: PromiseResult = new PromiseResult(this.__waitForNewIframe.name, this.AllAgents.Logger);
+  //    var result: PromiseResult = new PromiseResult(this.__waitForNewIframe.name, this.AllAgents.Logger);
 
-      var iframeResult: IDataOneIframe;
+  //    var iframeResult: IDataOneIframe;
 
-      await this.OneScWinMan().OneDesktopMan.WaitForNewIframe(iframesBefore)
-        .then((result) => iframeResult = result)
-        .then(() => resolve(iframeResult))
-        .catch((err) => {
-          this.AllAgents.Logger.DebugDataOneIframe(iframeResult);
-          reject(err);
-        });
+  //    await this.AllAgents.HelperAgent.PromiseHelper.WaitForNewIframe(iframesBefore)
+  //      .then((result) => iframeResult = result)
+  //      .then(() => resolve(iframeResult))
+  //      .catch((err) => {
+  //        this.AllAgents.Logger.DebugDataOneIframe(iframeResult);
+  //        reject(err);
+  //      });
 
-      this.AllAgents.Logger.FuncEnd(this.__waitForNewIframe.name);
-    });
-  }
+  //    this.AllAgents.Logger.FuncEnd(this.__waitForNewIframe.name);
+  //  });
+  //}
 
   private __waitForAndThenClickCEFromMenu(targetDoc: IDataOneDoc) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
@@ -86,7 +85,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     });
   }
 
-  private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState,targetCeAgent: OneCEAgent) {
+  private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: OneCEAgent) {
     return new Promise<void>(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.__restoreDataToOneIframe.name);
 
@@ -110,7 +109,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore], this.RunOneChain.name)) {
       var dataBucket: IDataBucketRestoreDesktop = {
         targetDoc: targetDoc,
-        IFramesbefore: allIframeData,
+        IFramesbefore: allIframeDataAtBeginning,
         oneTreeState: dataToRestore,
         LastChainLinkSuccessful: false,
       }
@@ -118,21 +117,22 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
       //guaranteed to be on the correct page
 
-      var allIframeData = this.OneScWinMan().OneDesktopMan.GetAllLiveIframeData();
+      var allIframeDataAtBeginning: IDataOneIframe[];
       var targetCeAgent: OneCEAgent;
-      await
 
-        this.__waitForAndClickRedStartButton(dataBucket.targetDoc)
-          .then(() => this.__waitForAndThenClickCEFromMenu(dataBucket.targetDoc))
-          .then(() => this.__waitForNewIframe(allIframeData))
-          .then((result) => {
-            targetCeAgent = new OneCEAgent(result.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
-            this.__waitForIframeReady(result);
-          })
-          .then(() => this.__restoreDataToOneIframe(dataToRestore, targetCeAgent))
-          .catch(ex => {
-            this.AllAgents.Logger.ErrorAndThrow(this.RunOneChain.name, ex);
-          });
+      await this.AllAgents.HelperAgent.PromiseHelper.GetAllLiveIframeData(targetDoc)
+        .then((result) => allIframeDataAtBeginning = result)
+        .then(() => this.__waitForAndClickRedStartButton(dataBucket.targetDoc))
+        .then(() => this.__waitForAndThenClickCEFromMenu(dataBucket.targetDoc))
+        .then(() => this.AllAgents.HelperAgent.PromiseHelper.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
+        .then((result) => {
+          targetCeAgent = new OneCEAgent(result.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
+          this.__waitForIframeReady(result);
+        })
+        .then(() => this.__restoreDataToOneIframe(dataToRestore, targetCeAgent))
+        .catch(ex => {
+          this.AllAgents.Logger.ErrorAndThrow(this.RunOneChain.name, ex);
+        });
 
       this.AllAgents.Logger.FuncEnd(this.RunOneChain.name);
     }

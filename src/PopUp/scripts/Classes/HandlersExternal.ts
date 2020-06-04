@@ -76,13 +76,17 @@ export class HandlersExternal extends CommonEvents {
     popHub.PopMsgMan.FromAtticDrawStorage();
   }
 
+  __DrawPopUpLogStorage(evt: MouseEvent, popHub: PopUpHub) {
+    popHub.PopMsgMan.FromAtticDrawPopUpLogStorage();
+  }
+
   HndlrSnapShotRemove(evt: any, popHub: PopUpHub) {
     var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.RemoveFromStorage, popHub);
     this.GoContentCommand(msg);
   }
 
   CreateNewWindowIfRequired(evt: MouseEvent, popHub: PopUpHub, tabUrl: AbsoluteUrl,) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise <IDataBrowserTab>(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.CreateNewWindowIfRequired.name, 'ctrl key? ' + evt.ctrlKey.toString() + ' ' + tabUrl);
       let result: PromiseResult = new PromiseResult(this.CreateNewWindowIfRequired.name, this.AllAgents.Logger);
       let toReturn: IDataBrowserTab;

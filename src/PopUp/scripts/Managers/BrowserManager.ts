@@ -5,7 +5,7 @@ import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 export class BrowserManager extends PopUpManagerBase {
 
   async CreateNewTab(tabUrl: AbsoluteUrl) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise <IDataBrowserTab>(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.CreateNewTab.name, tabUrl.AbsUrl);
 
       let result: PromiseResult = new PromiseResult(this.CreateNewTab.name, this.AllAgents.Logger);

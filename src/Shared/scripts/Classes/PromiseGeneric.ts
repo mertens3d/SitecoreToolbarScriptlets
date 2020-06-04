@@ -7,6 +7,7 @@ import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 import { IDataBrowserTab } from '../Interfaces/IDataBrowserWindow';
 import { IPromiseHelper } from '../Interfaces/IPromiseHelper';
+import { ContentConst } from '../Interfaces/InjectConst';
 
 export class PromiseHelper extends HelperBase implements IPromiseHelper {
   async WaitForReadyIframe(dataOneIframe: IDataOneIframe) {
@@ -116,6 +117,92 @@ export class PromiseHelper extends HelperBase implements IPromiseHelper {
     });
   }
 
+  GetAllLiveIframeData(targetDoc: IDataOneDoc): Promise<IDataOneIframe[]> {
+    return new Promise((resolve, reject) => {
+      this.Logger.FuncStart(this.GetAllLiveIframeData.name);
+      let successful: boolean = true;
+      let rejectReason: string = '';
+
+      this.Logger.DebugIDataOneDoc(targetDoc);
+
+      var toReturn: IDataOneIframe[] = [];
+
+      this.Logger.LogVal('querySelectorAll 9.2: ', ContentConst.Const.Selector.SC.IframeContent.sc920);
+
+      var iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
+
+      if (!iframeAr) {
+        iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
+      }
+
+      this.Logger.LogVal('found iframes count', iframeAr.length);
+      if (iframeAr) {
+        this.Logger.Log('iframeAr: ' + iframeAr.length);
+        for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
+          this.Logger.Log('pushing: ' + ifrIdx);
+
+          var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
+          var dataOneIframe: IDataOneIframe = this.HelperAgent.FactoryHelp.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
+          toReturn.push(dataOneIframe);
+        }
+      } else {
+        successful = false;
+        rejectReason = 'no iframes found'
+        this.Logger.Log(rejectReason);
+      }
+
+      //this.Logger.LogAsJsonPretty('toReturn', toReturn);
+      this.Logger.LogVal('GetAllLiveIframeData: iframe count', toReturn.length);
+
+      if (successful) {
+        resolve(toReturn);
+      } else {
+        reject(rejectReason);
+      }
+
+      this.Logger.FuncEnd(this.GetAllLiveIframeData.name);
+    });
+  }
+
+  async WaitForNewIframe(allIframesBefore: IDataOneIframe[], targetDoc: IDataOneDoc) {
+    return new Promise<IDataOneIframe>(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForNewIframe.name);
+      this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);
+      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, allIframesBefore);
+      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, targetDoc);
+
+      var toReturn: IDataOneIframe = null;
+
+      var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframe.name)
+      let beforeCount: number = allIframesBefore.length;
+
+      while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
+        var allIframesAfter: IDataOneIframe[];
+        await this.GetAllLiveIframeData(targetDoc)
+          .then((result) => allIframesAfter = result)
+          .catch((err) => this.Logger.ErrorAndThrow(this.WaitForNewIframe.name, err));
+
+        var count: number = allIframesAfter.length;
+        this.Logger.Log('iFrame count before: ' + beforeCount);
+        this.Logger.Log('iFrame count after: ' + allIframesAfter.length);
+
+        if (count > beforeCount) {
+          var newIframes: IDataOneIframe[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
+
+          toReturn = newIframes[0];
+        } else {
+          await iterationJr.Wait();
+        }
+      }
+
+      this.Logger.FuncEnd(this.WaitForNewIframe.name);
+      if (toReturn) {
+        resolve(toReturn);
+      } else {
+        reject(iterationJr.IsExhaustedMsg);
+      }
+    });
+  }
   async WaitForAndReturnFoundElem(haystackDoc: IDataOneDoc, selector: string, overrideIterCount = 8) {
     return new Promise<HTMLElement>(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForAndReturnFoundElem.name);

@@ -27,6 +27,7 @@ export class PopConst {
           GoCE: 'CE',
           Desktop: 'Desktop',
           HsDrawStorage: 'DrawLocalStorage',
+          DrawPopUpLogStorage: 'DrawPopUpLogStorage',
           BigRed: 'BigRed',
           ModeEdit: 'sc-mode-edit',
           ModeNorm: 'Norm',
@@ -108,6 +109,8 @@ export class PopConst {
       WindowRoot: 'todo',
       SettingsSuffix: 'todo',
       KeyGenericSettings: 'GenericSettings',
+      StorageLastKeyKey: 'LastUsedLogId',
+      StorageLogKeyPrefix: "Log.",
       Defaults: {
         bool: {
           AutoSaveEnabled: false,

@@ -24,6 +24,7 @@ export interface IPopUpConst {
         Desktop: string,
         HsCancel: string,
         HsDrawStorage: string,
+        DrawPopUpLogStorage: string,
         HsRemoveFromStorage: string,
         HsRestoreWindowState: string,
         TakeSnapshot: string,
@@ -103,6 +104,8 @@ export interface IPopUpConst {
     WindowRoot: string,
     SettingsSuffix: string,
     KeyGenericSettings: string,
+    StorageLastKeyKey: string,
+    StorageLogKeyPrefix: string,
     Defaults: {
       bool: {
         AutoSaveEnabled: boolean,

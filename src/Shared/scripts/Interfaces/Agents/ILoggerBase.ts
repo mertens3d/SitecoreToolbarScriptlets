@@ -8,7 +8,7 @@ import { IAllAgents } from "./IAllAgents";
 
 export interface ILoggerAgent {
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
-  IsNotNullOrUndefinedThrow(arg0: string, allAgents: any);
+  ThrowIfNullOrUndefined(arg0: string, allAgents: any);
   PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
   DebugDataOneIframe(NewIframe: IDataOneIframe);
   CtorName(name: string);
@@ -31,7 +31,7 @@ export interface ILoggerAgent {
   Init(valueToUse: boolean);
   IsNotNullOrUndefinedBool(title: string, dataToCheck: any);
   IsNullOrUndefined(dataToCheck: any): string;
-  IsNotNullOrUndefinedThrow(title: string, dataToCheck: any): void;
+  ThrowIfNullOrUndefined(title: string, dataToCheck: any): void;
   Log(text);
   Log(text, optionalValue: string);
   Log(text, optionalValue: string, hasPrefix: boolean);

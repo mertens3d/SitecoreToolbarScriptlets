@@ -25,7 +25,6 @@ export class OneScWindowManager extends ContentManagerBase {
   }
 
   Init() {
-
     let currPageType = this.ScUiMan().GetCurrentPageType();
 
     if (currPageType === scWindowType.Desktop) {
@@ -84,8 +83,6 @@ export class OneScWindowManager extends ContentManagerBase {
           .catch((err) => promiseResult.MarkFailed(err));
       }
 
-
-
       if (promiseResult.WasSuccessful()) {
         resolve();
       } else {
@@ -110,27 +107,37 @@ export class OneScWindowManager extends ContentManagerBase {
   //  }
   //  this.debug().FuncEnd(this.WaitForPageLoad.name);
   //}
-  private __getTopLevelIframe(targetDoc: IDataOneDoc) {
-    var toReturn: IDataOneIframe = null;
-    var allIframe = this.OneDesktopMan.GetAllLiveIframeData();
-    var maxZVal = -1;
-    if (allIframe && allIframe.length > 0) {
-      for (var idx = 0; idx < allIframe.length; idx++) {
-        var candidateIframe = allIframe[idx];
-        if (candidateIframe && candidateIframe.Zindex > maxZVal) {
-          toReturn = candidateIframe;
-          maxZVal = candidateIframe.Zindex;
-        }
-      }
-    }
-    return toReturn;
+  private async __getTopLevelIframe(targetDoc: IDataOneDoc): Promise<IDataOneIframe> {
+    return new Promise(async (resolve, reject) => {
+      var toReturn: IDataOneIframe = null;
+
+      var allIframe: IDataOneIframe[];
+
+      await this.AllAgents.HelperAgent.PromiseHelper.GetAllLiveIframeData(targetDoc)
+        .then((result) => {
+          allIframe = result
+
+          var maxZVal = -1;
+          if (allIframe && allIframe.length > 0) {
+            for (var idx = 0; idx < allIframe.length; idx++) {
+              var candidateIframe = allIframe[idx];
+              if (candidateIframe && candidateIframe.Zindex > maxZVal) {
+                toReturn = candidateIframe;
+                maxZVal = candidateIframe.Zindex;
+              }
+            }
+          }
+        })
+        .then(() => resolve(toReturn))
+        .catch((err) => this.AllAgents.Logger.ErrorAndThrow(this.__getTopLevelIframe.name, err));
+    })
   }
   async PublishActiveCE(targetDoc: IDataOneDoc) {
     this.AllAgents.Logger.FuncStart(this.PublishActiveCE.name);
     var currentWindowType = this.ScUiMan().GetCurrentPageType();
     var docToPublish: IDataOneDoc = null;
     if (currentWindowType === scWindowType.Desktop) {
-      var topIframe: IDataOneIframe = this.__getTopLevelIframe(targetDoc);
+      var topIframe: IDataOneIframe = await this.__getTopLevelIframe(targetDoc);
       if (topIframe) {
         docToPublish = topIframe.ContentDoc;
       }

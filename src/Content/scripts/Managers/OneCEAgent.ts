@@ -6,12 +6,12 @@ import { IDataOneTreeNode } from '../../../Shared/scripts/Interfaces/IDataOneTre
 import { OneTreeDrone } from '../Drones/OneTreeDrone';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IHelperAgent } from '../../../Shared/scripts/Interfaces/Agents/IHelperAgent';
+import { IOneTreeDrone } from '../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 
 export class OneCEAgent {
-  private OneTreeDrone: OneTreeDrone;
+  private OneTreeDrone: IOneTreeDrone;
   private ContextDoc: IDataOneDoc;
   private Logger: ILoggerAgent;
   private HelperAgent: IHelperAgent;

@@ -12,7 +12,7 @@ allAgents.RepoAgent = new RepoAgent(allAgents.Logger);
 allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, allAgents.RepoAgent);
 allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
 
-allAgents.Logger.IsNotNullOrUndefinedThrow("allAgents", allAgents);
-allAgents.Logger.IsNotNullOrUndefinedThrow("allAgents.HelperAgent", allAgents.HelperAgent);
+allAgents.Logger.ThrowIfNullOrUndefined("allAgents", allAgents);
+allAgents.Logger.ThrowIfNullOrUndefined("allAgents.HelperAgent", allAgents.HelperAgent);
 
 new ContentHub(allAgents);

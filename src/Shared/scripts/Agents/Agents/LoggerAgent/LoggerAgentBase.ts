@@ -16,6 +16,8 @@ import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
 import { IDataPayloadSnapShot } from "../../../Interfaces/IDataPayloadSnapShot";
 import { IDataOneIframe } from "../../../Interfaces/IDataOneIframe";
 import { ICurrStateContent } from "../../../Interfaces/ICurrState";
+import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
+import { RollingLogIdDrone } from "../../Drones/RollingLogIdDrone";
 
 export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;
@@ -24,15 +26,18 @@ export class LoggerAgent implements ILoggerAgent {
   ErrorStack: IError[] = [];
   LogPreInitBuffer: string[] = [];
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
-
+  private RollingLogId: RollingLogIdDrone;
   constructor() {
     this.__callDepth = -1;
     console.log('default: ' + SharedConst.Const.Settings.Defaults.LogToConsole);
     this.LogToConsoleEnabled = SharedConst.Const.Settings.Defaults.LogToConsole;
     this.LogHasBeenInit = false;
+
+    this.RollingLogId = new RollingLogIdDrone();
+    this.RollingLogId.Init();
+
     console.log('(ctor) Logger log to console enabled: ' + this.LogToConsoleEnabled);
   }
-   
 
   Init(val: boolean) {
     this.LogToConsoleEnabled = val;
@@ -83,7 +88,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
 
-  IsNotNullOrUndefinedThrow(title: string, subject :any): void {
+  ThrowIfNullOrUndefined(title: string, subject: any): void {
     if (!this.IsNotNullOrUndefinedBool(title, subject)) {
       throw 'Failed';
     }
@@ -234,11 +239,27 @@ export class LoggerAgent implements ILoggerAgent {
 
       if (this.LogToConsoleEnabled) {
         console.log(text);
+        this.WriteLogToStorage(text);
       } else if (!this.LogHasBeenInit) {
         this.LogPreInitBuffer.push(text);
       }
     }
   }
+
+  StorageLogCombined: string = "";
+
+  async WriteLogToStorage(logMessage: any): Promise<void> {
+    return new Promise(async () => {
+      
+
+      this.StorageLogCombined += "|||" + JSON.stringify(logMessage);
+      let storageObj: browser.storage.StorageObject = {
+        [this.RollingLogId. CurrentStorageLogKey]: this.StorageLogCombined
+      }
+      await browser.storage.local.set(storageObj);
+    });
+  }
+
   DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
     this.FuncStart(this.DebugDataOneIframe.name);
     this.Log('dataOneIframe : ' + this.IsNullOrUndefined(dataOneIframe));
@@ -374,7 +395,7 @@ export class LoggerAgent implements ILoggerAgent {
 
     this.Log(text, optionalValue, true);
   }
-  ErrorAndThrow(container :string, text:any):void {
+  ErrorAndThrow(container: string, text: any): void {
     if (!container) {
       container = 'unknown';
     }

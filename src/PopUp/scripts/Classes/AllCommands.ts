@@ -206,7 +206,16 @@ export class AllCommands {
           ParameterData: [],
         }]
       },
-
+      {
+        Command: MenuCommand.DrawStoragePopUpLogStorage,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsDrawStorage,
+        VisibilityControllers: [],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.__DrawPopUpLogStorage,
+          ParameterData: [],
+        }]
+      },
       /*
 
       {

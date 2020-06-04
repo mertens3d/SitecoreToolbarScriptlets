@@ -1,15 +1,11 @@
 import { ContentHub } from './ContentHub';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone';
 import { PromiseChainRestoreDesktop } from '../Promises/PromiseChainRestoreDesktop';
 import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
-import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { OneCEAgent } from './OneCEAgent';
 import { IDataDesktopState } from '../../../Shared/scripts/Interfaces/IDataDtState';
-import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class OneDesktopManager extends ContentManagerBase {
@@ -66,124 +62,41 @@ export class OneDesktopManager extends ContentManagerBase {
     });
   }
 
-  async WaitForNewIframe(IFramesbefore: IDataOneIframe[]) {
-    return new Promise<IDataOneIframe>(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.WaitForNewIframe.name);
-      var toReturn: IDataOneIframe = null;
-
-      var iterationJr = new IterationDrone(this.AllAgents.Logger, this.WaitForNewIframe.name)
-
-      while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
-        let beforeCount: number = IFramesbefore.length;
-
-        var allIframesAfter: IDataOneIframe[] = this.GetAllLiveIframeData();
-
-        var count: number = allIframesAfter.length;
-        this.AllAgents.Logger.Log('iFrame count before: ' + IFramesbefore.length);
-        this.AllAgents.Logger.Log('iFrame count after: ' + allIframesAfter.length);
-
-        if (count > beforeCount) {
-          var newIframes: IDataOneIframe[] = allIframesAfter.filter(e => !IFramesbefore.includes(e));
-
-          toReturn = newIframes[0];
-        } else {
-          await iterationJr.Wait();
-        }
-      }
-
-      this.AllAgents.Logger.FuncEnd(this.WaitForNewIframe.name);
-      if (toReturn) {
-        resolve(toReturn);
-      } else {
-        reject(iterationJr.IsExhaustedMsg);
-      }
-    });
-  }
-
-  GetAllLiveIframeData(): IDataOneIframe[] {
-    this.AllAgents.Logger.FuncStart(this.GetAllLiveIframeData.name);
-
-    this.AllAgents.Logger.DebugIDataOneDoc(this.associatedDoc);
-
-    var toReturn: IDataOneIframe[] = [];
-
-    this.AllAgents.Logger.LogVal('querySelectorAll 9.2: ', ContentConst.Const.Selector.SC.IframeContent.sc920);
-
-    var iframeAr = this.associatedDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
-
-    if (!iframeAr) {
-      iframeAr = this.associatedDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
-    }
-
-    this.AllAgents.Logger.LogVal('found iframes count', iframeAr.length);
-    if (iframeAr) {
-      this.AllAgents.Logger.Log('iframeAr: ' + iframeAr.length);
-      for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
-        this.AllAgents.Logger.Log('pushing: ' + ifrIdx);
-
-        var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        var dataOneIframe: IDataOneIframe = this.AllAgents.HelperAgent.FactoryHelp.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
-        toReturn.push(dataOneIframe);
-      }
-    } else {
-      this.AllAgents.Logger.Log('no iframes found');
-    }
-
-    this.AllAgents.Logger.LogVal('iframe count', toReturn.length);
-
-    this.AllAgents.Logger.FuncEnd(this.GetAllLiveIframeData.name, 'count:  ' + toReturn.length);
-    return toReturn;
-  }
-
-  GetStateDesktop() {
+  GetStateDesktop(): Promise<IDataDesktopState> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.GetStateDesktop.name);
       this.AllAgents.Logger.DebugIDataOneDoc(this.associatedDoc);
 
-      let promiseResult: PromiseResult = new PromiseResult(this.GetStateDesktop.name, this.AllAgents.Logger);
-
       var toReturnAllCeState: IDataDesktopState = this.AllAgents.HelperAgent.FactoryHelp.CreateNewDtDataShell();
-      toReturnAllCeState.livingIframeAr = this.GetAllLiveIframeData();
 
-      if (toReturnAllCeState.livingIframeAr && toReturnAllCeState.livingIframeAr.length > 0) {
-        for (var iframeIdx = 0; iframeIdx < toReturnAllCeState.livingIframeAr.length; iframeIdx++) {
-          this.AllAgents.Logger.LogVal('iframeIdx: ', iframeIdx);
+      await this.AllAgents.HelperAgent.PromiseHelper.GetAllLiveIframeData(this.associatedDoc)
+        .then((result) => toReturnAllCeState.livingIframeAr = result)
+        .then(() => {
+          if (toReturnAllCeState.livingIframeAr && toReturnAllCeState.livingIframeAr.length > 0) {
+            for (var iframeIdx = 0; iframeIdx < toReturnAllCeState.livingIframeAr.length; iframeIdx++) {
+              this.AllAgents.Logger.LogVal('iframeIdx: ', iframeIdx);
+              var targetIframeObj = toReturnAllCeState.livingIframeAr[iframeIdx];
+              var oneCeMan = new OneCEAgent(targetIframeObj.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
 
-          var targetIframeObj = toReturnAllCeState.livingIframeAr[iframeIdx];
+              //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
-          var oneCeMan = new OneCEAgent(targetIframeObj.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
+              oneCeMan.GetTreeState(this.AllAgents.HelperAgent.GuidHelper.NewGuid())
+                .then((oneCeState: IDataOneStorageOneTreeState) => {
+                  toReturnAllCeState.AllCeData.push(oneCeState);
 
-          //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
-
-          await oneCeMan.GetTreeState(this.AllAgents.HelperAgent.GuidHelper.NewGuid())
-            .then((oneCeState: IDataOneStorageOneTreeState) => {
-              toReturnAllCeState.AllCeData.push(oneCeState);
-
-              if (targetIframeObj.Zindex === 1) {
-                toReturnAllCeState.ActiveCeMan = oneCeMan;
-                toReturnAllCeState.ActiveCeState = oneCeState;
-              }
-
-              promiseResult.MarkSuccessful();
+                  if (targetIframeObj.Zindex === 1) {
+                    toReturnAllCeState.ActiveCeMan = oneCeMan;
+                    toReturnAllCeState.ActiveCeState = oneCeState;
+                  }
+                })
+                .catch((err) => this.AllAgents.Logger.ErrorAndThrow(this.GetStateDesktop.name, err));
             }
-            )
-            .catch((err) => promiseResult.MarkFailed(err));
-
-          if (!promiseResult.WasSuccessful) {
-            break;
           }
-        }
-      } else {
-        promiseResult.MarkSuccessful();
-      }
+        })
+        .then(() => resolve(toReturnAllCeState))
+        .catch((err) => reject(err));
 
       this.AllAgents.Logger.FuncEnd(this.GetStateDesktop.name);
-
-      if (promiseResult.WasSuccessful()) {
-        resolve(toReturnAllCeState);
-      } else {
-        reject(promiseResult.RejectReasons);
-      }
-    })
+    });
   }
-};
+}

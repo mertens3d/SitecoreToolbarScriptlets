@@ -215,11 +215,16 @@ export class ContentMessageManager extends ContentManagerBase {
           break;
 
         case MsgFlag.ReqAddCETab:
-          await this.AllAgents.HelperAgent.PromiseHelper.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.ScUiMan().TopLevelDoc())
+          let targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();
+          let allIframeDataAtBeginning;
 
-            .then(() => { this.AllAgents.HelperAgent.PromiseHelper.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.ScUiMan().TopLevelDoc()) })
-
-            .then(() => { promResult.MarkSuccessful(); })
+          await this.AllAgents.HelperAgent.PromiseHelper.GetAllLiveIframeData(targetDoc)
+            .then((result) => allIframeDataAtBeginning = result)
+            .then(() => this.AllAgents.HelperAgent.PromiseHelper.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, targetDoc))
+            .then(() => this.AllAgents.HelperAgent.PromiseHelper.WaitForReadyIframe())
+            .then(() => { this.AllAgents.HelperAgent.PromiseHelper.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], targetDoc) })
+            .then(() => this.AllAgents.HelperAgent.PromiseHelper.WaitForNewIframe(allIframeDataAtBeginning, targetDoc))
+            .then(() => promResult.MarkSuccessful())
             .catch((err) => promResult.MarkFailed(err));
           break;
 
@@ -276,7 +281,7 @@ export class ContentMessageManager extends ContentManagerBase {
           break;
 
         case MsgFlag.ReqTakeSnapShot:
-        await this.OneScWinMan().SaveWindowState(payload.Data.SnapShotSettings)
+          await this.OneScWinMan().SaveWindowState(payload.Data.SnapShotSettings)
             .then(() => { this.AllAgents.Logger.MarkerA() })
             .then(() => { this.AllAgents.Logger.MarkerA() })
             .then(() => promResult.MarkSuccessful())
