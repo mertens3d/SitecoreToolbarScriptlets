@@ -23,6 +23,7 @@ gulp.task('BookmarkText', (cb) => otherTasks.BookmarkText(cb, varsObj));
 gulp.task('BuildPopUpHtml', (cb) => htmlTasks.BuildHtml(cb, varsObj));
 //gulp.task('buildjsContent', (cb) => jstasks.buildjsContent(cb, varsObj));
 gulp.task('BuildPopUpStyles', (cb) => styleTasks.BuildPopUpStyles(cb, varsObj));
+gulp.task('BuildContentStyles', (cb) => styleTasks.BuildCompactCEStyles(cb, varsObj));
 gulp.task('BuildTypescriptAll', (cb) => tsTasks.BuildTypeScriptAll(cb, varsObj));
 //gulp.task('BuildTypescriptShared', (cb) => tsTasks.BuildTypeScriptShared(cb, varsObj));
 //gulp.task('BuildTypescriptContent', (cb) => tsTasks.BuildTypeScriptContent(cb, varsObj));
@@ -52,7 +53,7 @@ gulp.task('TimeStampAll', gulp.series(['CleanBuildStamp', 'PopulateBuildTimeStam
 //todo - put back if needed 'buildWindowOpenerForBookMark', 'BookmarkText',
 //todo - put back if needed 'cleanAutoBuildFolder', 'cleanAddons',
 
-gulp.task('builders', gulp.series(['BuildPopUpStyles', 'TimeStampAll', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml', 'PutToFinal']), function (resolve) {
+gulp.task('builders', gulp.series(['BuildPopUpStyles', 'BuildContentStyles', 'TimeStampAll', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml', 'PutToFinal']), function (resolve) {
   resolve();
 });
 

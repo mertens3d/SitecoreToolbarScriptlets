@@ -85,6 +85,11 @@ export class HandlersExternal extends CommonEvents {
     this.GoContentCommand(msg);
   }
 
+  HndlrCompactCE(evt: any, popHub: PopUpHub) {
+    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.ReqCompactCE, popHub);
+    this.GoContentCommand(msg);
+  }
+
   CreateNewWindowIfRequired(evt: MouseEvent, popHub: PopUpHub, tabUrl: AbsoluteUrl,) {
     return new Promise <IDataBrowserTab>(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.CreateNewWindowIfRequired.name, 'ctrl key? ' + evt.ctrlKey.toString() + ' ' + tabUrl);

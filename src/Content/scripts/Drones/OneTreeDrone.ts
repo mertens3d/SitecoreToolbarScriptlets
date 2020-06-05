@@ -138,12 +138,17 @@ export class OneTreeDrone implements IOneTreeDrone {
   GetOneLiveTreeData(): IDataOneTreeNode[] {
     this.Logger.FuncStart(this.GetOneLiveTreeData.name);
     this.Logger.Log('targetDoc isnull: ' + (this.AssociatedDoc === null));
+    this.Logger.LogVal('Doc url: ', this.AssociatedDoc.ContentDoc.location.href);
+    this.Logger.LogVal('Ready State: ', this.AssociatedDoc.ContentDoc.readyState);
+
+
+
     var toReturn: IDataOneTreeNode[] = [];
 
     if (this.AssociatedDoc) {
       //this.debug().Log(targetDoc);
       this.Logger.LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
-      this.Logger.DebugIDataOneDoc(this.AssociatedDoc);
+      //this.Logger.DebugIDataOneDoc(this.AssociatedDoc);
 
       var rootNode = this.AssociatedDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
 

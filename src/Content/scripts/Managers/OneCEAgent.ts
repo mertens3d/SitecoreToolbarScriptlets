@@ -11,6 +11,7 @@ import { IHelperAgent } from '../../../Shared/scripts/Interfaces/Agents/IHelperA
 import { IOneTreeDrone } from '../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 
 export class OneCEAgent {
+
   private OneTreeDrone: IOneTreeDrone;
   private ContextDoc: IDataOneDoc;
   private Logger: ILoggerAgent;
@@ -119,7 +120,13 @@ export class OneCEAgent {
 
     this.Logger.FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
   }
+  SetCompactCss() {
+    this.Logger.FuncStart(this.SetCompactCss.name, this.ContextDoc.DocId.AsShort);
 
+  //  browser.tabs.insertCSS(ass integer tabId, object details, function callback);
+
+    this.Logger.FuncStart(this.SetCompactCss.name, this.ContextDoc.DocId.AsShort);
+  }
   async RestoreCEStateAsync(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
       this.Logger.FuncStart(this.RestoreCEStateAsync.name, this.ContextDoc.DocId.AsShort);

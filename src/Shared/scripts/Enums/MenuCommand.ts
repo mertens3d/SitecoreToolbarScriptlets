@@ -17,5 +17,6 @@
     GoDesktop,
     GoContentEditor,
     PutAdminB,
-    PresentationDetails
+    PresentationDetails,
+  CompactCE,
 }

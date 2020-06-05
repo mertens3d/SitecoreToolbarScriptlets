@@ -1,0 +1,47 @@
+﻿body#Body {
+  header {
+
+    .sc-globalHeader-content {
+      overflow: hidden;
+    }
+
+    img #globalHeaderUserPortrait {
+      display: none;
+    }
+
+    .sc-accountInformation {
+      height: 16px;
+
+      li {
+        position: relative;
+        top: -17px;
+      }
+    }
+
+
+
+    &.sc-globalHeader {
+      /*display: none;*/
+      height: 16px;
+
+      .sc-globalHeader {
+      }
+
+      .sc-global-logo {
+        height: 11px;
+        vertical-align: top;
+        margin-top: 3px;
+      }
+
+      ul .sc-accountInformation li img {
+        height: 11px;
+        width: 11px;
+        vertical-align: top;
+      }
+
+      ~ div {
+        padding-top: 16px;
+      }
+    }
+  }
+}

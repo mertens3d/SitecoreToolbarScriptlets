@@ -78,6 +78,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\HelperBase.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\PromisesRecipes.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IOneTreeDrone.ts" />
@@ -125,6 +126,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMenuState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneCommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseHelper.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseRecipes.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISelectionHeaders.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISnapShotsMany.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUrlHelp.ts" />
@@ -148,6 +150,9 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpManagerBase.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesManager.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.debug.ts" />
+    <None Include="src\Content\css\_compactCe.scss" />
+    <None Include="src\Content\css\content.scss" />
+    <None Include="src\Content\css\vars.scss" />
     <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
     <Content Include="webpack.config.js" />

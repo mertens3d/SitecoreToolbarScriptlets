@@ -6,11 +6,11 @@ import { HelperBase } from './HelperBase';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 import { IDataBrowserTab } from '../Interfaces/IDataBrowserWindow';
-import { IPromiseHelper } from '../Interfaces/IPromiseHelper';
+import { IPromisesBasic } from '../Interfaces/IPromiseHelper';
 import { ContentConst } from '../Interfaces/InjectConst';
 
-export class PromiseHelper extends HelperBase implements IPromiseHelper {
-  async WaitForReadyIframe(dataOneIframe: IDataOneIframe) {
+export class PromisesBasic extends HelperBase implements IPromisesBasic {
+  async WaitForReadyIframe(dataOneIframe: IDataOneIframe): Promise<null> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort);
 
@@ -25,6 +25,7 @@ export class PromiseHelper extends HelperBase implements IPromiseHelper {
         if (isReadyStateComplete && (currentDocName !== 'about:blank')) {
           this.Logger.LogVal('doc name', dataOneIframe.IframeElem.contentDocument.location.href);
           promiseResult.MarkSuccessful();
+     
         } else {
           await iterationJr.Wait();
         }
@@ -36,13 +37,13 @@ export class PromiseHelper extends HelperBase implements IPromiseHelper {
 
       //this.AllHelperAgents.Logger.LogAsJsonPretty('dataOneIframe', dataOneIframe);
 
-      this.Logger.FuncEnd(this.WaitForReadyIframe.name);
 
       if (promiseResult.WasSuccessful()) {
         resolve();
       } else {
         reject(promiseResult.RejectReasons);
       }
+      this.Logger.FuncEnd(this.WaitForReadyIframe.name);
     });
   }
 
@@ -123,9 +124,8 @@ export class PromiseHelper extends HelperBase implements IPromiseHelper {
       let successful: boolean = true;
       let rejectReason: string = '';
 
-      this.Logger.DebugIDataOneDoc(targetDoc);
-
-      var toReturn: IDataOneIframe[] = [];
+      //this.Logger.DebugIDataOneDoc(targetDoc);
+            var toReturn: IDataOneIframe[] = [];
 
       this.Logger.LogVal('querySelectorAll 9.2: ', ContentConst.Const.Selector.SC.IframeContent.sc920);
 
@@ -164,7 +164,7 @@ export class PromiseHelper extends HelperBase implements IPromiseHelper {
     });
   }
 
-  async WaitForNewIframe(allIframesBefore: IDataOneIframe[], targetDoc: IDataOneDoc) {
+  async WaitForNewIframe(allIframesBefore: IDataOneIframe[], targetDoc: IDataOneDoc): Promise<IDataOneIframe> {
     return new Promise<IDataOneIframe>(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframe.name);
       this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);

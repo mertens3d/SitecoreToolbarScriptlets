@@ -96,6 +96,16 @@ export class AllCommands {
         }]
       },
       {
+        Command: MenuCommand.CompactCE,
+        ButtonSelector: PopConst.Const.ElemId.HS.Btn.CompactCE,
+        VisibilityControllers: [VisibilityType.ActiveCeNode],
+        Events: [{
+          Event: CommandButtonEvents.OnClick,
+          Handler: popHub.EventMan.Handlers.External.HndlrCompactCE,
+          ParameterData: [],
+        }]
+      },
+      {
         Command: MenuCommand.PutAdminB,
         ButtonSelector: PopConst.Const.ElemId.HS.Btn.AdminB,
         VisibilityControllers: [VisibilityType.LoginPage],

@@ -33,6 +33,7 @@ export interface IPopUpConst {
         ModeNorm: string,
         ModePrev: string,
         PresentationDetails: string,
+        CompactCE: string,
         QuickPublish: string,
         UpdateNicknameB: string,
       }

@@ -57,6 +57,7 @@ module.exports = {
       vars.WindowOpener.WebpackFileFull(),
       vars.PopUpJs.WebpackFileFull(),
       vars.PopUpStyles.AutoBuildMinFileNameFull(),
+      vars.ContentStyles.AutoBuildMinFileNameFull(),
       vars.BrowserPolyFillJs.WebpackFileFull(),
     ])
       .pipe(gulp.dest(vars.PopUpHtml.FinalFolderNameFull()));
@@ -71,6 +72,7 @@ module.exports = {
       path.join(vars.ContentJs.FinalFolderNameFull(), vars.WindowOpener.MinFileName()),
       path.join(vars.PopUpJs.FinalFolderNameFull(), vars.PopUpJs.MinFileName()),
       path.join(vars.PopUpStyles.FinalFolderNameFull(), vars.PopUpStyles.MinFileName()),
+      path.join(vars.ContentStyles.FinalFolderNameFull(), vars.ContentStyles.MinFileName()),
       path.join(vars.BrowserPolyFillJs.FinalFolderNameFull(), vars.BrowserPolyFillJs.MinFileName()),
     ])
       .pipe(gulp.dest(vars.BrowserExtensionFireFox.Root));

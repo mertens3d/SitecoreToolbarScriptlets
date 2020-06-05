@@ -1,7 +1,7 @@
 ﻿import { ContentAtticManager } from './ContentAtticManager';
 import { MiscManager } from './MiscManager';
 import { OneScWindowManager } from "./OneScWindowManager";
-import { PromiseHelper } from '../../../Shared/scripts/Classes/PromiseGeneric';
+import { PromisesBasic } from '../../../Shared/scripts/Classes/PromiseGeneric';
 import { PromiseOneStep } from '../Promises/PromiseOneStep';
 import { UtilityHelper } from "../../../Shared/scripts/Helpers/UtilityHelper";
 import { ContentMessageManager } from './ContentMessageManager';
@@ -22,7 +22,7 @@ export class ContentHub {
   MsgMan: ContentMessageManager;
   MiscMan: MiscManager;
   OneWindowMan: OneScWindowManager;
-  PromiseHelper: PromiseHelper;
+  PromiseHelper: PromisesBasic;
   PromiseOneStep: PromiseOneStep;
   SitecoreUiMan: SitecoreUiManager;
 

@@ -33,6 +33,7 @@ export class PopConst {
           ModeNorm: 'Norm',
           ModePrev: 'Prev',
           PresentationDetails: 'PresentationDetails',
+          CompactCE: 'CompactCE',
           QuickPublish: 'QuickPublish',
           HsRemoveFromStorage: 'RemoveOneFromLocalStorage',
           HsRestoreWindowState: 'RestoreWindowState',

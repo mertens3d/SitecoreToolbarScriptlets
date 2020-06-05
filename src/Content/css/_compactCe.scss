@@ -1,0 +1,107 @@
+@import "vars";
+
+body#Body {
+  &.contentEditor {
+  }
+
+  a.scSystemMenu {
+    top: 0px;
+  }
+
+  ul.sc-accountInformation {
+    padding-right: 20px;
+  }
+
+  .scEditorSectionPanel {
+    line-height: 20px;
+
+    .scEditorQuickInfo td {
+      line-height: 20px;
+    }
+  }
+
+  .scRibbonNavigatorButtonsGroupHeader {
+    display: none;
+  }
+
+  .scEditorSectionPanel {
+    margin: 0;
+  }
+
+  .scMessageBar.scMessageBarIcon {
+    background-size: 16px;
+    min-width: 16px;
+    min-height: 16px;
+  }
+
+  .scMessageBarTextContainer {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  .scEditorTabHeaderNormal, .scEditorTabHeaderActive {
+    height: 20px;
+    line-height: 20px;
+  }
+
+  .scEditorSectionCaptionExpanded, .scEditorSectionCaptionCollapsed {
+    line-height: 26px;
+  }
+
+  .scEditorHeaderTitleHelp {
+    position: relative;
+    top: -10px;
+  }
+
+  .scEditorTabControlsHolder {
+    margin-top: 5px;
+  }
+
+  #BTAddNewSearch {
+    margin-top: 0;
+  }
+
+  a.scRibbonEditorTabNormal, a.scRibbonEditorTabActive {
+    margin-top: 0;
+    height: 26px;
+  }
+
+  #BTAddNewSearch {
+    height: 26px;
+  }
+
+  #EditorTabs {
+    height: 32px;
+    padding-top: 2px;
+  }
+
+  #EditorFrames {
+    margin-top: 32px;
+  }
+
+  .scRibbon .chunk {
+    height: 50px;
+  }
+
+  .scRibbonToolbarStrip {
+    min-height: 50px;
+  }
+
+  .RibbonPanel {
+    .caption {
+      display: none;
+    }
+  }
+
+  .scRibbon .chunk .panel {
+    padding: 0;
+  }
+
+  .scEditorHeader {
+    padding: 0px 15px;
+  }
+
+  .scPager.scDockBottom {
+    display: none;
+  }
+}

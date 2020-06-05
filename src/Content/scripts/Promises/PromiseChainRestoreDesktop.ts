@@ -23,7 +23,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       if (this.MiscMan().NotNullOrUndefined(targetDoc, this.__waitForAndClickRedStartButton.name)) {
         this.AllAgents.Logger.MarkerB();
 
-        await this.AllAgents.HelperAgent.PromiseHelper.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, targetDoc)
+        await this.AllAgents.HelperAgent.PromisesBasic.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, targetDoc)
           .then(() => resolve())
           .catch((ex) => reject(ex));
       } else {
@@ -39,7 +39,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
       //  var promResult: PromiseResult = new PromiseResult(this.__waitForIframeCountDiff.name, this.AllAgents.Logger);
 
-      await this.AllAgents.HelperAgent.PromiseHelper.WaitForReadyIframe(targetIframe)
+      await this.AllAgents.HelperAgent.PromisesBasic.WaitForReadyIframe(targetIframe)
         .then((result) => {
           this.AllAgents.Logger.Log('resolved! : ');
 
@@ -79,7 +79,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
   private __waitForAndThenClickCEFromMenu(targetDoc: IDataOneDoc) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      await this.AllAgents.HelperAgent.PromiseHelper.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], targetDoc)
+      await this.AllAgents.HelperAgent.PromisesBasic.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], targetDoc)
         .then(() => { resolve(); })
         .catch((ex) => { reject(this.__waitForAndThenClickCEFromMenu.name + ' ' + ex); });
     });
@@ -103,6 +103,8 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     });
   }
 
+  
+
   async RunOneChain(targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState) {
     this.AllAgents.Logger.FuncStart(this.RunOneChain.name);
 
@@ -120,11 +122,13 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       var allIframeDataAtBeginning: IDataOneIframe[];
       var targetCeAgent: OneCEAgent;
 
-      await this.AllAgents.HelperAgent.PromiseHelper.GetAllLiveIframeData(targetDoc)
+      await this.AllAgents.HelperAgent.PromisesBasic.GetAllLiveIframeData(targetDoc)
         .then((result) => allIframeDataAtBeginning = result)
         .then(() => this.__waitForAndClickRedStartButton(dataBucket.targetDoc))
         .then(() => this.__waitForAndThenClickCEFromMenu(dataBucket.targetDoc))
-        .then(() => this.AllAgents.HelperAgent.PromiseHelper.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
+
+        .then(() => this.AllAgents.HelperAgent.PromisesBasic.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
+
         .then((result) => {
           targetCeAgent = new OneCEAgent(result.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
           this.__waitForIframeReady(result);

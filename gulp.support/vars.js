@@ -12,6 +12,8 @@ class Vars {
 
     this.PopUpStyles = new InjectableClass('PopUp', '/**/popup.scss', 'css', this.FinalFolderShort);
 
+    this.ContentStyles = new InjectableClass('Content', '/**/content.scss', 'css', this.FinalFolderShort);
+
     this.PopUpJs = new InjectableClass('PopUp', '/**/*.js', 'js', this.FinalFolderShort);
     this.PopUpJs.Ts.TranspiledEntryPointFile = 'EntryPoint.js';
 

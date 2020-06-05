@@ -115,27 +115,15 @@ export class ContentMessageManager extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
       var promResult: PromiseResult = new PromiseResult(this.ContentReceiveRequest.name, this.AllAgents.Logger);
-      //this.AllAgents.Logger.LogAsJsonPretty(MsgFromPopUp.name, reqMsgFromPopup);
 
       var response: MsgFromContent = null;
 
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
-          //this.SetLoggerFromMessage(reqMsgFromPopup);
-
-          //this.ScheduleIntervalTasks(reqMsgFromPopup);
-
-          this.AllAgents.Logger.Log('about to call it');
           await this.ReqMsgRouter(reqMsgFromPopup)
-            .then((result: MsgFromContent) => {
-              this.AllAgents.Logger.MarkerD();
-              this.AllAgents.Logger.MarkerD();
-              response = result;
-            })
-            .then(() => { this.AllAgents.Logger.MarkerA() })
-            .then(() => { promResult.MarkSuccessful() })
-            .then(() => { this.AllAgents.Logger.MarkerB() })
+            .then((result: MsgFromContent) => { response = result; })
+            .then(() =>  promResult.MarkSuccessful() )
             .catch((err) => promResult.MarkFailed(err))
         } else {
           promResult.MarkFailed('reqMsgFromPopup is not valid')
@@ -149,8 +137,6 @@ export class ContentMessageManager extends ContentManagerBase {
         this.AllAgents.Logger.LogVal('responding', StaticHelpers.MsgFlagAsString(response.MsgFlag));
       }
 
-      this.AllAgents.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
-
       if (promResult.WasSuccessful()) {
         resolve(response);
       } else {
@@ -158,6 +144,8 @@ export class ContentMessageManager extends ContentManagerBase {
         response.ContentState.LastReqFailReason = promResult.RejectReasons;
         reject(promResult.RejectReasons);
       }
+
+      this.AllAgents.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
     })
   }
 
@@ -218,14 +206,20 @@ export class ContentMessageManager extends ContentManagerBase {
           let targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();
           let allIframeDataAtBeginning;
 
-          await this.AllAgents.HelperAgent.PromiseHelper.GetAllLiveIframeData(targetDoc)
-            .then((result) => allIframeDataAtBeginning = result)
-            .then(() => this.AllAgents.HelperAgent.PromiseHelper.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, targetDoc))
-            .then(() => this.AllAgents.HelperAgent.PromiseHelper.WaitForReadyIframe())
-            .then(() => { this.AllAgents.HelperAgent.PromiseHelper.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], targetDoc) })
-            .then(() => this.AllAgents.HelperAgent.PromiseHelper.WaitForNewIframe(allIframeDataAtBeginning, targetDoc))
+          await this.AllAgents.HelperAgent.PromisesRecipes.FromDesktopOpenNewCEIframe(targetDoc)
             .then(() => promResult.MarkSuccessful())
             .catch((err) => promResult.MarkFailed(err));
+
+          //this.AllAgents.HelperAgent.PromisesBasic.GetAllLiveIframeData(targetDoc)
+          //.then((result) => allIframeDataAtBeginning = result)
+          //.then(() => this.AllAgents.HelperAgent.PromisesBasic.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, targetDoc))
+
+          //.then(() => this.AllAgents.HelperAgent.PromisesBasic.WaitForReadyIframe())
+
+          //.then(() => { this.AllAgents.HelperAgent.PromisesBasic.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], targetDoc) })
+          //.then(() => this.AllAgents.HelperAgent.PromisesBasic.WaitForNewIframe(allIframeDataAtBeginning, targetDoc))
+          //.then(() => promResult.MarkSuccessful())
+          //.catch((err) => promResult.MarkFailed(err));
           break;
 
         case MsgFlag.ReqAdminB:
@@ -264,7 +258,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
         case MsgFlag.ReqMarkFavorite:
           this.AtticMan().MarkFavorite(payload.Data)
-            .then(promResult.MarkSuccessful)
+            .then(() => promResult.MarkSuccessful())
             .catch((err) => promResult.MarkFailed(err));
           break;
 
@@ -276,6 +270,12 @@ export class ContentMessageManager extends ContentManagerBase {
 
         case MsgFlag.ReqRestoreClick:
           await this.__restoreClick(payload.Data)
+            .then(() => promResult.MarkSuccessful())
+            .catch((err) => promResult.MarkFailed(err));
+          break;
+
+        case MsgFlag.ReqCompactCE:
+          await this.SetCompactCss(payload.Data)
             .then(() => promResult.MarkSuccessful())
             .catch((err) => promResult.MarkFailed(err));
           break;
@@ -292,16 +292,18 @@ export class ContentMessageManager extends ContentManagerBase {
 
         case MsgFlag.RemoveFromStorage:
           await this.AtticMan().RemoveOneFromStorage(payload.Data.IdOfSelect)
-            .then(promResult.MarkSuccessful)
+            .then(() => promResult.MarkSuccessful())
             .catch((err) => promResult.MarkFailed(err));
           break;
+
+      
 
         case MsgFlag.RespTaskSuccessful:
           this.NotifyCompleteOnContent(null, payload.Data.ScreenMessage);
 
         case MsgFlag.ReqUpdateNickName:
           await this.AtticMan().UpdateNickname(payload.Data)
-            .then(promResult.MarkSuccessful)
+            .then(() => promResult.MarkSuccessful())
             .catch((err) => promResult.MarkFailed(err));
           break;
 
@@ -330,7 +332,27 @@ export class ContentMessageManager extends ContentManagerBase {
     });
   }
 
-  private __restoreClick(Data: PayloadDataFromPopUp) {
+  private SetCompactCss(Data: PayloadDataFromPopUp): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.SetCompactCss.name);
+
+      var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();
+      if (targetDoc) {
+        var self = this;
+        await this.OneScWinMan().SetCompactCss(targetDoc)
+          .then(() => resolve())
+          .catch((err) => { this.AllAgents.Logger.ErrorAndThrow(this.SetCompactCss.name, err) })
+      }
+
+
+      this.AllAgents.Logger.FuncEnd(this.SetCompactCss.name);
+    });
+
+  }
+
+
+
+  private __restoreClick(Data: PayloadDataFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.__restoreClick.name);
 

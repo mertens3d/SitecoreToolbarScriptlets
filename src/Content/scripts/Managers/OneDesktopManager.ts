@@ -69,7 +69,7 @@ export class OneDesktopManager extends ContentManagerBase {
 
       var toReturnAllCeState: IDataDesktopState = this.AllAgents.HelperAgent.FactoryHelp.CreateNewDtDataShell();
 
-      await this.AllAgents.HelperAgent.PromiseHelper.GetAllLiveIframeData(this.associatedDoc)
+      await this.AllAgents.HelperAgent.PromisesBasic.GetAllLiveIframeData(this.associatedDoc)
         .then((result) => toReturnAllCeState.livingIframeAr = result)
         .then(() => {
           if (toReturnAllCeState.livingIframeAr && toReturnAllCeState.livingIframeAr.length > 0) {

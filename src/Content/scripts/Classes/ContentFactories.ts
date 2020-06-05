@@ -1,5 +1,5 @@
 ﻿import { ContentHub } from "../Managers/ContentHub";
-import { PromiseHelper } from "../../../Shared/scripts/Classes/PromiseGeneric";
+import { PromisesBasic } from "../../../Shared/scripts/Classes/PromiseGeneric";
 import { ContentManagerBase } from "../_first/_ContentManagerBase";
 import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
@@ -15,8 +15,8 @@ import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllAgents
 export class ContentFactories extends ContentManagerBase {
   constructor(hub: ContentHub, contentAgents: IAllAgents) {
     super(hub, contentAgents);
-    this.AllAgents.Logger.FuncStart(PromiseHelper.name);
-    this.AllAgents.Logger.FuncEnd(PromiseHelper.name);
+    this.AllAgents.Logger.FuncStart(PromisesBasic.name);
+    this.AllAgents.Logger.FuncEnd(PromisesBasic.name);
   }
 
   UpdateContentState(contentState: ICurrStateContent) {

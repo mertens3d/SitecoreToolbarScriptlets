@@ -16,7 +16,8 @@
         "AutoBuild/final/hindsite.js",
         "AutoBuild/final/browser-polyfill.js",
         "AutoBuild/final/content.min.js"
-      ]
+      ],
+      "css": [ "AutoBuild/final/content.min.css" ]
 
     }
   ],

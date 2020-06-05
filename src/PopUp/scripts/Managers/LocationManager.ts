@@ -51,7 +51,7 @@ export class LocationManager extends PopUpManagerBase {
           self.ChangeLocationSwitchBoard(desiredPageType)
         }
 
-        this.AllAgents.HelperAgent.PromiseHelper.TabChainSetHrefWaitForComplete(absUrl, this.TabMan().CurrentTabData)
+        this.AllAgents.HelperAgent.PromisesBasic.TabChainSetHrefWaitForComplete(absUrl, this.TabMan().CurrentTabData)
           .then(() => this.MsgMan().WaitForListeningTab(this.TabMan().CurrentTabData))
           .then(() => callBackOnSuccessfulHrefChange);
       }
@@ -124,14 +124,14 @@ export class LocationManager extends PopUpManagerBase {
         this.TabMan().CurrentTabData.UrlParts = this.AllAgents.HelperAgent.UrlHelp.SetScModeFromEditPrevNorm(newValue, this.TabMan().CurrentTabData.UrlParts);
 
         let newHref: AbsoluteUrl = this.AllAgents.HelperAgent.UrlHelp.BuildFullUrlFromParts(this.TabMan().CurrentTabData.UrlParts);
-        await this.AllAgents.HelperAgent.PromiseHelper.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData)
+        await this.AllAgents.HelperAgent.PromisesBasic.TabChainSetHrefWaitForComplete(newHref, this.TabMan().CurrentTabData)
           .then(() => result.MarkSuccessful())
           .catch((ex) => result.MarkFailed(ex));
       }
 
       this.AllAgents.Logger.FuncEnd(this.SetScMode.name);
 
-      if (result.MarkSuccessful) {
+      if (result.WasSuccessful()) {
         resolve();
       } else {
         reject(result.RejectReasons);

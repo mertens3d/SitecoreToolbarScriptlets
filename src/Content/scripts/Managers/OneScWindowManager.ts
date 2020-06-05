@@ -79,7 +79,7 @@ export class OneScWindowManager extends ContentManagerBase {
 
       if (promiseResult.WasSuccessful) {
         await this.AtticMan().WriteToStorage(snapShot)
-          .then(promiseResult.MarkSuccessful)
+          .then(() => promiseResult.MarkSuccessful())
           .catch((err) => promiseResult.MarkFailed(err));
       }
 
@@ -113,7 +113,7 @@ export class OneScWindowManager extends ContentManagerBase {
 
       var allIframe: IDataOneIframe[];
 
-      await this.AllAgents.HelperAgent.PromiseHelper.GetAllLiveIframeData(targetDoc)
+      await this.AllAgents.HelperAgent.PromisesBasic.GetAllLiveIframeData(targetDoc)
         .then((result) => {
           allIframe = result
 
@@ -152,6 +152,13 @@ export class OneScWindowManager extends ContentManagerBase {
     }
     this.AllAgents.Logger.FuncEnd(this.PublishActiveCE.name);
   }
+  async SetCompactCss(targetDoc: IDataOneDoc) {
+    //if (this.ScUiMan().GetCurrentPageType() === scWindowType.ContentEditor) {
+      await this.OneCEAgent.SetCompactCss();
+    //}
+
+  }
+
   async RestoreWindowStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage) {
     this.AllAgents.Logger.FuncStart(this.RestoreWindowStateToTargetDoc.name);
     if (dataToRestore) {
