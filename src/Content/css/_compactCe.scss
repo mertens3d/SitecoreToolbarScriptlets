@@ -8,6 +8,13 @@ body#Body {
     top: 0px;
   }
 
+  .scRibbon a.scRibbonNavigatorButtonsNormal,
+  .scRibbon a.scRibbonNavigatorButtonsActive,
+  .scRibbon a.scRibbonNavigatorButtonsContextualNormal,
+  .scRibbon a.scRibbonNavigatorButtonsContextualActive {
+    padding: 0 6px;
+  }
+
   ul.sc-accountInformation {
     padding-right: 20px;
   }
@@ -48,27 +55,34 @@ body#Body {
     line-height: 26px;
   }
 
-  .scEditorHeaderTitleHelp {
-    position: relative;
-    top: -10px;
+  .scContentControlLayoutDevice {
+    margin: 2px 0;
+  }
+
+  .scMessageBarTextContainer {
+    line-height: 12px;
   }
 
   .scEditorTabControlsHolder {
     margin-top: 5px;
   }
 
-  #BTAddNewSearch {
-    margin-top: 0;
+  div {
+    line-height: 14px;
   }
+
+  .scContentControlLayoutDeviceRenderings {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
 
   a.scRibbonEditorTabNormal, a.scRibbonEditorTabActive {
     margin-top: 0;
     height: 26px;
   }
 
-  #BTAddNewSearch {
-    height: 26px;
-  }
+
 
   #EditorTabs {
     height: 32px;

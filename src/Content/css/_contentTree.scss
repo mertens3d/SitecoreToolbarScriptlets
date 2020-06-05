@@ -1,0 +1,59 @@
+﻿@import "vars";
+
+body#Body {
+  .scEditorPanel {
+    input:not([type]), input[type="text"],
+    input[type="password"],
+    select,
+    textarea {
+      min-height: 26px;
+    }
+
+    .scEditorSectionCaptionGlyph {
+      margin-top: 5px;
+    }
+
+    .scEditorFieldMarker {
+      margin-bottom: 2px;
+    }
+
+    #BTAddNewSearch {
+      margin-top: 0;
+      height: 24px;
+    }
+
+    .scEditorHeaderTitle,
+    .scEditorHeaderTitle:link,
+    .scEditorHeaderTitle:hover,
+    .scEditorHeaderTitle:active,
+    .scEditorHeaderTitle:visited {
+      line-height: 16px;
+      font-size: 16px;
+    }
+
+    .scEditorHeaderTitleHelp {
+      position: relative;
+      top: 0px;
+    }
+
+    .scEditorFieldLabel {
+      padding: 0;
+    }
+  }
+}
+
+body#Body {
+  #ContentTreeHolder {
+    .scContentTreeNode > img body#Body {
+    }
+
+    .scContentTreeNode > a {
+      padding: 1px 5px;
+    }
+
+    .scContentTreeNode > img {
+      width: 14px;
+      margin: 1px 0;
+    }
+  }
+}
