@@ -72,73 +72,62 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     //}
   }
 
-  OnePing(targetTab: IDataBrowserTab, msg: MsgFromPopUp) {
+  OnePing(targetTab: IDataBrowserTab, msg: MsgFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.OnePing.name);
 
-      var promResult: PromiseResult = new PromiseResult(this.OnePing.name, this.AllAgents.Logger);
-
       this.AllAgents.Logger.LogVal('sending to tab id', targetTab.Tab.id);
-      // this.AllAgents.Logger.LogAsJsonPretty('msg', msg);
 
       this.UiMan().UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(msg.MsgFlag));
 
+      var successful: boolean = true;
+
       await browser.tabs.sendMessage(targetTab.Tab.id, msg)
         .then((response) => {
-          //was successful?
-          this.AllAgents.Logger.MarkerC();
-          //    this.AllAgents.Logger.LogAsJsonPretty('response', response);
-
           var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
           if (asMsgFromContent) {
-            this.AllAgents.Logger.Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
-            if (asMsgFromContent.MsgFlag = MsgFlag.RespListeningAndReady) {
-              promResult.MarkSuccessful();
+            this.AllAgents.Logger.LogVal('Response', StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
+            
+
+            if (asMsgFromContent.MsgFlag !== MsgFlag.RespListeningAndReady
+              &&
+              asMsgFromContent.MsgFlag !== MsgFlag.RespTaskSuccessful
+              ) {
+              throw "response message: " + asMsgFromContent.MsgFlag
             }
           } else {
-            promResult.MarkFailed('no message from content');
+            this.AllAgents.Logger.ErrorAndThrow(this.OnePing.name, 'Unable to translate the response');
+
           }
         })
-        .catch((err) => {
-          this.AllAgents.Logger.MarkerB();
-          promResult.MarkFailed(err)
-        });
+        .then(() => resolve())
+        .catch((err) => reject(err));
 
       this.AllAgents.Logger.FuncEnd(this.OnePing.name);
+    });
+  }
 
-      if (promResult.WasSuccessful()) {
-        resolve();
-      } else {
-        reject(promResult.RejectReasons);
-      }
-    });//promise
-  }// function
-
-  async WaitForListeningTab(targetTab: IDataBrowserTab) {
+  async WaitForListeningTab(targetTab: IDataBrowserTab): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.WaitForListeningTab.name);
 
-      var promResult: PromiseResult = new PromiseResult(this.WaitForListeningTab.name, this.AllAgents.Logger);
+      var success: boolean = false;
       var iterationJr: IterationDrone = new IterationDrone(this.AllAgents.Logger, this.WaitForListeningTab.name);
 
       var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
 
       msg.CurrentContentPrefs = this.AllAgents.SettingsAgent.GetOnlyContentPrefs();
 
-      while (iterationJr.DecrementAndKeepGoing() && !promResult.WasSuccessful()) {
+      while (iterationJr.DecrementAndKeepGoing() && !success) {
         this.AllAgents.Logger.Log('Pinging');
         await this.OnePing(targetTab, msg)
-          .then(() => promResult.MarkSuccessful())
-          .catch((ex) => {
-            this.AllAgents.Logger.MarkerA();
-            promResult.MarkFailed(ex)
-          });
+          .then(() => success = true)
+          .catch((ex) => success = false);
 
-        if (!promResult.WasSuccessful()) {
+        if (!success) {
           this.UiMan().UpdateMsgStatusStack('Ping did not succeed, waiting');
           await iterationJr.Wait();
           this.AllAgents.Logger.Log('Done waiting');
-          msg
         }
         else {
           this.UiMan().UpdateMsgStatusStack('Ping succeeded');
@@ -147,15 +136,12 @@ export class PopUpMessagesManager extends PopUpManagerBase {
 
       this.AllAgents.Logger.FuncEnd(this.WaitForListeningTab.name);
 
-      if (promResult.WasSuccessful()) {
-        resolve(targetTab);
+      if (success) {
+        resolve();
       } else {
-        if (iterationJr.IsExhausted) {
-          promResult.MarkFailed(iterationJr.IsExhaustedMsg);
-        }
-        reject(promResult.RejectReasons);
+        reject(iterationJr.IsExhausted ? iterationJr.IsExhaustedMsg : 'unknown error WaitForListeningTab');
       }
-    });//promise
+    });
   }
   private SendMessageToSingleTab(dataBrowserTab: IDataBrowserTab, messageToSend: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
@@ -223,7 +209,6 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     });
   }
   async FromAtticDrawPopUpLogStorage() {
-    
     try {
       await browser.storage.local.get()
         .then((storageResults: browser.storage.StorageObject) => {
@@ -237,7 +222,6 @@ export class PopUpMessagesManager extends PopUpManagerBase {
               console.log("length " + valueSplit.length);
               for (var idx = 0; idx < valueSplit.length; idx++) {
                 console.log(valueSplit[idx]);
-
               }
             }
           }
@@ -245,9 +229,6 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     } catch (e) {
       this.AllAgents.Logger.ErrorAndThrow(this.FromAtticDrawPopUpLogStorage.name, e.toString());
     }
-
-
-
   }
   FromAtticDrawStorage() {
     //AtticMan().DrawStorage

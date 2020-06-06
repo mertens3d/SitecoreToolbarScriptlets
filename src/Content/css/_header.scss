@@ -1,47 +1,49 @@
-﻿body#Body {
-  header {
-
+﻿body {
+    
+    
+    
+    
     .sc-globalHeader-content {
-      overflow: hidden;
+    overflow: hidden;
+  }
+
+  img #globalHeaderUserPortrait {
+    display: none;
+  }
+
+  .sc-accountInformation {
+    height: 16px;
+
+    li {
+      position: relative;
+      top: -17px;
+    }
+  }
+
+  .sc-globalHeader {
+    /*display: none;*/
+    height: 16px;
+
+    ~ div > .DesktopArea {
+      margin-top: 16px;
     }
 
-    img #globalHeaderUserPortrait {
-      display: none;
+
+
+    .sc-global-logo {
+      height: 11px;
+      vertical-align: top;
+      margin-top: 3px;
     }
 
-    .sc-accountInformation {
-      height: 16px;
-
-      li {
-        position: relative;
-        top: -17px;
-      }
+    ul .sc-accountInformation li img {
+      height: 11px;
+      width: 11px;
+      vertical-align: top;
     }
 
-
-
-    &.sc-globalHeader {
-      /*display: none;*/
-      height: 16px;
-
-      .sc-globalHeader {
-      }
-
-      .sc-global-logo {
-        height: 11px;
-        vertical-align: top;
-        margin-top: 3px;
-      }
-
-      ul .sc-accountInformation li img {
-        height: 11px;
-        width: 11px;
-        vertical-align: top;
-      }
-
-      ~ div {
-        padding-top: 16px;
-      }
+    ~ div {
+      padding-top: 16px;
     }
   }
 }

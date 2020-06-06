@@ -21,25 +21,25 @@ export class SettingsAgent implements ISettingsAgent {
     this.SettingsAr = currentContentPrefs;
   }
 
-  Init(allDefaultSettings: IOneGenericSetting[]) {
+  async Init(allDefaultSettings: IOneGenericSetting[]) {
     this.Logger.FuncStart(this.Init.name, allDefaultSettings.length);
     this.SettingsAr = allDefaultSettings;
 
-    this.HarvestNonDefaultGenericSettingsFromStorage();
+    await this.HarvestGenericSettingsFromStorage();
     this.Logger.FuncEnd(this.Init.name);
   }
-  async HarvestNonDefaultGenericSettingsFromStorage() {
+  async HarvestGenericSettingsFromStorage() {
     //take in a setting
     // if get, spit back it's value
     // if set, update the cache and write to storage
 
-    this.Logger.FuncStart(this.HarvestNonDefaultGenericSettingsFromStorage.name);
+    this.Logger.FuncStart(this.HarvestGenericSettingsFromStorage.name);
     let foundSettings: IOneGenericSettingForStorage[];
 
     try {
       foundSettings = await this.RepoAgent.ReadGenericSettings();
     } catch (e) {
-      this.Logger.ErrorAndThrow(this.HarvestNonDefaultGenericSettingsFromStorage.name, e.toString());
+      this.Logger.ErrorAndThrow(this.HarvestGenericSettingsFromStorage.name, e.toString());
     }
 
     this.Logger.LogAsJsonPretty('settings from storage', foundSettings);
@@ -52,14 +52,14 @@ export class SettingsAgent implements ISettingsAgent {
         if (matchingSetting) {
           matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
         } else {
-          this.Logger.ErrorAndThrow(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+          this.Logger.ErrorAndThrow(this.HarvestGenericSettingsFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
         }
       }
     } else {
-      this.Logger.ErrorAndThrow(this.HarvestNonDefaultGenericSettingsFromStorage.name, 'settings not found');
+      this.Logger.ErrorAndThrow(this.HarvestGenericSettingsFromStorage.name, 'settings not found');
     }
 
-    this.Logger.FuncEnd(this.HarvestNonDefaultGenericSettingsFromStorage.name);
+    this.Logger.FuncEnd(this.HarvestGenericSettingsFromStorage.name);
   }
 
   ValueAsInteger(setting: IOneGenericSetting): number {

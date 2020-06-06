@@ -150,9 +150,13 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpManagerBase.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesManager.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.debug.ts" />
+    <None Include="src\Content\css\_desktopArea.scss" />
+    <None Include="src\Content\css\_scStartbar.scss" />
     <None Include="src\Content\css\_compactCe.scss" />
     <None Include="src\Content\css\content.scss" />
     <None Include="src\Content\css\vars.scss" />
+    <None Include="src\Content\css\_contentTree.scss" />
+    <None Include="src\Content\css\_header.scss" />
     <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
     <Content Include="webpack.config.js" />

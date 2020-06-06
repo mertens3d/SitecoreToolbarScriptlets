@@ -17,10 +17,17 @@
         "AutoBuild/final/browser-polyfill.js",
         "AutoBuild/final/content.min.js"
       ],
-      "css": [ "AutoBuild/final/content.min.css" ]
+      
+      "all_frames": false
 
+    },
+    {
+      "matches": [ "http://*/sitecore/shell/default.aspx", "https://*/sitecore/shell/default.aspx" ],
+      "all_frames": true,
+      "css": [ "AutoBuild/final/content.min.css" ]
     }
   ],
+
   "permissions": [
     "activeTab",
     "idle",
@@ -31,7 +38,7 @@
     "default_title": "Hind•Site",
     "default_popup": "/AutoBuild/final/PopUp.min.html"
   },
-    "commands": {
+  "commands": {
     "_execute_browser_action": {
       "suggested_key": {
         "default": "Ctrl+Shift+Y"

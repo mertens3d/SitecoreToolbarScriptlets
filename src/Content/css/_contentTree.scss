@@ -1,6 +1,6 @@
 ﻿@import "vars";
 
-body#Body {
+body {
   .scEditorPanel {
     input:not([type]), input[type="text"],
     input[type="password"],
@@ -42,9 +42,9 @@ body#Body {
   }
 }
 
-body#Body {
+body {
   #ContentTreeHolder {
-    .scContentTreeNode > img body#Body {
+    .scContentTreeNode > img body {
     }
 
     .scContentTreeNode > a {
