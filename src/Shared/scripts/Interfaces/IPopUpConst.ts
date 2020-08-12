@@ -102,10 +102,10 @@ export interface IPopUpConst {
     }
   },
   Storage: {
-    WindowRoot: string,
+    //StorageRootPrefix: string,
     SettingsSuffix: string,
     KeyGenericSettings: string,
-    StorageLastKeyKey: string,
+    //StorageLastKeyKey: string,
     StorageLogKeyPrefix: string,
     Defaults: {
       bool: {

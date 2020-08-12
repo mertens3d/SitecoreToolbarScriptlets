@@ -31,7 +31,8 @@
   "permissions": [
     "activeTab",
     "idle",
-    "storage"
+    "storage",
+    "chrome-extension"
   ],
   "browser_action": {
     "default_icon": "icons/border-48.png",

@@ -127,7 +127,7 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
       //this.Logger.DebugIDataOneDoc(targetDoc);
             var toReturn: IDataOneIframe[] = [];
 
-      this.Logger.LogVal('querySelectorAll 9.2: ', ContentConst.Const.Selector.SC.IframeContent.sc920);
+      //this.Logger.LogVal('querySelectorAll 9.2: ', ContentConst.Const.Selector.SC.IframeContent.sc920);
 
       var iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
@@ -137,7 +137,7 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
 
       this.Logger.LogVal('found iframes count', iframeAr.length);
       if (iframeAr) {
-        this.Logger.Log('iframeAr: ' + iframeAr.length);
+        //this.Logger.Log('iframeAr: ' + iframeAr.length);
         for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
           this.Logger.Log('pushing: ' + ifrIdx);
 

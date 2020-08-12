@@ -2,6 +2,8 @@
 import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 
 export class PopConst {
+  static StorageRootPrefix: 'HindSite.';
+
   static Const: IPopUpConst = {
     ClassNames: {
       HS: {
@@ -107,18 +109,16 @@ export class PopConst {
       }
     },
     Storage: {
-      WindowRoot: 'todo',
+      
       SettingsSuffix: 'todo',
-      KeyGenericSettings: 'GenericSettings',
-      StorageLastKeyKey: 'LastUsedLogId',
-      StorageLogKeyPrefix: "Log.",
+      KeyGenericSettings: 'HindSite.' + 'GenericSettings',
+      StorageLogKeyPrefix: 'HindSite.' + 'Log.',
       Defaults: {
         bool: {
           AutoSaveEnabled: false,
           AutoLogin: false,
           DefaultDebugKeepDialogOpen: false,
           AutoSnapshotBeforeWindowChange: true,
-        
         }
       }
     },

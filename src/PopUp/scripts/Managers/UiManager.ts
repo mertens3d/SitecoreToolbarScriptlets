@@ -81,7 +81,7 @@ export class UiManager extends PopUpManagerBase {
     try {
       this.UpdateMsgStatusStack('Command Completed Successfully');
 
-      let setting: IOneGenericSetting = this.AllAgents. SettingsAgent.GetByKey(SettingKey.DebugKeepDialogOpen);
+      let setting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.DebugKeepDialogOpen);
       if (!this.AllAgents
         .SettingsAgent.ValueAsBool(setting)) {
         window.close();
@@ -357,21 +357,24 @@ export class UiManager extends PopUpManagerBase {
 
   RefreshUiGenericSettings() {
     this.AllAgents.Logger.FuncStart(this.RefreshUiGenericSettings.name);
-    for (var idx = 0; idx < this.AllAgents. SettingsAgent.SettingsAr.length; idx++) {
-      var oneSetting: IOneGenericSetting = this.AllAgents. SettingsAgent.SettingsAr[idx];
+    for (var idx = 0; idx < this.AllAgents.SettingsAgent.SettingsAr.length; idx++) {
+      var oneSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.SettingsAr[idx];
       //this.allAgents.Logger.LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
-      var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
-      if (foundElem) {
-        if (oneSetting.DataType === SettingType.BoolCheckBox) {
-          let valueToDisplay: boolean = <boolean>(oneSetting.ValueAsObj || oneSetting.DefaultValue);
-          //this.allAgents.Logger.LogVal('valueToDisplay', valueToDisplay);
-          (<HTMLInputElement>foundElem).checked = valueToDisplay;
+      if (oneSetting.UiSelector) {
+        var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
+        if (foundElem) {
+          if (oneSetting.DataType === SettingType.BoolCheckBox) {
+            let valueToDisplay: boolean = <boolean>(oneSetting.ValueAsObj || oneSetting.DefaultValue);
+            //this.allAgents.Logger.LogVal('valueToDisplay', valueToDisplay);
+            (<HTMLInputElement>foundElem).checked = valueToDisplay;
+          }
+          if (oneSetting.DataType === SettingType.Accordion) {
+            this.RestoreaccordionState(oneSetting, foundElem);
+          }
+        } else {
+          this.AllAgents.Logger.LogAsJsonPretty('oneSetting', oneSetting);
+          this.AllAgents.Logger.ErrorAndThrow(this.RefreshUiGenericSettings.name, 'ui element not found: ' + oneSetting.UiSelector);
         }
-        if (oneSetting.DataType === SettingType.Accordion) {
-          this.RestoreaccordionState(oneSetting, foundElem);
-        }
-      } else {
-        this.AllAgents.Logger.ErrorAndThrow(this.RefreshUiGenericSettings.name, 'ui element not found: ' + oneSetting.UiSelector);
       }
     }
     this.AllAgents.Logger.FuncEnd(this.RefreshUiGenericSettings.name);
@@ -385,8 +388,6 @@ export class UiManager extends PopUpManagerBase {
     this.UiMan().PopulateState(this.MsgMan().LastKnownContentState);
 
     this.PopulateStateOfSnapShotSelect(this.MsgMan().LastKnownContentState.SnapShotsMany.CurrentSnapShots);
-
-  
 
     this.ButtonStateManager.RefreshButtonStates();
 
@@ -707,7 +708,6 @@ export class UiManager extends PopUpManagerBase {
           this.AllAgents.Logger.Log('targetSel.options.length : ' + targetSel.options.length);
 
           for (var idx: number = 0; idx < snapShots.length; idx++) {
-
             this.AllAgents.Logger.Log('snapShots:' + idx + ":" + snapShots.length);
 
             var data = snapShots[idx];
@@ -742,7 +742,7 @@ export class UiManager extends PopUpManagerBase {
         targetSel.appendChild(headers.AutoTitle);
         targetSel.appendChild(headers.Auto);
 
-   if(! this.CurrentMenuState.SelectSnapshotId || this.CurrentMenuState.SelectSnapshotId === this.AllAgents.HelperAgent.GuidHelper.EmptyGuid()) {
+        if (!this.CurrentMenuState.SelectSnapshotId || this.CurrentMenuState.SelectSnapshotId === this.AllAgents.HelperAgent.GuidHelper.EmptyGuid()) {
           targetSel.selectedIndex = 0;
         }
       }

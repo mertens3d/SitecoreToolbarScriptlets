@@ -23,21 +23,16 @@ export class ContentFactories extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.UpdateContentState.name);
       let promiseResult: PromiseResult = new PromiseResult(this.UpdateContentState.name, this.AllAgents.Logger);
-      this.AllAgents.Logger.MarkerC();
+      //this.AllAgents.Logger.MarkerC();
       contentState.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
       contentState.ErrorStack = this.AllAgents.Logger.ErrorStack;
 
       //this.AllAgents.Logger.LogAsJsonPretty('ContentState', contentState);
 
-
-      this.AllAgents.Logger.MarkerA();
+      //this.AllAgents.Logger.MarkerA();
 
       await this.GetCurrentDtOrCeState()
-        .then((result: IDataOneStorageOneTreeState) => {
-          this.AllAgents.Logger.MarkerB();
-          contentState.ActiveCe = result;
-          this.AllAgents.Logger.MarkerB();
-        })
+        .then((result: IDataOneStorageOneTreeState) => { contentState.ActiveCe = result; })
         .then(() => promiseResult.MarkSuccessful())
         .catch((err) => promiseResult.MarkFailed(err));
 
@@ -85,7 +80,6 @@ export class ContentFactories extends ContentManagerBase {
         || pageType === scWindowType.Edit
         || pageType === scWindowType.Preview
         || pageType === scWindowType.Normal
-
 
       ) {
         toReturnOneTreeState = null;

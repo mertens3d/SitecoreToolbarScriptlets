@@ -22,24 +22,32 @@ import { RollingLogIdDrone } from "../../Drones/RollingLogIdDrone";
 export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;
   private LogToConsoleEnabled: boolean;
+  private LogToStorageEnabled: boolean;
   LogHasBeenInit: boolean = false;
   ErrorStack: IError[] = [];
   LogPreInitBuffer: string[] = [];
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
-  private RollingLogId: RollingLogIdDrone;
+  private CurrentStorageLogKey: string = 'default';
+  private LogTabId: number = -1;
+  private LogTab: browser.tabs.Tab = null;
+
   constructor() {
     this.__callDepth = -1;
     console.log('default: ' + SharedConst.Const.Settings.Defaults.LogToConsole);
     this.LogToConsoleEnabled = SharedConst.Const.Settings.Defaults.LogToConsole;
+    this.LogToStorageEnabled = SharedConst.Const.Settings.Defaults.LogToStorage;
     this.LogHasBeenInit = false;
 
-    this.RollingLogId = new RollingLogIdDrone();
-    this.RollingLogId.Init();
-
     console.log('(ctor) Logger log to console enabled: ' + this.LogToConsoleEnabled);
+    console.log('(ctor) Logger log to storage enabled: ' + this.LogToStorageEnabled);
   }
 
-  Init(val: boolean) {
+  SetLogToStorageKey(currentStorageLogKey: string) {
+    console.log(this.SetLogToStorageKey.name + ' ' + currentStorageLogKey);
+    this.CurrentStorageLogKey = currentStorageLogKey;
+  }
+
+  async Init(val: boolean) {
     this.LogToConsoleEnabled = val;
     this.LogHasBeenInit = true;
 
@@ -53,7 +61,52 @@ export class LoggerAgent implements ILoggerAgent {
       }
     }
 
+
+    //if (this.LogTabId < 0) {
+
+
+    //  browser.windows.create({
+    //    'url': browser.runtime.getURL("popup/PopUpLog.html"), 'type': 'popup'
+    //  })
+    //    .then((window: browser.windows.Window) => {
+    //      browser.tabs.sendMessage(window.id, "hey dog")
+    //})
+    //    .catch((err) => console.log(err));
+
+        
+
+
+
+
+      //console.log('Creating new log tab');
+      //await browser.tabs.create({
+      //  //active: false, url: 'javascript:document.write("<h1>Init</h1>")'
+      //  active: false, url: browser.runtime.getURL("popup/PopUpLog.html")
+      //})
+      //  .then((rawNewTab: browser.tabs.Tab) => {
+      //    if (rawNewTab) {
+      //      console.log(rawNewTab);
+      //      console.log(rawNewTab.id);
+      //      this.LogTab = rawNewTab;
+      //      this.LogTabId = rawNewTab.id;
+
+      //      browser.tabs.executeScript(this.LogTabId, {
+      //        code: 'document.write("<h5>xxxxxxx</h5>")'
+      //      })
+      //        .catch((err) => console.log(err));
+
+      //    } else {
+      //      console.log('New tab is null');
+      //    }
+      //  })
+      //  .catch((err) => console.log(err));
+    //}
+
+    //if (this.LogTabId < 0) {
+    //  this.LogTabId = 0;
+    //}
     console.log('(init) Logger log to console enabled: ' + this.LogToConsoleEnabled);
+    console.log('(init) Logger log to storage enabled: ' + this.LogToStorageEnabled);
   }
 
   SetEnabled(newValue: boolean) {
@@ -123,15 +176,15 @@ export class LoggerAgent implements ILoggerAgent {
   //    }
   //  }
   //}
-  DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
+  DebugIDataOneDoc(dataOneDoc: IDataOneDoc): void {
     this.FuncStart(this.DebugIDataOneDoc.name);
-    this.Log('');
-    this.Log(this.debugPrefix + this.DebugIDataOneDoc.name);
+    //this.Log('');
+    //this.Log(this.debugPrefix + this.DebugIDataOneDoc.name);
     if (dataOneDoc) {
-      this.LogVal(this.debugPrefix + 'dataOneDoc', this.IsNullOrUndefined(dataOneDoc));
-      this.LogVal(this.debugPrefix + 'dataOneDoc.XyyzId.asShort:', this.IsNullOrUndefined(dataOneDoc.DocId.AsShort));
-      this.LogVal(this.debugPrefix + 'dataOneDoc.Document:', this.IsNullOrUndefined(dataOneDoc.ContentDoc));
-      this.LogVal(this.debugPrefix + 'dataOneDoc.DocId.AsBracedGuid ', dataOneDoc.DocId.AsBracedGuid);
+      //this.LogVal(this.debugPrefix + 'dataOneDoc', this.IsNullOrUndefined(dataOneDoc));
+      //this.LogVal(this.debugPrefix + 'dataOneDoc.XyyzId.asShort:', this.IsNullOrUndefined(dataOneDoc.DocId.AsShort));
+      //this.LogVal(this.debugPrefix + 'dataOneDoc.Document:', this.IsNullOrUndefined(dataOneDoc.ContentDoc));
+      //this.LogVal(this.debugPrefix + 'dataOneDoc.DocId.AsBracedGuid ', dataOneDoc.DocId.AsBracedGuid);
 
       if (dataOneDoc.ContentDoc) {
         this.LogVal(this.debugPrefix + 'dataOneDoc.Document.readyState:', dataOneDoc.ContentDoc.readyState);
@@ -219,7 +272,7 @@ export class LoggerAgent implements ILoggerAgent {
     const debugPrefix = '  ~~~  ';
     this.Log(debugPrefix + textValName + ' : ' + textVal);
   }
-  Log(text, optionalValue: string = '', hasPrefix = false) {
+  async Log(text, optionalValue: string = '', hasPrefix = false) {
     if (this.LogToConsoleEnabled || !this.LogHasBeenInit) {
       var indent = '  ';
       //text =  indent.repeat(this.__indentCount) + text;
@@ -239,7 +292,7 @@ export class LoggerAgent implements ILoggerAgent {
 
       if (this.LogToConsoleEnabled) {
         console.log(text);
-        this.WriteLogToStorage(text);
+        await this.WriteLogToStorage(text);
       } else if (!this.LogHasBeenInit) {
         this.LogPreInitBuffer.push(text);
       }
@@ -249,14 +302,33 @@ export class LoggerAgent implements ILoggerAgent {
   StorageLogCombined: string = "";
 
   async WriteLogToStorage(logMessage: any): Promise<void> {
-    return new Promise(async () => {
-      
-
+    return new Promise(async (resolve) => {
       this.StorageLogCombined += "|||" + JSON.stringify(logMessage);
-      let storageObj: browser.storage.StorageObject = {
-        [this.RollingLogId. CurrentStorageLogKey]: this.StorageLogCombined
+
+      if (this.CurrentStorageLogKey) {
+        //if it doesn't exist yet, it will hopefully catch up once it does
+        window.localStorage.setItem(this.CurrentStorageLogKey, this.StorageLogCombined);
+
+        //let storageObj: browser.storage.StorageObject = {
+        //  [this.RollingLogId.CurrentStorageLogKey]: this.StorageLogCombined
+        //}
       }
-      await browser.storage.local.set(storageObj);
+
+      //browser.storage.local.set(storageObj);
+
+      //try writing to a tab
+      //chrome.tabs.create({ url: 'javascript:document.write("<h1>Hello, World!</h1>")' });
+
+      //console.log('this.LogTabId: ' + this.LogTabId);
+      //if (this.LogTabId > 0) {
+      //  console.log('Executing script on log tab')
+      //  browser.tabs.executeScript(this.LogTabId, { code: 'document.write("<h5>Log Message</h5>")' })
+      //    .catch((err) => console.log(err));
+
+      //  browser.tabs.executeScript(this.LogTabId, { code: 'console.log("<h5>Log Message</h5>")' })
+      //    .catch((err) => console.log(err));
+      //  //browser.tabs.sendMessage( this.LogTabId,  url: 'javascript:document.write("<h1>' + logMessage + '</h1>")' });
+      //}
     });
   }
 

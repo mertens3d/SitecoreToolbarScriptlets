@@ -92,7 +92,7 @@ export class ContentMessageManager extends ContentManagerBase {
 
     this.AllAgents.Logger.FuncEnd(this.AutoSaveSnapShot.name);
   }
-  SetLoggerFromMessage(reqMsgFromPopup: MsgFromPopUp) {
+  async SetLoggerFromMessage(reqMsgFromPopup: MsgFromPopUp) {
     let currSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole);
     let valueToUse: boolean = SharedConst.Const.Settings.Defaults.LogToConsole;
     if (currSetting) {
@@ -103,7 +103,7 @@ export class ContentMessageManager extends ContentManagerBase {
       } else {
         console.log('candidate was null');
       }
-      this.AllAgents.Logger.Init(valueToUse);
+      await this.AllAgents.Logger.Init(valueToUse);
     } else {
       console.log('curr setting not found');
     }
@@ -363,8 +363,11 @@ export class ContentMessageManager extends ContentManagerBase {
 
         if (Data.IdOfSelect) {
           this.AllAgents.Logger.LogVal("IdOfSelect", Data.IdOfSelect);
+          var dataOneWindowStorage;
 
-          var dataOneWindowStorage = this.AtticMan().GetFromStorageById(Data.IdOfSelect, CacheMode.OkToUseCache);
+          await this.AtticMan().GetFromStorageById(Data.IdOfSelect, CacheMode.OkToUseCache)
+          .then((result) => dataOneWindowStorage = result);
+
           var self = this;
 
           var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);

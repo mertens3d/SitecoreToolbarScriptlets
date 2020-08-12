@@ -1,5 +1,6 @@
 ﻿export enum SettingFlavor {
-    unknown = 0,
-    PopUp,
-    ContentAndPopUp
+  unknown = 0,
+  PopUp,
+  ContentAndPopUpStoredInPopUp,
+  ContentAndPopUpStoredInEach,
 }

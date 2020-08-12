@@ -9,6 +9,8 @@ import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationDrone";
 import { PopConst } from "../Classes/PopConst";
+import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
+import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 
 export class PopUpMessagesManager extends PopUpManagerBase {
   LastKnownContentState: ICurrStateContent;
@@ -212,8 +214,11 @@ export class PopUpMessagesManager extends PopUpManagerBase {
     try {
       await browser.storage.local.get()
         .then((storageResults: browser.storage.StorageObject) => {
-          let lastId = storageResults[PopConst.Const.Storage.StorageLastKeyKey];
-          let keyToUse = PopConst.Const.Storage.StorageLogKeyPrefix + lastId;
+          //let lastId = storageResults[PopConst.Const.Storage.StorageLastKeyKey];
+          var lastId: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.LastUsedLogToStorageKey);
+
+          this.AllAgents.Logger.LogAsJsonPretty('lastId xxxx', lastId);
+          let keyToUse = PopConst.Const.Storage.StorageLogKeyPrefix + lastId.ValueAsInt();
           console.log("keyToUse: " + keyToUse);
           let storedValue: browser.storage.StorageValue = storageResults[keyToUse];
           if (storedValue) {
@@ -224,13 +229,20 @@ export class PopUpMessagesManager extends PopUpManagerBase {
                 console.log(valueSplit[idx]);
               }
             }
+          } else {
+            this.AllAgents.Logger.Log('No storedVal');
           }
         });
     } catch (e) {
       this.AllAgents.Logger.ErrorAndThrow(this.FromAtticDrawPopUpLogStorage.name, e.toString());
     }
   }
-  FromAtticDrawStorage() {
-    //AtticMan().DrawStorage
+  async FromAtticDrawStorage() {
+      this.AllAgents.Logger.FuncStart(this.FromAtticDrawStorage.name);
+    try {
+    } catch (e) {
+
+    }
+    this.AllAgents.Logger.FuncEnd(this.FromAtticDrawStorage.name);
   }
 }

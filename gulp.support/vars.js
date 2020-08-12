@@ -15,14 +15,14 @@ class Vars {
     this.ContentStyles = new InjectableClass('Content', '/**/content.scss', 'css', this.FinalFolderShort);
 
     this.PopUpJs = new InjectableClass('PopUp', '/**/*.js', 'js', this.FinalFolderShort);
-    this.PopUpJs.Ts.TranspiledEntryPointFile = 'EntryPoint.js';
+    this.PopUpJs.Ts.TranspiledEntryPointFile = 'zPopUpEntryPoint.js';
 
 
     this.ContentJs = new InjectableClass('Content', '/**/*.js', 'js', this.FinalFolderShort);
     this.BrowserPolyFillJs = new InjectableClass('browser-polyfill', '/**/*.js', 'js', this.FinalFolderShort);
     this.BrowserPolyFillJs.MinSuffix = '';
 
-    this.ContentJs.Ts.TranspiledEntryPointFile = 'zLast.js';
+    this.ContentJs.Ts.TranspiledEntryPointFile = 'zContentEntryPoint.js';
 
     this.SharedJs = new InjectableClass('Shared', '/**/*.js', 'js');
 

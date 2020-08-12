@@ -62,7 +62,6 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\AllAgents.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerPopUpAgent.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\CommonEvents.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersExternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersInternal.ts" />
@@ -87,7 +86,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataPayloadSnapShot.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IMenuStateForMsg.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IOneGenericSettingForStorage.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgentBase.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgFromPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\OneGenericSetting.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseResult.ts" />
@@ -134,7 +133,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\OneParamPair.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\UrlParts.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\__global.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\EntryPoint.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\zPopUpEntryPoint.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgRunner.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMessageManager.ts" />
@@ -230,7 +229,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneDesktopManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\OneTreeDrone.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\IterationDrone.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\zLast.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\zContentEntryPoint.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\Constants.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.ts" />
     <None Include="Readme.md" />

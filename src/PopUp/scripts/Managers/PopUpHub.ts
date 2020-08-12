@@ -12,8 +12,7 @@ import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents
 import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 
 export class PopUpHub {
-    [x: string]: any;
-
+  [x: string]: any;
 
   BrowserMan: BrowserManager;
   EventMan: EventManager;
@@ -26,13 +25,12 @@ export class PopUpHub {
   UiMan: UiManager;
 
   constructor(allAgents: IAllAgents) {
-
     this._allAgents = allAgents;
 
     this.PopMsgMan = new PopUpMessagesManager(this, this._allAgents);
     this.UiMan = new UiManager(this, this._allAgents);
     this.EventMan = new EventManager(this, this._allAgents);
-    
+
     this.LocMan = new LocationManager(this, this._allAgents);
     //this.PopUpConst = PopConst.Const;
 
@@ -54,16 +52,12 @@ export class PopUpHub {
     console.log(setting);
 
     if (setting) {
-      this._allAgents.Logger.Init(this._allAgents. SettingsAgent.ValueAsBool(setting))
+      await this._allAgents.Logger.Init(this._allAgents.SettingsAgent.ValueAsBool(setting))
     } else {
-      this._allAgents.Logger.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
+      await this._allAgents.Logger.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
     }
 
-
-
-
     await this.TabMan.Init();
-    
 
     this._allAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
     this.EventMan.Init();

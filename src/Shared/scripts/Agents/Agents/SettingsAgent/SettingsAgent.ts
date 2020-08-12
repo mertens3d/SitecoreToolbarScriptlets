@@ -6,6 +6,7 @@ import { IOneGenericSettingForStorage } from "../../../Classes/IOneGenericSettin
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
+import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 
 export class SettingsAgent implements ISettingsAgent {
   SettingsAr: IOneGenericSetting[] = [];
@@ -21,14 +22,68 @@ export class SettingsAgent implements ISettingsAgent {
     this.SettingsAr = currentContentPrefs;
   }
 
-  async Init(allDefaultSettings: IOneGenericSetting[]) {
-    this.Logger.FuncStart(this.Init.name, allDefaultSettings.length);
-    this.SettingsAr = allDefaultSettings;
+  async InitSettingsAgent(allDefaultSettings: IOneGenericSetting[]): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.Logger.FuncStart(this.InitSettingsAgent.name, allDefaultSettings.length);
+      this.SettingsAr = allDefaultSettings;
 
-    await this.HarvestGenericSettingsFromStorage();
-    this.Logger.FuncEnd(this.Init.name);
+      await this.HarvestGenericSettingsFromStorage()
+        .then(() => resolve());
+
+      this.Logger.FuncEnd(this.InitSettingsAgent.name);
+    });
   }
-  async HarvestGenericSettingsFromStorage() {
+  async ReadGenericSettings(): Promise<IOneGenericSettingForStorage[]> {
+    return new Promise(async (resolve) => {
+      this.Logger.FuncStart(this.ReadGenericSettings.name);
+      let toReturn: IOneGenericSettingForStorage[] = [];
+
+      await this.RepoAgent.ReadDataOfKey(PopConst.Const.Storage.KeyGenericSettings)
+        .then((storedValue: browser.storage.StorageValue) => {
+          if (storedValue) {
+            toReturn = <IOneGenericSettingForStorage[]>JSON.parse(storedValue.toString());
+          } else {
+            toReturn = null;
+          }
+        })
+        .then(() => resolve(toReturn));
+
+      //await browser.storage.local.get()
+      //  .then((storageResults: browser.storage.StorageObject) => {
+      //    console.log('storageResults: ' + storageResults);
+      //    var storageKeys: string[] = Object.keys(storageResults);
+
+      //    for (let oneKey of storageKeys) {
+      //      if (oneKey === PopConst.Const.Storage.KeyGenericSettings) {
+      //        let storedValue: browser.storage.StorageValue = storageResults[oneKey];
+      //        if (storedValue) {
+      //          toReturn = <IOneGenericSettingForStorage[]>JSON.parse(storedValue.toString());
+      //        }
+      //      }
+      //    }
+      //  });
+
+      this.Logger.FuncEnd(this.ReadGenericSettings.name);
+    });
+  }
+
+  UpdateSettingValuesFromStorage(foundSettings: IOneGenericSettingForStorage[]) {
+    this.Logger.FuncStart(this.UpdateSettingValuesFromStorage.name);
+    for (var idx = 0; idx < foundSettings.length; idx++) {
+      let storageSetting: IOneGenericSettingForStorage = foundSettings[idx];
+      this.Logger.LogVal('setting key', storageSetting.SettingKeyFriendly);
+      let matchingSetting: IOneGenericSetting = this.GetByKey(storageSetting.SettingKey);
+      if (matchingSetting) {
+        matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
+      } else {
+        this.Logger.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+      }
+    }
+    this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);
+  }
+
+  async HarvestGenericSettingsFromStorage(): Promise<void> {
+    return new Promise(async (resolve) => { 
     //take in a setting
     // if get, spit back it's value
     // if set, update the cache and write to storage
@@ -36,30 +91,19 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncStart(this.HarvestGenericSettingsFromStorage.name);
     let foundSettings: IOneGenericSettingForStorage[];
 
-    try {
-      foundSettings = await this.RepoAgent.ReadGenericSettings();
-    } catch (e) {
-      this.Logger.ErrorAndThrow(this.HarvestGenericSettingsFromStorage.name, e.toString());
-    }
-
-    this.Logger.LogAsJsonPretty('settings from storage', foundSettings);
-
-    if (foundSettings) {
-      for (var idx = 0; idx < foundSettings.length; idx++) {
-        let storageSetting: IOneGenericSettingForStorage = foundSettings[idx];
-        this.Logger.LogVal('setting key', storageSetting.SettingKeyFriendly);
-        let matchingSetting: IOneGenericSetting = this.GetByKey(storageSetting.SettingKey);
-        if (matchingSetting) {
-          matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
-        } else {
-          this.Logger.ErrorAndThrow(this.HarvestGenericSettingsFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+    await this.ReadGenericSettings()
+      .then((result) => foundSettings = result)
+      .then(() => this.Logger.LogAsJsonPretty('settings from storage', foundSettings))
+      .then(() => {
+        if (foundSettings) {
+          this.UpdateSettingValuesFromStorage(foundSettings);
         }
-      }
-    } else {
-      this.Logger.ErrorAndThrow(this.HarvestGenericSettingsFromStorage.name, 'settings not found');
-    }
+      })
+      .then(() => resolve());
+    
 
-    this.Logger.FuncEnd(this.HarvestGenericSettingsFromStorage.name);
+      this.Logger.FuncEnd(this.HarvestGenericSettingsFromStorage.name);
+    });
   }
 
   ValueAsInteger(setting: IOneGenericSetting): number {
@@ -74,7 +118,7 @@ export class SettingsAgent implements ISettingsAgent {
 
     for (var idx = 0; idx < this.SettingsAr.length; idx++) {
       let candidate: IOneGenericSetting = this.SettingsAr[idx];
-      if (candidate.SettingFlavor === SettingFlavor.ContentAndPopUp) {
+      if (candidate.SettingFlavor === SettingFlavor.ContentAndPopUpStoredInPopUp) {
         toReturn.push(candidate);
       }
     }
@@ -88,14 +132,19 @@ export class SettingsAgent implements ISettingsAgent {
     this.SetByKey(SettingKey, valueAsObj);
   }
   GetByKey(settingKey: SettingKey): IOneGenericSetting {
+    this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
+
     var toReturn: IOneGenericSetting;
 
     for (var idx = 0; idx < this.SettingsAr.length; idx++) {
       if (this.SettingsAr[idx].SettingKey === settingKey) {
+        this.Logger.Log('Setting found');
         toReturn = this.SettingsAr[idx];
+        this.Logger.LogAsJsonPretty('ValueAsObj', toReturn.ValueAsObj);
         break;
       }
     }
+    this.Logger.FuncEnd(this.GetByKey.name);
     return toReturn;
   }
   //GetByKey(settingKey: SettingKey): IOneGenericSetting {
@@ -112,6 +161,7 @@ export class SettingsAgent implements ISettingsAgent {
 
   SetByKey(settingKey: SettingKey, value: any): void {
     this.Logger.FuncStart(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
+    this.Logger.LogAsJsonPretty('value', value);
 
     let foundSetting = this.GetByKey(settingKey);
 
@@ -122,11 +172,11 @@ export class SettingsAgent implements ISettingsAgent {
         foundSetting.ValueAsObj = null;
       }
 
-      let nonDefaultSettings: IOneGenericSettingForStorage[] = [];
+      let settingValues: IOneGenericSettingForStorage[] = [];
 
       for (var udx = 0; udx < this.SettingsAr.length; udx++) {
         if (this.SettingsAr[udx].ValueAsObj !== null) {
-          nonDefaultSettings.push(
+          settingValues.push(
             {
               SettingKey: this.SettingsAr[udx].SettingKey,
               ValueAsObj: this.SettingsAr[udx].ValueAsObj,
@@ -135,7 +185,7 @@ export class SettingsAgent implements ISettingsAgent {
         }
       }
 
-      this.RepoAgent.WriteGenericSettings(nonDefaultSettings);
+      this.RepoAgent.WriteGenericSettings(settingValues);
     } else {
       this.Logger.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
     }

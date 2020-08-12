@@ -27,7 +27,9 @@ export class EventManager extends PopUpManagerBase {
 
   Init() {
     this.AllAgents.Logger.FuncStart(EventManager.name + this.Init.name);
+    this.AllAgents.Logger.FuncStart(AllCommands.BuildAllCommands.name);
     this.AllMenuCommands = AllCommands.BuildAllCommands(this.PopHub, this.Handlers);
+    this.AllAgents.Logger.FuncEnd(AllCommands.BuildAllCommands.name);
     this.__wireMenuButtons();
     this.WireAllGenericSettings();
     this.AllAgents.Logger.FuncEnd(EventManager.name + this.Init.name);
@@ -37,32 +39,34 @@ export class EventManager extends PopUpManagerBase {
 
     for (var idx = 0; idx < genericSettings.length; idx++) {
       let oneSetting = genericSettings[idx];
-      let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
-      if (uiElem) {
-        //if has label
-        let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
-        if (uiLabel) {
-          uiLabel.innerHTML = oneSetting.Friendly;
-        } else {
-          uiElem.innerHTML = oneSetting.Friendly;
-        }
+      if (oneSetting.HasUi) {
+        let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
+        if (uiElem) {
+          //if has label
+          let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
+          if (uiLabel) {
+            uiLabel.innerHTML = oneSetting.Friendly;
+          } else {
+            uiElem.innerHTML = oneSetting.Friendly;
+          }
 
-        if (oneSetting.DataType === SettingType.BoolCheckBox) {
-          let self = this;
-          uiElem.addEventListener('change', (evt) => {
-            self.AllAgents.SettingsAgent.SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
+          if (oneSetting.DataType === SettingType.BoolCheckBox) {
+            let self = this;
+            uiElem.addEventListener('change', (evt) => {
+              self.AllAgents.SettingsAgent.SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
+            }
+            )
           }
-          )
-        }
-        else if (oneSetting.DataType === SettingType.Accordion) {
-          let self = this;
-          uiElem.addEventListener('click', (evt) => {
-            self.Handlers.Internal.Toggleaccordion(evt, this.PopHub, oneSetting.SettingKey);
+          else if (oneSetting.DataType === SettingType.Accordion) {
+            let self = this;
+            uiElem.addEventListener('click', (evt) => {
+              self.Handlers.Internal.Toggleaccordion(evt, this.PopHub, oneSetting.SettingKey);
+            }
+            )
           }
-          )
+        } else {
+          this.AllAgents.Logger.ErrorAndThrow(this.WireAllGenericSettings.name, 'ui generic element not found');
         }
-      } else {
-        this.AllAgents.Logger.ErrorAndThrow(this.WireAllGenericSettings.name, 'ui generic element not found');
       }
     }
   }

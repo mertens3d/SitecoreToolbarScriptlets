@@ -66,12 +66,15 @@ export class HandlersExternal extends CommonEvents {
         .catch((err) => reject(err));
     })
   }
+
   __hndlrCancelOperation(evt: MouseEvent, popHub: PopUpHub) {
     popHub.UiMan.SetCancelFlag();
   }
+
   MarkFavorite(evt: MouseEvent, popHub: PopUpHub) {
     popHub.PopMsgMan.SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqMarkFavorite, popHub));
   }
+
   __DrawStorage(evt: MouseEvent, popHub: PopUpHub) {
     popHub.PopMsgMan.FromAtticDrawStorage();
   }

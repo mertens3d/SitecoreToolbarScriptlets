@@ -129,8 +129,8 @@ export class ContentConst {
     Storage: {
       SettingsSuffix: '.Settings',
       ShowDebugData: false,
-      SnapShotPrefix: '.WindowSnapShot.',
-      WindowRoot: 'Xyyz',
+      SnapShotPrefix: 'WindowSnapShot.',
+      WindowRoot: 'HindSite.',
     },
 
     MaxIter: 100,

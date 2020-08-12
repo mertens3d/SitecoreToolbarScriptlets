@@ -13,6 +13,7 @@
   Settings: {
     Defaults: {
       LogToConsole: boolean,
+      LogToStorage: boolean,
     }
   },
   Regex: {

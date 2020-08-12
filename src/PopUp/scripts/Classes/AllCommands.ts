@@ -10,6 +10,7 @@ import { scMode } from '../../../Shared/scripts/Enums/scMode';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 export class AllCommands {
   static BuildAllCommands(popHub: PopUpHub, handlers: Handlers) {
+
     let toReturn: IOneCommand[] = [
       {
         Command: MenuCommand.CloseWindow,

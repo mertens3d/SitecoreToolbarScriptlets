@@ -18,6 +18,6 @@
     LgndHindSite = 302,
     LgndSettings = 303,
     LgndState = 304,
-    NotUsed,
+    LastUsedLogToStorageKey = 999, //what number should this be?
     AutoSnapshotBeforeWindowChange
 }

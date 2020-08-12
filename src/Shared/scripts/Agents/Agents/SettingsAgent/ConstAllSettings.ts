@@ -7,7 +7,17 @@ import { SharedConst } from "../../../SharedConst";
 import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
 
 export class ConstAllSettings {
-   AllSettings: IOneGenericSetting[] = [
+  AllSettings: IOneGenericSetting[] = [
+    new OneGenericSetting(
+      SettingKey.LastUsedLogToStorageKey,
+      SettingType.Number,
+      0,
+      null,
+      0,
+      SettingFlavor.ContentAndPopUpStoredInEach,
+      'Rolling Prefix key for log to storage',
+      false // has ui
+    ),
     new OneGenericSetting(
       SettingKey.Test,
       SettingType.BoolCheckBox,
@@ -23,7 +33,7 @@ export class ConstAllSettings {
       true,
       PopConst.Const.Selector.HS.LogToConsole,
       SharedConst.Const.Settings.Defaults.LogToConsole,
-      SettingFlavor.ContentAndPopUp,
+      SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Log to Console',
     ),
     //new OneGenericSetting(
@@ -35,15 +45,15 @@ export class ConstAllSettings {
     //  SettingFlavor.ContentAndPopUp,
     //  'Auto Save Snapshot',
     // ),
-     new OneGenericSetting(
-       SettingKey.AutoSnapshotBeforeWindowChange,
-       SettingType.BoolCheckBox,
-       null,
-       PopConst.Const.Selector.HS.AutoSnapshotBeforeWindowChange,
-       PopConst.Const.Storage.Defaults.bool.AutoSnapshotBeforeWindowChange,
-       SettingFlavor.ContentAndPopUp,
-       'Auto Save Snapshot on HindSite Window Change',
-     ),
+    new OneGenericSetting(
+      SettingKey.AutoSnapshotBeforeWindowChange,
+      SettingType.BoolCheckBox,
+      null,
+      PopConst.Const.Selector.HS.AutoSnapshotBeforeWindowChange,
+      PopConst.Const.Storage.Defaults.bool.AutoSnapshotBeforeWindowChange,
+      SettingFlavor.ContentAndPopUpStoredInPopUp,
+      'Auto Save Snapshot on HindSite Window Change',
+    ),
     //new OneGenericSetting(
     //  SettingKey.NotUsed,
     //  SettingType.BoolCheckBox,
@@ -59,7 +69,7 @@ export class ConstAllSettings {
       null,
       PopConst.Const.Selector.HS.iCBoxdSettingsAutoLogin,
       PopConst.Const.Storage.Defaults.bool.AutoLogin,
-      SettingFlavor.ContentAndPopUp,
+      SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Auto Login',
     ),
     new OneGenericSetting(
@@ -122,7 +132,7 @@ export class ConstAllSettings {
       null,
       PopConst.Const.Selector.HS.SettingAutoSaveMaxCount,
       PopConst.Const.Numbers.MaxAutoSaveCount,
-      SettingFlavor.ContentAndPopUp,
+      SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Auto Save Max Count',
     ),
     new OneGenericSetting(
@@ -131,10 +141,10 @@ export class ConstAllSettings {
       null,
       PopConst.Const.Selector.HS.SettingAutoSaveInterval,
       PopConst.Const.Numbers.AutoSaveIntervalMin,
-      SettingFlavor.ContentAndPopUp,
+      SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Auto Save Interval (Min) - 0 to disable',
     ),
-   
+
     new OneGenericSetting(
       SettingKey.DebugKeepDialogOpen,
       SettingType.BoolCheckBox,

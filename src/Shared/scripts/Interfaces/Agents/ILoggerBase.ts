@@ -4,9 +4,9 @@ import { IError } from "../IError";
 import { IDataBrowserTab } from "../IDataBrowserWindow";
 import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
 import { IDataOneIframe } from "../IDataOneIframe";
-import { IAllAgents } from "./IAllAgents";
 
 export interface ILoggerAgent {
+  SetLogToStorageKey(CurrentStorageLogKey: string);
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   ThrowIfNullOrUndefined(arg0: string, allAgents: any);
   PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
@@ -16,7 +16,7 @@ export interface ILoggerAgent {
 
   HndlrClearDebugText(self: ILoggerAgent): void
   HndlrClearDebugText(self: ILoggerAgent, verify: boolean ): void
-  DebugIDataOneDoc(targetDoc: IDataOneDoc);
+  DebugIDataOneDoc(targetDoc: IDataOneDoc) :void;
   DebugIGuid(Id: IGuid);
   EnabledStatus();
   ErrorAndThrow(container: string, text: any): void

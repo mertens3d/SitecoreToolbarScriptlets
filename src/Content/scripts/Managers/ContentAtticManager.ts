@@ -13,7 +13,7 @@ import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
-export class ContentAtticManager extends ContentManagerBase{ 
+export class ContentAtticManager extends ContentManagerBase {
   private CachedWindowStorage: ISnapShotsMany;
 
   constructor(hub: ContentHub, AllAgents: IAllAgents) {
@@ -32,12 +32,16 @@ export class ContentAtticManager extends ContentManagerBase{
   //}
 
   UpdateNickname(payload: PayloadDataFromPopUp) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.UpdateNickname.name);
       var promResult: PromiseResult = new PromiseResult(this.UpdateNickname.name, this.AllAgents.Logger);
 
       if (payload.IdOfSelect) {
-        var storageMatch = this.GetFromStorageById(payload.IdOfSelect, CacheMode.OkToUseCache)
+        var storageMatch;
+
+        await this.GetFromStorageById(payload.IdOfSelect, CacheMode.OkToUseCache)
+          .then((result) => storageMatch = result);
+
         if (storageMatch && payload.SnapShotSettings && payload.SnapShotSettings.SnapShotNewNickname) {
           storageMatch.NickName = payload.SnapShotSettings.SnapShotNewNickname;
           this.WriteToStorage(storageMatch);
@@ -59,31 +63,24 @@ export class ContentAtticManager extends ContentManagerBase{
     });
   }
 
-  MarkFavorite(data: PayloadDataFromPopUp) {
+  MarkFavorite(data: PayloadDataFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.MarkFavorite.name);
-      var result: PromiseResult = new PromiseResult(this.MarkFavorite.name, this.AllAgents.Logger);
 
       if (data.IdOfSelect) {
-        var storageMatch = this.GetFromStorageById(data.IdOfSelect, CacheMode.OkToUseCache)
-        if (storageMatch) {
-          storageMatch.Flavor = SnapShotFlavor.Favorite;
-          await this.WriteToStorage(storageMatch);
-          result.MarkSuccessful();
-        } else {
-          result.MarkFailed('no storage match');
-        }
+
+        await this.GetFromStorageById(data.IdOfSelect, CacheMode.OkToUseCache)
+          .then((result: IDataOneWindowStorage) => {
+            result.Flavor = SnapShotFlavor.Favorite;
+            this.WriteToStorage(result);
+          })
+          .then(() => resolve())
+          .catch((err) => { throw this.MarkFavorite.name + ' ' + err });
       } else {
-        result.MarkFailed('no data.idofselect');
+        reject( 'no data.idofselect');
       }
 
       this.AllAgents.Logger.FuncEnd(this.MarkFavorite.name);
-
-      if (result) {
-        resolve();
-      } else {
-        reject(result.RejectReasons);
-      }
     })
   }
   async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
@@ -115,61 +112,34 @@ export class ContentAtticManager extends ContentManagerBase{
     });
   }
 
-  GetFromStorageById(needleId: IGuid, cacheMode: CacheMode): IDataOneWindowStorage {
-    this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.AsString);
-    var foundStorage: ISnapShotsMany = this.GetAllSnapShotsMany(cacheMode);
-    var DateOneWinStoreMatch: IDataOneWindowStorage = null;
+  async GetFromStorageById(needleId: IGuid, cacheMode: CacheMode): Promise<IDataOneWindowStorage> {
+    return new Promise(async (resolve) => {
+      this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.AsString);
 
-    if (foundStorage) {
-      for (var idx = 0; idx < foundStorage.CurrentSnapShots.length; idx++) {
-        var candidate = foundStorage.CurrentSnapShots[idx];
-        if (candidate.Id.AsString === needleId.AsString) {
-          DateOneWinStoreMatch = candidate;
-          break;
+      var foundStorage: ISnapShotsMany;
+      await this.GetAllSnapShotsMany(cacheMode)
+        .then((result) => foundStorage = result);
+
+      var DateOneWinStoreMatch: IDataOneWindowStorage = null;
+
+      if (foundStorage) {
+        for (var idx = 0; idx < foundStorage.CurrentSnapShots.length; idx++) {
+          var candidate = foundStorage.CurrentSnapShots[idx];
+          if (candidate.Id.AsString === needleId.AsString) {
+            DateOneWinStoreMatch = candidate;
+            break;
+          }
         }
       }
-    }
-    if (DateOneWinStoreMatch) {
-      this.AllAgents.Logger.Log('found match', this.AllAgents.HelperAgent.UtilityHelp.TimeNicknameFavStr(DateOneWinStoreMatch));
-    } else {
-      this.AllAgents.Logger.LogVal(this.GetFromStorageById.name, 'Match notfound')
-    }
-
-    this.AllAgents.Logger.FuncEnd(this.GetFromStorageById.name);
-    return DateOneWinStoreMatch;
-  }
-
-  private __getAllLocalStorageAsIOneStorageData(): IOneStorageData[] {
-    this.AllAgents.Logger.FuncStart(this.__getAllLocalStorageAsIOneStorageData.name);
-    var toReturn: IOneStorageData[] = [];
-
-    var storageLength: number = window.localStorage.length;
-    this.AllAgents.Logger.LogVal('storageLength', storageLength);
-
-    for (var idx: number = 0; idx < storageLength; idx++) {
-      this.AllAgents.Logger.LogVal('Processing Index', idx);
-
-      var candidate: IOneStorageData = {
-        data: '',
-        key: '',
-      };
-
-      candidate.key = window.localStorage.key(idx);
-
-      this.AllAgents.Logger.LogVal('Candidate.key', candidate.key);
-
-      if (candidate.key.startsWith(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix)) {
-        this.AllAgents.Logger.LogVal('valid candidate', true);
-
-        candidate.data = window.localStorage.getItem(candidate.key);
-        if (this.AllAgents.Logger.IsNotNullOrUndefinedBool('candidate.data', candidate.data)) {
-          toReturn.push(candidate);
-        }
+      if (DateOneWinStoreMatch) {
+        this.AllAgents.Logger.Log('found match', this.AllAgents.HelperAgent.UtilityHelp.TimeNicknameFavStr(DateOneWinStoreMatch));
+      } else {
+        this.AllAgents.Logger.LogVal(this.GetFromStorageById.name, 'Match notfound')
       }
-    }
 
-    this.AllAgents.Logger.FuncEnd(this.__getAllLocalStorageAsIOneStorageData.name, toReturn.length);
-    return toReturn;
+      this.AllAgents.Logger.FuncEnd(this.GetFromStorageById.name);
+      resolve(DateOneWinStoreMatch);
+    });
   }
 
   private __parseRawData(oneRaw: IOneStorageData) {
@@ -194,24 +164,33 @@ export class ContentAtticManager extends ContentManagerBase{
     }
     return candidate
   }
-
-  private __getAllStorageReal() {
+  private GetAllLocalStorageAsIOneStorageData(): Promise<IOneStorageData[]> {
+    return new Promise(async (resolve) => {
+      let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
+      await this.AllAgents.RepoAgent.GetBulkLocalStorageByKeyPrefix(prefix)
+        .then((result) => resolve(result));
+    });
+  }
+  private async __getAllStorageReal() {
     this.AllAgents.Logger.FuncStart(this.__getAllStorageReal.name);
     var toReturn: IDataOneWindowStorage[] = [];
 
-    var rawStorageData: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
-
-    if (rawStorageData) {
-      for (var idx = 0; idx < rawStorageData.length; idx++) {
-        toReturn.push(this.__parseRawData(rawStorageData[idx]));
-      }
-    }
-
-    toReturn.sort((a: IDataOneWindowStorage, b: IDataOneWindowStorage) =>
-      +b.TimeStamp - +a.TimeStamp
-    );
-
-    toReturn = this.FilterOutOldData(toReturn);
+    var rawStorageData: IOneStorageData[];
+    await this.GetAllLocalStorageAsIOneStorageData()
+      .then((result) => rawStorageData = result)
+      .then(() => {
+        if (rawStorageData) {
+          for (var idx = 0; idx < rawStorageData.length; idx++) {
+            toReturn.push(this.__parseRawData(rawStorageData[idx]));
+          }
+        }
+      })
+      .then(() => {
+        toReturn.sort((a: IDataOneWindowStorage, b: IDataOneWindowStorage) =>
+          +b.TimeStamp - +a.TimeStamp
+        );
+      })
+      .then(() => toReturn = this.FilterOutOldData(toReturn))
 
     this.AllAgents.Logger.FuncEnd(this.__getAllStorageReal.name);
     return toReturn;
@@ -261,45 +240,47 @@ export class ContentAtticManager extends ContentManagerBase{
     this.AllAgents.Logger.FuncEnd(this.CleanOutOldData.name);
   }
 
-  GetAllSnapShotsMany(cacheMode: CacheMode): ISnapShotsMany {
-    this.AllAgents.Logger.FuncStart(this.GetAllSnapShotsMany.name, StaticHelpers.CacheModeAsString(cacheMode));
-    var toReturn: ISnapShotsMany;
+  GetAllSnapShotsMany(cacheMode: CacheMode): Promise<ISnapShotsMany> {
+    return new Promise(async (resolve) => {
+      this.AllAgents.Logger.FuncStart(this.GetAllSnapShotsMany.name, StaticHelpers.CacheModeAsString(cacheMode));
+      var toReturn: ISnapShotsMany;
 
-    if (cacheMode === CacheMode.DoNotUseCach) {
-      this.CachedWindowStorage = null;
-    }
-
-    if (!this.CachedWindowStorage) {
-      this.CachedWindowStorage = {
-        CurrentSnapShots: [],
-        Birthday: new Date(1970),
-        FavoriteCount: 0,
-        SnapShotsAutoCount: 0,
-        PlainCount: 0,
+      if (cacheMode === CacheMode.DoNotUseCach) {
+        this.CachedWindowStorage = null;
       }
-    }
 
-    var timeDiff: number = Date.now() - this.CachedWindowStorage.Birthday.getTime();
+      if (!this.CachedWindowStorage) {
+        this.CachedWindowStorage = {
+          CurrentSnapShots: [],
+          Birthday: new Date(1970),
+          FavoriteCount: 0,
+          SnapShotsAutoCount: 0,
+          PlainCount: 0,
+        }
+      }
 
-    this.AllAgents.Logger.LogVal('cached timeDiff', timeDiff + ' : ' + ContentConst.Const.MaxCacheAgeMs);
-    if (timeDiff > (ContentConst.Const.MaxCacheAgeMs)) {
-      this.AllAgents.Logger.Log('updating cache');
+      var timeDiff: number = Date.now() - this.CachedWindowStorage.Birthday.getTime();
 
-      this.CachedWindowStorage.CurrentSnapShots = this.__getAllStorageReal();
-      this.CachedWindowStorage.Birthday = new Date();
-    } else {
-      this.AllAgents.Logger.Log('using cache');
-    }
+      this.AllAgents.Logger.LogVal('cached timeDiff', timeDiff + ' : ' + ContentConst.Const.MaxCacheAgeMs);
+      if (timeDiff > (ContentConst.Const.MaxCacheAgeMs)) {
+        this.AllAgents.Logger.Log('updating cache');
 
-    this.CleanOutOldData();
-    this.UpdateCounts();
+        await this.__getAllStorageReal()
+          .then((result) => this.CachedWindowStorage.CurrentSnapShots = result);
+        this.CachedWindowStorage.Birthday = new Date();
+      } else {
+        this.AllAgents.Logger.Log('using cache');
+      }
 
-    toReturn = this.CachedWindowStorage;
-    this.AllAgents.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
+      this.CleanOutOldData();
+      this.UpdateCounts();
 
-    return toReturn;
+      toReturn = this.CachedWindowStorage;
+
+      resolve(toReturn);
+      this.AllAgents.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
+    });
   }
-
   UpdateCounts() {
     this.CachedWindowStorage.FavoriteCount = 0;
     this.CachedWindowStorage.SnapShotsAutoCount = 0;
