@@ -39,10 +39,12 @@ export class SettingsAgent implements ISettingsAgent {
       let toReturn: IOneGenericSettingForStorage[] = [];
 
       await this.RepoAgent.ReadDataOfKey(PopConst.Const.Storage.KeyGenericSettings)
-        .then((storedValue: browser.storage.StorageValue) => {
+        .then((storedValue: any) => {
           if (storedValue) {
+            this.Logger.Log('storedValue NOT null');
             toReturn = <IOneGenericSettingForStorage[]>JSON.parse(storedValue.toString());
           } else {
+            this.Logger.Log('storedValue YES null');
             toReturn = null;
           }
         })
@@ -74,7 +76,9 @@ export class SettingsAgent implements ISettingsAgent {
       this.Logger.LogVal('setting key', storageSetting.SettingKeyFriendly);
       let matchingSetting: IOneGenericSetting = this.GetByKey(storageSetting.SettingKey);
       if (matchingSetting) {
+        this.Logger.LogVal('Before Update', matchingSetting.ValueAsObj);
         matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
+        this.Logger.LogVal('after Update', matchingSetting.ValueAsObj);
       } else {
         this.Logger.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
       }
@@ -92,7 +96,10 @@ export class SettingsAgent implements ISettingsAgent {
     let foundSettings: IOneGenericSettingForStorage[];
 
     await this.ReadGenericSettings()
-      .then((result) => foundSettings = result)
+      .then((result) => {
+        this.Logger.LogAsJsonPretty('result values from storage', result);
+        foundSettings = result
+      })
       .then(() => this.Logger.LogAsJsonPretty('settings from storage', foundSettings))
       .then(() => {
         if (foundSettings) {

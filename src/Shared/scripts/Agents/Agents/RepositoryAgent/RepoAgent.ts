@@ -82,25 +82,25 @@ export class RepoAgent implements IRepositoryAgent {
   //}
 
   async ReadDataOfKey(targetKey: string): Promise<browser.storage.StorageValue> {
-    let toReturn: browser.storage.StorageValue = null;
-    console.log('target key ' + targetKey);
+    return new Promise(async (resolve) => {
+      this.Logger.FuncStart(this.ReadDataOfKey.name);
 
-    await browser.storage.local.get(targetKey)
-      .then((storageResults: browser.storage.StorageObject) => {
-        console.log('storageResults: ' + JSON.stringify(storageResults));
-        var storageKeys: string[] = Object.keys(storageResults);
+      let toReturn: browser.storage.StorageValue = null;
+      this.Logger.LogVal('target key ', targetKey);
 
-        for (let oneKey of storageKeys) {
-          if (oneKey === targetKey) {
-            let storedValue: browser.storage.StorageValue = storageResults[oneKey];
-            if (storedValue) {
-              toReturn = storedValue.toString();
-            }
-          }
-        }
-      });
+      //var testLocalStorage = window.localStorage.getItem(targetKey)
+      //this.Logger.LogAsJsonPretty('testLocalStorage', testLocalStorage);
+      toReturn = window.localStorage.getItem(targetKey);
 
-    return toReturn;
+      if (toReturn) {
+        //this.Logger.LogAsJsonPretty('toReturn', toReturn);
+
+        resolve(toReturn);
+      } else {
+        this.Logger.ErrorAndThrow(this.ReadDataOfKey.name, "No value returned from storage")
+      }
+      this.Logger.FuncEnd(this.ReadDataOfKey.name);
+    });
   }
 
   WriteGenericSettings(settingsToWrite: IOneGenericSettingForStorage[]): void {

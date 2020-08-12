@@ -23,7 +23,9 @@ export class OneGenericSetting implements IOneGenericSetting {
   HasUi: boolean;
   ValueAsInt(): number {
     var toReturn: number = parseInt(this.ValueAsObj.toString());
-
+    console.log('ValueAsObj');
+    console.log(this.ValueAsObj);
+    console.log('toReturn : ' + toReturn );
     return toReturn;
   }
 
