@@ -27,7 +27,8 @@ export class LoggerAgent implements ILoggerAgent {
   ErrorStack: IError[] = [];
   LogPreInitBuffer: string[] = [];
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
-  private CurrentStorageLogKey: string = 'default';
+  private LogToStoragePrefix: string = 'Hindsite.Log.';
+  private CurrentStorageLogKey: string = '0';
   private LogTabId: number = -1;
   private LogTab: browser.tabs.Tab = null;
 
@@ -38,23 +39,34 @@ export class LoggerAgent implements ILoggerAgent {
     this.LogToStorageEnabled = SharedConst.Const.Settings.Defaults.LogToStorage;
     this.LogHasBeenInit = false;
 
+
+    var dateobj = new Date();
+    function pad(n) { return n < 10 ? "0" + n : n; }
+    var result = pad(dateobj.getDate()) + "/" + pad(dateobj.getMonth() + 1) + "/" + dateobj.getFullYear() + " " + pad(dateobj.getHours()) + ":" + pad(dateobj.getMinutes());
+
+    this.LogVal('TimeStamp', result);
     console.log('(ctor) Logger log to console enabled: ' + this.LogToConsoleEnabled);
     console.log('(ctor) Logger log to storage enabled: ' + this.LogToStorageEnabled);
   }
 
-  SetLogToStorageKey(currentStorageLogKey: string) {
-    console.log(this.SetLogToStorageKey.name + ' ' + currentStorageLogKey);
-    this.CurrentStorageLogKey = currentStorageLogKey;
+  SetLogToStorageKey(logToStorageIndex: string) {
+
+    //console.log(this.SetLogToStorageKey.name + ' ' + currentStorageLogKey);
+    this.CurrentStorageLogKey = this.LogToStoragePrefix + logToStorageIndex;
+
   }
 
   async Init(val: boolean) {
     this.LogToConsoleEnabled = val;
     this.LogHasBeenInit = true;
 
+   
     //console.log('Logger Enabled:' + this.LogToConsoleEnabled);
 
     if (this.LogToConsoleEnabled) {
       var iterCheckMax = 1000;
+      this.LogVal('TimeStamp B', Date.now());
+
       while (this.LogPreInitBuffer.length > 0 && iterCheckMax > 0) {
         iterCheckMax--;
         this.Log(this.LogPreInitBuffer.shift());

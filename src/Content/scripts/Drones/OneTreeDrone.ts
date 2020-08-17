@@ -118,7 +118,7 @@ export class OneTreeDrone implements IOneTreeDrone {
 
           var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
 
-          newData.NodeId = this.HelperAgent.GuidHelper.ParseGuid(apparentId);
+          newData.NodeId = this.HelperAgent.GuidHelper.ParseGuid(apparentId, true);
 
           toReturn.push(newData);
         }

@@ -13,6 +13,10 @@ import { SharedConst } from '../../../Shared/scripts/SharedConst';
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { SitecoreUiManager } from './SitecoreUiManager';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
+import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
+import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
+import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 
 export class ContentHub {
   AtticMan: ContentAtticManager;
@@ -80,5 +84,47 @@ export class ContentHub {
     this.OneWindowMan.Init();
 
     this.AllAgents.Logger.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);
+  }
+
+  InitFromQueryStr(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.InitFromQueryStr.name);
+
+      try {
+        if (this.AllAgents.QueryStrAgent.HasKey(QueryStrKey.hsRestoreSnapshot)) {
+          let qsValue: string = this.AllAgents.QueryStrAgent.QsValueByKey(QueryStrKey.hsRestoreSnapshot);
+          let targetGuid: IGuid = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(qsValue, false);
+
+          if (targetGuid && targetGuid !== this.AllAgents.HelperAgent.GuidHelper.EmptyGuid()) {
+            this.AllAgents.Logger.LogVal("targetGuid", targetGuid);
+            var dataOneWindowStorage;
+
+            await this.AtticMan.GetFromStorageById(targetGuid, CacheMode.DoNotUseCache)
+              .then((result) => dataOneWindowStorage = result);
+
+            var self = this;
+
+            var targetDoc: IDataOneDoc = this.SitecoreUiMan.TopLevelDoc();
+
+            if (targetDoc) {
+              await this.AllAgents.HelperAgent.PromisesBasic.WaitForPageReadyNative(targetDoc);
+
+                await self.OneWindowMan.RestoreWindowStateToTargetDoc(targetDoc, dataOneWindowStorage)
+                .then(() => resolve())
+                .catch((err) => reject(err));
+            }
+            else {
+              self.AllAgents.Logger.ErrorAndThrow(this.InitFromQueryStr.name, 'no targetDoc');
+            }
+          } else {
+            this.AllAgents.Logger.Log('Either no snapshot provided or an illegal one was found');
+          }
+        }
+      } catch (ex) {
+        this.AllAgents.Logger.ErrorAndThrow(this.InitFromQueryStr.name, ex)
+      }
+
+      this.AllAgents.Logger.FuncEnd(this.InitFromQueryStr.name);
+    });
   }
 }

@@ -8,6 +8,7 @@ import { AllAgents } from '../../Shared/scripts/Agents/Agents/AllAgents';
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone';
 import { IOneGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
 import { ConstAllSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings';
+import { QueryStrAgent } from '../../Shared/scripts/Agents/Agents/QueryStringAgent/QueryStrAgent';
 
 async function main() {
   var allAgents: IAllAgents = new AllAgents();
@@ -25,10 +26,16 @@ async function main() {
 
   allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
 
+  allAgents.QueryStrAgent = new QueryStrAgent(allAgents.Logger);
+
   allAgents.Logger.ThrowIfNullOrUndefined("allAgents", allAgents);
   allAgents.Logger.ThrowIfNullOrUndefined("allAgents.HelperAgent", allAgents.HelperAgent);
 
-  new ContentHub(allAgents);
+  let ch: ContentHub = new ContentHub(allAgents);
+  await ch.InitFromQueryStr();
+
+
+
 }
 
 main();

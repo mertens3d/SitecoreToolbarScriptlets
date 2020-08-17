@@ -350,8 +350,6 @@ export class ContentMessageManager extends ContentManagerBase {
 
   }
 
-
-
   private __restoreClick(Data: PayloadDataFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.__restoreClick.name);

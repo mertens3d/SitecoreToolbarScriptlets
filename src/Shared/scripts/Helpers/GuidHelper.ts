@@ -11,7 +11,7 @@ export class GuidHelper extends HelperBase implements IGuidHelper {
   }
 
   EmptyGuid(): IGuid {
-    return this.ParseGuid('00000000-0000-0000-0000-000000000000');
+    return this.ParseGuid('00000000-0000-0000-0000-000000000000', true);
   }
 
   private newGuidString(): string {
@@ -30,7 +30,7 @@ export class GuidHelper extends HelperBase implements IGuidHelper {
   }
   NewGuid(): IGuid {
     //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-    var toReturn: IGuid = this.ParseGuid(this.newGuidString());
+    var toReturn: IGuid = this.ParseGuid(this.newGuidString(), true);
     return toReturn;
   }
 
@@ -50,14 +50,14 @@ export class GuidHelper extends HelperBase implements IGuidHelper {
     return str.replace(SharedConst.Const.Regex.CleanGuid, '');
   }
 
-  FormatAsBracedGuid(str: string): string {
+  FormatAsBracedGuid(str: string, throwOnError: boolean): string {
     //https://stackoverflow.com/questions/25131143/javascript-string-to-guid
 
     var GUID;
 
     try {
       var parts = [];
-      if (str.length !== 32) {
+      if (str.length !== 32 && throwOnError) {
         //str = this.EmptyGuidJustNumbers();
         this.Logger.ErrorAndThrow(this.FormatAsBracedGuid.name, 'Wrong count wanted: ' + 32 + " got: " + str.length);
       }
@@ -76,9 +76,9 @@ export class GuidHelper extends HelperBase implements IGuidHelper {
     return GUID;
   }
 
-  ParseGuid(val: string): IGuid {
+  ParseGuid(val: string, throwOnError: boolean): IGuid {
     let justNumbers = this.FormatJustNumbers(val);
-    let guidFormat = this.FormatAsBracedGuid(justNumbers);
+    let guidFormat = this.FormatAsBracedGuid(justNumbers, throwOnError);
 
     let toReturn: IGuid = {
       AsString: justNumbers,

@@ -1,4 +1,4 @@
 ﻿export enum CacheMode {
-    DoNotUseCach,
+    DoNotUseCache,
     OkToUseCache
 }

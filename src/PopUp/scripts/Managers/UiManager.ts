@@ -299,7 +299,7 @@ export class UiManager extends PopUpManagerBase {
 
   SelectChanged(): void {
     this.AllAgents.Logger.FuncStart(this.SelectChanged.name);
-    this.CurrentMenuState.SelectSnapshotId = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(this.__getSelectElem().value);
+    this.CurrentMenuState.SelectSnapshotId = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(this.__getSelectElem().value, true);
     //this.debug().Log('new index :' + this.__selectSnapshotId);
 
     //if (e.ctrlKey) {

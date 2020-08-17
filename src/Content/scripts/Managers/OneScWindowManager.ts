@@ -154,24 +154,33 @@ export class OneScWindowManager extends ContentManagerBase {
   }
   async SetCompactCss(targetDoc: IDataOneDoc) {
     //if (this.ScUiMan().GetCurrentPageType() === scWindowType.ContentEditor) {
-      await this.OneCEAgent.SetCompactCss();
+    await this.OneCEAgent.SetCompactCss();
     //}
-
   }
 
-  async RestoreWindowStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage) {
-    this.AllAgents.Logger.FuncStart(this.RestoreWindowStateToTargetDoc.name);
-    if (dataToRestore) {
-      if (dataToRestore.WindowType === scWindowType.ContentEditor) {
-        await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0]);
-      }
-      else if (dataToRestore.WindowType === scWindowType.Desktop) {
-        await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore);
+  async RestoreWindowStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.RestoreWindowStateToTargetDoc.name);
+
+      if (dataToRestore) {
+        if (dataToRestore.WindowType === scWindowType.ContentEditor || dataToRestore.WindowType === scWindowType.Desktop) {
+          if (dataToRestore.WindowType === scWindowType.ContentEditor) {
+            await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0]);
+          } else {
+            await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore);
+          }
+          resolve();
+        }
+        else {
+          this.AllAgents.Logger.ErrorAndThrow(this.RestoreWindowStateToTargetDoc.name, 'No match found for snap shot');
+        }
       }
       else {
-        this.AllAgents.Logger.ErrorAndThrow(this.RestoreWindowStateToTargetDoc.name, 'No match found for snap shot');
+        this.AllAgents.Logger.Log("no data to restore");
       }
+
+      reject();
       this.AllAgents.Logger.FuncEnd(this.RestoreWindowStateToTargetDoc.name);
-    }
+    });
   }
 }

@@ -93,7 +93,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
       await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.Id.AsString, snapShotAsString)
 
-      var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id, CacheMode.DoNotUseCach);
+      var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id, CacheMode.DoNotUseCache);
 
       if (foundInStorage) {
         result.MarkSuccessful();
@@ -148,7 +148,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      candidate.Id = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(candidate.Id.AsString);
+      candidate.Id = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(candidate.Id.AsString,true);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {
@@ -245,7 +245,7 @@ export class ContentAtticManager extends ContentManagerBase {
       this.AllAgents.Logger.FuncStart(this.GetAllSnapShotsMany.name, StaticHelpers.CacheModeAsString(cacheMode));
       var toReturn: ISnapShotsMany;
 
-      if (cacheMode === CacheMode.DoNotUseCach) {
+      if (cacheMode === CacheMode.DoNotUseCache) {
         this.CachedWindowStorage = null;
       }
 
@@ -318,7 +318,7 @@ export class ContentAtticManager extends ContentManagerBase {
               this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
               await window.localStorage.removeItem(storageMatch.RawData.key);
 
-              var stillExists: IDataOneWindowStorage = await this.GetFromStorageById(targetId, CacheMode.DoNotUseCach);
+              var stillExists: IDataOneWindowStorage = await this.GetFromStorageById(targetId, CacheMode.DoNotUseCache);
 
               if (stillExists) {
                 successful = false;

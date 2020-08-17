@@ -4,7 +4,8 @@ import { IOneGenericSetting } from "../../Interfaces/Agents/IOneGenericSetting";
 
 export class RollingLogIdDrone {
   private SettingsAgent: ISettingsAgent;
-
+  private maxKey: number = 5;
+  private minKey: number = 1;
   constructor(settingsAgent: ISettingsAgent) {
     this.SettingsAgent = settingsAgent;
   }
@@ -16,8 +17,8 @@ export class RollingLogIdDrone {
 
   //CurrentStorageLogKey: string = null;
 
-   GetNextLogId(): string {
-    let nextKeyInt: number = 0;
+  GetNextLogId(): string {
+    let nextKeyInt: number = this.minKey;
     let nextKeyToReturn: string;
 
     //if (!this.CurrentStorageLogKey) {
@@ -25,9 +26,9 @@ export class RollingLogIdDrone {
 
     var result: number = this.GetLastUsedLogId().ValueAsInt();
 
-    nextKeyInt = result + 1;
-    if (nextKeyInt > 10) {
-      nextKeyInt = 0;
+     nextKeyInt = result + 1;
+     if (nextKeyInt > this.maxKey) {
+       nextKeyInt = this.minKey;
     }
 
      this.SettingsAgent.SetByKey(SettingKey.LastUsedLogToStorageKey, nextKeyInt.toString())
