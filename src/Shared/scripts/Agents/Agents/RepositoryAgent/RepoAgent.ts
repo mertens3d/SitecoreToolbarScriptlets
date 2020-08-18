@@ -5,6 +5,7 @@ import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
 import { ContentConst } from "../../../Interfaces/InjectConst";
 
+
 export class RepoAgent implements IRepositoryAgent {
   private Logger: ILoggerAgent;
 

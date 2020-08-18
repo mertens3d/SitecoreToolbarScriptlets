@@ -164,29 +164,7 @@ export class ContentMessageManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncEnd(this.Init.name);
   }
 
-  NotifyCompleteOnContent(targetDoc: IDataOneDoc = null, Message: string): void {
-    if (!targetDoc) {
-      targetDoc = this.ScUiMan().TopLevelDoc();
-    }
 
-    let bodyTag = targetDoc.ContentDoc.getElementsByTagName('body')[0];//(treeGlyphTargetId);
-
-    var flagElem: HTMLElement = targetDoc.ContentDoc.createElement('div');
-    flagElem.innerHTML = '<div>' + Message + '</div>';
-    flagElem.style.position = 'absolute';
-    flagElem.style.top = '100px';
-    flagElem.style.left = '100px';
-    flagElem.style.backgroundColor = 'yellow';
-    flagElem.style.zIndex = '999';
-    flagElem.style.fontSize = '40px';
-
-    setTimeout(function () {
-      flagElem.remove();
-      window.close();
-    }, ContentConst.Const.Timeouts.WaitBeforeRemovingCompleteFlagOnContent);
-
-    bodyTag.appendChild(flagElem);
-  }
 
   async ReqMsgRouter(payload: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
@@ -299,7 +277,7 @@ export class ContentMessageManager extends ContentManagerBase {
       
 
         case MsgFlag.RespTaskSuccessful:
-          this.NotifyCompleteOnContent(null, payload.Data.ScreenMessage);
+          this.AllAgents.ToastAgent.NotifyCompleteOnContent(this.ScUiMan().TopLevelDoc(), payload.Data.ScreenMessage);
 
         case MsgFlag.ReqUpdateNickName:
           await this.AtticMan().UpdateNickname(payload.Data)

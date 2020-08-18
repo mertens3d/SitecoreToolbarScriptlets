@@ -28,20 +28,26 @@ export class OneDesktopManager extends ContentManagerBase {
   //  return toReturn;
   //}
 
-  async RestoreDesktopState(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage) {
-    this.AllAgents.Logger.FuncStart(this.RestoreDesktopState.name);;
+  async RestoreDesktopState(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.RestoreDesktopState.name);;
 
-    if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.RestoreDesktopState.name)) {
-      for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
-        this.AllAgents.Logger.Log('data idx: ' + idx + ':' + dataToRestore.AllCEAr.length);
+      if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.RestoreDesktopState.name)) {
+        for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
+          this.AllAgents.Logger.Log('data idx: ' + idx + ':' + dataToRestore.AllCEAr.length);
 
-        var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.ContentHub, this.AllAgents);
+          var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.ContentHub, this.AllAgents);
 
-        await desktopPromiser.RunOneChain(targetDoc, dataToRestore.AllCEAr[idx]);
+          await desktopPromiser.RunOneChain(targetDoc, dataToRestore.AllCEAr[idx])
+            .then(() => resolve())
+            .catch((err) => reject(err));
+        }
+      } else {
+        reject(this.RestoreDesktopState.name + ' bad data');
       }
-    }
 
-    this.AllAgents.Logger.FuncEnd(this.RestoreDesktopState.name);
+      this.AllAgents.Logger.FuncEnd(this.RestoreDesktopState.name);
+    });
   }
 
   async RestoreDataToOneIframeWorker(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: OneCEAgent) {

@@ -17,22 +17,26 @@
         "AutoBuild/final/browser-polyfill.js",
         "AutoBuild/final/content.min.js"
       ],
-      
+
       "all_frames": false
 
     },
     {
-      "matches": [ "http://*/sitecore/shell/default.aspx", "https://*/sitecore/shell/default.aspx" ],
+      "matches": [ "http://*/sitecore/shell/default.aspx/*", "https://*/sitecore/shell/default.aspx/*" ],
       "all_frames": true,
       "css": [ "AutoBuild/final/content.min.css" ]
     }
+
   ],
+
+
+  "web_accessible_resources": [ "AutoBuild/final/content.min.css" ],
 
   "permissions": [
     "activeTab",
     "idle",
-    "storage",
-    "chrome-extension"
+    "storage"
+    //"chrome-extension"
   ],
   "browser_action": {
     "default_icon": "icons/border-48.png",

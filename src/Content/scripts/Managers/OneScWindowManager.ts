@@ -165,10 +165,15 @@ export class OneScWindowManager extends ContentManagerBase {
       if (dataToRestore) {
         if (dataToRestore.WindowType === scWindowType.ContentEditor || dataToRestore.WindowType === scWindowType.Desktop) {
           if (dataToRestore.WindowType === scWindowType.ContentEditor) {
-            await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0]);
+            await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0])
+              .then(() => this.AllAgents.ToastAgent.NotifyCompleteOnContent(targetDoc, 'Restore Completed'));
+
           } else {
-            await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore);
+            await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore)
+              .then(() => this.AllAgents.ToastAgent.NotifyCompleteOnContent(targetDoc, 'Restore Completed'));
+            
           }
+
           resolve();
         }
         else {

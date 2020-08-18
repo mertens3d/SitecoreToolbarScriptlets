@@ -1,3 +1,3 @@
 ﻿export enum QueryStrKey {
-  hsRestoreSnapshot
+  hsTargetSs
 }

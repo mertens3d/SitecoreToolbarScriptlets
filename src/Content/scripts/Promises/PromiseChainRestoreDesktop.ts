@@ -103,42 +103,44 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     });
   }
 
-  
+  async RunOneChain(targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.RunOneChain.name);
 
-  async RunOneChain(targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState) {
-    this.AllAgents.Logger.FuncStart(this.RunOneChain.name);
+      if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore], this.RunOneChain.name)) {
+        var dataBucket: IDataBucketRestoreDesktop = {
+          targetDoc: targetDoc,
+          IFramesbefore: allIframeDataAtBeginning,
+          oneTreeState: dataToRestore,
+          LastChainLinkSuccessful: false,
+        }
+        //guaranteed to be on the correct page
 
-    if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore], this.RunOneChain.name)) {
-      var dataBucket: IDataBucketRestoreDesktop = {
-        targetDoc: targetDoc,
-        IFramesbefore: allIframeDataAtBeginning,
-        oneTreeState: dataToRestore,
-        LastChainLinkSuccessful: false,
+        var allIframeDataAtBeginning: IDataOneIframe[];
+        var targetCeAgent: OneCEAgent;
+
+        await this.AllAgents.HelperAgent.PromisesBasic.GetAllLiveIframeData(targetDoc)
+          .then((result) => allIframeDataAtBeginning = result)
+          .then(() => this.__waitForAndClickRedStartButton(dataBucket.targetDoc))
+          .then(() => this.__waitForAndThenClickCEFromMenu(dataBucket.targetDoc))
+
+          .then(() => this.AllAgents.HelperAgent.PromisesBasic.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
+
+          .then((result) => {
+            targetCeAgent = new OneCEAgent(result.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
+            this.__waitForIframeReady(result);
+          })
+          .then(() => this.__restoreDataToOneIframe(dataToRestore, targetCeAgent))
+          .then(() => resolve())
+          .catch(ex => {
+            this.AllAgents.Logger.ErrorAndThrow(this.RunOneChain.name, ex);
+          });
       }
-      //this.debug().PromiseBucketDebug(dataBucket, this.RunOneChain.name);
-
-      //guaranteed to be on the correct page
-
-      var allIframeDataAtBeginning: IDataOneIframe[];
-      var targetCeAgent: OneCEAgent;
-
-      await this.AllAgents.HelperAgent.PromisesBasic.GetAllLiveIframeData(targetDoc)
-        .then((result) => allIframeDataAtBeginning = result)
-        .then(() => this.__waitForAndClickRedStartButton(dataBucket.targetDoc))
-        .then(() => this.__waitForAndThenClickCEFromMenu(dataBucket.targetDoc))
-
-        .then(() => this.AllAgents.HelperAgent.PromisesBasic.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
-
-        .then((result) => {
-          targetCeAgent = new OneCEAgent(result.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
-          this.__waitForIframeReady(result);
-        })
-        .then(() => this.__restoreDataToOneIframe(dataToRestore, targetCeAgent))
-        .catch(ex => {
-          this.AllAgents.Logger.ErrorAndThrow(this.RunOneChain.name, ex);
-        });
+      else {
+        reject(this.RunOneChain.name + ' missing data');
+      }
 
       this.AllAgents.Logger.FuncEnd(this.RunOneChain.name);
-    }
+    });
   }
 }

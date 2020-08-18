@@ -57,7 +57,6 @@
     <Content Include="src\BrowserBookmarkCode\Debug.txt" />
     <Content Include="src\BrowserBookmarkCode\Debug.txt.backup.txt" />
     <TypeScriptCompile Include="src\Content\scripts\Classes\ContentFactories.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Agents\LoggerContent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Classes\VarDebug.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
@@ -67,6 +66,8 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersInternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\AllCommands.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\BrowserManager.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\QueryStringAgent\QueryStrAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\ToastAgent\ToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\ConstAllSettings.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\Handlers.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PageManagerPopUp.ts" />
@@ -81,7 +82,9 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IOneTreeDrone.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IQueryStrAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IRepositoryAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IAllSettings.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataPayloadSnapShot.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IMenuStateForMsg.ts" />
@@ -149,6 +152,7 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpManagerBase.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesManager.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.debug.ts" />
+    <None Include="src\Content\css\_toast.scss" />
     <None Include="src\Content\css\_desktopArea.scss" />
     <None Include="src\Content\css\_scStartbar.scss" />
     <None Include="src\Content\css\_compactCe.scss" />
@@ -250,6 +254,7 @@
     <Folder Include="Browser Addons\Firefox\communication\" />
     <Folder Include="src\Browser-PolyFill\" />
     <Folder Include="src\Shared\scripts\Agents\Agents\HelperAgent\" />
+    <Folder Include="src\Shared\scripts\Agents\Agents\RestoreAgent\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneCEAgent.ts" />

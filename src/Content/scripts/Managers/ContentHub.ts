@@ -83,7 +83,25 @@ export class ContentHub {
 
     this.OneWindowMan.Init();
 
+    this.InjectCss();
+
     this.AllAgents.Logger.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);
+  }
+
+  InjectCss(): void {
+    let tabs = browser.tabs;
+    //let targetTab: browser.tabs.Tab = tabs[0];
+
+    //let targetTab = this.man
+    //browser.tabs.insertCSS( {
+    //  file: 'AutoBuild/final/content.min.css'
+    //});
+
+    const style = document.createElement('link');
+    style.type = 'text/css';
+    style.href = browser.extension.getURL('AutoBuild/final/content.min.css');
+    style.rel = "stylesheet";
+    document.getElementsByTagName("head")[0].appendChild(style);
   }
 
   InitFromQueryStr(): Promise<void> {
@@ -91,8 +109,8 @@ export class ContentHub {
       this.AllAgents.Logger.FuncStart(this.InitFromQueryStr.name);
 
       try {
-        if (this.AllAgents.QueryStrAgent.HasKey(QueryStrKey.hsRestoreSnapshot)) {
-          let qsValue: string = this.AllAgents.QueryStrAgent.QsValueByKey(QueryStrKey.hsRestoreSnapshot);
+        if (this.AllAgents.QueryStrAgent.HasKey(QueryStrKey.hsTargetSs)) {
+          let qsValue: string = this.AllAgents.QueryStrAgent.QsValueByKey(QueryStrKey.hsTargetSs);
           let targetGuid: IGuid = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(qsValue, false);
 
           if (targetGuid && targetGuid !== this.AllAgents.HelperAgent.GuidHelper.EmptyGuid()) {
@@ -109,7 +127,7 @@ export class ContentHub {
             if (targetDoc) {
               await this.AllAgents.HelperAgent.PromisesBasic.WaitForPageReadyNative(targetDoc);
 
-                await self.OneWindowMan.RestoreWindowStateToTargetDoc(targetDoc, dataOneWindowStorage)
+              await self.OneWindowMan.RestoreWindowStateToTargetDoc(targetDoc, dataOneWindowStorage)
                 .then(() => resolve())
                 .catch((err) => reject(err));
             }
