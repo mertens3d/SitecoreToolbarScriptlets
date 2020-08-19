@@ -83,6 +83,7 @@ export interface IPopUpConst {
       SettingNotUsed: string,
       AutoSnapshotBeforeWindowChange: string,
       SettingDebugKeepDialogOpen: string,
+      SettingUseCompactCss: string,
       SettingAutoSaveInterval: string,
       SettingAutoSaveMaxCount: string,
       TaDebug: string,

@@ -1,0 +1,27 @@
+﻿@import "../vars";
+
+body {
+  &.hs-compact {
+    .scStartbar {
+      height: $desktopBottomBarHeight;
+
+      .scStartButton {
+        height: $desktopBottomBarHeight;
+        background-size: cover;
+        width: $desktopBottomBarHeight;
+        height: 38px;
+      }
+
+      #SearchBox {
+        padding: 0px 12px;
+        min-height: 20px;
+      }
+
+      table#StartbarTray {
+        position: relative;
+        top: -10px;
+        border: none;
+      }
+    }
+  }
+}

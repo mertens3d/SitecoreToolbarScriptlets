@@ -14,6 +14,7 @@
     Defaults: {
       LogToConsole: boolean,
       LogToStorage: boolean,
+      UseCompactCss: boolean,
     }
   },
   Regex: {

@@ -5,7 +5,7 @@ import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/Logg
 import { RepoAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent';
 import { HelperAgent } from '../../Shared/scripts/Helpers/Helpers';
 import { AllAgents } from '../../Shared/scripts/Agents/Agents/AllAgents';
-import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone';
+import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { IOneGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
 import { ConstAllSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings';
 import { QueryStrAgent } from '../../Shared/scripts/Agents/Agents/QueryStringAgent/QueryStrAgent';

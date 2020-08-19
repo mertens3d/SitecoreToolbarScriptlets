@@ -23,5 +23,5 @@
   RespTaskFailed,
   RespTaskSuccessful,
   RespTest,
-  ReqCompactCE,
+  ReqToggleCompactCss,
 }

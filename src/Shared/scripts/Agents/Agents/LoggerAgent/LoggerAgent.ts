@@ -17,7 +17,7 @@ import { IDataPayloadSnapShot } from "../../../Interfaces/IDataPayloadSnapShot";
 import { IDataOneIframe } from "../../../Interfaces/IDataOneIframe";
 import { ICurrStateContent } from "../../../Interfaces/ICurrState";
 import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { RollingLogIdDrone } from "../../Drones/RollingLogIdDrone";
+import { RollingLogIdDrone } from "../../Drones/RollingLogIdDrone/RollingLogIdDrone";
 
 export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;
@@ -39,7 +39,6 @@ export class LoggerAgent implements ILoggerAgent {
     this.LogToStorageEnabled = SharedConst.Const.Settings.Defaults.LogToStorage;
     this.LogHasBeenInit = false;
 
-
     var dateobj = new Date();
     function pad(n) { return n < 10 ? "0" + n : n; }
     var result = pad(dateobj.getDate()) + "/" + pad(dateobj.getMonth() + 1) + "/" + dateobj.getFullYear() + " " + pad(dateobj.getHours()) + ":" + pad(dateobj.getMinutes());
@@ -50,17 +49,14 @@ export class LoggerAgent implements ILoggerAgent {
   }
 
   SetLogToStorageKey(logToStorageIndex: string) {
-
     //console.log(this.SetLogToStorageKey.name + ' ' + currentStorageLogKey);
     this.CurrentStorageLogKey = this.LogToStoragePrefix + logToStorageIndex;
-
   }
 
   async Init(val: boolean) {
     this.LogToConsoleEnabled = val;
     this.LogHasBeenInit = true;
 
-   
     //console.log('Logger Enabled:' + this.LogToConsoleEnabled);
 
     if (this.LogToConsoleEnabled) {
@@ -73,10 +69,7 @@ export class LoggerAgent implements ILoggerAgent {
       }
     }
 
-
     //if (this.LogTabId < 0) {
-
-
     //  browser.windows.create({
     //    'url': browser.runtime.getURL("popup/PopUpLog.html"), 'type': 'popup'
     //  })
@@ -85,33 +78,28 @@ export class LoggerAgent implements ILoggerAgent {
     //})
     //    .catch((err) => console.log(err));
 
-        
+    //console.log('Creating new log tab');
+    //await browser.tabs.create({
+    //  //active: false, url: 'javascript:document.write("<h1>Init</h1>")'
+    //  active: false, url: browser.runtime.getURL("popup/PopUpLog.html")
+    //})
+    //  .then((rawNewTab: browser.tabs.Tab) => {
+    //    if (rawNewTab) {
+    //      console.log(rawNewTab);
+    //      console.log(rawNewTab.id);
+    //      this.LogTab = rawNewTab;
+    //      this.LogTabId = rawNewTab.id;
 
+    //      browser.tabs.executeScript(this.LogTabId, {
+    //        code: 'document.write("<h5>xxxxxxx</h5>")'
+    //      })
+    //        .catch((err) => console.log(err));
 
-
-
-      //console.log('Creating new log tab');
-      //await browser.tabs.create({
-      //  //active: false, url: 'javascript:document.write("<h1>Init</h1>")'
-      //  active: false, url: browser.runtime.getURL("popup/PopUpLog.html")
-      //})
-      //  .then((rawNewTab: browser.tabs.Tab) => {
-      //    if (rawNewTab) {
-      //      console.log(rawNewTab);
-      //      console.log(rawNewTab.id);
-      //      this.LogTab = rawNewTab;
-      //      this.LogTabId = rawNewTab.id;
-
-      //      browser.tabs.executeScript(this.LogTabId, {
-      //        code: 'document.write("<h5>xxxxxxx</h5>")'
-      //      })
-      //        .catch((err) => console.log(err));
-
-      //    } else {
-      //      console.log('New tab is null');
-      //    }
-      //  })
-      //  .catch((err) => console.log(err));
+    //    } else {
+    //      console.log('New tab is null');
+    //    }
+    //  })
+    //  .catch((err) => console.log(err));
     //}
 
     //if (this.LogTabId < 0) {
@@ -439,7 +427,8 @@ export class LoggerAgent implements ILoggerAgent {
   //NotNullOrUndefined(subjectAnyOrAr: any | any[], label: string = '', iterationCheck: number = null): boolean {
   FuncStart(textOrFunc: string, optionalValue?: number): void;
   FuncStart(textOrFunc: string, optionalValue?: string): void;
-  FuncStart(textOrFunc: string, optionalValue: number | string): void {
+  FuncStart(textOrFunc: string, optionalValue?: boolean): void;
+  FuncStart(textOrFunc: string, optionalValue: number | string | boolean): void {
     textOrFunc = 's' + ' ' + this.__callDepth + ') ' + textOrFunc;
     if (!optionalValue) {
       optionalValue = '';
@@ -479,17 +468,26 @@ export class LoggerAgent implements ILoggerAgent {
 
     this.Log(text, optionalValue, true);
   }
+
   ErrorAndThrow(container: string, text: any): void {
+    this.ErrorAndContinue(container, text);
+    throw container + " " + text
+  }
+
+  ErrorAndContinue(container: string, text: any): void {
     if (!container) {
       container = 'unknown';
     }
+
     if (!text) {
       text = 'unknown';
     }
+
     this.ErrorStack.push({
       ContainerFunc: container,
       ErrorString: text
     });
+
     this.Log('');
     this.Log('\t\t** ERROR ** ' + container);
     this.Log('');
@@ -497,9 +495,8 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log('');
     this.Log('\t\t** ERROR ** ' + container);
     this.Log('');
-
-    throw container + " " + text
   }
+
   NotNullCheck(title: string, value: any): void {
     if (typeof value === 'undefined') {
       this.LogVal(title, 'Is Undefined');

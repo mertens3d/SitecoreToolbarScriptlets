@@ -1,17 +1,17 @@
 ﻿@import "vars";
 
 fieldset {
-  &.top{
-
-  background-color: $scBackgroundColor;
-  border: none;
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  /*margin-top: 5px;*/
-  padding: 0;
-
+  &.top {
+    background-color: $scBackgroundColor;
+    border: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    /*margin-top: 5px;*/
+    padding: 0;
+    width: $AccordianWidth;
   }
+
   > legend {
     &.section {
       /*background-color: green;*/
@@ -68,4 +68,5 @@ fieldset {
   margin-top: 0px;
   margin-bottom: 15px;
   padding-top: 5px;
+  width: $AccordianWidth;
 }

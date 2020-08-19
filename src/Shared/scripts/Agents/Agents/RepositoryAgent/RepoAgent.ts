@@ -106,13 +106,6 @@ export class RepoAgent implements IRepositoryAgent {
 
   WriteGenericSettings(settingsToWrite: IOneGenericSettingForStorage[]): void {
     this.Logger.FuncStart(this.WriteGenericSettings.name);
-    this.Logger.LogAsJsonPretty('settings', settingsToWrite);
-    this.Logger.LogAsJsonPretty('key', PopConst.Const.Storage.KeyGenericSettings);
-
-    //let storageObj: browser.storage.StorageObject = {
-    //  [PopConst.Const.Storage.KeyGenericSettings]: JSON.stringify(settingsToWrite)
-    //}
-    //browser.storage.local.set(storageObj);
 
     window.localStorage.setItem(PopConst.Const.Storage.KeyGenericSettings, JSON.stringify(settingsToWrite));
 

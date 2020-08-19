@@ -27,6 +27,9 @@ import { UiButtonStateManager } from './UiButtonStateManager';
 import { IMenuState } from '../../../Shared/scripts/Interfaces/IMenuState';
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 import { IOneGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
+import { AccordianDrone } from '../../../Shared/scripts/Agents/Drones/AccordianDrone/AccordianDrone';
+import { AccordianManager } from '../../../Shared/scripts/Agents/Drones/AccordianDrone/AccordianManager';
+import { IAccordianManager } from '../../../Shared/scripts/Interfaces/Agents/IAccordianManager';
 
 export class UiManager extends PopUpManagerBase {
   TabId: string;
@@ -44,12 +47,16 @@ export class UiManager extends PopUpManagerBase {
   }
   MsgStatusDiv: HTMLDivElement;
 
+  AccordianManager: IAccordianManager;
+
   constructor(popHub: PopUpHub, allAgents: IAllAgents) {
     super(popHub, allAgents);
 
     this.AllAgents.Logger.FuncStart(UiManager.name);
 
     this.ButtonStateManager = new UiButtonStateManager(this.PopHub, this.AllAgents);
+
+    this.AccordianManager = new AccordianManager(this.AllAgents.Logger, this.AllAgents.SettingsAgent);
     this.AllAgents.Logger.FuncEnd(UiManager.name);
   }
 
@@ -224,28 +231,9 @@ export class UiManager extends PopUpManagerBase {
   //  }
   //}
 
-  SetaccordionClass(targetElem: HTMLElement, isCollapsed: boolean) {
-    if (!isCollapsed) {
-      targetElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
-    } else {
-      targetElem.classList.add(PopConst.Const.ClassNames.HS.Collapsed);
-    }
-  }
+  
 
-  GetaccordionContentElem(sib: HTMLElement): HTMLElement {
-    //this.debug().FuncStart(this.GetaccordionContentElem.name);
-    var toReturn: HTMLElement;
-    if (sib) {
-      var siblings = sib.parentElement.getElementsByClassName('accordion-content');
-
-      if (siblings) {
-        var toReturn = <HTMLElement>siblings[0];
-      }
-    }
-
-    //this.debug().FuncEnd(this.GetaccordionContentElem.name);
-    return toReturn;
-  }
+  
 
   DrawStorageResponse(data: PayloadDataFromContent) {
     this.AllAgents.Logger.FuncStart('DrawStorage');
@@ -270,17 +258,6 @@ export class UiManager extends PopUpManagerBase {
       this.AllAgents.Logger.Log('------------');
     }
     this.AllAgents.Logger.FuncEnd('DrawStorageRaw');
-  }
-
-  async RestoreaccordionState(oneSetting: IOneGenericSetting, foundElem: HTMLElement): Promise<void> {
-    this.AllAgents.Logger.FuncStart(this.RestoreaccordionState.name);
-    var contentSib = this.GetaccordionContentElem(foundElem);
-    if (contentSib) {
-      this.SetaccordionClass(contentSib, <boolean>oneSetting.ValueAsObj)
-    } else {
-      this.AllAgents.Logger.ErrorAndThrow(this.RestoreaccordionState.name, 'Sibling not found');
-    }
-    this.AllAgents.Logger.FuncEnd(this.RestoreaccordionState.name);
   }
 
   async UpdateAtticFromUi(): Promise<any> {
@@ -369,7 +346,7 @@ export class UiManager extends PopUpManagerBase {
             (<HTMLInputElement>foundElem).checked = valueToDisplay;
           }
           if (oneSetting.DataType === SettingType.Accordion) {
-            this.RestoreaccordionState(oneSetting, foundElem);
+            this.AccordianManager.RestoreAccordionState(oneSetting);
           }
         } else {
           this.AllAgents.Logger.LogAsJsonPretty('oneSetting', oneSetting);

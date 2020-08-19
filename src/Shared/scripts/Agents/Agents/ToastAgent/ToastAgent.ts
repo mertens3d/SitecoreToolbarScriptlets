@@ -11,9 +11,11 @@ export class ToastAgent implements IToastAgent {
     this.Logger = loggerAgent;
   }
 
-  NotifyCompleteOnContent(targetDoc: IDataOneDoc = null, Message: string): Promise<void> {
+  Notify(targetDoc: IDataOneDoc = null, Message: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.NotifyCompleteOnContent.name);
+      this.Logger.FuncStart(this.Notify.name);
+
+      this.Logger.LogVal("Message", Message);
 
       if (targetDoc) {
         let bodyTag = targetDoc.ContentDoc.getElementsByTagName('body')[0];//(treeGlyphTargetId);
@@ -41,7 +43,7 @@ export class ToastAgent implements IToastAgent {
         bodyTag.appendChild(toastContainer);
       }
 
-      this.Logger.FuncEnd(this.NotifyCompleteOnContent.name);
+      this.Logger.FuncEnd(this.Notify.name);
     });
   }
   CreateSliderDiv(targetDoc: IDataOneDoc, Message: string): HTMLElement {

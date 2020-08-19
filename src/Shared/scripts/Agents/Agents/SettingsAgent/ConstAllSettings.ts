@@ -36,7 +36,25 @@ export class ConstAllSettings {
       SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Log to Console',
     ),
-    //new OneGenericSetting(
+    new OneGenericSetting(
+      SettingKey.UseCompactCss,
+      SettingType.BoolCheckBox,
+      false,
+      PopConst.Const.Selector.HS.SettingUseCompactCss,
+      SharedConst.Const.Settings.Defaults.UseCompactCss,
+      SettingFlavor.ContentOnly,
+      'Use Compact CSS',
+    ),
+    new OneGenericSetting(
+      SettingKey.LogToConsole,
+      SettingType.BoolCheckBox,
+      true,
+      PopConst.Const.Selector.HS.LogToConsole,
+      SharedConst.Const.Settings.Defaults.LogToConsole,
+      SettingFlavor.ContentAndPopUpStoredInPopUp,
+      'Log to Console',
+    ),
+        //new OneGenericSetting(
     //  SettingKey.AutoSaveEnabled,
     //  SettingType.BoolCheckBox,
     //  null,
@@ -100,7 +118,7 @@ export class ConstAllSettings {
       'Hind&bull;Site',
     ),
     new OneGenericSetting(
-      SettingKey.LgndHindSite,
+      SettingKey.LgndInSite,
       SettingType.Accordion,
       null,
       PopConst.Const.Selector.Legend.LgndInSite,

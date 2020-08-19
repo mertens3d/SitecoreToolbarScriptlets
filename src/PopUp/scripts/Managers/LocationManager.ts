@@ -8,7 +8,7 @@ import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
-import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone';
+import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 
 export class LocationManager extends PopUpManagerBase {
   constructor(hub: PopUpHub, allAgents: IAllAgents) {

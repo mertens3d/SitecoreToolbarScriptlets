@@ -252,8 +252,8 @@ export class ContentMessageManager extends ContentManagerBase {
             .catch((err) => promResult.MarkFailed(err));
           break;
 
-        case MsgFlag.ReqCompactCE:
-          await this.SetCompactCss(payload.Data)
+        case MsgFlag.ReqToggleCompactCss:
+          await this.ToggleCompactCss(payload.Data)
             .then(() => promResult.MarkSuccessful())
             .catch((err) => promResult.MarkFailed(err));
           break;
@@ -277,7 +277,7 @@ export class ContentMessageManager extends ContentManagerBase {
       
 
         case MsgFlag.RespTaskSuccessful:
-          this.AllAgents.ToastAgent.NotifyCompleteOnContent(this.ScUiMan().TopLevelDoc(), payload.Data.ScreenMessage);
+          this.AllAgents.ToastAgent.Notify(this.ScUiMan().TopLevelDoc(), payload.Data.ScreenMessage);
 
         case MsgFlag.ReqUpdateNickName:
           await this.AtticMan().UpdateNickname(payload.Data)
@@ -310,20 +310,20 @@ export class ContentMessageManager extends ContentManagerBase {
     });
   }
 
-  private SetCompactCss(Data: PayloadDataFromPopUp): Promise<void> {
+  private ToggleCompactCss(Data: PayloadDataFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.SetCompactCss.name);
+      this.AllAgents.Logger.FuncStart(this.ToggleCompactCss.name);
 
       var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();
       if (targetDoc) {
         var self = this;
         await this.OneScWinMan().SetCompactCss(targetDoc)
           .then(() => resolve())
-          .catch((err) => { this.AllAgents.Logger.ErrorAndThrow(this.SetCompactCss.name, err) })
+          .catch((err) => { this.AllAgents.Logger.ErrorAndThrow(this.ToggleCompactCss.name, err) })
       }
 
 
-      this.AllAgents.Logger.FuncEnd(this.SetCompactCss.name);
+      this.AllAgents.Logger.FuncEnd(this.ToggleCompactCss.name);
     });
 
   }

@@ -1,4 +1,4 @@
-﻿import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone';
+﻿import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
@@ -120,6 +120,7 @@ export class OneCEAgent {
 
     this.Logger.FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
   }
+
   SetCompactCss() {
     this.Logger.FuncStart(this.SetCompactCss.name, this.ContextDoc.DocId.AsShort);
 
@@ -127,6 +128,7 @@ export class OneCEAgent {
 
     this.Logger.FuncStart(this.SetCompactCss.name, this.ContextDoc.DocId.AsShort);
   }
+
   async RestoreCEStateAsync(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
       this.Logger.FuncStart(this.RestoreCEStateAsync.name, this.ContextDoc.DocId.AsShort);

@@ -3,4 +3,5 @@
   PopUp,
   ContentAndPopUpStoredInPopUp,
   ContentAndPopUpStoredInEach,
+  ContentOnly
 }

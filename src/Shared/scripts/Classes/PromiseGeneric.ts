@@ -1,4 +1,4 @@
-﻿import { IterationDrone } from '../Agents/Drones/IterationDrone';
+﻿import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
 import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
 import { PromiseResult } from "./PromiseResult";

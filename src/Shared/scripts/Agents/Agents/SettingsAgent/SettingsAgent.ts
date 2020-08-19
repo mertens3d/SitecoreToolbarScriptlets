@@ -80,7 +80,7 @@ export class SettingsAgent implements ISettingsAgent {
         matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
         this.Logger.LogVal('after Update', matchingSetting.ValueAsObj);
       } else {
-        this.Logger.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+        this.Logger.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
       }
     }
     this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);
@@ -97,10 +97,10 @@ export class SettingsAgent implements ISettingsAgent {
 
     await this.ReadGenericSettings()
       .then((result) => {
-        this.Logger.LogAsJsonPretty('result values from storage', result);
+        //this.Logger.LogAsJsonPretty('result values from storage', result);
         foundSettings = result
       })
-      .then(() => this.Logger.LogAsJsonPretty('settings from storage', foundSettings))
+      //.then(() => this.Logger.LogAsJsonPretty('settings from storage', foundSettings))
       .then(() => {
         if (foundSettings) {
           this.UpdateSettingValuesFromStorage(foundSettings);
@@ -120,12 +120,16 @@ export class SettingsAgent implements ISettingsAgent {
     }
     return toReturn;
   }
+
   GetOnlyContentPrefs(): IOneGenericSetting[] {
     let toReturn: IOneGenericSetting[] = [];
 
     for (var idx = 0; idx < this.SettingsAr.length; idx++) {
       let candidate: IOneGenericSetting = this.SettingsAr[idx];
-      if (candidate.SettingFlavor === SettingFlavor.ContentAndPopUpStoredInPopUp) {
+      if ((candidate.SettingFlavor === SettingFlavor.ContentAndPopUpStoredInPopUp)
+        ||
+        (candidate.SettingFlavor === SettingFlavor.ContentOnly))
+      {
         toReturn.push(candidate);
       }
     }
@@ -141,15 +145,18 @@ export class SettingsAgent implements ISettingsAgent {
   GetByKey(settingKey: SettingKey): IOneGenericSetting {
     this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
 
-    var toReturn: IOneGenericSetting;
+    var toReturn: IOneGenericSetting = null;
 
     for (var idx = 0; idx < this.SettingsAr.length; idx++) {
       if (this.SettingsAr[idx].SettingKey === settingKey) {
-        this.Logger.Log('Setting found');
         toReturn = this.SettingsAr[idx];
-        this.Logger.LogAsJsonPretty('ValueAsObj', toReturn.ValueAsObj);
+        this.Logger.LogAsJsonPretty('found. ValueAsObj', toReturn.ValueAsObj);
         break;
       }
+    }
+
+    if (!toReturn) {
+      this.Logger.Log('Setting not found')
     }
     this.Logger.FuncEnd(this.GetByKey.name);
     return toReturn;
@@ -173,31 +180,42 @@ export class SettingsAgent implements ISettingsAgent {
     let foundSetting = this.GetByKey(settingKey);
 
     if (foundSetting) {
-      if (foundSetting.DefaultValue !== value) {
-        foundSetting.ValueAsObj = value;
-      } else {
-        foundSetting.ValueAsObj = null;
-      }
 
-      let settingValues: IOneGenericSettingForStorage[] = [];
+      foundSetting.ValueAsObj = value;
+      //if (foundSetting.DefaultValue !== value) {
+      //  foundSetting.ValueAsObj = value;
+      //} else {
+      //  foundSetting.ValueAsObj = null;
+      //}
 
-      for (var udx = 0; udx < this.SettingsAr.length; udx++) {
-        if (this.SettingsAr[udx].ValueAsObj !== null) {
-          settingValues.push(
-            {
-              SettingKey: this.SettingsAr[udx].SettingKey,
-              ValueAsObj: this.SettingsAr[udx].ValueAsObj,
-              SettingKeyFriendly: StaticHelpers.SettingKeyAsString(this.SettingsAr[udx].SettingKey)
-            });
-        }
-      }
-
-      this.RepoAgent.WriteGenericSettings(settingValues);
+      this.WriteAllSettingValuesToStorage();
+     
     } else {
       this.Logger.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
     }
     this.Logger.FuncEnd(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
   }
+
+  private WriteAllSettingValuesToStorage() {
+    this.Logger.FuncStart(this.WriteAllSettingValuesToStorage.name);
+    let settingValues: IOneGenericSettingForStorage[] = [];
+
+    for (var udx = 0; udx < this.SettingsAr.length; udx++) {
+      if (this.SettingsAr[udx].ValueAsObj !== null) {
+        settingValues.push(
+          {
+            SettingKey: this.SettingsAr[udx].SettingKey,
+            ValueAsObj: this.SettingsAr[udx].ValueAsObj,
+            SettingKeyFriendly: StaticHelpers.SettingKeyAsString(this.SettingsAr[udx].SettingKey)
+          });
+      }
+    }
+
+    this.RepoAgent.WriteGenericSettings(settingValues);
+    this.Logger.FuncEnd(this.WriteAllSettingValuesToStorage.name);
+  }
+
+
   ValueAsBool(setting: IOneGenericSetting): boolean {
     let toReturn: boolean = false;
     if (setting) {

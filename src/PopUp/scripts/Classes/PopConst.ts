@@ -79,12 +79,14 @@ export class PopConst {
         LogToConsole: '[id=id-settings-show-log-data]',
         iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
         PrefAutoLogin: '[id=id-settings-auto-login]',
+
         SettingNotUsed: '[id=id-settings-not-used]',
         AutoSnapshotBeforeWindowChange: '[id=id-settings-auto-snapshot-on-window-change]',
         SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',
         SettingAutoSaveMaxCount: '[id=id-settings-auto-save-max-count]',
 
         SettingDebugKeepDialogOpen: '[id=id-settings-debug-keep-dialog-open]',
+        SettingUseCompactCss: '[id=id-settings-use-compact]',
 
         BuildStamp: '[id=build-stamp]',
         DivMsgStatus: '[id=msg-status]',

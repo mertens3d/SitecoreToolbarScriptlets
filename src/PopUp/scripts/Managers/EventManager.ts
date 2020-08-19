@@ -12,6 +12,7 @@ import { IEventHandlerData } from "../../../Shared/scripts/Interfaces/IEventHand
 import { PopConst } from '../Classes/PopConst';
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { IOneGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
+import { AccordianDrone } from '../../../Shared/scripts/Agents/Drones/AccordianDrone/AccordianDrone';
 
 export class EventManager extends PopUpManagerBase {
   Handlers: Handlers
@@ -58,11 +59,7 @@ export class EventManager extends PopUpManagerBase {
             )
           }
           else if (oneSetting.DataType === SettingType.Accordion) {
-            let self = this;
-            uiElem.addEventListener('click', (evt) => {
-              self.Handlers.Internal.Toggleaccordion(evt, this.PopHub, oneSetting.SettingKey);
-            }
-            )
+            this.UiMan().AccordianManager.AddAccordianDrone(this.PopHub, oneSetting, uiElem);
           }
         } else {
           this.AllAgents.Logger.ErrorAndThrow(this.WireAllGenericSettings.name, 'ui generic element not found');
@@ -70,6 +67,7 @@ export class EventManager extends PopUpManagerBase {
       }
     }
   }
+
 
   private __wireMenuButtons() {
     this.AllAgents.Logger.FuncStart(this.__wireMenuButtons.name);

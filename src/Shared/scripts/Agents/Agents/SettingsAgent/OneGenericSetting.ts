@@ -21,14 +21,30 @@ export class OneGenericSetting implements IOneGenericSetting {
     this.HasUi = hasUi;
   }
   HasUi: boolean;
+
   ValueAsInt(): number {
     var toReturn: number = parseInt(this.ValueAsObj.toString());
     console.log('ValueAsObj');
     console.log(this.ValueAsObj);
-    console.log('toReturn : ' + toReturn );
+    console.log('toReturn : ' + toReturn);
     return toReturn;
   }
 
+  ValueAsBool(): boolean {
+    let toReturn: boolean = this.DefaultValue;
+
+    if (this.ValueAsObj !== undefined && this.ValueAsObj !== null) {
+      toReturn = <boolean>this.ValueAsObj;
+    } else {
+      toReturn = this.DefaultValue;
+    }
+
+    console.log('ValueAsObj');
+    console.log(this.ValueAsObj);
+    console.log('toReturn : ' + toReturn);
+
+    return toReturn;
+  }
   //  i am passing the setting in the message so the method doesn't come along
   //i either need a helper method or need to reconstruct the instances on the content side
 }

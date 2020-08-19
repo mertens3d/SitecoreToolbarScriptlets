@@ -35,24 +35,6 @@ export class HandlersInternal extends CommonEvents {
       .then(() => popHub.UiMan.OnSuccessfullCommand());
     //.catch((ex) => popHub.Log.Error(popHub.EventMan.Handlers.External.SetScMode.name, ex));
   }
-  Toggleaccordion(evt: any, popHub: PopUpHub, settingKey: SettingKey) {
-    this.AllAgents.Logger.FuncStart(this.Toggleaccordion.name);
-    var srcElem: HTMLElement = <HTMLElement>(evt.target || evt.srcElement);
-    var foundContentSib = popHub.UiMan.GetaccordionContentElem(srcElem);
-    if (foundContentSib) {
-      var oldValue: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(settingKey);
-      if (oldValue) {
-        var oldValueBool: boolean = <boolean>oldValue.ValueAsObj;
-        var newVal: boolean = !oldValue;
-        popHub.UiMan.SetaccordionClass(foundContentSib, newVal);
-      }
-      //this.PopAtticMan().UpdateAccodianState(srcElem.getAttribute('id'), newVal);
 
-      this.AllAgents.SettingsAgent.SetByKey(settingKey, newVal);
-    }
-    else {
-      this.AllAgents.Logger.ErrorAndThrow(this.Toggleaccordion.name, 'did not find sib');
-    }
-    this.AllAgents.Logger.FuncEnd(this.Toggleaccordion.name);
-  }
+ 
 }

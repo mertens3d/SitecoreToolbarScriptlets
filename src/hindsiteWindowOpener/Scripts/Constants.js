@@ -1,4 +1,4 @@
 var constants = {
-    taDebug: 'ta-debug'
+    taDebug: 'ta-log'
 };
 //# sourceMappingURL=Constants.js.map

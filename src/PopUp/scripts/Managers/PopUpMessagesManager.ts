@@ -7,7 +7,7 @@ import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
-import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationDrone";
+import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
 import { PopConst } from "../Classes/PopConst";
 import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
 import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";

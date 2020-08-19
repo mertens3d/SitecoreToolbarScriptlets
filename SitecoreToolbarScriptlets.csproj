@@ -74,11 +74,13 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\TabManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiButtonStateManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Promises\PromiseChainRestoreDTPopUp.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\RollingLogIdDrone.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\AccordianDrone\AccordianManager.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\RollingLogIdDrone\RollingLogIdDrone.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\HelperBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromisesRecipes.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IOneTreeDrone.ts" />
@@ -153,9 +155,9 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesManager.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.debug.ts" />
     <None Include="src\Content\css\_toast.scss" />
-    <None Include="src\Content\css\_desktopArea.scss" />
-    <None Include="src\Content\css\_scStartbar.scss" />
-    <None Include="src\Content\css\_compactCe.scss" />
+    <None Include="src\Content\css\_compact\_desktopArea.scss" />
+    <None Include="src\Content\css\_compact\_scStartbar.scss" />
+    <None Include="src\Content\css\_compact\_compactCe.scss" />
     <None Include="src\Content\css\content.scss" />
     <None Include="src\Content\css\vars.scss" />
     <None Include="src\Content\css\_contentTree.scss" />
@@ -232,7 +234,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneDesktopManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\OneTreeDrone.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\IterationDrone.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\IterationDrone\IterationDrone.ts" />
     <TypeScriptCompile Include="src\Content\scripts\zContentEntryPoint.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\Constants.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\menu.ts" />
@@ -270,6 +272,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IdataOneSetting.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\AccordianDrone\AccordianDrone.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

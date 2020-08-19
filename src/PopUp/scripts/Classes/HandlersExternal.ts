@@ -89,7 +89,7 @@ export class HandlersExternal extends CommonEvents {
   }
 
   HndlrCompactCE(evt: any, popHub: PopUpHub) {
-    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.ReqCompactCE, popHub);
+    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.ReqToggleCompactCss, popHub);
     this.GoContentCommand(msg);
   }
 

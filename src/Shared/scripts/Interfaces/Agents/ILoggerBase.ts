@@ -20,14 +20,16 @@ export interface ILoggerAgent {
   DebugIGuid(Id: IGuid);
   EnabledStatus();
   ErrorAndThrow(container: string, text: any): void
+  ErrorAndContinue(container: string, text: any): void
   ErrorStack: IError[];
   AddDebugTextChangedCallback(caller: any, callback: Function): void
   FuncEnd(text, optionalValueInput: string | number);
   FuncEnd(text, optionalValueInput?: number);
   FuncEnd(text, optionalValueInput?: string);
-  FuncStart(textOrFunc: string, optionalValue: number | string): void;
+  FuncStart(textOrFunc: string, optionalValue: number | string | boolean): void;
   FuncStart(textOrFunc: string, optionalValue?: number): void;
   FuncStart(textOrFunc: string, optionalValue?: string): void;
+  FuncStart(textOrFunc: string, optionalValue?: boolean): void;
   Init(valueToUse: boolean);
   IsNotNullOrUndefinedBool(title: string, dataToCheck: any);
   IsNullOrUndefined(dataToCheck: any): string;

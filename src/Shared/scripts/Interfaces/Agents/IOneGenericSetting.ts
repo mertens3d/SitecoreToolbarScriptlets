@@ -6,10 +6,11 @@ export interface IOneGenericSetting {
   DataType: SettingType;
   DefaultValue: any;
   Friendly: string;
+  HasUi: boolean
   SettingFlavor: SettingFlavor;
   SettingKey: SettingKey;
   UiSelector: any;
-  ValueAsObj: any;
-  HasUi: boolean
+  ValueAsBool(): boolean;
   ValueAsInt(): number
+  ValueAsObj: any;
 }

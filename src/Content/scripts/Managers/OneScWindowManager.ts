@@ -162,29 +162,33 @@ export class OneScWindowManager extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.RestoreWindowStateToTargetDoc.name);
 
+      
+
       if (dataToRestore) {
         if (dataToRestore.WindowType === scWindowType.ContentEditor || dataToRestore.WindowType === scWindowType.Desktop) {
           if (dataToRestore.WindowType === scWindowType.ContentEditor) {
             await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0])
-              .then(() => this.AllAgents.ToastAgent.NotifyCompleteOnContent(targetDoc, 'Restore Completed'));
+              .then(() => this.AllAgents.ToastAgent.Notify(targetDoc, 'Restore Completed'));
 
           } else {
             await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore)
-              .then(() => this.AllAgents.ToastAgent.NotifyCompleteOnContent(targetDoc, 'Restore Completed'));
+              .then(() => this.AllAgents.ToastAgent.Notify(targetDoc, 'Restore Completed'));
             
           }
 
-          resolve();
+          
         }
         else {
-          this.AllAgents.Logger.ErrorAndThrow(this.RestoreWindowStateToTargetDoc.name, 'No match found for snap shot');
+          this.AllAgents.Logger.ErrorAndThrow(this.RestoreWindowStateToTargetDoc.name, 'Data not restored. Not in Desktop or Content Editor');
         }
       }
       else {
-        this.AllAgents.Logger.Log("no data to restore");
+        this.AllAgents.ToastAgent.Notify(targetDoc, "No data found to restore");
       }
 
-      reject();
+      resolve();
+
+      //reject(this.RestoreWindowStateToTargetDoc.name +  " something went wrong");
       this.AllAgents.Logger.FuncEnd(this.RestoreWindowStateToTargetDoc.name);
     });
   }
