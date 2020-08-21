@@ -1,5 +1,5 @@
 ﻿import { CommonEvents } from "./CommonEvents";
-import { SettingKey } from "../../../Shared/scripts/Enums/SettingKey";
+import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { PopUpHub } from "../Managers/PopUpHub";
 import { IScMode } from "../../../Shared/scripts/Interfaces/IscMode";
@@ -32,7 +32,7 @@ export class HandlersInternal extends CommonEvents {
   async SetScModeInternal(evt: MouseEvent, popHub: PopUpHub, parameters: any[]) {
     let newMode: IScMode = parameters[0];
     await popHub.LocMan.SetScMode(newMode)
-      .then(() => popHub.UiMan.OnSuccessfullCommand());
+      .then(() => popHub.UiMan.ClosePopUp());
     //.catch((ex) => popHub.Log.Error(popHub.EventMan.Handlers.External.SetScMode.name, ex));
   }
 

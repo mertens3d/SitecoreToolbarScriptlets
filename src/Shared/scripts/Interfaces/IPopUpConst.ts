@@ -71,6 +71,7 @@ export interface IPopUpConst {
     },
     HS: {
       BuildStamp: string,
+      DivOverlayModule: string,
       DivMsgStatus: string,
       GenericSettingTest: string,
       DivStatePopUp: string,

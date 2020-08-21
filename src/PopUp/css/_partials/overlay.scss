@@ -1,0 +1,53 @@
+﻿@import "../vars";
+
+#menu-overlay {
+  bottom: 0;
+  display: block;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 999;
+
+  .overlay-gray {
+    background-color: gray;
+    bottom: 0;
+    left: 0;
+    opacity: 0.8;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .msg-status {
+    text-align: left;
+    height: $headerHeight;
+    width: 350px;
+    margin: auto;
+  }
+
+  .scroller-msg-stat {
+    background-color: white;
+    display: block;
+    height: 300px;
+    left: 0;
+    margin: 55px 100px;
+    opacity: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: absolute;
+    top: 0;
+    width: 300px;
+  }
+
+  .overlay-solid {
+    background: white;
+    border: 5px solid black;
+    display: none;
+    margin: auto auto;
+    padding: 20px;
+    position: relative;
+    top: 50px;
+    width: 60%;
+  }
+}

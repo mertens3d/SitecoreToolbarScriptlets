@@ -1,8 +1,7 @@
-﻿import { ContentHub } from './ContentHub';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+﻿import { ContentHub } from '../ContentHub/ContentHub';
+import { ContentManagerBase } from '../../_first/_ContentManagerBase';
+import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
+import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 
 export class MiscManager extends ContentManagerBase {

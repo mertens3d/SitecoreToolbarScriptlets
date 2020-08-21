@@ -1,5 +1,5 @@
 ﻿import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
-import { MenuCommand } from '../../../Shared/scripts/Enums/MenuCommand';
+import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { PopConst } from './PopConst';
 import { PopUpHub } from '../Managers/PopUpHub';
@@ -56,11 +56,11 @@ export class AllCommands {
       {
         Command: MenuCommand.ScModePrev,
         ButtonSelector: PopConst.Const.ElemId.HS.Btn.ModePrev,
-        VisibilityControllers: [VisibilityType.ActiveCeNode],
+        VisibilityControllers: [VisibilityType.ActiveCeNode, VisibilityType.Edit],
         Events: [{
           Event: CommandButtonEvents.OnClick,
           Handler: popHub.EventMan.Handlers.Internal.SetScModeInternal,
-          ParameterData: [PopConst.Const.ScMode.preview],
+          ParameterData: [PopConst.Const.ScMode.preview ],
         }]
       },
       //{

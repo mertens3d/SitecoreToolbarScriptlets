@@ -1,9 +1,9 @@
-﻿import { IDataOneWindowStorage } from '../../../Shared/Scripts/Interfaces/IDataOneWindowStorage'
-import { iSitecoreUiManager } from '../../../Shared/scripts/Interfaces/ISitecoreUiManager';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+﻿import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
+import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
+import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
+import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 
 export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUiManager {
 

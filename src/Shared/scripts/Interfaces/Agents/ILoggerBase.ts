@@ -5,6 +5,7 @@ import { IDataBrowserTab } from "../IDataBrowserWindow";
 import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
 import { IDataOneIframe } from "../IDataOneIframe";
 
+
 export interface ILoggerAgent {
   SetLogToStorageKey(CurrentStorageLogKey: string);
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });

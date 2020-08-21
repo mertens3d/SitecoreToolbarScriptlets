@@ -5,7 +5,6 @@ import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
 import { ContentConst } from "../../../Interfaces/InjectConst";
 
-
 export class RepoAgent implements IRepositoryAgent {
   private Logger: ILoggerAgent;
 
@@ -29,34 +28,32 @@ export class RepoAgent implements IRepositoryAgent {
   //  this.Logger.FuncEnd(this.ReadStorageResults.name);
   //}
   public GetBulkLocalStorageByKeyPrefix(targetPrefix: string): Promise<IOneStorageData[]> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       var toReturn: IOneStorageData[] = [];
 
-      var storageLength: number = window.localStorage.length;
+      try {
+        var storageLength: number = window.localStorage.length;
 
-      for (var idx: number = 0; idx < storageLength; idx++) {
-        console.log('Processing Index' + idx);
+        for (var idx: number = 0; idx < storageLength; idx++) {
+          var candidate: IOneStorageData = {
+            data: '',
+            key: '',
+          };
 
-        var candidate: IOneStorageData = {
-          data: '',
-          key: '',
-        };
+          candidate.key = window.localStorage.key(idx);
 
-        candidate.key = window.localStorage.key(idx);
-
-        console.log('Candidate.key ' + candidate.key);
-
-        if (candidate.key.startsWith(targetPrefix)) {
-          console.log('valid candidate' + true);
-
-          candidate.data = window.localStorage.getItem(candidate.key);
-          if (typeof candidate != 'undefined' && typeof candidate.data != 'undefined' && candidate != null && candidate.data != null) {
-            toReturn.push(candidate);
+          if (candidate.key.startsWith(targetPrefix)) {
+            candidate.data = window.localStorage.getItem(candidate.key);
+            if (typeof candidate != 'undefined' && typeof candidate.data != 'undefined' && candidate != null && candidate.data != null) {
+              toReturn.push(candidate);
+            }
           }
         }
-      }
 
-      resolve(toReturn);
+        resolve(toReturn);
+      } catch (ex) {
+        reject(ex);
+      }
     });
   }
 

@@ -52,7 +52,13 @@ export class LocationManager extends PopUpManagerBase {
         }
 
         this.AllAgents.HelperAgent.PromisesBasic.TabChainSetHrefWaitForComplete(absUrl, this.TabMan().CurrentTabData)
-          .then(() => this.MsgMan().WaitForListeningTab(this.TabMan().CurrentTabData))
+          .then(() => {
+
+            console.log('todo');
+            // put back?
+            //this.MsgMan().WaitForListeningTab(this.TabMan().CurrentTabData)
+
+          })
           .then(() => callBackOnSuccessfulHrefChange);
       }
     }

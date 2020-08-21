@@ -2,6 +2,7 @@
 import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
 
 export class CommonEvents {
   protected PopHub: PopUpHub; //extends PopUpManagerBase
@@ -26,8 +27,11 @@ export class CommonEvents {
 
       //this.AllAgents.Logger.LogAsJsonPretty("msgPayload", msgPlayload);
 
-      await this.PopHub.PopMsgMan.SendMessageToContentTab(msgPlayload, targetTab)
-        .then(() => resolve())
+      await this.PopHub.MessageMan.SendMessageToContent(msgPlayload)
+        .then((result: ICurrStateContent) => {
+          this.PopHub.UiMan.RefreshUiFromContentState(result);
+          resolve();
+        })
         .catch((err) => reject(err));
 
       this.AllAgents.Logger.FuncEnd(this.GoContentCommand.name);

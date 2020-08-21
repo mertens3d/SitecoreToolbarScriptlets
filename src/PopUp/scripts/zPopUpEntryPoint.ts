@@ -13,7 +13,6 @@ async function main() {
   allAgents.RepoAgent = new RepoAgent(allAgents.Logger);
   allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, allAgents.RepoAgent);
 
-
   var allSettings: IOneGenericSetting[] = new ConstAllSettings().AllSettings;
   //allAgents.Logger.LogAsJsonPretty("allSettings (default values)", allSettings);
   await allAgents.SettingsAgent.InitSettingsAgent(allSettings);
@@ -21,12 +20,9 @@ async function main() {
 
   var RollingLogId = new RollingLogIdDrone(allAgents.SettingsAgent);
   var nextLogId = RollingLogId.GetNextLogId();
-  console.log('RollingLogId: ' + nextLogId);
   allAgents.Logger.SetLogToStorageKey(nextLogId);
 
-
   allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
-
 
   new PopUpHub(allAgents);
 }

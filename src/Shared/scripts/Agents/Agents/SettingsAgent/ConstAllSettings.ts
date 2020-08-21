@@ -1,5 +1,5 @@
 ﻿import { OneGenericSetting } from "./OneGenericSetting";
-import { SettingKey } from "../../../Enums/SettingKey";
+import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";

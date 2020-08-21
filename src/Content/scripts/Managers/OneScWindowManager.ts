@@ -1,17 +1,17 @@
-﻿import { ContentHub } from './ContentHub';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { PromiseChainQuickPublish } from '../Promises/PromiseChainQuickPublish';
-import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
-import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
+﻿import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
-import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IDataPayloadSnapShot } from '../../../Shared/scripts/Interfaces/IDataPayloadSnapShot';
-import { OneDesktopManager } from './OneDesktopManager';
-import { OneCEAgent } from './OneCEAgent';
-import { IDataDesktopState } from '../../../Shared/scripts/Interfaces/IDataDtState';
-import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { IDataDesktopState } from '../../../Shared/scripts/Interfaces/IDataDtState';
+import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
+import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
+import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
+import { IDataPayloadSnapShot } from '../../../Shared/scripts/Interfaces/IDataPayloadSnapShot';
+import { PromiseChainQuickPublish } from '../Promises/PromiseChainQuickPublish';
+import { ContentManagerBase } from '../_first/_ContentManagerBase';
+import { ContentHub } from './ContentHub/ContentHub';
+import { OneCEAgent } from './OneCEAgent/OneCEAgent';
+import { OneDesktopManager } from './OneDesktopManager/OneDesktopManager';
 
 export class OneScWindowManager extends ContentManagerBase {
   OneDesktopMan: OneDesktopManager = null;

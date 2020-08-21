@@ -27,19 +27,7 @@
     float: right;
   }
 
-  .scroller-msg-stat {
-    height: $headerHeight;
-    display: inline-block;
-    width: 400px;
-    overflow-x: hidden;
-    overflow-y:scroll;
-    margin: 0;
-  }
 
-  .msg-status {
-    text-align: left;
-    height: $headerHeight;
-  }
 
   .build-stamp {
     display: inline-block;

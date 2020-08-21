@@ -1,4 +1,4 @@
-﻿import { MsgFlag } from "../Enums/MessageFlag";
+﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
 
 export class MsgFromXBase {
   MsgFlag: MsgFlag = MsgFlag.Unknown;

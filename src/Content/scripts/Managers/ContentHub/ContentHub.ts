@@ -1,28 +1,30 @@
-﻿import { ContentAtticManager } from './ContentAtticManager';
-import { MiscManager } from './MiscManager';
-import { OneScWindowManager } from "./OneScWindowManager";
-import { PromisesBasic } from '../../../Shared/scripts/Classes/PromiseGeneric';
-import { PromiseOneStep } from '../Promises/PromiseOneStep';
-import { UtilityHelper } from "../../../Shared/scripts/Helpers/UtilityHelper";
-import { ContentMessageManager } from './ContentMessageManager';
-import { IContentConst } from '../../../Shared/scripts/Interfaces/IContentConst';
-import { MsgFlag } from '../../../Shared/scripts/Enums/MessageFlag';
-import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { ContentFactories } from "../Classes/ContentFactories";
-import { SharedConst } from '../../../Shared/scripts/SharedConst';
-import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
-import { SitecoreUiManager } from './SitecoreUiManager';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
-import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
-import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
-import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
-import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
+﻿import { MiscManager } from '../MiscManager/MiscManager';
+import { OneScWindowManager } from "../OneScWindowManager";
+import { PromisesBasic } from '../../../../Shared/scripts/Classes/PromiseGeneric';
+import { PromiseOneStep } from '../../Promises/PromiseOneStep';
+import { UtilityHelper } from "../../../../Shared/scripts/Helpers/UtilityHelper";
+import { ContentMessageManager } from '../ContentMessageManager/ContentMessageManager';
+import { IContentConst } from '../../../../Shared/scripts/Interfaces/IContentConst';
+import { MsgFlag } from '../../../../Shared/scripts/Enums/1xxx-MessageFlag';
+import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
+import { ContentStateManager } from "../../Classes/ContentStateManager/ContentStateManager";
+import { SharedConst } from '../../../../Shared/scripts/SharedConst';
+import { ISharedConst } from '../../../../Shared/scripts/Interfaces/ISharedConst';
+import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { QueryStrKey } from '../../../../Shared/scripts/Enums/QueryStrKey';
+import { IGuid } from '../../../../Shared/scripts/Interfaces/IGuid';
+import { CacheMode } from '../../../../Shared/scripts/Enums/CacheMode';
+import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { ContentAPIManager } from '../ContentAPIManager/ContentAPIManager';
+import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
+import { ContentAtticManager } from '../ContentAtticManager/ContentAtticManager';
 
 export class ContentHub {
   AtticMan: ContentAtticManager;
   Const: IContentConst;
   private AllAgents: IAllAgents;
 
+  ContentAPIMan: ContentAPIManager;
   MsgMan: ContentMessageManager;
   MiscMan: MiscManager;
   OneWindowMan: OneScWindowManager;
@@ -32,9 +34,8 @@ export class ContentHub {
 
   Utilities: UtilityHelper;
   MessageFlag: MsgFlag;
-  ContentFactory: ContentFactories;
+  ContentFactory: ContentStateManager;
   SharedConst: ISharedConst;
-  ReadyForMessages: boolean = false;
 
   constructor(allAgents: IAllAgents) {
     this.AllAgents = allAgents;
@@ -51,10 +52,10 @@ export class ContentHub {
     this.AllAgents.Logger.FuncStart(this.Instantiate.name);
 
     this.AtticMan = new ContentAtticManager(this, this.AllAgents);
-
+    this.ContentAPIMan = new ContentAPIManager(this, this.AllAgents);
     this.MsgMan = new ContentMessageManager(this, this.AllAgents);
     this.MiscMan = new MiscManager(this, this.AllAgents);
-    this.ContentFactory = new ContentFactories(this, this.AllAgents);
+    this.ContentFactory = new ContentStateManager(this, this.AllAgents);
 
     this.AllAgents.Logger.MarkerA();
 
@@ -65,10 +66,10 @@ export class ContentHub {
     this.SharedConst = SharedConst.Const;
 
     this.SitecoreUiMan = new SitecoreUiManager(this, this.AllAgents);
+
     this.Init();
 
     this.AllAgents.Logger.Log('ready for messages');
-    this.ReadyForMessages = true;
 
     this.AllAgents.Logger.FuncEnd(this.Instantiate.name);
   }

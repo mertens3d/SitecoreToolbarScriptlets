@@ -1,27 +1,27 @@
 ﻿import { CommonEvents } from "./CommonEvents";
 import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
-import { MsgFlag } from "../../../Shared/scripts/Enums/MessageFlag";
+import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { PopUpHub } from "../Managers/PopUpHub";
+import { TabManager } from "../Managers/TabManager";
 
 export class HandlersExternal extends CommonEvents {
   async AddCETab(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqAddCETab, popHub));
-
-    popHub.UiMan.OnSuccessfullCommand();
-    ;
-    //.catch((ex) =>  popHub.Log.Error(popHub.EventMan.Handlers.External.__hndlrAddCETab.name, ex.toString()));
+    await popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqAddCETab, popHub))
+      .then(() => popHub.UiMan.ClosePopUp())
+      .catch((err) => popHub.UiMan.OnFailedCommand(err))
   }
+
   async PutAdminB(evt: MouseEvent, popHub: PopUpHub) {
     popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqAdminB, popHub));
   }
 
   async QuickPublish(evt: MouseEvent, popHub: PopUpHub) {
     await popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqQuickPublish, popHub))
-      .then(popHub.UiMan.OnSuccessfullCommand)
+      .then(popHub.UiMan.ClosePopUp)
       .catch((ex) => this.AllAgents.Logger.ErrorAndThrow(popHub.EventMan.Handlers.External.QuickPublish.name, ex));
   }
 
@@ -71,16 +71,16 @@ export class HandlersExternal extends CommonEvents {
     popHub.UiMan.SetCancelFlag();
   }
 
-  MarkFavorite(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.PopMsgMan.SendMessageToContentTab(new MsgFromPopUp(MsgFlag.ReqMarkFavorite, popHub));
+  MarkFavorite(evt: MouseEvent, popHub: PopUpHub, tanManagerTempFix: TabManager) {
+    popHub.MessageMan.SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqMarkFavorite, popHub));
   }
 
   __DrawStorage(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.PopMsgMan.FromAtticDrawStorage();
+    popHub.UiMan.FromAtticDrawStorage();
   }
 
   __DrawPopUpLogStorage(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.PopMsgMan.FromAtticDrawPopUpLogStorage();
+    popHub.UiMan.FromAtticDrawPopUpLogStorage();
   }
 
   HndlrSnapShotRemove(evt: any, popHub: PopUpHub) {
@@ -94,7 +94,7 @@ export class HandlersExternal extends CommonEvents {
   }
 
   CreateNewWindowIfRequired(evt: MouseEvent, popHub: PopUpHub, tabUrl: AbsoluteUrl,) {
-    return new Promise <IDataBrowserTab>(async (resolve, reject) => {
+    return new Promise<IDataBrowserTab>(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.CreateNewWindowIfRequired.name, 'ctrl key? ' + evt.ctrlKey.toString() + ' ' + tabUrl);
       let result: PromiseResult = new PromiseResult(this.CreateNewWindowIfRequired.name, this.AllAgents.Logger);
       let toReturn: IDataBrowserTab;

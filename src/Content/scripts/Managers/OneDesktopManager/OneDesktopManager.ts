@@ -1,12 +1,12 @@
-import { ContentHub } from './ContentHub';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { PromiseChainRestoreDesktop } from '../Promises/PromiseChainRestoreDesktop';
-import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
-import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
-import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { OneCEAgent } from './OneCEAgent';
-import { IDataDesktopState } from '../../../Shared/scripts/Interfaces/IDataDtState';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDtState";
+import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
+import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
+import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { PromiseChainRestoreDesktop } from "../../Promises/PromiseChainRestoreDesktop";
+import { ContentManagerBase } from "../../_first/_ContentManagerBase";
+import { ContentHub } from "../ContentHub/ContentHub";
+import { OneCEAgent } from "../OneCEAgent/OneCEAgent";
 
 export class OneDesktopManager extends ContentManagerBase {
   associatedDoc: IDataOneDoc;

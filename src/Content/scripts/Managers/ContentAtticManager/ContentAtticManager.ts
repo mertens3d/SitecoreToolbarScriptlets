@@ -1,17 +1,18 @@
-﻿import { ContentHub } from './ContentHub';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { PayloadDataFromPopUp } from '../../../Shared/scripts/Classes/PayloadDataReqPopUp';
-import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
-import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
-import { IOneStorageData } from '../../../Shared/scripts/Interfaces/IOneStorageData';
-import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { ISnapShotsMany } from '../../../Shared/scripts/Interfaces/ISnapShotsMany';
-import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
-import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
-import { CacheMode } from '../../../Shared/scripts/Enums/CacheMode';
-import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
-import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+﻿import { ContentManagerBase } from "../../_first/_ContentManagerBase";
+import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/ISnapShotsMany";
+import { ContentHub } from "../ContentHub/ContentHub";
+import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
+import { PromiseResult } from "../../../../Shared/scripts/Classes/PromiseResult";
+import { CacheMode } from "../../../../Shared/scripts/Enums/CacheMode";
+import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
+import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
+import { IGuid } from "../../../../Shared/scripts/Interfaces/IGuid";
+import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
+import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+
 
 export class ContentAtticManager extends ContentManagerBase {
   private CachedWindowStorage: ISnapShotsMany;
@@ -26,6 +27,7 @@ export class ContentAtticManager extends ContentManagerBase {
   }
 
   Init() {
+    this.CleanOutOldData();
   }
   //functioneventHandler(e) {
   //  console.log('this data is ' + e.detail);
@@ -63,26 +65,6 @@ export class ContentAtticManager extends ContentManagerBase {
     });
   }
 
-  MarkFavorite(data: PayloadDataFromPopUp): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.MarkFavorite.name);
-
-      if (data.IdOfSelect) {
-
-        await this.GetFromStorageById(data.IdOfSelect, CacheMode.OkToUseCache)
-          .then((result: IDataOneWindowStorage) => {
-            result.Flavor = SnapShotFlavor.Favorite;
-            this.WriteToStorage(result);
-          })
-          .then(() => resolve())
-          .catch((err) => { throw this.MarkFavorite.name + ' ' + err });
-      } else {
-        reject( 'no data.idofselect');
-      }
-
-      this.AllAgents.Logger.FuncEnd(this.MarkFavorite.name);
-    })
-  }
   async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.WriteToStorage.name);
@@ -165,10 +147,13 @@ export class ContentAtticManager extends ContentManagerBase {
     return candidate
   }
   private GetAllLocalStorageAsIOneStorageData(): Promise<IOneStorageData[]> {
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.GetAllLocalStorageAsIOneStorageData.name);
       let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
       await this.AllAgents.RepoAgent.GetBulkLocalStorageByKeyPrefix(prefix)
-        .then((result) => resolve(result));
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+      this.AllAgents.Logger.FuncEnd(this.GetAllLocalStorageAsIOneStorageData.name);
     });
   }
   private async __getAllStorageReal() {
@@ -272,7 +257,7 @@ export class ContentAtticManager extends ContentManagerBase {
         this.AllAgents.Logger.Log('using cache');
       }
 
-      this.CleanOutOldData();
+      
       this.UpdateCounts();
 
       toReturn = this.CachedWindowStorage;

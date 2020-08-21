@@ -1,13 +1,12 @@
-﻿import { ContentHub } from '../Managers/ContentHub';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
+﻿import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IDataBucketRestoreDesktop } from '../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop';
-import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
-import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
-import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
+import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
-import { OneCEAgent } from '../Managers/OneCEAgent';
+import { ContentHub } from '../Managers/ContentHub/ContentHub';
+import { OneCEAgent } from '../Managers/OneCEAgent/OneCEAgent';
+import { ContentManagerBase } from '../_first/_ContentManagerBase';
 
 export class PromiseChainRestoreDesktop extends ContentManagerBase {
   constructor(hub: ContentHub, AllAgents: IAllAgents) {

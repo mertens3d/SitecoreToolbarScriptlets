@@ -1,4 +1,4 @@
-import { ContentHub } from './Managers/ContentHub';
+import { ContentHub } from './Managers/ContentHub/ContentHub';
 import { IAllAgents } from '../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
@@ -36,9 +36,6 @@ async function main() {
 
   let ch: ContentHub = new ContentHub(allAgents);
   await ch.InitFromQueryStr();
-
- 
-
 }
 
 main();

@@ -1,4 +1,4 @@
-﻿import { SettingKey } from "../../../Enums/SettingKey";
+﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
@@ -142,23 +142,24 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.LogVal('valueAsObj', valueAsObj.toString());
     this.SetByKey(SettingKey, valueAsObj);
   }
+
   GetByKey(settingKey: SettingKey): IOneGenericSetting {
-    this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
+    //this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
 
     var toReturn: IOneGenericSetting = null;
 
     for (var idx = 0; idx < this.SettingsAr.length; idx++) {
       if (this.SettingsAr[idx].SettingKey === settingKey) {
         toReturn = this.SettingsAr[idx];
-        this.Logger.LogAsJsonPretty('found. ValueAsObj', toReturn.ValueAsObj);
+        //this.Logger.LogAsJsonPretty('found. ValueAsObj', toReturn.ValueAsObj);
         break;
       }
     }
 
     if (!toReturn) {
-      this.Logger.Log('Setting not found')
+      this.Logger.Log('Setting not found ' + StaticHelpers.SettingKeyAsString(settingKey));
     }
-    this.Logger.FuncEnd(this.GetByKey.name);
+    //this.Logger.FuncEnd(this.GetByKey.name);
     return toReturn;
   }
   //GetByKey(settingKey: SettingKey): IOneGenericSetting {

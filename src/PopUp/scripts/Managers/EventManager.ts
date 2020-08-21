@@ -3,7 +3,7 @@ import { PopUpHub } from './PopUpHub';
 import { HandlersExternal } from "../Classes/HandlersExternal";
 import { HandlersInternal } from "../Classes/HandlersInternal";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
-import { MenuCommand } from '../../../Shared/scripts/Enums/MenuCommand';
+import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
 import { AllCommands } from '../Classes/AllCommands';
 import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
@@ -99,6 +99,7 @@ export class EventManager extends PopUpManagerBase {
 
     this.AllAgents.Logger.FuncEnd(this.__wireMenuButtons.name);
   }
+
   GetCommandByKey(menuCommand: MenuCommand): IOneCommand {
     var toReturn: IOneCommand;
 

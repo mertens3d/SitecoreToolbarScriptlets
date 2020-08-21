@@ -1,11 +1,11 @@
-﻿import { ContentHub } from '../Managers/ContentHub';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
+﻿import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
+import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPublishChain';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
+import { ContentHub } from '../Managers/ContentHub/ContentHub';
+import { ContentManagerBase } from '../_first/_ContentManagerBase';
 
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 
 export class PromiseChainQuickPublish extends ContentManagerBase {
   constructor(hub: ContentHub, contentAgents: IAllAgents) {

@@ -48,6 +48,9 @@ export class IterationDrone {
     return toReturn
   }
 
+  CurrentTimeout(): number{
+    return this.__timeout;
+  }
   NotifyExhausted() {
     this.Logger.Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
   }

@@ -1,6 +1,6 @@
 ﻿import { IDataOneStorageOneTreeState } from "./IDataOneStorageOneTreeState";
 import { IDataOneIframe } from "./IDataOneIframe";
-import { OneCEAgent } from "../../../Content/scripts/Managers/OneCEAgent";
+import { OneCEAgent } from "../../../Content/scripts/Managers/OneCEAgent/OneCEAgent";
 
 export interface IDataDesktopState {
   ActiveCeState: IDataOneStorageOneTreeState

@@ -1,4 +1,4 @@
-﻿import { SettingKey } from "../../Enums/SettingKey";
+﻿import { SettingKey } from "../../Enums/3xxx-SettingKey";
 import { IOneGenericSetting } from "./IOneGenericSetting";
 import { IOneGenericSettingForStorage } from "../../Classes/IOneGenericSettingForStorage";
 

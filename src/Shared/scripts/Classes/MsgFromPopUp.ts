@@ -1,4 +1,4 @@
-﻿import { MsgFlag } from "../Enums/MessageFlag";
+﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
 import { PayloadDataFromPopUp } from "./PayloadDataReqPopUp";
 import { IMsgFromX } from "../Interfaces/IMsgPayload";
 import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
@@ -18,5 +18,12 @@ export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
             Flavor: SnapShotFlavor.Unknown,
             CurrentPageType: popHub.TabMan.CurrentTabData.UrlParts.ScWindowType
         };
-    }
+
+      this.CurrentContentPrefs = popHub._allAgents.SettingsAgent.GetOnlyContentPrefs();
+  }
+
+
+
+
+
 }

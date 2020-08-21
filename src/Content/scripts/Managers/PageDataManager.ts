@@ -1,9 +1,7 @@
-﻿import { ContentHub } from './ContentHub';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
+﻿import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
-
-import { IAllConentAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllConentAgents';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { ContentManagerBase } from '../_first/_ContentManagerBase';
+import { ContentHub } from './ContentHub/ContentHub';
 
 export class PageManager extends ContentManagerBase {
   private topLevelDoc: IDataOneDoc;

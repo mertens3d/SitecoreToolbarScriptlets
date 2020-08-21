@@ -1,7 +1,7 @@
 ﻿import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
 import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
-import { SettingKey } from "../../../Enums/SettingKey";
+import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 
 export class AccordianDrone {

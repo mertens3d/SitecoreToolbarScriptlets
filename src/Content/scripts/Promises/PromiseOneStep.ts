@@ -1,9 +1,9 @@
-﻿import { ContentHub } from '../Managers/ContentHub';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { PromisesBasic } from '../../../Shared/scripts/Classes/PromiseGeneric';
+﻿import { PromisesBasic } from '../../../Shared/scripts/Classes/PromiseGeneric';
+import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IDataPublishChain } from '../../../Shared/scripts/Interfaces/IDataPublishChain';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { ContentHub } from '../Managers/ContentHub/ContentHub';
+import { ContentManagerBase } from '../_first/_ContentManagerBase';
 
 export class PromiseOneStep extends ContentManagerBase {
   constructor(hub: ContentHub, AllAgents: IAllAgents) {

@@ -1,7 +1,7 @@
 ﻿import { IMsgFromX } from "../Interfaces/IMsgPayload";
 //import { MsgFlag } from "../Enums/MessageFlag";
 import { PayloadDataFromContent } from "./PayloadDataFromContent";
-import { MsgFlag } from "../Enums/MessageFlag";
+import { MsgFlag } from "../Enums/1xxx-MessageFlag";
 import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
 import { ICurrStateContent } from "../Interfaces/ICurrState";
 import { scWindowType } from "../Enums/scWindowType";

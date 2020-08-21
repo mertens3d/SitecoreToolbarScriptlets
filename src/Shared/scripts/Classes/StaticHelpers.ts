@@ -1,4 +1,4 @@
-﻿import { MsgFlag } from "../Enums/MessageFlag";
+﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
 import { scWindowType } from "../Enums/scWindowType";
 import { CacheMode } from "../Enums/CacheMode";
 import { BufferDirection } from "../Enums/BufferDirection";
@@ -6,7 +6,7 @@ import { BufferChar } from "../Enums/BufferChar";
 import { BufferUseNbsp } from "../Enums/BufferUseNbsp";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 import { UrlParts } from "../Interfaces/UrlParts";
-import { SettingKey } from "../Enums/SettingKey";
+import { SettingKey } from "../Enums/3xxx-SettingKey";
 
 export class StaticHelpers {
   static MinToMs(minutes: number) {

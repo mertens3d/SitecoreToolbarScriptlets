@@ -89,6 +89,7 @@ export class PopConst {
         SettingUseCompactCss: '[id=id-settings-use-compact]',
 
         BuildStamp: '[id=build-stamp]',
+        DivOverlayModule: '[id=menu-overlay]',
         DivMsgStatus: '[id=msg-status]',
         DivStatePopUp: '[id=div-state-pop-up]',
         DivStateContent: '[id=div-state-content]',

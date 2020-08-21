@@ -1,7 +1,7 @@
 ﻿import { HelperBase } from './HelperBase';
 import { IPromiseRecipes } from '../Interfaces/IPromiseRecipes';
 import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
-import { OneCEAgent } from '../../../Content/scripts/Managers/OneCEAgent';
+import { OneCEAgent } from '../../../Content/scripts/Managers/OneCEAgent/OneCEAgent';
 import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
 import { ContentConst } from '../Interfaces/InjectConst';
 
