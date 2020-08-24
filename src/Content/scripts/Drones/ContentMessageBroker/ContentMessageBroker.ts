@@ -9,15 +9,19 @@ import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/Payload
 import { ContentAPIManager } from "../../Managers/ContentAPIManager/ContentAPIManager";
 import { ICurrStateContent } from "../../../../Shared/scripts/Interfaces/ICurrState";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
+import { ContentManagerBase } from "../../_first/_ContentManagerBase";
+import { ContentHub } from "../../Managers/ContentHub/ContentHub";
+import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 
-export class ContentMessageBroker implements IContentMessageBroker {
+export class ContentMessageBroker extends ContentManagerBase implements IContentMessageBroker {
   private Logger: ILoggerAgent;
   private SettingsAgent: ISettingsAgent;
   private ApiManager: ContentAPIManager;
   private TopLevelDoc: IDataOneDoc;
   //ReadyForMessages: boolean = false;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: ContentAPIManager, topLevelDoc: IDataOneDoc) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: ContentAPIManager, topLevelDoc: IDataOneDoc, hub: ContentHub, contentAgents: IAllAgents) {
+    super(hub, contentAgents);
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
     this.ApiManager = apiManager;
@@ -165,7 +169,7 @@ export class ContentMessageBroker implements IContentMessageBroker {
       }
 
       if (commandToExecute) {
-        await commandToExecute(payload.Data, this, this.TopLevelDoc)
+        await commandToExecute(payload.Data, this, this.TopLevelDoc, this.ContentHub)
           .then(() => this.ApiManager.GetContentState())
           .then((result: ICurrStateContent) => {
             response.ContentState.LastReq = payload.MsgFlag;
@@ -178,9 +182,9 @@ export class ContentMessageBroker implements IContentMessageBroker {
 
       this.Logger.FuncEnd(this.ReqMsgRouter.name);
     });
-  }
 
-  ScUiMan() {
-    throw new Error("Method not implemented.");
+    //ScUiMan() {
+    //  throw new Error("Method not implemented.");
+    //}
   }
 }

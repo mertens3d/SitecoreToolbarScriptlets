@@ -39,7 +39,7 @@ export class ContentAPIManager extends ContentManagerBase {
     });
   }
 
-  AddCETab(payloadData: PayloadDataFromPopUp, self: any, targetDoc: IDataOneDoc): Promise<void> {
+  AddCETab(payloadData: PayloadDataFromPopUp, self: ContentManagerBase, targetDoc: IDataOneDoc, contentHub: ContentHub): Promise<void> {
     return new Promise(async (resolve, reject) => {
       //let targetDoc: IDataOneDoc = self.ScUiMan().TopLevelDoc();
 

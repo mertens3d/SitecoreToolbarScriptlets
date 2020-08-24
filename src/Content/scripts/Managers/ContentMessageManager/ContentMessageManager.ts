@@ -30,7 +30,7 @@ export class ContentMessageManager extends ContentManagerBase {
   Init() {
     this.AllAgents.Logger.FuncStart(this.Init.name + ' ' + ContentMessageManager.name);
     var self = this;
-    this.ContentMessageBroker = new ContentMessageBroker(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.APIMan(), this.ScUiMan().TopLevelDoc());
+    this.ContentMessageBroker = new ContentMessageBroker(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.APIMan(), this.ScUiMan().TopLevelDoc(), this.ContentHub, this.AllAgents);
     this.ContentMessageBroker.BeginListening();
     this.AllAgents.Logger.FuncEnd(this.Init.name);
   }
