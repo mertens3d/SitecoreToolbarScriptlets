@@ -1,16 +1,12 @@
-﻿import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
-import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
-import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { PopConst } from './PopConst';
-import { PopUpHub } from '../Managers/PopUpHub';
-import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
-import { Handlers } from '../Managers/Handlers';
-import { SharedConst } from '../../../Shared/scripts/SharedConst';
-import { scMode } from '../../../Shared/scripts/Enums/scMode';
+﻿import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
+import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
+import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
+import { Handlers } from '../Managers/Handlers';
+import { PopUpHub } from '../Managers/PopUpHub';
+import { PopConst } from './PopConst';
 export class AllCommands {
   static BuildAllCommands(popHub: PopUpHub, handlers: Handlers) {
-
     let toReturn: IOneCommand[] = [
       {
         Command: MenuCommand.CloseWindow,
@@ -60,7 +56,7 @@ export class AllCommands {
         Events: [{
           Event: CommandButtonEvents.OnClick,
           Handler: popHub.EventMan.Handlers.Internal.SetScModeInternal,
-          ParameterData: [PopConst.Const.ScMode.preview ],
+          ParameterData: [PopConst.Const.ScMode.preview],
         }]
       },
       //{
@@ -160,11 +156,6 @@ export class AllCommands {
         }]
       },
 
-
-
-
-
-
       {
         Command: MenuCommand.MarkFavorite,
         ButtonSelector: PopConst.Const.ElemId.HS.Btn.MarkFavorite,
@@ -227,20 +218,6 @@ export class AllCommands {
           ParameterData: [],
         }]
       },
-      /*
-
-      {
-        Command: null,
-        ButtonSelector: null,
-        RequiredPageTypes: null,
-        Events: [{
-          Handler: null,
-          Event: null,
-        }]
-      },
-
-       */
-
     ];
 
     return toReturn;

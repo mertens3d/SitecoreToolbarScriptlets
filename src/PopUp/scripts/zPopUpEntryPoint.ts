@@ -7,20 +7,24 @@ import { ConstAllSettings } from "../../Shared/scripts/Agents/Agents/SettingsAge
 import { IOneGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 import { HelperAgent } from "../../Shared/scripts/Helpers/Helpers";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
+import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
+import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 async function main() {
   var allAgents = new AllAgents();
   allAgents.Logger = new LoggerAgent();
+  allAgents.Logger.AddWriter(new LoggerConsoleWriter());
+
   allAgents.RepoAgent = new RepoAgent(allAgents.Logger);
   allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, allAgents.RepoAgent);
 
   var allSettings: IOneGenericSetting[] = new ConstAllSettings().AllSettings;
-  //allAgents.Logger.LogAsJsonPretty("allSettings (default values)", allSettings);
   await allAgents.SettingsAgent.InitSettingsAgent(allSettings);
-  //allAgents.Logger.LogAsJsonPretty("allSettings (After init from storage)", allSettings);
 
   var RollingLogId = new RollingLogIdDrone(allAgents.SettingsAgent);
   var nextLogId = RollingLogId.GetNextLogId();
-  allAgents.Logger.SetLogToStorageKey(nextLogId);
+
+  let storageLogWriter = new LoggerStorageWriter();
+  storageLogWriter.SetLogToStorageKey(nextLogId);
 
   allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
 

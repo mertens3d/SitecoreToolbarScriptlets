@@ -1,35 +1,23 @@
-﻿import { IDataOneWindowStorage } from '../Interfaces/IDataOneWindowStorage';
-import { scWindowType } from '../Enums/scWindowType';
+﻿import { HelperBase } from '../Classes/HelperBase';
 import { StaticHelpers } from '../Classes/StaticHelpers';
-import { SnapShotFlavor } from '../Enums/SnapShotFlavor';
 import { BufferChar } from '../Enums/BufferChar';
 import { BufferDirection } from '../Enums/BufferDirection';
-import { HelperBase } from '../Classes/HelperBase';
-import { SharedConst } from '../SharedConst';
+import { IDataOneWindowStorage } from '../Interfaces/IDataOneWindowStorage';
+import { scWindowType } from '../Enums/scWindowType';
+import { PopConst } from '../../../PopUp/scripts/Classes/PopConst';
+import { SnapShotFlavor } from '../Enums/SnapShotFlavor';
+
 export class UtilityHelper extends HelperBase {
-  lenTimestamp: number = 13;
-  lenNickname: number = 16;
-  lenPageType: number = 7;
-  lenPrefix: number = 6;
-  lenShortId: number = 4;
-  colSep: string = ' - ';
-  lenCeCount: number = 3;
-  lenActiveNode: number = 16;
-  lenFavorite: number = 3;
-  SelectHeaderStr(prefix: string): string {
-    // '    Time Stamp          - Page Type - Nickname       - Favorite?';
-    let toReturn: string = StaticHelpers.BufferString('Time Stamp', this.lenTimestamp, BufferChar.Period, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString('Type', this.lenPageType, BufferChar.Period, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString('Nickname', this.lenNickname, BufferChar.Period, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString('Active Node.', this.lenActiveNode, BufferChar.Period, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString('Fav.', this.lenFavorite, BufferChar.Period, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString('Id', this.lenShortId, BufferChar.Period, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString('#CE', this.lenCeCount, BufferChar.Period, BufferDirection.right);
-    return toReturn;
-  }
   MakeSelectorFromId(TabId: string): any {
     return '[id=' + TabId + ']';
   }
+
+  TimeNicknameFavStrForConfirmation(data: IDataOneWindowStorage): string {
+    var result = data.TimeNicknameFavStr;
+    result = result.replace(new RegExp(/&nbsp;/ig), '');
+    return result;
+  }
+
   TimeNicknameFavStr(data: IDataOneWindowStorage): string {
     var typeStr: string = '';
     if (data.WindowType === scWindowType.ContentEditor) {
@@ -54,32 +42,26 @@ export class UtilityHelper extends HelperBase {
         }
       }
     }
-    let toReturn = StaticHelpers.BufferString(this.MakeFriendlyDate(data.TimeStamp), this.lenTimestamp, BufferChar.space, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString(typeStr, this.lenPageType, BufferChar.Nbsp, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString(data.NickName, this.lenNickname, BufferChar.Nbsp, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString(activeCeNode, this.lenActiveNode, BufferChar.Nbsp, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Favorite ? '*' : ''), this.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
-      //+ this.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString(data.Id.AsShort, this.lenShortId, BufferChar.Nbsp, BufferDirection.right)
-      + this.colSep + StaticHelpers.BufferString(data.AllCEAr.length.toString(), this.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+    let toReturn = StaticHelpers.BufferString(data.TimeStampFriendly, PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.space, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(typeStr, PopConst.Const.SnapShotFormat.lenPageType, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.NickName, PopConst.Const.SnapShotFormat.lenNickname, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(activeCeNode, PopConst.Const.SnapShotFormat.lenActiveNode, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Favorite ? '*' : ''), PopConst.Const.SnapShotFormat.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
+      //+ PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.Id.AsShort, PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.AllCEAr.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
     return toReturn;
   }
-  TimeNicknameFavStrForConfirmation(data: IDataOneWindowStorage): string {
-    var result = this.TimeNicknameFavStr(data);
-    result = result.replace(new RegExp(/&nbsp;/ig), '');
-    return result;
-  }
+
   MakeFriendlyDate(date: Date): string {
-
     var toReturn: string = '';
-
 
     var workingDate = new Date(date);
 
     if (workingDate) {
       //var year = date.getFullYear();
       var month = StaticHelpers.BufferString((workingDate.getMonth() + 1).toString(), 2, BufferChar.Zero, BufferDirection.left);
-      var day =StaticHelpers.BufferString(workingDate.getDate().toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var day = StaticHelpers.BufferString(workingDate.getDate().toString(), 2, BufferChar.Zero, BufferDirection.left);
       var min = StaticHelpers.BufferString(workingDate.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);
       var hoursRaw = workingDate.getHours();
       var ampm = hoursRaw >= 12 ? 'p' : 'a';
@@ -95,7 +77,4 @@ export class UtilityHelper extends HelperBase {
     }
     return toReturn;
   }
-
- 
-
 }

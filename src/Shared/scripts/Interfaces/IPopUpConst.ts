@@ -66,6 +66,7 @@ export interface IPopUpConst {
       LgndForeSite: string,
       LgndHindSite: string,
       LgndInSite: string,
+      LgndMessages: string,
       LgndSettings: string,
       LgndState: string,
     },
@@ -92,15 +93,15 @@ export interface IPopUpConst {
   },
   Settings: {
     Defaults: {
+      AutoSaveEnabled: boolean,
+      DebugKeepDialogOpen: boolean,
       LgndDebug: boolean,
       LgndForeSite: boolean,
       LgndHindSite: boolean,
       LgndInSite: boolean,
+      LgndMessages: boolean,
       LgndSettings: boolean,
       LgndState: boolean,
-      AutoSaveEnabled: boolean,
-      DebugKeepDialogOpen: boolean,
-
     }
   },
   Storage: {
@@ -118,6 +119,17 @@ export interface IPopUpConst {
    
       }
     }
+  },
+  SnapShotFormat: {
+    lenTimestamp: number ,
+    lenNickname: number,
+    lenPageType: number,
+    lenPrefix: number ,
+    lenShortId: number,
+    colSep: string,
+    lenCeCount: number,
+    lenActiveNode: number,
+    lenFavorite: number,
   },
   Timeouts: {
     WaitBeforeRemovingCompleteFlag: number,

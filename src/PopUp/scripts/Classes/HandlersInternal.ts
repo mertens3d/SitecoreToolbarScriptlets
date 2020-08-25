@@ -5,8 +5,9 @@ import { PopUpHub } from "../Managers/PopUpHub";
 import { IScMode } from "../../../Shared/scripts/Interfaces/IscMode";
 import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 export class HandlersInternal extends CommonEvents {
+
   HndlrSelectChange(evt: any, popHub: PopUpHub) {
-    this.PopHub.UiMan.SelectChanged();
+    this.PopHub.UiMan. SelectChanged();
   }
   //__showDebugButtonClicked(evt: MouseEvent) {
   //    this.__initNewOperation();
@@ -35,6 +36,4 @@ export class HandlersInternal extends CommonEvents {
       .then(() => popHub.UiMan.ClosePopUp());
     //.catch((ex) => popHub.Log.Error(popHub.EventMan.Handlers.External.SetScMode.name, ex));
   }
-
- 
 }

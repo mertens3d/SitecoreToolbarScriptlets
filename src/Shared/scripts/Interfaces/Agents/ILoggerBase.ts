@@ -4,10 +4,11 @@ import { IError } from "../IError";
 import { IDataBrowserTab } from "../IDataBrowserWindow";
 import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
 import { IDataOneIframe } from "../IDataOneIframe";
+import { LoggerConsoleWriter } from "../../Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 
 
 export interface ILoggerAgent {
-  SetLogToStorageKey(CurrentStorageLogKey: string);
+  AddWriter(arg0: LoggerConsoleWriter);
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   ThrowIfNullOrUndefined(arg0: string, allAgents: any);
   PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
@@ -17,13 +18,12 @@ export interface ILoggerAgent {
 
   HndlrClearDebugText(self: ILoggerAgent): void
   HndlrClearDebugText(self: ILoggerAgent, verify: boolean ): void
-  DebugIDataOneDoc(targetDoc: IDataOneDoc) :void;
   DebugIGuid(Id: IGuid);
   EnabledStatus();
   ErrorAndThrow(container: string, text: any): void
   ErrorAndContinue(container: string, text: any): void
   ErrorStack: IError[];
-  AddDebugTextChangedCallback(caller: any, callback: Function): void
+  //AddDebugTextChangedCallback(caller: any, callback: Function): void
   FuncEnd(text, optionalValueInput: string | number);
   FuncEnd(text, optionalValueInput?: number);
   FuncEnd(text, optionalValueInput?: string);

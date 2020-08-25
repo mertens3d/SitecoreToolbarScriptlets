@@ -1,24 +1,22 @@
-﻿import { UiManager } from "./UiManager/UiManager";
-import { EventManager } from "./EventManager";
-import { PopUpMessagesBroker } from "./PopUpMessagesBroker/PopUpMessagesBroker";
-import { FeedbackManager } from "./FeedbackManager";
-import { TabManager } from "./TabManager";
-import { LocationManager } from "./LocationManager";
+﻿import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { HelperAgent } from "../../../Shared/scripts/Helpers/Helpers";
-import { BrowserManager } from "./MessageManager/BrowserManager";
-import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
-import { UiCommunicationFeedbackModule } from "./UiMessageOverlayModule";
+import { SharedConst } from "../../../Shared/scripts/SharedConst";
+import { EventManager } from "./EventManager";
+import { LocationManager } from "./LocationManager";
 import { MessageManager } from "./MessageManager";
+import { BrowserManager } from "./MessageManager/BrowserManager";
+import { PopUpMessagesBroker } from "./PopUpMessagesBroker/PopUpMessagesBroker";
+import { TabManager } from "./TabManager";
+import { CommunicationsFeedbackModule } from "./UiManager/Modules/UiFeedbackModules/CommunicationsFeedbackModule/CommunicationsFeedbackModule";
+import { UiManager } from "./UiManager/UiManager";
+import { PopConst } from "../Classes/PopConst";
 
 export class PopUpHub {
-  //[x: string]: any;
 
   BrowserMan: BrowserManager;
   EventMan: EventManager;
-  FeedbackMan: FeedbackManager;
   Helpers: HelperAgent;
   LocMan: LocationManager;
   _allAgents: IAllAgents;
@@ -32,22 +30,26 @@ export class PopUpHub {
     this.EventMan = new EventManager(this, this._allAgents);
 
     this.LocMan = new LocationManager(this, this._allAgents);
-    //this.PopUpConst = PopConst.Const;
 
-    this.FeedbackMan = new FeedbackManager(this, this._allAgents);
     this.TabMan = new TabManager(this, this._allAgents);
+
+    this.Helpers = new HelperAgent(allAgents.Logger);
 
     this.UiMan = new UiManager(this, this._allAgents);
     //after tabman
     //after uiMan
-    let PopUpMessageBroker = new PopUpMessagesBroker(this._allAgents.Logger, this.UiMan.MessageFeedbackModule);
+    // after HelperAgent
+
+
+    let communicationsFeedbackModule = new CommunicationsFeedbackModule(PopConst.Const.Selector.HS.DivMsgStatus, this._allAgents.Logger);
+    let PopUpMessageBroker = new PopUpMessagesBroker(this._allAgents.Logger, communicationsFeedbackModule);
 
     //after popUpMessageBroker
     this.MessageMan = new MessageManager(this, this._allAgents, PopUpMessageBroker);
 
     this.BrowserMan = new BrowserManager(this, this._allAgents);
 
-    this.Helpers = new HelperAgent(allAgents.Logger);
+
 
     this.init();
   }

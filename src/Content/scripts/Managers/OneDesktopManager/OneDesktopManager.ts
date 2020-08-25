@@ -71,7 +71,7 @@ export class OneDesktopManager extends ContentManagerBase {
   GetStateDesktop(): Promise<IDataDesktopState> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.GetStateDesktop.name);
-      this.AllAgents.Logger.DebugIDataOneDoc(this.associatedDoc);
+      this.AllAgents.Logger.LogAsJsonPretty(this.GetStateDesktop.name,this.associatedDoc);
 
       var toReturnAllCeState: IDataDesktopState = this.AllAgents.HelperAgent.FactoryHelp.CreateNewDtDataShell();
 

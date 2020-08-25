@@ -72,6 +72,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
 
     var activeWindowSnapShot: IDataOneWindowStorage = {
       TimeStamp: dateToUse,
+      TimeStampFriendly: this.HelperAgent.UtilityHelp.MakeFriendlyDate(dateToUse),
       WindowType: windowType,
       WindowFriendly: windowType[windowType],
       AllCEAr: [],
@@ -79,7 +80,12 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       NickName: '',
       RawData: null,
       Flavor: flavor,
+      TimeNicknameFavStr: '{error}'
     };
+
+    activeWindowSnapShot.TimeNicknameFavStr = this.HelperAgent.UtilityHelp.TimeNicknameFavStr(activeWindowSnapShot);
+
+
     this.Logger.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
 
     return activeWindowSnapShot;

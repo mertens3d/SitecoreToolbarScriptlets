@@ -64,13 +64,20 @@
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiMessageOverlayModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\SelectSnapshotModule\SelectSnapshotModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\StorageFeedbackModule\StorageFeedbackModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\ContentStateModule\UiContentStateModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\CommunicationsFeedbackModule\CommunicationsFeedbackModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\UiFeedbackModuleBase\UiFeedbackModuleBase.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\UiFeedbackModuleLog\UiFeedbackModuleLog.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\AllAgents.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\CommonEvents.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersExternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersInternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\AllCommands.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager\BrowserManager.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\QueryStringAgent\QueryStrAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\ToastAgent\ToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\ConstAllSettings.ts" />
@@ -89,6 +96,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentMessageBroker.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ILoggerWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IMessageBrokerFeedback\IMessageBrokerFeedback.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IOneTreeDrone.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IQueryStrAgent.ts" />
@@ -217,7 +225,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataBucketRestoreDesktop.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IScVerSpec.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\SitecoreUiManager\SitecoreUiManager.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\FeedbackManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\IIterationResults.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\NewWindowDest.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\GuidHelper.ts" />
@@ -258,6 +265,7 @@
   <ItemGroup>
     <Folder Include="Browser Addons\Firefox\communication\" />
     <Folder Include="src\Browser-PolyFill\" />
+    <Folder Include="src\PopUp\scripts\Modules\" />
     <Folder Include="src\Shared\scripts\Agents\Agents\HelperAgent\" />
     <Folder Include="src\Shared\scripts\Agents\Agents\RestoreAgent\" />
   </ItemGroup>

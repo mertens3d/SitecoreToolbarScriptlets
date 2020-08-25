@@ -16,8 +16,7 @@ import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
 import { IDataPayloadSnapShot } from "../../../Interfaces/IDataPayloadSnapShot";
 import { IDataOneIframe } from "../../../Interfaces/IDataOneIframe";
 import { ICurrStateContent } from "../../../Interfaces/ICurrState";
-import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { RollingLogIdDrone } from "../../Drones/RollingLogIdDrone/RollingLogIdDrone";
+import { ILogWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 
 export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;
@@ -27,10 +26,9 @@ export class LoggerAgent implements ILoggerAgent {
   ErrorStack: IError[] = [];
   LogPreInitBuffer: string[] = [];
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
-  private LogToStoragePrefix: string = 'Hindsite.Log.';
-  private CurrentStorageLogKey: string = '0';
-  private LogTabId: number = -1;
-  private LogTab: browser.tabs.Tab = null;
+
+  
+  private __allLogWriters: ILogWriter[] = [];
 
   constructor() {
     this.__callDepth = -1;
@@ -48,16 +46,11 @@ export class LoggerAgent implements ILoggerAgent {
     console.log('(ctor) Logger log to storage enabled: ' + this.LogToStorageEnabled);
   }
 
-  SetLogToStorageKey(logToStorageIndex: string) {
-    //console.log(this.SetLogToStorageKey.name + ' ' + currentStorageLogKey);
-    this.CurrentStorageLogKey = this.LogToStoragePrefix + logToStorageIndex;
-  }
+
 
   async Init(val: boolean) {
     this.LogToConsoleEnabled = val;
     this.LogHasBeenInit = true;
-
-    //console.log('Logger Enabled:' + this.LogToConsoleEnabled);
 
     if (this.LogToConsoleEnabled) {
       var iterCheckMax = 1000;
@@ -69,50 +62,20 @@ export class LoggerAgent implements ILoggerAgent {
       }
     }
 
-    //if (this.LogTabId < 0) {
-    //  browser.windows.create({
-    //    'url': browser.runtime.getURL("popup/PopUpLog.html"), 'type': 'popup'
-    //  })
-    //    .then((window: browser.windows.Window) => {
-    //      browser.tabs.sendMessage(window.id, "hey dog")
-    //})
-    //    .catch((err) => console.log(err));
-
-    //console.log('Creating new log tab');
-    //await browser.tabs.create({
-    //  //active: false, url: 'javascript:document.write("<h1>Init</h1>")'
-    //  active: false, url: browser.runtime.getURL("popup/PopUpLog.html")
-    //})
-    //  .then((rawNewTab: browser.tabs.Tab) => {
-    //    if (rawNewTab) {
-    //      console.log(rawNewTab);
-    //      console.log(rawNewTab.id);
-    //      this.LogTab = rawNewTab;
-    //      this.LogTabId = rawNewTab.id;
-
-    //      browser.tabs.executeScript(this.LogTabId, {
-    //        code: 'document.write("<h5>xxxxxxx</h5>")'
-    //      })
-    //        .catch((err) => console.log(err));
-
-    //    } else {
-    //      console.log('New tab is null');
-    //    }
-    //  })
-    //  .catch((err) => console.log(err));
-    //}
-
-    //if (this.LogTabId < 0) {
-    //  this.LogTabId = 0;
-    //}
+    
     console.log('(init) Logger log to console enabled: ' + this.LogToConsoleEnabled);
     console.log('(init) Logger log to storage enabled: ' + this.LogToStorageEnabled);
+  }
+
+  AddWriter(writter: ILogWriter) {
+    this.__allLogWriters.push(writter);
   }
 
   SetEnabled(newValue: boolean) {
     this.LogToConsoleEnabled = newValue;
     console.log('Logging set to: ' + newValue);
   }
+
   DebugIDataBrowserTab(browserWindow: IDataBrowserTab) {
     if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
       this.LogVal('WindowType', scWindowType[browserWindow.UrlParts.ScWindowType]);
@@ -206,13 +169,12 @@ export class LoggerAgent implements ILoggerAgent {
 
     this.FuncEnd(this.DebugIDataOneDoc.name);
   }
-  AddDebugTextChangedCallback(caller: any, callback: Function): void {
-    //console.log('========================================');
-    this.__debugTextChangedCallbacks.push({
-      Caller: caller,
-      Func: callback
-    });
-  }
+  //AddDebugTextChangedCallback(caller: any, callback: Function): void {
+  //  this.__debugTextChangedCallbacks.push({
+  //    Caller: caller,
+  //    Func: callback
+  //  });
+  //}
   HndlrClearDebugText(self: ILoggerAgent, verify: boolean = false): void {
     this.FuncStart(this.HndlrClearDebugText.name);
     var proceed: boolean = true;
@@ -290,47 +252,19 @@ export class LoggerAgent implements ILoggerAgent {
         Append: true
       });
 
+      this.__WriteToAllWriters(text);
+
       if (this.LogToConsoleEnabled) {
-        console.log(text);
-        await this.WriteLogToStorage(text);
+
       } else if (!this.LogHasBeenInit) {
+
         this.LogPreInitBuffer.push(text);
+
       }
     }
   }
 
-  StorageLogCombined: string = "";
 
-  async WriteLogToStorage(logMessage: any): Promise<void> {
-    return new Promise(async (resolve) => {
-      this.StorageLogCombined += "|||" + JSON.stringify(logMessage);
-
-      if (this.CurrentStorageLogKey) {
-        //if it doesn't exist yet, it will hopefully catch up once it does
-        window.localStorage.setItem(this.CurrentStorageLogKey, this.StorageLogCombined);
-
-        //let storageObj: browser.storage.StorageObject = {
-        //  [this.RollingLogId.CurrentStorageLogKey]: this.StorageLogCombined
-        //}
-      }
-
-      //browser.storage.local.set(storageObj);
-
-      //try writing to a tab
-      //chrome.tabs.create({ url: 'javascript:document.write("<h1>Hello, World!</h1>")' });
-
-      //console.log('this.LogTabId: ' + this.LogTabId);
-      //if (this.LogTabId > 0) {
-      //  console.log('Executing script on log tab')
-      //  browser.tabs.executeScript(this.LogTabId, { code: 'document.write("<h5>Log Message</h5>")' })
-      //    .catch((err) => console.log(err));
-
-      //  browser.tabs.executeScript(this.LogTabId, { code: 'console.log("<h5>Log Message</h5>")' })
-      //    .catch((err) => console.log(err));
-      //  //browser.tabs.sendMessage( this.LogTabId,  url: 'javascript:document.write("<h1>' + logMessage + '</h1>")' });
-      //}
-    });
-  }
 
   DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
     this.FuncStart(this.DebugDataOneIframe.name);
@@ -411,6 +345,13 @@ export class LoggerAgent implements ILoggerAgent {
       //}
     }
     this.FuncEnd(this.PromiseBucketDebug.name, friendlyName);
+  }
+
+  private __WriteToAllWriters(text: string) {
+    for (var idx = 0; idx < this.__allLogWriters.length; idx++) {
+      var oneWriter: ILogWriter = this.__allLogWriters[idx];
+      oneWriter.WriteText(text);
+    }
   }
 
   __triggerAllDebugTextChangedCallbacks(data: ICallbackDataDebugTextChanged) {

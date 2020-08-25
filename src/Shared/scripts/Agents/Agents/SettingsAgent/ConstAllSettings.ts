@@ -54,7 +54,7 @@ export class ConstAllSettings {
       SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Log to Console',
     ),
-        //new OneGenericSetting(
+    //new OneGenericSetting(
     //  SettingKey.AutoSaveEnabled,
     //  SettingType.BoolCheckBox,
     //  null,
@@ -135,6 +135,16 @@ export class ConstAllSettings {
       SettingFlavor.PopUp,
       'Settings',
     ),
+    new OneGenericSetting(
+      SettingKey.LgndMessages,
+      SettingType.Accordion,
+      null,
+      PopConst.Const.Selector.Legend.LgndMessages,
+      PopConst.Const.Settings.Defaults.LgndMessages,
+      SettingFlavor.PopUp,
+      'Messages',
+    ),
+
     new OneGenericSetting(
       SettingKey.LgndState,
       SettingType.Accordion,

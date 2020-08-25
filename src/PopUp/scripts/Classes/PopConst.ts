@@ -66,12 +66,12 @@ export class PopConst {
         WindowClose: '[id=close-window]',
       },
       Legend: {
-        LgndSettings: '[id=lgnd-settings]',
-        LgndInSite: '[id=lgnd-in-site]',
-        LgndHindSite: '[id=lgnd-hind-site]',
-
         LgndDebug: '[id=lgnd-log]',
         LgndForeSite: '[id=lgnd-fore-site]',
+        LgndHindSite: '[id=lgnd-hind-site]',
+        LgndInSite: '[id=lgnd-in-site]',
+        LgndMessages: '[id=lgnd-messages]',
+        LgndSettings: '[id=lgnd-settings]',
         LgndState: '[id=lgnd-state]',
       },
       HS: {
@@ -100,15 +100,15 @@ export class PopConst {
     },
     Settings: {
       Defaults: {
+        AutoSaveEnabled: false,
+        DebugKeepDialogOpen: false,
         LgndDebug: false,
         LgndForeSite: true,
         LgndHindSite: true,
         LgndInSite: true,
+        LgndMessages: false,
         LgndSettings: false,
         LgndState: false,
-        DebugKeepDialogOpen: false,
-        AutoSaveEnabled: false,
-        
       }
     },
     Storage: {
@@ -124,6 +124,17 @@ export class PopConst {
           AutoSnapshotBeforeWindowChange: true,
         }
       }
+    },
+    SnapShotFormat: {
+      lenTimestamp : 13,
+      lenNickname : 16,
+      lenPageType : 7,
+      lenPrefix : 6,
+      lenShortId : 4,
+      colSep:  ' - ',
+      lenCeCount : 3,
+      lenActiveNode : 16,
+      lenFavorite : 3,
     },
     Timeouts: {
       WaitBeforeRemovingCompleteFlag: 1500,

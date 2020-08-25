@@ -53,7 +53,7 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
 
       var result: PromiseResult = new PromiseResult(this.WaitForPageReadyNative.name, this.Logger);
 
-      this.Logger.DebugIDataOneDoc(targetDoc);
+      this.Logger.LogAsJsonPretty(this.WaitForPageReadyNative.name,targetDoc);
 
       var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForPageReadyNative.name);
 

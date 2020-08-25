@@ -1,51 +1,53 @@
-﻿import { PopUpManagerBase } from '../PopUpManagerBase';
-import { PopUpHub } from '../PopUpHub';
-import { IOneStorageData } from '../../../../Shared/scripts/Interfaces/IOneStorageData';
-import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/IDataOneTreeNode';
-import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
-import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
-import { scWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
-import { ICallbackDataDebugTextChanged } from '../../../../Shared/scripts/Interfaces/ICallbackDataDebugTextChanged';
-import { PayloadDataFromContent } from '../../../../Shared/scripts/Classes/PayloadDataFromContent';
-import { MsgFlag } from '../../../../Shared/scripts/Enums/1xxx-MessageFlag';
-import { IGuid } from '../../../../Shared/scripts/Interfaces/IGuid';
-import { ICurrStateContent } from '../../../../Shared/scripts/Interfaces/ICurrState';
-import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
-import { MenuCommand } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
+﻿import { AccordianManager } from '../../../../Shared/scripts/Agents/Drones/AccordianDrone/AccordianManager';
+import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
-import { ISelectionHeaders } from '../../../../Shared/scripts/Interfaces/ISelectionHeaders';
-import { SnapShotFlavor } from '../../../../Shared/scripts/Enums/SnapShotFlavor';
-import { SettingType } from '../../../../Shared/scripts/Enums/SettingType';
-import { UrlParts } from '../../../../Shared/scripts/Interfaces/UrlParts';
-import { PopConst } from '../../Classes/PopConst';
+import { MsgFlag } from '../../../../Shared/scripts/Enums/1xxx-MessageFlag';
+import { MenuCommand } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
-import { UiButtonStateManager } from '../UiButtonStateManager';
-import { IMenuState } from '../../../../Shared/scripts/Interfaces/IMenuState';
+import { SettingType } from '../../../../Shared/scripts/Enums/SettingType';
+import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/IAccordianManager';
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IallAgents";
 import { IOneGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
-import { AccordianManager } from '../../../../Shared/scripts/Agents/Drones/AccordianDrone/AccordianManager';
-import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/IAccordianManager';
-import { UiCommunicationFeedbackModule } from '../UiMessageOverlayModule';
-import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
+import { ICurrStateContent } from '../../../../Shared/scripts/Interfaces/ICurrState';
+import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
+import { IGuid } from '../../../../Shared/scripts/Interfaces/IGuid';
+import { IMenuState } from '../../../../Shared/scripts/Interfaces/IMenuState';
+import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
+import { UrlParts } from '../../../../Shared/scripts/Interfaces/UrlParts';
+import { PopConst } from '../../Classes/PopConst';
+import { PopUpHub } from '../PopUpHub';
+import { PopUpManagerBase } from '../PopUpManagerBase';
+import { UiButtonStateManager } from '../UiButtonStateManager';
+import { SelectSnapshotModule } from './Modules/SelectSnapshotModule/SelectSnapshotModule';
+import { CommunicationsFeedbackModule } from "./Modules/UiFeedbackModules/CommunicationsFeedbackModule/CommunicationsFeedbackModule";
+import { UiContentStateModule } from './Modules/UiFeedbackModules/ContentStateModule/UiContentStateModule';
+import { StorageFeedbackModule } from './Modules/UiFeedbackModules/StorageFeedbackModule/StorageFeedbackModule';
+import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
 
 export class UiManager extends PopUpManagerBase {
-  TabId: string;
-  ParentFocused: boolean = false;
+  
+  
+   
+  AccordianManager: IAccordianManager;
+  ButtonStateManager: UiButtonStateManager;
+  CommunicationsFeedbackModule: CommunicationsFeedbackModule;
+  CurrContentState: ICurrStateContent;
+  private FeedbackModuleLog: UiFeedbackModuleLog;
+  private FeedbackModuleState: UiContentStateModule;
+  private FeedbackModuleStorage: StorageFeedbackModule;
+  indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';
+  lineBreak = '<br/>';
+  MenuEnabled: boolean = true;
   MenuFocused: boolean = true;
   OtherFocused: boolean = false;
-  MenuEnabled: boolean = true;
-  CurrContentState: ICurrStateContent;
-  ButtonStateManager: UiButtonStateManager;
-  lineBreak = '<br/>';
-  indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';
+  ParentFocused: boolean = false;
+  private SelectSnapShotModule: SelectSnapshotModule;
+  TabId: string;
 
   CurrentMenuState: IMenuState = {
     SelectSnapshotId: null,
   }
-
-
-  AccordianManager: IAccordianManager;
-  MessageFeedbackModule: UiCommunicationFeedbackModule;
+    
 
   constructor(popHub: PopUpHub, allAgents: IAllAgents) {
     super(popHub, allAgents);
@@ -56,7 +58,12 @@ export class UiManager extends PopUpManagerBase {
 
     this.AccordianManager = new AccordianManager(this.AllAgents.Logger, this.AllAgents.SettingsAgent);
 
-    this.MessageFeedbackModule = new UiCommunicationFeedbackModule(document.querySelector(PopConst.Const.Selector.HS.DivOverlayModule), this.AllAgents.Logger);
+    this.CommunicationsFeedbackModule = new CommunicationsFeedbackModule(PopConst.Const.Selector.HS.DivOverlayModule, this.AllAgents.Logger);
+    this.FeedbackModuleLog = new UiFeedbackModuleLog(PopConst.Const.ElemId.textAreaFeedback, this.AllAgents.Logger);
+    this.FeedbackModuleState = new UiContentStateModule(PopConst.Const.Selector.HS.DivStatePopUp, this.AllAgents.Logger);
+
+
+    this.SelectSnapShotModule = new SelectSnapshotModule(PopConst.Const.Selector.HS.SelStateSnapShot, this.AllAgents.Logger, this.Helpers().GuidHelper)
 
     this.AllAgents.Logger.FuncEnd(UiManager.name);
   }
@@ -65,34 +72,40 @@ export class UiManager extends PopUpManagerBase {
     this.AllAgents.Logger.FuncStart(UiManager.name, this.Init.name);
 
     var self = this;
-    this.AllAgents.Logger.AddDebugTextChangedCallback(self, this.HndlrDebugTextChanged);
+    //this.AllAgents.Logger.AddDebugTextChangedCallback(self, this.FeedbackModuleDebugData.HndlrDebugTextChanged);
 
-    
     this.WriteBuildNumToUi();
 
-    
+    this.InitUiTextAreaModules();
+
     //this.MsgMan().SendMessageToContentTab(new MsgFromPopUp(MsgFlag.Ping, this.PopHub), this.TabMan().CurrentTabData);
 
     this.ScheduleAutoSaveSnapShot();
     this.ScheduleAutoLogin();
 
-
     this.AllAgents.Logger.FuncEnd(UiManager.name, this.Init.name);
   }
-
-
-
+  SelectChanged() {
+    this.SelectSnapShotModule.SelectChanged();
+    this.RefreshUi();
+  }
+  private InitUiTextAreaModules() {
+  }
 
   OnFailedCommand(err: string): void {
     //todo
     this.AllAgents.Logger.Log(err);
   }
 
+  DrawStorage() {
+    this.FeedbackModuleStorage.FromAtticDrawStorage();
+  }
+
   ClosePopUp(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.ClosePopUp.name);
       try {
-        this.MessageFeedbackModule.UpdateMsgStatusStack('Command Completed Successfully');
+        this.CommunicationsFeedbackModule.UpdateMsgStatusStack('Command Completed Successfully');
 
         let setting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.DebugKeepDialogOpen);
         if (!this.AllAgents.SettingsAgent.ValueAsBool(setting)) {
@@ -108,40 +121,13 @@ export class UiManager extends PopUpManagerBase {
       this.AllAgents.Logger.FuncEnd(this.ClosePopUp.name);
     });
   }
-  async FromAtticDrawPopUpLogStorage() {
-    try {
-      await browser.storage.local.get()
-        .then((storageResults: browser.storage.StorageObject) => {
-          //let lastId = storageResults[PopConst.Const.Storage.StorageLastKeyKey];
-          var lastId: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.LastUsedLogToStorageKey);
-
-          this.AllAgents.Logger.LogAsJsonPretty('lastId xxxx', lastId);
-          let keyToUse = PopConst.Const.Storage.StorageLogKeyPrefix + lastId.ValueAsInt();
-          console.log("keyToUse: " + keyToUse);
-          let storedValue: browser.storage.StorageValue = storageResults[keyToUse];
-          if (storedValue) {
-            let valueSplit: string[] = storedValue.toString().split('|||');
-            if (valueSplit) {
-              console.log("length " + valueSplit.length);
-              for (var idx = 0; idx < valueSplit.length; idx++) {
-                console.log(valueSplit[idx]);
-              }
-            }
-          } else {
-            this.AllAgents.Logger.Log('No storedVal');
-          }
-        });
-    } catch (e) {
-      this.AllAgents.Logger.ErrorAndThrow(this.FromAtticDrawPopUpLogStorage.name, e.toString());
-    }
-  }
+ 
   AutoLogin() {
     //todo - put back ?
     //if (this.CachedState.WindowType === scWindowType.LoginPage) {
     //  this.SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqLoginWithAdminB, this.PopHub));
     //}
   }
-
 
   ScheduleAutoSaveSnapShot() {
   }
@@ -156,13 +142,9 @@ export class UiManager extends PopUpManagerBase {
     //}
   }
 
-  async FromAtticDrawStorage() {
-    this.AllAgents.Logger.FuncStart(this.FromAtticDrawStorage.name);
-    try {
-    } catch (e) {
-
-    }
-    this.AllAgents.Logger.FuncEnd(this.FromAtticDrawStorage.name);
+  DrawPopUpLogStorage() {
+    var lastId: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.LastUsedLogToStorageKey);
+    this.FeedbackModuleStorage.FromAtticDrawPopUpLogStorage(lastId);
   }
 
   WriteBuildNumToUi() {
@@ -176,149 +158,11 @@ export class UiManager extends PopUpManagerBase {
     }
   }
 
-  private __drawStoragePretty(ourData: IOneStorageData[]) {
-    this.AllAgents.Logger.FuncStart(this.__drawStoragePretty.name);
 
-    this.ClearTextArea();
+  
 
-    for (var idx = 0; idx < ourData.length; idx++) {
-      this.AllAgents.Logger.Log('key: \t' + ourData[idx].key);
-      var parsed: IDataOneWindowStorage = <IDataOneWindowStorage>JSON.parse(ourData[idx].data);
-      if (parsed) {
-        this.DrawDebugDataPretty(parsed);
-        this.AllAgents.Logger.Log('------------');
-      }
-    }
-    this.AllAgents.Logger.FuncEnd(this.__drawStoragePretty.name);
-  }
-  DebugDataOneNode(dataOneTreeNode: IDataOneTreeNode): string {
-    this.AllAgents.Logger.FuncStart(this.DebugDataOneNode.name);
-    var activeOrNot = dataOneTreeNode.IsActive ? '* ' : '  ';
-    var expandedOrNot = dataOneTreeNode.IsExpanded ? '+ ' : '  ';
 
-    var toReturn: string = activeOrNot + expandedOrNot + dataOneTreeNode.NodeId.AsString + ' ' + dataOneTreeNode.NodeFriendly;
-    this.AllAgents.Logger.FuncEnd(this.DebugDataOneNode.name);
-    return toReturn;
-  }
-  GetDebugDataOneCE(dataOneCe: IDataOneStorageOneTreeState): string[] {
-    this.AllAgents.Logger.FuncStart('GetDebugDataOneCE');
-    var toReturn: string[] = [];
-    toReturn.push('------ All Tree Nodes -----');
 
-    for (var idx = 0; idx < dataOneCe.AllTreeNodeAr.length; idx++) {
-      this.AllAgents.Logger.Log('idx: ' + idx);
-      var oneVal = this.DebugDataOneNode(dataOneCe.AllTreeNodeAr[idx]);
-      this.AllAgents.Logger.Log('oneVal : ' + oneVal);
-      toReturn.push(oneVal);
-    }
-
-    this.AllAgents.Logger.FuncEnd(this.GetDebugDataOneCE.name);
-    return toReturn;
-  }
-
-  __buildDebugDataPretty(dataOneWindow: IDataOneWindowStorage) {
-    this.AllAgents.Logger.FuncStart(this.__buildDebugDataPretty.name, 'data not null? ' + this.AllAgents.Logger.IsNullOrUndefined(dataOneWindow));
-
-    var toReturn: string[] = [];
-    if (dataOneWindow) {
-      toReturn.push('------ One Window Snap Shot Start -----');
-      toReturn.push('Id: ' + dataOneWindow.Id);
-      toReturn.push('TimeStamp: ' + dataOneWindow.TimeStamp);
-      toReturn.push('CE Count: ' + dataOneWindow.AllCEAr.length);
-      toReturn.push('Type: ' + scWindowType[dataOneWindow.WindowType]);
-      toReturn.push('Nickname: ' + dataOneWindow.NickName);
-      for (var jdx = 0; jdx < dataOneWindow.AllCEAr.length; jdx++) {
-        toReturn.push('\t------ One CE Start -----');
-        var dataOneCE: IDataOneStorageOneTreeState = dataOneWindow.AllCEAr[jdx];
-        //toReturn.push('\tId: ' + dataOneCE.Id.AsString);
-
-        var allCeDebugDataAr = this.GetDebugDataOneCE(dataOneCE);
-        for (var kdx = 0; kdx < allCeDebugDataAr.length; kdx++) {
-          toReturn.push('\t\t' + allCeDebugDataAr[kdx]);
-        }
-        toReturn.push('\t------ One CE End -----');
-      }
-      toReturn.push('------ One Window Snap Shot End -----');
-
-      this.AllAgents.Logger.FuncEnd(this.__buildDebugDataPretty.name);
-    } else {
-      this.AllAgents.Logger.ErrorAndThrow(this.__buildDebugDataPretty.name, 'missing data')
-    }
-    return toReturn;
-  }
-  DrawDebugDataPretty(source: IDataOneWindowStorage): void {
-    this.AllAgents.Logger.FuncStart(this.DrawDebugDataPretty.name, 'source not null: ' + this.AllAgents.Logger.IsNullOrUndefined(source));
-
-    var allDebugData: string[] = this.__buildDebugDataPretty(source);
-
-    //allDebugData = allDebugData.concat(this.__drawSettings());
-
-    for (var ldx = 0; ldx < allDebugData.length; ldx++) {
-      this.PopHub.FeedbackMan.WriteLine(allDebugData[ldx]);
-    }
-
-    this.AllAgents.Logger.FuncEnd(this.DrawDebugDataPretty.name);
-  }
-
-  ClearTextArea(): void {
-    var ta = this.__getTextArea();
-    if (ta) {
-      ta.value = '';
-    } else {
-      this.AllAgents.Logger.ErrorAndThrow(this.ClearTextArea.name, 'No text area found');
-    }
-  }
-
-  __getTextArea(): HTMLTextAreaElement {
-    return <HTMLTextAreaElement>document.querySelector(PopConst.Const.Selector.HS.TaDebug);
-  }
-
-  HndlrDebugTextChanged(caller: any, data: ICallbackDataDebugTextChanged) {
-    var self = caller;
-    var ta = self.__getTextArea();
-
-    if (ta) {
-      if (data.Append) {
-        ta.value += data.NewText + '\n';
-      } else {
-        ta.value = data.NewText + '\n';
-      }
-
-      ta.scrollTop = ta.scrollHeight;
-    }
-  }
-
-  //SetParentInfo(winDataParent: IDataBrowserTab) {
-  //  var targetSpan = document.getElementById(PopConst.Const.ElemId.HindSiteParentInfo);
-  //  if (targetSpan) {
-  //    targetSpan.innerHTML = ' | Parent Id: ' + winDataParent.DataDocSelf.DocId.AsShort + ' | ' + winDataParent.Window.location.href;
-  //  }
-  //}
-
-  DrawStorageResponse(data: PayloadDataFromContent) {
-    this.AllAgents.Logger.FuncStart('DrawStorage');
-    try {
-      //var ourData: IOneStorageData[] = this.__getAllLocalStorageAsIOneStorageData();
-
-      if (data.State.SnapShotsMany.CurrentSnapShots) {
-        //this.__drawStorageRaw(data.CurrentSnapShots)
-        //this.__drawStoragePretty(data.CurrentSnapShots)
-      }
-    } catch (e) {
-      this.AllAgents.Logger.ErrorAndThrow(this.DrawStorageResponse.name, e.message);
-    }
-    this.AllAgents.Logger.FuncEnd('DrawStorage');
-  }
-
-  private __drawStorageRaw(ourData: IOneStorageData[]) {
-    this.AllAgents.Logger.FuncStart('DrawStorageRaw');
-    for (var idx = 0; idx < ourData.length; idx++) {
-      this.AllAgents.Logger.Log('key: \t' + ourData[idx].key);
-      this.AllAgents.Logger.Log('data: \t' + ourData[idx].data);
-      this.AllAgents.Logger.Log('------------');
-    }
-    this.AllAgents.Logger.FuncEnd('DrawStorageRaw');
-  }
 
   async UpdateAtticFromUi(): Promise<any> {
     this.AllAgents.Logger.FuncStart(this.UpdateAtticFromUi.name);
@@ -334,18 +178,7 @@ export class UiManager extends PopUpManagerBase {
     this.AllAgents.Logger.FuncEnd(this.UpdateAtticFromUi.name);
   }
 
-  SelectChanged(): void {
-    this.AllAgents.Logger.FuncStart(this.SelectChanged.name);
-    this.CurrentMenuState.SelectSnapshotId = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(this.__getSelectElem().value, true);
-    //this.debug().Log('new index :' + this.__selectSnapshotId);
 
-    //if (e.ctrlKey) {
-    //  alert
-    //}
-
-    this.RefreshUi();
-    this.AllAgents.Logger.FuncEnd(this.SelectChanged.name);
-  }
 
   private __GetCancelButton() {
     return document.getElementById(PopConst.Const.ElemId.HS.Btn.HsCancel);
@@ -366,31 +199,6 @@ export class UiManager extends PopUpManagerBase {
     }
     //todo this.UiMan().OperationCancelled = false;
   }
-
-  //async __refreshSettings() {
-  //  this.allAgents.Logger.FuncStart(this.__refreshSettings.name);
-  //  let debugFieldSet: HTMLFieldSetElement = <HTMLFieldSetElement>window.document.querySelector(PopConst.Const.Selector.HS.IdFieldSetDebug);
-
-  //  let currentSettings: IDataPopUpSettings =  await this.PopAtticMan().CurrentSettings();
-  //  if (currentSettings) {
-  //    if (debugFieldSet) {
-  //      let newDisplay = currentSettings.LogSettings.ShowDebugData ? '' : 'none';
-  //      debugFieldSet.style.display = newDisplay;
-  //    }
-  //    let checkBoxShowDebug: HTMLInputElement = <HTMLInputElement>window.document.querySelector(PopConst.Const.Selector.HS.iCBoxdSettingsShowLogData);
-  //    if (checkBoxShowDebug) {
-  //      this.allAgents.Logger.LogVal('before', checkBoxShowDebug.checked.toString());
-  //      checkBoxShowDebug.checked = currentSettings.LogSettings.ShowDebugData;
-  //      this.allAgents.Logger.LogVal('after', checkBoxShowDebug.checked.toString());
-  //    } else {
-  //      this.allAgents.Logger.Error(this.__refreshSettings.name, 'no checkbox found');
-  //    }
-  //  }
-  //  else {
-  //    this.allAgents.Logger.Error(this.__refreshSettings.name, 'no settings found');
-  //  }
-  //  this.allAgents.Logger.FuncEnd(this.__refreshSettings.name);
-  //}
 
   RefreshUiGenericSettings() {
     this.AllAgents.Logger.FuncStart(this.RefreshUiGenericSettings.name);
@@ -418,10 +226,7 @@ export class UiManager extends PopUpManagerBase {
   }
 
   async RefreshUi() {
-
   }
-
-
 
   async RefreshUiFromContentState(contentState: ICurrStateContent) {
     this.AllAgents.Logger.FuncStart(this.RefreshUiFromContentState.name);
@@ -430,7 +235,7 @@ export class UiManager extends PopUpManagerBase {
 
     this.UiMan().PopulateState(contentState);
 
-    this.PopulateStateOfSnapShotSelect(contentState.SnapShotsMany.CurrentSnapShots);
+    this.SelectSnapShotModule. PopulateStateOfSnapShotSelect(contentState.SnapShotsMany.CurrentSnapShots);
 
     this.ButtonStateManager.RefreshButtonStates();
 
@@ -490,9 +295,7 @@ export class UiManager extends PopUpManagerBase {
     return toReturn;
   }
 
-  private __getSelectElem(): HTMLSelectElement {
-    return <HTMLSelectElement>window.document.querySelector(PopConst.Const.Selector.HS.SelStateSnapShot);
-  }
+
 
   //GetIdOfSelectWindowSnapshot(): IGuid {
   //  this.allAgents.Logger.FuncStart(this.GetIdOfSelectWindowSnapshot.name);
@@ -616,13 +419,9 @@ export class UiManager extends PopUpManagerBase {
     }
   }
   PopulateContentStateDivPopUp() {
-    var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.DivStatePopUp);
 
-    //this.allAgents.Logger.LogVal('now', new Date().toString());
-    //var allTaText: string = 'State as of: ' + (new Date()).toString();
     var allStateText: string = this.lineBreak + 'PopUp State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());
 
-    if (targetCurrStateDiv) {
       allStateText += this.lineBreak + 'UI';
 
       allStateText += this.indentedLineBreak + 'Select Snapshot: ';
@@ -659,9 +458,10 @@ export class UiManager extends PopUpManagerBase {
           allStateText += '&nbsp; : &nbsp;';
           allStateText += urlParts.Parameters[idx].value || '';
         }
-      }
 
-      targetCurrStateDiv.innerHTML = allStateText;
+
+      this.FeedbackModuleState.AddHtml(allStateText);
+     
     }
   }
 
@@ -672,7 +472,7 @@ export class UiManager extends PopUpManagerBase {
 
     this.CurrContentState = contentState;
     if (this.AllAgents.Logger.IsNotNullOrUndefinedBool('state', contentState)) {
-      this.UiMan().PopulateStateOfSnapShotSelect(contentState.SnapShotsMany.CurrentSnapShots);
+      this.UiMan().SelectSnapShotModule.PopulateStateOfSnapShotSelect(contentState.SnapShotsMany.CurrentSnapShots);
       this.PopulateContentStateDivPopUp();
       this.PopulateContentStateDivContent(contentState);
     }
@@ -685,111 +485,8 @@ export class UiManager extends PopUpManagerBase {
   PopulateSnapShotsNotAuto() {
   }
 
-  CleanExistingSelection(targetSel: HTMLSelectElement) {
-    var optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderAutoTitle + ']')
-    if (optGroup) {
-      optGroup.remove();
-    }
 
-    optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderAuto + ']')
-    if (optGroup) {
-      optGroup.remove();
-    }
-    optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderFavorite + ']')
-    if (optGroup) {
-      optGroup.remove();
-    }
 
-    optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle + ']')
-    if (optGroup) {
-      optGroup.remove();
-    }
 
-    targetSel.options.length = 0;
-  }
 
-  WriteHeaders(targetSel: HTMLSelectElement) {
-    var toReturn: ISelectionHeaders = {
-      Auto: null,
-      Favorite: null,
-      AutoTitle: null,
-      FavoriteTitle: null,
-    }
-
-    toReturn.Auto = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.Auto.label = this.AllAgents.HelperAgent.UtilityHelp.SelectHeaderStr('');
-    toReturn.Auto.id = PopConst.Const.ElemId.HS.SelectHeaderAuto;
-
-    toReturn.AutoTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.AutoTitle.label = 'Auto Snap Shots';
-    toReturn.AutoTitle.id = PopConst.Const.ElemId.HS.SelectHeaderAutoTitle;
-    toReturn.AutoTitle.classList.add('title');
-
-    toReturn.Favorite = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.Favorite.label = this.AllAgents.HelperAgent.UtilityHelp.SelectHeaderStr('');
-    toReturn.Favorite.id = PopConst.Const.ElemId.HS.SelectHeaderFavorite;
-
-    toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.FavoriteTitle.label = 'Tyical Snap Shots';
-    toReturn.FavoriteTitle.id = PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle;
-    toReturn.FavoriteTitle.classList.add('title');
-
-    return toReturn;
-  }
-
-  PopulateStateOfSnapShotSelect(snapShots: IDataOneWindowStorage[]) {
-    this.AllAgents.Logger.FuncStart(this.PopulateStateOfSnapShotSelect.name);
-
-    if (snapShots) {
-      var targetSel: HTMLSelectElement = this.__getSelectElem();
-
-      if (targetSel) {
-        this.CleanExistingSelection(targetSel);
-        var headers: ISelectionHeaders = this.WriteHeaders(targetSel);
-
-        if (snapShots && snapShots.length > 0) {
-          this.AllAgents.Logger.Log('targetSel.options.length : ' + targetSel.options.length);
-
-          for (var idx: number = 0; idx < snapShots.length; idx++) {
-            this.AllAgents.Logger.Log('snapShots:' + idx + ":" + snapShots.length);
-
-            var data = snapShots[idx];
-
-            var el = <HTMLOptionElement>window.document.createElement('option');
-            el.innerHTML = this.PopHub.Helpers.UtilityHelp.TimeNicknameFavStr(data);
-
-            if (data.Flavor === SnapShotFlavor.Favorite) {
-              el.classList.add('favorite');
-            }
-
-            el.value = data.Id.AsString;
-            this.AllAgents.Logger.LogVal('data.Id:', data.Id);
-            this.AllAgents.Logger.LogVal('this.CurrentMenuState.SelectSnapshotId:', this.CurrentMenuState.SelectSnapshotId);
-
-            if (data.Id && this.CurrentMenuState.SelectSnapshotId) {
-              if (data.Id.AsString === this.CurrentMenuState.SelectSnapshotId.AsString) {
-                this.AllAgents.Logger.LogVal("selected", data.Id.AsString);
-                el.selected = true;
-              }
-            }
-            if (data.Flavor === SnapShotFlavor.Autosave) {
-              headers.Auto.appendChild(el);
-            } else {
-              headers.Favorite.appendChild(el);
-            }
-          }
-        }
-
-        targetSel.appendChild(headers.FavoriteTitle);
-        targetSel.appendChild(headers.Favorite);
-        targetSel.appendChild(headers.AutoTitle);
-        targetSel.appendChild(headers.Auto);
-
-        if (!this.CurrentMenuState.SelectSnapshotId || this.CurrentMenuState.SelectSnapshotId === this.AllAgents.HelperAgent.GuidHelper.EmptyGuid()) {
-          targetSel.selectedIndex = 0;
-        }
-      }
-    }
-    this.AllAgents.Logger.FuncEnd(this.PopulateStateOfSnapShotSelect.name);
-  }
 }

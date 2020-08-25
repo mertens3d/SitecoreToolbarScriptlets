@@ -75,6 +75,7 @@ export class ContentMessageManager extends ContentManagerBase {
   async SetLoggerFromMessage(reqMsgFromPopup: MsgFromPopUp) {
     let currSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole);
     let valueToUse: boolean = SharedConst.Const.Settings.Defaults.LogToConsole;
+
     if (currSetting) {
       let candidate = this.AllAgents.SettingsAgent.ValueAsBool(currSetting);
       if (candidate) {
@@ -87,6 +88,7 @@ export class ContentMessageManager extends ContentManagerBase {
     } else {
       console.log('curr setting not found');
     }
+
   }
 
   private ToggleCompactCss(Data: PayloadDataFromPopUp): Promise<void> {

@@ -10,19 +10,14 @@
 <body>
   <div class="big-wrapper">
 
-    <div id="menu-overlayx" >
+    <div id="menu-overlayx">
       <div class="overlay-gray"></div>
-      <div class="scroller-msg-stat">
-        <div class="msg-status" id="msg-status"></div>
-      </div>
-
+      
     </div>
-
 
     <form>
       <div class="header">
         <div class="left-side">
-         
         </div>
         <div class="right-side">
           <div class="build-stamp" id="build-stamp"></div>
@@ -118,6 +113,22 @@
       </fieldset>
 
       <fieldset class='top'>
+        <legend id='lgnd-messages' data-setting='lgnd-messages' class="section">{error}</legend>
+        <div class='accordion-content'>
+          <div class='flex-container'>
+            <div class='col-full'>
+              <div class='scroller'>
+                <div class="scroller-msg-stat">
+                  <div class="msg-status" id="msg-status"></div>
+                </div>
+                <textarea id='ta-messages'></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class='top'>
         <legend id='lgnd-settings' data-setting='lgnd-settings' class="section">Settings/ Stats</legend>
         <div class='accordion-content'>
 
@@ -132,8 +143,6 @@
           <br />
           <input type="checkbox" id="id-settings-use-compact" checked="" />
           <label for='id-settings-use-compact'>{error}</label>
-
-
 
           <fieldset>
             <legend>Debug</legend>
@@ -151,8 +160,8 @@
             <legend>Auto Snapshot</legend>
 
             <!--<input type="checkbox" id="id-settings-not-used" checked="checked" />
-        <label for='id-settings-not-used'>{error}</label>
-        <br />-->
+            <label for='id-settings-not-used'>{error}</label>
+            <br />-->
             <input type="checkbox" id="id-settings-auto-snapshot-on-window-change" checked="checked" />
             <label for='id-settings-auto-snapshot-on-window-change'>{error}</label>
 

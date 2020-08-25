@@ -11,6 +11,8 @@ export interface IDataOneWindowStorage {
   NickName: string
   RawData: IOneStorageData,
   TimeStamp: Date,
+  TimeStampFriendly: string,
   WindowFriendly: string,
   WindowType: scWindowType,
+  TimeNicknameFavStr: string
 }

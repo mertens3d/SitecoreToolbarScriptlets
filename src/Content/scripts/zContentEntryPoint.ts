@@ -10,10 +10,18 @@ import { IOneGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IOneG
 import { ConstAllSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings';
 import { QueryStrAgent } from '../../Shared/scripts/Agents/Agents/QueryStringAgent/QueryStrAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
+import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
+import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
 
 async function main() {
   var allAgents: IAllAgents = new AllAgents();
   allAgents.Logger = new LoggerAgent();
+  allAgents.Logger.AddWriter(new LoggerConsoleWriter());
+  let storageLogWriter = new LoggerStorageWriter();
+  allAgents.Logger.AddWriter(storageLogWriter);
+
+
+
   allAgents.RepoAgent = new RepoAgent(allAgents.Logger);
 
   allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, allAgents.RepoAgent);
@@ -23,7 +31,9 @@ async function main() {
   var RollingLogId = new RollingLogIdDrone(allAgents.SettingsAgent);
   var nextLogId = RollingLogId.GetNextLogId();
   console.log('RollingLogId: ' + nextLogId);
-  allAgents.Logger.SetLogToStorageKey(nextLogId);
+
+  storageLogWriter.SetLogToStorageKey(nextLogId);
+  allAgents.Logger.AddWriter(new LoggerStorageWriter());
 
   allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
 

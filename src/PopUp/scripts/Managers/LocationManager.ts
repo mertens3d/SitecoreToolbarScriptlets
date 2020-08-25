@@ -93,8 +93,9 @@ export class LocationManager extends PopUpManagerBase {
             .then(() => result.MarkSuccessful())
             .catch((ex) => result.MarkFailed(ex));
         } else {
-          this.AllAgents.Logger.Log('unknown case');
+          //this.AllAgents.Logger.Log('unknown case');
           this.AllAgents.Logger.LogAsJsonPretty('contState', contState);
+          reject('unknown contState ');
         }
       } else {
         this.AllAgents.Logger.Log('need to handle ce case');

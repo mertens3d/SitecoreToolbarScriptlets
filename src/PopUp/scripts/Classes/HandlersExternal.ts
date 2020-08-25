@@ -76,11 +76,11 @@ export class HandlersExternal extends CommonEvents {
   }
 
   __DrawStorage(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.UiMan.FromAtticDrawStorage();
+    popHub.UiMan.DrawStorage();  
   }
 
   __DrawPopUpLogStorage(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.UiMan.FromAtticDrawPopUpLogStorage();
+    popHub.UiMan.DrawPopUpLogStorage(); 
   }
 
   HndlrSnapShotRemove(evt: any, popHub: PopUpHub) {
