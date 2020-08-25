@@ -6,13 +6,17 @@ export class UiFeedbackModuleBase {
   Logger: ILoggerAgent;
   protected __targetElement: HTMLElement;
 
-  constructor(textAreaSelector: string, logger: ILoggerAgent) {
-    this.__elementSelector = textAreaSelector;
+  constructor(selector: string, logger: ILoggerAgent) {
+    this.__elementSelector = selector;
     this.Logger = logger;
   }
 
   private __getFeedbackElem(): HTMLElement {
-    return <HTMLElement>document.getElementById(this.__elementSelector);
+
+    let result = <HTMLElement>document.querySelector(this.__elementSelector);
+    console.log(this.__elementSelector);
+    console.log('++++++++++' + JSON.stringify(result))
+    return result; 
   }
 
   AddHtml(htmlText: string) {

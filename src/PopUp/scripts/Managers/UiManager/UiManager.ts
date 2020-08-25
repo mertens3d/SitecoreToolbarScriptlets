@@ -59,7 +59,10 @@ export class UiManager extends PopUpManagerBase {
     this.AccordianManager = new AccordianManager(this.AllAgents.Logger, this.AllAgents.SettingsAgent);
 
     this.CommunicationsFeedbackModule = new CommunicationsFeedbackModule(PopConst.Const.Selector.HS.DivOverlayModule, this.AllAgents.Logger);
-    this.FeedbackModuleLog = new UiFeedbackModuleLog(PopConst.Const.ElemId.textAreaFeedback, this.AllAgents.Logger);
+    this.FeedbackModuleLog = new UiFeedbackModuleLog(PopConst.Const.Selector.HS.textAreaFeedback, this.AllAgents.Logger);
+
+    this.AllAgents.Logger.AddWriter(this.FeedbackModuleLog);
+
     this.FeedbackModuleState = new UiContentStateModule(PopConst.Const.Selector.HS.DivStatePopUp, this.AllAgents.Logger);
 
 

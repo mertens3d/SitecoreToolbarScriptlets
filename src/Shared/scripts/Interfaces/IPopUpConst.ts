@@ -7,7 +7,7 @@ export interface IPopUpConst {
     preview: IScMode,
   },
   ElemId: {
-    textAreaFeedback: string,
+   
     InputNickname: string,
     HindSiteParentInfo: string,
     HS: {
@@ -71,24 +71,25 @@ export interface IPopUpConst {
       LgndState: string,
     },
     HS: {
+      AutoSnapshotBeforeWindowChange: string,
       BuildStamp: string,
-      DivOverlayModule: string,
       DivMsgStatus: string,
-      GenericSettingTest: string,
-      DivStatePopUp: string,
+      DivOverlayModule: string,
       DivStateContent: string,
+      DivStatePopUp: string,
+      GenericSettingTest: string,
       iCBoxdSettingsAutoLogin: string,
-      LogToConsole: string,
       IdFieldSetDebug: string,
+      LogToConsole: string,
       PrefAutoLogin: string,
       SelStateSnapShot: string,
-      SettingNotUsed: string,
-      AutoSnapshotBeforeWindowChange: string,
-      SettingDebugKeepDialogOpen: string,
-      SettingUseCompactCss: string,
       SettingAutoSaveInterval: string,
       SettingAutoSaveMaxCount: string,
+      SettingDebugKeepDialogOpen: string,
+      SettingNotUsed: string,
+      SettingUseCompactCss: string,
       TaDebug: string,
+      textAreaFeedback: string,
     }
   },
   Settings: {

@@ -3,17 +3,11 @@ import { ILogWriter } from "../../../../../../../Shared/scripts/Interfaces/Agent
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
 
 export class UiFeedbackModuleLog extends UiFeedbackModuleBase implements ILogWriter {
+  WriteText(text: string) {
+    this.WriteSingleLine(text);
+  }
 
-
-    WriteText(text: string) {
-        if (this.__targetElement) {
-        }
-    }
-
-
-    constructor(textAreaSelector: string, logger: ILoggerAgent) {
-        super(textAreaSelector, logger);
-
-    }
-
+  constructor(selector: string, logger: ILoggerAgent) {
+    super(selector, logger);
+  }
 }
