@@ -73,12 +73,9 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncStart(this.UpdateSettingValuesFromStorage.name);
     for (var idx = 0; idx < foundSettings.length; idx++) {
       let storageSetting: IOneGenericSettingForStorage = foundSettings[idx];
-      this.Logger.LogVal('setting key', storageSetting.SettingKeyFriendly);
       let matchingSetting: IOneGenericSetting = this.GetByKey(storageSetting.SettingKey);
       if (matchingSetting) {
-        this.Logger.LogVal('Before Update', matchingSetting.ValueAsObj);
         matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
-        this.Logger.LogVal('after Update', matchingSetting.ValueAsObj);
       } else {
         this.Logger.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
       }
@@ -87,27 +84,26 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   async HarvestGenericSettingsFromStorage(): Promise<void> {
-    return new Promise(async (resolve) => { 
-    //take in a setting
-    // if get, spit back it's value
-    // if set, update the cache and write to storage
+    return new Promise(async (resolve) => {
+      //take in a setting
+      // if get, spit back it's value
+      // if set, update the cache and write to storage
 
-    this.Logger.FuncStart(this.HarvestGenericSettingsFromStorage.name);
-    let foundSettings: IOneGenericSettingForStorage[];
+      this.Logger.FuncStart(this.HarvestGenericSettingsFromStorage.name);
+      let foundSettings: IOneGenericSettingForStorage[];
 
-    await this.ReadGenericSettings()
-      .then((result) => {
-        //this.Logger.LogAsJsonPretty('result values from storage', result);
-        foundSettings = result
-      })
-      //.then(() => this.Logger.LogAsJsonPretty('settings from storage', foundSettings))
-      .then(() => {
-        if (foundSettings) {
-          this.UpdateSettingValuesFromStorage(foundSettings);
-        }
-      })
-      .then(() => resolve());
-    
+      await this.ReadGenericSettings()
+        .then((result) => {
+          //this.Logger.LogAsJsonPretty('result values from storage', result);
+          foundSettings = result
+        })
+        //.then(() => this.Logger.LogAsJsonPretty('settings from storage', foundSettings))
+        .then(() => {
+          if (foundSettings) {
+            this.UpdateSettingValuesFromStorage(foundSettings);
+          }
+        })
+        .then(() => resolve());
 
       this.Logger.FuncEnd(this.HarvestGenericSettingsFromStorage.name);
     });
@@ -128,8 +124,7 @@ export class SettingsAgent implements ISettingsAgent {
       let candidate: IOneGenericSetting = this.SettingsAr[idx];
       if ((candidate.SettingFlavor === SettingFlavor.ContentAndPopUpStoredInPopUp)
         ||
-        (candidate.SettingFlavor === SettingFlavor.ContentOnly))
-      {
+        (candidate.SettingFlavor === SettingFlavor.ContentOnly)) {
         toReturn.push(candidate);
       }
     }
@@ -181,7 +176,6 @@ export class SettingsAgent implements ISettingsAgent {
     let foundSetting = this.GetByKey(settingKey);
 
     if (foundSetting) {
-
       foundSetting.ValueAsObj = value;
       //if (foundSetting.DefaultValue !== value) {
       //  foundSetting.ValueAsObj = value;
@@ -190,7 +184,6 @@ export class SettingsAgent implements ISettingsAgent {
       //}
 
       this.WriteAllSettingValuesToStorage();
-     
     } else {
       this.Logger.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
     }
@@ -215,7 +208,6 @@ export class SettingsAgent implements ISettingsAgent {
     this.RepoAgent.WriteGenericSettings(settingValues);
     this.Logger.FuncEnd(this.WriteAllSettingValuesToStorage.name);
   }
-
 
   ValueAsBool(setting: IOneGenericSetting): boolean {
     let toReturn: boolean = false;

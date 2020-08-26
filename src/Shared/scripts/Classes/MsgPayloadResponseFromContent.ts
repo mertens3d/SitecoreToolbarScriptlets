@@ -3,12 +3,12 @@
 import { PayloadDataFromContent } from "./PayloadDataFromContent";
 import { MsgFlag } from "../Enums/1xxx-MessageFlag";
 import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
-import { ICurrStateContent } from "../Interfaces/ICurrState";
+import { IContentState } from "../Interfaces/IContentState/IContentState";
 import { scWindowType } from "../Enums/scWindowType";
 
 export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
   Data: PayloadDataFromContent;
-  ContentState: ICurrStateContent;
+  ContentState: IContentState;
   response: string;
   
 

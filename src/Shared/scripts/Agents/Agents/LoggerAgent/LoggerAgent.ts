@@ -15,7 +15,7 @@ import { IDataBucketRestoreDesktop } from "../../../Interfaces/IDataBucketRestor
 import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
 import { IDataPayloadSnapShot } from "../../../Interfaces/IDataPayloadSnapShot";
 import { IDataOneIframe } from "../../../Interfaces/IDataOneIframe";
-import { ICurrStateContent } from "../../../Interfaces/ICurrState";
+import { IContentState } from "../../../Interfaces/IContentState/IContentState";
 import { ILogWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 
 export class LoggerAgent implements ILoggerAgent {
@@ -27,7 +27,6 @@ export class LoggerAgent implements ILoggerAgent {
   LogPreInitBuffer: string[] = [];
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
 
-  
   private __allLogWriters: ILogWriter[] = [];
 
   constructor() {
@@ -42,11 +41,7 @@ export class LoggerAgent implements ILoggerAgent {
     var result = pad(dateobj.getDate()) + "/" + pad(dateobj.getMonth() + 1) + "/" + dateobj.getFullYear() + " " + pad(dateobj.getHours()) + ":" + pad(dateobj.getMinutes());
 
     this.LogVal('TimeStamp', result);
-    console.log('(ctor) Logger log to console enabled: ' + this.LogToConsoleEnabled);
-    console.log('(ctor) Logger log to storage enabled: ' + this.LogToStorageEnabled);
   }
-
-
 
   async Init(val: boolean) {
     this.LogToConsoleEnabled = val;
@@ -61,14 +56,16 @@ export class LoggerAgent implements ILoggerAgent {
         this.Log(this.LogPreInitBuffer.shift());
       }
     }
-
-    
-    console.log('(init) Logger log to console enabled: ' + this.LogToConsoleEnabled);
-    console.log('(init) Logger log to storage enabled: ' + this.LogToStorageEnabled);
   }
 
   AddWriter(writter: ILogWriter) {
     this.__allLogWriters.push(writter);
+  }
+
+  SectionMarker(sectionTag: string): void {
+    this.Log("");
+    this.Log("======================= " + sectionTag + " =======================");
+    this.Log("");
   }
 
   SetEnabled(newValue: boolean) {
@@ -76,13 +73,6 @@ export class LoggerAgent implements ILoggerAgent {
     console.log('Logging set to: ' + newValue);
   }
 
-  DebugIDataBrowserTab(browserWindow: IDataBrowserTab) {
-    if (this.IsNotNullOrUndefinedBool('IDataBrowserWindow', browserWindow)) {
-      this.LogVal('WindowType', scWindowType[browserWindow.UrlParts.ScWindowType]);
-      //this.DebugIDataOneDoc(browserWindow.DataDocSelf);
-      //this.DebugWindow(browserWindow.Window);
-    }
-  }
   EnabledStatus(): boolean {
     return this.LogToConsoleEnabled;
   }
@@ -255,16 +245,11 @@ export class LoggerAgent implements ILoggerAgent {
       this.__WriteToAllWriters(text);
 
       if (this.LogToConsoleEnabled) {
-
       } else if (!this.LogHasBeenInit) {
-
         this.LogPreInitBuffer.push(text);
-
       }
     }
   }
-
-
 
   DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
     this.FuncStart(this.DebugDataOneIframe.name);
@@ -318,7 +303,7 @@ export class LoggerAgent implements ILoggerAgent {
   //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document.location.href);
   //  this.LogVal('targetWindow.DataDocSelf.Document.location.href', targetWindow.DataDocSelf.Document.location.href);
   //}
-  DebugObjState(state: ICurrStateContent) {
+  DebugObjState(state: IContentState) {
     if (this.IsNotNullOrUndefinedBool('State', state)) {
       if (this.IsNotNullOrUndefinedBool('CurrentSnapShots', state.SnapShotsMany.CurrentSnapShots)) {
         this.LogVal('Snapshot count', state.SnapShotsMany.CurrentSnapShots.length);
@@ -390,6 +375,14 @@ export class LoggerAgent implements ILoggerAgent {
       this.__callDepth = 10;
     }
   }
+
+  InstantiateStart(text: string): void {
+    this.FuncStart("[Instantiate] " + text);
+  }
+  InstantiateEnd(text: string): void {
+    this.FuncEnd("[Instantiate] " + text);
+  }
+
   FuncEnd(text, optionalValueInput?: number);
   FuncEnd(text, optionalValueInput?: string);
   FuncEnd(text, optionalValueInput: string | number) {

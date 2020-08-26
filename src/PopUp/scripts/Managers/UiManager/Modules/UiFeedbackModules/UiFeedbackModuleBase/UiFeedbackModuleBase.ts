@@ -2,6 +2,9 @@
 
 export class UiFeedbackModuleBase {
 
+  protected indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';
+  protected lineBreak = '<br/>';
+
   protected __elementSelector: string;
   Logger: ILoggerAgent;
   protected __targetElement: HTMLElement;
@@ -12,18 +15,23 @@ export class UiFeedbackModuleBase {
   }
 
   private __getFeedbackElem(): HTMLElement {
+    if (!this.__targetElement) {
+      this.__targetElement = <HTMLElement>document.querySelector(this.__elementSelector);
 
-    let result = <HTMLElement>document.querySelector(this.__elementSelector);
-    console.log(this.__elementSelector);
-    console.log('++++++++++' + JSON.stringify(result))
-    return result; 
+      if (!this.__targetElement) {
+        this.Logger.ErrorAndThrow(this.__getFeedbackElem.name, 'target not found: ' + this.__elementSelector);
+      }
+    }
+
+
+    return this.__targetElement; 
   }
 
-  AddHtml(htmlText: string) {
+  AddHtmlString(htmlText: string) {
     if (htmlText) {
-      this.__getFeedbackElem().innerHTML = htmlText;
+      this.__getFeedbackElem().insertAdjacentHTML('beforeend', htmlText);
     } else {
-      this.Logger.ErrorAndThrow(this.AddHtml.name, 'htmlText');
+      this.Logger.ErrorAndThrow(this.AddHtmlString.name, 'htmlText');
     }
   }
 
@@ -40,18 +48,42 @@ export class UiFeedbackModuleBase {
   }
 
   ClearFeedbackElem(): void {
-    var ta: HTMLElement = this.__getFeedbackElem();
-    if (ta) {
-      ta.innerHTML = '';
+    var elem: HTMLElement = this.__getFeedbackElem();
+    if (elem) {
+      elem.innerHTML = '';
     } else {
       this.Logger.ErrorAndThrow(this.ClearFeedbackElem.name, 'No feedback elem found');
     }
   }
 
+  ConvertIndents(input: string): string{
+    let toReturn: string = '';
+
+    for (var idx = 0; idx < input.length; idx++) {
+      let oneChar = input[idx];
+      if (oneChar === ' ') {
+        toReturn += '&nbsp;';
+      } else {
+        toReturn += input.substring(idx);
+        break;
+      }
+
+    }
+
+    return toReturn;
+  }
+
+  ConvertLineBreaks(input: string): string {
+    return input.replace(/\r?\n/g, "<br/>");
+  }
+
+  ConvertTabs(input: string): string {
+    return input.replace(/\t/g, "&nbsp;&nbsp;xxxxxx");
+  }
   WriteSingleLine(text: string): void {
     var ta = this.__getFeedbackElem();
     if (ta) {
-      ta.innerHTML += text + '<br/>';
+      ta.innerHTML += this.ConvertIndents(this.ConvertTabs( this.ConvertLineBreaks(text)) + '<br/>');
     }
   }
 }

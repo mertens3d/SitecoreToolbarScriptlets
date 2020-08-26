@@ -5,11 +5,12 @@ import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { CacheMode } from "../../../../Shared/scripts/Enums/CacheMode";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
-import { ICurrStateContent } from "../../../../Shared/scripts/Interfaces/ICurrState";
+import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDtState";
 import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
 import { ContentHub } from "../../Managers/ContentHub/ContentHub";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
+import { DefaultContentState } from "../../../../Shared/scripts/Classes/DefaultContentState";
 
 export class ContentStateManager extends ContentManagerBase {
   constructor(hub: ContentHub, contentAgents: IAllAgents) {
@@ -18,26 +19,13 @@ export class ContentStateManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncEnd(PromisesBasic.name);
   }
 
-  PopulateContentState(): Promise<ICurrStateContent> {
+  PopulateContentState(): Promise<IContentState> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.PopulateContentState.name);
 
       //contentState: ICurrStateContent = new contents
 
-      let toReturn: ICurrStateContent = {
-        SnapShotsMany: {
-          CurrentSnapShots: [],
-          FavoriteCount: 0,
-          SnapShotsAutoCount: 0,
-          PlainCount: 0,
-          Birthday: new Date(1970),
-        },
-        LastReq: MsgFlag.Unknown,
-        ErrorStack: [],
-        LastReqSuccessful: false,
-        LastReqFailReason: '',
-        ActiveCe: null
-      };
+      let toReturn: IContentState = new DefaultContentState();
 
       //let promiseResult: PromiseResult = new PromiseResult(this.UpdateContentState.name, this.AllAgents.Logger);
       //this.AllAgents.Logger.MarkerC();

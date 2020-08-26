@@ -1,9 +1,8 @@
-﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
-import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { IAccordianManager } from "../../../Interfaces/Agents/IAccordianManager";
+﻿import { IAccordianManager } from "../../../Interfaces/Agents/IAccordianManager";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
 import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
+import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { AccordianDrone } from "./AccordianDrone";
-import { PopUpHub } from "../../../../../PopUp/scripts/Managers/PopUpHub";
 
 export class AccordianManager implements IAccordianManager {
   private SettingsAgent: ISettingsAgent;
@@ -33,9 +32,13 @@ export class AccordianManager implements IAccordianManager {
     this.Logger.FuncEnd(this.RestoreAccordionState.name);
   }
 
-  AddAccordianDrone(popHub: PopUpHub, oneSetting: IOneGenericSetting, uiElem: HTMLElement) {
+  AddAccordianDrone(oneSetting: IOneGenericSetting, uiElem: HTMLElement) {
+    this.Logger.FuncStart(this.AddAccordianDrone.name, oneSetting.UiSelector);
+
+    this.Logger.LogAsJsonPretty('uiElem', uiElem);
     let newAccordianDrone = new AccordianDrone(this.Logger, this.SettingsAgent, uiElem, oneSetting);
     this.AllAccordians.push(newAccordianDrone);
+    this.Logger.FuncEnd(this.AddAccordianDrone.name);
   }
 
   GetAccordianByKey(oneSetting: IOneGenericSetting): AccordianDrone {

@@ -7,7 +7,7 @@ import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers"
 import { MsgFromContent } from "../../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { ContentAPIManager } from "../../Managers/ContentAPIManager/ContentAPIManager";
-import { ICurrStateContent } from "../../../../Shared/scripts/Interfaces/ICurrState";
+import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../../Managers/ContentHub/ContentHub";
@@ -77,8 +77,6 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
         if (reqMsgFromPopup.IsValid) {
           await this.ReqMsgRouter(reqMsgFromPopup)
             .then((contentResponse: MsgFromContent) => {
-              this.Logger.LogAsJsonPretty('contentResponse', contentResponse)
-
               resolve(contentResponse);
             })
             .catch((err) => reject(err))
@@ -171,7 +169,7 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
       if (commandToExecute) {
         await commandToExecute(payload.Data, this, this.TopLevelDoc, this.ContentHub)
           .then(() => this.ApiManager.GetContentState())
-          .then((result: ICurrStateContent) => {
+          .then((result: IContentState) => {
             response.ContentState.LastReq = payload.MsgFlag;
             response.MsgFlag = MsgFlag.RespTaskSuccessful;
             response.ContentState = result;

@@ -18,9 +18,9 @@ export class HelperAgent implements IHelperAgent {
   UrlHelp: UrlHelper;
 
   constructor(logger: ILoggerAgent) {
-    logger.FuncStart(HelperAgent.name);
+    logger.InstantiateStart(HelperAgent.name);
     this.Init(logger, this);
-    logger.FuncEnd(HelperAgent.name);
+    logger.InstantiateEnd(HelperAgent.name);
   }
 
   Init(logger: ILoggerAgent, helperAgent: IHelperAgent): void {

@@ -41,8 +41,6 @@ export class ContentAPIManager extends ContentManagerBase {
 
   AddCETab(payloadData: PayloadDataFromPopUp, self: ContentManagerBase, targetDoc: IDataOneDoc, contentHub: ContentHub): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      //let targetDoc: IDataOneDoc = self.ScUiMan().TopLevelDoc();
-
       await self.AllAgents.HelperAgent.PromisesRecipes.FromDesktopOpenNewCEIframe(targetDoc)
         .then(() => {
           resolve();
@@ -53,7 +51,6 @@ export class ContentAPIManager extends ContentManagerBase {
     });
   }
 
-
   PublischActiveCE() {
     return new Promise(async (resolve, reject) => {
       await this.OneScWinMan().PublishActiveCE(this.ScUiMan().TopLevelDoc())
@@ -62,7 +59,6 @@ export class ContentAPIManager extends ContentManagerBase {
     });
   }
 
-
   async RemoveSnapShot(payloadData: PayloadDataFromPopUp) {
     return new Promise(async (resolve, reject) => {
       await this.AtticMan().RemoveOneFromStorage(payloadData.IdOfSelect)
@@ -70,11 +66,11 @@ export class ContentAPIManager extends ContentManagerBase {
         .catch((err) => reject(err));
     });
   }
-  async SaveWindowState(payloadData: PayloadDataFromPopUp) {
+
+  async SaveWindowState(payloadData: PayloadDataFromPopUp, self: ContentManagerBase, targetDoc: IDataOneDoc, contentHub: ContentHub): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await this.OneScWinMan().SaveWindowState(payloadData.SnapShotSettings)
-        .then(() => { this.AllAgents.Logger.MarkerA() })
-        .then(() => { this.AllAgents.Logger.MarkerA() })
+      await self.OneScWinMan().SaveWindowState(payloadData.SnapShotSettings)
+        .then((windowState) => self.AtticMan().WriteToStorage(windowState))
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -87,9 +83,9 @@ export class ContentAPIManager extends ContentManagerBase {
         .catch((err) => reject(err));
     });
   }
-  RestoreSnapshop(payloadData: PayloadDataFromPopUp) {
+  RestoreSnapshop(payloadData: PayloadDataFromPopUp, self: ContentManagerBase, targetDoc: IDataOneDoc, contentHub: ContentHub) {
     return new Promise(async (resolve, reject) => {
-      await this.ContentHub.MsgMan.__restoreClick(payloadData)
+      await self.MsgMan(). __restoreClick(payloadData)
         .then(() => resolve())
         .catch((err) => reject(err));
     });

@@ -9,12 +9,11 @@ import { MessageManager } from "./MessageManager";
 import { BrowserManager } from "./MessageManager/BrowserManager";
 import { PopUpMessagesBroker } from "./PopUpMessagesBroker/PopUpMessagesBroker";
 import { TabManager } from "./TabManager";
-import { CommunicationsFeedbackModule } from "./UiManager/Modules/UiFeedbackModules/CommunicationsFeedbackModule/CommunicationsFeedbackModule";
+import { FeedbackModuleMessages } from "./UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 import { UiManager } from "./UiManager/UiManager";
 import { PopConst } from "../Classes/PopConst";
 
 export class PopUpHub {
-
   BrowserMan: BrowserManager;
   EventMan: EventManager;
   Helpers: HelperAgent;
@@ -25,6 +24,7 @@ export class PopUpHub {
   MessageMan: MessageManager;
 
   constructor(allAgents: IAllAgents) {
+    allAgents.Logger.InstantiateStart(PopUpHub.name);
     this._allAgents = allAgents;
 
     this.EventMan = new EventManager(this, this._allAgents);
@@ -40,50 +40,38 @@ export class PopUpHub {
     //after uiMan
     // after HelperAgent
 
-
-    let communicationsFeedbackModule = new CommunicationsFeedbackModule(PopConst.Const.Selector.HS.DivMsgStatus, this._allAgents.Logger);
-    let PopUpMessageBroker = new PopUpMessagesBroker(this._allAgents.Logger, communicationsFeedbackModule);
+    let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this._allAgents.Logger);
+    let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this._allAgents.Logger, FeedbackModuleMsg);
 
     //after popUpMessageBroker
     this.MessageMan = new MessageManager(this, this._allAgents, PopUpMessageBroker);
 
     this.BrowserMan = new BrowserManager(this, this._allAgents);
 
-
-
-    this.init();
+    this._allAgents.Logger.InstantiateEnd(PopUpHub.name);
   }
 
-  async init() {
-    this._allAgents.Logger.FuncStart(PopUpHub.name, this.init.name);
+  async InitPopUpHub(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this._allAgents.Logger.FuncStart(this.InitPopUpHub.name);
 
-    let setting: IOneGenericSetting = await this._allAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole);
+      let logToConsolesetting: IOneGenericSetting = await this._allAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole);
 
-    console.log("setting");
-    console.log(setting);
+      if (logToConsolesetting) {
+        await this._allAgents.Logger.Init(this._allAgents.SettingsAgent.ValueAsBool(logToConsolesetting))
+      } else {
+        await this._allAgents.Logger.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
+      }
 
-    if (setting) {
-      await this._allAgents.Logger.Init(this._allAgents.SettingsAgent.ValueAsBool(setting))
-    } else {
-      await this._allAgents.Logger.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
-    }
+      this.TabMan.InitTabManager()
+        .then(() => this.EventMan.InitEventManager())
+        .then(() => this.UiMan.InitUiManager())
+        .then(() => this.MessageMan.InitMessageManager())
+        .then(() => resolve())
+        .catch((err) => reject(err));
 
-    await this.TabMan.Init();
 
-    await this.MessageMan.Init();
-
-    this._allAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
-    this.EventMan.Init();
-    this._allAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
-    this._allAgents.Logger.DebugIDataBrowserTab(this.TabMan.CurrentTabData);
-
-    this.UiMan.Init();
-
-    //this.PageMan.Init();
-
-    this._allAgents.Logger.FuncEnd(PopUpHub.name, this.init.name);
-
-    this._allAgents.Logger.Log('');
-    this._allAgents.Logger.Log('');
+      this._allAgents.Logger.FuncEnd(this.InitPopUpHub.name);
+    });
   }
 }

@@ -3,7 +3,7 @@ import { IScMode } from '../../../Shared/scripts/Interfaces/IscMode';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { PopUpManagerBase } from './PopUpManagerBase';
 import { PopUpHub } from './PopUpHub';
-import { ICurrStateContent } from '../../../Shared/scripts/Interfaces/ICurrState';
+import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
@@ -13,8 +13,8 @@ import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationD
 export class LocationManager extends PopUpManagerBase {
   constructor(hub: PopUpHub, allAgents: IAllAgents) {
     super(hub, allAgents);
-    this.AllAgents.Logger.FuncStart(LocationManager.name);
-    this.AllAgents.Logger.FuncEnd(LocationManager.name);
+    this.AllAgents.Logger.InstantiateStart(LocationManager.name);
+    this.AllAgents.Logger.InstantiateEnd(LocationManager.name);
   }
     
   ChangeLocationSwitchBoard(desiredPageType: scWindowType) {
@@ -76,7 +76,7 @@ export class LocationManager extends PopUpManagerBase {
 
       if (currentPageType === scWindowType.Desktop) {
         this.AllAgents.Logger.MarkerB();
-        let contState: ICurrStateContent = this.UiMan().CurrContentState;
+        let contState: IContentState = this.UiMan().CurrContentState;
         this.AllAgents.Logger.MarkerC();
         if (contState && contState.ActiveCe && contState.ActiveCe.ActiveNode) {
           this.AllAgents.Logger.MarkerD();

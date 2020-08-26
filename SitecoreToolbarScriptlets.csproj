@@ -64,10 +64,14 @@
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\ButtonVisibilityTests.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\ButtonVisibilityTestDrone.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\SelectSnapshotModule\SelectSnapshotModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\FeedbackModuleBrowserState\FeedbackModuleBrowserState.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\SettingsModule\SettingsModule.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\StorageFeedbackModule\StorageFeedbackModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\ContentStateModule\UiContentStateModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\CommunicationsFeedbackModule\CommunicationsFeedbackModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\FeedbackModuleContentState\FeedbackModuleContentState.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\FeedbackModuleMessages\FeedbackModuleMessages.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\UiFeedbackModuleBase\UiFeedbackModuleBase.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\UiFeedbackModuleLog\UiFeedbackModuleLog.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\AllAgents.ts" />
@@ -90,6 +94,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\RollingLogIdDrone\RollingLogIdDrone.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\ContentStateValidator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\HelperBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromisesRecipes.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.ts" />
@@ -102,7 +107,9 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IQueryStrAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IRepositoryAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUiModule.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IAllSettings.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IContentState\IContentState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataPayloadSnapShot.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IMenuStateForMsg.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IOneGenericSettingForStorage.ts" />
@@ -134,7 +141,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IOneGenericSetting.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ISettingsAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\CommandButtonEvents.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICurrState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataCacheOneWindowStorage.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataContentPrefs.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataDtState.ts" />
@@ -147,7 +153,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseRecipes.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISelectionHeaders.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISnapShotsMany.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IContentState\ISnapShotsMany.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUrlHelp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\MsgFromXBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\OneParamPair.ts" />
@@ -286,6 +292,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\AccordianDrone\AccordianDrone.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\DefaultContentState.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

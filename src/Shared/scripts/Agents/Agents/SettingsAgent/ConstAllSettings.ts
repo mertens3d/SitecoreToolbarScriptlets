@@ -91,13 +91,13 @@ export class ConstAllSettings {
       'Auto Login',
     ),
     new OneGenericSetting(
-      SettingKey.LgndLog,
+      SettingKey.LgndPopUpLog,
       SettingType.Accordion,
       null,
-      PopConst.Const.Selector.Legend.LgndDebug,
-      PopConst.Const.Settings.Defaults.LgndDebug,
+      PopConst.Const.Selector.Legend.LgndPopUpLog,
+      PopConst.Const.Settings.Defaults.LgndPopUpLog,
       SettingFlavor.PopUp,
-      'Log',
+      'Pop Up Log',
     ),
     new OneGenericSetting(
       SettingKey.LgndForeSite,
@@ -144,16 +144,38 @@ export class ConstAllSettings {
       SettingFlavor.PopUp,
       'Messages',
     ),
-
     new OneGenericSetting(
-      SettingKey.LgndState,
+      SettingKey.LgndPopUpState,
       SettingType.Accordion,
       null,
-      PopConst.Const.Selector.Legend.LgndState,
-      PopConst.Const.Settings.Defaults.LgndState,
+      PopConst.Const.Selector.Legend.LgndPopUpState,
+      PopConst.Const.Settings.Defaults.LgndPopUpState,
       SettingFlavor.PopUp,
-      'State',
+      'Pop Up State',
     ),
+    new OneGenericSetting(
+      SettingKey.LgndContentState,
+      SettingType.Accordion,
+      null,
+      PopConst.Const.Selector.Legend.LgndContentState,
+      PopConst.Const.Settings.Defaults.LgndContentState,
+      SettingFlavor.PopUp,
+      'Content State',
+    ),
+
+    new OneGenericSetting(
+      SettingKey.LgndBrowserState,
+      SettingType.Accordion,
+      null,
+      PopConst.Const.Selector.Legend.LgndBrowserState,
+      PopConst.Const.Settings.Defaults.LgndBrowserState,
+      SettingFlavor.PopUp,
+      'Browser State',
+    ),
+
+
+
+
     new OneGenericSetting(
       SettingKey.MaxAutoSaveCount,
       SettingType.Number,
@@ -163,6 +185,8 @@ export class ConstAllSettings {
       SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Auto Save Max Count',
     ),
+
+
     new OneGenericSetting(
       SettingKey.AutoSaveIntervalMin,
       SettingType.Number,

@@ -1,4 +1,4 @@
-﻿import { IDataOneWindowStorage } from "./IDataOneWindowStorage";
+﻿import { IDataOneWindowStorage } from "../IDataOneWindowStorage";
 export interface ISnapShotsMany {
   Birthday: Date;
   CurrentSnapShots: IDataOneWindowStorage[];

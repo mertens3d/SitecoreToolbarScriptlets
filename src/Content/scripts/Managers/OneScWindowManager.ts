@@ -34,7 +34,7 @@ export class OneScWindowManager extends ContentManagerBase {
     }
   }
 
-  SaveWindowState(snapShotSettings: IDataPayloadSnapShot) {
+  SaveWindowState(snapShotSettings: IDataPayloadSnapShot): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.SaveWindowState.name);
 
@@ -77,14 +77,8 @@ export class OneScWindowManager extends ContentManagerBase {
 
       this.AllAgents.Logger.FuncEnd(this.SaveWindowState.name);
 
-      if (promiseResult.WasSuccessful) {
-        await this.AtticMan().WriteToStorage(snapShot)
-          .then(() => promiseResult.MarkSuccessful())
-          .catch((err) => promiseResult.MarkFailed(err));
-      }
-
       if (promiseResult.WasSuccessful()) {
-        resolve();
+        resolve(snapShot);
       } else {
         reject(promiseResult.RejectReasons);
       }

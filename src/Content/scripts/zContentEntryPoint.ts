@@ -20,11 +20,10 @@ async function main() {
   let storageLogWriter = new LoggerStorageWriter();
   allAgents.Logger.AddWriter(storageLogWriter);
 
+  let Repo: RepoAgent = new RepoAgent(allAgents.Logger);
 
+  allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, Repo);
 
-  allAgents.RepoAgent = new RepoAgent(allAgents.Logger);
-
-  allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, allAgents.RepoAgent);
   var allSettings: IOneGenericSetting[] = new ConstAllSettings().AllSettings;
   await allAgents.SettingsAgent.InitSettingsAgent(allSettings);
 

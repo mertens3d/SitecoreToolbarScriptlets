@@ -1,5 +1,5 @@
 ﻿import { ContentManagerBase } from "../../_first/_ContentManagerBase";
-import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/ISnapShotsMany";
+import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShotsMany";
 import { ContentHub } from "../ContentHub/ContentHub";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
@@ -12,14 +12,18 @@ import { IGuid } from "../../../../Shared/scripts/Interfaces/IGuid";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+import { RepoAgent } from "../../../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
 
 
 export class ContentAtticManager extends ContentManagerBase {
   private CachedWindowStorage: ISnapShotsMany;
+    Repo: RepoAgent;
 
-  constructor(hub: ContentHub, AllAgents: IAllAgents) {
+  constructor(hub: ContentHub, AllAgents: IAllAgents, repo: RepoAgent) {
     super(hub, AllAgents);
     this.AllAgents.Logger.FuncStart(ContentAtticManager.name);
+
+    this.Repo = repo;
 
     this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
 
@@ -150,9 +154,11 @@ export class ContentAtticManager extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.GetAllLocalStorageAsIOneStorageData.name);
       let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
-      await this.AllAgents.RepoAgent.GetBulkLocalStorageByKeyPrefix(prefix)
+
+      await this.Repo.GetBulkLocalStorageByKeyPrefix(prefix)
         .then((result) => resolve(result))
         .catch((err) => reject(err));
+
       this.AllAgents.Logger.FuncEnd(this.GetAllLocalStorageAsIOneStorageData.name);
     });
   }

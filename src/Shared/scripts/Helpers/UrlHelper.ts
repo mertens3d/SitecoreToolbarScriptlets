@@ -5,7 +5,7 @@ import { SharedConst } from "../SharedConst";
 import { IScMode } from "../Interfaces/IscMode";
 import { OneParamPair } from "../Interfaces/OneParamPair";
 import { AbsoluteUrl } from "../Interfaces/AbsoluteUrl";
-import { ICurrStateContent } from "../Interfaces/ICurrState";
+import { IContentState } from "../Interfaces/IContentState/IContentState";
 export class UrlHelper extends HelperBase {
 
 
@@ -46,7 +46,7 @@ export class UrlHelper extends HelperBase {
     return toReturn;
   }
 
-  BuildEditPrevNormUrl(scMode: IScMode, contState: ICurrStateContent, urlParts: UrlParts): UrlParts {
+  BuildEditPrevNormUrl(scMode: IScMode, contState: IContentState, urlParts: UrlParts): UrlParts {
     let toReturn: UrlParts = urlParts;
     urlParts.Anchor = '';
     urlParts.FilePath = '';
@@ -80,6 +80,7 @@ export class UrlHelper extends HelperBase {
 
     return toReturn;
   }
+
   BuildFullUrlFromParts(UrlParts: UrlParts): AbsoluteUrl {
     let toReturn: AbsoluteUrl = {
       AbsUrl: '',

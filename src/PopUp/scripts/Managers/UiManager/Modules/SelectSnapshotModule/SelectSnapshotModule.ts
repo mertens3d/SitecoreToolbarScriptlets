@@ -8,28 +8,37 @@ import { IGuid } from "../../../../../../Shared/scripts/Interfaces/IGuid";
 import { IGuidHelper } from "../../../../../../Shared/scripts/Interfaces/IGuidHelper";
 import { ISelectionHeaders } from "../../../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { PopConst } from "../../../../Classes/PopConst";
+import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { IContentState } from "../../../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 
-export class SelectSnapshotModule {
+export class SelectSnapshotModule implements IUiModule {
+  ContentState: IContentState;
+
   private __logger: ILoggerAgent;
   private __selector: string;
   SelectSnapshotId: IGuid;
   private __guidHelper: IGuidHelper;
-
-  
 
   constructor(selector: string, logger: ILoggerAgent, guidHelper: IGuidHelper) {
     this.__selector = selector;
     this.__logger = logger;
     this.__guidHelper = guidHelper;
   }
+
+  Init(): void {
+  }
+
+  SetContentState(contentState: IContentState) {
+    this.ContentState = contentState;
+  }
+
+  RefreshUi(): void {
+    this.PopulateStateOfSnapShotSelect();
+  }
+
   private __getSelectElem(): HTMLSelectElement {
     return <HTMLSelectElement>window.document.querySelector(this.__selector);
   }
-
-
-  
-
-
 
   SelectHeaderStr(prefix: string): string {
     // '    Time Stamp          - Page Type - Nickname       - Favorite?';
@@ -65,7 +74,7 @@ export class SelectSnapshotModule {
     toReturn.Favorite.id = PopConst.Const.ElemId.HS.SelectHeaderFavorite;
 
     toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.FavoriteTitle.label = 'Tyical Snap Shots';
+    toReturn.FavoriteTitle.label = 'Typical Snap Shots';
     toReturn.FavoriteTitle.id = PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle;
     toReturn.FavoriteTitle.classList.add('title');
 
@@ -81,65 +90,71 @@ export class SelectSnapshotModule {
     //  alert
     //}
 
-  
     this.__logger.FuncEnd(this.SelectChanged.name);
   }
 
-  PopulateStateOfSnapShotSelect(snapShots: IDataOneWindowStorage[]) {
+  private PopulateStateOfSnapShotSelect() {
     this.__logger.FuncStart(this.PopulateStateOfSnapShotSelect.name);
 
-    if (snapShots) {
-      var targetSel: HTMLSelectElement = this.__getSelectElem();
+    //contentState.SnapShotsMany.CurrentSnapShots
 
-      if (targetSel) {
-        this.CleanExistingSelection(targetSel);
-        var headers: ISelectionHeaders = this.WriteHeaders(targetSel);
+    if (this.ContentState.SnapShotsMany.CurrentSnapShots) {
+      let snapShots: IDataOneWindowStorage[] = this.ContentState.SnapShotsMany.CurrentSnapShots;
 
-        if (snapShots && snapShots.length > 0) {
-          this.__logger.Log('targetSel.options.length : ' + targetSel.options.length);
+      if (snapShots) {
+        var targetSel: HTMLSelectElement = this.__getSelectElem();
 
-          for (var idx: number = 0; idx < snapShots.length; idx++) {
-            this.__logger.Log('snapShots:' + idx + ":" + snapShots.length);
+        if (targetSel) {
+          this.CleanExistingSelection(targetSel);
+          var headers: ISelectionHeaders = this.WriteHeaders(targetSel);
 
-            var data = snapShots[idx];
+          if (snapShots && snapShots.length > 0) {
+            this.__logger.Log('targetSel.options.length : ' + targetSel.options.length);
 
-            var el = <HTMLOptionElement>window.document.createElement('option');
-            el.innerHTML = data.TimeNicknameFavStr;
+            for (var idx: number = 0; idx < snapShots.length; idx++) {
+              this.__logger.Log('snapShots:' + idx + ":" + snapShots.length);
 
-            if (data.Flavor === SnapShotFlavor.Favorite) {
-              el.classList.add('favorite');
-            }
+              var data = snapShots[idx];
 
-            el.value = data.Id.AsString;
-            this.__logger.LogVal('data.Id:', data.Id);
-            this.__logger.LogVal('this.CurrentMenuState.SelectSnapshotId:', this.SelectSnapshotId);
+              var el = <HTMLOptionElement>window.document.createElement('option');
+              el.innerHTML = data.TimeNicknameFavStr;
 
-            if (data.Id && this.SelectSnapshotId) {
-              if (data.Id.AsString === this.SelectSnapshotId.AsString) {
-                this.__logger.LogVal("selected", data.Id.AsString);
-                el.selected = true;
+              if (data.Flavor === SnapShotFlavor.Favorite) {
+                el.classList.add('favorite');
+              }
+
+              el.value = data.Id.AsString;
+              this.__logger.LogVal('data.Id:', data.Id);
+              this.__logger.LogVal('this.CurrentMenuState.SelectSnapshotId:', this.SelectSnapshotId);
+
+              if (data.Id && this.SelectSnapshotId) {
+                if (data.Id.AsString === this.SelectSnapshotId.AsString) {
+                  this.__logger.LogVal("selected", data.Id.AsString);
+                  el.selected = true;
+                }
+              }
+              if (data.Flavor === SnapShotFlavor.Autosave) {
+                headers.Auto.appendChild(el);
+              } else {
+                headers.Favorite.appendChild(el);
               }
             }
-            if (data.Flavor === SnapShotFlavor.Autosave) {
-              headers.Auto.appendChild(el);
-            } else {
-              headers.Favorite.appendChild(el);
-            }
           }
-        }
 
-        targetSel.appendChild(headers.FavoriteTitle);
-        targetSel.appendChild(headers.Favorite);
-        targetSel.appendChild(headers.AutoTitle);
-        targetSel.appendChild(headers.Auto);
+          targetSel.appendChild(headers.FavoriteTitle);
+          targetSel.appendChild(headers.Favorite);
+          targetSel.appendChild(headers.AutoTitle);
+          targetSel.appendChild(headers.Auto);
 
-        if (!this.SelectSnapshotId || this.SelectSnapshotId === this.__guidHelper.EmptyGuid()) {
-          targetSel.selectedIndex = 0;
+          if (!this.SelectSnapshotId || this.SelectSnapshotId === this.__guidHelper.EmptyGuid()) {
+            targetSel.selectedIndex = 0;
+          }
         }
       }
     }
     this.__logger.FuncEnd(this.PopulateStateOfSnapShotSelect.name);
   }
+
   CleanExistingSelection(targetSel: HTMLSelectElement) {
     var optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderAutoTitle + ']')
     if (optGroup) {

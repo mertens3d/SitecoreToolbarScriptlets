@@ -8,33 +8,29 @@ import { LoggerConsoleWriter } from "../../Agents/Agents/LoggerAgent/LoggerConso
 
 
 export interface ILoggerAgent {
-  AddWriter(arg0: LoggerConsoleWriter);
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
-  ThrowIfNullOrUndefined(arg0: string, allAgents: any);
-  PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
-  DebugDataOneIframe(NewIframe: IDataOneIframe);
+  AddWriter(arg0: LoggerConsoleWriter);
   CtorName(name: string);
-
-
-  HndlrClearDebugText(self: ILoggerAgent): void
-  HndlrClearDebugText(self: ILoggerAgent, verify: boolean ): void
+  DebugDataOneIframe(NewIframe: IDataOneIframe);
   DebugIGuid(Id: IGuid);
   EnabledStatus();
-  ErrorAndThrow(container: string, text: any): void
   ErrorAndContinue(container: string, text: any): void
+  ErrorAndThrow(container: string, text: any): void
   ErrorStack: IError[];
-  //AddDebugTextChangedCallback(caller: any, callback: Function): void
   FuncEnd(text, optionalValueInput: string | number);
   FuncEnd(text, optionalValueInput?: number);
   FuncEnd(text, optionalValueInput?: string);
   FuncStart(textOrFunc: string, optionalValue: number | string | boolean): void;
+  FuncStart(textOrFunc: string, optionalValue?: boolean): void;
   FuncStart(textOrFunc: string, optionalValue?: number): void;
   FuncStart(textOrFunc: string, optionalValue?: string): void;
-  FuncStart(textOrFunc: string, optionalValue?: boolean): void;
+  HndlrClearDebugText(self: ILoggerAgent): void
+  HndlrClearDebugText(self: ILoggerAgent, verify: boolean ): void
   Init(valueToUse: boolean);
+  InstantiateEnd(text: string): void;
+  InstantiateStart(text: string): void;
   IsNotNullOrUndefinedBool(title: string, dataToCheck: any);
   IsNullOrUndefined(dataToCheck: any): string;
-  ThrowIfNullOrUndefined(title: string, dataToCheck: any): void;
   Log(text);
   Log(text, optionalValue: string);
   Log(text, optionalValue: string, hasPrefix: boolean);
@@ -44,6 +40,9 @@ export interface ILoggerAgent {
   MarkerB();
   MarkerC();
   MarkerD();
+  PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
+  SectionMarker(arg0: string);
   SetEnabled(arg0: boolean);
-  DebugIDataBrowserTab(tabData: IDataBrowserTab);
+  ThrowIfNullOrUndefined(arg0: string, allAgents: any);
+  ThrowIfNullOrUndefined(title: string, dataToCheck: any): void;
 }

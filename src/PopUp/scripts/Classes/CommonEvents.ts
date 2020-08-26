@@ -2,7 +2,9 @@
 import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllAgents";
-import { ICurrStateContent } from "../../../Shared/scripts/Interfaces/ICurrState";
+import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { DefaultContentState } from "../../../Shared/scripts/Classes/DefaultContentState";
+import { ContentStateValidator } from "../../../Shared/scripts/Classes/ContentStateValidator";
 
 export class CommonEvents {
   protected PopHub: PopUpHub; //extends PopUpManagerBase
@@ -16,7 +18,6 @@ export class CommonEvents {
 
   protected __cleardebugText() {
     this.AllAgents.Logger.HndlrClearDebugText(this.AllAgents.Logger);
-    this.AllAgents.Logger.Log('does this work?');
   }
 
   protected GoContentCommand(msgPlayload: MsgFromPopUp, targetTab: IDataBrowserTab = null) {
@@ -28,8 +29,9 @@ export class CommonEvents {
       //this.AllAgents.Logger.LogAsJsonPretty("msgPayload", msgPlayload);
 
       await this.PopHub.MessageMan.SendMessageToContent(msgPlayload)
-        .then((result: ICurrStateContent) => {
-          this.PopHub.UiMan.RefreshUiFromContentState(result);
+        .then((contentState: IContentState) => {
+          this.AllAgents.Logger.LogAsJsonPretty('contentState ' + this.GoContentCommand.name, contentState);
+          this.PopHub.UiMan.RefreshUi(contentState);
           resolve();
         })
         .catch((err) => reject(err));
@@ -37,4 +39,7 @@ export class CommonEvents {
       this.AllAgents.Logger.FuncEnd(this.GoContentCommand.name);
     });
   }
+
+  
+
 }

@@ -12,7 +12,6 @@
 
     <div id='menu-overlayx'>
       <div class='overlay-gray'></div>
-      
     </div>
 
     <form>
@@ -70,65 +69,6 @@
       </fieldset>
 
       <fieldset class='top'>
-        <legend id='lgnd-state' data-setting='lgnd-state' class='section'>{error}</legend>
-        <div class='accordion-content'>
-          <div class='flex-container'>
-            <div class='col-full'>
-              <div class='scroller'>
-                <div id='div-state-pop-up'></div>
-                <div id='div-state-content'></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset id='id-fieldset-debug' class='top'>
-        <legend id='lgnd-log' data-setting='lgnd-log' class='section'>{error}</legend>
-        <span id='spanParentInfo'></span>
-        <div class='accordion-content'>
-          <div class='col-full'>
-            <div class='scroller'>
-              <div id='ta-log'></div>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset class='top'>
-        <legend id='lgnd-in-site' data-setting='lgnd-in-site' class='section'>{error}</legend>
-        <div class='accordion-content'>
-          <div class='flex-container'>
-            <div class='col-full'>
-              <div class='scroller'>
-                <div id='ta-feedback'></div>
-              </div>
-            </div>
-            <div class='col-right'>
-              <button id='DrawLocalStorage' type='button' class='icon draw-storage'>Draw Local Storage</button>
-              <button id='DrawPopUpLogStorage' type='button' class='icon draw-storage'>Draw Pop Up Log</button>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset class='top'>
-        <legend id='lgnd-messages' data-setting='lgnd-messages' class='section'>{error}</legend>
-        <div class='accordion-content'>
-          <div class='flex-container'>
-            <div class='col-full'>
-              <div class='scroller'>
-                <div class='scroller-msg-stat'>
-                  <div class='msg-status' id='msg-status'></div>
-                </div>
-                <div id='ta-messages'></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset class='top'>
         <legend id='lgnd-settings' data-setting='lgnd-settings' class='section'>Settings/ Stats</legend>
         <div class='accordion-content'>
 
@@ -159,9 +99,6 @@
           <fieldset>
             <legend>Auto Snapshot</legend>
 
-            <!--<input type="checkbox" id="id-settings-not-used" checked="checked" />
-            <label for='id-settings-not-used'>{error}</label>
-            <br />-->
             <input type='checkbox' id='id-settings-auto-snapshot-on-window-change' checked='checked'>
             <label for='id-settings-auto-snapshot-on-window-change'>{error}</label>
 
@@ -177,6 +114,90 @@
           <br>
           <div id='stat-caller-id'></div>
           <div id='stat-self-id'></div>
+        </div>
+      </fieldset>
+
+
+      <fieldset class='top'>
+        <legend id='lgnd-pop-up-state' data-setting='lgnd-pop-up-state' class='section'>{error}</legend>
+        <div class='accordion-content'>
+          <div class='flex-container'>
+            <div class='col-full'>
+              <div class='scroller'>
+                <div id='feedback-div-pop-up-state'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class='top'>
+        <legend id='lgnd-content-state' data-setting='lgnd-content-state' class='section'>{error}</legend>
+        <div class='accordion-content'>
+          <div class='flex-container'>
+            <div class='col-full'>
+              <div class='scroller'>
+                <div id='feedback-div-state-content'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class='top'>
+        <legend id='lgnd-browser-state' data-setting='lgnd-browser-state' class='section'>{error}</legend>
+        <div class='accordion-content'>
+          <div class='flex-container'>
+            <div class='col-full'>
+              <div class='scroller'>
+                <div id='feedback-div-browser-state'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset id='id-fieldset-debug' class='top'>
+        <legend id='lgnd-pop-up-log' data-setting='lgnd-pop-up-log' class='section'>{error}</legend>
+        <span id='spanParentInfo'></span>
+        <div class='accordion-content'>
+          <div class='col-full'>
+            <div class='scroller'>
+              <div id='feedback-pop-up-log'></div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class='top'>
+        <legend id='lgnd-in-site' data-setting='lgnd-in-site' class='section'>{error}</legend>
+        <div class='accordion-content'>
+          <div class='flex-container'>
+            <div class='col-full'>
+              <div class='scroller'>
+                <div id='feedback-storage'></div>
+              </div>
+            </div>
+            <div class='col-right'>
+              <button id='DrawLocalStorage' type='button' class='icon draw-storage'>Draw Local Storage</button>
+              <button id='DrawPopUpLogStorage' type='button' class='icon draw-storage'>Draw Pop Up Log</button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class='top'>
+        <legend id='lgnd-messages' data-setting='lgnd-messages' class='section'>{error}</legend>
+        <div class='accordion-content'>
+          <div class='flex-container'>
+            <div class='col-full'>
+              <div class='scroller'>
+                <div class='feedback-messages' id='feedback-messages'></div>
+
+                <div class='scroller-msg-stat'>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </fieldset>
     </form>

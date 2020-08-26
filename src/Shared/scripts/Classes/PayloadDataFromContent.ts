@@ -1,5 +1,5 @@
-﻿import { ICurrStateContent } from "../Interfaces/ICurrState";
+﻿import { IContentState } from "../Interfaces/IContentState/IContentState";
 
 export class PayloadDataFromContent {
-  State: ICurrStateContent;
+  State: IContentState;
 }

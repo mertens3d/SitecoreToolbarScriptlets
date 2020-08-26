@@ -28,7 +28,13 @@ async function main() {
 
   allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
 
-  new PopUpHub(allAgents);
+  let popUpHub = new PopUpHub(allAgents);
+
+  allAgents.Logger.SectionMarker('Begin Init');
+  await popUpHub.InitPopUpHub();
+  allAgents.Logger.SectionMarker('End Init');
+  allAgents.Logger.SectionMarker('Begin Standby');
+
 }
 
 main();

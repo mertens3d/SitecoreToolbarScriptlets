@@ -18,6 +18,7 @@ import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { ContentAPIManager } from '../ContentAPIManager/ContentAPIManager';
 import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { ContentAtticManager } from '../ContentAtticManager/ContentAtticManager';
+import { RepoAgent } from '../../../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent';
 
 export class ContentHub {
   AtticMan: ContentAtticManager;
@@ -51,7 +52,10 @@ export class ContentHub {
   Instantiate() {
     this.AllAgents.Logger.FuncStart(this.Instantiate.name);
 
-    this.AtticMan = new ContentAtticManager(this, this.AllAgents);
+    let Repo: RepoAgent = new RepoAgent(this.AllAgents.Logger);
+
+    this.AtticMan = new ContentAtticManager(this, this.AllAgents, Repo);
+
     this.ContentAPIMan = new ContentAPIManager(this, this.AllAgents);
     this.MsgMan = new ContentMessageManager(this, this.AllAgents);
     this.MiscMan = new MiscManager(this, this.AllAgents);

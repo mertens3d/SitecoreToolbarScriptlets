@@ -8,7 +8,7 @@ export interface IAllAgents {
   HelperAgent: IHelperAgent;
   Logger: ILoggerAgent;
   QueryStrAgent: QueryStrAgent;
-  RepoAgent: IRepositoryAgent;
+  //RepoAgent: IRepositoryAgent;
   SettingsAgent: ISettingsAgent;
   ToastAgent: IToastAgent;
 }

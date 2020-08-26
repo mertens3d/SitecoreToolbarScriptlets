@@ -88,7 +88,6 @@ export class ContentMessageManager extends ContentManagerBase {
     } else {
       console.log('curr setting not found');
     }
-
   }
 
   private ToggleCompactCss(Data: PayloadDataFromPopUp): Promise<void> {
@@ -107,48 +106,44 @@ export class ContentMessageManager extends ContentManagerBase {
     });
   }
 
-  __restoreClick(Data: PayloadDataFromPopUp): Promise<void> {
+  __restoreClick(data: PayloadDataFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.__restoreClick.name);
 
-      let promiseResult: PromiseResult = new PromiseResult(this.__restoreClick.name, this.AllAgents.Logger);
+      this.AllAgents.Logger.LogAsJsonPretty('data', data);
 
       try {
-        this.AllAgents.Logger.MarkerA();
+        if (data) {
+          if (data.IdOfSelect) {
+            this.AllAgents.Logger.LogVal("IdOfSelect", data.IdOfSelect);
+            var dataOneWindowStorage;
 
-        if (Data.IdOfSelect) {
-          this.AllAgents.Logger.LogVal("IdOfSelect", Data.IdOfSelect);
-          var dataOneWindowStorage;
+            await this.AtticMan().GetFromStorageById(data.IdOfSelect, CacheMode.OkToUseCache)
+              .then((result) => dataOneWindowStorage = result);
 
-          await this.AtticMan().GetFromStorageById(Data.IdOfSelect, CacheMode.OkToUseCache)
-            .then((result) => dataOneWindowStorage = result);
+            var self = this;
 
-          var self = this;
+            var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
 
-          var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
-
-          if (targetDoc) {
-            await self.OneScWinMan().RestoreWindowStateToTargetDoc(targetDoc, dataOneWindowStorage)
-              .then(() => promiseResult.MarkSuccessful())
-              .catch((err) => promiseResult.MarkFailed(err))
-          }
-          else {
-            self.AllAgents.Logger.ErrorAndThrow(this.__restoreClick.name, 'no target window');
+            if (targetDoc) {
+              await self.OneScWinMan().RestoreWindowStateToTargetDoc(targetDoc, dataOneWindowStorage)
+                .then(() => resolve())
+                .catch((err) => reject(err))
+            }
+            else {
+              self.AllAgents.Logger.ErrorAndThrow(this.__restoreClick.name, 'no target window');
+            }
+          } else {
+            reject('No IdOfSelect');
           }
         } else {
-          promiseResult.MarkFailed('No IdOfSelect');
+          reject('No data')
         }
       } catch (ex) {
         this.AllAgents.Logger.ErrorAndThrow(this.__restoreClick.name, ex)
       }
 
       this.AllAgents.Logger.FuncEnd(this.__restoreClick.name);
-
-      if (promiseResult.WasSuccessful()) {
-        resolve();
-      } else {
-        reject(promiseResult.RejectReasons);
-      }
     });
   }
 

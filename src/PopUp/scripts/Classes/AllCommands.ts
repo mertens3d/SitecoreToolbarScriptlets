@@ -21,7 +21,7 @@ export class AllCommands {
 
       {
         Command: MenuCommand.AddCeTab,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.BigRed,
+        ButtonSelector: PopConst.Const.Selector.HS.BigRed,
         VisibilityControllers: [VisibilityType.Desktop],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -31,7 +31,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.GoScModeEdit,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.ModeEdit,
+        ButtonSelector: PopConst.Const.Selector.HS.ModeEdit,
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -41,7 +41,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.ScModeNormal,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.ModeNorm,
+        ButtonSelector: PopConst.Const.Selector.HS.ModeNorm,
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -51,7 +51,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.ScModePrev,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.ModePrev,
+        ButtonSelector: PopConst.Const.Selector.HS.ModePrev,
         VisibilityControllers: [VisibilityType.ActiveCeNode, VisibilityType.Edit],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -61,7 +61,7 @@ export class AllCommands {
       },
       //{
       //  Command: MenuCommand.Edit,
-      //  ButtonSelector: PopConst.Const.ElemId.HS.Btn.ModePrev,
+      //  ButtonSelector: PopConst.Const.Selector.HS.ModePrev,
       //  RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop, scWindowType.Edit, scWindowType.Preview, scWindowType.Normal],
       //  Events: [{
       //    Event: CommandButtonEvents.OnClick,
@@ -74,7 +74,7 @@ export class AllCommands {
 
       {
         Command: MenuCommand.UpdateNickname,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.UpdateNicknameB,
+        ButtonSelector: PopConst.Const.Selector.HS.UpdateNicknameB,
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -84,7 +84,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.PresentationDetails,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.PresentationDetails,
+        ButtonSelector: PopConst.Const.Selector.HS.PresentationDetails,
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -94,7 +94,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.CompactCE,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.CompactCE,
+        ButtonSelector: PopConst.Const.Selector.HS.CompactCE,
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -104,7 +104,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.PutAdminB,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.AdminB,
+        ButtonSelector: PopConst.Const.Selector.HS.AdminB,
         VisibilityControllers: [VisibilityType.LoginPage],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -115,7 +115,7 @@ export class AllCommands {
 
       {
         Command: MenuCommand.GoContentEditor,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.GoCE,
+        ButtonSelector: PopConst.Const.Selector.HS.GoCE,
         VisibilityControllers: [VisibilityType.NotLogin],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -126,7 +126,7 @@ export class AllCommands {
 
       {
         Command: MenuCommand.QuickPublish,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.QuickPublish,
+        ButtonSelector: PopConst.Const.Selector.HS.QuickPublish,
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -136,7 +136,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.GoDesktop,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.Desktop,
+        ButtonSelector: PopConst.Const.Selector.HS.Desktop,
         VisibilityControllers: [VisibilityType.NotLogin],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -144,10 +144,20 @@ export class AllCommands {
           ParameterData: [],
         }]
       },
+      {
+        Command: MenuCommand.Ping,
+        ButtonSelector: null,
+        VisibilityControllers: [],
+        Events: [{
+          Event: null,
+          Handler: popHub.EventMan.Handlers.External.Ping,
+          ParameterData: [],
+        }]
+      },
       // ------ hind site
       {
         Command: MenuCommand.TakeSnapShot,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.TakeSnapshot,
+        ButtonSelector: PopConst.Const.Selector.HS.TakeSnapshot,
         VisibilityControllers: [VisibilityType.SnapShotable],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -158,7 +168,7 @@ export class AllCommands {
 
       {
         Command: MenuCommand.MarkFavorite,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.MarkFavorite,
+        ButtonSelector: PopConst.Const.Selector.HS.MarkFavorite,
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         Events: [{
           Handler: popHub.EventMan.Handlers.External.MarkFavorite,
@@ -168,7 +178,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.Cancel,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsCancel,
+        ButtonSelector: PopConst.Const.Selector.HS.HsCancel,
         VisibilityControllers: [VisibilityType.CommandIsRunning],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -178,7 +188,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.Remove,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsRemoveFromStorage,
+        ButtonSelector: PopConst.Const.Selector.HS.HsRemoveFromStorage,
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -188,7 +198,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.RestoreState,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsRestoreWindowState,
+        ButtonSelector: PopConst.Const.Selector.HS.HsRestoreWindowState,
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -200,7 +210,7 @@ export class AllCommands {
       //------------ insite
       {
         Command: MenuCommand.DrawStorage,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsDrawStorage,
+        ButtonSelector: PopConst.Const.Selector.HS.HsDrawStorage,
         VisibilityControllers: [],
         Events: [{
           Event: CommandButtonEvents.OnClick,
@@ -210,7 +220,7 @@ export class AllCommands {
       },
       {
         Command: MenuCommand.DrawStoragePopUpLogStorage,
-        ButtonSelector: PopConst.Const.ElemId.HS.Btn.HsDrawStorage,
+        ButtonSelector: PopConst.Const.Selector.HS.HsDrawStorage,
         VisibilityControllers: [],
         Events: [{
           Event: CommandButtonEvents.OnClick,

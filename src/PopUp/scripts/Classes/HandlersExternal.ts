@@ -67,6 +67,12 @@ export class HandlersExternal extends CommonEvents {
     })
   }
 
+  async Ping() {
+    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
+    this.GoContentCommand(msg);
+  }
+
+
   __hndlrCancelOperation(evt: MouseEvent, popHub: PopUpHub) {
     popHub.UiMan.SetCancelFlag();
   }
@@ -104,7 +110,7 @@ export class HandlersExternal extends CommonEvents {
             this.AllAgents.Logger.MarkerA();
             toReturn = newTab;
           });
-        this.AllAgents.Logger.DebugIDataBrowserTab(toReturn);
+        this.AllAgents.Logger.LogAsJsonPretty("toReturn", toReturn);
         result.MarkSuccessful();
       }
       else {
