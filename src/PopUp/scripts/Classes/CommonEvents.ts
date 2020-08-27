@@ -31,7 +31,8 @@ export class CommonEvents {
       await this.PopHub.MessageMan.SendMessageToContent(msgPlayload)
         .then((contentState: IContentState) => {
           this.AllAgents.Logger.LogAsJsonPretty('contentState ' + this.GoContentCommand.name, contentState);
-          this.PopHub.UiMan.RefreshUi(contentState);
+          this.PopHub.UiMan.SetContentState(contentState)
+          this.PopHub.UiMan.RefreshUi();
           resolve();
         })
         .catch((err) => reject(err));

@@ -1,48 +1,70 @@
-﻿import { CommonEvents } from "./CommonEvents";
-import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
-import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
+﻿import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
-import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
+import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
+import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { PopUpHub } from "../Managers/PopUpHub";
 import { TabManager } from "../Managers/TabManager";
+import { CommonEvents } from "./CommonEvents";
 
 export class HandlersExternal extends CommonEvents {
-  async AddCETab(evt: MouseEvent, popHub: PopUpHub) {
-    await popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqAddCETab, popHub))
-      .then(() => popHub.UiMan.ClosePopUp())
-      .catch((err) => popHub.UiMan.OnFailedCommand(err))
+  private BuildNewMsgFromPopUp(msgFlag: MsgFlag): MsgFromPopUp {
+    this.AllAgents.Logger.FuncStart(this.PopHub.EventMan.Handlers.External.BuildNewMsgFromPopUp.name);
+    var msg = new MsgFromPopUp(msgFlag, this.PopHub.TabMan.CurrentTabData.UrlParts.ScWindowType, this.PopHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId(), this.PopHub._allAgents.SettingsAgent.GetOnlyContentPrefs());
+    this.AllAgents.Logger.FuncEnd(this.PopHub.EventMan.Handlers.External.BuildNewMsgFromPopUp.name);
+    return msg;
   }
 
+  async AddCETab(evt: MouseEvent, popHub: PopUpHub) {
+    return new Promise<void>(async (resolve, reject) => {
+      let msg: MsgFromPopUp = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAddCETab);
+
+      await popHub.EventMan.Handlers.External.GoContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    });
+  }
   async PutAdminB(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqAdminB, popHub));
+    return new Promise<void>(async (resolve, reject) => {
+      let msg: MsgFromPopUp = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAdminB);
+
+      await popHub.EventMan.Handlers.External.GoContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    });
   }
 
   async QuickPublish(evt: MouseEvent, popHub: PopUpHub) {
-    await popHub.EventMan.Handlers.External.GoContentCommand(new MsgFromPopUp(MsgFlag.ReqQuickPublish, popHub))
-      .then(popHub.UiMan.ClosePopUp)
-      .catch((ex) => this.AllAgents.Logger.ErrorAndThrow(popHub.EventMan.Handlers.External.QuickPublish.name, ex));
+    return new Promise<void>(async (resolve, reject) => {
+      let msg: MsgFromPopUp = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqQuickPublish);
+
+      await popHub.EventMan.Handlers.External.GoContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    });
   }
 
   async HndlrSnapShotCreate(evt: MouseEvent, popHub: PopUpHub) {
-    var msg = new MsgFromPopUp(MsgFlag.ReqTakeSnapShot, popHub);
-    msg.Data.SnapShotSettings.Flavor = SnapShotFlavor.Manual;
+    return new Promise<void>(async (resolve, reject) => {
+      let msg: MsgFromPopUp = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqTakeSnapShot);
 
-    popHub.EventMan.Handlers.External.GoContentCommand(msg);
+      await popHub.EventMan.Handlers.External.GoContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    });
   }
 
   async HndlrSnapShotRestore(evt: MouseEvent, popHub: PopUpHub) {
     this.AllAgents.Logger.FuncStart(this.HndlrSnapShotRestore.name);
 
+    //this will either be a new tab or modifying the existing one
+
     await popHub.EventMan.Handlers.External.CreateNewWindowIfRequired(evt,
       popHub,
       popHub.Helpers.UrlHelp.BuildFullUrlFromParts(popHub.TabMan.CurrentTabData.UrlParts))
       .then((newTab: IDataBrowserTab) => {
-        var msg = new MsgFromPopUp(MsgFlag.ReqRestoreClick, popHub);
-        msg.Data.IdOfSelect = popHub.UiMan.CurrentMenuState.SelectSnapshotId;
-
-        //this.AllAgents.Logger.LogAsJsonPretty("msg.Data", msg.Data);
+        var msg = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqRestoreClick);
+        msg.Data.IdOfSelect = popHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId();
 
         this.GoContentCommand(msg, newTab);
       })
@@ -55,10 +77,7 @@ export class HandlersExternal extends CommonEvents {
 
   async HndlrSnapShotUpdateNickName(evt: MouseEvent, popHub: PopUpHub) {
     return new Promise<void>(async (resolve, reject) => {
-      var msg = new MsgFromPopUp(MsgFlag.ReqUpdateNickName, popHub);
-
-      //the problem seems to be here that the select element is not being set instead it's null
-      msg.Data.IdOfSelect = popHub.UiMan.CurrentMenuState.SelectSnapshotId;
+      let msg: MsgFromPopUp = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqUpdateNickName);
 
       msg.Data.SnapShotSettings.SnapShotNewNickname = popHub.UiMan.GetValueInNickname();
       await popHub.EventMan.Handlers.External.GoContentCommand(msg)
@@ -67,36 +86,49 @@ export class HandlersExternal extends CommonEvents {
     })
   }
 
-  async Ping() {
-    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
-    this.GoContentCommand(msg);
-  }
+  async Ping(evt: MouseEvent, popHub: PopUpHub) {
+    return new Promise<void>(async (resolve, reject) => {
+      let msg: MsgFromPopUp = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.Ping);
 
+      await popHub.EventMan.Handlers.External.GoContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    });
+  }
 
   __hndlrCancelOperation(evt: MouseEvent, popHub: PopUpHub) {
     popHub.UiMan.SetCancelFlag();
   }
 
   MarkFavorite(evt: MouseEvent, popHub: PopUpHub, tanManagerTempFix: TabManager) {
-    popHub.MessageMan.SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqMarkFavorite, popHub));
-  }
-
-  __DrawStorage(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.UiMan.DrawStorage();  
-  }
-
-  __DrawPopUpLogStorage(evt: MouseEvent, popHub: PopUpHub) {
-    popHub.UiMan.DrawPopUpLogStorage(); 
+    return new Promise<void>(async (resolve, reject) => {
+      var msg: MsgFromPopUp = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqMarkFavorite);
+      await popHub.EventMan.Handlers.External.GoContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    });
   }
 
   HndlrSnapShotRemove(evt: any, popHub: PopUpHub) {
-    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.RemoveFromStorage, popHub);
-    this.GoContentCommand(msg);
+    return new Promise<void>(async (resolve, reject) => {
+      let msg: MsgFromPopUp = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.RemoveFromStorage);
+
+      msg.Data.SnapShotSettings.SnapShotNewNickname = popHub.UiMan.GetValueInNickname();
+      await popHub.EventMan.Handlers.External.GoContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    })
   }
 
   HndlrCompactCE(evt: any, popHub: PopUpHub) {
-    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.ReqToggleCompactCss, popHub);
-    this.GoContentCommand(msg);
+    return new Promise<void>(async (resolve, reject) => {
+      let msg: MsgFromPopUp = popHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqToggleCompactCss);
+
+      msg.Data.SnapShotSettings.SnapShotNewNickname = popHub.UiMan.GetValueInNickname();
+      await popHub.EventMan.Handlers.External.GoContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    })
   }
 
   CreateNewWindowIfRequired(evt: MouseEvent, popHub: PopUpHub, tabUrl: AbsoluteUrl,) {

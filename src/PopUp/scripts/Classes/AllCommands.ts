@@ -206,28 +206,6 @@ export class AllCommands {
           ParameterData: [],
         }]
       },
-
-      //------------ insite
-      {
-        Command: MenuCommand.DrawStorage,
-        ButtonSelector: PopConst.Const.Selector.HS.HsDrawStorage,
-        VisibilityControllers: [],
-        Events: [{
-          Event: CommandButtonEvents.OnClick,
-          Handler: popHub.EventMan.Handlers.External.__DrawStorage,
-          ParameterData: [],
-        }]
-      },
-      {
-        Command: MenuCommand.DrawStoragePopUpLogStorage,
-        ButtonSelector: PopConst.Const.Selector.HS.HsDrawStorage,
-        VisibilityControllers: [],
-        Events: [{
-          Event: CommandButtonEvents.OnClick,
-          Handler: popHub.EventMan.Handlers.External.__DrawPopUpLogStorage,
-          ParameterData: [],
-        }]
-      },
     ];
 
     return toReturn;

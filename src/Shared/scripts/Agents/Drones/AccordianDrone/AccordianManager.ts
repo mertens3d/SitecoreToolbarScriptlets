@@ -15,7 +15,6 @@ export class AccordianManager implements IAccordianManager {
   }
 
   async RestoreAccordionState(oneSetting: IOneGenericSetting): Promise<void> {
-    this.Logger.FuncStart(this.RestoreAccordionState.name);
 
     if (oneSetting) {
       let foundAccordian: AccordianDrone = this.GetAccordianByKey(oneSetting);
@@ -29,13 +28,10 @@ export class AccordianManager implements IAccordianManager {
       this.Logger.Log('No setting provided ');
     }
 
-    this.Logger.FuncEnd(this.RestoreAccordionState.name);
   }
 
   AddAccordianDrone(oneSetting: IOneGenericSetting, uiElem: HTMLElement) {
     this.Logger.FuncStart(this.AddAccordianDrone.name, oneSetting.UiSelector);
-
-    this.Logger.LogAsJsonPretty('uiElem', uiElem);
     let newAccordianDrone = new AccordianDrone(this.Logger, this.SettingsAgent, uiElem, oneSetting);
     this.AllAccordians.push(newAccordianDrone);
     this.Logger.FuncEnd(this.AddAccordianDrone.name);

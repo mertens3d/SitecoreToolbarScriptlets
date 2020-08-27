@@ -58,7 +58,7 @@
             <button id='SaveWindowState' type='button' class='icon take-snapshot'>Take Snapshot</button>
             <input type='text' id='inputNickname' value='' placeholder='Nick Name'>
             <button id='UpdateNickname' type='button' class='icon set-nickname'>Set Nickname</button>
-            <button id='MarkFavorite' type='button' class='icon btn-favorite'>Mark Favorite</button>
+            <button id='MarkFavorite' type='button' class='icon btn-favorite'>Mark as Favorite</button>
             <button id='RemoveOneFromLocalStorage' type='button' class='icon delete-snapshot'>Delete Snapshot</button>
 
             <button id='RestoreWindowState' type='button' class='icon restore-snapshot'>Restore Snapshot</button>
@@ -73,15 +73,11 @@
         <div class='accordion-content'>
 
           <br>
-          <input type='checkbox' id='id-generic-setting-test' checked='checked'>
-          <label for='id-generic-setting-test'>{error}</label>
-
-          <br>
-          <input type='checkbox' id='id-settings-auto-login' checked='checked'>
+          <input type='checkbox' id='id-settings-auto-login' checked='checked' disabled='disabled'>
           <label for='id-settings-auto-login'>{error}</label>
 
           <br>
-          <input type='checkbox' id='id-settings-use-compact' checked=''>
+          <input type='checkbox' id='id-settings-use-compact' checked='' disabled='disabled'>
           <label for='id-settings-use-compact'>{error}</label>
 
           <fieldset>
@@ -99,15 +95,15 @@
           <fieldset>
             <legend>Auto Snapshot</legend>
 
-            <input type='checkbox' id='id-settings-auto-snapshot-on-window-change' checked='checked'>
+            <input type='checkbox' id='id-settings-auto-snapshot-on-window-change' checked='checked' disabled='disabled'>
             <label for='id-settings-auto-snapshot-on-window-change'>{error}</label>
 
             <br>
-            <input type='number' id='id-settings-auto-save-interval' min='0' max='100' value='15'>
+            <input type='number' id='id-settings-auto-save-interval' min='0' max='100' value='15' disabled='disabled'>
             <label for='id-settings-auto-save-interval'>{error}</label>
 
             <br>
-            <input type='number' id='id-settings-auto-save-max-count' min='3' max='100' value='3'>
+            <input type='number' id='id-settings-auto-save-max-count' min='3' max='100' value='3' disabled='disabled'>
             <label for='id-settings-auto-save-max-count'>{error}</label>
           </fieldset>
 
@@ -163,23 +159,6 @@
           <div class='col-full'>
             <div class='scroller'>
               <div id='feedback-pop-up-log'></div>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset class='top'>
-        <legend id='lgnd-in-site' data-setting='lgnd-in-site' class='section'>{error}</legend>
-        <div class='accordion-content'>
-          <div class='flex-container'>
-            <div class='col-full'>
-              <div class='scroller'>
-                <div id='feedback-storage'></div>
-              </div>
-            </div>
-            <div class='col-right'>
-              <button id='DrawLocalStorage' type='button' class='icon draw-storage'>Draw Local Storage</button>
-              <button id='DrawPopUpLogStorage' type='button' class='icon draw-storage'>Draw Pop Up Log</button>
             </div>
           </div>
         </div>

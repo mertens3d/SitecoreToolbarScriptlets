@@ -2,15 +2,17 @@
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
+import { Enabled } from "../../../Enums/Enabled";
 export class OneGenericSetting implements IOneGenericSetting {
-  Friendly: string;
+  Enabled: Enabled;
   DataType: SettingType;
-  ValueAsObj: any;
-  SettingKey: SettingKey;
-  SettingFlavor: SettingFlavor;
-  UiSelector: string;
   DefaultValue: any;
-  constructor(settingKey: SettingKey, dataType: SettingType, valueAsObj: any, uiSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, hasUi: boolean = true) {
+  Friendly: string;
+  SettingFlavor: SettingFlavor;
+  SettingKey: SettingKey;
+  UiSelector: string;
+  ValueAsObj: any;
+  constructor(settingKey: SettingKey, dataType: SettingType, valueAsObj: any, uiSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: Enabled, hasUi: boolean = true) {
     this.SettingKey = settingKey;
     this.DataType = dataType;
     this.ValueAsObj = valueAsObj;
@@ -19,14 +21,12 @@ export class OneGenericSetting implements IOneGenericSetting {
     this.SettingFlavor = settingFlavor;
     this.Friendly = friendly;
     this.HasUi = hasUi;
+    this.Enabled = enabled;
   }
   HasUi: boolean;
 
   ValueAsInt(): number {
     var toReturn: number = parseInt(this.ValueAsObj.toString());
-    console.log('ValueAsObj');
-    console.log(this.ValueAsObj);
-    console.log('toReturn : ' + toReturn);
     return toReturn;
   }
 

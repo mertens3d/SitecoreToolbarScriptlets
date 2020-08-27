@@ -5,6 +5,7 @@ import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 import { SharedConst } from "../../../SharedConst";
 import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
+import { Enabled } from "../../../Enums/Enabled";
 
 export class ConstAllSettings {
   AllSettings: IOneGenericSetting[] = [
@@ -16,16 +17,8 @@ export class ConstAllSettings {
       0,
       SettingFlavor.ContentAndPopUpStoredInEach,
       'Rolling Prefix key for log to storage',
+      Enabled.Enabled,
       false // has ui
-    ),
-    new OneGenericSetting(
-      SettingKey.Test,
-      SettingType.BoolCheckBox,
-      null,
-      PopConst.Const.Selector.HS.GenericSettingTest,
-      false,
-      SettingFlavor.PopUp,
-      'Generic Setting Test'
     ),
     new OneGenericSetting(
       SettingKey.LogToConsole,
@@ -35,6 +28,7 @@ export class ConstAllSettings {
       SharedConst.Const.Settings.Defaults.LogToConsole,
       SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Log to Console',
+      Enabled.Enabled
     ),
     new OneGenericSetting(
       SettingKey.UseCompactCss,
@@ -44,25 +38,8 @@ export class ConstAllSettings {
       SharedConst.Const.Settings.Defaults.UseCompactCss,
       SettingFlavor.ContentOnly,
       'Use Compact CSS',
+      Enabled.Disabled
     ),
-    new OneGenericSetting(
-      SettingKey.LogToConsole,
-      SettingType.BoolCheckBox,
-      true,
-      PopConst.Const.Selector.HS.LogToConsole,
-      SharedConst.Const.Settings.Defaults.LogToConsole,
-      SettingFlavor.ContentAndPopUpStoredInPopUp,
-      'Log to Console',
-    ),
-    //new OneGenericSetting(
-    //  SettingKey.AutoSaveEnabled,
-    //  SettingType.BoolCheckBox,
-    //  null,
-    //  PopConst.Const.Selector.HS.SettingAutoSaveEnabled,
-    //  PopConst.Const.Storage.Defaults.bool.AutoSaveEnabled,
-    //  SettingFlavor.ContentAndPopUp,
-    //  'Auto Save Snapshot',
-    // ),
     new OneGenericSetting(
       SettingKey.AutoSnapshotBeforeWindowChange,
       SettingType.BoolCheckBox,
@@ -71,6 +48,7 @@ export class ConstAllSettings {
       PopConst.Const.Storage.Defaults.bool.AutoSnapshotBeforeWindowChange,
       SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Auto Save Snapshot on HindSite Window Change',
+      Enabled.Disabled
     ),
     //new OneGenericSetting(
     //  SettingKey.NotUsed,
@@ -89,6 +67,7 @@ export class ConstAllSettings {
       PopConst.Const.Storage.Defaults.bool.AutoLogin,
       SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Auto Login',
+      Enabled.Disabled
     ),
     new OneGenericSetting(
       SettingKey.LgndPopUpLog,
@@ -98,6 +77,7 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.LgndPopUpLog,
       SettingFlavor.PopUp,
       'Pop Up Log',
+      Enabled.Enabled
     ),
     new OneGenericSetting(
       SettingKey.LgndForeSite,
@@ -107,6 +87,7 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.LgndForeSite,
       SettingFlavor.PopUp,
       'Fore&bull;Site',
+      Enabled.Enabled
     ),
     new OneGenericSetting(
       SettingKey.LgndHindSite,
@@ -116,15 +97,7 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.LgndHindSite,
       SettingFlavor.PopUp,
       'Hind&bull;Site',
-    ),
-    new OneGenericSetting(
-      SettingKey.LgndInSite,
-      SettingType.Accordion,
-      null,
-      PopConst.Const.Selector.Legend.LgndInSite,
-      PopConst.Const.Settings.Defaults.LgndInSite,
-      SettingFlavor.PopUp,
-      'In&bull;Site',
+      Enabled.Enabled
     ),
     new OneGenericSetting(
       SettingKey.LgndSettings,
@@ -134,6 +107,7 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.LgndSettings,
       SettingFlavor.PopUp,
       'Settings',
+      Enabled.Enabled
     ),
     new OneGenericSetting(
       SettingKey.LgndMessages,
@@ -143,6 +117,7 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.LgndMessages,
       SettingFlavor.PopUp,
       'Messages',
+      Enabled.Enabled
     ),
     new OneGenericSetting(
       SettingKey.LgndPopUpState,
@@ -152,6 +127,7 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.LgndPopUpState,
       SettingFlavor.PopUp,
       'Pop Up State',
+      Enabled.Enabled
     ),
     new OneGenericSetting(
       SettingKey.LgndContentState,
@@ -161,6 +137,7 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.LgndContentState,
       SettingFlavor.PopUp,
       'Content State',
+      Enabled.Enabled
     ),
 
     new OneGenericSetting(
@@ -171,10 +148,8 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.LgndBrowserState,
       SettingFlavor.PopUp,
       'Browser State',
+      Enabled.Enabled
     ),
-
-
-
 
     new OneGenericSetting(
       SettingKey.MaxAutoSaveCount,
@@ -184,8 +159,8 @@ export class ConstAllSettings {
       PopConst.Const.Numbers.MaxAutoSaveCount,
       SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Auto Save Max Count',
+      Enabled.Disabled
     ),
-
 
     new OneGenericSetting(
       SettingKey.AutoSaveIntervalMin,
@@ -195,6 +170,7 @@ export class ConstAllSettings {
       PopConst.Const.Numbers.AutoSaveIntervalMin,
       SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Auto Save Interval (Min) - 0 to disable',
+      Enabled.Disabled
     ),
 
     new OneGenericSetting(
@@ -205,6 +181,7 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.DebugKeepDialogOpen,
       SettingFlavor.PopUp,
       '(Debug) Keep Dialog Open',
+      Enabled.Enabled
     )
   ];
 }

@@ -14,7 +14,6 @@
   //popup settings - 2200's
   MaxAutoSaveCount = 3200,
   LogToConsole = 3201,
-  Test = 3202,
 
   //accordion - 3300's
   LgndPopUpLog = 3300,
@@ -22,7 +21,7 @@
   LgndHindSite = 3302,
   LgndSettings = 3303,
   LgndContentState = 3304,
-  LgndInSite = 3305,
+  _unused_ = 3305,
   LgndMessages = 3306,
   LgndBrowserState = 3307,
   LgndPopUpState = 3308,

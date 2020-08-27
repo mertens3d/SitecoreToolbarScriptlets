@@ -120,13 +120,13 @@ export class UiButtonStateManager {
     }
   }
 
-  RefreshUi(currentWindowType: scWindowType, currSelSnapshot: IGuid, guidHelper: IGuidHelper, currentContentState: IContentState): void {
+  RefreshUi(currentWindowType: scWindowType, currSelSnapshot: IGuid, guidHelper: IGuidHelper, contentState: IContentState): void {
     this.Logger.FuncStart(this.RefreshUi.name, this.AllMenuCommands.length);
 
     this.currentWindowType = currentWindowType;
     this.currSelSnapshot = currSelSnapshot;
     this.guidHelper = guidHelper;
-    this.currentContentState = currentContentState;
+    this.currentContentState = contentState;
 
     for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
       var oneCommand = this.AllMenuCommands[idx];

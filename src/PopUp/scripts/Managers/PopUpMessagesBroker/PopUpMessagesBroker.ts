@@ -26,34 +26,40 @@ export class PopUpMessagesBroker {
 
   private ReceiveResponseHndlr(response: any): Promise<IContentState> {
     return new Promise((resolve, reject) => {
-      this.Logger.FuncStart(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
+      this.Logger.FuncStart(this.ReceiveResponseHndlr.name);
 
       if (response) {
-        this.MsgFeedback.UpdateMsgStatusStack('Response Received: ' + StaticHelpers.MsgFlagAsString(response.MsgFlag));
+        StaticHelpers.MsgFlagAsString(response.MsgFlag)
 
-        var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
+        if (response) {
+          this.MsgFeedback.UpdateMsgStatusStack('Response Received: ' + StaticHelpers.MsgFlagAsString(response.MsgFlag));
 
-        if (asMsgFromContent) {
-          this.Logger.Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
+          var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
 
-          switch (response.MsgFlag) {
-            case MsgFlag.RespCurState:
-              break;
-            case MsgFlag.RespTaskSuccessful:
-              resolve(asMsgFromContent.ContentState);
-              break;
-            case MsgFlag.RespError:
-              reject(asMsgFromContent.MsgFlag);
-              break;
-            default:
-              reject('Unrecognized MsgFlag' + StaticHelpers.MsgFlagAsString(response.MsgFlag))
-              break;
+          if (asMsgFromContent) {
+            this.Logger.Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
+
+            switch (response.MsgFlag) {
+              case MsgFlag.RespCurState:
+                break;
+              case MsgFlag.RespTaskSuccessful:
+                resolve(asMsgFromContent.ContentState);
+                break;
+              case MsgFlag.RespError:
+                reject(asMsgFromContent.MsgFlag);
+                break;
+              default:
+                reject('Unrecognized MsgFlag' + StaticHelpers.MsgFlagAsString(response.MsgFlag))
+                break;
+            }
           }
+          else {
+            reject(this.ReceiveResponseHndlr.name + ' response is not class: ' + MsgFromContent.name);
+          }
+          this.Logger.FuncEnd(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
         }
-        else {
-          reject(this.ReceiveResponseHndlr.name + ' response is not class: ' + MsgFromContent.name);
-        }
-        this.Logger.FuncEnd(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
+      } else {
+        reject(this.ReceiveResponseHndlr.name + ' null or undefined response');
       }
     });
   }

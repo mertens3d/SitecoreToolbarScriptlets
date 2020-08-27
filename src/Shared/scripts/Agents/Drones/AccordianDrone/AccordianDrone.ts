@@ -79,22 +79,14 @@ export class AccordianDrone {
       }
     }
 
-    //this.debug().FuncEnd(this.GetaccordionContentElem.name);
     return toReturn;
   }
 
   private SetAccordionClass(targetElem: HTMLElement, isCollapsed: Boolean) {
-    this.Logger.FuncStart(this.SetAccordionClass.name);
-    this.Logger.LogAsJsonPretty("isCollapsed", isCollapsed);
-
     if (!isCollapsed) {
       targetElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
     } else {
       targetElem.classList.add(PopConst.Const.ClassNames.HS.Collapsed);
     }
-
-    this.Logger.LogAsJsonPretty('classList', targetElem.classList);
-
-    this.Logger.FuncEnd(this.SetAccordionClass.name);
   }
 }

@@ -3,9 +3,10 @@ import { IGuidHelper } from "../IGuidHelper";
 import { IPromisesBasic } from "../IPromiseHelper";
 import { IUrlHelper } from "../IUrlHelp";
 import { IPromiseRecipes } from "../IPromiseRecipes";
+import { UtilityHelper } from "../../Helpers/UtilityHelper";
 
 export interface IHelperAgent {
-  UtilityHelp: any;
+  UtilityHelp: UtilityHelper;
   UrlHelp: IUrlHelper;
   PromisesBasic: IPromisesBasic;
   PromisesRecipes: IPromiseRecipes;

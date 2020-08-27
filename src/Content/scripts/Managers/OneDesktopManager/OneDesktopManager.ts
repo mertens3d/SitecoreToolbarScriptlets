@@ -34,14 +34,13 @@ export class OneDesktopManager extends ContentManagerBase {
 
       if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.RestoreDesktopState.name)) {
         for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
-          this.AllAgents.Logger.Log('data idx: ' + idx + ':' + dataToRestore.AllCEAr.length);
-
           var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.ContentHub, this.AllAgents);
 
           await desktopPromiser.RunOneChain(targetDoc, dataToRestore.AllCEAr[idx])
-            .then(() => resolve())
             .catch((err) => reject(err));
         }
+
+        resolve();
       } else {
         reject(this.RestoreDesktopState.name + ' bad data');
       }
@@ -71,7 +70,7 @@ export class OneDesktopManager extends ContentManagerBase {
   GetStateDesktop(): Promise<IDataDesktopState> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.GetStateDesktop.name);
-      this.AllAgents.Logger.LogAsJsonPretty(this.GetStateDesktop.name,this.associatedDoc);
+      this.AllAgents.Logger.LogAsJsonPretty(this.GetStateDesktop.name, this.associatedDoc);
 
       var toReturnAllCeState: IDataDesktopState = this.AllAgents.HelperAgent.FactoryHelp.CreateNewDtDataShell();
 

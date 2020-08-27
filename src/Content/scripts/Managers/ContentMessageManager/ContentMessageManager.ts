@@ -110,8 +110,6 @@ export class ContentMessageManager extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.__restoreClick.name);
 
-      this.AllAgents.Logger.LogAsJsonPretty('data', data);
-
       try {
         if (data) {
           if (data.IdOfSelect) {

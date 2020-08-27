@@ -156,21 +156,15 @@ export class OneScWindowManager extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.RestoreWindowStateToTargetDoc.name);
 
-      
-
       if (dataToRestore) {
         if (dataToRestore.WindowType === scWindowType.ContentEditor || dataToRestore.WindowType === scWindowType.Desktop) {
           if (dataToRestore.WindowType === scWindowType.ContentEditor) {
             await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0])
               .then(() => this.AllAgents.ToastAgent.Notify(targetDoc, 'Restore Completed'));
-
           } else {
             await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore)
               .then(() => this.AllAgents.ToastAgent.Notify(targetDoc, 'Restore Completed'));
-            
           }
-
-          
         }
         else {
           this.AllAgents.Logger.ErrorAndThrow(this.RestoreWindowStateToTargetDoc.name, 'Data not restored. Not in Desktop or Content Editor');

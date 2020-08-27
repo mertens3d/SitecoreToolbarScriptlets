@@ -10,22 +10,51 @@ import { ISelectionHeaders } from "../../../../../../Shared/scripts/Interfaces/I
 import { PopConst } from "../../../../Classes/PopConst";
 import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IContentState } from "../../../../../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { scWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
 
 export class SelectSnapshotModule implements IUiModule {
   ContentState: IContentState;
 
-  private __logger: ILoggerAgent;
+  private Logger: ILoggerAgent;
   private __selector: string;
-  SelectSnapshotId: IGuid;
+  private AllCallbacks: Function[] = [];
+
   private __guidHelper: IGuidHelper;
 
   constructor(selector: string, logger: ILoggerAgent, guidHelper: IGuidHelper) {
     this.__selector = selector;
-    this.__logger = logger;
+    this.Logger = logger;
     this.__guidHelper = guidHelper;
   }
 
   Init(): void {
+    this.AssignOnChangeEvent(PopConst.Const.Selector.HS.SelStateSnapShot);
+  }
+
+  private AssignOnChangeEvent(selector: string): void {
+    this.Logger.FuncStart(this.AssignOnChangeEvent.name, selector);
+
+    var targetElem: HTMLElement = document.querySelector(selector);
+    if (!targetElem) {
+      this.Logger.ErrorAndThrow(this.AssignOnChangeEvent.name, 'No Id: ' + selector);
+    } else {
+      targetElem.onchange = (() => {
+        let self = this;
+        this.OnChangeEventHandler(self);
+      });
+    }
+    this.Logger.FuncEnd(this.AssignOnChangeEvent.name, selector);
+  }
+
+  AddCallbackForSelChanged(callbackFunc: Function) {
+    this.AllCallbacks.push(callbackFunc);
+  }
+
+  private OnChangeEventHandler(self: SelectSnapshotModule) {
+    for (var idx = 0; idx < self.AllCallbacks.length; idx++) {
+      let oneCallback: Function = self.AllCallbacks[idx];
+      oneCallback();
+    }
   }
 
   SetContentState(contentState: IContentState) {
@@ -42,13 +71,26 @@ export class SelectSnapshotModule implements IUiModule {
 
   SelectHeaderStr(prefix: string): string {
     // '    Time Stamp          - Page Type - Nickname       - Favorite?';
-    let toReturn: string = StaticHelpers.BufferString('Time Stamp', PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.Period, BufferDirection.right)
+    let toReturn: string =
+      StaticHelpers.BufferString('', 4, BufferChar.Period, BufferDirection.right)
+      + StaticHelpers.BufferString('Time Stamp', PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Type', PopConst.Const.SnapShotFormat.lenPageType, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Nickname', PopConst.Const.SnapShotFormat.lenNickname, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Active Node.', PopConst.Const.SnapShotFormat.lenActiveNode, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Fav.', PopConst.Const.SnapShotFormat.lenFavorite, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Id', PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('#CE', PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Period, BufferDirection.right);
+    return toReturn;
+  }
+
+  GetSelectSnapshotId(): IGuid {
+    let currentVal = this.__getSelectElem().value;
+    let toReturn: IGuid;
+    if (currentVal) {
+      toReturn = this.__guidHelper.ParseGuid(currentVal, true);
+    } else {
+      toReturn = this.__guidHelper.EmptyGuid();
+    }
     return toReturn;
   }
 
@@ -82,21 +124,20 @@ export class SelectSnapshotModule implements IUiModule {
   }
 
   SelectChanged(): void {
-    this.__logger.FuncStart(this.SelectChanged.name);
-    this.SelectSnapshotId = this.__guidHelper.ParseGuid(this.__getSelectElem().value, true);
+    this.Logger.FuncStart(this.SelectChanged.name);
     //this.debug().Log('new index :' + this.__selectSnapshotId);
 
     //if (e.ctrlKey) {
     //  alert
     //}
 
-    this.__logger.FuncEnd(this.SelectChanged.name);
+    this.Logger.FuncEnd(this.SelectChanged.name);
   }
 
   private PopulateStateOfSnapShotSelect() {
-    this.__logger.FuncStart(this.PopulateStateOfSnapShotSelect.name);
+    this.Logger.FuncStart(this.PopulateStateOfSnapShotSelect.name);
 
-    //contentState.SnapShotsMany.CurrentSnapShots
+    let priorValue: IGuid = this.GetSelectSnapshotId();
 
     if (this.ContentState.SnapShotsMany.CurrentSnapShots) {
       let snapShots: IDataOneWindowStorage[] = this.ContentState.SnapShotsMany.CurrentSnapShots;
@@ -109,35 +150,14 @@ export class SelectSnapshotModule implements IUiModule {
           var headers: ISelectionHeaders = this.WriteHeaders(targetSel);
 
           if (snapShots && snapShots.length > 0) {
-            this.__logger.Log('targetSel.options.length : ' + targetSel.options.length);
+            this.Logger.Log('targetSel.options.length : ' + targetSel.options.length);
 
             for (var idx: number = 0; idx < snapShots.length; idx++) {
-              this.__logger.Log('snapShots:' + idx + ":" + snapShots.length);
+              this.Logger.Log('snapShots:' + idx + ":" + snapShots.length);
 
               var data = snapShots[idx];
-
-              var el = <HTMLOptionElement>window.document.createElement('option');
-              el.innerHTML = data.TimeNicknameFavStr;
-
-              if (data.Flavor === SnapShotFlavor.Favorite) {
-                el.classList.add('favorite');
-              }
-
-              el.value = data.Id.AsString;
-              this.__logger.LogVal('data.Id:', data.Id);
-              this.__logger.LogVal('this.CurrentMenuState.SelectSnapshotId:', this.SelectSnapshotId);
-
-              if (data.Id && this.SelectSnapshotId) {
-                if (data.Id.AsString === this.SelectSnapshotId.AsString) {
-                  this.__logger.LogVal("selected", data.Id.AsString);
-                  el.selected = true;
-                }
-              }
-              if (data.Flavor === SnapShotFlavor.Autosave) {
-                headers.Auto.appendChild(el);
-              } else {
-                headers.Favorite.appendChild(el);
-              }
+              let el = this.BuildOne(data, priorValue, idx);
+              this.AppendToCorrectSnapshotGroup(data, el, headers);
             }
           }
 
@@ -146,13 +166,82 @@ export class SelectSnapshotModule implements IUiModule {
           targetSel.appendChild(headers.AutoTitle);
           targetSel.appendChild(headers.Auto);
 
-          if (!this.SelectSnapshotId || this.SelectSnapshotId === this.__guidHelper.EmptyGuid()) {
-            targetSel.selectedIndex = 0;
-          }
+          //if (!this.GetSelectSnapshotId || this.GetSelectSnapshotId() === this.__guidHelper.EmptyGuid()) {
+          //  targetSel.selectedIndex = 0;
+          //}
         }
       }
     }
-    this.__logger.FuncEnd(this.PopulateStateOfSnapShotSelect.name);
+    this.Logger.FuncEnd(this.PopulateStateOfSnapShotSelect.name);
+  }
+
+  TimeNicknameFavStr(data: IDataOneWindowStorage): string {
+    var typeStr: string = '';
+    if (data.WindowType === scWindowType.ContentEditor) {
+      typeStr = 'Cont Ed';
+    }
+    else if (data.WindowType === scWindowType.Desktop) {
+      typeStr = 'Desktop';
+    }
+    //= (data.WindowType === scWindowType.Unknown) ? '?' : scWindowType[data.WindowType];
+    var activeCeNode: string = '';
+    for (var idx = 0; idx < data.AllCEAr.length; idx++) {
+      var candidateCe = data.AllCEAr[idx];
+      for (var jdx = 0; jdx < candidateCe.AllTreeNodeAr.length; jdx++) {
+        var candidateNode = candidateCe.AllTreeNodeAr[jdx];
+        if (candidateNode.IsActive) {
+          var lvl2Node: string = '';
+          if (jdx >= 2) {
+            lvl2Node = candidateCe.AllTreeNodeAr[1].NodeFriendly + '/';
+          }
+          activeCeNode = lvl2Node + candidateNode.NodeFriendly;
+          break;
+        }
+      }
+    }
+    let toReturn = StaticHelpers.BufferString(data.TimeStampFriendly, PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.space, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(typeStr, PopConst.Const.SnapShotFormat.lenPageType, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.NickName, PopConst.Const.SnapShotFormat.lenNickname, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(activeCeNode, PopConst.Const.SnapShotFormat.lenActiveNode, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Favorite ? '*' : ''), PopConst.Const.SnapShotFormat.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
+      //+ PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.Id.AsShort, PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.AllCEAr.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+    return toReturn;
+  }
+
+  private BuildOne(data: IDataOneWindowStorage, prior: IGuid, idx: number): HTMLOptionElement {
+    let el: HTMLOptionElement = <HTMLOptionElement>window.document.createElement('option');
+
+    let timeNicknameFavStr = this.TimeNicknameFavStr(data);
+
+    el.innerHTML = timeNicknameFavStr;
+
+    if (data.Flavor === SnapShotFlavor.Favorite) {
+      el.classList.add('favorite');
+    }
+
+    el.value = data.Id.AsString;
+
+    if ((data.Id && prior && data.Id.AsString === prior.AsString) ||
+      (idx === 0 && !prior)
+      ||
+      (idx === 0 && prior.AsString === this.__guidHelper.EmptyGuid().AsString)
+
+    ) {
+      this.Logger.Log('Setting to selected')
+      el.selected = true;
+    }
+
+    return el;
+  }
+
+  private AppendToCorrectSnapshotGroup(data: IDataOneWindowStorage, el: HTMLOptionElement, headers: ISelectionHeaders) {
+    if (data.Flavor === SnapShotFlavor.Autosave) {
+      headers.Auto.appendChild(el);
+    } else {
+      headers.Favorite.appendChild(el);
+    }
   }
 
   CleanExistingSelection(targetSel: HTMLSelectElement) {

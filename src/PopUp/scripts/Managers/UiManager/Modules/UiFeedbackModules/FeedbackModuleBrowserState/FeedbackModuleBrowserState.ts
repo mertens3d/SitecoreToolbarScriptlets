@@ -1,10 +1,9 @@
-﻿import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
+﻿import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
 import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IContentState } from "../../../../../../../Shared/scripts/Interfaces/IContentState/IContentState";
-import { IMenuState } from "../../../../../../../Shared/scripts/Interfaces/IMenuState";
 import { UrlParts } from "../../../../../../../Shared/scripts/Interfaces/UrlParts";
-import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
+import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
+import { PopConst } from "../../../../../Classes/PopConst";
 
 export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements IUiModule {
   constructor(selector: string, loggerAgent: ILoggerAgent) {
@@ -15,9 +14,10 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
   RefreshUi(): void {
    
   }
-  PopulateFeedackBrowserState( urlParts: UrlParts) {
+  PopulateFeedackBrowserState(urlParts: UrlParts) {
+    var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.FeedbackBrowserState);
 
-    var allStateText: string = this.lineBreak;// + 'PopUp State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());
+    var allStateText: string = 'Browser State' + this.lineBreak;// + 'PopUp State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());
     allStateText += this.lineBreak + 'URL Parts';
 
     allStateText += this.indentedLineBreak + 'Page Type: ' + StaticHelpers.WindowTypeAsString(urlParts.ScWindowType);
@@ -37,6 +37,6 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
     //    allTaText += urlParts.FilePaths[idx];
     //  }
     //}
-
+    targetCurrStateDiv.innerHTML = allStateText;
   }
 }

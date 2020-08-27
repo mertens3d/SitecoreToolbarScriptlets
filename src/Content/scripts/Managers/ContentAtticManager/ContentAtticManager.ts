@@ -118,9 +118,9 @@ export class ContentAtticManager extends ContentManagerBase {
         }
       }
       if (DateOneWinStoreMatch) {
-        this.AllAgents.Logger.Log('found match', this.AllAgents.HelperAgent.UtilityHelp.TimeNicknameFavStr(DateOneWinStoreMatch));
+        this.AllAgents.Logger.Log('found match');
       } else {
-        this.AllAgents.Logger.LogVal(this.GetFromStorageById.name, 'Match notfound')
+        this.AllAgents.Logger.LogVal(this.GetFromStorageById.name, 'Match not found')
       }
 
       this.AllAgents.Logger.FuncEnd(this.GetFromStorageById.name);

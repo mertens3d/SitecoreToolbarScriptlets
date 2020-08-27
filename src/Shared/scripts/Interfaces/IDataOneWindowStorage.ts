@@ -14,5 +14,4 @@ export interface IDataOneWindowStorage {
   TimeStampFriendly: string,
   WindowFriendly: string,
   WindowType: scWindowType,
-  TimeNicknameFavStr: string
 }
