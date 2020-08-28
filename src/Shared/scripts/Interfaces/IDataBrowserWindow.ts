@@ -1,6 +1,8 @@
-﻿import { UrlParts } from './UrlParts';
+﻿import { IUrlAgent } from './IUrlAgent';
+import { ScUrlAgent } from '../Agents/Agents/UrlAgent/ScUrlAgent';
 
 export interface IDataBrowserTab {
-  Tab: browser.tabs.Tab,
-  UrlParts: UrlParts,
+  ScUrlAgent: ScUrlAgent;
+  //Tab: browser.tabs.Tab,
+  //UrlAgent: IUrlAgent,
 }

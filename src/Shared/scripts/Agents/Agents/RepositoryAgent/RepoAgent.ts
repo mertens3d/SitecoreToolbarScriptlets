@@ -1,9 +1,8 @@
-﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
+﻿import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 import { IOneGenericSettingForStorage } from "../../../Classes/IOneGenericSettingForStorage";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
-import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
-import { ContentConst } from "../../../Interfaces/InjectConst";
 
 export class RepoAgent implements IRepositoryAgent {
   private Logger: ILoggerAgent;

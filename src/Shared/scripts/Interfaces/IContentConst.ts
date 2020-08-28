@@ -1,10 +1,9 @@
-import { IScMode } from './IscMode';
 import { IScVerSpec } from './IScVerSpec';
 
 export interface IContentConst {
   MaxAutoSaveAgeDays: number;
   MaxAutoToSaveCount: number;
-  MaxCacheAgeMs: number;
+  //MaxCacheAgeMs: number;
 
   ElemId: {
     sc: {
@@ -14,7 +13,6 @@ export interface IContentConst {
       SitecoreRootGlyphId: string,
 
       scLoginBtn: IScVerSpec,
-
     },
   },
 
@@ -61,11 +59,6 @@ export interface IContentConst {
       }
     }
   },
-  ScMode: {
-    edit: IScMode,
-    normal: IScMode,
-    preview: IScMode,
-  }
   Storage: {
     SettingsSuffix: string,
     ShowDebugData: boolean,

@@ -51,7 +51,7 @@ export class ContentConst {
   static Const: IContentConst = {
     MaxAutoToSaveCount: 10,
     MaxAutoSaveAgeDays: 1,
-    MaxCacheAgeMs: 1000 * 60 * 10,
+    //MaxCacheAgeMs: 1000 * 60 * 10,
     Iterations: {
       MaxSetHrefEffort: 10,
       MaxIterationSwitchBoard: 20,
@@ -79,18 +79,10 @@ export class ContentConst {
 
     ClassNames: {
       ContentTreeNode: 'scContentTreeNode',
-
       SC: {
         scContentTreeNodeActive: 'scContentTreeNodeActive',
       }
     },
-
-    ScMode: {
-      edit: { AsEnum: scMode.Edit, AsString: 'edit' },
-      normal: { AsEnum: scMode.Normal, AsString: 'normal' },
-      preview: { AsEnum: scMode.Preview, AsString: 'preview' },
-    },
-
     Selector: {
       SC: {
         ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',

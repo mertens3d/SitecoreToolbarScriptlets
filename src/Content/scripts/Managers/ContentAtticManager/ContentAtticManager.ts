@@ -1,23 +1,20 @@
-﻿import { ContentManagerBase } from "../../_first/_ContentManagerBase";
-import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShotsMany";
-import { ContentHub } from "../ContentHub/ContentHub";
-import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+﻿import { RepoAgent } from "../../../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
 import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { PromiseResult } from "../../../../Shared/scripts/Classes/PromiseResult";
-import { CacheMode } from "../../../../Shared/scripts/Enums/CacheMode";
-import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
-import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
-import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { IGuid } from "../../../../Shared/scripts/Interfaces/IGuid";
-import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
-import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { RepoAgent } from "../../../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
-
+import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
+import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShotsMany";
+import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { IGuid } from "../../../../Shared/scripts/Interfaces/IGuid";
+import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
+import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
+import { ContentManagerBase } from "../../_first/_ContentManagerBase";
+import { ContentHub } from "../ContentHub/ContentHub";
 
 export class ContentAtticManager extends ContentManagerBase {
-  private CachedWindowStorage: ISnapShotsMany;
-    Repo: RepoAgent;
+  //private CachedWindowStorage: ISnapShotsMany;
+  Repo: RepoAgent;
 
   constructor(hub: ContentHub, AllAgents: IAllAgents, repo: RepoAgent) {
     super(hub, AllAgents);
@@ -45,7 +42,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (payload.IdOfSelect) {
         var storageMatch;
 
-        await this.GetFromStorageById(payload.IdOfSelect, CacheMode.OkToUseCache)
+        await this.GetFromStorageById(payload.IdOfSelect)
           .then((result) => storageMatch = result);
 
         if (storageMatch && payload.SnapShotSettings && payload.SnapShotSettings.SnapShotNewNickname) {
@@ -79,7 +76,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
       await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.Id.AsString, snapShotAsString)
 
-      var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id, CacheMode.DoNotUseCache);
+      var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id);
 
       if (foundInStorage) {
         result.MarkSuccessful();
@@ -98,12 +95,12 @@ export class ContentAtticManager extends ContentManagerBase {
     });
   }
 
-  async GetFromStorageById(needleId: IGuid, cacheMode: CacheMode): Promise<IDataOneWindowStorage> {
+  async GetFromStorageById(needleId: IGuid): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve) => {
       this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.AsString);
 
       var foundStorage: ISnapShotsMany;
-      await this.GetAllSnapShotsMany(cacheMode)
+      await this.GetAllSnapShotsMany()
         .then((result) => foundStorage = result);
 
       var DateOneWinStoreMatch: IDataOneWindowStorage = null;
@@ -134,7 +131,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      candidate.Id = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(candidate.Id.AsString,true);
+      candidate.Id = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(candidate.Id.AsString, true);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {
@@ -162,44 +159,50 @@ export class ContentAtticManager extends ContentManagerBase {
       this.AllAgents.Logger.FuncEnd(this.GetAllLocalStorageAsIOneStorageData.name);
     });
   }
-  private async __getAllStorageReal() {
-    this.AllAgents.Logger.FuncStart(this.__getAllStorageReal.name);
-    var toReturn: IDataOneWindowStorage[] = [];
+  private async __getAllStorageReal(): Promise<IDataOneWindowStorage[]> {
+    return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.__getAllStorageReal.name);
+      var toReturn: IDataOneWindowStorage[] = [];
 
-    var rawStorageData: IOneStorageData[];
-    await this.GetAllLocalStorageAsIOneStorageData()
-      .then((result) => rawStorageData = result)
-      .then(() => {
-        if (rawStorageData) {
-          for (var idx = 0; idx < rawStorageData.length; idx++) {
-            toReturn.push(this.__parseRawData(rawStorageData[idx]));
+      var rawStorageData: IOneStorageData[];
+      await this.GetAllLocalStorageAsIOneStorageData()
+        .then((result) => rawStorageData = result)
+        .then(() => {
+          if (rawStorageData) {
+            for (var idx = 0; idx < rawStorageData.length; idx++) {
+              toReturn.push(this.__parseRawData(rawStorageData[idx]));
+            }
           }
-        }
-      })
-      .then(() => {
-        toReturn.sort((a: IDataOneWindowStorage, b: IDataOneWindowStorage) =>
-          +b.TimeStamp - +a.TimeStamp
-        );
-      })
-      .then(() => toReturn = this.FilterOutOldData(toReturn))
+        })
+        .then(() => {
+          toReturn.sort((a: IDataOneWindowStorage, b: IDataOneWindowStorage) =>
+            +b.TimeStamp - +a.TimeStamp
+          );
+        })
+        .then(() => {
+          toReturn = this.FilterOutOldData(toReturn);
+          resolve(toReturn)
+        })
+        .catch((err) => reject(err));
 
-    this.AllAgents.Logger.FuncEnd(this.__getAllStorageReal.name);
-    return toReturn;
+      this.AllAgents.Logger.FuncEnd(this.__getAllStorageReal.name);
+    })
   }
 
-  CleanOutOldData(): void {
+  async CleanOutOldData(): Promise<void> {
     this.AllAgents.Logger.FuncStart(this.CleanOutOldData.name);
 
     var cleanData: IDataOneWindowStorage[] = [];
     var now: Date = new Date();
     var maxAutoSaveDiff: number = ContentConst.Const.MaxAutoSaveAgeDays * 24 * 60 * 60 * 1000;
+    let currentWindowStorage: ISnapShotsMany = await this.GetAllSnapShotsMany();
 
-    if (this.CachedWindowStorage) {
-      var cacheLength = this.CachedWindowStorage.CurrentSnapShots.length;
+    if (currentWindowStorage) {
+      var cacheLength = currentWindowStorage.CurrentSnapShots.length;
       var autoCount: number = 0;
       for (var idx = 0; idx < cacheLength; idx++) {
         var deleteFlag: boolean = false;
-        var candidate = this.CachedWindowStorage.CurrentSnapShots[idx];
+        var candidate = currentWindowStorage.CurrentSnapShots[idx];
 
         if (candidate.Flavor) {
           if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
@@ -225,66 +228,53 @@ export class ContentAtticManager extends ContentManagerBase {
           }
         }
       }
-      this.CachedWindowStorage.CurrentSnapShots = cleanData;
     }
 
     this.AllAgents.Logger.FuncEnd(this.CleanOutOldData.name);
   }
 
-  GetAllSnapShotsMany(cacheMode: CacheMode): Promise<ISnapShotsMany> {
-    return new Promise(async (resolve) => {
-      this.AllAgents.Logger.FuncStart(this.GetAllSnapShotsMany.name, StaticHelpers.CacheModeAsString(cacheMode));
-      var toReturn: ISnapShotsMany;
+  GetAllSnapShotsMany(): Promise<ISnapShotsMany> {
+    return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.GetAllSnapShotsMany.name);
 
-      if (cacheMode === CacheMode.DoNotUseCache) {
-        this.CachedWindowStorage = null;
+      //if (cacheMode === CacheMode.DoNotUseCache) {
+      //  this.CachedWindowStorage = null;
+      //}
+
+      let snapShotsMany: ISnapShotsMany = {
+        CurrentSnapShots: [],
+        Birthday: new Date(1970),
+        FavoriteCount: 0,
+        SnapShotsAutoCount: 0,
+        PlainCount: 0,
       }
 
-      if (!this.CachedWindowStorage) {
-        this.CachedWindowStorage = {
-          CurrentSnapShots: [],
-          Birthday: new Date(1970),
-          FavoriteCount: 0,
-          SnapShotsAutoCount: 0,
-          PlainCount: 0,
-        }
-      }
+      await this.__getAllStorageReal()
+        .then((result: IDataOneWindowStorage[]) => {
+          snapShotsMany.CurrentSnapShots = result;
+          snapShotsMany.Birthday = new Date();
+          this.UpdateCounts(snapShotsMany);
 
-      var timeDiff: number = Date.now() - this.CachedWindowStorage.Birthday.getTime();
+          resolve(snapShotsMany);
+        })
+        .catch((err) => reject(err));
 
-      this.AllAgents.Logger.LogVal('cached timeDiff', timeDiff + ' : ' + ContentConst.Const.MaxCacheAgeMs);
-      if (timeDiff > (ContentConst.Const.MaxCacheAgeMs)) {
-        this.AllAgents.Logger.Log('updating cache');
-
-        await this.__getAllStorageReal()
-          .then((result) => this.CachedWindowStorage.CurrentSnapShots = result);
-        this.CachedWindowStorage.Birthday = new Date();
-      } else {
-        this.AllAgents.Logger.Log('using cache');
-      }
-
-      
-      this.UpdateCounts();
-
-      toReturn = this.CachedWindowStorage;
-
-      resolve(toReturn);
       this.AllAgents.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
     });
   }
-  UpdateCounts() {
-    this.CachedWindowStorage.FavoriteCount = 0;
-    this.CachedWindowStorage.SnapShotsAutoCount = 0;
-    this.CachedWindowStorage.PlainCount = 0;
+  UpdateCounts(storageAllSnapshots: ISnapShotsMany) {
+    storageAllSnapshots.FavoriteCount = 0;
+    storageAllSnapshots.SnapShotsAutoCount = 0;
+    storageAllSnapshots.PlainCount = 0;
 
-    for (var idx = 0; idx < this.CachedWindowStorage.CurrentSnapShots.length; idx++) {
-      var candidate = this.CachedWindowStorage.CurrentSnapShots[idx];
+    for (var idx = 0; idx < storageAllSnapshots.CurrentSnapShots.length; idx++) {
+      var candidate = storageAllSnapshots.CurrentSnapShots[idx];
       if (candidate.Flavor === SnapShotFlavor.Autosave) {
-        this.CachedWindowStorage.SnapShotsAutoCount++;
+        storageAllSnapshots.SnapShotsAutoCount++;
       } else if (candidate.Flavor === SnapShotFlavor.Favorite) {
-        this.CachedWindowStorage.FavoriteCount++;
+        storageAllSnapshots.FavoriteCount++;
       } else {
-        this.CachedWindowStorage.PlainCount++;
+        storageAllSnapshots.PlainCount++;
       }
     }
   }
@@ -295,56 +285,57 @@ export class ContentAtticManager extends ContentManagerBase {
     return toReturn;
   }
 
+  TimeNicknameFavStrForConfirmation(data: IDataOneWindowStorage): string {
+    var result = data.TimeStampFriendly + ' ' + data.NickName + ' ' + data.Id.AsShort;
+    result = result.replace(new RegExp(/&nbsp;/ig), '');
+    return result;
+  }
+
+  ConfirmRemoveAndCheck(storageMatch: IDataOneWindowStorage): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      //var result: boolean = confirm('Remove ?: ' + this.TimeNicknameFavStrForConfirmation(storageMatch));
+      //if (result === true) {
+        this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
+
+        let targetId = storageMatch.Id;
+
+        await window.localStorage.removeItem(storageMatch.RawData.key);
+
+        await this.GetFromStorageById(targetId)
+          .then((result) => {
+            if (!result) {
+              resolve();
+            } else {
+              reject('Snapshot still exists after deleting');
+            }
+          })
+      //} else {
+      //  reject('Confirmation not received');
+      //}
+    })
+  }
+
   RemoveOneFromStorage(targetId: IGuid) {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.RemoveOneFromStorage.name);
-      var successful: boolean = true;
-      var failMsg: string = '';
       try {
         if (targetId) {
-          var storageMatch: IDataOneWindowStorage = await this.GetFromStorageById(targetId, CacheMode.OkToUseCache)
+          var storageMatch: IDataOneWindowStorage = await this.GetFromStorageById(targetId)
           if (storageMatch) {
-            var result: boolean = confirm('Remove ?: ' + this.ContentHub.Utilities.TimeNicknameFavStrForConfirmation(storageMatch));
-            if (result === true) {
-              this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
-              await window.localStorage.removeItem(storageMatch.RawData.key);
-
-              var stillExists: IDataOneWindowStorage = await this.GetFromStorageById(targetId, CacheMode.DoNotUseCache);
-
-              if (stillExists) {
-                successful = false;
-                failMsg = 'Snapshot still exists after deleting';
-              } else {
-                successful = true;
-              }
-
-              this.AllAgents.Logger.Log('Attempting completed');
-            } else {
-              successful = false;
-              failMsg = 'Confirmation not received';
-            }
+            await this.ConfirmRemoveAndCheck(storageMatch)
+              .then(() => resolve())
+              .catch((err) => reject(err));
           } else {
-            successful = false;
-            failMsg = 'no storage match';
+            reject('no storage match');
           }
         } else {
-          successful = false;
-          failMsg = 'no target id';
+          reject('no target id');
         }
       } catch (e) {
-        successful = false;
-        failMsg = e.toString();
+        reject(e);
       }
 
       this.AllAgents.Logger.FuncEnd(this.RemoveOneFromStorage.name);
-
-      if (successful) {
-        this.AllAgents.Logger.Log('resolving');
-        resolve();
-      } else {
-        this.AllAgents.Logger.Log('rejecting');
-        reject(failMsg);
-      }
     })
   }
 }

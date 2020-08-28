@@ -10,7 +10,7 @@ import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDa
 import { IGuid } from '../../../../Shared/scripts/Interfaces/IGuid';
 import { IGuidHelper } from '../../../../Shared/scripts/Interfaces/IGuidHelper';
 import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
-import { UrlParts } from '../../../../Shared/scripts/Interfaces/UrlParts';
+import { GenericUrlParts } from '../../../../Shared/scripts/Interfaces/UrlParts';
 import { PopConst } from '../../Classes/PopConst';
 import { PopUpHub } from '../PopUpHub';
 import { PopUpManagerBase } from '../PopUpManagerBase';
@@ -195,7 +195,7 @@ export class UiManager extends PopUpManagerBase {
     //todo this.UiMan().OperationCancelled = false;
   }
 
-  async SetUIStates(urlParts: UrlParts) {
+  async SetUIStates(urlParts: GenericUrlParts) {
     this.AllAgents.Logger.FuncStart(this.SetUIStates.name);
     if (this.AllAgents.Logger.IsNotNullOrUndefinedBool('state', this.LastKnownContentState)) {
       this.FeedbackModulePopUpState.PopulatePopUpStateUI(this.ModuleSelectSnapShot.GetSelectSnapshotId());
@@ -208,7 +208,7 @@ export class UiManager extends PopUpManagerBase {
   async RefreshUi() {
     this.AllAgents.Logger.FuncStart(this.RefreshUi.name);
 
-    await this.SetUIStates(this.TabMan().CurrentTabData.UrlParts);
+    await this.SetUIStates(this.TabMan().GetUrlParts() );
 
     this.FeedbackModuleBrowserState.RefreshUi();
 
@@ -217,7 +217,7 @@ export class UiManager extends PopUpManagerBase {
 
     this.SettingsModule.RefreshUi();
 
-    let currentWindowType = this.TabMan().CurrentTabData.UrlParts.ScWindowType;
+    let currentWindowType = this.TabMan().GetWindowType();
     let currSelSnapshot: IGuid = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId();
     let guidHelper: IGuidHelper = this.AllAgents.HelperAgent.GuidHelper
 

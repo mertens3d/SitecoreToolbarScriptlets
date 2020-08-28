@@ -1,13 +1,5 @@
-﻿import { IScMode } from "../../../Shared/Scripts/Interfaces/IscMode";
-
-export interface IPopUpConst {
-  ScMode: {
-    edit: IScMode,
-    normal: IScMode,
-    preview: IScMode,
-  },
+﻿export interface IPopUpConst {
   ElemId: {
-   
     InputNickname: string,
     HindSiteParentInfo: string,
     HS: {
@@ -18,11 +10,7 @@ export interface IPopUpConst {
       TabId: string,
 
       Btn: {
-
-     
-      
       }
-     
     },
   }
 
@@ -41,7 +29,7 @@ export interface IPopUpConst {
     Default: string,
     PublishComplete: string,
   },
- 
+
   Selector: {
     Btn: {
       WindowClose: string,
@@ -74,7 +62,8 @@ export interface IPopUpConst {
       GoCE: string,
       HsCancel: string,
       HsRemoveFromStorage: string,
-      HsRestoreWindowState: string,
+      HsRestoreWindowStateSameTab: string,
+      HsRestoreWindowStateNewTab: string,
       iCBoxdSettingsAutoLogin: string,
       IdFieldSetDebug: string,
       LogToConsole: string,
@@ -121,15 +110,14 @@ export interface IPopUpConst {
         AutoSnapshotBeforeWindowChange: boolean,
         AutoLogin: boolean,
         DefaultDebugKeepDialogOpen: boolean,
-   
       }
     }
   },
   SnapShotFormat: {
-    lenTimestamp: number ,
+    lenTimestamp: number,
     lenNickname: number,
     lenPageType: number,
-    lenPrefix: number ,
+    lenPrefix: number,
     lenShortId: number,
     colSep: string,
     lenCeCount: number,
@@ -138,8 +126,7 @@ export interface IPopUpConst {
   },
   Timeouts: {
     WaitBeforeRemovingCompleteFlag: number,
-    
+
     AutoLoginCheckInterval: number,
   },
- 
 }

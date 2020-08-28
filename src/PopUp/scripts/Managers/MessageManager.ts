@@ -4,7 +4,6 @@ import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/
 import { PopUpHub } from './PopUpHub';
 import { PopUpManagerBase } from './PopUpManagerBase';
 import { PopUpMessagesBroker } from './PopUpMessagesBroker/PopUpMessagesBroker';
-import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
 export class MessageManager extends PopUpManagerBase {
   private MessageBroker: PopUpMessagesBroker;
   constructor(popHub: PopUpHub, allAgents: IAllAgents, PopUpMessagesBroker: PopUpMessagesBroker) {
@@ -17,7 +16,7 @@ export class MessageManager extends PopUpManagerBase {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.InitMessageManager.name);
 
-      this.MessageBroker.InitMessageBroker(this.PopHub.TabMan.CurrentTabData)
+      this.MessageBroker.InitMessageBroker()
 
       await this.PopHub.EventMan.TriggerPingEvent()
               .then(() => resolve())

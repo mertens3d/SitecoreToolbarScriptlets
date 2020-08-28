@@ -1,7 +1,7 @@
 ﻿import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
 import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { UrlParts } from "../../../../../../../Shared/scripts/Interfaces/UrlParts";
+import { GenericUrlParts } from "../../../../../../../Shared/scripts/Interfaces/UrlParts";
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
 import { PopConst } from "../../../../../Classes/PopConst";
 
@@ -14,7 +14,7 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
   RefreshUi(): void {
    
   }
-  PopulateFeedackBrowserState(urlParts: UrlParts) {
+  PopulateFeedackBrowserState(urlParts: GenericUrlParts) {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.FeedbackBrowserState);
 
     var allStateText: string = 'Browser State' + this.lineBreak;// + 'PopUp State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());

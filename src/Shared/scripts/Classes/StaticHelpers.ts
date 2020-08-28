@@ -1,12 +1,9 @@
 ﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
-import { scWindowType } from "../Enums/scWindowType";
-import { CacheMode } from "../Enums/CacheMode";
-import { BufferDirection } from "../Enums/BufferDirection";
-import { BufferChar } from "../Enums/BufferChar";
-import { BufferUseNbsp } from "../Enums/BufferUseNbsp";
-import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
-import { UrlParts } from "../Interfaces/UrlParts";
 import { SettingKey } from "../Enums/3xxx-SettingKey";
+import { BufferChar } from "../Enums/BufferChar";
+import { BufferDirection } from "../Enums/BufferDirection";
+import { scWindowType } from "../Enums/scWindowType";
+import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 
 export class StaticHelpers {
   static MinToMs(minutes: number) {
@@ -20,9 +17,9 @@ export class StaticHelpers {
     return 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
   }
 
-  static CacheModeAsString(cacheMode: CacheMode): string {
-    return 'CacheMode.' + CacheMode[cacheMode] + ' (' + cacheMode + ')';
-  }
+  //static CacheModeAsString(cacheMode: CacheMode): string {
+  //  return 'CacheMode.' + CacheMode[cacheMode] + ' (' + cacheMode + ')';
+  //}
 
   static WindowTypeAsString(windowType: scWindowType) {
     return scWindowType[windowType];

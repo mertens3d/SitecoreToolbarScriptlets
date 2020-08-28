@@ -1,15 +1,34 @@
-﻿import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+﻿import { ScUrlAgent } from "../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
+import { ContentHub } from "../ContentHub/ContentHub";
 
 export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUiManager {
+  
+  ScUrlAgent: ScUrlAgent;
+
+
+  constructor(contentHub: ContentHub, allAgents: IAllAgents) {
+    super(contentHub, allAgents)
+    this.ScUrlAgent = new ScUrlAgent(this.AllAgents.Logger);
+
+  }
+
+  async Init() {
+    await this.ScUrlAgent.Init();
+  }
+
 
   GetCurrentPageType(): scWindowType {
 
-    return this.AllAgents.HelperAgent.UrlHelp.CalcPageTypeFromHref({ AbsUrl: document.location.href });
+    
+    //return this.CalcPageTypeFromHref({ AbsUrl: document.location.href });
+    return this.ScUrlAgent.GetScWindowType()
   }
 
   __activeWindowSnapShot: IDataOneWindowStorage;

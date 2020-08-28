@@ -23,7 +23,7 @@ export class ContentManagerBase {
   AtticMan(): ContentAtticManager { return this.ContentHub.AtticMan; }
   OneScWinMan(): OneScWindowManager { return this.ContentHub.OneWindowMan; }
   ScUiMan(): SitecoreUiManager { return this.ContentHub.SitecoreUiMan; }
-  MsgMan(): ContentMessageManager { return this.ContentHub.MsgMan; }
+  MsgMan(): ContentMessageManager { return this.ContentHub.ContentMessageMan; }
   ContentFactory(): ContentStateManager { return this.ContentHub.ContentFactory; }
   MiscMan(): MiscManager { return this.ContentHub.MiscMan; }
   PromiseOneStep(): PromiseOneStep { return this.ContentHub.PromiseOneStep; }

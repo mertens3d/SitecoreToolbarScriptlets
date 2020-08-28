@@ -15,7 +15,7 @@
   ReqOpenCE = 1105,
   ReqQuickPublish = 1106,
   ReqRestoreClick = 1107,
-  ReqRestoreToNewTab = 1108,
+  Unused = 1108,
   ReqSetScMode = 1109,
   ReqTakeSnapShot = 1110,
   ReqToggleCompactCss = 1111,

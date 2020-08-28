@@ -4,7 +4,6 @@ import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents
 import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { EventManager } from "./EventManager";
-import { LocationManager } from "./LocationManager";
 import { MessageManager } from "./MessageManager";
 import { BrowserManager } from "./MessageManager/BrowserManager";
 import { PopUpMessagesBroker } from "./PopUpMessagesBroker/PopUpMessagesBroker";
@@ -17,7 +16,6 @@ export class PopUpHub {
   BrowserMan: BrowserManager;
   EventMan: EventManager;
   Helpers: HelperAgent;
-  LocMan: LocationManager;
   _allAgents: IAllAgents;
   TabMan: TabManager;
   UiMan: UiManager;
@@ -28,13 +26,8 @@ export class PopUpHub {
     this._allAgents = allAgents;
 
     this.EventMan = new EventManager(this, this._allAgents);
-
-    this.LocMan = new LocationManager(this, this._allAgents);
-
     this.TabMan = new TabManager(this, this._allAgents);
-
     this.Helpers = new HelperAgent(allAgents.Logger);
-
     this.UiMan = new UiManager(this, this._allAgents);
     //after tabman
     //after uiMan
@@ -63,13 +56,12 @@ export class PopUpHub {
         await this._allAgents.Logger.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
       }
 
-      this.TabMan.InitTabManager()
+     await this.TabMan.InitTabManager()
         .then(() => this.EventMan.InitEventManager())
         .then(() => this.UiMan.InitUiManager())
         .then(() => this.MessageMan.InitMessageManager())
         .then(() => resolve())
         .catch((err) => reject(err));
-
 
       this._allAgents.Logger.FuncEnd(this.InitPopUpHub.name);
     });

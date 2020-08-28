@@ -31,10 +31,10 @@ export class AccordianManager implements IAccordianManager {
   }
 
   AddAccordianDrone(oneSetting: IOneGenericSetting, uiElem: HTMLElement) {
-    this.Logger.FuncStart(this.AddAccordianDrone.name, oneSetting.UiSelector);
+    //this.Logger.FuncStart(this.AddAccordianDrone.name, oneSetting.UiSelector);
     let newAccordianDrone = new AccordianDrone(this.Logger, this.SettingsAgent, uiElem, oneSetting);
     this.AllAccordians.push(newAccordianDrone);
-    this.Logger.FuncEnd(this.AddAccordianDrone.name);
+    //this.Logger.FuncEnd(this.AddAccordianDrone.name);
   }
 
   GetAccordianByKey(oneSetting: IOneGenericSetting): AccordianDrone {

@@ -1,6 +1,6 @@
-﻿import {scMode} from "../Enums/scMode";
+﻿//import {scMode} from "../Enums/scMode";
 
-export interface IScMode {
-  AsEnum: scMode;
-  AsString: string;
-}
+//export interface IScMode {
+//  AsEnum: scMode;
+//  AsString: string;
+//}

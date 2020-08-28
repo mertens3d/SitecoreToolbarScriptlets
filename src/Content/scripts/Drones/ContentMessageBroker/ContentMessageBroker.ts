@@ -12,6 +12,7 @@ import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../../Managers/ContentHub/ContentHub";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 
 export class ContentMessageBroker extends ContentManagerBase implements IContentMessageBroker {
   private Logger: ILoggerAgent;
@@ -109,9 +110,9 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
       var response: MsgFromContent = await this.NewMsgFromContentShell();
 
       switch (payload.MsgFlag) {
-        case MsgFlag.ReqRestoreToNewTab:
-          commandToExecute = this.ApiManager.RestoreToNewTab;
-          break;
+        //case MsgFlag.ReqRestoreToNewTab:
+        //  commandToExecute = this.ApiManager.RestoreToNewTab;
+        //  break;
 
         case MsgFlag.ReqAddCETab:
           commandToExecute = this.ApiManager.AddCETab;
@@ -167,7 +168,16 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
       }
 
       if (commandToExecute) {
-        await commandToExecute(payload.Data, this, this.TopLevelDoc, this.ContentHub)
+
+        let commandData: ICommandHndlrDataForContent = {
+          PayloadData : payload.Data,
+          ContentMessageBroker: this,
+          TopLevelDoc: this.TopLevelDoc,
+          ContentHub: this.ContentHub
+        }
+
+
+        await commandToExecute(commandData)
           .then(() => this.ApiManager.GetContentState())
           .then((result: IContentState) => {
             response.ContentState.LastReq = payload.MsgFlag;

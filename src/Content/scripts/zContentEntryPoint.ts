@@ -8,7 +8,6 @@ import { AllAgents } from '../../Shared/scripts/Agents/Agents/AllAgents';
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { IOneGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
 import { ConstAllSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings';
-import { QueryStrAgent } from '../../Shared/scripts/Agents/Agents/QueryStringAgent/QueryStrAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
@@ -29,22 +28,22 @@ async function main() {
 
   var RollingLogId = new RollingLogIdDrone(allAgents.SettingsAgent);
   var nextLogId = RollingLogId.GetNextLogId();
-  console.log('RollingLogId: ' + nextLogId);
 
   storageLogWriter.SetLogToStorageKey(nextLogId);
   allAgents.Logger.AddWriter(new LoggerStorageWriter());
 
   allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
 
-  allAgents.QueryStrAgent = new QueryStrAgent(allAgents.Logger);
 
   allAgents.ToastAgent = new ToastAgent(allAgents.Logger)
 
   allAgents.Logger.ThrowIfNullOrUndefined("allAgents", allAgents);
   allAgents.Logger.ThrowIfNullOrUndefined("allAgents.HelperAgent", allAgents.HelperAgent);
 
-  let ch: ContentHub = new ContentHub(allAgents);
-  await ch.InitFromQueryStr();
+  let contentHub: ContentHub = new ContentHub(allAgents);
+  await contentHub.Init()
+    .then(() => allAgents.Logger.Log('Init success'))
+    .catch((err) => allAgents.Logger.ErrorAndThrow('Content Entry Point', JSON.stringify( err)))  ;
 }
 
 main();

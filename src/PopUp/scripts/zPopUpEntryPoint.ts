@@ -31,7 +31,9 @@ async function main() {
   let popUpHub = new PopUpHub(allAgents);
 
   allAgents.Logger.SectionMarker('Begin Init');
-  await popUpHub.InitPopUpHub();
+  await popUpHub.InitPopUpHub()
+    .then(() => allAgents.Logger.Log('Init Successful'))
+    .catch((err) => allAgents.Logger.ErrorAndContinue('Pop Up Entry Point Main', JSON.stringify( err)));
   allAgents.Logger.SectionMarker('End Init');
   allAgents.Logger.SectionMarker('Begin Standby');
 

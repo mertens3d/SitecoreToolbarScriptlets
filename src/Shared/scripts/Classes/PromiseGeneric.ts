@@ -25,7 +25,6 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
         if (isReadyStateComplete && (currentDocName !== 'about:blank')) {
           this.Logger.LogVal('doc name', dataOneIframe.IframeElem.contentDocument.location.href);
           promiseResult.MarkSuccessful();
-     
         } else {
           await iterationJr.Wait();
         }
@@ -36,7 +35,6 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
       }
 
       //this.AllHelperAgents.Logger.LogAsJsonPretty('dataOneIframe', dataOneIframe);
-
 
       if (promiseResult.WasSuccessful()) {
         resolve();
@@ -53,7 +51,7 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
 
       var result: PromiseResult = new PromiseResult(this.WaitForPageReadyNative.name, this.Logger);
 
-      this.Logger.LogAsJsonPretty(this.WaitForPageReadyNative.name,targetDoc);
+      this.Logger.LogAsJsonPretty(this.WaitForPageReadyNative.name, targetDoc);
 
       var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForPageReadyNative.name);
 
@@ -125,7 +123,7 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
       let rejectReason: string = '';
 
       //this.Logger.DebugIDataOneDoc(targetDoc);
-            var toReturn: IDataOneIframe[] = [];
+      var toReturn: IDataOneIframe[] = [];
 
       //this.Logger.LogVal('querySelectorAll 9.2: ', ContentConst.Const.Selector.SC.IframeContent.sc920);
 
@@ -257,7 +255,7 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
     });
   }
 
-  TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab) {
+  TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void> {
     return new Promise(async (resolve, reject) => {
       let iterHelper = new IterationDrone(this.Logger, this.TabWaitForReadyStateCompleteNative.name);
 
@@ -285,19 +283,20 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
     });
   }
 
-  TabChainSetHrefWaitForComplete(href: AbsoluteUrl, targetTab: IDataBrowserTab) {
+  TabChainSetHrefWaitForComplete(href: AbsoluteUrl) {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
 
-      try {
-        await browser.tabs.update(targetTab.Tab.id, { url: href.AbsUrl })
-          .then(() => this.TabWaitForReadyStateCompleteNative(targetTab.Tab))
-          .then(resolve)
-          .catch(reject);
-      } catch (e) {
-        this.Logger.ErrorAndThrow(this.TabChainSetHrefWaitForComplete.name, e.toString());
-        reject(e);
-      }
+      await browser.tabs.query({ currentWindow: true, active: true })
+        .then((result: browser.tabs.Tab[]) => {
+          let targetTab: browser.tabs.Tab = result[0];
+          browser.tabs.update(targetTab.id, { url: href.AbsUrl });
+          this.TabWaitForReadyStateCompleteNative(targetTab);
+        }
+        )
+        .then(resolve)
+        .catch((ex) => reject(ex));
+
       this.Logger.FuncEnd(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
     });
   }

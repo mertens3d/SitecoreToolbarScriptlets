@@ -1,14 +1,15 @@
 ﻿import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { CacheMode } from "../../../../Shared/scripts/Enums/CacheMode";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
+import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { RecipeRemoveItemFromStorage } from "./Recipes/RecipeRemoveItemFromStorage";
+import { RecipeSaveState } from "./Recipes/RecipeSaveState";
 
-//these are the exposed commands which can be called by the popup
 export class ContentAPIManager extends ContentManagerBase {
   constructor(hub: ContentHub, AllAgents: IAllAgents) {
     super(hub, AllAgents);
@@ -59,19 +60,20 @@ export class ContentAPIManager extends ContentManagerBase {
     });
   }
 
-  async RemoveSnapShot(payloadData: PayloadDataFromPopUp) {
+  async RemoveSnapShot(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await this.AtticMan().RemoveOneFromStorage(payloadData.IdOfSelect)
-        .then(() => resolve())
+      let recipe = new RecipeRemoveItemFromStorage(commandData);
+      await recipe.Execute()
+        .then(resolve)
         .catch((err) => reject(err));
     });
   }
 
-  async SaveWindowState(payloadData: PayloadDataFromPopUp, self: ContentManagerBase, targetDoc: IDataOneDoc, contentHub: ContentHub): Promise<void> {
+  async SaveWindowState(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await self.OneScWinMan().SaveWindowState(payloadData.SnapShotSettings)
-        .then((windowState) => self.AtticMan().WriteToStorage(windowState))
-        .then(() => resolve())
+      let recipe = new RecipeSaveState(commandData);
+      await recipe.Execute()
+        .then(resolve)
         .catch((err) => reject(err));
     });
   }
@@ -83,9 +85,9 @@ export class ContentAPIManager extends ContentManagerBase {
         .catch((err) => reject(err));
     });
   }
-  RestoreSnapshop(payloadData: PayloadDataFromPopUp, self: ContentManagerBase, targetDoc: IDataOneDoc, contentHub: ContentHub) {
+  RestoreSnapshop(commandData: ICommandHndlrDataForContent) {
     return new Promise(async (resolve, reject) => {
-      await self.MsgMan(). __restoreClick(payloadData)
+      await commandData.ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -98,7 +100,7 @@ export class ContentAPIManager extends ContentManagerBase {
   MarkFavorite(payloadData: PayloadDataFromPopUp) {
     return new Promise(async (resolve, reject) => {
       if (payloadData.IdOfSelect) {
-        await this.AtticMan().GetFromStorageById(payloadData.IdOfSelect, CacheMode.OkToUseCache)
+        await this.AtticMan().GetFromStorageById(payloadData.IdOfSelect)
           .then((result: IDataOneWindowStorage) => {
             result.Flavor = SnapShotFlavor.Favorite;
             this.AtticMan().WriteToStorage(result);
@@ -122,8 +124,5 @@ export class ContentAPIManager extends ContentManagerBase {
   }
   AdminB() {
     this.ScUiMan().AdminB(this.ScUiMan().TopLevelDoc(), null);
-  }
-  RestoreToNewTab() {
-    throw new Error("Method not implemented.");
   }
 }

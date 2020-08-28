@@ -12,6 +12,7 @@ import { PopConst } from '../Classes/PopConst';
 import { Handlers } from './Handlers';
 import { PopUpHub } from './PopUpHub';
 import { PopUpManagerBase } from './PopUpManagerBase';
+import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 
 export class EventManager extends PopUpManagerBase {
   Handlers: Handlers
@@ -30,7 +31,7 @@ export class EventManager extends PopUpManagerBase {
 
     this.AllMenuCommands = AllCommands.BuildAllCommands(this.PopHub, this.Handlers);
 
-    this.__wireMenuButtons();
+    this.__wireAllMenuButtons();
     this.WireAllGenericSettings();
     this.AllAgents.Logger.FuncEnd(this.InitEventManager.name);
   }
@@ -67,39 +68,95 @@ export class EventManager extends PopUpManagerBase {
     }
   }
 
+  private __wireAllMenuButtons() {
+    this.AllAgents.Logger.FuncStart(this.__wireAllMenuButtons.name);
+
+    // --------------- hindsite
+    for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
+      let oneCommand: IOneCommand = this.AllMenuCommands[idx];
+      this.__wireOneMenuButtonListener(oneCommand);
+    }
+
+    this.AllAgents.Logger.FuncEnd(this.__wireAllMenuButtons.name);
+  }
+
+  private __wireOneMenuButtonListener(oneCommand: IOneCommand): void {
+    var targetElem: HTMLElement = this.UiMan().GetButtonByIdOrSelector(oneCommand.ButtonSelector);
+
+    if (oneCommand.EventData.Event === CommandButtonEvents.OnSingleClick) {
+      this.__wireSingleClickEvent(oneCommand, targetElem);
+    } else if (oneCommand.EventData.Event === CommandButtonEvents.OnDoubleClick) {
+      this.__wireDoubleClickEvent(oneCommand, targetElem)
+    }
+  }
+  private __wireDoubleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
+    //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestoreNewTab(evt, this.PopHub); });
+    //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.FeedbackLogElement, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
+
+    if (targetElem) {
+      let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
+      targetElem.ondblclick = (evt) => {
+        data.Evt = evt,
+          data.Self.RouteAllCommandEvents(data)
+      };
+    }
+  }
+
+  private __wireSingleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
+    if (targetElem) {
+      let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
+
+      targetElem.addEventListener('click', (evt) => {
+        data.Evt = evt;
+        data.Self.RouteAllCommandEvents(data);
+      });
+    } else {
+      this.AllAgents.Logger.ErrorAndThrow(this.__wireAllMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
+    }
+  }
+
+  private __buildCommandData(oneCommand: IOneCommand): ICommandHndlrDataForPopUp {
+    var self: EventManager = this;
+
+    let data: ICommandHndlrDataForPopUp = {
+      Self: self,
+      Command: oneCommand,
+      Event: oneCommand.EventData,
+      Evt: null,
+      PopUpHub: self.PopHub
+    }
+
+    return data;
+  }
+
   TriggerPingEvent(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.TriggerPingEvent.name);
-      await this.Handlers.External.Ping(null, this.PopHub);
+
+      for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
+        let candidate = this.AllMenuCommands[idx];
+        if (candidate.Command === MenuCommand.Ping) {
+          let data = this.__buildCommandData(candidate);
+          this.AllAgents.Logger.LogAsJsonPretty(this.TriggerPingEvent.name, data.Command);
+
+
+          await data.Self.RouteAllCommandEvents(data)
+            .then(() => resolve())
+            .catch((err) => reject(err));
+          break;
+          //await this.Handlers.External.Ping(null, this.PopHub);
+        }
+      }
 
       this.AllAgents.Logger.FuncEnd(this.TriggerPingEvent.name);
     })
   }
 
-  private __wireMenuButtons() {
-    this.AllAgents.Logger.FuncStart(this.__wireMenuButtons.name);
-
-    this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestore(evt, this.PopHub); });
-    this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.FeedbackLogElement, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
-
-    // --------------- hindsite
-    for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
-      let oneCommand: IOneCommand = this.AllMenuCommands[idx];
-      for (var jdx = 0; jdx < oneCommand.Events.length; jdx++) {
-        let oneEvent: IEventHandlerData = oneCommand.Events[jdx];
-        if (oneEvent.Event === CommandButtonEvents.OnClick) {
-          var targetElem = this.UiMan().GetButtonByIdOrSelector(oneCommand.ButtonSelector);
-
-          if (targetElem) {
-            var popHub: PopUpHub = this.PopHub;
-            targetElem.addEventListener('click', (evt) => { oneEvent.Handler(evt, this.PopHub, oneEvent.ParameterData) });
-          } else {
-            this.AllAgents.Logger.ErrorAndThrow(this.__wireMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
-          }
-        }
-      }
-    }
-
-    this.AllAgents.Logger.FuncEnd(this.__wireMenuButtons.name);
+ async RouteAllCommandEvents(data: ICommandHndlrDataForPopUp) {
+   return new Promise(async (resolve, reject) => {
+     await data.Event.Handler(data)
+       .then(() => resolve())
+       .catch((err) => reject(err));
+   });
   }
 }

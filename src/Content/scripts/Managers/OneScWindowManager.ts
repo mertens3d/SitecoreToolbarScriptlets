@@ -152,9 +152,9 @@ export class OneScWindowManager extends ContentManagerBase {
     //}
   }
 
-  async RestoreWindowStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
+  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.RestoreWindowStateToTargetDoc.name);
+      this.AllAgents.Logger.FuncStart(this.RestoreStateToTargetDoc.name);
 
       if (dataToRestore) {
         if (dataToRestore.WindowType === scWindowType.ContentEditor || dataToRestore.WindowType === scWindowType.Desktop) {
@@ -167,7 +167,7 @@ export class OneScWindowManager extends ContentManagerBase {
           }
         }
         else {
-          this.AllAgents.Logger.ErrorAndThrow(this.RestoreWindowStateToTargetDoc.name, 'Data not restored. Not in Desktop or Content Editor');
+          this.AllAgents.Logger.ErrorAndThrow(this.RestoreStateToTargetDoc.name, 'Data not restored. Not in Desktop or Content Editor');
         }
       }
       else {
@@ -176,8 +176,8 @@ export class OneScWindowManager extends ContentManagerBase {
 
       resolve();
 
-      //reject(this.RestoreWindowStateToTargetDoc.name +  " something went wrong");
-      this.AllAgents.Logger.FuncEnd(this.RestoreWindowStateToTargetDoc.name);
+      //reject(this.RestoreStateToTargetDoc.name +  " something went wrong");
+      this.AllAgents.Logger.FuncEnd(this.RestoreStateToTargetDoc.name);
     });
   }
 }

@@ -1,8 +1,7 @@
-﻿import { PromisesBasic } from "../../../../Shared/scripts/Classes/PromiseGeneric";
+﻿import { DefaultContentState } from "../../../../Shared/scripts/Classes/DefaultContentState";
+import { PromisesBasic } from "../../../../Shared/scripts/Classes/PromiseGeneric";
 import { PromiseResult } from "../../../../Shared/scripts/Classes/PromiseResult";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { CacheMode } from "../../../../Shared/scripts/Enums/CacheMode";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
@@ -10,7 +9,6 @@ import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDt
 import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
 import { ContentHub } from "../../Managers/ContentHub/ContentHub";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
-import { DefaultContentState } from "../../../../Shared/scripts/Classes/DefaultContentState";
 
 export class ContentStateManager extends ContentManagerBase {
   constructor(hub: ContentHub, contentAgents: IAllAgents) {
@@ -29,7 +27,7 @@ export class ContentStateManager extends ContentManagerBase {
 
       //let promiseResult: PromiseResult = new PromiseResult(this.UpdateContentState.name, this.AllAgents.Logger);
       //this.AllAgents.Logger.MarkerC();
-      toReturn.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany(CacheMode.OkToUseCache);
+      toReturn.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany();
       toReturn.ErrorStack = this.AllAgents.Logger.ErrorStack;
 
       //this.AllAgents.Logger.LogAsJsonPretty('ContentState', contentState);

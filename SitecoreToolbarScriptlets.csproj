@@ -60,6 +60,9 @@
     <TypeScriptCompile Include="src\Content\scripts\Classes\VarDebug.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentMessageBroker.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\ContentAPIManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
     <TypeScriptCompile Include="src\hindsiteWindowOpener\Scripts\EntryPoint.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
@@ -82,14 +85,13 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager\BrowserManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\QueryStringAgent\QueryStrAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\ToastAgent\ToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\ConstAllSettings.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\Handlers.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\PageManagerPopUp.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\TabManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiButtonStateManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Promises\PromiseChainRestoreDTPopUp.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\UrlAgent\ScUrlAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\AccordianDrone\AccordianManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\RollingLogIdDrone\RollingLogIdDrone.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
@@ -97,6 +99,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\ContentStateValidator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\HelperBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromisesRecipes.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\Enabled.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentMessageBroker.ts" />
@@ -109,6 +112,9 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUiModule.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IAllSettings.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandHndlrDataForContent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandHndlrDataForPopUp.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandRecipes.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IContentState\IContentState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataPayloadSnapShot.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\IMenuStateForMsg.ts" />
@@ -123,7 +129,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingFlavor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\VisibilityType.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\SettingsAgent.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Helpers\UrlHelper.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\UrlAgent\UrlAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\UtilityHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferChar.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferDirection.ts" />
@@ -153,7 +159,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseRecipes.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISelectionHeaders.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IContentState\ISnapShotsMany.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUrlHelp.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUrlAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\MsgFromXBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\OneParamPair.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\UrlParts.ts" />
@@ -219,7 +225,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\SharedConst.ts" />
     <TypeScriptCompile Include="src\Shared\typdefs\browser.d.ts" />
     <TypeScriptCompile Include="src\tests\foo.test.ts" />
-    <TypeScriptCompile Include="src\tests\IterationHelper.test.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataDebugSettings.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataPublishChain.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataBrowserWindow.ts" />
@@ -234,7 +239,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\NewWindowDest.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\GuidHelper.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentHub\ContentHub.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\LocationManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneIframe.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\PageDataManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\MiscManager\MiscManager.ts" />

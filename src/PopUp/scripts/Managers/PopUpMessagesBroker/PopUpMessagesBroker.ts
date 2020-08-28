@@ -1,27 +1,23 @@
-﻿import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
+﻿import { ContentStateValidator } from "../../../../Shared/scripts/Classes/ContentStateValidator";
 import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFromContent } from "../../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
-import { PromiseResult } from "../../../../Shared/scripts/Classes/PromiseResult";
-import { IDataBrowserTab } from "../../../../Shared/scripts/Interfaces/IDataBrowserWindow";
+import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
 import { IMessageBrokerFeedback } from "../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
-import { ContentStateValidator } from "../../../../Shared/scripts/Classes/ContentStateValidator";
+import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 
 export class PopUpMessagesBroker {
   LastKnownContentState: IContentState;
   private Logger: ILoggerAgent;
   private MsgFeedback: IMessageBrokerFeedback;
-  private TargetTab: IDataBrowserTab;
 
   constructor(loggerAgent: ILoggerAgent, msgFeedback: IMessageBrokerFeedback,) {
     this.Logger = loggerAgent;
     this.MsgFeedback = msgFeedback;
   }
 
-  InitMessageBroker(targetTab: IDataBrowserTab) {
-    this.TargetTab = targetTab;
+  InitMessageBroker() {
   }
 
   private ReceiveResponseHndlr(response: any): Promise<IContentState> {
@@ -56,97 +52,35 @@ export class PopUpMessagesBroker {
           else {
             reject(this.ReceiveResponseHndlr.name + ' response is not class: ' + MsgFromContent.name);
           }
-          this.Logger.FuncEnd(this.ReceiveResponseHndlr.name, StaticHelpers.MsgFlagAsString(response.MsgFlag));
         }
       } else {
         reject(this.ReceiveResponseHndlr.name + ' null or undefined response');
       }
+      this.Logger.FuncEnd(this.ReceiveResponseHndlr.name);
     });
   }
 
-  OnePing(targetTab: IDataBrowserTab, msg: MsgFromPopUp): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.OnePing.name);
-
-      this.Logger.LogVal('sending to tab id', targetTab.Tab.id);
-
-      this.MsgFeedback.UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(msg.MsgFlag));
-
-      var successful: boolean = true;
-
-      await browser.tabs.sendMessage(targetTab.Tab.id, msg)
-        .then((response) => {
-          var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
-          if (asMsgFromContent) {
-            this.Logger.LogVal('Response', StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
-
-            if (asMsgFromContent.MsgFlag !== MsgFlag.RespListeningAndReady
-              &&
-              asMsgFromContent.MsgFlag !== MsgFlag.RespTaskSuccessful) {
-              throw "response message: " + asMsgFromContent.MsgFlag;
-            }
-          }
-          else {
-            this.Logger.ErrorAndThrow(this.OnePing.name, 'Unable to translate the response');
-          }
-        })
-        .then(() => resolve())
-        .catch((err) => reject(err));
-
-      this.Logger.FuncEnd(this.OnePing.name);
-    });
-  }
-
-  //private async WaitForListeningTab(targetTab: IDataBrowserTab): Promise<void> {
-  //  return new Promise(async (resolve, reject) => {
-  //    this.Logger.FuncStart(this.WaitForListeningTab.name);
-
-  //    var success: boolean = false;
-  //    var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForListeningTab.name);
-
-  //    var msg: MsgFromPopUp = new MsgFromPopUp(MsgFlag.Ping, this.PopHub);
-
-  //    while (iterationJr.DecrementAndKeepGoing() && !success) {
-  //      this.Logger.Log('Pinging');
-  //      await this.OnePing(targetTab, msg)
-  //        .then(() => success = true)
-  //        .catch((ex) => success = false);
-
-  //      if (!success) {
-  //        this.MsgFeedback.UpdateMsgStatusStack('Ping did not succeed, waiting: ' + (iterationJr.CurrentTimeout() * 1000).toFixed() + ' ms');
-  //        await iterationJr.Wait();
-  //        this.Logger.Log('Done waiting');
-  //      }
-  //      else {
-  //        this.MsgFeedback.UpdateMsgStatusStack('Ping succeeded');
-  //      }
-  //    } //while
-
-  //    this.Logger.FuncEnd(this.WaitForListeningTab.name);
-
-  //    if (success) {
-  //      resolve();
-  //    }
-  //    else {
-  //      reject(iterationJr.IsExhausted ? iterationJr.IsExhaustedMsg : 'unknown error WaitForListeningTab');
-  //    }
-  //  });
-  //}
   private SendMessageToSingleTab(messageToSend: MsgFromPopUp): Promise<IContentState> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
 
       this.MsgFeedback.UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
       //this.Logger.LogAsJsonPretty("messageToSend", messageToSend);
-      await browser.tabs.sendMessage(this.TargetTab.Tab.id, messageToSend)
+
+      let targetTab: browser.tabs.Tab;
+
+      await browser.tabs.query({ currentWindow: true, active: true })
+        .then((result: browser.tabs.Tab[]) => { targetTab = result[0]; })
+        .catch((err) => reject(err));
+
+      this.Logger.LogAsJsonPretty('targetTab', targetTab);
+      this.Logger.LogVal('Tab Id', targetTab.id);
+
+        await browser.tabs.sendMessage(targetTab.id, messageToSend)
         .then((response: any) => this.ReceiveResponseHndlr(response))
         .then((contentState: IContentState) => {
           let validator = new ContentStateValidator(this.Logger);
-
           let validatedContentState: IContentState = validator.ValidateContentState(contentState);
-
-          //this.Logger.LogAsJsonPretty('validatedContentState', validatedContentState);
-
           resolve(validatedContentState);
         })
         .catch((ex) => { reject(ex) });
@@ -154,6 +88,7 @@ export class PopUpMessagesBroker {
       this.Logger.FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
     });
   }
+
   async SendMessageToContentTab(msgPlayload: MsgFromPopUp): Promise<IContentState> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));

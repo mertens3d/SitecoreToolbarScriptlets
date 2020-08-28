@@ -2,23 +2,11 @@
 import { StaticHelpers } from '../Classes/StaticHelpers';
 import { BufferChar } from '../Enums/BufferChar';
 import { BufferDirection } from '../Enums/BufferDirection';
-import { IDataOneWindowStorage } from '../Interfaces/IDataOneWindowStorage';
-import { scWindowType } from '../Enums/scWindowType';
-import { PopConst } from '../../../PopUp/scripts/Classes/PopConst';
-import { SnapShotFlavor } from '../Enums/SnapShotFlavor';
 
 export class UtilityHelper extends HelperBase {
   MakeSelectorFromId(TabId: string): any {
     return '[id=' + TabId + ']';
   }
-
-  TimeNicknameFavStrForConfirmation(data: IDataOneWindowStorage): string {
-    var result = data.TimeStampFriendly + ' ' + data.NickName + ' ' + data.Id.AsShort;
-    result = result.replace(new RegExp(/&nbsp;/ig), '');
-    return result;
-  }
-
- 
 
   MakeFriendlyDate(date: Date): string {
     var toReturn: string = '';

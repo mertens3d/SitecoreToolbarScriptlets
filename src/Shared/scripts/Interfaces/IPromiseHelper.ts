@@ -8,8 +8,8 @@ import { IDataPublishChain } from "./IDataPublishChain";
 export interface IPromisesBasic {
   GetAllLiveIframeData(arg0: IDataOneDoc): Promise< IDataOneIframe[]>;
   RaceWaitAndClick(scStartButton: IScVerSpec, arg1: IDataOneDoc);
-  TabChainSetHrefWaitForComplete(newHref: AbsoluteUrl, CurrentTabData: IDataBrowserTab);
-  TabWaitForReadyStateCompleteNative(Tab: browser.tabs.Tab);
+  TabChainSetHrefWaitForComplete(newHref: AbsoluteUrl);
+  TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void>;
   WaitForAndClickWithPayload(MenuDropDownPublishItem: string, docToPublish: IDataOneDoc, payload: IDataPublishChain);
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string);
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string, maxIteration: number);

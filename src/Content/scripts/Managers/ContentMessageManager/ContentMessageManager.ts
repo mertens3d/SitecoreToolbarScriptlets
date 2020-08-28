@@ -1,20 +1,18 @@
-﻿import { ContentHub } from '../ContentHub/ContentHub';
-import { ContentManagerBase } from '../../_first/_ContentManagerBase';
-import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
-import { scWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
+﻿import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
 import { PayloadDataFromPopUp } from '../../../../Shared/scripts/Classes/PayloadDataReqPopUp';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
-import { IDataPayloadSnapShot } from '../../../../Shared/scripts/Interfaces/IDataPayloadSnapShot';
-import { SnapShotFlavor } from '../../../../Shared/scripts/Enums/SnapShotFlavor';
-import { CacheMode } from '../../../../Shared/scripts/Enums/CacheMode';
-import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
-import { SharedConst } from '../../../../Shared/scripts/SharedConst';
-import { PromiseResult } from '../../../../Shared/scripts/Classes/PromiseResult';
+import { scWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
+import { SnapShotFlavor } from '../../../../Shared/scripts/Enums/SnapShotFlavor';
 import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IOneGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
+import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { IDataPayloadSnapShot } from '../../../../Shared/scripts/Interfaces/IDataPayloadSnapShot';
+import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
+import { SharedConst } from '../../../../Shared/scripts/SharedConst';
 import { ContentMessageBroker } from '../../Drones/ContentMessageBroker/ContentMessageBroker';
+import { ContentManagerBase } from '../../_first/_ContentManagerBase';
+import { ContentHub } from '../ContentHub/ContentHub';
 
 export class ContentMessageManager extends ContentManagerBase {
   AutoSaveHasBeenScheduled: boolean = false;
@@ -116,7 +114,7 @@ export class ContentMessageManager extends ContentManagerBase {
             this.AllAgents.Logger.LogVal("IdOfSelect", data.IdOfSelect);
             var dataOneWindowStorage;
 
-            await this.AtticMan().GetFromStorageById(data.IdOfSelect, CacheMode.OkToUseCache)
+            await this.AtticMan().GetFromStorageById(data.IdOfSelect)
               .then((result) => dataOneWindowStorage = result);
 
             var self = this;
@@ -124,7 +122,7 @@ export class ContentMessageManager extends ContentManagerBase {
             var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
 
             if (targetDoc) {
-              await self.OneScWinMan().RestoreWindowStateToTargetDoc(targetDoc, dataOneWindowStorage)
+              await self.OneScWinMan().RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage)
                 .then(() => resolve())
                 .catch((err) => reject(err))
             }

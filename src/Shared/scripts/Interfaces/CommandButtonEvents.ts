@@ -1,3 +1,4 @@
 ﻿export enum CommandButtonEvents {
-    OnClick
+  OnSingleClick,
+  OnDoubleClick
 }

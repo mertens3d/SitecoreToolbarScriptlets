@@ -2,7 +2,7 @@
 import { UtilityHelper } from "./UtilityHelper";
 import { PromisesBasic } from "../Classes/PromiseGeneric";
 import { FactoryHelper } from "./FactoryHelper";
-import { UrlHelper } from "./UrlHelper";
+import { GenericUrlAgent } from "../Agents/Agents/UrlAgent/UrlAgent";
 import { IHelperAgent } from "../Interfaces/Agents/IHelperAgent";
 import { ILoggerAgent } from "../Interfaces/Agents/ILoggerBase";
 import { IPromiseRecipes } from "../Interfaces/IPromiseRecipes";
@@ -15,7 +15,7 @@ export class HelperAgent implements IHelperAgent {
   PromisesBasic: IPromisesBasic;
   PromisesRecipes: IPromiseRecipes;
   FactoryHelp: FactoryHelper;
-  UrlHelp: UrlHelper;
+
 
   constructor(logger: ILoggerAgent) {
     logger.InstantiateStart(HelperAgent.name);
@@ -29,6 +29,6 @@ export class HelperAgent implements IHelperAgent {
     this.PromisesBasic = new PromisesBasic(logger, helperAgent);
     this.PromisesRecipes = new PromisesRecipes(logger, helperAgent);
     this.FactoryHelp = new FactoryHelper(logger, helperAgent);
-    this.UrlHelp = new UrlHelper(logger, helperAgent);
+
   }
 } 

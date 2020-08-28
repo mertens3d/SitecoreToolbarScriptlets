@@ -41,12 +41,6 @@ export class PopConst {
       Default: 'Complete',
       PublishComplete: 'Publishing Complete',
     },
-
-    ScMode: {
-      edit: { AsEnum: scMode.Edit, AsString: 'edit' },
-      normal: { AsEnum: scMode.Normal, AsString: 'normal' },
-      preview: { AsEnum: scMode.Preview, AsString: 'preview' },
-    },
     Selector: {
       Btn: {
         WindowClose: '[id=close-window]',
@@ -80,7 +74,8 @@ export class PopConst {
         GoCE: '[id=CE]',
         HsCancel: '[id=Cancel]',
         HsRemoveFromStorage: '[id=RemoveOneFromLocalStorage]',
-        HsRestoreWindowState: '[id=RestoreWindowState]',
+        HsRestoreWindowStateSameTab: '[id=id-restore-state-same-tab]',
+        HsRestoreWindowStateNewTab: '[id=id-restore-state-new-tab]',
         iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
         IdFieldSetDebug: '[id=id-fieldset-debug]',
         LogToConsole: '[id=id-settings-show-log-data]',

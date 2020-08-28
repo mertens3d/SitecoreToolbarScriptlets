@@ -1,3 +1,7 @@
 ﻿export enum QueryStrKey {
-  hsTargetSs
+  hsTargetSs,
+  sc_mode,
+  sc_itemid,
+  sc_lang,
+  sc_site,
 }
