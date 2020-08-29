@@ -68,6 +68,10 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
     return reqMsgFromPopup;
   }
 
+  private NotifyFail(failrReason: string) {
+    this.Logger.ErrorAndContinue(this.NotifyFail.name, 'Fail ' + failrReason);
+  }
+
   async ContentReceiveRequest(reqMsgFromPopup: MsgFromPopUp): Promise<MsgFromContent> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
@@ -81,7 +85,10 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
             .then((contentResponse: MsgFromContent) => {
               resolve(contentResponse);
             })
-            .catch((err) => reject(err))
+            .catch((err) => {
+              this.NotifyFail(err);
+              reject(err);
+            });
         } else {
           reject('reqMsgFromPopup is not valid')
         }
@@ -174,7 +181,9 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
           PayloadData : payload.Data,
           ContentMessageBroker: this,
           TopLevelDoc: this.TopLevelDoc,
-          ContentHub: this.ContentHub
+          ContentHub: this.ContentHub,
+          Logger: this.Logger,
+          PromiseBasic: this.AllAgents.HelperAgent.PromisesBasic
         }
 
 
@@ -191,9 +200,5 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
 
       this.Logger.FuncEnd(this.ReqMsgRouter.name);
     });
-
-    //ScUiMan() {
-    //  throw new Error("Method not implemented.");
-    //}
   }
 }

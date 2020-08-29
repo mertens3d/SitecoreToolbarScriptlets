@@ -9,6 +9,7 @@ import { ContentHub } from "../ContentHub/ContentHub";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { RecipeRemoveItemFromStorage } from "./Recipes/RecipeRemoveItemFromStorage";
 import { RecipeSaveState } from "./Recipes/RecipeSaveState";
+import { RecipePublishActiveCe } from "./Recipes/RecipePublishActiveCe";
 
 export class ContentAPIManager extends ContentManagerBase {
   constructor(hub: ContentHub, AllAgents: IAllAgents) {
@@ -52,11 +53,14 @@ export class ContentAPIManager extends ContentManagerBase {
     });
   }
 
-  PublischActiveCE() {
+  PublischActiveCE(commandData: ICommandHndlrDataForContent) {
     return new Promise(async (resolve, reject) => {
-      await this.OneScWinMan().PublishActiveCE(this.ScUiMan().TopLevelDoc())
-        .then(() => resolve())
+
+      await new RecipePublishActiveCe(commandData).Execute()
+        .then(() => resolve)
         .catch((err) => reject(err));
+
+      
     });
   }
 

@@ -1,12 +1,10 @@
 ﻿import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
-import { PromiseResult } from "../../../Shared/scripts/Classes/PromiseResult";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
+import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
-import { IDataBrowserTab } from "../../../Shared/scripts/Interfaces/IDataBrowserWindow";
 import { TabManager } from "../Managers/TabManager";
 import { CommonEvents } from "./CommonEvents";
-import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 
 export class HandlersExternal extends CommonEvents {
   private BuildNewMsgFromPopUp(msgFlag: MsgFlag): MsgFromPopUp {

@@ -7,7 +7,6 @@ import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIfram
 import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
 import { IDataOneWindowStorage } from '../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IDataPayloadSnapShot } from '../../../Shared/scripts/Interfaces/IDataPayloadSnapShot';
-import { PromiseChainQuickPublish } from '../Promises/PromiseChainQuickPublish';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { ContentHub } from './ContentHub/ContentHub';
 import { OneCEAgent } from './OneCEAgent/OneCEAgent';
@@ -126,26 +125,7 @@ export class OneScWindowManager extends ContentManagerBase {
         .catch((err) => this.AllAgents.Logger.ErrorAndThrow(this.__getTopLevelIframe.name, err));
     })
   }
-  async PublishActiveCE(targetDoc: IDataOneDoc) {
-    this.AllAgents.Logger.FuncStart(this.PublishActiveCE.name);
-    var currentWindowType = this.ScUiMan().GetCurrentPageType();
-    var docToPublish: IDataOneDoc = null;
-    if (currentWindowType === scWindowType.Desktop) {
-      var topIframe: IDataOneIframe = await this.__getTopLevelIframe(targetDoc);
-      if (topIframe) {
-        docToPublish = topIframe.ContentDoc;
-      }
-    }
-    else {
-      docToPublish = this.ScUiMan().TopLevelDoc();
-    }
-    this.AllAgents.Logger.Log('docToPublish', this.AllAgents.Logger.IsNullOrUndefined(docToPublish));
-    if (docToPublish) {
-      var publishChain: PromiseChainQuickPublish = new PromiseChainQuickPublish(this.ContentHub, this.AllAgents);
-      await publishChain.PublishCE(docToPublish);
-    }
-    this.AllAgents.Logger.FuncEnd(this.PublishActiveCE.name);
-  }
+
   async SetCompactCss(targetDoc: IDataOneDoc) {
     //if (this.ScUiMan().GetCurrentPageType() === scWindowType.ContentEditor) {
     await this.OneCEAgent.SetCompactCss();

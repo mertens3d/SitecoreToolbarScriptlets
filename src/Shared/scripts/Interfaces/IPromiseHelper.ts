@@ -18,4 +18,5 @@ export interface IPromisesBasic {
   WaitForPageReadyNative(targetDoc: IDataOneDoc);
   WaitForReadyIframe(jqIframe: IDataOneIframe): Promise<null>;
   WaitForThenClick(arg0: string[], arg1: IDataOneDoc);
+   GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<IDataOneIframe>
 }

@@ -1,13 +1,12 @@
 ﻿import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
+import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
 import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
-import { PromiseResult } from "./PromiseResult";
-import { HelperBase } from './HelperBase';
-import { IScVerSpec } from '../Interfaces/IScVerSpec';
-import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
-import { IDataBrowserTab } from '../Interfaces/IDataBrowserWindow';
-import { IPromisesBasic } from '../Interfaces/IPromiseHelper';
 import { ContentConst } from '../Interfaces/InjectConst';
+import { IPromisesBasic } from '../Interfaces/IPromiseHelper';
+import { IScVerSpec } from '../Interfaces/IScVerSpec';
+import { HelperBase } from './HelperBase';
+import { PromiseResult } from "./PromiseResult";
 
 export class PromisesBasic extends HelperBase implements IPromisesBasic {
   async WaitForReadyIframe(dataOneIframe: IDataOneIframe): Promise<null> {
@@ -86,6 +85,37 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
       }
     });
   }
+
+  async GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<IDataOneIframe> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetTopLevelIframe.name);
+
+      var toReturn: IDataOneIframe = null;
+
+      var allIframe: IDataOneIframe[];
+
+      await this.GetAllLiveIframeData(targetDoc)
+        .then((result) => {
+          allIframe = result
+
+          var maxZVal = -1;
+          if (allIframe && allIframe.length > 0) {
+            for (var idx = 0; idx < allIframe.length; idx++) {
+              var candidateIframe = allIframe[idx];
+              if (candidateIframe && candidateIframe.Zindex > maxZVal) {
+                toReturn = candidateIframe;
+                maxZVal = candidateIframe.Zindex;
+              }
+            }
+          }
+        })
+        .then(() => resolve(toReturn))
+        .catch((err) => this.Logger.ErrorAndThrow(this.GetTopLevelIframe.name, err));
+
+      this.Logger.FuncEnd(this.GetTopLevelIframe.name);
+    })
+  }
+
   async WaitForIframeElemAndReturnWhenReady(haystackDoc: IDataOneDoc, selector: string, iframeNickName: string) {
     return new Promise<IDataOneIframe>(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
@@ -371,10 +401,9 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
     });
   }
 
-  WaitForThenClick(selectorAr: string[], targetDoc: IDataOneDoc) {
-    return new Promise<void>(async (resolve, reject) => {
+  WaitForThenClick(selectorAr: string[], targetDoc: IDataOneDoc): Promise<void> {
+    return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForThenClick.name);
-      let promiseResults: PromiseResult = new PromiseResult(this.WaitForThenClick.name, this.Logger);
 
       if (targetDoc) {
         this.Logger.LogAsJsonPretty('selectors', selectorAr);
@@ -396,29 +425,25 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
             try {
               found.click();
 
-              promiseResults.MarkSuccessful();
-            } catch (e) {
-              promiseResults.MarkFailed(e);
+              resolve();
+            } catch (err) {
+              reject(err);
             }
           } else {
             await iterationJr.Wait()
           }
         }
       } else {
-        promiseResults.MarkFailed('no target doc');
+        reject('no target doc');
       }
 
       if (!found && iterationJr.IsExhausted) {
-        promiseResults.MarkFailed(iterationJr.IsExhaustedMsg);
+        reject(iterationJr.IsExhaustedMsg);
       }
 
       this.Logger.FuncEnd(this.WaitForThenClick.name);
 
-      if (promiseResults.WasSuccessful()) {
-        resolve();
-      } else {
-        reject(promiseResults.RejectReasons);
-      }
+    
     });
   }
 }

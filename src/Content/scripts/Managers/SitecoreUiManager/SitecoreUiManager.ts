@@ -9,14 +9,11 @@ import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
 
 export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUiManager {
-  
   ScUrlAgent: ScUrlAgent;
-
 
   constructor(contentHub: ContentHub, allAgents: IAllAgents) {
     super(contentHub, allAgents)
     this.ScUrlAgent = new ScUrlAgent(this.AllAgents.Logger);
-
   }
 
   async InitSitecoreUiManager() {
@@ -25,10 +22,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
     this.AllAgents.Logger.FuncEnd(this.InitSitecoreUiManager.name);
   }
 
-
   GetCurrentPageType(): scWindowType {
-
-    
     //return this.CalcPageTypeFromHref({ AbsUrl: document.location.href });
     return this.ScUrlAgent.GetScWindowType()
   }

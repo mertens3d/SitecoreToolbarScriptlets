@@ -61,6 +61,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentMessageBroker.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\ContentAPIManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
@@ -187,8 +188,26 @@
     <None Include="src\Content\css\vars.scss" />
     <None Include="src\Content\css\_contentTree.scss" />
     <None Include="src\Content\css\_header.scss" />
+    <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.js.map">
+      <DependentUpon>RecipeBase.js</DependentUpon>
+    </None>
+    <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.js.map">
+      <DependentUpon>RecipeRemoveItemFromStorage.js</DependentUpon>
+    </None>
+    <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.js.map">
+      <DependentUpon>RecipeSaveState.js</DependentUpon>
+    </None>
     <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
+    <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.js">
+      <DependentUpon>RecipeBase.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.js">
+      <DependentUpon>RecipeRemoveItemFromStorage.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.js">
+      <DependentUpon>RecipeSaveState.ts</DependentUpon>
+    </Content>
     <Content Include="webpack.config.js" />
     <None Include=".editorconfig" />
     <None Include=".jshintrc" />
@@ -244,7 +263,6 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\MiscManager\MiscManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataPopUpSettings.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiManager.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseChainQuickPublish.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseChainRestoreDesktop.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseGeneric.ts" />
     <TypeScriptCompile Include="src\Content\scripts\_first\_ContentManagerBase.ts" />
