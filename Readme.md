@@ -47,7 +47,7 @@ A Sitecore interface tool that is disassociated enough with a given Sitecore sit
 
 ## Known Issues
 
-TODO: Write history
+If intellisense stops working on browser.tabs.Tab, simply restart visual studio
 
 ## Not Implemented Yet (not prioritized)
 

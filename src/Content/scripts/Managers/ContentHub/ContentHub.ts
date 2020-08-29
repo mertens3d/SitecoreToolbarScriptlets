@@ -42,13 +42,13 @@ export class ContentHub {
 
     this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
 
-    this.AllAgents.Logger.FuncStart(ContentHub.name);
+    this.AllAgents.Logger.InstantiateStart(ContentHub.name);
     console.log('(ctor) logger enabled ' + this.AllAgents.Logger.EnabledStatus());
     this.InstantiateMembers();
-    this.AllAgents.Logger.FuncEnd(ContentHub.name);
+    this.AllAgents.Logger.InstantiateEnd(ContentHub.name);
   }
 
-  async InstantiateMembers() {
+   InstantiateMembers() {
     this.AllAgents.Logger.FuncStart(this.InstantiateMembers.name);
 
     let Repo: RepoAgent = new RepoAgent(this.AllAgents.Logger);
@@ -68,30 +68,33 @@ export class ContentHub {
 
     this.SitecoreUiMan = new SitecoreUiManager(this, this.AllAgents);
 
-    this.AllAgents.Logger.Log('ready for messages');
+
 
     this.AllAgents.Logger.FuncEnd(this.InstantiateMembers.name);
   }
 
-  Init(): Promise<void>{
+  InitContentHub(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(ContentHub.constructor.name + ' ' + this.Init.name);
-      await this.SitecoreUiMan.Init();
-
+      this.AllAgents.Logger.FuncStart(this.InitContentHub.name);
       this.Const = ContentConst.Const;
 
-      this.AtticMan.Init();
-      this.ContentMessageMan.Init();
+      await this.SitecoreUiMan.InitSitecoreUiManager()
+        .then(() => {
+          this.AtticMan.InitContentAtticManager();
+          this.ContentMessageMan.InitContentMessageManager();
 
-      this.AllAgents.Logger.SetEnabled(this.ContentMessageMan.IsLogEnabled());
+          this.AllAgents.Logger.SetEnabled(this.ContentMessageMan.IsLogEnabled());
 
-      this.OneWindowMan.Init();
+          this.OneWindowMan.InitOneScWindowManager();
 
-      this.InjectCss();
+          this.InjectCss();
+        })
+        .then(() => this.InitFromQueryStr())
 
-      await this.InitFromQueryStr();
+        .then(() => resolve())
+        .catch((err) => reject(err));
 
-      this.AllAgents.Logger.FuncEnd(ContentHub.constructor.name + ' ' + this.Init.name);
+      this.AllAgents.Logger.FuncEnd(this.InitContentHub.name);
     })
   }
 

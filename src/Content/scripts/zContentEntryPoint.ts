@@ -41,7 +41,7 @@ async function main() {
   allAgents.Logger.ThrowIfNullOrUndefined("allAgents.HelperAgent", allAgents.HelperAgent);
 
   let contentHub: ContentHub = new ContentHub(allAgents);
-  await contentHub.Init()
+  await contentHub.InitContentHub()
     .then(() => allAgents.Logger.Log('Init success'))
     .catch((err) => allAgents.Logger.ErrorAndThrow('Content Entry Point', JSON.stringify( err)))  ;
 }

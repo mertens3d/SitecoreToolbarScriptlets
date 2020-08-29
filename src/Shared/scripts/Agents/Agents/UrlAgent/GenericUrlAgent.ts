@@ -11,7 +11,6 @@ export class GenericUrlAgent implements IUrlAgent {
 
   constructor(logger: ILoggerAgent) {
     this.Logger = logger;
-    
   }
 
   GetUrlParts(): GenericUrlParts {
@@ -55,40 +54,39 @@ export class GenericUrlAgent implements IUrlAgent {
     this.UrlParts.FilePath = newFilePath;
   }
 
-   Init() : Promise<void>{
-     return new Promise(async (resolve, reject) => {
+  InitGenericUrlAgent(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        this.Logger.FuncStart(this.InitGenericUrlAgent.name);
 
-       try {
+        if (browser.tabs) {
+          await browser.tabs.query({ currentWindow: true, active: true })
+            .then((result: browser.tabs.Tab[]) => {
+              this.Logger.LogAsJsonPretty('result', result);
+              let resultTab: browser.tabs.Tab = result[0];
 
-       
+              this.SetFromHref(resultTab.url);
 
-       if (browser.tabs) {
+              resolve();
+            })
+            .catch((err) => reject(err));
+        }
+        else {
+          this.Logger.Log('Init from window.location.href')
+          let urlToUse = window.location.href;
+          this.SetFromHref(urlToUse);
+        }
 
+        resolve();
+      } catch (ex) {
+        reject(ex);
+      }
 
-         await browser.tabs.query({ currentWindow: true, active: true })
-           .then((result: browser.tabs.Tab[]) => {
-             let resultTab: browser.tabs.Tab = result[0];
-
-             this.SetFromHref(resultTab.url);
-
-             resolve();
-           })
-           .catch((err) => reject(err));
-         
-       }
-       else {
-         let urlToUse = window.location.href;
-         this.SetFromHref(urlToUse);
-         }
-       } catch (ex) {
-         reject(ex);
-       }
-      
+      this.Logger.FuncEnd(this.InitGenericUrlAgent.name);
     });
   }
 
   private SetFromHref(href: string) {
-
     var parser = document.createElement('a');
     parser.href = href;// resultTab.url;
 

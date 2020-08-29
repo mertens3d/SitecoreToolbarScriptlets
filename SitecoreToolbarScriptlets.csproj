@@ -129,7 +129,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingFlavor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\VisibilityType.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\SettingsAgent.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\UrlAgent\UrlAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\UrlAgent\GenericUrlAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\UtilityHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferChar.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferDirection.ts" />

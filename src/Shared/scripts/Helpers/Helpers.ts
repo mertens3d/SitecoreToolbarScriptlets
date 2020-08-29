@@ -2,7 +2,7 @@
 import { UtilityHelper } from "./UtilityHelper";
 import { PromisesBasic } from "../Classes/PromiseGeneric";
 import { FactoryHelper } from "./FactoryHelper";
-import { GenericUrlAgent } from "../Agents/Agents/UrlAgent/UrlAgent";
+import { GenericUrlAgent } from "../Agents/Agents/UrlAgent/GenericUrlAgent";
 import { IHelperAgent } from "../Interfaces/Agents/IHelperAgent";
 import { ILoggerAgent } from "../Interfaces/Agents/ILoggerBase";
 import { IPromiseRecipes } from "../Interfaces/IPromiseRecipes";

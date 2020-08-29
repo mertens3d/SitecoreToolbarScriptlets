@@ -5,7 +5,7 @@ import { AbsoluteUrl } from "../../../Interfaces/AbsoluteUrl";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
 import { IContentState } from "../../../Interfaces/IContentState/IContentState";
 import { SharedConst } from "../../../SharedConst";
-import { GenericUrlAgent } from "./UrlAgent";
+import { GenericUrlAgent } from "./GenericUrlAgent";
 
 export class ScUrlAgent extends GenericUrlAgent {
   constructor(logger: ILoggerAgent) {

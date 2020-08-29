@@ -19,8 +19,10 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
 
   }
 
-  async Init() {
-    await this.ScUrlAgent.Init();
+  async InitSitecoreUiManager() {
+    this.AllAgents.Logger.FuncStart(this.InitSitecoreUiManager.name);
+    await this.ScUrlAgent.InitGenericUrlAgent();
+    this.AllAgents.Logger.FuncEnd(this.InitSitecoreUiManager.name);
   }
 
 

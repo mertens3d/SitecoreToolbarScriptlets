@@ -27,7 +27,7 @@ export class ContentAtticManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncEnd(ContentAtticManager.name);
   }
 
-  Init() {
+  InitContentAtticManager() {
     this.CleanOutOldData();
   }
   //functioneventHandler(e) {

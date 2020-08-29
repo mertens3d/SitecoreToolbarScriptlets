@@ -25,12 +25,11 @@ export class ContentMessageManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncEnd(ContentMessageManager.name);
   }
 
-  Init() {
-    this.AllAgents.Logger.FuncStart(this.Init.name + ' ' + ContentMessageManager.name);
-    var self = this;
+  InitContentMessageManager() {
+    this.AllAgents.Logger.FuncStart(this.InitContentMessageManager.name + ' ' + ContentMessageManager.name);
     this.ContentMessageBroker = new ContentMessageBroker(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.APIMan(), this.ScUiMan().TopLevelDoc(), this.ContentHub, this.AllAgents);
     this.ContentMessageBroker.BeginListening();
-    this.AllAgents.Logger.FuncEnd(this.Init.name);
+    this.AllAgents.Logger.FuncEnd(this.InitContentMessageManager.name);
   }
 
   ScheduleIntervalTasks(reqMsgFromPopup: MsgFromPopUp) {

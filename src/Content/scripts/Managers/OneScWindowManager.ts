@@ -24,7 +24,7 @@ export class OneScWindowManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncEnd(OneScWindowManager.name);
   }
 
-  Init() {
+  InitOneScWindowManager() {
     let currPageType = this.ScUiMan().GetCurrentPageType();
 
     if (currPageType === scWindowType.Desktop) {

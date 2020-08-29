@@ -42,7 +42,7 @@ export class TabManager extends PopUpManagerBase {
     this.AllAgents.Logger.FuncStart(TabManager.name, this.InitTabManager.name);
 
     this.ScUrlAgent =  new ScUrlAgent(this.AllAgents.Logger);
-    await this.ScUrlAgent.Init();
+    await this.ScUrlAgent.InitGenericUrlAgent();
 
     this.AllAgents.Logger.FuncEnd(TabManager.name, this.InitTabManager.name);
   }

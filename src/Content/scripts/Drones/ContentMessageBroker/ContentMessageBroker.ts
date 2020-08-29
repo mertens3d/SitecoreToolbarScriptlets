@@ -28,9 +28,9 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
     this.ApiManager = apiManager;
     this.TopLevelDoc = topLevelDoc;
 
-    this.Logger.FuncStart(ContentMessageBroker.name);
+    this.Logger.InstantiateStart(ContentMessageBroker.name);
 
-    this.Logger.FuncEnd(ContentMessageBroker.name);
+    this.Logger.InstantiateEnd(ContentMessageBroker.name);
   }
 
   BeginListening() {
@@ -39,6 +39,7 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
     var self = this;
     browser.runtime.onMessage.addListener(request => self.ContentReceiveRequest(request));
 
+    this.AllAgents.Logger.Log('Listening for messages');
     //this.ReadyForMessages = true;
     this.Logger.FuncEnd(this.BeginListening.name);
   }
