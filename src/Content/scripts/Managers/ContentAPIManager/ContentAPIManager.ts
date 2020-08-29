@@ -40,12 +40,12 @@ export class ContentAPIManager extends ContentManagerBase {
     });
   }
 
-  AddCETab(payloadData: PayloadDataFromPopUp, self: ContentManagerBase, targetDoc: IDataOneDoc, contentHub: ContentHub): Promise<void> {
+  AddCETab(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await self.AllAgents.HelperAgent.PromisesRecipes.FromDesktopOpenNewCEIframe(targetDoc)
+      await commandData.ContentHub.AtticMan.AllAgents.HelperAgent.PromisesRecipes.FromDesktopOpenNewCEIframe(commandData.TopLevelDoc)
         .then(() => {
+          commandData.ContentHub.AtticMan.AllAgents.ToastAgent.Notify(commandData.TopLevelDoc, "Success");
           resolve();
-          self.AllAgents.ToastAgent.Notify(self.ScUiMan().TopLevelDoc(), "Success");
         })
 
         .catch((err) => reject(err));

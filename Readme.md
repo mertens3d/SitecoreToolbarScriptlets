@@ -45,6 +45,10 @@ A Sitecore interface tool that is disassociated enough with a given Sitecore sit
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request
 
+
+## Standards and Conventions
+1. Use a single space between methods.
+
 ## Known Issues
 
 If intellisense stops working on browser.tabs.Tab, simply restart visual studio

@@ -14,14 +14,15 @@ import { PopUpHub } from './PopUpHub';
 import { PopUpManagerBase } from './PopUpManagerBase';
 
 export class TabManager extends PopUpManagerBase {
+  private ScUrlAgent: ScUrlAgent;
+
   GetFullUrl(): AbsoluteUrl {
-    throw new Error("Method not implemented.");
-  }
-  SetQueryStringKeyValue(hsTargetSs: QueryStrKey, AsString: string) {
-    throw new Error("Method not implemented.");
+    return this.ScUrlAgent.BuildFullUrlFromParts();
   }
 
-  private ScUrlAgent: ScUrlAgent;
+  SetQueryStringKeyValue(qsKey: QueryStrKey, qsValue: string) {
+    this.ScUrlAgent.SetParameterValueByKey(qsKey, qsValue)
+  }
 
   GetUrlParts(): GenericUrlParts {
     return this.ScUrlAgent.GetUrlParts();
@@ -41,7 +42,7 @@ export class TabManager extends PopUpManagerBase {
   async InitTabManager() {
     this.AllAgents.Logger.FuncStart(TabManager.name, this.InitTabManager.name);
 
-    this.ScUrlAgent =  new ScUrlAgent(this.AllAgents.Logger);
+    this.ScUrlAgent = new ScUrlAgent(this.AllAgents.Logger);
     await this.ScUrlAgent.InitGenericUrlAgent();
 
     this.AllAgents.Logger.FuncEnd(TabManager.name, this.InitTabManager.name);
