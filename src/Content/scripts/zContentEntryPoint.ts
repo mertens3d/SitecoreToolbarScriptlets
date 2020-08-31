@@ -12,41 +12,53 @@ import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastA
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
 
-async function main() {
-  var allAgents: IAllAgents = new AllAgents();
-  allAgents.Logger = new LoggerAgent();
-  allAgents.Logger.AddWriter(new LoggerConsoleWriter());
+class ContentEntry {
+  private AllAgents: IAllAgents;
+
+  async main() {
+    await this.InstantiateMembers()
+      .then(() => this.AllAgents.Logger.Log('Instantiate Members succeeded'))
+      .then(() => {
+        let contentHub: ContentHub = new ContentHub(this.AllAgents);
+        contentHub.InitContentHub()
+      })
+      .then(() => this.AllAgents.Logger.Log('Init success'))
+      .catch((err) => this.AllAgents.Logger.ErrorAndThrow('Content Entry Point', err));
+  }
+
+  private async InstantiateMembers() {
+  this.AllAgents = new AllAgents();
+  this.AllAgents.Logger = new LoggerAgent();
+  this.AllAgents.Logger.AddWriter(new LoggerConsoleWriter());
   let storageLogWriter = new LoggerStorageWriter();
-  allAgents.Logger.AddWriter(storageLogWriter);
+  this.AllAgents.Logger.AddWriter(storageLogWriter);
 
-  let Repo: RepoAgent = new RepoAgent(allAgents.Logger);
+  let Repo: RepoAgent = new RepoAgent(this.AllAgents.Logger);
 
-  allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, Repo);
+  this.AllAgents.SettingsAgent = new SettingsAgent(this.AllAgents.Logger, Repo);
 
   var allSettings: IOneGenericSetting[] = new ConstAllSettings().AllSettings;
-  await allAgents.SettingsAgent.InitSettingsAgent(allSettings);
 
-  var RollingLogId = new RollingLogIdDrone(allAgents.SettingsAgent);
-  var nextLogId = RollingLogId.GetNextLogId();
+  await this.AllAgents.SettingsAgent.InitSettingsAgent(allSettings)
+    .then(() => {
+      var RollingLogId = new RollingLogIdDrone(this.AllAgents.SettingsAgent, this.AllAgents.Logger);
+      var nextLogId = RollingLogId.GetNextLogId();
 
-  storageLogWriter.SetLogToStorageKey(nextLogId);
-  allAgents.Logger.AddWriter(new LoggerStorageWriter());
+      storageLogWriter.SetLogToStorageKey(nextLogId);
 
-  allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
+      this.AllAgents.Logger.AddWriter(new LoggerStorageWriter());
 
+      this.AllAgents.HelperAgent = new HelperAgent(this.AllAgents.Logger);
 
-  allAgents.ToastAgent = new ToastAgent(allAgents.Logger)
+      this.AllAgents.ToastAgent = new ToastAgent(this.AllAgents.Logger);
+    })
 
-  allAgents.Logger.ThrowIfNullOrUndefined("allAgents", allAgents);
-  allAgents.Logger.ThrowIfNullOrUndefined("allAgents.HelperAgent", allAgents.HelperAgent);
-
-  let contentHub: ContentHub = new ContentHub(allAgents);
-  await contentHub.InitContentHub()
-    .then(() => allAgents.Logger.Log('Init success'))
-    .catch((err) => allAgents.Logger.ErrorAndThrow('Content Entry Point', JSON.stringify( err)))  ;
+    .catch((err) => this.AllAgents.Logger.ErrorAndThrow(this.InstantiateMembers.name, err));
+}
 }
 
-main();
+let contentEntry: ContentEntry = new ContentEntry();
+contentEntry.main();
   //.then(text => {
   //  console.log(text);
   //})

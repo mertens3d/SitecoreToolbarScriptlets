@@ -17,26 +17,28 @@ async function main() {
   allAgents.RepoAgent = new RepoAgent(allAgents.Logger);
   allAgents.SettingsAgent = new SettingsAgent(allAgents.Logger, allAgents.RepoAgent);
 
-  var allSettings: IOneGenericSetting[] = new ConstAllSettings().AllSettings;
-  await allAgents.SettingsAgent.InitSettingsAgent(allSettings);
-
-  var RollingLogId = new RollingLogIdDrone(allAgents.SettingsAgent);
-  var nextLogId = RollingLogId.GetNextLogId();
-
-  let storageLogWriter = new LoggerStorageWriter();
-  storageLogWriter.SetLogToStorageKey(nextLogId);
-
   allAgents.HelperAgent = new HelperAgent(allAgents.Logger);
+  var allSettings: IOneGenericSetting[] = new ConstAllSettings().AllSettings;
 
-  let popUpHub = new PopUpHub(allAgents);
+  await allAgents.SettingsAgent.InitSettingsAgent(allSettings)
+    .then(() => {
+      var RollingLogId = new RollingLogIdDrone(allAgents.SettingsAgent, allAgents.Logger);
+      var nextLogId = RollingLogId.GetNextLogId();
 
-  allAgents.Logger.SectionMarker('Begin Init');
-  await popUpHub.InitPopUpHub()
-    .then(() => allAgents.Logger.Log('Init Successful'))
-    .catch((err) => allAgents.Logger.ErrorAndContinue('Pop Up Entry Point Main', JSON.stringify( err)));
-  allAgents.Logger.SectionMarker('End Init');
-  allAgents.Logger.SectionMarker('Begin Standby');
+      let storageLogWriter = new LoggerStorageWriter();
+      storageLogWriter.SetLogToStorageKey(nextLogId);
+    })
+    .then(() => {
+      let popUpHub = new PopUpHub(allAgents);
 
+      allAgents.Logger.SectionMarker('Begin Init');
+      popUpHub.InitPopUpHub()
+        .then(() => allAgents.Logger.Log('Init Successful'))
+        .catch((err) => allAgents.Logger.ErrorAndContinue('Pop Up Entry Point Main', JSON.stringify(err)));
+      allAgents.Logger.SectionMarker('End Init');
+      allAgents.Logger.SectionMarker('Begin Standby');
+    })
+    .catch((err) => { throw (err) });
 }
 
 main();

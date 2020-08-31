@@ -14,7 +14,8 @@ import { ContentHub } from "../ContentHub/ContentHub";
 
 export class ContentAtticManager extends ContentManagerBase {
   //private CachedWindowStorage: ISnapShotsMany;
-  Repo: RepoAgent;
+  private Repo: RepoAgent;
+  private SettingAutoSnapshotRetainDays: number;
 
   constructor(hub: ContentHub, AllAgents: IAllAgents, repo: RepoAgent) {
     super(hub, AllAgents);
@@ -22,13 +23,15 @@ export class ContentAtticManager extends ContentManagerBase {
 
     this.Repo = repo;
 
-    this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
+    //this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
 
     this.AllAgents.Logger.FuncEnd(ContentAtticManager.name);
   }
 
-  InitContentAtticManager() {
-    this.CleanOutOldData();
+  InitContentAtticManager(settingAutoSnapshotRetainDays: number) {
+    this.SettingAutoSnapshotRetainDays = settingAutoSnapshotRetainDays;
+
+    this.CleanOutOldAutoSavedData();
   }
   //functioneventHandler(e) {
   //  console.log('this data is ' + e.detail);
@@ -189,12 +192,16 @@ export class ContentAtticManager extends ContentManagerBase {
     })
   }
 
-  async CleanOutOldData(): Promise<void> {
-    this.AllAgents.Logger.FuncStart(this.CleanOutOldData.name);
+  async CleanOutOldAutoSavedData(): Promise<void> {
+    this.AllAgents.Logger.FuncStart(this.CleanOutOldAutoSavedData.name);
 
     var cleanData: IDataOneWindowStorage[] = [];
     var now: Date = new Date();
-    var maxAutoSaveDiff: number = ContentConst.Const.MaxAutoSaveAgeDays * 24 * 60 * 60 * 1000;
+
+    if (!this.SettingAutoSnapshotRetainDays || this.SettingAutoSnapshotRetainDays < 1) {
+      this.SettingAutoSnapshotRetainDays = ContentConst.Const.DefaultMaxAutoSaveAgeDays;
+    }
+    var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
     let currentWindowStorage: ISnapShotsMany = await this.GetAllSnapShotsMany();
 
     if (currentWindowStorage) {
@@ -213,7 +220,7 @@ export class ContentAtticManager extends ContentManagerBase {
         }
 
         if (now.getTime() - candidate.TimeStamp.getTime() > maxAutoSaveDiff) {
-          this.AllAgents.Logger.LogVal('Delete (Old : max' + ContentConst.Const.MaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
+          this.AllAgents.Logger.LogVal('Delete (Old : max' + ContentConst.Const.DefaultMaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
           deleteFlag = true;
         }
 
@@ -224,13 +231,13 @@ export class ContentAtticManager extends ContentManagerBase {
             this.AllAgents.Logger.LogVal('Cleaning old autosave', candidate.RawData.key);
             window.localStorage.removeItem(candidate.RawData.key);
           } catch (e) {
-            this.AllAgents.Logger.ErrorAndThrow(this.CleanOutOldData.name, 'unable to delete key: ' + candidate.RawData.key)
+            this.AllAgents.Logger.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.RawData.key)
           }
         }
       }
     }
 
-    this.AllAgents.Logger.FuncEnd(this.CleanOutOldData.name);
+    this.AllAgents.Logger.FuncEnd(this.CleanOutOldAutoSavedData.name);
   }
 
   GetAllSnapShotsMany(): Promise<ISnapShotsMany> {
@@ -295,20 +302,20 @@ export class ContentAtticManager extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       //var result: boolean = confirm('Remove ?: ' + this.TimeNicknameFavStrForConfirmation(storageMatch));
       //if (result === true) {
-        this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
+      this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
 
-        let targetId = storageMatch.Id;
+      let targetId = storageMatch.Id;
 
-        await window.localStorage.removeItem(storageMatch.RawData.key);
+      await window.localStorage.removeItem(storageMatch.RawData.key);
 
-        await this.GetFromStorageById(targetId)
-          .then((result) => {
-            if (!result) {
-              resolve();
-            } else {
-              reject('Snapshot still exists after deleting');
-            }
-          })
+      await this.GetFromStorageById(targetId)
+        .then((result) => {
+          if (!result) {
+            resolve();
+          } else {
+            reject('Snapshot still exists after deleting');
+          }
+        })
       //} else {
       //  reject('Confirmation not received');
       //}

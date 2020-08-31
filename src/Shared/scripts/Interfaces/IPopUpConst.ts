@@ -78,6 +78,7 @@
       SettingAutoSaveInterval: string,
       SettingAutoSaveMaxCount: string,
       SettingDebugKeepDialogOpen: string,
+      SettingAutoSaveSnapshotRetainDays: string,
       SettingNotUsed: string,
       SettingUseCompactCss: string,
       TakeSnapshot: string,

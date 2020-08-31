@@ -1,13 +1,22 @@
 ﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
+import { LoggerAgent } from "../../Agents/LoggerAgent/LoggerAgent";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
 
 export class RollingLogIdDrone {
   private SettingsAgent: ISettingsAgent;
   private maxKey: number = 5;
   private minKey: number = 1;
-  constructor(settingsAgent: ISettingsAgent) {
+  private Logger: ILoggerAgent;
+
+  constructor(settingsAgent: ISettingsAgent, loggerAgent: ILoggerAgent) {
+    this.Logger = loggerAgent;
+
+    this.Logger.InstantiateStart(RollingLogIdDrone.name);
     this.SettingsAgent = settingsAgent;
+
+    this.Logger.FuncEnd(RollingLogIdDrone.name);
   }
 
   GetNextLogId(): string {

@@ -53,14 +53,11 @@ export class ContentAPIManager extends ContentManagerBase {
     });
   }
 
-  PublischActiveCE(commandData: ICommandHndlrDataForContent) {
+  PublischActiveCE(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
       await new RecipePublishActiveCe(commandData).Execute()
         .then(() => resolve)
         .catch((err) => reject(err));
-
-      
     });
   }
 
@@ -89,6 +86,7 @@ export class ContentAPIManager extends ContentManagerBase {
         .catch((err) => reject(err));
     });
   }
+
   RestoreSnapshop(commandData: ICommandHndlrDataForContent) {
     return new Promise(async (resolve, reject) => {
       await commandData.ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)

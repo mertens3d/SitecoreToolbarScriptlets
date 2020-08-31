@@ -50,7 +50,7 @@ import { scMode } from '../Enums/scMode';
 export class ContentConst {
   static Const: IContentConst = {
     MaxAutoToSaveCount: 10,
-    MaxAutoSaveAgeDays: 1,
+    DefaultMaxAutoSaveAgeDays: 7,
     //MaxCacheAgeMs: 1000 * 60 * 10,
     Iterations: {
       MaxSetHrefEffort: 10,

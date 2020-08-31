@@ -6,6 +6,7 @@ import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 import { SharedConst } from "../../../SharedConst";
 import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
 import { Enabled } from "../../../Enums/Enabled";
+import { ContentConst } from "../../../Interfaces/InjectConst";
 
 export class ConstAllSettings {
   AllSettings: IOneGenericSetting[] = [
@@ -181,6 +182,16 @@ export class ConstAllSettings {
       PopConst.Const.Settings.Defaults.DebugKeepDialogOpen,
       SettingFlavor.PopUp,
       '(Debug) Keep Dialog Open',
+      Enabled.Enabled
+    ),
+    new OneGenericSetting(
+      SettingKey.AutoSaveRetainDays,
+      SettingType.Number,
+      null,
+      PopConst.Const.Selector.HS.SettingAutoSaveSnapshotRetainDays,
+      ContentConst.Const.DefaultMaxAutoSaveAgeDays,
+      SettingFlavor.ContentOnly,
+       'Days to Retain Auto Snap Shots',
       Enabled.Enabled
     )
   ];

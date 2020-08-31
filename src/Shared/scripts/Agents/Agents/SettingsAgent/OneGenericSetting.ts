@@ -12,6 +12,7 @@ export class OneGenericSetting implements IOneGenericSetting {
   SettingKey: SettingKey;
   UiSelector: string;
   ValueAsObj: any;
+
   constructor(settingKey: SettingKey, dataType: SettingType, valueAsObj: any, uiSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: Enabled, hasUi: boolean = true) {
     this.SettingKey = settingKey;
     this.DataType = dataType;
@@ -26,7 +27,12 @@ export class OneGenericSetting implements IOneGenericSetting {
   HasUi: boolean;
 
   ValueAsInt(): number {
-    var toReturn: number = parseInt(this.ValueAsObj.toString());
+    var toReturn: number = Number.MIN_SAFE_INTEGER;
+    if (this.ValueAsObj !== undefined && this.ValueAsObj !== null) {
+
+      toReturn = parseInt(this.ValueAsObj.toString());
+    } 
+
     return toReturn;
   }
 

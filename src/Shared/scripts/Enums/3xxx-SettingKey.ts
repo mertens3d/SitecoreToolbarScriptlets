@@ -10,6 +10,7 @@
   DebugKeepDialogOpen = 3102,
   AutoSaveIntervalMin = 3103,
   UseCompactCss = 3104,
+  AutoSaveRetainDays = 3105,
 
   //popup settings - 2200's
   MaxAutoSaveCount = 3200,

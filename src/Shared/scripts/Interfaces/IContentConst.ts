@@ -1,7 +1,7 @@
 import { IScVerSpec } from './IScVerSpec';
 
 export interface IContentConst {
-  MaxAutoSaveAgeDays: number;
+  DefaultMaxAutoSaveAgeDays: number;
   MaxAutoToSaveCount: number;
   //MaxCacheAgeMs: number;
 

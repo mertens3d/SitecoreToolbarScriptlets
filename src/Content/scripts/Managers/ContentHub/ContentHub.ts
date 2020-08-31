@@ -18,6 +18,7 @@ import { ContentMessageManager } from '../ContentMessageManager/ContentMessageMa
 import { MiscManager } from '../MiscManager/MiscManager';
 import { OneScWindowManager } from "../OneScWindowManager";
 import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
+import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 
 export class ContentHub {
   AtticMan: ContentAtticManager;
@@ -40,10 +41,10 @@ export class ContentHub {
   constructor(allAgents: IAllAgents) {
     this.AllAgents = allAgents;
 
-    this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
+    //this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
 
     this.AllAgents.Logger.InstantiateStart(ContentHub.name);
-    console.log('(ctor) logger enabled ' + this.AllAgents.Logger.EnabledStatus());
+    //console.log('(ctor) logger enabled ' + this.AllAgents.Logger.EnabledStatus());
     this.InstantiateMembers();
     this.AllAgents.Logger.InstantiateEnd(ContentHub.name);
   }
@@ -80,7 +81,7 @@ export class ContentHub {
 
       await this.SitecoreUiMan.InitSitecoreUiManager()
         .then(() => {
-          this.AtticMan.InitContentAtticManager();
+          this.AtticMan.InitContentAtticManager(this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
           this.ContentMessageMan.InitContentMessageManager();
 
           this.AllAgents.Logger.SetEnabled(this.ContentMessageMan.IsLogEnabled());

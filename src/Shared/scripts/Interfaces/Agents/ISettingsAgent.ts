@@ -11,6 +11,6 @@ export interface ISettingsAgent {
   ValueAsBool(setting: IOneGenericSetting): boolean;
   SetContentSettings(CurrentContentPrefs: IOneGenericSetting[]);
   GetByKey(AutoSaveIntervalMin: SettingKey): IOneGenericSetting;
-  InitSettingsAgent(allSettings: IOneGenericSetting[]): void;
+  InitSettingsAgent(allSettings: IOneGenericSetting[]): Promise< void>;
   ReadGenericSettings(): Promise<IOneGenericSettingForStorage[]>;
 }
