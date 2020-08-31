@@ -3,16 +3,14 @@ import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
-import { IGuid } from '../../../Shared/scripts/Interfaces/IGuid';
-import { IGuidHelper } from '../../../Shared/scripts/Interfaces/IGuidHelper';
 import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 
 export class UiButtonStateManager {
   private AllMenuCommands: IOneCommand[];
   private currentContentState: IContentState;
   private currentWindowType: scWindowType;
-  private currSelSnapshot: IGuid;
-  private guidHelper: IGuidHelper;
+  private currSelSnapshot: Guid;
   private Logger: ILoggerAgent;
   private Tester: ButtonVisibilityTester;
 
@@ -74,7 +72,7 @@ export class UiButtonStateManager {
 
           case VisibilityType.SnapShotSelected:
 
-            toReturn = this.Tester.VisibilityTestSnapShotSelected(this.currSelSnapshot, this.guidHelper);
+            toReturn = this.Tester.VisibilityTestSnapShotSelected(this.currSelSnapshot);
             break;
 
           case VisibilityType.NotLogin:
@@ -120,12 +118,11 @@ export class UiButtonStateManager {
     }
   }
 
-  RefreshUi(currentWindowType: scWindowType, currSelSnapshot: IGuid, guidHelper: IGuidHelper, contentState: IContentState): void {
+  RefreshUi(currentWindowType: scWindowType, currSelSnapshot: Guid, contentState: IContentState): void {
     this.Logger.FuncStart(this.RefreshUi.name, this.AllMenuCommands.length);
 
     this.currentWindowType = currentWindowType;
     this.currSelSnapshot = currSelSnapshot;
-    this.guidHelper = guidHelper;
     this.currentContentState = contentState;
 
     for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {

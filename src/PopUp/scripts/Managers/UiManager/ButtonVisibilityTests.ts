@@ -1,7 +1,6 @@
 ﻿import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
-import { IGuid } from "../../../../Shared/scripts/Interfaces/IGuid";
-import { IGuidHelper } from "../../../../Shared/scripts/Interfaces/IGuidHelper";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class ButtonVisibilityTester {
   VisibilityTestWindowType(windowType: scWindowType, currentWindowType: scWindowType): boolean {
@@ -12,10 +11,10 @@ export class ButtonVisibilityTester {
     return toReturn;
   }
 
-  VisibilityTestSnapShotSelected(currSelSnapshot: IGuid, guidHelper: IGuidHelper): boolean {
+  VisibilityTestSnapShotSelected(currSelSnapshot: Guid): boolean {
     let toReturn: boolean = false;
 
-    if (currSelSnapshot && currSelSnapshot.AsBracedGuid !== guidHelper.EmptyGuid().AsBracedGuid) {
+    if (currSelSnapshot && currSelSnapshot.AsBracedGuid !== Guid.GetEmptyGuid().AsBracedGuid) {
       toReturn = true;
     }
     return toReturn;

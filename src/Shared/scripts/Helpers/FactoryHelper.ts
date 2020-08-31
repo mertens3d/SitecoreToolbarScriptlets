@@ -3,10 +3,10 @@ import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
 import { IDataOneWindowStorage } from "../Interfaces/IDataOneWindowStorage";
 import { scWindowType } from "../Enums/scWindowType";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
-import { IGuid } from "../Interfaces/IGuid";
 import { IDataDesktopState } from "../Interfaces/IDataDtState";
 import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
+import { Guid } from "./Guid";
 
 export class FactoryHelper extends HelperBase implements IFactoryHelper {
   CreateNewDtDataShell(): IDataDesktopState {
@@ -28,7 +28,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       {
         //ParentDoc: parentDocument,
         ContentDoc: dataOneIframe.IframeElem.contentDocument,
-        DocId: this.HelperAgent.GuidHelper.NewGuid(),
+        DocId: Guid.NewGuid(),
         Nickname: dataOneIframe.Nickname + ' - content doc'
       }
     } else {
@@ -49,7 +49,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       var toReturn: IDataOneIframe = {
         Index: -1,
         IframeElem: iframeElem,
-        Id: this.HelperAgent.GuidHelper.NewGuid(),
+        Id: Guid.NewGuid(),
         Zindex: zIndex,
         Nickname: nickname,
         ContentDoc: null,
@@ -68,7 +68,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
   CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
     this.Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
     var dateToUse: Date = new Date();
-    var newGuid: IGuid = this.HelperAgent.GuidHelper.NewGuid();
+    var newGuid: Guid = Guid.NewGuid();
 
     var activeWindowSnapShot: IDataOneWindowStorage = {
       TimeStamp: dateToUse,
@@ -81,9 +81,6 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       RawData: null,
       Flavor: flavor,
     };
-
-   
-
 
     this.Logger.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
 

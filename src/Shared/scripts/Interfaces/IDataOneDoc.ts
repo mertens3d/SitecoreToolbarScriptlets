@@ -1,8 +1,8 @@
-﻿import { IGuid } from "./IGuid";
+﻿import { Guid } from "../Helpers/Guid";
 
 export interface IDataOneDoc {
   //ParentDoc: IDataOneDoc;
-  DocId: IGuid;
+  DocId: Guid;
   ContentDoc: Document;
   Nickname: string;
 }

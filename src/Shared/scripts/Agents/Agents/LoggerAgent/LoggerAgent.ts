@@ -1,22 +1,20 @@
-﻿import { IDataOneDoc } from "../../../Interfaces/IDataOneDoc";
-import { IDataDebugCallback } from "../../../Interfaces/DebugCallback";
-import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
-import { IGuid } from "../../../Interfaces/IGuid";
-import { IError } from "../../../Interfaces/IError";
+﻿import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { BufferChar } from "../../../Enums/BufferChar";
 import { BufferDirection } from "../../../Enums/BufferDirection";
-import { SharedConst } from "../../../SharedConst";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
-import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
-import { IDataBrowserTab } from "../../../Interfaces/IDataBrowserWindow";
-import { scWindowType } from "../../../Enums/scWindowType";
-import { IDataBucketRestoreDesktop } from "../../../Interfaces/IDataBucketRestoreDesktop";
-import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
-import { IDataPayloadSnapShot } from "../../../Interfaces/IDataPayloadSnapShot";
-import { IDataOneIframe } from "../../../Interfaces/IDataOneIframe";
-import { IContentState } from "../../../Interfaces/IContentState/IContentState";
 import { ILogWriter } from "../../../Interfaces/Agents/ILoggerWriter";
+import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
+import { IDataDebugCallback } from "../../../Interfaces/DebugCallback";
+import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
+import { IContentState } from "../../../Interfaces/IContentState/IContentState";
+import { IDataBucketRestoreDesktop } from "../../../Interfaces/IDataBucketRestoreDesktop";
+import { IDataOneDoc } from "../../../Interfaces/IDataOneDoc";
+import { IDataOneIframe } from "../../../Interfaces/IDataOneIframe";
+import { IDataPayloadSnapShot } from "../../../Interfaces/IDataPayloadSnapShot";
+import { IError } from "../../../Interfaces/IError";
+import { SharedConst } from "../../../SharedConst";
+import { Guid } from "../../../Helpers/Guid";
 
 export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;
@@ -116,10 +114,10 @@ export class LoggerAgent implements ILoggerAgent {
     }
     return toReturn;
   }
-  DebugIGuid(id: IGuid) {
-    if (this.IsNotNullOrUndefinedBool('IGuid', id)) {
-      this.LogVal('asShort', id.AsShort);
-      this.LogVal('asString', id.AsString);
+  DebugGuid(id: Guid) {
+    if (this.IsNotNullOrUndefinedBool('Guid', id)) {
+      this.LogVal('asShort', id.AsShort());
+      this.LogVal('asString', id.ToString());
     }
   }
   //DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
@@ -202,11 +200,11 @@ export class LoggerAgent implements ILoggerAgent {
     this.LogVal(texValName, JSON.stringify(jsonObj, null, 1));
   }
 
-  LogVal(textValName: string, textVal: IGuid): void;
+  LogVal(textValName: string, textVal: Guid): void;
   LogVal(textValName: string, textVal: string): void;
   LogVal(textValName: string, textVal: boolean): void;
   LogVal(textValName: string, textVal: number): void;
-  LogVal(textValName: string, textVal: string | boolean | number | IGuid): any {
+  LogVal(textValName: string, textVal: string | boolean | number | Guid): any {
     if (typeof textVal === 'undefined') {
       textVal = '{undefined}';
     }
@@ -214,9 +212,9 @@ export class LoggerAgent implements ILoggerAgent {
       textVal = '{null}';
     }
     else {
-      var asGuid = <IGuid>textVal;
-      if (asGuid.Type === 'IGuid') {
-        textVal = asGuid.AsString;
+      var asGuid = <Guid>textVal;
+      if (asGuid.Type === 'Guid') {
+        textVal = asGuid.ToString();
       }
     }
     textVal = textVal.toString();
@@ -278,7 +276,7 @@ export class LoggerAgent implements ILoggerAgent {
   DebugPayloadDataFromPopUp(data: PayloadDataFromPopUp) {
     if (this.IsNotNullOrUndefinedBool('PayloadDataFromPopUp', data)) {
       this.LogVal('idOfSelect', data.IdOfSelect);
-      this.DebugIGuid(data.IdOfSelect);
+      this.DebugGuid(data.IdOfSelect);
       this.DebugIDataPayloadSnapShot(data.SnapShotSettings);
     }
   }

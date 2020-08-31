@@ -9,6 +9,7 @@ import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDt
 import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
 import { ContentHub } from "../../Managers/ContentHub/ContentHub";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class ContentStateManager extends ContentManagerBase {
   constructor(hub: ContentHub, contentAgents: IAllAgents) {
@@ -66,7 +67,7 @@ export class ContentStateManager extends ContentManagerBase {
       else if (pageType === scWindowType.ContentEditor) {
         toReturnOneTreeState = null;
 
-        await this.OneScWinMan().OneCEAgent.GetTreeState(this.AllAgents.HelperAgent.GuidHelper.NewGuid())
+        await this.OneScWinMan().OneCEAgent.GetTreeState(Guid.NewGuid())
           .then((result: IDataOneStorageOneTreeState) => {
             toReturnOneTreeState = result;
             promiseResult.MarkSuccessful();

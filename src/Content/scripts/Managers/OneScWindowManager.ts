@@ -11,6 +11,7 @@ import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { ContentHub } from './ContentHub/ContentHub';
 import { OneCEAgent } from './OneCEAgent/OneCEAgent';
 import { OneDesktopManager } from './OneDesktopManager/OneDesktopManager';
+import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 
 export class OneScWindowManager extends ContentManagerBase {
   OneDesktopMan: OneDesktopManager = null;
@@ -50,7 +51,7 @@ export class OneScWindowManager extends ContentManagerBase {
 
       if (snapShotSettings.CurrentPageType === scWindowType.ContentEditor) {
         this.AllAgents.Logger.MarkerA();
-        var id = this.AllAgents.HelperAgent.GuidHelper.EmptyGuid();
+        var id = Guid.GetEmptyGuid();
 
         await this.OneCEAgent.GetTreeState(id)
           .then((state: IDataOneStorageOneTreeState) => {

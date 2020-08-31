@@ -84,7 +84,7 @@ export class HandlersExternal extends CommonEvents {
   async HndlrSnapShotRestoreNewTab(data: ICommandHndlrDataForPopUp) {
     data.PopUpHub._allAgents.Logger.FuncStart(data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreNewTab.name);
 
-    data.PopUpHub.TabMan.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.PopUpHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId().AsString);
+    data.PopUpHub.TabMan.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.PopUpHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId().ToString());
 
     let newUrl: AbsoluteUrl = data.PopUpHub.TabMan.GetFullUrl();
 

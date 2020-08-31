@@ -7,6 +7,7 @@ import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst"
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUiManager {
   ScUrlAgent: ScUrlAgent;
@@ -36,7 +37,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
       this.topDoc = {
         //ParentDoc: null,
         ContentDoc: window.document,
-        DocId: this.AllAgents.HelperAgent.GuidHelper.NewGuid(),
+        DocId: Guid.NewGuid(),
         Nickname: 'top doc'
       }
     }

@@ -6,11 +6,11 @@ import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor"
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShotsMany";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
-import { IGuid } from "../../../../Shared/scripts/Interfaces/IGuid";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class ContentAtticManager extends ContentManagerBase {
   //private CachedWindowStorage: ISnapShotsMany;
@@ -77,7 +77,7 @@ export class ContentAtticManager extends ContentManagerBase {
       var snapShotAsString = JSON.stringify(dataOneWindow);
       //this.debug().LogVal('snapShotAsString', snapShotAsString);
 
-      await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.Id.AsString, snapShotAsString)
+      await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.Id.ToString(), snapShotAsString)
 
       var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id);
 
@@ -98,9 +98,9 @@ export class ContentAtticManager extends ContentManagerBase {
     });
   }
 
-  async GetFromStorageById(needleId: IGuid): Promise<IDataOneWindowStorage> {
+  async GetFromStorageById(needleId: Guid): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve) => {
-      this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.AsString);
+      this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.ToString());
 
       var foundStorage: ISnapShotsMany;
       await this.GetAllSnapShotsMany()
@@ -111,7 +111,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (foundStorage) {
         for (var idx = 0; idx < foundStorage.CurrentSnapShots.length; idx++) {
           var candidate = foundStorage.CurrentSnapShots[idx];
-          if (candidate.Id.AsString === needleId.AsString) {
+          if (candidate.Id.ToString() === needleId.ToString()) {
             DateOneWinStoreMatch = candidate;
             break;
           }
@@ -134,7 +134,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      candidate.Id = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(candidate.Id.AsString, true);
+      candidate.Id = Guid.ParseGuid(candidate.Id.ToString(), true);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {
@@ -322,7 +322,7 @@ export class ContentAtticManager extends ContentManagerBase {
     })
   }
 
-  RemoveOneFromStorage(targetId: IGuid) {
+  RemoveOneFromStorage(targetId: Guid) {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.RemoveOneFromStorage.name);
       try {

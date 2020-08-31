@@ -4,6 +4,7 @@ import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst'
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IHelperAgent } from '../../../../Shared/scripts/Interfaces/Agents/IHelperAgent';
 import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
+import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 
 export class OneTreeDrone implements IOneTreeDrone {
   AssociatedDoc: IDataOneDoc;
@@ -118,7 +119,7 @@ export class OneTreeDrone implements IOneTreeDrone {
 
           var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
 
-          newData.NodeId = this.HelperAgent.GuidHelper.ParseGuid(apparentId, true);
+          newData.NodeId = Guid.ParseGuid(apparentId, true);
 
           toReturn.push(newData);
         }

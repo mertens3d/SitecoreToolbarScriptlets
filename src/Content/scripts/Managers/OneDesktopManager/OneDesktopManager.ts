@@ -7,6 +7,7 @@ import { PromiseChainRestoreDesktop } from "../../Promises/PromiseChainRestoreDe
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
 import { OneCEAgent } from "../OneCEAgent/OneCEAgent";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class OneDesktopManager extends ContentManagerBase {
   associatedDoc: IDataOneDoc;
@@ -85,7 +86,7 @@ export class OneDesktopManager extends ContentManagerBase {
 
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
-              oneCeMan.GetTreeState(this.AllAgents.HelperAgent.GuidHelper.NewGuid())
+              oneCeMan.GetTreeState(Guid.NewGuid())
                 .then((oneCeState: IDataOneStorageOneTreeState) => {
                   toReturnAllCeState.AllCeData.push(oneCeState);
 

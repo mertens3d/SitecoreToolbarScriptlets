@@ -2,6 +2,7 @@
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { ContentHub } from './ContentHub/ContentHub';
+import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 
 export class PageManager extends ContentManagerBase {
   private topLevelDoc: IDataOneDoc;
@@ -20,7 +21,7 @@ export class PageManager extends ContentManagerBase {
     this.topLevelDoc = {
       //ParentDoc: null,
       ContentDoc: (<Window>(window)).document,
-      DocId: this.AllAgents.HelperAgent.GuidHelper.NewGuid(),
+      DocId: Guid.NewGuid(),
       Nickname: 'Original Target Page'
     }
 
