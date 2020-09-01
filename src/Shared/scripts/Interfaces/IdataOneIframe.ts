@@ -1,11 +1,11 @@
 import { IDataOneDoc } from "./IDataOneDoc";
-import { Guid } from "../Helpers/Guid";
+import { GuidData } from "../Helpers/GuidData";
 
 export interface IDataOneIframe {
   Index: number,
   IframeElem: HTMLIFrameElement,
   ContentDoc: IDataOneDoc,
-  Id: Guid,
+  Id: GuidData,
   Zindex: number,
   Nickname:string ,
 }

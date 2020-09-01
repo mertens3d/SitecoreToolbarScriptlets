@@ -14,6 +14,7 @@ import { IDataOneIframe } from "../../../Interfaces/IDataOneIframe";
 import { IDataPayloadSnapShot } from "../../../Interfaces/IDataPayloadSnapShot";
 import { IError } from "../../../Interfaces/IError";
 import { SharedConst } from "../../../SharedConst";
+import { GuidData } from "../../../Helpers/GuidData";
 import { Guid } from "../../../Helpers/Guid";
 
 export class LoggerAgent implements ILoggerAgent {
@@ -114,10 +115,10 @@ export class LoggerAgent implements ILoggerAgent {
     }
     return toReturn;
   }
-  DebugGuid(id: Guid) {
+  DebugGuid(id: GuidData) {
     if (this.IsNotNullOrUndefinedBool('Guid', id)) {
-      this.LogVal('asShort', id.AsShort());
-      this.LogVal('asString', id.ToString());
+      this.LogVal('asShort', Guid.AsShort(id));
+      this.LogVal('asString', id.Raw);
     }
   }
   //DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
@@ -200,11 +201,11 @@ export class LoggerAgent implements ILoggerAgent {
     this.LogVal(texValName, JSON.stringify(jsonObj, null, 1));
   }
 
-  LogVal(textValName: string, textVal: Guid): void;
+  LogVal(textValName: string, textVal: GuidData): void;
   LogVal(textValName: string, textVal: string): void;
   LogVal(textValName: string, textVal: boolean): void;
   LogVal(textValName: string, textVal: number): void;
-  LogVal(textValName: string, textVal: string | boolean | number | Guid): any {
+  LogVal(textValName: string, textVal: string | boolean | number | GuidData): any {
     if (typeof textVal === 'undefined') {
       textVal = '{undefined}';
     }
@@ -212,9 +213,9 @@ export class LoggerAgent implements ILoggerAgent {
       textVal = '{null}';
     }
     else {
-      var asGuid = <Guid>textVal;
-      if (typeof asGuid === typeof Guid) {
-        textVal = asGuid.ToString();
+      var asGuid = <GuidData>textVal;
+      if (typeof asGuid === typeof GuidData) {
+        textVal = asGuid.Raw;
       }
     }
     textVal = textVal.toString();

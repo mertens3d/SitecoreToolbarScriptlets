@@ -5,12 +5,12 @@ import { IOneGenericSetting } from "../Interfaces/Agents/IOneGenericSetting";
 import { IMsgFromX } from "../Interfaces/IMsgPayload";
 import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
 import { PayloadDataFromPopUp } from "./PayloadDataReqPopUp";
-import { Guid } from "../Helpers/Guid";
+import { GuidData } from "../Helpers/GuidData";
 export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
     CurrentContentPrefs: IOneGenericSetting[];
     Data: PayloadDataFromPopUp;
   IsValid: boolean;
-  constructor(msgFlag: MsgFlag, scWindowType: scWindowType, selectSnapshotId: Guid, contentPrefs: IOneGenericSetting[]) {
+  constructor(msgFlag: MsgFlag, scWindowType: scWindowType, selectSnapshotId: GuidData, contentPrefs: IOneGenericSetting[]) {
         super(msgFlag);
         this.Data = new PayloadDataFromPopUp();
         this.Data.IdOfSelect = selectSnapshotId;

@@ -6,6 +6,7 @@ import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 import { IDataDesktopState } from "../Interfaces/IDataDtState";
 import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
+import { GuidData } from "./GuidData";
 import { Guid } from "./Guid";
 
 export class FactoryHelper extends HelperBase implements IFactoryHelper {
@@ -68,7 +69,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
   CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
     this.Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
     var dateToUse: Date = new Date();
-    var newGuid: Guid = Guid.NewRandomGuid();
+    var newGuid: GuidData = Guid.NewRandomGuid();
 
     var activeWindowSnapShot: IDataOneWindowStorage = {
       TimeStamp: dateToUse,
@@ -76,7 +77,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       WindowType: windowType,
       WindowFriendly: windowType[windowType],
       AllCEAr: [],
-      Id: newGuid,
+      GuidId: newGuid,
       NickName: '',
       RawData: null,
       Flavor: flavor,

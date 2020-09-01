@@ -10,6 +10,7 @@ import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst"
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class ContentAtticManager extends ContentManagerBase {
@@ -77,9 +78,9 @@ export class ContentAtticManager extends ContentManagerBase {
       var snapShotAsString = JSON.stringify(dataOneWindow);
       //this.debug().LogVal('snapShotAsString', snapShotAsString);
 
-      await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.Id.ToString(), snapShotAsString)
+      await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.GuidId.Raw, snapShotAsString)
 
-      var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id);
+      var foundInStorage = await this.GetFromStorageById(dataOneWindow.GuidId);
 
       if (foundInStorage) {
         result.MarkSuccessful();
@@ -98,9 +99,9 @@ export class ContentAtticManager extends ContentManagerBase {
     });
   }
 
-  async GetFromStorageById(needleId: Guid): Promise<IDataOneWindowStorage> {
+  async GetFromStorageById(needleId: GuidData): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve) => {
-      this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.ToString());
+      this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.Raw);
 
       var foundStorage: ISnapShotsMany;
       await this.GetAllSnapShotsMany()
@@ -111,7 +112,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (foundStorage) {
         for (var idx = 0; idx < foundStorage.CurrentSnapShots.length; idx++) {
           var candidate = foundStorage.CurrentSnapShots[idx];
-          if (candidate.Id.ToString() === needleId.ToString()) {
+          if (candidate.GuidId.Raw === needleId.Raw) {
             DateOneWinStoreMatch = candidate;
             break;
           }
@@ -280,11 +281,11 @@ export class ContentAtticManager extends ContentManagerBase {
 
       try {
 
-        if (candidate.Id && Guid.IsValidGuidStr(candidate.Id.Raw)) {
-          candidate.Id = new Guid(candidate.Id.Raw);
+        if (candidate.GuidId && GuidData.IsValidGuidStr(candidate.GuidId.Raw)) {
+          candidate.GuidId = new GuidData(candidate.GuidId.Raw);
           toReturn.push(candidate);
         } else {
-          this.AllAgents.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored ')
+          this.AllAgents.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.GuidId.Raw)
 
         }
       } catch (err) {
@@ -318,7 +319,7 @@ export class ContentAtticManager extends ContentManagerBase {
   }
 
   TimeNicknameFavStrForConfirmation(data: IDataOneWindowStorage): string {
-    var result = data.TimeStampFriendly + ' ' + data.NickName + ' ' + data.Id.AsShort();
+    var result = data.TimeStampFriendly + ' ' + data.NickName + ' ' + Guid.AsShort(data.GuidId);
     result = result.replace(new RegExp(/&nbsp;/ig), '');
     return result;
   }
@@ -329,7 +330,7 @@ export class ContentAtticManager extends ContentManagerBase {
       //if (result === true) {
       this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
 
-      let targetId = storageMatch.Id;
+      let targetId = storageMatch.GuidId;
 
       await window.localStorage.removeItem(storageMatch.RawData.key);
 
@@ -347,7 +348,7 @@ export class ContentAtticManager extends ContentManagerBase {
     })
   }
 
-  RemoveOneFromStorage(targetId: Guid) {
+  RemoveOneFromStorage(targetId: GuidData) {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.RemoveOneFromStorage.name);
       try {

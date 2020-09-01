@@ -4,13 +4,13 @@ import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerB
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
 import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
-import { Guid } from '../../../Shared/scripts/Helpers/Guid';
+import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 
 export class UiButtonStateManager {
   private AllMenuCommands: IOneCommand[];
   private currentContentState: IContentState;
   private currentWindowType: scWindowType;
-  private currSelSnapshot: Guid;
+  private currSelSnapshot: GuidData;
   private Logger: ILoggerAgent;
   private Tester: ButtonVisibilityTester;
 
@@ -118,7 +118,7 @@ export class UiButtonStateManager {
     }
   }
 
-  RefreshUi(currentWindowType: scWindowType, currSelSnapshot: Guid, contentState: IContentState): void {
+  RefreshUi(currentWindowType: scWindowType, currSelSnapshot: GuidData, contentState: IContentState): void {
     this.Logger.FuncStart(this.RefreshUi.name, this.AllMenuCommands.length);
 
     this.currentWindowType = currentWindowType;

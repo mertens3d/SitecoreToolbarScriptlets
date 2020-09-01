@@ -9,6 +9,7 @@ import { IContentState } from "../../../../../../Shared/scripts/Interfaces/ICont
 import { IDataOneWindowStorage } from "../../../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { ISelectionHeaders } from "../../../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { PopConst } from "../../../../Classes/PopConst";
+import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
 import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";
 
 export class SelectSnapshotModule implements IUiModule {
@@ -79,13 +80,13 @@ export class SelectSnapshotModule implements IUiModule {
     return toReturn;
   }
 
-  GetSelectSnapshotId(): Guid {
+  GetSelectSnapshotId(): GuidData {
     let currentVal = this.__getSelectElem().value;
-    let toReturn: Guid;
+    let toReturn: GuidData;
     if (currentVal) {
       toReturn = Guid.ParseGuid(currentVal, true);
     } else {
-      toReturn = Guid.GetEmptyGuid();
+      toReturn = GuidData.GetEmptyGuid();
     }
     return toReturn;
   }
@@ -133,7 +134,7 @@ export class SelectSnapshotModule implements IUiModule {
   private PopulateStateOfSnapShotSelect() {
     this.Logger.FuncStart(this.PopulateStateOfSnapShotSelect.name);
 
-    let priorValue: Guid = this.GetSelectSnapshotId();
+    let priorValue: GuidData = this.GetSelectSnapshotId();
 
     if (this.ContentState.SnapShotsMany.CurrentSnapShots) {
       let snapShots: IDataOneWindowStorage[] = this.ContentState.SnapShotsMany.CurrentSnapShots;
@@ -198,12 +199,12 @@ export class SelectSnapshotModule implements IUiModule {
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(activeCeNode, PopConst.Const.SnapShotFormat.lenActiveNode, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Favorite ? '*' : ''), PopConst.Const.SnapShotFormat.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
       //+ PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
-      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.Id.AsShort(), PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(Guid.AsShort(data.GuidId), PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.AllCEAr.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
     return toReturn;
   }
 
-  private BuildOne(data: IDataOneWindowStorage, prior: Guid, idx: number): HTMLOptionElement {
+  private BuildOne(data: IDataOneWindowStorage, prior: GuidData, idx: number): HTMLOptionElement {
     let el: HTMLOptionElement = <HTMLOptionElement>window.document.createElement('option');
 
     let timeNicknameFavStr = this.TimeNicknameFavStr(data);
@@ -214,12 +215,12 @@ export class SelectSnapshotModule implements IUiModule {
       el.classList.add('favorite');
     }
 
-    el.value = data.Id.ToString();
+    el.value = data.GuidId.Raw;
 
-    if ((data.Id && prior && data.Id.ToString() === prior.ToString()) ||
+    if ((data.GuidId && prior && data.GuidId.Raw === prior.Raw) ||
       (idx === 0 && !prior)
       ||
-      (idx === 0 && prior.ToString() === Guid.GetEmptyGuid().ToString())
+      (idx === 0 && prior.Raw === GuidData.GetEmptyGuid().Raw)
 
     ) {
       this.Logger.Log('Setting to selected')

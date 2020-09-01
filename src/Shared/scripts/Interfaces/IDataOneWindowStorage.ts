@@ -2,11 +2,11 @@
 import { IDataOneStorageOneTreeState } from './IDataOneStorageOneTreeState';
 import { scWindowType } from '../Enums/scWindowType';
 import { SnapShotFlavor } from '../Enums/SnapShotFlavor';
-import { Guid } from '../Helpers/Guid';
+import { GuidData } from "../Helpers/GuidData";
 
 export interface IDataOneWindowStorage {
   AllCEAr: IDataOneStorageOneTreeState[],
-  Id: Guid,
+  GuidId: GuidData,
   Flavor: SnapShotFlavor;
   NickName: string
   RawData: IOneStorageData,

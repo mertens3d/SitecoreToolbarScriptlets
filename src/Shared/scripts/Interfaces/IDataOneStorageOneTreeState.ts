@@ -1,8 +1,8 @@
 ﻿import { IDataOneTreeNode } from './IDataOneTreeNode';
-import { Guid } from '../Helpers/Guid';
+import { GuidData } from "../Helpers/GuidData";
 
 export interface IDataOneStorageOneTreeState {
-  Id: Guid,
+  Id: GuidData,
   AllTreeNodeAr: IDataOneTreeNode[],
   ActiveNode: IDataOneTreeNode
 }

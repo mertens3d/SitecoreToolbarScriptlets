@@ -1,9 +1,9 @@
+import { IHelperAgent } from '../../../../Shared/scripts/Interfaces/Agents/IHelperAgent';
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/IDataOneTreeNode';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
-import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
-import { IHelperAgent } from '../../../../Shared/scripts/Interfaces/Agents/IHelperAgent';
-import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 
 export class OneTreeDrone implements IOneTreeDrone {

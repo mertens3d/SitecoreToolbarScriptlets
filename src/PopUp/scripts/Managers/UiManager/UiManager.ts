@@ -20,7 +20,7 @@ import { FeedbackModuleContentState } from './Modules/UiFeedbackModules/Feedback
 import { FeedbackModuleMessages } from './Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from './Modules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
-import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
+import { GuidData } from '../../../../Shared/scripts/Helpers/GuidData';
 
 export class UiManager extends PopUpManagerBase {
   AccordianManager: IAccordianManager;
@@ -95,26 +95,27 @@ export class UiManager extends PopUpManagerBase {
   }
 
   SetContentState(contentState: IContentState) {
-    contentState.SnapShotsMany.CurrentSnapShots = this.FixGuidsInContentState(contentState.SnapShotsMany.CurrentSnapShots);
+    //contentState.SnapShotsMany.CurrentSnapShots = this.FixGuidsInContentState(contentState.SnapShotsMany.CurrentSnapShots);
 
     this.LastKnownContentState = contentState;
   }
 
-  FixGuidsInContentState(dataAr: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
-    let toReturn: IDataOneWindowStorage[] = [];
-    if (dataAr) {
+  //FixGuidsInContentState(dataAr: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
+  //  let toReturn: IDataOneWindowStorage[] = [];
+  //  let toReturn: IDataOneWindowStorage[] = [];
+  //  if (dataAr) {
 
-      for (var idx = 0; idx < dataAr.length; idx++) {
-        let candidate = dataAr[idx];
-        if (Guid.IsValidGuidStr(candidate.Id.Raw)) {
-          candidate.Id = new Guid(candidate.Id.Raw);
-          toReturn.push(candidate);
-        }
-      }
-    }
+  //    for (var idx = 0; idx < dataAr.length; idx++) {
+  //      let candidate = dataAr[idx];
+  //      if (GuidData.IsValidGuidStr(candidate.Id.Raw)) {
+  //        candidate.Id = new GuidData(candidate.Id.Raw);
+  //        toReturn.push(candidate);
+  //      }
+  //    }
+  //  }
 
-    return toReturn
-  }
+  //  return toReturn
+  //}
 
   SelectChanged() {
     this.ModuleSelectSnapShot.SelectChanged();
@@ -235,7 +236,7 @@ export class UiManager extends PopUpManagerBase {
     this.SettingsModule.RefreshUi();
 
     let currentWindowType = this.TabMan().GetWindowType();
-    let currSelSnapshot: Guid = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId();
+    let currSelSnapshot: GuidData = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId();
 
     this.ButtonStateManager.RefreshUi(currentWindowType, currSelSnapshot, this.LastKnownContentState);
 
@@ -257,9 +258,9 @@ export class UiManager extends PopUpManagerBase {
   }
   private __drawCorrectNicknameInUI(snapShots: IDataOneWindowStorage[]) {
     this.AllAgents.Logger.FuncStart(this.__drawCorrectNicknameInUI.name);
-    var targetId: Guid = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId()
+    var targetId: GuidData = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId()
     if (targetId) {
-      this.AllAgents.Logger.Log('targetId : ' + targetId.ToString());
+      this.AllAgents.Logger.Log('targetId : ' + targetId.Raw);
 
       var storageValues = snapShots;
 
@@ -267,7 +268,7 @@ export class UiManager extends PopUpManagerBase {
 
       for (var idx = 0; idx < storageValues.length; idx++) {
         var candidate = storageValues[idx];
-        if (candidate.Id.ToString() === this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId().ToString()) {
+        if (candidate.GuidId.Raw === this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId().Raw) {
           storageMatch = candidate;
           break;
         }

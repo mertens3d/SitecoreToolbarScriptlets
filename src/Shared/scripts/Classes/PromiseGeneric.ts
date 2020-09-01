@@ -7,11 +7,12 @@ import { IPromisesBasic } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { HelperBase } from './HelperBase';
 import { PromiseResult } from "./PromiseResult";
+import { Guid } from '../Helpers/Guid';
 
 export class PromisesBasic extends HelperBase implements IPromisesBasic {
   async WaitForReadyIframe(dataOneIframe: IDataOneIframe): Promise<null> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort());
+      this.Logger.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + Guid.AsShort(  dataOneIframe.Id));
 
       var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyIframe.name);
       let promiseResult: PromiseResult = new PromiseResult(this.WaitForReadyIframe.name, this.Logger);

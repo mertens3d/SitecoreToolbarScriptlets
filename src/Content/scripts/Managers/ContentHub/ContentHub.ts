@@ -18,6 +18,7 @@ import { MiscManager } from '../MiscManager/MiscManager';
 import { OneScWindowManager } from "../OneScWindowManager";
 import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 
 export class ContentHub {
@@ -122,9 +123,9 @@ export class ContentHub {
       try {
         if (this.SitecoreUiMan.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
           let qsValue: string = (this.SitecoreUiMan.ScUrlAgent.GetQueryStringValueByKey(QueryStrKey.hsTargetSs));
-          let targetGuid: Guid = Guid.ParseGuid(qsValue, false);
+          let targetGuid: GuidData = Guid.ParseGuid(qsValue, false);
 
-          if (targetGuid && targetGuid !== Guid.GetEmptyGuid()) {
+          if (targetGuid && targetGuid !== GuidData.GetEmptyGuid()) {
             this.AllAgents.Logger.LogVal("targetGuid", targetGuid);
             var dataOneWindowStorage;
 

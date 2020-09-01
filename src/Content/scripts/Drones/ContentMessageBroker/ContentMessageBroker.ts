@@ -13,7 +13,7 @@ import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../../Managers/ContentHub/ContentHub";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 
 export class ContentMessageBroker extends ContentManagerBase implements IContentMessageBroker {
   private Logger: ILoggerAgent;
@@ -115,12 +115,12 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
 
-      Guid.FixStorageGuidObjects(payload);
+      //GuidData.FixStorageGuidObjects(payload);
 
       this.AllAgents.Logger.LogAsJsonPretty('payload', payload);
 
       if (payload.Data.IdOfSelect) {
-        payload.Data.IdOfSelect = new Guid(payload.Data.IdOfSelect.Raw);
+        payload.Data.IdOfSelect = new GuidData(payload.Data.IdOfSelect.Raw);
       }
 
       let commandToExecute: Function = null;

@@ -46,7 +46,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
     //callbackOnComplete();
-    this.AllAgents.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.AsShort());
+    this.AllAgents.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(  targetDoc.DocId));
     this.AllAgents.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
     var userNameElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);

@@ -67,7 +67,7 @@ export class ContentStateManager extends ContentManagerBase {
       else if (pageType === scWindowType.ContentEditor) {
         toReturnOneTreeState = null;
 
-        await this.OneScWinMan().OneCEAgent.GetTreeState(Guid.NewRandomGuid())
+        await this.OneScWinMan().OneCEAgent.GetTreeState(  Guid.NewRandomGuid())
           .then((result: IDataOneStorageOneTreeState) => {
             toReturnOneTreeState = result;
             promiseResult.MarkSuccessful();
