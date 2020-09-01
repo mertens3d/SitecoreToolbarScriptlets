@@ -6,11 +6,12 @@ import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor"
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShotsMany";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
-import { IGuid } from "../../../../Shared/scripts/Interfaces/IGuid";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class ContentAtticManager extends ContentManagerBase {
   //private CachedWindowStorage: ISnapShotsMany;
@@ -77,9 +78,9 @@ export class ContentAtticManager extends ContentManagerBase {
       var snapShotAsString = JSON.stringify(dataOneWindow);
       //this.debug().LogVal('snapShotAsString', snapShotAsString);
 
-      await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.Id.AsString, snapShotAsString)
+      await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.GuidId.Raw, snapShotAsString)
 
-      var foundInStorage = await this.GetFromStorageById(dataOneWindow.Id);
+      var foundInStorage = await this.GetFromStorageById(dataOneWindow.GuidId);
 
       if (foundInStorage) {
         result.MarkSuccessful();
@@ -98,9 +99,9 @@ export class ContentAtticManager extends ContentManagerBase {
     });
   }
 
-  async GetFromStorageById(needleId: IGuid): Promise<IDataOneWindowStorage> {
+  async GetFromStorageById(needleId: GuidData): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve) => {
-      this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.AsString);
+      this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.Raw);
 
       var foundStorage: ISnapShotsMany;
       await this.GetAllSnapShotsMany()
@@ -111,7 +112,7 @@ export class ContentAtticManager extends ContentManagerBase {
       if (foundStorage) {
         for (var idx = 0; idx < foundStorage.CurrentSnapShots.length; idx++) {
           var candidate = foundStorage.CurrentSnapShots[idx];
-          if (candidate.Id.AsString === needleId.AsString) {
+          if (candidate.GuidId.Raw === needleId.Raw) {
             DateOneWinStoreMatch = candidate;
             break;
           }
@@ -134,7 +135,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      candidate.Id = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(candidate.Id.AsString, true);
+      //candidate.Id = Guid.ParseGuid(candidate.Id.ToString(), true);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {
@@ -261,6 +262,7 @@ export class ContentAtticManager extends ContentManagerBase {
           snapShotsMany.CurrentSnapShots = result;
           snapShotsMany.Birthday = new Date();
           this.UpdateCounts(snapShotsMany);
+          snapShotsMany.CurrentSnapShots = this.ConvertGuidData(snapShotsMany.CurrentSnapShots);
 
           resolve(snapShotsMany);
         })
@@ -269,6 +271,30 @@ export class ContentAtticManager extends ContentManagerBase {
       this.AllAgents.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
     });
   }
+
+  ConvertGuidData(candidateSnapShots: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
+
+    let toReturn: IDataOneWindowStorage[] = []
+
+    for (var idx = 0; idx < candidateSnapShots.length; idx++) {
+      var candidate = candidateSnapShots[idx];
+
+      try {
+
+        if (candidate.GuidId && GuidData.IsValidGuidStr(candidate.GuidId.Raw)) {
+          candidate.GuidId = new GuidData(candidate.GuidId.Raw);
+          toReturn.push(candidate);
+        } else {
+          this.AllAgents.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.GuidId.Raw)
+
+        }
+      } catch (err) {
+      }
+    }
+
+    return toReturn;
+  }
+
   UpdateCounts(storageAllSnapshots: ISnapShotsMany) {
     storageAllSnapshots.FavoriteCount = 0;
     storageAllSnapshots.SnapShotsAutoCount = 0;
@@ -293,7 +319,7 @@ export class ContentAtticManager extends ContentManagerBase {
   }
 
   TimeNicknameFavStrForConfirmation(data: IDataOneWindowStorage): string {
-    var result = data.TimeStampFriendly + ' ' + data.NickName + ' ' + data.Id.AsShort;
+    var result = data.TimeStampFriendly + ' ' + data.NickName + ' ' + Guid.AsShort(data.GuidId);
     result = result.replace(new RegExp(/&nbsp;/ig), '');
     return result;
   }
@@ -304,7 +330,7 @@ export class ContentAtticManager extends ContentManagerBase {
       //if (result === true) {
       this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
 
-      let targetId = storageMatch.Id;
+      let targetId = storageMatch.GuidId;
 
       await window.localStorage.removeItem(storageMatch.RawData.key);
 
@@ -322,7 +348,7 @@ export class ContentAtticManager extends ContentManagerBase {
     })
   }
 
-  RemoveOneFromStorage(targetId: IGuid) {
+  RemoveOneFromStorage(targetId: GuidData) {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.RemoveOneFromStorage.name);
       try {

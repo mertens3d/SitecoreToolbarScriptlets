@@ -1,16 +1,13 @@
-﻿import { GuidHelper } from "./GuidHelper";
-import { UtilityHelper } from "./UtilityHelper";
-import { PromisesBasic } from "../Classes/PromiseGeneric";
-import { FactoryHelper } from "./FactoryHelper";
-import { GenericUrlAgent } from "../Agents/Agents/UrlAgent/GenericUrlAgent";
+﻿import { PromisesBasic } from "../Classes/PromiseGeneric";
+import { PromisesRecipes } from "../Classes/PromisesRecipes";
 import { IHelperAgent } from "../Interfaces/Agents/IHelperAgent";
 import { ILoggerAgent } from "../Interfaces/Agents/ILoggerBase";
-import { IPromiseRecipes } from "../Interfaces/IPromiseRecipes";
 import { IPromisesBasic } from "../Interfaces/IPromiseHelper";
-import { PromisesRecipes } from "../Classes/PromisesRecipes";
+import { IPromiseRecipes } from "../Interfaces/IPromiseRecipes";
+import { FactoryHelper } from "./FactoryHelper";
+import { UtilityHelper } from "./UtilityHelper";
 
 export class HelperAgent implements IHelperAgent {
-  GuidHelper: GuidHelper;
   UtilityHelp: UtilityHelper;
   PromisesBasic: IPromisesBasic;
   PromisesRecipes: IPromiseRecipes;
@@ -24,7 +21,6 @@ export class HelperAgent implements IHelperAgent {
   }
 
   Init(logger: ILoggerAgent, helperAgent: IHelperAgent): void {
-    this.GuidHelper = new GuidHelper(logger, helperAgent);
     this.UtilityHelp = new UtilityHelper(logger, helperAgent);
     this.PromisesBasic = new PromisesBasic(logger, helperAgent);
     this.PromisesRecipes = new PromisesRecipes(logger, helperAgent);

@@ -66,7 +66,7 @@ export class ScUrlAgent extends GenericUrlAgent {
     //urlParts.Parameters = [];
     this.UrlParts.ScWindowType = scWindowType.Unknown;
 
-    this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid);
+    this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid());
     this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[newMode]);
     this.SetParameterValueByKey(QueryStrKey.sc_lang, 'en');
     this.SetParameterValueByKey(QueryStrKey.sc_site, 'website');

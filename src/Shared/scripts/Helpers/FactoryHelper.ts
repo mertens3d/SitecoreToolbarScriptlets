@@ -3,10 +3,11 @@ import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
 import { IDataOneWindowStorage } from "../Interfaces/IDataOneWindowStorage";
 import { scWindowType } from "../Enums/scWindowType";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
-import { IGuid } from "../Interfaces/IGuid";
 import { IDataDesktopState } from "../Interfaces/IDataDtState";
 import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
+import { GuidData } from "./GuidData";
+import { Guid } from "./Guid";
 
 export class FactoryHelper extends HelperBase implements IFactoryHelper {
   CreateNewDtDataShell(): IDataDesktopState {
@@ -28,7 +29,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       {
         //ParentDoc: parentDocument,
         ContentDoc: dataOneIframe.IframeElem.contentDocument,
-        DocId: this.HelperAgent.GuidHelper.NewGuid(),
+        DocId: Guid.NewRandomGuid(),
         Nickname: dataOneIframe.Nickname + ' - content doc'
       }
     } else {
@@ -49,7 +50,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       var toReturn: IDataOneIframe = {
         Index: -1,
         IframeElem: iframeElem,
-        Id: this.HelperAgent.GuidHelper.NewGuid(),
+        Id: Guid.NewRandomGuid(),
         Zindex: zIndex,
         Nickname: nickname,
         ContentDoc: null,
@@ -68,7 +69,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
   CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
     this.Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
     var dateToUse: Date = new Date();
-    var newGuid: IGuid = this.HelperAgent.GuidHelper.NewGuid();
+    var newGuid: GuidData = Guid.NewRandomGuid();
 
     var activeWindowSnapShot: IDataOneWindowStorage = {
       TimeStamp: dateToUse,
@@ -76,14 +77,11 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       WindowType: windowType,
       WindowFriendly: windowType[windowType],
       AllCEAr: [],
-      Id: newGuid,
+      GuidId: newGuid,
       NickName: '',
       RawData: null,
       Flavor: flavor,
     };
-
-   
-
 
     this.Logger.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
 

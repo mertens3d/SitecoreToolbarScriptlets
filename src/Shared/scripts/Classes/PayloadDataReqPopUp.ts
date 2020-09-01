@@ -1,8 +1,8 @@
-﻿import { IGuid } from "../Interfaces/IGuid";
-import { IDataPayloadSnapShot } from "../Interfaces/IDataPayloadSnapShot";
+﻿import { IDataPayloadSnapShot } from "../Interfaces/IDataPayloadSnapShot";
+import { GuidData } from "../Helpers/GuidData";
 
 export class PayloadDataFromPopUp {
-  IdOfSelect: IGuid;
+  IdOfSelect: GuidData;
   ScreenMessage: string;
   SnapShotSettings: IDataPayloadSnapShot;
 }

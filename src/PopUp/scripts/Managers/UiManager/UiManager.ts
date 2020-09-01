@@ -7,8 +7,6 @@ import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IallAge
 import { IOneGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
-import { IGuid } from '../../../../Shared/scripts/Interfaces/IGuid';
-import { IGuidHelper } from '../../../../Shared/scripts/Interfaces/IGuidHelper';
 import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
 import { GenericUrlParts } from '../../../../Shared/scripts/Interfaces/UrlParts';
 import { PopConst } from '../../Classes/PopConst';
@@ -22,6 +20,7 @@ import { FeedbackModuleContentState } from './Modules/UiFeedbackModules/Feedback
 import { FeedbackModuleMessages } from './Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from './Modules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
+import { GuidData } from '../../../../Shared/scripts/Helpers/GuidData';
 
 export class UiManager extends PopUpManagerBase {
   AccordianManager: IAccordianManager;
@@ -60,7 +59,7 @@ export class UiManager extends PopUpManagerBase {
     this.FeedbackModuleBrowserState = new FeedbackModuleBrowserState(PopConst.Const.Selector.HS.FeedbackBrowserState, this.AllAgents.Logger);
     this.FeedbackModulePopUpState = new FeedbackModulePopUpState(PopConst.Const.Selector.HS.FeedbackPopUpState, this.AllAgents.Logger);
 
-    this.ModuleSelectSnapShot = new SelectSnapshotModule(PopConst.Const.Selector.HS.SelStateSnapShot, this.AllAgents.Logger, this.Helpers().GuidHelper)
+    this.ModuleSelectSnapShot = new SelectSnapshotModule(PopConst.Const.Selector.HS.SelStateSnapShot, this.AllAgents.Logger)
 
     this.SettingsModule = new SettingsModule(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.AccordianManager);
 
@@ -96,6 +95,8 @@ export class UiManager extends PopUpManagerBase {
   }
 
   SetContentState(contentState: IContentState) {
+    //contentState.SnapShotsMany.CurrentSnapShots = this.FixGuidsInContentState(contentState.SnapShotsMany.CurrentSnapShots);
+
     this.LastKnownContentState = contentState;
   }
 
@@ -208,7 +209,7 @@ export class UiManager extends PopUpManagerBase {
   async RefreshUi() {
     this.AllAgents.Logger.FuncStart(this.RefreshUi.name);
 
-    await this.SetUIStates(this.TabMan().GetUrlParts() );
+    await this.SetUIStates(this.TabMan().GetUrlParts());
 
     this.FeedbackModuleBrowserState.RefreshUi();
 
@@ -218,10 +219,9 @@ export class UiManager extends PopUpManagerBase {
     this.SettingsModule.RefreshUi();
 
     let currentWindowType = this.TabMan().GetWindowType();
-    let currSelSnapshot: IGuid = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId();
-    let guidHelper: IGuidHelper = this.AllAgents.HelperAgent.GuidHelper
+    let currSelSnapshot: GuidData = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId();
 
-    this.ButtonStateManager.RefreshUi(currentWindowType, currSelSnapshot, guidHelper, this.LastKnownContentState);
+    this.ButtonStateManager.RefreshUi(currentWindowType, currSelSnapshot, this.LastKnownContentState);
 
     this.__drawCorrectNicknameInUI(this.LastKnownContentState.SnapShotsMany.CurrentSnapShots);
 
@@ -241,9 +241,9 @@ export class UiManager extends PopUpManagerBase {
   }
   private __drawCorrectNicknameInUI(snapShots: IDataOneWindowStorage[]) {
     this.AllAgents.Logger.FuncStart(this.__drawCorrectNicknameInUI.name);
-    var targetId: IGuid = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId()
+    var targetId: GuidData = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId()
     if (targetId) {
-      this.AllAgents.Logger.Log('targetId : ' + targetId.AsString);
+      this.AllAgents.Logger.Log('targetId : ' + targetId.Raw);
 
       var storageValues = snapShots;
 
@@ -251,7 +251,7 @@ export class UiManager extends PopUpManagerBase {
 
       for (var idx = 0; idx < storageValues.length; idx++) {
         var candidate = storageValues[idx];
-        if (candidate.Id.AsString === this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId().AsString) {
+        if (candidate.GuidId.Raw === this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId().Raw) {
           storageMatch = candidate;
           break;
         }
@@ -272,35 +272,6 @@ export class UiManager extends PopUpManagerBase {
     toReturn = (<HTMLInputElement>window.document.getElementById(PopConst.Const.ElemId.InputNickname)).value;
     return toReturn;
   }
-
-  //GetIdOfSelectWindowSnapshot(): IGuid {
-  //  this.allAgents.Logger.FuncStart(this.GetIdOfSelectWindowSnapshot.name);
-
-  //  var targetSel: HTMLSelectElement = this.__getSelectElem();
-  //  var toReturn: IGuid = null;
-  //  if (targetSel) {
-  //    var selectedValue: string = targetSel.value;
-  //    if (selectedValue) {
-  //      toReturn = this.AllAgents.HelperAgent.GuidHelp.ParseGuid(selectedValue);
-  //    }
-  //    //var optionsLength = targetSel.options.length;
-  //    //if (this.__selectSnapshotId < optionsLength) {
-  //    //  var temp = targetSel.options[this.__selectSnapshotId].value;
-  //    //  //this.debug().Log('temp: ' + temp);
-  //    //  toReturn = this.GuidMan().ParseGuid(temp);
-  //    //}
-  //  }
-
-  //  if (!toReturn) {
-  //    this.allAgents.Logger.Log('using empty guid');
-  //    toReturn = this.AllAgents.HelperAgent.GuidHelp.EmptyGuid();
-  //  }
-
-  //  this.allAgents.Logger.DebugIGuid(toReturn);
-
-  //  this.allAgents.Logger.FuncEnd(this.GetIdOfSelectWindowSnapshot.name, toReturn.AsString);
-  //  return toReturn;
-  //}
 
   GetButtonByIdOrSelector(targetId: string): HTMLElement {
     var toReturn: HTMLElement = document.querySelector(targetId);

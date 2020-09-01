@@ -6,7 +6,6 @@ import { UtilityHelper } from "../../../../Shared/scripts/Helpers/UtilityHelper"
 import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IContentConst } from '../../../../Shared/scripts/Interfaces/IContentConst';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IGuid } from '../../../../Shared/scripts/Interfaces/IGuid';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
 import { ISharedConst } from '../../../../Shared/scripts/Interfaces/ISharedConst';
 import { SharedConst } from '../../../../Shared/scripts/SharedConst';
@@ -19,6 +18,8 @@ import { MiscManager } from '../MiscManager/MiscManager';
 import { OneScWindowManager } from "../OneScWindowManager";
 import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 
 export class ContentHub {
   AtticMan: ContentAtticManager;
@@ -122,9 +123,9 @@ export class ContentHub {
       try {
         if (this.SitecoreUiMan.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
           let qsValue: string = (this.SitecoreUiMan.ScUrlAgent.GetQueryStringValueByKey(QueryStrKey.hsTargetSs));
-          let targetGuid: IGuid = this.AllAgents.HelperAgent.GuidHelper.ParseGuid(qsValue, false);
+          let targetGuid: GuidData = Guid.ParseGuid(qsValue, false);
 
-          if (targetGuid && targetGuid !== this.AllAgents.HelperAgent.GuidHelper.EmptyGuid()) {
+          if (targetGuid && targetGuid !== GuidData.GetEmptyGuid()) {
             this.AllAgents.Logger.LogVal("targetGuid", targetGuid);
             var dataOneWindowStorage;
 

@@ -1,10 +1,8 @@
-﻿import { IGuid } from "../IGuid";
-import { IDataOneDoc } from "../IDataOneDoc";
-import { IError } from "../IError";
-import { IDataBrowserTab } from "../IDataBrowserWindow";
+﻿import { LoggerConsoleWriter } from "../../Agents/Agents/LoggerAgent/LoggerConsoleWriter";
+import { GuidData } from "../../Helpers/GuidData";
 import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
 import { IDataOneIframe } from "../IDataOneIframe";
-import { LoggerConsoleWriter } from "../../Agents/Agents/LoggerAgent/LoggerConsoleWriter";
+import { IError } from "../IError";
 
 
 export interface ILoggerAgent {
@@ -12,7 +10,7 @@ export interface ILoggerAgent {
   AddWriter(arg0: LoggerConsoleWriter);
   CtorName(name: string);
   DebugDataOneIframe(NewIframe: IDataOneIframe);
-  DebugIGuid(Id: IGuid);
+  DebugGuid(Id: GuidData);
   EnabledStatus();
   ErrorAndContinue(container: string, text: any): void
   ErrorAndThrow(container: string, text: any): void
@@ -35,7 +33,7 @@ export interface ILoggerAgent {
   Log(text, optionalValue: string);
   Log(text, optionalValue: string, hasPrefix: boolean);
   LogAsJsonPretty(texValName: string, jsonObj: any);
-  LogVal(textValName: string, textVal: string | boolean | number | IGuid): any;
+  LogVal(textValName: string, textVal: string | boolean | number | GuidData): any;
   MarkerA();
   MarkerB();
   MarkerC();

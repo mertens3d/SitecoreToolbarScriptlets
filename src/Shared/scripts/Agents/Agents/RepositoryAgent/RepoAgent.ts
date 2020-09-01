@@ -94,7 +94,8 @@ export class RepoAgent implements IRepositoryAgent {
 
         resolve(toReturn);
       } else {
-        this.Logger.ErrorAndThrow(this.ReadDataOfKey.name, "No value returned from storage")
+        resolve(toReturn)
+        this.Logger.Log(this.ReadDataOfKey.name, "No value returned from storage")
       }
       this.Logger.FuncEnd(this.ReadDataOfKey.name);
     });

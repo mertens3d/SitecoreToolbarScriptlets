@@ -1,8 +1,8 @@
-﻿import { IGuid } from "./IGuid";
+﻿import { GuidData } from "../Helpers/GuidData";
 
 export interface IDataOneTreeNode {
     IsActive: Boolean;
     IsExpanded: Boolean;
     NodeFriendly: string;
-    NodeId: IGuid;
+    NodeId: GuidData;
 }

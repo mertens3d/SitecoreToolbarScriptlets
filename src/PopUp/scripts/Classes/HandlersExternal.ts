@@ -5,6 +5,7 @@ import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { TabManager } from "../Managers/TabManager";
 import { CommonEvents } from "./CommonEvents";
+import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 
 export class HandlersExternal extends CommonEvents {
   private BuildNewMsgFromPopUp(msgFlag: MsgFlag): MsgFromPopUp {
@@ -84,7 +85,7 @@ export class HandlersExternal extends CommonEvents {
   async HndlrSnapShotRestoreNewTab(data: ICommandHndlrDataForPopUp) {
     data.PopUpHub._allAgents.Logger.FuncStart(data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreNewTab.name);
 
-    data.PopUpHub.TabMan.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.PopUpHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId().AsString);
+    data.PopUpHub.TabMan.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.PopUpHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId().Raw);
 
     let newUrl: AbsoluteUrl = data.PopUpHub.TabMan.GetFullUrl();
 
@@ -159,7 +160,7 @@ export class HandlersExternal extends CommonEvents {
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.RemoveFromStorage);
 
-      var result: boolean = confirm('Remove ?: ' + msg.Data.IdOfSelect.AsShort);
+      var result: boolean = confirm('Remove ?: ' + Guid.AsShort( msg.Data.IdOfSelect));
       if (result === true) {
         await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
           .then(() => resolve())

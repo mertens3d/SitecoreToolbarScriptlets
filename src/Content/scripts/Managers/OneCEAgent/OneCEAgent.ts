@@ -1,7 +1,6 @@
 ﻿import { IterationDrone } from '../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IGuid } from '../../../../Shared/scripts/Interfaces/IGuid';
 import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/IDataOneTreeNode';
 import { OneTreeDrone } from '../../Drones/OneTreeDrone/OneTreeDrone';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
@@ -9,6 +8,8 @@ import { PromiseResult } from '../../../../Shared/scripts/Classes/PromiseResult'
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IHelperAgent } from '../../../../Shared/scripts/Interfaces/Agents/IHelperAgent';
 import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 
 export class OneCEAgent {
 
@@ -48,6 +49,8 @@ export class OneCEAgent {
     if (currentSrc.indexOf(ContentConst.Const.Names.TreeMenuExpandedPng) < 0) {
       this.Logger.Log('clicking it');
       foundOnPage.click();
+    } else {
+      this.Logger.Log('Already expanded');
     }
     this.Logger.FuncEnd(this.__expandNode.name);
   }
@@ -71,11 +74,11 @@ export class OneCEAgent {
   }
 
   async WaitForAndRestoreOneNode(nextNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
-    this.Logger.FuncStart(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
+    this.Logger.FuncStart(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId) );
 
-    var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + nextNode.NodeId.AsString;
+    var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes( nextNode.NodeId);
 
-    this.Logger.Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + dataOneDocTarget.DocId.AsShort);
+    this.Logger.Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + Guid.AsShort( dataOneDocTarget.DocId));
     this.Logger.Log('document not null ' + (dataOneDocTarget.ContentDoc != null));
 
     var iterHelper = new IterationDrone(this.Logger, this.WaitForAndRestoreOneNode.name);
@@ -83,32 +86,38 @@ export class OneCEAgent {
     var foundOnPageTreeGlyph: HTMLElement = null;
 
     while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
-      this.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.AsShort + '*');
+      this.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + Guid.AsShort(  dataOneDocTarget.DocId) + '*');
 
       foundOnPageTreeGlyph = dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
 
       if (foundOnPageTreeGlyph) {
+        this.Logger.Log('Found it');
         if (nextNode.IsExpanded) {
           this.__expandNode(foundOnPageTreeGlyph);
         }
+
+        this.Logger.LogVal('IsActive', nextNode.IsActive.toString());
+
         if (nextNode.IsActive) {
-          var hotTreeNodeId = ContentConst.Const.Names.SC.TreeNodePrefix + nextNode.NodeId.AsString;
+          var hotTreeNodeId = ContentConst.Const.Names.SC.TreeNodePrefix + Guid.WithoutDashes( nextNode.NodeId);
           var hotTreeNode = dataOneDocTarget.ContentDoc.getElementById(hotTreeNodeId);
           if (hotTreeNode) {
             this.__activateNode(hotTreeNode);
+          } else {
+            this.Logger.ErrorAndContinue(this.WaitForAndRestoreOneNode.name, 'hot tree node not found')
           }
-        }
+        } 
       } else {
         this.Logger.Log('not Found...waiting: ');
         await iterHelper.Wait();
       }
     }
 
-    this.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, dataOneDocTarget.DocId.AsShort);
+    this.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, Guid.AsShort( dataOneDocTarget.DocId));
   }
 
   async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageOneTreeState, targetDoc: IDataOneDoc) {
-    this.Logger.FuncStart(this.WaitForAndRestoreManyAllNodes.name, targetDoc.DocId.AsShort);
+    this.Logger.FuncStart(this.WaitForAndRestoreManyAllNodes.name, Guid.AsShort(  targetDoc.DocId));
 
     let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.WaitForAndRestoreManyAllNodes.name);
 
@@ -122,16 +131,16 @@ export class OneCEAgent {
   }
 
   SetCompactCss() {
-    this.Logger.FuncStart(this.SetCompactCss.name, this.ContextDoc.DocId.AsShort);
+    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort( this.ContextDoc.DocId));
 
   //  browser.tabs.insertCSS(ass integer tabId, object details, function callback);
 
-    this.Logger.FuncStart(this.SetCompactCss.name, this.ContextDoc.DocId.AsShort);
+    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort( this.ContextDoc.DocId));
   }
 
   async RestoreCEStateAsync(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RestoreCEStateAsync.name, this.ContextDoc.DocId.AsShort);
+      this.Logger.FuncStart(this.RestoreCEStateAsync.name, Guid.AsShort( this.ContextDoc.DocId));
 
       var toReturn: boolean = false;
 
@@ -162,10 +171,9 @@ export class OneCEAgent {
     return toReturn;
   }
 
-  GetTreeState(id: IGuid) {
+  GetTreeState(id: GuidData) {
     return new Promise<IDataOneStorageOneTreeState>((resolve, reject) => {
       this.Logger.FuncStart(this.GetTreeState.name);
-      let result: PromiseResult = new PromiseResult(this.GetTreeState.name, this.Logger);
 
       var toReturnOneTreeState: IDataOneStorageOneTreeState = {
         Id: id,
@@ -176,18 +184,13 @@ export class OneCEAgent {
       toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
 
       if (toReturnOneTreeState) {
-        result.MarkSuccessful()
+        resolve(toReturnOneTreeState);
       } else {
-        result.MarkFailed('todo why would this fail?');
+        reject('todo why would this fail?');
       }
 
       this.Logger.FuncEnd(this.GetTreeState.name);
 
-      if (result.WasSuccessful()) {
-        resolve(toReturnOneTreeState)
-      } else {
-        reject(result.RejectReasons);
-      }
     });
   }
 }

@@ -7,6 +7,7 @@ import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst"
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUiManager {
   ScUrlAgent: ScUrlAgent;
@@ -36,7 +37,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
       this.topDoc = {
         //ParentDoc: null,
         ContentDoc: window.document,
-        DocId: this.AllAgents.HelperAgent.GuidHelper.NewGuid(),
+        DocId: Guid.NewRandomGuid(),
         Nickname: 'top doc'
       }
     }
@@ -45,7 +46,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
     //callbackOnComplete();
-    this.AllAgents.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.AsShort);
+    this.AllAgents.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(  targetDoc.DocId));
     this.AllAgents.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
     var userNameElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);
