@@ -100,23 +100,6 @@ export class UiManager extends PopUpManagerBase {
     this.LastKnownContentState = contentState;
   }
 
-  //FixGuidsInContentState(dataAr: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
-  //  let toReturn: IDataOneWindowStorage[] = [];
-  //  let toReturn: IDataOneWindowStorage[] = [];
-  //  if (dataAr) {
-
-  //    for (var idx = 0; idx < dataAr.length; idx++) {
-  //      let candidate = dataAr[idx];
-  //      if (GuidData.IsValidGuidStr(candidate.Id.Raw)) {
-  //        candidate.Id = new GuidData(candidate.Id.Raw);
-  //        toReturn.push(candidate);
-  //      }
-  //    }
-  //  }
-
-  //  return toReturn
-  //}
-
   SelectChanged() {
     this.ModuleSelectSnapShot.SelectChanged();
     //this.RefreshUi();

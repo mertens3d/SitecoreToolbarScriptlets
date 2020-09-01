@@ -101,6 +101,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\HelperBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromisesRecipes.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\Enabled.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Helpers\GuidData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentMessageBroker.ts" />
