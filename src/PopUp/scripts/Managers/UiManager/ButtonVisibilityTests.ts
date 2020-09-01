@@ -14,7 +14,7 @@ export class ButtonVisibilityTester {
   VisibilityTestSnapShotSelected(currSelSnapshot: Guid): boolean {
     let toReturn: boolean = false;
 
-    if (currSelSnapshot && currSelSnapshot.AsBracedGuid !== Guid.GetEmptyGuid().AsBracedGuid) {
+    if (currSelSnapshot && currSelSnapshot.AsBracedGuid() !== Guid.GetEmptyGuid().AsBracedGuid()) {
       toReturn = true;
     }
     return toReturn;

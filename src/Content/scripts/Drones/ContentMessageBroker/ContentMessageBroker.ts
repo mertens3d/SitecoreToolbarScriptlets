@@ -13,6 +13,7 @@ import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../../Managers/ContentHub/ContentHub";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class ContentMessageBroker extends ContentManagerBase implements IContentMessageBroker {
   private Logger: ILoggerAgent;
@@ -113,6 +114,15 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
+
+      Guid.FixStorageGuidObjects(payload);
+
+      this.AllAgents.Logger.LogAsJsonPretty('payload', payload);
+
+      if (payload.Data.IdOfSelect) {
+        payload.Data.IdOfSelect = new Guid(payload.Data.IdOfSelect.Raw);
+      }
+
       let commandToExecute: Function = null;
 
       var response: MsgFromContent = await this.NewMsgFromContentShell();
@@ -176,16 +186,14 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
       }
 
       if (commandToExecute) {
-
         let commandData: ICommandHndlrDataForContent = {
-          PayloadData : payload.Data,
+          PayloadData: payload.Data,
           ContentMessageBroker: this,
           TopLevelDoc: this.TopLevelDoc,
           ContentHub: this.ContentHub,
           Logger: this.Logger,
           PromiseBasic: this.AllAgents.HelperAgent.PromisesBasic
         }
-
 
         await commandToExecute(commandData)
           .then(() => this.ApiManager.GetContentState())

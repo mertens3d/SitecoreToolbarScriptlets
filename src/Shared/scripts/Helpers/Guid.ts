@@ -1,34 +1,94 @@
 ﻿import { SharedConst } from "../SharedConst";
 
 export class Guid {
-  private ConstEmptyGuid: string = '00000000-0000-0000-0000-000000000000';
-  private ConstEmptyBracedGuid: string = '{00000000-0000-0000-0000-000000000000}';
-  private ConstAllZeros: string = '00000000000000000000000000000000';
+  private static ConstEmptyGuid: string = '00000000-0000-0000-0000-000000000000';
+  private static ConstEmptyBracedGuid: string = '{00000000-0000-0000-0000-000000000000}';
+  //private ConstAllZeros: string = '00000000000000000000000000000000';
 
-  ShortGuidLength: number = 4;
-  AsBracedGuid: string = this.ConstEmptyBracedGuid;
+  private static ShortGuidLength: number = 4;
+  //AsBracedGuid: string = this.ConstEmptyBracedGuid;
   readonly Type: "Guid";
 
-  private SourceOfTruth: string;
+  readonly StorageType: string = 'Guid';
+  readonly Raw: string;
+   Flag: string = '';
 
-  constructor() {
-    this.SourceOfTruth = this.ConstEmptyGuid;
+  constructor(raw: string = null) {
+
+    this.StorageType = 'GuidAsString';
+    this.Type = 'Guid';
+    if (!raw) {
+      this.Raw = Guid.ConstEmptyGuid;
+    } else {
+      if (Guid.IsValidGuidStr(raw)) {
+        this.Raw = this.GuidStrWithDashes(raw);
+      } else {
+        throw ('Invalid GUID string: ' + raw);
+      }
+    }
   }
 
-  //EmptyGuidJustNumbers(): string {
-  //  return this.ConstAllZeros;
-  //}
+  static FixStorageGuidObjects(obj: any) {
+
+
+    for (var property in obj) {
+      if (obj.hasOwnProperty(property)) {
+        if (typeof obj[property] == "object") {
+
+          this.FixStorageGuidObjects(obj[property]);
+
+        } else {
+
+          if (obj.hasOwnProperty('StorageType') && obj[ 'StorageType'] == 'GuidAsString') {
+            console.log('====================== has it')
+            try {
+              let newGuid = new Guid(obj.Raw);
+              obj = newGuid;
+              obj.Flag = 'dog';
+              
+            } catch (ex) {
+              console.log('That didnt work: ')
+            }
+          }
+          console.log('property: ' + property + "  value: " + obj[property] + "  type: " + typeof obj[property]);
+        }
+      }
+    }
+  }
+
+  private GuidStrWithDashes(val: string): string {
+    let toReturn: string = '';
+    let withoutDashes: string = val.replace(/-/g, '');
+
+    var parts = [];
+    if (withoutDashes.length !== 32) {
+      throw (this.GuidStrWithDashes.name + ' - Wrong count wanted: ' + 32 + " got: " + withoutDashes.length + ' (without dashes) ' + withoutDashes);
+    }
+
+    parts.push(withoutDashes.slice(0, 8));
+    parts.push(withoutDashes.slice(8, 12));
+    parts.push(withoutDashes.slice(12, 16));
+    parts.push(withoutDashes.slice(16, 20));
+    parts.push(withoutDashes.slice(20, 32));
+
+    toReturn = parts.join('-');
+
+    return toReturn;
+  }
+
+  AsBracedGuid(): string {
+    return '{' + this.Raw + "}";
+  }
 
   ToString(): string {
-    return this.SourceOfTruth;
+    return this.Raw;
   }
 
   static GetEmptyGuid(): Guid {
-    let toReturn = new Guid();
-    return Guid.ParseGuid('00000000-0000-0000-0000-000000000000', true);
+    return new Guid();
   }
 
-  private newGuidString(): string {
+  private getRandomGuidString(): string {
     var toReturn: string;
 
     var temp = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
@@ -43,21 +103,22 @@ export class Guid {
     return toReturn;
   }
 
-  MakeNewGuid(): Guid {
-    return this.MakeGuidFromString(this.newGuidString(), true);
+  MakeNewRandomGuid(): Guid {
+    let randomStr: string = this.getRandomGuidString();
+    return this.MakeGuidFromString(randomStr, true);
   }
 
-  static NewGuid(): Guid {
+  static NewRandomGuid(): Guid {
     //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
     let newGuid: Guid = new Guid();
-    var toReturn: Guid = newGuid.MakeNewGuid();
+    var toReturn: Guid = newGuid.MakeNewRandomGuid();
     return toReturn;
   }
 
   AsShort(): string {
     var toReturn: string = '{error}';
 
-    toReturn = this.SourceOfTruth.substr(0, this.ShortGuidLength);
+    toReturn = this.Raw.substr(0, Guid.ShortGuidLength);
 
     return toReturn;
   }
@@ -66,6 +127,14 @@ export class Guid {
     return str.replace(SharedConst.Const.Regex.CleanGuid, '');
   }
 
+  static IsValidGuidStr(candidateStr: string): boolean {
+    let toReturn: boolean = false;
+    let regexGuid: string = '^[\}]?[0-9a-f]{8}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{12}[\}]?$';
+    let pattern: RegExp = new RegExp(regexGuid, 'i');
+
+    toReturn = pattern.test(candidateStr);
+    return toReturn;
+  }
   //FormatAsBracedGuid(throwOnError: boolean): string {
   //  //https://stackoverflow.com/questions/25131143/javascript-string-to-guid
 
@@ -92,9 +161,7 @@ export class Guid {
   //}
 
   MakeGuidFromString(val: string, throwOnError: boolean): Guid {
-
-    let toReturn: Guid = new Guid();
-    this.SourceOfTruth = val;
+    let toReturn: Guid = new Guid(val);
 
     return toReturn;
   }

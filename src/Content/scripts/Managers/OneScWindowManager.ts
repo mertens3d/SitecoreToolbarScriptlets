@@ -57,8 +57,7 @@ export class OneScWindowManager extends ContentManagerBase {
           .then((state: IDataOneStorageOneTreeState) => {
             snapShot.AllCEAr.push(state);
             promiseResult.MarkSuccessful();
-          }
-          )
+          })
           .catch((err) => promiseResult.MarkFailed(err));
       }
       else if (snapShotSettings.CurrentPageType === scWindowType.Desktop) {

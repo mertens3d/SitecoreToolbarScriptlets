@@ -154,7 +154,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IError.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IEventHandlerData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IFactoryHelper.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IGuidHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneCommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseRecipes.ts" />
@@ -248,7 +247,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataPublishChain.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataBrowserWindow.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\InjectConst.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IGuid.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IContentConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneStorageData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataBucketRestoreDesktop.ts" />
@@ -256,7 +254,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\SitecoreUiManager\SitecoreUiManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\IIterationResults.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\NewWindowDest.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Helpers\GuidHelper.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Helpers\Guid.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentHub\ContentHub.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneIframe.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\PageDataManager.ts" />

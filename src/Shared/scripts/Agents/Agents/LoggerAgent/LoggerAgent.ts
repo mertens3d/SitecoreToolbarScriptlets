@@ -213,7 +213,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
     else {
       var asGuid = <Guid>textVal;
-      if (asGuid.Type === 'Guid') {
+      if (typeof asGuid === typeof Guid) {
         textVal = asGuid.ToString();
       }
     }

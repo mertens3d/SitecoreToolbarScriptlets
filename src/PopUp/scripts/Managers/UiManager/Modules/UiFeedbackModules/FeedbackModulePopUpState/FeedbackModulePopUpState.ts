@@ -16,7 +16,7 @@ export class FeedbackModulePopUpState extends UiFeedbackModuleBase implements IU
 
   PopulatePopUpStateUI(selectSnapShot: Guid) {
     var allStateText: string = 'Pop Up State:' + this.lineBreak;// + 'PopUp State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());
-    allStateText += 'Select Snapshot: ' + selectSnapShot.AsShort;
+    allStateText += 'Select Snapshot: ' + selectSnapShot.AsShort();
 
     this.AddHtmlString(allStateText);
   }

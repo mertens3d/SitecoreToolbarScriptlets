@@ -159,7 +159,7 @@ export class HandlersExternal extends CommonEvents {
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.RemoveFromStorage);
 
-      var result: boolean = confirm('Remove ?: ' + msg.Data.IdOfSelect.AsShort);
+      var result: boolean = confirm('Remove ?: ' + msg.Data.IdOfSelect.AsShort());
       if (result === true) {
         await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
           .then(() => resolve())

@@ -37,7 +37,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
       this.topDoc = {
         //ParentDoc: null,
         ContentDoc: window.document,
-        DocId: Guid.NewGuid(),
+        DocId: Guid.NewRandomGuid(),
         Nickname: 'top doc'
       }
     }
@@ -46,7 +46,7 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
     //callbackOnComplete();
-    this.AllAgents.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.AsShort);
+    this.AllAgents.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + targetDoc.DocId.AsShort());
     this.AllAgents.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
     var userNameElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);

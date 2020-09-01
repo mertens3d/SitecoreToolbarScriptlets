@@ -54,12 +54,13 @@ export class OneDesktopManager extends ContentManagerBase {
     return new Promise<boolean>(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.RestoreDataToOneIframeWorker.name, 'data not null: ' + (oneTreeState != null) + ' newFrame not null: ' + (targetCeAgent !== null));
 
-      //this.AllAgents.Logger.DebugDataOneIframe(targetCeAgent);
+      this.AllAgents.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
 
       if (oneTreeState && targetCeAgent) {
         await targetCeAgent.RestoreCEStateAsync(oneTreeState)
           .then(() => resolve(true))
           .catch((err) => {
+            this.AllAgents.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
             this.AllAgents.Logger.ErrorAndThrow(this.RestoreDataToOneIframeWorker.name, 'bad data');
             reject((this.RestoreDataToOneIframeWorker.name + " " + err))
           })
@@ -86,7 +87,7 @@ export class OneDesktopManager extends ContentManagerBase {
 
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
-              oneCeMan.GetTreeState(Guid.NewGuid())
+              oneCeMan.GetTreeState(Guid.NewRandomGuid())
                 .then((oneCeState: IDataOneStorageOneTreeState) => {
                   toReturnAllCeState.AllCeData.push(oneCeState);
 

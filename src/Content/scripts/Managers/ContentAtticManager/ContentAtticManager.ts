@@ -134,7 +134,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      candidate.Id = Guid.ParseGuid(candidate.Id.ToString(), true);
+      //candidate.Id = Guid.ParseGuid(candidate.Id.ToString(), true);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {
@@ -261,6 +261,7 @@ export class ContentAtticManager extends ContentManagerBase {
           snapShotsMany.CurrentSnapShots = result;
           snapShotsMany.Birthday = new Date();
           this.UpdateCounts(snapShotsMany);
+          snapShotsMany.CurrentSnapShots = this.ConvertGuidData(snapShotsMany.CurrentSnapShots);
 
           resolve(snapShotsMany);
         })
@@ -269,6 +270,30 @@ export class ContentAtticManager extends ContentManagerBase {
       this.AllAgents.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
     });
   }
+
+  ConvertGuidData(candidateSnapShots: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
+
+    let toReturn: IDataOneWindowStorage[] = []
+
+    for (var idx = 0; idx < candidateSnapShots.length; idx++) {
+      var candidate = candidateSnapShots[idx];
+
+      try {
+
+        if (candidate.Id && Guid.IsValidGuidStr(candidate.Id.Raw)) {
+          candidate.Id = new Guid(candidate.Id.Raw);
+          toReturn.push(candidate);
+        } else {
+          this.AllAgents.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored ')
+
+        }
+      } catch (err) {
+      }
+    }
+
+    return toReturn;
+  }
+
   UpdateCounts(storageAllSnapshots: ISnapShotsMany) {
     storageAllSnapshots.FavoriteCount = 0;
     storageAllSnapshots.SnapShotsAutoCount = 0;
@@ -293,7 +318,7 @@ export class ContentAtticManager extends ContentManagerBase {
   }
 
   TimeNicknameFavStrForConfirmation(data: IDataOneWindowStorage): string {
-    var result = data.TimeStampFriendly + ' ' + data.NickName + ' ' + data.Id.AsShort;
+    var result = data.TimeStampFriendly + ' ' + data.NickName + ' ' + data.Id.AsShort();
     result = result.replace(new RegExp(/&nbsp;/ig), '');
     return result;
   }

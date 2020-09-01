@@ -83,7 +83,7 @@ export class OneCEAgent {
     var foundOnPageTreeGlyph: HTMLElement = null;
 
     while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
-      this.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.AsShort + '*');
+      this.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + dataOneDocTarget.DocId.AsShort() + '*');
 
       foundOnPageTreeGlyph = dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
 
@@ -165,7 +165,6 @@ export class OneCEAgent {
   GetTreeState(id: Guid) {
     return new Promise<IDataOneStorageOneTreeState>((resolve, reject) => {
       this.Logger.FuncStart(this.GetTreeState.name);
-      let result: PromiseResult = new PromiseResult(this.GetTreeState.name, this.Logger);
 
       var toReturnOneTreeState: IDataOneStorageOneTreeState = {
         Id: id,
@@ -176,18 +175,13 @@ export class OneCEAgent {
       toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
 
       if (toReturnOneTreeState) {
-        result.MarkSuccessful()
+        resolve(toReturnOneTreeState);
       } else {
-        result.MarkFailed('todo why would this fail?');
+        reject('todo why would this fail?');
       }
 
       this.Logger.FuncEnd(this.GetTreeState.name);
 
-      if (result.WasSuccessful()) {
-        resolve(toReturnOneTreeState)
-      } else {
-        reject(result.RejectReasons);
-      }
     });
   }
 }

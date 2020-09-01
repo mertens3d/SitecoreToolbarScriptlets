@@ -21,7 +21,7 @@ export class PageManager extends ContentManagerBase {
     this.topLevelDoc = {
       //ParentDoc: null,
       ContentDoc: (<Window>(window)).document,
-      DocId: Guid.NewGuid(),
+      DocId: Guid.NewRandomGuid(),
       Nickname: 'Original Target Page'
     }
 

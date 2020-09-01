@@ -11,7 +11,7 @@ import { PromiseResult } from "./PromiseResult";
 export class PromisesBasic extends HelperBase implements IPromisesBasic {
   async WaitForReadyIframe(dataOneIframe: IDataOneIframe): Promise<null> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort);
+      this.Logger.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + dataOneIframe.Id.AsShort());
 
       var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyIframe.name);
       let promiseResult: PromiseResult = new PromiseResult(this.WaitForReadyIframe.name, this.Logger);

@@ -28,7 +28,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       {
         //ParentDoc: parentDocument,
         ContentDoc: dataOneIframe.IframeElem.contentDocument,
-        DocId: Guid.NewGuid(),
+        DocId: Guid.NewRandomGuid(),
         Nickname: dataOneIframe.Nickname + ' - content doc'
       }
     } else {
@@ -49,7 +49,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
       var toReturn: IDataOneIframe = {
         Index: -1,
         IframeElem: iframeElem,
-        Id: Guid.NewGuid(),
+        Id: Guid.NewRandomGuid(),
         Zindex: zIndex,
         Nickname: nickname,
         ContentDoc: null,
@@ -68,7 +68,7 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
   CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
     this.Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
     var dateToUse: Date = new Date();
-    var newGuid: Guid = Guid.NewGuid();
+    var newGuid: Guid = Guid.NewRandomGuid();
 
     var activeWindowSnapShot: IDataOneWindowStorage = {
       TimeStamp: dateToUse,

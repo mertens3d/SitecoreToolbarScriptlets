@@ -95,7 +95,25 @@ export class UiManager extends PopUpManagerBase {
   }
 
   SetContentState(contentState: IContentState) {
+    contentState.SnapShotsMany.CurrentSnapShots = this.FixGuidsInContentState(contentState.SnapShotsMany.CurrentSnapShots);
+
     this.LastKnownContentState = contentState;
+  }
+
+  FixGuidsInContentState(dataAr: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
+    let toReturn: IDataOneWindowStorage[] = [];
+    if (dataAr) {
+
+      for (var idx = 0; idx < dataAr.length; idx++) {
+        let candidate = dataAr[idx];
+        if (Guid.IsValidGuidStr(candidate.Id.Raw)) {
+          candidate.Id = new Guid(candidate.Id.Raw);
+          toReturn.push(candidate);
+        }
+      }
+    }
+
+    return toReturn
   }
 
   SelectChanged() {
@@ -207,7 +225,7 @@ export class UiManager extends PopUpManagerBase {
   async RefreshUi() {
     this.AllAgents.Logger.FuncStart(this.RefreshUi.name);
 
-    await this.SetUIStates(this.TabMan().GetUrlParts() );
+    await this.SetUIStates(this.TabMan().GetUrlParts());
 
     this.FeedbackModuleBrowserState.RefreshUi();
 
@@ -219,7 +237,7 @@ export class UiManager extends PopUpManagerBase {
     let currentWindowType = this.TabMan().GetWindowType();
     let currSelSnapshot: Guid = this.UiMan().ModuleSelectSnapShot.GetSelectSnapshotId();
 
-    this.ButtonStateManager.RefreshUi(currentWindowType, currSelSnapshot,  this.LastKnownContentState);
+    this.ButtonStateManager.RefreshUi(currentWindowType, currSelSnapshot, this.LastKnownContentState);
 
     this.__drawCorrectNicknameInUI(this.LastKnownContentState.SnapShotsMany.CurrentSnapShots);
 
