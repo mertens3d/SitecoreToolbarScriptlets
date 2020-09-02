@@ -111,3 +111,32 @@ button {
 .set-nickname {
   background-image: $sc_rename;
 }
+
+#id-input-nickname{
+  height: 16px;
+
+}
+
+.input-btn-wrapper {
+  display: block;
+  width: 96px;
+  margin: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-bottom: 6px;
+  padding-top: 0;
+  overflow: hidden;
+}
+
+input#id-input-nickname {
+display: inline-block;
+  width: 88PX;
+  overflow: hidden;
+}
+
+button#id-btn-update-nickname {
+  height: 40px;
+  display: inline-block;
+  width: 100%;
+  margin: 0;
+}

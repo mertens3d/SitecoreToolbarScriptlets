@@ -10,7 +10,7 @@ export class PopConst {
       },
     },
     ElemId: {
-      InputNickname: 'inputNickname',
+      InputNickname: 'id-input-nickname',
       HindSiteParentInfo: 'spanParentInfo',
 
       HS: {
@@ -83,7 +83,7 @@ export class PopConst {
         SettingNotUsed: '[id=id-settings-not-used]',
         SettingUseCompactCss: '[id=id-settings-use-compact]',
         TakeSnapshot: '[id=SaveWindowState]',
-        UpdateNicknameB: '[id=UpdateNickname]',
+        UpdateNicknameB: '[id=id-btn-update-nickname]',
       },
     },
     Settings: {

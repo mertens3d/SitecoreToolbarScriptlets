@@ -32,38 +32,6 @@ export class ContentAtticManager extends ContentManagerBase {
     this.CleanOutOldAutoSavedData();
   }
 
-  UpdateNickname(payload: PayloadDataFromPopUp) {
-    return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.UpdateNickname.name);
-      var promResult: PromiseResult = new PromiseResult(this.UpdateNickname.name, this.AllAgents.Logger);
-
-      if (payload.IdOfSelect) {
-        var storageMatch;
-
-        await this.GetFromStorageById(payload.IdOfSelect)
-          .then((result) => storageMatch = result);
-
-        if (storageMatch && payload.SnapShotSettings && payload.SnapShotSettings.SnapShotNewNickname) {
-          storageMatch.NickName = payload.SnapShotSettings.SnapShotNewNickname;
-          this.WriteToStorage(storageMatch);
-          promResult.MarkSuccessful();
-        } else {
-          promResult.MarkFailed('something was missing');
-        }
-      } else {
-        promResult.MarkFailed('no payload or id');
-        this.AllAgents.Logger.LogAsJsonPretty(this.UpdateNickname.name, payload);
-      }
-
-      this.AllAgents.Logger.FuncEnd(this.UpdateNickname);
-      if (promResult.WasSuccessful()) {
-        resolve();
-      } else {
-        reject(promResult.RejectReasons);
-      }
-    });
-  }
-
   async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.WriteToStorage.name);
@@ -261,20 +229,17 @@ export class ContentAtticManager extends ContentManagerBase {
   }
 
   ConvertGuidData(candidateSnapShots: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
-
     let toReturn: IDataOneWindowStorage[] = []
 
     for (var idx = 0; idx < candidateSnapShots.length; idx++) {
       var candidate = candidateSnapShots[idx];
 
       try {
-
         if (candidate.GuidId && GuidData.IsValidGuidStr(candidate.GuidId.Raw)) {
           candidate.GuidId = new GuidData(candidate.GuidId.Raw);
           toReturn.push(candidate);
         } else {
           this.AllAgents.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.GuidId.Raw)
-
         }
       } catch (err) {
       }

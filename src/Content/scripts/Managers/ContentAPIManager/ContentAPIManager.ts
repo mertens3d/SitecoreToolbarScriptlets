@@ -2,14 +2,14 @@
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
-import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
+import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
-import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { RecipePublishActiveCe } from "./Recipes/RecipePublishActiveCe";
 import { RecipeRemoveItemFromStorage } from "./Recipes/RecipeRemoveItemFromStorage";
 import { RecipeSaveState } from "./Recipes/RecipeSaveState";
-import { RecipePublishActiveCe } from "./Recipes/RecipePublishActiveCe";
+import { RecipeChangeNickName } from "./Recipes/RecipeChangeNickName";
 
 export class ContentAPIManager extends ContentManagerBase {
   constructor(hub: ContentHub, AllAgents: IAllAgents) {
@@ -19,9 +19,9 @@ export class ContentAPIManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncEnd(ContentAPIManager.name);
   }
 
-  async UpdateNickname(payloadData: PayloadDataFromPopUp) {
+  async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void>{
     return new Promise(async (resolve, reject) => {
-      await this.AtticMan().UpdateNickname(payloadData)
+      await new RecipeChangeNickName(commandData, commandData.ContentHub.AtticMan).Execute()
         .then(() => resolve())
         .catch((err) => reject(err));
     })
