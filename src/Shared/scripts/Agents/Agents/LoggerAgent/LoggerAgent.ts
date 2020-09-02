@@ -287,21 +287,7 @@ export class LoggerAgent implements ILoggerAgent {
       this.LogVal('Nickname', snapShotSettings.SnapShotNewNickname);
     }
   }
-  //DebugIDataContentPrefs(prefs: IOneGenericSetting) {
-  //      if (this.IsNotNullOrUndefinedBool('IDataContentPrefs', prefs)) {
-  //          if (this.IsNotNullOrUndefinedBool('MaxAutoSaveCount', prefs.MaxAutoSaveCount)) {
-  //              this.LogVal('MaxAutoSaveCount', prefs.MaxAutoSaveCount);
-  //          }
-  //      }
-  //  }
-  //DebugIDataBrowserWindow(targetWindow: IDataBrowserWindow) {
-  //  this.NotNullCheck('toReturn', targetWindow);
-  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf);
-  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document);
-  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document.location);
-  //  this.NotNullCheck('toReturn', targetWindow.DataDocSelf.Document.location.href);
-  //  this.LogVal('targetWindow.DataDocSelf.Document.location.href', targetWindow.DataDocSelf.Document.location.href);
-  //}
+  
   DebugObjState(state: IContentState) {
     if (this.IsNotNullOrUndefinedBool('State', state)) {
       if (this.IsNotNullOrUndefinedBool('CurrentSnapShots', state.SnapShotsMany.CurrentSnapShots)) {
@@ -347,9 +333,7 @@ export class LoggerAgent implements ILoggerAgent {
   CtorName(ctorName: string) {
     this.Log('Constructor: ' + ctorName);
   }
-  //NotNullOrUndefined(subjectAnyAr: any[], label?: string, iterationCheck?: number): boolean;
-  //NotNullOrUndefined(subjectAny: any, label?: string, iterationCheck?: number);
-  //NotNullOrUndefined(subjectAnyOrAr: any | any[], label: string = '', iterationCheck: number = null): boolean {
+
   FuncStart(textOrFunc: string, optionalValue?: number): void;
   FuncStart(textOrFunc: string, optionalValue?: string): void;
   FuncStart(textOrFunc: string, optionalValue?: boolean): void;
@@ -361,10 +345,7 @@ export class LoggerAgent implements ILoggerAgent {
     else {
       optionalValue = optionalValue.toString();
     }
-    //if (typeof (textOrFunc) === 'function') {
-    //  console.log('******* is func *************');
-    //  textOrFunc = textOrFunc.name;
-    //}
+
     if (optionalValue.length > 0) {
       textOrFunc = textOrFunc + ' : ' + optionalValue;
     }

@@ -41,9 +41,6 @@ export class ContentHub {
 
   constructor(allAgents: IAllAgents) {
     this.AllAgents = allAgents;
-
-    //this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
-
     this.AllAgents.Logger.InstantiateStart(ContentHub.name);
     //console.log('(ctor) logger enabled ' + this.AllAgents.Logger.EnabledStatus());
     this.InstantiateMembers();

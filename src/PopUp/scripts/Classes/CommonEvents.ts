@@ -4,11 +4,10 @@ import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/
 import { PopUpHub } from "../Managers/PopUpHub";
 
 export class CommonEvents {
-  protected PopHub: PopUpHub; //extends PopUpManagerBase
+  protected PopHub: PopUpHub; 
   protected AllAgents: IAllAgents;
 
   constructor(hub: PopUpHub, allAgents: IAllAgents) {
-    //super(hub);
     this.PopHub = hub;
     this.AllAgents = allAgents;
   }
@@ -22,8 +21,6 @@ export class CommonEvents {
       this.AllAgents.Logger.FuncStart(this.SendContentCommand.name);
       this.__cleardebugText();
       this.PopHub.UiMan.ClearCancelFlag();
-
-      //this.AllAgents.Logger.LogAsJsonPretty("msgPayload", msgPlayload);
 
       await this.PopHub.MessageMan.SendMessageToContent(msgPlayload)
         .then((contentState: IContentState) => {

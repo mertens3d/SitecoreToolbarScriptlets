@@ -19,8 +19,6 @@ export class UtilityHelper extends HelperBase {
       var day = StaticHelpers.BufferString(workingDate.getDate().toString(), 2, BufferChar.Zero, BufferDirection.left);
       var min = StaticHelpers.BufferString(workingDate.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);
       var hoursRaw = workingDate.getHours();
-      //var ampm = hoursRaw >= 12 ? 'p' : 'a';
-      //hoursRaw = hoursRaw % 12;
       var hourClean = hoursRaw ? hoursRaw : 12; // the hour '0' should be '12'
       var hourCleanStr: string = StaticHelpers.BufferString(hourClean.toString(), 2, BufferChar.Zero, BufferDirection.left);
       //year + '.' +

@@ -62,13 +62,10 @@ export class IterationDrone {
   }
 
   Wait(): Promise<void> {
-    //this.AllHelperAgents.Logger.FuncStart(this.Wait.name, this.__nickName);
-
     if (!this.OperationCancelled) {
       return new Promise((resolve) => {
         setTimeout(resolve, this.__timeout);
       });
     }
-    //this.AllHelperAgents.Logger.FuncEnd(this.WaitAndThen.name, this.__nickName);
   }
 }

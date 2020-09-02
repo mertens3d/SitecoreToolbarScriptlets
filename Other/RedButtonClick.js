@@ -1,1 +1,0 @@
-javascript:document.getElementById('StartButton').click();document.querySelector('.scStartMenuLeftOption').click();

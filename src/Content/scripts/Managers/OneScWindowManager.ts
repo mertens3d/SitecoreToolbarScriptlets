@@ -83,23 +83,7 @@ export class OneScWindowManager extends ContentManagerBase {
       }
     });
   }
-  //WaitForPageLoad(desiredPageType: WindowType, targetWindow: IDataBrowserWindow, iteration: number, successCallBack: Function) {
-  //  this.debug().FuncStart(this.WaitForPageLoad.name, 'Iteration: ' + iteration + ' | Desired type: ' + WindowType[desiredPageType]);
-  //  var targetPageType: WindowType = this.PageMan().GetPageTypeOfTargetWindow(targetWindow.Window);
-  //  if (targetPageType !== desiredPageType) {
-  //    var self = this;
-  //    if (iteration > 0) {
-  //      iteration = iteration - 1;
-  //      setTimeout(function () {
-  //        self.WaitForPageLoad(desiredPageType, targetWindow, iteration, successCallBack);
-  //      }, self.Const().Timeouts.WaitFogPageLoad);
-  //    }
-  //  } else {
-  //    this.debug().Log('success, triggering callback: ' + successCallBack.name);
-  //    successCallBack();
-  //  }
-  //  this.debug().FuncEnd(this.WaitForPageLoad.name);
-  //}
+
   private async __getTopLevelIframe(targetDoc: IDataOneDoc): Promise<IDataOneIframe> {
     return new Promise(async (resolve, reject) => {
       var toReturn: IDataOneIframe = null;

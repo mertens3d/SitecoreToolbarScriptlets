@@ -3,5 +3,4 @@
   Auto: HTMLOptGroupElement,
   AutoTitle: HTMLOptGroupElement,
   FavoriteTitle: HTMLOptGroupElement,
-
 }

@@ -7,24 +7,19 @@ import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
 import { PayloadDataFromPopUp } from "./PayloadDataReqPopUp";
 import { GuidData } from "../Helpers/GuidData";
 export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
-    CurrentContentPrefs: IOneGenericSetting[];
-    Data: PayloadDataFromPopUp;
+  CurrentContentPrefs: IOneGenericSetting[];
+  Data: PayloadDataFromPopUp;
   IsValid: boolean;
   constructor(msgFlag: MsgFlag, scWindowType: scWindowType, selectSnapshotId: GuidData, contentPrefs: IOneGenericSetting[]) {
-        super(msgFlag);
-        this.Data = new PayloadDataFromPopUp();
-        this.Data.IdOfSelect = selectSnapshotId;
-        this.Data.SnapShotSettings =  {
-            SnapShotNewNickname: '',
-            Flavor: SnapShotFlavor.Unknown,
-          CurrentPageType: scWindowType
-        };
+    super(msgFlag);
+    this.Data = new PayloadDataFromPopUp();
+    this.Data.IdOfSelect = selectSnapshotId;
+    this.Data.SnapShotSettings = {
+      SnapShotNewNickname: '',
+      Flavor: SnapShotFlavor.Unknown,
+      CurrentPageType: scWindowType
+    };
 
     this.CurrentContentPrefs = contentPrefs;
   }
-
-
-
-
-
 }

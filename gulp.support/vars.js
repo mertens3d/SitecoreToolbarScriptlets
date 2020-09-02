@@ -32,7 +32,7 @@ class Vars {
     this.WindowOpener.Ts.TranspiledEntryPointFile = 'EntryPoint.js';
 
     this.BrowserExtensionFireFox = {
-      Root: './Browser Addons/Firefox/HindSite',
+      Root: './Dist/HindSite',
       AutoBuildDest: '/HindSite/AutoBuild'
     };
 
