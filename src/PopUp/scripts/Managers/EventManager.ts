@@ -81,6 +81,7 @@ export class EventManager extends PopUpManagerBase {
   }
 
   private __wireOneMenuButtonListener(oneCommand: IOneCommand): void {
+    this.AllAgents.Logger.FuncStart(this.__wireOneMenuButtonListener.name, oneCommand.ButtonSelector)
     var targetElem: HTMLElement = this.UiMan().GetButtonByIdOrSelector(oneCommand.ButtonSelector);
 
     if (oneCommand.EventData.Event === CommandButtonEvents.OnSingleClick) {
@@ -88,6 +89,8 @@ export class EventManager extends PopUpManagerBase {
     } else if (oneCommand.EventData.Event === CommandButtonEvents.OnDoubleClick) {
       this.__wireDoubleClickEvent(oneCommand, targetElem)
     }
+
+    this.AllAgents.Logger.FuncEnd(this.__wireOneMenuButtonListener.name)
   }
   private __wireDoubleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
     //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestoreNewTab(evt, this.PopHub); });

@@ -68,7 +68,7 @@ export class PopConst {
         iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
         IdFieldSetDebug: '[id=id-fieldset-debug]',
         LogToConsole: '[id=id-settings-show-log-data]',
-        MarkFavorite: '[id=MarkFavorite]',
+        ToggleFavorite: '[id=id-toggle-favorite]',
         ModeEdit: '[id=sc-mode-edit]',
         ModeNorm: '[id=Norm]',
         ModePrev: '[id=Prev]',

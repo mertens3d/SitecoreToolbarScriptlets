@@ -1,7 +1,7 @@
 ﻿export enum MenuCommand {
   Unknown = 0,
   GoScModeEdit = 2001,
-  MarkFavorite = 2002,
+  ToggleFavorite = 2002,
   CloseWindow = 2003,
   TakeSnapShot = 2004,
   AddCeTab = 2005,

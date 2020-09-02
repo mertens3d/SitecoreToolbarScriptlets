@@ -123,7 +123,7 @@ export class HandlersExternal extends CommonEvents {
     data.PopUpHub.UiMan.SetCancelFlag();
   }
 
-  MarkFavorite(data: ICommandHndlrDataForPopUp, tanManagerTempFix: TabManager) {
+  ToggleFavorite(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
       var msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqMarkFavorite);
       await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)

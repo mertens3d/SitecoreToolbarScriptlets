@@ -64,7 +64,7 @@
       iCBoxdSettingsAutoLogin: string,
       IdFieldSetDebug: string,
       LogToConsole: string,
-      MarkFavorite: string,
+      ToggleFavorite: string,
       ModeEdit: string,
       ModeNorm: string,
       ModePrev: string,

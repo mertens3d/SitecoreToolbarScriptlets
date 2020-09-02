@@ -3,6 +3,7 @@ import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/IComma
 import { ContentAtticManager } from "../../ContentAtticManager/ContentAtticManager";
 import { RecipeBase } from "./RecipeBase";
 
+
 export class RecipeChangeNickName extends RecipeBase implements ICommandRecipes {
   private AtticMan: ContentAtticManager;
 

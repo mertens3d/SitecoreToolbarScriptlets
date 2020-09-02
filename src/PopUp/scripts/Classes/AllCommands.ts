@@ -168,12 +168,12 @@ export class AllCommands {
       },
 
       {
-        Command: MenuCommand.MarkFavorite,
-        ButtonSelector: PopConst.Const.Selector.HS.MarkFavorite,
+        Command: MenuCommand.ToggleFavorite,
+        ButtonSelector: PopConst.Const.Selector.HS.ToggleFavorite,
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
-          Handler: popHub.EventMan.Handlers.External.MarkFavorite,
-          Event: null,
+          Handler: popHub.EventMan.Handlers.External.ToggleFavorite,
+          Event: CommandButtonEvents.OnSingleClick,
           ParameterData: [],
         }
       },

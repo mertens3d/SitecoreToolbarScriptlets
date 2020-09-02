@@ -65,9 +65,11 @@
     <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentMessageBroker.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\ContentAPIManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeToggleFavorite.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
@@ -190,6 +192,9 @@
     <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.js.map">
       <DependentUpon>RecipeBase.js</DependentUpon>
     </None>
+    <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName.js.map">
+      <DependentUpon>RecipeChangeNickName.js</DependentUpon>
+    </None>
     <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.js.map">
       <DependentUpon>RecipePublishActiveCe.js</DependentUpon>
     </None>
@@ -206,6 +211,9 @@
     </Content>
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.js">
       <DependentUpon>RecipeBase.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName.js">
+      <DependentUpon>RecipeChangeNickName.ts</DependentUpon>
     </Content>
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.js">
       <DependentUpon>RecipePublishActiveCe.ts</DependentUpon>

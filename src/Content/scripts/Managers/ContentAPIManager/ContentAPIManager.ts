@@ -10,6 +10,7 @@ import { RecipePublishActiveCe } from "./Recipes/RecipePublishActiveCe";
 import { RecipeRemoveItemFromStorage } from "./Recipes/RecipeRemoveItemFromStorage";
 import { RecipeSaveState } from "./Recipes/RecipeSaveState";
 import { RecipeChangeNickName } from "./Recipes/RecipeChangeNickName";
+import { RecipeToggleFavorite } from "./Recipes/RecipeToggleFavorite";
 
 export class ContentAPIManager extends ContentManagerBase {
   constructor(hub: ContentHub, AllAgents: IAllAgents) {
@@ -99,19 +100,11 @@ export class ContentAPIManager extends ContentManagerBase {
     throw new Error("Method not implemented.");
   }
 
-  MarkFavorite(payloadData: PayloadDataFromPopUp) {
+  MarkFavorite(commandData: ICommandHndlrDataForContent) {
     return new Promise(async (resolve, reject) => {
-      if (payloadData.IdOfSelect) {
-        await this.AtticMan().GetFromStorageById(payloadData.IdOfSelect)
-          .then((result: IDataOneWindowStorage) => {
-            result.Flavor = SnapShotFlavor.Favorite;
-            this.AtticMan().WriteToStorage(result);
-          })
-          .then(() => resolve())
-          .catch((err) => { throw this.MarkFavorite.name + ' ' + err });
-      } else {
-        reject('no targetId');
-      }
+      await new RecipeToggleFavorite(commandData, commandData.ContentHub.AtticMan).Execute()
+        .then(() => resolve())
+        .catch((err) => reject(err));
     });
   }
 

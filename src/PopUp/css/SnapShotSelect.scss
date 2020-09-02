@@ -9,7 +9,7 @@ select {
 
   option {
     &.favorite {
-      background-color: #E0B406;
+      background-color: #f8efcd;
     }
 
     color: black;
@@ -26,8 +26,6 @@ select {
       padding: 0;
     }
   }
-
-
 
   optgroup {
     color: $scTextColorLight;
