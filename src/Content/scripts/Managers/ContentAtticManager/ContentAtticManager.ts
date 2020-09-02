@@ -14,7 +14,6 @@ import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class ContentAtticManager extends ContentManagerBase {
-  //private CachedWindowStorage: ISnapShotsMany;
   private Repo: RepoAgent;
   private SettingAutoSnapshotRetainDays: number;
 
@@ -24,8 +23,6 @@ export class ContentAtticManager extends ContentManagerBase {
 
     this.Repo = repo;
 
-    //this.AllAgents.Logger.IsNotNullOrUndefinedBool("AllAgents.HelperAgent", this.AllAgents.HelperAgent);
-
     this.AllAgents.Logger.FuncEnd(ContentAtticManager.name);
   }
 
@@ -34,9 +31,6 @@ export class ContentAtticManager extends ContentManagerBase {
 
     this.CleanOutOldAutoSavedData();
   }
-  //functioneventHandler(e) {
-  //  console.log('this data is ' + e.detail);
-  //}
 
   UpdateNickname(payload: PayloadDataFromPopUp) {
     return new Promise(async (resolve, reject) => {
@@ -76,7 +70,6 @@ export class ContentAtticManager extends ContentManagerBase {
       var result: PromiseResult = new PromiseResult(this.WriteToStorage.name, this.AllAgents.Logger);
 
       var snapShotAsString = JSON.stringify(dataOneWindow);
-      //this.debug().LogVal('snapShotAsString', snapShotAsString);
 
       await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.GuidId.Raw, snapShotAsString)
 
@@ -135,7 +128,6 @@ export class ContentAtticManager extends ContentManagerBase {
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
-      //candidate.Id = Guid.ParseGuid(candidate.Id.ToString(), true);
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {
@@ -244,10 +236,6 @@ export class ContentAtticManager extends ContentManagerBase {
   GetAllSnapShotsMany(): Promise<ISnapShotsMany> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.GetAllSnapShotsMany.name);
-
-      //if (cacheMode === CacheMode.DoNotUseCache) {
-      //  this.CachedWindowStorage = null;
-      //}
 
       let snapShotsMany: ISnapShotsMany = {
         CurrentSnapShots: [],

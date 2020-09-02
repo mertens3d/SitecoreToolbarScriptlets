@@ -1,7 +1,6 @@
 ﻿import { GuidData } from "./GuidData";
 
 export class Guid {
-  
   private static ShortGuidLength: number = 4;
   static NewRandomGuid(): GuidData {
     //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -28,7 +27,6 @@ export class Guid {
     let withoutDashes: string = guiddata.Raw.replace(/-/g, '');
     return withoutDashes;
   }
-
 
   static ParseGuid(val: string, throwOnError: boolean): GuidData {
     let newGuid: GuidData = new GuidData();
@@ -60,28 +58,4 @@ export class Guid {
 
     return toReturn;
   }
-
-  //static FixStorageGuidObjects(obj: any) {
-  //  for (var property in obj) {
-  //    if (obj.hasOwnProperty(property)) {
-  //      if (typeof obj[property] == "object") {
-  //        this.FixStorageGuidObjects(obj[property]);
-  //      }
-  //      else {
-  //        if (obj.hasOwnProperty('StorageType') && obj['StorageType'] == 'GuidAsString') {
-  //          console.log('====================== has it');
-  //          try {
-  //            let newGuid = new GuidData(obj.Raw);
-  //            obj = newGuid;
-  //            obj.Flag = 'dog';
-  //          }
-  //          catch (ex) {
-  //            console.log('That didnt work: ');
-  //          }
-  //        }
-  //        console.log('property: ' + property + "  value: " + obj[property] + "  type: " + typeof obj[property]);
-  //      }
-  //    }
-  //  }
-  //}
 }

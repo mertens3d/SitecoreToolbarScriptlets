@@ -9,7 +9,7 @@ import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 export class OneTreeDrone implements IOneTreeDrone {
   AssociatedDoc: IDataOneDoc;
   private Logger: ILoggerAgent;
-  private  HelperAgent: IHelperAgent;
+  private HelperAgent: IHelperAgent;
 
   constructor(logger: ILoggerAgent, helperAgent: IHelperAgent, associatedDoc: IDataOneDoc) {
     this.Logger = logger;
@@ -36,21 +36,6 @@ export class OneTreeDrone implements IOneTreeDrone {
     return toReturn;
   }
 
-  //GetActiveNode(): IDataOneTreeNode {
-  //  let toReturn: IDataOneTreeNode = null;
-
-  //  var AllTreeNodeAr: IDataOneTreeNode[] = this.GetOneLiveTreeData();
-
-  //  for (var idx = 0; idx < AllTreeNodeAr.length; idx++) {
-  //    var candidate: IDataOneTreeNode = AllTreeNodeAr[idx];
-  //    if (candidate.IsActive) {
-  //      toReturn = candidate;
-  //      break;
-  //    }
-  //  }
-
-  //  return toReturn;
-  //}
   private __isActive(targetNode: HTMLElement): boolean {
     var toReturn: boolean = false;
 
@@ -63,9 +48,6 @@ export class OneTreeDrone implements IOneTreeDrone {
       }
     }
 
-    //this.debug().Log(className);
-    //this.debug().Log(InjectConst.ContConst.ClassNames.SC.scContentTreeNodeActive);
-
     return toReturn;
   }
 
@@ -75,7 +57,6 @@ export class OneTreeDrone implements IOneTreeDrone {
       var srcAttr = firstImg.getAttribute('src');
 
       if (srcAttr.indexOf(ContentConst.Const.Names.SC.TreeExpandedPng.sc920) > -1) {
-        //this.debug().Log('is Expanded');
         toReturn = true;
       }
       return toReturn;
@@ -109,13 +90,7 @@ export class OneTreeDrone implements IOneTreeDrone {
         }
 
         if (newData.IsExpanded || newData.IsActive) {
-          //this.debug().LogVal('isExpanded', newData.IsExpanded.toString());
-          //this.debug().LogVal('isActive', newData.IsActive.toString());
-
           newData.NodeFriendly = this.GetFriendlyNameFromNode(firstImg);
-
-          //this.debug().LogVal('friendlyName', newData.NodeFriendly);
-          //this.debug().LogVal('id', firstImg.id);
 
           var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
 
@@ -142,8 +117,6 @@ export class OneTreeDrone implements IOneTreeDrone {
     this.Logger.LogVal('Doc url: ', this.AssociatedDoc.ContentDoc.location.href);
     this.Logger.LogVal('Ready State: ', this.AssociatedDoc.ContentDoc.readyState);
 
-
-
     var toReturn: IDataOneTreeNode[] = [];
 
     if (this.AssociatedDoc) {
@@ -159,9 +132,6 @@ export class OneTreeDrone implements IOneTreeDrone {
 
         toReturn = this.WalkNodeRecursive(rootParent, ContentConst.Const.MaxIter);
         this.Logger.Log('foundNodes count: ' + toReturn.length);
-
-        //var nodesAsString = JSON.stringify(toReturn);
-        //this.debug().Log('toReturn as string: ' + nodesAsString);
       } else {
         this.Logger.ErrorAndThrow(this.GetOneLiveTreeData.name, 'no root node');
       }

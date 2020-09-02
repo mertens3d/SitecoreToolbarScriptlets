@@ -1,5 +1,4 @@
-﻿import { scMode } from "../../../Shared/scripts/Enums/scMode";
-import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
+﻿import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
 
 export class PopConst {
   static StorageRootPrefix: 'HindSite.';
@@ -11,7 +10,6 @@ export class PopConst {
       },
     },
     ElemId: {
-   
       InputNickname: 'inputNickname',
       HindSiteParentInfo: 'spanParentInfo',
 
@@ -21,14 +19,6 @@ export class PopConst {
         SelectHeaderFavorite: 'sel-header-favorite',
         SelectHeaderFavoriteTitle: 'sel-header-favorite-title',
         TabId: 'orig-win-id',
-
-        Btn: {
-    
-
-     
-         
-        },
-        
       }
     },
     Numbers: {
@@ -44,7 +34,6 @@ export class PopConst {
     Selector: {
       Btn: {
         WindowClose: '[id=close-window]',
-
       },
       Legend: {
         LgndBrowserState: '[id=lgnd-browser-state]',
@@ -112,7 +101,6 @@ export class PopConst {
       }
     },
     Storage: {
-      
       SettingsSuffix: 'todo',
       KeyGenericSettings: 'HindSite.' + 'GenericSettings',
       StorageLogKeyPrefix: 'HindSite.' + 'Log.',
@@ -126,19 +114,19 @@ export class PopConst {
       }
     },
     SnapShotFormat: {
-      lenTimestamp : 13,
-      lenNickname : 16,
-      lenPageType : 7,
-      lenPrefix : 6,
-      lenShortId : 4,
-      colSep:  ' - ',
-      lenCeCount : 3,
-      lenActiveNode : 16,
-      lenFavorite : 3,
+      lenTimestamp: 13,
+      lenNickname: 16,
+      lenPageType: 7,
+      lenPrefix: 6,
+      lenShortId: 4,
+      colSep: ' - ',
+      lenCeCount: 3,
+      lenActiveNode: 16,
+      lenFavorite: 3,
     },
     Timeouts: {
       WaitBeforeRemovingCompleteFlag: 1500,
-      
+
       AutoLoginCheckInterval: 3000,
     },
   }

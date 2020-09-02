@@ -55,27 +55,6 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
       this.AllAgents.Logger.FuncEnd(this.__waitForIframeReady.name);
     });
   }
-
-  //private __waitForNewIframe(iframesBefore: IDataOneIframe[]) {
-  //  return new Promise<IDataOneIframe>(async (resolve, reject) => {
-  //    this.AllAgents.Logger.FuncStart(this.__waitForNewIframe.name);
-
-  //    var result: PromiseResult = new PromiseResult(this.__waitForNewIframe.name, this.AllAgents.Logger);
-
-  //    var iframeResult: IDataOneIframe;
-
-  //    await this.AllAgents.HelperAgent.PromiseHelper.WaitForNewIframe(iframesBefore)
-  //      .then((result) => iframeResult = result)
-  //      .then(() => resolve(iframeResult))
-  //      .catch((err) => {
-  //        this.AllAgents.Logger.DebugDataOneIframe(iframeResult);
-  //        reject(err);
-  //      });
-
-  //    this.AllAgents.Logger.FuncEnd(this.__waitForNewIframe.name);
-  //  });
-  //}
-
   private __waitForAndThenClickCEFromMenu(targetDoc: IDataOneDoc) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
       await this.AllAgents.HelperAgent.PromisesBasic.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], targetDoc)

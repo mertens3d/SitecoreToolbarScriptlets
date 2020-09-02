@@ -14,7 +14,6 @@ export class FeedbackModuleContentState extends UiFeedbackModuleBase implements 
   RefreshUi(): void {
   }
 
-  
   PopulateContentStateFeedack(contentState: IContentState) {
     var allStateText: string = '';
     allStateText += JSON.stringify(contentState, null, 1);

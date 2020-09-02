@@ -182,12 +182,7 @@ export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes
 
       let promiseResult: PromiseResult = new PromiseResult(this.GetDialogIframe0Blue.name, this.Logger);
 
-      //why is this null?
-      //var IDataOneIframe: IDataOneIframe = this.AllAgents.HelperAgent.FactoryHelp.DataOneIframeFactory(null, dataPublishChain.jqIframe.ContentDoc, 'Iframe0Blue');
-
-      //this.ContentAgents.Logger.MarkerA();
       this.Logger.LogAsJsonPretty('dataPublishChain', dataPublishChain);
-      //this.ContentAgents.Logger.MarkerB();
 
       await this.PromiseBasic.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
         .then((result) => {

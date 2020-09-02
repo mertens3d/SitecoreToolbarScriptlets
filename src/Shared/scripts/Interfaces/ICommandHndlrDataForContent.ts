@@ -12,5 +12,4 @@ export interface ICommandHndlrDataForContent {
   TopLevelDoc: IDataOneDoc,
   ContentHub: ContentHub,
   PromiseBasic: IPromisesBasic
-
 }

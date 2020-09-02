@@ -3,7 +3,6 @@ import { IScVerSpec } from './IScVerSpec';
 export interface IContentConst {
   DefaultMaxAutoSaveAgeDays: number;
   MaxAutoToSaveCount: number;
-  //MaxCacheAgeMs: number;
 
   ElemId: {
     sc: {

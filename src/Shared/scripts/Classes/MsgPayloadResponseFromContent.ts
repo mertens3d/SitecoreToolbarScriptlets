@@ -1,16 +1,13 @@
-﻿import { IMsgFromX } from "../Interfaces/IMsgPayload";
-//import { MsgFlag } from "../Enums/MessageFlag";
-import { PayloadDataFromContent } from "./PayloadDataFromContent";
-import { MsgFlag } from "../Enums/1xxx-MessageFlag";
-import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
+﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
 import { IContentState } from "../Interfaces/IContentState/IContentState";
-import { scWindowType } from "../Enums/scWindowType";
+import { IMsgFromX } from "../Interfaces/IMsgPayload";
+import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
+import { PayloadDataFromContent } from "./PayloadDataFromContent";
 
 export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
   Data: PayloadDataFromContent;
   ContentState: IContentState;
   response: string;
-  
 
   constructor(msgFlag: MsgFlag) {
     super(msgFlag);

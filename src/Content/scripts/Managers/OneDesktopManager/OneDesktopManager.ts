@@ -19,16 +19,6 @@ export class OneDesktopManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncEnd(OneDesktopManager.name);
   }
 
-  //GetNewIframeData(index: number, docElem: Document, iframe: HTMLIFrameElement) {
-  //  var toReturn: IDataOneIframe = {
-  //    Index: index,
-  //    DocElem: docElem,
-  //    IframeElem: iframe,
-  //    Id: this.Xyyz.GuidMan.ParseGuid(iframe.getAttribute('id'))
-  //  }
-  //  return toReturn;
-  //}
-
   async RestoreDesktopState(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.RestoreDesktopState.name);;

@@ -1,6 +1,4 @@
-﻿
-export interface IError {
+﻿export interface IError {
   ContainerFunc: string;
   ErrorString: string
-
 }

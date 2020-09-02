@@ -1,1 +1,0 @@
-document.querySelector("#UserName").setAttribute('value',"admin");document.querySelector("#Password").setAttribute('value',"b");document.querySelector("#LogInBtn").click();

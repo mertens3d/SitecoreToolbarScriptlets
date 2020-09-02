@@ -8,9 +8,6 @@
       SelectHeaderFavorite: string;
       SelectHeaderFavoriteTitle: string;
       TabId: string,
-
-      Btn: {
-      }
     },
   }
 

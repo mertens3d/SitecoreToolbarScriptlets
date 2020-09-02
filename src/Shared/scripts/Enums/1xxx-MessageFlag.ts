@@ -5,13 +5,12 @@
   Ping = 1003,
   RemoveFromStorage = 1004,
 
-
   // 100 - requests
   ReqAddCETab = 1100,
   ReqAdminB = 1101,
   ReqGoDesktop = 1102,
   ReqLoginWithAdminB = 1103,
-  ReqMarkFavorite= 1104,
+  ReqMarkFavorite = 1104,
   ReqOpenCE = 1105,
   ReqQuickPublish = 1106,
   ReqRestoreClick = 1107,
@@ -20,8 +19,6 @@
   ReqTakeSnapShot = 1110,
   ReqToggleCompactCss = 1111,
   ReqUpdateNickName = 1112,
-
-
 
   // 200 - response
   RespCurState = 1200,

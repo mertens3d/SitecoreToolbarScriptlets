@@ -1,5 +1,4 @@
 import { IContentConst } from './IContentConst';
-import { scMode } from '../Enums/scMode';
 
 /* publish
  *

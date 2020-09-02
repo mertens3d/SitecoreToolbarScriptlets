@@ -12,7 +12,6 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
   Init(): void {
   }
   RefreshUi(): void {
-   
   }
   PopulateFeedackBrowserState(urlParts: GenericUrlParts) {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.FeedbackBrowserState);
@@ -24,19 +23,12 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
 
     allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + urlParts.OriginalRaw;
 
-    //allStateText += this.indentedLineBreak + 'Url Full (parts): ' + this.AllAgents.HelperAgent.UrlHelp.BuildFullUrlFromParts(urlParts).AbsUrl;
-
     allStateText += this.indentedLineBreak + 'Protocol: ' + urlParts.Protocol;
 
     allStateText += this.indentedLineBreak + 'Host & Port: ' + urlParts.HostAndPort;
 
     allStateText += this.indentedLineBreak + 'File Path: ' + urlParts.FilePath;
-    //if (urlParts.FilePaths) {
-    //  for (var idx = 0; idx < urlParts.FilePaths.length; idx++) {
-    //    allTaText += this.lineBreak + '&nbsp;&nbsp;&nbsp;';
-    //    allTaText += urlParts.FilePaths[idx];
-    //  }
-    //}
+
     targetCurrStateDiv.innerHTML = allStateText;
   }
 }

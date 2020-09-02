@@ -4,7 +4,6 @@ import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
 import { IDataOneIframe } from "../IDataOneIframe";
 import { IError } from "../IError";
 
-
 export interface ILoggerAgent {
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   AddWriter(arg0: LoggerConsoleWriter);
@@ -23,7 +22,7 @@ export interface ILoggerAgent {
   FuncStart(textOrFunc: string, optionalValue?: number): void;
   FuncStart(textOrFunc: string, optionalValue?: string): void;
   HndlrClearDebugText(self: ILoggerAgent): void
-  HndlrClearDebugText(self: ILoggerAgent, verify: boolean ): void
+  HndlrClearDebugText(self: ILoggerAgent, verify: boolean): void
   Init(valueToUse: boolean);
   InstantiateEnd(text: string): void;
   InstantiateStart(text: string): void;
