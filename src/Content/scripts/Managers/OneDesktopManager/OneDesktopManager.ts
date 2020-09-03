@@ -57,13 +57,22 @@ export class OneDesktopManager extends ContentManagerBase {
       this.AllAgents.Logger.FuncEnd(this.RestoreDataToOneIframeWorker.name);
     });
   }
+ private  CreateNewDtDataShell(): IDataDesktopState {
+    var toReturn: IDataDesktopState = {
+      AllCeData: [],
+      livingIframeAr: [],
+      ActiveCeMan: null,
+      ActiveCeState: null
+    }
 
+    return toReturn;
+  }
   GetStateDesktop(): Promise<IDataDesktopState> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.GetStateDesktop.name);
       this.AllAgents.Logger.LogAsJsonPretty(this.GetStateDesktop.name, this.associatedDoc);
 
-      var toReturnAllCeState: IDataDesktopState = this.AllAgents.HelperAgent.FactoryHelp.CreateNewDtDataShell();
+      var toReturnAllCeState: IDataDesktopState = this.CreateNewDtDataShell();
 
       await this.AllAgents.HelperAgent.PromisesBasic.GetAllLiveIframeData(this.associatedDoc)
         .then((result) => toReturnAllCeState.livingIframeAr = result)

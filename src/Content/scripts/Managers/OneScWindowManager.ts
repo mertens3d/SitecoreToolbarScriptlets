@@ -12,6 +12,8 @@ import { ContentHub } from './ContentHub/ContentHub';
 import { OneCEAgent } from './OneCEAgent/OneCEAgent';
 import { OneDesktopManager } from './OneDesktopManager/OneDesktopManager';
 import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
+import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
+import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 
 export class OneScWindowManager extends ContentManagerBase {
   OneDesktopMan: OneDesktopManager = null;
@@ -33,14 +35,34 @@ export class OneScWindowManager extends ContentManagerBase {
       this.OneCEAgent = new OneCEAgent(this.ScUiMan().TopLevelDoc(), this.AllAgents.Logger, this.AllAgents.HelperAgent);
     }
   }
+ private CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
+   this.AllAgents. Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
+    var dateToUse: Date = new Date();
+    var newGuid: GuidData = Guid.NewRandomGuid();
 
+    var activeWindowSnapShot: IDataOneWindowStorage = {
+      TimeStamp: dateToUse,
+      TimeStampFriendly: this.AllAgents. HelperAgent.UtilityHelp.MakeFriendlyDate(dateToUse),
+      WindowType: windowType,
+      WindowFriendly: windowType[windowType],
+      AllCEAr: [],
+      GuidId: newGuid,
+      NickName: '',
+      RawData: null,
+      Flavor: flavor,
+    };
+
+   this.AllAgents.Logger.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
+
+    return activeWindowSnapShot;
+  }
   SaveWindowState(snapShotSettings: IDataPayloadSnapShot): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.SaveWindowState.name);
 
       let promiseResult: PromiseResult = new PromiseResult(this.SaveWindowState.name, this.AllAgents.Logger);
 
-      var snapShot: IDataOneWindowStorage = this.AllAgents.HelperAgent.FactoryHelp.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
+      var snapShot: IDataOneWindowStorage = this.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
 
       if (snapShotSettings) {
         if (snapShotSettings.SnapShotNewNickname) {

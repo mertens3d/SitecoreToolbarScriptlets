@@ -1,5 +1,4 @@
-﻿import { HelperAgent } from "../../../Shared/scripts/Helpers/Helpers";
-import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
+﻿import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
 import { PopConst } from "../Classes/PopConst";
 import { EventManager } from "./EventManager";
 import { MessageManager } from "./MessageManager";
@@ -8,30 +7,29 @@ import { PopUpMessagesBroker } from "./PopUpMessagesBroker/PopUpMessagesBroker";
 import { TabManager } from "./TabManager";
 import { FeedbackModuleMessages } from "./UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 import { UiManager } from "./UiManager/UiManager";
+import { Handlers } from "./Handlers";
 
 export class PopUpHub {
   BrowserMan: BrowserManager;
   EventMan: EventManager;
-  Helpers: HelperAgent;
   _allAgents: IAllAgents;
   TabMan: TabManager;
   UiMan: UiManager;
   MessageMan: MessageManager;
 
-  constructor(allAgents: IAllAgents) {
+  constructor(allAgents: IAllAgents, tabman: TabManager, uiMan: UiManager, handlers: Handlers, eventMan: EventManager) {
     allAgents.Logger.InstantiateStart(PopUpHub.name);
     this._allAgents = allAgents;
 
-    this.TabMan = new TabManager(this, this._allAgents);
-    this.Helpers = new HelperAgent(allAgents.Logger);
-    this.UiMan = new UiManager(this, this._allAgents); //after tabman, after uiMan, after HelperAgent
-    this.EventMan = new EventManager(this, this._allAgents, this._allAgents.Logger, this._allAgents.SettingsAgent, this.UiMan); // after uiman
+    this.UiMan = uiMan;
+
+    this.EventMan = eventMan;
 
     let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this._allAgents.Logger);
     let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this._allAgents.Logger, FeedbackModuleMsg);
 
     //after popUpMessageBroker
-    this.MessageMan = new MessageManager(this, this._allAgents, PopUpMessageBroker);
+    this.MessageMan = new MessageManager(PopUpMessageBroker, this.EventMan, allAgents.Logger);
 
     this.BrowserMan = new BrowserManager(this, this._allAgents);
 

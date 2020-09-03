@@ -8,10 +8,11 @@ import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandB
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { AllCommands } from '../Classes/AllCommands';
-import { HandlersExternal } from "../Classes/HandlersExternal";
 import { HandlersInternal } from "../Classes/HandlersInternal";
 import { Handlers } from './Handlers';
+import { MessageManager } from './MessageManager';
 import { PopUpHub } from './PopUpHub';
+import { TabManager } from './TabManager';
 import { UiManager } from './UiManager/UiManager';
 
 export class EventManager { //extends PopUpManagerBase
@@ -19,25 +20,24 @@ export class EventManager { //extends PopUpManagerBase
 
   AllMenuCommands: IOneCommand[];
   private Logger: ILoggerAgent;
-  private PopHub: PopUpHub;
   private SettingsAgent: ISettingsAgent;
   private UiMan: UiManager;
 
-  constructor(popHub: PopUpHub, allAgents: IAllAgents, logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager) {
+  constructor( allAgents: IAllAgents, logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers) {
     //super(popHub, allAgents);
     this.Logger = logger;
-    this.PopHub = popHub;
     this.SettingsAgent = settingsAgent;
     this.UiMan = uiMan;
-    this.Handlers = new Handlers();
-    this.Handlers.External = new HandlersExternal(popHub, logger);
-    this.Handlers.Internal = new HandlersInternal(popHub, allAgents);
+    this.Handlers = handlers;
+   
+
+    this.Handlers.Internal = new HandlersInternal( allAgents);
   }
 
   InitEventManager() {
     this.Logger.FuncStart(this.InitEventManager.name);
 
-    this.AllMenuCommands = AllCommands.BuildAllCommands(this.PopHub, this.Handlers);
+    this.AllMenuCommands = AllCommands.BuildAllCommands(this.Handlers);
 
     this.__wireAllMenuButtons();
     this.WireAllGenericSettings();
@@ -139,8 +139,7 @@ export class EventManager { //extends PopUpManagerBase
       Self: self,
       Command: oneCommand,
       Event: oneCommand.EventData,
-      Evt: null,
-      PopUpHub: self.PopHub
+      Evt: null
     }
 
     return data;

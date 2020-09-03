@@ -1,28 +1,32 @@
 ﻿import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgFromPopUp';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
-import { PopUpHub } from './PopUpHub';
-import { PopUpManagerBase } from './PopUpManagerBase';
+import { EventManager } from './EventManager';
 import { PopUpMessagesBroker } from './PopUpMessagesBroker/PopUpMessagesBroker';
-export class MessageManager extends PopUpManagerBase {
-  private MessageBroker: PopUpMessagesBroker;
-  constructor(popHub: PopUpHub, allAgents: IAllAgents, PopUpMessagesBroker: PopUpMessagesBroker) {
-    super(popHub, allAgents);
 
+export class MessageManager { //extends PopUpManagerBase
+  private MessageBroker: PopUpMessagesBroker;
+  private EventMan: EventManager;
+  private Logger: ILoggerAgent;
+
+  constructor(PopUpMessagesBroker: PopUpMessagesBroker, EventMan: EventManager, logger: ILoggerAgent) {
+    //super(popHub, allAgents);
+    this.Logger = logger;
     this.MessageBroker = PopUpMessagesBroker;
+    this.EventMan = EventMan;
   }
 
   InitMessageManager() {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.InitMessageManager.name);
+      this.Logger.FuncStart(this.InitMessageManager.name);
 
       this.MessageBroker.InitMessageBroker();
 
-      await this.PopHub.EventMan.TriggerPingEvent()
+      await this.EventMan.TriggerPingEvent()
         .then(() => resolve())
         .catch((err) => reject(err));
 
-      this.AllAgents.Logger.FuncEnd(this.InitMessageManager.name);
+      this.Logger.FuncEnd(this.InitMessageManager.name);
     });
   }
 

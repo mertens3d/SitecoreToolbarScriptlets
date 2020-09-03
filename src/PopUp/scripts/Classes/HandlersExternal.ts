@@ -7,14 +7,26 @@ import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/IC
 import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { PopUpHub } from "../Managers/PopUpHub";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { MessageManager } from "../Managers/MessageManager";
+import { UiManager } from "../Managers/UiManager/UiManager";
+import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { TabManager } from "../Managers/TabManager";
 
 export class HandlersExternal {
   private Logger: ILoggerAgent; //extends CommonEvents
-  PopHub: PopUpHub;
+  //PopHub: PopUpHub;
+  private MessageManager: MessageManager;
+  private UiMan: UiManager;
+  private SettingsAgent: ISettingsAgent;
+  private TabMan: TabManager;
 
-  constructor(hub: PopUpHub, logger: ILoggerAgent) {
+  constructor(logger: ILoggerAgent, msgManager: MessageManager, uiMan: UiManager, settingsAgent: ISettingsAgent, tabMan: TabManager) {
     this.Logger = logger;
-    this.PopHub = hub;
+    //this.PopHub = hub;
+    this.MessageManager = msgManager;
+    this.UiMan = uiMan;
+    this.SettingsAgent = settingsAgent;
+    this.TabMan = tabMan;
     //this.AllAgents = allAgents;
   }
 
@@ -24,7 +36,7 @@ export class HandlersExternal {
 
   private BuildNewMsgFromPopUp(msgFlag: MsgFlag): MsgFromPopUp {
     this.Logger.FuncStart(this.BuildNewMsgFromPopUp.name);
-    var msg = new MsgFromPopUp(msgFlag, this.PopHub.TabMan.GetWindowType(), this.PopHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId(), this.PopHub._allAgents.SettingsAgent.GetOnlyContentPrefs());
+    var msg = new MsgFromPopUp(msgFlag, this.TabMan.GetWindowType(), this.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId(), this.SettingsAgent.GetOnlyContentPrefs());
     this.Logger.FuncEnd(this.BuildNewMsgFromPopUp.name);
     return msg;
   }
@@ -33,13 +45,13 @@ export class HandlersExternal {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendContentCommand.name);
       this.__cleardebugText();
-      this.PopHub.UiMan.ClearCancelFlag();
+      this.UiMan.ClearCancelFlag();
 
-      await this.PopHub.MessageMan.SendMessageToContent(msgPlayload)
+      await this.MessageManager.SendMessageToContent(msgPlayload)
         .then((contentState: IContentState) => {
           this.Logger.LogAsJsonPretty('contentState ' + this.SendContentCommand.name, contentState);
-          this.PopHub.UiMan.SetContentState(contentState)
-          this.PopHub.UiMan.RefreshUi();
+          this.UiMan.SetContentState(contentState)
+          this.UiMan.RefreshUi();
           resolve();
         })
         .catch((err) => reject(err));
@@ -109,7 +121,6 @@ export class HandlersExternal {
     });
   }
 
-
   async HndlrSnapShotRestoreSameTab(data: ICommandHndlrDataForPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
       data.PopUpHub._allAgents.Logger.FuncStart(data.Self.Handlers.External.HndlrSnapShotRestoreSameTab.name);
@@ -151,8 +162,6 @@ export class HandlersExternal {
         .catch((err) => reject(err));
     })
   }
-
-
 
   __hndlrCancelOperation(data: ICommandHndlrDataForPopUp) {
     data.PopUpHub.UiMan.SetCancelFlag();

@@ -1,18 +1,27 @@
 ﻿import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { PopUpHub } from "../Managers/PopUpHub";
-import { CommonEvents } from "./CommonEvents";
 import { scMode } from "../../../Shared/scripts/Enums/scMode";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
+import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 
-export class HandlersInternal extends CommonEvents {
+export class HandlersInternal  {
+ private AllAgents: IAllAgents;
+
+  constructor( allAgents: IAllAgents) {
+    this.AllAgents = allAgents;
+  }
+
   __cleardebugTextWithConfirm(evt: any, popHub: PopUpHub) {
     this.AllAgents.Logger.HndlrClearDebugText(this.AllAgents.Logger, true);
   }
+
   GenericSettingChanged() {
   }
+
   CloseWindow(evt: any, popHub: PopUpHub) {
     window.close();
   }
+
   async GoCeInternal(evt: any, popHub: PopUpHub) {
     popHub.TabMan.ChangeLocationSwitchBoard(scWindowType.ContentEditor);
     //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqOpenCE, this.PopHub));

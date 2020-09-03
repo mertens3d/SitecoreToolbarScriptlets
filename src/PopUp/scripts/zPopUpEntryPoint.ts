@@ -12,6 +12,10 @@ import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAg
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { PopConst } from "./Classes/PopConst";
 import { OneGenericSetting } from "../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting";
+import { TabManager } from "./Managers/TabManager";
+import { UiManager } from "./Managers/UiManager/UiManager";
+import { EventManager } from "./Managers/EventManager";
+import { Handlers } from "./Managers/Handlers";
 
 class PopUpEntry {
   RepoAgent: RepoAgent;
@@ -81,7 +85,13 @@ class PopUpEntry {
     allAgents.SettingsAgent = this.SettingsAgent;
     allAgents.HelperAgent = this.HelperAgent;
     allAgents.Logger = this.Logger;
-    popUpHub = new PopUpHub(allAgents);
+
+    let uiMan = new UiManager(this, this._allAgents); //after tabman, after uiMan, after HelperAgent
+    let tabMan = new TabManager(this.Logger, this.HelperAgent, uiMan, this.BrowserMan);
+    let handlers = new Handlers(logger, messageMan, uiMan, this.SettingsAgent, tabman);
+    let eventMan = new EventManager(this, this._allAgents, this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
+
+    popUpHub = new PopUpHub(allAgents, tabMan, uiMan, handlers, eventMan);
 
     await popUpHub.InitPopUpHub()
       .then(() => { })

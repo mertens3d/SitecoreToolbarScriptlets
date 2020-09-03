@@ -1,13 +1,13 @@
 ﻿import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
+import { scMode } from '../../../Shared/scripts/Enums/scMode';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { Handlers } from '../Managers/Handlers';
-import { PopUpHub } from '../Managers/PopUpHub';
 import { PopConst } from './PopConst';
-import { scMode } from '../../../Shared/scripts/Enums/scMode';
+
 export class AllCommands {
-  static BuildAllCommands(popHub: PopUpHub, handlers: Handlers) {
+  static BuildAllCommands( handlers: Handlers) {
     let toReturn: IOneCommand[] = [
       {
         Command: MenuCommand.CloseWindow,
@@ -26,7 +26,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.Desktop],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.AddCETab,
+          Handler: handlers.External.AddCETab,
           ParameterData: [],
         }
       },
@@ -36,7 +36,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.Internal.SetScModeInternal,
+          Handler: handlers.Internal.SetScModeInternal,
           ParameterData: [scMode.Edit],
         }
       },
@@ -46,7 +46,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.Internal.SetScModeInternal,
+          Handler: handlers.Internal.SetScModeInternal,
           ParameterData: [scMode.Normal],
         }
       },
@@ -56,7 +56,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.ActiveCeNode, VisibilityType.Edit],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.Internal.SetScModeInternal,
+          Handler: handlers.Internal.SetScModeInternal,
           ParameterData: [scMode.Preview],
         }
       },
@@ -66,7 +66,7 @@ export class AllCommands {
       //  RequiredPageTypes: [scWindowType.ContentEditor, scWindowType.Desktop, scWindowType.Edit, scWindowType.Preview, scWindowType.Normal],
       //  Events: {
       //    Event: CommandButtonEvents.OnClick,
-      //    Handler: popHub.EventMan.Handlers.External.__hndlrSetScMode,
+      //    Handler: handlers.External.__hndlrSetScMode,
       //    ParameterData: [PopConst.Const.ScMode.preview],
       //  }
       //},
@@ -79,7 +79,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotUpdateNickName,
+          Handler: handlers.External.HndlrSnapShotUpdateNickName,
           ParameterData: [],
         }
       },
@@ -89,7 +89,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.HndlrPresentationDetails,
+          Handler: handlers.External.HndlrPresentationDetails,
           ParameterData: [],
         }
       },
@@ -99,7 +99,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.HndlrCompactCE,
+          Handler: handlers.External.HndlrCompactCE,
           ParameterData: [],
         }
       },
@@ -109,7 +109,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.LoginPage],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.PutAdminB,
+          Handler: handlers.External.PutAdminB,
           ParameterData: [],
         }
       },
@@ -120,7 +120,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.NotLogin],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.Internal.GoCeInternal,
+          Handler: handlers.Internal.GoCeInternal,
           ParameterData: [],
         }
       },
@@ -131,7 +131,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.QuickPublish,
+          Handler: handlers.External.QuickPublish,
           ParameterData: [],
         }
       },
@@ -141,7 +141,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.NotLogin],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.Internal.GoDesktopInternal,
+          Handler: handlers.Internal.GoDesktopInternal,
           ParameterData: [],
         }
       },
@@ -151,7 +151,7 @@ export class AllCommands {
         VisibilityControllers: [],
         EventData: {
           Event: null,
-          Handler: popHub.EventMan.Handlers.External.HndlrPing,
+          Handler: handlers.External.HndlrPing,
           ParameterData: [],
         }
       },
@@ -162,7 +162,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.SnapShotable],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotCreate,
+          Handler: handlers.External.HndlrSnapShotCreate,
           ParameterData: [],
         }
       },
@@ -172,7 +172,7 @@ export class AllCommands {
         ButtonSelector: PopConst.Const.Selector.HS.ToggleFavorite,
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
-          Handler: popHub.EventMan.Handlers.External.ToggleFavorite,
+          Handler: handlers.External.ToggleFavorite,
           Event: CommandButtonEvents.OnSingleClick,
           ParameterData: [],
         }
@@ -183,7 +183,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.CommandIsRunning],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.__hndlrCancelOperation,
+          Handler: handlers.External.__hndlrCancelOperation,
           ParameterData: [],
         }
       },
@@ -193,7 +193,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotRemove,
+          Handler: handlers.External.HndlrSnapShotRemove,
           ParameterData: [],
         }
       },
@@ -203,7 +203,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
           Event: CommandButtonEvents.OnDoubleClick,
-          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotRestoreTBDTab,
+          Handler: handlers.External.HndlrSnapShotRestoreTBDTab,
           ParameterData: [],
         }
       },
@@ -213,7 +213,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotRestoreSameTab,
+          Handler: handlers.External.HndlrSnapShotRestoreSameTab,
           ParameterData: [],
         }
       },
@@ -223,7 +223,7 @@ export class AllCommands {
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
-          Handler: popHub.EventMan.Handlers.External.HndlrSnapShotRestoreNewTab,
+          Handler: handlers.External.HndlrSnapShotRestoreNewTab,
           ParameterData: [],
         }
       },
