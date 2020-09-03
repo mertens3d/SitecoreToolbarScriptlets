@@ -28,6 +28,7 @@ export class OneDesktopManager extends ContentManagerBase {
           var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.ContentHub, this.AllAgents);
 
           await desktopPromiser.RunOneChain(targetDoc, dataToRestore.AllCEAr[idx])
+            
             .catch((err) => reject(err));
         }
 
@@ -40,15 +41,13 @@ export class OneDesktopManager extends ContentManagerBase {
     });
   }
 
-  async RestoreDataToOneIframeWorker(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: OneCEAgent) {
-    return new Promise<boolean>(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.RestoreDataToOneIframeWorker.name, 'data not null: ' + (oneTreeState != null) + ' newFrame not null: ' + (targetCeAgent !== null));
-
-      this.AllAgents.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
+  async RestoreDataToOneIframeWorker(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: OneCEAgent): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.AllAgents.Logger.FuncStart(this.RestoreDataToOneIframeWorker.name);
 
       if (oneTreeState && targetCeAgent) {
         await targetCeAgent.RestoreCEStateAsync(oneTreeState)
-          .then(() => resolve(true))
+          .then(() => resolve())
           .catch((err) => {
             this.AllAgents.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
             this.AllAgents.Logger.ErrorAndThrow(this.RestoreDataToOneIframeWorker.name, 'bad data');

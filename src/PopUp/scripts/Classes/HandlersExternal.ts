@@ -1,34 +1,66 @@
 ﻿import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
+import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
-import { TabManager } from "../Managers/TabManager";
-import { CommonEvents } from "./CommonEvents";
-import { Guid } from "../../../Shared/scripts/Helpers/Guid";
+import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { PopUpHub } from "../Managers/PopUpHub";
+import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
 
-export class HandlersExternal extends CommonEvents {
+export class HandlersExternal {
+  private Logger: ILoggerAgent; //extends CommonEvents
+  PopHub: PopUpHub;
+
+  constructor(hub: PopUpHub, logger: ILoggerAgent) {
+    this.Logger = logger;
+    this.PopHub = hub;
+    //this.AllAgents = allAgents;
+  }
+
+  private __cleardebugText() {
+    this.Logger.HndlrClearDebugText(this.Logger);
+  }
+
   private BuildNewMsgFromPopUp(msgFlag: MsgFlag): MsgFromPopUp {
-    this.AllAgents.Logger.FuncStart(this.BuildNewMsgFromPopUp.name);
+    this.Logger.FuncStart(this.BuildNewMsgFromPopUp.name);
     var msg = new MsgFromPopUp(msgFlag, this.PopHub.TabMan.GetWindowType(), this.PopHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId(), this.PopHub._allAgents.SettingsAgent.GetOnlyContentPrefs());
-    this.AllAgents.Logger.FuncEnd(this.BuildNewMsgFromPopUp.name);
+    this.Logger.FuncEnd(this.BuildNewMsgFromPopUp.name);
     return msg;
   }
 
+  private SendContentCommand(msgPlayload: MsgFromPopUp) {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.SendContentCommand.name);
+      this.__cleardebugText();
+      this.PopHub.UiMan.ClearCancelFlag();
+
+      await this.PopHub.MessageMan.SendMessageToContent(msgPlayload)
+        .then((contentState: IContentState) => {
+          this.Logger.LogAsJsonPretty('contentState ' + this.SendContentCommand.name, contentState);
+          this.PopHub.UiMan.SetContentState(contentState)
+          this.PopHub.UiMan.RefreshUi();
+          resolve();
+        })
+        .catch((err) => reject(err));
+
+      this.Logger.FuncEnd(this.SendContentCommand.name);
+    });
+  }
   async AddCETab(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAddCETab);
+      let msg: MsgFromPopUp = this.BuildNewMsgFromPopUp(MsgFlag.ReqAddCETab);
 
-      await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
+      await this.SendContentCommand(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
   }
   async PutAdminB(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAdminB);
+      let msg: MsgFromPopUp = this.BuildNewMsgFromPopUp(MsgFlag.ReqAdminB);
 
-      await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
+      await this.SendContentCommand(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -36,9 +68,9 @@ export class HandlersExternal extends CommonEvents {
 
   async QuickPublish(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqQuickPublish);
+      let msg: MsgFromPopUp = this.BuildNewMsgFromPopUp(MsgFlag.ReqQuickPublish);
 
-      await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
+      await this.SendContentCommand(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -46,9 +78,9 @@ export class HandlersExternal extends CommonEvents {
 
   async HndlrSnapShotCreate(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqTakeSnapShot);
+      let msg: MsgFromPopUp = this.BuildNewMsgFromPopUp(MsgFlag.ReqTakeSnapShot);
 
-      await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
+      await this.SendContentCommand(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -56,68 +88,71 @@ export class HandlersExternal extends CommonEvents {
 
   async HndlrSnapShotRestoreTBDTab(data: ICommandHndlrDataForPopUp) {
     //TBD = To Be Determined
-    data.PopUpHub._allAgents.Logger.FuncStart(data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreTBDTab.name);
+    data.PopUpHub._allAgents.Logger.FuncStart(data.Self.Handlers.External.HndlrSnapShotRestoreTBDTab.name);
 
     if (!data.Evt.ctrlKey) {
-      await data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreSameTab(data);
+      await data.Self.Handlers.External.HndlrSnapShotRestoreSameTab(data);
     } else {
-      await data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreNewTab(data);
+      await data.Self.Handlers.External.HndlrSnapShotRestoreNewTab(data);
     }
 
-    data.PopUpHub._allAgents.Logger.FuncEnd(data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreTBDTab.name);
+    data.PopUpHub._allAgents.Logger.FuncEnd(data.Self.Handlers.External.HndlrSnapShotRestoreTBDTab.name);
   }
+
+  async HndlrPing(data: ICommandHndlrDataForPopUp): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
+      let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.Ping);
+
+      await data.Self.Handlers.External.SendContentCommand(msg)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+    });
+  }
+
 
   async HndlrSnapShotRestoreSameTab(data: ICommandHndlrDataForPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      data.PopUpHub._allAgents.Logger.FuncStart(data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreSameTab.name);
+      data.PopUpHub._allAgents.Logger.FuncStart(data.Self.Handlers.External.HndlrSnapShotRestoreSameTab.name);
 
-      var msg = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqRestoreClick);
+      var msg = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqRestoreClick);
       msg.Data.IdOfSelect = data.PopUpHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId();
 
-      await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendContentCommand(msg)
         .then((resolve))
         .catch((ex) => reject(ex));
 
-      data.PopUpHub._allAgents.Logger.FuncEnd(data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreSameTab.name);
+      data.PopUpHub._allAgents.Logger.FuncEnd(data.Self.Handlers.External.HndlrSnapShotRestoreSameTab.name);
     });
   }
 
   async HndlrSnapShotRestoreNewTab(data: ICommandHndlrDataForPopUp) {
-    data.PopUpHub._allAgents.Logger.FuncStart(data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreNewTab.name);
+    data.PopUpHub._allAgents.Logger.FuncStart(data.Self.Handlers.External.HndlrSnapShotRestoreNewTab.name);
 
     data.PopUpHub.TabMan.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.PopUpHub.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId().Raw);
 
     let newUrl: AbsoluteUrl = data.PopUpHub.TabMan.GetFullUrl();
 
-    await data.PopUpHub.EventMan.Handlers.External.CreateNewWindow(data, newUrl)
+    await data.Self.Handlers.External.CreateNewWindow(data, newUrl)
       .catch((ex) => {
-        data.PopUpHub.EventMan.Handlers.External.AllAgents.Logger.ErrorAndThrow(data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreSameTab.name, ex.toString());
+        data.Self.Handlers.External.Logger.ErrorAndThrow(data.Self.Handlers.External.HndlrSnapShotRestoreSameTab.name, ex.toString());
       });
 
-    data.PopUpHub._allAgents.Logger.FuncEnd(data.PopUpHub.EventMan.Handlers.External.HndlrSnapShotRestoreNewTab.name);
+    data.PopUpHub._allAgents.Logger.FuncEnd(this.HndlrSnapShotRestoreNewTab.name);
   }
 
   async HndlrSnapShotUpdateNickName(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqUpdateNickName);
+      let msg: MsgFromPopUp = this.BuildNewMsgFromPopUp(MsgFlag.ReqUpdateNickName);
 
       msg.Data.SnapShotSettings.SnapShotNewNickname = data.PopUpHub.UiMan.GetValueInNickname();
 
-      await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
+      await this.SendContentCommand(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     })
   }
 
-  async Ping(data: ICommandHndlrDataForPopUp): Promise<void> {
-    return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.Ping);
 
-      await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
-        .then(() => resolve())
-        .catch((err) => reject(err));
-    });
-  }
 
   __hndlrCancelOperation(data: ICommandHndlrDataForPopUp) {
     data.PopUpHub.UiMan.SetCancelFlag();
@@ -125,8 +160,8 @@ export class HandlersExternal extends CommonEvents {
 
   ToggleFavorite(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      var msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqMarkFavorite);
-      await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
+      var msg: MsgFromPopUp = this.BuildNewMsgFromPopUp(MsgFlag.ReqMarkFavorite);
+      await this.SendContentCommand(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -136,7 +171,7 @@ export class HandlersExternal extends CommonEvents {
   //  return new Promise(async (resolve, reject) => {
   //    var result: boolean = confirm('Remove ?: ' + this.TimeNicknameFavStrForConfirmation(storageMatch));
   //    if (result === true) {
-  //      this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
+  //      this.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
 
   //      let targetId = storageMatch.Id;
 
@@ -158,11 +193,11 @@ export class HandlersExternal extends CommonEvents {
 
   HndlrSnapShotRemove(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.RemoveFromStorage);
+      let msg: MsgFromPopUp = this.BuildNewMsgFromPopUp(MsgFlag.RemoveFromStorage);
 
-      var result: boolean = confirm('Remove ?: ' + Guid.AsShort( msg.Data.IdOfSelect));
+      var result: boolean = confirm('Remove ?: ' + Guid.AsShort(msg.Data.IdOfSelect));
       if (result === true) {
-        await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
+        await this.SendContentCommand(msg)
           .then(() => resolve())
           .catch((err) => reject(err));
       } else {
@@ -173,10 +208,10 @@ export class HandlersExternal extends CommonEvents {
 
   HndlrCompactCE(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.PopUpHub.EventMan.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqToggleCompactCss);
+      let msg: MsgFromPopUp = this.BuildNewMsgFromPopUp(MsgFlag.ReqToggleCompactCss);
 
       msg.Data.SnapShotSettings.SnapShotNewNickname = data.PopUpHub.UiMan.GetValueInNickname();
-      await data.PopUpHub.EventMan.Handlers.External.SendContentCommand(msg)
+      await this.SendContentCommand(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     })
@@ -184,18 +219,17 @@ export class HandlersExternal extends CommonEvents {
 
   CreateNewWindow(data: ICommandHndlrDataForPopUp, tabUrl: AbsoluteUrl): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
-      data.PopUpHub.EventMan.Handlers.External.AllAgents.Logger.FuncStart(data.PopUpHub.EventMan.Handlers.External.CreateNewWindow.name);
+      this.Logger.FuncStart(this.CreateNewWindow.name);
 
       await data.PopUpHub.BrowserMan.CreateNewTab(tabUrl)
         .then(() => resolve())
         .catch((err) => reject(err));
 
-      data.PopUpHub.EventMan.Handlers.External.AllAgents.Logger.FuncEnd(data.PopUpHub.EventMan.Handlers.External.CreateNewWindow.name);
+      this.Logger.FuncEnd(this.CreateNewWindow.name);
     });
   }
 
   HndlrPresentationDetails(data: ICommandHndlrDataForPopUp) {
-    data.PopUpHub.EventMan.Handlers.External.AllAgents.Logger.ErrorAndThrow(data.PopUpHub.EventMan.Handlers.External.HndlrPresentationDetails.name, 'to do');
+    this.Logger.ErrorAndThrow(this.HndlrPresentationDetails.name, 'to do');
   }
 }

@@ -20,7 +20,7 @@ export class PopUpMessagesBroker {
   InitMessageBroker() {
   }
 
-  private ReceiveResponseHndlr(response: any): Promise<IContentState> {
+  ReceiveResponseHndlr(response: any): Promise<IContentState> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.ReceiveResponseHndlr.name);
 

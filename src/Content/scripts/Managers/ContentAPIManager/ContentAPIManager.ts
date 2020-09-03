@@ -38,7 +38,7 @@ export class ContentAPIManager extends ContentManagerBase {
 
   Notify(payloadData: PayloadDataFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.ToastAgent.Notify(this.ScUiMan().TopLevelDoc(), payloadData.ScreenMessage);
+      this.AllAgents.ToastAgent.PopUpToastNotification(this.ScUiMan().TopLevelDoc(), payloadData.ScreenMessage);
     });
   }
 
@@ -46,7 +46,7 @@ export class ContentAPIManager extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       await commandData.ContentHub.AtticMan.AllAgents.HelperAgent.PromisesRecipes.FromDesktopOpenNewCEIframe(commandData.TopLevelDoc)
         .then(() => {
-          commandData.ContentHub.AtticMan.AllAgents.ToastAgent.Notify(commandData.TopLevelDoc, "Success");
+          commandData.ContentHub.AtticMan.AllAgents.ToastAgent.PopUpToastNotification(commandData.TopLevelDoc, "Success");
           resolve();
         })
 

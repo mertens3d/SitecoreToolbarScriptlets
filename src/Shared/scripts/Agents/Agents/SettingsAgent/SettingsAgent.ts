@@ -25,12 +25,10 @@ export class SettingsAgent implements ISettingsAgent {
 
   InitSettingsAgent(allDefaultSettings: IGenericSetting[]): void {
     this.Logger.FuncStart(this.InitSettingsAgent.name, allDefaultSettings.length);
-    this.SettingsAr = <OneGenericSetting[]> allDefaultSettings;
+    this.SettingsAr = <OneGenericSetting[]>allDefaultSettings;
 
     let settingsFromStorage: IOneGenericSettingForStorage[] = this.ReadGenericSettingsFromStorage();
     this.UpdateSettingValuesFromStorage(settingsFromStorage)
-
-
 
     this.Logger.FuncEnd(this.InitSettingsAgent.name);
   }
@@ -78,25 +76,6 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);
   }
 
-  //  async HarvestGenericSettingsFromStorage(foundSettings: IOneGenericSettingForStorage[]): Promise<void> {
-  //    return new Promise(async (resolve, reject) => {
-  //      //take in a setting
-  //      // if get, spit back it's value
-  //      // if set, update the cache and write to storage
-
-  //      this.Logger.FuncStart(this.HarvestGenericSettingsFromStorage.name);
-
-  //      if (foundSettings) {
-  //        await          this.UpdateSettingValuesFromStorage(foundSettings);
-  //      } else {
-  //        this.Logger.Log('No settings found');
-  //      }
-  //    })
-
-  //    this.Logger.FuncEnd(this.HarvestGenericSettingsFromStorage.name);
-  //  });
-  //}
-
   ValueAsInteger(setting: IGenericSetting): number {
     let toReturn: number = 0;
     if (setting) {
@@ -121,7 +100,6 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   SettingChanged(SettingKey: SettingKey, valueAsObj: any): void {
-    //this.SetByKey(SettingKey, target.)
     this.Logger.Log(StaticHelpers.SettingKeyAsString(SettingKey));
     this.Logger.LogVal('valueAsObj', valueAsObj.toString());
     this.SetByKey(SettingKey, valueAsObj);
@@ -147,18 +125,6 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncEnd(this.GetByKey.name, toReturn.ValueAsObj);
     return toReturn;
   }
-
-  //GetByKey(settingKey: SettingKey): IOneGenericSetting {
-  //  this.Logger.Log(StaticHelpers.SettingKeyAsString(settingKey));
-
-  //  let foundSetting = this.AllAgents.SettingsAgent.GetByKey(settingKey);
-  //  if (foundSetting) {
-  //    console.log(foundSetting.Friendly);
-  //  } else {
-  //    this.Logger.Error(this.GetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
-  //  }
-  //  return foundSetting;
-  //}
 
   SetByKey(settingKey: SettingKey, value: any): void {
     this.Logger.FuncStart(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));

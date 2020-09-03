@@ -16,10 +16,10 @@ export class MessageManager extends PopUpManagerBase {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.InitMessageManager.name);
 
-      this.MessageBroker.InitMessageBroker()
+      this.MessageBroker.InitMessageBroker();
 
       await this.PopHub.EventMan.TriggerPingEvent()
-              .then(() => resolve())
+        .then(() => resolve())
         .catch((err) => reject(err));
 
       this.AllAgents.Logger.FuncEnd(this.InitMessageManager.name);

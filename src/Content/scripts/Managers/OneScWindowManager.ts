@@ -124,10 +124,17 @@ export class OneScWindowManager extends ContentManagerBase {
         if (dataToRestore.WindowType === scWindowType.ContentEditor || dataToRestore.WindowType === scWindowType.Desktop) {
           if (dataToRestore.WindowType === scWindowType.ContentEditor) {
             await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0])
-              .then(() => this.AllAgents.ToastAgent.Notify(targetDoc, 'Restore Completed'));
+              .then(() => this.AllAgents.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
+              .then(() => resolve())
+              .catch((err) => reject(err));
           } else {
             await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore)
-              .then(() => this.AllAgents.ToastAgent.Notify(targetDoc, 'Restore Completed'));
+              .then(() => this.AllAgents.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
+              .then(() => {
+                this.AllAgents.Logger.LogVal('resolving', this.RestoreStateToTargetDoc.name)
+                resolve();
+              })
+              .catch((err) => reject(err));
           }
         }
         else {
@@ -135,10 +142,10 @@ export class OneScWindowManager extends ContentManagerBase {
         }
       }
       else {
-        this.AllAgents.ToastAgent.Notify(targetDoc, "No data found to restore");
+        this.AllAgents.ToastAgent.PopUpToastNotification(targetDoc, "No data found to restore");
       }
 
-      resolve();
+      reject('unknown reason');
 
       //reject(this.RestoreStateToTargetDoc.name +  " something went wrong");
       this.AllAgents.Logger.FuncEnd(this.RestoreStateToTargetDoc.name);

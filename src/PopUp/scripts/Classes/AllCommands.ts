@@ -151,7 +151,7 @@ export class AllCommands {
         VisibilityControllers: [],
         EventData: {
           Event: null,
-          Handler: popHub.EventMan.Handlers.External.Ping,
+          Handler: popHub.EventMan.Handlers.External.HndlrPing,
           ParameterData: [],
         }
       },

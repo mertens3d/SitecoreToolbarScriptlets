@@ -10,7 +10,7 @@ export class RecipeRemoveItemFromStorage extends RecipeBase implements ICommandR
     return new Promise(async (resolve, reject) => {
       await this.CommandData.ContentHub.AtticMan.RemoveOneFromStorage(this.CommandData.PayloadData.IdOfSelect)
         .then(() => {
-          this.CommandData.ContentMessageBroker.AllAgents.ToastAgent.Notify(this.CommandData.ContentHub.SitecoreUiMan.TopLevelDoc(), "Success");
+          this.CommandData.ContentMessageBroker.AllAgents.ToastAgent.PopUpToastNotification(this.CommandData.ContentHub.SitecoreUiMan.TopLevelDoc(), "Success");
           resolve();
         })
         .catch((err) => reject(err));

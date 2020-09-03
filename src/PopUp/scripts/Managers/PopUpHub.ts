@@ -22,10 +22,10 @@ export class PopUpHub {
     allAgents.Logger.InstantiateStart(PopUpHub.name);
     this._allAgents = allAgents;
 
-    this.EventMan = new EventManager(this, this._allAgents);
     this.TabMan = new TabManager(this, this._allAgents);
     this.Helpers = new HelperAgent(allAgents.Logger);
     this.UiMan = new UiManager(this, this._allAgents); //after tabman, after uiMan, after HelperAgent
+    this.EventMan = new EventManager(this, this._allAgents, this._allAgents.Logger, this._allAgents.SettingsAgent, this.UiMan); // after uiman
 
     let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this._allAgents.Logger);
     let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this._allAgents.Logger, FeedbackModuleMsg);

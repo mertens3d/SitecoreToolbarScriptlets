@@ -84,6 +84,7 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
         if (reqMsgFromPopup.IsValid) {
           await this.ReqMsgRouter(reqMsgFromPopup)
             .then((contentResponse: MsgFromContent) => {
+              this.Logger.Log('responding: ' + StaticHelpers.MsgFlagAsString( contentResponse.MsgFlag))
               resolve(contentResponse);
             })
             .catch((err) => {
@@ -113,11 +114,6 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
   async ReqMsgRouter(payload: MsgFromPopUp): Promise<MsgFromContent> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
-
-
-      //GuidData.FixStorageGuidObjects(payload);
-
-      this.AllAgents.Logger.LogAsJsonPretty('payload', payload);
 
       if (payload.Data.IdOfSelect) {
         payload.Data.IdOfSelect = new GuidData(payload.Data.IdOfSelect.Raw);
