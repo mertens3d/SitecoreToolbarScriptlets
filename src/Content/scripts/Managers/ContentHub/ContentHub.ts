@@ -82,8 +82,6 @@ export class ContentHub {
           this.AtticMan.InitContentAtticManager(this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
           this.ContentMessageMan.InitContentMessageManager();
 
-          this.AllAgents.Logger.SetEnabled(this.ContentMessageMan.IsLogEnabled());
-
           this.OneWindowMan.InitOneScWindowManager();
 
           this.InjectCss();

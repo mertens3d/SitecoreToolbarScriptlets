@@ -113,7 +113,7 @@ export class SelectSnapshotModule implements IUiModule {
     toReturn.Favorite.id = PopConst.Const.ElemId.HS.SelectHeaderFavorite;
 
     toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.FavoriteTitle.label = 'Typical Snap Shots';
+    toReturn.FavoriteTitle.label = 'Manual Snap Shots';
     toReturn.FavoriteTitle.id = PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle;
     toReturn.FavoriteTitle.classList.add('title');
 

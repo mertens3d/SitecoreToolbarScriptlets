@@ -4,7 +4,7 @@ import { MenuCommand } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/IAccordianManager';
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IallAgents";
-import { IOneGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
+import { IGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
@@ -116,8 +116,8 @@ export class UiManager extends PopUpManagerBase {
       try {
         this.FeedbackModuleMessages.UpdateMsgStatusStack('Command Completed Successfully');
 
-        let setting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.DebugKeepDialogOpen);
-        if (!this.AllAgents.SettingsAgent.ValueAsBool(setting)) {
+        let setting: IGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.DebugKeepDialogOpen);
+        if (!setting.ValueAsBool) {
           window.close();
         } else {
           this.AllAgents.Logger.Log('Window not closed because of setting: ' + setting.Friendly)

@@ -1,16 +1,16 @@
 ﻿import { SettingKey } from "../../Enums/3xxx-SettingKey";
-import { IOneGenericSetting } from "./IOneGenericSetting";
+import { IGenericSetting } from "./IGenericSetting";
 import { IOneGenericSettingForStorage } from "../../Classes/IOneGenericSettingForStorage";
 
 export interface ISettingsAgent {
+  GetAllSettings():IGenericSetting[];
+  GetByKey(AutoSaveIntervalMin: SettingKey): IGenericSetting;
+  GetOnlyContentPrefs(): IGenericSetting[];
+  InitSettingsAgent(allSettings: IGenericSetting[]): void;
+  LogAllSettings();
+  ReadGenericSettingsFromStorage(): IOneGenericSettingForStorage[];
   SetByKey(settingKey: SettingKey, value: any): any;
-  SettingsAr: IOneGenericSetting[];
+  SetContentSettings(CurrentContentPrefs: IGenericSetting[]);
   SettingChanged(SettingKey: SettingKey, checked: boolean);
-  GetOnlyContentPrefs(): IOneGenericSetting[];
-  ValueAsInteger(autoSaveSetting: IOneGenericSetting);
-  ValueAsBool(setting: IOneGenericSetting): boolean;
-  SetContentSettings(CurrentContentPrefs: IOneGenericSetting[]);
-  GetByKey(AutoSaveIntervalMin: SettingKey): IOneGenericSetting;
-  InitSettingsAgent(allSettings: IOneGenericSetting[]): Promise< void>;
-  ReadGenericSettings(): Promise<IOneGenericSettingForStorage[]>;
+  ValueAsInteger(autoSaveSetting: IGenericSetting);
 }

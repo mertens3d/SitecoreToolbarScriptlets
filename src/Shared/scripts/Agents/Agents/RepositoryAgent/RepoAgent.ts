@@ -78,27 +78,23 @@ export class RepoAgent implements IRepositoryAgent {
   //  });
   //}
 
-  async ReadDataOfKey(targetKey: string): Promise<browser.storage.StorageValue> {
-    return new Promise(async (resolve) => {
+  ReadDataOfKey(targetKey: string): browser.storage.StorageValue {
       this.Logger.FuncStart(this.ReadDataOfKey.name);
 
       let toReturn: browser.storage.StorageValue = null;
       this.Logger.LogVal('target key ', targetKey);
 
-      //var testLocalStorage = window.localStorage.getItem(targetKey)
-      //this.Logger.LogAsJsonPretty('testLocalStorage', testLocalStorage);
-      toReturn = window.localStorage.getItem(targetKey);
+      toReturn = window.localStorage.getItem(targetKey); // is synchronous
 
       if (toReturn) {
         //this.Logger.LogAsJsonPretty('toReturn', toReturn);
-
-        resolve(toReturn);
+       
       } else {
-        resolve(toReturn)
         this.Logger.Log(this.ReadDataOfKey.name, "No value returned from storage")
       }
-      this.Logger.FuncEnd(this.ReadDataOfKey.name);
-    });
+    this.Logger.FuncEnd(this.ReadDataOfKey.name);
+
+    return toReturn;
   }
 
   WriteGenericSettings(settingsToWrite: IOneGenericSettingForStorage[]): void {

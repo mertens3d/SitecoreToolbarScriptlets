@@ -5,12 +5,12 @@ import { IDataOneIframe } from "../IDataOneIframe";
 import { IError } from "../IError";
 
 export interface ILoggerAgent {
+  FlushBuffer();
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   AddWriter(arg0: LoggerConsoleWriter);
   CtorName(name: string);
   DebugDataOneIframe(NewIframe: IDataOneIframe);
   DebugGuid(Id: GuidData);
-  EnabledStatus();
   ErrorAndContinue(container: string, text: any): void
   ErrorAndThrow(container: string, text: any): void
   ErrorStack: IError[];
@@ -23,7 +23,6 @@ export interface ILoggerAgent {
   FuncStart(textOrFunc: string, optionalValue?: string): void;
   HndlrClearDebugText(self: ILoggerAgent): void
   HndlrClearDebugText(self: ILoggerAgent, verify: boolean): void
-  Init(valueToUse: boolean);
   InstantiateEnd(text: string): void;
   InstantiateStart(text: string): void;
   IsNotNullOrUndefinedBool(title: string, dataToCheck: any);
@@ -39,7 +38,6 @@ export interface ILoggerAgent {
   MarkerD();
   PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
   SectionMarker(arg0: string);
-  SetEnabled(arg0: boolean);
   ThrowIfNullOrUndefined(arg0: string, allAgents: any);
   ThrowIfNullOrUndefined(title: string, dataToCheck: any): void;
 }

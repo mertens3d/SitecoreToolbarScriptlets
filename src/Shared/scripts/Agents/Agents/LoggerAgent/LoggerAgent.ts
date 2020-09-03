@@ -2,9 +2,11 @@
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { BufferChar } from "../../../Enums/BufferChar";
 import { BufferDirection } from "../../../Enums/BufferDirection";
+import { Guid } from "../../../Helpers/Guid";
+import { GuidData } from "../../../Helpers/GuidData";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
 import { ILogWriter } from "../../../Interfaces/Agents/ILoggerWriter";
-import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
+import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { IDataDebugCallback } from "../../../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
 import { IContentState } from "../../../Interfaces/IContentState/IContentState";
@@ -13,51 +15,56 @@ import { IDataOneDoc } from "../../../Interfaces/IDataOneDoc";
 import { IDataOneIframe } from "../../../Interfaces/IDataOneIframe";
 import { IDataPayloadSnapShot } from "../../../Interfaces/IDataPayloadSnapShot";
 import { IError } from "../../../Interfaces/IError";
-import { SharedConst } from "../../../SharedConst";
-import { GuidData } from "../../../Helpers/GuidData";
-import { Guid } from "../../../Helpers/Guid";
+import { LogWriterBuffer } from "./LogWriterBuffer";
 
 export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;
-  private LogToConsoleEnabled: boolean;
-  private LogToStorageEnabled: boolean;
-  LogHasBeenInit: boolean = false;
   ErrorStack: IError[] = [];
-  LogPreInitBuffer: string[] = [];
+
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
 
   private __allLogWriters: ILogWriter[] = [];
+  private HasWriters: boolean;
+  private BufferWriter: LogWriterBuffer;
 
   constructor() {
+    this.BufferWriter = new LogWriterBuffer();
+    this.AddWriter(this.BufferWriter);
     this.__callDepth = -1;
-    console.log('default: ' + SharedConst.Const.Settings.Defaults.LogToConsole);
-    this.LogToConsoleEnabled = SharedConst.Const.Settings.Defaults.LogToConsole;
-    this.LogToStorageEnabled = SharedConst.Const.Settings.Defaults.LogToStorage;
-    this.LogHasBeenInit = false;
+    this.LogTimeStamp();
+  }
 
+  private LogTimeStamp() {
     var dateobj = new Date();
-    function pad(n) { return n < 10 ? "0" + n : n; }
-    var result = pad(dateobj.getDate()) + "/" + pad(dateobj.getMonth() + 1) + "/" + dateobj.getFullYear() + " " + pad(dateobj.getHours()) + ":" + pad(dateobj.getMinutes());
-
+    var result = this.pad(dateobj.getDate()) + "/" + this.pad(dateobj.getMonth() + 1) + "/" + dateobj.getFullYear() + " " + this.pad(dateobj.getHours()) + ":" + this.pad(dateobj.getMinutes());
     this.LogVal('TimeStamp', result);
   }
 
-  async Init(val: boolean) {
-    this.LogToConsoleEnabled = val;
-    this.LogHasBeenInit = true;
+  private pad(n) { return n < 10 ? "0" + n : n; }
 
-    if (this.LogToConsoleEnabled) {
-      var iterCheckMax = 1000;
-      this.LogVal('TimeStamp B', Date.now());
+  FlushBuffer() {
+    this.RemoveWriter(this.BufferWriter);
 
-      while (this.LogPreInitBuffer.length > 0 && iterCheckMax > 0) {
-        iterCheckMax--;
-        this.Log(this.LogPreInitBuffer.shift());
+    this.LogVal('TimeStamp B', Date.now());
+
+    let bufferAr: string[] = this.BufferWriter.GetBuffer();
+
+    for (var idx = 0; idx < bufferAr.length; idx++) {
+      this.Log(bufferAr[idx]);
+    }
+  }
+  RemoveWriter(BufferWriter: LogWriterBuffer) {
+    for (var idx = 0; idx < this.__allLogWriters.length; idx++) {
+      let candidate: ILogWriter = this.__allLogWriters[idx];
+      if (candidate == BufferWriter) {
+        this.__allLogWriters.splice(idx, 1);
+        break;
       }
     }
   }
 
   AddWriter(writter: ILogWriter) {
+    this.HasWriters = true;
     this.__allLogWriters.push(writter);
   }
 
@@ -67,14 +74,14 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log("");
   }
 
-  SetEnabled(newValue: boolean) {
-    this.LogToConsoleEnabled = newValue;
-    console.log('Logging set to: ' + newValue);
-  }
+  //SetEnabled(newValue: boolean) {
+  //  this.LogToConsoleEnabled = newValue;
+  //  console.log('Logging set to: ' + newValue);
+  //}
 
-  EnabledStatus(): boolean {
-    return this.LogToConsoleEnabled;
-  }
+  //EnabledStatus(): boolean {
+  //  return this.LogToConsoleEnabled;
+  //}
   debugPrefix: string = '\t\t';
   //DebugObjVarVal(textValName: string, textVal: number)
   //DebugObjVarVal(textValName: string, textVal: string)
@@ -82,7 +89,7 @@ export class LoggerAgent implements ILoggerAgent {
   //  const debugPrefix = '   ~~~   ';
   //  this.LogVal(debugPrefix + textValName, textVal.toString())
   //}
-  DebugIdataPopUpSettings(toReturn: IOneGenericSetting): void {
+  DebugIdataPopUpSettings(toReturn: IGenericSetting): void {
     //this.FuncStart(this.DebugSettings.name);
     this.LogVal('Settings', JSON.stringify(toReturn));
     //this.FuncEnd(this.DebugSettings.name);
@@ -224,7 +231,7 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log(debugPrefix + textValName + ' : ' + textVal);
   }
   async Log(text, optionalValue: string = '', hasPrefix = false) {
-    if (this.LogToConsoleEnabled || !this.LogHasBeenInit) {
+    if (this.HasWriters) { //|| !this.LogHasBeenInit
       var indent = '  ';
       //text =  indent.repeat(this.__indentCount) + text;
       for (var idx = 0; idx < this.__callDepth; idx++) {
@@ -242,11 +249,6 @@ export class LoggerAgent implements ILoggerAgent {
       });
 
       this.__WriteToAllWriters(text);
-
-      if (this.LogToConsoleEnabled) {
-      } else if (!this.LogHasBeenInit) {
-        this.LogPreInitBuffer.push(text);
-      }
     }
   }
 
@@ -287,7 +289,7 @@ export class LoggerAgent implements ILoggerAgent {
       this.LogVal('Nickname', snapShotSettings.SnapShotNewNickname);
     }
   }
-  
+
   DebugObjState(state: IContentState) {
     if (this.IsNotNullOrUndefinedBool('State', state)) {
       if (this.IsNotNullOrUndefinedBool('CurrentSnapShots', state.SnapShotsMany.CurrentSnapShots)) {

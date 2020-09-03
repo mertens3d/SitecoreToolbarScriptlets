@@ -9,6 +9,5 @@ export class AllAgents implements IAllAgents {
   SettingsAgent: ISettingsAgent;
   HelperAgent: IHelperAgent;
   Logger: ILoggerAgent;
-  RepoAgent: IRepositoryAgent;
   ToastAgent: IToastAgent;
 }

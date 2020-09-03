@@ -12,7 +12,7 @@
   },
   Settings: {
     Defaults: {
-      LogToConsole: boolean,
+      EnableLogging: boolean,
       LogToStorage: boolean,
       UseCompactCss: boolean,
     }

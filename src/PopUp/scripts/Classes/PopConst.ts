@@ -9,6 +9,9 @@ export class PopConst {
         Collapsed: 'in',
       },
     },
+    Debug: {
+      ForceLoggingEnabled: false
+    },
     ElemId: {
       InputNickname: 'id-input-nickname',
       HindSiteParentInfo: 'spanParentInfo',
@@ -67,7 +70,7 @@ export class PopConst {
         HsRestoreWindowStateNewTab: '[id=id-restore-state-new-tab]',
         iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
         IdFieldSetDebug: '[id=id-fieldset-debug]',
-        LogToConsole: '[id=id-settings-show-log-data]',
+        EnableLogging: '[id=id-settings-show-log-data]',
         ToggleFavorite: '[id=id-toggle-favorite]',
         ModeEdit: '[id=sc-mode-edit]',
         ModeNorm: '[id=Norm]',

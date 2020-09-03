@@ -1,4 +1,12 @@
 ﻿export interface IPopUpConst {
+  Debug: {
+    ForceLoggingEnabled: boolean
+  },
+  ClassNames: {
+    HS: {
+      Collapsed: string,
+    },
+  },
   ElemId: {
     InputNickname: string,
     HindSiteParentInfo: string,
@@ -10,12 +18,6 @@
       TabId: string,
     },
   }
-
-  ClassNames: {
-    HS: {
-      Collapsed: string,
-    },
-  },
   Numbers: {
     MinMenuHeight: number,
     MinMenuWidth: number,
@@ -63,7 +65,7 @@
       HsRestoreWindowStateNewTab: string,
       iCBoxdSettingsAutoLogin: string,
       IdFieldSetDebug: string,
-      LogToConsole: string,
+      EnableLogging: string,
       ToggleFavorite: string,
       ModeEdit: string,
       ModeNorm: string,

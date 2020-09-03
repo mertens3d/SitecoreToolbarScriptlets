@@ -1,5 +1,5 @@
 ﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
-import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
+import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { LoggerAgent } from "../../Agents/LoggerAgent/LoggerAgent";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
@@ -37,10 +37,10 @@ export class RollingLogIdDrone {
     return nextKeyToReturn;
   }
 
-  private GetLastUsedLogId(): IOneGenericSetting {
+  private GetLastUsedLogId(): IGenericSetting {
     let toReturn: number = 0;
 
-    var lastUsedLogIdSetting: IOneGenericSetting = this.SettingsAgent.GetByKey(SettingKey.LastUsedLogToStorageKey);
+    var lastUsedLogIdSetting: IGenericSetting = this.SettingsAgent.GetByKey(SettingKey.LastUsedLogToStorageKey);
 
     return lastUsedLogIdSetting;
   }

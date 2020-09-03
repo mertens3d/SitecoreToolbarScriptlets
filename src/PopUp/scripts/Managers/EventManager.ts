@@ -1,7 +1,7 @@
 import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllAgents";
-import { IOneGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
+import { IGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
 import { IEventHandlerData } from "../../../Shared/scripts/Interfaces/IEventHandlerData";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
@@ -35,13 +35,17 @@ export class EventManager extends PopUpManagerBase {
     this.WireAllGenericSettings();
     this.AllAgents.Logger.FuncEnd(this.InitEventManager.name);
   }
+
   WireAllGenericSettings() {
-    let genericSettings: IOneGenericSetting[] = this.AllAgents.SettingsAgent.SettingsAr;
+    this.AllAgents.Logger.FuncStart(this.WireAllGenericSettings.name);
+    let genericSettings: IGenericSetting[] = this.AllAgents.SettingsAgent.GetAllSettings();
 
     for (var idx = 0; idx < genericSettings.length; idx++) {
       let oneSetting = genericSettings[idx];
+      this.AllAgents.Logger.Log(oneSetting.Friendly + ' : ' + oneSetting.ValueAsObj);
       if (oneSetting.HasUi) {
         let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
+
         if (uiElem) {
           //if has label
           let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
@@ -53,6 +57,7 @@ export class EventManager extends PopUpManagerBase {
 
           if (oneSetting.DataType === SettingType.BoolCheckBox) {
             let self = this;
+            this.AllAgents.Logger.Log('Assigning change event');
             uiElem.addEventListener('change', (evt) => {
               self.AllAgents.SettingsAgent.SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
             }
@@ -66,6 +71,7 @@ export class EventManager extends PopUpManagerBase {
         }
       }
     }
+    this.AllAgents.Logger.FuncEnd(this.WireAllGenericSettings.name);
   }
 
   private __wireAllMenuButtons() {

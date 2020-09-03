@@ -1,14 +1,16 @@
 ﻿import { SettingType } from "../../../../../../Shared/scripts/Enums/SettingType";
 import { IAccordianManager } from "../../../../../../Shared/scripts/Interfaces/Agents/IAccordianManager";
 import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
-import { IOneGenericSetting } from "../../../../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
+import { IGenericSetting } from "../../../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ISettingsAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { StaticHelpers } from "../../../../../../Shared/scripts/Classes/StaticHelpers";
 
 export class SettingsModule implements IUiModule {
   Logger: ILoggerAgent;
   SettingsAgent: ISettingsAgent;
   AccordianManager: IAccordianManager;
+
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, accordianManager: IAccordianManager) {
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
@@ -19,15 +21,24 @@ export class SettingsModule implements IUiModule {
 
   RefreshUi() {
     this.Logger.FuncStart(this.RefreshUi.name);
-    for (var idx = 0; idx < this.SettingsAgent.SettingsAr.length; idx++) {
-      var oneSetting: IOneGenericSetting = this.SettingsAgent.SettingsAr[idx];
-      //this.Logger.LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
+    this.refreshUiSettings();
+
+    this.Logger.FuncEnd(this.RefreshUi.name);
+  }
+
+  private refreshUiSettings() {
+    this.Logger.FuncStart(this.refreshUiSettings.name);
+    let allSettings = this.SettingsAgent.GetAllSettings();
+    for (var idx = 0; idx < allSettings.length; idx++) {
+      var oneSetting: IGenericSetting = allSettings[idx];
+      this.Logger.LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
       if (oneSetting.UiSelector) {
         var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
         if (foundElem) {
           if (oneSetting.DataType === SettingType.BoolCheckBox) {
-            let valueToDisplay: boolean = <boolean>(oneSetting.ValueAsObj || oneSetting.DefaultValue);
+            let valueToDisplay: boolean  =oneSetting.ValueAsBool();
             (<HTMLInputElement>foundElem).checked = valueToDisplay;
+            this.Logger.LogVal('Setting to', valueToDisplay);
           }
           if (oneSetting.DataType === SettingType.Accordion) {
             this.AccordianManager.RestoreAccordionState(oneSetting);
@@ -38,6 +49,6 @@ export class SettingsModule implements IUiModule {
         }
       }
     }
-    this.Logger.FuncEnd(this.RefreshUi.name);
+    this.Logger.FuncEnd(this.refreshUiSettings.name);
   }
 }

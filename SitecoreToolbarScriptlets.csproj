@@ -42,7 +42,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Dist\HindSite\AutoBuild\final\hindsite.js" />
     <Content Include="gulp.support\Helper.js" />
     <Content Include="gulp.support\InjectableTs.js" />
     <Content Include="gulp.support\tasks\cleanTasks.js" />
@@ -90,6 +89,7 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager\BrowserManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LogWriterBuffer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\ToastAgent\ToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\ConstAllSettings.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\Handlers.ts" />
@@ -145,7 +145,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\Helpers.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\AbsoluteUrl.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ILoggerBase.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IOneGenericSetting.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IGenericSetting.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ISettingsAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\CommandButtonEvents.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataContentPrefs.ts" />
@@ -224,6 +224,15 @@
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.js">
       <DependentUpon>RecipeSaveState.ts</DependentUpon>
     </Content>
+    <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.js">
+      <DependentUpon>LoggerAgent.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.js">
+      <DependentUpon>LoggerConsoleWriter.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.js">
+      <DependentUpon>LoggerStorageWriter.ts</DependentUpon>
+    </Content>
     <Content Include="src\Shared\scripts\Helpers\FactoryHelper.js">
       <DependentUpon>FactoryHelper.ts</DependentUpon>
     </Content>
@@ -239,6 +248,165 @@
     <Content Include="src\Shared\scripts\Helpers\UtilityHelper.js">
       <DependentUpon>UtilityHelper.ts</DependentUpon>
     </Content>
+    <Content Include="src\Shared\scripts\Interfaces\AbsoluteUrl.js">
+      <DependentUpon>AbsoluteUrl.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.js">
+      <DependentUpon>IAccordianManager.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.js">
+      <DependentUpon>IAllAgents.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\IContentMessageBroker.js">
+      <DependentUpon>IContentMessageBroker.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.js">
+      <DependentUpon>IHelperAgent.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\ILoggerBase.js">
+      <DependentUpon>ILoggerBase.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\ILoggerWriter.js">
+      <DependentUpon>ILoggerWriter.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\IOneTreeDrone.js">
+      <DependentUpon>IOneTreeDrone.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\IRepositoryAgent.js">
+      <DependentUpon>IRepositoryAgent.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\ISettingsAgent.js">
+      <DependentUpon>ISettingsAgent.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.js">
+      <DependentUpon>IToastAgent.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\Agents\IUiModule.js">
+      <DependentUpon>IUiModule.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\CommandButtonEvents.js">
+      <DependentUpon>CommandButtonEvents.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\DebugCallback.js">
+      <DependentUpon>DebugCallback.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\ICallbackDataDebugTextChanged.js">
+      <DependentUpon>ICallbackDataDebugTextChanged.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\ICommandHndlrDataForContent.js">
+      <DependentUpon>ICommandHndlrDataForContent.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\ICommandHndlrDataForPopUp.js">
+      <DependentUpon>ICommandHndlrDataForPopUp.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\ICommandRecipes.js">
+      <DependentUpon>ICommandRecipes.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IContentConst.js">
+      <DependentUpon>IContentConst.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IContentState\IContentState.js">
+      <DependentUpon>IContentState.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IContentState\ISnapShotsMany.js">
+      <DependentUpon>ISnapShotsMany.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataBrowserWindow.js">
+      <DependentUpon>IDataBrowserWindow.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataBucketRestoreDesktop.js">
+      <DependentUpon>IDataBucketRestoreDesktop.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataContentPrefs.js">
+      <DependentUpon>IDataContentPrefs.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataDtState.js">
+      <DependentUpon>IDataDtState.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataOneDoc.js">
+      <DependentUpon>IDataOneDoc.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataOneIframe.js">
+      <DependentUpon>IDataOneIframe.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IdataOneSetting.js">
+      <DependentUpon>IdataOneSetting.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataOneStorageOneTreeState.js">
+      <DependentUpon>IDataOneStorageOneTreeState.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataOneTreeNode.js">
+      <DependentUpon>IDataOneTreeNode.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataOneWindowStorage.js">
+      <DependentUpon>IDataOneWindowStorage.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataPayloadSnapShot.js">
+      <DependentUpon>IDataPayloadSnapShot.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IDataPublishChain.js">
+      <DependentUpon>IDataPublishChain.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IError.js">
+      <DependentUpon>IError.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IEventHandlerData.js">
+      <DependentUpon>IEventHandlerData.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IFactoryHelper.js">
+      <DependentUpon>IFactoryHelper.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IMsgPayload.js">
+      <DependentUpon>IMsgPayload.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\InjectConst.js">
+      <DependentUpon>InjectConst.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IOneCommand.js">
+      <DependentUpon>IOneCommand.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IOneStorageData.js">
+      <DependentUpon>IOneStorageData.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IPopUpConst.js">
+      <DependentUpon>IPopUpConst.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IPromiseHelper.js">
+      <DependentUpon>IPromiseHelper.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IPromiseRecipes.js">
+      <DependentUpon>IPromiseRecipes.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IScVerSpec.js">
+      <DependentUpon>IScVerSpec.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\ISelectionHeaders.js">
+      <DependentUpon>ISelectionHeaders.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\ISharedConst.js">
+      <DependentUpon>ISharedConst.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\ISitecoreUiManager.js">
+      <DependentUpon>ISitecoreUiManager.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IUiMan.js">
+      <DependentUpon>IUiMan.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\IUrlAgent.js">
+      <DependentUpon>IUrlAgent.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\MsgFromXBase.js">
+      <DependentUpon>MsgFromXBase.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\OneParamPair.js">
+      <DependentUpon>OneParamPair.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\UrlParts.js">
+      <DependentUpon>UrlParts.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Shared\scripts\Interfaces\__global.js">
+      <DependentUpon>__global.ts</DependentUpon>
+    </Content>
     <Content Include="webpack.config.js" />
     <None Include=".editorconfig" />
     <None Include=".jshintrc" />
@@ -246,7 +414,6 @@
     <None Include=".vscode\tasks.json" />
     <None Include="Dist\HindSite\manifest.json" />
     <None Include="jsconfig.json" />
-    <Content Include="Dist\HindSite\content_scripts\hindsite.js" />
     <Content Include="Dist\HindSite\popup\choose_setting.css" />
     <Content Include="gulp.support\CommonBase.js" />
     <Content Include="gulpfile.js" />
@@ -302,6 +469,15 @@
     <None Include="src\PopUp\css\PageLevel.scss" />
     <None Include="src\PopUp\css\SnapShotSelect.scss" />
     <None Include="src\PopUp\css\vars.scss" />
+    <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.js.map">
+      <DependentUpon>LoggerAgent.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.js.map">
+      <DependentUpon>LoggerConsoleWriter.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.js.map">
+      <DependentUpon>LoggerStorageWriter.js</DependentUpon>
+    </None>
     <None Include="src\Shared\scripts\Helpers\FactoryHelper.js.map">
       <DependentUpon>FactoryHelper.js</DependentUpon>
     </None>
@@ -317,6 +493,162 @@
     <None Include="src\Shared\scripts\Helpers\UtilityHelper.js.map">
       <DependentUpon>UtilityHelper.js</DependentUpon>
     </None>
+    <None Include="src\Shared\scripts\Interfaces\AbsoluteUrl.js.map">
+      <DependentUpon>AbsoluteUrl.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.js.map">
+      <DependentUpon>IAccordianManager.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.js.map">
+      <DependentUpon>IAllAgents.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\IContentMessageBroker.js.map">
+      <DependentUpon>IContentMessageBroker.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.js.map">
+      <DependentUpon>IHelperAgent.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\ILoggerBase.js.map">
+      <DependentUpon>ILoggerBase.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\ILoggerWriter.js.map">
+      <DependentUpon>ILoggerWriter.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\IOneTreeDrone.js.map">
+      <DependentUpon>IOneTreeDrone.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\IRepositoryAgent.js.map">
+      <DependentUpon>IRepositoryAgent.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\ISettingsAgent.js.map">
+      <DependentUpon>ISettingsAgent.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.js.map">
+      <DependentUpon>IToastAgent.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\Agents\IUiModule.js.map">
+      <DependentUpon>IUiModule.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\CommandButtonEvents.js.map">
+      <DependentUpon>CommandButtonEvents.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\DebugCallback.js.map">
+      <DependentUpon>DebugCallback.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\ICallbackDataDebugTextChanged.js.map">
+      <DependentUpon>ICallbackDataDebugTextChanged.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\ICommandHndlrDataForContent.js.map">
+      <DependentUpon>ICommandHndlrDataForContent.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\ICommandHndlrDataForPopUp.js.map">
+      <DependentUpon>ICommandHndlrDataForPopUp.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\ICommandRecipes.js.map">
+      <DependentUpon>ICommandRecipes.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IContentConst.js.map">
+      <DependentUpon>IContentConst.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IContentState.js.map">
+      <DependentUpon>IContentState.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IContentState\IContentState.js.map">
+      <DependentUpon>IContentState.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IContentState\ISnapShotsMany.js.map">
+      <DependentUpon>ISnapShotsMany.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataBrowserWindow.js.map">
+      <DependentUpon>IDataBrowserWindow.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataBucketRestoreDesktop.js.map">
+      <DependentUpon>IDataBucketRestoreDesktop.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataContentPrefs.js.map">
+      <DependentUpon>IDataContentPrefs.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataDtState.js.map">
+      <DependentUpon>IDataDtState.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataOneDoc.js.map">
+      <DependentUpon>IDataOneDoc.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataOneIframe.js.map">
+      <DependentUpon>IDataOneIframe.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IdataOneSetting.js.map">
+      <DependentUpon>IdataOneSetting.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataOneStorageOneTreeState.js.map">
+      <DependentUpon>IDataOneStorageOneTreeState.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataOneTreeNode.js.map">
+      <DependentUpon>IDataOneTreeNode.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataOneWindowStorage.js.map">
+      <DependentUpon>IDataOneWindowStorage.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IDataPayloadSnapShot.js.map">
+      <DependentUpon>IDataPayloadSnapShot.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IError.js.map">
+      <DependentUpon>IError.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IEventHandlerData.js.map">
+      <DependentUpon>IEventHandlerData.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IFactoryHelper.js.map">
+      <DependentUpon>IFactoryHelper.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IMsgPayload.js.map">
+      <DependentUpon>IMsgPayload.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\InjectConst.js.map">
+      <DependentUpon>InjectConst.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IOneCommand.js.map">
+      <DependentUpon>IOneCommand.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IOneStorageData.js.map">
+      <DependentUpon>IOneStorageData.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IPopUpConst.js.map">
+      <DependentUpon>IPopUpConst.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IPromiseHelper.js.map">
+      <DependentUpon>IPromiseHelper.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IPromiseRecipes.js.map">
+      <DependentUpon>IPromiseRecipes.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IScVerSpec.js.map">
+      <DependentUpon>IScVerSpec.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\ISelectionHeaders.js.map">
+      <DependentUpon>ISelectionHeaders.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\ISharedConst.js.map">
+      <DependentUpon>ISharedConst.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\ISitecoreUiManager.js.map">
+      <DependentUpon>ISitecoreUiManager.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IUiMan.js.map">
+      <DependentUpon>IUiMan.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\IUrlAgent.js.map">
+      <DependentUpon>IUrlAgent.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\MsgFromXBase.js.map">
+      <DependentUpon>MsgFromXBase.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\OneParamPair.js.map">
+      <DependentUpon>OneParamPair.js</DependentUpon>
+    </None>
+    <None Include="src\Shared\scripts\Interfaces\__global.js.map">
+      <DependentUpon>__global.js</DependentUpon>
+    </None>
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
     <None Include="src\PopUp\css\popup.scss" />
@@ -324,7 +656,10 @@
     <TypeScriptCompile Include="src\tests\SitecoreUiManager.Fake.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Dist\HindSite\AutoBuild\final\" />
+    <Folder Include="Dist\HindSite\content_scripts\" />
     <Folder Include="Dist\HindSite\icons\" />
+    <Folder Include="Misc\" />
     <Folder Include="src\Browser-PolyFill\" />
     <Folder Include="src\hindsiteWindowOpener\Scripts\" />
     <Folder Include="src\PopUp\scripts\Modules\" />

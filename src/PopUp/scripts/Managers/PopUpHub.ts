@@ -1,8 +1,6 @@
-﻿import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { HelperAgent } from "../../../Shared/scripts/Helpers/Helpers";
+﻿import { HelperAgent } from "../../../Shared/scripts/Helpers/Helpers";
 import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IallAgents";
-import { IOneGenericSetting } from "../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting";
-import { SharedConst } from "../../../Shared/scripts/SharedConst";
+import { PopConst } from "../Classes/PopConst";
 import { EventManager } from "./EventManager";
 import { MessageManager } from "./MessageManager";
 import { BrowserManager } from "./MessageManager/BrowserManager";
@@ -10,7 +8,6 @@ import { PopUpMessagesBroker } from "./PopUpMessagesBroker/PopUpMessagesBroker";
 import { TabManager } from "./TabManager";
 import { FeedbackModuleMessages } from "./UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 import { UiManager } from "./UiManager/UiManager";
-import { PopConst } from "../Classes/PopConst";
 
 export class PopUpHub {
   BrowserMan: BrowserManager;
@@ -28,10 +25,7 @@ export class PopUpHub {
     this.EventMan = new EventManager(this, this._allAgents);
     this.TabMan = new TabManager(this, this._allAgents);
     this.Helpers = new HelperAgent(allAgents.Logger);
-    this.UiMan = new UiManager(this, this._allAgents);
-    //after tabman
-    //after uiMan
-    // after HelperAgent
+    this.UiMan = new UiManager(this, this._allAgents); //after tabman, after uiMan, after HelperAgent
 
     let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this._allAgents.Logger);
     let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this._allAgents.Logger, FeedbackModuleMsg);
@@ -48,15 +42,7 @@ export class PopUpHub {
     return new Promise(async (resolve, reject) => {
       this._allAgents.Logger.FuncStart(this.InitPopUpHub.name);
 
-      let logToConsolesetting: IOneGenericSetting = await this._allAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole);
-
-      if (logToConsolesetting) {
-        await this._allAgents.Logger.Init(this._allAgents.SettingsAgent.ValueAsBool(logToConsolesetting))
-      } else {
-        await this._allAgents.Logger.Init(SharedConst.Const.Settings.Defaults.LogToConsole);
-      }
-
-     await this.TabMan.InitTabManager()
+      await this.TabMan.InitTabManager()
         .then(() => this.EventMan.InitEventManager())
         .then(() => this.UiMan.InitUiManager())
         .then(() => this.MessageMan.InitMessageManager())

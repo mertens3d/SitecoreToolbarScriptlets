@@ -5,7 +5,7 @@ import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { scWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
 import { SnapShotFlavor } from '../../../../Shared/scripts/Enums/SnapShotFlavor';
 import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
-import { IOneGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IOneGenericSetting';
+import { IGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataPayloadSnapShot } from '../../../../Shared/scripts/Interfaces/IDataPayloadSnapShot';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
@@ -17,6 +17,7 @@ import { ContentHub } from '../ContentHub/ContentHub';
 export class ContentMessageManager extends ContentManagerBase {
   AutoSaveHasBeenScheduled: boolean = false;
   private ContentMessageBroker: ContentMessageBroker;
+  OperationCancelled: any;
 
   constructor(contentHub: ContentHub, contentAgents: IAllAgents) {
     super(contentHub, contentAgents);
@@ -36,7 +37,7 @@ export class ContentMessageManager extends ContentManagerBase {
     this.AllAgents.Logger.FuncStart(this.ScheduleIntervalTasks.name);
     this.AllAgents.Logger.LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
 
-    let autoSaveSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin)
+    let autoSaveSetting: IGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin)
 
     if (this.AllAgents.SettingsAgent.ValueAsInteger(autoSaveSetting) > 0) {
       if (!this.AutoSaveHasBeenScheduled) {
@@ -68,23 +69,6 @@ export class ContentMessageManager extends ContentManagerBase {
     this.OneScWinMan().SaveWindowState(SnapShotSettings);
 
     this.AllAgents.Logger.FuncEnd(this.AutoSaveSnapShot.name);
-  }
-  async SetLoggerFromMessage(reqMsgFromPopup: MsgFromPopUp) {
-    let currSetting: IOneGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.LogToConsole);
-    let valueToUse: boolean = SharedConst.Const.Settings.Defaults.LogToConsole;
-
-    if (currSetting) {
-      let candidate = this.AllAgents.SettingsAgent.ValueAsBool(currSetting);
-      if (candidate) {
-        console.log('setting value as bool ' + valueToUse);
-        console.log('setting it to ' + valueToUse);
-      } else {
-        console.log('candidate was null');
-      }
-      await this.AllAgents.Logger.Init(valueToUse);
-    } else {
-      console.log('curr setting not found');
-    }
   }
 
   private ToggleCompactCss(Data: PayloadDataFromPopUp): Promise<void> {
@@ -141,11 +125,6 @@ export class ContentMessageManager extends ContentManagerBase {
     });
   }
 
-  IsLogEnabled(): boolean {
-    return this.AllAgents.Logger.EnabledStatus();
-  }
-
-  OperationCancelled: any;
   SetParentInfo(__winDataParent: IDataOneDoc) {
   }
 }

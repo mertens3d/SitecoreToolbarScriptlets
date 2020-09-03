@@ -2,7 +2,7 @@
 import { SettingType } from "../../Enums/SettingType";
 import { SettingKey } from "../../Enums/3xxx-SettingKey";
 
-export interface IOneGenericSetting {
+export interface IGenericSetting {
   DataType: SettingType;
   DefaultValue: any;
   Friendly: string;

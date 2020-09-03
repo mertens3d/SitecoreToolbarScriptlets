@@ -16,7 +16,7 @@ export class SharedConst {
     },
     Settings: {
       Defaults: {
-        LogToConsole: true,
+        EnableLogging: true,
         LogToStorage: true,
         UseCompactCss: false,
       }

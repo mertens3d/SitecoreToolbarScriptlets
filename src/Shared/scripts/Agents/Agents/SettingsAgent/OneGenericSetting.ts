@@ -1,9 +1,9 @@
 ﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
-import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
+import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { Enabled } from "../../../Enums/Enabled";
-export class OneGenericSetting implements IOneGenericSetting {
+export class OneGenericSetting implements IGenericSetting {
   Enabled: Enabled;
   DataType: SettingType;
   DefaultValue: any;
@@ -24,6 +24,7 @@ export class OneGenericSetting implements IOneGenericSetting {
     this.HasUi = hasUi;
     this.Enabled = enabled;
   }
+
   HasUi: boolean;
 
   ValueAsInt(): number {
@@ -45,9 +46,9 @@ export class OneGenericSetting implements IOneGenericSetting {
       toReturn = this.DefaultValue;
     }
 
-    console.log('ValueAsObj');
-    console.log(this.ValueAsObj);
-    console.log('toReturn : ' + toReturn);
+    //console.log('ValueAsObj');
+    //console.log(this.ValueAsObj);
+    //console.log('toReturn : ' + toReturn);
 
     return toReturn;
   }

@@ -4,12 +4,12 @@ import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 import { SharedConst } from "../../../SharedConst";
-import { IOneGenericSetting } from "../../../Interfaces/Agents/IOneGenericSetting";
+import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { Enabled } from "../../../Enums/Enabled";
 import { ContentConst } from "../../../Interfaces/InjectConst";
 
 export class ConstAllSettings {
-  AllSettings: IOneGenericSetting[] = [
+  AllSettings: IGenericSetting[] = [
     new OneGenericSetting(
       SettingKey.LastUsedLogToStorageKey,
       SettingType.Number,
@@ -22,13 +22,13 @@ export class ConstAllSettings {
       false // has ui
     ),
     new OneGenericSetting(
-      SettingKey.LogToConsole,
+      SettingKey.EnableLogging,
       SettingType.BoolCheckBox,
       true,
-      PopConst.Const.Selector.HS.LogToConsole,
-      SharedConst.Const.Settings.Defaults.LogToConsole,
+      PopConst.Const.Selector.HS.EnableLogging,
+      SharedConst.Const.Settings.Defaults.EnableLogging,
       SettingFlavor.ContentAndPopUpStoredInPopUp,
-      'Log to Console',
+      'Enable Logging',
       Enabled.Enabled
     ),
     new OneGenericSetting(
