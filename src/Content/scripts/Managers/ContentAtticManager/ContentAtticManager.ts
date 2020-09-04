@@ -161,7 +161,7 @@ export class ContentAtticManager extends ContentManagerBase {
         var deleteFlag: boolean = false;
         var candidate = currentWindowStorage.CurrentSnapShots[idx];
 
-        if (candidate.Flavor) {
+        if (candidate.Flavor == SnapShotFlavor.Autosave) {
           if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
             this.AllAgents.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
             deleteFlag = true;
