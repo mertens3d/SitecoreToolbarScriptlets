@@ -116,6 +116,70 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
     return response;
   }
 
+  private CalculateCommandToExec(msgFlag: MsgFlag) : Function {
+    let commandToExecute: Function = null;
+
+    switch (msgFlag) {
+      //case MsgFlag.ReqRestoreToNewTab:
+      //  commandToExecute = this.ApiManager.RestoreToNewTab;
+      //  break;
+
+      case MsgFlag.ReqAddCETab:
+        commandToExecute = this.ApiManager.AddCETab;
+        break;
+
+      case MsgFlag.ReqAdminB:
+        commandToExecute = this.ApiManager.AdminB;
+        break;
+
+      case MsgFlag.Ping:
+        commandToExecute = this.ApiManager.Ping;
+        break;
+
+      case MsgFlag.ReqOpenCE:
+        commandToExecute = this.ApiManager.OpenContentEditor;
+        break;
+
+      case MsgFlag.ReqMarkFavorite:
+        commandToExecute = this.ApiManager.MarkFavorite;
+        break;
+
+      case MsgFlag.ReqQuickPublish:
+        commandToExecute = this.ApiManager.PublischActiveCE;
+        break;
+
+      case MsgFlag.ReqRestoreClick:
+        commandToExecute = this.ApiManager.RestoreSnapshop;
+        break;
+
+      case MsgFlag.ReqToggleCompactCss:
+        commandToExecute = this.ApiManager.ToggleCompactCss;
+        break;
+
+      case MsgFlag.ReqTakeSnapShot:
+        commandToExecute = this.ApiManager.SaveWindowState;
+        break;
+
+      case MsgFlag.RemoveFromStorage:
+        commandToExecute = this.ApiManager.RemoveSnapShot;
+        break;
+
+      case MsgFlag.RespTaskSuccessful:
+        commandToExecute = this.ApiManager.Notify;
+        break;
+
+      case MsgFlag.ReqUpdateNickName:
+        commandToExecute = this.ApiManager.UpdateNickname
+        break;
+
+      default:
+        this.Logger.ErrorAndThrow('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(msgFlag));
+        break;
+    }
+
+    return commandToExecute;
+  }
+
   async ReqMsgRouter(payload: MsgFromPopUp): Promise<MsgFromContent> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
@@ -124,65 +188,10 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
         payload.Data.IdOfSelect = new GuidData(payload.Data.IdOfSelect.Raw);
       }
 
-      let commandToExecute: Function = null;
+      this.SettingsAgent.UpdateSettings(payload.CurrentContentPrefs);
 
-      switch (payload.MsgFlag) {
-        //case MsgFlag.ReqRestoreToNewTab:
-        //  commandToExecute = this.ApiManager.RestoreToNewTab;
-        //  break;
 
-        case MsgFlag.ReqAddCETab:
-          commandToExecute = this.ApiManager.AddCETab;
-          break;
-
-        case MsgFlag.ReqAdminB:
-          commandToExecute = this.ApiManager.AdminB;
-          break;
-
-        case MsgFlag.Ping:
-          commandToExecute = this.ApiManager.Ping;
-          break;
-
-        case MsgFlag.ReqOpenCE:
-          commandToExecute = this.ApiManager.OpenContentEditor;
-          break;
-
-        case MsgFlag.ReqMarkFavorite:
-          commandToExecute = this.ApiManager.MarkFavorite;
-          break;
-
-        case MsgFlag.ReqQuickPublish:
-          commandToExecute = this.ApiManager.PublischActiveCE;
-          break;
-
-        case MsgFlag.ReqRestoreClick:
-          commandToExecute = this.ApiManager.RestoreSnapshop;
-          break;
-
-        case MsgFlag.ReqToggleCompactCss:
-          commandToExecute = this.ApiManager.ToggleCompactCss;
-          break;
-
-        case MsgFlag.ReqTakeSnapShot:
-          commandToExecute = this.ApiManager.SaveWindowState;
-          break;
-
-        case MsgFlag.RemoveFromStorage:
-          commandToExecute = this.ApiManager.RemoveSnapShot;
-          break;
-
-        case MsgFlag.RespTaskSuccessful:
-          commandToExecute = this.ApiManager.Notify;
-          break;
-
-        case MsgFlag.ReqUpdateNickName:
-          commandToExecute = this.ApiManager.UpdateNickname
-          break;
-
-        default:
-          this.Logger.ErrorAndThrow('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
-          break;
-      }
+      let commandToExecute: Function = this.CalculateCommandToExec(payload.MsgFlag);
 
       await this.ExecuteCommand(commandToExecute, payload)
         .then((response: MsgFromContent) => resolve(response))

@@ -19,6 +19,17 @@ export class SettingsAgent implements ISettingsAgent {
     this.RepoAgent = repoAgent;
   }
 
+  UpdateSettings(newSettings: IGenericSetting[]) {
+    this.Logger.FuncStart(this.UpdateSettings.name);
+    if (newSettings) {
+      for (var idx = 0; idx < newSettings.length; idx++) {
+        let oneSetting: IGenericSetting = newSettings[idx];
+        this.SetByKey(oneSetting.SettingKey, oneSetting.ValueAsObj);
+      }
+    }
+    this.Logger.FuncEnd(this.UpdateSettings.name);
+  }
+
   SetContentSettings(currentContentPrefs: IGenericSetting[]) {
     this.SettingsAr = <OneGenericSetting[]>currentContentPrefs;
   }
@@ -76,14 +87,24 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);
   }
 
+GetSettingsByFlavor(targetFlavors: SettingFlavor[]): IGenericSetting[] {
+    let toReturn: IGenericSetting[] = [];
+
+    for (var idx = 0; idx < this.SettingsAr.length; idx++) {
+      let candidate: IGenericSetting = this.SettingsAr[idx];
+      if (targetFlavors.indexOf(candidate.SettingFlavor) > -1) {
+        toReturn.push(candidate);
+      }
+    }
+
+    return toReturn;
+  }
   GetOnlyContentPrefs(): IGenericSetting[] {
     let toReturn: IGenericSetting[] = [];
 
     for (var idx = 0; idx < this.SettingsAr.length; idx++) {
       let candidate: IGenericSetting = this.SettingsAr[idx];
-      if ((candidate.SettingFlavor === SettingFlavor.ContentAndPopUpStoredInPopUp)
-        ||
-        (candidate.SettingFlavor === SettingFlavor.ContentOnly)) {
+      if (targetFlavors.indexOf(candidate.SettingFlavor) > -1) {
         toReturn.push(candidate);
       }
     }
