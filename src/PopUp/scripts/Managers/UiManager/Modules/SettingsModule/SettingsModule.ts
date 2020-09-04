@@ -35,13 +35,16 @@ export class SettingsModule implements IUiModule {
       if (oneSetting.UiSelector) {
         var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
         if (foundElem) {
+
           if (oneSetting.DataType === SettingType.BoolCheckBox) {
-            let valueToDisplay: boolean  =oneSetting.ValueAsBool();
+            let valueToDisplay: boolean = oneSetting.ValueAsBool();
             (<HTMLInputElement>foundElem).checked = valueToDisplay;
             this.Logger.LogVal('Setting to', valueToDisplay);
-          }
-          if (oneSetting.DataType === SettingType.Accordion) {
+          } else if (oneSetting.DataType === SettingType.Accordion) {
             this.AccordianManager.RestoreAccordionState(oneSetting);
+          } else if (oneSetting.DataType == SettingType.Number) {
+            let valueToDisplay: number = oneSetting.ValueAsInt();
+            (<HTMLInputElement>foundElem).value = valueToDisplay.toString();
           }
         } else {
           this.Logger.LogAsJsonPretty('oneSetting', oneSetting);

@@ -51,15 +51,6 @@ export class ConstAllSettings {
       'Auto Save Snapshot on HindSite Window Change',
       Enabled.Disabled
     ),
-    //new OneGenericSetting(
-    //  SettingKey.NotUsed,
-    //  SettingType.BoolCheckBox,
-    //  null,
-    //  PopConst.Const.Selector.HS.SettingAutoSaveEnabled,
-    //  PopConst.Const.Settings.Defaults.AutoSaveEnabled,
-    //  SettingFlavor.Content,
-    //  'todo',
-    //),
     new OneGenericSetting(
       SettingKey.AutoLogin,
       SettingType.BoolCheckBox,
@@ -171,7 +162,7 @@ export class ConstAllSettings {
       PopConst.Const.Numbers.AutoSaveIntervalMin,
       SettingFlavor.ContentAndPopUpStoredInPopUp,
       'Auto Save Interval (Min) - 0 to disable',
-      Enabled.Disabled
+      Enabled.Enabled
     ),
 
     new OneGenericSetting(

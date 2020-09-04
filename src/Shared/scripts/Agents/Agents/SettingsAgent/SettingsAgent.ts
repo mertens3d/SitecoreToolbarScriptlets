@@ -76,14 +76,6 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);
   }
 
-  ValueAsInteger(setting: IGenericSetting): number {
-    let toReturn: number = 0;
-    if (setting) {
-      toReturn = <number>setting.ValueAsObj;
-    }
-    return toReturn;
-  }
-
   GetOnlyContentPrefs(): IGenericSetting[] {
     let toReturn: IGenericSetting[] = [];
 
@@ -99,11 +91,19 @@ export class SettingsAgent implements ISettingsAgent {
     return toReturn;
   }
 
-  SettingChanged(SettingKey: SettingKey, valueAsObj: any): void {
+  CheckBoxSettingChanged(SettingKey: SettingKey, valueAsObj: any): void {
     //this.Logger.Log(StaticHelpers.SettingKeyAsString(SettingKey));
     //this.Logger.LogVal('valueAsObj', valueAsObj.toString());
     this.SetByKey(SettingKey, valueAsObj);
   }
+
+
+  NumberSettingChanged(SettingKey: SettingKey, valueAsNumber: number): void {
+    this.Logger.Log(StaticHelpers.SettingKeyAsString(SettingKey));
+    this.Logger.LogVal('valueAsNumber', valueAsNumber.toString());
+    this.SetByKey(SettingKey, valueAsNumber);
+  }
+
 
   GetByKey(needleSettingKey: SettingKey): OneGenericSetting {
     //this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(needleSettingKey));

@@ -65,7 +65,7 @@ export class ContentHub {
 
     this.SharedConst = SharedConst.Const;
 
-    this.SitecoreUiMan = new SitecoreUiManager(this, this.AllAgents);
+    
 
 
 

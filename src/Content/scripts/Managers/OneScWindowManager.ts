@@ -56,6 +56,7 @@ export class OneScWindowManager extends ContentManagerBase {
 
     return activeWindowSnapShot;
   }
+
   SaveWindowState(snapShotSettings: IDataPayloadSnapShot): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.SaveWindowState.name);

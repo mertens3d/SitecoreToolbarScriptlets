@@ -11,6 +11,6 @@ export interface ISettingsAgent {
   ReadGenericSettingsFromStorage(): IOneGenericSettingForStorage[];
   SetByKey(settingKey: SettingKey, value: any): any;
   SetContentSettings(CurrentContentPrefs: IGenericSetting[]);
-  SettingChanged(SettingKey: SettingKey, checked: boolean);
-  ValueAsInteger(autoSaveSetting: IGenericSetting);
+  CheckBoxSettingChanged(SettingKey: SettingKey, checked: boolean);
+  NumberSettingChanged(SettingKey: SettingKey, checked: number);
 }

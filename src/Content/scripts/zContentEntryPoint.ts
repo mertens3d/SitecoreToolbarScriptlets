@@ -12,16 +12,26 @@ import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastA
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
+import { AutoSnapShotAgent } from './Managers/AutoSnapShotAgent/AutoSnapShotAgent';
+import { SitecoreUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
 
 class ContentEntry {
   private AllAgents: IAllAgents;
+  private contentHub: ContentHub;
 
   async main() {
     await this.InstantiateMembers()
       .then(() => this.AllAgents.Logger.Log('Instantiate Members succeeded'))
       .then(() => {
-        let contentHub: ContentHub = new ContentHub(this.AllAgents);
-        contentHub.InitContentHub()
+        this.contentHub = new ContentHub(this.AllAgents);
+        let scUiMan = new SitecoreUiManager(this.contentHub, this.AllAgents);
+        this.contentHub.SitecoreUiMan = scUiMan;
+        this.contentHub.InitContentHub();
+      })
+      .then(() => {
+        let pageType = this.contentHub.SitecoreUiMan.GetCurrentPageType();
+        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.contentHub.OneWindowMan, pageType);
+        autoSnapShotAgent.ScheduleIntervalTasks();
       })
       .then(() => this.AllAgents.Logger.Log('Init success'))
       .catch((err) => this.AllAgents.Logger.ErrorAndThrow('Content Entry Point', err));
@@ -55,7 +65,6 @@ class ContentEntry {
 
     this.AllAgents.HelperAgent = new HelperAgent(this.AllAgents.Logger);
     this.AllAgents.ToastAgent = new ToastAgent(this.AllAgents.Logger);
-
   }
 }
 
