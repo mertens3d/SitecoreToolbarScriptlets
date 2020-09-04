@@ -4,21 +4,24 @@ import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { ContentMessageBroker } from '../../Drones/ContentMessageBroker/ContentMessageBroker';
 import { ContentManagerBase } from '../../_first/_ContentManagerBase';
 import { ContentHub } from '../ContentHub/ContentHub';
+import { ContentAtticManager } from '../ContentAtticManager/ContentAtticManager';
 
 export class ContentMessageManager extends ContentManagerBase {
   private ContentMessageBroker: ContentMessageBroker;
   OperationCancelled: any;
+  private  AtticMan: ContentAtticManager;
 
-  constructor(contentHub: ContentHub, contentAgents: IAllAgents) {
+  constructor(contentHub: ContentHub, contentAgents: IAllAgents, atticMan: ContentAtticManager) {
     super(contentHub, contentAgents);
     this.AllAgents.Logger.FuncStart(ContentMessageManager.name);
+    this.AtticMan = atticMan;
 
     this.AllAgents.Logger.FuncEnd(ContentMessageManager.name);
   }
 
   InitContentMessageManager() {
     this.AllAgents.Logger.FuncStart(this.InitContentMessageManager.name + ' ' + ContentMessageManager.name);
-    this.ContentMessageBroker = new ContentMessageBroker(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.APIMan(), this.ScUiMan().TopLevelDoc(), this.ContentHub, this.AllAgents);
+    this.ContentMessageBroker = new ContentMessageBroker(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.APIMan(), this.ScUiMan().TopLevelDoc(), this.ContentHub, this.AllAgents, this.AtticMan);
     this.ContentMessageBroker.BeginListening();
     this.AllAgents.Logger.FuncEnd(this.InitContentMessageManager.name);
   }
@@ -48,7 +51,7 @@ export class ContentMessageManager extends ContentManagerBase {
             this.AllAgents.Logger.LogVal("IdOfSelect", data.IdOfSelect);
             var dataOneWindowStorage;
 
-            await this.AtticMan().GetFromStorageById(data.IdOfSelect)
+            await this.AtticMan.GetFromStorageById(data.IdOfSelect)
               .then((result) => dataOneWindowStorage = result)
               .catch((err) => reject(err));
 

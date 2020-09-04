@@ -1,29 +1,28 @@
 ﻿import { RepoAgent } from "../../../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
-import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { PromiseResult } from "../../../../Shared/scripts/Classes/PromiseResult";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
-import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
 import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShotsMany";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
-import { ContentManagerBase } from "../../_first/_ContentManagerBase";
-import { ContentHub } from "../ContentHub/ContentHub";
-import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
-export class ContentAtticManager extends ContentManagerBase {
+export class ContentAtticManager {
   private Repo: RepoAgent;
   private SettingAutoSnapshotRetainDays: number;
+  private Logger: ILoggerAgent;
 
-  constructor(hub: ContentHub, AllAgents: IAllAgents, repo: RepoAgent) {
-    super(hub, AllAgents);
-    this.AllAgents.Logger.FuncStart(ContentAtticManager.name);
+  constructor(repo: RepoAgent, logger: ILoggerAgent) {
+    this.Logger = logger;
+
+    this.Logger.FuncStart(ContentAtticManager.name);
 
     this.Repo = repo;
 
-    this.AllAgents.Logger.FuncEnd(ContentAtticManager.name);
+    this.Logger.FuncEnd(ContentAtticManager.name);
   }
 
   InitContentAtticManager(settingAutoSnapshotRetainDays: number) {
@@ -32,8 +31,8 @@ export class ContentAtticManager extends ContentManagerBase {
 
   async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.WriteToStorage.name);
-      var result: PromiseResult = new PromiseResult(this.WriteToStorage.name, this.AllAgents.Logger);
+      this.Logger.FuncStart(this.WriteToStorage.name);
+      var result: PromiseResult = new PromiseResult(this.WriteToStorage.name, this.Logger);
 
       var snapShotAsString = JSON.stringify(dataOneWindow);
 
@@ -42,19 +41,20 @@ export class ContentAtticManager extends ContentManagerBase {
       await this.GetFromStorageById(dataOneWindow.GuidId)
         .then(() => this.CleanOutOldAutoSavedData())
         .then(() => resolve())
-        .catch((err) => reject (err))
+        .catch((err) => reject(err))
 
-      this.AllAgents.Logger.FuncEnd(this.WriteToStorage.name);
+      this.Logger.FuncEnd(this.WriteToStorage.name);
     });
   }
 
   async GetFromStorageById(needleId: GuidData): Promise<IDataOneWindowStorage> {
-    return new Promise(async (resolve) => {
-      this.AllAgents.Logger.FuncStart(this.GetFromStorageById.name, needleId.Raw);
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetFromStorageById.name, needleId.Raw);
 
       var foundStorage: ISnapShotsMany;
       await this.GetAllSnapShotsMany()
-        .then((result) => foundStorage = result);
+        .then((result) => foundStorage = result)
+        .catch((err) => reject(err));
 
       var DateOneWinStoreMatch: IDataOneWindowStorage = null;
 
@@ -68,12 +68,12 @@ export class ContentAtticManager extends ContentManagerBase {
         }
       }
       if (DateOneWinStoreMatch) {
-        this.AllAgents.Logger.Log('found match');
+        this.Logger.Log('found match');
       } else {
-        this.AllAgents.Logger.LogVal(this.GetFromStorageById.name, 'Match not found')
+        this.Logger.LogVal(this.GetFromStorageById.name, 'Match not found')
       }
 
-      this.AllAgents.Logger.FuncEnd(this.GetFromStorageById.name);
+      this.Logger.FuncEnd(this.GetFromStorageById.name);
       resolve(DateOneWinStoreMatch);
     });
   }
@@ -95,26 +95,26 @@ export class ContentAtticManager extends ContentManagerBase {
         candidate.NickName = '';
       }
     } else {
-      this.AllAgents.Logger.ErrorAndThrow(this.__parseRawData.name, 'Saved data did not import correctly')
+      this.Logger.ErrorAndThrow(this.__parseRawData.name, 'Saved data did not import correctly')
     }
     return candidate
   }
   private GetAllLocalStorageAsIOneStorageData(): Promise<IOneStorageData[]> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.GetAllLocalStorageAsIOneStorageData.name);
+      this.Logger.FuncStart(this.GetAllLocalStorageAsIOneStorageData.name);
       let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
 
       await this.Repo.GetBulkLocalStorageByKeyPrefix(prefix)
         .then((result) => resolve(result))
         .catch((err) => reject(err));
 
-      this.AllAgents.Logger.FuncEnd(this.GetAllLocalStorageAsIOneStorageData.name);
+      this.Logger.FuncEnd(this.GetAllLocalStorageAsIOneStorageData.name);
     });
   }
 
   private async __getAllStorageReal(): Promise<IDataOneWindowStorage[]> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.__getAllStorageReal.name);
+      this.Logger.FuncStart(this.__getAllStorageReal.name);
       var toReturn: IDataOneWindowStorage[] = [];
 
       var rawStorageData: IOneStorageData[];
@@ -138,12 +138,12 @@ export class ContentAtticManager extends ContentManagerBase {
         })
         .catch((err) => reject(err));
 
-      this.AllAgents.Logger.FuncEnd(this.__getAllStorageReal.name);
+      this.Logger.FuncEnd(this.__getAllStorageReal.name);
     })
   }
 
   async CleanOutOldAutoSavedData(): Promise<void> {
-    this.AllAgents.Logger.FuncStart(this.CleanOutOldAutoSavedData.name);
+    this.Logger.FuncStart(this.CleanOutOldAutoSavedData.name);
 
     var cleanData: IDataOneWindowStorage[] = [];
     var now: Date = new Date();
@@ -163,14 +163,14 @@ export class ContentAtticManager extends ContentManagerBase {
 
         if (candidate.Flavor == SnapShotFlavor.Autosave) {
           if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
-            this.AllAgents.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
+            this.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
             deleteFlag = true;
           }
           autoCount++;
         }
 
         if (now.getTime() - candidate.TimeStamp.getTime() > maxAutoSaveDiff) {
-          this.AllAgents.Logger.LogVal('Delete (Old : max' + ContentConst.Const.DefaultMaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
+          this.Logger.LogVal('Delete (Old : max' + ContentConst.Const.DefaultMaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
           deleteFlag = true;
         }
 
@@ -178,21 +178,21 @@ export class ContentAtticManager extends ContentManagerBase {
           cleanData.push(candidate);
         } else {
           try {
-            this.AllAgents.Logger.LogVal('Cleaning old autosave', candidate.RawData.key);
+            this.Logger.LogVal('Cleaning old autosave', candidate.RawData.key);
             window.localStorage.removeItem(candidate.RawData.key);
           } catch (e) {
-            this.AllAgents.Logger.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.RawData.key)
+            this.Logger.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.RawData.key)
           }
         }
       }
     }
 
-    this.AllAgents.Logger.FuncEnd(this.CleanOutOldAutoSavedData.name);
+    this.Logger.FuncEnd(this.CleanOutOldAutoSavedData.name);
   }
 
   GetAllSnapShotsMany(): Promise<ISnapShotsMany> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.GetAllSnapShotsMany.name);
+      this.Logger.FuncStart(this.GetAllSnapShotsMany.name);
 
       let snapShotsMany: ISnapShotsMany = {
         CurrentSnapShots: [],
@@ -213,7 +213,7 @@ export class ContentAtticManager extends ContentManagerBase {
         })
         .catch((err) => reject(err));
 
-      this.AllAgents.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
+      this.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
     });
   }
 
@@ -228,7 +228,7 @@ export class ContentAtticManager extends ContentManagerBase {
           candidate.GuidId = new GuidData(candidate.GuidId.Raw);
           toReturn.push(candidate);
         } else {
-          this.AllAgents.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.GuidId.Raw)
+          this.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.GuidId.Raw)
         }
       } catch (err) {
       }
@@ -270,7 +270,7 @@ export class ContentAtticManager extends ContentManagerBase {
     return new Promise(async (resolve, reject) => {
       //var result: boolean = confirm('Remove ?: ' + this.TimeNicknameFavStrForConfirmation(storageMatch));
       //if (result === true) {
-      this.AllAgents.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
+      this.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
 
       let targetId = storageMatch.GuidId;
 
@@ -292,7 +292,7 @@ export class ContentAtticManager extends ContentManagerBase {
 
   RemoveOneFromStorage(targetId: GuidData) {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.RemoveOneFromStorage.name);
+      this.Logger.FuncStart(this.RemoveOneFromStorage.name);
       try {
         if (targetId) {
           var storageMatch: IDataOneWindowStorage = await this.GetFromStorageById(targetId)
@@ -310,7 +310,7 @@ export class ContentAtticManager extends ContentManagerBase {
         reject(e);
       }
 
-      this.AllAgents.Logger.FuncEnd(this.RemoveOneFromStorage.name);
+      this.Logger.FuncEnd(this.RemoveOneFromStorage.name);
     })
   }
 }

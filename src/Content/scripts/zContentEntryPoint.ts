@@ -14,31 +14,29 @@ import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGeneric
 import { AutoSnapShotAgent } from './Managers/AutoSnapShotAgent/AutoSnapShotAgent';
 import { ContentHub } from './Managers/ContentHub/ContentHub';
 import { SitecoreUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
-
-
-
-
+import { ContentAtticManager } from './Managers/ContentAtticManager/ContentAtticManager';
 
 class ContentEntry {
   private AllAgents: IAllAgents;
   private contentHub: ContentHub;
-
-
-
-
+   private RepoAgent: RepoAgent;
+  private  AtticMan: ContentAtticManager;
+  private  Logger: LoggerAgent;
 
   async main() {
     await this.InstantiateMembers()
       .then(() => this.AllAgents.Logger.Log('Instantiate Members succeeded'))
       .then(() => {
-        this.contentHub = new ContentHub(this.AllAgents);
+        this.RepoAgent = new RepoAgent(this.AllAgents.Logger);
+        this.AtticMan = new ContentAtticManager(this.RepoAgent, this.Logger);
+        this.contentHub = new ContentHub(this.AllAgents, this.AtticMan);
         let scUiMan = new SitecoreUiManager(this.contentHub, this.AllAgents);
         this.contentHub.SitecoreUiMan = scUiMan;
-        this.contentHub.InitContentHub();
+        this.contentHub.InitContentHub(this.AtticMan);
       })
       .then(() => {
         let pageType = this.contentHub.SitecoreUiMan.GetCurrentPageType();
-        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.contentHub.OneWindowMan, pageType, this.contentHub.AtticMan);
+        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.contentHub.OneWindowMan, pageType, this.AtticMan);
         autoSnapShotAgent.ScheduleIntervalTasks();
       })
       .then(() => this.AllAgents.Logger.Log('Init success'))
@@ -68,7 +66,8 @@ class ContentEntry {
 
   private async InstantiateMembers() {
     this.AllAgents = new AllAgents();
-    this.AllAgents.Logger = new LoggerAgent();
+    this.Logger = new LoggerAgent();
+    this.AllAgents.Logger = this.Logger;
 
     let Repo: RepoAgent = new RepoAgent(this.AllAgents.Logger);
 

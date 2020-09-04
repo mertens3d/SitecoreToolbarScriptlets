@@ -7,13 +7,18 @@ import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAge
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDtState";
 import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
+import { ContentAtticManager } from "../../Managers/ContentAtticManager/ContentAtticManager";
 import { ContentHub } from "../../Managers/ContentHub/ContentHub";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 
 export class ContentStateManager extends ContentManagerBase {
-  constructor(hub: ContentHub, contentAgents: IAllAgents) {
+  private AtticMan: ContentAtticManager;
+
+  constructor(hub: ContentHub, contentAgents: IAllAgents, atticMan: ContentAtticManager) {
     super(hub, contentAgents);
     this.AllAgents.Logger.FuncStart(PromisesBasic.name);
+
+    this.AtticMan = atticMan;
     this.AllAgents.Logger.FuncEnd(PromisesBasic.name);
   }
 
@@ -23,10 +28,10 @@ export class ContentStateManager extends ContentManagerBase {
 
       let toReturn: IContentState = new DefaultContentState();
 
-      toReturn.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany();
-      toReturn.ErrorStack = this.AllAgents.Logger.ErrorStack;
-
-      await this.GetCurrentDtOrCeState()
+      await this.AtticMan.GetAllSnapShotsMany()
+        .then((result) => toReturn.SnapShotsMany = result)
+        .then(() => toReturn.ErrorStack = this.AllAgents.Logger.ErrorStack)
+        .then(() => this.GetCurrentDtOrCeState())
         .then((result: IDataOneStorageOneTreeState) => {
           toReturn.ActiveCe = result;
           resolve(toReturn);

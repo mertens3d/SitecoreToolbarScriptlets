@@ -1,29 +1,31 @@
 ﻿import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { ContentManagerBase } from "../../_first/_ContentManagerBase";
 import { ContentHub } from "../ContentHub/ContentHub";
+import { RecipeChangeNickName } from "./Recipes/RecipeChangeNickName";
 import { RecipePublishActiveCe } from "./Recipes/RecipePublishActiveCe";
 import { RecipeRemoveItemFromStorage } from "./Recipes/RecipeRemoveItemFromStorage";
 import { RecipeSaveState } from "./Recipes/RecipeSaveState";
-import { RecipeChangeNickName } from "./Recipes/RecipeChangeNickName";
 import { RecipeToggleFavorite } from "./Recipes/RecipeToggleFavorite";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 
 export class ContentAPIManager extends ContentManagerBase {
+
   constructor(hub: ContentHub, AllAgents: IAllAgents) {
     super(hub, AllAgents);
+    
     this.AllAgents.Logger.FuncStart(ContentAPIManager.name);
+
+
 
     this.AllAgents.Logger.FuncEnd(ContentAPIManager.name);
   }
 
   async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void>{
     return new Promise(async (resolve, reject) => {
-      await new RecipeChangeNickName(commandData, commandData.ContentHub.AtticMan).Execute()
+      await new RecipeChangeNickName(commandData, commandData.AtticMan).Execute()
         .then(() => resolve())
         .catch((err) => reject(err));
     })
@@ -45,9 +47,9 @@ export class ContentAPIManager extends ContentManagerBase {
 
   AddCETab(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await commandData.ContentHub.AtticMan.AllAgents.HelperAgent.PromisesRecipes.FromDesktopOpenNewCEIframe(commandData.TopLevelDoc)
+      await this.AllAgents.HelperAgent.PromisesRecipes.FromDesktopOpenNewCEIframe(commandData.TopLevelDoc)
         .then(() => {
-          commandData.ContentHub.AtticMan.AllAgents.ToastAgent.PopUpToastNotification(commandData.TopLevelDoc, "Success");
+          this.AllAgents.ToastAgent.PopUpToastNotification(commandData.TopLevelDoc, "Success");
           resolve();
         })
 
@@ -65,7 +67,7 @@ export class ContentAPIManager extends ContentManagerBase {
 
   async RemoveSnapShot(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeRemoveItemFromStorage(commandData);
+      let recipe = new RecipeRemoveItemFromStorage(commandData, commandData.AtticMan);
       await recipe.Execute()
         .then(resolve)
         .catch((err) => reject(err));
@@ -74,7 +76,7 @@ export class ContentAPIManager extends ContentManagerBase {
 
   async SaveWindowState(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeSaveState(commandData);
+      let recipe = new RecipeSaveState(commandData, commandData.AtticMan);
       await recipe.Execute()
         .then(resolve)
         .catch((err) => reject(err));
@@ -103,7 +105,7 @@ export class ContentAPIManager extends ContentManagerBase {
 
   MarkFavorite(commandData: ICommandHndlrDataForContent) {
     return new Promise(async (resolve, reject) => {
-      await new RecipeToggleFavorite(commandData, commandData.ContentHub.AtticMan).Execute()
+      await new RecipeToggleFavorite(commandData, commandData.AtticMan).Execute()
         .then(() => resolve())
         .catch((err) => reject(err));
     });

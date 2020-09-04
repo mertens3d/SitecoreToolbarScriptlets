@@ -3,7 +3,6 @@ import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents
 import { ISharedConst } from '../../../Shared/scripts/Interfaces/ISharedConst';
 import { ContentStateManager } from "../Classes/ContentStateManager/ContentStateManager";
 import { ContentAPIManager } from '../Managers/ContentAPIManager/ContentAPIManager';
-import { ContentAtticManager } from '../Managers/ContentAtticManager/ContentAtticManager';
 import { ContentHub } from '../Managers/ContentHub/ContentHub';
 import { ContentMessageManager } from '../Managers/ContentMessageManager/ContentMessageManager';
 import { MiscManager } from '../Managers/MiscManager/MiscManager';
@@ -20,7 +19,6 @@ export class ContentManagerBase {
     this.AllAgents = allAgents;
   }
 
-  AtticMan(): ContentAtticManager { return this.ContentHub.AtticMan; }
   OneScWinMan(): OneScWindowManager { return this.ContentHub.OneWindowMan; }
   ScUiMan(): SitecoreUiManager { return this.ContentHub.SitecoreUiMan; }
   MsgMan(): ContentMessageManager { return this.ContentHub.ContentMessageMan; }

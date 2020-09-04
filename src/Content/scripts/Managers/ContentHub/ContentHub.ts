@@ -22,7 +22,6 @@ import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 
 export class ContentHub {
-  AtticMan: ContentAtticManager;
   Const: IContentConst;
   private AllAgents: IAllAgents;
 
@@ -39,25 +38,21 @@ export class ContentHub {
   ContentFactory: ContentStateManager;
   SharedConst: ISharedConst;
 
-  constructor(allAgents: IAllAgents) {
+  constructor(allAgents: IAllAgents, atticMan: ContentAtticManager) {
     this.AllAgents = allAgents;
     this.AllAgents.Logger.InstantiateStart(ContentHub.name);
     //console.log('(ctor) logger enabled ' + this.AllAgents.Logger.EnabledStatus());
-    this.InstantiateMembers();
+    this.InstantiateMembers(atticMan);
     this.AllAgents.Logger.InstantiateEnd(ContentHub.name);
   }
 
-   InstantiateMembers() {
+  InstantiateMembers(atticMan: ContentAtticManager) {
     this.AllAgents.Logger.FuncStart(this.InstantiateMembers.name);
 
-    let Repo: RepoAgent = new RepoAgent(this.AllAgents.Logger);
-
-    this.AtticMan = new ContentAtticManager(this, this.AllAgents, Repo);
-
     this.ContentAPIMan = new ContentAPIManager(this, this.AllAgents);
-    this.ContentMessageMan = new ContentMessageManager(this, this.AllAgents);
+    this.ContentMessageMan = new ContentMessageManager(this, this.AllAgents, atticMan);
     this.MiscMan = new MiscManager(this, this.AllAgents);
-    this.ContentFactory = new ContentStateManager(this, this.AllAgents);
+    this.ContentFactory = new ContentStateManager(this, this.AllAgents, atticMan);
 
     this.OneWindowMan = new OneScWindowManager(this, this.AllAgents);
 
@@ -65,28 +60,24 @@ export class ContentHub {
 
     this.SharedConst = SharedConst.Const;
 
-    
-
-
-
     this.AllAgents.Logger.FuncEnd(this.InstantiateMembers.name);
   }
 
-  InitContentHub(): Promise<void> {
+  InitContentHub(atticMan: ContentAtticManager): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.InitContentHub.name);
       this.Const = ContentConst.Const;
 
       await this.SitecoreUiMan.InitSitecoreUiManager()
         .then(() => {
-          this.AtticMan.InitContentAtticManager(this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
+          atticMan.InitContentAtticManager(this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
           this.ContentMessageMan.InitContentMessageManager();
 
           this.OneWindowMan.InitOneScWindowManager();
 
           this.InjectCss();
         })
-        .then(() => this.InitFromQueryStr())
+        .then(() => this.InitFromQueryStr(atticMan))
 
         .then(() => resolve())
         .catch((err) => reject(err));
@@ -111,7 +102,7 @@ export class ContentHub {
     document.getElementsByTagName("head")[0].appendChild(style);
   }
 
-  InitFromQueryStr(): Promise<void> {
+  InitFromQueryStr(atticMan: ContentAtticManager): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.InitFromQueryStr.name);
 
@@ -124,7 +115,7 @@ export class ContentHub {
             this.AllAgents.Logger.LogVal("targetGuid", targetGuid);
             var dataOneWindowStorage;
 
-            await this.AtticMan.GetFromStorageById(targetGuid)
+            await atticMan.GetFromStorageById(targetGuid)
               .then((result) => dataOneWindowStorage = result);
 
             var self = this;

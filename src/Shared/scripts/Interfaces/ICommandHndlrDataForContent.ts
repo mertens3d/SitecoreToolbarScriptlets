@@ -4,8 +4,10 @@ import { PayloadDataFromPopUp } from "../Classes/PayloadDataReqPopUp";
 import { ILoggerAgent } from "./Agents/ILoggerBase";
 import { IDataOneDoc } from "./IDataOneDoc";
 import { IPromisesBasic } from "./IPromiseHelper";
+import { ContentAtticManager } from "../../../Content/scripts/Managers/ContentAtticManager/ContentAtticManager";
 
 export interface ICommandHndlrDataForContent {
+  AtticMan: ContentAtticManager;
   Logger: ILoggerAgent;
   PayloadData: PayloadDataFromPopUp,
   ContentMessageBroker: ContentMessageBroker,

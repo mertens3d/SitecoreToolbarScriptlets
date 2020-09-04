@@ -14,20 +14,23 @@ import { ContentHub } from "../../Managers/ContentHub/ContentHub";
 import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { ContentAtticManager } from "../../Managers/ContentAtticManager/ContentAtticManager";
 
 export class ContentMessageBroker extends ContentManagerBase implements IContentMessageBroker {
   private Logger: ILoggerAgent;
   private SettingsAgent: ISettingsAgent;
   private ApiManager: ContentAPIManager;
   private TopLevelDoc: IDataOneDoc;
+  private  AtticMan: ContentAtticManager;
   //ReadyForMessages: boolean = false;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: ContentAPIManager, topLevelDoc: IDataOneDoc, hub: ContentHub, contentAgents: IAllAgents) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: ContentAPIManager, topLevelDoc: IDataOneDoc, hub: ContentHub, contentAgents: IAllAgents, atticMan: ContentAtticManager) {
     super(hub, contentAgents);
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
     this.ApiManager = apiManager;
     this.TopLevelDoc = topLevelDoc;
+    this.AtticMan = atticMan;
 
     this.Logger.InstantiateStart(ContentMessageBroker.name);
 
@@ -208,6 +211,7 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
         var response: MsgFromContent = await this.NewMsgFromContentShell();
 
         let commandData: ICommandHndlrDataForContent = {
+          AtticMan: this.AtticMan,
           PayloadData: payload.Data,
           ContentMessageBroker: this,
           TopLevelDoc: this.TopLevelDoc,

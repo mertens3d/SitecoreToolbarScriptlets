@@ -1,17 +1,20 @@
-﻿import { scWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
+﻿import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
+import { scWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
 import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { IDataOneIframe } from "../../../../../Shared/scripts/Interfaces/IDataOneIframe";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/IDataPublishChain";
-import { RecipeBase } from "./RecipeBase";
-import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
+import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
+import { RecipeBase } from "./RecipeBase";
 
 export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes {
+
   constructor(commandData: ICommandHndlrDataForContent) {
     super(commandData);
   }
+
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       await this.PublishActiveCE(this.CommandData.TopLevelDoc)
@@ -119,7 +122,7 @@ export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes
   private async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
     await this.PromiseBasic.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.SettingsHidden)
       .then(async () => {
-        await this.PromiseBasic.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, this.CommandData.ContentHub.AtticMan.SharedConst().IterHelper.MaxCount.OverridePublishing)
+        await this.PromiseBasic.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
         await this.PromiseBasic.WaitForThenClick([ContentConst.Const.Selector.SC.Cancel], dataPublishChain.Iframe0Blue.ContentDoc);
@@ -153,7 +156,7 @@ export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes
     await this.PromiseBasic.WaitForAndReturnFoundElem(dataPublishChain.TopLevelDoc, ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
       .then(
         (found: HTMLElement) => {
-          dataPublishChain.jqIframe = this.CommandData.ContentHub.AtticMan.AllAgents.HelperAgent.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>found, 'jqIframe');
+          dataPublishChain.jqIframe = this.CommandData.ContentHub.ContentAPIMan.AllAgents.HelperAgent.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>found, 'jqIframe');
 
           return dataPublishChain;
         }
