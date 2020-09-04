@@ -4,15 +4,20 @@ import { IOneGenericSettingForStorage } from "../../Classes/IOneGenericSettingFo
 import { SettingFlavor } from "../../Enums/SettingFlavor";
 
 export interface ISettingsAgent {
-  CheckBoxSettingChanged(SettingKey: SettingKey, checked: boolean);
   GetAllSettings():IGenericSetting[];
   GetByKey(AutoSaveIntervalMin: SettingKey): IGenericSetting;
   GetSettingsByFlavor(targetFlavor: SettingFlavor[]): IGenericSetting[];
   InitSettingsAgent(allSettings: IGenericSetting[]): void;
   LogAllSettings();
-  NumberSettingChanged(SettingKey: SettingKey, checked: number);
   ReadGenericSettingsFromStorage(): IOneGenericSettingForStorage[];
   SetByKey(settingKey: SettingKey, value: any): any;
   SetContentSettings(CurrentContentPrefs: IGenericSetting[]);
+<<<<<<< HEAD
+  CheckBoxSettingChanged(SettingKey: SettingKey, checked: boolean);
+  NumberSettingChanged(SettingKey: SettingKey, checked: number);
+=======
+  SettingChanged(SettingKey: SettingKey, checked: boolean);
   UpdateSettings(CurrentContentPrefs: IGenericSetting[]);
+  ValueAsInteger(autoSaveSetting: IGenericSetting);
+>>>>>>> origin/master
 }

@@ -57,11 +57,10 @@ export class OneScWindowManager extends ContentManagerBase {
     return activeWindowSnapShot;
   }
 
-  SaveWindowState(snapShotSettings: IDataPayloadSnapShot): Promise<IDataOneWindowStorage> {
+  GetWindowState(snapShotSettings: IDataPayloadSnapShot): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.SaveWindowState.name);
+      this.AllAgents.Logger.FuncStart(this.GetWindowState.name);
 
-      let promiseResult: PromiseResult = new PromiseResult(this.SaveWindowState.name, this.AllAgents.Logger);
 
       var snapShot: IDataOneWindowStorage = this.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
 
@@ -79,9 +78,9 @@ export class OneScWindowManager extends ContentManagerBase {
         await this.OneCEAgent.GetTreeState(id)
           .then((state: IDataOneStorageOneTreeState) => {
             snapShot.AllCEAr.push(state);
-            promiseResult.MarkSuccessful();
+            resolve(snapShot);
           })
-          .catch((err) => promiseResult.MarkFailed(err));
+          .catch((err) => reject(err));
       }
       else if (snapShotSettings.CurrentPageType === scWindowType.Desktop) {
         this.AllAgents.Logger.MarkerB();
@@ -89,21 +88,17 @@ export class OneScWindowManager extends ContentManagerBase {
         await this.OneDesktopMan.GetStateDesktop()
           .then((states: IDataDesktopState) => {
             snapShot.AllCEAr = states.AllCeData;
-            promiseResult.MarkSuccessful();
+            resolve(snapShot);
           })
-          .catch((err) => promiseResult.MarkFailed(err));
+          .catch((err) => reject(err));
       }
       else {
-        this.AllAgents.Logger.ErrorAndThrow(this.SaveWindowState.name, 'Invalid page location ' + snapShotSettings.CurrentPageType);
+        this.AllAgents.Logger.ErrorAndThrow(this.GetWindowState.name, 'Invalid page location ' + snapShotSettings.CurrentPageType);
       }
 
-      this.AllAgents.Logger.FuncEnd(this.SaveWindowState.name);
+      this.AllAgents.Logger.FuncEnd(this.GetWindowState.name);
 
-      if (promiseResult.WasSuccessful()) {
-        resolve(snapShot);
-      } else {
-        reject(promiseResult.RejectReasons);
-      }
+      
     });
   }
 

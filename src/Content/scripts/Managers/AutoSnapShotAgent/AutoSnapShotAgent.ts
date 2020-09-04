@@ -8,22 +8,25 @@ import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISe
 import { IDataPayloadSnapShot } from "../../../../Shared/scripts/Interfaces/IDataPayloadSnapShot";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { OneScWindowManager } from "../OneScWindowManager";
+import { ContentAtticManager } from "../ContentAtticManager/ContentAtticManager";
 
 export class AutoSnapShotAgent {
   private SettingsAgent: ISettingsAgent;
   private Logger: ILoggerAgent;
   private AutoSaveHasBeenScheduled: boolean = false;
   private windowMan: OneScWindowManager;
-  PageType: scWindowType;
+  private PageType: scWindowType;
+  private AtticMan: ContentAtticManager;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, windowMan: OneScWindowManager, pageType: scWindowType) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, windowMan: OneScWindowManager, pageType: scWindowType, atticMan: ContentAtticManager) {
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
     this.windowMan = windowMan;
-    this.PageType = pageType
+    this.PageType = pageType;
+    this.AtticMan = atticMan;
   }
 
-  AutoSaveSnapShot() {
+  async AutoSaveSnapShot() {
     this.Logger.FuncStart(this.AutoSaveSnapShot.name);
     var SnapShotSettings: IDataPayloadSnapShot = {
       SnapShotNewNickname: '',
@@ -31,7 +34,9 @@ export class AutoSnapShotAgent {
       CurrentPageType: this.PageType
     }
 
-    this.windowMan.SaveWindowState(SnapShotSettings);
+    await this.windowMan.GetWindowState(SnapShotSettings)
+      .then((windowState) => this.AtticMan.WriteToStorage(windowState))
+      .catch((err) => this.Logger.ErrorAndContinue(this.AutoSaveSnapShot.name,err));
 
     this.Logger.FuncEnd(this.AutoSaveSnapShot.name);
   }
