@@ -27,7 +27,7 @@ export class EventManager { //extends PopUpManagerBase
 
     try {
       this.__wireAllMenuButtons(allCommands);
-      this.WireAllGenericSettings();
+      this.WireUiToSettings();
 
       await this.TriggerPingEvent(pingCommand);
       //.then(() => resolve())
@@ -53,42 +53,51 @@ export class EventManager { //extends PopUpManagerBase
     })
   }
 
-  private WireAllGenericSettings() {
-    this.Logger.FuncStart(this.WireAllGenericSettings.name);
+  private SetLabel(uiElem: HTMLElement, oneSetting: IGenericSetting) {
+    //if has label
+    let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
+    if (uiLabel) {
+      uiLabel.innerHTML = oneSetting.Friendly;
+    } else {
+      uiElem.innerHTML = oneSetting.Friendly;
+    }
+  }
+
+  private WireUiToSettings() {
+    this.Logger.FuncStart(this.WireUiToSettings.name);
     let genericSettings: IGenericSetting[] = this.SettingsAgent.GetAllSettings();
 
     for (var idx = 0; idx < genericSettings.length; idx++) {
-      let oneSetting = genericSettings[idx];
+      let oneSetting: IGenericSetting = genericSettings[idx];
       this.Logger.Log(oneSetting.Friendly + ' : ' + oneSetting.ValueAsObj);
       if (oneSetting.HasUi) {
         let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
 
         if (uiElem) {
-          //if has label
-          let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
-          if (uiLabel) {
-            uiLabel.innerHTML = oneSetting.Friendly;
-          } else {
-            uiElem.innerHTML = oneSetting.Friendly;
-          }
+          this.SetLabel(uiElem, oneSetting)
 
           if (oneSetting.DataType === SettingType.BoolCheckBox) {
             let self = this;
             //this.Logger.Log('Assigning change event');
             uiElem.addEventListener('change', (evt) => {
-              self.SettingsAgent.SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
-            }
-            )
+              self.SettingsAgent.CheckBoxSettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
+            })
           }
           else if (oneSetting.DataType === SettingType.Accordion) {
             this.UiMan.AccordianManager.AddAccordianDrone(oneSetting, uiElem);
           }
+          else if (oneSetting.DataType == SettingType.Number) {
+            let self = this;
+            uiElem.addEventListener('change', (evt) => {
+              self.SettingsAgent.NumberSettingChanged(oneSetting.SettingKey, parseInt((<HTMLInputElement>evt.target).value));
+            })
+          }
         } else {
-          this.Logger.ErrorAndThrow(this.WireAllGenericSettings.name, 'ui generic element not found');
+          this.Logger.ErrorAndThrow(this.WireUiToSettings.name, 'ui generic element not found');
         }
       }
     }
-    this.Logger.FuncEnd(this.WireAllGenericSettings.name);
+    this.Logger.FuncEnd(this.WireUiToSettings.name);
   }
 
   private __wireAllMenuButtons(allCommands: IOneCommand[]) {
@@ -130,10 +139,9 @@ export class EventManager { //extends PopUpManagerBase
 
   private __wireSingleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
     if (targetElem) {
-
       let self = this;
       targetElem.addEventListener('click', (evt) => {
-      let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
+        let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
         data.Evt = evt;
         data.Self = self;
         data.Self.RouteAllCommandEvents(data);

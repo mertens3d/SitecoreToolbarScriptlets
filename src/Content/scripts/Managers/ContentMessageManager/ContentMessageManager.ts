@@ -1,21 +1,11 @@
-﻿import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
-import { PayloadDataFromPopUp } from '../../../../Shared/scripts/Classes/PayloadDataReqPopUp';
-import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
-import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
-import { scWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
-import { SnapShotFlavor } from '../../../../Shared/scripts/Enums/SnapShotFlavor';
+﻿import { PayloadDataFromPopUp } from '../../../../Shared/scripts/Classes/PayloadDataReqPopUp';
 import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
-import { IGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IDataPayloadSnapShot } from '../../../../Shared/scripts/Interfaces/IDataPayloadSnapShot';
-import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
-import { SharedConst } from '../../../../Shared/scripts/SharedConst';
 import { ContentMessageBroker } from '../../Drones/ContentMessageBroker/ContentMessageBroker';
 import { ContentManagerBase } from '../../_first/_ContentManagerBase';
 import { ContentHub } from '../ContentHub/ContentHub';
 
 export class ContentMessageManager extends ContentManagerBase {
-  AutoSaveHasBeenScheduled: boolean = false;
   private ContentMessageBroker: ContentMessageBroker;
   OperationCancelled: any;
 
@@ -31,44 +21,6 @@ export class ContentMessageManager extends ContentManagerBase {
     this.ContentMessageBroker = new ContentMessageBroker(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.APIMan(), this.ScUiMan().TopLevelDoc(), this.ContentHub, this.AllAgents);
     this.ContentMessageBroker.BeginListening();
     this.AllAgents.Logger.FuncEnd(this.InitContentMessageManager.name);
-  }
-
-  ScheduleIntervalTasks(reqMsgFromPopup: MsgFromPopUp) {
-    this.AllAgents.Logger.FuncStart(this.ScheduleIntervalTasks.name);
-    this.AllAgents.Logger.LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
-
-    let autoSaveSetting: IGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin)
-
-    if (this.AllAgents.SettingsAgent.ValueAsInteger(autoSaveSetting) > 0) {
-      if (!this.AutoSaveHasBeenScheduled) {
-        this.AllAgents.Logger.MarkerA();
-        var self = this;
-        this.AllAgents.Logger.MarkerB();
-        var intervalMs = StaticHelpers.MinToMs(ContentConst.Const.Timeouts.AutoSaveIntervalMin);
-
-        this.AllAgents.Logger.MarkerC();
-        window.setInterval(() => {
-          self.AutoSaveSnapShot(this.ScUiMan().GetCurrentPageType());
-        }, intervalMs)
-
-        this.AllAgents.Logger.MarkerD();
-        this.AutoSaveHasBeenScheduled = true;
-      }
-    }
-    this.AllAgents.Logger.FuncEnd(this.ScheduleIntervalTasks.name);
-  }
-
-  AutoSaveSnapShot(pageType: scWindowType) {
-    this.AllAgents.Logger.FuncStart(this.AutoSaveSnapShot.name);
-    var SnapShotSettings: IDataPayloadSnapShot = {
-      SnapShotNewNickname: '',
-      Flavor: SnapShotFlavor.Autosave,
-      CurrentPageType: pageType
-    }
-
-    this.OneScWinMan().SaveWindowState(SnapShotSettings);
-
-    this.AllAgents.Logger.FuncEnd(this.AutoSaveSnapShot.name);
   }
 
   private ToggleCompactCss(Data: PayloadDataFromPopUp): Promise<void> {

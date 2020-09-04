@@ -1,19 +1,23 @@
-import { AllAgents } from '../../Shared/scripts/Agents/Agents/AllAgents';
+import { ContentHub } from './Managers/ContentHub/ContentHub';
+import { IAllAgents } from '../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
+import { RepoAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent';
+import { HelperAgent } from '../../Shared/scripts/Helpers/Helpers';
+import { AllAgents } from '../../Shared/scripts/Agents/Agents/AllAgents';
+import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
+import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
+import { ConstAllSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings';
+import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
-import { RepoAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent';
-import { ConstAllSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings';
-import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
-import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
-import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
-import { HelperAgent } from '../../Shared/scripts/Helpers/Helpers';
-import { IAllAgents } from '../../Shared/scripts/Interfaces/Agents/IAllAgents';
-import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
+<<<<<<< HEAD
 import { AutoSnapShotAgent } from './Managers/AutoSnapShotAgent/AutoSnapShotAgent';
-import { ContentHub } from './Managers/ContentHub/ContentHub';
 import { SitecoreUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
+=======
+import { OneGenericSetting } from '../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting';
+>>>>>>> origin/master
 
 class ContentEntry {
   private AllAgents: IAllAgents;
@@ -30,7 +34,7 @@ class ContentEntry {
       })
       .then(() => {
         let pageType = this.contentHub.SitecoreUiMan.GetCurrentPageType();
-        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.contentHub.OneWindowMan, pageType, this.contentHub.AtticMan);
+        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.contentHub.OneWindowMan, pageType);
         autoSnapShotAgent.ScheduleIntervalTasks();
       })
       .then(() => this.AllAgents.Logger.Log('Init success'))

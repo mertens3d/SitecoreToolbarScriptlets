@@ -8,7 +8,7 @@ export class RecipeSaveState extends RecipeBase implements ICommandRecipes {
   }
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await this.CommandData.ContentHub.OneWindowMan.SaveWindowState(this.CommandData.PayloadData.SnapShotSettings)
+      await this.CommandData.ContentHub.OneWindowMan.GetWindowState(this.CommandData.PayloadData.SnapShotSettings)
         .then((windowState) => this.CommandData.ContentHub.AtticMan.WriteToStorage(windowState))
         .then(() => resolve())
         .catch((err) => reject(err));

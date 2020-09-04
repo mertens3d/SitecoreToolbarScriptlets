@@ -28,8 +28,6 @@ export class ContentAtticManager extends ContentManagerBase {
 
   InitContentAtticManager(settingAutoSnapshotRetainDays: number) {
     this.SettingAutoSnapshotRetainDays = settingAutoSnapshotRetainDays;
-
-    this.CleanOutOldAutoSavedData();
   }
 
   async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
@@ -41,22 +39,12 @@ export class ContentAtticManager extends ContentManagerBase {
 
       await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.GuidId.Raw, snapShotAsString)
 
-      var foundInStorage = await this.GetFromStorageById(dataOneWindow.GuidId);
-
-      if (foundInStorage) {
-        result.MarkSuccessful();
-      } else {
-        result.MarkFailed('not found in storage');
-        result.MarkFailed('Snap shot not successfully saved');
-      }
+      await this.GetFromStorageById(dataOneWindow.GuidId)
+        .then(() => this.CleanOutOldAutoSavedData())
+        .then(() => resolve())
+        .catch((err) => reject (err))
 
       this.AllAgents.Logger.FuncEnd(this.WriteToStorage.name);
-
-      if (result.WasSuccessful()) {
-        resolve();
-      } else {
-        reject(result.RejectReasons);
-      }
     });
   }
 
@@ -123,6 +111,7 @@ export class ContentAtticManager extends ContentManagerBase {
       this.AllAgents.Logger.FuncEnd(this.GetAllLocalStorageAsIOneStorageData.name);
     });
   }
+
   private async __getAllStorageReal(): Promise<IDataOneWindowStorage[]> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.__getAllStorageReal.name);
