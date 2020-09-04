@@ -12,6 +12,7 @@ import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastA
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
+import { OneGenericSetting } from '../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting';
 
 class ContentEntry {
   private AllAgents: IAllAgents;
@@ -27,19 +28,12 @@ class ContentEntry {
       .catch((err) => this.AllAgents.Logger.ErrorAndThrow('Content Entry Point', err));
   }
 
-  private async InstantiateMembers() {
-    this.AllAgents = new AllAgents();
-    this.AllAgents.Logger = new LoggerAgent();
+  private InitLogging() {
+    this.AllAgents.Logger.FuncStart(this.InitLogging.name);
 
-    let Repo: RepoAgent = new RepoAgent(this.AllAgents.Logger);
+    let enableLogger: IGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.EnableLogging);
 
-    this.AllAgents.SettingsAgent = new SettingsAgent(this.AllAgents.Logger, Repo);
-
-    var allSettings: IGenericSetting[] = new ConstAllSettings().AllSettings;
-
-    this.AllAgents.SettingsAgent.InitSettingsAgent(allSettings);
-
-    if (this.AllAgents.SettingsAgent.GetByKey(SettingKey.EnableLogging)) {
+    if (enableLogger.ValueAsBool()) {
       let consoleLogWrite = new LoggerConsoleWriter();
 
       var RollingLogId = new RollingLogIdDrone(this.AllAgents.SettingsAgent, this.AllAgents.Logger);
@@ -52,10 +46,25 @@ class ContentEntry {
     }
 
     this.AllAgents.Logger.FlushBuffer();
+    this.AllAgents.Logger.FuncEnd(this.InitLogging.name);
+  }
+
+  private async InstantiateMembers() {
+    this.AllAgents = new AllAgents();
+    this.AllAgents.Logger = new LoggerAgent();
+
+    let Repo: RepoAgent = new RepoAgent(this.AllAgents.Logger);
+
+    this.AllAgents.SettingsAgent = new SettingsAgent(this.AllAgents.Logger, Repo);
+
+    var allSettings: IGenericSetting[] = new ConstAllSettings().AllSettings;
+
+    this.AllAgents.SettingsAgent.InitSettingsAgent(allSettings);
+
+    this.InitLogging();
 
     this.AllAgents.HelperAgent = new HelperAgent(this.AllAgents.Logger);
     this.AllAgents.ToastAgent = new ToastAgent(this.AllAgents.Logger);
-
   }
 }
 

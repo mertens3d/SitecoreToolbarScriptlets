@@ -9,6 +9,7 @@ import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/IC
 import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { MessageManager } from "../Managers/MessageManager";
 import { TabManager } from "../Managers/TabManager";
+import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 
 export class HandlersExternal {
   private Logger: ILoggerAgent; //extends CommonEvents
@@ -33,7 +34,10 @@ export class HandlersExternal {
 
   private BuildNewMsgFromPopUp(msgFlag: MsgFlag, data: ICommandHndlrDataForPopUp): MsgFromPopUp {
     this.Logger.FuncStart(this.BuildNewMsgFromPopUp.name);
-    var msg = new MsgFromPopUp(msgFlag, this.TabMan.GetWindowType(), data.MenuState.SelectSnapshotId, this.SettingsAgent.GetOnlyContentPrefs());
+
+    
+    let settingsToSend = this.SettingsAgent.GetSettingsByFlavor([SettingFlavor.ContentAndPopUpStoredInPopUp, SettingFlavor.ContentOnly]);
+    var msg = new MsgFromPopUp(msgFlag, this.TabMan.GetWindowType(), data.MenuState.SelectSnapshotId, settingsToSend);
     this.Logger.FuncEnd(this.BuildNewMsgFromPopUp.name);
     return msg;
   }
