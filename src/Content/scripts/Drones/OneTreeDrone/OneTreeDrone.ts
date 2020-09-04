@@ -1,32 +1,32 @@
-import { IHelperAgent } from '../../../../Shared/scripts/Interfaces/Agents/IHelperAgent';
+import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/IDataOneTreeNode';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
-import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
+
+export class OneNodeDrone {
+}
 
 export class OneTreeDrone implements IOneTreeDrone {
   AssociatedDoc: IDataOneDoc;
   private Logger: ILoggerAgent;
-  private HelperAgent: IHelperAgent;
 
-  constructor(logger: ILoggerAgent, helperAgent: IHelperAgent, associatedDoc: IDataOneDoc) {
+  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc) {
     this.Logger = logger;
-    this.HelperAgent = helperAgent;
 
     this.Logger.FuncStart(OneTreeDrone.name);
     this.AssociatedDoc = associatedDoc;
     this.Logger.FuncEnd(OneTreeDrone.name);
   }
 
-  GetFriendlyNameFromNode(inputNode) {
+  GetFriendlyNameFromNode(inputNode: HTMLElement) {
     this.Logger.FuncStart(this.GetFriendlyNameFromNode.name);
     var toReturn = 'unknown';
 
     var parentNode = inputNode.parentNode;
 
-    var treeNode = parentNode.querySelector(ContentConst.Const.Selector.SC.IdStartsWithTreeNode); // [id^=Tree_Node_]');
+    var treeNode: HTMLElement = parentNode.querySelector(ContentConst.Const.Selector.SC.IdStartsWithTreeNode); // [id^=Tree_Node_]');
     if (treeNode) {
       toReturn = treeNode.innerText;
     } else {
@@ -111,20 +111,19 @@ export class OneTreeDrone implements IOneTreeDrone {
     return toReturn;
   }
 
+  GetRootNode(): HTMLElement {
+    this.Logger.LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
+    let toReturn: HTMLElement = this.AssociatedDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
+    return toReturn;
+  }
+
   GetOneLiveTreeData(): IDataOneTreeNode[] {
     this.Logger.FuncStart(this.GetOneLiveTreeData.name);
-    this.Logger.Log('targetDoc isnull: ' + (this.AssociatedDoc === null));
-    this.Logger.LogVal('Doc url: ', this.AssociatedDoc.ContentDoc.location.href);
-    this.Logger.LogVal('Ready State: ', this.AssociatedDoc.ContentDoc.readyState);
 
     var toReturn: IDataOneTreeNode[] = [];
 
     if (this.AssociatedDoc) {
-      //this.debug().Log(targetDoc);
-      this.Logger.LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
-      //this.Logger.DebugIDataOneDoc(this.AssociatedDoc);
-
-      var rootNode = this.AssociatedDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
+      var rootNode: HTMLElement = this.GetRootNode();
 
       if (rootNode) {
         this.Logger.Log('rootNode: ' + rootNode.innerHTML);

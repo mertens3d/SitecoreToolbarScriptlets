@@ -20,7 +20,7 @@ export class PromisesRecipes extends HelperBase implements IPromiseRecipes {
         .then(() => this.HelperAgent.PromisesBasic.WaitForNewIframe(allIframeDataAtBeginning, targetDoc))
         .then((result) => newIframe = result)
         .then(() => this.HelperAgent.PromisesBasic.WaitForReadyIframe(newIframe) )
-        .then(() => targetCeAgent = new OneCEAgent(newIframe.ContentDoc, this.Logger, this.HelperAgent))
+        .then(() => targetCeAgent = new OneCEAgent(newIframe.ContentDoc, this.Logger))
         .then(() => resolve(targetCeAgent))
         .catch((err) => { throw this.FromDesktopOpenNewCEIframe.name + ' ' + err });
     });

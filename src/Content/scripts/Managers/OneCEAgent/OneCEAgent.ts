@@ -1,35 +1,36 @@
 ﻿import { IterationDrone } from '../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
-import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
-import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/IDataOneTreeNode';
-import { OneTreeDrone } from '../../Drones/OneTreeDrone/OneTreeDrone';
-import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
-import { PromiseResult } from '../../../../Shared/scripts/Classes/PromiseResult';
-import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
-import { IHelperAgent } from '../../../../Shared/scripts/Interfaces/Agents/IHelperAgent';
-import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
-import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
+import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
+import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/IDataOneTreeNode';
+import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
+import { OneTreeDrone } from '../../Drones/OneTreeDrone/OneTreeDrone';
+
+
+export class NameContentTab {
+  let
+}
+
+
 
 export class OneCEAgent {
-
   private OneTreeDrone: IOneTreeDrone;
   private ContextDoc: IDataOneDoc;
   private Logger: ILoggerAgent;
-  private HelperAgent: IHelperAgent;
 
-  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, helperAgent: IHelperAgent) {
+  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent) {
     this.Logger = logger;
-    this.HelperAgent = helperAgent;
 
     this.Logger.FuncStart(this.constructor.name);
 
-    this.Logger.IsNotNullOrUndefinedBool("helperAgent", helperAgent);
     this.Logger.IsNotNullOrUndefinedBool("associatedDoc", associatedDoc);
 
     this.ContextDoc = associatedDoc;
 
-    this.OneTreeDrone = new OneTreeDrone(this.Logger, this.HelperAgent, this.ContextDoc);
+    this.OneTreeDrone = new OneTreeDrone(this.Logger, this.ContextDoc);
 
     this.Logger.FuncEnd(this.constructor.name);
   }
@@ -74,11 +75,11 @@ export class OneCEAgent {
   }
 
   async WaitForAndRestoreOneNode(nextNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
-    this.Logger.FuncStart(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId) );
+    this.Logger.FuncStart(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId));
 
-    var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes( nextNode.NodeId);
+    var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(nextNode.NodeId);
 
-    this.Logger.Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + Guid.AsShort( dataOneDocTarget.DocId));
+    this.Logger.Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + Guid.AsShort(dataOneDocTarget.DocId));
     this.Logger.Log('document not null ' + (dataOneDocTarget.ContentDoc != null));
 
     var iterHelper = new IterationDrone(this.Logger, this.WaitForAndRestoreOneNode.name);
@@ -86,7 +87,7 @@ export class OneCEAgent {
     var foundOnPageTreeGlyph: HTMLElement = null;
 
     while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
-      this.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + Guid.AsShort(  dataOneDocTarget.DocId) + '*');
+      this.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + Guid.AsShort(dataOneDocTarget.DocId) + '*');
 
       foundOnPageTreeGlyph = dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
 
@@ -99,25 +100,25 @@ export class OneCEAgent {
         this.Logger.LogVal('IsActive', nextNode.IsActive.toString());
 
         if (nextNode.IsActive) {
-          var hotTreeNodeId = ContentConst.Const.Names.SC.TreeNodePrefix + Guid.WithoutDashes( nextNode.NodeId);
+          var hotTreeNodeId = ContentConst.Const.Names.SC.TreeNodePrefix + Guid.WithoutDashes(nextNode.NodeId);
           var hotTreeNode = dataOneDocTarget.ContentDoc.getElementById(hotTreeNodeId);
           if (hotTreeNode) {
             this.__activateNode(hotTreeNode);
           } else {
             this.Logger.ErrorAndContinue(this.WaitForAndRestoreOneNode.name, 'hot tree node not found')
           }
-        } 
+        }
       } else {
         this.Logger.Log('not Found...waiting: ');
         await iterHelper.Wait();
       }
     }
 
-    this.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, Guid.AsShort( dataOneDocTarget.DocId));
+    this.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId));
   }
 
   async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageOneTreeState, targetDoc: IDataOneDoc) {
-    this.Logger.FuncStart(this.WaitForAndRestoreManyAllNodes.name, Guid.AsShort(  targetDoc.DocId));
+    this.Logger.FuncStart(this.WaitForAndRestoreManyAllNodes.name, Guid.AsShort(targetDoc.DocId));
 
     let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.WaitForAndRestoreManyAllNodes.name);
 
@@ -131,16 +132,16 @@ export class OneCEAgent {
   }
 
   SetCompactCss() {
-    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort( this.ContextDoc.DocId));
+    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.ContextDoc.DocId));
 
-  //  browser.tabs.insertCSS(ass integer tabId, object details, function callback);
+    //  browser.tabs.insertCSS(ass integer tabId, object details, function callback);
 
-    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort( this.ContextDoc.DocId));
+    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.ContextDoc.DocId));
   }
 
   async RestoreCEStateAsync(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RestoreCEStateAsync.name, Guid.AsShort( this.ContextDoc.DocId));
+      this.Logger.FuncStart(this.RestoreCEStateAsync.name, Guid.AsShort(this.ContextDoc.DocId));
 
       var toReturn: boolean = false;
 
@@ -171,7 +172,7 @@ export class OneCEAgent {
     return toReturn;
   }
 
-  GetTreeState(id: GuidData) {
+  GetTreeState(id: GuidData): Promise<IDataOneStorageOneTreeState> {
     return new Promise<IDataOneStorageOneTreeState>((resolve, reject) => {
       this.Logger.FuncStart(this.GetTreeState.name);
 
@@ -190,7 +191,6 @@ export class OneCEAgent {
       }
 
       this.Logger.FuncEnd(this.GetTreeState.name);
-
     });
   }
 }

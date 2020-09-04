@@ -15,9 +15,17 @@ import { AutoSnapShotAgent } from './Managers/AutoSnapShotAgent/AutoSnapShotAgen
 import { ContentHub } from './Managers/ContentHub/ContentHub';
 import { SitecoreUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
 
+
+
+
+
 class ContentEntry {
   private AllAgents: IAllAgents;
   private contentHub: ContentHub;
+
+
+
+
 
   async main() {
     await this.InstantiateMembers()

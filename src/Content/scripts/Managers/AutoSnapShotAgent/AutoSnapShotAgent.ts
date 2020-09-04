@@ -6,9 +6,8 @@ import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IG
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IDataPayloadSnapShot } from "../../../../Shared/scripts/Interfaces/IDataPayloadSnapShot";
-import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { OneScWindowManager } from "../OneScWindowManager";
 import { ContentAtticManager } from "../ContentAtticManager/ContentAtticManager";
+import { OneScWindowManager } from "../OneScWindowManager";
 
 export class AutoSnapShotAgent {
   private SettingsAgent: ISettingsAgent;
@@ -50,18 +49,14 @@ export class AutoSnapShotAgent {
 
     if (autoSaveSetting.ValueAsInt() > 0) {
       if (!this.AutoSaveHasBeenScheduled) {
-        this.Logger.MarkerA();
         var self = this;
-        this.Logger.MarkerB();
 
         var intervalMs = StaticHelpers.MinToMs(autoSaveSetting.ValueAsInt());
 
-        this.Logger.MarkerC();
         window.setInterval(() => {
           self.AutoSaveSnapShot();
         }, intervalMs)
 
-        this.Logger.MarkerD();
         this.AutoSaveHasBeenScheduled = true;
       }
     }

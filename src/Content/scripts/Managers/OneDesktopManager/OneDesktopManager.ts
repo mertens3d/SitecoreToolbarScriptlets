@@ -81,7 +81,7 @@ export class OneDesktopManager extends ContentManagerBase {
             for (var iframeIdx = 0; iframeIdx < toReturnAllCeState.livingIframeAr.length; iframeIdx++) {
               this.AllAgents.Logger.LogVal('iframeIdx: ', iframeIdx);
               var targetIframeObj = toReturnAllCeState.livingIframeAr[iframeIdx];
-              var oneCeMan = new OneCEAgent(targetIframeObj.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
+              var oneCeMan = new OneCEAgent(targetIframeObj.ContentDoc, this.AllAgents.Logger);
 
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 

@@ -99,7 +99,7 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
           .then(() => this.AllAgents.HelperAgent.PromisesBasic.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
 
           .then((result) => {
-            targetCeAgent = new OneCEAgent(result.ContentDoc, this.AllAgents.Logger, this.AllAgents.HelperAgent);
+            targetCeAgent = new OneCEAgent(result.ContentDoc, this.AllAgents.Logger);
             this.__waitForIframeReady(result);
           })
           .then(() => this.__restoreDataToOneIframe(dataToRestore, targetCeAgent))

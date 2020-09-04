@@ -1,5 +1,7 @@
-﻿import { PromiseResult } from '../../../Shared/scripts/Classes/PromiseResult';
-import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+﻿import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
+import { Guid } from '../../../Shared/scripts/Helpers/Guid';
+import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
 import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IDataDesktopState } from '../../../Shared/scripts/Interfaces/IDataDtState';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
@@ -11,9 +13,6 @@ import { ContentManagerBase } from '../_first/_ContentManagerBase';
 import { ContentHub } from './ContentHub/ContentHub';
 import { OneCEAgent } from './OneCEAgent/OneCEAgent';
 import { OneDesktopManager } from './OneDesktopManager/OneDesktopManager';
-import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
-import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
-import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 
 export class OneScWindowManager extends ContentManagerBase {
   OneDesktopMan: OneDesktopManager = null;
@@ -32,7 +31,7 @@ export class OneScWindowManager extends ContentManagerBase {
     if (currPageType === scWindowType.Desktop) {
       this.OneDesktopMan = new OneDesktopManager(this.ContentHub, this.ScUiMan().TopLevelDoc(), this.AllAgents);
     } else if (currPageType === scWindowType.ContentEditor) {
-      this.OneCEAgent = new OneCEAgent(this.ScUiMan().TopLevelDoc(), this.AllAgents.Logger, this.AllAgents.HelperAgent);
+      this.OneCEAgent = new OneCEAgent(this.ScUiMan().TopLevelDoc(), this.AllAgents.Logger);
     }
   }
  private CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {

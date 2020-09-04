@@ -11,6 +11,7 @@ import { RecipeRemoveItemFromStorage } from "./Recipes/RecipeRemoveItemFromStora
 import { RecipeSaveState } from "./Recipes/RecipeSaveState";
 import { RecipeChangeNickName } from "./Recipes/RecipeChangeNickName";
 import { RecipeToggleFavorite } from "./Recipes/RecipeToggleFavorite";
+import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 
 export class ContentAPIManager extends ContentManagerBase {
   constructor(hub: ContentHub, AllAgents: IAllAgents) {
@@ -28,10 +29,10 @@ export class ContentAPIManager extends ContentManagerBase {
     })
   }
 
-  GetContentState() {
+  GetContentState(): Promise<IContentState> {
     return new Promise(async (resolve, reject) => {
       await this.ContentFactory().PopulateContentState()
-        .then((result) => resolve(result))
+        .then((result: IContentState) => resolve(result))
         .catch((err) => reject(err))
     });
   }
