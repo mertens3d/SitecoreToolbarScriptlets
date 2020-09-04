@@ -1,12 +1,12 @@
 ﻿import { EventManager } from "../../../PopUp/scripts/Managers/EventManager";
-import { IOneCommand } from "./IOneCommand";
 import { IEventHandlerData } from "./IEventHandlerData";
-import { PopUpHub } from "../../../PopUp/scripts/Managers/PopUpHub";
+import { IOneCommand } from "./IOneCommand";
+import { IMenuStateForMsg } from "../Classes/IMenuStateForMsg";
 
 export interface ICommandHndlrDataForPopUp {
-    Self: EventManager;
-    Command: IOneCommand;
-    Event: IEventHandlerData;
-    Evt: MouseEvent;
-    PopUpHub: PopUpHub;
+  MenuState: IMenuStateForMsg;
+  Self: EventManager;
+  Command: IOneCommand;
+  Event: IEventHandlerData;
+  Evt: MouseEvent;
 }

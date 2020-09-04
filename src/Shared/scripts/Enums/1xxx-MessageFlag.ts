@@ -22,9 +22,9 @@
 
   // 200 - response
   RespCurState = 1200,
-  RespError = 1201,
+  RespTaskFailed  = 1201,
   RespListeningAndReady = 1202,
-  RespTaskFailed = 1203,
+  _unused = 1203,
   RespTaskSuccessful = 1204,
   RespTest = 1205,
   RespNotReady = 1206,

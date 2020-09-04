@@ -67,15 +67,9 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
     return new Promise<void>(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.__restoreDataToOneIframe.name);
 
-      //this.AllAgents.Logger.DebugDataOneIframe(targetCeAgent);
-
-      var success = await this.OneScWinMan().OneDesktopMan.RestoreDataToOneIframeWorker(oneTreeState, targetCeAgent);
-
-      if (success) {
-        resolve();
-      } else {
-        reject(this.__restoreDataToOneIframe.name);
-      }
+      await this.OneScWinMan().OneDesktopMan.RestoreDataToOneIframeWorker(oneTreeState, targetCeAgent)
+        .then(() => resolve())
+        .catch((err) => reject(err));
 
       this.AllAgents.Logger.FuncEnd(this.__restoreDataToOneIframe.name);
     });

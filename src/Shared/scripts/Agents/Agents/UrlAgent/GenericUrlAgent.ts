@@ -54,7 +54,7 @@ export class GenericUrlAgent implements IUrlAgent {
     this.UrlParts.FilePath = newFilePath;
   }
 
-  InitGenericUrlAgent(): Promise<void> {
+  protected InitGenericUrlAgent(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
         this.Logger.FuncStart(this.InitGenericUrlAgent.name);

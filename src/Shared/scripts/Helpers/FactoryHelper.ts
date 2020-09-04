@@ -1,25 +1,11 @@
 ﻿import { HelperBase } from "../Classes/HelperBase";
 import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
-import { IDataOneWindowStorage } from "../Interfaces/IDataOneWindowStorage";
-import { scWindowType } from "../Enums/scWindowType";
-import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
-import { IDataDesktopState } from "../Interfaces/IDataDtState";
 import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
-import { GuidData } from "./GuidData";
 import { Guid } from "./Guid";
 
 export class FactoryHelper extends HelperBase implements IFactoryHelper {
-  CreateNewDtDataShell(): IDataDesktopState {
-    var toReturn: IDataDesktopState = {
-      AllCeData: [],
-      livingIframeAr: [],
-      ActiveCeMan: null,
-      ActiveCeState: null
-    }
-
-    return toReturn;
-  }
+ 
   DataOneContentDocFactoryFromIframe(dataOneIframe: IDataOneIframe): IDataOneDoc {
     //IframeElem: HTMLIFrameElement, nickname: string
     var toReturn: IDataOneDoc = null;
@@ -66,25 +52,5 @@ export class FactoryHelper extends HelperBase implements IFactoryHelper {
     }
     return toReturn;
   }
-  CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
-    this.Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
-    var dateToUse: Date = new Date();
-    var newGuid: GuidData = Guid.NewRandomGuid();
-
-    var activeWindowSnapShot: IDataOneWindowStorage = {
-      TimeStamp: dateToUse,
-      TimeStampFriendly: this.HelperAgent.UtilityHelp.MakeFriendlyDate(dateToUse),
-      WindowType: windowType,
-      WindowFriendly: windowType[windowType],
-      AllCEAr: [],
-      GuidId: newGuid,
-      NickName: '',
-      RawData: null,
-      Flavor: flavor,
-    };
-
-    this.Logger.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
-
-    return activeWindowSnapShot;
-  }
+  
 }

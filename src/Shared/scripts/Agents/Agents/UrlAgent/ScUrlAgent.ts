@@ -8,6 +8,7 @@ import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 
 export class ScUrlAgent extends GenericUrlAgent {
+  
   constructor(logger: ILoggerAgent) {
     super(logger);
   }
@@ -16,6 +17,9 @@ export class ScUrlAgent extends GenericUrlAgent {
     return new RegExp(regexPattern).test(url);
   }
 
+  async InitScUrlAgent() {
+    await super.InitGenericUrlAgent();
+  }
 
   GetFullUrl() {
     return this.BuildFullUrlFromParts();

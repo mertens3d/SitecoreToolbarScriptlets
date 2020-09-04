@@ -12,6 +12,8 @@ import { ContentHub } from './ContentHub/ContentHub';
 import { OneCEAgent } from './OneCEAgent/OneCEAgent';
 import { OneDesktopManager } from './OneDesktopManager/OneDesktopManager';
 import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
+import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
+import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 
 export class OneScWindowManager extends ContentManagerBase {
   OneDesktopMan: OneDesktopManager = null;
@@ -33,14 +35,34 @@ export class OneScWindowManager extends ContentManagerBase {
       this.OneCEAgent = new OneCEAgent(this.ScUiMan().TopLevelDoc(), this.AllAgents.Logger, this.AllAgents.HelperAgent);
     }
   }
+ private CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
+   this.AllAgents. Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
+    var dateToUse: Date = new Date();
+    var newGuid: GuidData = Guid.NewRandomGuid();
 
+    var activeWindowSnapShot: IDataOneWindowStorage = {
+      TimeStamp: dateToUse,
+      TimeStampFriendly: this.AllAgents. HelperAgent.UtilityHelp.MakeFriendlyDate(dateToUse),
+      WindowType: windowType,
+      WindowFriendly: windowType[windowType],
+      AllCEAr: [],
+      GuidId: newGuid,
+      NickName: '',
+      RawData: null,
+      Flavor: flavor,
+    };
+
+   this.AllAgents.Logger.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
+
+    return activeWindowSnapShot;
+  }
   SaveWindowState(snapShotSettings: IDataPayloadSnapShot): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.SaveWindowState.name);
 
       let promiseResult: PromiseResult = new PromiseResult(this.SaveWindowState.name, this.AllAgents.Logger);
 
-      var snapShot: IDataOneWindowStorage = this.AllAgents.HelperAgent.FactoryHelp.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
+      var snapShot: IDataOneWindowStorage = this.CreateShellIDataOneWindowStorage(snapShotSettings.CurrentPageType, snapShotSettings.Flavor);
 
       if (snapShotSettings) {
         if (snapShotSettings.SnapShotNewNickname) {
@@ -124,23 +146,29 @@ export class OneScWindowManager extends ContentManagerBase {
         if (dataToRestore.WindowType === scWindowType.ContentEditor || dataToRestore.WindowType === scWindowType.Desktop) {
           if (dataToRestore.WindowType === scWindowType.ContentEditor) {
             await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0])
-              .then(() => this.AllAgents.ToastAgent.Notify(targetDoc, 'Restore Completed'));
+              .then(() => this.AllAgents.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
+              .then(() => resolve())
+              .catch((err) => reject(err));
           } else {
             await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore)
-              .then(() => this.AllAgents.ToastAgent.Notify(targetDoc, 'Restore Completed'));
+              .then(() => this.AllAgents.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
+              .then(() => {
+                this.AllAgents.Logger.LogVal('resolving', this.RestoreStateToTargetDoc.name)
+                resolve();
+              })
+              .catch((err) => reject(err));
           }
         }
         else {
-          this.AllAgents.Logger.ErrorAndThrow(this.RestoreStateToTargetDoc.name, 'Data not restored. Not in Desktop or Content Editor');
+          reject(this.RestoreStateToTargetDoc.name + 'Data not restored. Not in Desktop or Content Editor');
         }
       }
       else {
-        this.AllAgents.ToastAgent.Notify(targetDoc, "No data found to restore");
+        reject(this.RestoreStateToTargetDoc.name + " No data found to restore");
       }
 
-      resolve();
+      reject(this.RestoreStateToTargetDoc.name + ' : unknown reason');
 
-      //reject(this.RestoreStateToTargetDoc.name +  " something went wrong");
       this.AllAgents.Logger.FuncEnd(this.RestoreStateToTargetDoc.name);
     });
   }

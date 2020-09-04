@@ -1,7 +1,6 @@
 ﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
 import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../../Interfaces/IDataOneDoc";
-import { ContentConst } from "../../../Interfaces/InjectConst";
 
 export class ToastAgent implements IToastAgent {
   private Logger: ILoggerAgent;
@@ -11,41 +10,40 @@ export class ToastAgent implements IToastAgent {
     this.Logger = loggerAgent;
   }
 
-  Notify(targetDoc: IDataOneDoc = null, Message: string): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.Notify.name);
+  PopUpToastNotification(targetDoc: IDataOneDoc = null, Message: string) {
+    this.Logger.FuncStart(this.PopUpToastNotification.name);
 
-      this.Logger.LogVal("Message", Message);
+    this.Logger.LogVal("Message", Message);
 
-      if (targetDoc) {
-        let bodyTag = targetDoc.ContentDoc.getElementsByTagName('body')[0];//(treeGlyphTargetId);
+    if (targetDoc) {
+      let bodyTag = targetDoc.ContentDoc.getElementsByTagName('body')[0];//(treeGlyphTargetId);
 
-        let toastContainer: HTMLElement = this.CreateToastContainer(targetDoc);
-        let flagSlider: HTMLElement = this.CreateSliderDiv(targetDoc, Message);
+      let toastContainer: HTMLElement = this.CreateToastContainer(targetDoc);
+      let flagSlider: HTMLElement = this.CreateSliderDiv(targetDoc, Message);
 
-        toastContainer.appendChild(flagSlider);
-        var self = this;
+      toastContainer.appendChild(flagSlider);
+      var self = this;
 
-        await setTimeout(async function () {
-          flagSlider.classList.remove(self.classSlideDown);
-          flagSlider.classList.add(self.classSlideUp);
+      setTimeout(async function () {
+        flagSlider.classList.remove(self.classSlideDown);
+        flagSlider.classList.add(self.classSlideUp);
 
-          await setTimeout(async function () {
-            flagSlider.classList.remove(self.classSlideUp);
-            flagSlider.classList.add(self.classSlideDown);
+        setTimeout(async function () {
+          flagSlider.classList.remove(self.classSlideUp);
+          flagSlider.classList.add(self.classSlideDown);
 
-            await setTimeout(function () {
-              toastContainer.remove();
-            }, 3000)
-          }, 3000);//ContentConst.Const.Timeouts.WaitBeforeRemovingCompleteFlagOnContent);
-        }, 3000);
+          setTimeout(function () {
+            toastContainer.remove();
+          }, 3000)
+        }, 3000);//ContentConst.Const.Timeouts.WaitBeforeRemovingCompleteFlagOnContent);
+      }, 3000)
 
-        bodyTag.appendChild(toastContainer);
-      }
+      bodyTag.appendChild(toastContainer);
+    }
 
-      this.Logger.FuncEnd(this.Notify.name);
-    });
+    this.Logger.FuncEnd(this.PopUpToastNotification.name);
   }
+
   CreateSliderDiv(targetDoc: IDataOneDoc, Message: string): HTMLElement {
     let flagSlider: HTMLElement = targetDoc.ContentDoc.createElement('div');
     flagSlider.classList.add('slider');

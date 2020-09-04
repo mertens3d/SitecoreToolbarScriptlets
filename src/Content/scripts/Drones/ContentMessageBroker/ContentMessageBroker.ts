@@ -82,13 +82,19 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
+
+          this.Logger.LogAsJsonPretty('reqMsgFromPopup', reqMsgFromPopup);
+
+
           await this.ReqMsgRouter(reqMsgFromPopup)
             .then((contentResponse: MsgFromContent) => {
+              this.Logger.Log('responding: ' + StaticHelpers.MsgFlagAsString(contentResponse.MsgFlag))
               resolve(contentResponse);
             })
             .catch((err) => {
               this.NotifyFail(err);
-              reject(err);
+              resolve(new MsgFromContent(MsgFlag.RespTaskFailed));
+              //reject(err);
             });
         } else {
           reject('reqMsgFromPopup is not valid')
@@ -114,18 +120,11 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
-
-      //GuidData.FixStorageGuidObjects(payload);
-
-      this.AllAgents.Logger.LogAsJsonPretty('payload', payload);
-
       if (payload.Data.IdOfSelect) {
         payload.Data.IdOfSelect = new GuidData(payload.Data.IdOfSelect.Raw);
       }
 
       let commandToExecute: Function = null;
-
-      var response: MsgFromContent = await this.NewMsgFromContentShell();
 
       switch (payload.MsgFlag) {
         //case MsgFlag.ReqRestoreToNewTab:
@@ -185,7 +184,20 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
           break;
       }
 
+      await this.ExecuteCommand(commandToExecute, payload)
+        .then((response: MsgFromContent) => resolve(response))
+        .catch((err) => reject(err));
+
+      this.Logger.FuncEnd(this.ReqMsgRouter.name);
+    });
+  }
+
+  ExecuteCommand(commandToExecute: Function, payload: MsgFromPopUp): Promise<MsgFromContent> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.ExecuteCommand.name);
       if (commandToExecute) {
+        var response: MsgFromContent = await this.NewMsgFromContentShell();
+
         let commandData: ICommandHndlrDataForContent = {
           PayloadData: payload.Data,
           ContentMessageBroker: this,
@@ -206,7 +218,7 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
           .catch((err) => reject(err));
       }
 
-      this.Logger.FuncEnd(this.ReqMsgRouter.name);
+      this.Logger.FuncEnd(this.ExecuteCommand.name);
     });
   }
 }

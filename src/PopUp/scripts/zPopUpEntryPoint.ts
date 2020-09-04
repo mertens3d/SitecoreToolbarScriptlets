@@ -1,5 +1,4 @@
-﻿import { PopUpHub } from "./Managers/PopUpHub";
-import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
+﻿import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
 import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
 import { RepoAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
 import { AllAgents } from "../../Shared/scripts/Agents/Agents/AllAgents";
@@ -12,6 +11,17 @@ import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAg
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { PopConst } from "./Classes/PopConst";
 import { OneGenericSetting } from "../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting";
+import { TabManager } from "./Managers/TabManager";
+import { UiManager } from "./Managers/UiManager/UiManager";
+import { EventManager } from "./Managers/EventManager";
+import { Handlers } from "./Managers/Handlers";
+import { MessageManager } from "./Managers/MessageManager";
+import { FeedbackModuleMessages } from "./Managers/UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
+import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessagesBroker";
+import { CommandManager } from "./Classes/AllCommands";
+import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
+import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { IContentState } from "../../Shared/scripts/Interfaces/IContentState/IContentState";
 
 class PopUpEntry {
   RepoAgent: RepoAgent;
@@ -74,21 +84,32 @@ class PopUpEntry {
 
     this.Logger.FuncEnd(this.InitLogger.name);
   }
+
   async InitHub() {
-    let popUpHub: PopUpHub;
 
-    let allAgents: AllAgents = new AllAgents();
-    allAgents.SettingsAgent = this.SettingsAgent;
-    allAgents.HelperAgent = this.HelperAgent;
-    allAgents.Logger = this.Logger;
-    popUpHub = new PopUpHub(allAgents);
+    let scUrlAgent = new ScUrlAgent(this.Logger);
+    let tabMan = new TabManager(this.Logger, this.HelperAgent, scUrlAgent);
+    let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
+    let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger, FeedbackModuleMsg);
+    let messageMan = new MessageManager(PopUpMessageBroker, this.Logger);
+    let handlers = new Handlers(this.Logger, messageMan, this.SettingsAgent, tabMan);
+    let commandMan: CommandManager = new CommandManager(handlers);
+    let uiMan = new UiManager(this.Logger, this.SettingsAgent, this.HelperAgent, tabMan, commandMan); //after tabman, after HelperAgent
+    let eventMan = new EventManager(this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
 
-    await popUpHub.InitPopUpHub()
-      .then(() => { })
-      .catch((err) => {
-        this.Logger.ErrorAndContinue('Pop Up Entry Point Main', JSON.stringify(err));
-        throw (err);
-      });
+    let self = uiMan;
+    handlers.External.AddCallbackCommandComplete((contentState: IContentState) => { uiMan.CallBackCommandComplete(contentState); });
+
+    await
+      tabMan.InitTabManager()
+        .then(() => PopUpMessageBroker.InitMessageBroker())
+        .then(() => uiMan.InitUiManager())
+        .then(() => scUrlAgent.InitScUrlAgent())
+        .then(() => eventMan.InitEventManager(commandMan.AllMenuCommands, commandMan.GetCommandById(MenuCommand.Ping)))
+        .catch((err) => {
+          this.Logger.ErrorAndContinue('Pop Up Entry Point Main', JSON.stringify(err));
+          throw (err);
+        });
   }
   async InitMembers(): Promise<void> {
     return new Promise(async (resolve, reject) => {
