@@ -21,6 +21,8 @@ export class PopConst {
         SelectHeaderAutoTitle: 'sel-header-auto-title',
         SelectHeaderFavorite: 'sel-header-favorite',
         SelectHeaderFavoriteTitle: 'sel-header-favorite-title',
+        SelectHeaderManual: 'sel-header-manual',
+        SelectHeaderManualTitle: 'sel-header-manual-title',
         TabId: 'orig-win-id',
       }
     },

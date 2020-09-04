@@ -2,7 +2,8 @@
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { ContentAtticManager } from "../../ContentAtticManager/ContentAtticManager";
 import { RecipeBase } from "./RecipeBase";
-
+import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { SnapShotFlavor } from "../../../../../Shared/scripts/Enums/SnapShotFlavor";
 
 export class RecipeChangeNickName extends RecipeBase implements ICommandRecipes {
   private AtticMan: ContentAtticManager;
@@ -25,15 +26,29 @@ export class RecipeChangeNickName extends RecipeBase implements ICommandRecipes 
       this.Logger.FuncStart(this.UpdateNickname.name);
 
       if (this.CommandData.PayloadData.IdOfSelect) {
-        var storageMatch;
+        if (this.CommandData.PayloadData.SnapShotSettings && this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname) {
+          var storageMatch: IDataOneWindowStorage;
 
-        await this.AtticMan.GetFromStorageById(this.CommandData.PayloadData.IdOfSelect)
-          .then((result) => storageMatch = result);
+          await this.AtticMan.GetFromStorageById(this.CommandData.PayloadData.IdOfSelect)
+            .then((result: IDataOneWindowStorage) => storageMatch = result)
 
-        if (storageMatch && this.CommandData.PayloadData.SnapShotSettings && this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname) {
-          storageMatch.NickName = this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
-          this.AtticMan.WriteToStorage(storageMatch);
-          resolve();
+            .then(() => {
+              if (storageMatch) {
+                if ((storageMatch.Flavor === SnapShotFlavor.Autosave
+                  ||
+                  (storageMatch.Flavor === SnapShotFlavor.Unknown))) {
+                  storageMatch.Flavor = SnapShotFlavor.Manual;
+                }
+
+                storageMatch.NickName = this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
+                this.AtticMan.WriteToStorage(storageMatch);
+              } else {
+                reject(this.UpdateNickname.name + ' - No storage match');
+              }
+            })
+            .then(() => resolve())
+            .catch((err) => reject(err));
+
         } else {
           reject(this.UpdateNickname.name + ' - something was missing');
         }

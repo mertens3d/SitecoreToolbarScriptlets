@@ -62,6 +62,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Classes\ContentStateManager\ContentStateManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Classes\VarDebug.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentMessageBroker.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\AutoSnapShotAgent\AutoSnapShotAgent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\ContentAPIManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName.ts" />

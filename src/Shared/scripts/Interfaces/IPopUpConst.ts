@@ -15,6 +15,8 @@
       SelectHeaderAutoTitle: string;
       SelectHeaderFavorite: string;
       SelectHeaderFavoriteTitle: string;
+      SelectHeaderManual: string;
+      SelectHeaderManualTitle: string;
       TabId: string,
     },
   }

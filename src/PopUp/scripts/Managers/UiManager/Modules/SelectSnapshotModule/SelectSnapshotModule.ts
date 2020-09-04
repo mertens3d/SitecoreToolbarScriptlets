@@ -91,12 +91,14 @@ export class SelectSnapshotModule implements IUiModule {
     return toReturn;
   }
 
-  WriteHeaders(targetSel: HTMLSelectElement) {
+  WriteHeaders() {
     var toReturn: ISelectionHeaders = {
       Auto: null,
       Favorite: null,
       AutoTitle: null,
       FavoriteTitle: null,
+      Manual: null,
+      ManualTitle: null
     }
 
     toReturn.Auto = <HTMLOptGroupElement>window.document.createElement('optgroup');
@@ -107,13 +109,22 @@ export class SelectSnapshotModule implements IUiModule {
     toReturn.AutoTitle.label = 'Auto Snap Shots';
     toReturn.AutoTitle.id = PopConst.Const.ElemId.HS.SelectHeaderAutoTitle;
     toReturn.AutoTitle.classList.add('title');
+    //------
+    toReturn.Manual = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.Manual.label = this.SelectHeaderStr('');
+    toReturn.Manual.id = PopConst.Const.ElemId.HS.SelectHeaderManual;
 
+    toReturn.ManualTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.ManualTitle.label = 'Manual Snap Shots';
+    toReturn.ManualTitle.id = PopConst.Const.ElemId.HS.SelectHeaderManualTitle;
+    toReturn.ManualTitle.classList.add('title');
+    //------
     toReturn.Favorite = <HTMLOptGroupElement>window.document.createElement('optgroup');
     toReturn.Favorite.label = this.SelectHeaderStr('');
     toReturn.Favorite.id = PopConst.Const.ElemId.HS.SelectHeaderFavorite;
 
     toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
-    toReturn.FavoriteTitle.label = 'Manual Snap Shots';
+    toReturn.FavoriteTitle.label = 'Favorite Snap Shots';
     toReturn.FavoriteTitle.id = PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle;
     toReturn.FavoriteTitle.classList.add('title');
 
@@ -144,7 +155,7 @@ export class SelectSnapshotModule implements IUiModule {
 
         if (targetSel) {
           this.CleanExistingSelection(targetSel);
-          var headers: ISelectionHeaders = this.WriteHeaders(targetSel);
+          var headers: ISelectionHeaders = this.WriteHeaders();
 
           if (snapShots && snapShots.length > 0) {
             this.Logger.Log('targetSel.options.length : ' + targetSel.options.length);
@@ -160,9 +171,12 @@ export class SelectSnapshotModule implements IUiModule {
 
           targetSel.appendChild(headers.FavoriteTitle);
           targetSel.appendChild(headers.Favorite);
+
+          targetSel.appendChild(headers.ManualTitle);
+          targetSel.appendChild(headers.Manual);
+
           targetSel.appendChild(headers.AutoTitle);
           targetSel.appendChild(headers.Auto);
-
         }
       }
     }
@@ -233,30 +247,27 @@ export class SelectSnapshotModule implements IUiModule {
   private AppendToCorrectSnapshotGroup(data: IDataOneWindowStorage, el: HTMLOptionElement, headers: ISelectionHeaders) {
     if (data.Flavor === SnapShotFlavor.Autosave) {
       headers.Auto.appendChild(el);
-    } else {
+    } else if (data.Flavor === SnapShotFlavor.Favorite) {
       headers.Favorite.appendChild(el);
+    } else {
+      headers.Manual.appendChild(el);
+    }
+  }
+
+  private cleanOneGroup(targetSel: HTMLSelectElement, targetId: string) {
+    var optGroup = targetSel.querySelector('[id=' + targetId + ']')
+    if (optGroup) {
+      optGroup.remove();
     }
   }
 
   CleanExistingSelection(targetSel: HTMLSelectElement) {
-    var optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderAutoTitle + ']')
-    if (optGroup) {
-      optGroup.remove();
-    }
-
-    optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderAuto + ']')
-    if (optGroup) {
-      optGroup.remove();
-    }
-    optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderFavorite + ']')
-    if (optGroup) {
-      optGroup.remove();
-    }
-
-    optGroup = targetSel.querySelector('[id=' + PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle + ']')
-    if (optGroup) {
-      optGroup.remove();
-    }
+    this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderAuto);
+    this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderAutoTitle);
+    this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderFavorite);
+    this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle);
+    this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderManual);
+    this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderManualTitle);
 
     targetSel.options.length = 0;
   }

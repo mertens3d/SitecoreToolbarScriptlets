@@ -53,7 +53,8 @@ export class AutoSnapShotAgent {
         this.Logger.MarkerA();
         var self = this;
         this.Logger.MarkerB();
-        var intervalMs = StaticHelpers.MinToMs(ContentConst.Const.Timeouts.AutoSaveIntervalMin);
+
+        var intervalMs = StaticHelpers.MinToMs(autoSaveSetting.ValueAsInt());
 
         this.Logger.MarkerC();
         window.setInterval(() => {
