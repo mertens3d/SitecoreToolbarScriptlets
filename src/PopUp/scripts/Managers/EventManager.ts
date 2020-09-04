@@ -1,47 +1,56 @@
-import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
-import { IAllAgents } from "../../../Shared/scripts/Interfaces/Agents/IAllAgents";
 import { IGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
-import { AllCommands } from '../Classes/AllCommands';
-import { HandlersInternal } from "../Classes/HandlersInternal";
 import { Handlers } from './Handlers';
-import { MessageManager } from './MessageManager';
-import { PopUpHub } from './PopUpHub';
-import { TabManager } from './TabManager';
 import { UiManager } from './UiManager/UiManager';
 
 export class EventManager { //extends PopUpManagerBase
   Handlers: Handlers
 
-  AllMenuCommands: IOneCommand[];
   private Logger: ILoggerAgent;
   private SettingsAgent: ISettingsAgent;
   private UiMan: UiManager;
 
-  constructor( allAgents: IAllAgents, logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers) {
-    //super(popHub, allAgents);
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers) {
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
     this.UiMan = uiMan;
     this.Handlers = handlers;
-   
-
-    this.Handlers.Internal = new HandlersInternal( allAgents);
   }
 
-  InitEventManager() {
+  async InitEventManager(allCommands: IOneCommand[], pingCommand: IOneCommand) {
     this.Logger.FuncStart(this.InitEventManager.name);
 
-    this.AllMenuCommands = AllCommands.BuildAllCommands(this.Handlers);
+    try {
+      this.__wireAllMenuButtons(allCommands);
+      this.WireAllGenericSettings();
 
-    this.__wireAllMenuButtons();
-    this.WireAllGenericSettings();
+      await this.TriggerPingEvent(pingCommand);
+      //.then(() => resolve())
+      //.catch((err) => reject(err));
+    } catch (err) {
+      throw (err);
+    }
     this.Logger.FuncEnd(this.InitEventManager.name);
+  }
+
+  TriggerPingEvent(pingCommand: IOneCommand): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.TriggerPingEvent.name);
+
+      let data = this.__buildCommandData(pingCommand);
+      this.Logger.LogAsJsonPretty(this.TriggerPingEvent.name, pingCommand);
+
+      await this.RouteAllCommandEvents(data)
+        .then(() => resolve())
+        .catch((err) => reject(err));
+
+      this.Logger.FuncEnd(this.TriggerPingEvent.name);
+    })
   }
 
   private WireAllGenericSettings() {
@@ -65,7 +74,7 @@ export class EventManager { //extends PopUpManagerBase
 
           if (oneSetting.DataType === SettingType.BoolCheckBox) {
             let self = this;
-            this.Logger.Log('Assigning change event');
+            //this.Logger.Log('Assigning change event');
             uiElem.addEventListener('change', (evt) => {
               self.SettingsAgent.SettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
             }
@@ -82,12 +91,12 @@ export class EventManager { //extends PopUpManagerBase
     this.Logger.FuncEnd(this.WireAllGenericSettings.name);
   }
 
-  private __wireAllMenuButtons() {
+  private __wireAllMenuButtons(allCommands: IOneCommand[]) {
     this.Logger.FuncStart(this.__wireAllMenuButtons.name);
 
     // --------------- hindsite
-    for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
-      let oneCommand: IOneCommand = this.AllMenuCommands[idx];
+    for (var idx = 0; idx < allCommands.length; idx++) {
+      let oneCommand: IOneCommand = allCommands[idx];
       this.__wireOneMenuButtonListener(oneCommand);
     }
 
@@ -95,7 +104,7 @@ export class EventManager { //extends PopUpManagerBase
   }
 
   private __wireOneMenuButtonListener(oneCommand: IOneCommand): void {
-    this.Logger.FuncStart(this.__wireOneMenuButtonListener.name, oneCommand.ButtonSelector)
+    //this.Logger.FuncStart(this.__wireOneMenuButtonListener.name, oneCommand.ButtonSelector)
     var targetElem: HTMLElement = this.UiMan.GetButtonByIdOrSelector(oneCommand.ButtonSelector);
 
     if (oneCommand.EventData.Event === CommandButtonEvents.OnSingleClick) {
@@ -104,15 +113,15 @@ export class EventManager { //extends PopUpManagerBase
       this.__wireDoubleClickEvent(oneCommand, targetElem)
     }
 
-    this.Logger.FuncEnd(this.__wireOneMenuButtonListener.name)
+    //this.Logger.FuncEnd(this.__wireOneMenuButtonListener.name)
   }
   private __wireDoubleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
     //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestoreNewTab(evt, this.PopHub); });
     //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.FeedbackLogElement, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
 
     if (targetElem) {
-      let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
       targetElem.ondblclick = (evt) => {
+        let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
         data.Evt = evt,
           data.Self.RouteAllCommandEvents(data)
       };
@@ -121,14 +130,16 @@ export class EventManager { //extends PopUpManagerBase
 
   private __wireSingleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
     if (targetElem) {
-      let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
 
+      let self = this;
       targetElem.addEventListener('click', (evt) => {
+      let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
         data.Evt = evt;
+        data.Self = self;
         data.Self.RouteAllCommandEvents(data);
       });
     } else {
-      this.Logger.ErrorAndThrow(this.__wireAllMenuButtons.name, 'No Id: ' + oneCommand.ButtonSelector);
+      this.Logger.ErrorAndThrow(this.__wireSingleClickEvent.name, 'No Id: ' + oneCommand.ButtonSelector);
     }
   }
 
@@ -139,39 +150,23 @@ export class EventManager { //extends PopUpManagerBase
       Self: self,
       Command: oneCommand,
       Event: oneCommand.EventData,
-      Evt: null
+      Evt: null,
+      MenuState: {
+        SelectSnapshotId: this.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId(),
+        CurrentNicknameValue: this.UiMan.GetValueInNickname()
+      }
     }
 
     return data;
   }
 
-  TriggerPingEvent(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.TriggerPingEvent.name);
-
-      for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
-        let candidate = this.AllMenuCommands[idx];
-        if (candidate.Command === MenuCommand.Ping) {
-          let data = this.__buildCommandData(candidate);
-          this.Logger.LogAsJsonPretty(this.TriggerPingEvent.name, data.Command);
-
-          await data.Self.RouteAllCommandEvents(data)
-            .then(() => resolve())
-            .catch((err) => reject(err));
-          break;
-          //await this.Handlers.External.Ping(null, this.PopHub);
-        }
-      }
-
-      this.Logger.FuncEnd(this.TriggerPingEvent.name);
-    })
-  }
-
   async RouteAllCommandEvents(data: ICommandHndlrDataForPopUp) {
     return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.RouteAllCommandEvents.name);
       await data.Event.Handler(data)
         .then(() => resolve())
-        .catch((err) => reject(err));
+        .catch((err) => this.Logger.ErrorAndThrow(this.RouteAllCommandEvents.name, err));
+      this.Logger.FuncEnd(this.RouteAllCommandEvents.name);
     });
   }
 }

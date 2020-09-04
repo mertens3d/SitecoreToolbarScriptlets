@@ -6,7 +6,32 @@ import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { Handlers } from '../Managers/Handlers';
 import { PopConst } from './PopConst';
 
-export class AllCommands {
+export class CommandManager {
+  
+  AllMenuCommands: IOneCommand[];
+  private  Handlers: Handlers;
+
+  constructor(handlers: Handlers) {
+    this.Handlers = handlers;
+    this.AllMenuCommands = CommandManager.BuildAllCommands(this.Handlers);
+  }
+
+
+  GetCommandById(needleCommand: MenuCommand): IOneCommand {
+    let toReturn: IOneCommand = null;
+
+    for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
+      let candidate = this.AllMenuCommands[idx];
+      if (candidate.Command === needleCommand) {
+        toReturn = candidate;
+        break;
+      }
+    }
+
+    return toReturn;
+  }
+
+
   static BuildAllCommands( handlers: Handlers) {
     let toReturn: IOneCommand[] = [
       {

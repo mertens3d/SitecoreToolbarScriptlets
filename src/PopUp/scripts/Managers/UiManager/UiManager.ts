@@ -2,16 +2,19 @@
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { MenuCommand } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
+import { GuidData } from '../../../../Shared/scripts/Helpers/GuidData';
+import { HelperAgent } from '../../../../Shared/scripts/Helpers/Helpers';
 import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/IAccordianManager';
-import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IallAgents";
 import { IGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
 import { GenericUrlParts } from '../../../../Shared/scripts/Interfaces/UrlParts';
 import { PopConst } from '../../Classes/PopConst';
-import { PopUpHub } from '../PopUpHub';
-import { PopUpManagerBase } from '../PopUpManagerBase';
+import { EventManager } from '../EventManager';
+import { TabManager } from '../TabManager';
 import { UiButtonStateManager } from '../UiButtonStateManager';
 import { SelectSnapshotModule } from './Modules/SelectSnapshotModule/SelectSnapshotModule';
 import { SettingsModule } from './Modules/SettingsModule/SettingsModule';
@@ -20,13 +23,9 @@ import { FeedbackModuleContentState } from './Modules/UiFeedbackModules/Feedback
 import { FeedbackModuleMessages } from './Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from './Modules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
-import { GuidData } from '../../../../Shared/scripts/Helpers/GuidData';
-import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
-import { LoggerAgent } from '../../../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
-import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { EventManager } from '../EventManager';
-import { HelperAgent } from '../../../../Shared/scripts/Helpers/Helpers';
-import { TabManager } from '../TabManager';
+import { CommandManager } from '../../Classes/AllCommands';
+import { Handlers } from '../Handlers';
+import { CancelButtonModule } from './Modules/CancelButtonModule';
 
 export class UiManager {
   AccordianManager: IAccordianManager;
@@ -48,16 +47,17 @@ export class UiManager {
   private FeedbackModuleLog: UiFeedbackModuleLog;
   private Logger: ILoggerAgent;
   private SettingsAgent: ISettingsAgent;
-  private EventMan: EventManager;
   private HelperAgent: HelperAgent;
   private TabMan: TabManager;
+  private CommandMan: CommandManager;
+  CancelButtonModule: CancelButtonModule;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, eventMan: EventManager, helperAgent: HelperAgent, tabMan: TabManager) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, helperAgent: HelperAgent, tabMan: TabManager, commandMan: CommandManager) {
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
-    this.EventMan = eventMan;
     this.HelperAgent = helperAgent;
     this.TabMan = tabMan;
+    this.CommandMan = commandMan;
 
     this.Logger.InstantiateStart(UiManager.name);
 
@@ -77,6 +77,8 @@ export class UiManager {
     this.ModuleSelectSnapShot = new SelectSnapshotModule(PopConst.Const.Selector.HS.SelStateSnapShot, this.Logger)
 
     this.SettingsModule = new SettingsModule(this.Logger, this.SettingsAgent, this.AccordianManager);
+
+    this.CancelButtonModule = new CancelButtonModule(PopConst.Const.Selector.HS.HsCancel, this.Logger);
 
     this.Logger.InstantiateEnd(UiManager.name);
   }
@@ -99,12 +101,10 @@ export class UiManager {
     this.ScheduleAutoLogin();
 
     this.ModuleSelectSnapShot.AddCallbackForSelChanged(() => {
-      let self = this;
-
       self.RefreshUi();
     });
 
-    this.ButtonStateManager.Init(this.EventMan.AllMenuCommands);
+    this.ButtonStateManager.Init(this.CommandMan.AllMenuCommands);
 
     this.Logger.FuncEnd(this.InitUiManager.name);
   }
@@ -123,6 +123,12 @@ export class UiManager {
   OnFailedCommand(err: string): void {
     //todo
     this.Logger.Log(err);
+  }
+
+  CallBackCommandComplete(contentState: IContentState) {
+    this.Logger.LogAsJsonPretty('contentState', contentState);
+    this.SetContentState(contentState)
+    this.RefreshUi();
   }
 
   ClosePopUp(): Promise<void> {
@@ -191,26 +197,6 @@ export class UiManager {
   //  this.Logger.FuncEnd(this.UpdateAtticFromUi.name);
   //}
 
-  private __GetCancelButton() {
-    return document.getElementById(PopConst.Const.Selector.HS.HsCancel);
-  }
-
-  SetCancelFlag() {
-    //todo this.OperationCancelled = true;
-    var btn = this.__GetCancelButton();
-    if (btn) {
-      btn.classList.add('red');
-    }
-  }
-
-  ClearCancelFlag() {
-    var btn = this.__GetCancelButton();
-    if (btn) {
-      btn.classList.remove('red');
-    }
-    //todo this.UiMan.OperationCancelled = false;
-  }
-
   async SetUIStates(urlParts: GenericUrlParts) {
     this.Logger.FuncStart(this.SetUIStates.name);
     if (this.Logger.IsNotNullOrUndefinedBool('state', this.LastKnownContentState)) {
@@ -236,7 +222,7 @@ export class UiManager {
     let currentWindowType = this.TabMan.GetWindowType();
     let currSelSnapshot: GuidData = this.ModuleSelectSnapShot.GetSelectSnapshotId();
 
-    this.ButtonStateManager.RefreshUi(currentWindowType, currSelSnapshot, this.LastKnownContentState);
+    this.ButtonStateManager.RefreshUi(currentWindowType, currSelSnapshot, this.LastKnownContentState, this.CommandMan.AllMenuCommands);
 
     this.__drawCorrectNicknameInUI(this.LastKnownContentState.SnapShotsMany.CurrentSnapShots);
 

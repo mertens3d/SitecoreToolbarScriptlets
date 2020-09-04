@@ -160,16 +160,15 @@ export class OneScWindowManager extends ContentManagerBase {
           }
         }
         else {
-          this.AllAgents.Logger.ErrorAndThrow(this.RestoreStateToTargetDoc.name, 'Data not restored. Not in Desktop or Content Editor');
+          reject(this.RestoreStateToTargetDoc.name + 'Data not restored. Not in Desktop or Content Editor');
         }
       }
       else {
-        this.AllAgents.ToastAgent.PopUpToastNotification(targetDoc, "No data found to restore");
+        reject(this.RestoreStateToTargetDoc.name + " No data found to restore");
       }
 
-      reject('unknown reason');
+      reject(this.RestoreStateToTargetDoc.name + ' : unknown reason');
 
-      //reject(this.RestoreStateToTargetDoc.name +  " something went wrong");
       this.AllAgents.Logger.FuncEnd(this.RestoreStateToTargetDoc.name);
     });
   }

@@ -9,8 +9,9 @@ export class Handlers {
   External: HandlersExternal;
   Internal: HandlersInternal;
 
-  constructor(logger: ILoggerAgent, msgManager: MessageManager, uiMan: UiManager, settingsAgent: ISettingsAgent, tabMan: TabManager) {
+  constructor(logger: ILoggerAgent, msgManager: MessageManager,  settingsAgent: ISettingsAgent, tabMan: TabManager) {
 
-    this.External = new HandlersExternal(logger, msgManager, uiMan, settingsAgent, tabMan);
+    this.External = new HandlersExternal(logger, msgManager, settingsAgent, tabMan);
+    this.Internal = new HandlersInternal(logger, tabMan);
   }
 }

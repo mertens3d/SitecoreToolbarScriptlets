@@ -7,7 +7,7 @@ import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/
 import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 
 export class UiButtonStateManager {
-  private AllMenuCommands: IOneCommand[];
+  //private AllMenuCommands: IOneCommand[];
   private currentContentState: IContentState;
   private currentWindowType: scWindowType;
   private currSelSnapshot: GuidData;
@@ -22,7 +22,7 @@ export class UiButtonStateManager {
   }
 
   Init(AllMenuCommands: IOneCommand[]) {
-    this.AllMenuCommands = AllMenuCommands;
+    //this.AllMenuCommands = AllMenuCommands;
     this.Tester = new ButtonVisibilityTester();
   }
 
@@ -118,15 +118,15 @@ export class UiButtonStateManager {
     }
   }
 
-  RefreshUi(currentWindowType: scWindowType, currSelSnapshot: GuidData, contentState: IContentState): void {
-    this.Logger.FuncStart(this.RefreshUi.name, this.AllMenuCommands.length);
+  RefreshUi(currentWindowType: scWindowType, currSelSnapshot: GuidData, contentState: IContentState, allMenuCommands: IOneCommand[]): void {
+    this.Logger.FuncStart(this.RefreshUi.name, allMenuCommands.length);
 
     this.currentWindowType = currentWindowType;
     this.currSelSnapshot = currSelSnapshot;
     this.currentContentState = contentState;
 
-    for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
-      var oneCommand = this.AllMenuCommands[idx];
+    for (var idx = 0; idx < allMenuCommands.length; idx++) {
+      var oneCommand = allMenuCommands[idx];
 
       if (oneCommand.ButtonSelector !== null) {
         //this.Logger.LogVal('working on', MenuCommand[command.Command])

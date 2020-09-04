@@ -97,28 +97,30 @@ export class ContentMessageManager extends ContentManagerBase {
             var dataOneWindowStorage;
 
             await this.AtticMan().GetFromStorageById(data.IdOfSelect)
-              .then((result) => dataOneWindowStorage = result);
+              .then((result) => dataOneWindowStorage = result)
+              .catch((err) => reject(err));
 
-            var self = this;
+            if (dataOneWindowStorage) {
+              var self = this;
+              var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();
 
-            var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();//  await this.PageMan().GetTargetWindowAsync(Data.UseOriginalWindowLocation ? true : false, dataOneWindowStorage.WindowType);
-
-            if (targetDoc) {
-              await self.OneScWinMan().RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage)
-                .then(() => resolve())
-                .catch((err) => reject(err))
-            }
-            else {
-              self.AllAgents.Logger.ErrorAndThrow(this.__restoreClick.name, 'no target window');
+              if (targetDoc) {
+                await self.OneScWinMan().RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage)
+                  .then(() => resolve())
+                  .catch((err) => reject(err))
+              }
+              else {
+                reject(this.__restoreClick.name + ' no target window');
+              }
             }
           } else {
-            reject('No IdOfSelect');
+            reject(this.__restoreClick.name + ' No IdOfSelect');
           }
         } else {
-          reject('No data')
+          reject(this.__restoreClick.name + ' No data')
         }
-      } catch (ex) {
-        this.AllAgents.Logger.ErrorAndThrow(this.__restoreClick.name, ex)
+      } catch (err) {
+        reject(err)
       }
 
       this.AllAgents.Logger.FuncEnd(this.__restoreClick.name);

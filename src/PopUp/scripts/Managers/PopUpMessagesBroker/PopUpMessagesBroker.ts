@@ -41,8 +41,8 @@ export class PopUpMessagesBroker {
               case MsgFlag.RespTaskSuccessful:
                 resolve(asMsgFromContent.ContentState);
                 break;
-              case MsgFlag.RespError:
-                reject(asMsgFromContent.MsgFlag);
+              case MsgFlag.RespTaskFailed :
+                reject(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
                 break;
               default:
                 reject('Unrecognized MsgFlag' + StaticHelpers.MsgFlagAsString(response.MsgFlag))

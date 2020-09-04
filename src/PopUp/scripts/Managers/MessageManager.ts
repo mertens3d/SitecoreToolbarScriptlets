@@ -1,33 +1,15 @@
 ﻿import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgFromPopUp';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
-import { EventManager } from './EventManager';
 import { PopUpMessagesBroker } from './PopUpMessagesBroker/PopUpMessagesBroker';
 
-export class MessageManager { //extends PopUpManagerBase
+export class MessageManager { 
   private MessageBroker: PopUpMessagesBroker;
-  private EventMan: EventManager;
   private Logger: ILoggerAgent;
 
-  constructor(PopUpMessagesBroker: PopUpMessagesBroker, EventMan: EventManager, logger: ILoggerAgent) {
-    //super(popHub, allAgents);
+  constructor(PopUpMessagesBroker: PopUpMessagesBroker, logger: ILoggerAgent) {
     this.Logger = logger;
     this.MessageBroker = PopUpMessagesBroker;
-    this.EventMan = EventMan;
-  }
-
-  InitMessageManager() {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.InitMessageManager.name);
-
-      this.MessageBroker.InitMessageBroker();
-
-      await this.EventMan.TriggerPingEvent()
-        .then(() => resolve())
-        .catch((err) => reject(err));
-
-      this.Logger.FuncEnd(this.InitMessageManager.name);
-    });
   }
 
   SendMessageToContent(msgPayload: MsgFromPopUp): Promise<IContentState> {

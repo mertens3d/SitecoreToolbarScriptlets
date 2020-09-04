@@ -88,7 +88,7 @@ export class ContentAPIManager extends ContentManagerBase {
     });
   }
 
-  RestoreSnapshop(commandData: ICommandHndlrDataForContent) {
+  RestoreSnapshop(commandData: ICommandHndlrDataForContent): Promise<void>{
     return new Promise(async (resolve, reject) => {
       await commandData.ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
         .then(() => resolve())

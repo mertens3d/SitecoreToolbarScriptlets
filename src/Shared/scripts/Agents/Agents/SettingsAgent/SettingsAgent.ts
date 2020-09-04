@@ -100,13 +100,13 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   SettingChanged(SettingKey: SettingKey, valueAsObj: any): void {
-    this.Logger.Log(StaticHelpers.SettingKeyAsString(SettingKey));
-    this.Logger.LogVal('valueAsObj', valueAsObj.toString());
+    //this.Logger.Log(StaticHelpers.SettingKeyAsString(SettingKey));
+    //this.Logger.LogVal('valueAsObj', valueAsObj.toString());
     this.SetByKey(SettingKey, valueAsObj);
   }
 
   GetByKey(needleSettingKey: SettingKey): OneGenericSetting {
-    this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(needleSettingKey));
+    //this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(needleSettingKey));
 
     var toReturn: OneGenericSetting = null;
 
@@ -114,7 +114,6 @@ export class SettingsAgent implements ISettingsAgent {
       let candidate: OneGenericSetting = this.SettingsAr[idx];
       if (candidate.SettingKey === needleSettingKey) {
         toReturn = candidate;
-        //this.Logger.LogAsJsonPretty('found. ValueAsObj', toReturn.ValueAsObj);
         break;
       }
     }
@@ -122,7 +121,7 @@ export class SettingsAgent implements ISettingsAgent {
     if (!toReturn) {
       throw ('Setting not found ' + StaticHelpers.SettingKeyAsString(needleSettingKey));
     }
-    this.Logger.FuncEnd(this.GetByKey.name, toReturn.ValueAsObj);
+    //this.Logger.FuncEnd(this.GetByKey.name, toReturn.ValueAsObj);
     return toReturn;
   }
 

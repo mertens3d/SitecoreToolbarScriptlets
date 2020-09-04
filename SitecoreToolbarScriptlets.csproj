@@ -74,6 +74,7 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\ButtonVisibilityTests.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\SelectSnapshotModule\SelectSnapshotModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\CancelButtonModule.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\FeedbackModuleBrowserState\FeedbackModuleBrowserState.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\SettingsModule\SettingsModule.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\FeedbackModulePopUpState\FeedbackModulePopUpState.ts" />
@@ -85,7 +86,6 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersExternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersInternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\AllCommands.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager\BrowserManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LogWriterBuffer.ts" />
@@ -94,7 +94,6 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\Handlers.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\TabManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiButtonStateManager.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Promises\PromiseChainRestoreDTPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\UrlAgent\ScUrlAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\AccordianDrone\AccordianManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\RollingLogIdDrone\RollingLogIdDrone.ts" />
@@ -170,10 +169,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMsgPayload.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\PopConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUiMan.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\MiscMan.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\RepositoryAgent\RepoAgent.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpHub.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpManagerBase.ts" />
     <None Include="Readme.Installing.md" />
     <None Include="Readme.Contibuting.md" />
     <None Include="Readme.Using.md" />
@@ -222,6 +218,21 @@
     </Content>
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.js">
       <DependentUpon>RecipeSaveState.ts</DependentUpon>
+    </Content>
+    <Content Include="src\PopUp\scripts\Managers\EventManager.js">
+      <DependentUpon>EventManager.ts</DependentUpon>
+    </Content>
+    <Content Include="src\PopUp\scripts\Managers\Handlers.js">
+      <DependentUpon>Handlers.ts</DependentUpon>
+    </Content>
+    <Content Include="src\PopUp\scripts\Managers\MessageManager.js">
+      <DependentUpon>MessageManager.ts</DependentUpon>
+    </Content>
+    <Content Include="src\PopUp\scripts\Managers\TabManager.js">
+      <DependentUpon>TabManager.ts</DependentUpon>
+    </Content>
+    <Content Include="src\PopUp\scripts\Managers\UiButtonStateManager.js">
+      <DependentUpon>UiButtonStateManager.ts</DependentUpon>
     </Content>
     <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.js">
       <DependentUpon>LoggerAgent.ts</DependentUpon>
@@ -468,6 +479,21 @@
     <None Include="src\PopUp\css\PageLevel.scss" />
     <None Include="src\PopUp\css\SnapShotSelect.scss" />
     <None Include="src\PopUp\css\vars.scss" />
+    <None Include="src\PopUp\scripts\Managers\EventManager.js.map">
+      <DependentUpon>EventManager.js</DependentUpon>
+    </None>
+    <None Include="src\PopUp\scripts\Managers\Handlers.js.map">
+      <DependentUpon>Handlers.js</DependentUpon>
+    </None>
+    <None Include="src\PopUp\scripts\Managers\MessageManager.js.map">
+      <DependentUpon>MessageManager.js</DependentUpon>
+    </None>
+    <None Include="src\PopUp\scripts\Managers\TabManager.js.map">
+      <DependentUpon>TabManager.js</DependentUpon>
+    </None>
+    <None Include="src\PopUp\scripts\Managers\UiButtonStateManager.js.map">
+      <DependentUpon>UiButtonStateManager.js</DependentUpon>
+    </None>
     <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.js.map">
       <DependentUpon>LoggerAgent.js</DependentUpon>
     </None>
@@ -661,7 +687,9 @@
     <Folder Include="Misc\" />
     <Folder Include="src\Browser-PolyFill\" />
     <Folder Include="src\hindsiteWindowOpener\Scripts\" />
+    <Folder Include="src\PopUp\scripts\Managers\MessageManager\" />
     <Folder Include="src\PopUp\scripts\Modules\" />
+    <Folder Include="src\PopUp\scripts\Promises\" />
     <Folder Include="src\Shared\scripts\Agents\Agents\HelperAgent\" />
     <Folder Include="src\Shared\scripts\Agents\Agents\RestoreAgent\" />
   </ItemGroup>
