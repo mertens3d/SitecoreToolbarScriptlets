@@ -1,31 +1,21 @@
 ﻿import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 import { IOneGenericSettingForStorage } from "../../../Classes/IOneGenericSettingForStorage";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
 
-export class RepoAgent implements IRepositoryAgent {
+export class RepositoryAgent implements IRepositoryAgent {
   private Logger: ILoggerAgent;
 
   constructor(loggerAgent: ILoggerAgent) {
     this.Logger = loggerAgent;
   }
 
-  Init() {
-    this.Logger.FuncStart(RepoAgent.name, this.Init.name);
-    this.Logger.FuncEnd(RepoAgent.name, this.Init.name);
+  InitRepositoryAgent() {
+    this.Logger.FuncStart(RepositoryAgent.name, this.InitRepositoryAgent.name);
+    this.Logger.FuncEnd(RepositoryAgent.name, this.InitRepositoryAgent.name);
   }
-  //async ReadStorageResults() {
-  //  this.Logger.FuncStart(this.ReadStorageResults.name);
-  //  try {
-  //    await browser.storage.local.get()
-  //      .then((storageResults: browser.storage.StorageObject) => {
-  //      }
-  //  } catch (e) {
-  //    this.Logger.Error(this.ReadStorageResults.name, e.toString());
-  //  }
-  //  this.Logger.FuncEnd(this.ReadStorageResults.name);
-  //}
+
   public GetBulkLocalStorageByKeyPrefix(targetPrefix: string): Promise<IOneStorageData[]> {
     return new Promise((resolve, reject) => {
       var toReturn: IOneStorageData[] = [];
@@ -79,19 +69,18 @@ export class RepoAgent implements IRepositoryAgent {
   //}
 
   ReadDataOfKey(targetKey: string): browser.storage.StorageValue {
-      this.Logger.FuncStart(this.ReadDataOfKey.name);
+    this.Logger.FuncStart(this.ReadDataOfKey.name);
 
-      let toReturn: browser.storage.StorageValue = null;
-      this.Logger.LogVal('target key ', targetKey);
+    let toReturn: browser.storage.StorageValue = null;
+    this.Logger.LogVal('target key ', targetKey);
 
-      toReturn = window.localStorage.getItem(targetKey); // is synchronous
+    toReturn = window.localStorage.getItem(targetKey); // is synchronous
 
-      if (toReturn) {
-        //this.Logger.LogAsJsonPretty('toReturn', toReturn);
-       
-      } else {
-        this.Logger.Log(this.ReadDataOfKey.name, "No value returned from storage")
-      }
+    if (toReturn) {
+      //this.Logger.LogAsJsonPretty('toReturn', toReturn);
+    } else {
+      this.Logger.Log(this.ReadDataOfKey.name, "No value returned from storage")
+    }
     this.Logger.FuncEnd(this.ReadDataOfKey.name);
 
     return toReturn;

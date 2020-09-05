@@ -2,7 +2,7 @@
 import { scMode } from "../../../Enums/scMode";
 import { scWindowType } from "../../../Enums/scWindowType";
 import { AbsoluteUrl } from "../../../Interfaces/AbsoluteUrl";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IContentState } from "../../../Interfaces/IContentState/IContentState";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
@@ -68,7 +68,6 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
   BuildEditPrevNormUrl(newMode: scMode, contState: IContentState): void {
     this.UrlParts.Anchor = '';
     this.UrlParts.FilePath = '';
-    //urlParts.Parameters = [];
     this.UrlParts.ScWindowType = scWindowType.Unknown;
 
     this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid());

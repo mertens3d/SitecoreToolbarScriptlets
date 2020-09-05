@@ -4,8 +4,8 @@ import { BufferChar } from "../../../Enums/BufferChar";
 import { BufferDirection } from "../../../Enums/BufferDirection";
 import { Guid } from "../../../Helpers/Guid";
 import { GuidData } from "../../../Helpers/GuidData";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
-import { ILogWriter } from "../../../Interfaces/Agents/ILoggerWriter";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { IDataDebugCallback } from "../../../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
@@ -23,7 +23,7 @@ export class LoggerAgent implements ILoggerAgent {
 
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
 
-  private __allLogWriters: ILogWriter[] = [];
+  private __allLogWriters: ILoggerWriter[] = [];
   private HasWriters: boolean;
   private BufferWriter: LogWriterBuffer;
 
@@ -55,7 +55,7 @@ export class LoggerAgent implements ILoggerAgent {
   }
   RemoveWriter(BufferWriter: LogWriterBuffer) {
     for (var idx = 0; idx < this.__allLogWriters.length; idx++) {
-      let candidate: ILogWriter = this.__allLogWriters[idx];
+      let candidate: ILoggerWriter = this.__allLogWriters[idx];
       if (candidate == BufferWriter) {
         this.__allLogWriters.splice(idx, 1);
         break;
@@ -63,7 +63,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
 
-  AddWriter(writter: ILogWriter) {
+  AddWriter(writter: ILoggerWriter) {
     this.HasWriters = true;
     this.__allLogWriters.push(writter);
   }
@@ -74,21 +74,9 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log("");
   }
 
-  //SetEnabled(newValue: boolean) {
-  //  this.LogToConsoleEnabled = newValue;
-  //  console.log('Logging set to: ' + newValue);
-  //}
-
-  //EnabledStatus(): boolean {
-  //  return this.LogToConsoleEnabled;
-  //}
+  
   debugPrefix: string = '\t\t';
-  //DebugObjVarVal(textValName: string, textVal: number)
-  //DebugObjVarVal(textValName: string, textVal: string)
-  //DebugObjVarVal(textValName: string, textVal: string | number) {
-  //  const debugPrefix = '   ~~~   ';
-  //  this.LogVal(debugPrefix + textValName, textVal.toString())
-  //}
+
   DebugIdataPopUpSettings(toReturn: IGenericSetting): void {
     //this.FuncStart(this.DebugSettings.name);
     this.LogVal('Settings', JSON.stringify(toReturn));
@@ -128,13 +116,7 @@ export class LoggerAgent implements ILoggerAgent {
       this.LogVal('asString', id.Raw);
     }
   }
-  //DebugIDataOneDoc(dataOneDoc: IDataOneDoc) {
-  //  if (this.IsNotNullOrUndefinedBool('IDataOneDoc', dataOneDoc)) {
-  //    if (this.IsNotNullOrUndefinedBool('Document', dataOneDoc.ContentDoc)) {
-  //      this.LogVal('Doc Url', dataOneDoc.ContentDoc.location.href);
-  //    }
-  //  }
-  //}
+
   DebugIDataOneDoc(dataOneDoc: IDataOneDoc): void {
     this.FuncStart(this.DebugIDataOneDoc.name);
     //this.Log('');
@@ -165,12 +147,8 @@ export class LoggerAgent implements ILoggerAgent {
 
     this.FuncEnd(this.DebugIDataOneDoc.name);
   }
-  //AddDebugTextChangedCallback(caller: any, callback: Function): void {
-  //  this.__debugTextChangedCallbacks.push({
-  //    Caller: caller,
-  //    Func: callback
-  //  });
-  //}
+
+
   HndlrClearDebugText(self: ILoggerAgent, verify: boolean = false): void {
     this.FuncStart(this.HndlrClearDebugText.name);
     var proceed: boolean = true;
@@ -321,7 +299,7 @@ export class LoggerAgent implements ILoggerAgent {
 
   private __WriteToAllWriters(text: string) {
     for (var idx = 0; idx < this.__allLogWriters.length; idx++) {
-      var oneWriter: ILogWriter = this.__allLogWriters[idx];
+      var oneWriter: ILoggerWriter = this.__allLogWriters[idx];
       oneWriter.WriteText(text);
     }
   }

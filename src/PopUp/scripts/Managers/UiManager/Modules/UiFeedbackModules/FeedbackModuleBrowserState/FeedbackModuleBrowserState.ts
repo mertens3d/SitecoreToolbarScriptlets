@@ -1,5 +1,5 @@
 ﻿import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
-import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { GenericUrlParts } from "../../../../../../../Shared/scripts/Interfaces/UrlParts";
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";

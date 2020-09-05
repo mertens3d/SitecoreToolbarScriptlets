@@ -1,5 +1,5 @@
 ﻿import { IDataOneWindowStorage } from "../IDataOneWindowStorage";
-export interface ISnapShotsMany {
+export interface ISnapShots {
   Birthday: Date;
   CurrentSnapShots: IDataOneWindowStorage[];
   FavoriteCount: number;

@@ -1,6 +1,6 @@
-import { RecipeBasics } from "../../../../Shared/scripts/Classes/PromiseGeneric";
+import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDtState";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
@@ -9,7 +9,7 @@ import { PromiseChainRestoreDesktop } from "../../Promises/PromiseChainRestoreDe
 import { LoggableBase } from "../LoggableBase";
 import { MiscManager } from "../MiscManager/MiscManager";
 import { OneCEAgent } from "../OneCEAgent/OneCEAgent";
-import { ScWindowManager } from "../OneScWindowManager";
+import { ScWindowManager } from "../ScWindowManager/ScWindowManager";
 
 export class OneDesktopManager extends LoggableBase {
   private associatedDoc: IDataOneDoc;

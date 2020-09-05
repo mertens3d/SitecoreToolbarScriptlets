@@ -1,10 +1,10 @@
 ﻿import { ScUrlAgent } from '../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
 import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
-import { RecipeBasics } from '../../../Shared/scripts/Classes/PromiseGeneric';
+import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { GenericUrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 

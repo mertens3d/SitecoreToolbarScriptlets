@@ -1,5 +1,3 @@
-﻿
-
-export interface ILogWriter {
-    WriteText(text: string);
+﻿export interface ILoggerWriter {
+  WriteText(text: string);
 }

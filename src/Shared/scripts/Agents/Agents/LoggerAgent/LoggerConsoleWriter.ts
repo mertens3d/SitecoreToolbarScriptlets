@@ -1,6 +1,6 @@
-﻿import { ILogWriter } from "../../../Interfaces/Agents/ILoggerWriter";
+﻿import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 
-export class LoggerConsoleWriter implements ILogWriter {
+export class LoggerConsoleWriter implements ILoggerWriter {
   WriteText(text: string) {
         console.log(text);
     }

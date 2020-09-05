@@ -3,7 +3,7 @@ import { SitecoreUiManager } from "../../../Content/scripts/Managers/SitecoreUiM
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 import { GuidData } from "../Helpers/GuidData";
 import { IContentAtticAgent } from "./Agents/IContentAtticAgent/IContentAtticAgent";
-import { ILoggerAgent } from "./Agents/ILoggerBase";
+import { ILoggerAgent } from "./Agents/ILoggerAgent";
 import { IScWindowManager } from "./Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "./Agents/IToastAgent";
 import { IDataOneDoc } from "./IDataOneDoc";

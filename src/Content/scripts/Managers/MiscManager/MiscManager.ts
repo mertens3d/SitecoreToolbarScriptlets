@@ -1,7 +1,6 @@
-﻿import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+﻿import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../LoggableBase';
-
 
 export class MiscManager extends LoggableBase {
   constructor(logger: ILoggerAgent) {
@@ -36,7 +35,7 @@ export class MiscManager extends LoggableBase {
 
         if (Array.isArray(subjectAnyOrAr)) {
           for (var idx = 0; idx < subjectAnyOrAr.length; idx++) {
-            toReturn = toReturn && this.NotNullOrUndefined(subjectAnyOrAr[idx], (idx + 1) + ':' + subjectAnyOrAr.length + ' ' +  label, iterationCheck);
+            toReturn = toReturn && this.NotNullOrUndefined(subjectAnyOrAr[idx], (idx + 1) + ':' + subjectAnyOrAr.length + ' ' + label, iterationCheck);
           }
         }
       }

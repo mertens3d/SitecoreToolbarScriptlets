@@ -31,15 +31,13 @@ export class StaticHelpers {
     var workingDate = new Date(date);
 
     if (workingDate) {
-      //var year = date.getFullYear();
       var month = StaticHelpers.BufferString((workingDate.getMonth() + 1).toString(), 2, BufferChar.Zero, BufferDirection.left);
       var day = StaticHelpers.BufferString(workingDate.getDate().toString(), 2, BufferChar.Zero, BufferDirection.left);
       var min = StaticHelpers.BufferString(workingDate.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);
       var hoursRaw = workingDate.getHours();
       var hourClean = hoursRaw ? hoursRaw : 12; // the hour '0' should be '12'
       var hourCleanStr: string = StaticHelpers.BufferString(hourClean.toString(), 2, BufferChar.Zero, BufferDirection.left);
-      //year + '.' +
-      toReturn = month + '.' + day + ' ' + hourCleanStr + ':' + min;// + ' ' + ampm;
+      toReturn = month + '.' + day + ' ' + hourCleanStr + ':' + min;
     }
     else {
       toReturn = '{error}';

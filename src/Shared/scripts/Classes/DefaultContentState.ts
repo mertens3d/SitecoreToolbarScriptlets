@@ -1,10 +1,10 @@
 ﻿import { IContentState } from "../Interfaces/IContentState/IContentState";
-import { ISnapShotsMany } from "../Interfaces/IContentState/ISnapShotsMany";
+import { ISnapShots } from "../Interfaces/IContentState/ISnapShots";
 import { MsgFlag } from "../Enums/1xxx-MessageFlag";
 import { IError } from "../Interfaces/IError";
 
 export class DefaultContentState implements IContentState {
-  SnapShotsMany: ISnapShotsMany = {
+  SnapShotsMany: ISnapShots = {
     CurrentSnapShots: [],
     FavoriteCount: 0,
     SnapShotsAutoCount: 0,

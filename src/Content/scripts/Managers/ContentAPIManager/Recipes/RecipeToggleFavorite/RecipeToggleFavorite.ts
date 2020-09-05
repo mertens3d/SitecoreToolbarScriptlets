@@ -1,8 +1,8 @@
-﻿import { SnapShotFlavor } from "../../../../../Shared/scripts/Enums/SnapShotFlavor";
-import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
-import { RecipeBase } from "./RecipeBase";
+﻿import { SnapShotFlavor } from "../../../../../../Shared/scripts/Enums/SnapShotFlavor";
+import { ICommandHndlrDataForContent } from "../../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { ICommandRecipes } from "../../../../../../Shared/scripts/Interfaces/ICommandRecipes";
+import { IDataOneWindowStorage } from "../../../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { RecipeBase } from "../RecipeBase";
 
 export class RecipeToggleFavorite extends RecipeBase implements ICommandRecipes {
 

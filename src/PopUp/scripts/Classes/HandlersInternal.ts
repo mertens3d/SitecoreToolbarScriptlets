@@ -1,6 +1,6 @@
 ﻿import { scMode } from "../../../Shared/scripts/Enums/scMode";
 import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { TabManager } from "../Managers/TabManager";
 

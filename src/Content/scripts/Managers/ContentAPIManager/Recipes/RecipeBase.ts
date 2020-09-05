@@ -1,4 +1,4 @@
-﻿import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+﻿import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { IRecipeBasics } from "../../../../../Shared/scripts/Interfaces/IPromiseHelper";

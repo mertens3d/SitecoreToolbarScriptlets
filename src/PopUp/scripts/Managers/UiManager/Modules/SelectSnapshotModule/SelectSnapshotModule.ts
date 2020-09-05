@@ -3,7 +3,7 @@ import { BufferChar } from "../../../../../../Shared/scripts/Enums/BufferChar";
 import { BufferDirection } from "../../../../../../Shared/scripts/Enums/BufferDirection";
 import { scWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../../../Shared/scripts/Enums/SnapShotFlavor";
-import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IContentState } from "../../../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataOneWindowStorage } from "../../../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";

@@ -6,7 +6,7 @@ import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { GuidData } from '../../../../Shared/scripts/Helpers/GuidData';
 import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/IAccordianManager';
 import { IGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
-import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';

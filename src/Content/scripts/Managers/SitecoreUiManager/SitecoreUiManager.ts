@@ -1,6 +1,6 @@
-﻿import { RecipeBasics } from "../../../../Shared/scripts/Classes/PromiseGeneric";
+﻿import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";

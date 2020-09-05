@@ -1,7 +1,7 @@
 ﻿import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
-import { RepoAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
+import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
 import { ConstAllSettings } from "../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings";
 import { OneGenericSetting } from "../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting";
 import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
@@ -22,7 +22,7 @@ import { FeedbackModuleMessages } from "./Managers/UiManager/Modules/UiFeedbackM
 import { UiManager } from "./Managers/UiManager/UiManager";
 
 class PopUpEntry {
-  RepoAgent: RepoAgent;
+  RepoAgent: RepositoryAgent;
   Logger: LoggerAgent;
   SettingsAgent: SettingsAgent;
 
@@ -44,7 +44,7 @@ class PopUpEntry {
   private InstantiateAndInitSettingsAndLogger() {
     this.Logger = new LoggerAgent();
 
-    this.RepoAgent = new RepoAgent(this.Logger);
+    this.RepoAgent = new RepositoryAgent(this.Logger);
     this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
 
     var allSettings: IGenericSetting[] = new ConstAllSettings().AllSettings;

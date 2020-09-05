@@ -1,8 +1,8 @@
-﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
-import { ILogWriter } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerWriter";
+﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { ILoggerWriter } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerWriter";
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
 
-export class UiFeedbackModuleLog extends UiFeedbackModuleBase implements ILogWriter {
+export class UiFeedbackModuleLog extends UiFeedbackModuleBase implements ILoggerWriter {
   WriteText(text: string) {
     this.WriteSingleLine(text);
   }

@@ -1,10 +1,10 @@
 ﻿import { DefaultContentState } from "../../../../Shared/scripts/Classes/DefaultContentState";
-import { RecipeBasics } from "../../../../Shared/scripts/Classes/PromiseGeneric";
+import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDtState";

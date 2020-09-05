@@ -2,7 +2,7 @@
 import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { LoggerAgent } from "../../Agents/LoggerAgent/LoggerAgent";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 
 export class RollingLogIdDrone {
   private SettingsAgent: ISettingsAgent;
@@ -38,7 +38,6 @@ export class RollingLogIdDrone {
   }
 
   private GetLastUsedLogId(): IGenericSetting {
-    let toReturn: number = 0;
 
     var lastUsedLogIdSetting: IGenericSetting = this.SettingsAgent.GetByKey(SettingKey.LastUsedLogToStorageKey);
 

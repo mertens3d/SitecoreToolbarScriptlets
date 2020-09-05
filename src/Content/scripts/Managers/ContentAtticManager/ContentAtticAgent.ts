@@ -1,12 +1,11 @@
-﻿import { PromiseResult } from "../../../../Shared/scripts/Classes/PromiseResult";
-import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+﻿import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
-import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShotsMany";
+import { ISnapShots } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShots";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
@@ -33,7 +32,6 @@ export class ContentAtticAgent implements IContentAtticAgent {
   async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WriteToStorage.name);
-      var result: PromiseResult = new PromiseResult(this.WriteToStorage.name, this.Logger);
 
       var snapShotAsString = JSON.stringify(dataOneWindow);
 
@@ -52,7 +50,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetFromStorageById.name, needleId.Raw);
 
-      var foundStorage: ISnapShotsMany;
+      var foundStorage: ISnapShots;
       await this.GetAllSnapShotsMany()
         .then((result) => foundStorage = result)
         .catch((err) => reject(err));
@@ -153,7 +151,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       this.SettingAutoSnapshotRetainDays = ContentConst.Const.DefaultMaxAutoSaveAgeDays;
     }
     var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
-    let currentWindowStorage: ISnapShotsMany = await this.GetAllSnapShotsMany();
+    let currentWindowStorage: ISnapShots = await this.GetAllSnapShotsMany();
 
     if (currentWindowStorage) {
       var cacheLength = currentWindowStorage.CurrentSnapShots.length;
@@ -191,11 +189,11 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.Logger.FuncEnd(this.CleanOutOldAutoSavedData.name);
   }
 
-  GetAllSnapShotsMany(): Promise<ISnapShotsMany> {
+  GetAllSnapShotsMany(): Promise<ISnapShots> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetAllSnapShotsMany.name);
 
-      let snapShotsMany: ISnapShotsMany = {
+      let snapShotsMany: ISnapShots = {
         CurrentSnapShots: [],
         Birthday: new Date(1970),
         FavoriteCount: 0,
@@ -238,7 +236,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return toReturn;
   }
 
-  UpdateCounts(storageAllSnapshots: ISnapShotsMany) {
+  UpdateCounts(storageAllSnapshots: ISnapShots) {
     storageAllSnapshots.FavoriteCount = 0;
     storageAllSnapshots.SnapShotsAutoCount = 0;
     storageAllSnapshots.PlainCount = 0;

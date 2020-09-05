@@ -1,6 +1,6 @@
-﻿import { ILogWriter } from "../../../Interfaces/Agents/ILoggerWriter";
+﻿import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 
-export class LogWriterBuffer implements ILogWriter {
+export class LogWriterBuffer implements ILoggerWriter {
   private LogPreInitBuffer: string[] = [];
   private bufferPrefix: string = '* ';
 

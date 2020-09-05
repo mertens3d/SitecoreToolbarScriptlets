@@ -4,7 +4,7 @@ import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
 import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
 import { ContentConst } from '../Interfaces/InjectConst';
 import { IPromiseRecipes } from '../Interfaces/IPromiseRecipes';
-import { RecipeBasics } from './PromiseGeneric';
+import { RecipeBasics } from './RecipeBasics';
 
 export class PromisesRecipes extends LoggableBase implements IPromiseRecipes {
   async FromDesktopOpenNewCEIframe(targetDoc: IDataOneDoc, recipeBasics: RecipeBasics): Promise<OneCEAgent> {

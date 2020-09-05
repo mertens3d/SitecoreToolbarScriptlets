@@ -1,7 +1,7 @@
 import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
-import { RepoAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent';
+import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent';
 import { ConstAllSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings';
 import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
@@ -10,11 +10,10 @@ import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
 import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { AutoSnapShotAgent } from './Managers/AutoSnapShotAgent/AutoSnapShotAgent';
 import { SitecoreUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
-import { ContentAtticAgent } from './Managers/ContentAtticManager/ContentAtticManager';
+import { ContentAtticAgent } from './Managers/ContentAtticManager/ContentAtticAgent';
 import { ContentAPIManager } from './Managers/ContentAPIManager/ContentAPIManager';
 import { ContentStateManager } from './Classes/ContentStateManager/ContentStateManager';
-import { ScWindowManager } from './Managers/OneScWindowManager';
-import { RecipeBasics } from '../../Shared/scripts/Classes/PromiseGeneric';
+import { RecipeBasics } from '../../Shared/scripts/Classes/RecipeBasics';
 import { MiscManager } from './Managers/MiscManager/MiscManager';
 import { PromisesRecipes } from '../../Shared/scripts/Classes/PromisesRecipes';
 import { ContentMessageManager } from './Managers/ContentMessageManager/ContentMessageManager';
@@ -27,6 +26,7 @@ import { ScUrlAgent } from '../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAge
 import { IScUrlAgent } from '../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
+import { ScWindowManager } from './Managers/ScWindowManager/ScWindowManager';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -113,7 +113,7 @@ class ContentEntry {
   private async InstantiateAndInitLoggerAndSettings() {
     this.Logger = new LoggerAgent();
 
-    this.RepoAgent = new RepoAgent(this.Logger);
+    this.RepoAgent = new RepositoryAgent(this.Logger);
 
     this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
 

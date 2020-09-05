@@ -1,6 +1,6 @@
 ﻿import { HandlersExternal } from "../Classes/HandlersExternal";
 import { HandlersInternal } from "../Classes/HandlersInternal";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { MessageManager } from "./MessageManager";
 import { UiManager } from "./UiManager/UiManager";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";

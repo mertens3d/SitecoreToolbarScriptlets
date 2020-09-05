@@ -1,5 +1,5 @@
-﻿import { RecipeBasics } from '../../../Shared/scripts/Classes/PromiseGeneric';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+﻿import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataBucketRestoreDesktop } from '../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
@@ -8,7 +8,7 @@ import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../Managers/LoggableBase';
 import { MiscManager } from '../Managers/MiscManager/MiscManager';
 import { OneCEAgent } from '../Managers/OneCEAgent/OneCEAgent';
-import { ScWindowManager } from '../Managers/OneScWindowManager';
+import { ScWindowManager } from '../Managers/ScWindowManager/ScWindowManager';
 
 export class PromiseChainRestoreDesktop extends LoggableBase {
   private MiscMan: MiscManager;

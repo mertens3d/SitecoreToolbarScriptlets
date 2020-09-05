@@ -1,5 +1,5 @@
 ﻿import { IAccordianManager } from "../../../Interfaces/Agents/IAccordianManager";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { AccordianDrone } from "./AccordianDrone";
@@ -15,11 +15,10 @@ export class AccordianManager implements IAccordianManager {
   }
 
   async RestoreAccordionState(oneSetting: IGenericSetting): Promise<void> {
-
     if (oneSetting) {
       let foundAccordian: AccordianDrone = this.GetAccordianByKey(oneSetting);
 
-      if (foundAccordian ) {
+      if (foundAccordian) {
         foundAccordian.RestoreAccordionState(oneSetting);
       } else {
         this.Logger.Log('No accordion found for ' + oneSetting.Friendly);
@@ -27,14 +26,11 @@ export class AccordianManager implements IAccordianManager {
     } else {
       this.Logger.Log('No setting provided ');
     }
-
   }
 
   AddAccordianDrone(oneSetting: IGenericSetting, uiElem: HTMLElement) {
-    //this.Logger.FuncStart(this.AddAccordianDrone.name, oneSetting.UiSelector);
     let newAccordianDrone = new AccordianDrone(this.Logger, this.SettingsAgent, uiElem, oneSetting);
     this.AllAccordians.push(newAccordianDrone);
-    //this.Logger.FuncEnd(this.AddAccordianDrone.name);
   }
 
   GetAccordianByKey(oneSetting: IGenericSetting): AccordianDrone {

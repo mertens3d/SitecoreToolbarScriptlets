@@ -1,6 +1,6 @@
 ﻿import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
 import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";

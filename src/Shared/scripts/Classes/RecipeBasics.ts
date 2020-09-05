@@ -8,7 +8,7 @@ import { ContentConst } from '../Interfaces/InjectConst';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { PromiseResult } from "./PromiseResult";
-import { ILoggerAgent } from '../Interfaces/Agents/ILoggerBase';
+import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
 
@@ -151,10 +151,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       let successful: boolean = true;
       let rejectReason: string = '';
 
-      //this.Logger.DebugIDataOneDoc(targetDoc);
       var toReturn: IDataOneIframe[] = [];
-
-      //this.Logger.LogVal('querySelectorAll 9.2: ', ContentConst.Const.Selector.SC.IframeContent.sc920);
 
       var iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
@@ -164,7 +161,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
       this.Logger.LogVal('found iframes count', iframeAr.length);
       if (iframeAr) {
-        //this.Logger.Log('iframeAr: ' + iframeAr.length);
         for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
           this.Logger.Log('pushing: ' + ifrIdx);
 
@@ -242,9 +238,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       var iterationJr = new IterationDrone(this.Logger, this.WaitForAndReturnFoundElem.name, overrideIterCount);
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
-        this.Logger.LogVal('targetDoc.Document', haystackDoc.ContentDoc.toString());
-        this.Logger.LogVal('targetDoc.Document.location', haystackDoc.ContentDoc.location.toString());
-        this.Logger.LogVal('targetDoc.Document.location.href', haystackDoc.ContentDoc.location.href);
         toReturnFoundElem = haystackDoc.ContentDoc.querySelector(selector);
 
         if (toReturnFoundElem) {
@@ -329,60 +322,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       this.Logger.FuncEnd(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
     });
   }
-
-  //async SetHrefAndWaitForReadyStateComplete(href :string, targetTab: IDataBrowserTab) {
-  //  return new Promise(async (resolve, reject) => {
-  //    this.Debug.FuncStart(this.SetHrefAndWaitForReadyStateComplete.name, href);
-
-  //    var isCorrectHref = targetTab.Tab.url = href;
-
-  //    //if (targetTab.ScWindowType !== targetWindowType) {
-  //      targetTab.Tab.url = href;
-  //      //targetTab.Window.location.href = href;
-  //    //}
-
-  //    //await this.WaitForPageReady
-
-  //    await this.WaitForPageReadyNative(targetTab.DataDocSelf)
-
-  //      //.then( () => this.MsgMan().w())
-  //      .then(() => resolve())
-  //      .catch(() => reject());
-
-  //    this.Debug.FuncEnd(this.SetHrefAndWaitForReadyStateComplete.name);
-  //  });
-  //}
-
-  //async SetPageAndWaitForReady(targetWindowType: scWindowType, targetWindow: IDataBrowserWindow) {
-  //  return new Promise<void>(async (resolve, reject) => {
-  //    var iterationJr = new IterationHelper(this.Xyyz, this.SetPageAndWaitForReady.name);
-  //    if (targetWindow.WindowType !== targetWindowType) {
-  //      targetWindow.DataDocSelf.Document.location.href =
-  //    }
-  //    while (!found && iterationJr.DecrementAndKeepGoing() && !this.MsgMan().OperationCancelled) {
-  //      if (targetWindow) {
-  //      } else {
-  //        reject();
-  //      }
-  //    }
-  //  }
-
-  //async WaitForPageReady(targetWindow: IDataBrowserTab) {
-  //  return new Promise<void>(async (resolve, reject) => {
-  //    this.Debug.FuncStart(this.WaitForPageReady.name);
-
-  //    this.Debug.DebugIDataBrowserWindow(targetWindow);
-
-  //    if (targetWindow) {
-  //      await this. WaitForPageReadyNative(targetWindow.DataDocSelf)
-  //        .then(() => resolve())
-  //        .catch((ex) => {
-  //          reject(ex);
-  //        })
-  //    }
-  //    this.Debug.FuncEnd(this.WaitForPageReady.name);
-  //  });
-  //}
 
   async RaceWaitAndClick(selector: IScVerSpec, targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {

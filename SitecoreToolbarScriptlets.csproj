@@ -46,7 +46,6 @@
     <Content Include="gulp.support\InjectableTs.js" />
     <Content Include="gulp.support\tasks\cleanTasks.js" />
     <Content Include="gulp.support\tasks\htmlTasks.js" />
-    <Content Include="gulp.support\tasks\openerTasks.js" />
     <Content Include="gulp.support\tasks\otherTasks.js" />
     <Content Include="gulp.support\tasks\putTasks.js" />
     <Content Include="gulp.support\tasks\styleTasks.js" />
@@ -67,11 +66,12 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName\RecipeChangeNickName.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage\RecipeRemoveItemFromStorage.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRestore\RecipeRestore.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState\RecipeSaveState.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeToggleFavorite.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeToggleFavorite\RecipeToggleFavorite.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\LoggableBase.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\ButtonVisibilityTests.ts" />
@@ -190,9 +190,6 @@
     <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.js.map">
       <DependentUpon>RecipePublishActiveCe.js</DependentUpon>
     </None>
-    <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.js.map">
-      <DependentUpon>RecipeRemoveItemFromStorage.js</DependentUpon>
-    </None>
     <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\ContentAPIManager.js">
@@ -203,9 +200,6 @@
     </Content>
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.js">
       <DependentUpon>RecipePublishActiveCe.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.js">
-      <DependentUpon>RecipeRemoveItemFromStorage.ts</DependentUpon>
     </Content>
     <Content Include="src\PopUp\scripts\Managers\EventManager.js">
       <DependentUpon>EventManager.ts</DependentUpon>
@@ -221,15 +215,6 @@
     </Content>
     <Content Include="src\PopUp\scripts\Managers\UiButtonStateManager.js">
       <DependentUpon>UiButtonStateManager.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.js">
-      <DependentUpon>LoggerAgent.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.js">
-      <DependentUpon>LoggerConsoleWriter.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.js">
-      <DependentUpon>LoggerStorageWriter.ts</DependentUpon>
     </Content>
     <Content Include="src\Shared\scripts\Helpers\FactoryHelper.js">
       <DependentUpon>FactoryHelper.ts</DependentUpon>
@@ -405,7 +390,6 @@
     <Content Include="gulpfile.js" />
     <Content Include="jest.config.js" />
     <Content Include="gulp.support\Secrets.example.js" />
-    <Content Include="gulp.support\Secrets.js" />
     <Content Include="src\PopUp\html\menu.html" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISharedConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scMode.ts" />
@@ -432,7 +416,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\NewWindowDest.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\Guid.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneIframe.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\PageDataManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\MiscManager\MiscManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseChainRestoreDesktop.ts" />
@@ -466,15 +449,6 @@
     </None>
     <None Include="src\PopUp\scripts\Managers\UiButtonStateManager.js.map">
       <DependentUpon>UiButtonStateManager.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.js.map">
-      <DependentUpon>LoggerAgent.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.js.map">
-      <DependentUpon>LoggerConsoleWriter.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.js.map">
-      <DependentUpon>LoggerStorageWriter.js</DependentUpon>
     </None>
     <None Include="src\Shared\scripts\Helpers\FactoryHelper.js.map">
       <DependentUpon>FactoryHelper.js</DependentUpon>
@@ -648,7 +622,6 @@
     <Folder Include="Misc\" />
     <Folder Include="src\Browser-PolyFill\" />
     <Folder Include="src\Content\scripts\_first\" />
-    <Folder Include="src\hindsiteWindowOpener\Scripts\" />
     <Folder Include="src\PopUp\scripts\Managers\MessageManager\" />
     <Folder Include="src\PopUp\scripts\Modules\" />
     <Folder Include="src\PopUp\scripts\Promises\" />
@@ -662,7 +635,7 @@
     <Content Include="gulp.support\OneInjectable.js" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAtticManager\ContentAtticManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAtticManager\ContentAtticAgent.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dist\HindSite\background.js" />

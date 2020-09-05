@@ -46,10 +46,6 @@ export class OneGenericSetting implements IGenericSetting {
       toReturn = this.DefaultValue;
     }
 
-    //console.log('ValueAsObj');
-    //console.log(this.ValueAsObj);
-    //console.log('toReturn : ' + toReturn);
-
     return toReturn;
   }
   //  i am passing the setting in the message so the method doesn't come along
