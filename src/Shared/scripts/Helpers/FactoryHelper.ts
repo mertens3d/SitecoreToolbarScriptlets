@@ -7,13 +7,11 @@ import { Guid } from "./Guid";
 export class FactoryHelper extends LoggableBase implements IFactoryHelper {
  
   DataOneContentDocFactoryFromIframe(dataOneIframe: IDataOneIframe): IDataOneDoc {
-    //IframeElem: HTMLIFrameElement, nickname: string
     var toReturn: IDataOneDoc = null;
 
     if (dataOneIframe) {
       toReturn =
       {
-        //ParentDoc: parentDocument,
         ContentDoc: dataOneIframe.IframeElem.contentDocument,
         DocId: Guid.NewRandomGuid(),
         Nickname: dataOneIframe.Nickname + ' - content doc'

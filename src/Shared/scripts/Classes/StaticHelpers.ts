@@ -17,10 +17,6 @@ export class StaticHelpers {
     return 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
   }
 
-  //static CacheModeAsString(cacheMode: CacheMode): string {
-  //  return 'CacheMode.' + CacheMode[cacheMode] + ' (' + cacheMode + ')';
-  //}
-
   static WindowTypeAsString(windowType: scWindowType) {
     return scWindowType[windowType];
   }
@@ -88,7 +84,7 @@ export class StaticHelpers {
     var toReturn: string = "{error}";
     if (msg) {
       try {
-        toReturn = 'MsgFlag.' +  MsgFlag[msg] + '(' + msg + ')';
+        toReturn = 'MsgFlag.' + MsgFlag[msg] + '(' + msg + ')';
       } catch (e) {
       }
     }

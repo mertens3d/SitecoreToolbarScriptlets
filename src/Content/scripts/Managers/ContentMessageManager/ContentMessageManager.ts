@@ -10,7 +10,7 @@ export class ContentMessageManager extends LoggableBase {
   OperationCancelled: any;
   private ScWinMan: IScWindowManager;
 
-  constructor(logger: ILoggerAgent,  scWinMan: IScWindowManager, contentMessageBroker: IContentMessageBroker) {
+  constructor(logger: ILoggerAgent, scWinMan: IScWindowManager, contentMessageBroker: IContentMessageBroker) {
     super(logger);
     this.Logger.FuncStart(ContentMessageManager.name);
 
@@ -42,8 +42,5 @@ export class ContentMessageManager extends LoggableBase {
 
       this.Logger.FuncEnd(this.ToggleCompactCss.name);
     });
-  }
-
-  SetParentInfo(__winDataParent: IDataOneDoc) {
   }
 }

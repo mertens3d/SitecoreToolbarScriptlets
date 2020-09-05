@@ -17,7 +17,7 @@ import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfac
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { LoggableBase } from '../LoggableBase';
 import { MiscManager } from '../MiscManager/MiscManager';
-import { OneCEAgent } from '../OneCEAgent/OneCEAgent';
+import { OneCEAgent } from '../../Agents/OneCEAgent/OneCEAgent';
 import { OneDesktopManager } from '../OneDesktopManager/OneDesktopManager';
 import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 

@@ -3,28 +3,16 @@ import { IMessageBrokerFeedback } from "../../../../../../../Shared/scripts/Inte
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
 
 export class FeedbackModuleMessages extends UiFeedbackModuleBase implements IMessageBrokerFeedback {
-    private MsgStatusDiv: HTMLDivElement;
 
   constructor(selector: string, loggerAgent: ILoggerAgent) {
     super(selector, loggerAgent)
+  }
 
-    }
-
-    Init() {
-        //this.LookForMsgStatusDiv();
-    }
-
-    //LookForMsgStatusDiv() {
-    //    this.MsgStatusDiv = document.querySelector(PopConst.Const.Selector.HS.FeedbackMessages);
-    //}
+  Init() {
+  }
 
   UpdateMsgStatusStack(textToShow: string) {
-
-    this.AddHtmlString(textToShow + '</br>');// + this.MsgStatusDiv.innerHTML);
-
-        //if (this.MsgStatusDiv) {
-        //    this.MsgStatusDiv.innerHTML = textToShow + '</br>' + this.MsgStatusDiv.innerHTML;
-        //}
-        this.Logger.Log('msg stat: ' + textToShow);
-    }
+    this.AddHtmlString(textToShow + '</br>');
+    this.Logger.Log('msg stat: ' + textToShow);
+  }
 }

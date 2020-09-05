@@ -46,28 +46,6 @@ export class RepositoryAgent implements IRepositoryAgent {
     });
   }
 
-  //async GetAllLocalHindSiteStorage(targetKey: string): Promise<browser.storage.StorageValue> {
-  //  return new Promise(async (resolve) => {
-  //    let toReturn: browser.storage.StorageValue = null;
-
-  //    await browser.storage.local.get()
-  //      .then((storageResults: browser.storage.StorageObject) => {
-  //        //console.log('storageResults: ' + JSON.stringify(storageResults));
-  //        var storageKeys: string[] = Object.keys(storageResults);
-
-  //        for (let oneKey of storageKeys) {
-  //          if (oneKey === targetKey) {
-  //            let storedValue: browser.storage.StorageValue = storageResults[oneKey];
-  //            if (storedValue) {
-  //              toReturn = storedValue.toString();
-  //            }
-  //          }
-  //        }
-  //      })
-  //      .then(() => resolve(toReturn));
-  //  });
-  //}
-
   ReadDataOfKey(targetKey: string): browser.storage.StorageValue {
     this.Logger.FuncStart(this.ReadDataOfKey.name);
 

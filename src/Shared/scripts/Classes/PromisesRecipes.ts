@@ -1,5 +1,5 @@
 ﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
-import { OneCEAgent } from '../../../Content/scripts/Managers/OneCEAgent/OneCEAgent';
+import { OneCEAgent } from '../../../Content/scripts/Agents/OneCEAgent/OneCEAgent';
 import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
 import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
 import { ContentConst } from '../Interfaces/InjectConst';
