@@ -7,7 +7,7 @@ import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../Managers/LoggableBase';
 import { MiscManager } from '../Managers/MiscManager/MiscManager';
-import { OneCEAgent } from '../Managers/OneCEAgent/OneCEAgent';
+import { OneCEAgent } from '../Agents/OneCEAgent/OneCEAgent';
 import { ScWindowManager } from '../Managers/ScWindowManager/ScWindowManager';
 
 export class PromiseChainRestoreDesktop extends LoggableBase {
@@ -47,11 +47,8 @@ export class PromiseChainRestoreDesktop extends LoggableBase {
     return new Promise<void>(async (resolve, reject) => {
       this.Logger.FuncStart(this.__waitForIframeReady.name, 'targetIframe not null: ' + (targetIframe !== null));
 
-      //  var promResult: PromiseResult = new PromiseResult(this.__waitForIframeCountDiff.name, this.Logger);
-
       await this.RecipeBasics.WaitForReadyIframe(targetIframe)
-        .then((result) => {
-          this.Logger.Log('resolved! : ');
+        .then(() => {
 
           targetIframe.ContentDoc.ContentDoc = targetIframe.IframeElem.contentDocument;
           this.Logger.DebugDataOneIframe(targetIframe);

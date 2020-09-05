@@ -5,11 +5,11 @@ import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDt
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
-import { PromiseChainRestoreDesktop } from "../../Promises/PromiseChainRestoreDesktop";
 import { LoggableBase } from "../LoggableBase";
 import { MiscManager } from "../MiscManager/MiscManager";
-import { OneCEAgent } from "../OneCEAgent/OneCEAgent";
+import { OneCEAgent } from "../../Agents/OneCEAgent/OneCEAgent";
 import { ScWindowManager } from "../ScWindowManager/ScWindowManager";
+import { PromiseChainRestoreDesktop } from "../../PromiseChainRestoreDesktop/PromiseChainRestoreDesktop";
 
 export class OneDesktopManager extends LoggableBase {
   private associatedDoc: IDataOneDoc;

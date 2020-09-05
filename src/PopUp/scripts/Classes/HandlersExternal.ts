@@ -13,7 +13,6 @@ import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 
 export class HandlersExternal {
   private Logger: ILoggerAgent; //extends CommonEvents
-  //PopHub: PopUpHub;
   private MessageManager: MessageManager;
   private SettingsAgent: ISettingsAgent;
   private TabMan: TabManager;
@@ -176,7 +175,6 @@ export class HandlersExternal {
   }
 
   __hndlrCancelOperation(data: ICommandHndlrDataForPopUp) {
-    //data.PopUpHub.UiMan.SetCancelFlag();
   }
 
   ToggleFavorite(data: ICommandHndlrDataForPopUp) {

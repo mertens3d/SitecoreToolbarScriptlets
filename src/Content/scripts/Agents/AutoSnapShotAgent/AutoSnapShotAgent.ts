@@ -9,9 +9,8 @@ import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { IDataPayloadSnapShot } from "../../../../Shared/scripts/Interfaces/IDataPayloadSnapShot";
-import { RecipeSaveState } from "../ContentAPIManager/Recipes/RecipeSaveState/RecipeSaveState";
-import { SitecoreUiManager } from "../SitecoreUiManager/SitecoreUiManager";
+import { RecipeSaveState } from "../../Managers/ContentAPIManager/Recipes/RecipeSaveState/RecipeSaveState";
+import { SitecoreUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 
 export class AutoSnapShotAgent {
   private SettingsAgent: ISettingsAgent;

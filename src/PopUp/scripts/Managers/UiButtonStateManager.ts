@@ -7,7 +7,6 @@ import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/
 import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 
 export class UiButtonStateManager {
-  //private AllMenuCommands: IOneCommand[];
   private currentContentState: IContentState;
   private currentWindowType: scWindowType;
   private currSelSnapshot: GuidData;
@@ -22,7 +21,6 @@ export class UiButtonStateManager {
   }
 
   Init(AllMenuCommands: IOneCommand[]) {
-    //this.AllMenuCommands = AllMenuCommands;
     this.Tester = new ButtonVisibilityTester();
   }
 
@@ -65,13 +63,12 @@ export class UiButtonStateManager {
           case VisibilityType.Preview:
             toReturn = this.Tester.VisibilityTestWindowType(scWindowType.Preview, this.currentWindowType)
             break;
-          case VisibilityType.SnapShotable:
 
+          case VisibilityType.SnapShotable:
             toReturn = this.Tester.VisibilityTestSnapShotable(this.currentContentState);
             break;
 
           case VisibilityType.SnapShotSelected:
-
             toReturn = this.Tester.VisibilityTestSnapShotSelected(this.currSelSnapshot);
             break;
 
@@ -129,7 +126,6 @@ export class UiButtonStateManager {
       var oneCommand = allMenuCommands[idx];
 
       if (oneCommand.ButtonSelector !== null) {
-        //this.Logger.LogVal('working on', MenuCommand[command.Command])
         let passesOneTest: boolean = false;
         var targetButton: HTMLElement = document.querySelector(oneCommand.ButtonSelector);
 

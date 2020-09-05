@@ -4,7 +4,7 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { RecipeChangeNickName } from "./Recipes/RecipeChangeNickName/RecipeChangeNickName";
-import { RecipePublishActiveCe } from "./Recipes/RecipePublishActiveCe";
+import { RecipePublishActiveCe } from "./Recipes/RecipePublishActiveCe/RecipePublishActiveCe";
 import { RecipeRemoveItemFromStorage } from "./Recipes/RecipeRemoveItemFromStorage/RecipeRemoveItemFromStorage";
 import { RecipeSaveState } from "./Recipes/RecipeSaveState/RecipeSaveState";
 import { RecipeToggleFavorite } from "./Recipes/RecipeToggleFavorite/RecipeToggleFavorite";
@@ -135,11 +135,7 @@ export class ContentAPIManager extends LoggableBase implements IContentApi {
 
   Ping(payloadData: PayloadDataFromPopUp) {
     return new Promise(async (resolve, reject) => {
-      //if (this. ReadyForMessages) {
       resolve(MsgFlag.RespListeningAndReady);
-      //} else {
-      //  reject(MsgFlag.RespNotReady)
-      //}
     });
   }
 

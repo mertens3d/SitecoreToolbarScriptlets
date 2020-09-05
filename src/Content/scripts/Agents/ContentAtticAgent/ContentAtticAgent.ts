@@ -267,8 +267,6 @@ export class ContentAtticAgent implements IContentAtticAgent {
 
   ConfirmRemoveAndCheck(storageMatch: IDataOneWindowStorage): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      //var result: boolean = confirm('Remove ?: ' + this.TimeNicknameFavStrForConfirmation(storageMatch));
-      //if (result === true) {
       this.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
 
       let targetId = storageMatch.GuidId;
@@ -283,9 +281,6 @@ export class ContentAtticAgent implements IContentAtticAgent {
             reject('Snapshot still exists after deleting');
           }
         })
-      //} else {
-      //  reject('Confirmation not received');
-      //}
     })
   }
 

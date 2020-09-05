@@ -18,7 +18,6 @@ import { IRecipeBasics } from "../../../../Shared/scripts/Interfaces/IPromiseHel
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { SitecoreUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 
-
 export class ContentMessageBroker extends LoggableBase implements IContentMessageBroker {
   private SettingsAgent: ISettingsAgent;
   private ApiManager: IContentApi;
@@ -131,10 +130,6 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     let commandToExecute: Function = null;
 
     switch (msgFlag) {
-      //case MsgFlag.ReqRestoreToNewTab:
-      //  commandToExecute = this.ApiManager.RestoreToNewTab;
-      //  break;
-
       case MsgFlag.ReqAddCETab:
         commandToExecute = this.ApiManager.AddCETab;
         break;

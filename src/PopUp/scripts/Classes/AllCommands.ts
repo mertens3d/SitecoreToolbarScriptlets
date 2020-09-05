@@ -7,15 +7,13 @@ import { Handlers } from '../Managers/Handlers';
 import { PopConst } from './PopConst';
 
 export class CommandManager {
-  
   AllMenuCommands: IOneCommand[];
-  private  Handlers: Handlers;
+  private Handlers: Handlers;
 
   constructor(handlers: Handlers) {
     this.Handlers = handlers;
     this.AllMenuCommands = CommandManager.BuildAllCommands(this.Handlers);
   }
-
 
   GetCommandById(needleCommand: MenuCommand): IOneCommand {
     let toReturn: IOneCommand = null;
@@ -31,8 +29,7 @@ export class CommandManager {
     return toReturn;
   }
 
-
-  static BuildAllCommands( handlers: Handlers) {
+  static BuildAllCommands(handlers: Handlers) {
     let toReturn: IOneCommand[] = [
       {
         Command: MenuCommand.CloseWindow,

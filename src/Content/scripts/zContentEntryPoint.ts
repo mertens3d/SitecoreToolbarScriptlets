@@ -8,9 +8,8 @@ import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastA
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
 import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
-import { AutoSnapShotAgent } from './Managers/AutoSnapShotAgent/AutoSnapShotAgent';
+import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent/AutoSnapShotAgent';
 import { SitecoreUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
-import { ContentAtticAgent } from './Managers/ContentAtticManager/ContentAtticAgent';
 import { ContentAPIManager } from './Managers/ContentAPIManager/ContentAPIManager';
 import { ContentStateManager } from './Classes/ContentStateManager/ContentStateManager';
 import { RecipeBasics } from '../../Shared/scripts/Classes/RecipeBasics';
@@ -27,6 +26,7 @@ import { IScUrlAgent } from '../../Shared/scripts/Interfaces/Agents/IScUrlAgent/
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
 import { ScWindowManager } from './Managers/ScWindowManager/ScWindowManager';
+import { ContentAtticAgent } from './Agents/ContentAtticAgent/ContentAtticAgent';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;

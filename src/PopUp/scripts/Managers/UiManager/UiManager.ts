@@ -293,7 +293,6 @@ export class UiManager {
     if (!targetElem) {
       this.Logger.ErrorAndThrow(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
     } else {
-      //var popHub: PopUpHub = this.PopHub;
       targetElem.addEventListener('click', (evt) => { handler(evt) });
     }
   }

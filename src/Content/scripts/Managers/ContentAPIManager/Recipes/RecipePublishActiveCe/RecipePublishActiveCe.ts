@@ -1,14 +1,14 @@
-﻿import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
-import { scWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
-import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/IDataOneDoc";
-import { IDataOneIframe } from "../../../../../Shared/scripts/Interfaces/IDataOneIframe";
-import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/IDataPublishChain";
-import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
-import { RecipeBase } from "./RecipeBase";
-import { IFactoryHelper } from "../../../../../Shared/scripts/Interfaces/IFactoryHelper";
+﻿import { PromiseResult } from "../../../../../../Shared/scripts/Classes/PromiseResult";
+import { scWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
+import { ICommandHndlrDataForContent } from "../../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { ICommandRecipes } from "../../../../../../Shared/scripts/Interfaces/ICommandRecipes";
+import { IDataOneDoc } from "../../../../../../Shared/scripts/Interfaces/IDataOneDoc";
+import { IDataOneIframe } from "../../../../../../Shared/scripts/Interfaces/IDataOneIframe";
+import { IDataPublishChain } from "../../../../../../Shared/scripts/Interfaces/IDataPublishChain";
+import { ContentConst } from "../../../../../../Shared/scripts/Interfaces/InjectConst";
+import { SharedConst } from "../../../../../../Shared/scripts/SharedConst";
+import { RecipeBase } from "../RecipeBase";
+import { IFactoryHelper } from "../../../../../../Shared/scripts/Interfaces/IFactoryHelper";
 
 export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes {
  private FactoryHelp: IFactoryHelper;

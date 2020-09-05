@@ -1,7 +1,6 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 
 export class UiFeedbackModuleBase {
-
   protected indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';
   protected lineBreak = '<br/>';
 
@@ -23,8 +22,7 @@ export class UiFeedbackModuleBase {
       }
     }
 
-
-    return this.__targetElement; 
+    return this.__targetElement;
   }
 
   AddHtmlString(htmlText: string) {
@@ -34,7 +32,6 @@ export class UiFeedbackModuleBase {
       this.Logger.ErrorAndThrow(this.AddHtmlString.name, 'htmlText');
     }
   }
-
 
   WriteManyLines(strAr: string[]): void {
     if (strAr) {
@@ -56,7 +53,7 @@ export class UiFeedbackModuleBase {
     }
   }
 
-  ConvertIndents(input: string): string{
+  ConvertIndents(input: string): string {
     let toReturn: string = '';
 
     for (var idx = 0; idx < input.length; idx++) {
@@ -67,7 +64,6 @@ export class UiFeedbackModuleBase {
         toReturn += input.substring(idx);
         break;
       }
-
     }
 
     return toReturn;
@@ -83,7 +79,7 @@ export class UiFeedbackModuleBase {
   WriteSingleLine(text: string): void {
     var ta = this.__getFeedbackElem();
     if (ta) {
-      ta.innerHTML += this.ConvertIndents(this.ConvertTabs( this.ConvertLineBreaks(text)) + '<br/>');
+      ta.innerHTML += this.ConvertIndents(this.ConvertTabs(this.ConvertLineBreaks(text)) + '<br/>');
     }
   }
 }
