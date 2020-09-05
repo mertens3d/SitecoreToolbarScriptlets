@@ -6,8 +6,9 @@ import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
 import { IContentState } from "../../../Interfaces/IContentState/IContentState";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
+import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 
-export class ScUrlAgent extends GenericUrlAgent {
+export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
   
   constructor(logger: ILoggerAgent) {
     super(logger);

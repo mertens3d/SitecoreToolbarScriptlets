@@ -50,7 +50,7 @@ export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes
   async PublishActiveCE(targetDoc: IDataOneDoc): Promise<void> {
     this.Logger.FuncStart(this.PublishActiveCE.name);
     try {
-      var currentWindowType = this.CommandData.ScUiMan.GetCurrentPageType();
+      var currentWindowType = this.CommandData.ScWinMan.GetCurrentPageType();
       await this.GetDocToPublish(currentWindowType, targetDoc)
         .then((docToPublish: IDataOneDoc) => this.PublishCE(docToPublish))
         .catch((err) => { throw (err) });

@@ -1,5 +1,5 @@
 ﻿import { Guid } from '../../../Shared/scripts/Helpers/Guid';
-import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { ContentMessageManager } from './ContentMessageManager/ContentMessageManager';
 import { LoggableBase } from './LoggableBase';
@@ -10,8 +10,8 @@ export class PageManager  extends LoggableBase {
   SelfWindow: IDataOneDoc;
   MsgMan: ContentMessageManager;
 
-  constructor( AllAgents: IAllAgents, msgMan: ContentMessageManager) {
-    super(AllAgents.Logger);
+  constructor(logger: ILoggerAgent, msgMan: ContentMessageManager) {
+    super(logger);
     this.MsgMan = msgMan;
     this.Logger.CtorName(this.constructor.name);
   }

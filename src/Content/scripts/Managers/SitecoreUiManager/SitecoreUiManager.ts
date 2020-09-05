@@ -1,5 +1,4 @@
-﻿import { ScUrlAgent } from "../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
-import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+﻿import { RecipeBasics } from "../../../../Shared/scripts/Classes/PromiseGeneric";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
@@ -9,37 +8,40 @@ import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitec
 import { LoggableBase } from "../LoggableBase";
 
 export class SitecoreUiManager extends LoggableBase implements iSitecoreUiManager {
-  ScUrlAgent: ScUrlAgent;
+  __activeWindowSnapShot: IDataOneWindowStorage;
 
-  constructor(logger: ILoggerAgent) {
+  private RecipeBasics: RecipeBasics;
+
+  constructor(logger: ILoggerAgent, recipeBasics: RecipeBasics) {
     super(logger)
-    this.ScUrlAgent = new ScUrlAgent(this.Logger);
+
+    this.RecipeBasics = recipeBasics;
   }
 
   async InitSitecoreUiManager() {
     this.Logger.FuncStart(this.InitSitecoreUiManager.name);
-    await this.ScUrlAgent.InitScUrlAgent();
+    try {
+      this.InjectCss();
+    } catch (err) {
+      throw (err);
+    }
     this.Logger.FuncEnd(this.InitSitecoreUiManager.name);
   }
 
-  GetCurrentPageType(): scWindowType {
-    return this.ScUrlAgent.GetScWindowType()
-  }
+  InjectCss(): void {
+    //let tabs = browser.tabs;
+    //let targetTab: browser.tabs.Tab = tabs[0];
 
-  __activeWindowSnapShot: IDataOneWindowStorage;
+    //let targetTab = this.man
+    //browser.tabs.insertCSS( {
+    //  file: 'AutoBuild/final/content.min.css'
+    //});
 
-  private topDoc: IDataOneDoc;
-
-  TopLevelDoc(): IDataOneDoc {
-    if (!this.topDoc) {
-      this.topDoc = {
-        //ParentDoc: null,
-        ContentDoc: window.document,
-        DocId: Guid.NewRandomGuid(),
-        Nickname: 'top doc'
-      }
-    }
-    return this.topDoc;
+    const style = document.createElement('link');
+    style.type = 'text/css';
+    style.href = browser.extension.getURL('AutoBuild/final/content.min.css');
+    style.rel = "stylesheet";
+    document.getElementsByTagName("head")[0].appendChild(style);
   }
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
@@ -79,6 +81,7 @@ export class SitecoreUiManager extends LoggableBase implements iSitecoreUiManage
     }
     this.Logger.FuncEnd(this.AdminB.name);
   }
+
   GetLoginButton(targetDoc: IDataOneDoc): HTMLElement {
     this.Logger.FuncStart(this.GetLoginButton.name);
 

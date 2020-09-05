@@ -1,23 +1,25 @@
 ﻿import { ContentMessageBroker } from "../../../Content/scripts/Drones/ContentMessageBroker/ContentMessageBroker";
-import { ContentAtticManager } from "../../../Content/scripts/Managers/ContentAtticManager/ContentAtticManager";
-import { OneScWindowManager } from "../../../Content/scripts/Managers/OneScWindowManager";
 import { SitecoreUiManager } from "../../../Content/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
-import { PayloadDataFromPopUp } from "../Classes/PayloadDataReqPopUp";
+import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
+import { GuidData } from "../Helpers/GuidData";
+import { IContentAtticAgent } from "./Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "./Agents/ILoggerBase";
+import { IScWindowManager } from "./Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "./Agents/IToastAgent";
 import { IDataOneDoc } from "./IDataOneDoc";
-import { IFactoryHelper } from "./IFactoryHelper";
 import { IRecipeBasics } from "./IPromiseHelper";
 
 export interface ICommandHndlrDataForContent {
-  ScWinMan: OneScWindowManager;
+  TargetSnapShotFlavor: SnapShotFlavor,
+  TargetSnapShotId: GuidData;
+  TargetNickName: string;
+  ScWinMan: IScWindowManager;
   ScUiMan: SitecoreUiManager;
-  FactoryHelp: IFactoryHelper;
   ToastAgent: IToastAgent;
-  AtticMan: ContentAtticManager;
+  AtticAgent: IContentAtticAgent;
   Logger: ILoggerAgent;
-  PayloadData: PayloadDataFromPopUp,
   ContentMessageBroker: ContentMessageBroker,
   TopLevelDoc: IDataOneDoc,
-  PromiseBasic: IRecipeBasics
+  RecipeBasics: IRecipeBasics
+  //CurrentPageType: scWindowType
 }

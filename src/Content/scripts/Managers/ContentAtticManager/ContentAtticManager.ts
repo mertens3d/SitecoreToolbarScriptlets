@@ -1,28 +1,29 @@
-﻿import { RepoAgent } from "../../../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
-import { PromiseResult } from "../../../../Shared/scripts/Classes/PromiseResult";
+﻿import { PromiseResult } from "../../../../Shared/scripts/Classes/PromiseResult";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { IRepositoryAgent } from "../../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
 import { ISnapShotsMany } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShotsMany";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 
-export class ContentAtticManager {
-  private Repo: RepoAgent;
+export class ContentAtticAgent implements IContentAtticAgent {
+  private Repo: IRepositoryAgent;
   private SettingAutoSnapshotRetainDays: number;
   private Logger: ILoggerAgent;
 
-  constructor(repo: RepoAgent, logger: ILoggerAgent) {
+  constructor(repo: IRepositoryAgent, logger: ILoggerAgent) {
     this.Logger = logger;
 
-    this.Logger.FuncStart(ContentAtticManager.name);
+    this.Logger.FuncStart(ContentAtticAgent.name);
 
     this.Repo = repo;
 
-    this.Logger.FuncEnd(ContentAtticManager.name);
+    this.Logger.FuncEnd(ContentAtticAgent.name);
   }
 
   InitContentAtticManager(settingAutoSnapshotRetainDays: number) {
@@ -290,9 +291,9 @@ export class ContentAtticManager {
     })
   }
 
-  RemoveOneFromStorage(targetId: GuidData) {
+  RemoveSnapshotFromStorageById(targetId: GuidData) {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RemoveOneFromStorage.name);
+      this.Logger.FuncStart(this.RemoveSnapshotFromStorageById.name);
       try {
         if (targetId) {
           var storageMatch: IDataOneWindowStorage = await this.GetFromStorageById(targetId)
@@ -310,7 +311,7 @@ export class ContentAtticManager {
         reject(e);
       }
 
-      this.Logger.FuncEnd(this.RemoveOneFromStorage.name);
+      this.Logger.FuncEnd(this.RemoveSnapshotFromStorageById.name);
     })
   }
 }

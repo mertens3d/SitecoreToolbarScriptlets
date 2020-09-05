@@ -1,24 +1,21 @@
 ﻿import { ScUrlAgent } from '../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
 import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
+import { RecipeBasics } from '../../../Shared/scripts/Classes/PromiseGeneric';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
 import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { HelperAgent } from '../../../Shared/scripts/Helpers/Helpers';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { GenericUrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
-import { RecipeBasics } from '../../../Shared/scripts/Classes/PromiseGeneric';
 
 export class TabManager {
   private ScUrlAgent: ScUrlAgent;
   private Logger: ILoggerAgent;
-  private HelperAgent: HelperAgent;
   private RecipeBasics: RecipeBasics;
 
-  constructor(logger: ILoggerAgent, helperAgent: HelperAgent, scUrlAgent: ScUrlAgent, recipeBasic: RecipeBasics) {
+  constructor(logger: ILoggerAgent, scUrlAgent: ScUrlAgent, recipeBasic: RecipeBasics) {
     this.Logger = logger;
     this.Logger.InstantiateStart(TabManager.name);
-    this.HelperAgent = helperAgent;
     this.ScUrlAgent = scUrlAgent;
     this.RecipeBasics = recipeBasic;
 

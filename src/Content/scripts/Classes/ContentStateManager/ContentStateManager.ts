@@ -3,28 +3,26 @@ import { RecipeBasics } from "../../../../Shared/scripts/Classes/PromiseGeneric"
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDtState";
 import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
-import { ContentAtticManager } from "../../Managers/ContentAtticManager/ContentAtticManager";
-import { OneScWindowManager } from "../../Managers/OneScWindowManager";
 import { SitecoreUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 
 export class ContentStateManager {
-  private AtticMan: ContentAtticManager;
+  private AtticAgent: IContentAtticAgent;
   private Logger: ILoggerAgent;
-  private ScUiMan: SitecoreUiManager;
-  private OneScWinMan: OneScWindowManager;
+  private ScWinMan: IScWindowManager;
 
-  constructor(logger: ILoggerAgent, atticMan: ContentAtticManager, scUiMan: SitecoreUiManager, oneScWinMan: OneScWindowManager) {
+  constructor(logger: ILoggerAgent, atticMan: IContentAtticAgent, scUiMan: SitecoreUiManager, oneScWinMan: IScWindowManager) {
     this.Logger = logger;
 
     this.Logger.FuncStart(RecipeBasics.name);
 
-    this.AtticMan = atticMan;
-    this.ScUiMan = scUiMan;
-    this.OneScWinMan = oneScWinMan;
+    this.AtticAgent = atticMan;
+    this.ScWinMan = oneScWinMan;
     this.Logger.FuncEnd(RecipeBasics.name);
   }
 
@@ -34,7 +32,7 @@ export class ContentStateManager {
 
       let toReturn: IContentState = new DefaultContentState();
 
-      await this.AtticMan.GetAllSnapShotsMany()
+      await this.AtticAgent.GetAllSnapShotsMany()
         .then((result) => toReturn.SnapShotsMany = result)
         .then(() => toReturn.ErrorStack = this.Logger.ErrorStack)
         .then(() => this.GetCurrentDtOrCeState())
@@ -52,15 +50,15 @@ export class ContentStateManager {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetCurrentDtOrCeState.name);
 
-      let pageType: scWindowType = this.ScUiMan.GetCurrentPageType();
+      let pageType: scWindowType = this.ScWinMan.GetCurrentPageType();
 
       if (pageType === scWindowType.Desktop) {
-        await this.OneScWinMan.OneDesktopMan.GetStateDesktop()
+        await this.ScWinMan.OneDesktopMan.GetStateDesktop()
           .then((result: IDataDesktopState) => resolve(result.ActiveCeState))
           .catch((err) => reject(err));
       }
       else if (pageType === scWindowType.ContentEditor) {
-        await this.OneScWinMan.OneCEAgent.GetTreeState(Guid.NewRandomGuid())
+        await this.ScWinMan.OneCEAgent.GetTreeState(Guid.NewRandomGuid())
           .then((result: IDataOneStorageOneTreeState) => resolve(result))
           .catch((err) => reject(err));
       }

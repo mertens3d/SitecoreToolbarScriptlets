@@ -10,13 +10,14 @@ import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { PromiseResult } from "./PromiseResult";
 import { ILoggerAgent } from '../Interfaces/Agents/ILoggerBase';
 import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
+import { FactoryHelper } from '../Helpers/FactoryHelper';
 
 export class RecipeBasics extends LoggableBase implements IRecipeBasics {
-  FactoryHelp: IFactoryHelper;
+  private FactoryHelp: IFactoryHelper;
 
-  constructor(logger: ILoggerAgent, factoryHelp: IFactoryHelper) {
+  constructor(logger: ILoggerAgent) {
     super(logger);
-    this.FactoryHelp = factoryHelp;
+    this.FactoryHelp = new FactoryHelper(this.Logger);
   }
 
   async WaitForReadyIframe(dataOneIframe: IDataOneIframe): Promise<null> {
@@ -58,17 +59,11 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForPageReadyNative.name);
 
-      var result: PromiseResult = new PromiseResult(this.WaitForPageReadyNative.name, this.Logger);
-
-      this.Logger.LogAsJsonPretty(this.WaitForPageReadyNative.name, targetDoc);
-
       var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForPageReadyNative.name);
 
       var isReady: boolean = false;
-      this.Logger.MarkerA();
 
       while (iterationJr.DecrementAndKeepGoing() && !isReady) {
-        this.Logger.MarkerB();
         var currentReadyState: string = targetDoc.ContentDoc.readyState.toString();
         var isReadyStateComplete = currentReadyState === 'complete';
         this.Logger.LogVal('readyState', currentReadyState);;
@@ -76,23 +71,17 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
         if (isReadyStateComplete) {
           isReady = true;
-          result.MarkSuccessful();
+          resolve();
         } else {
           await iterationJr.Wait();
         }
       }
 
       if (iterationJr.IsExhausted) {
-        result.MarkFailed(iterationJr.IsExhaustedMsg);
+        reject(iterationJr.IsExhaustedMsg);
       }
 
       this.Logger.FuncEnd(this.WaitForPageReadyNative.name, 'ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());;
-
-      if (result.WasSuccessful()) {
-        resolve();
-      } else {
-        reject(result.RejectReasons);
-      }
     });
   }
 

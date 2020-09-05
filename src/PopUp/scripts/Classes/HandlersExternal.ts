@@ -67,6 +67,7 @@ export class HandlersExternal {
       this.Logger.FuncEnd(this.SendContentCommand.name);
     });
   }
+
   async AddCETab(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAddCETab, data);
@@ -76,6 +77,7 @@ export class HandlersExternal {
         .catch((err) => reject(err));
     });
   }
+
   async PutAdminB(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAdminB, data);
@@ -188,7 +190,7 @@ export class HandlersExternal {
 
   HndlrSnapShotRemove(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.RemoveFromStorage, data);
+      let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqRemoveFromStorage, data);
 
       var result: boolean = confirm('Remove ?: ' + Guid.AsShort(msg.Data.IdOfSelect));
       if (result === true) {

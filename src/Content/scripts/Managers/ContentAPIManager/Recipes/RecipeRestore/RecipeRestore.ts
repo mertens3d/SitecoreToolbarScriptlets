@@ -2,26 +2,23 @@
 import { IDataOneDoc } from "../../../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { RecipeBase } from "../RecipeBase";
 
-export class RecipeRestore extends RecipeBase implements ICommandRecipes {
+export class RecipeRestoreState extends RecipeBase implements ICommandRecipes {
   async Execute(): Promise<void> {
-    await this.__restoreClick()
-    }
-  __restoreClick(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.__restoreClick.name);
+      this.Logger.FuncStart(this.Execute.name);
       try {
         if (this.CommandData) {
-          if (this.CommandData.PayloadData.IdOfSelect) {
-            this.Logger.LogVal("IdOfSelect", this.CommandData.PayloadData.IdOfSelect);
+          if (this.CommandData.TargetSnapShotId) {
+            this.Logger.LogVal("IdOfSelect", this.CommandData.TargetSnapShotId);
             var dataOneWindowStorage;
 
-            await this.CommandData.AtticMan.GetFromStorageById(this.CommandData.PayloadData.IdOfSelect)
+            await this.CommandData.AtticAgent.GetFromStorageById(this.CommandData.TargetSnapShotId)
               .then((result) => dataOneWindowStorage = result)
               .catch((err) => reject(err));
 
             if (dataOneWindowStorage) {
               var self = this;
-              var targetDoc: IDataOneDoc = this.CommandData.ScUiMan.TopLevelDoc();
+              var targetDoc: IDataOneDoc = this.CommandData.ScWinMan.TopLevelDoc();
 
               if (targetDoc) {
                 await this.CommandData.ScWinMan.RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage)
@@ -29,20 +26,20 @@ export class RecipeRestore extends RecipeBase implements ICommandRecipes {
                   .catch((err) => reject(err))
               }
               else {
-                reject(this.__restoreClick.name + ' no target window');
+                reject(this.Execute.name + ' no target window');
               }
             }
           } else {
-            reject(this.__restoreClick.name + ' No IdOfSelect');
+            reject(this.Execute.name + ' No IdOfSelect');
           }
         } else {
-          reject(this.__restoreClick.name + ' No data')
+          reject(this.Execute.name + ' No data')
         }
       } catch (err) {
         reject(err)
       }
 
-      this.Logger.FuncEnd(this.__restoreClick.name);
+      this.Logger.FuncEnd(this.Execute.name);
     });
   }
 }

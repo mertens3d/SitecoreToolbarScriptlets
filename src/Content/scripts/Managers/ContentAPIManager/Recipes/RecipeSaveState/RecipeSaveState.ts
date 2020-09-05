@@ -8,8 +8,8 @@ export class RecipeSaveState extends RecipeBase implements ICommandRecipes {
   }
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await this.CommandData.ScWinMan.GetWindowState(this.CommandData.PayloadData.SnapShotSettings)
-        .then((windowState) => this.CommandData.AtticMan.WriteToStorage(windowState))
+      await this.CommandData.ScWinMan.GetWindowState(this.CommandData.TargetSnapShotFlavor)
+        .then((windowState) => this.CommandData.AtticAgent.WriteToStorage(windowState))
         .then(() => resolve())
         .catch((err) => reject(err));
     });

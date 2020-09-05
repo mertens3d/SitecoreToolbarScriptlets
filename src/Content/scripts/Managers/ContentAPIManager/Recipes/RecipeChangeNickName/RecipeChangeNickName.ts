@@ -1,16 +1,13 @@
-﻿import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { ContentAtticManager } from "../../ContentAtticManager/ContentAtticManager";
-import { RecipeBase } from "./RecipeBase";
-import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
-import { SnapShotFlavor } from "../../../../../Shared/scripts/Enums/SnapShotFlavor";
+﻿import { SnapShotFlavor } from "../../../../../../Shared/scripts/Enums/SnapShotFlavor";
+import { ICommandHndlrDataForContent } from "../../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { ICommandRecipes } from "../../../../../../Shared/scripts/Interfaces/ICommandRecipes";
+import { IDataOneWindowStorage } from "../../../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { RecipeBase } from "../RecipeBase";
 
 export class RecipeChangeNickName extends RecipeBase implements ICommandRecipes {
-  private AtticMan: ContentAtticManager;
 
-  constructor(commandData: ICommandHndlrDataForContent, atticMan: ContentAtticManager) {
+  constructor(commandData: ICommandHndlrDataForContent) {
     super(commandData);
-    this.AtticMan = atticMan;
   }
 
   Execute(): Promise<void> {
@@ -25,11 +22,11 @@ export class RecipeChangeNickName extends RecipeBase implements ICommandRecipes 
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.UpdateNickname.name);
 
-      if (this.CommandData.PayloadData.IdOfSelect) {
-        if (this.CommandData.PayloadData.SnapShotSettings && this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname) {
+      if (this.CommandData.TargetSnapShotId) {
+        if (this.CommandData.TargetNickName) {
           var storageMatch: IDataOneWindowStorage;
 
-          await this.AtticMan.GetFromStorageById(this.CommandData.PayloadData.IdOfSelect)
+          await this.CommandData.AtticAgent.GetFromStorageById(this.CommandData.TargetSnapShotId)
             .then((result: IDataOneWindowStorage) => storageMatch = result)
 
             .then(() => {
@@ -40,8 +37,8 @@ export class RecipeChangeNickName extends RecipeBase implements ICommandRecipes 
                   storageMatch.Flavor = SnapShotFlavor.Manual;
                 }
 
-                storageMatch.NickName = this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
-                this.AtticMan.WriteToStorage(storageMatch);
+                storageMatch.NickName = this.CommandData.TargetNickName;// this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
+                this.CommandData.AtticAgent.WriteToStorage(storageMatch);
               } else {
                 reject(this.UpdateNickname.name + ' - No storage match');
               }
@@ -53,7 +50,7 @@ export class RecipeChangeNickName extends RecipeBase implements ICommandRecipes 
           reject(this.UpdateNickname.name + ' - something was missing');
         }
       } else {
-        this.Logger.LogAsJsonPretty(this.UpdateNickname.name, this.CommandData.PayloadData);
+        this.Logger.LogAsJsonPretty(this.UpdateNickname.name, this.CommandData);
         reject(this.UpdateNickname.name + ' no payload or id');
       }
     });

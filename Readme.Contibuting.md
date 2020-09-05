@@ -9,6 +9,41 @@
 /dist/HindSite - distributable files for extension installation
 
 
+## How Logging Works
+Logging automatically happens and is written to a buffer
+- ___ switch
+  - Off - it won't try to log anymore
+  - On - Will cycle through all attached writers and output to them as each log line arrives.
+
+- Flush - Will dump and remove the contents of the logging buffer to the currently attached writers.
+
+
+## Managers
+- contentMessageMan - Manages messages recieved from popup and returns responses to popup.
+  - It reacts to those messages by triggering an API command.
+  - It owns the Message Broker Agent
+- Content Message Broker - Routes commands received by the MessageManager to the ApiManager
+  - It owns the APIManager
+
+## Logical Code Structure
+* Almost all classes have iLoggerAgent
+
++ Low Level Agents
+  + SettingsAgent
+  + RepoAgent
+  + 
+
+
++ Content
+  + SiteCoreWindowManager
+    + Desktop Manager
+      + DesktopUiManager
+      + ContentEditorManager
+    + Content Editor Manager
+      + ContentEditorUiManager
+
++ PopUp
+
 ## Environment Setup
 
 -------------

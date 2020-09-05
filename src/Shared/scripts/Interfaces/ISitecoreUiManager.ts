@@ -4,5 +4,5 @@ import { IDataOneDoc } from "./IDataOneDoc";
 export interface iSitecoreUiManager {
   //AssignMenuWindowChanged( handler: Function) : void
 
-  TopLevelDoc(): IDataOneDoc;
+
 }

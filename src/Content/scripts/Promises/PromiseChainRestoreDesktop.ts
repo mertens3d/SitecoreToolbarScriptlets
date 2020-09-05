@@ -8,14 +8,14 @@ import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../Managers/LoggableBase';
 import { MiscManager } from '../Managers/MiscManager/MiscManager';
 import { OneCEAgent } from '../Managers/OneCEAgent/OneCEAgent';
-import { OneScWindowManager } from '../Managers/OneScWindowManager';
+import { ScWindowManager } from '../Managers/OneScWindowManager';
 
 export class PromiseChainRestoreDesktop extends LoggableBase {
   private MiscMan: MiscManager;
   private RecipeBasics: RecipeBasics;
-  private OneScWinMan: OneScWindowManager;
+  private OneScWinMan: ScWindowManager;
 
-  constructor(logger: ILoggerAgent, miscMan: MiscManager, recipeBasics: RecipeBasics, oneScWinMan: OneScWindowManager) {
+  constructor(logger: ILoggerAgent, miscMan: MiscManager, recipeBasics: RecipeBasics, oneScWinMan: ScWindowManager) {
     super(logger);
     this.Logger.FuncStart(PromiseChainRestoreDesktop.name);
 

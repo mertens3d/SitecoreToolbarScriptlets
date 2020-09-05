@@ -4,14 +4,16 @@ import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/IDataOneDo
 import { IRecipeBasics } from "../../../../../Shared/scripts/Interfaces/IPromiseHelper";
 
 export class RecipeBase {
-  CommandData: ICommandHndlrDataForContent;
+  protected CommandData: ICommandHndlrDataForContent;
+
   protected Logger: ILoggerAgent;
   protected TopLevelDoc: IDataOneDoc;
   protected PromiseBasic: IRecipeBasics;
+
   constructor(commandData: ICommandHndlrDataForContent) {
     this.CommandData = commandData;
     this.Logger = commandData.Logger;
     this.TopLevelDoc = commandData.TopLevelDoc;
-    this.PromiseBasic = commandData.PromiseBasic;
+    this.PromiseBasic = commandData.RecipeBasics;
   }
 }

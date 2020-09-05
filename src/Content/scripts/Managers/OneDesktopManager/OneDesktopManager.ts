@@ -9,23 +9,23 @@ import { PromiseChainRestoreDesktop } from "../../Promises/PromiseChainRestoreDe
 import { LoggableBase } from "../LoggableBase";
 import { MiscManager } from "../MiscManager/MiscManager";
 import { OneCEAgent } from "../OneCEAgent/OneCEAgent";
-import { OneScWindowManager } from "../OneScWindowManager";
+import { ScWindowManager } from "../OneScWindowManager";
 
 export class OneDesktopManager extends LoggableBase {
   private associatedDoc: IDataOneDoc;
   private RecipeBasics: RecipeBasics;
   private MiscMan: MiscManager;
-  private OneScWinMan: OneScWindowManager;
+  private OneScWinMan: ScWindowManager;
 
-  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, recipeBasics: RecipeBasics, miscMan: MiscManager, oneScWinMan: OneScWindowManager) {
+  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, recipeBasics: RecipeBasics, miscMan: MiscManager, oneScWinMan: ScWindowManager) {
     super(logger);
 
-    this.Logger.FuncStart(OneDesktopManager.name);
+    this.Logger.InstantiateStart(OneDesktopManager.name);
     this.associatedDoc = associatedDoc;
     this.RecipeBasics = recipeBasics;
     this.MiscMan = miscMan;
     this.OneScWinMan = oneScWinMan;
-    this.Logger.FuncEnd(OneDesktopManager.name);
+    this.Logger.InstantiateEnd(OneDesktopManager.name);
   }
 
   async RestoreDesktopState(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {

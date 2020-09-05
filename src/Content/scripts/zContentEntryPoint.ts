@@ -1,4 +1,3 @@
-import { AllAgents } from '../../Shared/scripts/Agents/Agents/AllAgents';
 import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
@@ -8,110 +7,121 @@ import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
-import { HelperAgent } from '../../Shared/scripts/Helpers/Helpers';
-import { IAllAgents } from '../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { AutoSnapShotAgent } from './Managers/AutoSnapShotAgent/AutoSnapShotAgent';
-import { ContentHub } from './Managers/ContentHub/ContentHub';
 import { SitecoreUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
-import { ContentAtticManager } from './Managers/ContentAtticManager/ContentAtticManager';
+import { ContentAtticAgent } from './Managers/ContentAtticManager/ContentAtticManager';
 import { ContentAPIManager } from './Managers/ContentAPIManager/ContentAPIManager';
 import { ContentStateManager } from './Classes/ContentStateManager/ContentStateManager';
-import { OneScWindowManager } from './Managers/OneScWindowManager';
+import { ScWindowManager } from './Managers/OneScWindowManager';
 import { RecipeBasics } from '../../Shared/scripts/Classes/PromiseGeneric';
 import { MiscManager } from './Managers/MiscManager/MiscManager';
 import { PromisesRecipes } from '../../Shared/scripts/Classes/PromisesRecipes';
-import { FactoryHelper } from '../../Shared/scripts/Helpers/FactoryHelper';
 import { ContentMessageManager } from './Managers/ContentMessageManager/ContentMessageManager';
 import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { ContentMessageBroker } from './Drones/ContentMessageBroker/ContentMessageBroker';
+import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
+import { IContentApi } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
+import { IScWindowManager } from '../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
+import { ScUrlAgent } from '../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
+import { IScUrlAgent } from '../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
+import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
+import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
 
 class ContentEntry {
-  private AllAgents: IAllAgents;
-  private contentHub: ContentHub;
-  private RepoAgent: RepoAgent;
-  private AtticMan: ContentAtticManager;
+  private RepoAgent: IRepositoryAgent;
   private Logger: LoggerAgent;
-  private ContentAPIMan: ContentAPIManager;
-  private ContentFactory: ContentStateManager;
-  private ScUiMan: SitecoreUiManager;
-  private OneWindowMan: OneScWindowManager;
-  private RecipeBasics: RecipeBasics;
+  private ContentAPIMan: IContentApi;
+  private ContentMan: ContentStateManager;
   private ToastAgent: ToastAgent;
   private MiscMan: MiscManager;
   private SettingsAgent: ISettingsAgent;
+  private AtticAgent: IContentAtticAgent;
 
   async main() {
-    await this.InstantiateMembers()
-      .then(() => this.AllAgents.Logger.Log('Instantiate Members succeeded'))
-      .then(() => {
-        this.RepoAgent = new RepoAgent(this.AllAgents.Logger);
-        this.AtticMan = new ContentAtticManager(this.RepoAgent, this.Logger);
-        this.ScUiMan = new SitecoreUiManager(this.Logger);
-        let factoryHelp = new FactoryHelper(this.Logger);
-        this.RecipeBasics = new RecipeBasics(this.Logger, factoryHelp);
+    let scUiMan: SitecoreUiManager;
+    let contentMessageMan: ContentMessageManager;
+    let scWinMan: IScWindowManager;
+    let recipeBasics: RecipeBasics;
+
+    await this.InstantiateAndInitLoggerAndSettings()
+      .then(async () => {
+        this.Logger.SectionMarker('Instantiate Agents');
+
         this.MiscMan = new MiscManager(this.Logger);
-        this.OneWindowMan = new OneScWindowManager(this.Logger, this.ScUiMan, this.RecipeBasics, this.MiscMan, this.ToastAgent);
-        this.ContentFactory = new ContentStateManager(this.Logger, this.AtticMan, this.ScUiMan, this.OneWindowMan);
+        this.ToastAgent = new ToastAgent(this.Logger);
+        recipeBasics = new RecipeBasics(this.Logger);
         let promisesRecipes = new PromisesRecipes(this.Logger);
-        this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ContentFactory, this.ToastAgent, this.ScUiMan, promisesRecipes, this.RecipeBasics);
 
-        let contentMessageMan = new ContentMessageManager(this.Logger, this.AtticMan, this.RecipeBasics, factoryHelp, this.ToastAgent, this.SettingsAgent,
-          this.ContentAPIMan, this.ScUiMan, this.OneWindowMan);
-        this.contentHub = new ContentHub(this.AllAgents, this.AtticMan, this.MiscMan);
-        this.contentHub.SitecoreUiMan = this.ScUiMan;
-        this.contentHub.InitContentHub(this.AtticMan, this.RecipeBasics, this.OneWindowMan);
+        let scUrlAgent: IScUrlAgent = new ScUrlAgent(this.Logger);
+        await scUrlAgent.InitScUrlAgent()
 
-        contentMessageMan.InitContentMessageManager();
-        this.OneWindowMan.InitOneScWindowManager();
+        this.Logger.SectionMarker('Instantiate Managers');
+
+        this.AtticAgent = new ContentAtticAgent(this.RepoAgent, this.Logger);
+        this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
+
+        scWinMan = new ScWindowManager(this.Logger, scUiMan, recipeBasics, this.MiscMan, this.ToastAgent, this.AtticAgent, scUrlAgent);
+        scUiMan = new SitecoreUiManager(this.Logger, recipeBasics);
+        this.ContentMan = new ContentStateManager(this.Logger, this.AtticAgent, scUiMan, scWinMan);
+
+        this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ContentMan, this.ToastAgent, scUiMan, promisesRecipes, recipeBasics, scWinMan);
+
+        let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
+          this.ContentAPIMan, this.AtticAgent, recipeBasics, this.ToastAgent, scUiMan, scWinMan);
+
+        contentMessageMan = new ContentMessageManager(this.Logger, scWinMan, contentMessageBroker);
       })
+      .catch((err) => this.Logger.ErrorAndThrow(this.main.name, err));
+
+    this.Logger.SectionMarker('Initialize Managers');
+
+    await scUiMan.InitSitecoreUiManager()
+      .then(() => contentMessageMan.InitContentMessageManager())
+      .then(() => scWinMan.InitScWindowManager())
+
       .then(() => {
-        let pageType = this.contentHub.SitecoreUiMan.GetCurrentPageType();
-        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.OneWindowMan, pageType, this.AtticMan);
+        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, scWinMan,
+          this.AtticAgent, scUiMan, recipeBasics, this.ToastAgent);
         autoSnapShotAgent.ScheduleIntervalTasks();
       })
-      .then(() => this.AllAgents.Logger.Log('Init success'))
-      .catch((err) => this.AllAgents.Logger.ErrorAndThrow('Content Entry Point', err));
+      .then(() => this.Logger.Log('Init success'))
+      .catch((err) => this.Logger.ErrorAndThrow('Content Entry Point', err));
   }
 
   private InitLogging() {
-    this.AllAgents.Logger.FuncStart(this.InitLogging.name);
+    this.Logger.FuncStart(this.InitLogging.name);
 
-    let enableLogger: IGenericSetting = this.AllAgents.SettingsAgent.GetByKey(SettingKey.EnableLogging);
+    let enableLogger: IGenericSetting = this.SettingsAgent.GetByKey(SettingKey.EnableLogging);
 
     if (enableLogger.ValueAsBool()) {
       let consoleLogWrite = new LoggerConsoleWriter();
 
-      var RollingLogId = new RollingLogIdDrone(this.AllAgents.SettingsAgent, this.AllAgents.Logger);
+      var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.Logger);
       let storageLogWriter = new LoggerStorageWriter();
       var nextLogId = RollingLogId.GetNextLogId();
       storageLogWriter.SetLogToStorageKey(nextLogId);
 
-      this.AllAgents.Logger.AddWriter(consoleLogWrite);
-      this.AllAgents.Logger.AddWriter(storageLogWriter);
+      this.Logger.AddWriter(consoleLogWrite);
+      this.Logger.AddWriter(storageLogWriter);
     }
 
-    this.AllAgents.Logger.FlushBuffer();
-    this.AllAgents.Logger.FuncEnd(this.InitLogging.name);
+    this.Logger.FlushBuffer();
+    this.Logger.FuncEnd(this.InitLogging.name);
   }
 
-  private async InstantiateMembers() {
-    this.AllAgents = new AllAgents();
+  private async InstantiateAndInitLoggerAndSettings() {
     this.Logger = new LoggerAgent();
-    this.AllAgents.Logger = this.Logger;
 
-    let Repo: RepoAgent = new RepoAgent(this.AllAgents.Logger);
+    this.RepoAgent = new RepoAgent(this.Logger);
 
-    this.SettingsAgent = new SettingsAgent(this.AllAgents.Logger, Repo);
-    this.AllAgents.SettingsAgent = this.SettingsAgent;
+    this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
 
     var allSettings: IGenericSetting[] = new ConstAllSettings().AllSettings;
 
-    this.AllAgents.SettingsAgent.InitSettingsAgent(allSettings);
+    this.SettingsAgent.InitSettingsAgent(allSettings);
 
     this.InitLogging();
-
-    this.AllAgents.HelperAgent = new HelperAgent(this.AllAgents.Logger);
-    this.ToastAgent = new ToastAgent(this.AllAgents.Logger);
   }
 }
 

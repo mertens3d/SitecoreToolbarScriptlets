@@ -1,53 +1,29 @@
 ﻿import { PayloadDataFromPopUp } from '../../../../Shared/scripts/Classes/PayloadDataReqPopUp';
-import { RecipeBasics } from '../../../../Shared/scripts/Classes/PromiseGeneric';
+import { IContentMessageBroker } from '../../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
-import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IFactoryHelper } from '../../../../Shared/scripts/Interfaces/IFactoryHelper';
-import { ContentMessageBroker } from '../../Drones/ContentMessageBroker/ContentMessageBroker';
-import { ContentAPIManager } from '../ContentAPIManager/ContentAPIManager';
-import { ContentAtticManager } from '../ContentAtticManager/ContentAtticManager';
 import { LoggableBase } from '../LoggableBase';
-import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
-import { OneScWindowManager } from '../OneScWindowManager';
+import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 
 export class ContentMessageManager extends LoggableBase {
-  private ContentMessageBroker: ContentMessageBroker;
+  private ContentMessageBroker: IContentMessageBroker;
   OperationCancelled: any;
-  private AtticMan: ContentAtticManager;
-  private RecipeBasics: RecipeBasics;
-  private FactoryHelp: IFactoryHelper;
-  private ToastAgent: IToastAgent;
-  private SettingsAgent: ISettingsAgent;
-  private ApiMan: ContentAPIManager;
-  private ScUiMan: SitecoreUiManager;
-  private ScWinMan: OneScWindowManager;
+  private ScWinMan: IScWindowManager;
 
-  constructor(logger: ILoggerAgent, atticMan: ContentAtticManager, recipeBasics: RecipeBasics, factoryHelp: IFactoryHelper, toastAgent: IToastAgent, settingsAgent: ISettingsAgent,
-    apiMan: ContentAPIManager, scUiMan: SitecoreUiManager, scWinMan: OneScWindowManager
-  ) {
+  constructor(logger: ILoggerAgent,  scWinMan: IScWindowManager, contentMessageBroker: IContentMessageBroker) {
     super(logger);
     this.Logger.FuncStart(ContentMessageManager.name);
-    this.AtticMan = atticMan;
-    this.RecipeBasics = recipeBasics;
-    this.FactoryHelp = factoryHelp;
-    this.ToastAgent = toastAgent;
-    this.SettingsAgent = settingsAgent;
-    this.ApiMan = apiMan;
-    this.ScUiMan = scUiMan;
+
     this.ScWinMan = scWinMan;
+
+    this.ContentMessageBroker = contentMessageBroker;
+
     this.Logger.FuncEnd(ContentMessageManager.name);
   }
 
   InitContentMessageManager() {
     this.Logger.FuncStart(this.InitContentMessageManager.name + ' ' + ContentMessageManager.name);
-    this.ContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
-      this.ApiMan, this.ScUiMan.TopLevelDoc(), this.AtticMan,
-      this.RecipeBasics, this.FactoryHelp, this.ToastAgent,
-      this.ScUiMan, this.ScWinMan
 
-    );
     this.ContentMessageBroker.BeginListening();
     this.Logger.FuncEnd(this.InitContentMessageManager.name);
   }
@@ -56,7 +32,7 @@ export class ContentMessageManager extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ToggleCompactCss.name);
 
-      var targetDoc: IDataOneDoc = this.ScUiMan.TopLevelDoc();
+      var targetDoc: IDataOneDoc = this.ScWinMan.TopLevelDoc();
       if (targetDoc) {
         var self = this;
         await this.ScWinMan.SetCompactCss(targetDoc)
