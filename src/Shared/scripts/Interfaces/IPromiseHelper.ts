@@ -4,7 +4,7 @@ import { IDataOneIframe } from "./IDataOneIframe";
 import { IDataPublishChain } from "./IDataPublishChain";
 import { IScVerSpec } from "./IScVerSpec";
 
-export interface IPromisesBasic {
+export interface IRecipeBasics {
   GetAllLiveIframeData(arg0: IDataOneDoc): Promise<IDataOneIframe[]>;
   RaceWaitAndClick(scStartButton: IScVerSpec, arg1: IDataOneDoc);
   TabChainSetHrefWaitForComplete(newHref: AbsoluteUrl);

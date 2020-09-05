@@ -1,13 +1,11 @@
 ﻿import { MsgFlag } from "../../Enums/1xxx-MessageFlag";
 import { IError } from "../IError";
-import { ISnapShotsMany } from "./ISnapShotsMany";
+import { ISnapShots } from "./ISnapShots";
 import { IDataOneStorageOneTreeState } from "../IDataOneStorageOneTreeState";
 
 export interface IContentState {
     LastReq: MsgFlag;
-    SnapShotsMany: ISnapShotsMany;
-    //WindowType: scWindowType;
-    //Url: string;
+    SnapShotsMany: ISnapShots;
     ErrorStack: IError[];
     LastReqSuccessful: boolean;
     LastReqFailReason: string;

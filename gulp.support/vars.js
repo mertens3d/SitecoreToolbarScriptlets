@@ -1,6 +1,4 @@
 ﻿const InjectableClass = require('./OneInjectable');
-//const WindowOpenerClass = require('./HindSiteWindowOpener');
-const secrets = require('./../gulp.support/Secrets');
 
 class Vars {
   constructor() {
@@ -17,7 +15,6 @@ class Vars {
     this.PopUpJs = new InjectableClass('PopUp', '/**/*.js', 'js', this.FinalFolderShort);
     this.PopUpJs.Ts.TranspiledEntryPointFile = 'zPopUpEntryPoint.js';
 
-
     this.ContentJs = new InjectableClass('Content', '/**/*.js', 'js', this.FinalFolderShort);
     this.BrowserPolyFillJs = new InjectableClass('browser-polyfill', '/**/*.js', 'js', this.FinalFolderShort);
     this.BrowserPolyFillJs.MinSuffix = '';
@@ -26,37 +23,12 @@ class Vars {
 
     this.SharedJs = new InjectableClass('Shared', '/**/*.js', 'js');
 
-
-
-    this.WindowOpener = new InjectableClass('hindsiteWindowOpener', '/**/*.js', 'js', this.FinalFolderShort);
-    this.WindowOpener.Ts.TranspiledEntryPointFile = 'EntryPoint.js';
-
     this.BrowserExtensionFireFox = {
       Root: './Dist/HindSite',
       AutoBuildDest: '/HindSite/AutoBuild'
     };
 
-    this.mySecret = this.buildSecrets();
-
-    this.bookmarkFinal = 'Bookmark.js';
-
-    this.local = {};
-    this.local.Dest = this.buildLocal();
     console.log('e) Constructing Vars');
-  }
-
-  buildSecrets() {
-    var toReturn = new secrets();
-    console.log('secrets: ');
-    console.log(toReturn);
-    return toReturn;
-  }
-
-  buildLocal() {
-    var toReturn = this.mySecret.localWebRootAr;
-    console.log('buildLocal:');
-    console.log(toReturn);
-    return toReturn;
   }
 }
 

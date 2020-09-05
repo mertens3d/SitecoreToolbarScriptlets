@@ -25,7 +25,26 @@ export class StaticHelpers {
     return scWindowType[windowType];
   }
 
-  
+  static MakeFriendlyDate(date: Date): string {
+    var toReturn: string = '';
+
+    var workingDate = new Date(date);
+
+    if (workingDate) {
+      var month = StaticHelpers.BufferString((workingDate.getMonth() + 1).toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var day = StaticHelpers.BufferString(workingDate.getDate().toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var min = StaticHelpers.BufferString(workingDate.getMinutes().toString(), 2, BufferChar.Zero, BufferDirection.left);
+      var hoursRaw = workingDate.getHours();
+      var hourClean = hoursRaw ? hoursRaw : 12; // the hour '0' should be '12'
+      var hourCleanStr: string = StaticHelpers.BufferString(hourClean.toString(), 2, BufferChar.Zero, BufferDirection.left);
+      toReturn = month + '.' + day + ' ' + hourCleanStr + ':' + min;
+    }
+    else {
+      toReturn = '{error}';
+      throw (this.MakeFriendlyDate.name, 'no date provided');
+    }
+    return toReturn;
+  }
 
   static BufferString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
     var toReturn = str;

@@ -1,21 +1,22 @@
 ﻿import { AccordianManager } from '../../../../Shared/scripts/Agents/Drones/AccordianDrone/AccordianManager';
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
+import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { MenuCommand } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { GuidData } from '../../../../Shared/scripts/Helpers/GuidData';
-import { HelperAgent } from '../../../../Shared/scripts/Helpers/Helpers';
 import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/IAccordianManager';
 import { IGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
-import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
 import { GenericUrlParts } from '../../../../Shared/scripts/Interfaces/UrlParts';
+import { CommandManager } from '../../Classes/AllCommands';
 import { PopConst } from '../../Classes/PopConst';
-import { EventManager } from '../EventManager';
 import { TabManager } from '../TabManager';
 import { UiButtonStateManager } from '../UiButtonStateManager';
+import { CancelButtonModule } from './Modules/CancelButtonModule';
 import { SelectSnapshotModule } from './Modules/SelectSnapshotModule/SelectSnapshotModule';
 import { SettingsModule } from './Modules/SettingsModule/SettingsModule';
 import { FeedbackModuleBrowserState } from './Modules/UiFeedbackModules/FeedbackModuleBrowserState/FeedbackModuleBrowserState';
@@ -23,9 +24,6 @@ import { FeedbackModuleContentState } from './Modules/UiFeedbackModules/Feedback
 import { FeedbackModuleMessages } from './Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from './Modules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
-import { CommandManager } from '../../Classes/AllCommands';
-import { Handlers } from '../Handlers';
-import { CancelButtonModule } from './Modules/CancelButtonModule';
 
 export class UiManager {
   AccordianManager: IAccordianManager;
@@ -47,15 +45,13 @@ export class UiManager {
   private FeedbackModuleLog: UiFeedbackModuleLog;
   private Logger: ILoggerAgent;
   private SettingsAgent: ISettingsAgent;
-  private HelperAgent: HelperAgent;
   private TabMan: TabManager;
   private CommandMan: CommandManager;
   CancelButtonModule: CancelButtonModule;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, helperAgent: HelperAgent, tabMan: TabManager, commandMan: CommandManager) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: TabManager, commandMan: CommandManager) {
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
-    this.HelperAgent = helperAgent;
     this.TabMan = tabMan;
     this.CommandMan = commandMan;
 
@@ -177,7 +173,7 @@ export class UiManager {
 
     var targetTag: HTMLElement = document.querySelector(PopConst.Const.Selector.HS.BuildStamp);
     if (targetTag) {
-      targetTag.innerText = 'build stamp: ' + this.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date(BuiltDateStamp));
+      targetTag.innerText = 'build stamp: ' + StaticHelpers.MakeFriendlyDate(new Date(BuiltDateStamp));
     } else {
       this.Logger.ErrorAndThrow(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
     }

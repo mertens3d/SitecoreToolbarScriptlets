@@ -1,6 +1,6 @@
-﻿import { ILoggerAgent } from "../Interfaces/Agents/ILoggerBase";
+﻿import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
+
 export class PromiseResult {
-  private RejectReasonArPvt: string[];
   private Success: boolean;
   privaILoggerAgentBaseggerBase;
   NickName: string;
@@ -11,7 +11,6 @@ export class PromiseResult {
   constructor(nickname: string, logger: ILoggerAgent) {
     this.Success = false;
     this.NickName = nickname;
-    this.RejectReasonArPvt = [];
     this.Log = logger;
   }
   WasSuccessful() {

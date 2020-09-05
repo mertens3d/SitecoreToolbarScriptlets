@@ -1,5 +1,5 @@
 ﻿import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 

@@ -1,55 +1,64 @@
 ﻿import { DefaultContentState } from "../../../../Shared/scripts/Classes/DefaultContentState";
-import { PromisesBasic } from "../../../../Shared/scripts/Classes/PromiseGeneric";
+import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
-import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDtState";
 import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
-import { ContentHub } from "../../Managers/ContentHub/ContentHub";
-import { ContentManagerBase } from "../../_first/_ContentManagerBase";
+import { SitecoreUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 
-export class ContentStateManager extends ContentManagerBase {
-  constructor(hub: ContentHub, contentAgents: IAllAgents) {
-    super(hub, contentAgents);
-    this.AllAgents.Logger.FuncStart(PromisesBasic.name);
-    this.AllAgents.Logger.FuncEnd(PromisesBasic.name);
+export class ContentStateManager {
+  private AtticAgent: IContentAtticAgent;
+  private Logger: ILoggerAgent;
+  private ScWinMan: IScWindowManager;
+
+  constructor(logger: ILoggerAgent, atticMan: IContentAtticAgent, scUiMan: SitecoreUiManager, oneScWinMan: IScWindowManager) {
+    this.Logger = logger;
+
+    this.Logger.FuncStart(RecipeBasics.name);
+
+    this.AtticAgent = atticMan;
+    this.ScWinMan = oneScWinMan;
+    this.Logger.FuncEnd(RecipeBasics.name);
   }
 
   PopulateContentState(): Promise<IContentState> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.PopulateContentState.name);
+      this.Logger.FuncStart(this.PopulateContentState.name);
 
       let toReturn: IContentState = new DefaultContentState();
 
-      toReturn.SnapShotsMany = await this.AtticMan().GetAllSnapShotsMany();
-      toReturn.ErrorStack = this.AllAgents.Logger.ErrorStack;
-
-      await this.GetCurrentDtOrCeState()
+      await this.AtticAgent.GetAllSnapShotsMany()
+        .then((result) => toReturn.SnapShotsMany = result)
+        .then(() => toReturn.ErrorStack = this.Logger.ErrorStack)
+        .then(() => this.GetCurrentDtOrCeState())
         .then((result: IDataOneStorageOneTreeState) => {
           toReturn.ActiveCe = result;
           resolve(toReturn);
         })
         .catch((err) => reject(err));
 
-      this.AllAgents.Logger.FuncEnd(this.PopulateContentState.name);
+      this.Logger.FuncEnd(this.PopulateContentState.name);
     });
   }
 
   GetCurrentDtOrCeState() {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.GetCurrentDtOrCeState.name);
+      this.Logger.FuncStart(this.GetCurrentDtOrCeState.name);
 
-      let pageType: scWindowType = this.ScUiMan().GetCurrentPageType();
+      let pageType: scWindowType = this.ScWinMan.GetCurrentPageType();
 
       if (pageType === scWindowType.Desktop) {
-        await this.OneScWinMan().OneDesktopMan.GetStateDesktop()
+        await this.ScWinMan.OneDesktopMan.GetStateDesktop()
           .then((result: IDataDesktopState) => resolve(result.ActiveCeState))
           .catch((err) => reject(err));
       }
       else if (pageType === scWindowType.ContentEditor) {
-        await this.OneScWinMan().OneCEAgent.GetTreeState(Guid.NewRandomGuid())
+        await this.ScWinMan.OneCEAgent.GetTreeState(Guid.NewRandomGuid())
           .then((result: IDataOneStorageOneTreeState) => resolve(result))
           .catch((err) => reject(err));
       }
@@ -64,7 +73,7 @@ export class ContentStateManager extends ContentManagerBase {
         reject('unknown page type ' + StaticHelpers.WindowTypeAsString(pageType));
       }
 
-      this.AllAgents.Logger.FuncEnd(this.GetCurrentDtOrCeState.name);
+      this.Logger.FuncEnd(this.GetCurrentDtOrCeState.name);
     });
   }
 }

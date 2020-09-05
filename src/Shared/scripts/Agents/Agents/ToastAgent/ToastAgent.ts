@@ -1,4 +1,4 @@
-﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
+﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../../Interfaces/IDataOneDoc";
 

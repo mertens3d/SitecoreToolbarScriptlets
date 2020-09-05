@@ -1,4 +1,4 @@
-﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
@@ -16,7 +16,7 @@ export class FeedbackModulePopUpState extends UiFeedbackModuleBase implements IU
   }
 
   PopulatePopUpStateUI(selectSnapShot: GuidData) {
-    var allStateText: string = 'Pop Up State:' + this.lineBreak;// + 'PopUp State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());
+    var allStateText: string = 'Pop Up State:' + this.lineBreak;
     allStateText += 'Select Snapshot: ' + Guid.AsShort( selectSnapShot);
 
     this.AddHtmlString(allStateText);

@@ -1,29 +1,53 @@
 ﻿import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
-import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
-import { ContentManagerBase } from "../../_first/_ContentManagerBase";
-import { ContentHub } from "../ContentHub/ContentHub";
-import { RecipePublishActiveCe } from "./Recipes/RecipePublishActiveCe";
-import { RecipeRemoveItemFromStorage } from "./Recipes/RecipeRemoveItemFromStorage";
-import { RecipeSaveState } from "./Recipes/RecipeSaveState";
-import { RecipeChangeNickName } from "./Recipes/RecipeChangeNickName";
-import { RecipeToggleFavorite } from "./Recipes/RecipeToggleFavorite";
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { RecipeChangeNickName } from "./Recipes/RecipeChangeNickName/RecipeChangeNickName";
+import { RecipePublishActiveCe } from "./Recipes/RecipePublishActiveCe";
+import { RecipeRemoveItemFromStorage } from "./Recipes/RecipeRemoveItemFromStorage/RecipeRemoveItemFromStorage";
+import { RecipeSaveState } from "./Recipes/RecipeSaveState/RecipeSaveState";
+import { RecipeToggleFavorite } from "./Recipes/RecipeToggleFavorite/RecipeToggleFavorite";
+import { ContentStateManager } from "../../Classes/ContentStateManager/ContentStateManager";
+import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
+import { SitecoreUiManager } from "../SitecoreUiManager/SitecoreUiManager";
+import { PromisesRecipes } from "../../../../Shared/scripts/Classes/PromisesRecipes";
+import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
+import { RecipeRestoreState } from "./Recipes/RecipeRestore/RecipeRestore";
+import { FactoryHelper } from "../../../../Shared/scripts/Helpers/FactoryHelper";
+import { LoggableBase } from "../LoggableBase";
+import { IContentApi } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 
-export class ContentAPIManager extends ContentManagerBase {
-  constructor(hub: ContentHub, AllAgents: IAllAgents) {
-    super(hub, AllAgents);
-    this.AllAgents.Logger.FuncStart(ContentAPIManager.name);
+export class ContentAPIManager extends LoggableBase implements IContentApi {
+  private ContentFactory: ContentStateManager;
+  private ToastAgent: IToastAgent;
+  private ScUiMan: SitecoreUiManager;
+  private PromisesRecipes: PromisesRecipes;
+  private RecipeBasics: RecipeBasics;
+  private FactoryHelp: FactoryHelper;
+  private ScWinMan: IScWindowManager;
 
-    this.AllAgents.Logger.FuncEnd(ContentAPIManager.name);
+  constructor(logger: ILoggerAgent, contentFactory: ContentStateManager, toastAgent: IToastAgent, scUiMan: SitecoreUiManager, promisesRecipes: PromisesRecipes,
+    recipeBasics: RecipeBasics, scWinMan: IScWindowManager) {
+    super(logger);
+
+    this.Logger.FuncStart(ContentAPIManager.name);
+
+    this.ContentFactory = contentFactory;
+    this.ToastAgent = toastAgent;
+    this.ScUiMan = scUiMan;
+    this.PromisesRecipes = promisesRecipes;
+    this.RecipeBasics = recipeBasics;
+    this.ScWinMan = scWinMan;
+    this.FactoryHelp = new FactoryHelper(this.Logger);
+
+    this.Logger.FuncEnd(ContentAPIManager.name);
   }
 
-  async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void>{
+  async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await new RecipeChangeNickName(commandData, commandData.ContentHub.AtticMan).Execute()
+      await new RecipeChangeNickName(commandData).Execute()
         .then(() => resolve())
         .catch((err) => reject(err));
     })
@@ -31,7 +55,7 @@ export class ContentAPIManager extends ContentManagerBase {
 
   GetContentState(): Promise<IContentState> {
     return new Promise(async (resolve, reject) => {
-      await this.ContentFactory().PopulateContentState()
+      await this.ContentFactory.PopulateContentState()
         .then((result: IContentState) => resolve(result))
         .catch((err) => reject(err))
     });
@@ -39,15 +63,15 @@ export class ContentAPIManager extends ContentManagerBase {
 
   Notify(payloadData: PayloadDataFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.ToastAgent.PopUpToastNotification(this.ScUiMan().TopLevelDoc(), payloadData.ScreenMessage);
+      this.ToastAgent.PopUpToastNotification(this.ScWinMan.TopLevelDoc(), payloadData.ScreenMessage);
     });
   }
 
   AddCETab(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await commandData.ContentHub.AtticMan.AllAgents.HelperAgent.PromisesRecipes.FromDesktopOpenNewCEIframe(commandData.TopLevelDoc)
+      await this.PromisesRecipes.FromDesktopOpenNewCEIframe(commandData.TopLevelDoc, this.RecipeBasics)
         .then(() => {
-          commandData.ContentHub.AtticMan.AllAgents.ToastAgent.PopUpToastNotification(commandData.TopLevelDoc, "Success");
+          this.ToastAgent.PopUpToastNotification(commandData.TopLevelDoc, "Success");
           resolve();
         })
 
@@ -57,7 +81,7 @@ export class ContentAPIManager extends ContentManagerBase {
 
   PublischActiveCE(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await new RecipePublishActiveCe(commandData).Execute()
+      await new RecipePublishActiveCe(commandData, this.FactoryHelp).Execute()
         .then(() => resolve)
         .catch((err) => reject(err));
     });
@@ -65,7 +89,7 @@ export class ContentAPIManager extends ContentManagerBase {
 
   async RemoveSnapShot(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeRemoveItemFromStorage(commandData);
+      let recipe = new RecipeRemoveItemFromStorage(commandData, commandData.ToastAgent);
       await recipe.Execute()
         .then(resolve)
         .catch((err) => reject(err));
@@ -89,9 +113,9 @@ export class ContentAPIManager extends ContentManagerBase {
     });
   }
 
-  RestoreSnapshop(commandData: ICommandHndlrDataForContent): Promise<void>{
+  RestoreSnapshop(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await commandData.ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
+      await new RecipeRestoreState(commandData).Execute()// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -103,7 +127,7 @@ export class ContentAPIManager extends ContentManagerBase {
 
   MarkFavorite(commandData: ICommandHndlrDataForContent) {
     return new Promise(async (resolve, reject) => {
-      await new RecipeToggleFavorite(commandData, commandData.ContentHub.AtticMan).Execute()
+      await new RecipeToggleFavorite(commandData).Execute()
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -118,7 +142,8 @@ export class ContentAPIManager extends ContentManagerBase {
       //}
     });
   }
+
   AdminB() {
-    this.ScUiMan().AdminB(this.ScUiMan().TopLevelDoc(), null);
+    this.ScUiMan.AdminB(this.ScWinMan.TopLevelDoc(), null);
   }
 }

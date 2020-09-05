@@ -3,7 +3,7 @@
   GetAllStorageOneWindow = 1001,
   NewWindowTest = 1002,
   Ping = 1003,
-  RemoveFromStorage = 1004,
+  ReqRemoveFromStorage = 1004,
 
   // 100 - requests
   ReqAddCETab = 1100,

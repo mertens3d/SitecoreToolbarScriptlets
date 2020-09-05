@@ -3,7 +3,7 @@ import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFromContent } from "../../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IMessageBrokerFeedback } from "../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 

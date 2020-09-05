@@ -1,5 +1,5 @@
 ﻿import { IContentState } from "../Interfaces/IContentState/IContentState";
-import { ILoggerAgent } from "../Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
 import { DefaultContentState } from "./DefaultContentState";
 
 export class ContentStateValidator {

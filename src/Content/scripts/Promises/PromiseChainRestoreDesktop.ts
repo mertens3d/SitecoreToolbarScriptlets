@@ -1,63 +1,74 @@
-﻿import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+﻿import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataBucketRestoreDesktop } from '../../../Shared/scripts/Interfaces/IDataBucketRestoreDesktop';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneIframe } from '../../../Shared/scripts/Interfaces/IDataOneIframe';
 import { IDataOneStorageOneTreeState } from '../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { ContentHub } from '../Managers/ContentHub/ContentHub';
+import { LoggableBase } from '../Managers/LoggableBase';
+import { MiscManager } from '../Managers/MiscManager/MiscManager';
 import { OneCEAgent } from '../Managers/OneCEAgent/OneCEAgent';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
+import { ScWindowManager } from '../Managers/ScWindowManager/ScWindowManager';
 
-export class PromiseChainRestoreDesktop extends ContentManagerBase {
-  constructor(hub: ContentHub, AllAgents: IAllAgents) {
-    super(hub, AllAgents);
-    this.AllAgents.Logger.FuncStart(PromiseChainRestoreDesktop.name);
-    this.AllAgents.Logger.FuncEnd(PromiseChainRestoreDesktop.name);
+export class PromiseChainRestoreDesktop extends LoggableBase {
+  private MiscMan: MiscManager;
+  private RecipeBasics: RecipeBasics;
+  private OneScWinMan: ScWindowManager;
+
+  constructor(logger: ILoggerAgent, miscMan: MiscManager, recipeBasics: RecipeBasics, oneScWinMan: ScWindowManager) {
+    super(logger);
+    this.Logger.FuncStart(PromiseChainRestoreDesktop.name);
+
+    this.MiscMan = miscMan;
+    this.RecipeBasics = recipeBasics;
+    this.OneScWinMan = oneScWinMan;
+
+    this.Logger.FuncEnd(PromiseChainRestoreDesktop.name);
   }
 
   private __waitForAndClickRedStartButton(targetDoc: IDataOneDoc) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.__waitForAndClickRedStartButton.name);
+      this.Logger.FuncStart(this.__waitForAndClickRedStartButton.name);
 
-      if (this.MiscMan().NotNullOrUndefined(targetDoc, this.__waitForAndClickRedStartButton.name)) {
-        this.AllAgents.Logger.MarkerB();
+      if (this.MiscMan.NotNullOrUndefined(targetDoc, this.__waitForAndClickRedStartButton.name)) {
+        this.Logger.MarkerB();
 
-        await this.AllAgents.HelperAgent.PromisesBasic.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, targetDoc)
+        await this.RecipeBasics.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, targetDoc)
           .then(() => resolve())
           .catch((ex) => reject(ex));
       } else {
         reject(this.__waitForAndClickRedStartButton.name + ' something was null or undefined');
       }
-      this.AllAgents.Logger.FuncEnd(this.__waitForAndClickRedStartButton.name);
+      this.Logger.FuncEnd(this.__waitForAndClickRedStartButton.name);
     });
   }
 
   private __waitForIframeReady(targetIframe: IDataOneIframe) {
     return new Promise<void>(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.__waitForIframeReady.name, 'targetIframe not null: ' + (targetIframe !== null));
+      this.Logger.FuncStart(this.__waitForIframeReady.name, 'targetIframe not null: ' + (targetIframe !== null));
 
-      //  var promResult: PromiseResult = new PromiseResult(this.__waitForIframeCountDiff.name, this.AllAgents.Logger);
+      //  var promResult: PromiseResult = new PromiseResult(this.__waitForIframeCountDiff.name, this.Logger);
 
-      await this.AllAgents.HelperAgent.PromisesBasic.WaitForReadyIframe(targetIframe)
+      await this.RecipeBasics.WaitForReadyIframe(targetIframe)
         .then((result) => {
-          this.AllAgents.Logger.Log('resolved! : ');
+          this.Logger.Log('resolved! : ');
 
           targetIframe.ContentDoc.ContentDoc = targetIframe.IframeElem.contentDocument;
-          this.AllAgents.Logger.DebugDataOneIframe(targetIframe);
+          this.Logger.DebugDataOneIframe(targetIframe);
 
           resolve();
         })
         .catch((err) => {
-          this.AllAgents.Logger.Log('rejected ! : ');
+          this.Logger.Log('rejected ! : ');
           reject(this.__waitForIframeReady.name + ' ' + err);
         })
 
-      this.AllAgents.Logger.FuncEnd(this.__waitForIframeReady.name);
+      this.Logger.FuncEnd(this.__waitForIframeReady.name);
     });
   }
   private __waitForAndThenClickCEFromMenu(targetDoc: IDataOneDoc) {
     return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      await this.AllAgents.HelperAgent.PromisesBasic.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], targetDoc)
+      await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], targetDoc)
         .then(() => { resolve(); })
         .catch((ex) => { reject(this.__waitForAndThenClickCEFromMenu.name + ' ' + ex); });
     });
@@ -65,21 +76,21 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
 
   private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: OneCEAgent) {
     return new Promise<void>(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.__restoreDataToOneIframe.name);
+      this.Logger.FuncStart(this.__restoreDataToOneIframe.name);
 
-      await this.OneScWinMan().OneDesktopMan.RestoreDataToOneIframeWorker(oneTreeState, targetCeAgent)
+      await this.OneScWinMan.OneDesktopMan.RestoreDataToOneIframeWorker(oneTreeState, targetCeAgent)
         .then(() => resolve())
         .catch((err) => reject(err));
 
-      this.AllAgents.Logger.FuncEnd(this.__restoreDataToOneIframe.name);
+      this.Logger.FuncEnd(this.__restoreDataToOneIframe.name);
     });
   }
 
-  async RunOneChain(targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState): Promise<void> {
+  async RunOneChain(targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, promisesBasic: RecipeBasics): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.RunOneChain.name);
+      this.Logger.FuncStart(this.RunOneChain.name);
 
-      if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore], this.RunOneChain.name)) {
+      if (this.MiscMan.NotNullOrUndefined([targetDoc, dataToRestore], this.RunOneChain.name)) {
         var dataBucket: IDataBucketRestoreDesktop = {
           targetDoc: targetDoc,
           IFramesbefore: allIframeDataAtBeginning,
@@ -91,28 +102,28 @@ export class PromiseChainRestoreDesktop extends ContentManagerBase {
         var allIframeDataAtBeginning: IDataOneIframe[];
         var targetCeAgent: OneCEAgent;
 
-        await this.AllAgents.HelperAgent.PromisesBasic.GetAllLiveIframeData(targetDoc)
+        await promisesBasic.GetAllLiveIframeData(targetDoc)
           .then((result) => allIframeDataAtBeginning = result)
           .then(() => this.__waitForAndClickRedStartButton(dataBucket.targetDoc))
           .then(() => this.__waitForAndThenClickCEFromMenu(dataBucket.targetDoc))
 
-          .then(() => this.AllAgents.HelperAgent.PromisesBasic.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
+          .then(() => promisesBasic.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
 
           .then((result) => {
-            targetCeAgent = new OneCEAgent(result.ContentDoc, this.AllAgents.Logger);
+            targetCeAgent = new OneCEAgent(result.ContentDoc, this.Logger);
             this.__waitForIframeReady(result);
           })
           .then(() => this.__restoreDataToOneIframe(dataToRestore, targetCeAgent))
           .then(() => resolve())
           .catch(ex => {
-            this.AllAgents.Logger.ErrorAndThrow(this.RunOneChain.name, ex);
+            this.Logger.ErrorAndThrow(this.RunOneChain.name, ex);
           });
       }
       else {
         reject(this.RunOneChain.name + ' missing data');
       }
 
-      this.AllAgents.Logger.FuncEnd(this.RunOneChain.name);
+      this.Logger.FuncEnd(this.RunOneChain.name);
     });
   }
 }

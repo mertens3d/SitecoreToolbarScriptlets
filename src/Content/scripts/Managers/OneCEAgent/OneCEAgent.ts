@@ -1,7 +1,7 @@
 ﻿import { IterationDrone } from '../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
 import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
@@ -9,12 +9,9 @@ import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/IDataOne
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
 import { OneTreeDrone } from '../../Drones/OneTreeDrone/OneTreeDrone';
 
-
 export class NameContentTab {
   let
 }
-
-
 
 export class OneCEAgent {
   private OneTreeDrone: IOneTreeDrone;

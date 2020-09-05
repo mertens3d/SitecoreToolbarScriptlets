@@ -1,33 +1,30 @@
-﻿import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
-import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
-import { RepoAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent";
-import { AllAgents } from "../../Shared/scripts/Agents/Agents/AllAgents";
-import { ConstAllSettings } from "../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings";
-import { IGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { HelperAgent } from "../../Shared/scripts/Helpers/Helpers";
-import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
+﻿import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
-import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
-import { PopConst } from "./Classes/PopConst";
+import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
+import { ConstAllSettings } from "../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings";
 import { OneGenericSetting } from "../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting";
-import { TabManager } from "./Managers/TabManager";
-import { UiManager } from "./Managers/UiManager/UiManager";
+import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
+import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
+import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
+import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
+import { IGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { IContentState } from "../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { CommandManager } from "./Classes/AllCommands";
+import { PopConst } from "./Classes/PopConst";
 import { EventManager } from "./Managers/EventManager";
 import { Handlers } from "./Managers/Handlers";
 import { MessageManager } from "./Managers/MessageManager";
-import { FeedbackModuleMessages } from "./Managers/UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessagesBroker";
-import { CommandManager } from "./Classes/AllCommands";
-import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
-import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
-import { IContentState } from "../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { TabManager } from "./Managers/TabManager";
+import { FeedbackModuleMessages } from "./Managers/UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
+import { UiManager } from "./Managers/UiManager/UiManager";
 
 class PopUpEntry {
-  RepoAgent: RepoAgent;
+  RepoAgent: RepositoryAgent;
   Logger: LoggerAgent;
   SettingsAgent: SettingsAgent;
-  HelperAgent: HelperAgent;
 
   async main() {
     try {
@@ -47,7 +44,7 @@ class PopUpEntry {
   private InstantiateAndInitSettingsAndLogger() {
     this.Logger = new LoggerAgent();
 
-    this.RepoAgent = new RepoAgent(this.Logger);
+    this.RepoAgent = new RepositoryAgent(this.Logger);
     this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
 
     var allSettings: IGenericSetting[] = new ConstAllSettings().AllSettings;
@@ -57,7 +54,6 @@ class PopUpEntry {
   }
 
   private async InstantiateMembers() {
-    this.HelperAgent = new HelperAgent(this.Logger);
   }
 
   private InitLogger() {
@@ -88,13 +84,13 @@ class PopUpEntry {
   async InitHub() {
 
     let scUrlAgent = new ScUrlAgent(this.Logger);
-    let tabMan = new TabManager(this.Logger, this.HelperAgent, scUrlAgent);
+    let tabMan = new TabManager(this.Logger,  scUrlAgent, null); //< -- todo null fix
     let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
     let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger, FeedbackModuleMsg);
     let messageMan = new MessageManager(PopUpMessageBroker, this.Logger);
     let handlers = new Handlers(this.Logger, messageMan, this.SettingsAgent, tabMan);
     let commandMan: CommandManager = new CommandManager(handlers);
-    let uiMan = new UiManager(this.Logger, this.SettingsAgent, this.HelperAgent, tabMan, commandMan); //after tabman, after HelperAgent
+    let uiMan = new UiManager(this.Logger, this.SettingsAgent, tabMan, commandMan); //after tabman, after HelperAgent
     let eventMan = new EventManager(this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
 
     let self = uiMan;

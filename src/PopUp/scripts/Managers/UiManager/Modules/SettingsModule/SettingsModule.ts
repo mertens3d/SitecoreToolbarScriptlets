@@ -1,6 +1,6 @@
 ﻿import { SettingType } from "../../../../../../Shared/scripts/Enums/SettingType";
 import { IAccordianManager } from "../../../../../../Shared/scripts/Interfaces/Agents/IAccordianManager";
-import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IGenericSetting } from "../../../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ISettingsAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";

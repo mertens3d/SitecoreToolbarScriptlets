@@ -1,4 +1,4 @@
-﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IContentState } from "../../../../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";

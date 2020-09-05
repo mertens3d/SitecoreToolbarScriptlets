@@ -1,5 +1,5 @@
 ﻿import { SharedConst } from '../../../SharedConst';
-import { ILoggerAgent } from '../../../Interfaces/Agents/ILoggerBase';
+import { ILoggerAgent } from '../../../Interfaces/Agents/ILoggerAgent';
 
 export class IterationDrone {
   private __currentIteration: number;

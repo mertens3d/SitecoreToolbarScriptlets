@@ -1,5 +1,5 @@
 ﻿import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
-import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { GenericUrlParts } from "../../../../../../../Shared/scripts/Interfaces/UrlParts";
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
@@ -16,7 +16,7 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
   PopulateFeedackBrowserState(urlParts: GenericUrlParts) {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.FeedbackBrowserState);
 
-    var allStateText: string = 'Browser State' + this.lineBreak;// + 'PopUp State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());
+    var allStateText: string = 'Browser State' + this.lineBreak;
     allStateText += this.lineBreak + 'URL Parts';
 
     allStateText += this.indentedLineBreak + 'Page Type: ' + StaticHelpers.WindowTypeAsString(urlParts.ScWindowType);

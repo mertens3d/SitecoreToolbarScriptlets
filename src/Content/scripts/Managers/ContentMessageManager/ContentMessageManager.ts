@@ -1,81 +1,46 @@
 ﻿import { PayloadDataFromPopUp } from '../../../../Shared/scripts/Classes/PayloadDataReqPopUp';
-import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { IContentMessageBroker } from '../../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { ContentMessageBroker } from '../../Drones/ContentMessageBroker/ContentMessageBroker';
-import { ContentManagerBase } from '../../_first/_ContentManagerBase';
-import { ContentHub } from '../ContentHub/ContentHub';
+import { LoggableBase } from '../LoggableBase';
+import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 
-export class ContentMessageManager extends ContentManagerBase {
-  private ContentMessageBroker: ContentMessageBroker;
+export class ContentMessageManager extends LoggableBase {
+  private ContentMessageBroker: IContentMessageBroker;
   OperationCancelled: any;
+  private ScWinMan: IScWindowManager;
 
-  constructor(contentHub: ContentHub, contentAgents: IAllAgents) {
-    super(contentHub, contentAgents);
-    this.AllAgents.Logger.FuncStart(ContentMessageManager.name);
+  constructor(logger: ILoggerAgent,  scWinMan: IScWindowManager, contentMessageBroker: IContentMessageBroker) {
+    super(logger);
+    this.Logger.FuncStart(ContentMessageManager.name);
 
-    this.AllAgents.Logger.FuncEnd(ContentMessageManager.name);
+    this.ScWinMan = scWinMan;
+
+    this.ContentMessageBroker = contentMessageBroker;
+
+    this.Logger.FuncEnd(ContentMessageManager.name);
   }
 
   InitContentMessageManager() {
-    this.AllAgents.Logger.FuncStart(this.InitContentMessageManager.name + ' ' + ContentMessageManager.name);
-    this.ContentMessageBroker = new ContentMessageBroker(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.APIMan(), this.ScUiMan().TopLevelDoc(), this.ContentHub, this.AllAgents);
+    this.Logger.FuncStart(this.InitContentMessageManager.name + ' ' + ContentMessageManager.name);
+
     this.ContentMessageBroker.BeginListening();
-    this.AllAgents.Logger.FuncEnd(this.InitContentMessageManager.name);
+    this.Logger.FuncEnd(this.InitContentMessageManager.name);
   }
 
   private ToggleCompactCss(Data: PayloadDataFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.ToggleCompactCss.name);
+      this.Logger.FuncStart(this.ToggleCompactCss.name);
 
-      var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();
+      var targetDoc: IDataOneDoc = this.ScWinMan.TopLevelDoc();
       if (targetDoc) {
         var self = this;
-        await this.OneScWinMan().SetCompactCss(targetDoc)
+        await this.ScWinMan.SetCompactCss(targetDoc)
           .then(() => resolve())
-          .catch((err) => { this.AllAgents.Logger.ErrorAndThrow(this.ToggleCompactCss.name, err) })
+          .catch((err) => reject(err));
       }
 
-      this.AllAgents.Logger.FuncEnd(this.ToggleCompactCss.name);
-    });
-  }
-
-  __restoreClick(data: PayloadDataFromPopUp): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.__restoreClick.name);
-      try {
-        if (data) {
-          if (data.IdOfSelect) {
-            this.AllAgents.Logger.LogVal("IdOfSelect", data.IdOfSelect);
-            var dataOneWindowStorage;
-
-            await this.AtticMan().GetFromStorageById(data.IdOfSelect)
-              .then((result) => dataOneWindowStorage = result)
-              .catch((err) => reject(err));
-
-            if (dataOneWindowStorage) {
-              var self = this;
-              var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();
-
-              if (targetDoc) {
-                await self.OneScWinMan().RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage)
-                  .then(() => resolve())
-                  .catch((err) => reject(err))
-              }
-              else {
-                reject(this.__restoreClick.name + ' no target window');
-              }
-            }
-          } else {
-            reject(this.__restoreClick.name + ' No IdOfSelect');
-          }
-        } else {
-          reject(this.__restoreClick.name + ' No data')
-        }
-      } catch (err) {
-        reject(err)
-      }
-
-      this.AllAgents.Logger.FuncEnd(this.__restoreClick.name);
+      this.Logger.FuncEnd(this.ToggleCompactCss.name);
     });
   }
 

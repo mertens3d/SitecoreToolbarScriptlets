@@ -46,7 +46,6 @@
     <Content Include="gulp.support\InjectableTs.js" />
     <Content Include="gulp.support\tasks\cleanTasks.js" />
     <Content Include="gulp.support\tasks\htmlTasks.js" />
-    <Content Include="gulp.support\tasks\openerTasks.js" />
     <Content Include="gulp.support\tasks\otherTasks.js" />
     <Content Include="gulp.support\tasks\putTasks.js" />
     <Content Include="gulp.support\tasks\styleTasks.js" />
@@ -65,12 +64,14 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\AutoSnapShotAgent\AutoSnapShotAgent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\ContentAPIManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName\RecipeChangeNickName.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeToggleFavorite.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage\RecipeRemoveItemFromStorage.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRestore\RecipeRestore.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState\RecipeSaveState.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeToggleFavorite\RecipeToggleFavorite.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\LoggableBase.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\ButtonVisibilityTests.ts" />
@@ -83,7 +84,6 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\FeedbackModuleMessages\FeedbackModuleMessages.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\UiFeedbackModuleBase\UiFeedbackModuleBase.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\Modules\UiFeedbackModules\UiFeedbackModuleLog\UiFeedbackModuleLog.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\AllAgents.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersExternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersInternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\AllCommands.ts" />
@@ -101,15 +101,16 @@
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\ContentStateValidator.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\HelperBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromisesRecipes.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\Enabled.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\QueryStrKey.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\GuidData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\IContentApi.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentAtticAgent\IContentAtticAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IScUrlAgent\IScUrlAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IScWindowManager\IScWindowManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentMessageBroker.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ILoggerWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IMessageBrokerFeedback\IMessageBrokerFeedback.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IOneTreeDrone.ts" />
@@ -133,7 +134,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\VisibilityType.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\SettingsAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\UrlAgent\GenericUrlAgent.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Helpers\UtilityHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferChar.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferDirection.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\2xxx-MenuCommand.ts" />
@@ -141,7 +141,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingType.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SnapShotFlavor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\FactoryHelper.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Helpers\Helpers.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\AbsoluteUrl.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ILoggerBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IGenericSetting.ts" />
@@ -188,17 +187,8 @@
     <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.js.map">
       <DependentUpon>RecipeBase.js</DependentUpon>
     </None>
-    <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName.js.map">
-      <DependentUpon>RecipeChangeNickName.js</DependentUpon>
-    </None>
     <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.js.map">
       <DependentUpon>RecipePublishActiveCe.js</DependentUpon>
-    </None>
-    <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.js.map">
-      <DependentUpon>RecipeRemoveItemFromStorage.js</DependentUpon>
-    </None>
-    <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.js.map">
-      <DependentUpon>RecipeSaveState.js</DependentUpon>
     </None>
     <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
@@ -208,17 +198,8 @@
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeBase.js">
       <DependentUpon>RecipeBase.ts</DependentUpon>
     </Content>
-    <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName.js">
-      <DependentUpon>RecipeChangeNickName.ts</DependentUpon>
-    </Content>
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.js">
       <DependentUpon>RecipePublishActiveCe.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.js">
-      <DependentUpon>RecipeRemoveItemFromStorage.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.js">
-      <DependentUpon>RecipeSaveState.ts</DependentUpon>
     </Content>
     <Content Include="src\PopUp\scripts\Managers\EventManager.js">
       <DependentUpon>EventManager.ts</DependentUpon>
@@ -235,15 +216,6 @@
     <Content Include="src\PopUp\scripts\Managers\UiButtonStateManager.js">
       <DependentUpon>UiButtonStateManager.ts</DependentUpon>
     </Content>
-    <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.js">
-      <DependentUpon>LoggerAgent.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.js">
-      <DependentUpon>LoggerConsoleWriter.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.js">
-      <DependentUpon>LoggerStorageWriter.ts</DependentUpon>
-    </Content>
     <Content Include="src\Shared\scripts\Helpers\FactoryHelper.js">
       <DependentUpon>FactoryHelper.ts</DependentUpon>
     </Content>
@@ -253,26 +225,14 @@
     <Content Include="src\Shared\scripts\Helpers\GuidData.js">
       <DependentUpon>GuidData.ts</DependentUpon>
     </Content>
-    <Content Include="src\Shared\scripts\Helpers\Helpers.js">
-      <DependentUpon>Helpers.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Helpers\UtilityHelper.js">
-      <DependentUpon>UtilityHelper.ts</DependentUpon>
-    </Content>
     <Content Include="src\Shared\scripts\Interfaces\AbsoluteUrl.js">
       <DependentUpon>AbsoluteUrl.ts</DependentUpon>
     </Content>
     <Content Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.js">
       <DependentUpon>IAccordianManager.ts</DependentUpon>
     </Content>
-    <Content Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.js">
-      <DependentUpon>IAllAgents.ts</DependentUpon>
-    </Content>
     <Content Include="src\Shared\scripts\Interfaces\Agents\IContentMessageBroker.js">
       <DependentUpon>IContentMessageBroker.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.js">
-      <DependentUpon>IHelperAgent.ts</DependentUpon>
     </Content>
     <Content Include="src\Shared\scripts\Interfaces\Agents\ILoggerBase.js">
       <DependentUpon>ILoggerBase.ts</DependentUpon>
@@ -430,7 +390,6 @@
     <Content Include="gulpfile.js" />
     <Content Include="jest.config.js" />
     <Content Include="gulp.support\Secrets.example.js" />
-    <Content Include="gulp.support\Secrets.js" />
     <Content Include="src\PopUp\html\menu.html" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISharedConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scMode.ts" />
@@ -441,7 +400,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneTreeNode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISitecoreUiManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentMessageManager\ContentMessageManager.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseOneStep.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPopUpConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\SharedConst.ts" />
     <TypeScriptCompile Include="src\Shared\typdefs\browser.d.ts" />
@@ -457,14 +415,11 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\IIterationResults.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\NewWindowDest.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\Guid.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentHub\ContentHub.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneIframe.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\PageDataManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\MiscManager\MiscManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseChainRestoreDesktop.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseGeneric.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\_first\_ContentManagerBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneWindowStorage.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\EventManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
@@ -495,15 +450,6 @@
     <None Include="src\PopUp\scripts\Managers\UiButtonStateManager.js.map">
       <DependentUpon>UiButtonStateManager.js</DependentUpon>
     </None>
-    <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.js.map">
-      <DependentUpon>LoggerAgent.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.js.map">
-      <DependentUpon>LoggerConsoleWriter.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.js.map">
-      <DependentUpon>LoggerStorageWriter.js</DependentUpon>
-    </None>
     <None Include="src\Shared\scripts\Helpers\FactoryHelper.js.map">
       <DependentUpon>FactoryHelper.js</DependentUpon>
     </None>
@@ -513,26 +459,14 @@
     <None Include="src\Shared\scripts\Helpers\GuidData.js.map">
       <DependentUpon>GuidData.js</DependentUpon>
     </None>
-    <None Include="src\Shared\scripts\Helpers\Helpers.js.map">
-      <DependentUpon>Helpers.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Helpers\UtilityHelper.js.map">
-      <DependentUpon>UtilityHelper.js</DependentUpon>
-    </None>
     <None Include="src\Shared\scripts\Interfaces\AbsoluteUrl.js.map">
       <DependentUpon>AbsoluteUrl.js</DependentUpon>
     </None>
     <None Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.js.map">
       <DependentUpon>IAccordianManager.js</DependentUpon>
     </None>
-    <None Include="src\Shared\scripts\Interfaces\Agents\IAllAgents.js.map">
-      <DependentUpon>IAllAgents.js</DependentUpon>
-    </None>
     <None Include="src\Shared\scripts\Interfaces\Agents\IContentMessageBroker.js.map">
       <DependentUpon>IContentMessageBroker.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Interfaces\Agents\IHelperAgent.js.map">
-      <DependentUpon>IHelperAgent.js</DependentUpon>
     </None>
     <None Include="src\Shared\scripts\Interfaces\Agents\ILoggerBase.js.map">
       <DependentUpon>ILoggerBase.js</DependentUpon>
@@ -687,7 +621,7 @@
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
     <Folder Include="src\Browser-PolyFill\" />
-    <Folder Include="src\hindsiteWindowOpener\Scripts\" />
+    <Folder Include="src\Content\scripts\_first\" />
     <Folder Include="src\PopUp\scripts\Managers\MessageManager\" />
     <Folder Include="src\PopUp\scripts\Modules\" />
     <Folder Include="src\PopUp\scripts\Promises\" />
@@ -701,7 +635,7 @@
     <Content Include="gulp.support\OneInjectable.js" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAtticManager\ContentAtticManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAtticManager\ContentAtticAgent.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dist\HindSite\background.js" />

@@ -1,15 +1,25 @@
 ﻿import { ContentMessageBroker } from "../../../Content/scripts/Drones/ContentMessageBroker/ContentMessageBroker";
-import { ContentHub } from "../../../Content/scripts/Managers/ContentHub/ContentHub";
-import { PayloadDataFromPopUp } from "../Classes/PayloadDataReqPopUp";
-import { ILoggerAgent } from "./Agents/ILoggerBase";
+import { SitecoreUiManager } from "../../../Content/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
+import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
+import { GuidData } from "../Helpers/GuidData";
+import { IContentAtticAgent } from "./Agents/IContentAtticAgent/IContentAtticAgent";
+import { ILoggerAgent } from "./Agents/ILoggerAgent";
+import { IScWindowManager } from "./Agents/IScWindowManager/IScWindowManager";
+import { IToastAgent } from "./Agents/IToastAgent";
 import { IDataOneDoc } from "./IDataOneDoc";
-import { IPromisesBasic } from "./IPromiseHelper";
+import { IRecipeBasics } from "./IPromiseHelper";
 
 export interface ICommandHndlrDataForContent {
+  TargetSnapShotFlavor: SnapShotFlavor,
+  TargetSnapShotId: GuidData;
+  TargetNickName: string;
+  ScWinMan: IScWindowManager;
+  ScUiMan: SitecoreUiManager;
+  ToastAgent: IToastAgent;
+  AtticAgent: IContentAtticAgent;
   Logger: ILoggerAgent;
-  PayloadData: PayloadDataFromPopUp,
   ContentMessageBroker: ContentMessageBroker,
   TopLevelDoc: IDataOneDoc,
-  ContentHub: ContentHub,
-  PromiseBasic: IPromisesBasic
+  RecipeBasics: IRecipeBasics
+  //CurrentPageType: scWindowType
 }

@@ -1,41 +1,59 @@
-﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+﻿import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
+import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
+import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
+import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { IDataPayloadSnapShot } from "../../../../Shared/scripts/Interfaces/IDataPayloadSnapShot";
-import { ContentAtticManager } from "../ContentAtticManager/ContentAtticManager";
-import { OneScWindowManager } from "../OneScWindowManager";
+import { RecipeSaveState } from "../ContentAPIManager/Recipes/RecipeSaveState/RecipeSaveState";
+import { SitecoreUiManager } from "../SitecoreUiManager/SitecoreUiManager";
 
 export class AutoSnapShotAgent {
   private SettingsAgent: ISettingsAgent;
   private Logger: ILoggerAgent;
   private AutoSaveHasBeenScheduled: boolean = false;
-  private windowMan: OneScWindowManager;
-  private PageType: scWindowType;
-  private AtticMan: ContentAtticManager;
+  private ScWinMan: IScWindowManager;
+  private AtticAgent: IContentAtticAgent;
+  private ScUiMan: SitecoreUiManager;
+  private  RecipeBasics: RecipeBasics;
+   private ToastAgent: IToastAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, windowMan: OneScWindowManager, pageType: scWindowType, atticMan: ContentAtticManager) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, scWinMan: IScWindowManager,
+    atticAgent: IContentAtticAgent, scUiMan: SitecoreUiManager, recipeBasics: RecipeBasics, toastAgent: IToastAgent
+  ) {
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
-    this.windowMan = windowMan;
-    this.PageType = pageType;
-    this.AtticMan = atticMan;
+    this.ScWinMan = scWinMan;
+    this.AtticAgent = atticAgent;
+    this.ScUiMan = scUiMan;
+    this.RecipeBasics = recipeBasics;
+    this.ToastAgent = toastAgent;
   }
 
   async AutoSaveSnapShot() {
     this.Logger.FuncStart(this.AutoSaveSnapShot.name);
-    var SnapShotSettings: IDataPayloadSnapShot = {
-      SnapShotNewNickname: '',
-      Flavor: SnapShotFlavor.Autosave,
-      CurrentPageType: this.PageType
-    }
 
-    await this.windowMan.GetWindowState(SnapShotSettings)
-      .then((windowState) => this.AtticMan.WriteToStorage(windowState))
-      .catch((err) => this.Logger.ErrorAndContinue(this.AutoSaveSnapShot.name,err));
+    let commandData: ICommandHndlrDataForContent = {
+      AtticAgent: this.AtticAgent,
+      TargetNickName: '',
+      TargetSnapShotId: null,
+      ContentMessageBroker: null,
+      TopLevelDoc: this.ScWinMan.TopLevelDoc(),
+      Logger: this.Logger,
+      RecipeBasics: this.RecipeBasics,
+      ToastAgent: this.ToastAgent,
+      ScUiMan: this.ScUiMan,
+      ScWinMan: this.ScWinMan,
+      TargetSnapShotFlavor: SnapShotFlavor.Autosave
+    }
+    let recipeSaveState: RecipeSaveState = new RecipeSaveState(commandData);
+
+    await recipeSaveState.Execute();
 
     this.Logger.FuncEnd(this.AutoSaveSnapShot.name);
   }

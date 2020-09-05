@@ -1,7 +1,7 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
 import { scWindowType } from "../../../Enums/scWindowType";
 import { AbsoluteUrl } from "../../../Interfaces/AbsoluteUrl";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
 import { GenericUrlParts } from "../../../Interfaces/UrlParts";
 

@@ -3,7 +3,7 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
@@ -67,6 +67,7 @@ export class HandlersExternal {
       this.Logger.FuncEnd(this.SendContentCommand.name);
     });
   }
+
   async AddCETab(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAddCETab, data);
@@ -76,6 +77,7 @@ export class HandlersExternal {
         .catch((err) => reject(err));
     });
   }
+
   async PutAdminB(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAdminB, data);
@@ -188,7 +190,7 @@ export class HandlersExternal {
 
   HndlrSnapShotRemove(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.RemoveFromStorage, data);
+      let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqRemoveFromStorage, data);
 
       var result: boolean = confirm('Remove ?: ' + Guid.AsShort(msg.Data.IdOfSelect));
       if (result === true) {

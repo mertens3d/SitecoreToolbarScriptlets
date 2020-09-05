@@ -1,6 +1,6 @@
-﻿import { ILogWriter } from "../../../Interfaces/Agents/ILoggerWriter";
+﻿import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 
-export class LoggerStorageWriter implements ILogWriter {
+export class LoggerStorageWriter implements ILoggerWriter {
   private CurrentStorageLogKey: string = '0';
   private LogToStoragePrefix: string = 'Hindsite.Log.';
 
