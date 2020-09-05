@@ -1,39 +1,57 @@
-﻿import { IContentMessageBroker } from "../../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
-import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
-import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+﻿import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFromContent } from "../../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
-import { ContentAPIManager } from "../../Managers/ContentAPIManager/ContentAPIManager";
+import { RecipeBasics } from "../../../../Shared/scripts/Classes/PromiseGeneric";
+import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { IContentMessageBroker } from "../../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
+import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
+import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
-import { ContentManagerBase } from "../../_first/_ContentManagerBase";
-import { ContentHub } from "../../Managers/ContentHub/ContentHub";
-import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
-import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { IFactoryHelper } from "../../../../Shared/scripts/Interfaces/IFactoryHelper";
+import { IRecipeBasics } from "../../../../Shared/scripts/Interfaces/IPromiseHelper";
+import { ContentAPIManager } from "../../Managers/ContentAPIManager/ContentAPIManager";
 import { ContentAtticManager } from "../../Managers/ContentAtticManager/ContentAtticManager";
+import { ContentHub } from "../../Managers/ContentHub/ContentHub";
+import { LoggableBase } from "../../Managers/LoggableBase";
+import { SitecoreUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
+import { OneScWindowManager } from "../../Managers/OneScWindowManager";
 
-export class ContentMessageBroker extends ContentManagerBase implements IContentMessageBroker {
-  private Logger: ILoggerAgent;
+export class ContentMessageBroker extends LoggableBase implements IContentMessageBroker {
   private SettingsAgent: ISettingsAgent;
   private ApiManager: ContentAPIManager;
   private TopLevelDoc: IDataOneDoc;
-  private  AtticMan: ContentAtticManager;
+  private AtticMan: ContentAtticManager;
+  private RecipeBasics: IRecipeBasics;
+  private FactoryHelp: IFactoryHelper;
+  private ToastAgent: IToastAgent;
+  private ScUiMan: SitecoreUiManager;
+  private ScWinMan: OneScWindowManager;
   //ReadyForMessages: boolean = false;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: ContentAPIManager, topLevelDoc: IDataOneDoc, hub: ContentHub, contentAgents: IAllAgents, atticMan: ContentAtticManager) {
-    super(hub, contentAgents);
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: ContentAPIManager, topLevelDoc: IDataOneDoc, atticMan: ContentAtticManager,
+    recipeBasics: RecipeBasics, factoryHelp: IFactoryHelper, toastAgent: IToastAgent,
+    scUiMan: SitecoreUiManager, scWinMan: OneScWindowManager
+
+  ) {
+    super(logger);
+    this.Logger.InstantiateStart(ContentMessageBroker.name);
+
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
     this.ApiManager = apiManager;
     this.TopLevelDoc = topLevelDoc;
     this.AtticMan = atticMan;
-
-    this.Logger.InstantiateStart(ContentMessageBroker.name);
-
+    this.RecipeBasics = recipeBasics
+    this.FactoryHelp = factoryHelp
+    this.ToastAgent = toastAgent;
+    this.ScUiMan = scUiMan;
+    this.ScWinMan = scWinMan;
     this.Logger.InstantiateEnd(ContentMessageBroker.name);
   }
 
@@ -43,7 +61,7 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
     var self = this;
     browser.runtime.onMessage.addListener(request => self.ContentReceiveRequest(request));
 
-    this.AllAgents.Logger.Log('Listening for messages');
+    this.Logger.Log('Listening for messages');
     //this.ReadyForMessages = true;
     this.Logger.FuncEnd(this.BeginListening.name);
   }
@@ -85,9 +103,7 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
-
           this.Logger.LogAsJsonPretty('reqMsgFromPopup', reqMsgFromPopup);
-
 
           await this.ReqMsgRouter(reqMsgFromPopup)
             .then((contentResponse: MsgFromContent) => {
@@ -119,7 +135,7 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
     return response;
   }
 
-  private CalculateCommandToExec(msgFlag: MsgFlag) : Function {
+  private CalculateCommandToExec(msgFlag: MsgFlag): Function {
     let commandToExecute: Function = null;
 
     switch (msgFlag) {
@@ -193,7 +209,6 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
 
       this.SettingsAgent.UpdateSettings(payload.CurrentContentPrefs);
 
-
       let commandToExecute: Function = this.CalculateCommandToExec(payload.MsgFlag);
 
       await this.ExecuteCommand(commandToExecute, payload)
@@ -215,9 +230,12 @@ export class ContentMessageBroker extends ContentManagerBase implements IContent
           PayloadData: payload.Data,
           ContentMessageBroker: this,
           TopLevelDoc: this.TopLevelDoc,
-          ContentHub: this.ContentHub,
           Logger: this.Logger,
-          PromiseBasic: this.AllAgents.HelperAgent.PromisesBasic
+          PromiseBasic: this.RecipeBasics,
+          FactoryHelp: this.FactoryHelp,
+          ToastAgent: this.ToastAgent,
+          ScUiMan: this.ScUiMan,
+          ScWinMan: this.ScWinMan,
         }
 
         await commandToExecute(commandData)

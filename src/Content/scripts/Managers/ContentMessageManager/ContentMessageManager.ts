@@ -1,84 +1,70 @@
 ﻿import { PayloadDataFromPopUp } from '../../../../Shared/scripts/Classes/PayloadDataReqPopUp';
-import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { RecipeBasics } from '../../../../Shared/scripts/Classes/PromiseGeneric';
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
+import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { IFactoryHelper } from '../../../../Shared/scripts/Interfaces/IFactoryHelper';
 import { ContentMessageBroker } from '../../Drones/ContentMessageBroker/ContentMessageBroker';
-import { ContentManagerBase } from '../../_first/_ContentManagerBase';
-import { ContentHub } from '../ContentHub/ContentHub';
+import { ContentAPIManager } from '../ContentAPIManager/ContentAPIManager';
 import { ContentAtticManager } from '../ContentAtticManager/ContentAtticManager';
+import { LoggableBase } from '../LoggableBase';
+import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
+import { OneScWindowManager } from '../OneScWindowManager';
 
-export class ContentMessageManager extends ContentManagerBase {
+export class ContentMessageManager extends LoggableBase {
   private ContentMessageBroker: ContentMessageBroker;
   OperationCancelled: any;
-  private  AtticMan: ContentAtticManager;
+  private AtticMan: ContentAtticManager;
+  private RecipeBasics: RecipeBasics;
+  private FactoryHelp: IFactoryHelper;
+  private ToastAgent: IToastAgent;
+  private SettingsAgent: ISettingsAgent;
+  private ApiMan: ContentAPIManager;
+  private ScUiMan: SitecoreUiManager;
+  private ScWinMan: OneScWindowManager;
 
-  constructor(contentHub: ContentHub, contentAgents: IAllAgents, atticMan: ContentAtticManager) {
-    super(contentHub, contentAgents);
-    this.AllAgents.Logger.FuncStart(ContentMessageManager.name);
+  constructor(logger: ILoggerAgent, atticMan: ContentAtticManager, recipeBasics: RecipeBasics, factoryHelp: IFactoryHelper, toastAgent: IToastAgent, settingsAgent: ISettingsAgent,
+    apiMan: ContentAPIManager, scUiMan: SitecoreUiManager, scWinMan: OneScWindowManager
+  ) {
+    super(logger);
+    this.Logger.FuncStart(ContentMessageManager.name);
     this.AtticMan = atticMan;
-
-    this.AllAgents.Logger.FuncEnd(ContentMessageManager.name);
+    this.RecipeBasics = recipeBasics;
+    this.FactoryHelp = factoryHelp;
+    this.ToastAgent = toastAgent;
+    this.SettingsAgent = settingsAgent;
+    this.ApiMan = apiMan;
+    this.ScUiMan = scUiMan;
+    this.ScWinMan = scWinMan;
+    this.Logger.FuncEnd(ContentMessageManager.name);
   }
 
   InitContentMessageManager() {
-    this.AllAgents.Logger.FuncStart(this.InitContentMessageManager.name + ' ' + ContentMessageManager.name);
-    this.ContentMessageBroker = new ContentMessageBroker(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.APIMan(), this.ScUiMan().TopLevelDoc(), this.ContentHub, this.AllAgents, this.AtticMan);
+    this.Logger.FuncStart(this.InitContentMessageManager.name + ' ' + ContentMessageManager.name);
+    this.ContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
+      this.ApiMan, this.ScUiMan.TopLevelDoc(), this.AtticMan,
+      this.RecipeBasics, this.FactoryHelp, this.ToastAgent,
+      this.ScUiMan, this.ScWinMan
+
+    );
     this.ContentMessageBroker.BeginListening();
-    this.AllAgents.Logger.FuncEnd(this.InitContentMessageManager.name);
+    this.Logger.FuncEnd(this.InitContentMessageManager.name);
   }
 
   private ToggleCompactCss(Data: PayloadDataFromPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.ToggleCompactCss.name);
+      this.Logger.FuncStart(this.ToggleCompactCss.name);
 
-      var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();
+      var targetDoc: IDataOneDoc = this.ScUiMan.TopLevelDoc();
       if (targetDoc) {
         var self = this;
-        await this.OneScWinMan().SetCompactCss(targetDoc)
+        await this.ScWinMan.SetCompactCss(targetDoc)
           .then(() => resolve())
-          .catch((err) => { this.AllAgents.Logger.ErrorAndThrow(this.ToggleCompactCss.name, err) })
+          .catch((err) => reject(err));
       }
 
-      this.AllAgents.Logger.FuncEnd(this.ToggleCompactCss.name);
-    });
-  }
-
-  __restoreClick(data: PayloadDataFromPopUp): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.__restoreClick.name);
-      try {
-        if (data) {
-          if (data.IdOfSelect) {
-            this.AllAgents.Logger.LogVal("IdOfSelect", data.IdOfSelect);
-            var dataOneWindowStorage;
-
-            await this.AtticMan.GetFromStorageById(data.IdOfSelect)
-              .then((result) => dataOneWindowStorage = result)
-              .catch((err) => reject(err));
-
-            if (dataOneWindowStorage) {
-              var self = this;
-              var targetDoc: IDataOneDoc = this.ScUiMan().TopLevelDoc();
-
-              if (targetDoc) {
-                await self.OneScWinMan().RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage)
-                  .then(() => resolve())
-                  .catch((err) => reject(err))
-              }
-              else {
-                reject(this.__restoreClick.name + ' no target window');
-              }
-            }
-          } else {
-            reject(this.__restoreClick.name + ' No IdOfSelect');
-          }
-        } else {
-          reject(this.__restoreClick.name + ' No data')
-        }
-      } catch (err) {
-        reject(err)
-      }
-
-      this.AllAgents.Logger.FuncEnd(this.__restoreClick.name);
+      this.Logger.FuncEnd(this.ToggleCompactCss.name);
     });
   }
 

@@ -1,34 +1,43 @@
-import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { RecipeBasics } from "../../../../Shared/scripts/Classes/PromiseGeneric";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
 import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/IDataDtState";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { PromiseChainRestoreDesktop } from "../../Promises/PromiseChainRestoreDesktop";
-import { ContentManagerBase } from "../../_first/_ContentManagerBase";
-import { ContentHub } from "../ContentHub/ContentHub";
+import { LoggableBase } from "../LoggableBase";
+import { MiscManager } from "../MiscManager/MiscManager";
 import { OneCEAgent } from "../OneCEAgent/OneCEAgent";
-import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { OneScWindowManager } from "../OneScWindowManager";
 
-export class OneDesktopManager extends ContentManagerBase {
-  associatedDoc: IDataOneDoc;
+export class OneDesktopManager extends LoggableBase {
+  private associatedDoc: IDataOneDoc;
+  private RecipeBasics: RecipeBasics;
+  private MiscMan: MiscManager;
+  private OneScWinMan: OneScWindowManager;
 
-  constructor(hub: ContentHub, associatedDoc: IDataOneDoc, AllAgents: IAllAgents) {
-    super(hub, AllAgents);
-    this.AllAgents.Logger.FuncStart(OneDesktopManager.name);
+  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, recipeBasics: RecipeBasics, miscMan: MiscManager, oneScWinMan: OneScWindowManager) {
+    super(logger);
+
+    this.Logger.FuncStart(OneDesktopManager.name);
     this.associatedDoc = associatedDoc;
-    this.AllAgents.Logger.FuncEnd(OneDesktopManager.name);
+    this.RecipeBasics = recipeBasics;
+    this.MiscMan = miscMan;
+    this.OneScWinMan = oneScWinMan;
+    this.Logger.FuncEnd(OneDesktopManager.name);
   }
 
   async RestoreDesktopState(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.RestoreDesktopState.name);;
+      this.Logger.FuncStart(this.RestoreDesktopState.name);;
 
-      if (this.MiscMan().NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.RestoreDesktopState.name)) {
+      if (this.MiscMan.NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.RestoreDesktopState.name)) {
         for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
-          var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.ContentHub, this.AllAgents);
+          var desktopPromiser: PromiseChainRestoreDesktop = new PromiseChainRestoreDesktop(this.Logger, this.MiscMan, this.RecipeBasics, this.OneScWinMan);
 
-          await desktopPromiser.RunOneChain(targetDoc, dataToRestore.AllCEAr[idx])
-            
+          await desktopPromiser.RunOneChain(targetDoc, dataToRestore.AllCEAr[idx], this.RecipeBasics)
+
             .catch((err) => reject(err));
         }
 
@@ -37,27 +46,27 @@ export class OneDesktopManager extends ContentManagerBase {
         reject(this.RestoreDesktopState.name + ' bad data');
       }
 
-      this.AllAgents.Logger.FuncEnd(this.RestoreDesktopState.name);
+      this.Logger.FuncEnd(this.RestoreDesktopState.name);
     });
   }
 
   async RestoreDataToOneIframeWorker(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: OneCEAgent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.RestoreDataToOneIframeWorker.name);
+      this.Logger.FuncStart(this.RestoreDataToOneIframeWorker.name);
 
       if (oneTreeState && targetCeAgent) {
         await targetCeAgent.RestoreCEStateAsync(oneTreeState)
           .then(() => resolve())
           .catch((err) => {
-            this.AllAgents.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
-            this.AllAgents.Logger.ErrorAndThrow(this.RestoreDataToOneIframeWorker.name, 'bad data');
+            this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
+            this.Logger.ErrorAndThrow(this.RestoreDataToOneIframeWorker.name, 'bad data');
             reject((this.RestoreDataToOneIframeWorker.name + " " + err))
           })
       }
-      this.AllAgents.Logger.FuncEnd(this.RestoreDataToOneIframeWorker.name);
+      this.Logger.FuncEnd(this.RestoreDataToOneIframeWorker.name);
     });
   }
- private  CreateNewDtDataShell(): IDataDesktopState {
+  private CreateNewDtDataShell(): IDataDesktopState {
     var toReturn: IDataDesktopState = {
       AllCeData: [],
       livingIframeAr: [],
@@ -69,19 +78,19 @@ export class OneDesktopManager extends ContentManagerBase {
   }
   GetStateDesktop(): Promise<IDataDesktopState> {
     return new Promise(async (resolve, reject) => {
-      this.AllAgents.Logger.FuncStart(this.GetStateDesktop.name);
-      this.AllAgents.Logger.LogAsJsonPretty(this.GetStateDesktop.name, this.associatedDoc);
+      this.Logger.FuncStart(this.GetStateDesktop.name);
+      this.Logger.LogAsJsonPretty(this.GetStateDesktop.name, this.associatedDoc);
 
       var toReturnAllCeState: IDataDesktopState = this.CreateNewDtDataShell();
 
-      await this.AllAgents.HelperAgent.PromisesBasic.GetAllLiveIframeData(this.associatedDoc)
+      await this.RecipeBasics.GetAllLiveIframeData(this.associatedDoc)
         .then((result) => toReturnAllCeState.livingIframeAr = result)
         .then(() => {
           if (toReturnAllCeState.livingIframeAr && toReturnAllCeState.livingIframeAr.length > 0) {
             for (var iframeIdx = 0; iframeIdx < toReturnAllCeState.livingIframeAr.length; iframeIdx++) {
-              this.AllAgents.Logger.LogVal('iframeIdx: ', iframeIdx);
+              this.Logger.LogVal('iframeIdx: ', iframeIdx);
               var targetIframeObj = toReturnAllCeState.livingIframeAr[iframeIdx];
-              var oneCeMan = new OneCEAgent(targetIframeObj.ContentDoc, this.AllAgents.Logger);
+              var oneCeMan = new OneCEAgent(targetIframeObj.ContentDoc, this.Logger);
 
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
@@ -94,14 +103,14 @@ export class OneDesktopManager extends ContentManagerBase {
                     toReturnAllCeState.ActiveCeState = oneCeState;
                   }
                 })
-                .catch((err) => this.AllAgents.Logger.ErrorAndThrow(this.GetStateDesktop.name, err));
+                .catch((err) => this.Logger.ErrorAndThrow(this.GetStateDesktop.name, err));
             }
           }
         })
         .then(() => resolve(toReturnAllCeState))
         .catch((err) => reject(err));
 
-      this.AllAgents.Logger.FuncEnd(this.GetStateDesktop.name);
+      this.Logger.FuncEnd(this.GetStateDesktop.name);
     });
   }
 }

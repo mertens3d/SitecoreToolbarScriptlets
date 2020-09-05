@@ -7,17 +7,20 @@ import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
 import { GenericUrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
+import { RecipeBasics } from '../../../Shared/scripts/Classes/PromiseGeneric';
 
 export class TabManager {
   private ScUrlAgent: ScUrlAgent;
   private Logger: ILoggerAgent;
   private HelperAgent: HelperAgent;
+  private RecipeBasics: RecipeBasics;
 
-  constructor(logger: ILoggerAgent, helperAgent: HelperAgent, scUrlAgent: ScUrlAgent) {
+  constructor(logger: ILoggerAgent, helperAgent: HelperAgent, scUrlAgent: ScUrlAgent, recipeBasic: RecipeBasics) {
     this.Logger = logger;
     this.Logger.InstantiateStart(TabManager.name);
     this.HelperAgent = helperAgent;
     this.ScUrlAgent = scUrlAgent;
+    this.RecipeBasics = recipeBasic;
 
     this.Logger.InstantiateEnd(TabManager.name);
   }
@@ -40,9 +43,6 @@ export class TabManager {
 
   async InitTabManager() {
     this.Logger.FuncStart(TabManager.name, this.InitTabManager.name);
-
-   
-   
 
     this.Logger.FuncEnd(TabManager.name, this.InitTabManager.name);
   }
@@ -87,7 +87,7 @@ export class TabManager {
           self.ChangeLocationSwitchBoard(desiredPageType)
         }
 
-        this.HelperAgent.PromisesBasic.TabChainSetHrefWaitForComplete(absUrl)
+        this.RecipeBasics.TabChainSetHrefWaitForComplete(absUrl)
           .then(() => {
             console.log('todo');
             // put back?

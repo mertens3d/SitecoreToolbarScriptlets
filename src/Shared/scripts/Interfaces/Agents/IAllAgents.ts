@@ -6,5 +6,4 @@ export interface IAllAgents {
   HelperAgent: IHelperAgent;
   Logger: ILoggerAgent;
   SettingsAgent: ISettingsAgent;
-  ToastAgent: IToastAgent;
 }

@@ -1,30 +1,28 @@
 ﻿import { ScUrlAgent } from "../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
-import { IAllAgents } from "../../../../Shared/scripts/Interfaces/Agents/IAllAgents";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerBase";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
 import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
-import { ContentManagerBase } from "../../_first/_ContentManagerBase";
-import { ContentHub } from "../ContentHub/ContentHub";
-import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { LoggableBase } from "../LoggableBase";
 
-export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUiManager {
+export class SitecoreUiManager extends LoggableBase implements iSitecoreUiManager {
   ScUrlAgent: ScUrlAgent;
 
-  constructor(contentHub: ContentHub, allAgents: IAllAgents) {
-    super(contentHub, allAgents)
-    this.ScUrlAgent = new ScUrlAgent(this.AllAgents.Logger);
+  constructor(logger: ILoggerAgent) {
+    super(logger)
+    this.ScUrlAgent = new ScUrlAgent(this.Logger);
   }
 
   async InitSitecoreUiManager() {
-    this.AllAgents.Logger.FuncStart(this.InitSitecoreUiManager.name);
+    this.Logger.FuncStart(this.InitSitecoreUiManager.name);
     await this.ScUrlAgent.InitScUrlAgent();
-    this.AllAgents.Logger.FuncEnd(this.InitSitecoreUiManager.name);
+    this.Logger.FuncEnd(this.InitSitecoreUiManager.name);
   }
 
   GetCurrentPageType(): scWindowType {
-    //return this.CalcPageTypeFromHref({ AbsUrl: document.location.href });
     return this.ScUrlAgent.GetScWindowType()
   }
 
@@ -46,43 +44,43 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
 
   AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
     //callbackOnComplete();
-    this.AllAgents.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(  targetDoc.DocId));
-    this.AllAgents.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
+    this.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(targetDoc.DocId));
+    this.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
     var userNameElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);
     var passwordElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginPassword);
 
-    if (this.AllAgents.Logger.IsNotNullOrUndefinedBool('userNameElem', userNameElem)
+    if (this.Logger.IsNotNullOrUndefinedBool('userNameElem', userNameElem)
       &&
-      this.AllAgents.Logger.IsNotNullOrUndefinedBool('passwordElem', passwordElem)) {
+      this.Logger.IsNotNullOrUndefinedBool('passwordElem', passwordElem)) {
       userNameElem.setAttribute('value', ContentConst.Const.Names.scDefaultAdminUserName);
       passwordElem.setAttribute('value', ContentConst.Const.Names.scDefaultAdminPassword);
 
       var loginButton: HTMLElement = this.GetLoginButton(targetDoc);
 
-      if (this.AllAgents.Logger.IsNotNullOrUndefinedBool('loginButton', loginButton)) {
-        this.AllAgents.Logger.Log('clicking');
+      if (this.Logger.IsNotNullOrUndefinedBool('loginButton', loginButton)) {
+        this.Logger.Log('clicking');
         loginButton.click();
 
         if (callbackOnComplete) {
-          this.AllAgents.Logger.Log('Triggering callback');
+          this.Logger.Log('Triggering callback');
 
           setTimeout(callbackOnComplete, ContentConst.Const.Timeouts.PostLoginBtnClick);
         } else {
-          this.AllAgents.Logger.Log('no callback passed');
+          this.Logger.Log('no callback passed');
         }
       }
       else {
-        this.AllAgents.Logger.ErrorAndThrow(this.AdminB.name, 'No loginButton');
+        this.Logger.ErrorAndThrow(this.AdminB.name, 'No loginButton');
       }
     }
     else {
-      this.AllAgents.Logger.ErrorAndThrow(this.AdminB.name, 'No Username or password field');
+      this.Logger.ErrorAndThrow(this.AdminB.name, 'No Username or password field');
     }
-    this.AllAgents.Logger.FuncEnd(this.AdminB.name);
+    this.Logger.FuncEnd(this.AdminB.name);
   }
   GetLoginButton(targetDoc: IDataOneDoc): HTMLElement {
-    this.AllAgents.Logger.FuncStart(this.GetLoginButton.name);
+    this.Logger.FuncStart(this.GetLoginButton.name);
 
     var toReturn: HTMLElement = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginBtn.sc920);
 
@@ -90,8 +88,8 @@ export class SitecoreUiManager extends ContentManagerBase implements iSitecoreUi
       toReturn = targetDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.LoginBtn.sc820);
     }
 
-    this.AllAgents.Logger.Log('toReturn: ' + toReturn);
-    this.AllAgents.Logger.FuncEnd(this.GetLoginButton.name);
+    this.Logger.Log('toReturn: ' + toReturn);
+    this.Logger.FuncEnd(this.GetLoginButton.name);
     return toReturn;
   }
 }

@@ -15,13 +15,30 @@ import { AutoSnapShotAgent } from './Managers/AutoSnapShotAgent/AutoSnapShotAgen
 import { ContentHub } from './Managers/ContentHub/ContentHub';
 import { SitecoreUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
 import { ContentAtticManager } from './Managers/ContentAtticManager/ContentAtticManager';
+import { ContentAPIManager } from './Managers/ContentAPIManager/ContentAPIManager';
+import { ContentStateManager } from './Classes/ContentStateManager/ContentStateManager';
+import { OneScWindowManager } from './Managers/OneScWindowManager';
+import { RecipeBasics } from '../../Shared/scripts/Classes/PromiseGeneric';
+import { MiscManager } from './Managers/MiscManager/MiscManager';
+import { PromisesRecipes } from '../../Shared/scripts/Classes/PromisesRecipes';
+import { FactoryHelper } from '../../Shared/scripts/Helpers/FactoryHelper';
+import { ContentMessageManager } from './Managers/ContentMessageManager/ContentMessageManager';
+import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 
 class ContentEntry {
   private AllAgents: IAllAgents;
   private contentHub: ContentHub;
-   private RepoAgent: RepoAgent;
-  private  AtticMan: ContentAtticManager;
-  private  Logger: LoggerAgent;
+  private RepoAgent: RepoAgent;
+  private AtticMan: ContentAtticManager;
+  private Logger: LoggerAgent;
+  private ContentAPIMan: ContentAPIManager;
+  private ContentFactory: ContentStateManager;
+  private ScUiMan: SitecoreUiManager;
+  private OneWindowMan: OneScWindowManager;
+  private RecipeBasics: RecipeBasics;
+  private ToastAgent: ToastAgent;
+  private MiscMan: MiscManager;
+  private SettingsAgent: ISettingsAgent;
 
   async main() {
     await this.InstantiateMembers()
@@ -29,14 +46,27 @@ class ContentEntry {
       .then(() => {
         this.RepoAgent = new RepoAgent(this.AllAgents.Logger);
         this.AtticMan = new ContentAtticManager(this.RepoAgent, this.Logger);
-        this.contentHub = new ContentHub(this.AllAgents, this.AtticMan);
-        let scUiMan = new SitecoreUiManager(this.contentHub, this.AllAgents);
-        this.contentHub.SitecoreUiMan = scUiMan;
-        this.contentHub.InitContentHub(this.AtticMan);
+        this.ScUiMan = new SitecoreUiManager(this.Logger);
+        let factoryHelp = new FactoryHelper(this.Logger);
+        this.RecipeBasics = new RecipeBasics(this.Logger, factoryHelp);
+        this.MiscMan = new MiscManager(this.Logger);
+        this.OneWindowMan = new OneScWindowManager(this.Logger, this.ScUiMan, this.RecipeBasics, this.MiscMan, this.ToastAgent);
+        this.ContentFactory = new ContentStateManager(this.Logger, this.AtticMan, this.ScUiMan, this.OneWindowMan);
+        let promisesRecipes = new PromisesRecipes(this.Logger);
+        this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ContentFactory, this.ToastAgent, this.ScUiMan, promisesRecipes, this.RecipeBasics);
+
+        let contentMessageMan = new ContentMessageManager(this.Logger, this.AtticMan, this.RecipeBasics, factoryHelp, this.ToastAgent, this.SettingsAgent,
+          this.ContentAPIMan, this.ScUiMan, this.OneWindowMan);
+        this.contentHub = new ContentHub(this.AllAgents, this.AtticMan, this.MiscMan);
+        this.contentHub.SitecoreUiMan = this.ScUiMan;
+        this.contentHub.InitContentHub(this.AtticMan, this.RecipeBasics, this.OneWindowMan);
+
+        contentMessageMan.InitContentMessageManager();
+        this.OneWindowMan.InitOneScWindowManager();
       })
       .then(() => {
         let pageType = this.contentHub.SitecoreUiMan.GetCurrentPageType();
-        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.contentHub.OneWindowMan, pageType, this.AtticMan);
+        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.AllAgents.Logger, this.AllAgents.SettingsAgent, this.OneWindowMan, pageType, this.AtticMan);
         autoSnapShotAgent.ScheduleIntervalTasks();
       })
       .then(() => this.AllAgents.Logger.Log('Init success'))
@@ -71,7 +101,8 @@ class ContentEntry {
 
     let Repo: RepoAgent = new RepoAgent(this.AllAgents.Logger);
 
-    this.AllAgents.SettingsAgent = new SettingsAgent(this.AllAgents.Logger, Repo);
+    this.SettingsAgent = new SettingsAgent(this.AllAgents.Logger, Repo);
+    this.AllAgents.SettingsAgent = this.SettingsAgent;
 
     var allSettings: IGenericSetting[] = new ConstAllSettings().AllSettings;
 
@@ -80,7 +111,7 @@ class ContentEntry {
     this.InitLogging();
 
     this.AllAgents.HelperAgent = new HelperAgent(this.AllAgents.Logger);
-    this.AllAgents.ToastAgent = new ToastAgent(this.AllAgents.Logger);
+    this.ToastAgent = new ToastAgent(this.AllAgents.Logger);
   }
 }
 

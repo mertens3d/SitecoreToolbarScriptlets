@@ -22,6 +22,7 @@ import { CommandManager } from "./Classes/AllCommands";
 import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 import { IContentState } from "../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { RecipeBasics } from "../../Shared/scripts/Classes/PromiseGeneric";
 
 class PopUpEntry {
   RepoAgent: RepoAgent;
@@ -88,7 +89,7 @@ class PopUpEntry {
   async InitHub() {
 
     let scUrlAgent = new ScUrlAgent(this.Logger);
-    let tabMan = new TabManager(this.Logger, this.HelperAgent, scUrlAgent);
+    let tabMan = new TabManager(this.Logger, this.HelperAgent, scUrlAgent, null); //< -- todo null fix
     let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
     let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger, FeedbackModuleMsg);
     let messageMan = new MessageManager(PopUpMessageBroker, this.Logger);

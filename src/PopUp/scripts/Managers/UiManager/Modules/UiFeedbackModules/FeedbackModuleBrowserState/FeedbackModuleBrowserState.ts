@@ -16,7 +16,7 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
   PopulateFeedackBrowserState(urlParts: GenericUrlParts) {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.FeedbackBrowserState);
 
-    var allStateText: string = 'Browser State' + this.lineBreak;// + 'PopUp State as of: ' + this.AllAgents.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date());
+    var allStateText: string = 'Browser State' + this.lineBreak;
     allStateText += this.lineBreak + 'URL Parts';
 
     allStateText += this.indentedLineBreak + 'Page Type: ' + StaticHelpers.WindowTypeAsString(urlParts.ScWindowType);

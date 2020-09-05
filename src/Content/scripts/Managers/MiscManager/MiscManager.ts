@@ -1,14 +1,13 @@
-﻿import { ContentHub } from '../ContentHub/ContentHub';
-import { ContentManagerBase } from '../../_first/_ContentManagerBase';
+﻿import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerBase';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
-import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+import { LoggableBase } from '../LoggableBase';
 
 
-export class MiscManager extends ContentManagerBase {
-  constructor(hub: ContentHub, AllAgents: IAllAgents) {
-    super(hub, AllAgents);
-    this.AllAgents.Logger.FuncStart(MiscManager.name);
-    this.AllAgents.Logger.FuncEnd(MiscManager.name);
+export class MiscManager extends LoggableBase {
+  constructor(logger: ILoggerAgent) {
+    super(logger);
+    this.Logger.FuncStart(MiscManager.name);
+    this.Logger.FuncEnd(MiscManager.name);
   }
 
   NotNullOrUndefined(subjectAnyAr: any[], label?: string, iterationCheck?: number): boolean;
@@ -28,11 +27,11 @@ export class MiscManager extends ContentManagerBase {
       }
 
       if (subjectAnyOrAr === 'undefined') {
-        this.AllAgents.Logger.ErrorAndThrow(label, 'Is undefined');
+        this.Logger.ErrorAndThrow(label, 'Is undefined');
       } else if (!subjectAnyOrAr) {
-        this.AllAgents.Logger.ErrorAndThrow(label, 'Is Null');
+        this.Logger.ErrorAndThrow(label, 'Is Null');
       } else {
-        this.AllAgents.Logger.LogVal(label, 'Passed');
+        this.Logger.LogVal(label, 'Passed');
         toReturn = true;
 
         if (Array.isArray(subjectAnyOrAr)) {
@@ -42,10 +41,10 @@ export class MiscManager extends ContentManagerBase {
         }
       }
     } else {
-      this.AllAgents.Logger.ErrorAndThrow(this.NotNullOrUndefined.name, 'max iteration hit');
+      this.Logger.ErrorAndThrow(this.NotNullOrUndefined.name, 'max iteration hit');
     }
 
-    this.AllAgents.Logger.LogVal('toReturn', toReturn);
+    this.Logger.LogVal('toReturn', toReturn);
     return toReturn;
   }
 }

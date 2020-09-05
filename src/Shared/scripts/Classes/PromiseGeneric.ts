@@ -1,15 +1,24 @@
-﻿import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
+﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
+import { Guid } from '../Helpers/Guid';
 import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
 import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
 import { ContentConst } from '../Interfaces/InjectConst';
-import { IPromisesBasic } from '../Interfaces/IPromiseHelper';
+import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
-import { HelperBase } from './HelperBase';
 import { PromiseResult } from "./PromiseResult";
-import { Guid } from '../Helpers/Guid';
+import { ILoggerAgent } from '../Interfaces/Agents/ILoggerBase';
+import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
 
-export class PromisesBasic extends HelperBase implements IPromisesBasic {
+export class RecipeBasics extends LoggableBase implements IRecipeBasics {
+  FactoryHelp: IFactoryHelper;
+
+  constructor(logger: ILoggerAgent, factoryHelp: IFactoryHelper) {
+    super(logger);
+    this.FactoryHelp = factoryHelp;
+  }
+
   async WaitForReadyIframe(dataOneIframe: IDataOneIframe): Promise<null> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + Guid.AsShort(dataOneIframe.Id));
@@ -128,12 +137,12 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
       await this.WaitForAndReturnFoundElem(haystackDoc, selector)
         .then(async (foundElem: HTMLIFrameElement) => {
           if (foundElem) {
-            toReturnIframeData = this.HelperAgent.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>foundElem, iframeNickName);
+            toReturnIframeData = this.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>foundElem, iframeNickName);
           }
         })
         .then(() => this.WaitForReadyIframe(toReturnIframeData))
         .then(() => {
-          toReturnIframeData.ContentDoc = this.HelperAgent.FactoryHelp.DataOneContentDocFactoryFromIframe(toReturnIframeData);
+          toReturnIframeData.ContentDoc = this.FactoryHelp.DataOneContentDocFactoryFromIframe(toReturnIframeData);
           promiseResult.MarkSuccessful();
         })
         .catch((err) => promiseResult.MarkFailed(err));
@@ -171,7 +180,7 @@ export class PromisesBasic extends HelperBase implements IPromisesBasic {
           this.Logger.Log('pushing: ' + ifrIdx);
 
           var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-          var dataOneIframe: IDataOneIframe = this.HelperAgent.FactoryHelp.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
+          var dataOneIframe: IDataOneIframe = this.FactoryHelp.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
           toReturn.push(dataOneIframe);
         }
       } else {

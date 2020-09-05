@@ -1,10 +1,10 @@
-﻿import { HelperBase } from "../Classes/HelperBase";
+﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
 import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
 import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
 import { Guid } from "./Guid";
 
-export class FactoryHelper extends HelperBase implements IFactoryHelper {
+export class FactoryHelper extends LoggableBase implements IFactoryHelper {
  
   DataOneContentDocFactoryFromIframe(dataOneIframe: IDataOneIframe): IDataOneDoc {
     //IframeElem: HTMLIFrameElement, nickname: string

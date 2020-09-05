@@ -8,11 +8,14 @@ import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/IDat
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { RecipeBase } from "./RecipeBase";
+import { IFactoryHelper } from "../../../../../Shared/scripts/Interfaces/IFactoryHelper";
 
 export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes {
+ private FactoryHelp: IFactoryHelper;
 
-  constructor(commandData: ICommandHndlrDataForContent) {
+  constructor(commandData: ICommandHndlrDataForContent, factoryHelp: IFactoryHelper) {
     super(commandData);
+    this.FactoryHelp = factoryHelp;
   }
 
   Execute(): Promise<void> {
@@ -34,7 +37,7 @@ export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes
             .catch((err) => reject(err));
         }
         else {
-          resolve(this.CommandData.ContentHub.SitecoreUiMan.TopLevelDoc());
+          resolve(this.CommandData.TopLevelDoc);
         }
       } catch (err) {
         reject(this.GetDocToPublish.name + ' ' + err)
@@ -47,7 +50,7 @@ export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes
   async PublishActiveCE(targetDoc: IDataOneDoc): Promise<void> {
     this.Logger.FuncStart(this.PublishActiveCE.name);
     try {
-      var currentWindowType = this.CommandData.ContentHub.SitecoreUiMan.GetCurrentPageType();
+      var currentWindowType = this.CommandData.ScUiMan.GetCurrentPageType();
       await this.GetDocToPublish(currentWindowType, targetDoc)
         .then((docToPublish: IDataOneDoc) => this.PublishCE(docToPublish))
         .catch((err) => { throw (err) });
@@ -156,7 +159,7 @@ export class RecipePublishActiveCe extends RecipeBase implements ICommandRecipes
     await this.PromiseBasic.WaitForAndReturnFoundElem(dataPublishChain.TopLevelDoc, ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
       .then(
         (found: HTMLElement) => {
-          dataPublishChain.jqIframe = this.CommandData.ContentHub.ContentAPIMan.AllAgents.HelperAgent.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>found, 'jqIframe');
+          dataPublishChain.jqIframe = this.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>found, 'jqIframe');
 
           return dataPublishChain;
         }

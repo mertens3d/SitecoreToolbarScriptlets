@@ -26,6 +26,7 @@ import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModul
 import { CommandManager } from '../../Classes/AllCommands';
 import { Handlers } from '../Handlers';
 import { CancelButtonModule } from './Modules/CancelButtonModule';
+import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 
 export class UiManager {
   AccordianManager: IAccordianManager;
@@ -177,7 +178,7 @@ export class UiManager {
 
     var targetTag: HTMLElement = document.querySelector(PopConst.Const.Selector.HS.BuildStamp);
     if (targetTag) {
-      targetTag.innerText = 'build stamp: ' + this.HelperAgent.UtilityHelp.MakeFriendlyDate(new Date(BuiltDateStamp));
+      targetTag.innerText = 'build stamp: ' + StaticHelpers.MakeFriendlyDate(new Date(BuiltDateStamp));
     } else {
       this.Logger.ErrorAndThrow(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
     }

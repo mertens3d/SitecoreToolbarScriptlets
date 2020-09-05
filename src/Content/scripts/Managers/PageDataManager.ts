@@ -1,21 +1,23 @@
-﻿import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
+﻿import { Guid } from '../../../Shared/scripts/Helpers/Guid';
+import { IAllAgents } from '../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { ContentManagerBase } from '../_first/_ContentManagerBase';
-import { ContentHub } from './ContentHub/ContentHub';
-import { Guid } from '../../../Shared/scripts/Helpers/Guid';
+import { ContentMessageManager } from './ContentMessageManager/ContentMessageManager';
+import { LoggableBase } from './LoggableBase';
 
-export class PageManager extends ContentManagerBase {
+export class PageManager  extends LoggableBase {
   private topLevelDoc: IDataOneDoc;
   ChildPage: IDataOneDoc;
   SelfWindow: IDataOneDoc;
+  MsgMan: ContentMessageManager;
 
-  constructor(hub: ContentHub, AllAgents: IAllAgents) {
-    super(hub, AllAgents);
-    this.AllAgents.Logger.CtorName(this.constructor.name);
+  constructor( AllAgents: IAllAgents, msgMan: ContentMessageManager) {
+    super(AllAgents.Logger);
+    this.MsgMan = msgMan;
+    this.Logger.CtorName(this.constructor.name);
   }
 
   Init() {
-    this.AllAgents.Logger.FuncStart(this.Init.name);
+    this.Logger.FuncStart(this.Init.name);
 
     //if (window.opener) {
     this.topLevelDoc = {
@@ -26,8 +28,8 @@ export class PageManager extends ContentManagerBase {
     }
 
     //this.topLevelDoc.ParentDoc = this.topLevelDoc;
-    this.MsgMan().SetParentInfo(this.topLevelDoc);
+    this.MsgMan.SetParentInfo(this.topLevelDoc);
 
-    this.AllAgents.Logger.FuncEnd(this.Init.name);
+    this.Logger.FuncEnd(this.Init.name);
   }
 }

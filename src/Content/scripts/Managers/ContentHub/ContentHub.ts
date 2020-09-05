@@ -1,7 +1,9 @@
-﻿import { RepoAgent } from '../../../../Shared/scripts/Agents/Agents/RepositoryAgent/RepoAgent';
-import { PromisesBasic } from '../../../../Shared/scripts/Classes/PromiseGeneric';
+﻿import { RecipeBasics } from '../../../../Shared/scripts/Classes/PromiseGeneric';
 import { MsgFlag } from '../../../../Shared/scripts/Enums/1xxx-MessageFlag';
+import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { QueryStrKey } from '../../../../Shared/scripts/Enums/QueryStrKey';
+import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { UtilityHelper } from "../../../../Shared/scripts/Helpers/UtilityHelper";
 import { IAllAgents } from '../../../../Shared/scripts/Interfaces/Agents/IAllAgents';
 import { IContentConst } from '../../../../Shared/scripts/Interfaces/IContentConst';
@@ -10,27 +12,19 @@ import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst'
 import { ISharedConst } from '../../../../Shared/scripts/Interfaces/ISharedConst';
 import { SharedConst } from '../../../../Shared/scripts/SharedConst';
 import { ContentStateManager } from "../../Classes/ContentStateManager/ContentStateManager";
-import { PromiseOneStep } from '../../Promises/PromiseOneStep';
 import { ContentAPIManager } from '../ContentAPIManager/ContentAPIManager';
 import { ContentAtticManager } from '../ContentAtticManager/ContentAtticManager';
-import { ContentMessageManager } from '../ContentMessageManager/ContentMessageManager';
 import { MiscManager } from '../MiscManager/MiscManager';
 import { OneScWindowManager } from "../OneScWindowManager";
 import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
-import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
-import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 
 export class ContentHub {
   Const: IContentConst;
   private AllAgents: IAllAgents;
 
   ContentAPIMan: ContentAPIManager;
-  ContentMessageMan: ContentMessageManager;
   MiscMan: MiscManager;
-  OneWindowMan: OneScWindowManager;
-  PromiseHelper: PromisesBasic;
-  PromiseOneStep: PromiseOneStep;
+  PromiseHelper: RecipeBasics;
   SitecoreUiMan: SitecoreUiManager;
 
   Utilities: UtilityHelper;
@@ -38,32 +32,25 @@ export class ContentHub {
   ContentFactory: ContentStateManager;
   SharedConst: ISharedConst;
 
-  constructor(allAgents: IAllAgents, atticMan: ContentAtticManager) {
+  constructor(allAgents: IAllAgents, atticMan: ContentAtticManager, miscMan: MiscManager) {
     this.AllAgents = allAgents;
     this.AllAgents.Logger.InstantiateStart(ContentHub.name);
     //console.log('(ctor) logger enabled ' + this.AllAgents.Logger.EnabledStatus());
-    this.InstantiateMembers(atticMan);
+
+    this.InstantiateMembers(atticMan, miscMan);
     this.AllAgents.Logger.InstantiateEnd(ContentHub.name);
   }
 
-  InstantiateMembers(atticMan: ContentAtticManager) {
+  InstantiateMembers(atticMan: ContentAtticManager, miscMan: MiscManager) {
     this.AllAgents.Logger.FuncStart(this.InstantiateMembers.name);
 
-    this.ContentAPIMan = new ContentAPIManager(this, this.AllAgents);
-    this.ContentMessageMan = new ContentMessageManager(this, this.AllAgents, atticMan);
-    this.MiscMan = new MiscManager(this, this.AllAgents);
-    this.ContentFactory = new ContentStateManager(this, this.AllAgents, atticMan);
-
-    this.OneWindowMan = new OneScWindowManager(this, this.AllAgents);
-
-    this.PromiseOneStep = new PromiseOneStep(this, this.AllAgents);
 
     this.SharedConst = SharedConst.Const;
 
     this.AllAgents.Logger.FuncEnd(this.InstantiateMembers.name);
   }
 
-  InitContentHub(atticMan: ContentAtticManager): Promise<void> {
+  InitContentHub(atticMan: ContentAtticManager, recipeBasics: RecipeBasics, oneWindowMan: OneScWindowManager): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.InitContentHub.name);
       this.Const = ContentConst.Const;
@@ -71,13 +58,10 @@ export class ContentHub {
       await this.SitecoreUiMan.InitSitecoreUiManager()
         .then(() => {
           atticMan.InitContentAtticManager(this.AllAgents.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
-          this.ContentMessageMan.InitContentMessageManager();
-
-          this.OneWindowMan.InitOneScWindowManager();
 
           this.InjectCss();
         })
-        .then(() => this.InitFromQueryStr(atticMan))
+        .then(() => this.InitFromQueryStr(atticMan, recipeBasics, oneWindowMan))
 
         .then(() => resolve())
         .catch((err) => reject(err));
@@ -102,7 +86,7 @@ export class ContentHub {
     document.getElementsByTagName("head")[0].appendChild(style);
   }
 
-  InitFromQueryStr(atticMan: ContentAtticManager): Promise<void> {
+  InitFromQueryStr(atticMan: ContentAtticManager, recipeBasics: RecipeBasics, oneWindowMan: OneScWindowManager): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.AllAgents.Logger.FuncStart(this.InitFromQueryStr.name);
 
@@ -123,9 +107,9 @@ export class ContentHub {
             var targetDoc: IDataOneDoc = this.SitecoreUiMan.TopLevelDoc();
 
             if (targetDoc) {
-              await this.AllAgents.HelperAgent.PromisesBasic.WaitForPageReadyNative(targetDoc);
+              await recipeBasics.WaitForPageReadyNative(targetDoc);
 
-              await self.OneWindowMan.RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage)
+              await oneWindowMan.RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage)
                 .then(() => resolve())
                 .catch((err) => reject(err));
             }

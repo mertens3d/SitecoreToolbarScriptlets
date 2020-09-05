@@ -68,7 +68,8 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeChangeNickName.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipePublishActiveCe.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRestore\RecipeRestore.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState\RecipeSaveState.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeToggleFavorite.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\OneScWindowManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
@@ -197,9 +198,6 @@
     <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.js.map">
       <DependentUpon>RecipeRemoveItemFromStorage.js</DependentUpon>
     </None>
-    <None Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.js.map">
-      <DependentUpon>RecipeSaveState.js</DependentUpon>
-    </None>
     <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\ContentAPIManager.js">
@@ -216,9 +214,6 @@
     </Content>
     <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeRemoveItemFromStorage.js">
       <DependentUpon>RecipeRemoveItemFromStorage.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Content\scripts\Managers\ContentAPIManager\Recipes\RecipeSaveState.js">
-      <DependentUpon>RecipeSaveState.ts</DependentUpon>
     </Content>
     <Content Include="src\PopUp\scripts\Managers\EventManager.js">
       <DependentUpon>EventManager.ts</DependentUpon>
@@ -441,7 +436,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneTreeNode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISitecoreUiManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentMessageManager\ContentMessageManager.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseOneStep.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPopUpConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\SharedConst.ts" />
     <TypeScriptCompile Include="src\Shared\typdefs\browser.d.ts" />
@@ -464,7 +458,6 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Promises\PromiseChainRestoreDesktop.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PromiseGeneric.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\_first\_ContentManagerBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataOneWindowStorage.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\EventManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
@@ -687,6 +680,7 @@
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
     <Folder Include="src\Browser-PolyFill\" />
+    <Folder Include="src\Content\scripts\_first\" />
     <Folder Include="src\hindsiteWindowOpener\Scripts\" />
     <Folder Include="src\PopUp\scripts\Managers\MessageManager\" />
     <Folder Include="src\PopUp\scripts\Modules\" />
