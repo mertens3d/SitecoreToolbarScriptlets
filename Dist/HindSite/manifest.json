@@ -6,7 +6,7 @@
   "description": "Sitecore Tools",
 
   "icons": {
-    "48": "icons/border-48.png"
+    "48": "icons/glasses.png"
   },
 
   "content_scripts": [
@@ -38,7 +38,7 @@
     //"chrome-extension"
   ],
   "browser_action": {
-    "default_icon": "icons/border-48.png",
+    "default_icon": "icons/glasses.png",
     "default_title": "Hind•Site",
     "default_popup": "/AutoBuild/final/PopUp.min.html"
   },
