@@ -16,16 +16,16 @@ import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfac
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
 import { IDataSnapShots } from '../../../../Shared/scripts/Interfaces/Data/IDataSnapShots';
 import { MiscAgent } from '../../Agents/MiscAgent/MiscAgent';
-import { OneCEAgent } from '../../Agents/OneCEAgent/OneCEAgent';
+import { ContentEditorAgent } from '../../Agents/ContentEditorAgent/ContentEditorAgent';
 import { RecipeInitFromQueryStr } from '../../ContentApi/Recipes/RecipeInitFromQueryStr/RecipeInitFromQueryStr';
-import { DesktopAgent } from '../DesktopManager/DesktopManager';
 import { LoggableBase } from '../LoggableBase';
 import { ScUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { ScWindowRecipePartials } from './ScWindowRecipePartials';
+import { DesktopAgent } from '../../Agents/DesktopAgent/DesktopAgent';
 
 export class ScWindowManager extends LoggableBase implements IScWindowManager {
   OneDesktopMan: DesktopAgent = null;
-  OneCEAgent: OneCEAgent = null;
+  OneCEAgent: ContentEditorAgent = null;
   private MiscAgent: MiscAgent;
   private ToastAgent: IToastAgent;
   private ScUrlAgent: IScUrlAgent;
@@ -95,7 +95,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       if (currPageType === ScWindowType.Desktop) {
         this.OneDesktopMan = new DesktopAgent(this.Logger, this.MiscAgent, this.GetTopLevelDoc());
       } else if (currPageType === ScWindowType.ContentEditor) {
-        this.OneCEAgent = new OneCEAgent(this.GetTopLevelDoc(), this.Logger);
+        this.OneCEAgent = new ContentEditorAgent(this.GetTopLevelDoc(), this.Logger);
       }
 
       await this.InitFromQueryStr()
@@ -163,7 +163,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
   private async PopulateIfTopIsContentEditor(scWindowState: IDataOneWindowStorage): Promise<void> {
     try {
       if (this.GetCurrentPageType() === ScWindowType.ContentEditor) {
-        let ceAgent = new OneCEAgent(this.GetTopLevelDoc(), this.Logger);
+        let ceAgent = new ContentEditorAgent(this.GetTopLevelDoc(), this.Logger);
 
         await ceAgent.GetTreeState()
           .then((state: IDataOneStorageOneTreeState) => {

@@ -5,7 +5,7 @@ import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Inter
 import { ICommandHndlrDataForContent } from '../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
-import { OneCEAgent } from '../../../Agents/OneCEAgent/OneCEAgent';
+import { ContentEditorAgent } from '../../../Agents/ContentEditorAgent/ContentEditorAgent';
 import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { __RecipeBase } from '../__RecipeBase/__RecipeBase';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
@@ -80,7 +80,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     });
   }
 
-  private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: OneCEAgent) {
+  private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: ContentEditorAgent) {
     return new Promise<void>(async (resolve, reject) => {
       this.Logger.FuncStart(this.__restoreDataToOneIframe.name);
 
@@ -106,7 +106,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
         //guaranteed to be on the correct page
 
         var allIframeDataAtBeginning: IDataOneIframe[];
-        var targetCeAgent: OneCEAgent;
+        var targetCeAgent: ContentEditorAgent;
         let iframeHelper = new IframeHelper(this.Logger);
 
         await iframeHelper.GetHostedIframes(this.TargetDoc)
@@ -117,7 +117,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
           .then(() => this.RecipeBasics.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
 
           .then((result) => {
-            targetCeAgent = new OneCEAgent(result.ContentDoc, this.Logger);
+            targetCeAgent = new ContentEditorAgent(result.ContentDoc, this.Logger);
             this.__waitForIframeReady(result);
           })
           .then(() => this.__restoreDataToOneIframe(this.DataToRestore, targetCeAgent))

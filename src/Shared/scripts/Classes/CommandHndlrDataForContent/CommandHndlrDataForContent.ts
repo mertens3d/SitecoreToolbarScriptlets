@@ -1,16 +1,15 @@
-﻿import { ICommandHndlrDataForContent } from "../../Interfaces/ICommandHndlrDataForContent";
-import { DesktopAgent } from "../../../../Content/scripts/Managers/DesktopManager/DesktopManager";
-import { OneCEAgent } from "../../../../Content/scripts/Agents/OneCEAgent/OneCEAgent";
-import { IDataOneDoc } from "../../Interfaces/Data/IDataOneDoc";
+﻿import { ContentEditorAgent } from "../../../../Content/scripts/Agents/ContentEditorAgent/ContentEditorAgent";
+import { DesktopAgent } from "../../../../Content/scripts/Agents/DesktopAgent/DesktopAgent";
+import { ContentMessageBroker } from "../../../../Content/scripts/Drones/ContentMessageBroker/ContentMessageBroker";
+import { ScUiManager } from "../../../../Content/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
 import { SnapShotFlavor } from "../../Enums/SnapShotFlavor";
 import { GuidData } from "../../Helpers/GuidData";
-import { IScWindowManager } from "../../Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { ScUiManager } from "../../../../Content/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
-import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
-import { ContentMessageBroker } from "../../../../Content/scripts/Drones/ContentMessageBroker/ContentMessageBroker";
-import { ScWindowManager } from "../../../../Content/scripts/Managers/ScWindowManager/ScWindowManager";
+import { IScWindowManager } from "../../Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
+import { IDataOneDoc } from "../../Interfaces/Data/IDataOneDoc";
+import { ICommandHndlrDataForContent } from "../../Interfaces/ICommandHndlrDataForContent";
 
 export class CommandHndlrDataForContent implements ICommandHndlrDataForContent {
   AtticAgent: IContentAtticAgent = null;
@@ -19,7 +18,7 @@ export class CommandHndlrDataForContent implements ICommandHndlrDataForContent {
   Logger: ILoggerAgent = null;
   ScUiMan: ScUiManager = null;
   ScWinMan: IScWindowManager = null;
-  TargetCeAgent: OneCEAgent = null;
+  TargetCeAgent: ContentEditorAgent;
   TargetDoc: IDataOneDoc = null;
   TargetNickName: string = '';
   TargetSnapShotFlavor: SnapShotFlavor = SnapShotFlavor.Unknown;

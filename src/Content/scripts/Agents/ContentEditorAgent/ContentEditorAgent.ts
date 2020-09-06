@@ -14,7 +14,7 @@ export class NameContentTab {
   let
 }
 
-export class OneCEAgent extends LoggableBase {
+export class ContentEditorAgent extends LoggableBase {
   private OneTreeDrone: IOneTreeDrone;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedId: GuidData;

@@ -1,7 +1,7 @@
 ﻿import { IDataOneIframe } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { OneCEAgent } from '../../../Agents/OneCEAgent/OneCEAgent';
+import { ContentEditorAgent } from '../../../Agents/ContentEditorAgent/ContentEditorAgent';
 import { __RecipeBase } from '../__RecipeBase/__RecipeBase';
 import { IframeHelper } from '../../../Helpers/IframeHelper';
 
@@ -19,7 +19,7 @@ export class RecipeAddNewContentEditorToDesktop extends __RecipeBase implements 
         .then(() => this.RecipeBasics.WaitForNewIframe(allIframeDataAtBeginning, this.TargetDoc))
         .then((result) => newIframe = result)
         .then(() => this.RecipeBasics.WaitForReadyIframe(newIframe))
-        .then(() => this.TargetCeAgent = new OneCEAgent(newIframe.ContentDoc, this.Logger))
+        .then(() => this.TargetCeAgent = new ContentEditorAgent(newIframe.ContentDoc, this.Logger))
         .then(() => resolve())
         .catch((err) => reject(this.Execute.name + ' ' + err));
     });

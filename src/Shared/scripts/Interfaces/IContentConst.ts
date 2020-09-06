@@ -36,21 +36,25 @@ export interface IContentConst {
 
   Selector: {
     SC: {
+      Cancel: string,
+      ContentIframe0: string,
+      ContentIFrame1: string,
       ContentTreeNodeGlyph: string,
       IdStartsWithTreeNode: string,
       IframeContent: IScVerSpec,
       JqueryModalDialogsFrame: string,
-      ContentIframe0: string,
-      NextButton: string,
-      ContentIFrame1: string,
-      Ok: string,
-      Cancel: string,
       LoginBtn: IScVerSpec,
       MenuButtonPublish: string,
       MenuDropDownPublishItem: string,
       NavPublishStrip: string,
-      scStartButton: IScVerSpec,
+      NextButton: string,
+      Ok: string,
       StartMenuLeftOption: string,
+      scStartButton: IScVerSpec,
+      Desktop: {
+
+      DtStartBar: string,
+      },
       Publish: {
         TheItemHasBeenPublished: string,
         SettingsHidden: string,

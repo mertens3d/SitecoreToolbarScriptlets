@@ -335,7 +335,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IDataOneWindowStorage.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\EventManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\DesktopManager\DesktopManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Agents\DesktopAgent\DesktopAgent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\OneTreeDrone\OneTreeDrone.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\IterationDrone\IterationDrone.ts" />
     <TypeScriptCompile Include="src\Content\scripts\zContentEntryPoint.ts" />
@@ -464,6 +464,7 @@
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
     <Folder Include="src\Browser-PolyFill\" />
+    <Folder Include="src\Content\scripts\Managers\DesktopManager\" />
     <Folder Include="src\PopUp\scripts\Managers\MessageManager\" />
     <Folder Include="src\PopUp\scripts\Modules\" />
     <Folder Include="src\PopUp\scripts\Promises\" />
@@ -471,7 +472,7 @@
     <Folder Include="src\Shared\scripts\Agents\Agents\RestoreAgent\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\Content\scripts\Agents\OneCEAgent\OneCEAgent.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Agents\ContentEditorAgent\ContentEditorAgent.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="gulp.support\OneInjectable.js" />

@@ -7,12 +7,12 @@ import { ILoggerAgent } from "./Agents/ILoggerAgent";
 import { IScWindowManager } from "./Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "./Agents/IToastAgent";
 import { IDataOneDoc } from "./Data/IDataOneDoc";
-import { OneCEAgent } from "../../../Content/scripts/Agents/OneCEAgent/OneCEAgent";
-import { DesktopAgent } from "../../../Content/scripts/Managers/DesktopManager/DesktopManager";
+import { DesktopAgent } from "../../../Content/scripts/Agents/DesktopAgent/DesktopAgent";
+import { ContentEditorAgent } from "../../../Content/scripts/Agents/ContentEditorAgent/ContentEditorAgent";
 
 export interface ICommandHndlrDataForContent {
   DesktopMan: DesktopAgent;
-  TargetCeAgent: OneCEAgent;
+  TargetCeAgent: ContentEditorAgent
   TargetDoc: IDataOneDoc;
   TargetSnapShotFlavor: SnapShotFlavor,
   TargetSnapShotId: GuidData;

@@ -14,7 +14,4 @@ export class RecipeSaveState extends __RecipeBase implements ICommandRecipes {
         .catch((err) => reject(err));
     });
   }
-  
-
-  
 }

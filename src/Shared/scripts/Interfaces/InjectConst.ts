@@ -114,6 +114,11 @@ export class ContentConst {
           sc920: '[id=StartButton]',
           sc820: '[id=startButton]'
         },
+        Desktop: {
+
+          DtStartBar: '[id=Startbar]',
+        },
+
       },
     },
 

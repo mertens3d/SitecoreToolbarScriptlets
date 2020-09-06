@@ -8,10 +8,10 @@ import { IScUrlAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISc
 import { IToastAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { DesktopAgent } from "../../../Managers/DesktopManager/DesktopManager";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ScWindowRecipePartials } from "../../../Managers/ScWindowManager/ScWindowRecipePartials";
-import { OneCEAgent } from "../../../Agents/OneCEAgent/OneCEAgent";
+import { ContentEditorAgent } from "../../../Agents/ContentEditorAgent/ContentEditorAgent";
+import { DesktopAgent } from "../../../Agents/DesktopAgent/DesktopAgent";
 
 export class RecipeInitFromQueryStr extends LoggableBase implements ICommandRecipes {
   private ScUrlAgent: IScUrlAgent;
@@ -20,10 +20,10 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
   private TopLevelDoc: IDataOneDoc;
   private ScWinRecipeParts: ScWindowRecipePartials;
   private OneDesktopMan: DesktopAgent;
-  private OneCeAgent: OneCEAgent;
+  private OneCeAgent: ContentEditorAgent;
   private ToastAgent: IToastAgent;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopAgent, toastAgent: IToastAgent, oneCEAgent: OneCEAgent) {
+  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopAgent, toastAgent: IToastAgent, oneCEAgent: ContentEditorAgent) {
     super(logger);
     this.ScUrlAgent = scUrlAgent;
     this.RecipeBasics = new RecipeBasics(this.Logger);

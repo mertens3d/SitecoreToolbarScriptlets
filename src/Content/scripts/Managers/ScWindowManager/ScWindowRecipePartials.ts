@@ -2,10 +2,10 @@
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
-import { OneCEAgent } from '../../Agents/OneCEAgent/OneCEAgent';
-import { DesktopAgent } from '../DesktopManager/DesktopManager';
+import { ContentEditorAgent } from '../../Agents/ContentEditorAgent/ContentEditorAgent';
 import { LoggableBase } from '../LoggableBase';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { DesktopAgent } from '../../Agents/DesktopAgent/DesktopAgent';
 
 export class ScWindowRecipePartials extends LoggableBase {
   ToastAgent: IToastAgent;
@@ -16,7 +16,7 @@ export class ScWindowRecipePartials extends LoggableBase {
   }
 
 
-  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage, OneDesktopMan: DesktopAgent, OneCEAgent: OneCEAgent): Promise<void> {
+  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage, OneDesktopMan: DesktopAgent, OneCEAgent: ContentEditorAgent): Promise<void> {
         return new Promise(async (resolve, reject) => {
             this.Logger.FuncStart(this.RestoreStateToTargetDoc.name);
 
