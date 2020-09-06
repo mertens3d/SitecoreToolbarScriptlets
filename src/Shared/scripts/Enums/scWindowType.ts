@@ -1,4 +1,4 @@
-﻿export enum scWindowType {
+﻿export enum ScWindowType {
   Unknown = 0,
   LoginPage = 1,
   Desktop = 2,

@@ -1,7 +1,7 @@
 ﻿import { PayloadDataFromPopUp } from '../../../../Shared/scripts/Classes/PayloadDataReqPopUp';
 import { IContentMessageBroker } from '../../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
+import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { LoggableBase } from '../LoggableBase';
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 
@@ -32,7 +32,7 @@ export class ContentMessageManager extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ToggleCompactCss.name);
 
-      var targetDoc: IDataOneDoc = this.ScWinMan.TopLevelDoc();
+      var targetDoc: IDataOneDoc = this.ScWinMan.GetTopLevelDoc();
       if (targetDoc) {
         var self = this;
         await this.ScWinMan.SetCompactCss(targetDoc)

@@ -1,7 +1,5 @@
 ﻿export interface IPopUpConst {
-  Debug: {
-    ForceLoggingEnabled: boolean
-  },
+
   ClassNames: {
     HS: {
       Collapsed: string,

@@ -1,7 +1,7 @@
 ﻿import { ICommandHndlrDataForContent } from "../../ICommandHndlrDataForContent";
 import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
 
-export interface IContentApi {
+export interface IHindSiteScWindowApi {
   GetContentState();
   AddCETab(commandData: ICommandHndlrDataForContent): Promise<void>
   AdminB();
@@ -13,6 +13,6 @@ export interface IContentApi {
   SaveWindowState(commandData: ICommandHndlrDataForContent): Promise<void>;
   RemoveSnapShot(commandData: ICommandHndlrDataForContent): Promise<void>;
   PublischActiveCE(commandData: ICommandHndlrDataForContent): Promise<void>;
-  UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void>;
+  //UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void>;
 
 }

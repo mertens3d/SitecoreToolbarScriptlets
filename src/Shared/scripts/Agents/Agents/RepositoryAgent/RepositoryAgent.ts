@@ -1,5 +1,5 @@
 ﻿import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { IOneGenericSettingForStorage } from "../../../Classes/IOneGenericSettingForStorage";
+import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";

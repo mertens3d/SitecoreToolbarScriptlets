@@ -1,7 +1,5 @@
 ﻿import { LoggerConsoleWriter } from "../../Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { GuidData } from "../../Helpers/GuidData";
-import { IDataBucketRestoreDesktop } from "../IDataBucketRestoreDesktop";
-import { IDataOneIframe } from "../IDataOneIframe";
 import { IError } from "../IError";
 
 export interface ILoggerAgent {
@@ -9,8 +7,6 @@ export interface ILoggerAgent {
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   AddWriter(arg0: LoggerConsoleWriter);
   CtorName(name: string);
-  DebugDataOneIframe(NewIframe: IDataOneIframe);
-  DebugGuid(Id: GuidData);
   ErrorAndContinue(container: string, text: any): void
   ErrorAndThrow(container: string, text: any): void
   ErrorStack: IError[];
@@ -36,7 +32,6 @@ export interface ILoggerAgent {
   MarkerB();
   MarkerC();
   MarkerD();
-  PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, name: string);
   SectionMarker(arg0: string);
   ThrowIfNullOrUndefined(arg0: string, allAgents: any);
   ThrowIfNullOrUndefined(title: string, dataToCheck: any): void;

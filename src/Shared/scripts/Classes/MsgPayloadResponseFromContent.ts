@@ -1,19 +1,19 @@
 ﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
-import { IContentState } from "../Interfaces/IContentState/IContentState";
 import { IMsgFromX } from "../Interfaces/IMsgPayload";
 import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
 import { PayloadDataFromContent } from "./PayloadDataFromContent";
+import { IContentState } from "../Interfaces/Data/IContentState";
 
 export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
   Data: PayloadDataFromContent;
-  ContentState: IContentState;
+  ScWindowState: IContentState;
   response: string;
 
   constructor(msgFlag: MsgFlag) {
     super(msgFlag);
     this.Data = new PayloadDataFromContent();
 
-    this.ContentState = {
+    this.ScWindowState = {
       SnapShotsMany: {
         CurrentSnapShots: [],
         FavoriteCount: 0,
@@ -21,10 +21,10 @@ export class MsgFromContent extends MsgFromXBase implements IMsgFromX {
         PlainCount: 0,
         Birthday: new Date(1970),
       },
+      DesktopState: null,
       LastReq: MsgFlag.Unknown,
       ErrorStack: [],
       LastReqSuccessful: false,
-      LastReqFailReason: '',
       ActiveCe: null
     };
   }

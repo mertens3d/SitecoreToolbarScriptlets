@@ -1,12 +1,11 @@
 ﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { IDataOneDoc } from "../Interfaces/IDataOneDoc";
-import { IDataOneIframe } from "../Interfaces/IDataOneIframe";
-import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
+import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
+import { IDataOneIframe } from "../Interfaces/Data/IDataOneIframe";
 import { Guid } from "./Guid";
 
-export class FactoryHelper extends LoggableBase implements IFactoryHelper {
+export class FactoryHelper extends LoggableBase  {
  
-  DataOneContentDocFactoryFromIframe(dataOneIframe: IDataOneIframe): IDataOneDoc {
+ DataOneContentDocFactoryFromIframe(dataOneIframe: IDataOneIframe): IDataOneDoc {
     var toReturn: IDataOneDoc = null;
 
     if (dataOneIframe) {
@@ -21,6 +20,7 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     }
     return toReturn;
   }
+
   DataOneIframeFactory(iframeElem: HTMLIFrameElement, nickname: string): IDataOneIframe {
     this.Logger.FuncStart(this.DataOneIframeFactory.name);
     var toReturn: IDataOneIframe = null;

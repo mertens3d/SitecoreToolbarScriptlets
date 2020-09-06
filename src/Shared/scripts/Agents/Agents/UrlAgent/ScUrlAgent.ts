@@ -1,12 +1,12 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
 import { scMode } from "../../../Enums/scMode";
-import { scWindowType } from "../../../Enums/scWindowType";
+import { ScWindowType } from "../../../Enums/scWindowType";
 import { AbsoluteUrl } from "../../../Interfaces/AbsoluteUrl";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { IContentState } from "../../../Interfaces/IContentState/IContentState";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
+import { IContentState } from "../../../Interfaces/Data/IContentState";
 
 export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
   
@@ -26,41 +26,41 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
     return this.BuildFullUrlFromParts();
   }
 
-  GetScWindowType(): scWindowType {  //absUrl: AbsoluteUrl
+  GetScWindowType(): ScWindowType {  //absUrl: AbsoluteUrl
     this.Logger.FuncStart(this.GetScWindowType.name);
-    var toReturn: scWindowType = scWindowType.Unknown;
+    var toReturn: ScWindowType = ScWindowType.Unknown;
 
     let testPath: AbsoluteUrl = this.BuildFullUrlFromParts();
     if (testPath) {
       this.Logger.LogVal('current url', testPath.AbsUrl);
       if (testPath.AbsUrl.indexOf(SharedConst.Const.UrlSuffix.Login) > -1) {
-        toReturn = scWindowType.LoginPage;
+        toReturn = ScWindowType.LoginPage;
       }
       else if (new RegExp(SharedConst.Const.Regex.ContentEditor).test(testPath.AbsUrl)) {
-        toReturn = scWindowType.ContentEditor;
+        toReturn = ScWindowType.ContentEditor;
       }
       else if (testPath.AbsUrl.toLowerCase().indexOf(SharedConst.Const.UrlSuffix.LaunchPad.toLowerCase()) > -1) {
-        toReturn = scWindowType.Launchpad;
+        toReturn = ScWindowType.Launchpad;
       }
       else if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.Desktop, testPath.AbsUrl)) {
-        toReturn = scWindowType.Desktop;
+        toReturn = ScWindowType.Desktop;
       }
       else if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.Preview, testPath.AbsUrl)) {
-        toReturn = scWindowType.Preview;
+        toReturn = ScWindowType.Preview;
       }
       else if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.Edit, testPath.AbsUrl)) {
-        toReturn = scWindowType.Edit;
+        toReturn = ScWindowType.Edit;
       }
       else if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.Normal, testPath.AbsUrl)) {
-        toReturn = scWindowType.Normal;
+        toReturn = ScWindowType.Normal;
       }
       else {
-        toReturn = scWindowType.Unknown;
+        toReturn = ScWindowType.Unknown;
       }
     } else {
       this.Logger.ErrorAndThrow(this.GetScWindowType.name, 'null url');
     }
-    this.Logger.FuncEnd(this.GetScWindowType.name, scWindowType[toReturn]);
+    this.Logger.FuncEnd(this.GetScWindowType.name, ScWindowType[toReturn]);
 
     return toReturn;
   }
@@ -68,7 +68,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
   BuildEditPrevNormUrl(newMode: scMode, contState: IContentState): void {
     this.UrlParts.Anchor = '';
     this.UrlParts.FilePath = '';
-    this.UrlParts.ScWindowType = scWindowType.Unknown;
+    this.UrlParts.ScWindowType = ScWindowType.Unknown;
 
     this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid());
     this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[newMode]);
@@ -85,25 +85,25 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
     }
   }
 
-  SetFilePathFromWindowType(windowType: scWindowType = null): void {
+  SetFilePathFromWindowType(windowType: ScWindowType = null): void {
     if (!windowType) {
-      windowType = scWindowType.Unknown;
+      windowType = ScWindowType.Unknown;
     }
 
     switch (windowType) {
-      case scWindowType.ContentEditor:
+      case ScWindowType.ContentEditor:
         this.SetFilePath(SharedConst.Const.UrlSuffix.CE);
         break;
-      case scWindowType.Desktop:
+      case ScWindowType.Desktop:
         this.SetFilePath(SharedConst.Const.UrlSuffix.Desktop);
         break;
-      case scWindowType.Edit:
+      case ScWindowType.Edit:
         this.SetFilePath(SharedConst.Const.UrlSuffix.None);
         break;
-      case scWindowType.Preview:
+      case ScWindowType.Preview:
         this.SetFilePath(SharedConst.Const.UrlSuffix.None);
         break;
-      case scWindowType.Normal:
+      case ScWindowType.Normal:
         this.SetFilePath(SharedConst.Const.UrlSuffix.None);
         break;
       default:

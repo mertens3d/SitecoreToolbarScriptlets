@@ -1,11 +1,10 @@
 ﻿import { AbsoluteUrl } from "./AbsoluteUrl";
-import { IDataOneDoc } from "./IDataOneDoc";
-import { IDataOneIframe } from "./IDataOneIframe";
-import { IDataPublishChain } from "./IDataPublishChain";
+import { IDataPublishChain } from "./Data/IDataPublishChain";
 import { IScVerSpec } from "./IScVerSpec";
+import { IDataOneIframe } from "./data/IDataOneIframe";
+import { IDataOneDoc } from "./data/IDataOneDoc";
 
 export interface IRecipeBasics {
-  GetAllLiveIframeData(arg0: IDataOneDoc): Promise<IDataOneIframe[]>;
   RaceWaitAndClick(scStartButton: IScVerSpec, arg1: IDataOneDoc);
   TabChainSetHrefWaitForComplete(newHref: AbsoluteUrl);
   TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void>;

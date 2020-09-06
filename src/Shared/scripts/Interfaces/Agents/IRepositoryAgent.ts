@@ -1,4 +1,4 @@
-﻿import { IOneGenericSettingForStorage } from "../../Classes/IOneGenericSettingForStorage";
+﻿import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";
 import { IOneStorageData } from "../IOneStorageData";
 
 export interface IRepositoryAgent {

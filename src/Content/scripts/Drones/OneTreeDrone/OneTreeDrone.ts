@@ -1,8 +1,8 @@
 import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
-import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/IDataOneTreeNode';
+import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
 
 export class OneNodeDrone {

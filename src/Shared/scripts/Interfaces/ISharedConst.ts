@@ -1,5 +1,9 @@
 ﻿export interface ISharedConst {
+  Debug: {
+    ForceLoggingEnabled: boolean
+  },
   IterHelper: {
+
     GrowthPerIteration: number,
     MaxCount: {
       OverridePublishing: number,

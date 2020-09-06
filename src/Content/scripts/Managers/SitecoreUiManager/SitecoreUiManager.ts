@@ -1,21 +1,16 @@
-﻿import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
-import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+﻿import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/IDataOneDoc";
-import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { LoggableBase } from "../LoggableBase";
 
-export class SitecoreUiManager extends LoggableBase implements iSitecoreUiManager {
+export class ScUiManager extends LoggableBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IDataOneWindowStorage;
 
-  private RecipeBasics: RecipeBasics;
-
-  constructor(logger: ILoggerAgent, recipeBasics: RecipeBasics) {
+  constructor(logger: ILoggerAgent) {
     super(logger)
-
-    this.RecipeBasics = recipeBasics;
   }
 
   async InitSitecoreUiManager() {

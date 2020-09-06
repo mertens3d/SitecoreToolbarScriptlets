@@ -1,4 +1,4 @@
-﻿import { scWindowType } from "../../../Shared/scripts/Enums/scWindowType";
+﻿import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { TabManager } from "../Managers/TabManager";
@@ -24,12 +24,12 @@ export class HandlersInternal {
   }
 
   async GoCeInternal(evt: any) {
-    this.TabMan.ChangeLocationSwitchBoard(scWindowType.ContentEditor);
+    this.TabMan.ChangeLocationSwitchBoard(ScWindowType.ContentEditor);
     //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqOpenCE, this.PopHub));
   }
 
   GoDesktopInternal(evt: any) {
-    this.TabMan.ChangeLocationSwitchBoard(scWindowType.Desktop);
+    this.TabMan.ChangeLocationSwitchBoard(ScWindowType.Desktop);
     //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqGoDesktop, this.PopHub))
   }
 

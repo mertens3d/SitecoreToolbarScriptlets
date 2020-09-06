@@ -1,6 +1,6 @@
 ﻿import { MsgFromPopUp } from '../../../Shared/scripts/Classes/MsgFromPopUp';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { IContentState } from "../../../Shared/scripts/Interfaces/Data/IContentState";
 import { PopUpMessagesBroker } from './PopUpMessagesBroker/PopUpMessagesBroker';
 
 export class MessageManager { 

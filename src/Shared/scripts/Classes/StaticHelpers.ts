@@ -2,7 +2,7 @@
 import { SettingKey } from "../Enums/3xxx-SettingKey";
 import { BufferChar } from "../Enums/BufferChar";
 import { BufferDirection } from "../Enums/BufferDirection";
-import { scWindowType } from "../Enums/scWindowType";
+import { ScWindowType } from "../Enums/scWindowType";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 
 export class StaticHelpers {
@@ -17,8 +17,8 @@ export class StaticHelpers {
     return 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
   }
 
-  static WindowTypeAsString(windowType: scWindowType) {
-    return scWindowType[windowType];
+  static ScWindowTypeFriendly(windowType: ScWindowType) {
+    return ScWindowType[windowType];
   }
 
   static MakeFriendlyDate(date: Date): string {

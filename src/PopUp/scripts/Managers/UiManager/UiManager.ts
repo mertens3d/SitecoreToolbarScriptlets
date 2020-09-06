@@ -8,8 +8,6 @@ import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/
 import { IGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
-import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
 import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
 import { GenericUrlParts } from '../../../../Shared/scripts/Interfaces/UrlParts';
 import { CommandManager } from '../../Classes/AllCommands';
@@ -24,11 +22,13 @@ import { FeedbackModuleContentState } from './Modules/UiFeedbackModules/Feedback
 import { FeedbackModuleMessages } from './Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from './Modules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
+import { IContentState } from '../../../../Shared/scripts/Interfaces/Data/IContentState';
+import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
 
 export class UiManager {
   AccordianManager: IAccordianManager;
   ButtonStateManager: UiButtonStateManager;
-  CurrContentState: IContentState;
+  CurrScWindowState: IContentState;
   FeedbackModuleMessages: FeedbackModuleMessages;
   FeedbackModulePopUpState: FeedbackModulePopUpState;
   LastKnownContentState: IContentState;

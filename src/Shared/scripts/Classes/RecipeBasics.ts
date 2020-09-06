@@ -2,8 +2,8 @@
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { Guid } from '../Helpers/Guid';
 import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
-import { IDataOneDoc } from '../Interfaces/IDataOneDoc';
-import { IDataOneIframe } from '../Interfaces/IDataOneIframe';
+import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
+import { IDataOneIframe } from '../Interfaces/Data/IDataOneIframe';
 import { ContentConst } from '../Interfaces/InjectConst';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
@@ -11,6 +11,7 @@ import { PromiseResult } from "./PromiseResult";
 import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
+import { IframeHelper } from '../../../Content/scripts/Helpers/IframeHelper';
 
 export class RecipeBasics extends LoggableBase implements IRecipeBasics {
   private FactoryHelp: IFactoryHelper;
@@ -92,8 +93,9 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       var toReturn: IDataOneIframe = null;
 
       var allIframe: IDataOneIframe[];
+      let iframeHelper = new IframeHelper(this.Logger);
 
-      await this.GetAllLiveIframeData(targetDoc)
+      await iframeHelper.GetHostedIframes(targetDoc)
         .then((result) => {
           allIframe = result
 
@@ -145,48 +147,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     });
   }
 
-  GetAllLiveIframeData(targetDoc: IDataOneDoc): Promise<IDataOneIframe[]> {
-    return new Promise((resolve, reject) => {
-      this.Logger.FuncStart(this.GetAllLiveIframeData.name);
-      let successful: boolean = true;
-      let rejectReason: string = '';
-
-      var toReturn: IDataOneIframe[] = [];
-
-      var iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
-
-      if (!iframeAr) {
-        iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
-      }
-
-      this.Logger.LogVal('found iframes count', iframeAr.length);
-      if (iframeAr) {
-        for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
-          this.Logger.Log('pushing: ' + ifrIdx);
-
-          var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-          var dataOneIframe: IDataOneIframe = this.FactoryHelp.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
-          toReturn.push(dataOneIframe);
-        }
-      } else {
-        successful = false;
-        rejectReason = 'no iframes found'
-        this.Logger.Log(rejectReason);
-      }
-
-      //this.Logger.LogAsJsonPretty('toReturn', toReturn);
-      this.Logger.LogVal('GetAllLiveIframeData: iframe count', toReturn.length);
-
-      if (successful) {
-        resolve(toReturn);
-      } else {
-        reject(rejectReason);
-      }
-
-      this.Logger.FuncEnd(this.GetAllLiveIframeData.name);
-    });
-  }
-
   async WaitForNewIframe(allIframesBefore: IDataOneIframe[], targetDoc: IDataOneDoc): Promise<IDataOneIframe> {
     return new Promise<IDataOneIframe>(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframe.name);
@@ -198,10 +158,11 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
       var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframe.name)
       let beforeCount: number = allIframesBefore.length;
+      let iframeHelper = new IframeHelper(this.Logger);
 
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
         var allIframesAfter: IDataOneIframe[];
-        await this.GetAllLiveIframeData(targetDoc)
+        await iframeHelper.GetHostedIframes(targetDoc)
           .then((result) => allIframesAfter = result)
           .catch((err) => this.Logger.ErrorAndThrow(this.WaitForNewIframe.name, err));
 

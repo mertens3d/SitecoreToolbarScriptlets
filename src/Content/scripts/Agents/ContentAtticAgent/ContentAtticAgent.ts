@@ -1,12 +1,12 @@
-﻿import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+﻿import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
-import { ISnapShots } from "../../../../Shared/scripts/Interfaces/IContentState/ISnapShots";
-import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/IDataOneWindowStorage";
+import { IDataSnapShots } from "../../../../Shared/scripts/Interfaces/Data/IDataSnapShots";
+import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 
@@ -29,7 +29,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.SettingAutoSnapshotRetainDays = settingAutoSnapshotRetainDays;
   }
 
-  async WriteToStorage(dataOneWindow: IDataOneWindowStorage) {
+  async WriteToStorage(dataOneWindow: IDataOneWindowStorage) : Promise<void>{
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WriteToStorage.name);
 
@@ -37,8 +37,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
 
       await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.GuidId.Raw, snapShotAsString)
 
-      await this.GetFromStorageById(dataOneWindow.GuidId)
-        .then(() => this.CleanOutOldAutoSavedData())
+      await this.CleanOutOldAutoSavedData()
         .then(() => resolve())
         .catch((err) => reject(err))
 
@@ -50,30 +49,23 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetFromStorageById.name, needleId.Raw);
 
-      var foundStorage: ISnapShots;
-      await this.GetAllSnapShotsMany()
-        .then((result) => foundStorage = result)
-        .catch((err) => reject(err));
-
       var DateOneWinStoreMatch: IDataOneWindowStorage = null;
 
-      if (foundStorage) {
-        for (var idx = 0; idx < foundStorage.CurrentSnapShots.length; idx++) {
-          var candidate = foundStorage.CurrentSnapShots[idx];
-          if (candidate.GuidId.Raw === needleId.Raw) {
-            DateOneWinStoreMatch = candidate;
-            break;
+      await this.GetAllSnapShotsMany()
+        .then((foundStorage: IDataSnapShots) => {
+          for (var idx = 0; idx < foundStorage.CurrentSnapShots.length; idx++) {
+            var candidate = foundStorage.CurrentSnapShots[idx];
+            if (candidate.GuidId.Raw === needleId.Raw) {
+              DateOneWinStoreMatch = candidate;
+              this.Logger.Log('found match');
+              break;
+            }
           }
-        }
-      }
-      if (DateOneWinStoreMatch) {
-        this.Logger.Log('found match');
-      } else {
-        this.Logger.LogVal(this.GetFromStorageById.name, 'Match not found')
-      }
+          resolve(DateOneWinStoreMatch)
+        })
+        .catch((err) => reject(err));
 
       this.Logger.FuncEnd(this.GetFromStorageById.name);
-      resolve(DateOneWinStoreMatch);
     });
   }
 
@@ -86,8 +78,8 @@ export class ContentAtticAgent implements IContentAtticAgent {
       candidate.RawData = oneRaw;
 
       if (!candidate.WindowType) {
-        candidate.WindowType = scWindowType.Unknown;
-        candidate.WindowFriendly = scWindowType[candidate.WindowType];
+        candidate.WindowType = ScWindowType.Unknown;
+        candidate.WindowFriendly = ScWindowType[candidate.WindowType];
       }
 
       if (!candidate.NickName) {
@@ -98,9 +90,11 @@ export class ContentAtticAgent implements IContentAtticAgent {
     }
     return candidate
   }
+
   private GetAllLocalStorageAsIOneStorageData(): Promise<IOneStorageData[]> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetAllLocalStorageAsIOneStorageData.name);
+
       let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
 
       await this.Repo.GetBulkLocalStorageByKeyPrefix(prefix)
@@ -117,6 +111,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       var toReturn: IDataOneWindowStorage[] = [];
 
       var rawStorageData: IOneStorageData[];
+
       await this.GetAllLocalStorageAsIOneStorageData()
         .then((result) => rawStorageData = result)
         .then(() => {
@@ -133,7 +128,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
         })
         .then(() => {
           toReturn = this.FilterOutOldData(toReturn);
-          resolve(toReturn)
+          resolve(toReturn);
         })
         .catch((err) => reject(err));
 
@@ -151,7 +146,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       this.SettingAutoSnapshotRetainDays = ContentConst.Const.DefaultMaxAutoSaveAgeDays;
     }
     var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
-    let currentWindowStorage: ISnapShots = await this.GetAllSnapShotsMany();
+    let currentWindowStorage: IDataSnapShots = await this.GetAllSnapShotsMany();
 
     if (currentWindowStorage) {
       var cacheLength = currentWindowStorage.CurrentSnapShots.length;
@@ -189,11 +184,11 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.Logger.FuncEnd(this.CleanOutOldAutoSavedData.name);
   }
 
-  GetAllSnapShotsMany(): Promise<ISnapShots> {
+  GetAllSnapShotsMany(): Promise<IDataSnapShots> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetAllSnapShotsMany.name);
 
-      let snapShotsMany: ISnapShots = {
+      let snapShotsMany: IDataSnapShots = {
         CurrentSnapShots: [],
         Birthday: new Date(1970),
         FavoriteCount: 0,
@@ -236,7 +231,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return toReturn;
   }
 
-  UpdateCounts(storageAllSnapshots: ISnapShots) {
+  UpdateCounts(storageAllSnapshots: IDataSnapShots) {
     storageAllSnapshots.FavoriteCount = 0;
     storageAllSnapshots.SnapShotsAutoCount = 0;
     storageAllSnapshots.PlainCount = 0;

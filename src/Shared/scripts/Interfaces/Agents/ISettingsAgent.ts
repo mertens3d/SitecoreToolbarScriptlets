@@ -1,6 +1,6 @@
 ﻿import { SettingKey } from "../../Enums/3xxx-SettingKey";
 import { IGenericSetting } from "./IGenericSetting";
-import { IOneGenericSettingForStorage } from "../../Classes/IOneGenericSettingForStorage";
+import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";
 import { SettingFlavor } from "../../Enums/SettingFlavor";
 
 export interface ISettingsAgent {

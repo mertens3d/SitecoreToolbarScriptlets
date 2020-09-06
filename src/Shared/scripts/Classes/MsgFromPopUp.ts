@@ -1,5 +1,5 @@
 ﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
-import { scWindowType } from "../Enums/scWindowType";
+import { ScWindowType } from "../Enums/scWindowType";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 import { IGenericSetting } from "../Interfaces/Agents/IGenericSetting";
 import { IMsgFromX } from "../Interfaces/IMsgPayload";
@@ -12,7 +12,7 @@ export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
   Data: PayloadDataFromPopUp;
   IsValid: boolean;
 
-  constructor(msgFlag: MsgFlag, scWindowType: scWindowType, selectSnapshotId: GuidData, contentPrefs: IGenericSetting[]) {
+  constructor(msgFlag: MsgFlag, scWindowType: ScWindowType, selectSnapshotId: GuidData, contentPrefs: IGenericSetting[]) {
     super(msgFlag);
     this.Data = new PayloadDataFromPopUp();
     this.Data.IdOfSelect = selectSnapshotId;

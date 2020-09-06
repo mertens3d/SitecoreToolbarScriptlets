@@ -1,5 +1,5 @@
-﻿import { IDataOneDoc } from "./IDataOneDoc";
-import { IDataOneIframe } from "./IDataOneIframe";
+﻿import { IDataOneDoc } from "./Data/IDataOneDoc";
+import { IDataOneIframe } from "./Data/IDataOneIframe";
 
 export interface IFactoryHelper {
   DataOneContentDocFactoryFromIframe(toReturnIframeData: IDataOneIframe): IDataOneDoc;

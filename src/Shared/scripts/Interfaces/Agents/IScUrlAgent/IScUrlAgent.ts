@@ -1,7 +1,7 @@
 ﻿import { IUrlAgent } from "../../IUrlAgent";
-import { scWindowType } from "../../../Enums/scWindowType";
+import { ScWindowType } from "../../../Enums/scWindowType";
 
 export interface IScUrlAgent extends IUrlAgent {
-    GetScWindowType(): scWindowType;
+    GetScWindowType(): ScWindowType;
     InitScUrlAgent();
 }

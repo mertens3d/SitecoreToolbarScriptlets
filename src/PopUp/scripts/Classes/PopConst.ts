@@ -9,9 +9,7 @@ export class PopConst {
         Collapsed: 'in',
       },
     },
-    Debug: {
-      ForceLoggingEnabled: false
-    },
+   
     ElemId: {
       InputNickname: 'id-input-nickname',
       HindSiteParentInfo: 'spanParentInfo',

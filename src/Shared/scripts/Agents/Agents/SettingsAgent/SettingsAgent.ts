@@ -2,7 +2,7 @@
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { IOneGenericSettingForStorage } from "../../../Classes/IOneGenericSettingForStorage";
+import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";

@@ -2,10 +2,10 @@
 import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
-import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/IDataBrowserWindow';
+import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
 import { GenericUrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 
 export class TabManager {
@@ -34,7 +34,7 @@ export class TabManager {
     return this.ScUrlAgent.GetUrlParts();
   }
 
-  GetWindowType(): scWindowType {
+  GetWindowType(): ScWindowType {
     return this.ScUrlAgent.GetScWindowType();
   }
 
@@ -60,19 +60,19 @@ export class TabManager {
     })
   }
 
-  ChangeLocationSwitchBoard(desiredPageType: scWindowType) {
-    this.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + scWindowType[desiredPageType]);
+  ChangeLocationSwitchBoard(desiredPageType: ScWindowType) {
+    this.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + ScWindowType[desiredPageType]);
 
     var iteration: IterationDrone = new IterationDrone(this.Logger, this.ChangeLocationSwitchBoard.name);
 
     if (iteration.DecrementAndKeepGoing()) {
-      var currentScWindowType: scWindowType = this.ScUrlAgent.GetScWindowType();//.ScWindowType;
+      var currentScWindowType: ScWindowType = this.ScUrlAgent.GetScWindowType();//.ScWindowType;
 
-      if (currentScWindowType === scWindowType.LoginPage) {
+      if (currentScWindowType === ScWindowType.LoginPage) {
         var self = this;
       }
 
-      else if (currentScWindowType === scWindowType.Launchpad || currentScWindowType === scWindowType.ContentEditor || currentScWindowType === scWindowType.Desktop) {
+      else if (currentScWindowType === ScWindowType.Launchpad || currentScWindowType === ScWindowType.ContentEditor || currentScWindowType === ScWindowType.Desktop) {
         var self = this;
 
         this.ScUrlAgent.SetFilePathFromWindowType(desiredPageType);

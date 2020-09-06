@@ -19,7 +19,7 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
     var allStateText: string = 'Browser State' + this.lineBreak;
     allStateText += this.lineBreak + 'URL Parts';
 
-    allStateText += this.indentedLineBreak + 'Page Type: ' + StaticHelpers.WindowTypeAsString(urlParts.ScWindowType);
+    allStateText += this.indentedLineBreak + 'Page Type: ' + StaticHelpers.ScWindowTypeFriendly(urlParts.ScWindowType);
 
     allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + urlParts.OriginalRaw;
 

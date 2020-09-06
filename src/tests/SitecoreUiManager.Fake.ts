@@ -1,6 +1,6 @@
 ﻿//import { iSitecoreUiManager } from "../Shared/scripts/Interfaces/ISitecoreUiManager";
 //import { BaseDebug } from "../Shared/scripts/Classes/debug";
-//import { IDataOneWindowStorage } from "../Shared/scripts/Interfaces/IDataOneWindowStorage";
+//import { IDataOneWindowStorage } from "../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 
 //export class SitecoreUiManagerFake implements iSitecoreUiManager {
 

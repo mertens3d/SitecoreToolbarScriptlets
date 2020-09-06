@@ -2,6 +2,9 @@
 
 export class SharedConst {
   static Const: ISharedConst = {
+    Debug: {
+      ForceLoggingEnabled: true
+    },
     IterHelper: {
       GrowthPerIteration: 0.5,
 

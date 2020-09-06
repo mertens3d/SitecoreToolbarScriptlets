@@ -3,31 +3,32 @@ import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
-import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
-import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/IDataOneTreeNode';
+import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
+import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
 import { OneTreeDrone } from '../../Drones/OneTreeDrone/OneTreeDrone';
+import { LoggableBase } from '../../Managers/LoggableBase';
 
 export class NameContentTab {
   let
 }
 
-export class OneCEAgent {
+export class OneCEAgent extends LoggableBase {
   private OneTreeDrone: IOneTreeDrone;
-  private ContextDoc: IDataOneDoc;
-  private Logger: ILoggerAgent;
+  readonly AssociatedDoc: IDataOneDoc;
+  readonly AssociatedId: GuidData;
 
   constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent) {
-    this.Logger = logger;
+    super(logger);
 
     this.Logger.FuncStart(this.constructor.name);
 
     this.Logger.IsNotNullOrUndefinedBool("associatedDoc", associatedDoc);
 
-    this.ContextDoc = associatedDoc;
-
-    this.OneTreeDrone = new OneTreeDrone(this.Logger, this.ContextDoc);
+    this.AssociatedDoc = associatedDoc;
+    this.AssociatedId = Guid.NewRandomGuid();
+    this.OneTreeDrone = new OneTreeDrone(this.Logger, this.AssociatedDoc);
 
     this.Logger.FuncEnd(this.constructor.name);
   }
@@ -40,6 +41,24 @@ export class OneCEAgent {
 
     this.Logger.FuncEnd(this.__activateNode.name);
   }
+
+  async RestoreDataToOneIframeWorker(oneTreeState: IDataOneStorageOneTreeState): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.RestoreDataToOneIframeWorker.name);
+
+      if (oneTreeState) {
+        await this.RestoreCEStateAsync(oneTreeState)
+          .then(() => resolve())
+          .catch((err) => {
+            this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
+            this.Logger.ErrorAndThrow(this.RestoreDataToOneIframeWorker.name, 'bad data');
+            reject((this.RestoreDataToOneIframeWorker.name + " " + err))
+          })
+      }
+      this.Logger.FuncEnd(this.RestoreDataToOneIframeWorker.name);
+    });
+  }
+
   private __expandNode(foundOnPage: HTMLElement): void {
     this.Logger.FuncStart(this.__expandNode.name);
     var currentSrc = foundOnPage.getAttribute('src');
@@ -129,22 +148,22 @@ export class OneCEAgent {
   }
 
   SetCompactCss() {
-    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.ContextDoc.DocId));
+    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.AssociatedDoc.DocId));
 
     //  browser.tabs.insertCSS(ass integer tabId, object details, function callback);
 
-    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.ContextDoc.DocId));
+    this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.AssociatedDoc.DocId));
   }
 
   async RestoreCEStateAsync(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RestoreCEStateAsync.name, Guid.AsShort(this.ContextDoc.DocId));
+      this.Logger.FuncStart(this.RestoreCEStateAsync.name, Guid.AsShort(this.AssociatedDoc.DocId));
 
       var toReturn: boolean = false;
 
       this.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
 
-      await this.WaitForAndRestoreManyAllNodes(dataToRestore, this.ContextDoc)
+      await this.WaitForAndRestoreManyAllNodes(dataToRestore, this.AssociatedDoc)
         .then(() => resolve(true))
         .catch((err) => reject(this.RestoreCEStateAsync.name + " " + err));
 
@@ -169,12 +188,12 @@ export class OneCEAgent {
     return toReturn;
   }
 
-  GetTreeState(id: GuidData): Promise<IDataOneStorageOneTreeState> {
+  GetTreeState(): Promise<IDataOneStorageOneTreeState> {
     return new Promise<IDataOneStorageOneTreeState>((resolve, reject) => {
       this.Logger.FuncStart(this.GetTreeState.name);
 
       var toReturnOneTreeState: IDataOneStorageOneTreeState = {
-        Id: id,
+        Id: this.AssociatedId,
         AllTreeNodeAr: this.OneTreeDrone.GetOneLiveTreeData(),
         ActiveNode: null
       }

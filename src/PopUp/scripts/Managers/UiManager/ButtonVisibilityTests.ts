@@ -1,9 +1,9 @@
-﻿import { scWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
+﻿import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+import { IContentState } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 
 export class ButtonVisibilityTester {
-  VisibilityTestWindowType(windowType: scWindowType, currentWindowType: scWindowType): boolean {
+  VisibilityTestWindowType(windowType: ScWindowType, currentWindowType: ScWindowType): boolean {
     let toReturn: boolean = false;
 
     toReturn = windowType === currentWindowType;

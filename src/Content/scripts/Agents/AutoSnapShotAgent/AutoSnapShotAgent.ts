@@ -9,8 +9,9 @@ import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { RecipeSaveState } from "../../Managers/ContentAPIManager/Recipes/RecipeSaveState/RecipeSaveState";
-import { SitecoreUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
+import { RecipeSaveState } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
+import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
+import { CommandHndlrDataForContent } from "../../../../Shared/scripts/Classes/CommandHndlrDataForContent/CommandHndlrDataForContent";
 
 export class AutoSnapShotAgent {
   private SettingsAgent: ISettingsAgent;
@@ -18,38 +19,27 @@ export class AutoSnapShotAgent {
   private AutoSaveHasBeenScheduled: boolean = false;
   private ScWinMan: IScWindowManager;
   private AtticAgent: IContentAtticAgent;
-  private ScUiMan: SitecoreUiManager;
-  private  RecipeBasics: RecipeBasics;
-   private ToastAgent: IToastAgent;
+  private ScUiMan: ScUiManager;
+  private ToastAgent: IToastAgent;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, scWinMan: IScWindowManager,
-    atticAgent: IContentAtticAgent, scUiMan: SitecoreUiManager, recipeBasics: RecipeBasics, toastAgent: IToastAgent
+    atticAgent: IContentAtticAgent, scUiMan: ScUiManager,  toastAgent: IToastAgent
   ) {
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
     this.ScWinMan = scWinMan;
     this.AtticAgent = atticAgent;
     this.ScUiMan = scUiMan;
-    this.RecipeBasics = recipeBasics;
     this.ToastAgent = toastAgent;
   }
 
   async AutoSaveSnapShot() {
     this.Logger.FuncStart(this.AutoSaveSnapShot.name);
 
-    let commandData: ICommandHndlrDataForContent = {
-      AtticAgent: this.AtticAgent,
-      TargetNickName: '',
-      TargetSnapShotId: null,
-      ContentMessageBroker: null,
-      TopLevelDoc: this.ScWinMan.TopLevelDoc(),
-      Logger: this.Logger,
-      RecipeBasics: this.RecipeBasics,
-      ToastAgent: this.ToastAgent,
-      ScUiMan: this.ScUiMan,
-      ScWinMan: this.ScWinMan,
-      TargetSnapShotFlavor: SnapShotFlavor.Autosave
-    }
+    let commandData: ICommandHndlrDataForContent = new CommandHndlrDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan);
+
+    commandData.TargetSnapShotFlavor= SnapShotFlavor.Autosave;
+
     let recipeSaveState: RecipeSaveState = new RecipeSaveState(commandData);
 
     await recipeSaveState.Execute();

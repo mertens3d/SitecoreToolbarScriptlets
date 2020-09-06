@@ -10,7 +10,7 @@ import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLog
 import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { IContentState } from "../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { IContentState } from "../../Shared/scripts/Interfaces/Data/IContentState";
 import { CommandManager } from "./Classes/AllCommands";
 import { PopConst } from "./Classes/PopConst";
 import { EventManager } from "./Managers/EventManager";
@@ -20,6 +20,7 @@ import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessage
 import { TabManager } from "./Managers/TabManager";
 import { FeedbackModuleMessages } from "./Managers/UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 import { UiManager } from "./Managers/UiManager/UiManager";
+import { SharedConst } from "../../Shared/scripts/SharedConst";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
@@ -64,7 +65,7 @@ class PopUpEntry {
 
     this.Logger.LogAsJsonPretty('enableLoggingSetting', enableLoggingSetting);
     this.Logger.MarkerC();
-    if (PopConst.Const.Debug.ForceLoggingEnabled || enableLoggingSetting.ValueAsBool()) {
+    if (SharedConst.Const.Debug.ForceLoggingEnabled|| enableLoggingSetting.ValueAsBool()) {
       var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.Logger);
       var nextLogId = RollingLogId.GetNextLogId();
 
