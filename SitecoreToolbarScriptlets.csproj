@@ -70,6 +70,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Helpers\IframeHelper.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\LoggableBase.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowManager.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowRecipePartials.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\ButtonVisibilityTests.ts" />
