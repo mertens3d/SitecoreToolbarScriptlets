@@ -36,7 +36,7 @@ export class AutoSnapShotAgent {
   async AutoSaveSnapShot() {
     this.Logger.FuncStart(this.AutoSaveSnapShot.name);
 
-    let commandData: ICommandHndlrDataForContent = new CommandHndlrDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan);
+    let commandData: ICommandHndlrDataForContent = new CommandHndlrDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent);
 
     commandData.TargetSnapShotFlavor= SnapShotFlavor.Autosave;
 

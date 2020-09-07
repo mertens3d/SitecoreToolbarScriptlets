@@ -14,7 +14,16 @@ export class StaticHelpers {
   }
 
   static SettingKeyAsString(settingKey: SettingKey) {
-    return 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
+
+    let toReturn : string = ''
+    try {
+      toReturn = 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
+
+    } catch (err) {
+      toReturn = err;
+    }
+
+    return toReturn;
   }
 
   static ScWindowTypeFriendly(windowType: ScWindowType) {

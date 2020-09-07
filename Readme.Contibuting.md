@@ -9,6 +9,14 @@
 /dist/HindSite - distributable files for extension installation
 
 
+
+## Debugging
+- you can use this on the console in the popup to debug the startup js for the popup
+```javascript
+location.reload(true)
+```
+
+
 ## How Logging Works
 Logging automatically happens and is written to a buffer
 - ___ switch
@@ -38,6 +46,9 @@ Logging automatically happens and is written to a buffer
 - **Recipes** - A sequence Async interactions with the Ui and/or the Browser
   - The only public method in recipes is exec().
   - There are no publix properties
+  - 
+- **Proxies (Proxy)**
+    - Act as an interface between the Sitecore Ui and code
 
 Effort should be given to using Interfaces on any data or classes that are passed between these types.
 

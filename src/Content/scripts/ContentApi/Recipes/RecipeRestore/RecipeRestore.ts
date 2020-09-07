@@ -9,7 +9,7 @@ import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/IComma
 import { ContentEditorAgent } from "../../../Agents/ContentEditorAgent/ContentEditorAgent";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ScWindowRecipePartials } from "../../../Managers/ScWindowManager/ScWindowRecipePartials";
-import { DesktopAgent } from "../../../Agents/DesktopAgent/DesktopAgent";
+import { DesktopProxy } from "../../../Proxies/Desktop/DesktopProxy/DesktopProxy";
 
 export class RecipeRestoreState extends LoggableBase implements ICommandRecipes {
 
@@ -18,12 +18,12 @@ export class RecipeRestoreState extends LoggableBase implements ICommandRecipes 
   private AtticAgent: IContentAtticAgent;
   private TopLevelDoc: IDataOneDoc;
   private ScWinRecipeParts: ScWindowRecipePartials;
-  private OneDesktopMan: DesktopAgent;
+  private OneDesktopMan: DesktopProxy;
   private OneCeAgent: ContentEditorAgent;
   private ToastAgent: IToastAgent;
     TargetSnapShotId: GuidData;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopAgent, toastAgent: IToastAgent, oneCEAgent: ContentEditorAgent, targetSnapShotId: GuidData) {
+  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, toastAgent: IToastAgent, oneCEAgent: ContentEditorAgent, targetSnapShotId: GuidData) {
     super(logger);
     this.ScUrlAgent = scUrlAgent;
     this.RecipeBasics = new RecipeBasics(this.Logger);

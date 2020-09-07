@@ -50,7 +50,7 @@ export class ContentConst {
   static Const: IContentConst = {
     MaxAutoToSaveCount: 10,
     DefaultMaxAutoSaveAgeDays: 7,
-    //MaxCacheAgeMs: 1000 * 60 * 10,
+    DefaultAutoRenameCeTabButton: false,
     Iterations: {
       MaxSetHrefEffort: 10,
       MaxIterationSwitchBoard: 20,

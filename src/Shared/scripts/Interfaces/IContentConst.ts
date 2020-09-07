@@ -3,6 +3,7 @@ import { IScVerSpec } from './IScVerSpec';
 export interface IContentConst {
   DefaultMaxAutoSaveAgeDays: number;
   MaxAutoToSaveCount: number;
+  DefaultAutoRenameCeTabButton: boolean;
 
   ElemId: {
     sc: {

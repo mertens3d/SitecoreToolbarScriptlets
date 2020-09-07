@@ -21,25 +21,29 @@ import { RecipeInitFromQueryStr } from '../../ContentApi/Recipes/RecipeInitFromQ
 import { LoggableBase } from '../LoggableBase';
 import { ScUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { ScWindowRecipePartials } from './ScWindowRecipePartials';
-import { DesktopAgent } from '../../Agents/DesktopAgent/DesktopAgent';
+import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
+import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 
 export class ScWindowManager extends LoggableBase implements IScWindowManager {
-  OneDesktopMan: DesktopAgent = null;
+  DesktopUiProxy: DesktopProxy = null;
   OneCEAgent: ContentEditorAgent = null;
   private MiscAgent: MiscAgent;
   private ToastAgent: IToastAgent;
   private ScUrlAgent: IScUrlAgent;
   private TopDoc: IDataOneDoc;
   private AtticAgent: IContentAtticAgent;
+  SettingsAgent: ISettingsAgent;
 
   constructor(logger: ILoggerAgent, scUiMan: ScUiManager, miscAgent: MiscAgent, toastAgent: IToastAgent, atticAgent: IContentAtticAgent,
-    scUrlAgent: IScUrlAgent) {
+    scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
     super(logger);
     this.Logger.InstantiateStart(ScWindowManager.name);
     this.MiscAgent = miscAgent;
     this.ToastAgent = toastAgent;
     this.AtticAgent = atticAgent;
     this.ScUrlAgent = scUrlAgent;
+    this.SettingsAgent = settingsAgent;
     this.Logger.InstantiateEnd(ScWindowManager.name);
   }
 
@@ -52,7 +56,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       this.Logger.FuncStart(this.GetCurrentStateByPageType.name, StaticHelpers.ScWindowTypeFriendly(scWindowType));
 
       if (scWindowType === ScWindowType.Desktop) {
-        await this.OneDesktopMan.GetStateDesktop()
+        this.DesktopUiProxy.GetStateDesktop()
           .then((result: IDataDesktopState) => resolve(result.ActiveCeState))
           .then(() => resolve())
           .catch((err) => reject(err));
@@ -88,20 +92,23 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
 
   async InitScWindowManager(): Promise<void> {
     this.Logger.FuncStart(this.InitScWindowManager.name);
+    //this.Logger.LogVal('auto rename', this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton).ValueAsBool());
 
     try {
       let currPageType = this.GetCurrentPageType();
 
       if (currPageType === ScWindowType.Desktop) {
-        this.OneDesktopMan = new DesktopAgent(this.Logger, this.MiscAgent, this.GetTopLevelDoc());
+        this.DesktopUiProxy = new DesktopProxy(this.Logger, this.MiscAgent, this.GetTopLevelDoc(), this.SettingsAgent);
       } else if (currPageType === ScWindowType.ContentEditor) {
-        this.OneCEAgent = new ContentEditorAgent(this.GetTopLevelDoc(), this.Logger);
+        this.OneCEAgent = new ContentEditorAgent(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent);
       }
 
       await this.InitFromQueryStr()
-        .catch((err) => { throw (err) });
+        .catch((err) => {
+          throw (this.InitScWindowManager.name + ' ' + err)
+        });
     } catch (err) {
-      throw (err);
+      throw (this.InitScWindowManager.name + ' ' + err);
     }
     this.Logger.FuncEnd(this.InitScWindowManager.name);
   }
@@ -122,7 +129,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     this.Logger.FuncStart(this.InitFromQueryStr.name);
 
     try {
-      let recipe = new RecipeInitFromQueryStr(this.Logger, this.GetScUrlAgent(), this.AtticAgent, this.GetTopLevelDoc(), this.MakeScWinRecipeParts(), this.OneDesktopMan, this.ToastAgent, this.OneCEAgent);
+      let recipe = new RecipeInitFromQueryStr(this.Logger, this.GetScUrlAgent(), this.AtticAgent, this.GetTopLevelDoc(), this.MakeScWinRecipeParts(), this.DesktopUiProxy, this.ToastAgent, this.OneCEAgent);
       await recipe.Execute();
 
       this.Logger.FuncEnd(this.InitFromQueryStr.name);
@@ -163,7 +170,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
   private async PopulateIfTopIsContentEditor(scWindowState: IDataOneWindowStorage): Promise<void> {
     try {
       if (this.GetCurrentPageType() === ScWindowType.ContentEditor) {
-        let ceAgent = new ContentEditorAgent(this.GetTopLevelDoc(), this.Logger);
+        let ceAgent = new ContentEditorAgent(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent);
 
         await ceAgent.GetTreeState()
           .then((state: IDataOneStorageOneTreeState) => {
@@ -182,7 +189,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       if (this.GetCurrentPageType() === ScWindowType.Desktop) {
         this.Logger.MarkerB();
 
-        await this.OneDesktopMan.GetStateDesktop()
+        this.DesktopUiProxy.GetStateDesktop()
           .then((states: IDataDesktopState) => {
             scWindowState.AllCEAr = states.HostedContentEditors;
           })

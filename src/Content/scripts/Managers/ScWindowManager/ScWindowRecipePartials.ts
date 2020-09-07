@@ -5,7 +5,7 @@ import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Dat
 import { ContentEditorAgent } from '../../Agents/ContentEditorAgent/ContentEditorAgent';
 import { LoggableBase } from '../LoggableBase';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { DesktopAgent } from '../../Agents/DesktopAgent/DesktopAgent';
+import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
 
 export class ScWindowRecipePartials extends LoggableBase {
   ToastAgent: IToastAgent;
@@ -16,13 +16,13 @@ export class ScWindowRecipePartials extends LoggableBase {
   }
 
 
-  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage, OneDesktopMan: DesktopAgent, OneCEAgent: ContentEditorAgent): Promise<void> {
+  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage, desktopProxy: DesktopProxy, OneCEAgent: ContentEditorAgent): Promise<void> {
         return new Promise(async (resolve, reject) => {
             this.Logger.FuncStart(this.RestoreStateToTargetDoc.name);
 
             if (dataToRestore) {
                 if (dataToRestore.WindowType == ScWindowType.Desktop) {
-                    await OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore)
+                    await desktopProxy.RestoreDesktopState(targetDoc, dataToRestore)
                       .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
                         .then(() => resolve())
                         .catch((err) => reject(err));

@@ -7,11 +7,13 @@ import { ILoggerAgent } from "./Agents/ILoggerAgent";
 import { IScWindowManager } from "./Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "./Agents/IToastAgent";
 import { IDataOneDoc } from "./Data/IDataOneDoc";
-import { DesktopAgent } from "../../../Content/scripts/Agents/DesktopAgent/DesktopAgent";
+import { DesktopProxy } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ContentEditorAgent } from "../../../Content/scripts/Agents/ContentEditorAgent/ContentEditorAgent";
+import { ISettingsAgent } from "./Agents/ISettingsAgent";
 
 export interface ICommandHndlrDataForContent {
-  DesktopMan: DesktopAgent;
+  SettingsAgent: ISettingsAgent;
+  DesktopMan: DesktopProxy;
   TargetCeAgent: ContentEditorAgent
   TargetDoc: IDataOneDoc;
   TargetSnapShotFlavor: SnapShotFlavor,

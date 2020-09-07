@@ -56,6 +56,10 @@
     <Content Include="ReadmeResoures\external-tools-hotkey.png" />
     <Content Include="ReadmeResoures\external-tools.png" />
     <Content Include="ReadmeResoures\file.png" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\ContentEditorTreeProxy.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DtStartBarProxy\DtStartBarProxy.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorContentTreeHolderProxy\ContentEditorContentTreeHolderProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeInitFromQueryStr\RecipeInitFromQueryStr.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentMessageBroker.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Agents\AutoSnapShotAgent\AutoSnapShotAgent.ts" />
@@ -335,8 +339,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IDataOneWindowStorage.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\EventManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Agents\DesktopAgent\DesktopAgent.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Drones\OneTreeDrone\OneTreeDrone.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DesktopProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\IterationDrone\IterationDrone.ts" />
     <TypeScriptCompile Include="src\Content\scripts\zContentEntryPoint.ts" />
     <None Include="Readme.md" />

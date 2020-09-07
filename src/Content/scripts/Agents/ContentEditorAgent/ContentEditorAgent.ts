@@ -1,45 +1,39 @@
-﻿import { IterationDrone } from '../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
-import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
+﻿import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IOneTreeDrone } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
+import { IContentEditorTreeProxy } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
+import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
 import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
-import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
-import { OneTreeDrone } from '../../Drones/OneTreeDrone/OneTreeDrone';
 import { LoggableBase } from '../../Managers/LoggableBase';
-
-export class NameContentTab {
-  let
-}
+import { ContentEditorTreeProxy } from "../../Proxies/ContentEditor/ContentEditorTreeProxy/ContentEditorTreeProxy";
 
 export class ContentEditorAgent extends LoggableBase {
-  private OneTreeDrone: IOneTreeDrone;
+  private AssociatedTree: IContentEditorTreeProxy;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedId: GuidData;
+  private SettingsAgent: ISettingsAgent;
 
-  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent) {
+  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
     super(logger);
 
-    this.Logger.FuncStart(this.constructor.name);
+    this.Logger.InstantiateStart(ContentEditorAgent.name);
 
+    this.SettingsAgent = settingsAgent;
     this.Logger.IsNotNullOrUndefinedBool("associatedDoc", associatedDoc);
 
     this.AssociatedDoc = associatedDoc;
     this.AssociatedId = Guid.NewRandomGuid();
-    this.OneTreeDrone = new OneTreeDrone(this.Logger, this.AssociatedDoc);
+    this.AssociatedTree = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent);
 
-    this.Logger.FuncEnd(this.constructor.name);
+    this.Logger.InstantiateEnd(ContentEditorAgent.name);
   }
 
-  private __activateNode(hotTreeNode: HTMLElement): void {
-    this.Logger.FuncStart(this.__activateNode.name);
-
-    this.Logger.Log('clicking it');
-    hotTreeNode.click();
-
-    this.Logger.FuncEnd(this.__activateNode.name);
+  AddListenerToActiveNodeChange(callback: Function) {
+    if (this.AssociatedTree) {
+      this.AssociatedTree.AddListenerToMutationEvent(callback);
+    }
   }
 
   async RestoreDataToOneIframeWorker(oneTreeState: IDataOneStorageOneTreeState): Promise<void> {
@@ -59,94 +53,6 @@ export class ContentEditorAgent extends LoggableBase {
     });
   }
 
-  private __expandNode(foundOnPage: HTMLElement): void {
-    this.Logger.FuncStart(this.__expandNode.name);
-    var currentSrc = foundOnPage.getAttribute('src');
-    this.Logger.Log('currentSrc' + currentSrc);
-    if (currentSrc.indexOf(ContentConst.Const.Names.TreeMenuExpandedPng) < 0) {
-      this.Logger.Log('clicking it');
-      foundOnPage.click();
-    } else {
-      this.Logger.Log('Already expanded');
-    }
-    this.Logger.FuncEnd(this.__expandNode.name);
-  }
-
-  private __collapseNode(element: HTMLElement): void {
-    var currentSrc = element.getAttribute('src');
-    this.Logger.Log('currentSrc' + currentSrc);
-    if (currentSrc.indexOf(ContentConst.Const.Names.TreeMenuExpandedPng) > -1) {
-      this.Logger.Log('clicking it');
-      element.click();
-    }
-  }
-
-  private __collapseRootNode(targetCEDoc: IDataOneDoc) {
-    var rootElem: HTMLElement = targetCEDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
-    if (rootElem) {
-      this.__collapseNode(rootElem);
-    } else {
-      this.Logger.ErrorAndThrow(this.__collapseRootNode.name, 'Root glyph not found ' + ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
-    }
-  }
-
-  async WaitForAndRestoreOneNode(nextNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
-    this.Logger.FuncStart(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId));
-
-    var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(nextNode.NodeId);
-
-    this.Logger.Log('looking for: ' + treeGlyphTargetId + ' ' + nextNode.NodeFriendly + ' in ' + Guid.AsShort(dataOneDocTarget.DocId));
-    this.Logger.Log('document not null ' + (dataOneDocTarget.ContentDoc != null));
-
-    var iterHelper = new IterationDrone(this.Logger, this.WaitForAndRestoreOneNode.name);
-
-    var foundOnPageTreeGlyph: HTMLElement = null;
-
-    while (!foundOnPageTreeGlyph && iterHelper.DecrementAndKeepGoing()) {
-      this.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + nextNode.NodeFriendly + ' in *' + Guid.AsShort(dataOneDocTarget.DocId) + '*');
-
-      foundOnPageTreeGlyph = dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
-
-      if (foundOnPageTreeGlyph) {
-        this.Logger.Log('Found it');
-        if (nextNode.IsExpanded) {
-          this.__expandNode(foundOnPageTreeGlyph);
-        }
-
-        this.Logger.LogVal('IsActive', nextNode.IsActive.toString());
-
-        if (nextNode.IsActive) {
-          var hotTreeNodeId = ContentConst.Const.Names.SC.TreeNodePrefix + Guid.WithoutDashes(nextNode.NodeId);
-          var hotTreeNode = dataOneDocTarget.ContentDoc.getElementById(hotTreeNodeId);
-          if (hotTreeNode) {
-            this.__activateNode(hotTreeNode);
-          } else {
-            this.Logger.ErrorAndContinue(this.WaitForAndRestoreOneNode.name, 'hot tree node not found')
-          }
-        }
-      } else {
-        this.Logger.Log('not Found...waiting: ');
-        await iterHelper.Wait();
-      }
-    }
-
-    this.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId));
-  }
-
-  async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageOneTreeState, targetDoc: IDataOneDoc) {
-    this.Logger.FuncStart(this.WaitForAndRestoreManyAllNodes.name, Guid.AsShort(targetDoc.DocId));
-
-    let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.WaitForAndRestoreManyAllNodes.name);
-
-    while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
-      var nextNode: IDataOneTreeNode = storageData.AllTreeNodeAr.shift();
-
-      await this.WaitForAndRestoreOneNode(nextNode, targetDoc);
-    }
-
-    this.Logger.FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
-  }
-
   SetCompactCss() {
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.AssociatedDoc.DocId));
 
@@ -163,7 +69,7 @@ export class ContentEditorAgent extends LoggableBase {
 
       this.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
 
-      await this.WaitForAndRestoreManyAllNodes(dataToRestore, this.AssociatedDoc)
+      await this.AssociatedTree.WaitForAndRestoreManyAllNodes(dataToRestore, this.AssociatedDoc)
         .then(() => resolve(true))
         .catch((err) => reject(this.RestoreCEStateAsync.name + " " + err));
 
@@ -194,7 +100,7 @@ export class ContentEditorAgent extends LoggableBase {
 
       var toReturnOneTreeState: IDataOneStorageOneTreeState = {
         Id: this.AssociatedId,
-        AllTreeNodeAr: this.OneTreeDrone.GetOneLiveTreeData(),
+        AllTreeNodeAr: this.AssociatedTree.GetOneLiveTreeData(),
         ActiveNode: null
       }
 

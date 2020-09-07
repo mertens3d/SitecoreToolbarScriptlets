@@ -14,6 +14,9 @@
       Default: number,
     },
   },
+  ObjDiscriminator: {
+    DataOneTreeNode: string,
+  },
   Settings: {
     Defaults: {
       EnableLogging: boolean,

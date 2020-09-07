@@ -1,5 +1,9 @@
 ﻿import { IDataOneTreeNode } from "../Data/IDataOneTreeNode";
+import { IDataOneStorageOneTreeState } from "../Data/IDataOneStorageOneTreeState";
+import { IDataOneDoc } from "../Data/IDataOneDoc";
 
-export interface IOneTreeDrone {
+export interface IContentEditorTreeProxy {
+    WaitForAndRestoreManyAllNodes(dataToRestore: IDataOneStorageOneTreeState, AssociatedDoc: IDataOneDoc);
+    AddListenerToMutationEvent(bar: any);
     GetOneLiveTreeData(): IDataOneTreeNode[];
 }

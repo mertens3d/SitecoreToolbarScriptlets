@@ -17,6 +17,9 @@ export class SharedConst {
         Default: 100,
       },
     },
+    ObjDiscriminator: {
+      DataOneTreeNode: 'IDataOneTreeNode',
+    },
     Settings: {
       Defaults: {
         EnableLogging: false,
@@ -24,6 +27,7 @@ export class SharedConst {
         UseCompactCss: false,
       }
     },
+
     Regex: {
       ContentEditor: /Content.*?Editor/ig,
       CleanGuid: /{|-|}/ig,

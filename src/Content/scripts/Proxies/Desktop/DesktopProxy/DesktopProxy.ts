@@ -1,89 +1,37 @@
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataDesktopState } from "../../../../Shared/scripts/Interfaces/Data/IDataDesktopState";
-import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IDataOneStorageOneTreeState } from "../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
-import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
-import { MiscAgent } from "../../Agents/MiscAgent/MiscAgent";
-import { RecipeRestoreDesktop } from "../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
-import { IframeHelper } from "../../Helpers/IframeHelper";
-import { LoggableBase } from "../../Managers/LoggableBase";
-import { ContentEditorAgent } from "../ContentEditorAgent/ContentEditorAgent";
-import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { IDataOneIframe } from "../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
+import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IDataDesktopState } from "../../../../../Shared/scripts/Interfaces/Data/IDataDesktopState";
+import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { IDataOneStorageOneTreeState } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
+import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
+import { RecipeRestoreDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
+import { IframeHelper } from "../../../Helpers/IframeHelper";
+import { LoggableBase } from "../../../Managers/LoggableBase";
+import { ContentEditorAgent } from "../../../Agents/ContentEditorAgent/ContentEditorAgent";
+import { IDataOneIframe } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
+import { DtStartBarProxy } from "../DtStartBarProxy/DtStartBarProxy";
+import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { SettingKey } from "../../../../../Shared/scripts/Enums/3xxx-SettingKey";
 
-export class ContentEditorContentTreeHolderAgent extends LoggableBase {
-  private SelfDoc: IDataOneDoc;
-  private SelfElem: HTMLElement;
-
-  constructor(logger: ILoggerAgent, selfDoc: IDataOneDoc) {
-    super(logger);
-    this.SelfDoc = selfDoc;
-    this.SelfElem = this.SelfDoc.ContentDoc.querySelector('[id=ContentTreeHolder]');
-
-    this.AttachClickListener();
-
-  }
-
-  AttachClickListener() {
-    if (this.SelfElem) {
-
-      let observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-
-          console.log((<HTMLElement>mutation.target).innerText);
-
-        });
-
-
-      });
-      observer.observe(this.SelfElem, { attributes: true, subtree: true, childList: true });
-
-      //this.SelfElem.addEventListener('click', (evt) => { alert((<HTMLElement>evt.target).innerText) });
-
-      //use MutationObserver
-    }
-  }
-
-}
-
-export class DtStartBarAgent extends LoggableBase {
-  HostDoc: IDataOneDoc;
-  private __statBarElem: HTMLElement;
-
-  constructor(logger: ILoggerAgent, hostDoc: IDataOneDoc) {
-    super(logger);
-
-    this.HostDoc = hostDoc;
-  }
-
-  GetStartBarButtonById(targetId: string) {
-    return this.HostDoc.ContentDoc.querySelector('[id=' + targetId + ']');
-  }
-
-  GetStartBarElement(): HTMLElement {
-    if (!this.__statBarElem) {
-      this.__statBarElem = this.HostDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar)
-    }
-
-    return this.__statBarElem
-  }
-}
-
-export class DesktopAgent extends LoggableBase {
+export class DesktopProxy extends LoggableBase {
   private MiscAgent: MiscAgent;
   private AssociatedDoc: IDataOneDoc;
-  private _dtStartBarAgent: DtStartBarAgent;
+  private _dtStartBarAgent: DtStartBarProxy;
   private __iframeHelper: IframeHelper;
+  private SettingsAgent: ISettingsAgent;
+  private HostedContentEditors: ContentEditorAgent[] = [];
 
-  constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc) {
+  constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
 
-    this.Logger.InstantiateStart(DesktopAgent.name);
+    this.Logger.InstantiateStart(DesktopProxy.name);
     this.MiscAgent = miscAgent;
+    this.SettingsAgent = settingsAgent;
     this.AssociatedDoc = associatedDoc;
 
-    this.NameDesktopButtons();
-    this.Logger.InstantiateEnd(DesktopAgent.name);
+    this.EnrollListenerForActiveNodeChange();
+    this.EnrollListenerForActiveNodeChange();
+    this.Logger.InstantiateEnd(DesktopProxy.name);
   }
 
   private GetIframeHelper(): IframeHelper {
@@ -92,15 +40,27 @@ export class DesktopAgent extends LoggableBase {
     }
     return this.__iframeHelper;
   }
-  GetDtStartBarAgent(): DtStartBarAgent {
+  GetDtStartBarAgent(): DtStartBarProxy {
     if (!this._dtStartBarAgent) {
-      this._dtStartBarAgent = new DtStartBarAgent(this.Logger, this.AssociatedDoc);
+      this._dtStartBarAgent = new DtStartBarProxy(this.Logger, this.AssociatedDoc);
     }
 
     return this._dtStartBarAgent;
   }
 
-  async NameDesktopButtons(): Promise<void> {
+  async InitHostedContentEditors() {
+    await this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc)
+      .then((foundIframes: IDataOneIframe[]) => {
+        foundIframes.forEach((oneIframe) => {
+          var newCeAgent = new ContentEditorAgent(oneIframe.ContentDoc, this.Logger, this.SettingsAgent);
+          newCeAgent.AddListenerToActiveNodeChange(this.GetDtStartBarAgent().CallBackActiveElementChanged);
+          this.HostedContentEditors.push(newCeAgent);
+        })
+      })
+      .catch((err) => { throw (err) })
+  }
+
+  async EnrollListenerForActiveNodeChange(): Promise<void> {
     try {
       await this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc)
         .then((foundIframes: IDataOneIframe[]) => {
@@ -108,7 +68,7 @@ export class DesktopAgent extends LoggableBase {
             let iframe = foundIframes[idx];
             let iframeElemId = iframe.IframeElem.id;
 
-            let tree = new ContentEditorContentTreeHolderAgent(this.Logger, iframe.ContentDoc);
+            //let tree = new ContentEditorContentTreeHolderProxy(this.Logger, iframe.ContentDoc);
 
             //start bar button is same with prefix added
             let startBarButtonElemId = 'startbar_application_' + iframeElemId;
@@ -134,6 +94,7 @@ export class DesktopAgent extends LoggableBase {
   async GetStateDesktop(): Promise<IDataDesktopState> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetStateDesktop.name);
+
       this.Logger.LogAsJsonPretty(this.GetStateDesktop.name, this.AssociatedDoc);
 
       var toReturnDesktopState: IDataDesktopState = this.CreateNewDtDataShell();
@@ -147,7 +108,7 @@ export class DesktopAgent extends LoggableBase {
 
               var targetIframeObj = toReturnDesktopState.HostedIframes[iframeIdx];
 
-              var ceAgent = new ContentEditorAgent(targetIframeObj.ContentDoc, this.Logger);
+              var ceAgent = new ContentEditorAgent(targetIframeObj.ContentDoc, this.Logger, this.SettingsAgent);
 
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
@@ -177,10 +138,10 @@ export class DesktopAgent extends LoggableBase {
 
       if (this.MiscAgent.NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.RestoreDesktopState.name)) {
         for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
-          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, dataToRestore.AllCEAr[idx]);
+          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, dataToRestore.AllCEAr[idx], this.SettingsAgent);
 
           await recipe.Execute()
-            .then(() => this.NameDesktopButtons())
+            .then(() => this.EnrollListenerForActiveNodeChange())
             .catch((err) => reject(err));
         }
 

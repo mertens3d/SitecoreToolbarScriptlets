@@ -78,6 +78,7 @@
       SettingAutoSaveMaxCount: string,
       SettingDebugKeepDialogOpen: string,
       SettingAutoSaveSnapshotRetainDays: string,
+      SettingAutoRenameCeTabButton: string,
       SettingNotUsed: string,
       SettingUseCompactCss: string,
       TakeSnapshot: string,

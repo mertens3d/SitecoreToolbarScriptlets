@@ -18,6 +18,7 @@ import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager"
 import { CommandHndlrDataForContent } from "../../../../Shared/scripts/Classes/CommandHndlrDataForContent/CommandHndlrDataForContent";
 import { ICommandRecipes } from "../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { RecipeChangeNickName } from "../../ContentApi/Recipes/RecipeChangeNickName/RecipeChangeNickName";
+import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
 
 export class ContentMessageBroker extends LoggableBase implements IContentMessageBroker {
   private SettingsAgent: ISettingsAgent;
@@ -87,12 +88,17 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       this.Logger.Log('');
       this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
-      this.SettingsAgent.SetContentSettings(reqMsgFromPopup.CurrentContentPrefs);
+
+      
+
+
+          this.Logger.LogVal('ce butt', this.SettingsAgent.GetByKey(SettingKey.AutoLogin).ValueAsBool());
 
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
-          this.SettingsAgent.UpdateSettings(reqMsgFromPopup.CurrentContentPrefs)
+          this.SettingsAgent.UpdateSettingsFromPopUpMsg(reqMsgFromPopup.CurrentContentPrefs)
+
 
             await this.ReqMsgRouter(reqMsgFromPopup)
             .then((contentResponse: MsgFromContent) => {
@@ -235,7 +241,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteCommand.name);
       if (commandToExecute) {
-        let commandData: ICommandHndlrDataForContent = new CommandHndlrDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan)
+        let commandData: ICommandHndlrDataForContent = new CommandHndlrDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent)
 
         commandData.TargetSnapShotId = payload.Data.IdOfSelect;
         commandData.ContentMessageBroker = this;

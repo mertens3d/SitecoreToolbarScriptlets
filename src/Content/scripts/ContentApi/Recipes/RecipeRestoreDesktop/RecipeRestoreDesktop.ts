@@ -1,25 +1,25 @@
-﻿import { IDataBucketRestoreDesktop } from '../../../../../Shared/scripts/Interfaces/Data/IDataBucketRestoreDesktop';
+﻿import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { IDataBucketRestoreDesktop } from '../../../../../Shared/scripts/Interfaces/Data/IDataBucketRestoreDesktop';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataOneIframe } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
 import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
-import { ICommandHndlrDataForContent } from '../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent';
-import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
-import { ContentEditorAgent } from '../../../Agents/ContentEditorAgent/ContentEditorAgent';
-import { IframeHelper } from '../../../Helpers/IframeHelper';
-import { __RecipeBase } from '../__RecipeBase/__RecipeBase';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
+import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
+import { ContentEditorAgent } from '../../../Agents/ContentEditorAgent/ContentEditorAgent';
+import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
+import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
-import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 
 export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
   private TargetDoc: IDataOneDoc;
   private DataToRestore: IDataOneStorageOneTreeState;
   private  RecipeBasics: RecipeBasics;
+  private  SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, settingsAgent: ISettingsAgent) {
     super(logger);
     this.Logger.FuncStart(RecipeRestoreDesktop.name);
 
@@ -28,6 +28,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     this.TargetDoc = targetDoc;
     this.DataToRestore = dataToRestore;
     this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.SettingsAgent = settingsAgent;
 
     this.Logger.FuncEnd(RecipeRestoreDesktop.name);
   }
@@ -117,13 +118,13 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
           .then(() => this.RecipeBasics.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
 
           .then((result) => {
-            targetCeAgent = new ContentEditorAgent(result.ContentDoc, this.Logger);
+            targetCeAgent = new ContentEditorAgent(result.ContentDoc, this.Logger,this.SettingsAgent);
             this.__waitForIframeReady(result);
           })
           .then(() => this.__restoreDataToOneIframe(this.DataToRestore, targetCeAgent))
           .then(() => resolve())
           .catch(ex => {
-            this.Logger.ErrorAndThrow(this.RunOneChain.name, ex);
+            reject(this.RunOneChain.name + ' ' + ex);
           });
       }
       else {

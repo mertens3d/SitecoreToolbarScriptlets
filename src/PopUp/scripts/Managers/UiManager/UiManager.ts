@@ -134,7 +134,7 @@ export class UiManager {
         this.FeedbackModuleMessages.UpdateMsgStatusStack('Command Completed Successfully');
 
         let setting: IGenericSetting = this.SettingsAgent.GetByKey(SettingKey.DebugKeepDialogOpen);
-        if (!setting.ValueAsBool) {
+        if (!setting.ValueAsBool()) {
           window.close();
         } else {
           this.Logger.Log('Window not closed because of setting: ' + setting.Friendly)
