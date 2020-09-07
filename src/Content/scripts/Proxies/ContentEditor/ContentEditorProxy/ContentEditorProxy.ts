@@ -10,14 +10,16 @@ import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorTreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
 import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
+import { CeTabButtonAgent } from '../../../Agents/CeTabButtonAgent/CeTabButtonAgent';
 
 export class ContentEditorProxy extends LoggableBase {
   private AssociatedTreeProxy: IContentEditorTreeProxy;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedId: GuidData;
   private SettingsAgent: ISettingsAgent;
+  private CeTabButtonAgent: CeTabButtonAgent;
 
-  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
+  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent, ceTabButtonAgent: CeTabButtonAgent) {
     super(logger);
 
     this.Logger.InstantiateStart(ContentEditorProxy.name);
@@ -27,6 +29,8 @@ export class ContentEditorProxy extends LoggableBase {
     this.AssociatedDoc = associatedDoc;
 
     this.ValidateDoc();
+
+    this.CeTabButtonAgent = ceTabButtonAgent;
 
     this.Logger.InstantiateEnd(ContentEditorProxy.name);
   }
@@ -47,11 +51,16 @@ export class ContentEditorProxy extends LoggableBase {
     else if (this.AssociatedDoc.ContentDoc.URL === SharedConst.Const.UrlSuffix.AboutBlank) {
       this.Logger.ErrorAndThrow(this.ValidateDoc.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
     }
+
+    if (this.CeTabButtonAgent) {
+      this.CeTabButtonAgent.NotifyNewCeProxy(this);
+    }
+
     this.Logger.LogVal('URL', this.AssociatedDoc.ContentDoc.URL);
     this.Logger.FuncEnd(this.ValidateDoc.name);
   }
 
-  async WaitForReadyAssociatedDocandInit():Promise<void>{
+  async WaitForReadyAssociatedDocandInit(): Promise<void> {
     this.Logger.FuncStart(this.WaitForReadyAssociatedDocandInit.name);
     try {
       let recipeBasics = new RecipeBasics(this.Logger);

@@ -100,7 +100,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       if (currPageType === ScWindowType.Desktop) {
         this.DesktopUiProxy = new DesktopProxy(this.Logger, this.MiscAgent, this.GetTopLevelDoc(), this.SettingsAgent);
       } else if (currPageType === ScWindowType.ContentEditor) {
-        this.CeProxy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent);
+        this.CeProxy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
         await this.CeProxy.WaitForReadyAssociatedDocandInit();
       }
 
@@ -171,7 +171,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
   private async PopulateIfTopIsContentEditor(scWindowState: IDataOneWindowStorage): Promise<void> {
     try {
       if (this.GetCurrentPageType() === ScWindowType.ContentEditor) {
-        let ceAgent = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent);
+        let ceAgent = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
 
         await ceAgent.WaitForReadyAssociatedDocandInit()
           .then(() => ceAgent.GetTreeState())

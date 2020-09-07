@@ -13,7 +13,7 @@ import { ISettingsAgent } from "./Agents/ISettingsAgent";
 
 export interface ICommandHndlrDataForContent {
   SettingsAgent: ISettingsAgent;
-  DesktopMan: DesktopProxy;
+  DesktopProxy: DesktopProxy;
   TargetCeProxy: ContentEditorProxy
   TargetDoc: IDataOneDoc;
   TargetSnapShotFlavor: SnapShotFlavor,

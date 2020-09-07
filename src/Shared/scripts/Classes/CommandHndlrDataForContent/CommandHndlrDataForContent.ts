@@ -15,7 +15,7 @@ import { ICommandHndlrDataForContent } from "../../Interfaces/ICommandHndlrDataF
 export class CommandHndlrDataForContent implements ICommandHndlrDataForContent {
   AtticAgent: IContentAtticAgent = null;
   ContentMessageBroker: ContentMessageBroker = null;
-  DesktopMan: DesktopProxy = null;
+  DesktopProxy: DesktopProxy = null;
   Logger: ILoggerAgent = null;
   ScUiMan: ScUiManager = null;
   ScWinMan: IScWindowManager = null;

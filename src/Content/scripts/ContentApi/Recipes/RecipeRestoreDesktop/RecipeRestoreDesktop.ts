@@ -12,6 +12,7 @@ import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
 import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
+import { CeTabButtonAgent } from '../../../Agents/CeTabButtonAgent/CeTabButtonAgent';
 
 export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
@@ -19,8 +20,9 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
   private DataToRestore: IDataOneStorageOneTreeState;
   private  RecipeBasics: RecipeBasics;
   private  SettingsAgent: ISettingsAgent;
+    CeButtonTabAgent: CeTabButtonAgent;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, settingsAgent: ISettingsAgent, ceButtonTabAgent: CeTabButtonAgent) {
     super(logger);
     this.Logger.InstantiateStart(RecipeRestoreDesktop.name);
 
@@ -30,6 +32,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     this.DataToRestore = dataToRestore;
     this.RecipeBasics = new RecipeBasics(this.Logger);
     this.SettingsAgent = settingsAgent;
+    this.CeButtonTabAgent = ceButtonTabAgent;
 
     this.Logger.InstantiateEnd(RecipeRestoreDesktop.name);
   }
@@ -109,7 +112,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
         var allIframeDataAtBeginning: IframeProxy[];
         var ceProxy: ContentEditorProxy;
         let iframeHelper = new IframeHelper(this.Logger);
-        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent);
+        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent, this.CeButtonTabAgent);
 
         await recipeAddCe.Execute()
 

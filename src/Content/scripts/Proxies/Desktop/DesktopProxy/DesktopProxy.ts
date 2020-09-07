@@ -12,6 +12,7 @@ import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IData
 import { DtStartBarProxy } from "../DtStartBarProxy/DtStartBarProxy";
 import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { SettingKey } from "../../../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { CeTabButtonAgent } from "../../../Agents/CeTabButtonAgent/CeTabButtonAgent";
 
 export class DesktopProxy extends LoggableBase {
   private MiscAgent: MiscAgent;
@@ -20,6 +21,7 @@ export class DesktopProxy extends LoggableBase {
   private __iframeHelper: IframeHelper;
   private SettingsAgent: ISettingsAgent;
   private HostedContentEditors: ContentEditorProxy[] = [];
+ CeTabButtonAgent: CeTabButtonAgent;
 
   constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
@@ -29,7 +31,7 @@ export class DesktopProxy extends LoggableBase {
     this.SettingsAgent = settingsAgent;
     this.AssociatedDoc = associatedDoc;
 
-    this.EnrollListenerForActiveNodeChange();
+    this.CeTabButtonAgent = new CeTabButtonAgent(this.Logger);
     this.EnrollListenerForActiveNodeChange();
     this.Logger.InstantiateEnd(DesktopProxy.name);
   }
@@ -50,7 +52,7 @@ export class DesktopProxy extends LoggableBase {
 
   async CreateAndInitCe(oneIframe: IframeProxy): Promise<ContentEditorProxy> {
     return new Promise(async (resolve, reject) => {
-      var newCeAgent = new ContentEditorProxy(oneIframe.GetContentDoc(), this.Logger, this.SettingsAgent);
+      var newCeAgent = new ContentEditorProxy(oneIframe.GetContentDoc(), this.Logger, this.SettingsAgent, this.CeTabButtonAgent);
       await newCeAgent.WaitForReadyAssociatedDocandInit()
         .then(() => newCeAgent.AddListenerToActiveNodeChange(this.GetDtStartBarAgent().CallBackActiveElementChanged))
         .then(() => resolve(newCeAgent))
@@ -121,7 +123,7 @@ export class DesktopProxy extends LoggableBase {
 
               var iframeProxy: IframeProxy = toReturnDesktopState.HostedIframes[iframeIdx];
 
-              var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent);
+              var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent, this.CeTabButtonAgent);
 
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
@@ -153,7 +155,7 @@ export class DesktopProxy extends LoggableBase {
         for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
           let targetData: IDataOneStorageOneTreeState = dataToRestore.AllCEAr[idx];
           this.Logger.Log('Restoring ' + (idx + 1) + ":" + dataToRestore.AllCEAr.length + ' active node: ' + targetData.ActiveNode.NodeFriendly);
-          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, targetData, this.SettingsAgent);
+          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, targetData, this.SettingsAgent, this.CeTabButtonAgent);
 
           await recipe.Execute()
             .then(() => this.EnrollListenerForActiveNodeChange())

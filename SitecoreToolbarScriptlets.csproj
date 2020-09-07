@@ -56,6 +56,7 @@
     <Content Include="ReadmeResoures\external-tools-hotkey.png" />
     <Content Include="ReadmeResoures\external-tools.png" />
     <Content Include="ReadmeResoures\file.png" />
+    <TypeScriptCompile Include="src\Content\scripts\Agents\CeTabButtonAgent\CeTabButtonAgent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\ContentEditorTreeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DtStartBarProxy\DtStartBarProxy.ts" />
@@ -475,7 +476,7 @@
     <Folder Include="src\Shared\scripts\Agents\Agents\RestoreAgent\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\Content\scripts\Agents\ContentEditorAgent\ContentEditorAgent.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentEditorProxy.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="gulp.support\OneInjectable.js" />

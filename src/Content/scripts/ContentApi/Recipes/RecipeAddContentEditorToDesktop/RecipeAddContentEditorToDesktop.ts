@@ -8,15 +8,18 @@ import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorProxy } from '../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { CeTabButtonAgent } from '../../../Agents/CeTabButtonAgent/CeTabButtonAgent';
 
 export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements ICommandRecipes {
   private TargetDoc: IDataOneDoc;
   private SettingsAgent: ISettingsAgent;
+    CeTabButtonAgent: CeTabButtonAgent;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, settingsAgent: ISettingsAgent, ceButtonTabAgent: CeTabButtonAgent) {
     super(logger);
     this.TargetDoc = targetDoc;
     this.SettingsAgent = settingsAgent;
+    this.CeTabButtonAgent = ceButtonTabAgent;
   }
 
   Execute(): Promise<ContentEditorProxy> {
@@ -36,7 +39,7 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
         //.then(() => this.TargetCeAgent = new ContentEditorProxy(newIframe.ContentDoc, this.Logger, this.SettingsAgent)) //todo - I don't think this is needed. Although we probably should trigger a rebuild of the ScWinMan/DesktopProxy...or notify it...or ask it to create it to begin with.
         //.then(() => this.TargetCeAgent.WaitForReadyAssociatedDocandInit())
         .then((result) => {
-          let toReturn = new ContentEditorProxy(result.GetContentDoc(), this.Logger, this.SettingsAgent)
+          let toReturn = new ContentEditorProxy(result.GetContentDoc(), this.Logger, this.SettingsAgent, this.CeTabButtonAgent)
           resolve(toReturn);
         })
         .catch((err) => reject(this.Execute.name + ' ' + err));
