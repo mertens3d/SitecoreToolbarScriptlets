@@ -1,17 +1,17 @@
 ﻿import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { LoggableBase } from "../Managers/LoggableBase";
-import { IDataOneIframe } from "../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
+import { IframeProxy } from "../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 
 export class IframeHelper extends LoggableBase {
-  GetHostedIframes(targetDoc: IDataOneDoc): Promise<IDataOneIframe[]> {
+  GetHostedIframes(targetDoc: IDataOneDoc): Promise<IframeProxy[]> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.GetHostedIframes.name);
       let successful: boolean = true;
       let rejectReason: string = '';
 
-      var toReturn: IDataOneIframe[] = [];
+      var toReturn: IframeProxy[] = [];
 
       var iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
@@ -26,7 +26,7 @@ export class IframeHelper extends LoggableBase {
 
           var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
           let factoryHelper = new FactoryHelper(this.Logger);
-          var dataOneIframe: IDataOneIframe = factoryHelper.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
+          var dataOneIframe: IframeProxy = factoryHelper.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
           toReturn.push(dataOneIframe);
         }
         //this.Logger.LogAsJsonPretty('toReturn', toReturn);

@@ -3,7 +3,7 @@ import { IDataOneDoc } from "../../Data/IDataOneDoc";
 import { IScUrlAgent } from "../IScUrlAgent/IScUrlAgent";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { ScWindowRecipePartials } from "../../../../../Content/scripts/Managers/ScWindowManager/ScWindowRecipePartials";
-import { ContentEditorAgent } from "../../../../../Content/scripts/Agents/ContentEditorAgent/ContentEditorAgent";
+import { ContentEditorProxy } from "../../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DesktopProxy } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 
 export interface IScWindowManager {
@@ -14,7 +14,7 @@ export interface IScWindowManager {
   GetCurrentPageType(): ScWindowType;
   InitScWindowManager(): Promise<void>;
   SetCompactCss(targetDoc: IDataOneDoc);
-  OneCEAgent: ContentEditorAgent
+  CeProxy: ContentEditorProxy
   DesktopUiProxy: DesktopProxy;
   GetTopLevelDoc(): IDataOneDoc;
 }

@@ -7,7 +7,7 @@ import { IScWindowManager } from "../../../../../Shared/scripts/Interfaces/Agent
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { IRecipeBasics } from "../../../../../Shared/scripts/Interfaces/IPromiseHelper";
-import { ContentEditorAgent } from "../../../Agents/ContentEditorAgent/ContentEditorAgent";
+import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 
 export class __RecipeBase {
   protected AtticAgent: IContentAtticAgent;
@@ -17,7 +17,7 @@ export class __RecipeBase {
   protected TargetSnapShotId: GuidData;
   protected TargetSnapShotFlavor: SnapShotFlavor;
   protected TargetDoc: IDataOneDoc;
-  protected TargetCeAgent: ContentEditorAgent;
+  protected TargetCeProxy: ContentEditorProxy;
 
   constructor(commandData: ICommandHndlrDataForContent) {
     this.Logger = commandData.Logger;
@@ -27,6 +27,6 @@ export class __RecipeBase {
     this.TargetSnapShotId = commandData.TargetSnapShotId;
     this.TargetSnapShotFlavor = commandData.TargetSnapShotFlavor
     this.TargetDoc = commandData.TargetDoc;
-    this.TargetCeAgent = commandData.TargetCeAgent;
+    this.TargetCeProxy = commandData.TargetCeProxy;
   }
 }

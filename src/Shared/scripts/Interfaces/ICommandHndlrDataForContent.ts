@@ -8,13 +8,13 @@ import { IScWindowManager } from "./Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "./Agents/IToastAgent";
 import { IDataOneDoc } from "./Data/IDataOneDoc";
 import { DesktopProxy } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
-import { ContentEditorAgent } from "../../../Content/scripts/Agents/ContentEditorAgent/ContentEditorAgent";
+import { ContentEditorProxy } from "../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ISettingsAgent } from "./Agents/ISettingsAgent";
 
 export interface ICommandHndlrDataForContent {
   SettingsAgent: ISettingsAgent;
   DesktopMan: DesktopProxy;
-  TargetCeAgent: ContentEditorAgent
+  TargetCeProxy: ContentEditorProxy
   TargetDoc: IDataOneDoc;
   TargetSnapShotFlavor: SnapShotFlavor,
   TargetSnapShotId: GuidData;

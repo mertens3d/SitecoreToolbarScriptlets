@@ -1,16 +1,18 @@
-﻿import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
-import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IContentEditorTreeProxy } from '../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
-import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
-import { IDataOneTreeNode } from '../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
-import { LoggableBase } from '../../Managers/LoggableBase';
-import { ContentEditorTreeProxy } from "../../Proxies/ContentEditor/ContentEditorTreeProxy/ContentEditorTreeProxy";
+﻿import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
+import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
+import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
+import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
+import { IDataOneTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
+import { LoggableBase } from '../../../Managers/LoggableBase';
+import { ContentEditorTreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
+import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
 
-export class ContentEditorAgent extends LoggableBase {
-  private AssociatedTree: IContentEditorTreeProxy;
+export class ContentEditorProxy extends LoggableBase {
+  private AssociatedTreeProxy: IContentEditorTreeProxy;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedId: GuidData;
   private SettingsAgent: ISettingsAgent;
@@ -18,21 +20,54 @@ export class ContentEditorAgent extends LoggableBase {
   constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
     super(logger);
 
-    this.Logger.InstantiateStart(ContentEditorAgent.name);
+    this.Logger.InstantiateStart(ContentEditorProxy.name);
 
     this.SettingsAgent = settingsAgent;
-    this.Logger.IsNotNullOrUndefinedBool("associatedDoc", associatedDoc);
-
-    this.AssociatedDoc = associatedDoc;
     this.AssociatedId = Guid.NewRandomGuid();
-    this.AssociatedTree = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent);
+    this.AssociatedDoc = associatedDoc;
 
-    this.Logger.InstantiateEnd(ContentEditorAgent.name);
+    this.ValidateDoc();
+
+    this.Logger.InstantiateEnd(ContentEditorProxy.name);
+  }
+
+  ValidateDoc() {
+    this.Logger.FuncStart(this.ValidateDoc.name);
+    if (!this.AssociatedDoc) {
+      this.Logger.ErrorAndThrow(this.ValidateDoc.name, 'No doc provided');
+    }
+
+    else if (!this.AssociatedDoc.ContentDoc) {
+      this.Logger.ErrorAndThrow(this.ValidateDoc.name, 'No content doc');
+    }
+
+    else if (!this.AssociatedDoc.ContentDoc.URL) {
+      this.Logger.ErrorAndThrow(this.ValidateDoc.name, 'No URL');
+    }
+    else if (this.AssociatedDoc.ContentDoc.URL === SharedConst.Const.UrlSuffix.AboutBlank) {
+      this.Logger.ErrorAndThrow(this.ValidateDoc.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
+    }
+    this.Logger.LogVal('URL', this.AssociatedDoc.ContentDoc.URL);
+    this.Logger.FuncEnd(this.ValidateDoc.name);
+  }
+
+  async WaitForReadyAssociatedDocandInit():Promise<void>{
+    this.Logger.FuncStart(this.WaitForReadyAssociatedDocandInit.name);
+    try {
+      let recipeBasics = new RecipeBasics(this.Logger);
+
+      await recipeBasics.WaitForPageReadyNative(this.AssociatedDoc)
+        .then(() => this.AssociatedTreeProxy = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent))
+        .catch((err) => this.Logger.ErrorAndThrow(this.WaitForReadyAssociatedDocandInit.name, err));
+    } catch (e) {
+    }
+
+    this.Logger.FuncEnd(this.WaitForReadyAssociatedDocandInit.name);
   }
 
   AddListenerToActiveNodeChange(callback: Function) {
-    if (this.AssociatedTree) {
-      this.AssociatedTree.AddListenerToMutationEvent(callback);
+    if (this.AssociatedTreeProxy) {
+      this.AssociatedTreeProxy.AddListenerToMutationEvent(callback);
     }
   }
 
@@ -69,7 +104,7 @@ export class ContentEditorAgent extends LoggableBase {
 
       this.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
 
-      await this.AssociatedTree.WaitForAndRestoreManyAllNodes(dataToRestore, this.AssociatedDoc)
+      await this.AssociatedTreeProxy.WaitForAndRestoreManyAllNodes(dataToRestore, this.AssociatedDoc)
         .then(() => resolve(true))
         .catch((err) => reject(this.RestoreCEStateAsync.name + " " + err));
 
@@ -100,7 +135,7 @@ export class ContentEditorAgent extends LoggableBase {
 
       var toReturnOneTreeState: IDataOneStorageOneTreeState = {
         Id: this.AssociatedId,
-        AllTreeNodeAr: this.AssociatedTree.GetOneLiveTreeData(),
+        AllTreeNodeAr: this.AssociatedTreeProxy.GetOneLiveTreeData(),
         ActiveNode: null
       }
 

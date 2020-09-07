@@ -1,11 +1,10 @@
 ﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
 import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
-import { IDataOneIframe } from "../Interfaces/Data/IDataOneIframe";
+import { IframeProxy } from "../Interfaces/Data/IDataOneIframe";
 import { Guid } from "./Guid";
 
-export class FactoryHelper extends LoggableBase  {
- 
- DataOneContentDocFactoryFromIframe(dataOneIframe: IDataOneIframe): IDataOneDoc {
+export class FactoryHelper extends LoggableBase {
+  DataOneContentDocFactoryFromIframe(dataOneIframe: IframeProxy): IDataOneDoc {
     var toReturn: IDataOneDoc = null;
 
     if (dataOneIframe) {
@@ -21,34 +20,19 @@ export class FactoryHelper extends LoggableBase  {
     return toReturn;
   }
 
-  DataOneIframeFactory(iframeElem: HTMLIFrameElement, nickname: string): IDataOneIframe {
+  DataOneIframeFactory(iframeElem: HTMLIFrameElement, nickname: string): IframeProxy {
     this.Logger.FuncStart(this.DataOneIframeFactory.name);
-    var toReturn: IDataOneIframe = null;
+    var toReturn: IframeProxy = null;
 
     if (iframeElem && nickname) {
-      let zIndex: number = -1;
-      if (iframeElem && iframeElem.style && iframeElem.style.zIndex) {
-        zIndex = parseInt(iframeElem.style.zIndex);
-      }
-
-      var toReturn: IDataOneIframe = {
-        Index: -1,
-        IframeElem: iframeElem,
-        Id: Guid.NewRandomGuid(),
-        Zindex: zIndex,
-        Nickname: nickname,
-        ContentDoc: null,
-      };
-
-      toReturn.ContentDoc = this.DataOneContentDocFactoryFromIframe(toReturn);
-
-      this.Logger.FuncEnd(this.DataOneIframeFactory.name);
+      var toReturn: IframeProxy = new IframeProxy(this.Logger, iframeElem, nickname);
     } else {
       this.Logger.ErrorAndThrow(this.DataOneIframeFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
       this.Logger.LogAsJsonPretty('nickname', nickname);
     }
+
+    this.Logger.FuncEnd(this.DataOneIframeFactory.name);
     return toReturn;
   }
-  
 }

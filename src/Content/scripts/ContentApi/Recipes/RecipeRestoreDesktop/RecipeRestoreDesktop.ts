@@ -3,14 +3,15 @@ import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/IL
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataBucketRestoreDesktop } from '../../../../../Shared/scripts/Interfaces/Data/IDataBucketRestoreDesktop';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataOneIframe } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
+import { IframeProxy } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
 import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { ContentEditorAgent } from '../../../Agents/ContentEditorAgent/ContentEditorAgent';
+import { ContentEditorProxy } from '../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
 import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
+import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
 
 export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
@@ -21,7 +22,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
 
   constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, settingsAgent: ISettingsAgent) {
     super(logger);
-    this.Logger.FuncStart(RecipeRestoreDesktop.name);
+    this.Logger.InstantiateStart(RecipeRestoreDesktop.name);
 
     this.MiscAgent = new MiscAgent(this.Logger);
 
@@ -30,7 +31,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     this.RecipeBasics = new RecipeBasics(this.Logger);
     this.SettingsAgent = settingsAgent;
 
-    this.Logger.FuncEnd(RecipeRestoreDesktop.name);
+    this.Logger.InstantiateEnd(RecipeRestoreDesktop.name);
   }
   async Execute(): Promise<void> {
     await this.RunOneChain();
@@ -53,13 +54,12 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     });
   }
 
-  private __waitForIframeReady(targetIframe: IDataOneIframe) {
+  private __waitForIframeReady(targetIframe: IframeProxy) {
     return new Promise<void>(async (resolve, reject) => {
       this.Logger.FuncStart(this.__waitForIframeReady.name, 'targetIframe not null: ' + (targetIframe !== null));
 
       await this.RecipeBasics.WaitForReadyIframe(targetIframe)
         .then(() => {
-          targetIframe.ContentDoc.ContentDoc = targetIframe.IframeElem.contentDocument;
           this.Logger.LogAsJsonPretty(this.__waitForIframeReady.name, targetIframe);
 
           resolve();
@@ -81,7 +81,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     });
   }
 
-  private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: ContentEditorAgent) {
+  private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: ContentEditorProxy) {
     return new Promise<void>(async (resolve, reject) => {
       this.Logger.FuncStart(this.__restoreDataToOneIframe.name);
 
@@ -106,22 +106,24 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
         }
         //guaranteed to be on the correct page
 
-        var allIframeDataAtBeginning: IDataOneIframe[];
-        var targetCeAgent: ContentEditorAgent;
+        var allIframeDataAtBeginning: IframeProxy[];
+        var ceProxy: ContentEditorProxy;
         let iframeHelper = new IframeHelper(this.Logger);
+        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent);
 
-        await iframeHelper.GetHostedIframes(this.TargetDoc)
-          .then((result) => allIframeDataAtBeginning = result)
-          .then(() => this.__waitForAndClickRedStartButton(dataBucket.targetDoc))
-          .then(() => this.__waitForAndThenClickCEFromMenu(dataBucket.targetDoc))
+        await recipeAddCe.Execute()
 
-          .then(() => this.RecipeBasics.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
+          //iframeHelper.GetHostedIframes(this.TargetDoc)
+          //.then((result) => allIframeDataAtBeginning = result)
+          //.then(() => this.__waitForAndClickRedStartButton(dataBucket.targetDoc))
+          //.then(() => this.__waitForAndThenClickCEFromMenu(dataBucket.targetDoc))
 
-          .then((result) => {
-            targetCeAgent = new ContentEditorAgent(result.ContentDoc, this.Logger,this.SettingsAgent);
-            this.__waitForIframeReady(result);
-          })
-          .then(() => this.__restoreDataToOneIframe(this.DataToRestore, targetCeAgent))
+          //.then(() => this.RecipeBasics.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
+
+
+          .then((result: ContentEditorProxy) => ceProxy = result)
+          .then(() => ceProxy.WaitForReadyAssociatedDocandInit())
+          .then(() => this.__restoreDataToOneIframe(this.DataToRestore, ceProxy))
           .then(() => resolve())
           .catch(ex => {
             reject(this.RunOneChain.name + ' ' + ex);

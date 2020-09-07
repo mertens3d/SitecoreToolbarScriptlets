@@ -1,3 +1,3 @@
 ﻿export interface ICommandRecipes {
-  Execute(): Promise<void>;
+  Execute(): Promise<any>;
 }

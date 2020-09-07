@@ -43,5 +43,6 @@
     LaunchPad: string,
     CE: string,
     None: string,
+    AboutBlank: string,
   },
 }

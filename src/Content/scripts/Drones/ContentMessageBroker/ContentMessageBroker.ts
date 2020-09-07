@@ -246,7 +246,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
         commandData.TargetSnapShotId = payload.Data.IdOfSelect;
         commandData.ContentMessageBroker = this;
         commandData.TargetSnapShotFlavor = payload.Data.SnapShotSettings.Flavor;
-        commandData.TargetCeAgent = null; //todo
+        commandData.TargetCeProxy = null; //todo
         commandData.TargetDoc = null; // todo
 
         await commandToExecute(commandData)

@@ -1,10 +1,10 @@
 ﻿import { IDataOneStorageOneTreeState } from "./IDataOneStorageOneTreeState";
-import { IDataOneIframe } from "./IDataOneIframe";
-import { ContentEditorAgent } from "../../../../Content/scripts/Agents/ContentEditorAgent/ContentEditorAgent";
+import { IframeProxy } from "./IDataOneIframe";
+import { ContentEditorProxy } from "../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 
 export interface IDataDesktopState {
   ActiveCeState: IDataOneStorageOneTreeState
-  ActiveCEAgent: ContentEditorAgent;
-  HostedIframes: IDataOneIframe[];
+  ActiveCEAgent: ContentEditorProxy;
+  HostedIframes: IframeProxy[];
   HostedContentEditors: IDataOneStorageOneTreeState[]
 }

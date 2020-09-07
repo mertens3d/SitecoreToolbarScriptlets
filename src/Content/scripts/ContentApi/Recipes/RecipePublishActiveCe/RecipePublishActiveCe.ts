@@ -3,7 +3,7 @@ import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
 import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IDataOneIframe } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
+import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
@@ -33,7 +33,7 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
       try {
         if (currentWindowType === ScWindowType.Desktop) {
           await this.RecipeBasics.GetTopLevelIframe(targetDoc)
-            .then((topIframe: IDataOneIframe) => resolve(topIframe.ContentDoc))
+            .then((topIframe: IframeProxy) => resolve(topIframe.GetContentDoc()))
             .catch((err) => reject(err));
         }
         else {
@@ -123,25 +123,25 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
   }
 
   private async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.SettingsHidden)
+    await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.GetContentDoc(), ContentConst.Const.Selector.SC.Publish.SettingsHidden)
       .then(async () => {
-        await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.ContentDoc, ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
+        await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.GetContentDoc(), ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
-        await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.Cancel], dataPublishChain.Iframe0Blue.ContentDoc);
+        await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.Cancel], dataPublishChain.Iframe0Blue.GetContentDoc());
       });
 
     return dataPublishChain;
   }
 
   private async __waitForAndClickOk(dataPublishChain: IDataPublishChain) {
-    await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.Ok], dataPublishChain.messageDialogIframeRed.ContentDoc);
+    await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.Ok], dataPublishChain.messageDialogIframeRed.GetContentDoc());
 
     return dataPublishChain;
   }
 
   async __WaitForAndClickPublishNextButton(dataPublishChain: IDataPublishChain) {
-    await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.NextButton], dataPublishChain.Iframe0Blue.ContentDoc);
+    await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.NextButton], dataPublishChain.Iframe0Blue.GetContentDoc());
 
     return dataPublishChain;
   }
@@ -175,7 +175,7 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
   async GetMessageDialog(dataPublishChain: IDataPublishChain) {
     let toReturnPublishChain: IDataPublishChain = dataPublishChain;
 
-    await this.RecipeBasics.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
+    await this.RecipeBasics.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.GetContentDoc(), ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
       .then((result) => toReturnPublishChain.messageDialogIframeRed = result)
       .catch((err) => this.Logger.ErrorAndThrow(this.GetMessageDialog.name, err));
 
@@ -190,7 +190,7 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
 
       this.Logger.LogAsJsonPretty('dataPublishChain', dataPublishChain);
 
-      await this.RecipeBasics.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.ContentDoc, ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
+      await this.RecipeBasics.WaitForIframeElemAndReturnWhenReady(dataPublishChain.jqIframe.GetContentDoc(), ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
         .then((result) => {
           this.Logger.MarkerC();
           dataPublishChain.Iframe0Blue = result;

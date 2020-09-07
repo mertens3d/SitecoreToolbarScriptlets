@@ -47,6 +47,7 @@ export class SharedConst {
       LaunchPad: '/client/applications/launchpad',
       CE: '/sitecore/shell/Applications/Content Editor.aspx?sc_bw=1',
       None: '/',
+      AboutBlank: 'about:blank',
     },
   }
 }

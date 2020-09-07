@@ -18,8 +18,6 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
   private SettingsAgent: ISettingsAgent;
   private __treeHolderElem: HTMLElement;
 
-  //private __treeNodeProxy: ContentEditorTreeNodeProxy;
-
   constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
 

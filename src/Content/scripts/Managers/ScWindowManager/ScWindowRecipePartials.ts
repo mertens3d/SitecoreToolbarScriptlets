@@ -2,7 +2,7 @@
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
-import { ContentEditorAgent } from '../../Agents/ContentEditorAgent/ContentEditorAgent';
+import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { LoggableBase } from '../LoggableBase';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
@@ -16,7 +16,7 @@ export class ScWindowRecipePartials extends LoggableBase {
   }
 
 
-  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage, desktopProxy: DesktopProxy, OneCEAgent: ContentEditorAgent): Promise<void> {
+  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage, desktopProxy: DesktopProxy, OneCEAgent: ContentEditorProxy): Promise<void> {
         return new Promise(async (resolve, reject) => {
             this.Logger.FuncStart(this.RestoreStateToTargetDoc.name);
 

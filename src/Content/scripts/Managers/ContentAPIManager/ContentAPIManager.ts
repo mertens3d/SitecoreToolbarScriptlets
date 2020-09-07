@@ -61,7 +61,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
 
   AddCETab(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.SettingsAgent, commandData.TargetDoc, commandData.TargetCeAgent).Execute()
+      await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.SettingsAgent).Execute()
         .then(() => {
           this.ToastAgent.PopUpToastNotification(commandData.ScWinMan.GetTopLevelDoc(), "Success");
           resolve();
@@ -108,7 +108,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
   RestoreSnapshop(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
 
-      let recipe = new RecipeRestoreState(commandData.Logger, commandData.ScWinMan.GetScUrlAgent(), commandData.AtticAgent, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopUiProxy, commandData.ToastAgent, commandData.ScWinMan.OneCEAgent, commandData.TargetSnapShotId);// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
+      let recipe = new RecipeRestoreState(commandData.Logger, commandData.ScWinMan.GetScUrlAgent(), commandData.AtticAgent, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopUiProxy, commandData.ToastAgent, commandData.ScWinMan.CeProxy, commandData.TargetSnapShotId);// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
 
       await recipe.Execute()
         .then(() => resolve())

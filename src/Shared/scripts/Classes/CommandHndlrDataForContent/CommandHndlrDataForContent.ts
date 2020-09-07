@@ -1,4 +1,4 @@
-﻿import { ContentEditorAgent } from "../../../../Content/scripts/Agents/ContentEditorAgent/ContentEditorAgent";
+﻿import { ContentEditorProxy } from "../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ContentMessageBroker } from "../../../../Content/scripts/Drones/ContentMessageBroker/ContentMessageBroker";
 import { ScUiManager } from "../../../../Content/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
 import { DesktopProxy } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
@@ -19,7 +19,7 @@ export class CommandHndlrDataForContent implements ICommandHndlrDataForContent {
   Logger: ILoggerAgent = null;
   ScUiMan: ScUiManager = null;
   ScWinMan: IScWindowManager = null;
-  TargetCeAgent: ContentEditorAgent;
+  TargetCeProxy: ContentEditorProxy;
   TargetDoc: IDataOneDoc = null;
   TargetNickName: string = '';
   TargetSnapShotFlavor: SnapShotFlavor = SnapShotFlavor.Unknown;
