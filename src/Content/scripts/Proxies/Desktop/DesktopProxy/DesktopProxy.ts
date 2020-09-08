@@ -1,27 +1,31 @@
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IDataDesktopState } from "../../../../../Shared/scripts/Interfaces/Data/IDataDesktopState";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { IDataOneStorageOneTreeState } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
 import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { CeTabButtonAgent } from "../../../Agents/CeTabButtonAgent/CeTabButtonAgent";
 import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
 import { RecipeRestoreDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
 import { IframeHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { DtStartBarProxy } from "../DtStartBarProxy/DtStartBarProxy";
-import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { SettingKey } from "../../../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { CeTabButtonAgent } from "../../../Agents/CeTabButtonAgent/CeTabButtonAgent";
+import { ScContentEditorDomObserver } from "./ElementAddedObserver";
+import { CeProxyBucket } from "./CeProxyBucket";
 
 export class DesktopProxy extends LoggableBase {
-  private MiscAgent: MiscAgent;
-  private AssociatedDoc: IDataOneDoc;
-  private _dtStartBarAgent: DtStartBarProxy;
+  private CeProxyBucket: CeProxyBucket;
+
+  CeTabButtonAgent: CeTabButtonAgent;
   private __iframeHelper: IframeHelper;
+  private _dtStartBarAgent: DtStartBarProxy;
+  private AssociatedDoc: IDataOneDoc;
+
+  private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
-  private HostedContentEditors: ContentEditorProxy[] = [];
- CeTabButtonAgent: CeTabButtonAgent;
+  private ScChildIframeObserver: ScContentEditorDomObserver;
 
   constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
@@ -31,17 +35,28 @@ export class DesktopProxy extends LoggableBase {
     this.SettingsAgent = settingsAgent;
     this.AssociatedDoc = associatedDoc;
 
-    this.CeTabButtonAgent = new CeTabButtonAgent(this.Logger);
-    this.EnrollListenerForActiveNodeChange();
+    this.CeProxyBucket = new CeProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
+
+    this.CeTabButtonAgent = new CeTabButtonAgent(this.Logger, this);
+
+    this.CeProxyBucket.EnrollProxyAddedListener(this.CeTabButtonAgent.EnrollCeProxy);
+
+    this.ScChildIframeObserver = new ScContentEditorDomObserver(this.Logger, this.AssociatedDoc);
+    this.ScChildIframeObserver.AddListenerNodeAdded(this.ReactToNodeAdded);
+
+    this.CeProxyBucket.InitHostedContentEditors();
+
     this.Logger.InstantiateEnd(DesktopProxy.name);
   }
 
-  private GetIframeHelper(): IframeHelper {
-    if (this.__iframeHelper == null) {
-      this.__iframeHelper = new IframeHelper(this.Logger);
-    }
-    return this.__iframeHelper;
+  ReactToNodeAdded(ReactToElementAdded: any) {
+    this.Logger.ErrorAndContinue(this.ReactToNodeAdded.name, "Method not implemented.");
   }
+
+  GetAssociatedDoc(): IDataOneDoc {
+    return this.AssociatedDoc;
+  }
+
   GetDtStartBarAgent(): DtStartBarProxy {
     if (!this._dtStartBarAgent) {
       this._dtStartBarAgent = new DtStartBarProxy(this.Logger, this.AssociatedDoc);
@@ -50,60 +65,11 @@ export class DesktopProxy extends LoggableBase {
     return this._dtStartBarAgent;
   }
 
-  async CreateAndInitCe(oneIframe: IframeProxy): Promise<ContentEditorProxy> {
-    return new Promise(async (resolve, reject) => {
-      var newCeAgent = new ContentEditorProxy(oneIframe.GetContentDoc(), this.Logger, this.SettingsAgent, this.CeTabButtonAgent);
-      await newCeAgent.WaitForReadyAssociatedDocandInit()
-        .then(() => newCeAgent.AddListenerToActiveNodeChange(this.GetDtStartBarAgent().CallBackActiveElementChanged))
-        .then(() => resolve(newCeAgent))
-        .catch((err) => this.Logger.ErrorAndThrow(this.InitHostedContentEditors.name, err));
-    })
-  }
-
-  async InitHostedContentEditors(): Promise<void> {
-    try {
-      await this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc)
-        .then((foundIframes: IframeProxy[]) => {
-          foundIframes.forEach(async (oneIframe) => {
-            await this.CreateAndInitCe(oneIframe)
-              .then((newCeAgent) => this.HostedContentEditors.push(newCeAgent));
-          })
-        })
-        .catch((err) => { throw (err) })
-    } catch (err) {
-      this.Logger.ErrorAndThrow(this.InitHostedContentEditors.name, err);
+  private GetIframeHelper(): IframeHelper {
+    if (this.__iframeHelper == null) {
+      this.__iframeHelper = new IframeHelper(this.Logger);
     }
-  }
-
-  async EnrollListenerForActiveNodeChange(): Promise<void> {
-    try {
-      await this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc)
-        .then((foundIframes: IframeProxy[]) => {
-          for (var idx = 0; idx < foundIframes.length; idx++) {
-            let iframe = foundIframes[idx];
-            let iframeElemId = iframe.IframeElem.id;
-
-            //let tree = new ContentEditorContentTreeHolderProxy(this.Logger, iframe.ContentDoc);
-
-            //start bar button is same with prefix added
-            let startBarButtonElemId = 'startbar_application_' + iframeElemId;
-
-            let querySelectBtn = '[id=' + startBarButtonElemId + ']';
-            let foundStartBarButton = this.AssociatedDoc.ContentDoc.querySelector(querySelectBtn);
-            if (foundStartBarButton) {
-              let currentInnerHtml = document.querySelector(querySelectBtn).querySelector('div').querySelector('span').innerHTML;
-              let currentInnerText = document.querySelector(querySelectBtn).querySelector('div').querySelector('span').innerText;
-
-              let newInnerHtml = currentInnerHtml.replace(currentInnerText, 'dog');
-
-              document.querySelector(querySelectBtn).querySelector('div').querySelector('span').innerHTML = newInnerHtml;
-              //= document.querySelector('[id=startbar_application_FRAME267787985]').querySelector('div').querySelector('span').innerHTML.replace('Content Editor', 'dog')
-            }
-          }
-        });
-    } catch (err) {
-      throw (err);
-    }
+    return this.__iframeHelper;
   }
 
   async GetStateDesktop(): Promise<IDataDesktopState> {
@@ -123,7 +89,7 @@ export class DesktopProxy extends LoggableBase {
 
               var iframeProxy: IframeProxy = toReturnDesktopState.HostedIframes[iframeIdx];
 
-              var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent, this.CeTabButtonAgent);
+              var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent);
 
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
@@ -146,28 +112,27 @@ export class DesktopProxy extends LoggableBase {
       this.Logger.FuncEnd(this.GetStateDesktop.name);
     });
   }
-
-  async RestoreDesktopState(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
+  async SetStateDesktop(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RestoreDesktopState.name);;
+      this.Logger.FuncStart(this.SetStateDesktop.name);;
 
-      if (this.MiscAgent.NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.RestoreDesktopState.name)) {
+      if (this.MiscAgent.NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.SetStateDesktop.name)) {
         for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
           let targetData: IDataOneStorageOneTreeState = dataToRestore.AllCEAr[idx];
           this.Logger.Log('Restoring ' + (idx + 1) + ":" + dataToRestore.AllCEAr.length + ' active node: ' + targetData.ActiveNode.NodeFriendly);
           var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, targetData, this.SettingsAgent, this.CeTabButtonAgent);
 
           await recipe.Execute()
-            .then(() => this.EnrollListenerForActiveNodeChange())
+            //.then(() => this.EnrollListenerForActiveNodeChange())
             .catch((err) => reject(err));
         }
 
         resolve();
       } else {
-        reject(this.RestoreDesktopState.name + ' bad data');
+        reject(this.SetStateDesktop.name + ' bad data');
       }
 
-      this.Logger.FuncEnd(this.RestoreDesktopState.name);
+      this.Logger.FuncEnd(this.SetStateDesktop.name);
     });
   }
 

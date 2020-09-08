@@ -8,6 +8,7 @@ import { IContentAtticAgent } from '../../../../Shared/scripts/Interfaces/Agents
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
+import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
 import { IContentState } from '../../../../Shared/scripts/Interfaces/Data/IContentState';
 import { IDataDesktopState } from '../../../../Shared/scripts/Interfaces/Data/IDataDesktopState';
@@ -16,14 +17,12 @@ import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfac
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
 import { IDataSnapShots } from '../../../../Shared/scripts/Interfaces/Data/IDataSnapShots';
 import { MiscAgent } from '../../Agents/MiscAgent/MiscAgent';
-import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { RecipeInitFromQueryStr } from '../../ContentApi/Recipes/RecipeInitFromQueryStr/RecipeInitFromQueryStr';
+import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
+import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
 import { LoggableBase } from '../LoggableBase';
 import { ScUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { ScWindowRecipePartials } from './ScWindowRecipePartials';
-import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
-import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 
 export class ScWindowManager extends LoggableBase implements IScWindowManager {
   DesktopUiProxy: DesktopProxy = null;
@@ -100,7 +99,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       if (currPageType === ScWindowType.Desktop) {
         this.DesktopUiProxy = new DesktopProxy(this.Logger, this.MiscAgent, this.GetTopLevelDoc(), this.SettingsAgent);
       } else if (currPageType === ScWindowType.ContentEditor) {
-        this.CeProxy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
+        this.CeProxy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent);
         await this.CeProxy.WaitForReadyAssociatedDocandInit();
       }
 
@@ -171,7 +170,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
   private async PopulateIfTopIsContentEditor(scWindowState: IDataOneWindowStorage): Promise<void> {
     try {
       if (this.GetCurrentPageType() === ScWindowType.ContentEditor) {
-        let ceAgent = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
+        let ceAgent = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent);
 
         await ceAgent.WaitForReadyAssociatedDocandInit()
           .then(() => ceAgent.GetTreeState())

@@ -59,6 +59,8 @@
     <TypeScriptCompile Include="src\Content\scripts\Agents\CeTabButtonAgent\CeTabButtonAgent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\ContentEditorTreeProxy.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\CeProxyBucket.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\ElementAddedObserver.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DtStartBarProxy\DtStartBarProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorContentTreeHolderProxy\ContentEditorContentTreeHolderProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeInitFromQueryStr\RecipeInitFromQueryStr.ts" />

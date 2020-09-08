@@ -17,9 +17,8 @@ export class ContentEditorProxy extends LoggableBase {
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedId: GuidData;
   private SettingsAgent: ISettingsAgent;
-  private CeTabButtonAgent: CeTabButtonAgent;
 
-  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent, ceTabButtonAgent: CeTabButtonAgent) {
+  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
     super(logger);
 
     this.Logger.InstantiateStart(ContentEditorProxy.name);
@@ -30,7 +29,6 @@ export class ContentEditorProxy extends LoggableBase {
 
     this.ValidateDoc();
 
-    this.CeTabButtonAgent = ceTabButtonAgent;
 
     this.Logger.InstantiateEnd(ContentEditorProxy.name);
   }
@@ -50,10 +48,6 @@ export class ContentEditorProxy extends LoggableBase {
     }
     else if (this.AssociatedDoc.ContentDoc.URL === SharedConst.Const.UrlSuffix.AboutBlank) {
       this.Logger.ErrorAndThrow(this.ValidateDoc.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
-    }
-
-    if (this.CeTabButtonAgent) {
-      this.CeTabButtonAgent.NotifyNewCeProxy(this);
     }
 
     this.Logger.LogVal('URL', this.AssociatedDoc.ContentDoc.URL);
@@ -80,20 +74,20 @@ export class ContentEditorProxy extends LoggableBase {
     }
   }
 
-  async RestoreDataToOneIframeWorker(oneTreeState: IDataOneStorageOneTreeState): Promise<void> {
+  async SetTreeState(oneTreeState: IDataOneStorageOneTreeState): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RestoreDataToOneIframeWorker.name);
+      this.Logger.FuncStart(this.SetTreeState.name);
 
       if (oneTreeState) {
         await this.RestoreCEStateAsync(oneTreeState)
           .then(() => resolve())
           .catch((err) => {
             this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
-            this.Logger.ErrorAndThrow(this.RestoreDataToOneIframeWorker.name, 'bad data');
-            reject((this.RestoreDataToOneIframeWorker.name + " " + err))
+            this.Logger.ErrorAndThrow(this.SetTreeState.name, 'bad data');
+            reject((this.SetTreeState.name + " " + err))
           })
       }
-      this.Logger.FuncEnd(this.RestoreDataToOneIframeWorker.name);
+      this.Logger.FuncEnd(this.SetTreeState.name);
     });
   }
 

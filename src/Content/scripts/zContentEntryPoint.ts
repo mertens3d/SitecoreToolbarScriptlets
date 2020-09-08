@@ -54,10 +54,10 @@ class ContentEntry {
     scWinMan = new ScWindowManager(this.Logger, scUiMan, this.MiscAgent, this.ToastAgent, this.AtticAgent, this.ScUrlAgent, this.SettingsAgent);
     scUiMan = new ScUiManager(this.Logger);
 
-    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan,  scWinMan);
+    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan);
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
-      this.ContentAPIMan, this.AtticAgent,  this.ToastAgent, scUiMan, scWinMan);
+      this.ContentAPIMan, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan);
 
     contentMessageMan = new ContentMessageManager(this.Logger, scWinMan, contentMessageBroker);
 
@@ -127,5 +127,8 @@ class ContentEntry {
   }
 }
 
-let contentEntry: ContentEntry = new ContentEntry();
-contentEntry.Main();
+//document.addEventListener("DOMContentLoaded", function() {
+                           
+  let contentEntry: ContentEntry = new ContentEntry();
+  contentEntry.Main();
+//});
