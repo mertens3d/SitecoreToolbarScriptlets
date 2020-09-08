@@ -4,6 +4,7 @@ import { Guid } from "../../Helpers/Guid";
 import { FactoryHelper } from "../../Helpers/FactoryHelper";
 import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
 import { ILoggerAgent } from "../Agents/ILoggerAgent";
+import { RecipeBasics } from "../../Classes/RecipeBasics";
 
 export class IframeProxy extends LoggableBase {
   Index: number = -1;
@@ -16,6 +17,16 @@ export class IframeProxy extends LoggableBase {
     this.IframeElem = iframeElem;
     this.Id = Guid.NewRandomGuid();
     this.Nickname = nickName;
+  }
+
+  async WaitForReady(): Promise<void> {
+    try {
+      let recipeBasic: RecipeBasics = new RecipeBasics(this.Logger);
+
+      await recipeBasic.WaitForPageReadyHtmlIframeElement(this.IframeElem)
+    } catch (err) {
+      throw (this.WaitForReady.name + ' ' + err);
+    }
   }
 
   GetZindex(): number {

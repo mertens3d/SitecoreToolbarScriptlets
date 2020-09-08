@@ -12,8 +12,9 @@ import { IframeHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DtStartBarProxy } from "../DtStartBarProxy/DtStartBarProxy";
-import { ScContentEditorDomObserver } from "./ElementAddedObserver";
 import { CeProxyBucket } from "./CeProxyBucket";
+import { Subject_DesktopDomChangedEvent } from "./Events/DesktopDomChangedEvent/Subject_DesktopDomChangedEvent";
+import { IPayloadDesktop_DomChangedEvent } from "./Events/DesktopDomChangedEvent/IPayloadContentEditorDomChanged";
 
 export class DesktopProxy extends LoggableBase {
   private CeProxyBucket: CeProxyBucket;
@@ -25,7 +26,7 @@ export class DesktopProxy extends LoggableBase {
 
   private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
-  private ScChildIframeObserver: ScContentEditorDomObserver;
+  private Subject_DomChangedEvent: Subject_DesktopDomChangedEvent;
 
   constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
@@ -39,18 +40,31 @@ export class DesktopProxy extends LoggableBase {
 
     this.CeTabButtonAgent = new CeTabButtonAgent(this.Logger, this);
 
-    this.CeProxyBucket.EnrollProxyAddedListener(this.CeTabButtonAgent.EnrollCeProxy);
+    
+    let self = this;
+    this.CeProxyBucket.EnrollProxyAddedListener((ceProxy: ContentEditorProxy) => self.CeTabButtonAgent.CallBackTreeMutated(ceProxy));
 
-    this.ScChildIframeObserver = new ScContentEditorDomObserver(this.Logger, this.AssociatedDoc);
-    this.ScChildIframeObserver.AddListenerNodeAdded(this.ReactToNodeAdded);
+    this.Subject_DomChangedEvent = new Subject_DesktopDomChangedEvent(this.Logger, this.AssociatedDoc);
+
+    this.Subject_DomChangedEvent.RegisterObserver((payload: IPayloadDesktop_DomChangedEvent) => { self.Observer_DesktopDomChangedEvent(payload) });
 
     this.CeProxyBucket.InitHostedContentEditors();
 
     this.Logger.InstantiateEnd(DesktopProxy.name);
   }
 
-  ReactToNodeAdded(ReactToElementAdded: any) {
-    this.Logger.ErrorAndContinue(this.ReactToNodeAdded.name, "Method not implemented.");
+  Observer_DesktopDomChangedEvent(payload: IPayloadDesktop_DomChangedEvent) {
+    this.Logger.Log("The desktop DOM changed - probably an iframe has been added");
+    if (payload && payload.AddedIframes.length > 0) {
+      payload.AddedIframes.forEach(async (iframeElement) => {
+        this.Logger.LogVal('added iframe id', iframeElement.id);
+
+        let iframeProxy: IframeProxy = new IframeProxy(this.Logger, iframeElement, iframeElement.id);
+        await iframeProxy.WaitForReady()
+          .then(() => this.CeProxyBucket.AddToBucketFromIframeProxy(iframeProxy))
+      })
+    }
+    this.Logger.LogAsJsonPretty('payload', payload);
   }
 
   GetAssociatedDoc(): IDataOneDoc {
@@ -80,7 +94,7 @@ export class DesktopProxy extends LoggableBase {
 
       var toReturnDesktopState: IDataDesktopState = this.CreateNewDtDataShell();
 
-      await this.__iframeHelper.GetHostedIframes(this.AssociatedDoc)
+      await this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc)
         .then((result) => toReturnDesktopState.HostedIframes = result)
         .then(() => {
           if (toReturnDesktopState.HostedIframes && toReturnDesktopState.HostedIframes.length > 0) {
@@ -93,6 +107,7 @@ export class DesktopProxy extends LoggableBase {
 
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
+              this.Logger.MarkerA();
               ceAgent.GetTreeState()
                 .then((oneCeState: IDataOneStorageOneTreeState) => {
                   toReturnDesktopState.HostedContentEditors.push(oneCeState);

@@ -12,13 +12,15 @@ export class CeTabButtonAgent extends LoggableBase {
 
   constructor(logger: ILoggerAgent, ownerDesktopProxy: DesktopProxy) {
     super(logger);
+    this.Logger.InstantiateStart(CeTabButtonAgent.name);
     this.OwnerDesktopProxy = ownerDesktopProxy;
 
     this.EnrollListenerForActiveNodeChange();
+    this.Logger.InstantiateEnd(CeTabButtonAgent.name);
   }
 
-  EnrollCeProxy(ceProxy: ContentEditorProxy) {
-    this.Logger.FuncStart(this.EnrollCeProxy.name);
+  CallBackTreeMutated(ceProxy: ContentEditorProxy) {
+    this.Logger.FuncStart(this.CallBackTreeMutated.name);
 
     if (this.CeProxies.indexOf(ceProxy) < 0) {
       this.CeProxies.push(ceProxy);
@@ -27,7 +29,7 @@ export class CeTabButtonAgent extends LoggableBase {
       ceProxy.AddListenerToActiveNodeChange((data) => { self.CallbackNodeChanged(data) });
     }
 
-    this.Logger.FuncEnd(this.EnrollCeProxy.name);
+    this.Logger.FuncEnd(this.CallBackTreeMutated.name);
   }
 
   private GetIframeHelper(): IframeHelper {
@@ -35,6 +37,10 @@ export class CeTabButtonAgent extends LoggableBase {
       this.__iframeHelper = new IframeHelper(this.Logger);
     }
     return this.__iframeHelper;
+  }
+
+  TreeMutationCallback(mutation: MutationCallback) {
+
   }
 
   async EnrollListenerForActiveNodeChange(): Promise<void> {
@@ -70,7 +76,8 @@ export class CeTabButtonAgent extends LoggableBase {
 
 
   CallbackNodeChanged(data: any) {
-    this.Logger.Log('dddddddddddd');
+    this.Logger.FuncStart(this.CallbackNodeChanged.name);
     this.Logger.LogAsJsonPretty('data', data);
+    this.Logger.FuncEnd(this.CallbackNodeChanged.name);
   }
 }

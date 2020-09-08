@@ -267,6 +267,20 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log('');
   }
 
+  WarningAndContinue(container: string, text: any): void {
+    if (!container) {
+      container = 'unknown';
+    }
+
+    if (!text) {
+      text = 'unknown';
+    }
+
+    this.Log('');
+    this.Log('\t\t** WARNING ** ' + container + ' ' + text);
+    this.Log('');
+  }
+
   NotNullCheck(title: string, value: any): void {
     if (typeof value === 'undefined') {
       this.LogVal(title, 'Is Undefined');

@@ -1,16 +1,15 @@
-﻿import { SettingKey } from '../../../../../Shared/scripts/Enums/3xxx-SettingKey';
+﻿import { IterationDrone } from '../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
+import { SettingKey } from '../../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
 import { IDataOneTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorTreeNodeProxy } from '../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
-import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
-import { IterationDrone } from '../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
-import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
 
 export class ContentEditorTreeProxy extends LoggableBase implements IContentEditorTreeProxy {
   private AssociatedDoc: IDataOneDoc;
@@ -60,8 +59,10 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     this.Logger.FuncEnd(this.InitTreeHolderProxyOnReadyState.name);
   }
 
-  AddListenerToMutationEvent(callback: Function) {
+  AddListenerToTreeMutationEvent(callback: Function) {
+    this.Logger.FuncStart(this.AddListenerToTreeMutationEvent.name);
     this.MutationCallbacks.push(callback);
+    this.Logger.FuncEnd(this.AddListenerToTreeMutationEvent.name);
   }
 
   GetTreeNodeByGlyph(targetNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc): ContentEditorTreeNodeProxy {
@@ -119,7 +120,7 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
         foundOnPageProxy = this.GetTreeNodeByGlyph(newData, dataOneDocTarget);
 
         if (foundOnPageProxy) {
-          foundOnPageProxy.Restore(newData, dataOneDocTarget);
+          foundOnPageProxy.RestoreStateNode(newData, dataOneDocTarget);
         } else {
           this.Logger.Log('not Found...waiting: ');
           await iterHelper.Wait();
@@ -131,30 +132,49 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     this.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId));
   }
 
+  GetMutatedNode(mutation: MutationRecord): ContentEditorTreeNodeProxy {
+    let candidateNode: ContentEditorTreeNodeProxy = null;
+    if (mutation.attributeName === 'class') {
+      let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
+      this.Logger.Log(mutatedElement.classList.toString());
+      this.Logger.Log(mutatedElement.id);
+
+      this.Logger.Log('mutated');
+      let parent: HTMLElement = mutatedElement.parentElement;
+      if (parent) {
+        candidateNode = new ContentEditorTreeNodeProxy(this.Logger, parent);
+        this.Logger.Log((<HTMLElement>mutation.target).innerText);
+      } else {
+        this.Logger.WarningAndContinue(this.GetMutatedNode.name, 'no parent found for ' + mutatedElement.id);
+      }
+    }
+    return candidateNode;
+  }
+
+  BroadCastTreeMutated(mutations: MutationRecord[]) {
+    this.Logger.FuncStart(this.BroadCastTreeMutated.name + '_callback');
+    mutations.forEach((mutation) => {
+
+      let candidateNode: ContentEditorTreeNodeProxy = this.GetMutatedNode(mutation);
+
+      if (candidateNode) {
+        if (candidateNode.__isActive()) {
+          this.Logger.LogVal('this.MutationCallbacks.length', this.MutationCallbacks.length);
+
+          this.MutationCallbacks.forEach((callback) => callback(candidateNode));
+        }
+      }
+    });
+    this.Logger.FuncStart(this.BroadCastTreeMutated.name + '_callback');
+  }
+
   private AttachActiveNodeChangedObserver() {
     this.Logger.FuncStart(this.AttachActiveNodeChangedObserver.name);
 
     try {
       if (this.GetTreeHolderElem()) {
-        let observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.attributeName === 'class') {
-              let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
-              this.Logger.Log(mutatedElement.classList.toString());
-              this.Logger.Log(mutatedElement.id);
+        let observer = new MutationObserver((mutations: MutationRecord[]) => { this.BroadCastTreeMutated(mutations) });
 
-              //this.Logger.Log('mutated');
-              //this.Logger.Log(mutatedElement);
-
-              let candidateNode = new ContentEditorTreeNodeProxy(this.Logger, mutatedElement.parentElement);
-
-              if (candidateNode.__isActive()) {
-                this.MutationCallbacks.forEach((callback) => callback(mutatedElement.parentElement));
-                this.Logger.Log((<HTMLElement>mutation.target).innerText);
-              }
-            }
-          });
-        });
         observer.observe(this.GetTreeHolderElem(), { attributes: true, subtree: true, childList: true });
 
         //this.SelfElem.addEventListener('click', (evt) => { alert((<HTMLElement>evt.target).innerText) });
@@ -176,26 +196,21 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
 
     if (targetNode) {
       var firstImg: HTMLElement = targetNode.querySelector(ContentConst.Const.Selector.SC.ContentTreeNodeGlyph);
+      if (firstImg) {
+        this.Logger.Log(this.WalkNodeRecursive.name);
+        let treeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, firstImg);
 
-      let treeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, firstImg);
+        if (treeNodeProxy.__isContentTreeNode) {
+          if (treeNodeProxy.__isExpanded || treeNodeProxy.__isActive) {
+            let newData: IDataOneTreeNode = treeNodeProxy.GetStateNode();
 
-      if (treeNodeProxy.__isContentTreeNode) {
-        var newData: IDataOneTreeNode = {
-          IsExpanded: treeNodeProxy.__isExpanded(),
-          IsActive: treeNodeProxy.__isActive(),
-          NodeFriendly: '',
-          NodeId: null,
-          Discriminator: SharedConst.Const.ObjDiscriminator.DataOneTreeNode
-        };
+            var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
+            newData.NodeId = Guid.ParseGuid(apparentId, true);
 
-        if (newData.IsExpanded || newData.IsActive) {
-          newData.NodeFriendly = treeNodeProxy.GetFriendlyNameFromNode();
-
-          var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
-
-          newData.NodeId = Guid.ParseGuid(apparentId, true);
-
-          toReturn.push(newData);
+            toReturn.push(newData);
+          } else {
+            this.Logger.Log('no first img');
+          }
         }
       }
 

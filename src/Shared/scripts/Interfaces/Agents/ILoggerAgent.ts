@@ -8,6 +8,7 @@ export interface ILoggerAgent {
   AddWriter(arg0: LoggerConsoleWriter);
   CtorName(name: string);
   ErrorAndContinue(container: string, text: any): void
+  WarningAndContinue(container: string, text: any): void
   ErrorAndThrow(container: string, text: any): void
   ErrorStack: IError[];
   FuncEnd(text, optionalValueInput: string | number);

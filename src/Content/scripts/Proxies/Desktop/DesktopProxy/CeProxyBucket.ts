@@ -10,13 +10,15 @@ export class CeProxyBucket extends LoggableBase {
     private CeProxies: ContentEditorProxy[] = [];
     private __iframeHelper: any;
     private AssociatedDesktopDoc: IDataOneDoc;
-    private ProxyAddedListeners: Function[] = [];
+    private TreeMutationListeners: Function[] = [];
     SettingsAgent: ISettingsAgent;
 
     constructor(logger: ILoggerAgent, desktopDocument: IDataOneDoc, settingsAgent: ISettingsAgent) {
-        super(logger);
+      super(logger);
+      this.Logger.InstantiateStart(CeProxyBucket.name);
         this.AssociatedDesktopDoc = desktopDocument;
-        this.SettingsAgent = settingsAgent;
+      this.SettingsAgent = settingsAgent;
+      this.Logger.InstantiateEnd(CeProxyBucket.name);
     }
 
 
@@ -27,24 +29,26 @@ export class CeProxyBucket extends LoggableBase {
         return this.__iframeHelper;
     }
 
-    AddCeProxy(newCeProxy: ContentEditorProxy): void {
+  AddCeProxy(newCeProxy: ContentEditorProxy): void {
+    this.Logger.FuncStart(this.AddCeProxy.name);
         if (this.CeProxies.indexOf(newCeProxy) < 0) {
             this.CeProxies.push(newCeProxy);
             this.BroadcastCeProxyAdded(newCeProxy);
-        }
+    }
+    this.Logger.FuncEnd(this.AddCeProxy.name);
     }
 
 
-    async AddToBucketFromIframe(oneIframe: IframeProxy): Promise<void> {
+    async AddToBucketFromIframeProxy(oneIframe: IframeProxy): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            this.Logger.FuncStart(this.AddToBucketFromIframe.name);
+            this.Logger.FuncStart(this.AddToBucketFromIframeProxy.name);
             var newCeProxy = new ContentEditorProxy(oneIframe.GetContentDoc(), this.Logger, this.SettingsAgent);
             await newCeProxy.WaitForReadyAssociatedDocandInit()
                 //.then(() => newCeProxy.AddListenerToActiveNodeChange(this.GetDtStartBarAgent().CallBackActiveElementChanged))
                 .then(() => this.AddCeProxy(newCeProxy))
                 .then(() => resolve())
-                .catch((err) => reject(this.AddToBucketFromIframe.name + ' | ' + err));
-            this.Logger.FuncEnd(this.AddToBucketFromIframe.name);
+                .catch((err) => reject(this.AddToBucketFromIframeProxy.name + ' | ' + err));
+            this.Logger.FuncEnd(this.AddToBucketFromIframeProxy.name);
         });
     }
 
@@ -54,7 +58,7 @@ export class CeProxyBucket extends LoggableBase {
             await this.GetIframeHelper().GetHostedIframes(this.AssociatedDesktopDoc)
                 .then((foundIframes: IframeProxy[]) => {
                     foundIframes.forEach(async (oneIframe) => {
-                        this.AddToBucketFromIframe(oneIframe);
+                        this.AddToBucketFromIframeProxy(oneIframe);
                     });
                 })
                 .catch((err) => { throw (err); });
@@ -65,14 +69,18 @@ export class CeProxyBucket extends LoggableBase {
     }
 
 
-    EnrollProxyAddedListener(callback: Function): void {
-        if (this.ProxyAddedListeners.indexOf(callback) < 0) {
-            this.ProxyAddedListeners.push(callback);
-        }
+  EnrollProxyAddedListener(callback: Function): void {
+    this.Logger.FuncStart(this.EnrollProxyAddedListener.name);
+        if (this.TreeMutationListeners.indexOf(callback) < 0) {
+            this.TreeMutationListeners.push(callback);
+    }
+    this.Logger.FuncEnd(this.EnrollProxyAddedListener.name);
     }
 
 
-    private BroadcastCeProxyAdded(ceProxy: ContentEditorProxy): void {
-        this.ProxyAddedListeners.forEach((callback) => callback(ceProxy));
+  private BroadcastCeProxyAdded(ceProxy: ContentEditorProxy): void {
+    this.Logger.FuncStart(this.BroadcastCeProxyAdded.name);
+    this.TreeMutationListeners.forEach((callback) => callback(ceProxy));
+    this.Logger.FuncEnd(this.BroadcastCeProxyAdded.name);
     }
 }

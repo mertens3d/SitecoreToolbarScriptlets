@@ -24,6 +24,7 @@ export class DtStartBarProxy extends LoggableBase {
 
   }
 
+
     GetStartBarButtonById(targetId: string) {
         return this.HostDoc.ContentDoc.querySelector('[id=' + targetId + ']');
     }

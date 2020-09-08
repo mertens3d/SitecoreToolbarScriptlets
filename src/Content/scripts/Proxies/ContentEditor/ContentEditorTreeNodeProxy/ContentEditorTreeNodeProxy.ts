@@ -1,10 +1,10 @@
-﻿import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { LoggableBase } from "../../../Managers/LoggableBase";
-import { IDataOneTreeNode } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode";
-import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IterationDrone } from "../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { Guid } from "../../../../../Shared/scripts/Helpers/Guid";
+﻿import { Guid } from "../../../../../Shared/scripts/Helpers/Guid";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { IDataOneTreeNode } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode";
+import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
+import { LoggableBase } from "../../../Managers/LoggableBase";
+import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 
 export class ContentEditorTreeNodeProxy extends LoggableBase {
   private AssociatedNodeElem: HTMLElement;
@@ -31,7 +31,24 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     //}
   }
 
-  Restore(newData: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
+  GetStateNode(): IDataOneTreeNode {
+    var newData: IDataOneTreeNode = {
+      IsExpanded: this.__isExpanded(),
+      IsActive: this.__isActive(),
+      NodeFriendly: this.GetFriendlyNameFromNode(),
+      NodeId: null,
+      Discriminator: SharedConst.Const.ObjDiscriminator.DataOneTreeNode
+    };
+
+    //if (newData.IsExpanded || newData.IsActive) {
+    //newData.NodeFriendly = this.GetFriendlyNameFromNode();
+
+    //}
+
+    return newData;
+  }
+
+  RestoreStateNode(newData: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
     if (newData.IsExpanded) {
       this.__expandNode();
     }
@@ -43,12 +60,16 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
 
       var hotTreeNode = dataOneDocTarget.ContentDoc.getElementById(hotTreeNodeId);
 
-      let hotTreeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, hotTreeNode);
+      if (hotTreeNode) {
+        let hotTreeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, hotTreeNode);
 
-      if (hotTreeNodeProxy) {
-        hotTreeNodeProxy.__activateNode()
+        if (hotTreeNodeProxy) {
+          hotTreeNodeProxy.__activateNode()
+        } else {
+          this.Logger.ErrorAndContinue(this.RestoreStateNode.name, 'hot tree node not found')
+        }
       } else {
-        this.Logger.ErrorAndContinue(this.Restore.name, 'hot tree node not found')
+        this.Logger.WarningAndContinue(this.RestoreStateNode.name, 'No hotTreeNode');
       }
     }
   }

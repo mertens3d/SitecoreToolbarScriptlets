@@ -1,4 +1,5 @@
-﻿import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
+﻿import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
@@ -6,11 +7,9 @@ import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
 import { IDataOneTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
+import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorTreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
-import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
-import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
-import { CeTabButtonAgent } from '../../../Agents/CeTabButtonAgent/CeTabButtonAgent';
 
 export class ContentEditorProxy extends LoggableBase {
   private AssociatedTreeProxy: IContentEditorTreeProxy;
@@ -26,6 +25,9 @@ export class ContentEditorProxy extends LoggableBase {
     this.SettingsAgent = settingsAgent;
     this.AssociatedId = Guid.NewRandomGuid();
     this.AssociatedDoc = associatedDoc;
+
+    this.AssociatedTreeProxy = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent);
+
 
     this.ValidateDoc();
 
@@ -60,7 +62,7 @@ export class ContentEditorProxy extends LoggableBase {
       let recipeBasics = new RecipeBasics(this.Logger);
 
       await recipeBasics.WaitForPageReadyNative(this.AssociatedDoc)
-        .then(() => this.AssociatedTreeProxy = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent))
+       
         .catch((err) => this.Logger.ErrorAndThrow(this.WaitForReadyAssociatedDocandInit.name, err));
     } catch (e) {
     }
@@ -69,9 +71,13 @@ export class ContentEditorProxy extends LoggableBase {
   }
 
   AddListenerToActiveNodeChange(callback: Function) {
+    this.Logger.FuncStart(this.AddListenerToActiveNodeChange.name);
     if (this.AssociatedTreeProxy) {
-      this.AssociatedTreeProxy.AddListenerToMutationEvent(callback);
+      this.AssociatedTreeProxy.AddListenerToTreeMutationEvent(callback);
+    } else {
+      this.Logger.WarningAndContinue(this.AddListenerToActiveNodeChange.name, 'no associated tree proxy');
     }
+    this.Logger.FuncEnd(this.AddListenerToActiveNodeChange.name);
   }
 
   async SetTreeState(oneTreeState: IDataOneStorageOneTreeState): Promise<void> {
@@ -102,8 +108,6 @@ export class ContentEditorProxy extends LoggableBase {
   async RestoreCEStateAsync(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
       this.Logger.FuncStart(this.RestoreCEStateAsync.name, Guid.AsShort(this.AssociatedDoc.DocId));
-
-      var toReturn: boolean = false;
 
       this.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
 

@@ -4,6 +4,6 @@ import { IDataOneDoc } from "../Data/IDataOneDoc";
 
 export interface IContentEditorTreeProxy {
     WaitForAndRestoreManyAllNodes(dataToRestore: IDataOneStorageOneTreeState, AssociatedDoc: IDataOneDoc);
-    AddListenerToMutationEvent(bar: any);
+    AddListenerToTreeMutationEvent(bar: any);
     GetOneLiveTreeData(): IDataOneTreeNode[];
 }

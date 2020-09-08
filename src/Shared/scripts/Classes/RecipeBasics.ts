@@ -54,6 +54,67 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     });
   }
 
+  private IsDocumentReady(document: Document): boolean {
+    let toReturn: boolean = false;
+
+    if (document) {
+      let currentReadyState = document.readyState.toString();
+      let isReadyStateComplete = currentReadyState === 'complete';
+
+      let url = document.URL;
+
+      if (isReadyStateComplete && url !== SharedConst.Const.UrlSuffix.AboutBlank && url != '') {
+        toReturn = true;
+      }
+
+      this.Logger.LogVal('url', url);;
+      this.Logger.LogVal('readyState', currentReadyState);;
+      this.Logger.LogVal('isReadyStateComplete', isReadyStateComplete);
+      this.Logger.LogVal('toReturn', toReturn);
+    }
+
+    return toReturn;
+  }
+
+  async WaitForPageReadyHtmlIframeElement(targetIframe: HTMLIFrameElement) {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForPageReadyHtmlIframeElement.name);
+
+      if (targetIframe) {
+        var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForPageReadyNative.name);
+
+        var isReady: boolean = false;
+
+        let currentReadyState: string;
+
+        while (iterationJr.DecrementAndKeepGoing() && !isReady) {
+          currentReadyState = targetIframe.contentDocument.readyState.toString();
+
+          isReady = this.IsDocumentReady(targetIframe.contentDocument);
+
+          if (isReady) {
+            break;
+          } else {
+            await iterationJr.Wait();
+          }
+        }
+
+        if (isReady) {
+          resolve();
+        }
+
+        if (iterationJr.IsExhausted) {
+          reject(iterationJr.IsExhaustedMsg);
+        }
+        this.Logger.Log('ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());
+      }
+      else {
+        this.Logger.ErrorAndThrow(this.WaitForPageReadyHtmlIframeElement.name, 'No target doc');
+      }
+      this.Logger.FuncEnd(this.WaitForPageReadyHtmlIframeElement.name);;
+    });
+  }
+
   async WaitForPageReadyNative(targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForPageReadyNative.name);
@@ -65,27 +126,18 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
         let currentReadyState: string;
 
-        let aboutBlank: string = 'about:blank';
-        let lastHref: string = '';
-
         while (iterationJr.DecrementAndKeepGoing() && !isReady) {
-          currentReadyState = targetDoc.ContentDoc.readyState.toString();
-          var isReadyStateComplete = currentReadyState === 'complete';
+          isReady = this.IsDocumentReady(targetDoc.ContentDoc);
 
-          if (targetDoc && targetDoc.ContentDoc && targetDoc.ContentDoc.location) {
-            lastHref = targetDoc.ContentDoc.location.href;
-          }
-
-          this.Logger.LogVal('lastHref', lastHref);;
-          this.Logger.LogVal('readyState', currentReadyState);;
-          this.Logger.LogVal('isReadyStateComplete', isReadyStateComplete);
-
-          if (isReadyStateComplete && lastHref !== aboutBlank && lastHref != '') {
-            isReady = true;
-            resolve();
+          if (isReady) {
+            break;
           } else {
             await iterationJr.Wait();
           }
+        }
+
+        if (isReady) {
+          resolve();
         }
 
         if (iterationJr.IsExhausted) {
@@ -136,7 +188,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       this.Logger.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
 
       var toReturnIframeProxy: IframeProxy = null;
-
 
       await this.WaitForAndReturnFoundElem(haystackDoc, selector)
         .then(async (foundElem: HTMLIFrameElement) => {
