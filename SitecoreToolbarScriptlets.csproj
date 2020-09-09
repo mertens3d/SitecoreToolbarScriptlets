@@ -59,14 +59,14 @@
     <TypeScriptCompile Include="src\Content\scripts\Agents\DesktopTabButtonAgent\DesktopTabButtonAgent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\ContentEditorTreeProxy.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\CeProxyBucket.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DesktopIframeProxyBucket.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorTreeMutatedEvent\IPayload_ContentEditorTreeMutatedEvent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorTreeMutatedEvent\Subject_ContentEditorTreeMutatedEvent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyAddedToDesktopEvent\IPayloadDesktop__ContentEditorProxyAddedToDesktop.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyAddedToDesktopEvent\Subject_ContentEditorProxyAddedToDesktopEvent.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\GenericEvent\GenericEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\GenericEvent\Subject_GenericEvent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopDomChangedEvent\Subject_DesktopDomChangedEvent.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DtStartBarProxy\DtStartBarProxy.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorContentTreeHolderProxy\ContentEditorContentTreeHolderProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeInitFromQueryStr\RecipeInitFromQueryStr.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentMessageBroker.ts" />
