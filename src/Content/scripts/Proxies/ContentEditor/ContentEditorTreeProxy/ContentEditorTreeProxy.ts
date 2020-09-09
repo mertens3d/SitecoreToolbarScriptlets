@@ -162,6 +162,42 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     return toReturn;
   }
 
+  GetTreeState(): Promise<IDataOneStorageOneTreeState> {
+    return new Promise((resolve, reject) => {
+      let toReturnOneTreeState: IDataOneStorageOneTreeState = {
+        
+        AllTreeNodeAr: this.GetOneLiveTreeData(),
+        ActiveNode: null,
+        Id: null
+      }
+
+      toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
+
+      if (toReturnOneTreeState) {
+        resolve(toReturnOneTreeState);
+      } else {
+        reject('todo why would this fail?');
+      }
+    })
+  }
+
+  GetActiveNode(allTreeNodeAr: IDataOneTreeNode[]) {
+    let toReturn: IDataOneTreeNode = null;
+    if (allTreeNodeAr) {
+      for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
+        let candidate: IDataOneTreeNode = allTreeNodeAr[idx];
+        if (candidate.IsActive) {
+          toReturn = candidate;
+          break;
+        }
+      }
+    } else {
+      this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
+    }
+
+    return toReturn;
+  }
+
   GetOneLiveTreeData(): IDataOneTreeNode[] {
     this.Logger.FuncStart(this.GetOneLiveTreeData.name);
 

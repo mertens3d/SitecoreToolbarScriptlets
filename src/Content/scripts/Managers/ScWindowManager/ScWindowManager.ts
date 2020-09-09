@@ -61,7 +61,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
           .catch((err) => reject(err));
       }
       else if (scWindowType === ScWindowType.ContentEditor) {
-        await this.CeProxy.GetTreeState()
+        await this.CeProxy.GetStateTree()
           .then((result: IDataOneStorageOneTreeState) => resolve(result))
           .then(() => resolve())
           .catch((err) => reject(err));
@@ -173,7 +173,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
         let ceAgent = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
 
         await ceAgent.WaitForReadyAssociatedDocandInit()
-          .then(() => ceAgent.GetTreeState())
+          .then(() => ceAgent.GetStateTree())
           .then((state: IDataOneStorageOneTreeState) => {
             scWindowState.AllCEAr.push(state);
           })

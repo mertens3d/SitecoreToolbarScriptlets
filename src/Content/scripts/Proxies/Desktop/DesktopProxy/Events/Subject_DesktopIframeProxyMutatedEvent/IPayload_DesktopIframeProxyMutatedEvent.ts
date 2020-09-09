@@ -1,5 +1,5 @@
 ﻿import { ContentEditorProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 
-export interface IPayload__ConEdProxyAddedToDesktop {
+export interface IPayload_DesktopIframeProxyMutated {
   NewCeProxy: ContentEditorProxy
 }

@@ -97,7 +97,6 @@ export class GenericUrlAgent implements IUrlAgent {
       Parameters: new URLSearchParams(window.location.search),// this.ExtractParameters(parser.search),
       FilePath: parser.pathname,// this.ExtractFilePath(url, parser),
       Anchor: parser.hash,
-      ScWindowType: ScWindowType.Unknown,
       HasError: false,
     }
   }

@@ -6,7 +6,6 @@ import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interface
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
-import { IDataOneTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorTreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
@@ -80,20 +79,20 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncEnd(this.AddListenerToActiveNodeChange.name);
   }
 
-  async SetTreeState(oneTreeState: IDataOneStorageOneTreeState): Promise<void> {
+  async SetStateTree(oneTreeState: IDataOneStorageOneTreeState): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetTreeState.name);
+      this.Logger.FuncStart(this.SetStateTree.name);
 
       if (oneTreeState) {
-        await this.RestoreCEStateAsync(oneTreeState)
+        await this.SetStateDesktopIframeProxy(oneTreeState)
           .then(() => resolve())
           .catch((err) => {
             this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
-            this.Logger.ErrorAndThrow(this.SetTreeState.name, 'bad data');
-            reject((this.SetTreeState.name + " " + err))
+            this.Logger.ErrorAndThrow(this.SetStateTree.name, 'bad data');
+            reject((this.SetStateTree.name + " " + err))
           })
       }
-      this.Logger.FuncEnd(this.SetTreeState.name);
+      this.Logger.FuncEnd(this.SetStateTree.name);
     });
   }
 
@@ -105,56 +104,32 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.AssociatedDoc.DocId));
   }
 
-  async RestoreCEStateAsync(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
+  async SetStateDesktopIframeProxy(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RestoreCEStateAsync.name, Guid.AsShort(this.AssociatedDoc.DocId));
+      this.Logger.FuncStart(this.SetStateDesktopIframeProxy.name, Guid.AsShort(this.AssociatedDoc.DocId));
 
       this.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
 
       await this.AssociatedTreeProxy.WaitForAndRestoreManyAllNodes(dataToRestore, this.AssociatedDoc)
         .then(() => resolve(true))
-        .catch((err) => reject(this.RestoreCEStateAsync.name + " " + err));
+        .catch((err) => reject(this.SetStateDesktopIframeProxy.name + " " + err));
 
-      this.Logger.FuncEnd(this.RestoreCEStateAsync.name);
+      this.Logger.FuncEnd(this.SetStateDesktopIframeProxy.name);
     });
   }
 
-  GetActiveNode(allTreeNodeAr: IDataOneTreeNode[]) {
-    let toReturn: IDataOneTreeNode = null;
-    if (allTreeNodeAr) {
-      for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
-        let candidate: IDataOneTreeNode = allTreeNodeAr[idx];
-        if (candidate.IsActive) {
-          toReturn = candidate;
-          break;
-        }
-      }
-    } else {
-      this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
-    }
+  GetStateTree(): Promise<IDataOneStorageOneTreeState> {
+    return new Promise<IDataOneStorageOneTreeState>(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetStateTree.name);
 
-    return toReturn;
-  }
+      await this.AssociatedTreeProxy.GetTreeState()
+        .then((result: IDataOneStorageOneTreeState) => {
+          result.Id = this.AssociatedId;
+          resolve(result);
+        })
+        .catch((err) => reject(this.GetStateTree.name + ' ' + err));
 
-  GetTreeState(): Promise<IDataOneStorageOneTreeState> {
-    return new Promise<IDataOneStorageOneTreeState>((resolve, reject) => {
-      this.Logger.FuncStart(this.GetTreeState.name);
-
-      var toReturnOneTreeState: IDataOneStorageOneTreeState = {
-        Id: this.AssociatedId,
-        AllTreeNodeAr: this.AssociatedTreeProxy.GetOneLiveTreeData(),
-        ActiveNode: null
-      }
-
-      toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
-
-      if (toReturnOneTreeState) {
-        resolve(toReturnOneTreeState);
-      } else {
-        reject('todo why would this fail?');
-      }
-
-      this.Logger.FuncEnd(this.GetTreeState.name);
+      this.Logger.FuncEnd(this.GetStateTree.name);
     });
   }
 }

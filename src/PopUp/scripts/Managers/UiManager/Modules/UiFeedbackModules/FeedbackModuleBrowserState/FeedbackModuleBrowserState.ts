@@ -4,6 +4,7 @@ import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents
 import { GenericUrlParts } from "../../../../../../../Shared/scripts/Interfaces/UrlParts";
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
 import { PopConst } from "../../../../../Classes/PopConst";
+import { ScUrlAgent } from "../../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 
 export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements IUiModule {
   constructor(selector: string, loggerAgent: ILoggerAgent) {
@@ -13,21 +14,23 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
   }
   RefreshUi(): void {
   }
-  PopulateFeedackBrowserState(urlParts: GenericUrlParts) {
+  PopulateFeedackBrowserState(scUrlAgent: ScUrlAgent) {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.FeedbackBrowserState);
 
     var allStateText: string = 'Browser State' + this.lineBreak;
     allStateText += this.lineBreak + 'URL Parts';
 
-    allStateText += this.indentedLineBreak + 'Page Type: ' + StaticHelpers.ScWindowTypeFriendly(urlParts.ScWindowType);
+    allStateText += this.indentedLineBreak + '<strong>Page Type:</strong> ' + StaticHelpers.ScWindowTypeFriendly(scUrlAgent.GetScWindowType());
 
-    allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + urlParts.OriginalRaw;
+    let UrlParts: GenericUrlParts = scUrlAgent.GetUrlParts();
 
-    allStateText += this.indentedLineBreak + 'Protocol: ' + urlParts.Protocol;
+    allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + UrlParts. OriginalRaw;
 
-    allStateText += this.indentedLineBreak + 'Host & Port: ' + urlParts.HostAndPort;
+    allStateText += this.indentedLineBreak + 'Protocol: ' + UrlParts.Protocol;
 
-    allStateText += this.indentedLineBreak + 'File Path: ' + urlParts.FilePath;
+    allStateText += this.indentedLineBreak + 'Host & Port: ' + UrlParts.HostAndPort;
+
+    allStateText += this.indentedLineBreak + 'File Path: ' + UrlParts.FilePath;
 
     targetCurrStateDiv.innerHTML = allStateText;
   }

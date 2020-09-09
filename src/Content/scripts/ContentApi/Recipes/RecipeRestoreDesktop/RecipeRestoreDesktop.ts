@@ -44,7 +44,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     return new Promise<void>(async (resolve, reject) => {
       this.Logger.FuncStart(this.__restoreDataToOneIframe.name);
 
-      await targetCeAgent.SetTreeState(oneTreeState)
+      await targetCeAgent.SetStateTree(oneTreeState)
         .then(() => resolve())
         .catch((err) => reject(err));
 

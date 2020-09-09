@@ -68,7 +68,6 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
   BuildEditPrevNormUrl(newMode: scMode, contState: IContentState): void {
     this.UrlParts.Anchor = '';
     this.UrlParts.FilePath = '';
-    this.UrlParts.ScWindowType = ScWindowType.Unknown;
 
     this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid());
     this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[newMode]);

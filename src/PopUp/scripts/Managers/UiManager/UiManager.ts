@@ -24,6 +24,7 @@ import { FeedbackModulePopUpState } from './Modules/UiFeedbackModules/FeedbackMo
 import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
 import { IContentState } from '../../../../Shared/scripts/Interfaces/Data/IContentState';
 import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
+import { ScUrlAgent } from '../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
 
 export class UiManager {
   AccordianManager: IAccordianManager;
@@ -193,12 +194,12 @@ export class UiManager {
   //  this.Logger.FuncEnd(this.UpdateAtticFromUi.name);
   //}
 
-  async SetUIStates(urlParts: GenericUrlParts) {
+  async SetUIStates(scUrlAgent: ScUrlAgent) {
     this.Logger.FuncStart(this.SetUIStates.name);
     if (this.Logger.IsNotNullOrUndefinedBool('state', this.LastKnownContentState)) {
       this.FeedbackModulePopUpState.PopulatePopUpStateUI(this.ModuleSelectSnapShot.GetSelectSnapshotId());
       this.FeedbackModuleContentState.PopulateContentStateFeedack(this.LastKnownContentState);
-      this.FeedbackModuleBrowserState.PopulateFeedackBrowserState(urlParts);
+      this.FeedbackModuleBrowserState.PopulateFeedackBrowserState(scUrlAgent);
     }
     this.Logger.FuncEnd(this.SetUIStates.name);
   }
@@ -206,7 +207,8 @@ export class UiManager {
   async RefreshUi() {
     this.Logger.FuncStart(this.RefreshUi.name);
 
-    await this.SetUIStates(this.TabMan.GetUrlParts());
+    await this.SetUIStates(this.TabMan.GetScUrlAgent());
+    await this.SetUIStates(this.TabMan.GetScUrlAgent());
 
     this.FeedbackModuleBrowserState.RefreshUi();
 

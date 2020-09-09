@@ -28,7 +28,7 @@ export class ScWindowRecipePartials extends LoggableBase {
                         .catch((err) => reject(err));
                 }
                 else if (dataToRestore.WindowType === ScWindowType.ContentEditor) {
-                    await OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0])
+                    await OneCEAgent.SetStateDesktopIframeProxy(dataToRestore.AllCEAr[0])
                       .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
                         .then(() => resolve())
                         .catch((err) => reject(err));

@@ -15,7 +15,7 @@ import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarPro
 import { DesktopIframeProxyBucket } from "./DesktopIframeProxyBucket";
 import { Subject_DesktopDomChangedEvent } from "./Events/DesktopDomChangedEvent/Subject_DesktopDomChangedEvent";
 import { IPayloadDesktop_DomChangedEvent } from "./Events/DesktopDomChangedEvent/IPayloadContentEditorDomChanged";
-import { IPayload__ConEdProxyAddedToDesktop } from "./Events/ContentEditorProxyAddedToDesktopEvent/IPayloadDesktop__ContentEditorProxyAddedToDesktop";
+import { IPayload_DesktopIframeProxyMutated } from "./Events/Subject_DesktopIframeProxyMutatedEvent/IPayload_DesktopIframeProxyMutatedEvent";
 
 export class DesktopProxy extends LoggableBase {
   private DesktopIframeProxyBucket: DesktopIframeProxyBucket;
@@ -42,7 +42,7 @@ export class DesktopProxy extends LoggableBase {
     this.ConEdTabButtonAgent = new DesktopTabButtonAgent(this.Logger, this);
 
     let self = this;
-    this.DesktopIframeProxyBucket.ConEdProxyAddedEvent.RegisterObserver((conEditProxy: IPayload__ConEdProxyAddedToDesktop) => self.ConEdTabButtonAgent.CallBackConEdProxyAdded(conEditProxy));
+    this.DesktopIframeProxyBucket.DesktopIframeProxyAddedEvent.RegisterObserver((conEditProxy: IPayload_DesktopIframeProxyMutated) => self.ConEdTabButtonAgent.CallBackConEdProxyAdded(conEditProxy));
 
     this.Subject_DomChangedEvent = new Subject_DesktopDomChangedEvent(this.Logger, this.AssociatedDoc);
 
@@ -108,7 +108,7 @@ export class DesktopProxy extends LoggableBase {
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
               this.Logger.MarkerA();
-              ceAgent.GetTreeState()
+              ceAgent.GetStateTree()
                 .then((oneCeState: IDataOneStorageOneTreeState) => {
                   toReturnDesktopState.HostedContentEditors.push(oneCeState);
 

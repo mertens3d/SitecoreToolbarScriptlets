@@ -4,12 +4,12 @@ import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
 import { IframeHelper } from '../../Helpers/IframeHelper';
 import { IframeProxy } from '../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
-import { IPayload__ConEdProxyAddedToDesktop } from '../../Proxies/Desktop/DesktopProxy/Events/ContentEditorProxyAddedToDesktopEvent/IPayloadDesktop__ContentEditorProxyAddedToDesktop';
 import { IPayload_ContentEditorTreeMutatedEvent } from '../../Proxies/Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../Shared/scripts/Enums/BufferDirection';
+import { IPayload_DesktopIframeProxyMutated } from '../../Proxies/Desktop/DesktopProxy/Events/Subject_DesktopIframeProxyMutatedEvent/IPayload_DesktopIframeProxyMutatedEvent';
 
 export class DesktopTabButtonAgent extends LoggableBase {
   private __iframeHelper: IframeHelper;
@@ -65,7 +65,7 @@ export class DesktopTabButtonAgent extends LoggableBase {
     }
   }
 
-  CallBackConEdProxyAdded(payload: IPayload__ConEdProxyAddedToDesktop) {
+  CallBackConEdProxyAdded(payload: IPayload_DesktopIframeProxyMutated) {
     this.Logger.FuncStart(this.CallBackConEdProxyAdded.name);
 
     if (payload) {

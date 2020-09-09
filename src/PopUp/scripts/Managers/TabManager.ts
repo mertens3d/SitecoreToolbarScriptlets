@@ -6,7 +6,6 @@ import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
-import { GenericUrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
 
 export class TabManager {
   private ScUrlAgent: ScUrlAgent;
@@ -30,8 +29,8 @@ export class TabManager {
     this.ScUrlAgent.SetParameterValueByKey(qsKey, qsValue)
   }
 
-  GetUrlParts(): GenericUrlParts {
-    return this.ScUrlAgent.GetUrlParts();
+  GetScUrlAgent(): ScUrlAgent {
+    return this.ScUrlAgent;
   }
 
   GetWindowType(): ScWindowType {
