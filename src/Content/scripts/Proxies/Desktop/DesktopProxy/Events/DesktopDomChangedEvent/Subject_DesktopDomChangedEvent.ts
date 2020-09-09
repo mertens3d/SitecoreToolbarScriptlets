@@ -1,9 +1,9 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IPayloadDesktop_DomChangedEvent } from "./IPayloadContentEditorDomChanged";
-import { GenericEvent_Subject } from "../GenericEvent/GenericEvent_Subject";
+import { Subject_GenericEvent } from "../GenericEvent/Subject_GenericEvent";
 
-export class Subject_DesktopDomChangedEvent extends GenericEvent_Subject<IPayloadDesktop_DomChangedEvent>  {
+export class Subject_DesktopDomChangedEvent extends Subject_GenericEvent<IPayloadDesktop_DomChangedEvent>  {
   private AssociatedDoc: IDataOneDoc;
 
   constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc) {
@@ -25,14 +25,12 @@ export class Subject_DesktopDomChangedEvent extends GenericEvent_Subject<IPayloa
         let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
         this.Logger.Log('-----> ' + mutatedElement.id);
 
-
         let addedIframes: HTMLIFrameElement[] = [];
         mutation.addedNodes.forEach((addedNode) => {
           if (addedNode instanceof HTMLIFrameElement) {
-            addedIframes.push(<HTMLIFrameElement> addedNode);
+            addedIframes.push(<HTMLIFrameElement>addedNode);
           }
         })
-
 
         let message: IPayloadDesktop_DomChangedEvent = {
           MutatedElement: mutatedElement,

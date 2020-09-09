@@ -11,18 +11,18 @@ import { RecipeRestoreDesktop } from "../../../ContentApi/Recipes/RecipeRestoreD
 import { IframeHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { DtStartBarProxy } from "../DtStartBarProxy/DtStartBarProxy";
-import { ConEdProxyBucket } from "./CeProxyBucket";
+import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
+import { DesktopIframeProxyBucket } from "./DesktopIframeProxyBucket";
 import { Subject_DesktopDomChangedEvent } from "./Events/DesktopDomChangedEvent/Subject_DesktopDomChangedEvent";
 import { IPayloadDesktop_DomChangedEvent } from "./Events/DesktopDomChangedEvent/IPayloadContentEditorDomChanged";
 import { IPayload__ConEdProxyAddedToDesktop } from "./Events/ContentEditorProxyAddedToDesktopEvent/IPayloadDesktop__ContentEditorProxyAddedToDesktop";
 
 export class DesktopProxy extends LoggableBase {
-  private ConEdProxyBucket: ConEdProxyBucket;
+  private DesktopIframeProxyBucket: DesktopIframeProxyBucket;
 
   ConEdTabButtonAgent: DesktopTabButtonAgent;
   private __iframeHelper: IframeHelper;
-  private _dtStartBarAgent: DtStartBarProxy;
+  private _dtStartBarAgent: DesktopStartBarProxy;
   private AssociatedDoc: IDataOneDoc;
 
   private MiscAgent: MiscAgent;
@@ -37,19 +37,18 @@ export class DesktopProxy extends LoggableBase {
     this.SettingsAgent = settingsAgent;
     this.AssociatedDoc = associatedDoc;
 
-    this.ConEdProxyBucket = new ConEdProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
+    this.DesktopIframeProxyBucket = new DesktopIframeProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
 
     this.ConEdTabButtonAgent = new DesktopTabButtonAgent(this.Logger, this);
 
-    
     let self = this;
-    this.ConEdProxyBucket.ConEdProxyAddedEvent.RegisterObserver((conEditProxy: IPayload__ConEdProxyAddedToDesktop) => self.ConEdTabButtonAgent.CallBackConEdProxyAdded(conEditProxy));
+    this.DesktopIframeProxyBucket.ConEdProxyAddedEvent.RegisterObserver((conEditProxy: IPayload__ConEdProxyAddedToDesktop) => self.ConEdTabButtonAgent.CallBackConEdProxyAdded(conEditProxy));
 
     this.Subject_DomChangedEvent = new Subject_DesktopDomChangedEvent(this.Logger, this.AssociatedDoc);
 
     this.Subject_DomChangedEvent.RegisterObserver((payload: IPayloadDesktop_DomChangedEvent) => { self.Observer_DesktopDomChangedEvent(payload) });
 
-    this.ConEdProxyBucket.InitHostedContentEditors();
+    this.DesktopIframeProxyBucket.InitHostedContentEditors();
 
     this.Logger.InstantiateEnd(DesktopProxy.name);
   }
@@ -62,7 +61,7 @@ export class DesktopProxy extends LoggableBase {
 
         let iframeProxy: IframeProxy = new IframeProxy(this.Logger, iframeElement, iframeElement.id);
         await iframeProxy.WaitForReady()
-          .then(() => this.ConEdProxyBucket.AddToBucketFromIframeProxy(iframeProxy))
+          .then(() => this.DesktopIframeProxyBucket.AddToBucketFromIframeProxy(iframeProxy))
       })
     }
     this.Logger.LogAsJsonPretty('payload', payload);
@@ -72,9 +71,9 @@ export class DesktopProxy extends LoggableBase {
     return this.AssociatedDoc;
   }
 
-  GetDtStartBarAgent(): DtStartBarProxy {
+  GetDtStartBarAgent(): DesktopStartBarProxy {
     if (!this._dtStartBarAgent) {
-      this._dtStartBarAgent = new DtStartBarProxy(this.Logger, this.AssociatedDoc);
+      this._dtStartBarAgent = new DesktopStartBarProxy(this.Logger, this.AssociatedDoc);
     }
 
     return this._dtStartBarAgent;

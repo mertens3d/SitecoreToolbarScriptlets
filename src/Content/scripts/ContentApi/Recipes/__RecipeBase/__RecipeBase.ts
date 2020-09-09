@@ -17,7 +17,7 @@ export class __RecipeBase {
   protected TargetSnapShotId: GuidData;
   protected TargetSnapShotFlavor: SnapShotFlavor;
   protected TargetDoc: IDataOneDoc;
-  protected TargetCeProxy: ContentEditorProxy;
+  protected TargetConEdProxy: ContentEditorProxy;
 
   constructor(commandData: ICommandHndlrDataForContent) {
     this.Logger = commandData.Logger;
@@ -27,6 +27,6 @@ export class __RecipeBase {
     this.TargetSnapShotId = commandData.TargetSnapShotId;
     this.TargetSnapShotFlavor = commandData.TargetSnapShotFlavor
     this.TargetDoc = commandData.TargetDoc;
-    this.TargetCeProxy = commandData.TargetCeProxy;
+    this.TargetConEdProxy = commandData.TargetCeProxy;
   }
 }

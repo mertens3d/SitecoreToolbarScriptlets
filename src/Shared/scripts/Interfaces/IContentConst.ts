@@ -54,6 +54,7 @@ export interface IContentConst {
       scStartButton: IScVerSpec,
       Desktop: {
         DtStartBar: string,
+        ContentTreeHolder: string,
       },
       Publish: {
         TheItemHasBeenPublished: string,

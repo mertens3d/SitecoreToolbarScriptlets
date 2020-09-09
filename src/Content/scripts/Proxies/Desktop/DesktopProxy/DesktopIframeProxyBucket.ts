@@ -4,11 +4,11 @@ import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IData
 import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { IframeHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
-import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { ContentEditorProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { Subject_ConEdProxyAddedToDesktopEvent } from "./Events/ContentEditorProxyAddedToDesktopEvent/Subject_ContentEditorProxyAddedToDesktopEvent";
 import { IPayload__ConEdProxyAddedToDesktop } from "./Events/ContentEditorProxyAddedToDesktopEvent/IPayloadDesktop__ContentEditorProxyAddedToDesktop";
 
-export class ConEdProxyBucket extends LoggableBase {
+export class DesktopIframeProxyBucket extends LoggableBase {
   private CeProxies: ContentEditorProxy[] = [];
   private __iframeHelper: any;
   private AssociatedDesktopDoc: IDataOneDoc;
@@ -17,11 +17,11 @@ export class ConEdProxyBucket extends LoggableBase {
 
   constructor(logger: ILoggerAgent, desktopDocument: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
-    this.Logger.InstantiateStart(ConEdProxyBucket.name);
+    this.Logger.InstantiateStart(DesktopIframeProxyBucket.name);
     this.AssociatedDesktopDoc = desktopDocument;
     this.SettingsAgent = settingsAgent;
     this.ConEdProxyAddedEvent = new Subject_ConEdProxyAddedToDesktopEvent(this.Logger);
-    this.Logger.InstantiateEnd(ConEdProxyBucket.name);
+    this.Logger.InstantiateEnd(DesktopIframeProxyBucket.name);
   }
 
   private GetIframeHelper(): IframeHelper {
@@ -52,7 +52,6 @@ export class ConEdProxyBucket extends LoggableBase {
       this.Logger.FuncStart(this.AddToBucketFromIframeProxy.name);
       var newCeProxy = new ContentEditorProxy(oneIframe.GetContentDoc(), this.Logger, this.SettingsAgent, oneIframe.IframeElem.id);
       await newCeProxy.WaitForReadyAssociatedDocandInit()
-        //.then(() => newCeProxy.AddListenerToActiveNodeChange(this.GetDtStartBarAgent().CallBackActiveElementChanged))
         .then(() => this.AddConEdProxy(newCeProxy))
         .then(() => resolve())
         .catch((err) => reject(this.AddToBucketFromIframeProxy.name + ' | ' + err));

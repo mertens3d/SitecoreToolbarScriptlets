@@ -186,7 +186,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
         break;
 
       default:
-        //this.Logger.ErrorAndThrow('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(msgFlag));
+        this.Logger.Log('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(payload.MsgFlag));
         break;
     }
 

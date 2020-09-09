@@ -1,7 +1,7 @@
 ﻿import { LoggableBase } from "../../../../../Managers/LoggableBase";
 import { IObservable } from "../../../../../../../Shared/scripts/Interfaces/Events/IObservable";
 
-export class GenericEvent_Subject<T> extends LoggableBase implements IObservable {
+export class Subject_GenericEvent<T> extends LoggableBase implements IObservable {
     protected ObserverCollection: Function[] = [];
 
     RegisterObserver(observer: Function): void {

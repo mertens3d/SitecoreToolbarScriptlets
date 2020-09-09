@@ -116,6 +116,7 @@ export class ContentConst {
         },
         Desktop: {
           DtStartBar: '[id=Startbar]',
+          ContentTreeHolder: '[id=ContentTreeHolder]',
         },
       },
     },

@@ -1,11 +1,11 @@
-﻿import { GenericEvent_Subject } from "../GenericEvent/GenericEvent_Subject";
+﻿import { Subject_GenericEvent } from "../GenericEvent/Subject_GenericEvent";
 import { IPayload_ContentEditorTreeMutatedEvent } from "./IPayload_ContentEditorTreeMutatedEvent";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ContentEditorTreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
 
-export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<IPayload_ContentEditorTreeMutatedEvent> {
+export class Subject_ContentEditorTreeMutatedEvent extends Subject_GenericEvent<IPayload_ContentEditorTreeMutatedEvent> {
   private TreeElement: any;
-  private  HostIframeId: string;
+  private HostIframeId: string;
 
   constructor(logger: ILoggerAgent, treeElement: HTMLElement, hostIframeId: string) {
     super(logger);
@@ -28,9 +28,6 @@ export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<
         let observer = new MutationObserver((mutations: MutationRecord[]) => { self.HandleMutationEvent(mutations) });
 
         observer.observe(this.TreeElement, { attributes: true, subtree: true, childList: true });
-
-        //this.SelfElem.addEventListener('click', (evt) => { alert((<HTMLElement>evt.target).innerText) });
-        //use MutationObserver
       }
     } catch (err) {
       throw (err);

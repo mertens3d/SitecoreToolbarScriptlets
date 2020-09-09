@@ -38,29 +38,20 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
 
   private GetTreeHolderElem(): HTMLElement {
     if (!this.__treeHolderElem) {
-      this.__treeHolderElem = this.AssociatedDoc.ContentDoc.querySelector('[id=ContentTreeHolder]');
+      this.__treeHolderElem = this.AssociatedDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.Desktop.ContentTreeHolder);
     }
     return this.__treeHolderElem
   }
 
-
- private InitCeTreeProxy() {
+  private InitCeTreeProxy() {
     this.Logger.FuncStart(this.InitCeTreeProxy.name);
 
     let setting = this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton);
-    this.Logger.LogVal('enable rename ConEd button', setting.ValueAsBool());
-
     if (setting && setting.ValueAsBool()) {
-      this.AttachActiveNodeChangedObserver();
-
-      this.TreeMutationEvent = new Subject_ContentEditorTreeMutatedEvent(this.Logger, this.GetTreeHolderElem(),this.HostIframeId);
-    } else {
+      this.TreeMutationEvent = new Subject_ContentEditorTreeMutatedEvent(this.Logger, this.GetTreeHolderElem(), this.HostIframeId);
     }
-    this.Logger.FuncEnd(this.InitCeTreeProxy.name);
-  }
 
-  OnTreeMutated(payload: IPayload_ContentEditorTreeMutatedEvent) {
-    throw new Error("Method not implemented.");
+    this.Logger.FuncEnd(this.InitCeTreeProxy.name);
   }
 
   AddListenerToTreeMutationEvent(callback: Function) {
@@ -80,8 +71,6 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
 
       this.Logger.Log('looking for: ' + treeGlyphTargetId + ' ' + targetNode.NodeFriendly + ' in ' + Guid.AsShort(dataOneDocTarget.DocId));
 
-      //this.Logger.Log('document not null ' + (dataOneDocTarget.ContentDoc != null));
-
       var foundOnPageTreeGlyph: HTMLElement = dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
 
       if (foundOnPageTreeGlyph) {
@@ -90,12 +79,8 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
       } else {
         this.Logger.Log('Not Found');
       }
-
-      //this.Logger.Log('looking for: *' + treeGlyphTargetId + '* ' + targetNode.NodeFriendly + ' in *' + Guid.AsShort(dataOneDocTarget.DocId) + '*');
     }
-
     this.Logger.FuncEnd(this.GetTreeNodeByGlyph.name);
-
     return toReturn;
   }
 
@@ -122,8 +107,6 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
       let foundOnPageProxy: ContentEditorTreeNodeProxy = null;
 
       while (!foundOnPageProxy && iterHelper.DecrementAndKeepGoing()) {
-        //foundOnPageProxy = this.GetTreeNodeByGlyph(this.AssociatedNodeElem, dataOneDocTarget);
-
         foundOnPageProxy = this.GetTreeNodeByGlyph(newData, dataOneDocTarget);
 
         if (foundOnPageProxy) {
@@ -137,30 +120,6 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
       throw (this.WaitForAndRestoreOneNode.name + ' | ' + err);
     }
     this.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId));
-  }
-
-
-
-  BroadCastTreeMutated(mutations: MutationRecord[]) {
-    this.Logger.FuncStart(this.BroadCastTreeMutated.name + '_callback');
-  
-    this.Logger.FuncStart(this.BroadCastTreeMutated.name + '_callback');
-  }
-
-  private AttachActiveNodeChangedObserver() {
-    this.Logger.FuncStart(this.AttachActiveNodeChangedObserver.name);
-
-    try {
-      if (this.GetTreeHolderElem()) {
-      }
-      else {
-        this.Logger.ErrorAndThrow(this.AttachActiveNodeChangedObserver.name, 'no TreeHolder Elem');
-      }
-    } catch (err) {
-      throw (err);
-    }
-
-    this.Logger.FuncEnd(this.AttachActiveNodeChangedObserver.name);
   }
 
   WalkNodeRecursive(targetNode: HTMLElement, depth: number): IDataOneTreeNode[] {
