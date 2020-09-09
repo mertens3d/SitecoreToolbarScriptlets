@@ -12,17 +12,17 @@ import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
 import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
-import { CeTabButtonAgent } from '../../../Agents/CeTabButtonAgent/CeTabButtonAgent';
+import { DesktopTabButtonAgent } from '../../../Agents/DesktopTabButtonAgent/DesktopTabButtonAgent';
 
 export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
   private TargetDoc: IDataOneDoc;
   private DataToRestore: IDataOneStorageOneTreeState;
-  private  RecipeBasics: RecipeBasics;
-  private  SettingsAgent: ISettingsAgent;
-    CeButtonTabAgent: CeTabButtonAgent;
+  private RecipeBasics: RecipeBasics;
+  private SettingsAgent: ISettingsAgent;
+  DesktopTabButtonTabAgent: DesktopTabButtonAgent;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, settingsAgent: ISettingsAgent, ceButtonTabAgent: CeTabButtonAgent) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopTabButtonAgent) {
     super(logger);
     this.Logger.InstantiateStart(RecipeRestoreDesktop.name);
 
@@ -32,7 +32,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     this.DataToRestore = dataToRestore;
     this.RecipeBasics = new RecipeBasics(this.Logger);
     this.SettingsAgent = settingsAgent;
-    this.CeButtonTabAgent = ceButtonTabAgent;
+    this.DesktopTabButtonTabAgent = ceButtonTabAgent;
 
     this.Logger.InstantiateEnd(RecipeRestoreDesktop.name);
   }
@@ -40,49 +40,6 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     await this.RunOneChain();
   }
 
-  private __waitForAndClickRedStartButton(targetDoc: IDataOneDoc) {
-    return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.__waitForAndClickRedStartButton.name);
-
-      if (this.MiscAgent.NotNullOrUndefined(targetDoc, this.__waitForAndClickRedStartButton.name)) {
-        this.Logger.MarkerB();
-
-        await this.RecipeBasics.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, targetDoc)
-          .then(() => resolve())
-          .catch((ex) => reject(ex));
-      } else {
-        reject(this.__waitForAndClickRedStartButton.name + ' something was null or undefined');
-      }
-      this.Logger.FuncEnd(this.__waitForAndClickRedStartButton.name);
-    });
-  }
-
-  private __waitForIframeReady(targetIframe: IframeProxy) {
-    return new Promise<void>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.__waitForIframeReady.name, 'targetIframe not null: ' + (targetIframe !== null));
-
-      await this.RecipeBasics.WaitForReadyIframe(targetIframe)
-        .then(() => {
-          this.Logger.LogAsJsonPretty(this.__waitForIframeReady.name, targetIframe);
-
-          resolve();
-        })
-        .catch((err) => {
-          this.Logger.Log('rejected ! : ');
-          reject(this.__waitForIframeReady.name + ' ' + err);
-        })
-
-      this.Logger.FuncEnd(this.__waitForIframeReady.name);
-    });
-  }
-
-  private __waitForAndThenClickCEFromMenu(targetDoc: IDataOneDoc) {
-    return new Promise<IDataBucketRestoreDesktop>(async (resolve, reject) => {
-      await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], targetDoc)
-        .then(() => { resolve(); })
-        .catch((ex) => { reject(this.__waitForAndThenClickCEFromMenu.name + ' ' + ex); });
-    });
-  }
 
   private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: ContentEditorProxy) {
     return new Promise<void>(async (resolve, reject) => {
@@ -100,7 +57,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RunOneChain.name);
 
-      if (this.MiscAgent.NotNullOrUndefined([this.TargetDoc,this.DataToRestore], this.RunOneChain.name)) {
+      if (this.MiscAgent.NotNullOrUndefined([this.TargetDoc, this.DataToRestore], this.RunOneChain.name)) {
         var dataBucket: IDataBucketRestoreDesktop = {
           targetDoc: this.TargetDoc,
           IFramesbefore: allIframeDataAtBeginning,
@@ -112,7 +69,7 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
         var allIframeDataAtBeginning: IframeProxy[];
         var ceProxy: ContentEditorProxy;
         let iframeHelper = new IframeHelper(this.Logger);
-        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent, this.CeButtonTabAgent);
+        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent, this.DesktopTabButtonTabAgent);
 
         await recipeAddCe.Execute()
 
@@ -122,7 +79,6 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
           //.then(() => this.__waitForAndThenClickCEFromMenu(dataBucket.targetDoc))
 
           //.then(() => this.RecipeBasics.WaitForNewIframe(allIframeDataAtBeginning, dataBucket.targetDoc))
-
 
           .then((result: ContentEditorProxy) => ceProxy = result)
           .then(() => ceProxy.WaitForReadyAssociatedDocandInit())

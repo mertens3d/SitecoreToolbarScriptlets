@@ -56,7 +56,7 @@
     <Content Include="ReadmeResoures\external-tools-hotkey.png" />
     <Content Include="ReadmeResoures\external-tools.png" />
     <Content Include="ReadmeResoures\file.png" />
-    <TypeScriptCompile Include="src\Content\scripts\Agents\CeTabButtonAgent\CeTabButtonAgent.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Agents\DesktopTabButtonAgent\DesktopTabButtonAgent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\ContentEditorTreeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\CeProxyBucket.ts" />

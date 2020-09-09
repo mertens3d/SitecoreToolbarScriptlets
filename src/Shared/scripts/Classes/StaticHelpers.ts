@@ -51,10 +51,9 @@ export class StaticHelpers {
     return toReturn;
   }
 
-  static BufferString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
-    var toReturn = str;
-    var buffChar: string = ' ';
 
+  private static getBuffChar(buffCharEnum: BufferChar) {
+    var buffChar: string = ' ';
     if (buffCharEnum === BufferChar.space) {
       buffChar = ' ';
     } else if (buffCharEnum === BufferChar.Nbsp) {
@@ -66,6 +65,22 @@ export class StaticHelpers {
     else if (buffCharEnum === BufferChar.Zero) {
       buffChar = '0';
     }
+
+    return buffChar;
+  }
+
+  //static ShortenString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
+  //  var toReturn = str;
+
+
+
+  //  return toReturn;
+
+  //}
+
+  static BufferString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
+    var toReturn = str;
+    var buffChar: string = this.getBuffChar(buffCharEnum);
 
     if (toReturn.length > desiredLength) {
       if (desiredLength > 6) {

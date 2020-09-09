@@ -3,7 +3,7 @@
 export class SharedConst {
   static Const: ISharedConst = {
     Debug: {
-      ForceLoggingEnabled: true
+      ForceLoggingEnabled: false
     },
     IterHelper: {
       GrowthPerIteration: 0.5,
@@ -41,6 +41,7 @@ export class SharedConst {
         Preview: /sc_itemid=.*sc_mode=preview/ig,
       },
     },
+
     UrlSuffix: {
       Desktop: '/sitecore/shell/default.aspx',
       Login: '/sitecore/login',

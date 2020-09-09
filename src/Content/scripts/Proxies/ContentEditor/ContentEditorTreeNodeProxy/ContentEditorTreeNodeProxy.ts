@@ -9,11 +9,7 @@ import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 export class ContentEditorTreeNodeProxy extends LoggableBase {
   private AssociatedNodeElem: HTMLElement;
 
-  //constructor(logger: ILoggerAgent, treeNodeData: IDataOneTreeNode)
-  //constructor(logger: ILoggerAgent, nodeId: Guid)
-  //constructor(logger: ILoggerAgent, selector: string)
   constructor(logger: ILoggerAgent, obj: HTMLElement) {
-    //constructor(logger: ILoggerAgent, obj?: any) {
     super(logger);
     if (obj) {
       this.Logger.Log('Instantiating from Element');
@@ -21,36 +17,23 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     } else {
       this.Logger.ErrorAndThrow(ContentEditorTreeNodeProxy.name, 'No passed elem');
     }
-    //} else if (obj instanceof String) {
-    //  this.Logger.ErrorAndThrow('Instantiating from Selector');
-
-    //} else if (obj instanceof Guid) {
-    //  this.Logger.ErrorAndThrow('Instantiating from Selector');
-    //} else if (obj.Discriminator === 'IDataOneTreeNode') {
-    //  this.Logger.ErrorAndThrow('Instantiating from Selector');
-    //}
   }
 
   GetStateNode(): IDataOneTreeNode {
     var newData: IDataOneTreeNode = {
-      IsExpanded: this.__isExpanded(),
-      IsActive: this.__isActive(),
+      IsExpanded: this.IsExpanded(),
+      IsActive: this.IsActive(),
       NodeFriendly: this.GetFriendlyNameFromNode(),
       NodeId: null,
       Discriminator: SharedConst.Const.ObjDiscriminator.DataOneTreeNode
     };
-
-    //if (newData.IsExpanded || newData.IsActive) {
-    //newData.NodeFriendly = this.GetFriendlyNameFromNode();
-
-    //}
 
     return newData;
   }
 
   RestoreStateNode(newData: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
     if (newData.IsExpanded) {
-      this.__expandNode();
+      this.ExpandNode();
     }
 
     this.Logger.LogVal('IsActive', newData.IsActive.toString());
@@ -64,7 +47,7 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
         let hotTreeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, hotTreeNode);
 
         if (hotTreeNodeProxy) {
-          hotTreeNodeProxy.__activateNode()
+          hotTreeNodeProxy.ActivateNode()
         } else {
           this.Logger.ErrorAndContinue(this.RestoreStateNode.name, 'hot tree node not found')
         }
@@ -74,8 +57,8 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     }
   }
 
-  __isActive(): boolean {
-    this.Logger.FuncStart(this.__isActive.name);
+  IsActive(): boolean {
+    this.Logger.FuncStart(this.IsActive.name);
     var toReturn: boolean = false;
 
     var firstNodeActiveTest = this.AssociatedNodeElem.querySelector(ContentConst.Const.Selector.SC.IdStartsWithTreeNode);
@@ -92,22 +75,22 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
       this.Logger.Log('does not pass first node test');
     }
 
-    this.Logger.FuncEnd(this.__isActive.name);
+    this.Logger.FuncEnd(this.IsActive.name);
     return toReturn;
   }
 
-  __activateNode(): void {
-    this.Logger.FuncStart(this.__activateNode.name);
+  ActivateNode(): void {
+    this.Logger.FuncStart(this.ActivateNode.name);
 
     if (this.AssociatedNodeElem) {
       this.Logger.Log('clicking it');
 
       this.AssociatedNodeElem.click();
     } else {
-      this.Logger.ErrorAndContinue(this.__activateNode.name, 'No associated Elem');
+      this.Logger.ErrorAndContinue(this.ActivateNode.name, 'No associated Elem');
     }
 
-    this.Logger.FuncEnd(this.__activateNode.name);
+    this.Logger.FuncEnd(this.ActivateNode.name);
   }
 
   private __collapseNode(element: HTMLElement): void {
@@ -119,17 +102,8 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     }
   }
 
-  //private __collapseRootNode(targetCEDoc: IDataOneDoc) {
-  //  var rootElem: HTMLElement = targetCEDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
-  //  if (rootElem) {
-  //    this.__collapseNode(rootElem);
-  //  } else {
-  //    this.Logger.ErrorAndThrow(this.__collapseRootNode.name, 'Root glyph not found ' + ContentConst.Const.ElemId.sc.SitecoreRootGlyphId);
-  //  }
-  //}
-
-  __expandNode(): void {
-    this.Logger.FuncStart(this.__expandNode.name);
+  ExpandNode(): void {
+    this.Logger.FuncStart(this.ExpandNode.name);
     if (this.AssociatedNodeElem) {
       var currentSrc = this.AssociatedNodeElem.getAttribute('src');
       this.Logger.Log('currentSrc' + currentSrc);
@@ -141,13 +115,12 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
         this.Logger.Log('Already expanded');
       }
     } else {
-      this.Logger.ErrorAndContinue(this.__expandNode.name, 'No associated elem');
+      this.Logger.ErrorAndContinue(this.ExpandNode.name, 'No associated elem');
     }
-    this.Logger.FuncEnd(this.__expandNode.name);
+    this.Logger.FuncEnd(this.ExpandNode.name);
   }
 
   GetFriendlyNameFromNode() {
-    this.Logger.FuncStart(this.GetFriendlyNameFromNode.name);
     var toReturn = 'unknown';
 
     var parentNode = this.AssociatedNodeElem.parentNode;
@@ -159,11 +132,10 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     else {
       this.Logger.Log('No treeNode');
     }
-    this.Logger.FuncEnd(this.GetFriendlyNameFromNode.name, toReturn);
     return toReturn;
   }
 
-  __isContentTreeNode(targetNode: HTMLElement) {
+  IsContentTreeNode(targetNode: HTMLElement) {
     var toReturn: boolean = false;
 
     var className = targetNode.className;
@@ -173,7 +145,7 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     }
     return toReturn;
   }
-  __isExpanded() {
+  IsExpanded() {
     var toReturn: boolean = false;
     if (this.AssociatedNodeElem) {
       var srcAttr = this.AssociatedNodeElem.getAttribute('src');

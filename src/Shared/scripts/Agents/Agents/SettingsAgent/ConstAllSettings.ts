@@ -28,7 +28,7 @@ export class ConstAllSettings {
       PopConst.Const.Selector.HS.EnableLogging,
       SharedConst.Const.Settings.Defaults.EnableLogging,
       SettingFlavor.ContentAndPopUpStoredInPopUp,
-      'Enable Logging (note: page refresh + open pop up required to fully realize)',
+      'Enable Logging',
       Enabled.Enabled
     ),
     new OneGenericSetting(

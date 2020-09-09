@@ -53,8 +53,7 @@ export interface IContentConst {
       StartMenuLeftOption: string,
       scStartButton: IScVerSpec,
       Desktop: {
-
-      DtStartBar: string,
+        DtStartBar: string,
       },
       Publish: {
         TheItemHasBeenPublished: string,
@@ -69,7 +68,11 @@ export interface IContentConst {
     SnapShotPrefix: string,
     WindowRoot: string,
   },
-
+  Numbers: {
+    Desktop: {
+      MaxToolBarNameChars: number,
+    }
+  },
   MaxIter: number,
   MaxNullOrUndefinedIter: number,
 
@@ -81,6 +84,9 @@ export interface IContentConst {
       TreeGlyphPrefix: string,
       TreeNodePrefix: string,
       TreeExpandedPng: IScVerSpec,
+    },
+    Desktop: {
+      StartBarApplicationPrefix: string
     },
     PopUp: string,
     PopUpStyles: string,

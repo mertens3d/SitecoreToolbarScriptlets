@@ -59,13 +59,11 @@ export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<
   }
 
   private HandleMutationEvent(mutations: MutationRecord[]) {
-    this.Logger.FuncStart(this.HandleMutationEvent.name);
-
     mutations.forEach((mutation) => {
       let candidateNode: ContentEditorTreeNodeProxy = this.GetMutatedNode(mutation);
 
       if (candidateNode) {
-        if (candidateNode.__isActive()) {
+        if (candidateNode.IsActive()) {
           let payload: IPayload_ContentEditorTreeMutatedEvent = {
             MutatedElement: <HTMLElement>(mutation.target),
             ActiveNode: candidateNode,
@@ -75,7 +73,5 @@ export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<
         }
       }
     });
-
-    this.Logger.FuncEnd(this.HandleMutationEvent.name);
   }
 }

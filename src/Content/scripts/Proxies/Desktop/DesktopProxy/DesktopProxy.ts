@@ -5,7 +5,7 @@ import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IData
 import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { IDataOneStorageOneTreeState } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
 import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
-import { CeTabButtonAgent } from "../../../Agents/CeTabButtonAgent/CeTabButtonAgent";
+import { DesktopTabButtonAgent } from "../../../Agents/DesktopTabButtonAgent/DesktopTabButtonAgent";
 import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
 import { RecipeRestoreDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
 import { IframeHelper } from "../../../Helpers/IframeHelper";
@@ -18,9 +18,9 @@ import { IPayloadDesktop_DomChangedEvent } from "./Events/DesktopDomChangedEvent
 import { IPayload__ConEdProxyAddedToDesktop } from "./Events/ContentEditorProxyAddedToDesktopEvent/IPayloadDesktop__ContentEditorProxyAddedToDesktop";
 
 export class DesktopProxy extends LoggableBase {
-  private CeProxyBucket: ConEdProxyBucket;
+  private ConEdProxyBucket: ConEdProxyBucket;
 
-  CeTabButtonAgent: CeTabButtonAgent;
+  ConEdTabButtonAgent: DesktopTabButtonAgent;
   private __iframeHelper: IframeHelper;
   private _dtStartBarAgent: DtStartBarProxy;
   private AssociatedDoc: IDataOneDoc;
@@ -37,19 +37,19 @@ export class DesktopProxy extends LoggableBase {
     this.SettingsAgent = settingsAgent;
     this.AssociatedDoc = associatedDoc;
 
-    this.CeProxyBucket = new ConEdProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
+    this.ConEdProxyBucket = new ConEdProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
 
-    this.CeTabButtonAgent = new CeTabButtonAgent(this.Logger, this);
+    this.ConEdTabButtonAgent = new DesktopTabButtonAgent(this.Logger, this);
 
     
     let self = this;
-    this.CeProxyBucket.ConEdProxyAddedEvent.RegisterObserver((conEditProxy: IPayload__ConEdProxyAddedToDesktop) => self.CeTabButtonAgent.CallBackConEdProxyAdded(conEditProxy));
+    this.ConEdProxyBucket.ConEdProxyAddedEvent.RegisterObserver((conEditProxy: IPayload__ConEdProxyAddedToDesktop) => self.ConEdTabButtonAgent.CallBackConEdProxyAdded(conEditProxy));
 
     this.Subject_DomChangedEvent = new Subject_DesktopDomChangedEvent(this.Logger, this.AssociatedDoc);
 
     this.Subject_DomChangedEvent.RegisterObserver((payload: IPayloadDesktop_DomChangedEvent) => { self.Observer_DesktopDomChangedEvent(payload) });
 
-    this.CeProxyBucket.InitHostedContentEditors();
+    this.ConEdProxyBucket.InitHostedContentEditors();
 
     this.Logger.InstantiateEnd(DesktopProxy.name);
   }
@@ -62,7 +62,7 @@ export class DesktopProxy extends LoggableBase {
 
         let iframeProxy: IframeProxy = new IframeProxy(this.Logger, iframeElement, iframeElement.id);
         await iframeProxy.WaitForReady()
-          .then(() => this.CeProxyBucket.AddToBucketFromIframeProxy(iframeProxy))
+          .then(() => this.ConEdProxyBucket.AddToBucketFromIframeProxy(iframeProxy))
       })
     }
     this.Logger.LogAsJsonPretty('payload', payload);
@@ -136,7 +136,7 @@ export class DesktopProxy extends LoggableBase {
         for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
           let targetData: IDataOneStorageOneTreeState = dataToRestore.AllCEAr[idx];
           this.Logger.Log('Restoring ' + (idx + 1) + ":" + dataToRestore.AllCEAr.length + ' active node: ' + targetData.ActiveNode.NodeFriendly);
-          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, targetData, this.SettingsAgent, this.CeTabButtonAgent);
+          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, targetData, this.SettingsAgent, this.ConEdTabButtonAgent);
 
           await recipe.Execute()
             //.then(() => this.EnrollListenerForActiveNodeChange())

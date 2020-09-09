@@ -88,9 +88,9 @@ export class ContentConst {
         IdStartsWithTreeNode: '[id^=Tree_Node_]',
         IframeContent: {
           sc820: null,
-         sc920: 'iframe[src*=Content]'
+          sc920: 'iframe[src*=Content]'
         },
-          
+
         JqueryModalDialogsFrame: '[id=jqueryModalDialogsFrame]',
         ContentIframe0: '[id=scContentIframeId0]',
         NextButton: '[id=NextButton]',
@@ -115,10 +115,8 @@ export class ContentConst {
           sc820: '[id=startButton]'
         },
         Desktop: {
-
           DtStartBar: '[id=Startbar]',
         },
-
       },
     },
 
@@ -128,7 +126,11 @@ export class ContentConst {
       SnapShotPrefix: 'WindowSnapShot.',
       WindowRoot: 'HindSite.',
     },
-
+    Numbers: {
+      Desktop: {
+        MaxToolBarNameChars: 13
+      }
+    },
     MaxIter: 100,
     MaxNullOrUndefinedIter: 100,
 
@@ -144,6 +146,9 @@ export class ContentConst {
           sc920: 'treemenu_expanded.png',
           sc820: 'todo'
         }
+      },
+      Desktop: {
+        StartBarApplicationPrefix: 'startbar_application_',
       },
       PopUp: 'PopUp',
       PopUpStyles: 'PopUpStyles',

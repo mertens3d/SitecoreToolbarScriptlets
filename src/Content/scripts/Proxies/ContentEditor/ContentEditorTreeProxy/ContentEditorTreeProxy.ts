@@ -170,11 +170,10 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     if (targetNode) {
       var firstImg: HTMLElement = targetNode.querySelector(ContentConst.Const.Selector.SC.ContentTreeNodeGlyph);
       if (firstImg) {
-        this.Logger.Log(this.WalkNodeRecursive.name);
         let treeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, firstImg);
 
-        if (treeNodeProxy.__isContentTreeNode) {
-          if (treeNodeProxy.__isExpanded || treeNodeProxy.__isActive) {
+        if (treeNodeProxy.IsContentTreeNode) {
+          if (treeNodeProxy.IsExpanded || treeNodeProxy.IsActive) {
             let newData: IDataOneTreeNode = treeNodeProxy.GetStateNode();
 
             var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');

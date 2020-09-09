@@ -12,13 +12,13 @@ import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorTreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
 
 export class ContentEditorProxy extends LoggableBase {
-   AssociatedTreeProxy: IContentEditorTreeProxy;
+  AssociatedTreeProxy: IContentEditorTreeProxy;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedId: GuidData;
   private SettingsAgent: ISettingsAgent;
   private ParentIframeId: string = '';
 
-  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent, parentIframeId:string) {
+  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent, parentIframeId: string) {
     super(logger);
 
     this.Logger.InstantiateStart(ContentEditorProxy.name);
@@ -30,9 +30,7 @@ export class ContentEditorProxy extends LoggableBase {
 
     this.AssociatedTreeProxy = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent, this.ParentIframeId);
 
-
     this.ValidateDoc();
-
 
     this.Logger.InstantiateEnd(ContentEditorProxy.name);
   }
@@ -64,7 +62,7 @@ export class ContentEditorProxy extends LoggableBase {
       let recipeBasics = new RecipeBasics(this.Logger);
 
       await recipeBasics.WaitForPageReadyNative(this.AssociatedDoc)
-       
+
         .catch((err) => this.Logger.ErrorAndThrow(this.WaitForReadyAssociatedDocandInit.name, err));
     } catch (e) {
     }

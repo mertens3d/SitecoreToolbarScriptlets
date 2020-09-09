@@ -8,18 +8,18 @@ import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorProxy } from '../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { CeTabButtonAgent } from '../../../Agents/CeTabButtonAgent/CeTabButtonAgent';
+import { DesktopTabButtonAgent } from '../../../Agents/DesktopTabButtonAgent/DesktopTabButtonAgent';
 
 export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements ICommandRecipes {
   private TargetDoc: IDataOneDoc;
   private SettingsAgent: ISettingsAgent;
-    CeTabButtonAgent: CeTabButtonAgent;
+  DesktopTabButtonAgent: DesktopTabButtonAgent;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, settingsAgent: ISettingsAgent, ceButtonTabAgent: CeTabButtonAgent) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopTabButtonAgent) {
     super(logger);
     this.TargetDoc = targetDoc;
     this.SettingsAgent = settingsAgent;
-    this.CeTabButtonAgent = ceButtonTabAgent;
+    this.DesktopTabButtonAgent = ceButtonTabAgent;
   }
 
   Execute(): Promise<ContentEditorProxy> {

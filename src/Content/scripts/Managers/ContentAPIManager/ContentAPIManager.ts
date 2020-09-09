@@ -61,7 +61,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
 
   AddCETab(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.SettingsAgent, commandData.DesktopProxy.CeTabButtonAgent).Execute()
+      await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.SettingsAgent, commandData.DesktopProxy.ConEdTabButtonAgent).Execute()
         .then(() => {
           this.ToastAgent.PopUpToastNotification(commandData.ScWinMan.GetTopLevelDoc(), "Success");
           resolve();

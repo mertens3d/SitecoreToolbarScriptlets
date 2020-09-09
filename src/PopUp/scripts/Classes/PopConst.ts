@@ -113,7 +113,7 @@ export class PopConst {
           AutoSaveEnabled: false,
           AutoLogin: false,
           DefaultDebugKeepDialogOpen: false,
-          AutoSnapshotBeforeWindowChange: true,
+          AutoSnapshotBeforeWindowChange: false,
         }
       }
     },
