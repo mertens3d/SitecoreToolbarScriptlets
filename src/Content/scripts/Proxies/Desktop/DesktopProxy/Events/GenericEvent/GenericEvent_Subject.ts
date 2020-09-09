@@ -23,7 +23,9 @@ export class GenericEvent_Subject<T> extends LoggableBase implements IObservable
         this.Logger.FuncEnd(this.UnregisterObserver.name);
     }
 
-    NotifyObservers<T>(message: T): void {
-        this.ObserverCollection.forEach((observer) => observer(message));
+  NotifyObservers<T>(payload: T): void {
+    this.Logger.FuncStart(this.NotifyObservers.name, 'length: ' +  this.ObserverCollection.length);
+    this.ObserverCollection.forEach((observer) => observer(payload));
+    this.Logger.FuncEnd(this.NotifyObservers.name);
     }
 }

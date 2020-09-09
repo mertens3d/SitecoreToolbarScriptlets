@@ -154,7 +154,7 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
 
     var treeNode: HTMLElement = parentNode.querySelector(ContentConst.Const.Selector.SC.IdStartsWithTreeNode); // [id^=Tree_Node_]');
     if (treeNode) {
-      toReturn = treeNode.innerText;
+      toReturn = this.AssociatedNodeElem.innerText;
     }
     else {
       this.Logger.Log('No treeNode');

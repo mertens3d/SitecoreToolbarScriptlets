@@ -12,12 +12,13 @@ import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorTreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
 
 export class ContentEditorProxy extends LoggableBase {
-  private AssociatedTreeProxy: IContentEditorTreeProxy;
+   AssociatedTreeProxy: IContentEditorTreeProxy;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedId: GuidData;
   private SettingsAgent: ISettingsAgent;
+  private ParentIframeId: string = '';
 
-  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
+  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent, parentIframeId:string) {
     super(logger);
 
     this.Logger.InstantiateStart(ContentEditorProxy.name);
@@ -25,8 +26,9 @@ export class ContentEditorProxy extends LoggableBase {
     this.SettingsAgent = settingsAgent;
     this.AssociatedId = Guid.NewRandomGuid();
     this.AssociatedDoc = associatedDoc;
+    this.ParentIframeId = parentIframeId;
 
-    this.AssociatedTreeProxy = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent);
+    this.AssociatedTreeProxy = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent, this.ParentIframeId);
 
 
     this.ValidateDoc();

@@ -4,6 +4,8 @@ import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
 import { IframeHelper } from '../../Helpers/IframeHelper';
 import { IframeProxy } from '../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
+import { IPayload__ConEdProxyAddedToDesktop } from '../../Proxies/Desktop/DesktopProxy/Events/ContentEditorProxyAddedToDesktopEvent/IPayloadDesktop__ContentEditorProxyAddedToDesktop';
+import { IPayload_ContentEditorTreeMutatedEvent } from '../../Proxies/Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
 
 export class CeTabButtonAgent extends LoggableBase {
   private __iframeHelper: IframeHelper;
@@ -19,18 +21,16 @@ export class CeTabButtonAgent extends LoggableBase {
     this.Logger.InstantiateEnd(CeTabButtonAgent.name);
   }
 
-  CallBackTreeMutated(ceProxy: ContentEditorProxy) {
-    this.Logger.FuncStart(this.CallBackTreeMutated.name);
+  //CallBackTreeMutated(conEdProxy: ContentEditorProxy) {
+  //  this.Logger.FuncStart(this.CallBackTreeMutated.name);
 
-    if (this.CeProxies.indexOf(ceProxy) < 0) {
-      this.CeProxies.push(ceProxy);
+  //  if (conEdProxy) {
+  //  } else {
+  //    this.Logger.ErrorAndThrow(this.CallBackTreeMutated.name, 'Null ceProxy');
+  //  }
 
-      let self = this;
-      ceProxy.AddListenerToActiveNodeChange((data) => { self.CallbackNodeChanged(data) });
-    }
-
-    this.Logger.FuncEnd(this.CallBackTreeMutated.name);
-  }
+  //  this.Logger.FuncEnd(this.CallBackTreeMutated.name);
+  //}
 
   private GetIframeHelper(): IframeHelper {
     if (this.__iframeHelper == null) {
@@ -40,7 +40,33 @@ export class CeTabButtonAgent extends LoggableBase {
   }
 
   TreeMutationCallback(mutation: MutationCallback) {
+  }
 
+  GetStartAssociatedStartBarButton(iframeElemId: string): HTMLElement {
+    this.Logger.FuncStart(this.GetStartAssociatedStartBarButton.name);
+    //start bar button is same with prefix added
+    let startBarButtonElemId = 'startbar_application_' + iframeElemId;
+
+    let querySelectBtn = '[id=' + startBarButtonElemId + ']';
+    this.Logger.LogVal('selector', querySelectBtn);
+    let foundStartBarButton: HTMLElement = this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.querySelector(querySelectBtn);
+
+    this.Logger.FuncEnd(this.GetStartAssociatedStartBarButton.name, (foundStartBarButton != null).toString());
+    return foundStartBarButton;
+  }
+
+  ChangeStartBarButtonText(targetButton: HTMLElement, text: string) {
+    this.Logger.FuncStart(this.ChangeStartBarButtonText.name);
+    if (targetButton) {
+      let currentInnerHtml = targetButton.querySelector('div').querySelector('span').innerHTML;
+      let currentInnerText = targetButton.querySelector('div').querySelector('span').innerText;
+
+      let newInnerHtml = currentInnerHtml.replace(currentInnerText, text);
+
+      targetButton.querySelector('div').querySelector('span').innerHTML = newInnerHtml;
+      //= document.querySelector('[id=startbar_application_FRAME267787985]').querySelector('div').querySelector('span').innerHTML.replace('Content Editor', 'dog')
+    }
+    this.Logger.FuncEnd(this.ChangeStartBarButtonText.name);
   }
 
   async EnrollListenerForActiveNodeChange(): Promise<void> {
@@ -49,24 +75,10 @@ export class CeTabButtonAgent extends LoggableBase {
         .then((foundIframes: IframeProxy[]) => {
           for (var idx = 0; idx < foundIframes.length; idx++) {
             let iframe = foundIframes[idx];
-            let iframeElemId = iframe.IframeElem.id;
 
             //let tree = new ContentEditorContentTreeHolderProxy(this.Logger, iframe.ContentDoc);
-
-            //start bar button is same with prefix added
-            let startBarButtonElemId = 'startbar_application_' + iframeElemId;
-
-            let querySelectBtn = '[id=' + startBarButtonElemId + ']';
-            let foundStartBarButton = this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.querySelector(querySelectBtn);
-            if (foundStartBarButton) {
-              let currentInnerHtml = document.querySelector(querySelectBtn).querySelector('div').querySelector('span').innerHTML;
-              let currentInnerText = document.querySelector(querySelectBtn).querySelector('div').querySelector('span').innerText;
-
-              let newInnerHtml = currentInnerHtml.replace(currentInnerText, 'dog');
-
-              document.querySelector(querySelectBtn).querySelector('div').querySelector('span').innerHTML = newInnerHtml;
-              //= document.querySelector('[id=startbar_application_FRAME267787985]').querySelector('div').querySelector('span').innerHTML.replace('Content Editor', 'dog')
-            }
+            let foundStartBarButton = this.GetStartAssociatedStartBarButton(iframe.IframeElem.id);
+            this.ChangeStartBarButtonText(foundStartBarButton, 'dog');
           }
         });
     } catch (err) {
@@ -74,10 +86,49 @@ export class CeTabButtonAgent extends LoggableBase {
     }
   }
 
+  CallBackConEdProxyAdded(payload: IPayload__ConEdProxyAddedToDesktop) {
+    this.Logger.FuncStart(this.CallBackConEdProxyAdded.name);
 
-  CallbackNodeChanged(data: any) {
+    if (payload) {
+      if (this.CeProxies.indexOf(payload.NewCeProxy) < 0) {
+        this.CeProxies.push(payload.NewCeProxy);
+
+        let self = this;
+        payload.NewCeProxy.AddListenerToActiveNodeChange((payload: IPayload_ContentEditorTreeMutatedEvent) => { self.CallbackNodeChanged(payload) });
+      }
+    } else {
+      this.Logger.ErrorAndThrow(this.CallBackConEdProxyAdded.name, 'Null ceProxy');
+    }
+
+    this.Logger.FuncEnd(this.CallBackConEdProxyAdded.name);
+  }
+
+  CallbackNodeChanged(payload: IPayload_ContentEditorTreeMutatedEvent) {
     this.Logger.FuncStart(this.CallbackNodeChanged.name);
-    this.Logger.LogAsJsonPretty('data', data);
+    // at this point we have a new active node (or some other change event)
+
+    if (payload) {
+      this.Logger.LogAsJsonPretty('data', payload);
+
+
+
+      this.Logger.LogVal('target Iframe Id', payload.AssociatedIframeElemId);
+      let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(payload.AssociatedIframeElemId);
+      if (iframeElement) {
+        if (payload.ActiveNode ) {
+          let foundStartBarButton = this.GetStartAssociatedStartBarButton(payload.AssociatedIframeElemId);
+          this.ChangeStartBarButtonText(foundStartBarButton, payload.ActiveNode .GetFriendlyNameFromNode());
+        }
+
+        //we need to know what the associated button is
+        //we can get that by knowning the id of the CE
+      } else {
+        this.Logger.ErrorAndContinue(this.CallbackNodeChanged.name, 'Did not find iframe');
+      }
+    } else {
+      this.Logger.ErrorAndThrow(this.CallbackNodeChanged.name, 'Null payload');
+    }
+
     this.Logger.FuncEnd(this.CallbackNodeChanged.name);
   }
 }

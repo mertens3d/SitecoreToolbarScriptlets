@@ -3,7 +3,7 @@ import { IDataOneStorageOneTreeState } from "../Data/IDataOneStorageOneTreeState
 import { IDataOneDoc } from "../Data/IDataOneDoc";
 
 export interface IContentEditorTreeProxy {
-    WaitForAndRestoreManyAllNodes(dataToRestore: IDataOneStorageOneTreeState, AssociatedDoc: IDataOneDoc);
-    AddListenerToTreeMutationEvent(bar: any);
-    GetOneLiveTreeData(): IDataOneTreeNode[];
+  WaitForAndRestoreManyAllNodes(dataToRestore: IDataOneStorageOneTreeState, AssociatedDoc: IDataOneDoc);
+  AddListenerToTreeMutationEvent(bar: Function);
+  GetOneLiveTreeData(): IDataOneTreeNode[];
 }

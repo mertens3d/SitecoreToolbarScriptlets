@@ -38,8 +38,8 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
         .then(() => recipeBasics.WaitForReadyIframe(newIframeProxy))
         //.then(() => this.TargetCeAgent = new ContentEditorProxy(newIframe.ContentDoc, this.Logger, this.SettingsAgent)) //todo - I don't think this is needed. Although we probably should trigger a rebuild of the ScWinMan/DesktopProxy...or notify it...or ask it to create it to begin with.
         //.then(() => this.TargetCeAgent.WaitForReadyAssociatedDocandInit())
-        .then((result) => {
-          let toReturn = new ContentEditorProxy(result.GetContentDoc(), this.Logger, this.SettingsAgent)
+        .then((result: IframeProxy) => {
+          let toReturn = new ContentEditorProxy(result.GetContentDoc(), this.Logger, this.SettingsAgent, result.IframeElem.id);
           resolve(toReturn);
         })
         .catch((err) => reject(this.Execute.name + ' ' + err));

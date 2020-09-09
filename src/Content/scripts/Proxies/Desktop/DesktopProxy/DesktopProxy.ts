@@ -12,12 +12,13 @@ import { IframeHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DtStartBarProxy } from "../DtStartBarProxy/DtStartBarProxy";
-import { CeProxyBucket } from "./CeProxyBucket";
+import { ConEdProxyBucket } from "./CeProxyBucket";
 import { Subject_DesktopDomChangedEvent } from "./Events/DesktopDomChangedEvent/Subject_DesktopDomChangedEvent";
 import { IPayloadDesktop_DomChangedEvent } from "./Events/DesktopDomChangedEvent/IPayloadContentEditorDomChanged";
+import { IPayload__ConEdProxyAddedToDesktop } from "./Events/ContentEditorProxyAddedToDesktopEvent/IPayloadDesktop__ContentEditorProxyAddedToDesktop";
 
 export class DesktopProxy extends LoggableBase {
-  private CeProxyBucket: CeProxyBucket;
+  private CeProxyBucket: ConEdProxyBucket;
 
   CeTabButtonAgent: CeTabButtonAgent;
   private __iframeHelper: IframeHelper;
@@ -36,13 +37,13 @@ export class DesktopProxy extends LoggableBase {
     this.SettingsAgent = settingsAgent;
     this.AssociatedDoc = associatedDoc;
 
-    this.CeProxyBucket = new CeProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
+    this.CeProxyBucket = new ConEdProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
 
     this.CeTabButtonAgent = new CeTabButtonAgent(this.Logger, this);
 
     
     let self = this;
-    this.CeProxyBucket.EnrollProxyAddedListener((ceProxy: ContentEditorProxy) => self.CeTabButtonAgent.CallBackTreeMutated(ceProxy));
+    this.CeProxyBucket.ConEdProxyAddedEvent.RegisterObserver((conEditProxy: IPayload__ConEdProxyAddedToDesktop) => self.CeTabButtonAgent.CallBackConEdProxyAdded(conEditProxy));
 
     this.Subject_DomChangedEvent = new Subject_DesktopDomChangedEvent(this.Logger, this.AssociatedDoc);
 
@@ -103,7 +104,7 @@ export class DesktopProxy extends LoggableBase {
 
               var iframeProxy: IframeProxy = toReturnDesktopState.HostedIframes[iframeIdx];
 
-              var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent);
+              var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent, iframeProxy.IframeElem.id);
 
               //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
