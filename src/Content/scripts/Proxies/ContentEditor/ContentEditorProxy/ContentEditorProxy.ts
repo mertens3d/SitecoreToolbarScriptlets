@@ -145,9 +145,10 @@ export class ContentEditorProxy extends LoggableBase {
       var toReturnOneTreeState: IDataOneStorageOneTreeState = {
         Id: this.AssociatedId,
         AllTreeNodeAr: this.AssociatedTreeProxy.GetOneLiveTreeData(),
-        ActiveNode: this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr)
+        ActiveNode: null
       }
 
+      toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
 
       if (toReturnOneTreeState) {
         resolve(toReturnOneTreeState);
