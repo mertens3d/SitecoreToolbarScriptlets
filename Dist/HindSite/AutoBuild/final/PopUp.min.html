@@ -55,21 +55,25 @@
             </div>
           </div>
           <div class='row flex-container'>
-            <button id='SaveWindowState' type='button' class='icon take-snapshot'>Take Snapshot</button>
             
             <div class='input-btn-wrapper'>
-              <input type='text' id='id-input-nickname' value='' placeholder='Nick Name'>
-              <button id='id-btn-update-nickname' type='button' class='icon set-nickname'>Set Nickname</button>
+              <strong>todo (forced on)</strong>
+              <button id='SaveWindowState' type='button' class='icon take-snapshot'>Take Snapshot</button>
+              </div>
+
+              <div class='input-btn-wrapper'>
+                <input type='text' id='id-input-nickname' value='' placeholder='Nick Name'>
+                <button id='id-btn-update-nickname' type='button' class='icon set-nickname'>Set Nickname</button>
+              </div>
+
+              <button id='id-toggle-favorite' type='button' class='icon btn-favorite'>Toggle as Favorite</button>
+              <button id='RemoveOneFromLocalStorage' type='button' class='icon delete-snapshot'>Delete Snapshot</button>
+
+              <button id='id-restore-state-same-tab' type='button' class='icon restore-snapshot'>Restore to this tab</button>
+              <button id='id-restore-state-new-tab' type='button' class='icon restore-snapshot'>Restore to new tab</button>
+
+              <button id='Cancel' type='button' class='icon cancel'>Cancel</button>
             </div>
-            
-            <button id='id-toggle-favorite' type='button' class='icon btn-favorite'>Toggle as Favorite</button>
-            <button id='RemoveOneFromLocalStorage' type='button' class='icon delete-snapshot'>Delete Snapshot</button>
-
-            <button id='id-restore-state-same-tab' type='button' class='icon restore-snapshot'>Restore to this tab</button>
-            <button id='id-restore-state-new-tab' type='button' class='icon restore-snapshot'>Restore to new tab</button>
-
-            <button id='Cancel' type='button' class='icon cancel'>Cancel</button>
-          </div>
         </div>
       </fieldset>
 

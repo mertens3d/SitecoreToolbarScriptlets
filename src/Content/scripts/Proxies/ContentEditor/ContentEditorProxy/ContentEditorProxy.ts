@@ -120,6 +120,7 @@ export class ContentEditorProxy extends LoggableBase {
   }
 
   GetActiveNode(allTreeNodeAr: IDataOneTreeNode[]) {
+    this.Logger.FuncStart(this.GetActiveNode.name);
     let toReturn: IDataOneTreeNode = null;
     if (allTreeNodeAr) {
       for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
@@ -133,6 +134,7 @@ export class ContentEditorProxy extends LoggableBase {
       this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
     }
 
+    this.Logger.FuncEnd(this.GetActiveNode.name);
     return toReturn;
   }
 
@@ -143,10 +145,9 @@ export class ContentEditorProxy extends LoggableBase {
       var toReturnOneTreeState: IDataOneStorageOneTreeState = {
         Id: this.AssociatedId,
         AllTreeNodeAr: this.AssociatedTreeProxy.GetOneLiveTreeData(),
-        ActiveNode: null
+        ActiveNode: this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr)
       }
 
-      toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
 
       if (toReturnOneTreeState) {
         resolve(toReturnOneTreeState);

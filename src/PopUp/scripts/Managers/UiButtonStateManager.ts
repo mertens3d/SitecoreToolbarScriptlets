@@ -5,26 +5,28 @@ import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
 import { IContentState } from "../../../Shared/scripts/Interfaces/Data/IContentState";
 import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
+import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 
-export class UiButtonStateManager {
+export class UiButtonStateManager extends LoggableBase{
   private currentContentState: IContentState;
   private currentWindowType: ScWindowType;
   private currSelSnapshot: GuidData;
-  private Logger: ILoggerAgent;
   private Tester: ButtonVisibilityTester;
 
   constructor(logger: ILoggerAgent) {
-    this.Logger = logger;
+    super(logger);
 
-    this.Logger.FuncStart(UiButtonStateManager.name);
-    this.Logger.FuncEnd(UiButtonStateManager.name);
+    this.Logger.InstantiateStart(UiButtonStateManager.name);
+    this.Logger.InstantiateEnd(UiButtonStateManager.name);
   }
 
-  Init(AllMenuCommands: IOneCommand[]) {
-    this.Tester = new ButtonVisibilityTester();
+  InitButtonStateManager() {
+    this.Tester = new ButtonVisibilityTester(this.Logger);
   }
 
   private TestAgainstAllSetControllers(command: IOneCommand): boolean {
+
+    this.Logger.FuncStart(this.TestAgainstAllSetControllers.name, command.ButtonSelector);
     let toReturn: boolean = false;
 
     if (command.VisibilityControllers.length > 0) {
@@ -34,6 +36,7 @@ export class UiButtonStateManager {
         switch (oneControl) {
           case VisibilityType.Desktop:
             toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Desktop, this.currentWindowType)
+            
             break;
 
           case VisibilityType.ActiveCeNode:
@@ -97,6 +100,9 @@ export class UiButtonStateManager {
     else {
       toReturn = true;
     }
+
+
+    this.Logger.FuncEnd('toReturn', toReturn.toString());
 
     return toReturn;
   }

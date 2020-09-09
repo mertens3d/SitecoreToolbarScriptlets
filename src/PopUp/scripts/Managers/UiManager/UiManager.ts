@@ -100,7 +100,7 @@ export class UiManager {
       self.RefreshUi();
     });
 
-    this.ButtonStateManager.Init(this.CommandMan.AllMenuCommands);
+    this.ButtonStateManager.InitButtonStateManager();
 
     this.Logger.FuncEnd(this.InitUiManager.name);
   }
