@@ -2,6 +2,9 @@
 
 export class SharedConst {
   static Const: ISharedConst = {
+    Debug: {
+      ForceLoggingEnabled: false
+    },
     IterHelper: {
       GrowthPerIteration: 0.5,
 
@@ -14,6 +17,9 @@ export class SharedConst {
         Default: 100,
       },
     },
+    ObjDiscriminator: {
+      DataOneTreeNode: 'IDataOneTreeNode',
+    },
     Settings: {
       Defaults: {
         EnableLogging: false,
@@ -21,6 +27,7 @@ export class SharedConst {
         UseCompactCss: false,
       }
     },
+
     Regex: {
       ContentEditor: /Content.*?Editor/ig,
       CleanGuid: /{|-|}/ig,
@@ -34,12 +41,14 @@ export class SharedConst {
         Preview: /sc_itemid=.*sc_mode=preview/ig,
       },
     },
+
     UrlSuffix: {
       Desktop: '/sitecore/shell/default.aspx',
       Login: '/sitecore/login',
       LaunchPad: '/client/applications/launchpad',
       CE: '/sitecore/shell/Applications/Content Editor.aspx?sc_bw=1',
       None: '/',
+      AboutBlank: 'about:blank',
     },
   }
 }

@@ -1,4 +1,4 @@
-﻿import { IDataPayloadSnapShot } from "../Interfaces/IDataPayloadSnapShot";
+﻿import { IDataPayloadSnapShot } from "../Interfaces/Data/IDataPayloadSnapShot";
 import { GuidData } from "../Helpers/GuidData";
 
 export class PayloadDataFromPopUp {

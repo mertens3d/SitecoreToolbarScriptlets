@@ -1,10 +1,10 @@
-﻿import { scWindowType } from "../Enums/scWindowType";
+﻿import { ScWindowType } from "../Enums/scWindowType";
 
 export interface GenericUrlParts {
   OriginalRaw: string,
   FilePath: string,
   HostAndPort: string;
-  ScWindowType: scWindowType,
+  ScWindowType: ScWindowType,
   Protocol: string,
   Anchor: string,
   Parameters: URLSearchParams;

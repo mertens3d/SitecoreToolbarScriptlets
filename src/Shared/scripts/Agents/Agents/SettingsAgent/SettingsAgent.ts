@@ -2,7 +2,7 @@
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { IOneGenericSettingForStorage } from "../../../Classes/IOneGenericSettingForStorage";
+import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
@@ -19,23 +19,24 @@ export class SettingsAgent implements ISettingsAgent {
     this.RepoAgent = repoAgent;
   }
 
-  UpdateSettings(newSettings: IGenericSetting[]) {
-    this.Logger.FuncStart(this.UpdateSettings.name);
+  UpdateSettingsFromPopUpMsg(newSettings: IGenericSetting[]) {
+    this.Logger.FuncStart(this.UpdateSettingsFromPopUpMsg.name);
     if (newSettings) {
       for (var idx = 0; idx < newSettings.length; idx++) {
         let oneSetting: IGenericSetting = newSettings[idx];
         this.SetByKey(oneSetting.SettingKey, oneSetting.ValueAsObj);
       }
     }
-    this.Logger.FuncEnd(this.UpdateSettings.name);
+    this.Logger.FuncEnd(this.UpdateSettingsFromPopUpMsg.name);
   }
 
-  SetContentSettings(currentContentPrefs: IGenericSetting[]) {
-    this.SettingsAr = <OneGenericSetting[]>currentContentPrefs;
-  }
+  //SetContentSettings(currentContentPrefs: IGenericSetting[]) {
+  //  this.SettingsAr = <OneGenericSetting[]>currentContentPrefs;
+  //}
 
   InitSettingsAgent(allDefaultSettings: IGenericSetting[]): void {
     this.Logger.FuncStart(this.InitSettingsAgent.name, allDefaultSettings.length);
+
     this.SettingsAr = <OneGenericSetting[]>allDefaultSettings;
 
     let settingsFromStorage: IOneGenericSettingForStorage[] = this.ReadGenericSettingsFromStorage();
@@ -52,7 +53,7 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncStart(this.ReadGenericSettingsFromStorage.name);
     let toReturn: IOneGenericSettingForStorage[] = [];
 
-    let storedValue: browser.storage.StorageValue = this.RepoAgent.ReadDataOfKey(PopConst.Const.Storage.KeyGenericSettings);
+    let storedValue: string = this.RepoAgent.ReadDataOfKey(PopConst.Const.Storage.KeyGenericSettings);
 
     if (storedValue) {
       toReturn = <IOneGenericSettingForStorage[]>JSON.parse(storedValue.toString());
@@ -68,7 +69,7 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.LogAsJsonPretty('this.SettingsAr', this.SettingsAr);
   }
 
-  UpdateSettingValuesFromStorage(settingsFromStorage: IOneGenericSettingForStorage[]) {
+  UpdateSettingValuesFromStorage(settingsFromStorage: IOneGenericSettingForStorage[]): void {
     this.Logger.FuncStart(this.UpdateSettingValuesFromStorage.name);
     try {
       for (var idx = 0; idx < settingsFromStorage.length; idx++) {
@@ -113,7 +114,7 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   GetByKey(needleSettingKey: SettingKey): OneGenericSetting {
-    //this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(needleSettingKey));
+    this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(needleSettingKey));
 
     var toReturn: OneGenericSetting = null;
 
@@ -126,9 +127,9 @@ export class SettingsAgent implements ISettingsAgent {
     }
 
     if (!toReturn) {
-      throw ('Setting not found ' + StaticHelpers.SettingKeyAsString(needleSettingKey));
+      this.Logger.ErrorAndContinue(this.NumberSettingChanged.name, 'Setting not found ' + StaticHelpers.SettingKeyAsString(needleSettingKey));
     }
-    //this.Logger.FuncEnd(this.GetByKey.name, toReturn.ValueAsObj);
+    this.Logger.FuncEnd(this.GetByKey.name, toReturn ? toReturn.ValueAsObj : 'null');
     return toReturn;
   }
 
@@ -168,7 +169,7 @@ export class SettingsAgent implements ISettingsAgent {
       }
     }
 
-    this.RepoAgent.WriteGenericSettings(settingValues);
+    this.RepoAgent.WriteByKey(PopConst.Const.Storage.KeyGenericSettings, JSON.stringify(settingValues));
     this.Logger.FuncEnd(this.WriteAllSettingValuesToStorage.name);
   }
 }

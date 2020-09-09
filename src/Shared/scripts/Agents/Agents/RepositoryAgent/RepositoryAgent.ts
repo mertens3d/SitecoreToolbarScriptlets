@@ -1,6 +1,4 @@
-﻿import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { IOneGenericSettingForStorage } from "../../../Classes/IOneGenericSettingForStorage";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
 
@@ -46,16 +44,19 @@ export class RepositoryAgent implements IRepositoryAgent {
     });
   }
 
-  ReadDataOfKey(targetKey: string): browser.storage.StorageValue {
+  ReadDataOfKey(targetKey: string): string {
     this.Logger.FuncStart(this.ReadDataOfKey.name);
 
-    let toReturn: browser.storage.StorageValue = null;
+    let storageValue: browser.storage.StorageValue = null;
+    let toReturn: string = '';
+
     this.Logger.LogVal('target key ', targetKey);
 
-    toReturn = window.localStorage.getItem(targetKey); // is synchronous
+    storageValue = window.localStorage.getItem(targetKey); // is synchronous
 
-    if (toReturn) {
+    if (storageValue != null) {
       //this.Logger.LogAsJsonPretty('toReturn', toReturn);
+      toReturn = storageValue.toString();
     } else {
       this.Logger.Log(this.ReadDataOfKey.name, "No value returned from storage")
     }
@@ -64,11 +65,11 @@ export class RepositoryAgent implements IRepositoryAgent {
     return toReturn;
   }
 
-  WriteGenericSettings(settingsToWrite: IOneGenericSettingForStorage[]): void {
-    this.Logger.FuncStart(this.WriteGenericSettings.name);
+  WriteByKey( storageKey: string,  jsonString:string): void {
+    this.Logger.FuncStart(this.WriteByKey.name);
 
-    window.localStorage.setItem(PopConst.Const.Storage.KeyGenericSettings, JSON.stringify(settingsToWrite));
+    window.localStorage.setItem(storageKey, jsonString);
 
-    this.Logger.FuncEnd(this.WriteGenericSettings.name);
+    this.Logger.FuncEnd(this.WriteByKey.name);
   }
 }

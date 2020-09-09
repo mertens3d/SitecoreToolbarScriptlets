@@ -1,6 +1,6 @@
 ﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
-import { IDataOneDoc } from "../../../Interfaces/IDataOneDoc";
+import { IDataOneDoc } from "../../../Interfaces/Data/IDataOneDoc";
 
 export class ToastAgent implements IToastAgent {
   private Logger: ILoggerAgent;

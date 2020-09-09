@@ -9,6 +9,14 @@
 /dist/HindSite - distributable files for extension installation
 
 
+
+## Debugging
+- you can use this on the console in the popup to debug the startup js for the popup
+```javascript
+location.reload(true)
+```
+
+
 ## How Logging Works
 Logging automatically happens and is written to a buffer
 - ___ switch
@@ -17,13 +25,32 @@ Logging automatically happens and is written to a buffer
 
 - Flush - Will dump and remove the contents of the logging buffer to the currently attached writers.
 
+## Naming Convention
+- Managers - Have 'Manager' as a suffix to the class and instances use 'Man' as a suffix.
+- Agents - Have 'Agent' as a suffix to both class and instances.
 
-## Managers
-- contentMessageMan - Manages messages recieved from popup and returns responses to popup.
-  - It reacts to those messages by triggering an API command.
-  - It owns the Message Broker Agent
-- Content Message Broker - Routes commands received by the MessageManager to the ApiManager
-  - It owns the APIManager
+## Architecture
+- **Drones** - Simple contained black boxed classes.
+  - Their scope is localized to the instantiating class
+  
+- **Helpers** - Similar to drones. **todo** - do we need helpers and drones or will one group suffice?
+ 
+- **Agents** - Standalone classes with properties and methods. They are based on Interfaces and dependent on ILogger only.
+  - they do more complex tasks than drones
+  - They are instantiated at startup and used by various managers.
+  - Logger and Settings agents are exceptions
+
+- **Managers** - Typically control some aspect of Sitecore. 
+  - They are in charge of interacting with the Sitecore Ui.
+ 
+- **Recipes** - A sequence Async interactions with the Ui and/or the Browser
+  - The only public method in recipes is exec().
+  - There are no publix properties
+  - 
+- **Proxies (Proxy)**
+    - Act as an interface between the Sitecore Ui and code
+
+Effort should be given to using Interfaces on any data or classes that are passed between these types.
 
 ## Logical Code Structure
 * Almost all classes have iLoggerAgent

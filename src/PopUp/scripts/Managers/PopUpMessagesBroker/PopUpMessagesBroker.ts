@@ -1,11 +1,11 @@
-﻿import { ContentStateValidator } from "../../../../Shared/scripts/Classes/ContentStateValidator";
-import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
+﻿import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFromContent } from "../../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IMessageBrokerFeedback } from "../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { IContentState } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { ScWindowStateValidator } from "../../../../Shared/scripts/Classes/ScWindowStateValidator";
 
 export class PopUpMessagesBroker {
   LastKnownContentState: IContentState;
@@ -39,7 +39,7 @@ export class PopUpMessagesBroker {
               case MsgFlag.RespCurState:
                 break;
               case MsgFlag.RespTaskSuccessful:
-                resolve(asMsgFromContent.ContentState);
+                resolve(asMsgFromContent.ScWindowState);
                 break;
               case MsgFlag.RespTaskFailed :
                 reject(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
@@ -78,9 +78,9 @@ export class PopUpMessagesBroker {
 
         await browser.tabs.sendMessage(targetTab.id, messageToSend)
         .then((response: any) => this.ReceiveResponseHndlr(response))
-        .then((contentState: IContentState) => {
-          let validator = new ContentStateValidator(this.Logger);
-          let validatedContentState: IContentState = validator.ValidateContentState(contentState);
+        .then((scWindowState: IContentState) => {
+          let validator = new ScWindowStateValidator(this.Logger);
+          let validatedContentState: IContentState = validator.ValidateScWindowState(scWindowState);
           resolve(validatedContentState);
         })
         .catch((ex) => { reject(ex) });

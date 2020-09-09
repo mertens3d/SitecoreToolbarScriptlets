@@ -1,14 +1,15 @@
 ﻿import { PayloadDataFromPopUp } from '../../../../Shared/scripts/Classes/PayloadDataReqPopUp';
 import { IContentMessageBroker } from '../../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { LoggableBase } from '../LoggableBase';
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
+import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { LoggableBase } from '../LoggableBase';
 
 export class ContentMessageManager extends LoggableBase {
   private ContentMessageBroker: IContentMessageBroker;
   OperationCancelled: any;
   private ScWinMan: IScWindowManager;
+ 
 
   constructor(logger: ILoggerAgent, scWinMan: IScWindowManager, contentMessageBroker: IContentMessageBroker) {
     super(logger);
@@ -17,6 +18,7 @@ export class ContentMessageManager extends LoggableBase {
     this.ScWinMan = scWinMan;
 
     this.ContentMessageBroker = contentMessageBroker;
+
 
     this.Logger.FuncEnd(ContentMessageManager.name);
   }
@@ -32,7 +34,7 @@ export class ContentMessageManager extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ToggleCompactCss.name);
 
-      var targetDoc: IDataOneDoc = this.ScWinMan.TopLevelDoc();
+      var targetDoc: IDataOneDoc = this.ScWinMan.GetTopLevelDoc();
       if (targetDoc) {
         var self = this;
         await this.ScWinMan.SetCompactCss(targetDoc)

@@ -6,7 +6,7 @@ import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
-import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { IContentState } from "../../../Shared/scripts/Interfaces/Data/IContentState";
 import { MessageManager } from "../Managers/MessageManager";
 import { TabManager } from "../Managers/TabManager";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";

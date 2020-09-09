@@ -1,5 +1,5 @@
-﻿import { IContentState } from "../Interfaces/IContentState/IContentState";
+﻿import { IContentState } from "../Interfaces/Data/IContentState";
 
 export class PayloadDataFromContent {
-  State: IContentState;
+  ScWindowState: IContentState;
 }

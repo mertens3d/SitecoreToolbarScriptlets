@@ -2,7 +2,7 @@
 import { SettingKey } from "../Enums/3xxx-SettingKey";
 import { BufferChar } from "../Enums/BufferChar";
 import { BufferDirection } from "../Enums/BufferDirection";
-import { scWindowType } from "../Enums/scWindowType";
+import { ScWindowType } from "../Enums/scWindowType";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 
 export class StaticHelpers {
@@ -14,11 +14,20 @@ export class StaticHelpers {
   }
 
   static SettingKeyAsString(settingKey: SettingKey) {
-    return 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
+
+    let toReturn : string = ''
+    try {
+      toReturn = 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
+
+    } catch (err) {
+      toReturn = err;
+    }
+
+    return toReturn;
   }
 
-  static WindowTypeAsString(windowType: scWindowType) {
-    return scWindowType[windowType];
+  static ScWindowTypeFriendly(windowType: ScWindowType) {
+    return ScWindowType[windowType];
   }
 
   static MakeFriendlyDate(date: Date): string {
@@ -42,10 +51,9 @@ export class StaticHelpers {
     return toReturn;
   }
 
-  static BufferString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
-    var toReturn = str;
-    var buffChar: string = ' ';
 
+  private static getBuffChar(buffCharEnum: BufferChar) {
+    var buffChar: string = ' ';
     if (buffCharEnum === BufferChar.space) {
       buffChar = ' ';
     } else if (buffCharEnum === BufferChar.Nbsp) {
@@ -57,6 +65,22 @@ export class StaticHelpers {
     else if (buffCharEnum === BufferChar.Zero) {
       buffChar = '0';
     }
+
+    return buffChar;
+  }
+
+  //static ShortenString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
+  //  var toReturn = str;
+
+
+
+  //  return toReturn;
+
+  //}
+
+  static BufferString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
+    var toReturn = str;
+    var buffChar: string = this.getBuffChar(buffCharEnum);
 
     if (toReturn.length > desiredLength) {
       if (desiredLength > 6) {

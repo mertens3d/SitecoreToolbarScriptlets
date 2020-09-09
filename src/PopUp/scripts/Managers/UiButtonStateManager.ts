@@ -1,14 +1,14 @@
-﻿import { scWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+﻿import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
-import { IContentState } from "../../../Shared/scripts/Interfaces/IContentState/IContentState";
+import { IContentState } from "../../../Shared/scripts/Interfaces/Data/IContentState";
 import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 
 export class UiButtonStateManager {
   private currentContentState: IContentState;
-  private currentWindowType: scWindowType;
+  private currentWindowType: ScWindowType;
   private currSelSnapshot: GuidData;
   private Logger: ILoggerAgent;
   private Tester: ButtonVisibilityTester;
@@ -33,7 +33,7 @@ export class UiButtonStateManager {
 
         switch (oneControl) {
           case VisibilityType.Desktop:
-            toReturn = this.Tester.VisibilityTestWindowType(scWindowType.Desktop, this.currentWindowType)
+            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Desktop, this.currentWindowType)
             break;
 
           case VisibilityType.ActiveCeNode:
@@ -41,27 +41,27 @@ export class UiButtonStateManager {
             break;
 
           case VisibilityType.ContentEditor:
-            toReturn = this.Tester.VisibilityTestWindowType(scWindowType.ContentEditor, this.currentWindowType)
+            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.ContentEditor, this.currentWindowType)
             break;
 
           case VisibilityType.Edit:
-            toReturn = this.Tester.VisibilityTestWindowType(scWindowType.Edit, this.currentWindowType)
+            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Edit, this.currentWindowType)
             break;
 
           case VisibilityType.Launchpad:
-            toReturn = this.Tester.VisibilityTestWindowType(scWindowType.Launchpad, this.currentWindowType)
+            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Launchpad, this.currentWindowType)
             break;
 
           case VisibilityType.LoginPage:
-            toReturn = this.Tester.VisibilityTestWindowType(scWindowType.LoginPage, this.currentWindowType)
+            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.LoginPage, this.currentWindowType)
             break;
 
           case VisibilityType.Normal:
-            toReturn = this.Tester.VisibilityTestWindowType(scWindowType.Normal, this.currentWindowType)
+            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Normal, this.currentWindowType)
             break;
 
           case VisibilityType.Preview:
-            toReturn = this.Tester.VisibilityTestWindowType(scWindowType.Preview, this.currentWindowType)
+            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Preview, this.currentWindowType)
             break;
 
           case VisibilityType.SnapShotable:
@@ -73,7 +73,7 @@ export class UiButtonStateManager {
             break;
 
           case VisibilityType.NotLogin:
-            toReturn = !this.Tester.VisibilityTestWindowType(scWindowType.LoginPage, this.currentWindowType)
+            toReturn = !this.Tester.VisibilityTestWindowType(ScWindowType.LoginPage, this.currentWindowType)
             break;
 
           case VisibilityType.CommandIsRunning:
@@ -115,7 +115,7 @@ export class UiButtonStateManager {
     }
   }
 
-  RefreshUi(currentWindowType: scWindowType, currSelSnapshot: GuidData, contentState: IContentState, allMenuCommands: IOneCommand[]): void {
+  RefreshUi(currentWindowType: ScWindowType, currSelSnapshot: GuidData, contentState: IContentState, allMenuCommands: IOneCommand[]): void {
     this.Logger.FuncStart(this.RefreshUi.name, allMenuCommands.length);
 
     this.currentWindowType = currentWindowType;

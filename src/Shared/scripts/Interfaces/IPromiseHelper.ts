@@ -1,11 +1,10 @@
 ﻿import { AbsoluteUrl } from "./AbsoluteUrl";
-import { IDataOneDoc } from "./IDataOneDoc";
-import { IDataOneIframe } from "./IDataOneIframe";
-import { IDataPublishChain } from "./IDataPublishChain";
+import { IDataPublishChain } from "./Data/IDataPublishChain";
 import { IScVerSpec } from "./IScVerSpec";
+import { IframeProxy } from "./data/IDataOneIframe";
+import { IDataOneDoc } from "./data/IDataOneDoc";
 
 export interface IRecipeBasics {
-  GetAllLiveIframeData(arg0: IDataOneDoc): Promise<IDataOneIframe[]>;
   RaceWaitAndClick(scStartButton: IScVerSpec, arg1: IDataOneDoc);
   TabChainSetHrefWaitForComplete(newHref: AbsoluteUrl);
   TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void>;
@@ -13,9 +12,9 @@ export interface IRecipeBasics {
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string);
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string, maxIteration: number);
   WaitForIframeElemAndReturnWhenReady(ContentDoc: IDataOneDoc, ContentIFrame1: string, arg2: string);
-  WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: IDataOneDoc): Promise<IDataOneIframe>;
+  WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: IDataOneDoc): Promise<IframeProxy>;
   WaitForPageReadyNative(targetDoc: IDataOneDoc);
-  WaitForReadyIframe(jqIframe: IDataOneIframe): Promise<null>;
+  WaitForReadyIframe(jqIframe: IframeProxy): Promise<IframeProxy>;
   WaitForThenClick(arg0: string[], arg1: IDataOneDoc);
-  GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<IDataOneIframe>
+  GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<IframeProxy>
 }

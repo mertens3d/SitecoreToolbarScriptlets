@@ -28,7 +28,7 @@ export class ConstAllSettings {
       PopConst.Const.Selector.HS.EnableLogging,
       SharedConst.Const.Settings.Defaults.EnableLogging,
       SettingFlavor.ContentAndPopUpStoredInPopUp,
-      'Enable Logging (note: page refresh + open pop up required to fully realize)',
+      'Enable Logging',
       Enabled.Enabled
     ),
     new OneGenericSetting(
@@ -183,6 +183,16 @@ export class ConstAllSettings {
       ContentConst.Const.DefaultMaxAutoSaveAgeDays,
       SettingFlavor.ContentOnly,
        'Days to Retain Auto Snap Shots',
+      Enabled.Enabled
+    ),
+    new OneGenericSetting(
+      SettingKey.AutoRenameCeButton,
+      SettingType.BoolCheckBox,
+      false,
+      PopConst.Const.Selector.HS.SettingAutoRenameCeTabButton,
+      ContentConst.Const.DefaultAutoRenameCeTabButton,
+      SettingFlavor.ContentAndPopUpStoredInPopUp,
+      'Auto rename Content Editor tab button to match active node',
       Enabled.Enabled
     )
   ];

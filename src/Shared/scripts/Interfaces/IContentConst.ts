@@ -3,6 +3,7 @@ import { IScVerSpec } from './IScVerSpec';
 export interface IContentConst {
   DefaultMaxAutoSaveAgeDays: number;
   MaxAutoToSaveCount: number;
+  DefaultAutoRenameCeTabButton: boolean;
 
   ElemId: {
     sc: {
@@ -36,21 +37,25 @@ export interface IContentConst {
 
   Selector: {
     SC: {
+      Cancel: string,
+      ContentIframe0: string,
+      ContentIFrame1: string,
       ContentTreeNodeGlyph: string,
       IdStartsWithTreeNode: string,
       IframeContent: IScVerSpec,
       JqueryModalDialogsFrame: string,
-      ContentIframe0: string,
-      NextButton: string,
-      ContentIFrame1: string,
-      Ok: string,
-      Cancel: string,
       LoginBtn: IScVerSpec,
       MenuButtonPublish: string,
       MenuDropDownPublishItem: string,
       NavPublishStrip: string,
-      scStartButton: IScVerSpec,
+      NextButton: string,
+      Ok: string,
       StartMenuLeftOption: string,
+      scStartButton: IScVerSpec,
+      Desktop: {
+        DtStartBar: string,
+        ContentTreeHolder: string,
+      },
       Publish: {
         TheItemHasBeenPublished: string,
         SettingsHidden: string,
@@ -64,7 +69,11 @@ export interface IContentConst {
     SnapShotPrefix: string,
     WindowRoot: string,
   },
-
+  Numbers: {
+    Desktop: {
+      MaxToolBarNameChars: number,
+    }
+  },
   MaxIter: number,
   MaxNullOrUndefinedIter: number,
 
@@ -76,6 +85,9 @@ export interface IContentConst {
       TreeGlyphPrefix: string,
       TreeNodePrefix: string,
       TreeExpandedPng: IScVerSpec,
+    },
+    Desktop: {
+      StartBarApplicationPrefix: string
     },
     PopUp: string,
     PopUpStyles: string,

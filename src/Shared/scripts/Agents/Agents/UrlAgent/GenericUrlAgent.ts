@@ -1,5 +1,5 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
-import { scWindowType } from "../../../Enums/scWindowType";
+import { ScWindowType } from "../../../Enums/scWindowType";
 import { AbsoluteUrl } from "../../../Interfaces/AbsoluteUrl";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
@@ -97,7 +97,7 @@ export class GenericUrlAgent implements IUrlAgent {
       Parameters: new URLSearchParams(window.location.search),// this.ExtractParameters(parser.search),
       FilePath: parser.pathname,// this.ExtractFilePath(url, parser),
       Anchor: parser.hash,
-      ScWindowType: scWindowType.Unknown,
+      ScWindowType: ScWindowType.Unknown,
       HasError: false,
     }
   }

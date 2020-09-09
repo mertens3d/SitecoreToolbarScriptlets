@@ -77,13 +77,19 @@
         <legend id='lgnd-settings' data-setting='lgnd-settings' class="section">Settings/ Stats</legend>
         <div class='accordion-content'>
 
+
+          <h3>note: page refresh + open pop up required to fully propagate settings</h3>
           <br />
-          <input type="checkbox" id="id-settings-auto-login" checked="checked" disabled/>
+          <input type="checkbox" id="id-settings-auto-login" checked="checked" disabled />
           <label for='id-settings-auto-login'>{error}</label>
 
           <br />
-          <input type="checkbox" id="id-settings-use-compact" checked="" disabled/>
+          <input type="checkbox" id="id-settings-use-compact" checked="" disabled />
           <label for='id-settings-use-compact'>{error}</label>
+
+          <br />
+          <input type="checkbox" id="id-settings-auto-rename-ce-tab-button" checked="" />
+          <label for='id-settings-auto-rename-ce-tab-button'>{error}</label>
 
           <fieldset>
             <legend>Debug</legend>
@@ -104,15 +110,15 @@
             <label for='id-settings-auto-snapshot-on-window-change'>{error}</label>
 
             <br />
-            <input type="number" id="id-settings-auto-save-interval" min="0" max="100" value="15"  />
+            <input type="number" id="id-settings-auto-save-interval" min="0" max="100" value="15" />
             <label for='id-settings-auto-save-interval'>{error}</label>
 
             <br />
-            <input type="number" id="id-settings-auto-save-max-count" min="3" max="100" value="3"  />
+            <input type="number" id="id-settings-auto-save-max-count" min="3" max="100" value="3" />
             <label for='id-settings-auto-save-max-count'>{error}</label>
 
             <br />
-            <input type="number" id="id-settings-auto-save-snap-shot-retain-days" min="1" max="100" value="100"  />
+            <input type="number" id="id-settings-auto-save-snap-shot-retain-days" min="1" max="100" value="100" />
             <label for='id-settings-auto-save-snap-shot-retain-days'>{error}</label>
 
           </fieldset>

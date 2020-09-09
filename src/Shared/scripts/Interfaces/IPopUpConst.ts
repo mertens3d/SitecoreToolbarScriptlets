@@ -1,7 +1,5 @@
 ﻿export interface IPopUpConst {
-  Debug: {
-    ForceLoggingEnabled: boolean
-  },
+
   ClassNames: {
     HS: {
       Collapsed: string,
@@ -80,6 +78,7 @@
       SettingAutoSaveMaxCount: string,
       SettingDebugKeepDialogOpen: string,
       SettingAutoSaveSnapshotRetainDays: string,
+      SettingAutoRenameCeTabButton: string,
       SettingNotUsed: string,
       SettingUseCompactCss: string,
       TakeSnapshot: string,

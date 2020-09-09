@@ -1,120 +1,152 @@
-﻿import { RecipeBasics } from '../../../../Shared/scripts/Classes/RecipeBasics';
+﻿import { DefaultScWindowState } from '../../../../Shared/scripts/Classes/DefaultScWindowState';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
-import { QueryStrKey } from '../../../../Shared/scripts/Enums/QueryStrKey';
-import { scWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
+import { ScWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
 import { SnapShotFlavor } from '../../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
-import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { GuidData } from '../../../../Shared/scripts/Helpers/GuidData';
 import { IContentAtticAgent } from '../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
+import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
-import { IDataDesktopState } from '../../../../Shared/scripts/Interfaces/IDataDtState';
-import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/IDataOneDoc';
-import { IDataOneIframe } from '../../../../Shared/scripts/Interfaces/IDataOneIframe';
-import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/IDataOneStorageOneTreeState';
-import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/IDataOneWindowStorage';
+import { IContentState } from '../../../../Shared/scripts/Interfaces/Data/IContentState';
+import { IDataDesktopState } from '../../../../Shared/scripts/Interfaces/Data/IDataDesktopState';
+import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { IDataOneStorageOneTreeState } from '../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
+import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
+import { IDataSnapShots } from '../../../../Shared/scripts/Interfaces/Data/IDataSnapShots';
+import { MiscAgent } from '../../Agents/MiscAgent/MiscAgent';
+import { RecipeInitFromQueryStr } from '../../ContentApi/Recipes/RecipeInitFromQueryStr/RecipeInitFromQueryStr';
+import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
+import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
 import { LoggableBase } from '../LoggableBase';
-import { MiscManager } from '../MiscManager/MiscManager';
-import { OneCEAgent } from '../../Agents/OneCEAgent/OneCEAgent';
-import { OneDesktopManager } from '../OneDesktopManager/OneDesktopManager';
-import { SitecoreUiManager } from '../SitecoreUiManager/SitecoreUiManager';
+import { ScUiManager } from '../SitecoreUiManager/SitecoreUiManager';
+import { ScWindowRecipePartials } from './ScWindowRecipePartials';
 
 export class ScWindowManager extends LoggableBase implements IScWindowManager {
-  OneDesktopMan: OneDesktopManager = null;
-  OneCEAgent: OneCEAgent = null;
-  private RecipeBasics: RecipeBasics;
-  private MiscMan: MiscManager;
+  DesktopUiProxy: DesktopProxy = null;
+  CeProxy: ContentEditorProxy = null;
+  private MiscAgent: MiscAgent;
   private ToastAgent: IToastAgent;
   private ScUrlAgent: IScUrlAgent;
-  private topDoc: IDataOneDoc;
+  private TopDoc: IDataOneDoc;
   private AtticAgent: IContentAtticAgent;
+  SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, scUiMan: SitecoreUiManager, recipeBasics: RecipeBasics, miscMan: MiscManager, toastAgent: IToastAgent, atticAgent: IContentAtticAgent,
-    scUrlAgent: IScUrlAgent) {
+  constructor(logger: ILoggerAgent, scUiMan: ScUiManager, miscAgent: MiscAgent, toastAgent: IToastAgent, atticAgent: IContentAtticAgent,
+    scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
     super(logger);
     this.Logger.InstantiateStart(ScWindowManager.name);
-    this.RecipeBasics = recipeBasics;
-    this.MiscMan = miscMan;
+    this.MiscAgent = miscAgent;
     this.ToastAgent = toastAgent;
     this.AtticAgent = atticAgent;
     this.ScUrlAgent = scUrlAgent;
+    this.SettingsAgent = settingsAgent;
     this.Logger.InstantiateEnd(ScWindowManager.name);
   }
 
-  GetCurrentPageType(): scWindowType {
+  MakeScWinRecipeParts(): ScWindowRecipePartials {
+    return new ScWindowRecipePartials(this.Logger, this.ToastAgent);
+  }
+
+  GetCurrentStateByPageType(scWindowType: ScWindowType) {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetCurrentStateByPageType.name, StaticHelpers.ScWindowTypeFriendly(scWindowType));
+
+      if (scWindowType === ScWindowType.Desktop) {
+        this.DesktopUiProxy.GetStateDesktop()
+          .then((result: IDataDesktopState) => resolve(result.ActiveCeState))
+          .then(() => resolve())
+          .catch((err) => reject(err));
+      }
+      else if (scWindowType === ScWindowType.ContentEditor) {
+        await this.CeProxy.GetTreeState()
+          .then((result: IDataOneStorageOneTreeState) => resolve(result))
+          .then(() => resolve())
+          .catch((err) => reject(err));
+      }
+      else if (scWindowType === ScWindowType.LoginPage
+        || scWindowType === ScWindowType.Launchpad
+        || scWindowType === ScWindowType.Edit
+        || scWindowType === ScWindowType.Preview
+        || scWindowType === ScWindowType.Normal) {
+        resolve(null);
+      }
+      else {
+        reject('unknown page type ' + StaticHelpers.ScWindowTypeFriendly(scWindowType));
+      }
+
+      this.Logger.FuncEnd(this.GetCurrentStateByPageType.name);
+    });
+  }
+
+  GetScUrlAgent(): IScUrlAgent {
+    return this.ScUrlAgent;
+  }
+
+  GetCurrentPageType(): ScWindowType {
     return this.ScUrlAgent.GetScWindowType()
   }
 
-  async InitScWindowManager() {
+  async InitScWindowManager(): Promise<void> {
     this.Logger.FuncStart(this.InitScWindowManager.name);
+    //this.Logger.LogVal('auto rename', this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton).ValueAsBool());
 
-    let currPageType = this.GetCurrentPageType();
+    try {
+      let currPageType = this.GetCurrentPageType();
 
-    if (currPageType === scWindowType.Desktop) {
-      this.OneDesktopMan = new OneDesktopManager(this.Logger, this.TopLevelDoc(), this.RecipeBasics, this.MiscMan, this);
-    } else if (currPageType === scWindowType.ContentEditor) {
-      this.OneCEAgent = new OneCEAgent(this.TopLevelDoc(), this.Logger);
+      if (currPageType === ScWindowType.Desktop) {
+        this.DesktopUiProxy = new DesktopProxy(this.Logger, this.MiscAgent, this.GetTopLevelDoc(), this.SettingsAgent);
+      } else if (currPageType === ScWindowType.ContentEditor) {
+        this.CeProxy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
+        await this.CeProxy.WaitForReadyAssociatedDocandInit();
+      }
+
+      await this.InitFromQueryStr()
+        .catch((err) => {
+          throw (this.InitScWindowManager.name + ' ' + err)
+        });
+    } catch (err) {
+      throw (this.InitScWindowManager.name + ' ' + err);
     }
-
-    await this.InitFromQueryStr(this.AtticAgent, this.RecipeBasics)
-      .catch ((err) => { throw (err) });
-
     this.Logger.FuncEnd(this.InitScWindowManager.name);
   }
 
-  TopLevelDoc(): IDataOneDoc {
-    if (!this.topDoc) {
-      this.topDoc = {
+  GetTopLevelDoc(): IDataOneDoc {
+    if (!this.TopDoc) {
+      this.TopDoc = {
         //ParentDoc: null,
         ContentDoc: window.document,
         DocId: Guid.NewRandomGuid(),
         Nickname: 'top doc'
       }
     }
-    return this.topDoc;
+    return this.TopDoc;
   }
 
-  InitFromQueryStr(atticMan: IContentAtticAgent, recipeBasics: RecipeBasics): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.InitFromQueryStr.name);
+  async InitFromQueryStr(): Promise<void> {
+    this.Logger.FuncStart(this.InitFromQueryStr.name);
 
-      try {
-        if (this.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
-          let qsValue: string = (this.ScUrlAgent.GetQueryStringValueByKey(QueryStrKey.hsTargetSs));
-          let targetGuid: GuidData = Guid.ParseGuid(qsValue, false);
-
-          if (targetGuid && targetGuid !== GuidData.GetEmptyGuid()) {
-            this.Logger.LogVal("targetGuid", targetGuid.Raw);
-            var dataOneWindowStorage;
-
-            var targetDoc: IDataOneDoc = this.TopLevelDoc();
-            if (targetDoc) {
-              await atticMan.GetFromStorageById(targetGuid)
-                .then((result) => dataOneWindowStorage = result)
-                .then(() => recipeBasics.WaitForPageReadyNative(targetDoc))
-                .then(() => this.RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage))
-                .then(() => resolve())
-                .catch((err) => reject(this.InitFromQueryStr.name + ' ' + err));
-            }
-            else {
-              reject(this.InitFromQueryStr.name + ' no targetDoc');
-            }
-          } else {
-            reject('Either no snapshot provided or an illegal one was found');
-          }
-        }
-      } catch (ex) {
-        reject(this.InitFromQueryStr.name + ' ' + ex)
-      }
+    try {
+      let recipe = new RecipeInitFromQueryStr(this.Logger, this.GetScUrlAgent(), this.AtticAgent, this.GetTopLevelDoc(), this.MakeScWinRecipeParts(), this.DesktopUiProxy, this.ToastAgent, this.CeProxy);
+      await recipe.Execute();
 
       this.Logger.FuncEnd(this.InitFromQueryStr.name);
-    });
+    }
+    catch (err) {
+      throw (err);
+    }
   }
 
-  private CreateShellIDataOneWindowStorage(windowType: scWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
-    this.Logger.FuncStart(this.CreateShellIDataOneWindowStorage.name);
+  async SetCompactCss(targetDoc: IDataOneDoc) {
+    //if (this.ScUiMan().GetCurrentPageType() === scWindowType.ContentEditor) {
+    await this.CeProxy.SetCompactCss();
+    //}
+  }
+
+  private CreateShellIDataScWindowState(windowType: ScWindowType, flavor: SnapShotFlavor): IDataOneWindowStorage {
+    this.Logger.FuncStart(this.CreateShellIDataScWindowState.name);
     var dateToUse: Date = new Date();
     var newGuid: GuidData = Guid.NewRandomGuid();
 
@@ -130,111 +162,77 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       Flavor: flavor,
     };
 
-    this.Logger.FuncEnd(this.CreateShellIDataOneWindowStorage.name);
+    this.Logger.FuncEnd(this.CreateShellIDataScWindowState.name);
 
     return activeWindowSnapShot;
   }
 
-  GetWindowState(targetSnapShotFlavor: SnapShotFlavor): Promise<IDataOneWindowStorage> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetWindowState.name);
+  private async PopulateIfTopIsContentEditor(scWindowState: IDataOneWindowStorage): Promise<void> {
+    try {
+      if (this.GetCurrentPageType() === ScWindowType.ContentEditor) {
+        let ceAgent = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
 
-      let currentPageType = this.GetCurrentPageType();
-      var snapShot: IDataOneWindowStorage = this.CreateShellIDataOneWindowStorage(currentPageType, targetSnapShotFlavor);
-
-      if (currentPageType === scWindowType.ContentEditor) {
-        this.Logger.MarkerA();
-        var id = GuidData.GetEmptyGuid();
-
-        await this.OneCEAgent.GetTreeState(id)
+        await ceAgent.WaitForReadyAssociatedDocandInit()
+          .then(() => ceAgent.GetTreeState())
           .then((state: IDataOneStorageOneTreeState) => {
-            snapShot.AllCEAr.push(state);
-            resolve(snapShot);
+            scWindowState.AllCEAr.push(state);
           })
-          .catch((err) => reject(err));
+          .catch((err) => { throw (err) });
       }
-      else if (currentPageType === scWindowType.Desktop) {
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.PopulateIfTopIsContentEditor.name, err);
+    }
+  }
+
+  private async PopulateIfTopIsDeskTop(scWindowState: IDataOneWindowStorage): Promise<void> {
+    this.Logger.FuncStart(this.PopulateIfTopIsDeskTop.name);
+    try {
+      if (this.GetCurrentPageType() === ScWindowType.Desktop) {
         this.Logger.MarkerB();
 
-        await this.OneDesktopMan.GetStateDesktop()
+        this.DesktopUiProxy.GetStateDesktop()
           .then((states: IDataDesktopState) => {
-            snapShot.AllCEAr = states.AllCeData;
-            resolve(snapShot);
+            scWindowState.AllCEAr = states.HostedContentEditors;
           })
-          .catch((err) => reject(err));
+          .catch((err) => { throw (err); });
       }
-      else {
-        this.Logger.ErrorAndThrow(this.GetWindowState.name, 'Invalid page location ' + currentPageType);
-      }
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.PopulateIfTopIsContentEditor.name, err);
+    }
+    this.Logger.FuncEnd(this.PopulateIfTopIsDeskTop.name);
+  }
+  GetScWindowStateA(): Promise<IContentState> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetScWindowStateA.name);
 
-      this.Logger.FuncEnd(this.GetWindowState.name);
+      let toReturnScWindowState: IContentState = new DefaultScWindowState();
+
+      await this.AtticAgent.GetAllSnapShotsMany()
+        .then((result: IDataSnapShots) => toReturnScWindowState.SnapShotsMany = result)
+        .then(() => toReturnScWindowState.ErrorStack = this.Logger.ErrorStack)
+        .then(() => this.GetCurrentStateByPageType(this.GetCurrentPageType()))
+        .then((result: IDataOneStorageOneTreeState) => {
+          toReturnScWindowState.ActiveCe = result;
+          resolve(toReturnScWindowState);
+        })
+        .catch((err) => reject(err));
+
+      this.Logger.FuncEnd(this.GetScWindowStateA.name);
     });
   }
-
-  private async __getTopLevelIframe(targetDoc: IDataOneDoc): Promise<IDataOneIframe> {
+  GetScWindowStateB(targetSnapShotFlavor: SnapShotFlavor): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve, reject) => {
-      var toReturn: IDataOneIframe = null;
+      this.Logger.FuncStart(this.GetScWindowStateB.name);
 
-      var allIframe: IDataOneIframe[];
+      let currentPageType = this.GetCurrentPageType();
+      var scWindowState: IDataOneWindowStorage = this.CreateShellIDataScWindowState(currentPageType, targetSnapShotFlavor);
 
-      await this.RecipeBasics.GetAllLiveIframeData(targetDoc)
-        .then((result) => {
-          allIframe = result
+      await this.PopulateIfTopIsContentEditor(scWindowState)
+        .then(() => this.PopulateIfTopIsDeskTop(scWindowState))
+        .then(() => resolve(scWindowState))
+        .catch((err) => reject(err));
 
-          var maxZVal = -1;
-          if (allIframe && allIframe.length > 0) {
-            for (var idx = 0; idx < allIframe.length; idx++) {
-              var candidateIframe = allIframe[idx];
-              if (candidateIframe && candidateIframe.Zindex > maxZVal) {
-                toReturn = candidateIframe;
-                maxZVal = candidateIframe.Zindex;
-              }
-            }
-          }
-        })
-        .then(() => resolve(toReturn))
-        .catch((err) => reject(this.__getTopLevelIframe.name + ' ' + err));
-    })
-  }
-
-  async SetCompactCss(targetDoc: IDataOneDoc) {
-    //if (this.ScUiMan().GetCurrentPageType() === scWindowType.ContentEditor) {
-    await this.OneCEAgent.SetCompactCss();
-    //}
-  }
-
-  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RestoreStateToTargetDoc.name);
-
-      if (dataToRestore) {
-        if (dataToRestore.WindowType === scWindowType.ContentEditor || dataToRestore.WindowType === scWindowType.Desktop) {
-          if (dataToRestore.WindowType === scWindowType.ContentEditor) {
-            await this.OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0])
-              .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
-              .then(() => resolve())
-              .catch((err) => reject(err));
-          } else {
-            await this.OneDesktopMan.RestoreDesktopState(targetDoc, dataToRestore)
-              .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
-              .then(() => {
-                this.Logger.LogVal('resolving', this.RestoreStateToTargetDoc.name)
-                resolve();
-              })
-              .catch((err) => reject(err));
-          }
-        }
-        else {
-          reject(this.RestoreStateToTargetDoc.name + 'Data not restored. Not in Desktop or Content Editor');
-        }
-      }
-      else {
-        reject(this.RestoreStateToTargetDoc.name + " No data found to restore");
-      }
-
-      reject(this.RestoreStateToTargetDoc.name + ' : unknown reason');
-
-      this.Logger.FuncEnd(this.RestoreStateToTargetDoc.name);
+      this.Logger.FuncEnd(this.GetScWindowStateB.name);
     });
   }
 }

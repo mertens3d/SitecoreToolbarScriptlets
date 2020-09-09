@@ -1,5 +1,9 @@
 ﻿export interface ISharedConst {
+  Debug: {
+    ForceLoggingEnabled: boolean
+  },
   IterHelper: {
+
     GrowthPerIteration: number,
     MaxCount: {
       OverridePublishing: number,
@@ -9,6 +13,9 @@
       Max: number,
       Default: number,
     },
+  },
+  ObjDiscriminator: {
+    DataOneTreeNode: string,
   },
   Settings: {
     Defaults: {
@@ -36,5 +43,6 @@
     LaunchPad: string,
     CE: string,
     None: string,
+    AboutBlank: string,
   },
 }

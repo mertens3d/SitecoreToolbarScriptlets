@@ -5,76 +5,61 @@ import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAg
 import { ConstAllSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings';
 import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
+import { ScUrlAgent } from '../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
-import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
-import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent/AutoSnapShotAgent';
-import { SitecoreUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
-import { ContentAPIManager } from './Managers/ContentAPIManager/ContentAPIManager';
-import { ContentStateManager } from './Classes/ContentStateManager/ContentStateManager';
-import { RecipeBasics } from '../../Shared/scripts/Classes/RecipeBasics';
-import { MiscManager } from './Managers/MiscManager/MiscManager';
-import { PromisesRecipes } from '../../Shared/scripts/Classes/PromisesRecipes';
-import { ContentMessageManager } from './Managers/ContentMessageManager/ContentMessageManager';
-import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { ContentMessageBroker } from './Drones/ContentMessageBroker/ContentMessageBroker';
-import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
-import { IContentApi } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
-import { IScWindowManager } from '../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { ScUrlAgent } from '../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
-import { IScUrlAgent } from '../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
-import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
+import { IHindSiteScWindowApi } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
-import { ScWindowManager } from './Managers/ScWindowManager/ScWindowManager';
+import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
+import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
+import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
+import { IScWindowManager } from '../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
+import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent/AutoSnapShotAgent';
 import { ContentAtticAgent } from './Agents/ContentAtticAgent/ContentAtticAgent';
+import { MiscAgent } from './Agents/MiscAgent/MiscAgent';
+import { ContentMessageBroker } from './Drones/ContentMessageBroker/ContentMessageBroker';
+import { ContentAPIManager } from './Managers/ContentAPIManager/ContentAPIManager';
+import { ContentMessageManager } from './Managers/ContentMessageManager/ContentMessageManager';
+import { ScWindowManager } from './Managers/ScWindowManager/ScWindowManager';
+import { ScUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
+import { SharedConst } from '../../Shared/scripts/SharedConst';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
   private Logger: LoggerAgent;
-  private ContentAPIMan: IContentApi;
-  private ContentMan: ContentStateManager;
+  private ContentAPIMan: IHindSiteScWindowApi;
   private ToastAgent: ToastAgent;
-  private MiscMan: MiscManager;
+  private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
   private AtticAgent: IContentAtticAgent;
+  ScUrlAgent: ScUrlAgent;
 
-  async main() {
-    let scUiMan: SitecoreUiManager;
-    let contentMessageMan: ContentMessageManager;
-    let scWinMan: IScWindowManager;
-    let recipeBasics: RecipeBasics;
-
+  async Main() {
     await this.InstantiateAndInitLoggerAndSettings()
-      .then(async () => {
-        this.Logger.SectionMarker('Instantiate Agents');
-
-        this.MiscMan = new MiscManager(this.Logger);
-        this.ToastAgent = new ToastAgent(this.Logger);
-        recipeBasics = new RecipeBasics(this.Logger);
-        let promisesRecipes = new PromisesRecipes(this.Logger);
-
-        let scUrlAgent: IScUrlAgent = new ScUrlAgent(this.Logger);
-        await scUrlAgent.InitScUrlAgent()
-
-        this.Logger.SectionMarker('Instantiate Managers');
-
-        this.AtticAgent = new ContentAtticAgent(this.RepoAgent, this.Logger);
-        this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
-
-        scWinMan = new ScWindowManager(this.Logger, scUiMan, recipeBasics, this.MiscMan, this.ToastAgent, this.AtticAgent, scUrlAgent);
-        scUiMan = new SitecoreUiManager(this.Logger, recipeBasics);
-        this.ContentMan = new ContentStateManager(this.Logger, this.AtticAgent, scUiMan, scWinMan);
-
-        this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ContentMan, this.ToastAgent, scUiMan, promisesRecipes, recipeBasics, scWinMan);
-
-        let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
-          this.ContentAPIMan, this.AtticAgent, recipeBasics, this.ToastAgent, scUiMan, scWinMan);
-
-        contentMessageMan = new ContentMessageManager(this.Logger, scWinMan, contentMessageBroker);
-      })
-      .catch((err) => this.Logger.ErrorAndThrow(this.main.name, err));
+      .then(() => this.InstantiateAndInitAgents())
+      .then(() => this.InstantiateAndInitManagers())
+      .catch((err) => this.Logger.ErrorAndThrow(this.Main.name, err));
 
     this.Logger.SectionMarker('Initialize Managers');
+  }
+
+  private async InstantiateAndInitManagers(): Promise<void> {
+    this.Logger.SectionMarker('Instantiate and Initialize Managers');
+
+    let scUiMan: ScUiManager;
+    let contentMessageMan: ContentMessageManager;
+    let scWinMan: IScWindowManager;
+
+    scWinMan = new ScWindowManager(this.Logger, scUiMan, this.MiscAgent, this.ToastAgent, this.AtticAgent, this.ScUrlAgent, this.SettingsAgent);
+    scUiMan = new ScUiManager(this.Logger);
+
+    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan);
+
+    let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
+      this.ContentAPIMan, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan);
+
+    contentMessageMan = new ContentMessageManager(this.Logger, scWinMan, contentMessageBroker);
 
     await scUiMan.InitSitecoreUiManager()
       .then(() => contentMessageMan.InitContentMessageManager())
@@ -82,11 +67,28 @@ class ContentEntry {
 
       .then(() => {
         let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, scWinMan,
-          this.AtticAgent, scUiMan, recipeBasics, this.ToastAgent);
+          this.AtticAgent, scUiMan, this.ToastAgent);
         autoSnapShotAgent.ScheduleIntervalTasks();
       })
       .then(() => this.Logger.Log('Init success'))
       .catch((err) => this.Logger.ErrorAndThrow('Content Entry Point', err));
+  }
+
+  private async InstantiateAndInitAgents(): Promise<void> {
+    try {
+      this.Logger.SectionMarker('Instantiate Agents');
+
+      this.AtticAgent = new ContentAtticAgent(this.RepoAgent, this.Logger);
+      this.MiscAgent = new MiscAgent(this.Logger);
+      this.ScUrlAgent = new ScUrlAgent(this.Logger);
+      this.ToastAgent = new ToastAgent(this.Logger);
+
+      await this.ScUrlAgent.InitScUrlAgent()
+        .then(() => this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt()))
+        .catch((err) => { throw (err) });
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.InstantiateAndInitAgents.name, err)
+    }
   }
 
   private InitLogging() {
@@ -94,7 +96,7 @@ class ContentEntry {
 
     let enableLogger: IGenericSetting = this.SettingsAgent.GetByKey(SettingKey.EnableLogging);
 
-    if (enableLogger.ValueAsBool()) {
+    if (enableLogger.ValueAsBool() || SharedConst.Const.Debug.ForceLoggingEnabled) {
       let consoleLogWrite = new LoggerConsoleWriter();
 
       var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.Logger);
@@ -125,5 +127,8 @@ class ContentEntry {
   }
 }
 
-let contentEntry: ContentEntry = new ContentEntry();
-contentEntry.main();
+//document.addEventListener("DOMContentLoaded", function() {
+                           
+  let contentEntry: ContentEntry = new ContentEntry();
+  contentEntry.Main();
+//});

@@ -1,24 +1,17 @@
-﻿import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
-import { StaticHelpers } from "../../../Classes/StaticHelpers";
+﻿import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { BufferChar } from "../../../Enums/BufferChar";
 import { BufferDirection } from "../../../Enums/BufferDirection";
-import { Guid } from "../../../Helpers/Guid";
 import { GuidData } from "../../../Helpers/GuidData";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
-import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { IDataDebugCallback } from "../../../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
-import { IContentState } from "../../../Interfaces/IContentState/IContentState";
-import { IDataBucketRestoreDesktop } from "../../../Interfaces/IDataBucketRestoreDesktop";
-import { IDataOneDoc } from "../../../Interfaces/IDataOneDoc";
-import { IDataOneIframe } from "../../../Interfaces/IDataOneIframe";
-import { IDataPayloadSnapShot } from "../../../Interfaces/IDataPayloadSnapShot";
 import { IError } from "../../../Interfaces/IError";
 import { LogWriterBuffer } from "./LogWriterBuffer";
 
 export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;
+
   ErrorStack: IError[] = [];
 
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
@@ -75,18 +68,6 @@ export class LoggerAgent implements ILoggerAgent {
   }
 
   
-  debugPrefix: string = '\t\t';
-
-  DebugIdataPopUpSettings(toReturn: IGenericSetting): void {
-    //this.FuncStart(this.DebugSettings.name);
-    this.LogVal('Settings', JSON.stringify(toReturn));
-    //this.FuncEnd(this.DebugSettings.name);
-  }
-
-  DebugWindow(window: Window) {
-    if (this.IsNotNullOrUndefinedBool('window', window)) {
-    }
-  }
 
   ThrowIfNullOrUndefined(title: string, subject: any): void {
     if (!this.IsNotNullOrUndefinedBool(title, subject)) {
@@ -110,44 +91,6 @@ export class LoggerAgent implements ILoggerAgent {
     }
     return toReturn;
   }
-  DebugGuid(id: GuidData) {
-    if (this.IsNotNullOrUndefinedBool('Guid', id)) {
-      this.LogVal('asShort', Guid.AsShort(id));
-      this.LogVal('asString', id.Raw);
-    }
-  }
-
-  DebugIDataOneDoc(dataOneDoc: IDataOneDoc): void {
-    this.FuncStart(this.DebugIDataOneDoc.name);
-    //this.Log('');
-    //this.Log(this.debugPrefix + this.DebugIDataOneDoc.name);
-    if (dataOneDoc) {
-      //this.LogVal(this.debugPrefix + 'dataOneDoc', this.IsNullOrUndefined(dataOneDoc));
-      //this.LogVal(this.debugPrefix + 'dataOneDoc.XyyzId.asShort:', this.IsNullOrUndefined(dataOneDoc.DocId.AsShort));
-      //this.LogVal(this.debugPrefix + 'dataOneDoc.Document:', this.IsNullOrUndefined(dataOneDoc.ContentDoc));
-      //this.LogVal(this.debugPrefix + 'dataOneDoc.DocId.AsBracedGuid ', dataOneDoc.DocId.AsBracedGuid);
-
-      if (dataOneDoc.ContentDoc) {
-        this.LogVal(this.debugPrefix + 'dataOneDoc.Document.readyState:', dataOneDoc.ContentDoc.readyState);
-        if (dataOneDoc.ContentDoc.location) {
-          this.LogVal(this.debugPrefix + 'targetDoc.location.href', dataOneDoc.ContentDoc.location.href);
-        }
-        else {
-          this.Log(this.debugPrefix + 'dataOneDoc.Document.location - does not exist');
-        }
-      }
-      else {
-        this.Log(this.debugPrefix + 'dataOneDoc.Document - does not exist');
-      }
-    }
-    else {
-      this.ErrorAndThrow(this.DebugIDataOneDoc.name, 'no targetDoc');
-    }
-    this.Log('');
-
-    this.FuncEnd(this.DebugIDataOneDoc.name);
-  }
-
 
   HndlrClearDebugText(self: ILoggerAgent, verify: boolean = false): void {
     this.FuncStart(this.HndlrClearDebugText.name);
@@ -228,73 +171,6 @@ export class LoggerAgent implements ILoggerAgent {
 
       this.__WriteToAllWriters(text);
     }
-  }
-
-  DebugDataOneIframe(dataOneIframe: IDataOneIframe) {
-    this.FuncStart(this.DebugDataOneIframe.name);
-    this.Log('dataOneIframe : ' + this.IsNullOrUndefined(dataOneIframe));
-    if (dataOneIframe) {
-      this.Log('dataOneIframe.Nickname : ' + dataOneIframe.Nickname);
-      this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
-      if (dataOneIframe.IframeElem) {
-        this.Log('dataOneIframe.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
-        //  //this.Log('dataOneIframe.IframeElem.src: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.src));
-        //  this.Log('dataOneIframe.IframeElem.id: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.id));
-        //  //this.Log('dataOneIframe.IframeElem.name: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem.name));
-      }
-      this.Log('dataOneIframe.ContentDoc: \t' + this.IsNullOrUndefined(dataOneIframe.ContentDoc));
-      this.DebugIDataOneDoc(dataOneIframe.ContentDoc);
-      //this.Log('dataOneIframe.IframeElem: \t' + this.IsNullOrUndefined(dataOneIframe.IframeElem));
-      //this.Log('dataOneIframe.Id: \t' + this.IsNullOrUndefined(dataOneIframe.Id));
-      //if (dataOneIframe.Id) {
-      //  this.Log('dataOneIframe.Id.asShort: \t' + this.IsNullOrUndefined(dataOneIframe.Id.asShort));
-      //}
-      //this.Log('dataOneIframe.DocElem: \t' + this.IsNullOrUndefined(dataOneIframe.Index));
-    }
-    this.FuncEnd(this.DebugDataOneIframe.name);
-  }
-
-  DebugPayloadDataFromPopUp(data: PayloadDataFromPopUp) {
-    if (this.IsNotNullOrUndefinedBool('PayloadDataFromPopUp', data)) {
-      this.LogVal('idOfSelect', data.IdOfSelect);
-      this.DebugGuid(data.IdOfSelect);
-      this.DebugIDataPayloadSnapShot(data.SnapShotSettings);
-    }
-  }
-  DebugIDataPayloadSnapShot(snapShotSettings: IDataPayloadSnapShot) {
-    if (this.IsNotNullOrUndefinedBool('IDataPayloadSnapShot', snapShotSettings)) {
-      this.LogVal('Flavor', StaticHelpers.FlavorAsString(snapShotSettings.Flavor));
-      this.LogVal('Nickname', snapShotSettings.SnapShotNewNickname);
-    }
-  }
-
-  DebugObjState(state: IContentState) {
-    if (this.IsNotNullOrUndefinedBool('State', state)) {
-      if (this.IsNotNullOrUndefinedBool('CurrentSnapShots', state.SnapShotsMany.CurrentSnapShots)) {
-        this.LogVal('Snapshot count', state.SnapShotsMany.CurrentSnapShots.length);
-      }
-      //if (this.IsNotNullOrUndefinedBool('PageType', state.WindowType)) {
-      //  this.LogVal('scWindowType : ', scWindowType[state.WindowType]);
-      //}
-      //if (this.IsNotNullOrUndefinedBool('PageType', state.Url)) {
-      //  this.LogVal('Url : ', state.Url);
-      //}
-    }
-  }
-
-  PromiseBucketDebug(promiseBucket: IDataBucketRestoreDesktop, friendlyName: string) {
-    this.FuncStart(this.PromiseBucketDebug.name, friendlyName);
-    this.Log('promiseBucket : ' + this.IsNullOrUndefined(promiseBucket));
-    if (promiseBucket && typeof (promiseBucket) !== 'undefined') {
-      this.Log('promiseBucket.IFramesbefore: ' + this.IsNullOrUndefined(promiseBucket.IFramesbefore));
-      //this.Log('promiseBucket.targetWindow: ' + this.IsNullOrUndefined(promiseBucket.targetWindow));
-      this.Log('promiseBucket.oneTreeState: ' + this.IsNullOrUndefined(promiseBucket.oneTreeState));
-      //this.Log('promiseBucket.NewIframe: ' + this.IsNullOrUndefined(promiseBucket.NewIframe));
-      //if (promiseBucket.NewIframe) {
-      //  this.DebugDataOneIframe(promiseBucket.NewIframe);
-      //}
-    }
-    this.FuncEnd(this.PromiseBucketDebug.name, friendlyName);
   }
 
   private __WriteToAllWriters(text: string) {
@@ -388,6 +264,20 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log('\t\t  ' + text);
     this.Log('');
     this.Log('\t\t** ERROR ** ' + container);
+    this.Log('');
+  }
+
+  WarningAndContinue(container: string, text: any): void {
+    if (!container) {
+      container = 'unknown';
+    }
+
+    if (!text) {
+      text = 'unknown';
+    }
+
+    this.Log('');
+    this.Log('\t\t** WARNING ** ' + container + ' ' + text);
     this.Log('');
   }
 

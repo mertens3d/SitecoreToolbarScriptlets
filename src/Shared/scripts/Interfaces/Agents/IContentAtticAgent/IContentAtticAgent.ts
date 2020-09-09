@@ -1,5 +1,5 @@
 ﻿import { GuidData } from "../../../Helpers/GuidData";
-import { IDataOneWindowStorage } from "../../IDataOneWindowStorage";
+import { IDataOneWindowStorage } from "../../Data/IDataOneWindowStorage";
 
 export interface IContentAtticAgent {
   WriteToStorage(storageMatch: IDataOneWindowStorage);

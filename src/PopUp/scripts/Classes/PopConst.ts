@@ -9,9 +9,7 @@ export class PopConst {
         Collapsed: 'in',
       },
     },
-    Debug: {
-      ForceLoggingEnabled: false
-    },
+   
     ElemId: {
       InputNickname: 'id-input-nickname',
       HindSiteParentInfo: 'spanParentInfo',
@@ -85,6 +83,7 @@ export class PopConst {
         SettingAutoSaveMaxCount: '[id=id-settings-auto-save-max-count]',
         SettingDebugKeepDialogOpen: '[id=id-settings-debug-keep-dialog-open]',
         SettingAutoSaveSnapshotRetainDays: '[id=id-settings-auto-save-snap-shot-retain-days]',
+        SettingAutoRenameCeTabButton: '[id=id-settings-auto-rename-ce-tab-button]',
         SettingNotUsed: '[id=id-settings-not-used]',
         SettingUseCompactCss: '[id=id-settings-use-compact]',
         TakeSnapshot: '[id=SaveWindowState]',
@@ -114,7 +113,7 @@ export class PopConst {
           AutoSaveEnabled: false,
           AutoLogin: false,
           DefaultDebugKeepDialogOpen: false,
-          AutoSnapshotBeforeWindowChange: true,
+          AutoSnapshotBeforeWindowChange: false,
         }
       }
     },
