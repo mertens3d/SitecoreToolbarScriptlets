@@ -160,10 +160,8 @@ export class SelectSnapshotModule implements IUiModule {
           var headers: ISelectionHeaders = this.WriteHeaders();
 
           if (snapShots && snapShots.length > 0) {
-            this.Logger.Log('targetSel.options.length : ' + targetSel.options.length);
 
             for (var idx: number = 0; idx < snapShots.length; idx++) {
-              this.Logger.Log('snapShots:' + idx + ":" + snapShots.length);
 
               var data = snapShots[idx];
               let el = this.BuildOne(data, priorValue, idx);
@@ -264,7 +262,6 @@ export class SelectSnapshotModule implements IUiModule {
       (idx === 0 && prior.Raw === GuidData.GetEmptyGuid().Raw)
 
     ) {
-      this.Logger.Log('Setting to selected')
       el.selected = true;
     }
 

@@ -3,7 +3,6 @@
     ForceLoggingEnabled: boolean
   },
   IterHelper: {
-
     GrowthPerIteration: number,
     MaxCount: {
       OverridePublishing: number,
@@ -13,6 +12,9 @@
       Max: number,
       Default: number,
     },
+  },
+  Logger: {
+    MinTimeDiffMs: number
   },
   ObjDiscriminator: {
     DataOneTreeNode: string,

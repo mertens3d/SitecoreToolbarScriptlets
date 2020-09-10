@@ -38,9 +38,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       let storageKey = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.GuidId.Raw;
       this.RepoAgent.WriteByKey(storageKey, snapShotAsString);
 
-      //await this.CleanOutOldAutoSavedData()
-      //  .then(() => resolve())
-      //  .catch((err) => reject(err));
+      this.CleanOutOldAutoSavedData();
 
       resolve();
 

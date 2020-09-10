@@ -23,7 +23,7 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
       } else if (sourceElement.hasAttribute('href')) {
         this.InferFromAnchorElement(<HTMLAnchorElement>sourceElement);
       } else if (sourceElement.classList.contains('scContentTreeNode')) {
-        this.InferFromDivElement(<HTMLDivElement> sourceElement)
+        this.InferFromDivElement(<HTMLDivElement>sourceElement)
       } else {
         this.Logger.ErrorAndThrow(ContentEditorTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElement));
       }
@@ -56,7 +56,7 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     }
   }
   private GetGlyphNodeElem(): HTMLImageElement {
-    return <HTMLImageElement> this.ScContentTreeNodeDivElem.querySelector(":scope > img");
+    return <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector(":scope > img");
   }
   private GetLinkNodeElem(): HTMLElement {
     this.Logger.Log('trying to get link for: ' + this.ScContentTreeNodeDivElem + this.ScContentTreeNodeDivElem.id);
@@ -86,15 +86,75 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
   }
 
   GetIconSrc(): string {
-
-    let toReturn:string
+    let toReturn: string
     //((document.getElementById('Tree_Node_709C05C504394E1A9D4711E824C87B39')).parentElement).querySelector('.scContentTreeNodeIcon').src
     //((document.getElementById('Tree_Node_EB443C0BF923409E85F3E7893C8C30C2')).parentElement).querySelector('.scContentTreeNodeIcon').outerHTML
-    let foundElement: HTMLImageElement = <HTMLImageElement> this.ScContentTreeNodeDivElem.querySelector('.scContentTreeNodeIcon');
+    let foundElement: HTMLImageElement = <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
 
     if (foundElement) {
-
       toReturn = foundElement.src;
+    }
+
+    return toReturn;
+  }
+
+  GetParentTreeNode(): ContentEditorTreeNodeProxy{
+    let toReturn: ContentEditorTreeNodeProxy = null;
+
+    let candidate: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
+
+    if (candidate) {
+      this.Logger.Log('found a candidate');
+      toReturn = new ContentEditorTreeNodeProxy(this.Logger, candidate);
+    } else {
+
+      this.Logger.Log('no candidate found');
+    }
+    return toReturn;
+  }
+
+  IsSitecoreRootNode(): boolean {
+    let toReturn: boolean = false;
+
+    let apparentId = this.GetApparentId();
+    if (apparentId) {
+      toReturn = apparentId.Raw === ContentConst.Const.ElemId.sc.SitecoreRootApparentIdRaw;
+    }
+    return toReturn;
+  }
+
+  GetMainIconSrc(): string {
+    let toReturn: string
+
+
+    let maxIter: number = 100;
+    let penultimateNode: ContentEditorTreeNodeProxy = this;
+    let parentNode: ContentEditorTreeNodeProxy = this;
+
+
+    let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
+    if (penultimateElem) {
+
+      penultimateNode = new ContentEditorTreeNodeProxy(this.Logger, penultimateElem);
+
+    }
+
+
+    //while (parentNode && maxIter > 0) {
+    //  maxIter--;
+    //   parentNode = parentNode.GetParentTreeNode();
+
+    //  if (parentNode) {
+    //    if (parentNode.IsSitecoreRootNode()) {
+    //      penultimateNode = penultimateNode;
+    //      break;
+    //    }
+    //  }
+    //}
+
+    if (penultimateNode !== null) {
+
+      toReturn = penultimateNode.GetIconSrc();
     }
 
     return toReturn;
@@ -202,7 +262,7 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
 
     this.Logger.LogVal('className', className);
 
-    if (className === ContentConst.Const.ClassNames.ContentTreeNode) {
+    if (className === ContentConst.Const. ClassNames.SC.ContentTreeNode) {
       //this.debug().Log('is Content Node');
       toReturn = true;
     }

@@ -27,12 +27,10 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
   }
 
   GetScWindowType(): ScWindowType {  //absUrl: AbsoluteUrl
-    this.Logger.FuncStart(this.GetScWindowType.name);
     var toReturn: ScWindowType = ScWindowType.Unknown;
 
     let testPath: AbsoluteUrl = this.BuildFullUrlFromParts();
     if (testPath) {
-      this.Logger.LogVal('current url', testPath.AbsUrl);
       if (testPath.AbsUrl.indexOf(SharedConst.Const.UrlSuffix.Login) > -1) {
         toReturn = ScWindowType.LoginPage;
       }
@@ -60,7 +58,6 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
     } else {
       this.Logger.ErrorAndThrow(this.GetScWindowType.name, 'null url');
     }
-    this.Logger.FuncEnd(this.GetScWindowType.name, ScWindowType[toReturn]);
 
     return toReturn;
   }

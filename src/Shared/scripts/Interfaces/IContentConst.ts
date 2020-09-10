@@ -7,9 +7,10 @@ export interface IContentConst {
 
   ElemId: {
     sc: {
-      scLoginUserName: string,
       scLoginPassword: string,
-      SitecoreRootNodeId: string,
+      scLoginUserName: string,
+      SitecoreRootAnchorNodeId: string,
+      SitecoreRootApparentIdRaw: string,
       SitecoreRootGlyphId: string,
 
       scLoginBtn: IScVerSpec,
@@ -28,19 +29,21 @@ export interface IContentConst {
   },
 
   ClassNames: {
-    ContentTreeNode: string,
-
     SC: {
+      ContentTreeNode: string,
       scContentTreeNodeActive: string,
     }
   },
 
   Selector: {
     SC: {
+      ContentEditor: {
+        ContentTreeNodeGlyph: string,
+      scContentTreeNodeIcon: string,
+      },
       Cancel: string,
       ContentIframe0: string,
       ContentIFrame1: string,
-      ContentTreeNodeGlyph: string,
       IdStartsWithTreeNode: string,
       IframeContent: IScVerSpec,
       JqueryModalDialogsFrame: string,

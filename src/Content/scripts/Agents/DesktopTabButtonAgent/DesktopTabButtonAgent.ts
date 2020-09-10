@@ -39,26 +39,76 @@ export class DesktopTabButtonAgent extends LoggableBase {
     return foundStartBarButton;
   }
 
-  ChangeStartBarButtonText(targetButton: HTMLElement, text: string, iconSrc: string) {
+  ChangeStartBarButtonText(targetButton: HTMLElement, text: string, itemIconSource: string, mainIconSrc: string) {
     this.Logger.FuncStart(this.ChangeStartBarButtonText.name);
-    if (targetButton) {
-      let currentInnerHtml = targetButton.querySelector('div').querySelector('span').innerHTML;
-      let currentInnerText = targetButton.querySelector('div').querySelector('span').innerText;
-      let newInnerHtml = currentInnerHtml.replace(currentInnerText, text);
-      targetButton.querySelector('div').querySelector('span').innerHTML = newInnerHtml;
+    this.Logger.LogVal('iconSrc', itemIconSource);
+    this.Logger.LogVal('mainIconSrc', mainIconSrc);
+    if (targetButton && itemIconSource.length > 0) {
+      let containerSpanElement: HTMLElement = targetButton.querySelector('div').querySelector('span');
+      //let currentInnerText = containerSpanElement.innerText;
+      //let itemIconHtml = currentInnerHtml.replace(currentInnerText, text);
 
-      if (iconSrc && iconSrc.length > 0) {
+      //let existingIconImage: HTMLImageElement = containerSpanElement.querySelector('img');
 
-      let targetButtonImg: HTMLImageElement = <HTMLImageElement>targetButton.querySelector('img');
-      if (targetButtonImg) {
-        targetButtonImg.src = iconSrc;
-      }
-      }
+      //let currentInnerHtml = containerSpanElement.innerHTML;
+
+      // now the images
+
+      let newItemIconNode = <HTMLImageElement> document.createElement('img');
+      newItemIconNode.width = 16;
+      newItemIconNode.height = 16;
+      newItemIconNode.src = itemIconSource;
+      newItemIconNode.border = '0px';
+      newItemIconNode.classList.add("scContentTreeNodeIcon");
+
+      let newMainIconNode = <HTMLImageElement>document.createElement('img');
+      newMainIconNode.width = 16;
+      newMainIconNode.height = 16;
+      newMainIconNode.src = mainIconSrc;
+      newMainIconNode.style.position = 'relative';
+      newMainIconNode.style.left = '-8px';
+      newMainIconNode.style.top = '-8px';
+      newMainIconNode.style.marginRight = '-4px';
+
+
+      newMainIconNode.border = '0';
+      newMainIconNode.classList.add("scContentTreeNodeIcon");
+
+
+
+
+
+
+      //let mainIconHtml: string = '';
+
+      //if (mainIconSrc.length > 0) {
+      //  mainIconHtml = '<img src="' + mainIconSrc + '" width = "16" height = "16" class="scContentTreeNodeIcon" alt = "" border = "0" >';
+      //}
+
+      containerSpanElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
+
+
+
+      //  let itemImageElement: HTMLImageElement;
+
+      //  if (itemIconSource && itemIconSource.length > 0) {
+      //    itemImageElement = <HTMLImageElement>targetButton.querySelector('img');
+
+      //    if (itemImageElement) {
+      //      itemImageElement.src = itemIconSource;
+      //    }
+
+      //    if (containerSpanElement) {
+      //      containerSpanElement.innerHTML = mainIconHtml + itemim
+
+      //    }
+
+      //  }
     }
     this.Logger.FuncEnd(this.ChangeStartBarButtonText.name);
   }
 
-   EnrollListenerForActiveNodeChange(): void {
+  EnrollListenerForActiveNodeChange(): void {
     try {
       let foundIframes: IframeProxy[] = this.GetIframeHelper().GetHostedIframes(this.OwnerDesktopProxy.GetAssociatedDoc())
       for (var idx = 0; idx < foundIframes.length; idx++) {
@@ -78,7 +128,7 @@ export class DesktopTabButtonAgent extends LoggableBase {
         this.CeProxies.push(payload.NewCeProxy);
 
         let self = this;
-        payload.NewCeProxy.AddListenerToActiveNodeChange((payload: IPayload_ContentEditorTreeMutatedEvent) => { self.CallbackNodeChanged(payload) });
+        payload.NewCeProxy.AddListenerToActiveNodeChange((payload: IPayload_ContentEditorTreeMutatedEvent) => { self.CallbackTreeNodeChanged(payload) });
       }
     } else {
       this.Logger.ErrorAndThrow(this.CallBackConEdProxyAdded.name, 'Null ceProxy');
@@ -87,8 +137,8 @@ export class DesktopTabButtonAgent extends LoggableBase {
     this.Logger.FuncEnd(this.CallBackConEdProxyAdded.name);
   }
 
-  CallbackNodeChanged(payload: IPayload_ContentEditorTreeMutatedEvent) {
-    this.Logger.FuncStart(this.CallbackNodeChanged.name);
+  CallbackTreeNodeChanged(payload: IPayload_ContentEditorTreeMutatedEvent) {
+    this.Logger.FuncStart(this.CallbackTreeNodeChanged.name);
     // at this point we have a new active node (or some other change event)
 
     if (payload) {
@@ -100,21 +150,22 @@ export class DesktopTabButtonAgent extends LoggableBase {
         if (payload.ActiveNode) {
           let foundStartBarButton = this.GetStartAssociatedStartBarButton(payload.AssociatedIframeElemId);
 
-          let iconSrc: string = payload.ActiveNode.GetIconSrc();
+          let itemIconSrc: string = payload.ActiveNode .GetIconSrc();
+          let mainIconSrc: string = payload.ActiveNode.GetMainIconSrc();
 
           let bufferedString: string = StaticHelpers.BufferString(payload.ActiveNode.GetNodeLinkText(), ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
-          this.ChangeStartBarButtonText(foundStartBarButton, bufferedString, iconSrc);
+          this.ChangeStartBarButtonText(foundStartBarButton, bufferedString, itemIconSrc, mainIconSrc);
         }
 
         //we need to know what the associated button is
         //we can get that by knowing the id of the CE
       } else {
-        this.Logger.ErrorAndContinue(this.CallbackNodeChanged.name, 'Did not find iframe');
+        this.Logger.ErrorAndContinue(this.CallbackTreeNodeChanged.name, 'Did not find iframe');
       }
     } else {
-      this.Logger.ErrorAndThrow(this.CallbackNodeChanged.name, 'Null payload');
+      this.Logger.ErrorAndThrow(this.CallbackTreeNodeChanged.name, 'Null payload');
     }
 
-    this.Logger.FuncEnd(this.CallbackNodeChanged.name);
+    this.Logger.FuncEnd(this.CallbackTreeNodeChanged.name);
   }
 }

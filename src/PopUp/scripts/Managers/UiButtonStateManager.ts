@@ -7,7 +7,7 @@ import { IContentState } from "../../../Shared/scripts/Interfaces/Data/IContentS
 import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 
-export class UiButtonStateManager extends LoggableBase{
+export class UiButtonStateManager extends LoggableBase {
   private currentContentState: IContentState;
   private currentWindowType: ScWindowType;
   private currSelSnapshot: GuidData;
@@ -25,8 +25,6 @@ export class UiButtonStateManager extends LoggableBase{
   }
 
   private TestAgainstAllSetControllers(command: IOneCommand): boolean {
-
-    this.Logger.FuncStart(this.TestAgainstAllSetControllers.name, command.ButtonSelector);
     let toReturn: boolean = false;
 
     if (command.VisibilityControllers.length > 0) {
@@ -36,7 +34,7 @@ export class UiButtonStateManager extends LoggableBase{
         switch (oneControl) {
           case VisibilityType.Desktop:
             toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Desktop, this.currentWindowType)
-            
+
             break;
 
           case VisibilityType.ActiveCeNode:
@@ -100,9 +98,6 @@ export class UiButtonStateManager extends LoggableBase{
     else {
       toReturn = true;
     }
-
-
-    this.Logger.FuncEnd('toReturn', toReturn.toString());
 
     return toReturn;
   }

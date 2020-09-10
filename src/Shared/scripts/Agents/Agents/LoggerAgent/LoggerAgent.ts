@@ -8,6 +8,7 @@ import { IDataDebugCallback } from "../../../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
 import { IError } from "../../../Interfaces/IError";
 import { LogWriterBuffer } from "./LogWriterBuffer";
+import { LoggerTimer } from "./LoggerTimer";
 
 export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;
@@ -19,21 +20,16 @@ export class LoggerAgent implements ILoggerAgent {
   private __allLogWriters: ILoggerWriter[] = [];
   private HasWriters: boolean;
   private BufferWriter: LogWriterBuffer;
+  Timer: LoggerTimer;
+  UseTimeStamp: boolean = true;
 
   constructor() {
+    this.Timer = new LoggerTimer;
     this.BufferWriter = new LogWriterBuffer();
     this.AddWriter(this.BufferWriter);
     this.__callDepth = -1;
-    this.LogTimeStamp();
+    this.LogVal('TimeStamp', this.Timer.LogTimeStamp());
   }
-
-  private LogTimeStamp() {
-    var dateobj = new Date();
-    var result = this.pad(dateobj.getDate()) + "/" + this.pad(dateobj.getMonth() + 1) + "/" + dateobj.getFullYear() + " " + this.pad(dateobj.getHours()) + ":" + this.pad(dateobj.getMinutes());
-    this.LogVal('TimeStamp', result);
-  }
-
-  private pad(n) { return n < 10 ? "0" + n : n; }
 
   FlushBuffer() {
     this.RemoveWriter(this.BufferWriter);
@@ -67,8 +63,6 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log("");
   }
 
-  
-
   ThrowIfNullOrUndefined(title: string, subject: any): void {
     if (!this.IsNotNullOrUndefinedBool(title, subject)) {
       throw 'Failed';
@@ -82,7 +76,7 @@ export class LoggerAgent implements ILoggerAgent {
         this.LogVal(title + ' Is Not Undefined', '!!! false !!!');
       }
       else {
-        this.LogVal(title + ' Is Not Null', 'true');
+        //this.LogVal(title + ' Is Not Null', 'true');
         toReturn = true;
       }
     }
@@ -158,6 +152,7 @@ export class LoggerAgent implements ILoggerAgent {
       for (var idx = 0; idx < this.__callDepth; idx++) {
         text = indent + text;
       }
+
       var prefixLength = 3;
       if (!hasPrefix) {
         for (var idx = 0; idx < prefixLength; idx++) {
@@ -168,6 +163,11 @@ export class LoggerAgent implements ILoggerAgent {
         NewText: text,
         Append: true
       });
+
+      if (this.UseTimeStamp) {
+        let timeDiff = this.Timer.GetTimeDiff() + '  ';
+        text = timeDiff + text;
+      }
 
       this.__WriteToAllWriters(text);
     }
@@ -230,11 +230,10 @@ export class LoggerAgent implements ILoggerAgent {
 
     text = 'e' + ' ' + this.__callDepth + ') ' + text;
     if (optionalValue !== null && (typeof optionalValue === typeof Boolean)) {
-      optionalValue = optionalValue.toString(); 
+      optionalValue = optionalValue.toString();
     }
 
-
-    if (! optionalValueInput) {
+    if (!optionalValueInput) {
       optionalValueInput = '';
     }
     var optionalValue = optionalValueInput.toString();

@@ -123,7 +123,6 @@ export class UiManager {
   }
 
   CallBackCommandComplete(contentState: IContentState) {
-    this.Logger.LogAsJsonPretty('contentState', contentState);
     this.SetContentState(contentState)
     this.RefreshUi();
   }

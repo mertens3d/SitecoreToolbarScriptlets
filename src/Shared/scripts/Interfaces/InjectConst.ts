@@ -64,9 +64,10 @@ export class ContentConst {
 
     ElemId: {
       sc: {
-        scLoginUserName: 'UserName',
         scLoginPassword: 'Password',
-        SitecoreRootNodeId: 'Tree_Node_11111111111111111111111111111111',
+        scLoginUserName: 'UserName',
+        SitecoreRootAnchorNodeId: 'Tree_Node_11111111111111111111111111111111',
+        SitecoreRootApparentIdRaw: '11111111111111111111111111111111',
         SitecoreRootGlyphId: 'Tree_Glyph_11111111111111111111111111111111',
 
         scLoginBtn: {
@@ -77,14 +78,17 @@ export class ContentConst {
     },
 
     ClassNames: {
-      ContentTreeNode: 'scContentTreeNode',
       SC: {
+        ContentTreeNode: 'scContentTreeNode',
         scContentTreeNodeActive: 'scContentTreeNodeActive',
       }
     },
     Selector: {
       SC: {
-        ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
+        ContentEditor: {
+          ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
+          scContentTreeNodeIcon: '.scContentTreeNodeIcon',
+        },
         IdStartsWithTreeNode: '[id^=Tree_Node_]',
         IframeContent: {
           sc820: null,

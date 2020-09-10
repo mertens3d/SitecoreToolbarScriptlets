@@ -128,7 +128,7 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     depth = depth - 1;
 
     if (targetNode) {
-      var firstChildGlyphNode: HTMLImageElement = <HTMLImageElement>targetNode.querySelector(ContentConst.Const.Selector.SC.ContentTreeNodeGlyph);
+      var firstChildGlyphNode: HTMLImageElement = <HTMLImageElement>targetNode.querySelector(ContentConst.Const.Selector.SC.ContentEditor. ContentTreeNodeGlyph);
       if (firstChildGlyphNode) {
         let treeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, firstChildGlyphNode);
 
@@ -158,8 +158,8 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
   }
 
   GetRootNode(): HTMLElement {
-    this.Logger.LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
-    let toReturn: HTMLElement = this.AssociatedDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootNodeId);
+    this.Logger.LogVal('Looking for node ID: ', ContentConst.Const.ElemId.sc.SitecoreRootAnchorNodeId);
+    let toReturn: HTMLElement = this.AssociatedDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.SitecoreRootAnchorNodeId);
     return toReturn;
   }
 

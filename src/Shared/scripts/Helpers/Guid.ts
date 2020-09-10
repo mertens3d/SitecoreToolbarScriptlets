@@ -33,6 +33,7 @@ export class Guid {
     return new GuidData(val);
     //return newGuid.MakeGuidFromString(val, throwOnError);
   }
+
   MakeNewRandomGuid(): GuidData {
     let randomStr: string = this.GetRandomGuidString();
     return new GuidData(randomStr);
