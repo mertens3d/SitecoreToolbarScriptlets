@@ -1,18 +1,17 @@
-﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+﻿import { IframeHelper } from '../../../Content/scripts/Helpers/IframeHelper';
+import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
+import { FactoryHelper } from '../Helpers/FactoryHelper';
 import { Guid } from '../Helpers/Guid';
 import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
+import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
 import { IframeProxy } from '../Interfaces/Data/IDataOneIframe';
-import { ContentConst } from '../Interfaces/InjectConst';
+import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
-import { PromiseResult } from "./PromiseResult";
-import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
-import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
-import { FactoryHelper } from '../Helpers/FactoryHelper';
-import { IframeHelper } from '../../../Content/scripts/Helpers/IframeHelper';
 import { SharedConst } from '../SharedConst';
+import { PromiseResult } from "./PromiseResult";
 
 export class RecipeBasics extends LoggableBase implements IRecipeBasics {
   private FactoryHelp: IFactoryHelper;
@@ -152,35 +151,30 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     });
   }
 
-  async GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<IframeProxy> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetTopLevelIframe.name);
+  GetTopLevelIframe(targetDoc: IDataOneDoc): IframeProxy {
+    this.Logger.FuncStart(this.GetTopLevelIframe.name);
 
-      var toReturn: IframeProxy = null;
+    var toReturn: IframeProxy = null;
 
-      var allIframe: IframeProxy[];
-      let iframeHelper = new IframeHelper(this.Logger);
+    var allIframe: IframeProxy[];
+    let iframeHelper = new IframeHelper(this.Logger);
 
-      await iframeHelper.GetHostedIframes(targetDoc)
-        .then((result) => {
-          allIframe = result
+    allIframe = iframeHelper.GetHostedIframes(targetDoc)
 
-          var maxZVal = -1;
-          if (allIframe && allIframe.length > 0) {
-            for (var idx = 0; idx < allIframe.length; idx++) {
-              var candidateIframe = allIframe[idx];
-              if (candidateIframe && candidateIframe.GetZindex() > maxZVal) {
-                toReturn = candidateIframe;
-                maxZVal = candidateIframe.GetZindex();
-              }
-            }
-          }
-        })
-        .then(() => resolve(toReturn))
-        .catch((err) => this.Logger.ErrorAndThrow(this.GetTopLevelIframe.name, err));
+    var maxZVal = -1;
+    if (allIframe && allIframe.length > 0) {
+      for (var idx = 0; idx < allIframe.length; idx++) {
+        var candidateIframe = allIframe[idx];
+        if (candidateIframe && candidateIframe.GetZindex() > maxZVal) {
+          toReturn = candidateIframe;
+          maxZVal = candidateIframe.GetZindex();
+        }
+      }
+    }
 
-      this.Logger.FuncEnd(this.GetTopLevelIframe.name);
-    })
+    this.Logger.FuncEnd(this.GetTopLevelIframe.name);
+
+    return toReturn;
   }
 
   async WaitForIframeElemAndReturnWhenReady(haystackDoc: IDataOneDoc, selector: string, iframeNickName: string): Promise<IframeProxy> {
@@ -221,9 +215,8 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
         var allIframesAfter: IframeProxy[];
-        await iframeHelper.GetHostedIframes(targetDoc)
-          .then((result) => allIframesAfter = result)
-          .catch((err) => this.Logger.ErrorAndThrow(this.WaitForNewIframe.name, err));
+
+        allIframesAfter = iframeHelper.GetHostedIframes(targetDoc);
 
         var count: number = allIframesAfter.length;
         this.Logger.Log('iFrame count before: ' + beforeCount);
@@ -343,7 +336,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     });
   }
 
-  async RaceWaitAndClick(selector: IScVerSpec, targetDoc: IDataOneDoc) {
+  async RaceWaitAndClick(selector: IScVerSpec, targetDoc: IDataOneDoc): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RaceWaitAndClick.name);
 

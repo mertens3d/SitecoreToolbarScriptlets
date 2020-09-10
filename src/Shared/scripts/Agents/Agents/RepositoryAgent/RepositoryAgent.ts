@@ -9,39 +9,45 @@ export class RepositoryAgent implements IRepositoryAgent {
     this.Logger = loggerAgent;
   }
 
+  RemoveByKey(key: string) {
+    try {
+      window.localStorage.removeItem(key);
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.RemoveByKey.name, err);
+    }
+  }
+
   InitRepositoryAgent() {
     this.Logger.FuncStart(RepositoryAgent.name, this.InitRepositoryAgent.name);
     this.Logger.FuncEnd(RepositoryAgent.name, this.InitRepositoryAgent.name);
   }
 
-  public GetBulkLocalStorageByKeyPrefix(targetPrefix: string): Promise<IOneStorageData[]> {
-    return new Promise((resolve, reject) => {
-      var toReturn: IOneStorageData[] = [];
+  public GetBulkLocalStorageByKeyPrefix(targetPrefix: string): IOneStorageData[] {
+    var toReturn: IOneStorageData[] = [];
 
-      try {
-        var storageLength: number = window.localStorage.length;
+    try {
+      var storageLength: number = window.localStorage.length;
 
-        for (var idx: number = 0; idx < storageLength; idx++) {
-          var candidate: IOneStorageData = {
-            data: '',
-            key: '',
-          };
+      for (var idx: number = 0; idx < storageLength; idx++) {
+        var candidate: IOneStorageData = {
+          data: '',
+          key: '',
+        };
 
-          candidate.key = window.localStorage.key(idx);
+        candidate.key = window.localStorage.key(idx);
 
-          if (candidate.key.startsWith(targetPrefix)) {
-            candidate.data = window.localStorage.getItem(candidate.key);
-            if (typeof candidate != 'undefined' && typeof candidate.data != 'undefined' && candidate != null && candidate.data != null) {
-              toReturn.push(candidate);
-            }
+        if (candidate.key.startsWith(targetPrefix)) {
+          candidate.data = window.localStorage.getItem(candidate.key);
+          if (typeof candidate != 'undefined' && typeof candidate.data != 'undefined' && candidate != null && candidate.data != null) {
+            toReturn.push(candidate);
           }
         }
-
-        resolve(toReturn);
-      } catch (ex) {
-        reject(ex);
       }
-    });
+    }
+    catch (err) {
+      this.Logger.ErrorAndThrow(this.GetBulkLocalStorageByKeyPrefix.name, err);
+    }
+    return toReturn;
   }
 
   ReadDataOfKey(targetKey: string): string {
@@ -65,11 +71,11 @@ export class RepositoryAgent implements IRepositoryAgent {
     return toReturn;
   }
 
-  WriteByKey( storageKey: string,  jsonString:string): void {
-    this.Logger.FuncStart(this.WriteByKey.name);
+  WriteByKey(storageKey: string, jsonString: string): void {
+    //this.Logger.FuncStart(this.WriteByKey.name);
 
     window.localStorage.setItem(storageKey, jsonString);
 
-    this.Logger.FuncEnd(this.WriteByKey.name);
+    //this.Logger.FuncEnd(this.WriteByKey.name);
   }
 }

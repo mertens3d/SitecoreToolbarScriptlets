@@ -12,6 +12,7 @@ export interface ILoggerAgent {
   ErrorAndThrow(container: string, text: any): void
   ErrorStack: IError[];
   FuncEnd(text, optionalValueInput: string | number);
+  FuncEnd(text, optionalValueInput?: boolean);
   FuncEnd(text, optionalValueInput?: number);
   FuncEnd(text, optionalValueInput?: string);
   FuncStart(textOrFunc: string, optionalValue: number | string | boolean): void;
@@ -28,7 +29,7 @@ export interface ILoggerAgent {
   Log(text, optionalValue: string);
   Log(text, optionalValue: string, hasPrefix: boolean);
   LogAsJsonPretty(texValName: string, jsonObj: any);
-  LogVal(textValName: string, textVal: string | boolean | number | GuidData): any;
+  LogVal(textValName: string, textVal: string | boolean | Boolean | number | GuidData): any;
   MarkerA();
   MarkerB();
   MarkerC();

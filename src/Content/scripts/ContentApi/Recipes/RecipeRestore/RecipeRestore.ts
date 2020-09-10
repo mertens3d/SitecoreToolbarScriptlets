@@ -44,12 +44,9 @@ export class RecipeRestoreState extends LoggableBase implements ICommandRecipes 
           this.Logger.LogVal("IdOfSelect", this.TargetSnapShotId);
           var dataOneWindowStorage;
 
-          await this.AtticAgent.GetFromStorageById(this.TargetSnapShotId)
-            .then((result) => dataOneWindowStorage = result)
-            .catch((err) => reject(err));
+          dataOneWindowStorage = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId);
 
           if (dataOneWindowStorage) {
-            var self = this;
             var targetDoc: IDataOneDoc = this.TopLevelDoc;
 
             if (targetDoc) {

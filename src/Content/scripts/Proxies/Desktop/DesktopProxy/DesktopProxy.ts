@@ -86,47 +86,39 @@ export class DesktopProxy extends LoggableBase {
     return this.__iframeHelper;
   }
 
-  async GetStateDesktop(): Promise<IDataDesktopState> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetStateDesktop.name);
+  GetStateDesktop(): IDataDesktopState {
+    this.Logger.FuncStart(this.GetStateDesktop.name);
 
-      this.Logger.LogAsJsonPretty(this.GetStateDesktop.name, this.AssociatedDoc);
+    var toReturnDesktopState: IDataDesktopState = this.CreateNewDtDataShell();
 
-      var toReturnDesktopState: IDataDesktopState = this.CreateNewDtDataShell();
+    toReturnDesktopState.HostedIframes = this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc);
 
-      await this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc)
-        .then((result) => toReturnDesktopState.HostedIframes = result)
-        .then(() => {
-          if (toReturnDesktopState.HostedIframes && toReturnDesktopState.HostedIframes.length > 0) {
-            for (var iframeIdx = 0; iframeIdx < toReturnDesktopState.HostedIframes.length; iframeIdx++) {
-              this.Logger.LogVal('iframeIdx: ', iframeIdx);
+    if (toReturnDesktopState.HostedIframes && toReturnDesktopState.HostedIframes.length > 0) {
+      for (var iframeIdx = 0; iframeIdx < toReturnDesktopState.HostedIframes.length; iframeIdx++) {
+        this.Logger.LogVal('iframeIdx: ', iframeIdx);
 
-              var iframeProxy: IframeProxy = toReturnDesktopState.HostedIframes[iframeIdx];
+        var iframeProxy: IframeProxy = toReturnDesktopState.HostedIframes[iframeIdx];
 
-              var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent, iframeProxy.IframeElem.id);
+        var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent, iframeProxy.IframeElem.id);
 
-              //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
+        //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
-              this.Logger.MarkerA();
-              ceAgent.GetTreeState()
-                .then((oneCeState: IDataOneStorageOneTreeState) => {
-                  toReturnDesktopState.HostedContentEditors.push(oneCeState);
+        let oneCeState: IDataOneStorageOneTreeState = ceAgent.GetStateTree();
 
-                  if (iframeProxy.GetZindex() === 1) {
-                    toReturnDesktopState.ActiveCEAgent = ceAgent;
-                    toReturnDesktopState.ActiveCeState = oneCeState;
-                  }
-                })
-                .catch((err) => this.Logger.ErrorAndThrow(this.GetStateDesktop.name, err));
-            }
-          }
-        })
-        .then(() => resolve(toReturnDesktopState))
-        .catch((err) => reject(err));
+        toReturnDesktopState.HostedContentEditors.push(oneCeState);
 
-      this.Logger.FuncEnd(this.GetStateDesktop.name);
-    });
+        if (iframeProxy.GetZindex() === 1) {
+          toReturnDesktopState.ActiveCEAgent = ceAgent;
+          toReturnDesktopState.ActiveCeState = oneCeState;
+        }
+      }
+    }
+
+    this.Logger.FuncEnd(this.GetStateDesktop.name, toReturnDesktopState.HostedContentEditors.length);
+
+    return toReturnDesktopState;
   }
+
   async SetStateDesktop(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateDesktop.name);;

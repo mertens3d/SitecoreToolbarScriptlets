@@ -45,9 +45,9 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
   //  })
   //}
 
-  GetContentState(): Promise<IContentState> {
+  GetStateContent(): Promise<IContentState> {
     return new Promise(async (resolve, reject) => {
-      await this.ScWinMan.GetScWindowStateA()
+      await this.ScWinMan.GetStateScWindow()
         .then((result: IContentState) => resolve(result))
         .catch((err) => reject(err))
     });

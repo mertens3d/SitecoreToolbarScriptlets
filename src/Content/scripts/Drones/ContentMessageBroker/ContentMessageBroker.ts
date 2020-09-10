@@ -226,7 +226,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       let response = new MsgFromContent(MsgFlag.Unknown);
 
-      await this.ApiManager.GetContentState()
+      await this.ApiManager.GetStateContent()
         .then((result: IContentState) => {
           response.ScWindowState.LastReq = msgFlag;
           response.MsgFlag = MsgFlag.RespTaskSuccessful;

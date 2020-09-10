@@ -11,7 +11,7 @@ import { __RecipeBase } from "../__RecipeBase/__RecipeBase";
 import { IFactoryHelper } from "../../../../../Shared/scripts/Interfaces/IFactoryHelper";
 
 export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecipes {
- private FactoryHelp: IFactoryHelper;
+  private FactoryHelp: IFactoryHelper;
 
   constructor(commandData: ICommandHndlrDataForContent, factoryHelp: IFactoryHelper) {
     super(commandData);
@@ -32,9 +32,9 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
 
       try {
         if (currentWindowType === ScWindowType.Desktop) {
-          await this.RecipeBasics.GetTopLevelIframe(targetDoc)
-            .then((topIframe: IframeProxy) => resolve(topIframe.GetContentDoc()))
-            .catch((err) => reject(err));
+          let topIframe: IframeProxy = this.RecipeBasics.GetTopLevelIframe(targetDoc);
+
+          resolve(topIframe.GetContentDoc());
         }
         else {
           resolve(this.ScWinMan.GetTopLevelDoc());

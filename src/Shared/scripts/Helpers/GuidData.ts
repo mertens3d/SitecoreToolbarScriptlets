@@ -1,4 +1,5 @@
 ﻿import { SharedConst } from "../SharedConst";
+import { Guid } from "./Guid";
 
 export class GuidData {
   private static ConstEmptyGuid: string = '00000000-0000-0000-0000-000000000000';
@@ -14,32 +15,12 @@ export class GuidData {
     }
     else {
       if (GuidData.IsValidGuidStr(raw)) {
-        this.Raw = this.GuidStrWithDashes(raw);
+        this.Raw = Guid.GuidStrWithDashes(raw);
       }
       else {
         throw ('Invalid GUID string: ' + raw);
       }
     }
-  }
-
-  GuidStrWithDashes(val: string): string {
-    let toReturn: string = '';
-    let withoutDashes: string = val.replace(/-/g, '');
-
-    var parts = [];
-    if (withoutDashes.length !== 32) {
-      throw (this.GuidStrWithDashes.name + ' - Wrong count wanted: ' + 32 + " got: " + withoutDashes.length + ' (without dashes) ' + withoutDashes);
-    }
-
-    parts.push(withoutDashes.slice(0, 8));
-    parts.push(withoutDashes.slice(8, 12));
-    parts.push(withoutDashes.slice(12, 16));
-    parts.push(withoutDashes.slice(16, 20));
-    parts.push(withoutDashes.slice(20, 32));
-
-    toReturn = parts.join('-');
-
-    return toReturn;
   }
 
   AsBracedGuid(): string {

@@ -3,14 +3,15 @@ import { BufferChar } from "../../../../../../Shared/scripts/Enums/BufferChar";
 import { BufferDirection } from "../../../../../../Shared/scripts/Enums/BufferDirection";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../../../Shared/scripts/Enums/SnapShotFlavor";
+import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";
+import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { IContentState } from "../../../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataOneWindowStorage } from "../../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 import { ISelectionHeaders } from "../../../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { PopConst } from "../../../../Classes/PopConst";
-import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
-import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";
-import { IDataOneWindowStorage } from "../../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
-import { IContentState } from "../../../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IFirstActive } from "../../../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
 
 export class SelectSnapshotModule implements IUiModule {
   ContentState: IContentState;
@@ -73,7 +74,8 @@ export class SelectSnapshotModule implements IUiModule {
       + StaticHelpers.BufferString('Time Stamp', PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Type', PopConst.Const.SnapShotFormat.lenPageType, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Nickname', PopConst.Const.SnapShotFormat.lenNickname, BufferChar.Period, BufferDirection.right)
-      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Active Node.', PopConst.Const.SnapShotFormat.lenActiveNode, BufferChar.Period, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Main Sec', PopConst.Const.SnapShotFormat.MainSectionNode, BufferChar.Period, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Active', PopConst.Const.SnapShotFormat.lenActiveNode, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Fav.', PopConst.Const.SnapShotFormat.lenFavorite, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('Id', PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Period, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString('#CE', PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Period, BufferDirection.right);
@@ -183,6 +185,33 @@ export class SelectSnapshotModule implements IUiModule {
     this.Logger.FuncEnd(this.PopulateStateOfSnapShotSelect.name);
   }
 
+  GetFirstDataWithActiveNode(data: IDataOneWindowStorage): IFirstActive {
+    let toReturn: IFirstActive = {
+      ce: null,
+      active: null
+    }
+
+    if (data) {
+      for (var idx = 0; idx < data.AllCEAr.length; idx++) {
+        var candidateCe = data.AllCEAr[0];
+        for (var jdx = 0; jdx < candidateCe.AllTreeNodeAr.length; jdx++) {
+          var candidateNode = candidateCe.AllTreeNodeAr[jdx];
+          if (candidateNode.IsActive) {
+            toReturn.ce = candidateCe;
+            toReturn.active = candidateNode
+            break;
+          }
+        }
+
+        if (toReturn.ce !== null) {
+          break;
+        }
+      }
+    }
+
+    return toReturn
+  }
+
   TimeNicknameFavStr(data: IDataOneWindowStorage): string {
     var typeStr: string = '';
     if (data.WindowType === ScWindowType.ContentEditor) {
@@ -193,24 +222,22 @@ export class SelectSnapshotModule implements IUiModule {
     }
     //= (data.WindowType === scWindowType.Unknown) ? '?' : scWindowType[data.WindowType];
     var activeCeNode: string = '';
-    for (var idx = 0; idx < data.AllCEAr.length; idx++) {
-      var candidateCe = data.AllCEAr[idx];
-      for (var jdx = 0; jdx < candidateCe.AllTreeNodeAr.length; jdx++) {
-        var candidateNode = candidateCe.AllTreeNodeAr[jdx];
-        if (candidateNode.IsActive) {
-          var lvl2Node: string = '';
-          if (jdx >= 2) {
-            lvl2Node = candidateCe.AllTreeNodeAr[1].NodeFriendly + '/';
-          }
-          activeCeNode = lvl2Node + candidateNode.NodeFriendly;
-          break;
-        }
+    let MainSectionNode: string = '';
+
+    let candidateCe: IFirstActive = this.GetFirstDataWithActiveNode(data);
+
+    if (candidateCe && candidateCe.active) {
+      activeCeNode = candidateCe.active.NodeFriendly.trim();
+      if (candidateCe.ce.AllTreeNodeAr.length >= 2) {
+        MainSectionNode = candidateCe.ce.AllTreeNodeAr[1].NodeFriendly.trim();
       }
     }
     let toReturn = StaticHelpers.BufferString(data.TimeStampFriendly, PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.space, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(typeStr, PopConst.Const.SnapShotFormat.lenPageType, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.NickName, PopConst.Const.SnapShotFormat.lenNickname, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(MainSectionNode, PopConst.Const.SnapShotFormat.MainSectionNode, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(activeCeNode, PopConst.Const.SnapShotFormat.lenActiveNode, BufferChar.Nbsp, BufferDirection.right)
+
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Favorite ? '*' : ''), PopConst.Const.SnapShotFormat.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
       //+ PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(Guid.AsShort(data.GuidId), PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right)

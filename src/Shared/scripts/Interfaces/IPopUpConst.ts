@@ -123,6 +123,7 @@
     colSep: string,
     lenCeCount: number,
     lenActiveNode: number,
+    MainSectionNode: number,
     lenFavorite: number,
   },
   Timeouts: {

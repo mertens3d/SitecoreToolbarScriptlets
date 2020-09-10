@@ -134,8 +134,8 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   SetByKey(settingKey: SettingKey, value: any): void {
-    this.Logger.FuncStart(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
-    this.Logger.LogAsJsonPretty('value', value);
+    //this.Logger.FuncStart(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
+    //this.Logger.LogAsJsonPretty('value', value);
 
     let foundSetting = this.GetByKey(settingKey);
 
@@ -151,11 +151,11 @@ export class SettingsAgent implements ISettingsAgent {
     } else {
       this.Logger.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
     }
-    this.Logger.FuncEnd(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
+    //this.Logger.FuncEnd(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
   }
 
   private WriteAllSettingValuesToStorage() {
-    this.Logger.FuncStart(this.WriteAllSettingValuesToStorage.name);
+    //this.Logger.FuncStart(this.WriteAllSettingValuesToStorage.name);
     let settingValues: IOneGenericSettingForStorage[] = [];
 
     for (var udx = 0; udx < this.SettingsAr.length; udx++) {
@@ -170,6 +170,6 @@ export class SettingsAgent implements ISettingsAgent {
     }
 
     this.RepoAgent.WriteByKey(PopConst.Const.Storage.KeyGenericSettings, JSON.stringify(settingValues));
-    this.Logger.FuncEnd(this.WriteAllSettingValuesToStorage.name);
+    //this.Logger.FuncEnd(this.WriteAllSettingValuesToStorage.name);
   }
 }

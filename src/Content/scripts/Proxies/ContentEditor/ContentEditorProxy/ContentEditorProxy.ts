@@ -89,7 +89,6 @@ export class ContentEditorProxy extends LoggableBase {
           .then(() => resolve())
           .catch((err) => {
             this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
-            this.Logger.ErrorAndThrow(this.SetTreeState.name, 'bad data');
             reject((this.SetTreeState.name + " " + err))
           })
       }
@@ -134,29 +133,26 @@ export class ContentEditorProxy extends LoggableBase {
       this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
     }
 
-    this.Logger.FuncEnd(this.GetActiveNode.name);
+    this.Logger.FuncEnd(this.GetActiveNode.name, toReturn.NodeFriendly);
     return toReturn;
   }
 
-  GetTreeState(): Promise<IDataOneStorageOneTreeState> {
-    return new Promise<IDataOneStorageOneTreeState>((resolve, reject) => {
-      this.Logger.FuncStart(this.GetTreeState.name);
+  GetStateTree(): IDataOneStorageOneTreeState {
+    this.Logger.FuncStart(this.GetStateTree.name);
 
-      var toReturnOneTreeState: IDataOneStorageOneTreeState = {
-        Id: this.AssociatedId,
-        AllTreeNodeAr: this.AssociatedTreeProxy.GetOneLiveTreeData(),
-        ActiveNode: null
-      }
+    var toReturnOneTreeState: IDataOneStorageOneTreeState = {
+      Id: this.AssociatedId,
+      AllTreeNodeAr: this.AssociatedTreeProxy.GetOneLiveTreeData(),
+      ActiveNode: null
+    }
 
-      toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
+    toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
 
-      if (toReturnOneTreeState) {
-        resolve(toReturnOneTreeState);
-      } else {
-        reject('todo why would this fail?');
-      }
+    if (toReturnOneTreeState) {
+      this.Logger.LogVal('Tree State node count', toReturnOneTreeState.AllTreeNodeAr.length);
+    }
 
-      this.Logger.FuncEnd(this.GetTreeState.name);
-    });
+    this.Logger.FuncEnd(this.GetStateTree.name);
+    return toReturnOneTreeState;
   }
 }

@@ -11,16 +11,16 @@ import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst"
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 
 export class ContentAtticAgent implements IContentAtticAgent {
-  private Repo: IRepositoryAgent;
+  private RepoAgent: IRepositoryAgent;
   private SettingAutoSnapshotRetainDays: number;
   private Logger: ILoggerAgent;
 
-  constructor(repo: IRepositoryAgent, logger: ILoggerAgent) {
+  constructor(repoAgent: IRepositoryAgent, logger: ILoggerAgent) {
     this.Logger = logger;
 
     this.Logger.FuncStart(ContentAtticAgent.name);
 
-    this.Repo = repo;
+    this.RepoAgent = repoAgent;
 
     this.Logger.FuncEnd(ContentAtticAgent.name);
   }
@@ -29,44 +29,45 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.SettingAutoSnapshotRetainDays = settingAutoSnapshotRetainDays;
   }
 
-  async WriteToStorage(dataOneWindow: IDataOneWindowStorage) : Promise<void>{
+  async WriteStateToStorage(dataOneWindow: IDataOneWindowStorage): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WriteToStorage.name);
+      this.Logger.FuncStart(this.WriteStateToStorage.name, 'ce count ' + dataOneWindow.AllCEAr.length);
 
       var snapShotAsString = JSON.stringify(dataOneWindow);
 
-      await window.localStorage.setItem(ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.GuidId.Raw, snapShotAsString)
+      let storageKey = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + dataOneWindow.GuidId.Raw;
+      this.RepoAgent.WriteByKey(storageKey, snapShotAsString);
 
-      await this.CleanOutOldAutoSavedData()
-        .then(() => resolve())
-        .catch((err) => reject(err))
+      //await this.CleanOutOldAutoSavedData()
+      //  .then(() => resolve())
+      //  .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.WriteToStorage.name);
+      resolve();
+
+      this.Logger.FuncEnd(this.WriteStateToStorage.name);
     });
   }
 
-  async GetFromStorageById(needleId: GuidData): Promise<IDataOneWindowStorage> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetFromStorageById.name, needleId.Raw);
+  GetFromStorageById(needleId: GuidData): IDataOneWindowStorage {
 
-      var DateOneWinStoreMatch: IDataOneWindowStorage = null;
+    this.Logger.FuncStart(this.GetFromStorageById.name, needleId.Raw);
 
-      await this.GetAllSnapShotsMany()
-        .then((foundStorage: IDataSnapShots) => {
-          for (var idx = 0; idx < foundStorage.CurrentSnapShots.length; idx++) {
-            var candidate = foundStorage.CurrentSnapShots[idx];
-            if (candidate.GuidId.Raw === needleId.Raw) {
-              DateOneWinStoreMatch = candidate;
-              this.Logger.Log('found match');
-              break;
-            }
-          }
-          resolve(DateOneWinStoreMatch)
-        })
-        .catch((err) => reject(err));
+    var DateOneWinStoreMatch: IDataOneWindowStorage = null;
 
-      this.Logger.FuncEnd(this.GetFromStorageById.name);
-    });
+    let foundStorage: IDataSnapShots = this.GetAllSnapShotsMany();
+
+    for (var idx = 0; idx < foundStorage.CurrentSnapShots.length; idx++) {
+      var candidate = foundStorage.CurrentSnapShots[idx];
+      if (candidate.GuidId.Raw === needleId.Raw) {
+        DateOneWinStoreMatch = candidate;
+        this.Logger.Log('found match');
+        break;
+      }
+    }
+
+    this.Logger.FuncEnd(this.GetFromStorageById.name);
+
+    return DateOneWinStoreMatch;
   }
 
   private __parseRawData(oneRaw: IOneStorageData) {
@@ -91,124 +92,126 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return candidate
   }
 
-  private GetAllLocalStorageAsIOneStorageData(): Promise<IOneStorageData[]> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetAllLocalStorageAsIOneStorageData.name);
+  private GetAllLocalStorageAsIOneStorageData(): IOneStorageData[] {
+    this.Logger.FuncStart(this.GetAllLocalStorageAsIOneStorageData.name);
 
-      let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
+    let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
 
-      await this.Repo.GetBulkLocalStorageByKeyPrefix(prefix)
-        .then((result) => resolve(result))
-        .catch((err) => reject(err));
+    let result = this.RepoAgent.GetBulkLocalStorageByKeyPrefix(prefix);
 
-      this.Logger.FuncEnd(this.GetAllLocalStorageAsIOneStorageData.name);
-    });
+    this.Logger.FuncEnd(this.GetAllLocalStorageAsIOneStorageData.name);
+
+    return result;
   }
 
-  private async __getAllStorageReal(): Promise<IDataOneWindowStorage[]> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.__getAllStorageReal.name);
-      var toReturn: IDataOneWindowStorage[] = [];
+  private GetAllStorage(): IDataOneWindowStorage[] {
+    this.Logger.FuncStart(this.GetAllStorage.name);
+    var toReturn: IDataOneWindowStorage[] = [];
 
-      var rawStorageData: IOneStorageData[];
+    let rawStorageData: IOneStorageData[] = this.GetAllLocalStorageAsIOneStorageData();
 
-      await this.GetAllLocalStorageAsIOneStorageData()
-        .then((result) => rawStorageData = result)
-        .then(() => {
-          if (rawStorageData) {
-            for (var idx = 0; idx < rawStorageData.length; idx++) {
-              toReturn.push(this.__parseRawData(rawStorageData[idx]));
-            }
-          }
-        })
-        .then(() => {
-          toReturn.sort((a: IDataOneWindowStorage, b: IDataOneWindowStorage) =>
-            +b.TimeStamp - +a.TimeStamp
-          );
-        })
-        .then(() => {
-          toReturn = this.FilterOutOldData(toReturn);
-          resolve(toReturn);
-        })
-        .catch((err) => reject(err));
+    if (rawStorageData) {
+      for (var idx = 0; idx < rawStorageData.length; idx++) {
+        toReturn.push(this.__parseRawData(rawStorageData[idx]));
+      }
+    }
 
-      this.Logger.FuncEnd(this.__getAllStorageReal.name);
-    })
+    toReturn.sort((a: IDataOneWindowStorage, b: IDataOneWindowStorage) =>
+      +b.TimeStamp - +a.TimeStamp
+    );
+
+    toReturn = this.FilterOutOldData(toReturn);
+
+    this.Logger.FuncEnd(this.GetAllStorage.name);
+    return toReturn;
   }
 
-  async CleanOutOldAutoSavedData(): Promise<void> {
-    this.Logger.FuncStart(this.CleanOutOldAutoSavedData.name);
-
-    var cleanData: IDataOneWindowStorage[] = [];
+  private CleanOneStorageItem(candidate: IDataOneWindowStorage, autoCount: number): number {
+    this.Logger.FuncStart(this.CleanOneStorageItem.name);
+    var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
+    var deleteFlag: boolean = false;
     var now: Date = new Date();
 
-    if (!this.SettingAutoSnapshotRetainDays || this.SettingAutoSnapshotRetainDays < 1) {
-      this.SettingAutoSnapshotRetainDays = ContentConst.Const.DefaultMaxAutoSaveAgeDays;
+    if (candidate.Flavor == SnapShotFlavor.Autosave) {
+      if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
+        this.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
+        deleteFlag = true;
+      }
+      autoCount++;
     }
-    var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
-    let currentWindowStorage: IDataSnapShots = await this.GetAllSnapShotsMany();
 
-    if (currentWindowStorage) {
-      var cacheLength = currentWindowStorage.CurrentSnapShots.length;
-      var autoCount: number = 0;
-      for (var idx = 0; idx < cacheLength; idx++) {
-        var deleteFlag: boolean = false;
-        var candidate = currentWindowStorage.CurrentSnapShots[idx];
+    if (now.getTime() - candidate.TimeStamp.getTime() > maxAutoSaveDiff) {
+      this.Logger.LogVal('Delete (Old : max' + ContentConst.Const.DefaultMaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
+      deleteFlag = true;
+    }
 
-        if (candidate.Flavor == SnapShotFlavor.Autosave) {
-          if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
-            this.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.TimeStamp.toString());
-            deleteFlag = true;
-          }
-          autoCount++;
-        }
+    if (deleteFlag) {
+      try {
+        this.Logger.LogVal('Cleaning old autosave', candidate.RawData.key);
+        window.localStorage.removeItem(candidate.RawData.key)
+      } catch (e) {
+        this.Logger.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.RawData.key)
+      }
+    }
 
-        if (now.getTime() - candidate.TimeStamp.getTime() > maxAutoSaveDiff) {
-          this.Logger.LogVal('Delete (Old : max' + ContentConst.Const.DefaultMaxAutoSaveAgeDays + ' days)', candidate.TimeStamp.toString());
-          deleteFlag = true;
-        }
+    this.Logger.FuncEnd(this.CleanOneStorageItem.name);
+    return autoCount;
+  }
 
-        if (!deleteFlag) {
-          cleanData.push(candidate);
-        } else {
-          try {
-            this.Logger.LogVal('Cleaning old autosave', candidate.RawData.key);
-            window.localStorage.removeItem(candidate.RawData.key);
-          } catch (e) {
-            this.Logger.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.RawData.key)
-          }
+  CleanFoundStorage(currentWindowStorage: IDataSnapShots): void {
+    try {
+      if (currentWindowStorage) {
+        var cacheLength = currentWindowStorage.CurrentSnapShots.length;
+        var autoCount: number = 0;
+        for (var idx = 0; idx < cacheLength; idx++) {
+          var candidate = currentWindowStorage.CurrentSnapShots[idx];
+          autoCount = this.CleanOneStorageItem(candidate, autoCount);
         }
       }
+    } catch (err) {
+      throw (this.CleanFoundStorage.name, err);
+    }
+  }
+
+  CleanOutOldAutoSavedData(): void {
+    this.Logger.FuncStart(this.CleanOutOldAutoSavedData.name);
+
+    try {
+      if (!this.SettingAutoSnapshotRetainDays || this.SettingAutoSnapshotRetainDays < 1) {
+        this.SettingAutoSnapshotRetainDays = ContentConst.Const.DefaultMaxAutoSaveAgeDays;
+      }
+
+      let currentWindowStorage: IDataSnapShots = this.GetAllSnapShotsMany();
+
+      this.CleanFoundStorage(currentWindowStorage);
+    } catch (err) {
+      throw (this.CleanOutOldAutoSavedData.name, err);
     }
 
     this.Logger.FuncEnd(this.CleanOutOldAutoSavedData.name);
   }
 
-  GetAllSnapShotsMany(): Promise<IDataSnapShots> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetAllSnapShotsMany.name);
+  GetAllSnapShotsMany(): IDataSnapShots {
+    this.Logger.FuncStart(this.GetAllSnapShotsMany.name);
 
-      let snapShotsMany: IDataSnapShots = {
-        CurrentSnapShots: [],
-        Birthday: new Date(1970),
-        FavoriteCount: 0,
-        SnapShotsAutoCount: 0,
-        PlainCount: 0,
-      }
+    let snapShotsMany: IDataSnapShots = {
+      CurrentSnapShots: [],
+      Birthday: new Date(1970),
+      FavoriteCount: 0,
+      SnapShotsAutoCount: 0,
+      PlainCount: 0,
+    }
 
-      await this.__getAllStorageReal()
-        .then((result: IDataOneWindowStorage[]) => {
-          snapShotsMany.CurrentSnapShots = result;
-          snapShotsMany.Birthday = new Date();
-          this.UpdateCounts(snapShotsMany);
-          snapShotsMany.CurrentSnapShots = this.ConvertGuidData(snapShotsMany.CurrentSnapShots);
+    let result: IDataOneWindowStorage[] = this.GetAllStorage();
 
-          resolve(snapShotsMany);
-        })
-        .catch((err) => reject(err));
+    snapShotsMany.CurrentSnapShots = result;
+    snapShotsMany.Birthday = new Date();
+    this.UpdateCounts(snapShotsMany);
+    snapShotsMany.CurrentSnapShots = this.ConvertGuidData(snapShotsMany.CurrentSnapShots);
 
-      this.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
-    });
+    this.Logger.FuncEnd(this.GetAllSnapShotsMany.name);
+
+    return snapShotsMany;
   }
 
   ConvertGuidData(candidateSnapShots: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
@@ -260,46 +263,40 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return result;
   }
 
-  ConfirmRemoveAndCheck(storageMatch: IDataOneWindowStorage): Promise<void> {
-    return new Promise(async (resolve, reject) => {
+  RemoveAndConfirmRemoval(storageMatch: IDataOneWindowStorage): void {
       this.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
 
       let targetId = storageMatch.GuidId;
 
-      await window.localStorage.removeItem(storageMatch.RawData.key);
+     
+    this.RepoAgent.RemoveByKey(storageMatch.RawData.key);
 
-      await this.GetFromStorageById(targetId)
-        .then((result) => {
-          if (!result) {
-            resolve();
-          } else {
-            reject('Snapshot still exists after deleting');
-          }
-        })
-    })
+      let result = this.GetFromStorageById(targetId);
+
+      if (result) {
+        this.Logger.ErrorAndThrow(this.RemoveAndConfirmRemoval.name, 'Snapshot still exists after deleting');
+
+      }
   }
 
-  RemoveSnapshotFromStorageById(targetId: GuidData) {
-    return new Promise(async (resolve, reject) => {
+  RemoveSnapshotFromStorageById(targetId: GuidData): void {
       this.Logger.FuncStart(this.RemoveSnapshotFromStorageById.name);
       try {
         if (targetId) {
-          var storageMatch: IDataOneWindowStorage = await this.GetFromStorageById(targetId)
+          var storageMatch: IDataOneWindowStorage = this.GetFromStorageById(targetId)
           if (storageMatch) {
-            await this.ConfirmRemoveAndCheck(storageMatch)
-              .then(() => resolve())
-              .catch((err) => reject(err));
+            this.RemoveAndConfirmRemoval(storageMatch)
+
           } else {
-            reject('no storage match');
+            this.Logger.WarningAndContinue(this.RemoveSnapshotFromStorageById.name, 'no storage match');
           }
         } else {
-          reject('no target id');
+          this.Logger.WarningAndContinue(this.RemoveSnapshotFromStorageById.name, 'no target id');
         }
-      } catch (e) {
-        reject(e);
+      } catch (err) {
+        this.Logger.ErrorAndThrow(this.RemoveSnapshotFromStorageById.name, err);
       }
 
       this.Logger.FuncEnd(this.RemoveSnapshotFromStorageById.name);
-    })
   }
 }

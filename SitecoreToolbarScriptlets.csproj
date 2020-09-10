@@ -120,6 +120,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\IContentApi.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentAtticAgent\IContentAtticAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IFirstActive.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IScUrlAgent\IScUrlAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IScWindowManager\IScWindowManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentMessageBroker.ts" />
