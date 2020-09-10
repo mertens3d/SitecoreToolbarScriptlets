@@ -9,7 +9,6 @@ import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Inter
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorTreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
-import { IDataOneTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
 
 export class ContentEditorProxy extends LoggableBase {
   AssociatedTreeProxy: IContentEditorTreeProxy;
@@ -89,7 +88,12 @@ export class ContentEditorProxy extends LoggableBase {
           .then(() => resolve())
           .catch((err) => {
             this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
+<<<<<<< HEAD
+            this.Logger.ErrorAndThrow(this.SetStateTree.name, 'bad data');
             reject((this.SetStateTree.name + " " + err))
+=======
+            reject((this.SetTreeState.name + " " + err))
+>>>>>>> origin/master
           })
       }
       this.Logger.FuncEnd(this.SetStateTree.name);
@@ -118,6 +122,21 @@ export class ContentEditorProxy extends LoggableBase {
     });
   }
 
+<<<<<<< HEAD
+  GetStateTree(): Promise<IDataOneStorageOneTreeState> {
+    return new Promise<IDataOneStorageOneTreeState>(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetStateTree.name);
+
+      await this.AssociatedTreeProxy.GetTreeState()
+        .then((result: IDataOneStorageOneTreeState) => {
+          result.Id = this.AssociatedId;
+          resolve(result);
+        })
+        .catch((err) => reject(this.GetStateTree.name + ' ' + err));
+
+      this.Logger.FuncEnd(this.GetStateTree.name);
+    });
+=======
   GetActiveNode(allTreeNodeAr: IDataOneTreeNode[]) {
     this.Logger.FuncStart(this.GetActiveNode.name);
     let toReturn: IDataOneTreeNode = null;
@@ -154,5 +173,6 @@ export class ContentEditorProxy extends LoggableBase {
 
     this.Logger.FuncEnd(this.GetStateTree.name);
     return toReturnOneTreeState;
+>>>>>>> origin/master
   }
 }

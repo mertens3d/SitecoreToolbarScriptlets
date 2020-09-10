@@ -16,6 +16,39 @@ export class ScWindowRecipePartials extends LoggableBase {
   }
 
   async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage, desktopProxy: DesktopProxy, OneCEAgent: ContentEditorProxy): Promise<void> {
+<<<<<<< HEAD
+        return new Promise(async (resolve, reject) => {
+            this.Logger.FuncStart(this.RestoreStateToTargetDoc.name);
+
+            if (dataToRestore) {
+                if (dataToRestore.WindowType == ScWindowType.Desktop) {
+                    await desktopProxy.SetStateDesktop(targetDoc, dataToRestore)
+                      .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
+                        .then(() => resolve())
+                        .catch((err) => reject(err));
+                }
+                else if (dataToRestore.WindowType === ScWindowType.ContentEditor) {
+                    await OneCEAgent.SetStateDesktopIframeProxy(dataToRestore.AllCEAr[0])
+                      .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
+                        .then(() => resolve())
+                        .catch((err) => reject(err));
+                }
+                else {
+                    reject(this.RestoreStateToTargetDoc.name + 'Data not restored. Not in Desktop or Content Editor');
+                }
+            }
+            else {
+                reject(this.RestoreStateToTargetDoc.name + " No data found to restore");
+            }
+
+            reject(this.RestoreStateToTargetDoc.name + ' : unknown reason');
+
+            this.Logger.FuncEnd(this.RestoreStateToTargetDoc.name);
+        });
+    }
+
+}
+=======
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RestoreStateToTargetDoc.name);
 
@@ -27,7 +60,7 @@ export class ScWindowRecipePartials extends LoggableBase {
             .catch((err) => reject(err));
         }
         else if (dataToRestore.WindowType === ScWindowType.ContentEditor) {
-          await OneCEAgent.SetStateDesktopIframeProxy(dataToRestore.AllCEAr[0])
+          await OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0])
             .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
             .then(() => resolve())
             .catch((err) => reject(err));
@@ -47,3 +80,4 @@ export class ScWindowRecipePartials extends LoggableBase {
     });
   }
 }
+>>>>>>> origin/master
