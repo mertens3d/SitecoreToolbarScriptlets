@@ -17,9 +17,13 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
 
   constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopTabButtonAgent) {
     super(logger);
+
+    this.Logger.InstantiateStart(RecipeAddNewContentEditorToDesktop.name);
     this.TargetDoc = targetDoc;
     this.SettingsAgent = settingsAgent;
     this.DesktopTabButtonAgent = ceButtonTabAgent;
+
+    this.Logger.InstantiateEnd(RecipeAddNewContentEditorToDesktop.name);
   }
 
   Execute(): Promise<ContentEditorProxy> {

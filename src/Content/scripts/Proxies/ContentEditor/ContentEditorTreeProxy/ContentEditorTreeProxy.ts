@@ -9,9 +9,8 @@ import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Inter
 import { IDataOneTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
-import { ContentEditorTreeNodeProxy } from '../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
 import { Subject_ContentEditorTreeMutatedEvent } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/Subject_ContentEditorTreeMutatedEvent';
-import { IPayload_ContentEditorTreeMutatedEvent } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
+import { ContentEditorTreeNodeProxy } from '../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
 
 export class ContentEditorTreeProxy extends LoggableBase implements IContentEditorTreeProxy {
   private AssociatedDoc: IDataOneDoc;
@@ -69,13 +68,15 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     if (targetNode && dataOneDocTarget) {
       var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.NodeId);
 
-      this.Logger.Log('looking for: ' + treeGlyphTargetId + ' ' + targetNode.NodeFriendly + ' in ' + Guid.AsShort(dataOneDocTarget.DocId));
+      this.Logger.Log('looking for: (' + targetNode.NodeFriendly + ')'  + treeGlyphTargetId + ' in ' + Guid.AsShort(dataOneDocTarget.DocId));
 
-      var foundOnPageTreeGlyph: HTMLElement = dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
+      var foundOnPageTreeGlyph: HTMLImageElement = <HTMLImageElement>dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
+      var test: HTMLImageElement = <HTMLImageElement>dataOneDocTarget.ContentDoc.querySelector('[id=' + treeGlyphTargetId + ']');
 
       if (foundOnPageTreeGlyph) {
-        this.Logger.Log('Found it');
         toReturn = new ContentEditorTreeNodeProxy(this.Logger, foundOnPageTreeGlyph);
+        this.Logger.Log('Found it ' + toReturn.GetNodeLinkText());
+
       } else {
         this.Logger.Log('Not Found');
       }
@@ -127,7 +128,7 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     depth = depth - 1;
 
     if (targetNode) {
-      var firstChildGlyphNode: HTMLElement = targetNode.querySelector(ContentConst.Const.Selector.SC.ContentTreeNodeGlyph);
+      var firstChildGlyphNode: HTMLImageElement = <HTMLImageElement>targetNode.querySelector(ContentConst.Const.Selector.SC.ContentTreeNodeGlyph);
       if (firstChildGlyphNode) {
         let treeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, firstChildGlyphNode);
 

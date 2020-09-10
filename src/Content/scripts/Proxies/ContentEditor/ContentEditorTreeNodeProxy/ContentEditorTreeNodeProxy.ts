@@ -8,28 +8,60 @@ import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 
 export class ContentEditorTreeNodeProxy extends LoggableBase {
-  private scContentTreeNode: HTMLElement;
-  private scContentTreeNodeGlyph: HTMLElement;
-  NodeLinkElem: any;
+  private ScContentTreeNodeDivElem: HTMLDivElement;
 
-  constructor(logger: ILoggerAgent, glyphNode: HTMLElement) {
+  constructor(logger: ILoggerAgent, sourceElement: HTMLDivElement)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLAnchorElement)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement) {
     super(logger);
 
     this.Logger.InstantiateStart(ContentEditorTreeNodeProxy.name);
+    if (sourceElement) {
+      if (sourceElement.hasAttribute('src')) {
+        this.InferFromImageElement(<HTMLImageElement>sourceElement);
+      } else if (sourceElement.hasAttribute('href')) {
+        this.InferFromAnchorElement(<HTMLAnchorElement>sourceElement);
+      } else if (sourceElement.classList.contains('scContentTreeNode')) {
+        this.InferFromDivElement(<HTMLDivElement> sourceElement)
+      } else {
+        this.Logger.ErrorAndThrow(ContentEditorTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElement));
+      }
+    } else {
+      this.Logger.ErrorAndThrow(ContentEditorTreeNodeProxy.name, 'null sourceElement');
+    }
 
-    this.scContentTreeNodeGlyph = glyphNode;
-
-    this.InitTreeNodeProxy();
+    //this.InitTreeNodeProxy();
     this.Logger.InstantiateEnd(ContentEditorTreeNodeProxy.name);
   }
 
-  private InitTreeNodeProxy() {
-    if (this.scContentTreeNodeGlyph) {
-      this.scContentTreeNode = this.scContentTreeNodeGlyph.parentElement;
-      this.NodeLinkElem = this.scContentTreeNode.querySelector(":scope > a");
-    } else {
-      this.Logger.ErrorAndThrow(ContentEditorTreeNodeProxy.name, 'No passed elem');
+  private InferFromDivElement(divElement: HTMLDivElement) {
+    this.Logger.Log(this.InferFromAnchorElement.name);
+    if (divElement) {
+      this.ScContentTreeNodeDivElem = divElement;
     }
+  }
+
+  private InferFromAnchorElement(anchorElement: HTMLAnchorElement) {
+    this.Logger.Log(this.InferFromAnchorElement.name);
+    if (anchorElement) {
+      this.ScContentTreeNodeDivElem = <HTMLDivElement>anchorElement.parentElement
+    }
+  }
+
+  private InferFromImageElement(imageElement: HTMLImageElement) {
+    this.Logger.Log(this.InferFromImageElement.name);
+    if (imageElement) {
+      this.ScContentTreeNodeDivElem = <HTMLDivElement>imageElement.parentElement
+    }
+  }
+  private GetGlyphNodeElem(): HTMLImageElement {
+    return <HTMLImageElement> this.ScContentTreeNodeDivElem.querySelector(":scope > img");
+  }
+  private GetLinkNodeElem(): HTMLElement {
+    this.Logger.Log('trying to get link for: ' + this.ScContentTreeNodeDivElem + this.ScContentTreeNodeDivElem.id);
+    console.log(this.ScContentTreeNodeDivElem);
+    return this.ScContentTreeNodeDivElem.querySelector(":scope > a");
   }
 
   GetStateNode(): IDataOneTreeNode {
@@ -45,7 +77,7 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
   }
 
   GetApparentId(): GuidData {
-    let glyphNodeIdSuffix = this.scContentTreeNodeGlyph.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
+    let glyphNodeIdSuffix = this.GetGlyphNodeElem().id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
 
     let toReturnGuidData: GuidData = Guid.ParseGuid(glyphNodeIdSuffix, true);
 
@@ -61,12 +93,12 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     this.Logger.LogVal('IsActive', newData.IsActive.toString());
 
     if (newData.IsActive) {
-      var hotTreeNodeId = ContentConst.Const.Names.SC.TreeNodePrefix + Guid.WithoutDashes(newData.NodeId);
+      var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.NodeId);
 
-      var hotTreeNode = dataOneDocTarget.ContentDoc.getElementById(hotTreeNodeId);
+      let hotTreeNode: HTMLImageElement = <HTMLImageElement>dataOneDocTarget.ContentDoc.getElementById(hotTreeNodeId);
 
       if (hotTreeNode) {
-        let hotTreeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, hotTreeNode);
+        let hotTreeNodeProxy: ContentEditorTreeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, hotTreeNode);
 
         if (hotTreeNodeProxy) {
           hotTreeNodeProxy.ActivateNode()
@@ -83,12 +115,15 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     this.Logger.FuncStart(this.QueryIsActive.name);
     var toReturn: boolean = false;
 
-    if (this.NodeLinkElem) {
-      var className = this.NodeLinkElem.className;
-      if (className.indexOf(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive) > -1) {
+    if (this.GetLinkNodeElem()) {
+      var classList = this.GetLinkNodeElem().classList;
+      this.Logger.LogAsJsonPretty('classList', classList);
+      if (classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive)) {
         toReturn = true;
-        this.Logger.Log('** isActive ' + this.scContentTreeNode.innerText);
+        this.Logger.Log('** isActive ' + this.ScContentTreeNodeDivElem.innerText);
       }
+    } else {
+      this.Logger.Log('no node link elem');
     }
 
     this.Logger.FuncEnd(this.QueryIsActive.name, toReturn.toString());
@@ -98,10 +133,15 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
   ActivateNode(): void {
     this.Logger.FuncStart(this.ActivateNode.name);
 
-    if (this.scContentTreeNode) {
-      this.Logger.Log('clicking it');
+    if (this.GetLinkNodeElem()) {
+      this.Logger.Log('clicking it to activate');
 
-      this.scContentTreeNode.click();
+      this.GetLinkNodeElem().click();
+
+      // check
+      if (!this.QueryIsActive()) {
+        this.Logger.WarningAndContinue(this.ActivateNode.name, 'Did not work. Trying to activate: ' + this.GetNodeLinkText());
+      }
     } else {
       this.Logger.ErrorAndContinue(this.ActivateNode.name, 'No associated Elem');
     }
@@ -113,40 +153,27 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     var currentSrc = element.getAttribute('src');
     this.Logger.Log('currentSrc' + currentSrc);
     if (currentSrc.indexOf(ContentConst.Const.Names.TreeMenuExpandedPng) > -1) {
-      this.Logger.Log('clicking it');
+      this.Logger.Log('clicking it to collapse');
       element.click();
     }
   }
 
   ExpandNode(): void {
     this.Logger.FuncStart(this.ExpandNode.name);
-    if (this.scContentTreeNodeGlyph) {
-      var currentSrc = this.scContentTreeNodeGlyph.getAttribute('src');
-
-      if (currentSrc !== null) {
-        this.Logger.Log('currentSrc' + currentSrc);
-
-        if (!this.QueryIsExpanded()) {
-          this.Logger.Log('clicking it');
-          this.scContentTreeNode.click();
-        } else {
-          this.Logger.Log('Already expanded');
-        }
-      } else {
-        this.Logger.ErrorAndThrow(this.ExpandNode.name, 'corrupt data');
-      }
+    if (!this.QueryIsExpanded()) {
+      this.Logger.Log('clicking it to expand');
+      this.GetGlyphNodeElem().click();
     } else {
-      this.Logger.ErrorAndContinue(this.ExpandNode.name, 'No associated elem');
+      this.Logger.Log('Already expanded');
     }
-
     this.Logger.FuncEnd(this.ExpandNode.name);
   }
 
   GetNodeLinkText() {
     var toReturn = 'unknown';
 
-    if (this.NodeLinkElem) {
-      toReturn = this.NodeLinkElem.innerText;
+    if (this.GetLinkNodeElem()) {
+      toReturn = this.GetLinkNodeElem().innerText;
     }
 
     return toReturn;
@@ -156,7 +183,7 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     this.Logger.FuncStart(this.IsContentTreeNode.name);
     var toReturn: boolean = false;
 
-    var className = this.scContentTreeNode.className;
+    var className = this.ScContentTreeNodeDivElem.className;
 
     this.Logger.LogVal('className', className);
 
@@ -171,14 +198,15 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
 
   QueryIsExpanded() {
     var toReturn: boolean = false;
-    if (this.scContentTreeNodeGlyph) {
-      var srcAttr = this.scContentTreeNodeGlyph.getAttribute('src');
+    let candidate: HTMLImageElement = this.GetGlyphNodeElem();
+    if (candidate) {
+      var srcAttr = candidate.getAttribute('src');
       if (srcAttr !== null) {
         if (srcAttr.indexOf(ContentConst.Const.Names.SC.TreeExpandedPng.sc920) > -1) {
           toReturn = true;
         }
       } else {
-        this.Logger.ErrorAndThrow(this.QueryIsExpanded.name, 'Bad Glph/ node data');
+        this.Logger.ErrorAndThrow(this.QueryIsExpanded.name, 'Bad Glyph/ node data');
       }
       return toReturn;
     }
