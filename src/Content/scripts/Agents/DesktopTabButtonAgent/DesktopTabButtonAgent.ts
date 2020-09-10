@@ -39,27 +39,32 @@ export class DesktopTabButtonAgent extends LoggableBase {
     return foundStartBarButton;
   }
 
-  ChangeStartBarButtonText(targetButton: HTMLElement, text: string) {
+  ChangeStartBarButtonText(targetButton: HTMLElement, text: string, iconSrc: string) {
     this.Logger.FuncStart(this.ChangeStartBarButtonText.name);
     if (targetButton) {
       let currentInnerHtml = targetButton.querySelector('div').querySelector('span').innerHTML;
       let currentInnerText = targetButton.querySelector('div').querySelector('span').innerText;
       let newInnerHtml = currentInnerHtml.replace(currentInnerText, text);
       targetButton.querySelector('div').querySelector('span').innerHTML = newInnerHtml;
+
+      if (iconSrc && iconSrc.length > 0) {
+
+      let targetButtonImg: HTMLImageElement = <HTMLImageElement>targetButton.querySelector('img');
+      if (targetButtonImg) {
+        targetButtonImg.src = iconSrc;
+      }
+      }
     }
     this.Logger.FuncEnd(this.ChangeStartBarButtonText.name);
   }
 
-  async EnrollListenerForActiveNodeChange(): Promise<void> {
+   EnrollListenerForActiveNodeChange(): void {
     try {
-      await this.GetIframeHelper().GetHostedIframes(this.OwnerDesktopProxy.GetAssociatedDoc())
-        .then((foundIframes: IframeProxy[]) => {
-          for (var idx = 0; idx < foundIframes.length; idx++) {
-            let iframe = foundIframes[idx];
-            let foundStartBarButton = this.GetStartAssociatedStartBarButton(iframe.IframeElem.id);
-            this.ChangeStartBarButtonText(foundStartBarButton, 'dog');
-          }
-        });
+      let foundIframes: IframeProxy[] = this.GetIframeHelper().GetHostedIframes(this.OwnerDesktopProxy.GetAssociatedDoc())
+      for (var idx = 0; idx < foundIframes.length; idx++) {
+        let iframe = foundIframes[idx];
+        let foundStartBarButton = this.GetStartAssociatedStartBarButton(iframe.IframeElem.id);
+      }
     } catch (err) {
       throw (err);
     }
@@ -94,8 +99,11 @@ export class DesktopTabButtonAgent extends LoggableBase {
       if (iframeElement) {
         if (payload.ActiveNode) {
           let foundStartBarButton = this.GetStartAssociatedStartBarButton(payload.AssociatedIframeElemId);
-          let bufferedString: string = StaticHelpers.BufferString(payload.ActiveNode.GetFriendlyNameFromNode(), ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
-          this.ChangeStartBarButtonText(foundStartBarButton, bufferedString);
+
+          let iconSrc: string = payload.ActiveNode.GetIconSrc();
+
+          let bufferedString: string = StaticHelpers.BufferString(payload.ActiveNode.GetNodeLinkText(), ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
+          this.ChangeStartBarButtonText(foundStartBarButton, bufferedString, iconSrc);
         }
 
         //we need to know what the associated button is

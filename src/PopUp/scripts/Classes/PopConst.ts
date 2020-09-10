@@ -125,7 +125,8 @@ export class PopConst {
       lenShortId: 4,
       colSep: ' - ',
       lenCeCount: 3,
-      lenActiveNode: 16,
+      MainSectionNode: 9,
+      lenActiveNode: 9,
       lenFavorite: 3,
     },
     Timeouts: {

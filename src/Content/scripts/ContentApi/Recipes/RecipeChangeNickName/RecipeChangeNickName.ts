@@ -34,23 +34,22 @@ export class RecipeChangeNickName extends LoggableBase implements ICommandRecipe
         if (this.NewNickname) {
           var storageMatch: IDataOneWindowStorage;
 
-          await this.AtticAgent.GetFromStorageById(this.TargetSnapShotId)
-            .then((result: IDataOneWindowStorage) => storageMatch = result)
-            .then(() => {
-              if (storageMatch) {
-                if ((storageMatch.Flavor === SnapShotFlavor.Autosave
-                  ||
-                  (storageMatch.Flavor === SnapShotFlavor.Unknown))) {
-                  storageMatch.Flavor = SnapShotFlavor.Manual;
-                }
-                storageMatch.NickName = this.NewNickname;// this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
-              } else {
-                reject(this.UpdateNickname.name + ' - No storage match');
-              }
-            })
-            .then(() => this.AtticAgent.WriteToStorage(storageMatch))
-            .then(() => resolve())
-            .catch((err) => reject(err));
+          storageMatch = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId)
+
+          if (storageMatch) {
+            if ((storageMatch.Flavor === SnapShotFlavor.Autosave
+              ||
+              (storageMatch.Flavor === SnapShotFlavor.Unknown))) {
+              storageMatch.Flavor = SnapShotFlavor.Manual;
+            }
+            storageMatch.NickName = this.NewNickname;// this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
+          } else {
+            reject(this.UpdateNickname.name + ' - No storage match');
+          }
+
+          this.AtticAgent.WriteStateToStorage(storageMatch);
+          resolve();
+
         } else {
           reject(this.UpdateNickname.name + ' - something was missing');
         }

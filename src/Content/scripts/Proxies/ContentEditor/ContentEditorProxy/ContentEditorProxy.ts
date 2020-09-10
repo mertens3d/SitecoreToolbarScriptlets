@@ -88,8 +88,7 @@ export class ContentEditorProxy extends LoggableBase {
           .then(() => resolve())
           .catch((err) => {
             this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
-            this.Logger.ErrorAndThrow(this.SetStateTree.name, 'bad data');
-            reject((this.SetStateTree.name + " " + err))
+            reject((this.SetTreeState.name + " " + err))
           })
       }
       this.Logger.FuncEnd(this.SetStateTree.name);
@@ -118,18 +117,41 @@ export class ContentEditorProxy extends LoggableBase {
     });
   }
 
-  GetStateTree(): Promise<IDataOneStorageOneTreeState> {
-    return new Promise<IDataOneStorageOneTreeState>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetStateTree.name);
+  GetActiveNode(allTreeNodeAr: IDataOneTreeNode[]) {
+    this.Logger.FuncStart(this.GetActiveNode.name);
+    let toReturn: IDataOneTreeNode = null;
+    if (allTreeNodeAr) {
+      for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
+        let candidate: IDataOneTreeNode = allTreeNodeAr[idx];
+        if (candidate.IsActive) {
+          toReturn = candidate;
+          break;
+        }
+      }
+    } else {
+      this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
+    }
 
-      await this.AssociatedTreeProxy.GetTreeState()
-        .then((result: IDataOneStorageOneTreeState) => {
-          result.Id = this.AssociatedId;
-          resolve(result);
-        })
-        .catch((err) => reject(this.GetStateTree.name + ' ' + err));
+    this.Logger.FuncEnd(this.GetActiveNode.name, toReturn.NodeFriendly);
+    return toReturn;
+  }
 
-      this.Logger.FuncEnd(this.GetStateTree.name);
-    });
+  GetStateTree(): IDataOneStorageOneTreeState {
+    this.Logger.FuncStart(this.GetStateTree.name);
+
+    var toReturnOneTreeState: IDataOneStorageOneTreeState = {
+      Id: this.AssociatedId,
+      AllTreeNodeAr: this.AssociatedTreeProxy.GetOneLiveTreeData(),
+      ActiveNode: null
+    }
+
+    toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
+
+    if (toReturnOneTreeState) {
+      this.Logger.LogVal('Tree State node count', toReturnOneTreeState.AllTreeNodeAr.length);
+    }
+
+    this.Logger.FuncEnd(this.GetStateTree.name);
+    return toReturnOneTreeState;
   }
 }

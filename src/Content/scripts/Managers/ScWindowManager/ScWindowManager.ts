@@ -50,35 +50,35 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     return new ScWindowRecipePartials(this.Logger, this.ToastAgent);
   }
 
-  GetCurrentStateByPageType(scWindowType: ScWindowType) {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetCurrentStateByPageType.name, StaticHelpers.ScWindowTypeFriendly(scWindowType));
+  GetCurrentStateByPageType(scWindowType: ScWindowType): IDataOneStorageOneTreeState {
+    this.Logger.FuncStart(this.GetCurrentStateByPageType.name, StaticHelpers.ScWindowTypeFriendly(scWindowType));
 
-      if (scWindowType === ScWindowType.Desktop) {
-        this.DesktopUiProxy.GetStateDesktop()
-          .then((result: IDataDesktopState) => resolve(result.ActiveCeState))
-          .then(() => resolve())
-          .catch((err) => reject(err));
-      }
-      else if (scWindowType === ScWindowType.ContentEditor) {
-        await this.CeProxy.GetStateTree()
-          .then((result: IDataOneStorageOneTreeState) => resolve(result))
-          .then(() => resolve())
-          .catch((err) => reject(err));
-      }
-      else if (scWindowType === ScWindowType.LoginPage
-        || scWindowType === ScWindowType.Launchpad
-        || scWindowType === ScWindowType.Edit
-        || scWindowType === ScWindowType.Preview
-        || scWindowType === ScWindowType.Normal) {
-        resolve(null);
-      }
-      else {
-        reject('unknown page type ' + StaticHelpers.ScWindowTypeFriendly(scWindowType));
-      }
+    let toReturn: IDataOneStorageOneTreeState = null;
 
-      this.Logger.FuncEnd(this.GetCurrentStateByPageType.name);
-    });
+    if (scWindowType === ScWindowType.Desktop) {
+      let dtResult = this.DesktopUiProxy.GetStateDesktop();
+
+      if (dtResult.ActiveCEAgent) {
+        toReturn = dtResult.ActiveCEAgent.GetStateTree();
+      }
+    }
+
+    else if (scWindowType === ScWindowType.ContentEditor) {
+      toReturn = this.CeProxy.GetStateTree();
+    }
+    else if (scWindowType === ScWindowType.LoginPage
+      || scWindowType === ScWindowType.Launchpad
+      || scWindowType === ScWindowType.Edit
+      || scWindowType === ScWindowType.Preview
+      || scWindowType === ScWindowType.Normal) {
+    }
+    else {
+      this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, 'unknown page type ' + StaticHelpers.ScWindowTypeFriendly(scWindowType));
+    }
+
+    this.Logger.FuncEnd(this.GetCurrentStateByPageType.name);
+
+    return toReturn;
   }
 
   GetScUrlAgent(): IScUrlAgent {
@@ -190,49 +190,49 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       if (this.GetCurrentPageType() === ScWindowType.Desktop) {
         this.Logger.MarkerB();
 
-        this.DesktopUiProxy.GetStateDesktop()
-          .then((states: IDataDesktopState) => {
-            scWindowState.AllCEAr = states.HostedContentEditors;
-          })
-          .catch((err) => { throw (err); });
+        let states: IDataDesktopState = this.DesktopUiProxy.GetStateDesktop();
+
+        scWindowState.AllCEAr = states.HostedContentEditors;
       }
     } catch (err) {
       this.Logger.ErrorAndThrow(this.PopulateIfTopIsContentEditor.name, err);
     }
     this.Logger.FuncEnd(this.PopulateIfTopIsDeskTop.name);
   }
-  GetScWindowStateA(): Promise<IContentState> {
+
+  GetStateScWindow(): Promise<IContentState> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetScWindowStateA.name);
+      this.Logger.FuncStart(this.GetStateScWindow.name);
 
       let toReturnScWindowState: IContentState = new DefaultScWindowState();
 
-      await this.AtticAgent.GetAllSnapShotsMany()
-        .then((result: IDataSnapShots) => toReturnScWindowState.SnapShotsMany = result)
-        .then(() => toReturnScWindowState.ErrorStack = this.Logger.ErrorStack)
-        .then(() => this.GetCurrentStateByPageType(this.GetCurrentPageType()))
-        .then((result: IDataOneStorageOneTreeState) => {
-          toReturnScWindowState.ActiveCe = result;
-          resolve(toReturnScWindowState);
-        })
-        .catch((err) => reject(err));
+      toReturnScWindowState.SnapShotsMany = this.AtticAgent.GetAllSnapShotsMany();
 
-      this.Logger.FuncEnd(this.GetScWindowStateA.name);
+      toReturnScWindowState.ErrorStack = this.Logger.ErrorStack;
+
+      let result: IDataOneStorageOneTreeState = this.GetCurrentStateByPageType(this.GetCurrentPageType());
+      toReturnScWindowState.ActiveCe = result;
+
+      resolve(toReturnScWindowState);
+
+      this.Logger.FuncEnd(this.GetStateScWindow.name);
     });
   }
-  GetScWindowStateB(targetSnapShotFlavor: SnapShotFlavor): Promise<IDataOneWindowStorage> {
+
+  GetStateForStorage(targetSnapShotFlavor: SnapShotFlavor): Promise<IDataOneWindowStorage> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetScWindowStateB.name);
+      this.Logger.FuncStart(this.GetStateForStorage.name);
 
       let currentPageType = this.GetCurrentPageType();
       var scWindowState: IDataOneWindowStorage = this.CreateShellIDataScWindowState(currentPageType, targetSnapShotFlavor);
 
       await this.PopulateIfTopIsContentEditor(scWindowState)
         .then(() => this.PopulateIfTopIsDeskTop(scWindowState))
+        .then(() => this.Logger.LogVal('resolve length', scWindowState.AllCEAr.length))
         .then(() => resolve(scWindowState))
         .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.GetScWindowStateB.name);
+      this.Logger.FuncEnd(this.GetStateForStorage.name);
     });
   }
 }

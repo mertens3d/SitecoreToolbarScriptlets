@@ -67,15 +67,12 @@ export class DesktopIframeProxyBucket extends LoggableBase {
     });
   }
 
-  async InitHostedContentEditors(): Promise<void> {
+   InitHostedContentEditors(): void {
     try {
-      await this.GetIframeHelper().GetHostedIframes(this.AssociatedDesktopDoc)
-        .then((foundIframes: IframeProxy[]) => {
-          foundIframes.forEach(async (oneIframe) => {
-            this.AddToBucketFromIframeProxy(oneIframe);
-          });
-        })
-        .catch((err) => { throw (err); });
+      let foundIframes: IframeProxy[] = this.GetIframeHelper().GetHostedIframes(this.AssociatedDesktopDoc)
+      foundIframes.forEach(async (oneIframe) => {
+        this.AddToBucketFromIframeProxy(oneIframe);
+      });
     }
     catch (err) {
       this.Logger.ErrorAndThrow(this.InitHostedContentEditors.name, err);

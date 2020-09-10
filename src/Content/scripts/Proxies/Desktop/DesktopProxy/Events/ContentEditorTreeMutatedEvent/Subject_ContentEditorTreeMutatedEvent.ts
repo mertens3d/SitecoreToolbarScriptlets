@@ -39,17 +39,14 @@ export class Subject_ContentEditorTreeMutatedEvent extends Subject_GenericEvent<
   private GetMutatedNode(mutation: MutationRecord): ContentEditorTreeNodeProxy {
     let candidateNode: ContentEditorTreeNodeProxy = null;
     if (mutation.attributeName === 'class') {
-      let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
-      this.Logger.Log(mutatedElement.classList.toString());
-      this.Logger.Log(mutatedElement.id);
+      let mutatedAnchorElement: HTMLAnchorElement = <HTMLAnchorElement>(mutation.target);
+      if (mutatedAnchorElement) {
+        this.Logger.Log(mutatedAnchorElement.classList.toString());
+        this.Logger.Log(mutatedAnchorElement.id);
 
-      this.Logger.Log('mutated');
-      let parent: HTMLElement = mutatedElement.parentElement;
-      if (parent) {
-        candidateNode = new ContentEditorTreeNodeProxy(this.Logger, parent);
+        this.Logger.Log('mutated');
+        candidateNode = new ContentEditorTreeNodeProxy(this.Logger, mutatedAnchorElement);
         this.Logger.Log((<HTMLElement>mutation.target).innerText);
-      } else {
-        this.Logger.WarningAndContinue(this.GetMutatedNode.name, 'no parent found for ' + mutatedElement.id);
       }
     }
     return candidateNode;
@@ -60,7 +57,7 @@ export class Subject_ContentEditorTreeMutatedEvent extends Subject_GenericEvent<
       let candidateNode: ContentEditorTreeNodeProxy = this.GetMutatedNode(mutation);
 
       if (candidateNode) {
-        if (candidateNode.IsActive()) {
+        if (candidateNode.QueryIsActive()) {
           let payload: IPayload_ContentEditorTreeMutatedEvent = {
             MutatedElement: <HTMLElement>(mutation.target),
             ActiveNode: candidateNode,

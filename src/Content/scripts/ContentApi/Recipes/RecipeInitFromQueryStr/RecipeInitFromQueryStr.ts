@@ -54,9 +54,10 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
           var dataOneWindowStorage;
 
           if (this.TopLevelDoc) {
-            await this.AtticAgent.GetFromStorageById(targetGuid)
-              .then((result) => dataOneWindowStorage = result)
-              .then(() => this.RecipeBasics.WaitForPageReadyNative(this.TopLevelDoc))
+            dataOneWindowStorage = this.AtticAgent.GetFromStorageById(targetGuid);
+
+
+              await this.RecipeBasics.WaitForPageReadyNative(this.TopLevelDoc)
               .then(() => this.ScWinRecipeParts.RestoreStateToTargetDoc(this.TopLevelDoc, dataOneWindowStorage, this.OneDesktopMan, this.OneCeAgent))
               .then(() => resolve())
               .catch((err) => reject(this.InitFromQueryString.name + ' ' + err));
