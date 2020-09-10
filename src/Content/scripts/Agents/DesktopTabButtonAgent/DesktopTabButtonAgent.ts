@@ -39,13 +39,21 @@ export class DesktopTabButtonAgent extends LoggableBase {
     return foundStartBarButton;
   }
 
-  ChangeStartBarButtonText(targetButton: HTMLElement, text: string) {
+  ChangeStartBarButtonText(targetButton: HTMLElement, text: string, iconSrc: string) {
     this.Logger.FuncStart(this.ChangeStartBarButtonText.name);
     if (targetButton) {
       let currentInnerHtml = targetButton.querySelector('div').querySelector('span').innerHTML;
       let currentInnerText = targetButton.querySelector('div').querySelector('span').innerText;
       let newInnerHtml = currentInnerHtml.replace(currentInnerText, text);
       targetButton.querySelector('div').querySelector('span').innerHTML = newInnerHtml;
+
+      if (iconSrc && iconSrc.length > 0) {
+
+      let targetButtonImg: HTMLImageElement = <HTMLImageElement>targetButton.querySelector('img');
+      if (targetButtonImg) {
+        targetButtonImg.src = iconSrc;
+      }
+      }
     }
     this.Logger.FuncEnd(this.ChangeStartBarButtonText.name);
   }
@@ -91,8 +99,11 @@ export class DesktopTabButtonAgent extends LoggableBase {
       if (iframeElement) {
         if (payload.ActiveNode) {
           let foundStartBarButton = this.GetStartAssociatedStartBarButton(payload.AssociatedIframeElemId);
+
+          let iconSrc: string = payload.ActiveNode.GetIconSrc();
+
           let bufferedString: string = StaticHelpers.BufferString(payload.ActiveNode.GetNodeLinkText(), ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
-          this.ChangeStartBarButtonText(foundStartBarButton, bufferedString);
+          this.ChangeStartBarButtonText(foundStartBarButton, bufferedString, iconSrc);
         }
 
         //we need to know what the associated button is

@@ -85,6 +85,21 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     return toReturnGuidData;
   }
 
+  GetIconSrc(): string {
+
+    let toReturn:string
+    //((document.getElementById('Tree_Node_709C05C504394E1A9D4711E824C87B39')).parentElement).querySelector('.scContentTreeNodeIcon').src
+    //((document.getElementById('Tree_Node_EB443C0BF923409E85F3E7893C8C30C2')).parentElement).querySelector('.scContentTreeNodeIcon').outerHTML
+    let foundElement: HTMLImageElement = <HTMLImageElement> this.ScContentTreeNodeDivElem.querySelector('.scContentTreeNodeIcon');
+
+    if (foundElement) {
+
+      toReturn = foundElement.src;
+    }
+
+    return toReturn;
+  }
+
   RestoreStateNode(newData: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc) {
     if (newData.IsExpanded) {
       this.ExpandNode();
