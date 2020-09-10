@@ -29,7 +29,7 @@ export class Guid {
   }
 
   static ParseGuid(val: string, throwOnError: boolean): GuidData {
-    let newGuid: GuidData = new GuidData();
+    //let newGuid: GuidData = new GuidData();
     return new GuidData(val);
     //return newGuid.MakeGuidFromString(val, throwOnError);
   }
