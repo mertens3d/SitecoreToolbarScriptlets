@@ -127,18 +127,18 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     depth = depth - 1;
 
     if (targetNode) {
-      var firstImg: HTMLElement = targetNode.querySelector(ContentConst.Const.Selector.SC.ContentTreeNodeGlyph);
-      if (firstImg) {
-        let treeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, firstImg);
+      var firstChildGlyphNode: HTMLElement = targetNode.querySelector(ContentConst.Const.Selector.SC.ContentTreeNodeGlyph);
+      if (firstChildGlyphNode) {
+        let treeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, firstChildGlyphNode);
 
-        if (treeNodeProxy.IsContentTreeNode) {
-          if (treeNodeProxy.IsExpanded || treeNodeProxy.IsActive) {
+        this.Logger.LogVal('treeNodeProxy.IsContentTreeNode', treeNodeProxy.IsContentTreeNode() + ' ' + treeNodeProxy.GetNodeLinkText());
+
+        if (treeNodeProxy.IsContentTreeNode()) {
+          if (treeNodeProxy.QueryIsExpanded() || treeNodeProxy.QueryIsActive()) {
+
             let newData: IDataOneTreeNode = treeNodeProxy.GetStateNode();
-
-            var apparentId = firstImg.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
-            newData.NodeId = Guid.ParseGuid(apparentId, true);
-
             toReturn.push(newData);
+
           } else {
             this.Logger.Log('no first img');
           }
@@ -185,6 +185,7 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
       this.Logger.ErrorAndThrow(this.GetOneLiveTreeData.name, 'no targetDoc');
     }
 
+    this.Logger.LogVal('length', toReturn.length);
     this.Logger.FuncEnd(this.GetOneLiveTreeData.name);
 
     return toReturn;

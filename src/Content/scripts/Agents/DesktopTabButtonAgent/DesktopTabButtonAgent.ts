@@ -50,16 +50,13 @@ export class DesktopTabButtonAgent extends LoggableBase {
     this.Logger.FuncEnd(this.ChangeStartBarButtonText.name);
   }
 
-  async EnrollListenerForActiveNodeChange(): Promise<void> {
+   EnrollListenerForActiveNodeChange(): void {
     try {
-      await this.GetIframeHelper().GetHostedIframes(this.OwnerDesktopProxy.GetAssociatedDoc())
-        .then((foundIframes: IframeProxy[]) => {
-          for (var idx = 0; idx < foundIframes.length; idx++) {
-            let iframe = foundIframes[idx];
-            let foundStartBarButton = this.GetStartAssociatedStartBarButton(iframe.IframeElem.id);
-            this.ChangeStartBarButtonText(foundStartBarButton, 'dog');
-          }
-        });
+      let foundIframes: IframeProxy[] = this.GetIframeHelper().GetHostedIframes(this.OwnerDesktopProxy.GetAssociatedDoc())
+      for (var idx = 0; idx < foundIframes.length; idx++) {
+        let iframe = foundIframes[idx];
+        let foundStartBarButton = this.GetStartAssociatedStartBarButton(iframe.IframeElem.id);
+      }
     } catch (err) {
       throw (err);
     }
@@ -94,7 +91,7 @@ export class DesktopTabButtonAgent extends LoggableBase {
       if (iframeElement) {
         if (payload.ActiveNode) {
           let foundStartBarButton = this.GetStartAssociatedStartBarButton(payload.AssociatedIframeElemId);
-          let bufferedString: string = StaticHelpers.BufferString(payload.ActiveNode.GetFriendlyNameFromNode(), ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
+          let bufferedString: string = StaticHelpers.BufferString(payload.ActiveNode.GetNodeLinkText(), ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
           this.ChangeStartBarButtonText(foundStartBarButton, bufferedString);
         }
 

@@ -38,6 +38,26 @@ export class Guid {
     return new GuidData(randomStr);
   }
 
+  static GuidStrWithDashes(val: string): string {
+    let toReturn: string = '';
+    let withoutDashes: string = val.replace(/-/g, '');
+
+    var parts = [];
+    if (withoutDashes.length !== 32) {
+      throw (this.GuidStrWithDashes.name + ' - Wrong count wanted: ' + 32 + " got: " + withoutDashes.length + ' (without dashes) ' + withoutDashes);
+    }
+
+    parts.push(withoutDashes.slice(0, 8));
+    parts.push(withoutDashes.slice(8, 12));
+    parts.push(withoutDashes.slice(12, 16));
+    parts.push(withoutDashes.slice(16, 20));
+    parts.push(withoutDashes.slice(20, 32));
+
+    toReturn = parts.join('-');
+
+    return toReturn;
+  }
+
   GetRandomGuidString(): string {
     var toReturn: string;
 

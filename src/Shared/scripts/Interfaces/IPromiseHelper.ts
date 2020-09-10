@@ -16,5 +16,5 @@ export interface IRecipeBasics {
   WaitForPageReadyNative(targetDoc: IDataOneDoc);
   WaitForReadyIframe(jqIframe: IframeProxy): Promise<IframeProxy>;
   WaitForThenClick(arg0: string[], arg1: IDataOneDoc);
-  GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<IframeProxy>
+  GetTopLevelIframe(targetDoc: IDataOneDoc): IframeProxy
 }

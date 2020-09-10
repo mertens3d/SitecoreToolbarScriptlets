@@ -10,14 +10,16 @@ export class RecipeRemoveItemFromStorage extends __RecipeBase implements IComman
     super(commandData);
     this.ToastAgent = toastAgent;
   }
-  Execute(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      await this.AtticAgent.RemoveSnapshotFromStorageById(this.TargetSnapShotId)
-        .then(() => {
-          this.ToastAgent.PopUpToastNotification(this.ScWinMan.GetTopLevelDoc(), "Success");
-          resolve();
-        })
-        .catch((err) => reject(err));
-    });
+
+  async Execute():Promise<void> {
+    try {
+      this.AtticAgent.RemoveSnapshotFromStorageById(this.TargetSnapShotId);
+
+      this.ToastAgent.PopUpToastNotification(this.ScWinMan.GetTopLevelDoc(), "Success");
+    } catch (err) {
+
+      this.Logger.ErrorAndThrow(this.Execute.name, err);
+
+    }
   }
 }

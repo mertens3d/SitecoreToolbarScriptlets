@@ -5,11 +5,12 @@ import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { ScWindowRecipePartials } from "../../../../../Content/scripts/Managers/ScWindowManager/ScWindowRecipePartials";
 import { ContentEditorProxy } from "../../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DesktopProxy } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { IDataOneWindowStorage } from "../../Data/IDataOneWindowStorage";
 
 export interface IScWindowManager {
-  GetScWindowStateA();
+  GetStateScWindow();
   MakeScWinRecipeParts(): ScWindowRecipePartials;
-  GetScWindowStateB(TargetSnapShotFlavor: SnapShotFlavor);
+  GetStateForStorage(TargetSnapShotFlavor: SnapShotFlavor): Promise<IDataOneWindowStorage>;
   GetScUrlAgent(): IScUrlAgent;
   GetCurrentPageType(): ScWindowType;
   InitScWindowManager(): Promise<void>;

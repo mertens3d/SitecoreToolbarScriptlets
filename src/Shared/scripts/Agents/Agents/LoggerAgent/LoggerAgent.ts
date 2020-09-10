@@ -220,15 +220,21 @@ export class LoggerAgent implements ILoggerAgent {
   }
 
   FuncEnd(text, optionalValueInput?: number);
+  FuncEnd(text, optionalValueInput?: boolean);
   FuncEnd(text, optionalValueInput?: string);
-  FuncEnd(text, optionalValueInput: string | number) {
+  FuncEnd(text, optionalValueInput: string | number | boolean) {
     this.__callDepth--;
     if (this.__callDepth < 0) {
       this.__callDepth = 0;
     }
 
     text = 'e' + ' ' + this.__callDepth + ') ' + text;
-    if (!optionalValueInput) {
+    if (optionalValue !== null && (typeof optionalValue === typeof Boolean)) {
+      optionalValue = optionalValue.toString(); 
+    }
+
+
+    if (! optionalValueInput) {
       optionalValueInput = '';
     }
     var optionalValue = optionalValueInput.toString();

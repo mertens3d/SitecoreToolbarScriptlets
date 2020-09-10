@@ -60,7 +60,7 @@ export class Subject_ContentEditorTreeMutatedEvent extends Subject_GenericEvent<
       let candidateNode: ContentEditorTreeNodeProxy = this.GetMutatedNode(mutation);
 
       if (candidateNode) {
-        if (candidateNode.IsActive()) {
+        if (candidateNode.QueryIsActive()) {
           let payload: IPayload_ContentEditorTreeMutatedEvent = {
             MutatedElement: <HTMLElement>(mutation.target),
             ActiveNode: candidateNode,

@@ -5,7 +5,6 @@ import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/
 import { __RecipeBase } from "../__RecipeBase/__RecipeBase";
 
 export class RecipeToggleFavorite extends __RecipeBase implements ICommandRecipes {
-
   constructor(commandData: ICommandHndlrDataForContent) {
     super(commandData);
   }
@@ -13,17 +12,16 @@ export class RecipeToggleFavorite extends __RecipeBase implements ICommandRecipe
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       if (this.TargetSnapShotId) {
-        await this.AtticAgent.GetFromStorageById(this.TargetSnapShotId)
-          .then((result: IDataOneWindowStorage) => {
-            if (result.Flavor === SnapShotFlavor.Favorite) {
-              result.Flavor = SnapShotFlavor.Manual;
-            } else {
-              result.Flavor = SnapShotFlavor.Favorite;
-            }
-            this.AtticAgent.WriteToStorage(result);
-          })
-          .then(() => resolve())
-          .catch((err) => reject(err));
+        let result: IDataOneWindowStorage = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId);
+
+        if (result.Flavor === SnapShotFlavor.Favorite) {
+          result.Flavor = SnapShotFlavor.Manual;
+        } else {
+          result.Flavor = SnapShotFlavor.Favorite;
+        }
+        this.AtticAgent.WriteStateToStorage(result);
+
+        resolve();
       } else {
         reject('no targetId');
       }
