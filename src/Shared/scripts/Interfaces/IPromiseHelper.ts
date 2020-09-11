@@ -1,7 +1,7 @@
 ﻿import { AbsoluteUrl } from "./AbsoluteUrl";
 import { IDataPublishChain } from "./Data/IDataPublishChain";
 import { IScVerSpec } from "./IScVerSpec";
-import { IframeProxy } from "./data/IDataOneIframe";
+import { FrameProxy } from "./data/IDataOneIframe";
 import { IDataOneDoc } from "./data/IDataOneDoc";
 
 export interface IRecipeBasics {
@@ -12,9 +12,9 @@ export interface IRecipeBasics {
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string);
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string, maxIteration: number);
   WaitForIframeElemAndReturnWhenReady(ContentDoc: IDataOneDoc, ContentIFrame1: string, arg2: string);
-  WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: IDataOneDoc): Promise<IframeProxy>;
+  WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: IDataOneDoc): Promise<FrameProxy>;
   WaitForPageReadyNative(targetDoc: IDataOneDoc);
-  WaitForReadyIframe(jqIframe: IframeProxy): Promise<IframeProxy>;
+  WaitForReadyIframe(jqIframe: FrameProxy): Promise<FrameProxy>;
   WaitForThenClick(arg0: string[], arg1: IDataOneDoc);
-  GetTopLevelIframe(targetDoc: IDataOneDoc): IframeProxy
+  GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<FrameProxy>
 }

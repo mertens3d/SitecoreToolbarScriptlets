@@ -98,7 +98,7 @@ export class UiManager {
     this.ScheduleAutoLogin();
 
     this.ModuleSelectSnapShot.AddCallbackForSelChanged(() => {
-      self.RefreshUi();
+      self.RefreshUiUIManager();
     });
 
     this.ButtonStateManager.InitButtonStateManager();
@@ -124,7 +124,7 @@ export class UiManager {
 
   CallBackCommandComplete(contentState: IContentState) {
     this.SetContentState(contentState)
-    this.RefreshUi();
+    this.RefreshUiUIManager();
   }
 
   ClosePopUp(): Promise<void> {
@@ -140,9 +140,8 @@ export class UiManager {
           this.Logger.Log('Window not closed because of setting: ' + setting.Friendly)
         }
         resolve();
-      } catch (ex) {
-        console.log(ex.toString());
-        reject(ex);
+      } catch (err) {
+        reject(this.ClosePopUp.name + ' ' + err);
       }
       this.Logger.FuncEnd(this.ClosePopUp.name);
     });
@@ -194,17 +193,15 @@ export class UiManager {
   //}
 
   async SetUIStates(scUrlAgent: ScUrlAgent) {
-    this.Logger.FuncStart(this.SetUIStates.name);
     if (this.Logger.IsNotNullOrUndefinedBool('state', this.LastKnownContentState)) {
       this.FeedbackModulePopUpState.PopulatePopUpStateUI(this.ModuleSelectSnapShot.GetSelectSnapshotId());
       this.FeedbackModuleContentState.PopulateContentStateFeedack(this.LastKnownContentState);
       this.FeedbackModuleBrowserState.PopulateFeedackBrowserState(scUrlAgent);
     }
-    this.Logger.FuncEnd(this.SetUIStates.name);
   }
 
-  async RefreshUi() {
-    this.Logger.FuncStart(this.RefreshUi.name);
+  async RefreshUiUIManager() {
+    this.Logger.FuncStart(this.RefreshUiUIManager.name);
 
     await this.SetUIStates(this.TabMan.GetScUrlAgent());
     await this.SetUIStates(this.TabMan.GetScUrlAgent());
@@ -219,11 +216,11 @@ export class UiManager {
     let currentWindowType = this.TabMan.GetWindowType();
     let currSelSnapshot: GuidData = this.ModuleSelectSnapShot.GetSelectSnapshotId();
 
-    this.ButtonStateManager.RefreshUi(currentWindowType, currSelSnapshot, this.LastKnownContentState, this.CommandMan.AllMenuCommands);
+    this.ButtonStateManager.RefreshUiButtonState(currentWindowType, currSelSnapshot, this.LastKnownContentState, this.CommandMan.AllMenuCommands);
 
     this.__drawCorrectNicknameInUI(this.LastKnownContentState.SnapShotsMany.CurrentSnapShots);
 
-    this.Logger.FuncEnd(this.RefreshUi.name);
+    this.Logger.FuncEnd(this.RefreshUiUIManager.name);
   }
 
   ShowDebugDataOneWindow() {

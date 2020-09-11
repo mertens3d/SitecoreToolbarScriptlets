@@ -22,7 +22,7 @@ export class EventManager { //extends PopUpManagerBase
     this.Handlers = handlers;
   }
 
-  async InitEventManager(allCommands: IOneCommand[], pingCommand: IOneCommand) {
+  async InitEventManager(allCommands: IOneCommand[], pingCommand: IOneCommand): Promise<void> {
     this.Logger.FuncStart(this.InitEventManager.name);
 
     try {
@@ -30,10 +30,9 @@ export class EventManager { //extends PopUpManagerBase
       this.WireUiToSettings();
 
       await this.TriggerPingEvent(pingCommand);
-      //.then(() => resolve())
-      //.catch((err) => reject(err));
+
     } catch (err) {
-      throw (err);
+      this.Logger.ErrorAndThrow(this.InitEventManager.name , err);
     }
     this.Logger.FuncEnd(this.InitEventManager.name);
   }
@@ -43,7 +42,6 @@ export class EventManager { //extends PopUpManagerBase
       this.Logger.FuncStart(this.TriggerPingEvent.name);
 
       let data = this.__buildCommandData(pingCommand);
-      this.Logger.LogAsJsonPretty(this.TriggerPingEvent.name, pingCommand);
 
       await this.RouteAllCommandEvents(data)
         .then(() => resolve())
@@ -69,7 +67,6 @@ export class EventManager { //extends PopUpManagerBase
 
     for (var idx = 0; idx < genericSettings.length; idx++) {
       let oneSetting: IGenericSetting = genericSettings[idx];
-      this.Logger.Log(oneSetting.Friendly + ' : ' + oneSetting.ValueAsObj);
       if (oneSetting.HasUi) {
         let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
 
@@ -78,7 +75,6 @@ export class EventManager { //extends PopUpManagerBase
 
           if (oneSetting.DataType === SettingType.BoolCheckBox) {
             let self = this;
-            //this.Logger.Log('Assigning change event');
             uiElem.addEventListener('change', (evt) => {
               self.SettingsAgent.CheckBoxSettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
             })
@@ -168,7 +164,7 @@ export class EventManager { //extends PopUpManagerBase
     return data;
   }
 
-  async RouteAllCommandEvents(data: ICommandHndlrDataForPopUp) {
+  async RouteAllCommandEvents(data: ICommandHndlrDataForPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RouteAllCommandEvents.name);
       await data.Event.Handler(data)

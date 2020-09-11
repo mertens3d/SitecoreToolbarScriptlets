@@ -37,12 +37,6 @@ export class TabManager {
     return this.ScUrlAgent.GetScWindowType();
   }
 
-  async InitTabManager() {
-    this.Logger.FuncStart(TabManager.name, this.InitTabManager.name);
-
-    this.Logger.FuncEnd(TabManager.name, this.InitTabManager.name);
-  }
-
   async CreateNewTab(tabUrl: AbsoluteUrl) {
     return new Promise<IDataBrowserTab>(async (resolve, reject) => {
       this.Logger.FuncStart(this.CreateNewTab.name, tabUrl.AbsUrl);
@@ -85,7 +79,6 @@ export class TabManager {
 
         this.RecipeBasics.TabChainSetHrefWaitForComplete(absUrl)
           .then(() => {
-            console.log('todo');
             // put back?
             //this.MsgMan().WaitForListeningTab(this.CurrentTabData)
           })

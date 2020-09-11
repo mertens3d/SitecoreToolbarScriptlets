@@ -116,8 +116,8 @@ export class UiButtonStateManager extends LoggableBase {
     }
   }
 
-  RefreshUi(currentWindowType: ScWindowType, currSelSnapshot: GuidData, contentState: IContentState, allMenuCommands: IOneCommand[]): void {
-    this.Logger.FuncStart(this.RefreshUi.name, allMenuCommands.length);
+  RefreshUiButtonState(currentWindowType: ScWindowType, currSelSnapshot: GuidData, contentState: IContentState, allMenuCommands: IOneCommand[]): void {
+    this.Logger.FuncStart(this.RefreshUiButtonState.name, allMenuCommands.length);
 
     this.currentWindowType = currentWindowType;
     this.currSelSnapshot = currSelSnapshot;
@@ -134,11 +134,12 @@ export class UiButtonStateManager extends LoggableBase {
           passesOneTest = this.TestAgainstAllSetControllers(oneCommand);
         } else {
           this.Logger.LogAsJsonPretty('oneCommand', oneCommand);
-          this.Logger.ErrorAndContinue(this.RefreshUi.name, 'target button not found: ' + oneCommand.ButtonSelector);
+          this.Logger.ErrorAndContinue(this.RefreshUiButtonState.name, 'target button not found: ' + oneCommand.ButtonSelector);
         }
         this.SetOneButtonVisibility(targetButton, passesOneTest);
       }
     }
-    this.Logger.FuncEnd(this.RefreshUi.name);
+
+    this.Logger.FuncEnd(this.RefreshUiButtonState.name);
   }
 }

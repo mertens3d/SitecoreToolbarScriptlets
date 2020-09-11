@@ -2,25 +2,23 @@ import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IL
 import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IDataDesktopState } from "../../../../../Shared/scripts/Interfaces/Data/IDataDesktopState";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
+import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { IDataOneStorageOneTreeState } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
 import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
-import { DesktopTabButtonAgent } from "../../../Agents/DesktopTabButtonAgent/DesktopTabButtonAgent";
 import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
 import { RecipeRestoreDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
 import { IframeHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
-import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
 import { DesktopIframeProxyBucket } from "./DesktopIframeProxyBucket";
-import { Subject_DesktopDomChangedEvent } from "./Events/DesktopDomChangedEvent/Subject_DesktopDomChangedEvent";
 import { IPayloadDesktop_DomChangedEvent } from "./Events/DesktopDomChangedEvent/IPayloadContentEditorDomChanged";
+import { Subject_DesktopDomChangedEvent } from "./Events/DesktopDomChangedEvent/Subject_DesktopDomChangedEvent";
 import { IPayload_DesktopIframeProxyMutated } from "./Events/Subject_DesktopIframeProxyMutatedEvent/IPayload_DesktopIframeProxyMutatedEvent";
 
 export class DesktopProxy extends LoggableBase {
   private DesktopIframeProxyBucket: DesktopIframeProxyBucket;
 
-  ConEdTabButtonAgent: DesktopTabButtonAgent;
+  DesktopStartBarAgent: DesktopStartBarProxy;
   private __iframeHelper: IframeHelper;
   private _dtStartBarAgent: DesktopStartBarProxy;
   private AssociatedDoc: IDataOneDoc;
@@ -39,18 +37,25 @@ export class DesktopProxy extends LoggableBase {
 
     this.DesktopIframeProxyBucket = new DesktopIframeProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
 
-    this.ConEdTabButtonAgent = new DesktopTabButtonAgent(this.Logger, this);
+    this.DesktopStartBarAgent = new DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
 
     let self = this;
-    this.DesktopIframeProxyBucket.DesktopIframeProxyAddedEvent.RegisterObserver((conEditProxy: IPayload_DesktopIframeProxyMutated) => self.ConEdTabButtonAgent.CallBackConEdProxyAdded(conEditProxy));
+    this.DesktopIframeProxyBucket.DesktopIframeProxyAddedEvent.RegisterObserver((conEditProxy: IPayload_DesktopIframeProxyMutated) => self.DesktopStartBarAgent.CallBackConEdProxyAdded(conEditProxy));
 
     this.Subject_DomChangedEvent = new Subject_DesktopDomChangedEvent(this.Logger, this.AssociatedDoc);
 
     this.Subject_DomChangedEvent.RegisterObserver((payload: IPayloadDesktop_DomChangedEvent) => { self.Observer_DesktopDomChangedEvent(payload) });
 
-    this.DesktopIframeProxyBucket.InitHostedContentEditors();
-
     this.Logger.InstantiateEnd(DesktopProxy.name);
+  }
+
+  async InitDesktopProxy(): Promise<void> {
+    try {
+      await this.DesktopIframeProxyBucket.InitHostedIframes()
+        .catch((err) => this.Logger.ErrorAndThrow(this.InitDesktopProxy.name, err));
+    } catch (err) {
+      throw (this.InitDesktopProxy.name + ' ' + err);
+    }
   }
 
   Observer_DesktopDomChangedEvent(payload: IPayloadDesktop_DomChangedEvent) {
@@ -59,7 +64,8 @@ export class DesktopProxy extends LoggableBase {
       payload.AddedIframes.forEach(async (iframeElement) => {
         this.Logger.LogVal('added iframe id', iframeElement.id);
 
-        let iframeProxy: IframeProxy = new IframeProxy(this.Logger, iframeElement, iframeElement.id);
+        let iframeProxy: FrameProxy = new FrameProxy(this.Logger, iframeElement, iframeElement.id, this.SettingsAgent);
+
         await iframeProxy.WaitForReady()
           .then(() => this.DesktopIframeProxyBucket.AddToBucketFromIframeProxy(iframeProxy))
       })
@@ -73,7 +79,7 @@ export class DesktopProxy extends LoggableBase {
 
   GetDtStartBarAgent(): DesktopStartBarProxy {
     if (!this._dtStartBarAgent) {
-      this._dtStartBarAgent = new DesktopStartBarProxy(this.Logger, this.AssociatedDoc);
+      this._dtStartBarAgent = new DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
     }
 
     return this._dtStartBarAgent;
@@ -81,37 +87,39 @@ export class DesktopProxy extends LoggableBase {
 
   private GetIframeHelper(): IframeHelper {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new IframeHelper(this.Logger);
+      this.__iframeHelper = new IframeHelper(this.Logger, this.SettingsAgent);
     }
     return this.__iframeHelper;
   }
 
-  GetStateDesktop(): IDataDesktopState {
+  async GetStateDesktop(): Promise<IDataDesktopState> {
     this.Logger.FuncStart(this.GetStateDesktop.name);
 
-    var toReturnDesktopState: IDataDesktopState = this.CreateNewDtDataShell();
+    try {
+      var toReturnDesktopState: IDataDesktopState = this.CreateNewDtDataShell();
 
-    toReturnDesktopState.HostedIframes = this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc);
+      await this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc)
+        .then((results) => toReturnDesktopState.HostedIframes = results)
+        .catch((err) => this.Logger.ErrorAndThrow(this.GetStateDesktop.name, err));
 
-    if (toReturnDesktopState.HostedIframes && toReturnDesktopState.HostedIframes.length > 0) {
-      for (var iframeIdx = 0; iframeIdx < toReturnDesktopState.HostedIframes.length; iframeIdx++) {
-        this.Logger.LogVal('iframeIdx: ', iframeIdx);
+      if (toReturnDesktopState.HostedIframes && toReturnDesktopState.HostedIframes.length > 0) {
+        for (var iframeIdx = 0; iframeIdx < toReturnDesktopState.HostedIframes.length; iframeIdx++) {
+          this.Logger.LogVal('iframeIdx: ', iframeIdx);
 
-        var iframeProxy: IframeProxy = toReturnDesktopState.HostedIframes[iframeIdx];
+          var iframeProxy: FrameProxy = toReturnDesktopState.HostedIframes[iframeIdx];
 
-        var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent, iframeProxy.IframeElem.id);
+          let oneCeState: IDataOneStorageOneTreeState = iframeProxy.GetState();
 
-        //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
+          toReturnDesktopState.HostedContentEditors.push(oneCeState);
 
-        let oneCeState: IDataOneStorageOneTreeState = ceAgent.GetStateTree();
-
-        toReturnDesktopState.HostedContentEditors.push(oneCeState);
-
-        if (iframeProxy.GetZindex() === 1) {
-          toReturnDesktopState.ActiveCEAgent = ceAgent;
-          toReturnDesktopState.ActiveCeState = oneCeState;
+          if (iframeProxy.GetZindex() === 1) {
+            toReturnDesktopState.ActiveCEAgent = iframeProxy.CeAgent;
+            toReturnDesktopState.ActiveCeState = oneCeState;
+          }
         }
       }
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.GetStateDesktop.name, err);
     }
 
     this.Logger.FuncEnd(this.GetStateDesktop.name, toReturnDesktopState.HostedContentEditors.length);
@@ -126,8 +134,8 @@ export class DesktopProxy extends LoggableBase {
       if (this.MiscAgent.NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.SetStateDesktop.name)) {
         for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
           let targetData: IDataOneStorageOneTreeState = dataToRestore.AllCEAr[idx];
-          this.Logger.Log('Restoring ' + (idx + 1) + ":" + dataToRestore.AllCEAr.length + ' active node: ' + targetData.ActiveNode.NodeFriendly);
-          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, targetData, this.SettingsAgent, this.ConEdTabButtonAgent);
+          //this.Logger.Log('Restoring ' + (idx + 1) + ":" + dataToRestore.AllCEAr.length + ' active node: ' + targetData.ActiveNode.NodeFriendly);
+          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, targetData, this.SettingsAgent, this.DesktopStartBarAgent);
 
           await recipe.Execute()
             //.then(() => this.EnrollListenerForActiveNodeChange())

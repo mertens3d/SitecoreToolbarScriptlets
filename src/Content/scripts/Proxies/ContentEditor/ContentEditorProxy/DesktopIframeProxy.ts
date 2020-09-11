@@ -1,6 +1,6 @@
 ﻿import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { IframeProxy } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
+import { FrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorProxy } from './ContentEditorProxy';
 
@@ -8,18 +8,18 @@ export class DesktopIframeProxy extends LoggableBase {
   NewCeProxy: ContentEditorProxy;
   SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, oneIframe: IframeProxy, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, oneIframe: FrameProxy, settingsAgent: ISettingsAgent) {
     super(logger);
     this.SettingsAgent = settingsAgent;
 
     this.NewCeProxy = new ContentEditorProxy(oneIframe.GetContentDoc(), this.Logger, this.SettingsAgent, oneIframe.IframeElem.id);
   }
 
-  async WaitForReadyAssociatedDocandInit(): Promise<void> {
+  async WaitForReady(): Promise<void> {
     try {
-      await this.NewCeProxy.WaitForReadyAssociatedDocandInit()
+      await this.NewCeProxy.WaitForReadyContentEditor()
     } catch (err) {
-      throw (this.WaitForReadyAssociatedDocandInit.name + ' ' + err)
+      throw (this.WaitForReady.name + ' ' + err)
     }
   }
 }

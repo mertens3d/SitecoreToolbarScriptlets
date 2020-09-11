@@ -33,12 +33,12 @@ class PopUpEntry {
 
       this.InstantiateMembers();
       await this.InitMembers()
-        .then(() => { })
+        .then(() =>  this.Logger.Log(this.main.name + ' completed'))
         .catch((err) => console.log(err));
 
       this.Logger.SectionMarker('Begin Standby');
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -61,11 +61,8 @@ class PopUpEntry {
     this.Logger.FuncStart(this.InitLogger.name);
 
     let enableLoggingSetting: OneGenericSetting = this.SettingsAgent.GetByKey(SettingKey.EnableLogging);
-    this.Logger.MarkerB();
 
-    this.Logger.LogAsJsonPretty('enableLoggingSetting', enableLoggingSetting);
-    this.Logger.MarkerC();
-    if (SharedConst.Const.Debug.ForceLoggingEnabled|| enableLoggingSetting.ValueAsBool()) {
+    if (SharedConst.Const.Debug.ForceLoggingEnabled || enableLoggingSetting.ValueAsBool()) {
       var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.Logger);
       var nextLogId = RollingLogId.GetNextLogId();
 
@@ -82,37 +79,42 @@ class PopUpEntry {
     this.Logger.FuncEnd(this.InitLogger.name);
   }
 
-  async InitHub() {
+  async InitHub(): Promise<void> {
+    try {
+      let scUrlAgent = new ScUrlAgent(this.Logger);
+      let tabMan = new TabManager(this.Logger, scUrlAgent, null); //< -- todo null fix
+      let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
+      let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger, FeedbackModuleMsg);
+      let messageMan = new MessageManager(PopUpMessageBroker, this.Logger);
+      let handlers = new Handlers(this.Logger, messageMan, this.SettingsAgent, tabMan);
+      let commandMan: CommandManager = new CommandManager(handlers);
+      let uiMan = new UiManager(this.Logger, this.SettingsAgent, tabMan, commandMan); //after tabman, after HelperAgent
+      let eventMan = new EventManager(this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
 
-    let scUrlAgent = new ScUrlAgent(this.Logger);
-    let tabMan = new TabManager(this.Logger,  scUrlAgent, null); //< -- todo null fix
-    let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
-    let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger, FeedbackModuleMsg);
-    let messageMan = new MessageManager(PopUpMessageBroker, this.Logger);
-    let handlers = new Handlers(this.Logger, messageMan, this.SettingsAgent, tabMan);
-    let commandMan: CommandManager = new CommandManager(handlers);
-    let uiMan = new UiManager(this.Logger, this.SettingsAgent, tabMan, commandMan); //after tabman, after HelperAgent
-    let eventMan = new EventManager(this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
+      let self = uiMan;
+      handlers.External.AddCallbackCommandComplete((contentState: IContentState) => { uiMan.CallBackCommandComplete(contentState); });
 
-    let self = uiMan;
-    handlers.External.AddCallbackCommandComplete((contentState: IContentState) => { uiMan.CallBackCommandComplete(contentState); });
+      uiMan.InitUiManager();
 
-    await
-      tabMan.InitTabManager()
-        .then(() => PopUpMessageBroker.InitMessageBroker())
-        .then(() => uiMan.InitUiManager())
-        .then(() => scUrlAgent.InitScUrlAgent())
+      await scUrlAgent.InitScUrlAgent()
         .then(() => eventMan.InitEventManager(commandMan.AllMenuCommands, commandMan.GetCommandById(MenuCommand.Ping)))
         .catch((err) => {
           this.Logger.ErrorAndContinue('Pop Up Entry Point Main', JSON.stringify(err));
           throw (err);
         });
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.InitHub.name, err);
+    }
   }
+
   async InitMembers(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.SectionMarker('Begin Init');
 
-      this.InitHub();
+      await this.InitHub()
+        .then(() => resolve())
+        .catch((err) => reject(this.InitMembers.name + ' ' + err));
+
       this.Logger.SectionMarker('End Init');
     });
   }

@@ -10,23 +10,26 @@ import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditor
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ScWindowRecipePartials } from "../../../Managers/ScWindowManager/ScWindowRecipePartials";
 import { DesktopProxy } from "../../../Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 
 export class RecipeRestoreState extends LoggableBase implements ICommandRecipes {
 
-  private ScUrlAgent: IScUrlAgent;
-  private RecipeBasics: RecipeBasics;
-  private AtticAgent: IContentAtticAgent;
-  private TopLevelDoc: IDataOneDoc;
-  private ScWinRecipeParts: ScWindowRecipePartials;
-  private OneDesktopMan: DesktopProxy;
-  private OneCeAgent: ContentEditorProxy;
-  private ToastAgent: IToastAgent;
     TargetSnapShotId: GuidData;
+  private  SettingsAgent: ISettingsAgent;
+  private AtticAgent: IContentAtticAgent;
+  private OneCeAgent: ContentEditorProxy;
+  private OneDesktopMan: DesktopProxy;
+  private RecipeBasics: RecipeBasics;
+  private ScUrlAgent: IScUrlAgent;
+  private ScWinRecipeParts: ScWindowRecipePartials;
+  private ToastAgent: IToastAgent;
+  private TopLevelDoc: IDataOneDoc;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, toastAgent: IToastAgent, oneCEAgent: ContentEditorProxy, targetSnapShotId: GuidData) {
+  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, toastAgent: IToastAgent, oneCEAgent: ContentEditorProxy, targetSnapShotId: GuidData, settingsAgent: ISettingsAgent) {
     super(logger);
     this.ScUrlAgent = scUrlAgent;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.SettingsAgent = settingsAgent;
+    this.RecipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
     this.AtticAgent = atticAgent;
     this.TopLevelDoc = topLevelDoc;
     this.ScWinRecipeParts = scWinRecipeParts;

@@ -8,8 +8,7 @@ import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IContentState } from "../../../Interfaces/Data/IContentState";
 
-export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
-  
+export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
   constructor(logger: ILoggerAgent) {
     super(logger);
   }
@@ -18,8 +17,12 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
     return new RegExp(regexPattern).test(url);
   }
 
-  async InitScUrlAgent() {
-    await super.InitGenericUrlAgent();
+  async InitScUrlAgent() : Promise<void>{
+    try {
+      await super.InitGenericUrlAgent();
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.InitScUrlAgent.name, err);
+    }
   }
 
   GetFullUrl() {
@@ -77,7 +80,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
       //this.SetFilePathFromWindowType(newMode);
 
       if (this.UrlParts && this.UrlParts)
-        this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[ newMode])
+        this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[newMode])
     }
   }
 

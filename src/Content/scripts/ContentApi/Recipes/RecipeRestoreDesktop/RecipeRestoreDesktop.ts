@@ -3,7 +3,7 @@ import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/IL
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataBucketRestoreDesktop } from '../../../../../Shared/scripts/Interfaces/Data/IDataBucketRestoreDesktop';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IframeProxy } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
+import { FrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
 import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
@@ -12,7 +12,7 @@ import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
 import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
-import { DesktopTabButtonAgent } from '../../../Agents/DesktopTabButtonAgent/DesktopTabButtonAgent';
+import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 
 export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
@@ -20,9 +20,9 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
   private DataToRestore: IDataOneStorageOneTreeState;
   private RecipeBasics: RecipeBasics;
   private SettingsAgent: ISettingsAgent;
-  DesktopTabButtonTabAgent: DesktopTabButtonAgent;
+  DesktopTabButtonTabAgent: DesktopStartBarProxy;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopTabButtonAgent) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopStartBarProxy) {
     super(logger);
     this.Logger.InstantiateStart(RecipeRestoreDesktop.name);
 
@@ -30,8 +30,8 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
 
     this.TargetDoc = targetDoc;
     this.DataToRestore = dataToRestore;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
     this.SettingsAgent = settingsAgent;
+    this.RecipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
     this.DesktopTabButtonTabAgent = ceButtonTabAgent;
 
     this.Logger.InstantiateEnd(RecipeRestoreDesktop.name);
@@ -40,11 +40,11 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     await this.RunOneChain();
   }
 
-  private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: ContentEditorProxy) {
+  private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, frameProxy: FrameProxy) {
     return new Promise<void>(async (resolve, reject) => {
       this.Logger.FuncStart(this.__restoreDataToOneIframe.name);
 
-      await targetCeAgent.SetStateTree(oneTreeState)
+      await frameProxy.SetStateFrame(oneTreeState)
         .then(() => resolve())
         .catch((err) => reject(err));
 
@@ -58,13 +58,13 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
 
       if (this.MiscAgent.NotNullOrUndefined([this.TargetDoc, this.DataToRestore], this.RunOneChain.name)) {
         //guaranteed to be on the correct page
-        var conEditProxy: ContentEditorProxy;
+        var frameProxy: FrameProxy;
         let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent, this.DesktopTabButtonTabAgent);
 
         await recipeAddCe.Execute()
-          .then((result: ContentEditorProxy) => conEditProxy = result)
-          .then(() => conEditProxy.WaitForReadyAssociatedDocandInit())
-          .then(() => this.__restoreDataToOneIframe(this.DataToRestore, conEditProxy))
+          .then((result: FrameProxy) => frameProxy = result)
+          .then(() => frameProxy.WaitForReady())
+          .then(() => this.__restoreDataToOneIframe(this.DataToRestore, frameProxy))
           .then(() => resolve())
           .catch(ex => {
             reject(this.RunOneChain.name + ' ' + ex);

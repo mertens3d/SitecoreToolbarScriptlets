@@ -114,7 +114,6 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   GetByKey(needleSettingKey: SettingKey): OneGenericSetting {
-    this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(needleSettingKey));
 
     var toReturn: OneGenericSetting = null;
 
@@ -129,7 +128,7 @@ export class SettingsAgent implements ISettingsAgent {
     if (!toReturn) {
       this.Logger.ErrorAndContinue(this.NumberSettingChanged.name, 'Setting not found ' + StaticHelpers.SettingKeyAsString(needleSettingKey));
     }
-    this.Logger.FuncEnd(this.GetByKey.name, toReturn ? toReturn.ValueAsObj : 'null');
+
     return toReturn;
   }
 

@@ -56,7 +56,8 @@
     <Content Include="ReadmeResoures\external-tools-hotkey.png" />
     <Content Include="ReadmeResoures\external-tools.png" />
     <Content Include="ReadmeResoures\file.png" />
-    <TypeScriptCompile Include="src\Content\scripts\Agents\DesktopTabButtonAgent\DesktopTabButtonAgent.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarProxy.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarButtonProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorProxy\DesktopIframeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\ContentEditorTreeProxy.ts" />
@@ -67,7 +68,6 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\Subject_DesktopIframeProxyMutatedEvent\Subject_DesktopIframeProxyMutatedEvent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\GenericEvent\Subject_GenericEvent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopDomChangedEvent\Subject_DesktopDomChangedEvent.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorContentTreeHolderProxy\ContentEditorContentTreeHolderProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeInitFromQueryStr\RecipeInitFromQueryStr.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentMessageBroker.ts" />
@@ -199,9 +199,6 @@
     <None Include="src\Content\css\_header.scss" />
     <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
-    <Content Include="src\PopUp\scripts\Managers\EventManager.js">
-      <DependentUpon>EventManager.ts</DependentUpon>
-    </Content>
     <Content Include="src\PopUp\scripts\Managers\Handlers.js">
       <DependentUpon>Handlers.ts</DependentUpon>
     </Content>
@@ -363,9 +360,6 @@
     <None Include="src\PopUp\css\PageLevel.scss" />
     <None Include="src\PopUp\css\SnapShotSelect.scss" />
     <None Include="src\PopUp\css\vars.scss" />
-    <None Include="src\PopUp\scripts\Managers\EventManager.js.map">
-      <DependentUpon>EventManager.js</DependentUpon>
-    </None>
     <None Include="src\PopUp\scripts\Managers\Handlers.js.map">
       <DependentUpon>Handlers.js</DependentUpon>
     </None>
@@ -471,7 +465,6 @@
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
     <None Include="src\PopUp\css\popup.scss" />
-    <TypeScriptCompile Include="src\Content\scripts\_first.ts" />
     <TypeScriptCompile Include="src\tests\SitecoreUiManager.Fake.ts" />
   </ItemGroup>
   <ItemGroup>

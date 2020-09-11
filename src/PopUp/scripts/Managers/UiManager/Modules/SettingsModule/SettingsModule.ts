@@ -31,15 +31,12 @@ export class SettingsModule implements IUiModule {
     let allSettings = this.SettingsAgent.GetAllSettings();
     for (var idx = 0; idx < allSettings.length; idx++) {
       var oneSetting: IGenericSetting = allSettings[idx];
-      this.Logger.LogVal('setting', StaticHelpers.SettingKeyAsString(oneSetting.SettingKey));
       if (oneSetting.UiSelector) {
         var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
         if (foundElem) {
-
           if (oneSetting.DataType === SettingType.BoolCheckBox) {
             let valueToDisplay: boolean = oneSetting.ValueAsBool();
             (<HTMLInputElement>foundElem).checked = valueToDisplay;
-            this.Logger.LogVal('Setting to', valueToDisplay);
           } else if (oneSetting.DataType === SettingType.Accordion) {
             this.AccordianManager.RestoreAccordionState(oneSetting);
           } else if (oneSetting.DataType == SettingType.Number) {

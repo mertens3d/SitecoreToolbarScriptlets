@@ -101,6 +101,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
     this.FuncEnd(this.HndlrClearDebugText.name);
   }
+
   MarkerA() {
     this.__markerRaw('A');
   }

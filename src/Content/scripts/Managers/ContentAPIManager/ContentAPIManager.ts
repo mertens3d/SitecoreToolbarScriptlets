@@ -15,15 +15,17 @@ import { RecipeSaveState } from "../../ContentApi/Recipes/RecipeSaveState/Recipe
 import { RecipeToggleFavorite } from "../../ContentApi/Recipes/RecipeToggleFavorite/RecipeToggleFavorite";
 import { LoggableBase } from "../LoggableBase";
 import { ScUiManager } from "../SitecoreUiManager/SitecoreUiManager";
+import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { IFactoryHelper } from "../../../../Shared/scripts/Interfaces/IFactoryHelper";
 
 export class ContentAPIManager extends LoggableBase implements IHindSiteScWindowApi {
   private ToastAgent: IToastAgent;
   private ScUiMan: ScUiManager;
-  private FactoryHelp: FactoryHelper;
+  private FactoryHelp: IFactoryHelper;
   private ScWinMan: IScWindowManager;
+  private SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, 
-    scWinMan: IScWindowManager) {
+  constructor(logger: ILoggerAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager, settingsAgent: ISettingsAgent) {
     super(logger);
 
     this.Logger.FuncStart(ContentAPIManager.name);
@@ -31,14 +33,14 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     this.ToastAgent = toastAgent;
     this.ScUiMan = scUiMan;
     this.ScWinMan = scWinMan;
-    this.FactoryHelp = new FactoryHelper(this.Logger);
+    this.SettingsAgent = settingsAgent;
+    this.FactoryHelp = new FactoryHelper(this.Logger, this.SettingsAgent);
 
     this.Logger.FuncEnd(ContentAPIManager.name);
   }
 
   //async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void> {
   //  return new Promise(async (resolve, reject) => {
-
   //    await new RecipeChangeNickName(commandData).Execute()
   //      .then(() => resolve())
   //      .catch((err) => reject(err));
@@ -61,7 +63,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
 
   AddCETab(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.SettingsAgent, commandData.DesktopProxy.ConEdTabButtonAgent).Execute()
+      await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.SettingsAgent, commandData.DesktopProxy.DesktopStartBarAgent).Execute()
         .then(() => {
           this.ToastAgent.PopUpToastNotification(commandData.ScWinMan.GetTopLevelDoc(), "Success");
           resolve();
@@ -107,8 +109,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
 
   RestoreSnapshop(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
-      let recipe = new RecipeRestoreState(commandData.Logger, commandData.ScWinMan.GetScUrlAgent(), commandData.AtticAgent, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopUiProxy, commandData.ToastAgent, commandData.ScWinMan.CeProxy, commandData.TargetSnapShotId);// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
+      let recipe = new RecipeRestoreState(commandData.Logger, commandData.ScWinMan.GetScUrlAgent(), commandData.AtticAgent, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopUiProxy, commandData.ToastAgent, commandData.ScWinMan.CeProxy, commandData.TargetSnapShotId, this.SettingsAgent);// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
 
       await recipe.Execute()
         .then(() => resolve())

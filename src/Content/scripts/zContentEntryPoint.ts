@@ -54,7 +54,7 @@ class ContentEntry {
     scWinMan = new ScWindowManager(this.Logger, scUiMan, this.MiscAgent, this.ToastAgent, this.AtticAgent, this.ScUrlAgent, this.SettingsAgent);
     scUiMan = new ScUiManager(this.Logger);
 
-    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan);
+    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan, this.SettingsAgent);
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
       this.ContentAPIMan, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan);

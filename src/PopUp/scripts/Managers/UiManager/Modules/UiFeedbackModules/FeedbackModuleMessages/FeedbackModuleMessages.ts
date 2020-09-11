@@ -13,6 +13,5 @@ export class FeedbackModuleMessages extends UiFeedbackModuleBase implements IMes
 
   UpdateMsgStatusStack(textToShow: string) {
     this.AddHtmlString(textToShow + '</br>');
-    this.Logger.Log('msg stat: ' + textToShow);
   }
 }

@@ -62,7 +62,6 @@ export class GenericUrlAgent implements IUrlAgent {
         if (browser.tabs) {
           await browser.tabs.query({ currentWindow: true, active: true })
             .then((result: browser.tabs.Tab[]) => {
-              this.Logger.LogAsJsonPretty('result', result);
               let resultTab: browser.tabs.Tab = result[0];
 
               this.SetFromHref(resultTab.url);

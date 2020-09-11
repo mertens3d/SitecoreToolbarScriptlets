@@ -70,7 +70,6 @@ export class ContentAtticAgent implements IContentAtticAgent {
 
   private __parseRawData(oneRaw: IOneStorageData) {
     var candidate: IDataOneWindowStorage = <IDataOneWindowStorage>JSON.parse(oneRaw.data);
-    console.log
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);

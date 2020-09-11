@@ -1,14 +1,23 @@
 ﻿import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { LoggableBase } from "../Managers/LoggableBase";
-import { IframeProxy } from "../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
+import { FrameProxy } from "../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
+import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 
 export class IframeHelper extends LoggableBase {
-  GetHostedIframes(targetDoc: IDataOneDoc): IframeProxy[] {
+  SettingsAgent: ISettingsAgent;
+
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
+    super(logger);
+    this.SettingsAgent = settingsAgent;
+  }
+
+  async GetHostedIframes(targetDoc: IDataOneDoc): Promise<FrameProxy[]> {
     this.Logger.FuncStart(this.GetHostedIframes.name);
 
-    var toReturn: IframeProxy[] = [];
+    var toReturn: FrameProxy[] = [];
 
     var iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
@@ -22,9 +31,10 @@ export class IframeHelper extends LoggableBase {
         this.Logger.Log('pushing idx: ' + ifrIdx);
 
         var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        let factoryHelper = new FactoryHelper(this.Logger);
-        var dataOneIframe: IframeProxy = factoryHelper.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
-        toReturn.push(dataOneIframe);
+        let factoryHelper = new FactoryHelper(this.Logger, this.SettingsAgent);
+
+        await factoryHelper.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx)
+          .then((result) => toReturn.push(result));
       }
 
       //this.Logger.LogAsJsonPretty('toReturn', toReturn);

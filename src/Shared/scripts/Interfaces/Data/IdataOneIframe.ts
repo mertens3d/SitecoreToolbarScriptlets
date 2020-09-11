@@ -5,28 +5,47 @@ import { FactoryHelper } from "../../Helpers/FactoryHelper";
 import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
 import { ILoggerAgent } from "../Agents/ILoggerAgent";
 import { RecipeBasics } from "../../Classes/RecipeBasics";
+import { IDataOneStorageOneTreeState } from "./IDataOneStorageOneTreeState";
+import { ContentEditorProxy } from "../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { ISettingsAgent } from "../Agents/ISettingsAgent";
 
-export class IframeProxy extends LoggableBase {
+export class FrameProxy extends LoggableBase {
   Index: number = -1;
   IframeElem: HTMLIFrameElement = null;
   Id: GuidData = null;
   Nickname: string = null;
+  private SettingsAgent: ISettingsAgent;
+  CeAgent: ContentEditorProxy;
 
-  constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement, nickName: string) {
+  constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement, nickName: string, settingsAgent: ISettingsAgent) {
     super(logger);
     this.IframeElem = iframeElem;
     this.Id = Guid.NewRandomGuid();
     this.Nickname = nickName;
+    this.SettingsAgent = settingsAgent;
   }
 
   async WaitForReady(): Promise<void> {
     try {
-      let recipeBasic: RecipeBasics = new RecipeBasics(this.Logger);
+      let recipeBasic: RecipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
 
       await recipeBasic.WaitForPageReadyHtmlIframeElement(this.IframeElem)
+        .then(() => this.CeAgent = new ContentEditorProxy(this.GetContentDoc(), this.Logger, this.SettingsAgent, this.IframeElem.id));
     } catch (err) {
       throw (this.WaitForReady.name + ' ' + err);
     }
+  }
+
+  async SetStateFrame(oneTreeState: IDataOneStorageOneTreeState): Promise<void> {
+    await this.CeAgent.SetStateTree(oneTreeState)
+  }
+
+  GetState(): IDataOneStorageOneTreeState {
+    //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
+
+    let oneCeState: IDataOneStorageOneTreeState = this.CeAgent.GetStateTree();
+
+    return oneCeState;
   }
 
   GetZindex(): number {
@@ -41,6 +60,6 @@ export class IframeProxy extends LoggableBase {
   }
 
   GetContentDoc(): IDataOneDoc {
-    return new FactoryHelper(this.Logger).DataOneContentDocFactoryFromIframe(this);
+    return new FactoryHelper(this.Logger, this.SettingsAgent).DataOneContentDocFactoryFromIframe(this);
   }
 }

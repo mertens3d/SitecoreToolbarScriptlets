@@ -59,8 +59,6 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
     return <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector(":scope > img");
   }
   private GetLinkNodeElem(): HTMLElement {
-    this.Logger.Log('trying to get link for: ' + this.ScContentTreeNodeDivElem + this.ScContentTreeNodeDivElem.id);
-    console.log(this.ScContentTreeNodeDivElem);
     return this.ScContentTreeNodeDivElem.querySelector(":scope > a");
   }
 
@@ -192,7 +190,6 @@ export class ContentEditorTreeNodeProxy extends LoggableBase {
 
     if (this.GetLinkNodeElem()) {
       var classList = this.GetLinkNodeElem().classList;
-      this.Logger.LogAsJsonPretty('classList', classList);
       if (classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive)) {
         toReturn = true;
         this.Logger.Log('** isActive ' + this.ScContentTreeNodeDivElem.innerText);

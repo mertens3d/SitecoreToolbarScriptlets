@@ -28,46 +28,47 @@ export class ContentEditorProxy extends LoggableBase {
     this.AssociatedDoc = associatedDoc;
     this.ParentIframeId = parentIframeId;
 
-    this.AssociatedTreeProxy = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent, this.ParentIframeId);
 
-    this.ValidateDoc();
+    this.ValidateAssociatedDocContentEditor();
+
+    this.AssociatedTreeProxy = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent, this.ParentIframeId);
 
     this.Logger.InstantiateEnd(ContentEditorProxy.name);
   }
 
-  ValidateDoc() {
-    this.Logger.FuncStart(this.ValidateDoc.name);
+  ValidateAssociatedDocContentEditor() {
+    this.Logger.FuncStart(this.ValidateAssociatedDocContentEditor.name);
     if (!this.AssociatedDoc) {
-      this.Logger.ErrorAndThrow(this.ValidateDoc.name, 'No doc provided');
+      this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No doc provided');
     }
 
     else if (!this.AssociatedDoc.ContentDoc) {
-      this.Logger.ErrorAndThrow(this.ValidateDoc.name, 'No content doc');
+      this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No content doc');
     }
 
     else if (!this.AssociatedDoc.ContentDoc.URL) {
-      this.Logger.ErrorAndThrow(this.ValidateDoc.name, 'No URL');
+      this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No URL');
     }
     else if (this.AssociatedDoc.ContentDoc.URL === SharedConst.Const.UrlSuffix.AboutBlank) {
-      this.Logger.ErrorAndThrow(this.ValidateDoc.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
+      this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
     }
 
     this.Logger.LogVal('URL', this.AssociatedDoc.ContentDoc.URL);
-    this.Logger.FuncEnd(this.ValidateDoc.name);
+    this.Logger.FuncEnd(this.ValidateAssociatedDocContentEditor.name);
   }
 
-  async WaitForReadyAssociatedDocandInit(): Promise<void> {
-    this.Logger.FuncStart(this.WaitForReadyAssociatedDocandInit.name);
+  async WaitForReadyContentEditor(): Promise<void> {
+    this.Logger.FuncStart(this.WaitForReadyContentEditor.name);
     try {
-      let recipeBasics = new RecipeBasics(this.Logger);
+      let recipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
 
       await recipeBasics.WaitForPageReadyNative(this.AssociatedDoc)
 
-        .catch((err) => this.Logger.ErrorAndThrow(this.WaitForReadyAssociatedDocandInit.name, err));
+        .catch((err) => this.Logger.ErrorAndThrow(this.WaitForReadyContentEditor.name, err));
     } catch (e) {
     }
 
-    this.Logger.FuncEnd(this.WaitForReadyAssociatedDocandInit.name);
+    this.Logger.FuncEnd(this.WaitForReadyContentEditor.name);
   }
 
   AddListenerToActiveNodeChange(callback: Function) {

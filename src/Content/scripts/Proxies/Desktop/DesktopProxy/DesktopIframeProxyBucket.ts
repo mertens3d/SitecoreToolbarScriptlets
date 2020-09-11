@@ -1,7 +1,7 @@
 ﻿import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
+import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { IframeHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ContentEditorProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
@@ -27,7 +27,7 @@ export class DesktopIframeProxyBucket extends LoggableBase {
 
   private GetIframeHelper(): IframeHelper {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new IframeHelper(this.Logger);
+      this.__iframeHelper = new IframeHelper(this.Logger, this.SettingsAgent);
     }
     return this.__iframeHelper;
   }
@@ -51,15 +51,13 @@ export class DesktopIframeProxyBucket extends LoggableBase {
     this.Logger.FuncEnd(this.AddDesktopIframeProxy.name);
   }
 
-  async AddToBucketFromIframeProxy(oneIframe: IframeProxy): Promise<void> {
+  async AddToBucketFromIframeProxy(oneIframe: FrameProxy): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.AddToBucketFromIframeProxy.name);
 
       let desktopIframeProxy: DesktopIframeProxy = new DesktopIframeProxy(this.Logger, oneIframe, this.SettingsAgent);
 
-     
-
-      await desktopIframeProxy.WaitForReadyAssociatedDocandInit()
+      await desktopIframeProxy.WaitForReady()
         .then(() => this.AddDesktopIframeProxy(desktopIframeProxy))
         .then(() => resolve())
         .catch((err) => reject(this.AddToBucketFromIframeProxy.name + ' | ' + err));
@@ -67,15 +65,17 @@ export class DesktopIframeProxyBucket extends LoggableBase {
     });
   }
 
-   InitHostedContentEditors(): void {
+  async InitHostedIframes(): Promise<void> {
     try {
-      let foundIframes: IframeProxy[] = this.GetIframeHelper().GetHostedIframes(this.AssociatedDesktopDoc)
-      foundIframes.forEach(async (oneIframe) => {
-        this.AddToBucketFromIframeProxy(oneIframe);
-      });
+     await this.GetIframeHelper().GetHostedIframes(this.AssociatedDesktopDoc)
+        .then((foundIframes: FrameProxy[]) => {
+          foundIframes.forEach(async (oneIframe) => {
+            this.AddToBucketFromIframeProxy(oneIframe);
+          });
+        })
     }
     catch (err) {
-      this.Logger.ErrorAndThrow(this.InitHostedContentEditors.name, err);
+      this.Logger.ErrorAndThrow(this.InitHostedIframes.name, err);
     }
   }
 }

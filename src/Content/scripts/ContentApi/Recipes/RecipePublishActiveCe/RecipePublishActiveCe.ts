@@ -3,7 +3,7 @@ import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
 import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
+import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
@@ -32,9 +32,11 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
 
       try {
         if (currentWindowType === ScWindowType.Desktop) {
-          let topIframe: IframeProxy = this.RecipeBasics.GetTopLevelIframe(targetDoc);
-
-          resolve(topIframe.GetContentDoc());
+          await this.RecipeBasics.GetTopLevelIframe(targetDoc)
+            .then((topIframe: FrameProxy) => {
+              resolve(topIframe.GetContentDoc());
+            })
+            .catch((err) => reject(this.GetDocToPublish.name + ' ' + err));
         }
         else {
           resolve(this.ScWinMan.GetTopLevelDoc());
@@ -155,19 +157,17 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
     return await this.RecipeBasics.WaitForAndClickWithPayload(ContentConst.Const.Selector.SC.MenuDropDownPublishItem, payload.docToPublish, payload)
   }
 
-  async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null) {
-    await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.TopLevelDoc, ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
-      .then(
-        (found: HTMLElement) => {
-          dataPublishChain.jqIframe = this.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>found, 'jqIframe');
-
-          return dataPublishChain;
-        }
-      ) // opens publish item dialog
-      .then(async (payload: IDataPublishChain) => {
-        await this.RecipeBasics.WaitForReadyIframe(payload.jqIframe);
-        dataPublishChain = payload;
-      });
+  async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null): Promise<IDataPublishChain> {
+    try {
+      await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.TopLevelDoc, ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
+        .then((found: HTMLElement) => this.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>found, 'jqIframe'))
+        .then((result: FrameProxy) => dataPublishChain.jqIframe = result)
+        // opens publish item dialog
+        .then(() => this.RecipeBasics.WaitForReadyIframe(dataPublishChain.jqIframe))
+        .catch((err) => { throw (this.GetThePublishItemDialog.name + ' ' + err) });
+    } catch (err) {
+      throw (this.GetThePublishItemDialog.name + ' ' + err);
+    }
 
     return dataPublishChain;
   }
