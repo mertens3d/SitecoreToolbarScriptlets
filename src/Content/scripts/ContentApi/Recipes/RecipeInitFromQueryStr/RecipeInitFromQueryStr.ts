@@ -64,7 +64,7 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
               await this.RecipeBasics.WaitForPageReadyNative(this.TopLevelDoc)
                 .then(() => this.ScWinRecipeParts.RestoreStateToTargetDoc(this.TopLevelDoc, dataOneWindowStorage, this.OneDesktopMan, this.OneCeAgent))
                 .then(() => resolve())
-                .catch((err) => reject(this.InitFromQueryString.name + ' ' + err));
+                .catch((err) => reject(this.InitFromQueryString.name + ' | ' + err));
             }
             else {
               reject(this.InitFromQueryString.name + ' no targetDoc');

@@ -102,23 +102,13 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     //this.Logger.LogVal('auto rename', this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton).ValueAsBool());
 
     try {
-      let currPageType = this.GetCurrentPageType();
+      this.DesktopUiProxy = new DesktopProxy(this.Logger, this.MiscAgent, this.GetTopLevelDoc(), this.SettingsAgent);
+      this.ContentEditorProxy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
 
-      if (currPageType === ScWindowType.Desktop) {
-        this.DesktopUiProxy = new DesktopProxy(this.Logger, this.MiscAgent, this.GetTopLevelDoc(), this.SettingsAgent);
-
-        await this.DesktopUiProxy.InitDesktopProxy()
-          .catch((err) => this.Logger.ErrorAndThrow(this.InitScWindowManager.name, err))
-      } else if (currPageType === ScWindowType.ContentEditor) {
-        this.ContentEditorProxy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
-        await this.ContentEditorProxy.WaitForReadyContentEditor()
-          .catch((err) => this.Logger.ErrorAndThrow(this.InitScWindowManager.name, err))
-      }
-
-      await this.InitFromQueryStr()
-        .catch((err) => {
-          throw (this.InitScWindowManager.name + ' ' + err)
-        });
+      await this.DesktopUiProxy.InitDesktopProxy()
+        .then(() => this.ContentEditorProxy.WaitForReadyContentEditor())
+        .then(() => this.InitFromQueryStr())
+        .catch((err) => { throw (this.InitScWindowManager.name + ' | ' + err) })
     } catch (err) {
       throw (this.InitScWindowManager.name + ' ' + err);
     }
@@ -202,10 +192,9 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     this.Logger.FuncStart(this.PopulateIfTopIsDeskTop.name);
     try {
       if (this.GetCurrentPageType() === ScWindowType.Desktop) {
-
         await this.DesktopUiProxy.GetStateDesktop()
           .then((desktopState: IDataSateOfDesktop) => scWindowState.StateOfDesktop = desktopState)
-          .catch((err) => { throw (this.PopulateIfTopIsDeskTop.name + ' ' + err)});
+          .catch((err) => { throw (this.PopulateIfTopIsDeskTop.name + ' ' + err) });
       }
     } catch (err) {
       this.Logger.ErrorAndThrow(this.PopulateIfTopIsContentEditor.name, err);

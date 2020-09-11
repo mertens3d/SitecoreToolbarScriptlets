@@ -132,27 +132,30 @@ export class DesktopProxy extends LoggableBase {
     });
   }
 
-  async SetStateDesktop(desktopState: IDataSateOfDesktop): Promise<void> {
+  async SetStateOfDesktop(desktopState: IDataSateOfDesktop): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetStateDesktop.name);;
+      this.Logger.FuncStart(this.SetStateOfDesktop.name);;
 
-      if (this.MiscAgent.NotNullOrUndefined([this.AssociatedDoc, desktopState, desktopState.FrameStates], this.SetStateDesktop.name)) {
-        for (var idx = 0; idx < desktopState.FrameStates.length; idx++) {
-          let stateOfFrame: IDataStateOfFrame = desktopState.FrameStates[idx];
+      if (desktopState) {
+        if (this.MiscAgent.NotNullOrUndefined([this.AssociatedDoc, desktopState, desktopState.FrameStates], this.SetStateOfDesktop.name)) {
+          for (var idx = 0; idx < desktopState.FrameStates.length; idx++) {
+            let stateOfFrame: IDataStateOfFrame = desktopState.FrameStates[idx];
 
-          var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.SettingsAgent, this.DesktopStartBarAgent);
+            var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.SettingsAgent, this.DesktopStartBarAgent);
 
-          //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
-          await recipe.Execute()
-            .catch((err) => reject(err));
+            //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
+            await recipe.Execute()
+              .then(() => resolve())
+              .catch((err) => reject(err));
+          }
+        } else {
+          reject(this.SetStateOfDesktop.name + ' bad data');
         }
-
-        resolve();
       } else {
-        reject(this.SetStateDesktop.name + ' bad data');
+        reject(this.SetStateOfDesktop.name + '  No desktop state to set');
       }
 
-      this.Logger.FuncEnd(this.SetStateDesktop.name);
+      this.Logger.FuncEnd(this.SetStateOfDesktop.name);
     });
   }
 

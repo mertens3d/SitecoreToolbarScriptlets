@@ -34,7 +34,12 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
     this.Logger.InstantiateEnd(RecipeRestoreFrameOnDesktop.name);
   }
   async Execute(): Promise<void> {
-    await this.RunOneChain();
+    try {
+      await this.RunOneChain()
+        .catch((err) => { throw (this.Execute.name + ' ' + err) });
+    } catch (err) {
+      throw (this.Execute.name + ' ' + err);
+    }
   }
 
   private __restoreDataToOneIframe(oneTreeState: IDataStateOfFrame, frameProxy: FrameProxy) {
