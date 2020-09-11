@@ -218,7 +218,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       var candidate = candidateSnapShots[idx];
 
       try {
-        if (candidate.GuidId && GuidData.IsValidGuidStr(candidate.GuidId.Raw)) {
+        if (candidate.GuidId && Guid.IsValidGuidStr(candidate.GuidId.Raw)) {
           candidate.GuidId = new GuidData(candidate.GuidId.Raw);
           toReturn.push(candidate);
         } else {

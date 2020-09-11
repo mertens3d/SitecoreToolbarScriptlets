@@ -50,25 +50,31 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
     return new Promise(async (resolve, reject) => {
       if (this.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
         let qsValue: string = (this.ScUrlAgent.GetQueryStringValueByKey(QueryStrKey.hsTargetSs));
-        let targetGuid: GuidData = Guid.ParseGuid(qsValue, false);
 
-        if (targetGuid && targetGuid !== GuidData.GetEmptyGuid()) {
-          this.Logger.LogVal("targetGuid", targetGuid.Raw);
-          var dataOneWindowStorage;
+        if (Guid.IsValidGuidStr(qsValue)) {
+          let targetGuid: GuidData = Guid.ParseGuid(qsValue, false);
 
-          if (this.TopLevelDoc) {
-            dataOneWindowStorage = this.AtticAgent.GetFromStorageById(targetGuid);
+          if (targetGuid && targetGuid !== GuidData.GetEmptyGuid()) {
+            this.Logger.LogVal("targetGuid", targetGuid.Raw);
+            var dataOneWindowStorage;
 
-            await this.RecipeBasics.WaitForPageReadyNative(this.TopLevelDoc)
-              .then(() => this.ScWinRecipeParts.RestoreStateToTargetDoc(this.TopLevelDoc, dataOneWindowStorage, this.OneDesktopMan, this.OneCeAgent))
-              .then(() => resolve())
-              .catch((err) => reject(this.InitFromQueryString.name + ' ' + err));
-          }
-          else {
-            reject(this.InitFromQueryString.name + ' no targetDoc');
+            if (this.TopLevelDoc) {
+              dataOneWindowStorage = this.AtticAgent.GetFromStorageById(targetGuid);
+
+              await this.RecipeBasics.WaitForPageReadyNative(this.TopLevelDoc)
+                .then(() => this.ScWinRecipeParts.RestoreStateToTargetDoc(this.TopLevelDoc, dataOneWindowStorage, this.OneDesktopMan, this.OneCeAgent))
+                .then(() => resolve())
+                .catch((err) => reject(this.InitFromQueryString.name + ' ' + err));
+            }
+            else {
+              reject(this.InitFromQueryString.name + ' no targetDoc');
+            }
+          } else {
+            reject('Either no snapshot provided or an illegal one was found');
           }
         } else {
-          reject('Either no snapshot provided or an illegal one was found');
+        this.Logger.Log('guid is not a valid guid');
+
         }
       } else {
         this.Logger.Log('Does not have qs target');

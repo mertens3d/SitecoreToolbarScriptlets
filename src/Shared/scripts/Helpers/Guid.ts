@@ -15,6 +15,15 @@ export class Guid {
     return toReturn;
   }
 
+  static IsValidGuidStr(candidateStr: string): boolean {
+    let toReturn: boolean = false;
+    let regexGuid: string = '^[\}]?[0-9a-f]{8}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{12}[\}]?$';
+    let pattern: RegExp = new RegExp(regexGuid, 'i');
+
+    toReturn = pattern.test(candidateStr);
+    return toReturn;
+  }
+
   static AsShort(guidData: GuidData): string {
     var toReturn: string = '{error}';
 

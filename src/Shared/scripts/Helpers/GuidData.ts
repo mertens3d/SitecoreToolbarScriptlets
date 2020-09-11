@@ -14,7 +14,7 @@ export class GuidData {
       this.Raw = GuidData.ConstEmptyGuid;
     }
     else {
-      if (GuidData.IsValidGuidStr(raw)) {
+      if (Guid.IsValidGuidStr(raw)) {
         this.Raw = Guid.GuidStrWithDashes(raw);
       }
       else {
@@ -35,12 +35,5 @@ export class GuidData {
     return str.replace(SharedConst.Const.Regex.CleanGuid, '');
   }
 
-  static IsValidGuidStr(candidateStr: string): boolean {
-    let toReturn: boolean = false;
-    let regexGuid: string = '^[\}]?[0-9a-f]{8}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{12}[\}]?$';
-    let pattern: RegExp = new RegExp(regexGuid, 'i');
-
-    toReturn = pattern.test(candidateStr);
-    return toReturn;
-  }
+  
 }
