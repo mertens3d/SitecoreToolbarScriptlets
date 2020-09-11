@@ -4,22 +4,21 @@ import { BufferDirection } from '../../../../../Shared/scripts/Enums/BufferDirec
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { FrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorProxy } from '../../ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from '../DesktopProxy/DesktopProxy';
 import { IPayload_ContentEditorTreeMutatedEvent } from '../DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
-import { IPayload_DesktopIframeProxyMutated } from '../DesktopProxy/Events/Subject_DesktopIframeProxyMutatedEvent/IPayload_DesktopIframeProxyMutatedEvent';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
+import { FrameHelper } from '../../../Helpers/IframeHelper';
+import { IPayload_DesktopIframeProxyMutated } from '../DesktopProxy/Events/Subject_DesktopIframeProxyMutatedEvent/IPayload_DesktopIframeProxyMutatedEvent';
 
 export class DesktopStartBarProxy extends LoggableBase {
-  private __iframeHelper: IframeHelper;
   private CeProxies: ContentEditorProxy[] = [];
   private OwnerDesktopProxy: DesktopProxy;
   private SettingsAgent: ISettingsAgent;
   private __statBarElem: HTMLElement;
+  private __iframeHelper: FrameHelper;
 
   constructor(logger: ILoggerAgent, ownerDesktopProxy: DesktopProxy, settingsAgent: ISettingsAgent) {
     super(logger);
@@ -47,9 +46,9 @@ export class DesktopStartBarProxy extends LoggableBase {
     return this.__statBarElem;
   }
 
-  private GetIframeHelper(): IframeHelper {
+  private GetIframeHelper() {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new IframeHelper(this.Logger, this.SettingsAgent);
+      this.__iframeHelper = new FrameHelper(this.Logger, this.SettingsAgent);
     }
     return this.__iframeHelper;
   }
@@ -59,79 +58,45 @@ export class DesktopStartBarProxy extends LoggableBase {
     return foundStartBarProxy;
   }
 
-  ChangeStartBarButtonText(targetButton:  DesktopStartBarButtonProxy, text: string, itemIconSource: string, mainIconSrc: string) {
+  private DesignMainIconNode(mainIconSrc: string): HTMLImageElement {
+    let newMainIconNode = <HTMLImageElement>document.createElement('img');
+    newMainIconNode.width = 16;
+    newMainIconNode.height = 16;
+    newMainIconNode.src = mainIconSrc;
+    newMainIconNode.style.position = 'relative';
+    newMainIconNode.style.left = '-8px';
+    newMainIconNode.style.top = '-8px';
+    newMainIconNode.style.marginRight = '-4px';
+    newMainIconNode.style.opacity = '0.5';
+    newMainIconNode.border = '0';
+    newMainIconNode.classList.add("scContentTreeNodeIcon");
+    return newMainIconNode;
+  }
+
+  private DesignItemIconNode(itemIconSource: string): HTMLImageElement {
+    let newItemIconNode = <HTMLImageElement>document.createElement('img');
+    newItemIconNode.width = 16;
+    newItemIconNode.height = 16;
+    newItemIconNode.src = itemIconSource;
+    newItemIconNode.border = '0px';
+    newItemIconNode.classList.add("scContentTreeNodeIcon");
+    return newItemIconNode;
+  }
+
+  ChangeStartBarButtonText(targetButton: DesktopStartBarButtonProxy, text: string, itemIconSource: string, mainIconSrc: string) {
     this.Logger.FuncStart(this.ChangeStartBarButtonText.name);
     this.Logger.LogVal('iconSrc', itemIconSource);
     this.Logger.LogVal('mainIconSrc', mainIconSrc);
     if (targetButton && itemIconSource.length > 0) {
       let containerSpanElement: HTMLElement = targetButton.FoundStartBarButton.querySelector('div').querySelector('span');
-      //let currentInnerText = containerSpanElement.innerText;
-      //let itemIconHtml = currentInnerHtml.replace(currentInnerText, text);
 
-      //let existingIconImage: HTMLImageElement = containerSpanElement.querySelector('img');
-
-      //let currentInnerHtml = containerSpanElement.innerHTML;
-
-      // now the images
-
-      let newItemIconNode = <HTMLImageElement>document.createElement('img');
-      newItemIconNode.width = 16;
-      newItemIconNode.height = 16;
-      newItemIconNode.src = itemIconSource;
-      newItemIconNode.border = '0px';
-      newItemIconNode.classList.add("scContentTreeNodeIcon");
-
-      let newMainIconNode = <HTMLImageElement>document.createElement('img');
-      newMainIconNode.width = 16;
-      newMainIconNode.height = 16;
-      newMainIconNode.src = mainIconSrc;
-      newMainIconNode.style.position = 'relative';
-      newMainIconNode.style.left = '-8px';
-      newMainIconNode.style.top = '-8px';
-      newMainIconNode.style.marginRight = '-4px';
-
-      newMainIconNode.border = '0';
-      newMainIconNode.classList.add("scContentTreeNodeIcon");
-
-      //let mainIconHtml: string = '';
-
-      //if (mainIconSrc.length > 0) {
-      //  mainIconHtml = '<img src="' + mainIconSrc + '" width = "16" height = "16" class="scContentTreeNodeIcon" alt = "" border = "0" >';
-      //}
+      let newItemIconNode: HTMLImageElement = this.DesignItemIconNode(itemIconSource)
+      let newMainIconNode: HTMLImageElement = this.DesignMainIconNode(mainIconSrc);
 
       containerSpanElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
-
-      //  let itemImageElement: HTMLImageElement;
-
-      //  if (itemIconSource && itemIconSource.length > 0) {
-      //    itemImageElement = <HTMLImageElement>targetButton.querySelector('img');
-
-      //    if (itemImageElement) {
-      //      itemImageElement.src = itemIconSource;
-      //    }
-
-      //    if (containerSpanElement) {
-      //      containerSpanElement.innerHTML = mainIconHtml + itemim
-
-      //    }
-
-      //  }
     }
     this.Logger.FuncEnd(this.ChangeStartBarButtonText.name);
   }
-
-  //EnrollListenerForActiveNodeChange(): void {
-  //  try {
-  //    await this.GetIframeHelper().GetHostedIframes(this.OwnerDesktopProxy.GetAssociatedDoc())
-  //      .then((foundIframes: FrameProxy[]) => {
-  //        for (var idx = 0; idx < foundIframes.length; idx++) {
-  //          let iframe = foundIframes[idx];
-  //        }
-  //      })
-  //  } catch (err) {
-  //    throw (err);
-  //  }
-  //}
 
   CallBackConEdProxyAdded(payload: IPayload_DesktopIframeProxyMutated) {
     this.Logger.FuncStart(this.CallBackConEdProxyAdded.name);
@@ -159,7 +124,7 @@ export class DesktopStartBarProxy extends LoggableBase {
       let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(payload.AssociatedIframeElemId);
       if (iframeElement) {
         if (payload.ActiveNode) {
-          let foundStartBarButton: DesktopStartBarButtonProxy= this.GetAssociatedStartBarButton(payload.AssociatedIframeElemId);
+          let foundStartBarButton: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(payload.AssociatedIframeElemId);
 
           let itemIconSrc: string = payload.ActiveNode.GetIconSrc();
           let mainIconSrc: string = payload.ActiveNode.GetMainIconSrc();

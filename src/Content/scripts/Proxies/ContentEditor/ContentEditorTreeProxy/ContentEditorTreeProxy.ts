@@ -5,12 +5,13 @@ import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/IL
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
-import { IDataOneTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
+import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
+import { IDataStateOfTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { Subject_ContentEditorTreeMutatedEvent } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/Subject_ContentEditorTreeMutatedEvent';
-import { ContentEditorTreeNodeProxy } from '../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
+import { TreeNodeProxy } from '../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
+import { IDataStateOfTree } from '../../../../../Shared/scripts/Interfaces/Data/iDataTreeState';
 
 export class ContentEditorTreeProxy extends LoggableBase implements IContentEditorTreeProxy {
   private AssociatedDoc: IDataOneDoc;
@@ -47,7 +48,7 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
 
     let setting = this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton);
     if (setting && setting.ValueAsBool()) {
-      this.TreeMutationEvent = new Subject_ContentEditorTreeMutatedEvent(this.Logger, this.GetTreeHolderElem(), this.HostIframeId);
+      this.TreeMutationEvent = new Subject_ContentEditorTreeMutatedEvent(this.Logger, this.GetTreeHolderElem(), this.HostIframeId, this.AssociatedDoc);
     }
 
     this.Logger.FuncEnd(this.InitCeTreeProxy.name);
@@ -61,22 +62,21 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     this.Logger.FuncEnd(this.AddListenerToTreeMutationEvent.name);
   }
 
-  GetTreeNodeByGlyph(targetNode: IDataOneTreeNode, dataOneDocTarget: IDataOneDoc): ContentEditorTreeNodeProxy {
+  GetTreeNodeByGlyph(targetNode: IDataStateOfTreeNode): TreeNodeProxy {
     this.Logger.FuncStart(this.GetTreeNodeByGlyph.name)
-    let toReturn: ContentEditorTreeNodeProxy = null;
+    let toReturn: TreeNodeProxy = null;
 
-    if (targetNode && dataOneDocTarget) {
+    if (targetNode && this.AssociatedDoc) {
       var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.NodeId);
 
-      this.Logger.Log('looking for: (' + targetNode.NodeFriendly + ')'  + treeGlyphTargetId + ' in ' + Guid.AsShort(dataOneDocTarget.DocId));
+      this.Logger.Log('looking for: (' + targetNode.NodeFriendly + ')' + treeGlyphTargetId + ' in ' + Guid.AsShort(this.AssociatedDoc.DocId));
 
-      var foundOnPageTreeGlyph: HTMLImageElement = <HTMLImageElement>dataOneDocTarget.ContentDoc.getElementById(treeGlyphTargetId);
-      var test: HTMLImageElement = <HTMLImageElement>dataOneDocTarget.ContentDoc.querySelector('[id=' + treeGlyphTargetId + ']');
+      var foundOnPageTreeGlyph: HTMLImageElement = <HTMLImageElement>this.AssociatedDoc.ContentDoc.getElementById(treeGlyphTargetId);
+      var test: HTMLImageElement = <HTMLImageElement>this.AssociatedDoc.ContentDoc.querySelector('[id=' + treeGlyphTargetId + ']');
 
       if (foundOnPageTreeGlyph) {
-        toReturn = new ContentEditorTreeNodeProxy(this.Logger, foundOnPageTreeGlyph);
+        toReturn = new TreeNodeProxy(this.Logger, this.AssociatedDoc, foundOnPageTreeGlyph);
         this.Logger.Log('Found it ' + toReturn.GetNodeLinkText());
-
       } else {
         this.Logger.Log('Not Found');
       }
@@ -85,61 +85,59 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     return toReturn;
   }
 
-  async WaitForAndRestoreManyAllNodes(storageData: IDataOneStorageOneTreeState, targetDoc: IDataOneDoc) {
-    this.Logger.FuncStart(this.WaitForAndRestoreManyAllNodes.name, Guid.AsShort(targetDoc.DocId));
+  async SetStateOfTree(stateOfContentEditor: IDataStateOfTree) {
+    this.Logger.FuncStart(this.SetStateOfTree.name);
 
-    let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.WaitForAndRestoreManyAllNodes.name);
+    let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.SetStateOfTree.name);
 
-    while (storageData.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
-      var nextNode: IDataOneTreeNode = storageData.AllTreeNodeAr.shift();
+    while (stateOfContentEditor.AllTreeNodeAr.length > 0 && iterHelper.DecrementAndKeepGoing()) {
+      var nextNode: IDataStateOfTreeNode = stateOfContentEditor.AllTreeNodeAr.shift();
 
-      await this.WaitForAndRestoreOneNode(targetDoc, nextNode);
+      await this.SetStateOfTreeNode(nextNode);
     }
 
-    this.Logger.FuncEnd(this.WaitForAndRestoreManyAllNodes.name);
+    this.Logger.FuncEnd(this.SetStateOfTree.name);
   }
 
-  async WaitForAndRestoreOneNode(dataOneDocTarget: IDataOneDoc, newData: IDataOneTreeNode): Promise<void> {
-    this.Logger.FuncStart(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId));
+  async SetStateOfTreeNode(dataStateOfTreeNode: IDataStateOfTreeNode): Promise<void> {
+    this.Logger.FuncStart(this.SetStateOfTreeNode.name);
 
     try {
-      var iterHelper = new IterationDrone(this.Logger, this.WaitForAndRestoreOneNode.name);
+      var iterHelper = new IterationDrone(this.Logger, this.SetStateOfTreeNode.name);
 
-      let foundOnPageProxy: ContentEditorTreeNodeProxy = null;
+      let treeNodeProxy: TreeNodeProxy = null;
 
-      while (!foundOnPageProxy && iterHelper.DecrementAndKeepGoing()) {
-        foundOnPageProxy = this.GetTreeNodeByGlyph(newData, dataOneDocTarget);
+      while (!treeNodeProxy && iterHelper.DecrementAndKeepGoing()) {
+        treeNodeProxy = this.GetTreeNodeByGlyph(dataStateOfTreeNode);
 
-        if (foundOnPageProxy) {
-          foundOnPageProxy.RestoreStateNode(newData, dataOneDocTarget);
+        if (treeNodeProxy) {
+          treeNodeProxy.SetStateOfTreeNode(dataStateOfTreeNode);
         } else {
           this.Logger.Log('not Found...waiting: ');
           await iterHelper.Wait();
         }
       }
     } catch (err) {
-      throw (this.WaitForAndRestoreOneNode.name + ' | ' + err);
+      throw (this.SetStateOfTreeNode.name + ' | ' + err);
     }
-    this.Logger.FuncEnd(this.WaitForAndRestoreOneNode.name, Guid.AsShort(dataOneDocTarget.DocId));
+    this.Logger.FuncEnd(this.SetStateOfTreeNode.name);
   }
 
-  WalkNodeRecursive(targetNode: HTMLElement, depth: number): IDataOneTreeNode[] {
-    var toReturn: IDataOneTreeNode[] = [];
+  WalkNodeRecursive(targetNode: HTMLElement, depth: number): IDataStateOfTreeNode[] {
+    var toReturn: IDataStateOfTreeNode[] = [];
     depth = depth - 1;
 
     if (targetNode) {
-      var firstChildGlyphNode: HTMLImageElement = <HTMLImageElement>targetNode.querySelector(ContentConst.Const.Selector.SC.ContentEditor. ContentTreeNodeGlyph);
+      var firstChildGlyphNode: HTMLImageElement = <HTMLImageElement>targetNode.querySelector(ContentConst.Const.Selector.SC.ContentEditor.ContentTreeNodeGlyph);
       if (firstChildGlyphNode) {
-        let treeNodeProxy = new ContentEditorTreeNodeProxy(this.Logger, firstChildGlyphNode);
+        let treeNodeProxy = new TreeNodeProxy(this.Logger, this.AssociatedDoc, firstChildGlyphNode);
 
         this.Logger.LogVal('treeNodeProxy.IsContentTreeNode', treeNodeProxy.IsContentTreeNode() + ' ' + treeNodeProxy.GetNodeLinkText());
 
         if (treeNodeProxy.IsContentTreeNode()) {
           if (treeNodeProxy.QueryIsExpanded() || treeNodeProxy.QueryIsActive()) {
-
-            let newData: IDataOneTreeNode = treeNodeProxy.GetStateNode();
+            let newData: IDataStateOfTreeNode = treeNodeProxy.GetStateNode();
             toReturn.push(newData);
-
           } else {
             this.Logger.Log('no first img');
           }
@@ -163,30 +161,26 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     return toReturn;
   }
 
-  GetTreeState(): Promise<IDataOneStorageOneTreeState> {
-    return new Promise((resolve, reject) => {
-      let toReturnOneTreeState: IDataOneStorageOneTreeState = {
-        
-        AllTreeNodeAr: this.GetOneLiveTreeData(),
-        ActiveNode: null,
-        Id: null
-      }
+  GetStateOfTree(): IDataStateOfTree {
+    let toReturnOneTreeState: IDataStateOfTree = {
+      AllTreeNodeAr: this.GetOneLiveTreeData(),
+      ActiveNode: null,
+    }
 
-      toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
+    toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
 
-      if (toReturnOneTreeState) {
-        resolve(toReturnOneTreeState);
-      } else {
-        reject('todo why would this fail?');
-      }
-    })
+    if (toReturnOneTreeState) {
+      this.Logger.LogVal('Tree State node count', toReturnOneTreeState.AllTreeNodeAr.length);
+    }
+
+    return toReturnOneTreeState;
   }
 
-  GetActiveNode(allTreeNodeAr: IDataOneTreeNode[]) {
-    let toReturn: IDataOneTreeNode = null;
+  GetActiveNode(allTreeNodeAr: IDataStateOfTreeNode[]) {
+    let toReturn: IDataStateOfTreeNode = null;
     if (allTreeNodeAr) {
       for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
-        let candidate: IDataOneTreeNode = allTreeNodeAr[idx];
+        let candidate: IDataStateOfTreeNode = allTreeNodeAr[idx];
         if (candidate.IsActive) {
           toReturn = candidate;
           break;
@@ -199,10 +193,10 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     return toReturn;
   }
 
-  GetOneLiveTreeData(): IDataOneTreeNode[] {
+  private GetOneLiveTreeData(): IDataStateOfTreeNode[] {
     this.Logger.FuncStart(this.GetOneLiveTreeData.name);
 
-    var toReturn: IDataOneTreeNode[] = [];
+    var toReturn: IDataStateOfTreeNode[] = [];
 
     if (this.AssociatedDoc) {
       var rootNode: HTMLElement = this.GetRootNode();

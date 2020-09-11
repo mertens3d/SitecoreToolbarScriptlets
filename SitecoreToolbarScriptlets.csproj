@@ -132,6 +132,9 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IRepositoryAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUiModule.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IDataDesktopState.1.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataStateOfFrame.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\iDataTreeState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Events\IObservable.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopDomChangedEvent\IPayloadContentEditorDomChanged.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandHndlrDataForContent.ts" />
@@ -341,7 +344,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\IIterationResults.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\NewWindowDest.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\Guid.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IDataOneIframe.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\Proxies\FrameProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Agents\MiscAgent\MiscAgent.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeRestoreDesktop\RecipeRestoreDesktop.ts" />

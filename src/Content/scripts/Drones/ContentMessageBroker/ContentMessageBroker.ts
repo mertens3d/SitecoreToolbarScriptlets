@@ -12,7 +12,7 @@ import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 import { CommandHndlrDataForContent } from "../../../../Shared/scripts/Classes/CommandHndlrDataForContent/CommandHndlrDataForContent";
@@ -227,7 +227,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       let response = new MsgFromContent(MsgFlag.Unknown);
 
       await this.ApiManager.GetStateContent()
-        .then((result: IContentState) => {
+        .then((result: IContentReplyPayload) => {
           response.ScWindowState.LastReq = msgFlag;
           response.MsgFlag = MsgFlag.RespTaskSuccessful;
           response.ScWindowState = result;

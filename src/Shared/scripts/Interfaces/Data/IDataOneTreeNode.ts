@@ -1,6 +1,6 @@
 ﻿import { GuidData } from "../../Helpers/GuidData";
 
-export interface IDataOneTreeNode {
+export interface IDataStateOfTreeNode {
   IsActive: Boolean;
   IsExpanded: Boolean;
   NodeFriendly: string;

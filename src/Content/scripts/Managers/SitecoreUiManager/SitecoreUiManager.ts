@@ -1,13 +1,13 @@
 ﻿import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfSitecore } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { LoggableBase } from "../LoggableBase";
 
 export class ScUiManager extends LoggableBase implements iSitecoreUiManager {
-  __activeWindowSnapShot: IDataOneWindowStorage;
+  __activeWindowSnapShot: IDataStateOfSitecore;
 
   constructor(logger: ILoggerAgent) {
     super(logger)

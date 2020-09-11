@@ -2,9 +2,9 @@
 import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
-import { FrameProxy } from "../Interfaces/Data/IDataOneIframe";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
 import { Guid } from "./Guid";
+import { FrameProxy } from "../Interfaces/Data/Proxies/FrameProxy";
 
 export class FactoryHelper extends LoggableBase implements IFactoryHelper {
   SettingsAgent: ISettingsAgent;

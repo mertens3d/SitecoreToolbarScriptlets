@@ -10,7 +10,7 @@ import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLog
 import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { IContentState } from "../../Shared/scripts/Interfaces/Data/IContentState";
+import { IContentReplyPayload } from "../../Shared/scripts/Interfaces/Data/IContentState";
 import { CommandManager } from "./Classes/AllCommands";
 import { PopConst } from "./Classes/PopConst";
 import { EventManager } from "./Managers/EventManager";
@@ -92,7 +92,7 @@ class PopUpEntry {
       let eventMan = new EventManager(this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
 
       let self = uiMan;
-      handlers.External.AddCallbackCommandComplete((contentState: IContentState) => { uiMan.CallBackCommandComplete(contentState); });
+      handlers.External.AddCallbackCommandComplete((contentState: IContentReplyPayload) => { uiMan.CallBackCommandComplete(contentState); });
 
       uiMan.InitUiManager();
 

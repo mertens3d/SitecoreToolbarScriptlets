@@ -1,5 +1,5 @@
 ﻿import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
 
@@ -21,16 +21,16 @@ export class ButtonVisibilityTester extends LoggableBase {
     return toReturn;
   }
 
-  VisibilityTestSnapShotable(currentContentState: IContentState): boolean {
+  VisibilityTestSnapShotable(currentContentState: IContentReplyPayload): boolean {
     //todo may want to be able take snap shots of other window types
     return this.VisibilityTestActiveCeNode(currentContentState);
   }
 
-  VisibilityTestActiveCeNode(currentContentState: IContentState): boolean {
+  VisibilityTestActiveCeNode(currentContentState: IContentReplyPayload): boolean {
 
     let toReturn: boolean = false;
 
-    toReturn = currentContentState !== null && currentContentState.ActiveCe !== null && currentContentState.ActiveCe.ActiveNode !== null;
+    toReturn = currentContentState !== null && currentContentState.ActiveCe !== null && currentContentState.ActiveCe.StateOfTree.ActiveNode !== null;
 
     if (currentContentState) {
       if (currentContentState.ActiveCe) {

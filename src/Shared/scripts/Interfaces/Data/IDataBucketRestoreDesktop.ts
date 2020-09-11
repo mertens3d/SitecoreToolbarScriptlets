@@ -1,10 +1,10 @@
-﻿import { FrameProxy } from "./IDataOneIframe";
-import { IDataOneStorageOneTreeState } from "./IDataOneStorageOneTreeState";
+﻿import { FrameProxy } from "./Proxies/FrameProxy";
+import { IDataStateOfContentEditor } from "./IDataOneStorageOneTreeState";
 import { IDataOneDoc } from "./IDataOneDoc";
 
 export interface IDataBucketRestoreDesktop {
   LastChainLinkSuccessful: boolean,
   IFramesbefore: FrameProxy[],
-  oneTreeState: IDataOneStorageOneTreeState,
+  oneTreeState: IDataStateOfContentEditor,
   targetDoc: IDataOneDoc,
 }

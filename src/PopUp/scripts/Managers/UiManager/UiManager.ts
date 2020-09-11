@@ -22,17 +22,17 @@ import { FeedbackModuleContentState } from './Modules/UiFeedbackModules/Feedback
 import { FeedbackModuleMessages } from './Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from './Modules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
-import { IContentState } from '../../../../Shared/scripts/Interfaces/Data/IContentState';
-import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
+import { IContentReplyPayload } from '../../../../Shared/scripts/Interfaces/Data/IContentState';
+import { IDataStateOfSitecore } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
 import { ScUrlAgent } from '../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
 
 export class UiManager {
   AccordianManager: IAccordianManager;
   ButtonStateManager: UiButtonStateManager;
-  CurrScWindowState: IContentState;
+  CurrScWindowState: IContentReplyPayload;
   FeedbackModuleMessages: FeedbackModuleMessages;
   FeedbackModulePopUpState: FeedbackModulePopUpState;
-  LastKnownContentState: IContentState;
+  LastKnownContentState: IContentReplyPayload;
   MenuEnabled: boolean = true;
   MenuFocused: boolean = true;
   ModuleSelectSnapShot: SelectSnapshotModule;
@@ -106,7 +106,7 @@ export class UiManager {
     this.Logger.FuncEnd(this.InitUiManager.name);
   }
 
-  SetContentState(contentState: IContentState) {
+  SetContentState(contentState: IContentReplyPayload) {
     //contentState.SnapShotsMany.CurrentSnapShots = this.FixGuidsInContentState(contentState.SnapShotsMany.CurrentSnapShots);
 
     this.LastKnownContentState = contentState;
@@ -122,7 +122,7 @@ export class UiManager {
     this.Logger.Log(err);
   }
 
-  CallBackCommandComplete(contentState: IContentState) {
+  CallBackCommandComplete(contentState: IContentReplyPayload) {
     this.SetContentState(contentState)
     this.RefreshUiUIManager();
   }
@@ -218,7 +218,7 @@ export class UiManager {
 
     this.ButtonStateManager.RefreshUiButtonState(currentWindowType, currSelSnapshot, this.LastKnownContentState, this.CommandMan.AllMenuCommands);
 
-    this.__drawCorrectNicknameInUI(this.LastKnownContentState.SnapShotsMany.CurrentSnapShots);
+    this.__drawCorrectNicknameInUI(this.LastKnownContentState.SnapShotsStateOfSitecore.CurrentSnapShots);
 
     this.Logger.FuncEnd(this.RefreshUiUIManager.name);
   }
@@ -234,7 +234,7 @@ export class UiManager {
     this.Logger.FuncEnd('ShowDebugDataOneWindow');
     return toReturn;
   }
-  private __drawCorrectNicknameInUI(snapShots: IDataOneWindowStorage[]) {
+  private __drawCorrectNicknameInUI(snapShots: IDataStateOfSitecore[]) {
     this.Logger.FuncStart(this.__drawCorrectNicknameInUI.name);
     var targetId: GuidData = this.ModuleSelectSnapShot.GetSelectSnapshotId()
     if (targetId) {

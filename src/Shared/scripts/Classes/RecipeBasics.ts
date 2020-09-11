@@ -1,4 +1,4 @@
-﻿import { IframeHelper } from '../../../Content/scripts/Helpers/IframeHelper';
+﻿import { FrameHelper } from '../../../Content/scripts/Helpers/IframeHelper';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
@@ -6,7 +6,7 @@ import { Guid } from '../Helpers/Guid';
 import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
-import { FrameProxy } from '../Interfaces/Data/IDataOneIframe';
+import { FrameProxy } from '../Interfaces/Data/Proxies/FrameProxy';
 import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
@@ -16,11 +16,14 @@ import { ISettingsAgent } from '../Interfaces/Agents/ISettingsAgent';
 
 export class RecipeBasics extends LoggableBase implements IRecipeBasics {
   private FactoryHelp: IFactoryHelper;
-  SettingsAgent: ISettingsAgent;
+  private SettingsAgent: ISettingsAgent;
+  private  FrameHelper: FrameHelper;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
     super(logger);
     this.SettingsAgent = settingsAgent;
+    this.FrameHelper = new FrameHelper(this.Logger, this.SettingsAgent);
+
     this.FactoryHelp = new FactoryHelper(this.Logger, settingsAgent);
   }
 
@@ -159,9 +162,9 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
     var toReturn: FrameProxy = null;
 
-    let iframeHelper = new IframeHelper(this.Logger, this.SettingsAgent);
+    
 
-    await iframeHelper.GetHostedIframes(targetDoc)
+    await this.FrameHelper.GetHostedframes(targetDoc)
       .then((allIframe: FrameProxy[]) => {
         var maxZVal = -1;
         if (allIframe && allIframe.length > 0) {
@@ -206,12 +209,11 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframe.name)
       let beforeCount: number = allIframesBefore.length;
 
-      let iframeHelper = new IframeHelper(this.Logger, this.SettingsAgent);
 
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
         var allIframesAfter: FrameProxy[];
 
-        await iframeHelper.GetHostedIframes(targetDoc)
+        await this.FrameHelper.GetHostedframes(targetDoc)
           .then((result) => allIframesAfter = result)
           .catch((err) => reject(this.WaitForNewIframe.name + ' ' + err));
 

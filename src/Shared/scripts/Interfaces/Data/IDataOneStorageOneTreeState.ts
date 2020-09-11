@@ -1,8 +1,7 @@
-﻿import { IDataOneTreeNode } from './IDataOneTreeNode';
-import { GuidData } from '../../Helpers/GuidData';
+﻿import { GuidData } from '../../Helpers/GuidData';
+import { IDataStateOfTree } from './iDataTreeState';
 
-export interface IDataOneStorageOneTreeState {
+export interface IDataStateOfContentEditor {
   Id: GuidData,
-  AllTreeNodeAr: IDataOneTreeNode[],
-  ActiveNode: IDataOneTreeNode
+  StateOfTree: IDataStateOfTree,
 }

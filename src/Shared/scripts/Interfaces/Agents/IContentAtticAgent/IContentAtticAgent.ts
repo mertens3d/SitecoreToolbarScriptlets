@@ -1,11 +1,11 @@
 ﻿import { GuidData } from "../../../Helpers/GuidData";
-import { IDataOneWindowStorage } from "../../Data/IDataOneWindowStorage";
+import { IDataStateOfSitecore } from "../../Data/IDataOneWindowStorage";
 
 export interface IContentAtticAgent {
-  WriteStateToStorage(storageMatch: IDataOneWindowStorage);
+  WriteStateOfSitecoreToStorage(storageMatch: IDataStateOfSitecore);
   RemoveSnapshotFromStorageById(TargetSnapShotId: GuidData);
-  WriteStateToStorage(storageMatch: IDataOneWindowStorage);
+  WriteStateOfSitecoreToStorage(storageMatch: IDataStateOfSitecore);
   GetAllSnapShotsMany();
   InitContentAtticManager(retainDayCount: number);
-  GetFromStorageById(targetGuid: GuidData): IDataOneWindowStorage;
+  GetFromStorageById(targetGuid: GuidData): IDataStateOfSitecore;
 }

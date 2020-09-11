@@ -6,7 +6,7 @@ import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
 import { IDataSnapShots } from "../../../../Shared/scripts/Interfaces/Data/IDataSnapShots";
-import { IDataOneWindowStorage } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfSitecore } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 
@@ -29,9 +29,9 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.SettingAutoSnapshotRetainDays = settingAutoSnapshotRetainDays;
   }
 
-  async WriteStateToStorage(dataOneWindow: IDataOneWindowStorage): Promise<void> {
+  async WriteStateOfSitecoreToStorage(dataOneWindow: IDataStateOfSitecore): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WriteStateToStorage.name, 'ce count ' + dataOneWindow.AllCEAr.length);
+      this.Logger.FuncStart(this.WriteStateOfSitecoreToStorage.name);
 
       var snapShotAsString = JSON.stringify(dataOneWindow);
 
@@ -42,15 +42,15 @@ export class ContentAtticAgent implements IContentAtticAgent {
 
       resolve();
 
-      this.Logger.FuncEnd(this.WriteStateToStorage.name);
+      this.Logger.FuncEnd(this.WriteStateOfSitecoreToStorage.name);
     });
   }
 
-  GetFromStorageById(needleId: GuidData): IDataOneWindowStorage {
+  GetFromStorageById(needleId: GuidData): IDataStateOfSitecore {
 
     this.Logger.FuncStart(this.GetFromStorageById.name, needleId.Raw);
 
-    var DateOneWinStoreMatch: IDataOneWindowStorage = null;
+    var DateOneWinStoreMatch: IDataStateOfSitecore = null;
 
     let foundStorage: IDataSnapShots = this.GetAllSnapShotsMany();
 
@@ -69,7 +69,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
   }
 
   private __parseRawData(oneRaw: IOneStorageData) {
-    var candidate: IDataOneWindowStorage = <IDataOneWindowStorage>JSON.parse(oneRaw.data);
+    var candidate: IDataStateOfSitecore = <IDataStateOfSitecore>JSON.parse(oneRaw.data);
 
     if (candidate) {
       candidate.TimeStamp = new Date(candidate.TimeStamp);
@@ -101,9 +101,9 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return result;
   }
 
-  private GetAllStorage(): IDataOneWindowStorage[] {
+  private GetAllStorage(): IDataStateOfSitecore[] {
     this.Logger.FuncStart(this.GetAllStorage.name);
-    var toReturn: IDataOneWindowStorage[] = [];
+    var toReturn: IDataStateOfSitecore[] = [];
 
     let rawStorageData: IOneStorageData[] = this.GetAllLocalStorageAsIOneStorageData();
 
@@ -113,7 +113,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       }
     }
 
-    toReturn.sort((a: IDataOneWindowStorage, b: IDataOneWindowStorage) =>
+    toReturn.sort((a: IDataStateOfSitecore, b: IDataStateOfSitecore) =>
       +b.TimeStamp - +a.TimeStamp
     );
 
@@ -123,7 +123,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return toReturn;
   }
 
-  private CleanOneStorageItem(candidate: IDataOneWindowStorage, autoCount: number): number {
+  private CleanOneStorageItem(candidate: IDataStateOfSitecore, autoCount: number): number {
     this.Logger.FuncStart(this.CleanOneStorageItem.name);
     var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
     var deleteFlag: boolean = false;
@@ -199,7 +199,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       PlainCount: 0,
     }
 
-    let result: IDataOneWindowStorage[] = this.GetAllStorage();
+    let result: IDataStateOfSitecore[] = this.GetAllStorage();
 
     snapShotsMany.CurrentSnapShots = result;
     snapShotsMany.Birthday = new Date();
@@ -211,8 +211,8 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return snapShotsMany;
   }
 
-  ConvertGuidData(candidateSnapShots: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
-    let toReturn: IDataOneWindowStorage[] = []
+  ConvertGuidData(candidateSnapShots: IDataStateOfSitecore[]): IDataStateOfSitecore[] {
+    let toReturn: IDataStateOfSitecore[] = []
 
     for (var idx = 0; idx < candidateSnapShots.length; idx++) {
       var candidate = candidateSnapShots[idx];
@@ -248,19 +248,19 @@ export class ContentAtticAgent implements IContentAtticAgent {
     }
   }
 
-  FilterOutOldData(data: IDataOneWindowStorage[]): IDataOneWindowStorage[] {
-    var toReturn: IDataOneWindowStorage[] = data;
+  FilterOutOldData(data: IDataStateOfSitecore[]): IDataStateOfSitecore[] {
+    var toReturn: IDataStateOfSitecore[] = data;
 
     return toReturn;
   }
 
-  TimeNicknameFavStrForConfirmation(data: IDataOneWindowStorage): string {
+  TimeNicknameFavStrForConfirmation(data: IDataStateOfSitecore): string {
     var result = data.TimeStampFriendly + ' ' + data.NickName + ' ' + Guid.AsShort(data.GuidId);
     result = result.replace(new RegExp(/&nbsp;/ig), '');
     return result;
   }
 
-  RemoveAndConfirmRemoval(storageMatch: IDataOneWindowStorage): void {
+  RemoveAndConfirmRemoval(storageMatch: IDataStateOfSitecore): void {
       this.Logger.LogVal('Key to Delete', storageMatch.RawData.key);
 
       let targetId = storageMatch.GuidId;
@@ -280,7 +280,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       this.Logger.FuncStart(this.RemoveSnapshotFromStorageById.name);
       try {
         if (targetId) {
-          var storageMatch: IDataOneWindowStorage = this.GetFromStorageById(targetId)
+          var storageMatch: IDataStateOfSitecore = this.GetFromStorageById(targetId)
           if (storageMatch) {
             this.RemoveAndConfirmRemoval(storageMatch)
 

@@ -2,12 +2,12 @@
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { FrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
+import { FrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
-import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
+import { FrameHelper } from '../../../Helpers/IframeHelper';
 
 export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements ICommandRecipes {
   private TargetDoc: IDataOneDoc;
@@ -29,11 +29,11 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
     return new Promise(async (resolve, reject) => {
       let allIframeDataAtBeginning: FrameProxy[];
       let newIframeProxy: FrameProxy;
-      let iframeHelper = new IframeHelper(this.Logger, this.SettingsAgent);
+      let frameHelper = new FrameHelper(this.Logger, this.SettingsAgent);
       let recipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
 
 
-      await iframeHelper.GetHostedIframes(this.TargetDoc)
+      await frameHelper.GetHostedframes(this.TargetDoc)
         .then((result) => allIframeDataAtBeginning = result)
         .catch((err) => reject(this.Execute.name + ' ' + err));
 

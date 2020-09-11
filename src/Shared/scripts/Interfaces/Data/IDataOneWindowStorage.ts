@@ -1,11 +1,14 @@
 ﻿import { IOneStorageData } from '.././IOneStorageData';
-import { IDataOneStorageOneTreeState } from './IDataOneStorageOneTreeState';
+import { IDataStateOfContentEditor } from './IDataOneStorageOneTreeState';
 import { ScWindowType } from '../../Enums/scWindowType';
 import { SnapShotFlavor } from '../../Enums/SnapShotFlavor';
 import { GuidData } from "../../Helpers/GuidData";
+import { IDataSateOfDesktop } from './IDataDesktopState';
 
-export interface IDataOneWindowStorage {
-  AllCEAr: IDataOneStorageOneTreeState[],
+export interface IDataStateOfSitecore {
+  StateOfDesktop: IDataSateOfDesktop,
+  StateOfContentEditor: IDataStateOfContentEditor,
+  
   GuidId: GuidData,
   Flavor: SnapShotFlavor;
   NickName: string

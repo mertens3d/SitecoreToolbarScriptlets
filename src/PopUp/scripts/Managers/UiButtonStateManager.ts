@@ -3,12 +3,12 @@ import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
-import { IContentState } from "../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IContentReplyPayload } from "../../../Shared/scripts/Interfaces/Data/IContentState";
 import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 
 export class UiButtonStateManager extends LoggableBase {
-  private currentContentState: IContentState;
+  private currentContentState: IContentReplyPayload;
   private currentWindowType: ScWindowType;
   private currSelSnapshot: GuidData;
   private Tester: ButtonVisibilityTester;
@@ -116,7 +116,7 @@ export class UiButtonStateManager extends LoggableBase {
     }
   }
 
-  RefreshUiButtonState(currentWindowType: ScWindowType, currSelSnapshot: GuidData, contentState: IContentState, allMenuCommands: IOneCommand[]): void {
+  RefreshUiButtonState(currentWindowType: ScWindowType, currSelSnapshot: GuidData, contentState: IContentReplyPayload, allMenuCommands: IOneCommand[]): void {
     this.Logger.FuncStart(this.RefreshUiButtonState.name, allMenuCommands.length);
 
     this.currentWindowType = currentWindowType;

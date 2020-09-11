@@ -2,7 +2,7 @@
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfSitecore } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 
@@ -32,7 +32,7 @@ export class RecipeChangeNickName extends LoggableBase implements ICommandRecipe
 
       if (this.TargetSnapShotId) {
         if (this.NewNickname) {
-          var storageMatch: IDataOneWindowStorage;
+          var storageMatch: IDataStateOfSitecore;
 
           storageMatch = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId)
 
@@ -47,7 +47,7 @@ export class RecipeChangeNickName extends LoggableBase implements ICommandRecipe
             reject(this.UpdateNickname.name + ' - No storage match');
           }
 
-          this.AtticAgent.WriteStateToStorage(storageMatch);
+          this.AtticAgent.WriteStateOfSitecoreToStorage(storageMatch);
           resolve();
 
         } else {

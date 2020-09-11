@@ -1,8 +1,9 @@
 ﻿import { AbsoluteUrl } from "./AbsoluteUrl";
 import { IDataPublishChain } from "./Data/IDataPublishChain";
 import { IScVerSpec } from "./IScVerSpec";
-import { FrameProxy } from "./data/IDataOneIframe";
 import { IDataOneDoc } from "./data/IDataOneDoc";
+import { FrameProxy } from "./Data/Proxies/FrameProxy";
+//import { FrameProxy } from "./Data/Proxies/FrameProxy";
 
 export interface IRecipeBasics {
   RaceWaitAndClick(scStartButton: IScVerSpec, arg1: IDataOneDoc);

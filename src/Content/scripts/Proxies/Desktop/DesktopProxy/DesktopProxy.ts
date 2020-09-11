@@ -1,28 +1,28 @@
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IDataDesktopState } from "../../../../../Shared/scripts/Interfaces/Data/IDataDesktopState";
+import { IDataSateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/IDataDesktopState";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
-import { IDataOneStorageOneTreeState } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
-import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy";
+import { IDataStateOfContentEditor } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
 import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
-import { RecipeRestoreDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
-import { IframeHelper } from "../../../Helpers/IframeHelper";
+import { RecipeRestoreFrameOnDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
+import { FrameHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
 import { DesktopIframeProxyBucket } from "./DesktopIframeProxyBucket";
 import { IPayloadDesktop_DomChangedEvent } from "./Events/DesktopDomChangedEvent/IPayloadContentEditorDomChanged";
 import { Subject_DesktopDomChangedEvent } from "./Events/DesktopDomChangedEvent/Subject_DesktopDomChangedEvent";
 import { IPayload_DesktopIframeProxyMutated } from "./Events/Subject_DesktopIframeProxyMutatedEvent/IPayload_DesktopIframeProxyMutatedEvent";
+import { IDataStateOfFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
 
 export class DesktopProxy extends LoggableBase {
   private DesktopIframeProxyBucket: DesktopIframeProxyBucket;
 
   DesktopStartBarAgent: DesktopStartBarProxy;
-  private __iframeHelper: IframeHelper;
+  private __iframeHelper: FrameHelper;
   private _dtStartBarAgent: DesktopStartBarProxy;
   private AssociatedDoc: IDataOneDoc;
-
+  private HostedIframes: FrameProxy[];
   private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
   private Subject_DomChangedEvent: Subject_DesktopDomChangedEvent;
@@ -85,60 +85,65 @@ export class DesktopProxy extends LoggableBase {
     return this._dtStartBarAgent;
   }
 
-  private GetIframeHelper(): IframeHelper {
+  private GetIframeHelper(): FrameHelper {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new IframeHelper(this.Logger, this.SettingsAgent);
+      this.__iframeHelper = new FrameHelper(this.Logger, this.SettingsAgent);
     }
     return this.__iframeHelper;
   }
 
-  async GetStateDesktop(): Promise<IDataDesktopState> {
-    this.Logger.FuncStart(this.GetStateDesktop.name);
+  async GetStateDesktop(): Promise<IDataSateOfDesktop> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetStateDesktop.name);
 
-    try {
-      var toReturnDesktopState: IDataDesktopState = this.CreateNewDtDataShell();
+      try {
+        var toReturnDesktopState: IDataSateOfDesktop = this.CreateNewDtDataShell();
 
-      await this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc)
-        .then((results) => toReturnDesktopState.HostedIframes = results)
-        .catch((err) => this.Logger.ErrorAndThrow(this.GetStateDesktop.name, err));
+        await this.GetIframeHelper().GetHostedframes(this.AssociatedDoc)
+          .then((results: FrameProxy[]) => {
+            if (results) {
+              results.forEach((oneFrame) => toReturnDesktopState.FrameStates.push(oneFrame.GetStateOfFrame()))
+            }
+          })
+          .then(() => resolve(toReturnDesktopState))
+          .catch((err) => this.Logger.ErrorAndThrow(this.GetStateDesktop.name, err));
 
-      if (toReturnDesktopState.HostedIframes && toReturnDesktopState.HostedIframes.length > 0) {
-        for (var iframeIdx = 0; iframeIdx < toReturnDesktopState.HostedIframes.length; iframeIdx++) {
-          this.Logger.LogVal('iframeIdx: ', iframeIdx);
+        //if (toReturnDesktopState.HostedIframes && toReturnDesktopState.HostedIframes.length > 0) {
+        //  for (var iframeIdx = 0; iframeIdx < toReturnDesktopState.HostedIframes.length; iframeIdx++) {
+        //    this.Logger.LogVal('iframeIdx: ', iframeIdx);
 
-          var iframeProxy: FrameProxy = toReturnDesktopState.HostedIframes[iframeIdx];
+        //    var iframeProxy: FrameProxy = toReturnDesktopState.HostedIframes[iframeIdx];
 
-          let oneCeState: IDataOneStorageOneTreeState = iframeProxy.GetState();
+        //    let oneCeState: IDataContentEditorState = iframeProxy.GetState();
 
-          toReturnDesktopState.HostedContentEditors.push(oneCeState);
+        //    toReturnDesktopState.FrameStates.push(oneCeState);
 
-          if (iframeProxy.GetZindex() === 1) {
-            toReturnDesktopState.ActiveCEAgent = iframeProxy.CeAgent;
-            toReturnDesktopState.ActiveCeState = oneCeState;
-          }
-        }
+        //    if (iframeProxy.GetZindex() === 1) {
+        //      toReturnDesktopState.ActiveCEAgent = iframeProxy.ConEditProxy;
+        //      toReturnDesktopState.ActiveCeState = oneCeState;
+        //    }
+        //  }
+        //}
+      } catch (err) {
+        reject(this.GetStateDesktop.name + ' ' + err);
       }
-    } catch (err) {
-      this.Logger.ErrorAndThrow(this.GetStateDesktop.name, err);
-    }
 
-    this.Logger.FuncEnd(this.GetStateDesktop.name, toReturnDesktopState.HostedContentEditors.length);
-
-    return toReturnDesktopState;
+      this.Logger.FuncEnd(this.GetStateDesktop.name, toReturnDesktopState.FrameStates.length);
+    });
   }
 
-  async SetStateDesktop(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
+  async SetStateDesktop(desktopState: IDataSateOfDesktop): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateDesktop.name);;
 
-      if (this.MiscAgent.NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.SetStateDesktop.name)) {
-        for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
-          let targetData: IDataOneStorageOneTreeState = dataToRestore.AllCEAr[idx];
-          //this.Logger.Log('Restoring ' + (idx + 1) + ":" + dataToRestore.AllCEAr.length + ' active node: ' + targetData.ActiveNode.NodeFriendly);
-          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, targetData, this.SettingsAgent, this.DesktopStartBarAgent);
+      if (this.MiscAgent.NotNullOrUndefined([this.AssociatedDoc, desktopState, desktopState.FrameStates], this.SetStateDesktop.name)) {
+        for (var idx = 0; idx < desktopState.FrameStates.length; idx++) {
+          let stateOfFrame: IDataStateOfFrame = desktopState.FrameStates[idx];
 
+          var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.SettingsAgent, this.DesktopStartBarAgent);
+
+          //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
           await recipe.Execute()
-            //.then(() => this.EnrollListenerForActiveNodeChange())
             .catch((err) => reject(err));
         }
 
@@ -151,11 +156,9 @@ export class DesktopProxy extends LoggableBase {
     });
   }
 
-  CreateNewDtDataShell(): IDataDesktopState {
-    var toReturn: IDataDesktopState = {
-      HostedContentEditors: [],
-      HostedIframes: [],
-      ActiveCEAgent: null,
+  CreateNewDtDataShell(): IDataSateOfDesktop {
+    var toReturn: IDataSateOfDesktop = {
+      FrameStates: [],
       ActiveCeState: null
     }
 

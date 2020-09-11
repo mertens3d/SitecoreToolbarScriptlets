@@ -1,6 +1,6 @@
 ﻿import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
-import { IContentState } from "../Interfaces/Data/IContentState";
-import { DefaultScWindowState } from "./DefaultScWindowState";
+import { IContentReplyPayload } from "../Interfaces/Data/IContentState";
+import { DefaultContentReplyPayload } from "./DefaultScWindowState";
 
 export class ScWindowStateValidator {
   Logger: ILoggerAgent;
@@ -9,23 +9,23 @@ export class ScWindowStateValidator {
     this.Logger = logger;
   }
 
-  ValidateScWindowState(contentState: IContentState): IContentState {
+  ValidateScWindowState(contentState: IContentReplyPayload): IContentReplyPayload {
     this.Logger.FuncStart(this.ValidateScWindowState.name);
 
-    var defaultVal: IContentState = new DefaultScWindowState();
+    var defaultVal: IContentReplyPayload = new DefaultContentReplyPayload();
 
     if (!contentState) {
       contentState = defaultVal;
       this.Logger.ErrorAndContinue(this.ValidateScWindowState.name, 'Null contentState');
     }
 
-    if (!contentState.SnapShotsMany) {
-      contentState.SnapShotsMany = defaultVal.SnapShotsMany;
+    if (!contentState.SnapShotsStateOfSitecore) {
+      contentState.SnapShotsStateOfSitecore = defaultVal.SnapShotsStateOfSitecore;
       this.Logger.ErrorAndContinue(this.ValidateScWindowState.name, 'Null SnapShotsMany');
     }
 
-    if (!contentState.SnapShotsMany.CurrentSnapShots) {
-      contentState.SnapShotsMany.CurrentSnapShots = defaultVal.SnapShotsMany.CurrentSnapShots;
+    if (!contentState.SnapShotsStateOfSitecore.CurrentSnapShots) {
+      contentState.SnapShotsStateOfSitecore.CurrentSnapShots = defaultVal.SnapShotsStateOfSitecore.CurrentSnapShots;
       this.Logger.ErrorAndContinue(this.ValidateScWindowState.name, 'Null CurrentSnapShots');
     }
 

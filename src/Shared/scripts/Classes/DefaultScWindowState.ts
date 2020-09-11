@@ -1,11 +1,10 @@
 ﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
-import { IDataDesktopState } from "../Interfaces/Data/IDataDesktopState";
-import { IContentState } from "../Interfaces/Data/IContentState";
+import { IContentReplyPayload } from "../Interfaces/Data/IContentState";
 import { IError } from "../Interfaces/IError";
 
-export class DefaultScWindowState implements IContentState {
-  DesktopState: IDataDesktopState = null;
-  SnapShotsMany = {
+export class DefaultContentReplyPayload implements IContentReplyPayload {
+  CurrentStateOfSitecore = null;
+  SnapShotsStateOfSitecore = {
     CurrentSnapShots: [],
     FavoriteCount: 0,
     SnapShotsAutoCount: 0,
@@ -15,7 +14,7 @@ export class DefaultScWindowState implements IContentState {
 
   LastReq = MsgFlag.Unknown;
 
-  ErrorStack: IError[] = [] ;
+  ErrorStack: IError[] = [];
 
   LastReqSuccessful = false;
 

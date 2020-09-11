@@ -4,11 +4,11 @@ import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers"
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IMessageBrokerFeedback } from "../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
 import { ScWindowStateValidator } from "../../../../Shared/scripts/Classes/ScWindowStateValidator";
 
 export class PopUpMessagesBroker {
-  LastKnownContentState: IContentState;
+  LastKnownContentState: IContentReplyPayload;
   private Logger: ILoggerAgent;
   private MsgFeedback: IMessageBrokerFeedback;
 
@@ -17,7 +17,7 @@ export class PopUpMessagesBroker {
     this.MsgFeedback = msgFeedback;
   }
 
-  ReceiveResponseHndlr(response: any): Promise<IContentState> {
+  ReceiveResponseHndlr(response: any): Promise<IContentReplyPayload> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.ReceiveResponseHndlr.name);
 
@@ -55,7 +55,7 @@ export class PopUpMessagesBroker {
     });
   }
 
-  private SendMessageToSingleTab(messageToSend: MsgFromPopUp): Promise<IContentState> {
+  private SendMessageToSingleTab(messageToSend: MsgFromPopUp): Promise<IContentReplyPayload> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
 
@@ -72,9 +72,9 @@ export class PopUpMessagesBroker {
 
         await browser.tabs.sendMessage(targetTab.id, messageToSend)
         .then((response: any) => this.ReceiveResponseHndlr(response))
-        .then((scWindowState: IContentState) => {
+        .then((scWindowState: IContentReplyPayload) => {
           let validator = new ScWindowStateValidator(this.Logger);
-          let validatedContentState: IContentState = validator.ValidateScWindowState(scWindowState);
+          let validatedContentState: IContentReplyPayload = validator.ValidateScWindowState(scWindowState);
           resolve(validatedContentState);
         })
         .catch((ex) => { reject(ex) });
@@ -83,12 +83,12 @@ export class PopUpMessagesBroker {
     });
   }
 
-  async SendMessageToContentTab(msgPlayload: MsgFromPopUp): Promise<IContentState> {
+  async SendMessageToContentTab(msgPlayload: MsgFromPopUp): Promise<IContentReplyPayload> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
 
       await this.SendMessageToSingleTab(msgPlayload)
-        .then((result: IContentState) => {
+        .then((result: IContentReplyPayload) => {
           resolve(result);
         })
         .catch((err) => reject(err));

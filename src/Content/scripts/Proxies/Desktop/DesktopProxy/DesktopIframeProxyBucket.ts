@@ -1,13 +1,13 @@
 ﻿import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
-import { IframeHelper } from "../../../Helpers/IframeHelper";
+import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ContentEditorProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { Subject_DesktopIframeProxyMutatedEvent } from "./Events/Subject_DesktopIframeProxyMutatedEvent/Subject_DesktopIframeProxyMutatedEvent";
 import { IPayload_DesktopIframeProxyMutated } from "./Events/Subject_DesktopIframeProxyMutatedEvent/IPayload_DesktopIframeProxyMutatedEvent";
 import { DesktopIframeProxy } from "../../ContentEditor/ContentEditorProxy/DesktopIframeProxy";
+import { FrameHelper } from "../../../Helpers/IframeHelper";
 
 export class DesktopIframeProxyBucket extends LoggableBase {
   private CeProxies: ContentEditorProxy[] = [];
@@ -25,9 +25,9 @@ export class DesktopIframeProxyBucket extends LoggableBase {
     this.Logger.InstantiateEnd(DesktopIframeProxyBucket.name);
   }
 
-  private GetIframeHelper(): IframeHelper {
+  private GetFrameHelper() {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new IframeHelper(this.Logger, this.SettingsAgent);
+      this.__iframeHelper = new FrameHelper(this.Logger, this.SettingsAgent);
     }
     return this.__iframeHelper;
   }
@@ -67,7 +67,7 @@ export class DesktopIframeProxyBucket extends LoggableBase {
 
   async InitHostedIframes(): Promise<void> {
     try {
-     await this.GetIframeHelper().GetHostedIframes(this.AssociatedDesktopDoc)
+      await this.GetFrameHelper().GetHostedframes(this.AssociatedDesktopDoc)
         .then((foundIframes: FrameProxy[]) => {
           foundIframes.forEach(async (oneIframe) => {
             this.AddToBucketFromIframeProxy(oneIframe);

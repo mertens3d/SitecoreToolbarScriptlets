@@ -5,11 +5,12 @@ import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/IL
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
+import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorTreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
-import { IDataOneTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
+import { IDataStateOfTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
+import { IDataStateOfFrame } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataFrameState';
 
 export class ContentEditorProxy extends LoggableBase {
   AssociatedTreeProxy: IContentEditorTreeProxy;
@@ -28,12 +29,22 @@ export class ContentEditorProxy extends LoggableBase {
     this.AssociatedDoc = associatedDoc;
     this.ParentIframeId = parentIframeId;
 
-
     this.ValidateAssociatedDocContentEditor();
 
     this.AssociatedTreeProxy = new ContentEditorTreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent, this.ParentIframeId);
 
     this.Logger.InstantiateEnd(ContentEditorProxy.name);
+  }
+
+  GetStateOfContentEditor(): IDataStateOfContentEditor {
+    let toReturnStateOfContentEditor: IDataStateOfContentEditor = {
+      StateOfTree: null,
+      Id: null,
+    }
+
+    toReturnStateOfContentEditor.StateOfTree = this.AssociatedTreeProxy.GetStateOfTree();
+
+    return toReturnStateOfContentEditor;
   }
 
   ValidateAssociatedDocContentEditor() {
@@ -81,12 +92,12 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncEnd(this.AddListenerToActiveNodeChange.name);
   }
 
-  async SetStateTree(oneTreeState: IDataOneStorageOneTreeState): Promise<void> {
+  async SetStateTree(oneTreeState: IDataStateOfContentEditor): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateTree.name);
 
       if (oneTreeState) {
-        await this.SetStateDesktopIframeProxy(oneTreeState)
+        await this.SetStateOfContentEditor(oneTreeState)
           .then(() => resolve())
           .catch((err) => {
             this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
@@ -105,26 +116,26 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.AssociatedDoc.DocId));
   }
 
-  async SetStateDesktopIframeProxy(dataToRestore: IDataOneStorageOneTreeState): Promise<Boolean> {
+  async SetStateOfContentEditor(dataToRestore: IDataStateOfContentEditor): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetStateDesktopIframeProxy.name, Guid.AsShort(this.AssociatedDoc.DocId));
+      this.Logger.FuncStart(this.SetStateOfContentEditor.name, Guid.AsShort(this.AssociatedDoc.DocId));
 
-      this.Logger.Log('Node Count in storage data: ' + dataToRestore.AllTreeNodeAr.length);
+      this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfTree.AllTreeNodeAr.length);
 
-      await this.AssociatedTreeProxy.WaitForAndRestoreManyAllNodes(dataToRestore, this.AssociatedDoc)
+      await this.AssociatedTreeProxy.SetStateOfTree(dataToRestore.StateOfTree)
         .then(() => resolve(true))
-        .catch((err) => reject(this.SetStateDesktopIframeProxy.name + " " + err));
+        .catch((err) => reject(this.SetStateOfContentEditor.name + " " + err));
 
-      this.Logger.FuncEnd(this.SetStateDesktopIframeProxy.name);
+      this.Logger.FuncEnd(this.SetStateOfContentEditor.name);
     });
   }
 
-  GetActiveNode(allTreeNodeAr: IDataOneTreeNode[]) {
+  GetActiveNode(allTreeNodeAr: IDataStateOfTreeNode[]) {
     this.Logger.FuncStart(this.GetActiveNode.name);
-    let toReturn: IDataOneTreeNode = null;
+    let toReturn: IDataStateOfTreeNode = null;
     if (allTreeNodeAr) {
       for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
-        let candidate: IDataOneTreeNode = allTreeNodeAr[idx];
+        let candidate: IDataStateOfTreeNode = allTreeNodeAr[idx];
         if (candidate.IsActive) {
           toReturn = candidate;
           break;
@@ -138,19 +149,12 @@ export class ContentEditorProxy extends LoggableBase {
     return toReturn;
   }
 
-  GetStateTree(): IDataOneStorageOneTreeState {
+  GetStateTree(): IDataStateOfContentEditor {
     this.Logger.FuncStart(this.GetStateTree.name);
 
-    var toReturnOneTreeState: IDataOneStorageOneTreeState = {
+    var toReturnOneTreeState: IDataStateOfContentEditor = {
       Id: this.AssociatedId,
-      AllTreeNodeAr: this.AssociatedTreeProxy.GetOneLiveTreeData(),
-      ActiveNode: null
-    }
-
-    toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
-
-    if (toReturnOneTreeState) {
-      this.Logger.LogVal('Tree State node count', toReturnOneTreeState.AllTreeNodeAr.length);
+      StateOfTree: this.AssociatedTreeProxy.GetStateOfTree(),
     }
 
     this.Logger.FuncEnd(this.GetStateTree.name);

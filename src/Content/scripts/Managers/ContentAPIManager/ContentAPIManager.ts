@@ -5,7 +5,7 @@ import { IHindSiteScWindowApi } from "../../../../Shared/scripts/Interfaces/Agen
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { RecipeAddNewContentEditorToDesktop } from "../../ContentApi/Recipes/RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop";
 import { RecipePublishActiveCe } from "../../ContentApi/Recipes/RecipePublishActiveCe/RecipePublishActiveCe";
@@ -47,10 +47,10 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
   //  })
   //}
 
-  GetStateContent(): Promise<IContentState> {
+  GetStateContent(): Promise<IContentReplyPayload> {
     return new Promise(async (resolve, reject) => {
       await this.ScWinMan.GetStateScWindow()
-        .then((result: IContentState) => resolve(result))
+        .then((result: IContentReplyPayload) => resolve(result))
         .catch((err) => reject(err))
     });
   }
@@ -109,7 +109,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
 
   RestoreSnapshop(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeRestoreState(commandData.Logger, commandData.ScWinMan.GetScUrlAgent(), commandData.AtticAgent, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopUiProxy, commandData.ToastAgent, commandData.ScWinMan.CeProxy, commandData.TargetSnapShotId, this.SettingsAgent);// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
+      let recipe = new RecipeRestoreState(commandData.Logger, commandData.ScWinMan.GetScUrlAgent(), commandData.AtticAgent, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopUiProxy, commandData.ToastAgent, commandData.ScWinMan.ContentEditorProxy, commandData.TargetSnapShotId, this.SettingsAgent);// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
 
       await recipe.Execute()
         .then(() => resolve())
