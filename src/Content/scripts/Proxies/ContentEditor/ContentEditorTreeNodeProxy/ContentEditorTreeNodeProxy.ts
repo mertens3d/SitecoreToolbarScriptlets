@@ -2,7 +2,7 @@
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IDataStateOfScContentTreeNode } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode";
+import { IDataStateOfScContentTreeNode } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 

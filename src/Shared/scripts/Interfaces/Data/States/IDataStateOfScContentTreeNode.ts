@@ -1,4 +1,4 @@
-﻿import { GuidData } from "../../Helpers/GuidData";
+﻿import { GuidData } from "../../../Helpers/GuidData";
 
 export interface IDataStateOfScContentTreeNode {
   IsActive: Boolean;

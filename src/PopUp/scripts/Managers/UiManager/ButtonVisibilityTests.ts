@@ -1,10 +1,9 @@
-﻿import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
-import { IDataContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+﻿import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
+import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
-import { IDataStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
-import { StateHelpers } from "./Modules/SelectSnapshotModule/StateHelpers";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { StateHelpers } from "../../Classes/StateHelpers";
+import { IDataStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor";
 
 export class ButtonVisibilityTester extends LoggableBase {
   StateHelpers: StateHelpers;
@@ -35,10 +34,10 @@ export class ButtonVisibilityTester extends LoggableBase {
     let toReturn: boolean = false;
 
     if (stateOfSitecoreWindow) {
-      let activeStateOfContentEditor: IDataStateOfContentEditor = this.StateHelpers.GetActiveContentEditFromStateOfDesktop(stateOfSitecoreWindow.StateOfDesktop);
+      let activeStateOfContentEditor: IDataStateOfContentEditor = this.StateHelpers.GetActiveContentEditFromStateOfDesktop(stateOfSitecoreWindow.States.StateOfDesktop);
 
       if (!activeStateOfContentEditor) {
-        activeStateOfContentEditor = stateOfSitecoreWindow.StateOfContentEditor;
+        activeStateOfContentEditor = stateOfSitecoreWindow.States.StateOfContentEditor;
       }
 
       toReturn = activeStateOfContentEditor && activeStateOfContentEditor.StateOfTree.ActiveTreeNodeIndex !== null;

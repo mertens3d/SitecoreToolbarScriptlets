@@ -9,25 +9,25 @@ import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
 import { IFirstActive } from "../../../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
 import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IDataStateOfSitecoreWindow } from "../../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
-import { IDataStateOfSnapShots } from "../../../../../../Shared/scripts/Interfaces/Data/IDataSnapShots";
-import { IDataStateOfSnapShotSelect } from "../../../../../../Shared/scripts/Interfaces/Data/IDataStateOfSnapShotSelect";
+import { IDataStateOfSitecoreWindow } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataSitecoreWindowStates } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
+import { IDataStateOfStorageSnapShots } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { IDataStateOfSnapShotSelect } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSnapShotSelect";
 import { IDataStateOfFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
 import { ISelectionHeaders } from "../../../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { PopConst } from "../../../../Classes/PopConst";
-import { StateHelpers } from "./StateHelpers";
+import { StateHelpers } from "../../../../Classes/StateHelpers";
 
 export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapShotSelect> implements IUiModule {
   StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
-  StateOfSnapShots: IDataStateOfSnapShots;
+  StateOfStorageSnapShots: IDataStateOfStorageSnapShots;
 
-  private __selector: string;
-  private  StateHelpers: StateHelpers;
+  private Selector: string;
+  private StateHelpers: StateHelpers;
 
   constructor(selector: string, logger: ILoggerAgent) {
-    super(logger);
-    this.__selector = selector;
-    this.Logger = logger;
+    super(logger, SelectSnapshotModule.name);
+    this.Selector = selector;
     this.StateHelpers = new StateHelpers(this.Logger);
   }
 
@@ -52,16 +52,17 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
     this.Logger.FuncEnd(this.AssignOnChangeEvent.name, selector);
   }
 
-  SetContentState(contentState: IDataStateOfSitecoreWindow) {
-    this.StateOfSitecoreWindow = contentState;
+  HydrateStorageSnapShotModule(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, states: IDataSitecoreWindowStates, stateOfStorageSnapShots: IDataStateOfStorageSnapShots) {
+    this.StateOfSitecoreWindow = stateOfSitecoreWindow;
+    this.StateOfStorageSnapShots = stateOfStorageSnapShots;
+    this.PopulateStateOfSnapShotSelectElement();
   }
 
   RefreshUi(): void {
-    this.PopulateStateOfSnapShotSelect();
   }
 
   private __getSelectElem(): HTMLSelectElement {
-    return <HTMLSelectElement>window.document.querySelector(this.__selector);
+    return <HTMLSelectElement>window.document.querySelector(this.Selector);
   }
 
   SelectHeaderStr(prefix: string): string {
@@ -141,41 +142,42 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
     this.Logger.FuncEnd(this.SelectChanged.name);
   }
 
-  private PopulateStateOfSnapShotSelect() {
-    this.Logger.FuncStart(this.PopulateStateOfSnapShotSelect.name);
+  private PopulateStateOfSnapShotSelectElement() {
+    this.Logger.FuncStart(this.PopulateStateOfSnapShotSelectElement.name);
 
     let priorValue: GuidData = this.GetSelectSnapshotId();
 
-    if (this.StateOfSnapShots.SnapShots) {
-      let snapShots: IDataStateOfSitecoreWindow[] = this.StateOfSnapShots.SnapShots;
+    if (this.StateOfStorageSnapShots && this.StateOfStorageSnapShots.SnapShots) {
+      let snapShots: IDataStateOfSitecoreWindow[] = this.StateOfStorageSnapShots.SnapShots;
 
-      if (snapShots) {
-        var targetSel: HTMLSelectElement = this.__getSelectElem();
+      var targetSel: HTMLSelectElement = this.__getSelectElem();
 
-        if (targetSel) {
-          this.CleanExistingSelection(targetSel);
-          var headers: ISelectionHeaders = this.WriteHeaders();
+      if (targetSel) {
+        this.CleanExistingSelection(targetSel);
+        var headers: ISelectionHeaders = this.WriteHeaders();
 
-          if (snapShots && snapShots.length > 0) {
-            for (var idx: number = 0; idx < snapShots.length; idx++) {
-              var data = snapShots[idx];
-              let el = this.BuildOne(data, priorValue, idx);
-              this.AppendToCorrectSnapshotGroup(data, el, headers);
-            }
+        if (snapShots && snapShots.length > 0) {
+          for (var idx: number = 0; idx < snapShots.length; idx++) {
+            var data = snapShots[idx];
+            let el = this.BuildOneSnapshot(data, priorValue, idx);
+            this.AppendSnapShotToCorrectGroup(data, el, headers);
           }
-
-          targetSel.appendChild(headers.FavoriteTitle);
-          targetSel.appendChild(headers.Favorite);
-
-          targetSel.appendChild(headers.ManualTitle);
-          targetSel.appendChild(headers.Manual);
-
-          targetSel.appendChild(headers.AutoTitle);
-          targetSel.appendChild(headers.Auto);
         }
+
+        targetSel.appendChild(headers.FavoriteTitle);
+        targetSel.appendChild(headers.Favorite);
+
+        targetSel.appendChild(headers.ManualTitle);
+        targetSel.appendChild(headers.Manual);
+
+        targetSel.appendChild(headers.AutoTitle);
+        targetSel.appendChild(headers.Auto);
       }
+    } else {
+      this.Logger.Log('no snap shots');
     }
-    this.Logger.FuncEnd(this.PopulateStateOfSnapShotSelect.name);
+
+    this.Logger.FuncEnd(this.PopulateStateOfSnapShotSelectElement.name);
   }
 
   //private GetFirstDesktopStateWithActiveNode(data: IDataDesktopState): IDataContentEditorState {
@@ -206,13 +208,12 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
       activeTreeNode: null
     }
 
-    if ((data.Meta.WindowType === ScWindowType.Desktop) && data.StateOfDesktop && data.StateOfDesktop.IndexOfActiveFrame && data.StateOfDesktop.StateOfFrames) {
-
-      let activeFrame: IDataStateOfFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.StateOfDesktop);  
+    if ((data.Meta.WindowType === ScWindowType.Desktop) && data.States.StateOfDesktop && data.States.StateOfDesktop.IndexOfActiveFrame && data.States.StateOfDesktop.StateOfFrames) {
+      let activeFrame: IDataStateOfFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.States.StateOfDesktop);
       toReturn.StateOfContentEditor = activeFrame.StateOfContentEditor;
-      toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor); 
+      toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);
     }
-    else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.StateOfContentEditor && data.StateOfContentEditor.StateOfTree) {
+    else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.States.StateOfContentEditor && data.States.StateOfContentEditor.StateOfTree) {
       toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(toReturn.StateOfContentEditor);
     } else {
       this.Logger.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(data.Meta.WindowType));
@@ -254,7 +255,7 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
     return toReturn;
   }
 
-  private BuildOne(data: IDataStateOfSitecoreWindow, prior: GuidData, idx: number): HTMLOptionElement {
+  private BuildOneSnapshot(data: IDataStateOfSitecoreWindow, prior: GuidData, idx: number): HTMLOptionElement {
     let el: HTMLOptionElement = <HTMLOptionElement>window.document.createElement('option');
 
     let timeNicknameFavStr = this.TimeNicknameFavStr(data);
@@ -279,7 +280,7 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
     return el;
   }
 
-  private AppendToCorrectSnapshotGroup(data: IDataStateOfSitecoreWindow, el: HTMLOptionElement, headers: ISelectionHeaders) {
+  private AppendSnapShotToCorrectGroup(data: IDataStateOfSitecoreWindow, el: HTMLOptionElement, headers: ISelectionHeaders) {
     if (data.Meta.Flavor === SnapShotFlavor.Autosave) {
       headers.Auto.appendChild(el);
     } else if (data.Meta.Flavor === SnapShotFlavor.Favorite) {
@@ -297,6 +298,7 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
   }
 
   CleanExistingSelection(targetSel: HTMLSelectElement) {
+    this.Logger.FuncStart(this.CleanExistingSelection.name);
     this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderAuto);
     this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderAutoTitle);
     this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderFavorite);
@@ -305,5 +307,6 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
     this.cleanOneGroup(targetSel, PopConst.Const.ElemId.HS.SelectHeaderManualTitle);
 
     targetSel.options.length = 0;
+    this.Logger.FuncEnd(this.CleanExistingSelection.name);
   }
 }

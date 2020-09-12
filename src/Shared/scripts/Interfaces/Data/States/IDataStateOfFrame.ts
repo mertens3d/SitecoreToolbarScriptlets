@@ -1,9 +1,11 @@
-﻿import { IDataStateOfContentEditor } from "../IDataOneStorageOneTreeState";
-import { ScWindowType } from "../../../Enums/scWindowType";
+﻿import { ScWindowType } from "../../../Enums/scWindowType";
+import { GuidData } from "../../../Helpers/GuidData";
+import { IDataStateOfContentEditor } from "./IDataStateOfContentEditor";
 
 export interface IDataStateOfFrame {
   StateOfContentEditor: IDataStateOfContentEditor;
-  Style: string;
+  StorageId: GuidData;
+  Styling: string;
   WindowType: ScWindowType;
   ZIndex: number
 }

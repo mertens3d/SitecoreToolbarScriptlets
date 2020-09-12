@@ -1,18 +1,20 @@
 ﻿import { UiManager } from "../../../../../PopUp/scripts/Managers/UiManager/UiManager";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataContentReplyPayload } from "../../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { IGeneric_Observer } from "./Events/GenericEvent/IGeneric_Observer";
 
-export class CommandCompleted_Observer extends LoggableBase implements IGeneric_Observer<IDataContentReplyPayload> {
-  private Owner: UiManager;
+export class ContentReplyReceivedEvent_Observer extends LoggableBase implements IGeneric_Observer<IDataContentReplyReceivedEvent_Payload> {
+  private OwnerUiManager: UiManager;
+  Friendly: string;
 
   constructor(logger: ILoggerAgent, owner: UiManager) {
     super(logger);
-    this.Owner = owner;
+    this.Friendly = ContentReplyReceivedEvent_Observer.name;
+    this.OwnerUiManager = owner;
   }
 
-  Update(payload: IDataContentReplyPayload) {
-    this.Owner.CallBackCommandComplete(payload.StateOfSitecoreWindow, payload.StateOfSnapShots);
+  Update(payload: IDataContentReplyReceivedEvent_Payload) {
+    this.OwnerUiManager.ContentReplyReceivedEventCallBack(payload.StateOfSitecoreWindow, payload.StateOfStorageSnapShots);
   }
 }

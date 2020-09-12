@@ -7,19 +7,18 @@ import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IDataContentReplyPayload } from "../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { PopUpMessageManager } from "../Managers/MessageManager";
 import { TabManager } from "../Managers/TabManager";
 
-export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayload>  {
+export class HandlersExternalEvent_Subject extends GenericEvent_Subject<IDataContentReplyReceivedEvent_Payload>  {
   private MessageManager: PopUpMessageManager;
   private SettingsAgent: ISettingsAgent;
   private TabMan: TabManager;
-  AllCallbacksCommandComplete: Function[] = [];
 
   constructor(logger: ILoggerAgent, msgManager: PopUpMessageManager, settingsAgent: ISettingsAgent, tabMan: TabManager) {
-    super(logger)
+    super(logger, HandlersExternalEvent_Subject.name);
     this.MessageManager = msgManager;
     this.SettingsAgent = settingsAgent;
     this.TabMan = tabMan;
@@ -38,23 +37,18 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
     return msg;
   }
 
-  AddCallbackCommandComplete(callbackFunc: Function) {
-    this.AllCallbacksCommandComplete.push(callbackFunc);
-  }
-
-
-  private SendContentCommand(msgPlayload: MsgFromPopUp) {
+  private SendCommandToContent(sendMsgPlayload: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SendContentCommand.name);
+      this.Logger.FuncStart(this.SendCommandToContent.name);
       this.__cleardebugText();
       //todo - put back?  this.UiMan.ClearCancelFlag();
 
-      await this.MessageManager.SendMessageToContent(msgPlayload)
-        .then((contentReplyPayload: IDataContentReplyPayload) => this.NotifyObservers(contentReplyPayload))
+      this.MessageManager.SendMessageToContentAsync(sendMsgPlayload)
+        .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.NotifyObservers(replyMessagePayload))
         .then(() => resolve())
         .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.SendContentCommand.name);
+      this.Logger.FuncEnd(this.SendCommandToContent.name);
     });
   }
 
@@ -62,7 +56,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAddCETab, data);
 
-      await data.Self.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendCommandToContent(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -72,7 +66,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqAdminB, data);
 
-      await data.Self.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendCommandToContent(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -82,7 +76,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqQuickPublish, data);
 
-      await data.Self.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendCommandToContent(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -92,7 +86,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqTakeSnapShot, data);
 
-      await data.Self.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendCommandToContent(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -117,7 +111,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.Ping, data);
 
-      await data.Self.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendCommandToContent(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -130,7 +124,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
       var msg = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqSetStateOfSitecoreWindow, data);
       msg.Payload.IdOfSelect = data.MenuState.SelectSnapshotId;
 
-      await data.Self.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendCommandToContent(msg)
         .then(() => resolve())
         .catch((ex) => reject(ex));
 
@@ -159,7 +153,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
 
       msg.Payload.SnapShotSettings.SnapShotNewNickname = data.MenuState.CurrentNicknameValue;
 
-      await data.Self.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendCommandToContent(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     })
@@ -171,7 +165,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
   ToggleFavorite(data: ICommandHndlrDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
       var msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqMarkFavorite, data);
-      await data.Self.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendCommandToContent(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -183,7 +177,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
 
       var result: boolean = confirm('Remove ?: ' + Guid.AsShort(msg.Payload.IdOfSelect));
       if (result === true) {
-        await data.Self.Handlers.External.SendContentCommand(msg)
+        await data.Self.Handlers.External.SendCommandToContent(msg)
           .then(() => resolve())
           .catch((err) => reject(err));
       } else {
@@ -197,7 +191,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqToggleCompactCss, data);
 
       msg.Payload.SnapShotSettings.SnapShotNewNickname = data.MenuState.CurrentNicknameValue;
-      await data.Self.Handlers.External.SendContentCommand(msg)
+      await data.Self.Handlers.External.SendCommandToContent(msg)
         .then(() => resolve())
         .catch((err) => reject(err));
     })

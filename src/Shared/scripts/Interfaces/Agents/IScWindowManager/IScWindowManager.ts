@@ -5,7 +5,7 @@ import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { ScWindowRecipePartials } from "../../../../../Content/scripts/Managers/ScWindowManager/ScWindowRecipePartials";
 import { ContentEditorProxy } from "../../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DesktopProxy } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
-import { IDataStateOfSitecoreWindow } from "../../Data/IDataOneWindowStorage";
+import { IDataStateOfSitecoreWindow } from "../../Data/States/IDataStateOfSitecoreWindow";
 
 export interface IScWindowManager {
   GetStateOfSiteCoreWindow(): Promise<IDataStateOfSitecoreWindow>;

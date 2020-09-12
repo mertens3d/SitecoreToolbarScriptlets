@@ -1,4 +1,4 @@
-﻿import { IDataStateOfFrame } from "./States/IDataStateOfFrame";
+﻿import { IDataStateOfFrame } from "./IDataStateOfFrame";
 
 export interface IDataStateOfDesktop {
   IndexOfActiveFrame: number;

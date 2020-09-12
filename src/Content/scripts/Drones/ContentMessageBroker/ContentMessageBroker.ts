@@ -12,7 +12,7 @@ import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { IDataContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 import { CommandHndlrDataForContent } from "../../../../Shared/scripts/Classes/CommandHndlrDataForContent/CommandHndlrDataForContent";
@@ -49,7 +49,6 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     browser.runtime.onMessage.addListener(request => self.ContentReceiveRequest(request));
 
     this.Logger.Log('Listening for messages');
-    //this.ReadyForMessages = true;
     this.Logger.FuncEnd(this.BeginListening.name);
   }
 
@@ -88,21 +87,17 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       this.Logger.Log('');
       this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
-
-      
-
-
-          this.Logger.LogVal('ce butt', this.SettingsAgent.GetByKey(SettingKey.AutoLogin).ValueAsBool());
+      this.Logger.LogVal('ce butt', this.SettingsAgent.GetByKey(SettingKey.AutoLogin).ValueAsBool());
 
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
           this.SettingsAgent.UpdateSettingsFromPopUpMsg(reqMsgFromPopup.CurrentContentPrefs)
 
-
-            await this.ReqMsgRouter(reqMsgFromPopup)
+          await this.ReqMsgRouter(reqMsgFromPopup)
             .then((contentResponse: MsgFromContent) => {
               this.Logger.Log('responding: ' + StaticHelpers.MsgFlagAsString(contentResponse.MsgFlag))
+              this.Logger.LogAsJsonPretty('contentResponse: ', contentResponse)
               resolve(contentResponse);
             })
             .catch((err) => {
@@ -227,7 +222,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       let response = new MsgFromContent(MsgFlag.Unknown);
 
       await this.ApiManager.GetStateOfContent()
-        .then((result: IDataContentReplyPayload) => {
+        .then((result: IDataContentReplyReceivedEvent_Payload) => {
           response.Payload = result;
           response.Payload.LastReq = msgFlag;
           response.MsgFlag = MsgFlag.RespTaskSuccessful;

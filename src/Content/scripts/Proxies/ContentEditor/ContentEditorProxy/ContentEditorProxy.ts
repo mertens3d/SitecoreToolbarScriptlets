@@ -1,18 +1,18 @@
-﻿import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+﻿import { DefaultStateOfContentEditor } from '../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentEditor';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
-import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
-import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
-import { LoggableBase } from '../../../Managers/LoggableBase';
-import { TreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
-import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
+import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
+import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
 import { IGeneric_Observer } from "../../Desktop/DesktopProxy/Events/GenericEvent/IGeneric_Observer";
+import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { ITreeMutatedEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
-import { IDataStateOfTree } from '../../../../../Shared/scripts/Interfaces/Data/iDataTreeState';
+import { LoggableBase } from '../../../Managers/LoggableBase';
+import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
+import { TreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
 
 export class ContentEditorProxy extends LoggableBase {
   AssociatedTreeProxy: IContentEditorTreeProxy;
@@ -39,13 +39,11 @@ export class ContentEditorProxy extends LoggableBase {
   }
 
   GetStateOfContentEditor(): IDataStateOfContentEditor {
-    let toReturnStateOfContentEditor: IDataStateOfContentEditor = {
-      StateOfTree: this.AssociatedTreeProxy.GetStateOfTree(),
+    {
+      let toReturnStateOfContentEditor: IDataStateOfContentEditor = new DefaultStateOfContentEditor();
+      toReturnStateOfContentEditor.StateOfTree = this.AssociatedTreeProxy.GetStateOfTree();
+      return toReturnStateOfContentEditor;
     }
-
-    toReturnStateOfContentEditor.StateOfTree = this.AssociatedTreeProxy.GetStateOfTree();
-
-    return toReturnStateOfContentEditor;
   }
 
   ValidateAssociatedDocContentEditor() {

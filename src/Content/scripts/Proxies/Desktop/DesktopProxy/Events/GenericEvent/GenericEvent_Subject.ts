@@ -1,12 +1,23 @@
 ﻿import { LoggableBase } from "../../../../../Managers/LoggableBase";
 import { IGeneric_Observer } from "./IGeneric_Observer";
 import { IObservable } from "./IObservable";
+import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 
 export class GenericEvent_Subject<T> extends LoggableBase implements IObservable<T> {
-    protected ObserverCollection: IGeneric_Observer<T>[] = [];
+  protected ObserverCollection: IGeneric_Observer<T>[] = [];
+  protected Friendly: string;
 
-    RegisterObserver(observer: IGeneric_Observer<T>): void {
-        if (observer && this.ObserverCollection.indexOf(observer) < 0) {
+  constructor(logger: ILoggerAgent, friendly: string) {
+    super(logger);
+    this.Friendly = friendly;
+    this.Logger.InstantiateStart(this.Friendly);
+    this.Logger.InstantiateEnd(this.Friendly);
+  }
+
+  RegisterObserver(observer: IGeneric_Observer<T>): void {
+    this.Logger.FuncStart(this.RegisterObserver.name, observer.Friendly + ' to ' + this.Friendly);
+      if (observer && this.ObserverCollection.indexOf(observer) < 0) {
+        this.Logger.Log(this.RegisterObserver.name + observer.Friendly);
             this.ObserverCollection.push(observer);
         }
     }
@@ -23,8 +34,9 @@ export class GenericEvent_Subject<T> extends LoggableBase implements IObservable
         this.Logger.FuncEnd(this.UnregisterObserver.name);
     }
 
-    NotifyObservers(payload: T): void {
-        this.Logger.FuncStart(this.NotifyObservers.name, 'length: ' + this.ObserverCollection.length);
+  NotifyObservers(payload: T): void {
+
+    this.Logger.FuncStart(this.NotifyObservers.name + ' ' + this.Friendly, 'length: ' + this.ObserverCollection.length);
         this.ObserverCollection.forEach((observer) => observer.Update(payload));
         this.Logger.FuncEnd(this.NotifyObservers.name);
     }

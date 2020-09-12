@@ -1,4 +1,4 @@
-﻿import { CommandCompleted_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/CommandCompleted_Observer";
+﻿import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/CommandCompleted_Observer";
 import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
@@ -92,7 +92,7 @@ class PopUpEntry {
       let eventMan = new EventManager(this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
 
       let self = uiMan;
-      handlers.External.RegisterObserver(new CommandCompleted_Observer(this.Logger, uiMan));
+      handlers.External.RegisterObserver(new ContentReplyReceivedEvent_Observer(this.Logger, uiMan));
 
       uiMan.InitUiManager();
 

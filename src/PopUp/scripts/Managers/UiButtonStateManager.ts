@@ -1,23 +1,24 @@
-﻿import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
+import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
-import { IDataContentReplyPayload } from "../../../Shared/scripts/Interfaces/Data/IContentState";
-import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
-import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
-import { IDataStateOfSitecoreWindow } from '../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
 
 export class UiButtonStateManager extends LoggableBase {
-  private StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
+  private AllMenuCommands: IOneCommand[];
   private currentWindowType: ScWindowType;
   private currSelSnapshot: GuidData;
+  private StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   private Tester: ButtonVisibilityTester;
 
-  constructor(logger: ILoggerAgent) {
+  constructor(logger: ILoggerAgent, allMenuCommands: IOneCommand[]) {
     super(logger);
 
     this.Logger.InstantiateStart(UiButtonStateManager.name);
+    this.AllMenuCommands = allMenuCommands;//: IOneCommand[]
     this.Logger.InstantiateEnd(UiButtonStateManager.name);
   }
 
@@ -117,15 +118,17 @@ export class UiButtonStateManager extends LoggableBase {
     }
   }
 
-  RefreshUiButtonState(currentWindowType: ScWindowType, currSelSnapshot: GuidData, stateOfSitecoreWindow: IDataStateOfSitecoreWindow, allMenuCommands: IOneCommand[]): void {
-    this.Logger.FuncStart(this.RefreshUiButtonState.name, allMenuCommands.length);
-
-    this.currentWindowType = currentWindowType;
-    this.currSelSnapshot = currSelSnapshot;
+  HydrateUiButtonState(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): void {
+    this.currentWindowType = stateOfSitecoreWindow.Meta.WindowType;
+    // todo - turn this into an event obsert  this.currSelSnapshot = currSelSnapshot;
     this.StateOfSitecoreWindow = stateOfSitecoreWindow;
+  }
 
-    for (var idx = 0; idx < allMenuCommands.length; idx++) {
-      var oneCommand = allMenuCommands[idx];
+  RefreshUiButtonStates(): void {
+    this.Logger.FuncStart(this.RefreshUiButtonStates.name,this.AllMenuCommands.length);
+
+    for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
+      var oneCommand = this.AllMenuCommands[idx];
 
       if (oneCommand.ButtonSelector !== null) {
         let passesOneTest: boolean = false;
@@ -135,12 +138,12 @@ export class UiButtonStateManager extends LoggableBase {
           passesOneTest = this.TestAgainstAllSetControllers(oneCommand);
         } else {
           this.Logger.LogAsJsonPretty('oneCommand', oneCommand);
-          this.Logger.ErrorAndContinue(this.RefreshUiButtonState.name, 'target button not found: ' + oneCommand.ButtonSelector);
+          this.Logger.ErrorAndContinue(this.RefreshUiButtonStates.name, 'target button not found: ' + oneCommand.ButtonSelector);
         }
         this.SetOneButtonVisibility(targetButton, passesOneTest);
       }
     }
 
-    this.Logger.FuncEnd(this.RefreshUiButtonState.name);
+    this.Logger.FuncEnd(this.RefreshUiButtonStates.name);
   }
 }

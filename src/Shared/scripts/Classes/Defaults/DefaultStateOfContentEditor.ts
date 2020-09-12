@@ -1,6 +1,7 @@
-﻿import { IDataStateOfContentEditor } from "../../Interfaces/Data/IDataOneStorageOneTreeState";
-import { IDataStateOfTree } from "../../Interfaces/Data/iDataTreeState";
+﻿import { IDataStateOfContentEditor } from "../../Interfaces/Data/States/IDataStateOfContentEditor";
+import { IDataStateOfTree } from "../../Interfaces/Data/States/IDataStateOfTree";
 
 export class DefaultStateOfContentEditor implements IDataStateOfContentEditor {
-    StateOfTree: IDataStateOfTree;
+  StateOfTree: IDataStateOfTree;
+  IsAlive: false;
 }

@@ -17,10 +17,12 @@ import { IGeneric_Observer } from '../DesktopProxy/Events/GenericEvent/IGeneric_
 
 export class TreeNodeChangedEvent_Observer extends LoggableBase implements IGeneric_Observer<ITreeMutatedEvent_Payload> {
   private Owner: DesktopStartBarProxy;
+    Friendly: string;
 
   constructor(logger: ILoggerAgent, owner: DesktopStartBarProxy) {
     super(logger);
     this.Owner = owner;
+    this.Friendly = TreeNodeChangedEvent_Observer.name;
   }
 
   Update(payload: ITreeMutatedEvent_Payload) {

@@ -6,7 +6,7 @@ import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
-import { IDataContentReplyPayload } from "../../../Interfaces/Data/IContentState";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
 
 export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
   constructor(logger: ILoggerAgent) {
@@ -65,7 +65,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
     return toReturn;
   }
 
-  BuildEditPrevNormUrl(newMode: scMode, contState: IDataContentReplyPayload): void {
+  BuildEditPrevNormUrl(newMode: scMode, contState: IDataContentReplyReceivedEvent_Payload): void {
     this.UrlParts.Anchor = '';
     this.UrlParts.FilePath = '';
 

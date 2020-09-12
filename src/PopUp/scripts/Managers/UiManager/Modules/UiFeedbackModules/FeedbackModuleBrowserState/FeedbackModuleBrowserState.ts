@@ -1,10 +1,10 @@
-﻿import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
+﻿import { ScUrlAgent } from "../../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { GenericUrlParts } from "../../../../../../../Shared/scripts/Interfaces/UrlParts";
-import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
 import { PopConst } from "../../../../../Classes/PopConst";
-import { ScUrlAgent } from "../../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
 
 export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements IUiModule {
   constructor(selector: string, loggerAgent: ILoggerAgent) {
@@ -14,7 +14,8 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
   }
   RefreshUi(): void {
   }
-  PopulateFeedackBrowserState(scUrlAgent: ScUrlAgent) {
+
+  HydrateFeedackBrowserState(scUrlAgent: ScUrlAgent) {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.FeedbackBrowserState);
 
     var allStateText: string = 'Browser State' + this.lineBreak;
@@ -24,7 +25,7 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
 
     let UrlParts: GenericUrlParts = scUrlAgent.GetUrlParts();
 
-    allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + UrlParts. OriginalRaw;
+    allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + UrlParts.OriginalRaw;
 
     allStateText += this.indentedLineBreak + 'Protocol: ' + UrlParts.Protocol;
 

@@ -1,5 +1,5 @@
 ﻿import { GuidData } from "../../Helpers/GuidData";
-import { IDataStateOfScContentTreeNode } from "../../Interfaces/Data/IDataOneTreeNode";
+import { IDataStateOfScContentTreeNode } from "../../Interfaces/Data/States/IDataStateOfScContentTreeNode";
 
 export class DefaultStateOfTreeNode implements IDataStateOfScContentTreeNode {
     IsActive = false;

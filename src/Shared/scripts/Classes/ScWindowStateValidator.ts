@@ -1,22 +1,22 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { IDataContentReplyPayload } from "../Interfaces/Data/IContentState";
-import { IDataStateOfDesktop } from "../Interfaces/Data/IDataDesktopState";
-import { IDataStateOfContentEditor } from "../Interfaces/Data/IDataOneStorageOneTreeState";
-import { IDataStateOfSitecoreWindow } from "../Interfaces/Data/IDataOneWindowStorage";
-import { IDataStateOfSnapShots } from "../Interfaces/Data/IDataSnapShots";
-import { DefaultContentReplyPayload } from "./Defaults/DefaultScWindowState";
+﻿import { DefaultContentReplyPayload } from "./Defaults/DefaultScWindowState";
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
 import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
 import { DefaultStateOfSitecoreWindow } from "./Defaults/DefaultStateOfSitecoreWindow";
-import { DefaultStateOfSnapshots } from "./Defaults/DefaultStateOfSnapshots";
+import { DefaultStateOfSnapshotStorage } from "./Defaults/DefaultStateOfSnapshots";
 import { DefaultStateOfTree } from "./Defaults/DefaultStateOfTree";
+import { IDataContentReplyReceivedEvent_Payload } from "../Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
+import { IDataStateOfContentEditor } from "../Interfaces/Data/States/IDataStateOfContentEditor";
+import { IDataStateOfDesktop } from "../Interfaces/Data/States/IDataStateOfDesktop";
+import { IDataStateOfSitecoreWindow } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataStateOfStorageSnapShots } from "../Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
 
 export class ScWindowStateValidator extends LoggableBase {
   
-  ValidatePayload(payload: IDataContentReplyPayload): IDataContentReplyPayload {
+  ValidatePayload(payload: IDataContentReplyReceivedEvent_Payload): IDataContentReplyReceivedEvent_Payload {
     this.Logger.FuncStart(this.ValidatePayload.name);
 
-    var defaultVal: IDataContentReplyPayload = new DefaultContentReplyPayload();
+    var defaultVal: IDataContentReplyReceivedEvent_Payload = new DefaultContentReplyPayload();
 
     if (!payload) {
       payload = defaultVal;
@@ -24,7 +24,7 @@ export class ScWindowStateValidator extends LoggableBase {
     }
 
     payload.StateOfSitecoreWindow = this.ValidateStateOfSitecoreWindow(payload.StateOfSitecoreWindow);
-    payload.StateOfSnapShots = this.ValidateStateOfSnapshots(payload.StateOfSnapShots);
+    payload.StateOfStorageSnapShots = this.ValidateStateOfSnapshots(payload.StateOfStorageSnapShots);
 
     if (!payload.ErrorStack) {
       payload.ErrorStack = defaultVal.ErrorStack;
@@ -34,9 +34,9 @@ export class ScWindowStateValidator extends LoggableBase {
     return payload;
   }
 
-  ValidateStateOfSnapshots(stateOfSnapShots: IDataStateOfSnapShots): IDataStateOfSnapShots {
+  ValidateStateOfSnapshots(stateOfSnapShots: IDataStateOfStorageSnapShots): IDataStateOfStorageSnapShots {
     if (!stateOfSnapShots) {
-      stateOfSnapShots = new DefaultStateOfSnapshots();
+      stateOfSnapShots = new DefaultStateOfSnapshotStorage();
     }
 
     return stateOfSnapShots;
@@ -47,8 +47,8 @@ export class ScWindowStateValidator extends LoggableBase {
       StateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
     }
 
-    StateOfSitecoreWindow.StateOfDesktop = this.ValidateStateOfDesktop(StateOfSitecoreWindow.StateOfDesktop);
-    StateOfSitecoreWindow.StateOfContentEditor = this.ValidateStateOfContentEditor(StateOfSitecoreWindow.StateOfContentEditor);
+    StateOfSitecoreWindow.States.StateOfDesktop = this.ValidateStateOfDesktop(StateOfSitecoreWindow.States.StateOfDesktop);
+    StateOfSitecoreWindow.States.StateOfContentEditor = this.ValidateStateOfContentEditor(StateOfSitecoreWindow.States.StateOfContentEditor);
 
     return StateOfSitecoreWindow;
   }

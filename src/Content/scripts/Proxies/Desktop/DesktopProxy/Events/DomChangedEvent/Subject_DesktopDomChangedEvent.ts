@@ -7,7 +7,7 @@ export class DesktopDomChangedEvent_Subject extends GenericEvent_Subject<IDomCha
   private AssociatedDoc: IDataOneDoc;
 
   constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc) {
-    super(logger);
+    super(logger, DesktopDomChangedEvent_Subject.name);
 
     this.Logger.InstantiateStart(DesktopDomChangedEvent_Subject.name);
     this.AssociatedDoc = targetDoc;

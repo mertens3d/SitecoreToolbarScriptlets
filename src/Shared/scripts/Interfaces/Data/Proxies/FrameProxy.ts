@@ -5,7 +5,7 @@ import { FactoryHelper } from "../../../Helpers/FactoryHelper";
 import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
 import { ILoggerAgent } from "../../Agents/ILoggerAgent";
 import { RecipeBasics } from "../../../Classes/RecipeBasics";
-import { IDataStateOfContentEditor } from "../IDataOneStorageOneTreeState";
+import { IDataStateOfContentEditor } from "../States/IDataStateOfContentEditor";
 import { ContentEditorProxy } from "../../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ISettingsAgent } from "../../Agents/ISettingsAgent";
 import { IDataStateOfFrame } from "../States/IDataStateOfFrame";
@@ -46,7 +46,7 @@ export class FrameProxy extends LoggableBase {
   GetStateOfFrame(): IDataStateOfFrame {
     let toReturn: IDataStateOfFrame = new DefaultStateOfFrame();
 
-    toReturn.Style = this.IframeElem.style.cssText;
+    toReturn.Styling = this.IframeElem.style.cssText;
 
     if (this.ContentEditorProxy) {
       toReturn.StateOfContentEditor = this.ContentEditorProxy.GetStateOfContentEditor();

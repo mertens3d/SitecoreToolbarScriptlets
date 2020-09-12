@@ -4,11 +4,11 @@ import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers"
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IMessageBrokerFeedback } from "../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
-import { IDataContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
 import { ScWindowStateValidator } from "../../../../Shared/scripts/Classes/ScWindowStateValidator";
 
 export class PopUpMessagesBroker {
-  LastKnownContentState: IDataContentReplyPayload;
+  LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
   private Logger: ILoggerAgent;
   private MsgFeedback: IMessageBrokerFeedback;
 
@@ -17,7 +17,7 @@ export class PopUpMessagesBroker {
     this.MsgFeedback = msgFeedback;
   }
 
-  ReceiveResponseHndlr(response: any): Promise<IDataContentReplyPayload> {
+  ReceiveResponseHndlr(response: any): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.ReceiveResponseHndlr.name);
 
@@ -36,7 +36,7 @@ export class PopUpMessagesBroker {
               case MsgFlag.RespTaskSuccessful:
                 resolve(asMsgFromContent.Payload);
                 break;
-              case MsgFlag.RespTaskFailed :
+              case MsgFlag.RespTaskFailed:
                 reject(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
                 break;
               default:
@@ -55,7 +55,7 @@ export class PopUpMessagesBroker {
     });
   }
 
-  private SendMessageToSingleTab(messageToSend: MsgFromPopUp): Promise<IDataContentReplyPayload> {
+  private SendMessageToSingleTab(messageToSend: MsgFromPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
 
@@ -70,12 +70,12 @@ export class PopUpMessagesBroker {
 
       this.Logger.LogVal('Tab Id', targetTab.id);
 
-        await browser.tabs.sendMessage(targetTab.id, messageToSend)
+      await browser.tabs.sendMessage(targetTab.id, messageToSend)
         .then((response: any) => this.ReceiveResponseHndlr(response))
-        .then((scWindowState: IDataContentReplyPayload) => {
+        .then((scWindowState: IDataContentReplyReceivedEvent_Payload) => {
           let validator = new ScWindowStateValidator(this.Logger);
 
-          let validatedPayload: IDataContentReplyPayload = validator.ValidatePayload(scWindowState);
+          let validatedPayload: IDataContentReplyReceivedEvent_Payload = validator.ValidatePayload(scWindowState);
 
           resolve(validatedPayload);
         })
@@ -85,17 +85,15 @@ export class PopUpMessagesBroker {
     });
   }
 
-  async SendMessageToContentTab(msgPlayload: MsgFromPopUp): Promise<IDataContentReplyPayload> {
+  async SendMessageToContentAsync(msgPlayload: MsgFromPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      this.Logger.FuncStart(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
 
-      await this.SendMessageToSingleTab(msgPlayload)
-        .then((result: IDataContentReplyPayload) => {
-          resolve(result);
-        })
+      this.SendMessageToSingleTab(msgPlayload)
+        .then((result: IDataContentReplyReceivedEvent_Payload) => resolve(result))
         .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      this.Logger.FuncEnd(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
     });
   }
 }

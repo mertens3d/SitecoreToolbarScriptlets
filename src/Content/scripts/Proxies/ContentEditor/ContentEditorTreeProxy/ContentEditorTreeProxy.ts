@@ -6,19 +6,25 @@ import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/IL
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
-import { IDataStateOfTree } from '../../../../../Shared/scripts/Interfaces/Data/iDataTreeState';
+import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
+import { IDataStateOfTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
-import { Subject_ContentEditorTreeMutatedEvent } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/Subject_ContentEditorTreeMutatedEvent';
+import { ContentEditorTreeMutatedEvent_Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/Subject_ContentEditorTreeMutatedEvent';
 import { IGeneric_Observer } from "../../Desktop/DesktopProxy/Events/GenericEvent/IGeneric_Observer";
 import { ScContentTreeNodeProxy } from '../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
 import { ITreeMutatedEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
 
+export class TreeMutationEvent_Observer extends LoggableBase implements IGeneric_Observer<IDataStateOfTree>{
+  Friendly: any;
+  constructor(logger: ILoggerAgent) {
+    super(logger);
+    this.Friendly = TreeMutationEvent_Observer.name;
+  }
 
-export class TreeMutation_Observer extends LoggableBase implements IGeneric_Observer<IDataStateOfTree>{
-    Update(payload: IDataStateOfTree) {
-    }
+  Update(payload: IDataStateOfTree) {
+    this.Logger.ErrorAndContinue(TreeMutationEvent_Observer.name, "Method not implemented.");
+  }
 }
 
 export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
@@ -26,7 +32,7 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
   private SettingsAgent: ISettingsAgent;
   private __treeHolderElem: HTMLElement;
 
-  TreeMutationEvent: Subject_ContentEditorTreeMutatedEvent;
+  ContentEditorTreeMutationEventSubject: ContentEditorTreeMutatedEvent_Subject;
   private HostIframeId: string;
 
   constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent, hostIframeId: string) {
@@ -58,7 +64,7 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
 
     let setting = this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton);
     if (setting && setting.ValueAsBool()) {
-      this.TreeMutationEvent = new Subject_ContentEditorTreeMutatedEvent(this.Logger, this.GetTreeHolderElem(), this.HostIframeId, this.AssociatedDoc);
+      this.ContentEditorTreeMutationEventSubject = new ContentEditorTreeMutatedEvent_Subject(this.Logger, this.GetTreeHolderElem(), this.HostIframeId, this.AssociatedDoc);
     }
 
     this.Logger.FuncEnd(this.InitCeTreeProxy.name);
@@ -67,7 +73,7 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
   RegisterObserver(observer: IGeneric_Observer<ITreeMutatedEvent_Payload>) {
     this.Logger.FuncStart(this.RegisterObserver.name);
 
-    this.TreeMutationEvent.RegisterObserver(observer);
+    this.ContentEditorTreeMutationEventSubject.RegisterObserver(observer);
     this.Logger.FuncEnd(this.RegisterObserver.name);
   }
 

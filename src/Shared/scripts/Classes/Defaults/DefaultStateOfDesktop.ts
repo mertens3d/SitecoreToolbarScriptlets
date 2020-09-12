@@ -1,4 +1,4 @@
-﻿import { IDataStateOfDesktop } from "../../Interfaces/Data/IDataDesktopState";
+﻿import { IDataStateOfDesktop } from "../../Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfFrame } from "../../Interfaces/Data/States/IDataStateOfFrame";
 
 export class DefaultStateOfDesktop implements IDataStateOfDesktop {

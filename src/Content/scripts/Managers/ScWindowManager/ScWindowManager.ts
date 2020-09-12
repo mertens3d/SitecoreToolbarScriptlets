@@ -10,10 +10,10 @@ import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrl
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
-import { IDataStateOfDesktop } from '../../../../Shared/scripts/Interfaces/Data/IDataDesktopState';
+import { IDataStateOfDesktop } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataStateOfContentEditor } from '../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
-import { IDataStateOfSitecoreWindow } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
+import { IDataStateOfContentEditor } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { MiscAgent } from '../../Agents/MiscAgent/MiscAgent';
 import { RecipeInitFromQueryStr } from '../../ContentApi/Recipes/RecipeInitFromQueryStr/RecipeInitFromQueryStr';
 import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
@@ -224,13 +224,13 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
 
       if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
         await this.DesktopProxy().GetStateOfDesktop()
-          .then((result: IDataStateOfDesktop) => toReturnStateOfSitecoreWindow.StateOfDesktop = result)
+          .then((result: IDataStateOfDesktop) => toReturnStateOfSitecoreWindow.States.StateOfDesktop = result)
           .catch((err) => reject(this.GetStateOfSiteCoreWindow.name + ' | ' + err));
       }
 
       if (this.ScUrlAgent.GetScWindowType() === ScWindowType.ContentEditor) {
         let result = this.ContentEditorProxy().GetStateOfContentEditor();
-        toReturnStateOfSitecoreWindow.StateOfContentEditor = result;
+        toReturnStateOfSitecoreWindow.States.StateOfContentEditor = result;
       }
 
       resolve(toReturnStateOfSitecoreWindow);

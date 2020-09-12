@@ -1,7 +1,7 @@
 ﻿import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { __RecipeBase } from "../__RecipeBase/__RecipeBase";
-import { IDataStateOfSitecoreWindow } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfSitecoreWindow } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 
 export class RecipeSaveState extends __RecipeBase implements ICommandRecipes {
   constructor(commandData: ICommandHndlrDataForContent) {

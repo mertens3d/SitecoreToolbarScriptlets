@@ -5,11 +5,11 @@ import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
-import { IDataStateOfSnapShots } from "../../../../Shared/scripts/Interfaces/Data/IDataSnapShots";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
-import { DefaultStateOfSnapshots } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
+import { DefaultStateOfSnapshotStorage } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
 
 export class ContentAtticAgent implements IContentAtticAgent {
   private RepoAgent: IRepositoryAgent;
@@ -56,7 +56,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
 
     var DateOneWinStoreMatch: IDataStateOfSitecoreWindow = null;
 
-    let foundStorage: IDataStateOfSnapShots = this.GetStateOfSnapShots();
+    let foundStorage: IDataStateOfStorageSnapShots = this.GetStateOfStorageSnapShots();
 
     for (var idx = 0; idx < foundStorage.SnapShots.length; idx++) {
       var candidate = foundStorage.SnapShots[idx];
@@ -158,7 +158,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return autoCount;
   }
 
-  CleanFoundStorage(currentWindowStorage: IDataStateOfSnapShots): void {
+  CleanFoundStorage(currentWindowStorage: IDataStateOfStorageSnapShots): void {
     try {
       if (currentWindowStorage) {
         var cacheLength = currentWindowStorage.SnapShots.length;
@@ -181,7 +181,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
         this.SettingAutoSnapshotRetainDays = ContentConst.Const.DefaultMaxAutoSaveAgeDays;
       }
 
-      let currentWindowStorage: IDataStateOfSnapShots = this.GetStateOfSnapShots();
+      let currentWindowStorage: IDataStateOfStorageSnapShots = this.GetStateOfStorageSnapShots();
 
       this.CleanFoundStorage(currentWindowStorage);
     } catch (err) {
@@ -191,21 +191,21 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.Logger.FuncEnd(this.CleanOutOldAutoSavedData.name);
   }
 
-  GetStateOfSnapShots(): IDataStateOfSnapShots {
-    this.Logger.FuncStart(this.GetStateOfSnapShots.name);
+  GetStateOfStorageSnapShots(): IDataStateOfStorageSnapShots {
+    this.Logger.FuncStart(this.GetStateOfStorageSnapShots.name);
 
-    let snapShotsMany: IDataStateOfSnapShots = new DefaultStateOfSnapshots();
+    let stateOfSnapshotStorage: IDataStateOfStorageSnapShots = new DefaultStateOfSnapshotStorage();
 
     let result: IDataStateOfSitecoreWindow[] = this.GetAllStorage();
 
-    snapShotsMany.SnapShots = result;
-    snapShotsMany.Birthday = new Date();
-    this.UpdateCounts(snapShotsMany);
-    snapShotsMany.SnapShots = this.ConvertGuidData(snapShotsMany.SnapShots);
+    stateOfSnapshotStorage.SnapShots = result;
+    stateOfSnapshotStorage.CreationDate = new Date();
+    this.UpdateCounts(stateOfSnapshotStorage);
+    stateOfSnapshotStorage.SnapShots = this.ConvertGuidData(stateOfSnapshotStorage.SnapShots);
 
-    this.Logger.FuncEnd(this.GetStateOfSnapShots.name);
+    this.Logger.FuncEnd(this.GetStateOfStorageSnapShots.name);
 
-    return snapShotsMany;
+    return stateOfSnapshotStorage;
   }
 
   ConvertGuidData(candidateSnapShots: IDataStateOfSitecoreWindow[]): IDataStateOfSitecoreWindow[] {
@@ -228,7 +228,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return toReturn;
   }
 
-  UpdateCounts(storageAllSnapshots: IDataStateOfSnapShots) {
+  UpdateCounts(storageAllSnapshots: IDataStateOfStorageSnapShots) {
     storageAllSnapshots.FavoriteCount = 0;
     storageAllSnapshots.SnapShotsAutoCount = 0;
     storageAllSnapshots.PlainCount = 0;

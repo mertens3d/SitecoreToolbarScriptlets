@@ -41,7 +41,7 @@ export class EventManager { //extends PopUpManagerBase
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.TriggerPingEvent.name);
 
-      let data = this.__buildCommandData(pingCommand);
+      let data = this.BuildCommandData(pingCommand);
 
       await this.RouteAllCommandEvents(data)
         .then(() => resolve())
@@ -113,7 +113,7 @@ export class EventManager { //extends PopUpManagerBase
     var targetElem: HTMLElement = this.UiMan.GetButtonByIdOrSelector(oneCommand.ButtonSelector);
 
     if (oneCommand.EventData.Event === CommandButtonEvents.OnSingleClick) {
-      this.__wireSingleClickEvent(oneCommand, targetElem);
+      this.WireSingleClickEvent(oneCommand, targetElem);
     } else if (oneCommand.EventData.Event === CommandButtonEvents.OnDoubleClick) {
       this.__wireDoubleClickEvent(oneCommand, targetElem)
     }
@@ -126,28 +126,28 @@ export class EventManager { //extends PopUpManagerBase
 
     if (targetElem) {
       targetElem.ondblclick = (evt) => {
-        let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
+        let data: ICommandHndlrDataForPopUp = this.BuildCommandData(oneCommand);
         data.Evt = evt,
           data.Self.RouteAllCommandEvents(data)
       };
     }
   }
 
-  private __wireSingleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
+  private WireSingleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
     if (targetElem) {
       let self = this;
       targetElem.addEventListener('click', (evt) => {
-        let data: ICommandHndlrDataForPopUp = this.__buildCommandData(oneCommand);
+        let data: ICommandHndlrDataForPopUp = this.BuildCommandData(oneCommand);
         data.Evt = evt;
         data.Self = self;
         data.Self.RouteAllCommandEvents(data);
       });
     } else {
-      this.Logger.ErrorAndThrow(this.__wireSingleClickEvent.name, 'No Id: ' + oneCommand.ButtonSelector);
+      this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No Id: ' + oneCommand.ButtonSelector);
     }
   }
 
-  private __buildCommandData(oneCommand: IOneCommand): ICommandHndlrDataForPopUp {
+  private BuildCommandData(oneCommand: IOneCommand): ICommandHndlrDataForPopUp {
     var self: EventManager = this;
 
     let data: ICommandHndlrDataForPopUp = {
@@ -156,7 +156,7 @@ export class EventManager { //extends PopUpManagerBase
       Event: oneCommand.EventData,
       Evt: null,
       MenuState: {
-        SelectSnapshotId: this.UiMan.ModuleSelectSnapShot.GetSelectSnapshotId(),
+        SelectSnapshotId: this.UiMan.ModuleSnapShots.GetSelectSnapshotId(),
         CurrentNicknameValue: this.UiMan.GetValueInNickname()
       }
     }
@@ -169,7 +169,7 @@ export class EventManager { //extends PopUpManagerBase
       this.Logger.FuncStart(this.RouteAllCommandEvents.name);
       await data.Event.Handler(data)
         .then(() => resolve())
-        .catch((err) => this.Logger.ErrorAndThrow(this.RouteAllCommandEvents.name, err));
+        .catch((err) => reject(this.RouteAllCommandEvents.name + ' | ' + err));
       this.Logger.FuncEnd(this.RouteAllCommandEvents.name);
     });
   }

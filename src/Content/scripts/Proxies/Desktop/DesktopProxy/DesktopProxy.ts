@@ -1,6 +1,6 @@
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/IDataDesktopState";
+import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy";
 import { IDataStateOfFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
@@ -10,41 +10,11 @@ import { FrameHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
 import { DesktopIframeProxyBucket } from "./DesktopIframeProxyBucket";
-import { IFrameProxyMutated_Payload } from "./Events/Subject_DesktopIframeProxyMutatedEvent/IFrameProxyMutatedEvent_Payload";
-import { IGeneric_Observer } from "./Events/GenericEvent/IGeneric_Observer";
 import { DesktopDomChangedEvent_Subject } from "./Events/DomChangedEvent/Subject_DesktopDomChangedEvent";
 import { IDomChangedEvent_Payload } from "./Events/DomChangedEvent/IDomChangedEvent_Payload";
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
-
-export class DesktopDomChangedEvent_Observer extends LoggableBase implements IGeneric_Observer<IDomChangedEvent_Payload>{
-  private Owner: DesktopProxy;
-
-  constructor(logger: ILoggerAgent, owner: DesktopProxy) {
-    super(logger);
-    this.Owner = owner;
-  }
-
-  Update(payload: IDomChangedEvent_Payload) {
-    //this.Owner.
-
-    this.Logger.WarningAndContinue(DesktopDomChangedEvent_Observer.name, 'Not implemented');
-  }
-}
-
-export class FrameMutation_Observer extends LoggableBase implements IGeneric_Observer<IFrameProxyMutated_Payload>{
-  private Owner: DesktopStartBarProxy;
-
-  constructor(logger: ILoggerAgent, owner: DesktopStartBarProxy) {
-    super(logger);
-    this.Owner = owner;
-  }
-
-  Update(conEditProxy: IFrameProxyMutated_Payload) {
-    this.Owner.CallBackConEdProxyAdded(conEditProxy);
-
-    // (payload: IPayloadDesktop_DomChangedEvent) => { self.Observer_DesktopDomChangedEvent(payload) });
-  }
-}
+import { DesktopDomChangedEvent_Observer } from "./DesktopDomChangedEvent_Observer";
+import { FrameMutationEvent_Observer } from "./FrameMutationEvent_Observer";
 
 export class DesktopProxy extends LoggableBase {
   private DesktopIframeProxyBucket: DesktopIframeProxyBucket;
@@ -55,7 +25,7 @@ export class DesktopProxy extends LoggableBase {
   private AssociatedDoc: IDataOneDoc;
   private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
-  private Subject_DomChangedEvent: DesktopDomChangedEvent_Subject;
+  private DomChangedEventSubject: DesktopDomChangedEvent_Subject;
 
   constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
@@ -70,11 +40,11 @@ export class DesktopProxy extends LoggableBase {
     this.DesktopStartBarAgent = new DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
 
     let self = this;
-    this.DesktopIframeProxyBucket.DesktopIframeProxyAddedEvent_Subject.RegisterObserver(new FrameMutation_Observer(self.Logger, self.DesktopStartBarAgent));
+    this.DesktopIframeProxyBucket.DesktopIframeProxyAddedEvent_Subject.RegisterObserver(new FrameMutationEvent_Observer(self.Logger, self.DesktopStartBarAgent));
 
-    this.Subject_DomChangedEvent = new DesktopDomChangedEvent_Subject(this.Logger, this.AssociatedDoc);
+    this.DomChangedEventSubject = new DesktopDomChangedEvent_Subject(this.Logger, this.AssociatedDoc);
 
-    this.Subject_DomChangedEvent.RegisterObserver(new DesktopDomChangedEvent_Observer(this.Logger, this))
+    this.DomChangedEventSubject.RegisterObserver(new DesktopDomChangedEvent_Observer(this.Logger, this))
 
     this.Logger.InstantiateEnd(DesktopProxy.name);
   }
@@ -150,7 +120,6 @@ export class DesktopProxy extends LoggableBase {
           .then((results: FrameProxy[]) => this.ProcessLiveFrames(results))
           .then((results: IDataStateOfDesktop) => resolve(results))
           .catch((err) => this.Logger.ErrorAndThrow(this.GetStateOfDesktop.name, err));
-       
       } catch (err) {
         reject(this.GetStateOfDesktop.name + ' | ' + err);
       }

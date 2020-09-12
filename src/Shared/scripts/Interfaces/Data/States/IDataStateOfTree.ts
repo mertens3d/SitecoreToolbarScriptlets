@@ -1,4 +1,4 @@
-﻿import { IDataStateOfScContentTreeNode } from './IDataOneTreeNode';
+﻿import { IDataStateOfScContentTreeNode } from './IDataStateOfScContentTreeNode';
 
 export interface IDataStateOfTree {
   ActiveTreeNodeIndex: number;

@@ -5,7 +5,7 @@ import { IHindSiteScWindowApi } from "../../../../Shared/scripts/Interfaces/Agen
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
-import { IDataContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { RecipeAddNewContentEditorToDesktop } from "../../ContentApi/Recipes/RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop";
 import { RecipePublishActiveCe } from "../../ContentApi/Recipes/RecipePublishActiveCe/RecipePublishActiveCe";
@@ -18,8 +18,8 @@ import { ScUiManager } from "../SitecoreUiManager/SitecoreUiManager";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IFactoryHelper } from "../../../../Shared/scripts/Interfaces/IFactoryHelper";
 import { DefaultContentReplyPayload } from "../../../../Shared/scripts/Classes/Defaults/DefaultScWindowState";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
-import { IDataStateOfSnapShots } from "../../../../Shared/scripts/Interfaces/Data/IDataSnapShots";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 
 export class ContentAPIManager extends LoggableBase implements IHindSiteScWindowApi {
@@ -52,14 +52,14 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
   //  })
   //}
 
-  GetStateOfContent(): Promise<IDataContentReplyPayload> {
+  GetStateOfContent(): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
-      let reply: IDataContentReplyPayload = new DefaultContentReplyPayload();
+      let reply: IDataContentReplyReceivedEvent_Payload = new DefaultContentReplyPayload();
 
       await this.ScWinMan.GetStateOfSiteCoreWindow()
         .then((result: IDataStateOfSitecoreWindow) => reply.StateOfSitecoreWindow = result)
-        .then(() => this.AtticAgent.GetStateOfSnapShots())
-        .then((result: IDataStateOfSnapShots) => reply.StateOfSnapShots = result)
+        .then(() => this.AtticAgent.GetStateOfStorageSnapShots())
+        .then((result: IDataStateOfStorageSnapShots) => reply.StateOfStorageSnapShots = result)
         .then(() => reply.ErrorStack = this.Logger.ErrorStack)
         .then(() => resolve(reply))
         .catch((err) => reject(err))

@@ -1,7 +1,7 @@
-﻿import { IDataStateOfSnapShots } from "../../Interfaces/Data/IDataSnapShots";
+﻿import { IDataStateOfStorageSnapShots } from "../../Interfaces/Data/States/IDataStateOfStorageSnapShots";
 
-export class DefaultStateOfSnapshots implements IDataStateOfSnapShots {
-    Birthday = new Date(1970);
+export class DefaultStateOfSnapshotStorage implements IDataStateOfStorageSnapShots {
+    CreationDate = new Date(1970);
     SnapShots = [];
     FavoriteCount = 0;
     PlainCount = 0;

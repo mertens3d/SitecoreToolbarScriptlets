@@ -11,15 +11,13 @@ import { LogWriterBuffer } from "./LogWriterBuffer";
 import { LoggerTimer } from "./LoggerTimer";
 
 export class LoggerAgent implements ILoggerAgent {
-  private __callDepth: number;
-
+  private MaxIndent: number = 10;
   ErrorStack: IError[] = [];
-
-  private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
-
   private __allLogWriters: ILoggerWriter[] = [];
-  private HasWriters: boolean;
+  private __callDepth: number;
+  private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
   private BufferWriter: LogWriterBuffer;
+  private HasWriters: boolean;
   Timer: LoggerTimer;
   UseTimeStamp: boolean = true;
 
@@ -150,7 +148,10 @@ export class LoggerAgent implements ILoggerAgent {
     if (this.HasWriters) { //|| !this.LogHasBeenInit
       var indent = '  ';
       //text =  indent.repeat(this.__indentCount) + text;
-      for (var idx = 0; idx < this.__callDepth; idx++) {
+
+      this.MaxIndent = 10;
+
+      for (var idx = 0; idx < Math.min(this.__callDepth, this.MaxIndent); idx++) {
         text = indent + text;
       }
 
@@ -208,9 +209,9 @@ export class LoggerAgent implements ILoggerAgent {
     }
     this.Log(textOrFunc, '', true);
     this.__callDepth++;
-    if (this.__callDepth > 10) {
-      this.__callDepth = 10;
-    }
+    //if (this.__callDepth >  10) {
+    //  this.__callDepth = 10;
+    //}
   }
 
   InstantiateStart(text: string): void {

@@ -15,7 +15,7 @@ export class FeedbackModulePopUpState extends UiFeedbackModuleBase implements IU
   RefreshUi(): void {
   }
 
-  PopulatePopUpStateUI(selectSnapShot: GuidData) {
+  HydratePopUpStateUI(selectSnapShot: GuidData) {
     var allStateText: string = 'Pop Up State:' + this.lineBreak;
     allStateText += 'Select Snapshot: ' + Guid.AsShort( selectSnapShot);
 

@@ -4,15 +4,15 @@ import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Age
 import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 
-export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<ITreeMutatedEvent_Payload> {
+export class ContentEditorTreeMutatedEvent_Subject extends GenericEvent_Subject<ITreeMutatedEvent_Payload> {
   private TreeElement: any;
   private HostIframeId: string;
-  private  HostDoc: IDataOneDoc;
+  private HostDoc: IDataOneDoc;
 
   constructor(logger: ILoggerAgent, treeElement: HTMLElement, hostIframeId: string, host: IDataOneDoc) {
-    super(logger);
+    super(logger, ContentEditorTreeMutatedEvent_Subject.name);
 
-    this.Logger.InstantiateStart(Subject_ContentEditorTreeMutatedEvent.name);
+    this.Logger.InstantiateStart(ContentEditorTreeMutatedEvent_Subject.name);
     this.TreeElement = treeElement;
     this.HostIframeId = hostIframeId;
     this.HostDoc = host;
@@ -20,7 +20,7 @@ export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<
 
     this.InitMutationObserver();
 
-    this.Logger.InstantiateEnd(Subject_ContentEditorTreeMutatedEvent.name);
+    this.Logger.InstantiateEnd(ContentEditorTreeMutatedEvent_Subject.name);
   }
   private InitMutationObserver() {
     this.Logger.FuncStart(this.InitMutationObserver.name);
@@ -48,7 +48,7 @@ export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<
         this.Logger.Log(mutatedAnchorElement.id);
 
         this.Logger.Log('mutated');
-        candidateNode = new ScContentTreeNodeProxy(this.Logger, this.HostDoc,  mutatedAnchorElement);
+        candidateNode = new ScContentTreeNodeProxy(this.Logger, this.HostDoc, mutatedAnchorElement);
         this.Logger.Log((<HTMLElement>mutation.target).innerText);
       }
     }
