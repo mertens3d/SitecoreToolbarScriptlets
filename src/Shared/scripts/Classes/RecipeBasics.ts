@@ -164,7 +164,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
     
 
-    await this.FrameHelper.GetHostedframes(targetDoc)
+    await this.FrameHelper.GetLiveFrames(targetDoc)
       .then((allIframe: FrameProxy[]) => {
         var maxZVal = -1;
         if (allIframe && allIframe.length > 0) {
@@ -213,7 +213,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
         var allIframesAfter: FrameProxy[];
 
-        await this.FrameHelper.GetHostedframes(targetDoc)
+        await this.FrameHelper.GetLiveFrames(targetDoc)
           .then((result) => allIframesAfter = result)
           .catch((err) => reject(this.WaitForNewIframe.name + ' ' + err));
 

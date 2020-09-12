@@ -8,7 +8,8 @@ import { RecipeBasics } from "../../../Classes/RecipeBasics";
 import { IDataStateOfContentEditor } from "../IDataOneStorageOneTreeState";
 import { ContentEditorProxy } from "../../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ISettingsAgent } from "../../Agents/ISettingsAgent";
-import { IDataStateOfFrame } from "../States/IDataFrameState";
+import { IDataStateOfFrame } from "../States/IDataStateOfFrame";
+import { DefaultStateOfFrame } from "../../../Classes/Defaults/DefaultStateOfFrame";
 
 export class FrameProxy extends LoggableBase {
   Index: number = -1;
@@ -16,7 +17,7 @@ export class FrameProxy extends LoggableBase {
   Id: GuidData = null;
   Nickname: string = null;
   private SettingsAgent: ISettingsAgent;
-  ConEditProxy: ContentEditorProxy;
+  ContentEditorProxy: ContentEditorProxy;
 
   constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement, nickName: string, settingsAgent: ISettingsAgent) {
     super(logger);
@@ -31,24 +32,24 @@ export class FrameProxy extends LoggableBase {
       let recipeBasic: RecipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
 
       await recipeBasic.WaitForPageReadyHtmlIframeElement(this.IframeElem)
-        .then(() => this.ConEditProxy = new ContentEditorProxy(this.GetContentDoc(), this.Logger, this.SettingsAgent, this.IframeElem.id));
+        .then(() => this.ContentEditorProxy = new ContentEditorProxy(this.GetContentDoc(), this.Logger, this.SettingsAgent, this.IframeElem.id));
     } catch (err) {
       throw (this.WaitForReady.name + ' ' + err);
     }
   }
 
-  async SetStateFrame(oneTreeState: IDataStateOfFrame): Promise<void> {
+  async SetStateFrame(stateOfFrame: IDataStateOfFrame): Promise<void> {
 
-    await this.ConEditProxy.SetStateTree(oneTreeState)
+    await this.ContentEditorProxy.SetStateOfContentEditor(stateOfFrame.StateOfContentEditor);
   }
 
   GetStateOfFrame(): IDataStateOfFrame {
-    let toReturn: IDataStateOfFrame = {
-      ContentEditorState: null
-    }
+    let toReturn: IDataStateOfFrame = new DefaultStateOfFrame();
 
-    if (this.ConEditProxy) {
-      toReturn.ContentEditorState = this.ConEditProxy.GetStateOfContentEditor();
+    toReturn.Style = this.IframeElem.style.cssText;
+
+    if (this.ContentEditorProxy) {
+      toReturn.StateOfContentEditor = this.ContentEditorProxy.GetStateOfContentEditor();
     }
 
     return toReturn;
@@ -57,7 +58,7 @@ export class FrameProxy extends LoggableBase {
   GetState(): IDataStateOfContentEditor {
     //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
-    let oneCeState: IDataStateOfContentEditor = this.ConEditProxy.GetStateOfTree();
+    let oneCeState: IDataStateOfContentEditor = this.ContentEditorProxy.GetStateOfContentEditor();
 
     return oneCeState;
   }

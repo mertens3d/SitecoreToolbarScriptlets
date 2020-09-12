@@ -33,7 +33,7 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
       let recipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
 
 
-      await frameHelper.GetHostedframes(this.TargetDoc)
+      await frameHelper.GetLiveFrames(this.TargetDoc)
         .then((result) => allIframeDataAtBeginning = result)
         .catch((err) => reject(this.Execute.name + ' ' + err));
 

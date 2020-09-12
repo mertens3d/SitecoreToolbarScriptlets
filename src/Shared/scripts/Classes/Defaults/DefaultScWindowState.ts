@@ -2,15 +2,13 @@
 import { IDataContentReplyPayload } from "../../Interfaces/Data/IContentState";
 import { IError } from "../../Interfaces/IError";
 import { DefaultStateOfSitecoreWindow } from "./DefaultStateOfSitecoreWindow";
+import { DefaultStateOfSnapshots } from "./DefaultStateOfSnapshots";
 
 export class DefaultContentReplyPayload implements IDataContentReplyPayload {
-  StateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
-
-  LastReq = MsgFlag.Unknown;
-
+  ActiveCe = null;
   ErrorStack: IError[] = [];
-
+  LastReq = MsgFlag.Unknown;
   LastReqSuccessful = false;
-
-  ActiveCe = null
+  StateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
+  StateOfSnapShots = new DefaultStateOfSnapshots();
 };

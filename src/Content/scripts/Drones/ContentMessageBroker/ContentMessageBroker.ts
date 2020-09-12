@@ -169,8 +169,8 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
         commandToExecute = this.ApiManager.PublischActiveCE;
         break;
 
-      case MsgFlag.ReqRestoreClick:
-        commandToExecute = this.ApiManager.RestoreSnapshop;
+      case MsgFlag.ReqSetStateOfSitecoreWindow:
+        commandToExecute = this.ApiManager.SetStateOfSitecoreWindow;
         break;
 
       case MsgFlag.ReqToggleCompactCss:

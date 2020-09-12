@@ -3,13 +3,9 @@ import { Guid } from "./Guid";
 
 export class GuidData {
   private static ConstEmptyGuid: string = '00000000-0000-0000-0000-000000000000';
-  readonly Type: "Guid";
-  readonly StorageType: string = 'GuidAsString';
-  readonly Raw: string; // source of truth
+  readonly Raw: string; 
 
   constructor(raw: string = null) {
-    this.StorageType = 'GuidAsString';
-    this.Type = 'Guid';
     if (!raw) {
       this.Raw = GuidData.ConstEmptyGuid;
     }

@@ -20,13 +20,13 @@ export class ScWindowRecipePartials extends LoggableBase {
       this.Logger.FuncStart(this.RestoreStateToTargetDoc.name);
 
       if (dataToRestore) {
-        if (dataToRestore.WindowType == ScWindowType.Desktop) {
+        if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
           await desktopProxy.SetStateOfDesktop(dataToRestore.StateOfDesktop)
             .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
             .then(() => resolve())
             .catch((err) => reject(this.RestoreStateToTargetDoc.name + ' | ' + err));
         }
-        else if (dataToRestore.WindowType === ScWindowType.ContentEditor) {
+        else if (dataToRestore.Meta.WindowType === ScWindowType.ContentEditor) {
           await OneCEAgent.SetStateOfContentEditor(dataToRestore.StateOfContentEditor)
             .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
             .then(() => resolve())

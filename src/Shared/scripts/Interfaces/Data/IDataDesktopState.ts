@@ -1,7 +1,6 @@
-﻿import { IDataStateOfContentEditor } from "./IDataOneStorageOneTreeState";
-import { IDataStateOfFrame } from "./States/IDataStateOfFrame";
+﻿import { IDataStateOfFrame } from "./States/IDataStateOfFrame";
 
 export interface IDataStateOfDesktop {
-  StateOfActiveFrame: IDataStateOfFrame;
+  IndexOfActiveFrame: number;
   StateOfFrames: IDataStateOfFrame[];
 }

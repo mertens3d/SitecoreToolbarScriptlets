@@ -10,7 +10,7 @@ import { IDataStateOfSitecoreWindow } from "../../Data/IDataOneWindowStorage";
 export interface IScWindowManager {
   GetStateOfSiteCoreWindow(): Promise<IDataStateOfSitecoreWindow>;
   MakeScWinRecipeParts(): ScWindowRecipePartials;
-  GetStateOfSitecore(TargetSnapShotFlavor: SnapShotFlavor): Promise<IDataStateOfSitecoreWindow>;
+  //GetStateOfSitecore(TargetSnapShotFlavor: SnapShotFlavor): Promise<IDataStateOfSitecoreWindow>;
   GetScUrlAgent(): IScUrlAgent;
   GetCurrentPageType(): ScWindowType;
   InitScWindowManager(): Promise<void>;

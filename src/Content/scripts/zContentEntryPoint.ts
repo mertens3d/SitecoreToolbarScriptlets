@@ -24,6 +24,7 @@ import { ContentMessageManager } from './Managers/ContentMessageManager/ContentM
 import { ScWindowManager } from './Managers/ScWindowManager/ScWindowManager';
 import { ScUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
 import { SharedConst } from '../../Shared/scripts/SharedConst';
+import { Guid } from '../../Shared/scripts/Helpers/Guid';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -51,10 +52,12 @@ class ContentEntry {
     let contentMessageMan: ContentMessageManager;
     let scWinMan: IScWindowManager;
 
+
+
     scWinMan = new ScWindowManager(this.Logger, scUiMan, this.MiscAgent, this.ToastAgent, this.AtticAgent, this.ScUrlAgent, this.SettingsAgent);
     scUiMan = new ScUiManager(this.Logger);
 
-    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan, this.SettingsAgent);
+    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan, this.SettingsAgent, this.AtticAgent);
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
       this.ContentAPIMan, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan);
@@ -128,7 +131,6 @@ class ContentEntry {
 }
 
 //document.addEventListener("DOMContentLoaded", function() {
-                           
-  let contentEntry: ContentEntry = new ContentEntry();
-  contentEntry.Main();
+let contentEntry: ContentEntry = new ContentEntry();
+contentEntry.Main();
 //});

@@ -39,7 +39,15 @@ export interface IContentConst {
     SC: {
       ContentEditor: {
         ContentTreeNodeGlyph: string,
-      scContentTreeNodeIcon: string,
+        scContentTreeNodeIcon: string,
+        RootAnchorNode: string,
+      },
+      Level2Nodes: {
+        MediaLibraryAnchorRootNode : string,
+        TemplatesAnchorRootNode : string,
+        LayoutRootAnchorNode : string,
+        SystemRootAnchorNode : string,
+        ContentRootAnchorNode : string,
       },
       Cancel: string,
       ContentIframe0: string,
@@ -67,6 +75,7 @@ export interface IContentConst {
     }
   },
   Storage: {
+    SessionKey: string,
     SettingsSuffix: string,
     ShowDebugData: boolean,
     SnapShotPrefix: string,

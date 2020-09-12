@@ -1,22 +1,26 @@
-﻿import { IOneStorageData } from '.././IOneStorageData';
-import { IDataStateOfContentEditor } from './IDataOneStorageOneTreeState';
-import { ScWindowType } from '../../Enums/scWindowType';
+﻿import { ScWindowType } from '../../Enums/scWindowType';
 import { SnapShotFlavor } from '../../Enums/SnapShotFlavor';
-import { GuidData } from "../../Helpers/GuidData";
 import { IDataStateOfDesktop } from './IDataDesktopState';
-import { IDataStateOfSnapShots } from './IDataSnapShots';
+import { IDataStateOfContentEditor } from './IDataOneStorageOneTreeState';
+import { GuidData } from '../../Helpers/GuidData';
 
-export interface IDataStateOfSitecoreWindow {
-  StateOfDesktop: IDataStateOfDesktop,
-  StateOfContentEditor: IDataStateOfContentEditor,
-  StateOfSnapShots: IDataStateOfSnapShots,
-
-  GuidId: GuidData,
-  Flavor: SnapShotFlavor;
+export interface IDataFriendly {
+  Flavor: string;
   NickName: string
-  RawData: IOneStorageData,
+  TimeStamp: string,
+  WindowType: string,
+}
+export interface IDataMetaData {
+  Flavor: SnapShotFlavor;
+  readonly SnapshotId: GuidData,
+  SessionId: string,
+  StorageKey: string,
   TimeStamp: Date,
-  TimeStampFriendly: string,
-  WindowFriendly: string,
   WindowType: ScWindowType,
+}
+export interface IDataStateOfSitecoreWindow {
+  Friendly: IDataFriendly,
+  Meta: IDataMetaData
+  StateOfContentEditor: IDataStateOfContentEditor,
+  StateOfDesktop: IDataStateOfDesktop,
 }

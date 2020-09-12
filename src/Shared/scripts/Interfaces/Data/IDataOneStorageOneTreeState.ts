@@ -2,6 +2,5 @@
 import { IDataStateOfTree } from './iDataTreeState';
 
 export interface IDataStateOfContentEditor {
-  Id: GuidData,
   StateOfTree: IDataStateOfTree,
 }

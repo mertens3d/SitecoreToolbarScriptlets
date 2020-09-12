@@ -1,13 +1,12 @@
 ﻿import { Guid } from "../../../../../Shared/scripts/Helpers/Guid";
+import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IDataStateOfTreeNode } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode";
+import { IDataStateOfScContentTreeNode } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { LoggableBase } from "../../../Managers/LoggableBase";
-import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
-import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 
-export class TreeNodeProxy extends LoggableBase {
+export class ScContentTreeNodeProxy extends LoggableBase {
   private ScContentTreeNodeDivElem: HTMLDivElement;
   private OwnerDoc: IDataOneDoc;
 
@@ -17,7 +16,7 @@ export class TreeNodeProxy extends LoggableBase {
   constructor(logger: ILoggerAgent, AssociatedDoc: IDataOneDoc, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement) {
     super(logger);
 
-    this.Logger.InstantiateStart(TreeNodeProxy.name);
+    this.Logger.InstantiateStart(ScContentTreeNodeProxy.name);
 
     if (sourceElement && AssociatedDoc) {
       this.OwnerDoc = AssociatedDoc;
@@ -29,14 +28,14 @@ export class TreeNodeProxy extends LoggableBase {
       } else if (sourceElement.classList.contains('scContentTreeNode')) {
         this.InferFromDivElement(<HTMLDivElement>sourceElement)
       } else {
-        this.Logger.ErrorAndThrow(TreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElement));
+        this.Logger.ErrorAndThrow(ScContentTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElement));
       }
     } else {
-      this.Logger.ErrorAndThrow(TreeNodeProxy.name, 'null sourceElement or associatedDoc');
+      this.Logger.ErrorAndThrow(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
     }
 
     //this.InitTreeNodeProxy();
-    this.Logger.InstantiateEnd(TreeNodeProxy.name);
+    this.Logger.InstantiateEnd(ScContentTreeNodeProxy.name);
   }
 
   private InferFromDivElement(divElement: HTMLDivElement) {
@@ -66,19 +65,18 @@ export class TreeNodeProxy extends LoggableBase {
     return this.ScContentTreeNodeDivElem.querySelector(":scope > a");
   }
 
-  GetStateNode(): IDataStateOfTreeNode {
-    var newData: IDataStateOfTreeNode = {
+  GetStateOfScContentTreeNode(): IDataStateOfScContentTreeNode {
+    var newData: IDataStateOfScContentTreeNode =  {
       IsExpanded: this.QueryIsExpanded(),
       IsActive: this.QueryIsActive(),
-      NodeFriendly: this.GetNodeLinkText(),
-      NodeId: this.GetApparentId(),
-      Discriminator: SharedConst.Const.ObjDiscriminator.DataOneTreeNode
+      Friendly: this.GetNodeLinkText(),
+      ItemId: this.GetApparentItemId(),
     };
 
     return newData;
   }
 
-  GetApparentId(): GuidData {
+  GetApparentItemId(): GuidData {
     let glyphNodeIdSuffix = this.GetGlyphNodeElem().id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
 
     let toReturnGuidData: GuidData = Guid.ParseGuid(glyphNodeIdSuffix, true);
@@ -100,14 +98,14 @@ export class TreeNodeProxy extends LoggableBase {
     return toReturn;
   }
 
-  GetParentTreeNode(): TreeNodeProxy {
-    let toReturn: TreeNodeProxy = null;
+  GetParentTreeNode(): ScContentTreeNodeProxy {
+    let toReturn: ScContentTreeNodeProxy = null;
 
     let candidate: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
 
     if (candidate) {
       this.Logger.Log('found a candidate');
-      toReturn = new TreeNodeProxy(this.Logger, this.OwnerDoc, candidate);
+      toReturn = new ScContentTreeNodeProxy(this.Logger, this.OwnerDoc, candidate);
     } else {
       this.Logger.Log('no candidate found');
     }
@@ -117,7 +115,7 @@ export class TreeNodeProxy extends LoggableBase {
   IsSitecoreRootNode(): boolean {
     let toReturn: boolean = false;
 
-    let apparentId = this.GetApparentId();
+    let apparentId = this.GetApparentItemId();
     if (apparentId) {
       toReturn = apparentId.Raw === ContentConst.Const.ElemId.sc.SitecoreRootApparentIdRaw;
     }
@@ -128,12 +126,12 @@ export class TreeNodeProxy extends LoggableBase {
     let toReturn: string
 
     let maxIter: number = 100;
-    let penultimateNode: TreeNodeProxy = this;
-    let parentNode: TreeNodeProxy = this;
+    let penultimateNode: ScContentTreeNodeProxy = this;
+    let parentNode: ScContentTreeNodeProxy = this;
 
     let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
     if (penultimateElem) {
-      penultimateNode = new TreeNodeProxy(this.Logger, this.OwnerDoc, penultimateElem);
+      penultimateNode = new ScContentTreeNodeProxy(this.Logger, this.OwnerDoc, penultimateElem);
     }
 
     //while (parentNode && maxIter > 0) {
@@ -155,7 +153,7 @@ export class TreeNodeProxy extends LoggableBase {
     return toReturn;
   }
 
-  SetStateOfTreeNode(newData: IDataStateOfTreeNode) {
+  SetStateOfTreeNode(newData: IDataStateOfScContentTreeNode) {
     if (newData.IsExpanded) {
       this.ExpandNode();
     }
@@ -163,12 +161,12 @@ export class TreeNodeProxy extends LoggableBase {
     this.Logger.LogVal('IsActive', newData.IsActive.toString());
 
     if (newData.IsActive) {
-      var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.NodeId);
+      var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.ItemId);
 
       let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.OwnerDoc.ContentDoc.getElementById(hotTreeNodeId);
 
       if (hotTreeNode) {
-        let hotTreeNodeProxy: TreeNodeProxy = new TreeNodeProxy(this.Logger, this.OwnerDoc, hotTreeNode);
+        let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, this.OwnerDoc, hotTreeNode);
 
         if (hotTreeNodeProxy) {
           hotTreeNodeProxy.ActivateNode()

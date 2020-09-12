@@ -13,6 +13,6 @@ export class CommandCompleted_Observer extends LoggableBase implements IGeneric_
   }
 
   Update(payload: IDataContentReplyPayload) {
-    this.Owner.CallBackCommandComplete(payload.StateOfSitecoreWindow);
+    this.Owner.CallBackCommandComplete(payload.StateOfSitecoreWindow, payload.StateOfSnapShots);
   }
 }

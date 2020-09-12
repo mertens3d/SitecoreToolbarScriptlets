@@ -1,4 +1,5 @@
-﻿import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
+﻿import { CommandCompleted_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/CommandCompleted_Observer";
+import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
@@ -10,7 +11,7 @@ import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLog
 import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { IDataContentReplyPayload } from "../../Shared/scripts/Interfaces/Data/IContentState";
+import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { CommandManager } from "./Classes/AllCommands";
 import { PopConst } from "./Classes/PopConst";
 import { EventManager } from "./Managers/EventManager";
@@ -20,8 +21,6 @@ import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessage
 import { TabManager } from "./Managers/TabManager";
 import { FeedbackModuleMessages } from "./Managers/UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 import { UiManager } from "./Managers/UiManager/UiManager";
-import { SharedConst } from "../../Shared/scripts/SharedConst";
-import { CommandCompleted_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/CommandCompleted_Observer";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;

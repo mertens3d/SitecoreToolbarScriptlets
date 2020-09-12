@@ -2,7 +2,7 @@
 
 export class DefaultStateOfSnapshots implements IDataStateOfSnapShots {
     Birthday = new Date(1970);
-    CurrentSnapShots = [];
+    SnapShots = [];
     FavoriteCount = 0;
     PlainCount = 0;
     SnapShotsAutoCount = 0;

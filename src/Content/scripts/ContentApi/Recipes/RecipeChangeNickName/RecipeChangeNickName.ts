@@ -34,15 +34,15 @@ export class RecipeChangeNickName extends LoggableBase implements ICommandRecipe
         if (this.NewNickname) {
           var storageMatch: IDataStateOfSitecoreWindow;
 
-          storageMatch = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId)
+          storageMatch = this.AtticAgent.GetFromStorageBySnapShotId(this.TargetSnapShotId)
 
           if (storageMatch) {
-            if ((storageMatch.Flavor === SnapShotFlavor.Autosave
+            if ((storageMatch.Meta.Flavor === SnapShotFlavor.Autosave
               ||
-              (storageMatch.Flavor === SnapShotFlavor.Unknown))) {
-              storageMatch.Flavor = SnapShotFlavor.Manual;
+              (storageMatch.Meta.Flavor === SnapShotFlavor.Unknown))) {
+              storageMatch.Meta.Flavor = SnapShotFlavor.Manual;
             }
-            storageMatch.NickName = this.NewNickname;// this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
+            storageMatch.Friendly.NickName = this.NewNickname;// this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
           } else {
             reject(this.UpdateNickname.name + ' - No storage match');
           }

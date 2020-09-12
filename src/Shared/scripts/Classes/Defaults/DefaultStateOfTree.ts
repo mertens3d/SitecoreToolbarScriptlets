@@ -1,8 +1,7 @@
-﻿import { IDataStateOfTree } from "../../Interfaces/Data/iDataTreeState";
-import { IDataStateOfTreeNode } from "../../Interfaces/Data/IDataOneTreeNode";
-import { DefaultStateOfTreeNode } from "./DefaultStateOfTreeNode";
+﻿import { IDataStateOfScContentTreeNode } from "../../Interfaces/Data/IDataOneTreeNode";
+import { IDataStateOfTree } from "../../Interfaces/Data/iDataTreeState";
 
 export class DefaultStateOfTree implements IDataStateOfTree {
-    ActiveNode = new DefaultStateOfTreeNode();
-    AllTreeNodeAr: IDataStateOfTreeNode[];
+    ActiveTreeNodeIndex =-1;
+    StateOfTreeNodes: IDataStateOfScContentTreeNode[];
 }

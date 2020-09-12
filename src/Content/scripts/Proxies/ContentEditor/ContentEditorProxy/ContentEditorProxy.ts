@@ -9,9 +9,10 @@ import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfa
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { TreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
-import { IDataStateOfTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
+import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
 import { IGeneric_Observer } from "../../Desktop/DesktopProxy/Events/GenericEvent/IGeneric_Observer";
 import { ITreeMutatedEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
+import { IDataStateOfTree } from '../../../../../Shared/scripts/Interfaces/Data/iDataTreeState';
 
 export class ContentEditorProxy extends LoggableBase {
   AssociatedTreeProxy: IContentEditorTreeProxy;
@@ -39,8 +40,7 @@ export class ContentEditorProxy extends LoggableBase {
 
   GetStateOfContentEditor(): IDataStateOfContentEditor {
     let toReturnStateOfContentEditor: IDataStateOfContentEditor = {
-      StateOfTree: null,
-      Id: null,
+      StateOfTree: this.AssociatedTreeProxy.GetStateOfTree(),
     }
 
     toReturnStateOfContentEditor.StateOfTree = this.AssociatedTreeProxy.GetStateOfTree();
@@ -93,21 +93,21 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncEnd(this.RegisterObserver.name);
   }
 
-  async SetStateTree(oneTreeState: IDataStateOfContentEditor): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetStateTree.name);
+  //async SetStateTree(oneTreeState: IDataStateOfTree): Promise<void> {
+  //  return new Promise(async (resolve, reject) => {
+  //    this.Logger.FuncStart(this.SetStateTree.name);
 
-      if (oneTreeState) {
-        await this.SetStateOfContentEditor(oneTreeState)
-          .then(() => resolve())
-          .catch((err) => {
-            this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
-            reject((this.SetStateTree.name + " " + err))
-          })
-      }
-      this.Logger.FuncEnd(this.SetStateTree.name);
-    });
-  }
+  //    if (oneTreeState) {
+  //      await this.AssociatedTreeProxy.SetStateOfTree(oneTreeState)
+  //        .then(() => resolve())
+  //        .catch((err) => {
+  //          this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
+  //          reject((this.SetStateTree.name + " " + err))
+  //        })
+  //    }
+  //    this.Logger.FuncEnd(this.SetStateTree.name);
+  //  });
+  //}
 
   SetCompactCss() {
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.AssociatedDoc.DocId));
@@ -121,7 +121,7 @@ export class ContentEditorProxy extends LoggableBase {
     return new Promise<boolean>(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateOfContentEditor.name, Guid.AsShort(this.AssociatedDoc.DocId));
 
-      this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfTree.AllTreeNodeAr.length);
+      this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfTree.StateOfTreeNodes.length);
 
       await this.AssociatedTreeProxy.SetStateOfTree(dataToRestore.StateOfTree)
         .then(() => resolve(true))
@@ -131,12 +131,12 @@ export class ContentEditorProxy extends LoggableBase {
     });
   }
 
-  GetActiveNode(allTreeNodeAr: IDataStateOfTreeNode[]) {
+  GetActiveNode(allTreeNodeAr: IDataStateOfScContentTreeNode[]) {
     this.Logger.FuncStart(this.GetActiveNode.name);
-    let toReturn: IDataStateOfTreeNode = null;
+    let toReturn: IDataStateOfScContentTreeNode = null;
     if (allTreeNodeAr) {
       for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
-        let candidate: IDataStateOfTreeNode = allTreeNodeAr[idx];
+        let candidate: IDataStateOfScContentTreeNode = allTreeNodeAr[idx];
         if (candidate.IsActive) {
           toReturn = candidate;
           break;
@@ -146,19 +146,7 @@ export class ContentEditorProxy extends LoggableBase {
       this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
     }
 
-    this.Logger.FuncEnd(this.GetActiveNode.name, toReturn.NodeFriendly);
+    this.Logger.FuncEnd(this.GetActiveNode.name, toReturn.Friendly);
     return toReturn;
-  }
-
-  GetStateOfTree(): IDataStateOfContentEditor {
-    this.Logger.FuncStart(this.GetStateOfTree.name);
-
-    var toReturnOneTreeState: IDataStateOfContentEditor = {
-      Id: this.AssociatedId,
-      StateOfTree: this.AssociatedTreeProxy.GetStateOfTree(),
-    }
-
-    this.Logger.FuncEnd(this.GetStateOfTree.name);
-    return toReturnOneTreeState;
   }
 }

@@ -88,7 +88,16 @@ export class ContentConst {
         ContentEditor: {
           ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
           scContentTreeNodeIcon: '.scContentTreeNodeIcon',
+          RootAnchorNode: '[id=Tree_Node_11111111111111111111111111111111]',
         },
+        Level2Nodes: {
+          MediaLibraryAnchorRootNode: '[id=Tree_Node_3D6658D8A0BF4E75B3E2D050FABCF4E1]',
+          TemplatesAnchorRootNode: '[id=Tree_Node_3C1715FE6A134FCF845FDE308BA9741D]',
+          LayoutRootAnchorNode: '[id=Tree_Node_EB2E4FFD27614653B05226A64D385227]',
+          SystemRootAnchorNode: '[id=Tree_Node_13D6D6C6C50B4BBDB3312B04F1A58F21]',
+          ContentRootAnchorNode: '[id=Tree_Node_0DE95AE441AB4D019EB067441B7C2450]',
+        },
+
         IdStartsWithTreeNode: '[id^=Tree_Node_]',
         IframeContent: {
           sc820: null,
@@ -128,8 +137,9 @@ export class ContentConst {
     Storage: {
       SettingsSuffix: '.Settings',
       ShowDebugData: false,
-      SnapShotPrefix: 'WindowSnapShot.',
+      SnapShotPrefix: 'ScSnapShot.',
       WindowRoot: 'HindSite.',
+      SessionKey: 'HindSite.SessionKey',
     },
     Numbers: {
       Desktop: {

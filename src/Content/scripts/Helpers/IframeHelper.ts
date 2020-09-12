@@ -14,8 +14,8 @@ export class FrameHelper extends LoggableBase {
     this.SettingsAgent = settingsAgent;
   }
 
-  async GetHostedframes(targetDoc: IDataOneDoc): Promise<FrameProxy[]> {
-    this.Logger.FuncStart(this.GetHostedframes.name);
+  async GetLiveFrames(targetDoc: IDataOneDoc): Promise<FrameProxy[]> {
+    this.Logger.FuncStart(this.GetLiveFrames.name);
 
     var toReturn: FrameProxy[] = [];
 
@@ -40,7 +40,7 @@ export class FrameHelper extends LoggableBase {
       //this.Logger.LogAsJsonPretty('toReturn', toReturn);
       this.Logger.LogVal('GetAllLiveIframeData: iframe count', toReturn.length);
 
-      this.Logger.FuncEnd(this.GetHostedframes.name);
+      this.Logger.FuncEnd(this.GetLiveFrames.name);
 
       return toReturn;
     }

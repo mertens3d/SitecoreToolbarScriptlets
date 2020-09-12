@@ -1,7 +1,6 @@
-﻿import { IDataStateOfTreeNode } from './IDataOneTreeNode';
+﻿import { IDataStateOfScContentTreeNode } from './IDataOneTreeNode';
 
 export interface IDataStateOfTree {
-    ActiveNode: IDataStateOfTreeNode;
-    AllTreeNodeAr: IDataStateOfTreeNode[];
-
+  ActiveTreeNodeIndex: number;
+  StateOfTreeNodes: IDataStateOfScContentTreeNode[];
 }

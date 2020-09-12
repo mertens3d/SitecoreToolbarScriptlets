@@ -21,7 +21,7 @@ export class SharedConst {
       MinTimeDiffMs: 100
     },
     ObjDiscriminator: {
-      DataOneTreeNode: 'IDataOneTreeNode',
+      //DataOneTreeNode: 'IDataOneTreeNode',
     },
     Settings: {
       Defaults: {

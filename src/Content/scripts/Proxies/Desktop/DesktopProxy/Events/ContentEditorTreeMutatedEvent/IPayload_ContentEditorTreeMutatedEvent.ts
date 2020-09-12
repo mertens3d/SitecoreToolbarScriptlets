@@ -1,7 +1,7 @@
-﻿import { TreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
+﻿import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
 
 export interface ITreeMutatedEvent_Payload {
-  ActiveNode: TreeNodeProxy;
+  ActiveNode: ScContentTreeNodeProxy;
   AssociatedIframeElemId: string;
   MutatedElement: HTMLElement;
 }

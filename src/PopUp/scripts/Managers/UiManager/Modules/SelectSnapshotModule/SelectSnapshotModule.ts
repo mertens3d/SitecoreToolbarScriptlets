@@ -1,4 +1,5 @@
-﻿import { StaticHelpers } from "../../../../../../Shared/scripts/Classes/StaticHelpers";
+﻿import { GenericEvent_Subject } from "../../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/GenericEvent_Subject";
+import { StaticHelpers } from "../../../../../../Shared/scripts/Classes/StaticHelpers";
 import { BufferChar } from "../../../../../../Shared/scripts/Enums/BufferChar";
 import { BufferDirection } from "../../../../../../Shared/scripts/Enums/BufferDirection";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
@@ -9,22 +10,25 @@ import { IFirstActive } from "../../../../../../Shared/scripts/Interfaces/Agents
 import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IDataStateOfSitecoreWindow } from "../../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfSnapShots } from "../../../../../../Shared/scripts/Interfaces/Data/IDataSnapShots";
+import { IDataStateOfSnapShotSelect } from "../../../../../../Shared/scripts/Interfaces/Data/IDataStateOfSnapShotSelect";
+import { IDataStateOfFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
 import { ISelectionHeaders } from "../../../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { PopConst } from "../../../../Classes/PopConst";
-import { IDataStateOfSnapShots } from "../../../../../../Shared/scripts/Interfaces/Data/IDataSnapShots";
-import { GenericEvent_Subject } from "../../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/GenericEvent_Subject";
-import { IDataStateOfSnapShotSelect } from "../../../../../../Shared/scripts/Interfaces/Data/IDataStateOfSnapShotSelect";
+import { StateHelpers } from "./StateHelpers";
 
 export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapShotSelect> implements IUiModule {
   StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   StateOfSnapShots: IDataStateOfSnapShots;
 
   private __selector: string;
+  private  StateHelpers: StateHelpers;
 
   constructor(selector: string, logger: ILoggerAgent) {
     super(logger);
     this.__selector = selector;
     this.Logger = logger;
+    this.StateHelpers = new StateHelpers(this.Logger);
   }
 
   Init(): void {
@@ -142,8 +146,8 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
 
     let priorValue: GuidData = this.GetSelectSnapshotId();
 
-    if (this.StateOfSnapShots.CurrentSnapShots) {
-      let snapShots: IDataStateOfSitecoreWindow[] = this.StateOfSnapShots.CurrentSnapShots;
+    if (this.StateOfSnapShots.SnapShots) {
+      let snapShots: IDataStateOfSitecoreWindow[] = this.StateOfSnapShots.SnapShots;
 
       if (snapShots) {
         var targetSel: HTMLSelectElement = this.__getSelectElem();
@@ -198,19 +202,20 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
 
   GetFirstDataWithActiveNode(data: IDataStateOfSitecoreWindow): IFirstActive {
     let toReturn: IFirstActive = {
-      contentEditorState: null,
+      StateOfContentEditor: null,
       activeTreeNode: null
     }
 
-    if ((data.WindowType === ScWindowType.Desktop) && data.StateOfDesktop && data.StateOfDesktop.StateOfActiveFrame && data.StateOfDesktop.StateOfActiveFrame.ContentEditorState.StateOfTree) {
-      toReturn.contentEditorState = data.StateOfDesktop.StateOfActiveFrame.ContentEditorState;
-      toReturn.activeTreeNode = data.StateOfDesktop.StateOfActiveFrame.ContentEditorState.StateOfTree.ActiveNode;
+    if ((data.Meta.WindowType === ScWindowType.Desktop) && data.StateOfDesktop && data.StateOfDesktop.IndexOfActiveFrame && data.StateOfDesktop.StateOfFrames) {
+
+      let activeFrame: IDataStateOfFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.StateOfDesktop);  
+      toReturn.StateOfContentEditor = activeFrame.StateOfContentEditor;
+      toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor); 
     }
-    else if ((data.WindowType === ScWindowType.ContentEditor) && data.StateOfContentEditor && data.StateOfContentEditor.StateOfTree) {
-      toReturn.contentEditorState = data.StateOfContentEditor;
-      toReturn.activeTreeNode = data.StateOfContentEditor.StateOfTree.ActiveNode;
+    else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.StateOfContentEditor && data.StateOfContentEditor.StateOfTree) {
+      toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(toReturn.StateOfContentEditor);
     } else {
-      this.Logger.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(data.WindowType));
+      this.Logger.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(data.Meta.WindowType));
     }
 
     return toReturn
@@ -218,33 +223,33 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
 
   TimeNicknameFavStr(data: IDataStateOfSitecoreWindow): string {
     var typeStr: string = '';
-    if (data.WindowType === ScWindowType.ContentEditor) {
+    if (data.Meta.WindowType === ScWindowType.ContentEditor) {
       typeStr = 'Cont Ed';
     }
-    else if (data.WindowType === ScWindowType.Desktop) {
+    else if (data.Meta.WindowType === ScWindowType.Desktop) {
       typeStr = 'Desktop';
     }
-    //= (data.WindowType === scWindowType.Unknown) ? '?' : scWindowType[data.WindowType];
+    //= (data.Meta.WindowType === scWindowType.Unknown) ? '?' : scWindowType[data.Meta.WindowType];
     var activeCeNode: string = '';
     let MainSectionNode: string = '';
 
     let candidateCe: IFirstActive = this.GetFirstDataWithActiveNode(data);
 
     if (candidateCe && candidateCe.activeTreeNode) {
-      activeCeNode = candidateCe.activeTreeNode.NodeFriendly.trim();
-      if (candidateCe.contentEditorState.StateOfTree.AllTreeNodeAr.length >= 2) {
-        MainSectionNode = candidateCe.contentEditorState.StateOfTree.AllTreeNodeAr[1].NodeFriendly.trim();
+      activeCeNode = candidateCe.activeTreeNode.Friendly.trim();
+      if (candidateCe.StateOfContentEditor.StateOfTree.StateOfTreeNodes.length >= 2) {
+        MainSectionNode = candidateCe.StateOfContentEditor.StateOfTree.StateOfTreeNodes[1].Friendly.trim();
       }
     }
-    let toReturn = StaticHelpers.BufferString(data.TimeStampFriendly, PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.space, BufferDirection.right)
+    let toReturn = StaticHelpers.BufferString(data.Friendly.TimeStamp, PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.space, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(typeStr, PopConst.Const.SnapShotFormat.lenPageType, BufferChar.Nbsp, BufferDirection.right)
-      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.NickName, PopConst.Const.SnapShotFormat.lenNickname, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.Friendly.NickName, PopConst.Const.SnapShotFormat.lenNickname, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(MainSectionNode, PopConst.Const.SnapShotFormat.MainSectionNode, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(activeCeNode, PopConst.Const.SnapShotFormat.lenActiveNode, BufferChar.Nbsp, BufferDirection.right)
 
-      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Favorite ? '*' : ''), PopConst.Const.SnapShotFormat.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Meta.Flavor === SnapShotFlavor.Favorite ? '*' : ''), PopConst.Const.SnapShotFormat.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
       //+ PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
-      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(Guid.AsShort(data.GuidId), PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right)
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(Guid.AsShort(data.Meta.SnapshotId), PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right)
     //todo - put back    + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data. AllCEAr.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
     return toReturn;
   }
@@ -256,13 +261,13 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
 
     el.innerHTML = timeNicknameFavStr;
 
-    if (data.Flavor === SnapShotFlavor.Favorite) {
+    if (data.Meta.Flavor === SnapShotFlavor.Favorite) {
       el.classList.add('favorite');
     }
 
-    el.value = data.GuidId.Raw;
+    el.value = data.Meta.SnapshotId.Raw;
 
-    if ((data.GuidId && prior && data.GuidId.Raw === prior.Raw) ||
+    if ((data.Meta.SessionId && prior && data.Meta.SnapshotId.Raw === prior.Raw) ||
       (idx === 0 && !prior)
       ||
       (idx === 0 && prior.Raw === GuidData.GetEmptyGuid().Raw)
@@ -275,9 +280,9 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
   }
 
   private AppendToCorrectSnapshotGroup(data: IDataStateOfSitecoreWindow, el: HTMLOptionElement, headers: ISelectionHeaders) {
-    if (data.Flavor === SnapShotFlavor.Autosave) {
+    if (data.Meta.Flavor === SnapShotFlavor.Autosave) {
       headers.Auto.appendChild(el);
-    } else if (data.Flavor === SnapShotFlavor.Favorite) {
+    } else if (data.Meta.Flavor === SnapShotFlavor.Favorite) {
       headers.Favorite.appendChild(el);
     } else {
       headers.Manual.appendChild(el);

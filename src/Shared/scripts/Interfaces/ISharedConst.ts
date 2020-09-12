@@ -17,7 +17,7 @@
     MinTimeDiffMs: number
   },
   ObjDiscriminator: {
-    DataOneTreeNode: string,
+    //DataOneTreeNode: string,
   },
   Settings: {
     Defaults: {

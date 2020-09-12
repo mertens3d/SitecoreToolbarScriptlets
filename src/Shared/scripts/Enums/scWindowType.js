@@ -11,5 +11,8 @@ var ScWindowType;
     ScWindowType[ScWindowType["Edit"] = 5] = "Edit";
     ScWindowType[ScWindowType["Normal"] = 6] = "Normal";
     ScWindowType[ScWindowType["Preview"] = 7] = "Preview";
+    ScWindowType[ScWindowType["MediaLibrary"] = 8] = "MediaLibrary";
+    ScWindowType[ScWindowType["PackageDesigner"] = 9] = "PackageDesigner";
+    ScWindowType[ScWindowType["InstallationWizard"] = 10] = "InstallationWizard";
 })(ScWindowType = exports.ScWindowType || (exports.ScWindowType = {}));
 //# sourceMappingURL=scWindowType.js.map

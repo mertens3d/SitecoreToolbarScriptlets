@@ -127,7 +127,7 @@ export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayl
     return new Promise(async (resolve, reject) => {
       data.Self.Handlers.External.Logger.FuncStart(data.Self.Handlers.External.HndlrSnapShotRestoreSameTab.name);
 
-      var msg = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqRestoreClick, data);
+      var msg = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqSetStateOfSitecoreWindow, data);
       msg.Payload.IdOfSelect = data.MenuState.SelectSnapshotId;
 
       await data.Self.Handlers.External.SendContentCommand(msg)

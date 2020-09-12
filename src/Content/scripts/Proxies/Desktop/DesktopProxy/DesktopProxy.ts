@@ -14,6 +14,7 @@ import { IFrameProxyMutated_Payload } from "./Events/Subject_DesktopIframeProxyM
 import { IGeneric_Observer } from "./Events/GenericEvent/IGeneric_Observer";
 import { DesktopDomChangedEvent_Subject } from "./Events/DomChangedEvent/Subject_DesktopDomChangedEvent";
 import { IDomChangedEvent_Payload } from "./Events/DomChangedEvent/IDomChangedEvent_Payload";
+import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 
 export class DesktopDomChangedEvent_Observer extends LoggableBase implements IGeneric_Observer<IDomChangedEvent_Payload>{
   private Owner: DesktopProxy;
@@ -24,7 +25,9 @@ export class DesktopDomChangedEvent_Observer extends LoggableBase implements IGe
   }
 
   Update(payload: IDomChangedEvent_Payload) {
-    throw new Error("Method not implemented.");
+    //this.Owner.
+
+    this.Logger.WarningAndContinue(DesktopDomChangedEvent_Observer.name, 'Not implemented');
   }
 }
 
@@ -119,43 +122,40 @@ export class DesktopProxy extends LoggableBase {
     return this.__iframeHelper;
   }
 
+  ProcessLiveFrames(results: FrameProxy[]): IDataStateOfDesktop {
+    let toReturnDesktopState: IDataStateOfDesktop = new DefaultStateOfDesktop();
+
+    if (results) {
+      for (var idx = 0; idx < results.length; idx++) {
+        let frameProxy: FrameProxy = results[idx];
+
+        let stateOfFrame = frameProxy.GetStateOfFrame();
+
+        toReturnDesktopState.StateOfFrames.push(stateOfFrame);
+        if (frameProxy.GetZindex() === 1) {
+          toReturnDesktopState.IndexOfActiveFrame = idx;
+        }
+      }
+    }
+
+    return toReturnDesktopState;
+  }
+
   async GetStateOfDesktop(): Promise<IDataStateOfDesktop> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetStateOfDesktop.name);
 
       try {
-        var toReturnDesktopState: IDataStateOfDesktop = this.CreateNewDtDataShell();
-
-        await this.GetIframeHelper().GetHostedframes(this.AssociatedDoc)
-          .then((results: FrameProxy[]) => {
-            if (results) {
-              results.forEach((oneFrame) => toReturnDesktopState.StateOfFrames.push(oneFrame.GetStateOfFrame()))
-            }
-          })
-          .then(() => resolve(toReturnDesktopState))
+        await this.GetIframeHelper().GetLiveFrames(this.AssociatedDoc)
+          .then((results: FrameProxy[]) => this.ProcessLiveFrames(results))
+          .then((results: IDataStateOfDesktop) => resolve(results))
           .catch((err) => this.Logger.ErrorAndThrow(this.GetStateOfDesktop.name, err));
-
-        //if (toReturnDesktopState.HostedIframes && toReturnDesktopState.HostedIframes.length > 0) {
-        //  for (var iframeIdx = 0; iframeIdx < toReturnDesktopState.HostedIframes.length; iframeIdx++) {
-        //    this.Logger.LogVal('iframeIdx: ', iframeIdx);
-
-        //    var iframeProxy: FrameProxy = toReturnDesktopState.HostedIframes[iframeIdx];
-
-        //    let oneCeState: IDataContentEditorState = iframeProxy.GetState();
-
-        //    toReturnDesktopState.FrameStates.push(oneCeState);
-
-        //    if (iframeProxy.GetZindex() === 1) {
-        //      toReturnDesktopState.ActiveCEAgent = iframeProxy.ConEditProxy;
-        //      toReturnDesktopState.ActiveCeState = oneCeState;
-        //    }
-        //  }
-        //}
+       
       } catch (err) {
-        reject(this.GetStateOfDesktop.name + ' ' + err);
+        reject(this.GetStateOfDesktop.name + ' | ' + err);
       }
 
-      this.Logger.FuncEnd(this.GetStateOfDesktop.name, toReturnDesktopState.StateOfFrames.length);
+      this.Logger.FuncEnd(this.GetStateOfDesktop.name);
     });
   }
 
@@ -179,19 +179,10 @@ export class DesktopProxy extends LoggableBase {
           reject(this.SetStateOfDesktop.name + ' bad data');
         }
       } else {
-        reject(this.SetStateOfDesktop.name + '  No desktop state to set');
+        reject(this.SetStateOfDesktop.name + '  No desktop state provided');
       }
 
       this.Logger.FuncEnd(this.SetStateOfDesktop.name);
     });
-  }
-
-  CreateNewDtDataShell(): IDataStateOfDesktop {
-    var toReturn: IDataStateOfDesktop = {
-      StateOfFrames: [],
-      StateOfActiveFrame: null
-    }
-
-    return toReturn;
   }
 }

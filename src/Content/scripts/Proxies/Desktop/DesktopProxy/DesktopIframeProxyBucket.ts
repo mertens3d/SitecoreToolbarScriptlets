@@ -26,7 +26,7 @@ export class DesktopIframeProxyBucket extends LoggableBase {
     this.Logger.InstantiateEnd(DesktopIframeProxyBucket.name);
   }
 
-  private GetFrameHelper() {
+  private GetFrameHelper(): FrameHelper {
     if (this.__iframeHelper == null) {
       this.__iframeHelper = new FrameHelper(this.Logger, this.SettingsAgent);
     }
@@ -68,7 +68,7 @@ export class DesktopIframeProxyBucket extends LoggableBase {
 
   async InitHostedIframes(): Promise<void> {
     try {
-      await this.GetFrameHelper().GetHostedframes(this.AssociatedDesktopDoc)
+      await this.GetFrameHelper().GetLiveFrames(this.AssociatedDesktopDoc)
         .then((foundIframes: FrameProxy[]) => {
           foundIframes.forEach(async (oneIframe) => {
             this.AddToBucketFromIframeProxy(oneIframe);

@@ -12,30 +12,21 @@ import { ScWindowRecipePartials } from "../../../Managers/ScWindowManager/ScWind
 import { DesktopProxy } from "../../../Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 
-export class RecipeRestoreState extends LoggableBase implements ICommandRecipes {
-
-    TargetSnapShotId: GuidData;
-  private  SettingsAgent: ISettingsAgent;
+export class RecipeSetStateOfSitecoreWindow extends LoggableBase implements ICommandRecipes {
+  TargetSnapShotId: GuidData;
   private AtticAgent: IContentAtticAgent;
   private OneCeAgent: ContentEditorProxy;
   private OneDesktopMan: DesktopProxy;
-  private RecipeBasics: RecipeBasics;
-  private ScUrlAgent: IScUrlAgent;
   private ScWinRecipeParts: ScWindowRecipePartials;
-  private ToastAgent: IToastAgent;
   private TopLevelDoc: IDataOneDoc;
 
   constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, toastAgent: IToastAgent, oneCEAgent: ContentEditorProxy, targetSnapShotId: GuidData, settingsAgent: ISettingsAgent) {
     super(logger);
-    this.ScUrlAgent = scUrlAgent;
-    this.SettingsAgent = settingsAgent;
-    this.RecipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
     this.AtticAgent = atticAgent;
     this.TopLevelDoc = topLevelDoc;
     this.ScWinRecipeParts = scWinRecipeParts;
     this.OneDesktopMan = oneDesktopMan;
     this.OneCeAgent = oneCEAgent;
-    this.ToastAgent = toastAgent;
     this.TargetSnapShotId = targetSnapShotId;
   }
 
@@ -47,13 +38,12 @@ export class RecipeRestoreState extends LoggableBase implements ICommandRecipes 
           this.Logger.LogVal("IdOfSelect", this.TargetSnapShotId);
           var dataOneWindowStorage;
 
-          dataOneWindowStorage = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId);
+          dataOneWindowStorage = this.AtticAgent.GetFromStorageBySnapShotId(this.TargetSnapShotId);
 
           if (dataOneWindowStorage) {
             var targetDoc: IDataOneDoc = this.TopLevelDoc;
 
             if (targetDoc) {
-
               await this.ScWinRecipeParts.RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage, this.OneDesktopMan, this.OneCeAgent)
                 .then(() => resolve())
                 .catch((err) => reject(err))

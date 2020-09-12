@@ -7,4 +7,7 @@
   Edit = 5,
   Normal = 6,
   Preview = 7,
+  MediaLibrary = 8,
+  PackageDesigner = 9,
+  InstallationWizard = 10,
 }

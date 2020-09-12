@@ -9,7 +9,7 @@ export class RecipeSaveState extends __RecipeBase implements ICommandRecipes {
   }
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await this.ScWinMan.GetStateOfSitecore(this.TargetSnapShotFlavor)
+      await this.ScWinMan.GetStateOfSiteCoreWindow()
         .then((windowState: IDataStateOfSitecoreWindow) => {
           this.AtticAgent.WriteStateOfSitecoreToStorage(windowState);
           //todo - put back this.Logger.WarningAndContinue(this.Execute.name, 'empty ce ar - not writing to storage');

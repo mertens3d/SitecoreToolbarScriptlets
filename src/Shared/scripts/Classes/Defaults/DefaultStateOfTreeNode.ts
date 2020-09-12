@@ -1,11 +1,9 @@
 ﻿import { GuidData } from "../../Helpers/GuidData";
-import { IDataStateOfTreeNode } from "../../Interfaces/Data/IDataOneTreeNode";
-import { SharedConst } from "../../SharedConst";
+import { IDataStateOfScContentTreeNode } from "../../Interfaces/Data/IDataOneTreeNode";
 
-export class DefaultStateOfTreeNode implements IDataStateOfTreeNode {
+export class DefaultStateOfTreeNode implements IDataStateOfScContentTreeNode {
     IsActive = false;
     IsExpanded = false;
-    NodeFriendly = '';
-    NodeId = new GuidData();
-    Discriminator = SharedConst.Const.ObjDiscriminator.DataOneTreeNode;
+    Friendly = '';
+    ItemId = new GuidData();
 }

@@ -1,7 +1,7 @@
 ﻿import { IDataStateOfContentEditor } from "../Data/IDataOneStorageOneTreeState";
-import { IDataStateOfTreeNode } from "../Data/IDataOneTreeNode";
+import { IDataStateOfScContentTreeNode } from "../Data/IDataOneTreeNode";
 
 export interface IFirstActive {
-  contentEditorState: IDataStateOfContentEditor,
-  activeTreeNode: IDataStateOfTreeNode
+  StateOfContentEditor: IDataStateOfContentEditor,
+  activeTreeNode: IDataStateOfScContentTreeNode
 }

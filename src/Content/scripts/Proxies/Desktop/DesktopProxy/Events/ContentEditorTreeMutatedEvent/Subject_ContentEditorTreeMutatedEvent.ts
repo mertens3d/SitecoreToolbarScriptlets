@@ -1,7 +1,7 @@
 ﻿import { GenericEvent_Subject } from "../GenericEvent/GenericEvent_Subject";
 import { ITreeMutatedEvent_Payload } from "./IPayload_ContentEditorTreeMutatedEvent";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { TreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
+import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 
 export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<ITreeMutatedEvent_Payload> {
@@ -39,8 +39,8 @@ export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<
     this.Logger.FuncEnd(this.InitMutationObserver.name);
   }
 
-  private GetMutatedNode(mutation: MutationRecord): TreeNodeProxy {
-    let candidateNode: TreeNodeProxy = null;
+  private GetMutatedNode(mutation: MutationRecord): ScContentTreeNodeProxy {
+    let candidateNode: ScContentTreeNodeProxy = null;
     if (mutation.attributeName === 'class') {
       let mutatedAnchorElement: HTMLAnchorElement = <HTMLAnchorElement>(mutation.target);
       if (mutatedAnchorElement) {
@@ -48,7 +48,7 @@ export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<
         this.Logger.Log(mutatedAnchorElement.id);
 
         this.Logger.Log('mutated');
-        candidateNode = new TreeNodeProxy(this.Logger, this.HostDoc,  mutatedAnchorElement);
+        candidateNode = new ScContentTreeNodeProxy(this.Logger, this.HostDoc,  mutatedAnchorElement);
         this.Logger.Log((<HTMLElement>mutation.target).innerText);
       }
     }
@@ -57,7 +57,7 @@ export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<
 
   private HandleMutationEvent(mutations: MutationRecord[]) {
     mutations.forEach((mutation) => {
-      let candidateNode: TreeNodeProxy = this.GetMutatedNode(mutation);
+      let candidateNode: ScContentTreeNodeProxy = this.GetMutatedNode(mutation);
 
       if (candidateNode) {
         if (candidateNode.QueryIsActive()) {

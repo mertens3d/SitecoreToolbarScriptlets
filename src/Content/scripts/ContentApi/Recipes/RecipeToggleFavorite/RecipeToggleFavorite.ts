@@ -12,12 +12,12 @@ export class RecipeToggleFavorite extends __RecipeBase implements ICommandRecipe
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       if (this.TargetSnapShotId) {
-        let result: IDataStateOfSitecoreWindow = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId);
+        let result: IDataStateOfSitecoreWindow = this.AtticAgent.GetFromStorageBySnapShotId(this.TargetSnapShotId);
 
-        if (result.Flavor === SnapShotFlavor.Favorite) {
-          result.Flavor = SnapShotFlavor.Manual;
+        if (result.Meta.Flavor === SnapShotFlavor.Favorite) {
+          result.Meta.Flavor = SnapShotFlavor.Manual;
         } else {
-          result.Flavor = SnapShotFlavor.Favorite;
+          result.Meta.Flavor = SnapShotFlavor.Favorite;
         }
         this.AtticAgent.WriteStateOfSitecoreToStorage(result);
 

@@ -8,5 +8,5 @@ export interface IContentAtticAgent {
   WriteStateOfSitecoreToStorage(storageMatch: IDataStateOfSitecoreWindow);
   GetStateOfSnapShots(): IDataStateOfSnapShots;
   InitContentAtticManager(retainDayCount: number);
-  GetFromStorageById(targetGuid: GuidData): IDataStateOfSitecoreWindow;
+  GetFromStorageBySnapShotId(storageKey: GuidData): IDataStateOfSitecoreWindow;
 }

@@ -1,9 +1,8 @@
 ﻿import { GuidData } from "../../Helpers/GuidData";
 
-export interface IDataStateOfTreeNode {
+export interface IDataStateOfScContentTreeNode {
   IsActive: Boolean;
   IsExpanded: Boolean;
-  NodeFriendly: string;
-  NodeId: GuidData;
-  Discriminator: string;
+  Friendly: string;
+  ItemId: GuidData;
 }

@@ -2,5 +2,6 @@
 import { DefaultStateOfContentEditor } from "./DefaultStateOfContentEditor";
 
 export class DefaultStateOfFrame implements IDataStateOfFrame {
-    ContentEditorState = new DefaultStateOfContentEditor();
+  StateOfContentEditor = new DefaultStateOfContentEditor();
+  Style = '';
 }

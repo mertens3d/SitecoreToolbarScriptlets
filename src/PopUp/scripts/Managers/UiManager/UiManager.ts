@@ -27,6 +27,7 @@ import { IDataStateOfSnapShotSelect } from '../../../../Shared/scripts/Interface
 import { GenericEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/GenericEvent_Subject";
 import { IGeneric_Observer } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/IGeneric_Observer";
 import { LoggableBase } from '../../../../Content/scripts/Managers/LoggableBase';
+import { IDataStateOfSnapShots } from '../../../../Shared/scripts/Interfaces/Data/IDataSnapShots';
 
 export class UiSelectSnapShot_Observer extends LoggableBase implements IGeneric_Observer<IDataStateOfSnapShotSelect>{
   private Owner: UiManager;
@@ -128,8 +129,8 @@ export class UiManager {
     this.Logger.Log(err);
   }
 
-  CallBackCommandComplete(contentState: IDataStateOfSitecoreWindow) {
-    this.RefreshUiUIManagerFromStateOfSitecoreData(contentState);
+  CallBackCommandComplete(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, stateOfSnapshots: IDataStateOfSnapShots) {
+    this.RefreshUiUIManagerFromStateOfSitecoreData(stateOfSitecoreWindow, stateOfSnapshots);
   }
 
   ClosePopUp(): Promise<void> {
@@ -211,7 +212,7 @@ export class UiManager {
 
   }
 
-  async RefreshUiUIManagerFromStateOfSitecoreData(stateOfSitecoreWindow: IDataStateOfSitecoreWindow) {
+  async RefreshUiUIManagerFromStateOfSitecoreData(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, stateOfSnapShots: IDataStateOfSnapShots) {
     this.Logger.FuncStart(this.RefreshUiUIManagerFromStateOfSitecoreData.name);
 
     await this.SetUIStates(this.TabMan.GetScUrlAgent(), stateOfSitecoreWindow);
@@ -228,7 +229,7 @@ export class UiManager {
 
     this.ButtonStateManager.RefreshUiButtonState(currentWindowType, currSelSnapshot, stateOfSitecoreWindow, this.CommandMan.AllMenuCommands);
 
-    this.__drawCorrectNicknameInUI(stateOfSitecoreWindow.StateOfSnapShots.CurrentSnapShots);
+    this.__drawCorrectNicknameInUI(stateOfSnapShots.SnapShots);
 
     this.Logger.FuncEnd(this.RefreshUiUIManagerFromStateOfSitecoreData.name);
   }
@@ -256,7 +257,7 @@ export class UiManager {
 
       for (var idx = 0; idx < storageValues.length; idx++) {
         var candidate = storageValues[idx];
-        if (candidate.GuidId.Raw === this.ModuleSelectSnapShot.GetSelectSnapshotId().Raw) {
+        if (candidate.Meta.SnapshotId.Raw === this.ModuleSelectSnapShot.GetSelectSnapshotId().Raw) {
           storageMatch = candidate;
           break;
         }

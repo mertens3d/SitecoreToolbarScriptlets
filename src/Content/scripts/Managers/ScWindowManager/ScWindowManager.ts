@@ -22,6 +22,7 @@ import { LoggableBase } from '../LoggableBase';
 import { ScUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { ScWindowRecipePartials } from './ScWindowRecipePartials';
 import { DefaultStateOfSitecoreWindow } from '../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
+import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
 
 export class ScWindowManager extends LoggableBase implements IScWindowManager {
   __desktopProxyLazy: DesktopProxy = null;
@@ -32,6 +33,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
   private TopDoc: IDataOneDoc;
   private AtticAgent: IContentAtticAgent;
   SettingsAgent: ISettingsAgent;
+  TabSessionId: string;
 
   constructor(logger: ILoggerAgent, scUiMan: ScUiManager, miscAgent: MiscAgent, toastAgent: IToastAgent, atticAgent: IContentAtticAgent,
     scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
@@ -42,6 +44,14 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     this.AtticAgent = atticAgent;
     this.ScUrlAgent = scUrlAgent;
     this.SettingsAgent = settingsAgent;
+
+    this.TabSessionId = sessionStorage.getItem(ContentConst.Const.Storage.SessionKey);
+
+    if (!this.TabSessionId) {
+      this.TabSessionId = Guid.WithoutDashes( Guid.NewRandomGuid());
+      sessionStorage.setItem(ContentConst.Const.Storage.SessionKey, this.TabSessionId);
+    }
+
     this.Logger.InstantiateEnd(ScWindowManager.name);
   }
 
@@ -100,7 +110,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       }
 
       else if (scWindowType === ScWindowType.ContentEditor) {
-        toReturn = this.ContentEditorProxy().GetStateOfTree();
+        toReturn = this.ContentEditorProxy().GetStateOfContentEditor();
       }
       else if (scWindowType === ScWindowType.LoginPage
         || scWindowType === ScWindowType.Launchpad
@@ -165,8 +175,9 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     this.Logger.FuncStart(this.CreateShellIDataScWindowState.name);
 
     var activeWindowSnapShot: IDataStateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
-    activeWindowSnapShot.Flavor = flavor;
-    activeWindowSnapShot.WindowType = windowType;
+    activeWindowSnapShot.Meta.Flavor = flavor;
+    activeWindowSnapShot.Meta.WindowType = windowType;
+    activeWindowSnapShot.Meta.SessionId = this.TabSessionId;
 
     this.Logger.FuncEnd(this.CreateShellIDataScWindowState.name);
 
@@ -209,35 +220,40 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       this.Logger.FuncStart(this.GetStateOfSiteCoreWindow.name);
 
       let toReturnStateOfSitecoreWindow: IDataStateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
+      toReturnStateOfSitecoreWindow.Meta.SessionId = this.TabSessionId;
 
-      toReturnStateOfSitecoreWindow.StateOfSnapShots = this.AtticAgent.GetStateOfSnapShots();
+      if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
+        await this.DesktopProxy().GetStateOfDesktop()
+          .then((result: IDataStateOfDesktop) => toReturnStateOfSitecoreWindow.StateOfDesktop = result)
+          .catch((err) => reject(this.GetStateOfSiteCoreWindow.name + ' | ' + err));
+      }
 
-      await this.DesktopProxy().GetStateOfDesktop()
-        .then((result: IDataStateOfDesktop) => toReturnStateOfSitecoreWindow.StateOfDesktop = result)
-        .then(() => this.ContentEditorProxy().GetStateOfContentEditor())
-        .then((result: IDataStateOfContentEditor) => toReturnStateOfSitecoreWindow.StateOfContentEditor = result)
-        .then(() => resolve(toReturnStateOfSitecoreWindow))
-        .catch((err) => reject(this.GetStateOfSiteCoreWindow.name + ' | ' + err));
+      if (this.ScUrlAgent.GetScWindowType() === ScWindowType.ContentEditor) {
+        let result = this.ContentEditorProxy().GetStateOfContentEditor();
+        toReturnStateOfSitecoreWindow.StateOfContentEditor = result;
+      }
+
+      resolve(toReturnStateOfSitecoreWindow);
 
       this.Logger.FuncEnd(this.GetStateOfSiteCoreWindow.name);
     });
   }
 
-  GetStateOfSitecore(snapShotFlavor: SnapShotFlavor): Promise<IDataStateOfSitecoreWindow> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetStateOfSitecore.name);
+  //GetStateOfSitecore(snapShotFlavor: SnapShotFlavor): Promise<IDataStateOfSitecoreWindow> {
+  //  return new Promise(async (resolve, reject) => {
+  //    this.Logger.FuncStart(this.GetStateOfSitecore.name);
 
-      let currentPageType = this.GetCurrentPageType();
-      var toReturnStateOfSitecore: IDataStateOfSitecoreWindow = this.CreateShellIDataScWindowState(currentPageType, snapShotFlavor);
+  //    let currentPageType = this.GetCurrentPageType();
+  //    var toReturnStateOfSitecore: IDataStateOfSitecoreWindow = this.CreateShellIDataScWindowState(currentPageType, snapShotFlavor);
 
-      await this.DesktopProxy().GetStateOfDesktop()
-        .then((stateOfDesktop: IDataStateOfDesktop) => toReturnStateOfSitecore.StateOfDesktop = stateOfDesktop)
-        .then(() => this.ContentEditorProxy().GetStateOfContentEditor())
-        .then((stateOfContentEditor: IDataStateOfContentEditor) => toReturnStateOfSitecore.StateOfContentEditor = stateOfContentEditor)
-        .then(() => resolve(toReturnStateOfSitecore))
-        .catch((err) => reject(err));
+  //    await this.DesktopProxy().GetStateOfDesktop()
+  //      .then((stateOfDesktop: IDataStateOfDesktop) => toReturnStateOfSitecore.StateOfDesktop = stateOfDesktop)
+  //      .then(() => this.ContentEditorProxy().GetStateOfContentEditor())
+  //      .then((stateOfContentEditor: IDataStateOfContentEditor) => toReturnStateOfSitecore.StateOfContentEditor = stateOfContentEditor)
+  //      .then(() => resolve(toReturnStateOfSitecore))
+  //      .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.GetStateOfSitecore.name);
-    });
-  }
+  //    this.Logger.FuncEnd(this.GetStateOfSitecore.name);
+  //  });
+  //}
 }
