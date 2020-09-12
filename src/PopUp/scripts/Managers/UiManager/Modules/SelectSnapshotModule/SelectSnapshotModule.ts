@@ -208,7 +208,7 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
       activeTreeNode: null
     }
 
-    if ((data.Meta.WindowType === ScWindowType.Desktop) && data.States.StateOfDesktop && data.States.StateOfDesktop.IndexOfActiveFrame && data.States.StateOfDesktop.StateOfFrames) {
+    if ((data.Meta.WindowType === ScWindowType.Desktop) && data.States.StateOfDesktop && (data.States.StateOfDesktop.IndexOfActiveFrame > -1 )&& data.States.StateOfDesktop.StateOfFrames) {
       let activeFrame: IDataStateOfFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.States.StateOfDesktop);
       toReturn.StateOfContentEditor = activeFrame.StateOfContentEditor;
       toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);

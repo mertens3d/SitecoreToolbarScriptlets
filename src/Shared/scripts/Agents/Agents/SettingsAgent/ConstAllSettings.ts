@@ -1,4 +1,4 @@
-﻿import { OneGenericSetting } from "./OneGenericSetting";
+﻿import { HindSiteSetting } from "./OneGenericSetting";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
@@ -10,7 +10,7 @@ import { ContentConst } from "../../../Interfaces/InjectConst";
 
 export class ConstAllSettings {
   AllSettings: IGenericSetting[] = [
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.LastUsedLogToStorageKey,
       SettingType.Number,
       0,
@@ -21,7 +21,7 @@ export class ConstAllSettings {
       Enabled.Enabled,
       false // has ui
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.EnableLogging,
       SettingType.BoolCheckBox,
       true,
@@ -31,7 +31,7 @@ export class ConstAllSettings {
       'Enable Logging',
       Enabled.Enabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.UseCompactCss,
       SettingType.BoolCheckBox,
       false,
@@ -41,7 +41,7 @@ export class ConstAllSettings {
       'Use Compact CSS',
       Enabled.Disabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.AutoSnapshotBeforeWindowChange,
       SettingType.BoolCheckBox,
       null,
@@ -51,7 +51,7 @@ export class ConstAllSettings {
       'Auto Save Snapshot on HindSite Window Change',
       Enabled.Disabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.AutoLogin,
       SettingType.BoolCheckBox,
       null,
@@ -61,7 +61,7 @@ export class ConstAllSettings {
       'Auto Login',
       Enabled.Disabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.LgndPopUpLog,
       SettingType.Accordion,
       null,
@@ -71,7 +71,7 @@ export class ConstAllSettings {
       'Pop Up Log',
       Enabled.Enabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.LgndForeSite,
       SettingType.Accordion,
       null,
@@ -81,7 +81,7 @@ export class ConstAllSettings {
       'Fore&bull;Site',
       Enabled.Enabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.LgndHindSite,
       SettingType.Accordion,
       null,
@@ -91,7 +91,7 @@ export class ConstAllSettings {
       'Hind&bull;Site',
       Enabled.Enabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.LgndSettings,
       SettingType.Accordion,
       null,
@@ -101,7 +101,7 @@ export class ConstAllSettings {
       'Settings',
       Enabled.Enabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.LgndMessages,
       SettingType.Accordion,
       null,
@@ -111,7 +111,7 @@ export class ConstAllSettings {
       'Messages',
       Enabled.Enabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.LgndPopUpState,
       SettingType.Accordion,
       null,
@@ -121,7 +121,7 @@ export class ConstAllSettings {
       'Pop Up State',
       Enabled.Enabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.LgndContentState,
       SettingType.Accordion,
       null,
@@ -132,7 +132,7 @@ export class ConstAllSettings {
       Enabled.Enabled
     ),
 
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.LgndBrowserState,
       SettingType.Accordion,
       null,
@@ -143,7 +143,7 @@ export class ConstAllSettings {
       Enabled.Enabled
     ),
 
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.MaxAutoSaveCount,
       SettingType.Number,
       null,
@@ -154,7 +154,7 @@ export class ConstAllSettings {
       Enabled.Disabled
     ),
 
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.AutoSaveIntervalMin,
       SettingType.Number,
       null,
@@ -165,7 +165,7 @@ export class ConstAllSettings {
       Enabled.Enabled
     ),
 
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.DebugKeepDialogOpen,
       SettingType.BoolCheckBox,
       null,
@@ -175,7 +175,7 @@ export class ConstAllSettings {
       '(Debug) Keep Dialog Open',
       Enabled.Enabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.AutoSaveRetainDays,
       SettingType.Number,
       null,
@@ -185,7 +185,7 @@ export class ConstAllSettings {
        'Days to Retain Auto Snap Shots',
       Enabled.Enabled
     ),
-    new OneGenericSetting(
+    new HindSiteSetting(
       SettingKey.AutoRenameCeButton,
       SettingType.BoolCheckBox,
       false,

@@ -3,7 +3,7 @@ import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { Enabled } from "../../../Enums/Enabled";
-export class OneGenericSetting implements IGenericSetting {
+export class HindSiteSetting implements IGenericSetting {
   Enabled: Enabled;
   DataType: SettingType;
   DefaultValue: any;

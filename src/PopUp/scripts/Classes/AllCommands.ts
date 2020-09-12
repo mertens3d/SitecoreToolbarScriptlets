@@ -222,7 +222,7 @@ export class CommandManager {
       {
         Command: MenuCommand.RestoreStateTBDTab,
         ButtonSelector: PopConst.Const.Selector.HS.SelStateSnapShot,
-        VisibilityControllers: [VisibilityType.SnapShotSelected],
+        VisibilityControllers: [],//[VisibilityType.SnapShotSelected],
         EventData: {
           Event: CommandButtonEvents.OnDoubleClick,
           Handler: handlers.External.HndlrSnapShotRestoreTBDTab,

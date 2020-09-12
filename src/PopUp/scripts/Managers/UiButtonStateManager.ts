@@ -124,8 +124,8 @@ export class UiButtonStateManager extends LoggableBase {
     this.StateOfSitecoreWindow = stateOfSitecoreWindow;
   }
 
-  RefreshUiButtonStates(): void {
-    this.Logger.FuncStart(this.RefreshUiButtonStates.name,this.AllMenuCommands.length);
+  RefreshUiButtonEnabledStatus(): void {
+    this.Logger.FuncStart(this.RefreshUiButtonEnabledStatus.name,this.AllMenuCommands.length);
 
     for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
       var oneCommand = this.AllMenuCommands[idx];
@@ -138,12 +138,12 @@ export class UiButtonStateManager extends LoggableBase {
           passesOneTest = this.TestAgainstAllSetControllers(oneCommand);
         } else {
           this.Logger.LogAsJsonPretty('oneCommand', oneCommand);
-          this.Logger.ErrorAndContinue(this.RefreshUiButtonStates.name, 'target button not found: ' + oneCommand.ButtonSelector);
+          this.Logger.ErrorAndContinue(this.RefreshUiButtonEnabledStatus.name, 'target button not found: ' + oneCommand.ButtonSelector);
         }
         this.SetOneButtonVisibility(targetButton, passesOneTest);
       }
     }
 
-    this.Logger.FuncEnd(this.RefreshUiButtonStates.name);
+    this.Logger.FuncEnd(this.RefreshUiButtonEnabledStatus.name);
   }
 }

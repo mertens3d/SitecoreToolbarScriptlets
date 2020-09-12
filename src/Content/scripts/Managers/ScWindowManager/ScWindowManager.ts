@@ -23,6 +23,8 @@ import { ScUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { ScWindowRecipePartials } from './ScWindowRecipePartials';
 import { DefaultStateOfSitecoreWindow } from '../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
+import { IDataFriendly } from '../../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
+import { IDataMetaData } from '../../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
 
 export class ScWindowManager extends LoggableBase implements IScWindowManager {
   __desktopProxyLazy: DesktopProxy = null;
@@ -48,7 +50,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     this.TabSessionId = sessionStorage.getItem(ContentConst.Const.Storage.SessionKey);
 
     if (!this.TabSessionId) {
-      this.TabSessionId = Guid.WithoutDashes( Guid.NewRandomGuid());
+      this.TabSessionId = Guid.WithoutDashes(Guid.NewRandomGuid());
       sessionStorage.setItem(ContentConst.Const.Storage.SessionKey, this.TabSessionId);
     }
 
@@ -222,6 +224,8 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       let toReturnStateOfSitecoreWindow: IDataStateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
       toReturnStateOfSitecoreWindow.Meta.SessionId = this.TabSessionId;
 
+      this.PopulateMetaData(toReturnStateOfSitecoreWindow.Meta);
+
       if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
         await this.DesktopProxy().GetStateOfDesktop()
           .then((result: IDataStateOfDesktop) => toReturnStateOfSitecoreWindow.States.StateOfDesktop = result)
@@ -237,6 +241,10 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
 
       this.Logger.FuncEnd(this.GetStateOfSiteCoreWindow.name);
     });
+  }
+
+  PopulateMetaData(Friendly: IDataMetaData): void {
+    Friendly.WindowType = this.ScUrlAgent.GetScWindowType();
   }
 
   //GetStateOfSitecore(snapShotFlavor: SnapShotFlavor): Promise<IDataStateOfSitecoreWindow> {

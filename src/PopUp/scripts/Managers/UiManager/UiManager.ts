@@ -207,7 +207,7 @@ export class UiManager {
   RefreshModuleUis() {
     this.ModuleSnapShots.RefreshUi();
     this.SettingsModule.RefreshUi();
-    this.ButtonStateManager.RefreshUiButtonStates();
+    this.ButtonStateManager.RefreshUiButtonEnabledStatus();
   }
 
   async RefreshUiUIManagerFromSnapShotSelect(uiData: IDataStateOfSnapShotSelect) {
