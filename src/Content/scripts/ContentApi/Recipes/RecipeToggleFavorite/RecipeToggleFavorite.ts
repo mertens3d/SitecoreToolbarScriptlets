@@ -1,7 +1,7 @@
 ﻿import { SnapShotFlavor } from "../../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { IDataStateOfSitecore } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfSitecoreWindow } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 import { __RecipeBase } from "../__RecipeBase/__RecipeBase";
 
 export class RecipeToggleFavorite extends __RecipeBase implements ICommandRecipes {
@@ -12,7 +12,7 @@ export class RecipeToggleFavorite extends __RecipeBase implements ICommandRecipe
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       if (this.TargetSnapShotId) {
-        let result: IDataStateOfSitecore = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId);
+        let result: IDataStateOfSitecoreWindow = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId);
 
         if (result.Flavor === SnapShotFlavor.Favorite) {
           result.Flavor = SnapShotFlavor.Manual;

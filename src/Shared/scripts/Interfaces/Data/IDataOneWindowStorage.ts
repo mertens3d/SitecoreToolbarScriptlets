@@ -3,12 +3,14 @@ import { IDataStateOfContentEditor } from './IDataOneStorageOneTreeState';
 import { ScWindowType } from '../../Enums/scWindowType';
 import { SnapShotFlavor } from '../../Enums/SnapShotFlavor';
 import { GuidData } from "../../Helpers/GuidData";
-import { IDataSateOfDesktop } from './IDataDesktopState';
+import { IDataStateOfDesktop } from './IDataDesktopState';
+import { IDataStateOfSnapShots } from './IDataSnapShots';
 
-export interface IDataStateOfSitecore {
-  StateOfDesktop: IDataSateOfDesktop,
+export interface IDataStateOfSitecoreWindow {
+  StateOfDesktop: IDataStateOfDesktop,
   StateOfContentEditor: IDataStateOfContentEditor,
-  
+  StateOfSnapShots: IDataStateOfSnapShots,
+
   GuidId: GuidData,
   Flavor: SnapShotFlavor;
   NickName: string

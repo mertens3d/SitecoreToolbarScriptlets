@@ -5,7 +5,7 @@ import { IHindSiteScWindowApi } from "../../../../Shared/scripts/Interfaces/Agen
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
-import { IContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { RecipeAddNewContentEditorToDesktop } from "../../ContentApi/Recipes/RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop";
 import { RecipePublishActiveCe } from "../../ContentApi/Recipes/RecipePublishActiveCe/RecipePublishActiveCe";
@@ -17,6 +17,8 @@ import { LoggableBase } from "../LoggableBase";
 import { ScUiManager } from "../SitecoreUiManager/SitecoreUiManager";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IFactoryHelper } from "../../../../Shared/scripts/Interfaces/IFactoryHelper";
+import { DefaultContentReplyPayload } from "../../../../Shared/scripts/Classes/Defaults/DefaultScWindowState";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 
 export class ContentAPIManager extends LoggableBase implements IHindSiteScWindowApi {
   private ToastAgent: IToastAgent;
@@ -47,10 +49,15 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
   //  })
   //}
 
-  GetStateContent(): Promise<IContentReplyPayload> {
+  GetStateOfContent(): Promise<IDataContentReplyPayload> {
     return new Promise(async (resolve, reject) => {
-      await this.ScWinMan.GetStateScWindow()
-        .then((result: IContentReplyPayload) => resolve(result))
+
+      let reply: IDataContentReplyPayload = new DefaultContentReplyPayload();
+
+      await this.ScWinMan.GetStateOfSiteCoreWindow()
+        .then((result: IDataStateOfSitecoreWindow) => reply.StateOfSitecoreWindow = result)
+        .then(() => reply.ErrorStack = this.Logger.ErrorStack)
+        .then(() => resolve(reply))
         .catch((err) => reject(err))
     });
   }
@@ -109,7 +116,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
 
   RestoreSnapshop(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeRestoreState(commandData.Logger, commandData.ScWinMan.GetScUrlAgent(), commandData.AtticAgent, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopUiProxy, commandData.ToastAgent, commandData.ScWinMan.ContentEditorProxy, commandData.TargetSnapShotId, this.SettingsAgent);// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
+      let recipe = new RecipeRestoreState(commandData.Logger, commandData.ScWinMan.GetScUrlAgent(), commandData.AtticAgent, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopProxy(), commandData.ToastAgent, commandData.ScWinMan.ContentEditorProxy(), commandData.TargetSnapShotId, this.SettingsAgent);// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
 
       await recipe.Execute()
         .then(() => resolve())

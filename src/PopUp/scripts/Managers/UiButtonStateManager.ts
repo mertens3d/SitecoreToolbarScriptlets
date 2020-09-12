@@ -3,12 +3,13 @@ import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
-import { IContentReplyPayload } from "../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyPayload } from "../../../Shared/scripts/Interfaces/Data/IContentState";
 import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+import { IDataStateOfSitecoreWindow } from '../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
 
 export class UiButtonStateManager extends LoggableBase {
-  private currentContentState: IContentReplyPayload;
+  private StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   private currentWindowType: ScWindowType;
   private currSelSnapshot: GuidData;
   private Tester: ButtonVisibilityTester;
@@ -38,7 +39,7 @@ export class UiButtonStateManager extends LoggableBase {
             break;
 
           case VisibilityType.ActiveCeNode:
-            toReturn = this.Tester.VisibilityTestActiveCeNode(this.currentContentState);
+            toReturn = this.Tester.VisibilityTestActiveCeNode(this.StateOfSitecoreWindow);
             break;
 
           case VisibilityType.ContentEditor:
@@ -66,7 +67,7 @@ export class UiButtonStateManager extends LoggableBase {
             break;
 
           case VisibilityType.SnapShotable:
-            toReturn = this.Tester.VisibilityTestSnapShotable(this.currentContentState);
+            toReturn = this.Tester.VisibilityTestSnapShotable(this.StateOfSitecoreWindow);
             break;
 
           case VisibilityType.SnapShotSelected:
@@ -116,12 +117,12 @@ export class UiButtonStateManager extends LoggableBase {
     }
   }
 
-  RefreshUiButtonState(currentWindowType: ScWindowType, currSelSnapshot: GuidData, contentState: IContentReplyPayload, allMenuCommands: IOneCommand[]): void {
+  RefreshUiButtonState(currentWindowType: ScWindowType, currSelSnapshot: GuidData, stateOfSitecoreWindow: IDataStateOfSitecoreWindow, allMenuCommands: IOneCommand[]): void {
     this.Logger.FuncStart(this.RefreshUiButtonState.name, allMenuCommands.length);
 
     this.currentWindowType = currentWindowType;
     this.currSelSnapshot = currSelSnapshot;
-    this.currentContentState = contentState;
+    this.StateOfSitecoreWindow = stateOfSitecoreWindow;
 
     for (var idx = 0; idx < allMenuCommands.length; idx++) {
       var oneCommand = allMenuCommands[idx];

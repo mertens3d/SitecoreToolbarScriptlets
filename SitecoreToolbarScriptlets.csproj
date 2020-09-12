@@ -56,6 +56,10 @@
     <Content Include="ReadmeResoures\external-tools-hotkey.png" />
     <Content Include="ReadmeResoures\external-tools.png" />
     <Content Include="ReadmeResoures\file.png" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\CommandCompleted_Observer.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorTreeMutatedEvent\IPayload_MessageReply.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\GenericEvent\IGeneric_Observer.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\Subject_DesktopIframeProxyMutatedEvent\IFrameProxyMutatedEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarButtonProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorProxy\DesktopIframeProxy.ts" />
@@ -64,10 +68,8 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DesktopIframeProxyBucket.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorTreeMutatedEvent\IPayload_ContentEditorTreeMutatedEvent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorTreeMutatedEvent\Subject_ContentEditorTreeMutatedEvent.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\Subject_DesktopIframeProxyMutatedEvent\IPayload_DesktopIframeProxyMutatedEvent.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\Subject_DesktopIframeProxyMutatedEvent\Subject_DesktopIframeProxyMutatedEvent.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\GenericEvent\Subject_GenericEvent.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopDomChangedEvent\Subject_DesktopDomChangedEvent.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\Subject_DesktopIframeProxyMutatedEvent\FrameProxyMutatedEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DomChangedEvent\Subject_DesktopDomChangedEvent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorContentTreeHolderProxy\ContentEditorContentTreeHolderProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeInitFromQueryStr\RecipeInitFromQueryStr.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentMessageBroker.ts" />
@@ -114,6 +116,13 @@
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\CommandHndlrDataForContent\CommandHndlrDataForContent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfContentEditor.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfDesktop.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfFrame.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfSitecoreWindow.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfSnapshots.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfTree.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfTreeNode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\ScWindowStateValidator.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeAddContentEditorToDesktop\RecipeAddContentEditorToDesktop.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\Enabled.ts" />
@@ -133,10 +142,12 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUiModule.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IDataDesktopState.1.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IDataStateOfSnapShotSelect.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataStateOfFrame.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\iDataTreeState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Events\IObservable.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopDomChangedEvent\IPayloadContentEditorDomChanged.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DomChangedEvent\IDomChangedEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Events\IObserver.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandHndlrDataForContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandHndlrDataForPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandRecipes.ts" />
@@ -200,8 +211,16 @@
     <None Include="src\Content\css\vars.scss" />
     <None Include="src\Content\css\_contentTree.scss" />
     <None Include="src\Content\css\_header.scss" />
+    <None Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyAddedToDesktopEvent\IPayloadDesktop__ContentEditorProxyAddedToDesktop.js.map">
+      <DependentUpon>IPayloadDesktop__ContentEditorProxyAddedToDesktop.js</DependentUpon>
+    </None>
+    <None Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyAddedToDesktopEvent\Subject_ContentEditorProxyAddedToDesktopEvent.js.map">
+      <DependentUpon>Subject_ContentEditorProxyAddedToDesktopEvent.js</DependentUpon>
+    </None>
     <None Include="src\PopUp\css\ContentLevel.scss" />
     <None Include="src\PopUp\css\header.scss" />
+    <Content Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyAddedToDesktopEvent\IPayloadDesktop__ContentEditorProxyAddedToDesktop.js" />
+    <Content Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyAddedToDesktopEvent\Subject_ContentEditorProxyAddedToDesktopEvent.js" />
     <Content Include="src\PopUp\scripts\Managers\Handlers.js">
       <DependentUpon>Handlers.ts</DependentUpon>
     </Content>
@@ -502,7 +521,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\AccordianDrone\AccordianDrone.ts" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\DefaultScWindowState.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultScWindowState.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

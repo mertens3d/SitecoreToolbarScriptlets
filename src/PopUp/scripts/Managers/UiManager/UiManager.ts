@@ -1,4 +1,5 @@
-﻿import { AccordianManager } from '../../../../Shared/scripts/Agents/Drones/AccordianDrone/AccordianManager';
+﻿import { ScUrlAgent } from '../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
+import { AccordianManager } from '../../../../Shared/scripts/Agents/Drones/AccordianDrone/AccordianManager';
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { MenuCommand } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
@@ -8,8 +9,8 @@ import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/
 import { IGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { IDataStateOfSitecoreWindow } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
 import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
-import { GenericUrlParts } from '../../../../Shared/scripts/Interfaces/UrlParts';
 import { CommandManager } from '../../Classes/AllCommands';
 import { PopConst } from '../../Classes/PopConst';
 import { TabManager } from '../TabManager';
@@ -22,17 +23,30 @@ import { FeedbackModuleContentState } from './Modules/UiFeedbackModules/Feedback
 import { FeedbackModuleMessages } from './Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from './Modules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
-import { IContentReplyPayload } from '../../../../Shared/scripts/Interfaces/Data/IContentState';
-import { IDataStateOfSitecore } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
-import { ScUrlAgent } from '../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
+import { IDataStateOfSnapShotSelect } from '../../../../Shared/scripts/Interfaces/Data/IDataStateOfSnapShotSelect';
+import { GenericEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/GenericEvent_Subject";
+import { IGeneric_Observer } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/IGeneric_Observer";
+import { LoggableBase } from '../../../../Content/scripts/Managers/LoggableBase';
+
+export class UiSelectSnapShot_Observer extends LoggableBase implements IGeneric_Observer<IDataStateOfSnapShotSelect>{
+  private Owner: UiManager;
+
+  constructor(logger: ILoggerAgent, owner: UiManager) {
+    super(logger);
+    this.Owner = owner;
+  }
+
+  Update(payload: IDataStateOfSnapShotSelect) {
+    this.Owner.RefreshUiUIManagerFromSnapShotSelect(payload);
+  }
+}
 
 export class UiManager {
   AccordianManager: IAccordianManager;
   ButtonStateManager: UiButtonStateManager;
-  CurrScWindowState: IContentReplyPayload;
+  CurrScWindowState: IDataStateOfSitecoreWindow;
   FeedbackModuleMessages: FeedbackModuleMessages;
   FeedbackModulePopUpState: FeedbackModulePopUpState;
-  LastKnownContentState: IContentReplyPayload;
   MenuEnabled: boolean = true;
   MenuFocused: boolean = true;
   ModuleSelectSnapShot: SelectSnapshotModule;
@@ -97,19 +111,11 @@ export class UiManager {
     this.ScheduleAutoSaveSnapShot();
     this.ScheduleAutoLogin();
 
-    this.ModuleSelectSnapShot.AddCallbackForSelChanged(() => {
-      self.RefreshUiUIManager();
-    });
+    this.ModuleSelectSnapShot.RegisterObserver(new UiSelectSnapShot_Observer(this.Logger, this));
 
     this.ButtonStateManager.InitButtonStateManager();
 
     this.Logger.FuncEnd(this.InitUiManager.name);
-  }
-
-  SetContentState(contentState: IContentReplyPayload) {
-    //contentState.SnapShotsMany.CurrentSnapShots = this.FixGuidsInContentState(contentState.SnapShotsMany.CurrentSnapShots);
-
-    this.LastKnownContentState = contentState;
   }
 
   SelectChanged() {
@@ -122,9 +128,8 @@ export class UiManager {
     this.Logger.Log(err);
   }
 
-  CallBackCommandComplete(contentState: IContentReplyPayload) {
-    this.SetContentState(contentState)
-    this.RefreshUiUIManager();
+  CallBackCommandComplete(contentState: IDataStateOfSitecoreWindow) {
+    this.RefreshUiUIManagerFromStateOfSitecoreData(contentState);
   }
 
   ClosePopUp(): Promise<void> {
@@ -192,23 +197,28 @@ export class UiManager {
   //  this.Logger.FuncEnd(this.UpdateAtticFromUi.name);
   //}
 
-  async SetUIStates(scUrlAgent: ScUrlAgent) {
-    if (this.Logger.IsNotNullOrUndefinedBool('state', this.LastKnownContentState)) {
+  async SetUIStates(scUrlAgent: ScUrlAgent, stateOfSitecoreWindow: IDataStateOfSitecoreWindow) {
+    if (stateOfSitecoreWindow) {
       this.FeedbackModulePopUpState.PopulatePopUpStateUI(this.ModuleSelectSnapShot.GetSelectSnapshotId());
-      this.FeedbackModuleContentState.PopulateContentStateFeedack(this.LastKnownContentState);
+      this.FeedbackModuleContentState.PopulateContentStateFeedack(stateOfSitecoreWindow);
       this.FeedbackModuleBrowserState.PopulateFeedackBrowserState(scUrlAgent);
     }
   }
 
-  async RefreshUiUIManager() {
-    this.Logger.FuncStart(this.RefreshUiUIManager.name);
+  async RefreshUiUIManagerFromSnapShotSelect(uiData: IDataStateOfSnapShotSelect) {
+    // todo
 
-    await this.SetUIStates(this.TabMan.GetScUrlAgent());
-    await this.SetUIStates(this.TabMan.GetScUrlAgent());
+
+  }
+
+  async RefreshUiUIManagerFromStateOfSitecoreData(stateOfSitecoreWindow: IDataStateOfSitecoreWindow) {
+    this.Logger.FuncStart(this.RefreshUiUIManagerFromStateOfSitecoreData.name);
+
+    await this.SetUIStates(this.TabMan.GetScUrlAgent(), stateOfSitecoreWindow);
 
     this.FeedbackModuleBrowserState.RefreshUi();
 
-    this.ModuleSelectSnapShot.SetContentState(this.LastKnownContentState);
+    this.ModuleSelectSnapShot.SetContentState(stateOfSitecoreWindow);
     this.ModuleSelectSnapShot.RefreshUi();
 
     this.SettingsModule.RefreshUi();
@@ -216,11 +226,11 @@ export class UiManager {
     let currentWindowType = this.TabMan.GetWindowType();
     let currSelSnapshot: GuidData = this.ModuleSelectSnapShot.GetSelectSnapshotId();
 
-    this.ButtonStateManager.RefreshUiButtonState(currentWindowType, currSelSnapshot, this.LastKnownContentState, this.CommandMan.AllMenuCommands);
+    this.ButtonStateManager.RefreshUiButtonState(currentWindowType, currSelSnapshot, stateOfSitecoreWindow, this.CommandMan.AllMenuCommands);
 
-    this.__drawCorrectNicknameInUI(this.LastKnownContentState.SnapShotsStateOfSitecore.CurrentSnapShots);
+    this.__drawCorrectNicknameInUI(stateOfSitecoreWindow.StateOfSnapShots.CurrentSnapShots);
 
-    this.Logger.FuncEnd(this.RefreshUiUIManager.name);
+    this.Logger.FuncEnd(this.RefreshUiUIManagerFromStateOfSitecoreData.name);
   }
 
   ShowDebugDataOneWindow() {
@@ -234,7 +244,7 @@ export class UiManager {
     this.Logger.FuncEnd('ShowDebugDataOneWindow');
     return toReturn;
   }
-  private __drawCorrectNicknameInUI(snapShots: IDataStateOfSitecore[]) {
+  private __drawCorrectNicknameInUI(snapShots: IDataStateOfSitecoreWindow[]) {
     this.Logger.FuncStart(this.__drawCorrectNicknameInUI.name);
     var targetId: GuidData = this.ModuleSelectSnapShot.GetSelectSnapshotId()
     if (targetId) {

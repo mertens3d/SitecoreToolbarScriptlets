@@ -1,7 +1,7 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { IDataStateOfSitecoreWindow } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
-import { IContentReplyPayload } from "../../../../../../../Shared/scripts/Interfaces/Data/IContentState";
 
 export class FeedbackModuleContentState extends UiFeedbackModuleBase implements IUiModule {
   constructor(selector: string, loggerAgent: ILoggerAgent) {
@@ -14,9 +14,9 @@ export class FeedbackModuleContentState extends UiFeedbackModuleBase implements 
   RefreshUi(): void {
   }
 
-  PopulateContentStateFeedack(dataScWindowState: IContentReplyPayload) {
+  PopulateContentStateFeedack(stateOfSitecoreWindow: IDataStateOfSitecoreWindow) {
     var allStateText: string = '';
-    allStateText += JSON.stringify(dataScWindowState, null, 1);
+    allStateText += JSON.stringify(stateOfSitecoreWindow, null, 1);
     this.WriteSingleLine(allStateText);
   }
 }

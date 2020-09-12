@@ -1,21 +1,28 @@
 ﻿import { IterationDrone } from '../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
+import { DefaultStateOfTree } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfTree";
 import { SettingKey } from '../../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
 import { IDataStateOfTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneTreeNode';
+import { IDataStateOfTree } from '../../../../../Shared/scripts/Interfaces/Data/iDataTreeState';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { Subject_ContentEditorTreeMutatedEvent } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/Subject_ContentEditorTreeMutatedEvent';
+import { IGeneric_Observer } from "../../Desktop/DesktopProxy/Events/GenericEvent/IGeneric_Observer";
 import { TreeNodeProxy } from '../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
-import { IDataStateOfTree } from '../../../../../Shared/scripts/Interfaces/Data/iDataTreeState';
+import { ITreeMutatedEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
 
-export class ContentEditorTreeProxy extends LoggableBase implements IContentEditorTreeProxy {
+
+export class TreeMutation_Observer extends LoggableBase implements IGeneric_Observer<IDataStateOfTree>{
+    Update(payload: IDataStateOfTree) {
+    }
+}
+
+export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
   private AssociatedDoc: IDataOneDoc;
-  private MutationCallbacks: Function[] = [];
   private SettingsAgent: ISettingsAgent;
   private __treeHolderElem: HTMLElement;
 
@@ -25,7 +32,7 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
   constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent, hostIframeId: string) {
     super(logger);
 
-    this.Logger.InstantiateStart(ContentEditorTreeProxy.name);
+    this.Logger.InstantiateStart(TreeProxy.name);
 
     this.AssociatedDoc = associatedDoc;
     this.SettingsAgent = settingsAgent;
@@ -33,7 +40,7 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
 
     this.InitCeTreeProxy();
 
-    this.Logger.InstantiateEnd(ContentEditorTreeProxy.name);
+    this.Logger.InstantiateEnd(TreeProxy.name);
   }
 
   private GetTreeHolderElem(): HTMLElement {
@@ -54,12 +61,11 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
     this.Logger.FuncEnd(this.InitCeTreeProxy.name);
   }
 
-  AddListenerToTreeMutationEvent(callback: Function) {
-    this.Logger.FuncStart(this.AddListenerToTreeMutationEvent.name);
+  RegisterObserver(observer: IGeneric_Observer<ITreeMutatedEvent_Payload>) {
+    this.Logger.FuncStart(this.RegisterObserver.name);
 
-    this.TreeMutationEvent.RegisterObserver(callback);
-    this.MutationCallbacks.push(callback);
-    this.Logger.FuncEnd(this.AddListenerToTreeMutationEvent.name);
+    this.TreeMutationEvent.RegisterObserver(observer);
+    this.Logger.FuncEnd(this.RegisterObserver.name);
   }
 
   GetTreeNodeByGlyph(targetNode: IDataStateOfTreeNode): TreeNodeProxy {
@@ -162,17 +168,24 @@ export class ContentEditorTreeProxy extends LoggableBase implements IContentEdit
   }
 
   GetStateOfTree(): IDataStateOfTree {
-    let toReturnOneTreeState: IDataStateOfTree = {
-      AllTreeNodeAr: this.GetOneLiveTreeData(),
-      ActiveNode: null,
+    this.Logger.FuncStart(this.GetStateOfTree.name);
+
+    let toReturnOneTreeState: IDataStateOfTree = new DefaultStateOfTree();
+
+    try {
+      toReturnOneTreeState.AllTreeNodeAr = this.GetOneLiveTreeData();
+      toReturnOneTreeState.ActiveNode = null;
+
+      toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
+
+      if (toReturnOneTreeState) {
+        this.Logger.LogVal('Tree State node count', toReturnOneTreeState.AllTreeNodeAr.length);
+      }
+    } catch (err) {
+      throw (this.GetStateOfTree.name + ' | ' + err);
     }
 
-    toReturnOneTreeState.ActiveNode = this.GetActiveNode(toReturnOneTreeState.AllTreeNodeAr);
-
-    if (toReturnOneTreeState) {
-      this.Logger.LogVal('Tree State node count', toReturnOneTreeState.AllTreeNodeAr.length);
-    }
-
+    this.Logger.FuncEnd(this.GetStateOfTree.name);
     return toReturnOneTreeState;
   }
 

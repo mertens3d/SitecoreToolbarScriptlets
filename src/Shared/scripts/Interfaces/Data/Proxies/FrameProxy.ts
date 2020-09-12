@@ -57,7 +57,7 @@ export class FrameProxy extends LoggableBase {
   GetState(): IDataStateOfContentEditor {
     //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
 
-    let oneCeState: IDataStateOfContentEditor = this.ConEditProxy.GetStateTree();
+    let oneCeState: IDataStateOfContentEditor = this.ConEditProxy.GetStateOfTree();
 
     return oneCeState;
   }

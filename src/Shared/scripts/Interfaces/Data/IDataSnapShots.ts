@@ -1,7 +1,7 @@
-﻿import { IDataStateOfSitecore } from "./IDataOneWindowStorage";
-export interface IDataSnapShots {
+﻿import { IDataStateOfSitecoreWindow } from "./IDataOneWindowStorage";
+export interface IDataStateOfSnapShots {
   Birthday: Date;
-  CurrentSnapShots: IDataStateOfSitecore[];
+  CurrentSnapShots: IDataStateOfSitecoreWindow[];
   FavoriteCount: number;
   PlainCount: number,
   SnapShotsAutoCount: number;

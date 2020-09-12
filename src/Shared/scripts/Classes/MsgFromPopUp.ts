@@ -9,14 +9,14 @@ import { GuidData } from "../Helpers/GuidData";
 
 export class MsgFromPopUp extends MsgFromXBase implements IMsgFromX {
   CurrentContentPrefs: IGenericSetting[];
-  Data: PayloadDataFromPopUp;
+  Payload: PayloadDataFromPopUp;
   IsValid: boolean;
 
   constructor(msgFlag: MsgFlag, scWindowType: ScWindowType, selectSnapshotId: GuidData, contentPrefs: IGenericSetting[]) {
     super(msgFlag);
-    this.Data = new PayloadDataFromPopUp();
-    this.Data.IdOfSelect = selectSnapshotId;
-    this.Data.SnapShotSettings = {
+    this.Payload = new PayloadDataFromPopUp();
+    this.Payload.IdOfSelect = selectSnapshotId;
+    this.Payload.SnapShotSettings = {
       SnapShotNewNickname: '',
       Flavor: SnapShotFlavor.Unknown,
       CurrentPageType: scWindowType

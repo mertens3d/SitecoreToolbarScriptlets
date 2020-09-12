@@ -22,10 +22,9 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
   private RecipeBasics: RecipeBasics;
   private ScUrlAgent: IScUrlAgent;
   private ScWinRecipeParts: ScWindowRecipePartials;
-  private ToastAgent: IToastAgent;
   private TopLevelDoc: IDataOneDoc;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, toastAgent: IToastAgent, oneCEAgent: ContentEditorProxy, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, contentEditorProxy: ContentEditorProxy, settingsAgent: ISettingsAgent) {
     super(logger);
     this.ScUrlAgent = scUrlAgent;
     this.SettingsAgent = settingsAgent;
@@ -34,8 +33,7 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
     this.TopLevelDoc = topLevelDoc;
     this.ScWinRecipeParts = scWinRecipeParts;
     this.OneDesktopMan = oneDesktopMan;
-    this.OneCeAgent = oneCEAgent;
-    this.ToastAgent = toastAgent;
+    this.OneCeAgent = contentEditorProxy;
   }
 
   Execute(): Promise<void> {

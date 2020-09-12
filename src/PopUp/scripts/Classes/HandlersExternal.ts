@@ -1,30 +1,28 @@
-﻿import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
+﻿import { GenericEvent_Subject } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/GenericEvent_Subject";
+import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
+import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { IDataContentReplyPayload } from "../../../Shared/scripts/Interfaces/Data/IContentState";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
-import { IContentReplyPayload } from "../../../Shared/scripts/Interfaces/Data/IContentState";
-import { MessageManager } from "../Managers/MessageManager";
+import { PopUpMessageManager } from "../Managers/MessageManager";
 import { TabManager } from "../Managers/TabManager";
-import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 
-export class HandlersExternal {
-  private Logger: ILoggerAgent; //extends CommonEvents
-  private MessageManager: MessageManager;
+export class HandlersExternal extends GenericEvent_Subject<IDataContentReplyPayload>  {
+  private MessageManager: PopUpMessageManager;
   private SettingsAgent: ISettingsAgent;
   private TabMan: TabManager;
   AllCallbacksCommandComplete: Function[] = [];
 
-  constructor(logger: ILoggerAgent, msgManager: MessageManager, settingsAgent: ISettingsAgent, tabMan: TabManager) {
-    this.Logger = logger;
-    //this.PopHub = hub;
+  constructor(logger: ILoggerAgent, msgManager: PopUpMessageManager, settingsAgent: ISettingsAgent, tabMan: TabManager) {
+    super(logger)
     this.MessageManager = msgManager;
     this.SettingsAgent = settingsAgent;
     this.TabMan = tabMan;
-    //this.AllAgents = allAgents;
   }
 
   private __cleardebugText() {
@@ -34,7 +32,6 @@ export class HandlersExternal {
   private BuildNewMsgFromPopUp(msgFlag: MsgFlag, data: ICommandHndlrDataForPopUp): MsgFromPopUp {
     this.Logger.FuncStart(this.BuildNewMsgFromPopUp.name);
 
-    
     let settingsToSend = this.SettingsAgent.GetSettingsByFlavor([SettingFlavor.ContentAndPopUpStoredInPopUp, SettingFlavor.ContentOnly]);
     var msg = new MsgFromPopUp(msgFlag, this.TabMan.GetWindowType(), data.MenuState.SelectSnapshotId, settingsToSend);
     this.Logger.FuncEnd(this.BuildNewMsgFromPopUp.name);
@@ -45,6 +42,7 @@ export class HandlersExternal {
     this.AllCallbacksCommandComplete.push(callbackFunc);
   }
 
+
   private SendContentCommand(msgPlayload: MsgFromPopUp) {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendContentCommand.name);
@@ -52,15 +50,8 @@ export class HandlersExternal {
       //todo - put back?  this.UiMan.ClearCancelFlag();
 
       await this.MessageManager.SendMessageToContent(msgPlayload)
-        .then((contentState: IContentReplyPayload) => {
-          if (this.AllCallbacksCommandComplete) {
-            for (var idx = 0; idx < this.AllCallbacksCommandComplete.length; idx++) {
-              let oneCallbackFunc: Function = this.AllCallbacksCommandComplete[idx];
-              oneCallbackFunc(contentState);
-            }
-          }
-          resolve();
-        })
+        .then((contentReplyPayload: IDataContentReplyPayload) => this.NotifyObservers(contentReplyPayload))
+        .then(() => resolve())
         .catch((err) => reject(err));
 
       this.Logger.FuncEnd(this.SendContentCommand.name);
@@ -137,7 +128,7 @@ export class HandlersExternal {
       data.Self.Handlers.External.Logger.FuncStart(data.Self.Handlers.External.HndlrSnapShotRestoreSameTab.name);
 
       var msg = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqRestoreClick, data);
-      msg.Data.IdOfSelect = data.MenuState.SelectSnapshotId;
+      msg.Payload.IdOfSelect = data.MenuState.SelectSnapshotId;
 
       await data.Self.Handlers.External.SendContentCommand(msg)
         .then(() => resolve())
@@ -166,7 +157,7 @@ export class HandlersExternal {
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqUpdateNickName, data);
 
-      msg.Data.SnapShotSettings.SnapShotNewNickname = data.MenuState.CurrentNicknameValue;
+      msg.Payload.SnapShotSettings.SnapShotNewNickname = data.MenuState.CurrentNicknameValue;
 
       await data.Self.Handlers.External.SendContentCommand(msg)
         .then(() => resolve())
@@ -190,7 +181,7 @@ export class HandlersExternal {
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqRemoveFromStorage, data);
 
-      var result: boolean = confirm('Remove ?: ' + Guid.AsShort(msg.Data.IdOfSelect));
+      var result: boolean = confirm('Remove ?: ' + Guid.AsShort(msg.Payload.IdOfSelect));
       if (result === true) {
         await data.Self.Handlers.External.SendContentCommand(msg)
           .then(() => resolve())
@@ -205,7 +196,7 @@ export class HandlersExternal {
     return new Promise<void>(async (resolve, reject) => {
       let msg: MsgFromPopUp = data.Self.Handlers.External.BuildNewMsgFromPopUp(MsgFlag.ReqToggleCompactCss, data);
 
-      msg.Data.SnapShotSettings.SnapShotNewNickname = data.MenuState.CurrentNicknameValue;
+      msg.Payload.SnapShotSettings.SnapShotNewNickname = data.MenuState.CurrentNicknameValue;
       await data.Self.Handlers.External.SendContentCommand(msg)
         .then(() => resolve())
         .catch((err) => reject(err));

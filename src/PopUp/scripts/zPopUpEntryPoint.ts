@@ -10,17 +10,18 @@ import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLog
 import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { IContentReplyPayload } from "../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyPayload } from "../../Shared/scripts/Interfaces/Data/IContentState";
 import { CommandManager } from "./Classes/AllCommands";
 import { PopConst } from "./Classes/PopConst";
 import { EventManager } from "./Managers/EventManager";
 import { Handlers } from "./Managers/Handlers";
-import { MessageManager } from "./Managers/MessageManager";
+import { PopUpMessageManager } from "./Managers/MessageManager";
 import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessagesBroker";
 import { TabManager } from "./Managers/TabManager";
 import { FeedbackModuleMessages } from "./Managers/UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 import { UiManager } from "./Managers/UiManager/UiManager";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
+import { CommandCompleted_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/CommandCompleted_Observer";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
@@ -85,14 +86,14 @@ class PopUpEntry {
       let tabMan = new TabManager(this.Logger, scUrlAgent, null); //< -- todo null fix
       let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
       let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger, FeedbackModuleMsg);
-      let messageMan = new MessageManager(PopUpMessageBroker, this.Logger);
+      let messageMan = new PopUpMessageManager(PopUpMessageBroker, this.Logger);
       let handlers = new Handlers(this.Logger, messageMan, this.SettingsAgent, tabMan);
       let commandMan: CommandManager = new CommandManager(handlers);
       let uiMan = new UiManager(this.Logger, this.SettingsAgent, tabMan, commandMan); //after tabman, after HelperAgent
       let eventMan = new EventManager(this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
 
       let self = uiMan;
-      handlers.External.AddCallbackCommandComplete((contentState: IContentReplyPayload) => { uiMan.CallBackCommandComplete(contentState); });
+      handlers.External.RegisterObserver(new CommandCompleted_Observer(this.Logger, uiMan));
 
       uiMan.InitUiManager();
 

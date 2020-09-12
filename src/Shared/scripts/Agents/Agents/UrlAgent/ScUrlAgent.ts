@@ -6,7 +6,7 @@ import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
-import { IContentReplyPayload } from "../../../Interfaces/Data/IContentState";
+import { IDataContentReplyPayload } from "../../../Interfaces/Data/IContentState";
 
 export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
   constructor(logger: ILoggerAgent) {
@@ -65,11 +65,11 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
     return toReturn;
   }
 
-  BuildEditPrevNormUrl(newMode: scMode, contState: IContentReplyPayload): void {
+  BuildEditPrevNormUrl(newMode: scMode, contState: IDataContentReplyPayload): void {
     this.UrlParts.Anchor = '';
     this.UrlParts.FilePath = '';
 
-    this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.StateOfTree.ActiveNode.NodeId.AsBracedGuid());
+    //todo - put back once this method returns to use this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.StateOfTree.ActiveNode.NodeId.AsBracedGuid());
     this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[newMode]);
     this.SetParameterValueByKey(QueryStrKey.sc_lang, 'en');
     this.SetParameterValueByKey(QueryStrKey.sc_site, 'website');

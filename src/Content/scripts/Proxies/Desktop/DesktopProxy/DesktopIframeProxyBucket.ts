@@ -4,8 +4,8 @@ import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IData
 import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ContentEditorProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { Subject_DesktopIframeProxyMutatedEvent } from "./Events/Subject_DesktopIframeProxyMutatedEvent/Subject_DesktopIframeProxyMutatedEvent";
-import { IPayload_DesktopIframeProxyMutated } from "./Events/Subject_DesktopIframeProxyMutatedEvent/IPayload_DesktopIframeProxyMutatedEvent";
+import { DesktopIframeProxyMutatedEvent_Subject } from "./Events/Subject_DesktopIframeProxyMutatedEvent/FrameProxyMutatedEvent_Subject";
+import { IFrameProxyMutated_Payload } from "./Events/Subject_DesktopIframeProxyMutatedEvent/IFrameProxyMutatedEvent_Payload";
 import { DesktopIframeProxy } from "../../ContentEditor/ContentEditorProxy/DesktopIframeProxy";
 import { FrameHelper } from "../../../Helpers/IframeHelper";
 
@@ -14,14 +14,15 @@ export class DesktopIframeProxyBucket extends LoggableBase {
   private __iframeHelper: any;
   private AssociatedDesktopDoc: IDataOneDoc;
   SettingsAgent: ISettingsAgent;
-  DesktopIframeProxyAddedEvent: Subject_DesktopIframeProxyMutatedEvent;
+
+  DesktopIframeProxyAddedEvent_Subject: DesktopIframeProxyMutatedEvent_Subject;
 
   constructor(logger: ILoggerAgent, desktopDocument: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
     this.Logger.InstantiateStart(DesktopIframeProxyBucket.name);
     this.AssociatedDesktopDoc = desktopDocument;
     this.SettingsAgent = settingsAgent;
-    this.DesktopIframeProxyAddedEvent = new Subject_DesktopIframeProxyMutatedEvent(this.Logger);
+    this.DesktopIframeProxyAddedEvent_Subject = new DesktopIframeProxyMutatedEvent_Subject(this.Logger);
     this.Logger.InstantiateEnd(DesktopIframeProxyBucket.name);
   }
 
@@ -40,11 +41,11 @@ export class DesktopIframeProxyBucket extends LoggableBase {
     if (this.CeProxies.indexOf(newCeProxy) < 0) {
       this.CeProxies.push(newCeProxy);
 
-      let payload: IPayload_DesktopIframeProxyMutated = {
+      let payload: IFrameProxyMutated_Payload = {
         NewCeProxy: newCeProxy
       }
 
-      this.DesktopIframeProxyAddedEvent.NotifyObservers(payload);
+      this.DesktopIframeProxyAddedEvent_Subject.NotifyObservers(payload);
     } else {
       this.Logger.WarningAndContinue(this.AddDesktopIframeProxy.name, 'Proxy already exists in bucket');
     }

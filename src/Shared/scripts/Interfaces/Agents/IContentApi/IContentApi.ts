@@ -2,7 +2,7 @@
 import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
 
 export interface IHindSiteScWindowApi {
-  GetStateContent();
+  GetStateOfContent();
   AddCETab(commandData: ICommandHndlrDataForContent): Promise<void>
   AdminB();
   MarkFavorite(commandData: ICommandHndlrDataForContent);

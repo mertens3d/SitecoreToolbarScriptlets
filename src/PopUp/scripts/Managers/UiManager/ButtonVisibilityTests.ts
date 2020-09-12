@@ -1,7 +1,9 @@
 ﻿import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
-import { IContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyPayload } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
 
 export class ButtonVisibilityTester extends LoggableBase {
   VisibilityTestWindowType(windowType: ScWindowType, currentWindowType: ScWindowType): boolean {
@@ -21,24 +23,25 @@ export class ButtonVisibilityTester extends LoggableBase {
     return toReturn;
   }
 
-  VisibilityTestSnapShotable(currentContentState: IContentReplyPayload): boolean {
+  VisibilityTestSnapShotable(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): boolean {
     //todo may want to be able take snap shots of other window types
-    return this.VisibilityTestActiveCeNode(currentContentState);
+    return this.VisibilityTestActiveCeNode(stateOfSitecoreWindow);
   }
 
-  VisibilityTestActiveCeNode(currentContentState: IContentReplyPayload): boolean {
-
+  VisibilityTestActiveCeNode(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): boolean {
     let toReturn: boolean = false;
 
-    toReturn = currentContentState !== null && currentContentState.ActiveCe !== null && currentContentState.ActiveCe.StateOfTree.ActiveNode !== null;
+    if (stateOfSitecoreWindow) {
+      let foundActive: IDataStateOfContentEditor = stateOfSitecoreWindow.StateOfDesktop.StateOfActiveFrame.ContentEditorState;
 
-    if (currentContentState) {
-      if (currentContentState.ActiveCe) {
+      if (!foundActive) {
+        foundActive = stateOfSitecoreWindow.StateOfContentEditor;
       }
-    }
 
-    //todo - fix
-    toReturn = true;
+      toReturn = foundActive && foundActive.StateOfTree.ActiveNode !== null;
+
+      toReturn = true;
+    }
     return toReturn;
   }
 }

@@ -2,7 +2,7 @@
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataStateOfSitecore } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfSitecoreWindow } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 
@@ -32,7 +32,7 @@ export class RecipeChangeNickName extends LoggableBase implements ICommandRecipe
 
       if (this.TargetSnapShotId) {
         if (this.NewNickname) {
-          var storageMatch: IDataStateOfSitecore;
+          var storageMatch: IDataStateOfSitecoreWindow;
 
           storageMatch = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId)
 

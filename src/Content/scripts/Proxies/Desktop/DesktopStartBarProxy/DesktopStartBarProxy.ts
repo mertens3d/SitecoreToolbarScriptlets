@@ -8,10 +8,27 @@ import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectCon
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorProxy } from '../../ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from '../DesktopProxy/DesktopProxy';
-import { IPayload_ContentEditorTreeMutatedEvent } from '../DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
+import { ITreeMutatedEvent_Payload } from '../DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { FrameHelper } from '../../../Helpers/IframeHelper';
-import { IPayload_DesktopIframeProxyMutated } from '../DesktopProxy/Events/Subject_DesktopIframeProxyMutatedEvent/IPayload_DesktopIframeProxyMutatedEvent';
+import { IFrameProxyMutated_Payload } from "../DesktopProxy/Events/Subject_DesktopIframeProxyMutatedEvent/IFrameProxyMutatedEvent_Payload";
+import { IGeneric_Observer } from '../DesktopProxy/Events/GenericEvent/IGeneric_Observer';
+
+
+export class TreeNodeChangedEvent_Observer extends LoggableBase implements IGeneric_Observer<ITreeMutatedEvent_Payload> {
+  private Owner: DesktopStartBarProxy;
+
+  constructor(logger: ILoggerAgent, owner: DesktopStartBarProxy) {
+    super(logger);
+    this.Owner = owner;
+  }
+
+  Update(payload: ITreeMutatedEvent_Payload) {
+    //(payload: ITreeMutatedEvent_Payload) => { self.CallbackTreeNodeChanged(payload) });
+    this.Owner.CallbackTreeNodeChanged(payload);
+  }
+}
+
 
 export class DesktopStartBarProxy extends LoggableBase {
   private CeProxies: ContentEditorProxy[] = [];
@@ -98,7 +115,7 @@ export class DesktopStartBarProxy extends LoggableBase {
     this.Logger.FuncEnd(this.ChangeStartBarButtonText.name);
   }
 
-  CallBackConEdProxyAdded(payload: IPayload_DesktopIframeProxyMutated) {
+  CallBackConEdProxyAdded(payload: IFrameProxyMutated_Payload) {
     this.Logger.FuncStart(this.CallBackConEdProxyAdded.name);
 
     if (payload) {
@@ -106,7 +123,7 @@ export class DesktopStartBarProxy extends LoggableBase {
         this.CeProxies.push(payload.NewCeProxy);
 
         let self = this;
-        payload.NewCeProxy.AddListenerToActiveNodeChange((payload: IPayload_ContentEditorTreeMutatedEvent) => { self.CallbackTreeNodeChanged(payload) });
+        payload.NewCeProxy.RegisterObserver(new TreeNodeChangedEvent_Observer(this.Logger, this));
       }
     } else {
       this.Logger.ErrorAndThrow(this.CallBackConEdProxyAdded.name, 'Null ceProxy');
@@ -115,7 +132,7 @@ export class DesktopStartBarProxy extends LoggableBase {
     this.Logger.FuncEnd(this.CallBackConEdProxyAdded.name);
   }
 
-  CallbackTreeNodeChanged(payload: IPayload_ContentEditorTreeMutatedEvent) {
+  CallbackTreeNodeChanged(payload: ITreeMutatedEvent_Payload) {
     this.Logger.FuncStart(this.CallbackTreeNodeChanged.name);
     // at this point we have a new active node (or some other change event)
 

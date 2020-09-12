@@ -1,18 +1,18 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IPayloadDesktop_DomChangedEvent } from "./IPayloadContentEditorDomChanged";
-import { Subject_GenericEvent } from "../GenericEvent/Subject_GenericEvent";
+import { IDomChangedEvent_Payload } from "./IDomChangedEvent_Payload";
+import { GenericEvent_Subject } from "../GenericEvent/GenericEvent_Subject";
 
-export class Subject_DesktopDomChangedEvent extends Subject_GenericEvent<IPayloadDesktop_DomChangedEvent>  {
+export class DesktopDomChangedEvent_Subject extends GenericEvent_Subject<IDomChangedEvent_Payload>  {
   private AssociatedDoc: IDataOneDoc;
 
   constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc) {
     super(logger);
 
-    this.Logger.InstantiateStart(Subject_DesktopDomChangedEvent.name);
+    this.Logger.InstantiateStart(DesktopDomChangedEvent_Subject.name);
     this.AssociatedDoc = targetDoc;
     this.InitMutationObserver();
-    this.Logger.InstantiateEnd(Subject_DesktopDomChangedEvent.name);
+    this.Logger.InstantiateEnd(DesktopDomChangedEvent_Subject.name);
   }
 
   private HandleMutationEvent(mutations: MutationRecord[]) {
@@ -32,7 +32,7 @@ export class Subject_DesktopDomChangedEvent extends Subject_GenericEvent<IPayloa
           }
         })
 
-        let message: IPayloadDesktop_DomChangedEvent = {
+        let message: IDomChangedEvent_Payload = {
           MutatedElement: mutatedElement,
           AddedIframes: addedIframes
         }

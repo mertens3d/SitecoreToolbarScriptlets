@@ -1,5 +1,4 @@
-﻿export interface IPayloadDesktop_DomChangedEvent {
+﻿export interface IDomChangedEvent_Payload {
   MutatedElement: HTMLElement;
   AddedIframes: HTMLIFrameElement[];
-
 }

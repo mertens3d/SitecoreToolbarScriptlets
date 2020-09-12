@@ -1,6 +1,15 @@
 ﻿import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
-import { IContentReplyPayload } from "../Interfaces/Data/IContentState";
-import { DefaultContentReplyPayload } from "./DefaultScWindowState";
+import { IDataContentReplyPayload } from "../Interfaces/Data/IContentState";
+import { IDataStateOfSitecoreWindow } from "../Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfDesktop } from "../Interfaces/Data/IDataDesktopState";
+import { DefaultContentReplyPayload } from "./Defaults/DefaultScWindowState";
+import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
+import { DefaultStateOfSnapshots } from "./Defaults/DefaultStateOfSnapshots";
+import { DefaultStateOfFrame } from "./Defaults/DefaultStateOfFrame";
+import { DefaultStateOfSitecoreWindow } from "./Defaults/DefaultStateOfSitecoreWindow";
+import { IDataStateOfContentEditor } from "../Interfaces/Data/IDataOneStorageOneTreeState";
+import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
+import { DefaultStateOfTree } from "./Defaults/DefaultStateOfTree";
 
 export class ScWindowStateValidator {
   Logger: ILoggerAgent;
@@ -9,35 +18,74 @@ export class ScWindowStateValidator {
     this.Logger = logger;
   }
 
-  ValidateScWindowState(contentState: IContentReplyPayload): IContentReplyPayload {
-    this.Logger.FuncStart(this.ValidateScWindowState.name);
+  ValidatePayload(contentState: IDataContentReplyPayload): IDataContentReplyPayload {
+    this.Logger.FuncStart(this.ValidatePayload.name);
 
-    var defaultVal: IContentReplyPayload = new DefaultContentReplyPayload();
+    var defaultVal: IDataContentReplyPayload = new DefaultContentReplyPayload();
 
     if (!contentState) {
       contentState = defaultVal;
-      this.Logger.ErrorAndContinue(this.ValidateScWindowState.name, 'Null contentState');
+      this.Logger.ErrorAndContinue(this.ValidatePayload.name, 'Null contentState');
     }
 
-    if (!contentState.SnapShotsStateOfSitecore) {
-      contentState.SnapShotsStateOfSitecore = defaultVal.SnapShotsStateOfSitecore;
-      this.Logger.ErrorAndContinue(this.ValidateScWindowState.name, 'Null SnapShotsMany');
-    }
-
-    if (!contentState.SnapShotsStateOfSitecore.CurrentSnapShots) {
-      contentState.SnapShotsStateOfSitecore.CurrentSnapShots = defaultVal.SnapShotsStateOfSitecore.CurrentSnapShots;
-      this.Logger.ErrorAndContinue(this.ValidateScWindowState.name, 'Null CurrentSnapShots');
-    }
+    contentState.StateOfSitecoreWindow = this.ValidateStateOfSitecoreWindow(contentState.StateOfSitecoreWindow);
 
     if (!contentState.ErrorStack) {
       contentState.ErrorStack = defaultVal.ErrorStack;
     }
 
-    if (!contentState.ActiveCe) {
-      contentState.ActiveCe = defaultVal.ActiveCe;
+    //if (!contentState..ActiveCe) {
+    //  contentState.ActiveCe = defaultVal.ActiveCe;
+    //}
+
+    this.Logger.FuncEnd(this.ValidatePayload.name);
+    return contentState;
+  }
+
+  ValidateStateOfSitecoreWindow(StateOfSitecoreWindow: IDataStateOfSitecoreWindow): IDataStateOfSitecoreWindow {
+    if (!StateOfSitecoreWindow) {
+      StateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
     }
 
-    this.Logger.FuncEnd(this.ValidateScWindowState.name);
-    return contentState;
+    StateOfSitecoreWindow.StateOfDesktop = this.ValidateStateOfDesktop(StateOfSitecoreWindow.StateOfDesktop);
+    StateOfSitecoreWindow.StateOfContentEditor = this.ValidateStateOfContentEditor(StateOfSitecoreWindow.StateOfContentEditor);
+
+    if (!StateOfSitecoreWindow.StateOfSnapShots) {
+      StateOfSitecoreWindow.StateOfSnapShots = new DefaultStateOfSnapshots();
+    }
+
+    return StateOfSitecoreWindow;
+  }
+  ValidateStateOfContentEditor(StateOfContentEditor: IDataStateOfContentEditor): IDataStateOfContentEditor {
+    if (!StateOfContentEditor) {
+      StateOfContentEditor = new DefaultStateOfContentEditor();
+    }
+
+    if (!StateOfContentEditor.Id) {
+      StateOfContentEditor.Id = new DefaultStateOfContentEditor().Id;
+    }
+
+    if (!StateOfContentEditor.StateOfTree) {
+      StateOfContentEditor.StateOfTree = new DefaultStateOfTree();
+    }
+
+
+    return StateOfContentEditor;
+  }
+
+  ValidateStateOfDesktop(StateOfDesktop: IDataStateOfDesktop): IDataStateOfDesktop {
+    if (!StateOfDesktop) {
+      StateOfDesktop = new DefaultStateOfDesktop();
+    }
+
+    if (!StateOfDesktop.StateOfActiveFrame) {
+      StateOfDesktop.StateOfActiveFrame = new DefaultStateOfFrame();
+    }
+
+    if (!StateOfDesktop.StateOfFrames) {
+      StateOfDesktop.StateOfFrames = [];
+    }
+
+    return StateOfDesktop;
   }
 }

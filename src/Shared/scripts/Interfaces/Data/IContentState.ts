@@ -1,14 +1,11 @@
 ﻿import { MsgFlag } from "../../Enums/1xxx-MessageFlag";
 import { IError } from "../IError";
-import { IDataStateOfContentEditor } from "./IDataOneStorageOneTreeState";
-import { IDataStateOfSitecore } from "./IDataOneWindowStorage";
-import { IDataSnapShots } from "./IDataSnapShots";
+import { IDataStateOfSitecoreWindow } from "./IDataOneWindowStorage";
 
-export interface IContentReplyPayload {
-  CurrentStateOfSitecore: IDataStateOfSitecore;
-  LastReq: MsgFlag;
-  SnapShotsStateOfSitecore: IDataSnapShots;
+export interface IDataContentReplyPayload {
   ErrorStack: IError[];
+  LastReq: MsgFlag;
   LastReqSuccessful: boolean;
-  ActiveCe: IDataStateOfContentEditor;
+  StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
+
 }

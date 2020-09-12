@@ -1,10 +1,10 @@
-﻿import { Subject_GenericEvent } from "../GenericEvent/Subject_GenericEvent";
-import { IPayload_ContentEditorTreeMutatedEvent } from "./IPayload_ContentEditorTreeMutatedEvent";
+﻿import { GenericEvent_Subject } from "../GenericEvent/GenericEvent_Subject";
+import { ITreeMutatedEvent_Payload } from "./IPayload_ContentEditorTreeMutatedEvent";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { TreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 
-export class Subject_ContentEditorTreeMutatedEvent extends Subject_GenericEvent<IPayload_ContentEditorTreeMutatedEvent> {
+export class Subject_ContentEditorTreeMutatedEvent extends GenericEvent_Subject<ITreeMutatedEvent_Payload> {
   private TreeElement: any;
   private HostIframeId: string;
   private  HostDoc: IDataOneDoc;
@@ -61,7 +61,7 @@ export class Subject_ContentEditorTreeMutatedEvent extends Subject_GenericEvent<
 
       if (candidateNode) {
         if (candidateNode.QueryIsActive()) {
-          let payload: IPayload_ContentEditorTreeMutatedEvent = {
+          let payload: ITreeMutatedEvent_Payload = {
             MutatedElement: <HTMLElement>(mutation.target),
             ActiveNode: candidateNode,
             AssociatedIframeElemId: this.HostIframeId
