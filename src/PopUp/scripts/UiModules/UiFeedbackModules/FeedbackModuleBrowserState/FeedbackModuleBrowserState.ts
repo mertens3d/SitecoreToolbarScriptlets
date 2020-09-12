@@ -1,10 +1,10 @@
-﻿import { ScUrlAgent } from "../../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
-import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
-import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { GenericUrlParts } from "../../../../../../../Shared/scripts/Interfaces/UrlParts";
-import { PopConst } from "../../../../../Classes/PopConst";
-import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
+﻿import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
+import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { ScUrlAgent } from "../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { PopConst } from "../../../Classes/PopConst";
+import { GenericUrlParts } from "../../../../../Shared/scripts/Interfaces/UrlParts";
+import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
+import { IUiModule } from "../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
 export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements IUiModule {
   constructor(selector: string, loggerAgent: ILoggerAgent) {

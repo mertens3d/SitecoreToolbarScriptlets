@@ -1,5 +1,5 @@
-﻿import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+﻿import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IUiModule } from "../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
 export class CancelButtonModule implements IUiModule {
   private Selector: string;

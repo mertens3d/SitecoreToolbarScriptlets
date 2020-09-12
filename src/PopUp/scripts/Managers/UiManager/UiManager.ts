@@ -16,20 +16,20 @@ import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
 import { CommandManager } from '../../Classes/AllCommands';
 import { PopConst } from '../../Classes/PopConst';
 import { TabManager } from '../TabManager';
-import { UiButtonStateManager } from '../UiButtonStateManager';
-import { CancelButtonModule } from './Modules/CancelButtonModule';
-import { SelectSnapshotModule } from './Modules/SelectSnapshotModule/SelectSnapshotModule';
-import { SettingsModule } from './Modules/SettingsModule/SettingsModule';
-import { FeedbackModuleBrowserState } from './Modules/UiFeedbackModules/FeedbackModuleBrowserState/FeedbackModuleBrowserState';
-import { FeedbackModuleContentState } from './Modules/UiFeedbackModules/FeedbackModuleContentState/FeedbackModuleContentState';
-import { FeedbackModuleMessages } from './Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
-import { FeedbackModulePopUpState } from './Modules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
-import { UiFeedbackModuleLog } from './Modules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
+import { UiStateManager } from '../UiButtonStateManager';
+import { CancelButtonModule } from '../../UiModules/CancelButtonModule';
+import { SelectSnapshotModule } from '../../UiModules/SelectSnapshotModule/SelectSnapshotModule';
+import { SettingsModule } from '../../UiModules/SettingsModule/SettingsModule';
+import { FeedbackModuleBrowserState } from '../../UiModules/UiFeedbackModules/FeedbackModuleBrowserState/FeedbackModuleBrowserState';
+import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/FeedbackModuleContentState/FeedbackModuleContentState';
+import { FeedbackModuleMessages } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
+import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
+import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
 import { UiSelectSnapShot_Observer } from './UiSelectSnapShot_Observer';
 
 export class UiManager {
   AccordianManager: IAccordianManager;
-  ButtonStateManager: UiButtonStateManager;
+  ButtonModulesManager: UiStateManager;
   CurrScWindowState: IDataStateOfSitecoreWindow;
   FeedbackModuleMessages: FeedbackModuleMessages;
   ModuleFeedbackOfPopUpState: FeedbackModulePopUpState;
@@ -58,9 +58,7 @@ export class UiManager {
 
     this.Logger.InstantiateStart(UiManager.name);
 
-    this.ButtonStateManager = new UiButtonStateManager(this.Logger, this.CommandMan.AllMenuCommands);
-    
-
+    this.ButtonModulesManager = new UiStateManager(this.Logger, this.CommandMan.AllMenuCommands);
     this.AccordianManager = new AccordianManager(this.Logger, this.SettingsAgent);
 
     this.FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.DivOverlayModule, this.Logger);
@@ -100,7 +98,7 @@ export class UiManager {
 
     this.ModuleSnapShots.RegisterObserver(new UiSelectSnapShot_Observer(this.Logger, this));
 
-    this.ButtonStateManager.InitButtonStateManager();
+    this.ButtonModulesManager.InitButtonStateManager();
 
     this.Logger.FuncEnd(this.InitUiManager.name);
   }
@@ -197,7 +195,7 @@ export class UiManager {
       this.ModuleFeedbackOfBrowserState.HydrateFeedackBrowserState(scUrlAgent);
       this.ModuleSnapShots.HydrateStorageSnapShotModule(stateOfSitecoreWindow, stateOfSitecoreWindow.States, stateOfStorageSnapShots);
 
-      this.ButtonStateManager.HydrateUiButtonState(stateOfSitecoreWindow);
+      this.ButtonModulesManager.HydrateUiButtonState(stateOfSitecoreWindow);
       this.ModuleFeedbackOfBrowserState.RefreshUi();
     }
     this.Logger.FuncEnd(this.HydrateModules.name);
@@ -207,7 +205,7 @@ export class UiManager {
   RefreshModuleUis() {
     this.ModuleSnapShots.RefreshUi();
     this.SettingsModule.RefreshUi();
-    this.ButtonStateManager.RefreshUiButtonEnabledStatus();
+    this.ButtonModulesManager.RefreshUiButtonVisibilityStatus();
   }
 
   async RefreshUiUIManagerFromSnapShotSelect(uiData: IDataStateOfSnapShotSelect) {

@@ -19,8 +19,8 @@ import { Handlers } from "./Managers/Handlers";
 import { PopUpMessageManager } from "./Managers/MessageManager";
 import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessagesBroker";
 import { TabManager } from "./Managers/TabManager";
-import { FeedbackModuleMessages } from "./Managers/UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 import { UiManager } from "./Managers/UiManager/UiManager";
+import { FeedbackModuleMessages } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;

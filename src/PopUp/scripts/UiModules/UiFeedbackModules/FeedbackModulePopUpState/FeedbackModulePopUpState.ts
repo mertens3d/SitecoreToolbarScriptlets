@@ -1,8 +1,8 @@
-﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
-import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
-import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
+﻿import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
+import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
+import { Guid } from "../../../../../Shared/scripts/Helpers/Guid";
+import { IUiModule } from "../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
 export class FeedbackModulePopUpState extends UiFeedbackModuleBase implements IUiModule {
   

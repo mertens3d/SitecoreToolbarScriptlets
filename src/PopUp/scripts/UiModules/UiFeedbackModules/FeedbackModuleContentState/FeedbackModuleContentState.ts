@@ -1,7 +1,7 @@
-﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IDataStateOfSitecoreWindow } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
+﻿import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
+import { IDataStateOfSitecoreWindow } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IUiModule } from "../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
 export class FeedbackModuleContentState extends UiFeedbackModuleBase implements IUiModule {
   constructor(selector: string, loggerAgent: ILoggerAgent) {

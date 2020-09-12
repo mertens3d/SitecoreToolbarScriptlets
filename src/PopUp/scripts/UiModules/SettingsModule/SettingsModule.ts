@@ -1,10 +1,10 @@
-﻿import { SettingType } from "../../../../../../Shared/scripts/Enums/SettingType";
-import { IAccordianManager } from "../../../../../../Shared/scripts/Interfaces/Agents/IAccordianManager";
-import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IGenericSetting } from "../../../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { ISettingsAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { StaticHelpers } from "../../../../../../Shared/scripts/Classes/StaticHelpers";
+﻿import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { IAccordianManager } from "../../../../Shared/scripts/Interfaces/Agents/IAccordianManager";
+import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
+
 
 export class SettingsModule implements IUiModule {
   Logger: ILoggerAgent;

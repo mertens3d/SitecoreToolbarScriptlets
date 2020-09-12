@@ -1,22 +1,24 @@
-﻿import { GenericEvent_Subject } from "../../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/GenericEvent_Subject";
-import { StaticHelpers } from "../../../../../../Shared/scripts/Classes/StaticHelpers";
-import { BufferChar } from "../../../../../../Shared/scripts/Enums/BufferChar";
-import { BufferDirection } from "../../../../../../Shared/scripts/Enums/BufferDirection";
-import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
-import { SnapShotFlavor } from "../../../../../../Shared/scripts/Enums/SnapShotFlavor";
-import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";
-import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
-import { IFirstActive } from "../../../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
-import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IDataStateOfSitecoreWindow } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IDataSitecoreWindowStates } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
-import { IDataStateOfStorageSnapShots } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { IDataStateOfSnapShotSelect } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSnapShotSelect";
-import { IDataStateOfFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
-import { ISelectionHeaders } from "../../../../../../Shared/scripts/Interfaces/ISelectionHeaders";
-import { PopConst } from "../../../../Classes/PopConst";
-import { StateHelpers } from "../../../../Classes/StateHelpers";
+﻿import { IDataStateOfSnapShotSelect } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSnapShotSelect";
+import { GenericEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/GenericEvent_Subject";
+import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { StateHelpers } from "../../Classes/StateHelpers";
+import { PopConst } from "../../Classes/PopConst";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataSitecoreWindowStates } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
+import { BufferDirection } from "../../../../Shared/scripts/Enums/BufferDirection";
+import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+import { BufferChar } from "../../../../Shared/scripts/Enums/BufferChar";
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { SharedConst } from "../../../../Shared/scripts/SharedConst";
+import { IDataStateOfFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
+import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
+import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
+
 
 export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapShotSelect> implements IUiModule {
   StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
@@ -101,29 +103,29 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
       ManualTitle: null
     }
 
-    toReturn.Auto = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.Auto = <HTMLOptGroupElement>window.document.createElement(SharedConst.Const.KeyWords.Html.optgroup);
     toReturn.Auto.label = this.SelectHeaderStr('');
     toReturn.Auto.id = PopConst.Const.ElemId.HS.SelectHeaderAuto;
 
-    toReturn.AutoTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.AutoTitle = <HTMLOptGroupElement>window.document.createElement(SharedConst.Const.KeyWords.Html.optgroup);
     toReturn.AutoTitle.label = 'Auto Snap Shots';
     toReturn.AutoTitle.id = PopConst.Const.ElemId.HS.SelectHeaderAutoTitle;
     toReturn.AutoTitle.classList.add('title');
     //------
-    toReturn.Manual = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.Manual = <HTMLOptGroupElement>window.document.createElement(SharedConst.Const.KeyWords.Html.optgroup);
     toReturn.Manual.label = this.SelectHeaderStr('');
     toReturn.Manual.id = PopConst.Const.ElemId.HS.SelectHeaderManual;
 
-    toReturn.ManualTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.ManualTitle = <HTMLOptGroupElement>window.document.createElement(SharedConst.Const.KeyWords.Html.optgroup);
     toReturn.ManualTitle.label = 'Manual Snap Shots';
     toReturn.ManualTitle.id = PopConst.Const.ElemId.HS.SelectHeaderManualTitle;
     toReturn.ManualTitle.classList.add('title');
     //------
-    toReturn.Favorite = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.Favorite = <HTMLOptGroupElement>window.document.createElement(SharedConst.Const.KeyWords.Html.optgroup);
     toReturn.Favorite.label = this.SelectHeaderStr('');
     toReturn.Favorite.id = PopConst.Const.ElemId.HS.SelectHeaderFavorite;
 
-    toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement('optgroup');
+    toReturn.FavoriteTitle = <HTMLOptGroupElement>window.document.createElement(SharedConst.Const.KeyWords.Html.optgroup);
     toReturn.FavoriteTitle.label = 'Favorite Snap Shots';
     toReturn.FavoriteTitle.id = PopConst.Const.ElemId.HS.SelectHeaderFavoriteTitle;
     toReturn.FavoriteTitle.classList.add('title');

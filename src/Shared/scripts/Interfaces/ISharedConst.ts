@@ -13,6 +13,12 @@
       Default: number,
     },
   },
+  KeyWords: {
+    Html: {
+      beforeend: InsertPosition,
+      optgroup: string,
+    }
+  },
   Logger: {
     MinTimeDiffMs: number
   },

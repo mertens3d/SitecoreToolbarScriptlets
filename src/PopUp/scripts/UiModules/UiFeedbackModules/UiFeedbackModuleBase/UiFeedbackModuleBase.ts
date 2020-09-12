@@ -1,24 +1,26 @@
-﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
+import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
 
-export class UiFeedbackModuleBase {
+export class UiFeedbackModuleBase extends LoggableBase {
   protected indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';
   protected lineBreak = '<br/>';
 
-  protected __elementSelector: string;
-  Logger: ILoggerAgent;
+  protected ElementSelector: string;
   protected __targetElement: HTMLElement;
 
-  constructor(selector: string, logger: ILoggerAgent) {
-    this.__elementSelector = selector;
-    this.Logger = logger;
+  constructor(selector: string, logger: ILoggerAgent)
+  {
+    super(logger);
+    this.ElementSelector = selector;
   }
 
   private __getFeedbackElem(): HTMLElement {
     if (!this.__targetElement) {
-      this.__targetElement = <HTMLElement>document.querySelector(this.__elementSelector);
+      this.__targetElement = <HTMLElement>document.querySelector(this.ElementSelector);
 
       if (!this.__targetElement) {
-        this.Logger.ErrorAndThrow(this.__getFeedbackElem.name, 'target not found: ' + this.__elementSelector);
+        this.Logger.ErrorAndThrow(this.__getFeedbackElem.name, 'target not found: ' + this.ElementSelector);
       }
     }
 
@@ -27,7 +29,7 @@ export class UiFeedbackModuleBase {
 
   AddHtmlString(htmlText: string) {
     if (htmlText) {
-      this.__getFeedbackElem().insertAdjacentHTML('beforeend', htmlText);
+      this.__getFeedbackElem().insertAdjacentHTML(SharedConst.Const.KeyWords.Html.beforeend , htmlText);
     } else {
       this.Logger.ErrorAndThrow(this.AddHtmlString.name, 'htmlText');
     }

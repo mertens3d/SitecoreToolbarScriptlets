@@ -1,149 +1,48 @@
 ﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
-import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
+import { CommandButtonModule } from '../UiModules/CommandButtonModule';
 
-export class UiButtonStateManager extends LoggableBase {
+export class UiStateManager extends LoggableBase {
   private AllMenuCommands: IOneCommand[];
-  private currentWindowType: ScWindowType;
-  private currSelSnapshot: GuidData;
-  private StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
-  private Tester: ButtonVisibilityTester;
+  private AllMenuCommandButtons: CommandButtonModule[] = [];
+    Tester: ButtonVisibilityTester;
 
   constructor(logger: ILoggerAgent, allMenuCommands: IOneCommand[]) {
     super(logger);
 
-    this.Logger.InstantiateStart(UiButtonStateManager.name);
+    this.Logger.InstantiateStart(UiStateManager.name);
     this.AllMenuCommands = allMenuCommands;//: IOneCommand[]
-    this.Logger.InstantiateEnd(UiButtonStateManager.name);
+    this.Logger.InstantiateEnd(UiStateManager.name);
   }
 
   InitButtonStateManager() {
     this.Tester = new ButtonVisibilityTester(this.Logger);
+
+    this.BuildCommandButtons();
   }
-
-  private TestAgainstAllSetControllers(command: IOneCommand): boolean {
-    let toReturn: boolean = false;
-
-    if (command.VisibilityControllers.length > 0) {
-      for (var jdx = 0; jdx < command.VisibilityControllers.length; jdx++) {
-        let oneControl: VisibilityType = command.VisibilityControllers[jdx];
-
-        switch (oneControl) {
-          case VisibilityType.Desktop:
-            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Desktop, this.currentWindowType)
-
-            break;
-
-          case VisibilityType.ActiveCeNode:
-            toReturn = this.Tester.VisibilityTestActiveCeNode(this.StateOfSitecoreWindow);
-            break;
-
-          case VisibilityType.ContentEditor:
-            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.ContentEditor, this.currentWindowType)
-            break;
-
-          case VisibilityType.Edit:
-            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Edit, this.currentWindowType)
-            break;
-
-          case VisibilityType.Launchpad:
-            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Launchpad, this.currentWindowType)
-            break;
-
-          case VisibilityType.LoginPage:
-            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.LoginPage, this.currentWindowType)
-            break;
-
-          case VisibilityType.Normal:
-            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Normal, this.currentWindowType)
-            break;
-
-          case VisibilityType.Preview:
-            toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Preview, this.currentWindowType)
-            break;
-
-          case VisibilityType.SnapShotable:
-            toReturn = this.Tester.VisibilityTestSnapShotable(this.StateOfSitecoreWindow);
-            break;
-
-          case VisibilityType.SnapShotSelected:
-            toReturn = this.Tester.VisibilityTestSnapShotSelected(this.currSelSnapshot);
-            break;
-
-          case VisibilityType.NotLogin:
-            toReturn = !this.Tester.VisibilityTestWindowType(ScWindowType.LoginPage, this.currentWindowType)
-            break;
-
-          case VisibilityType.CommandIsRunning:
-            toReturn = false; //todo
-            break;
-
-          case VisibilityType.Unknown:
-            this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
-            break;
-
-          default:
-            this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
-            break;
-        }
-
-        if (toReturn) {
-          break;
-        }
-      }
-    }
-    else {
-      toReturn = true;
-    }
-
-    return toReturn;
-  }
-
-  private SetOneButtonVisibility(targetButton: HTMLElement, passesOneTest: boolean) {
-    if (targetButton) {
-      if (passesOneTest) {
-        targetButton.classList.remove('disabled');
-        targetButton.removeAttribute('disabled');
-      } else {
-        targetButton.classList.add('disabled');
-        targetButton.setAttribute('disabled', 'disabled');
-      }
-    } else {
-      this.Logger.ErrorAndContinue(this.SetOneButtonVisibility.name, 'targetButton is NULL');
-    }
+  private BuildCommandButtons() {
+    this.AllMenuCommands.forEach((oneCommand) => {
+      let newButtonCommandModule = new CommandButtonModule(this.Logger, oneCommand, this.Tester);
+      this.AllMenuCommandButtons.push(newButtonCommandModule);
+    });
   }
 
   HydrateUiButtonState(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): void {
-    this.currentWindowType = stateOfSitecoreWindow.Meta.WindowType;
-    // todo - turn this into an event obsert  this.currSelSnapshot = currSelSnapshot;
-    this.StateOfSitecoreWindow = stateOfSitecoreWindow;
+    let currentWindowType: ScWindowType = stateOfSitecoreWindow.Meta.WindowType;
+
+    this.AllMenuCommandButtons.forEach((commandButton) => commandButton.Hydrate(stateOfSitecoreWindow, currentWindowType));
+
   }
 
-  RefreshUiButtonEnabledStatus(): void {
-    this.Logger.FuncStart(this.RefreshUiButtonEnabledStatus.name,this.AllMenuCommands.length);
+  RefreshUiButtonVisibilityStatus(): void {
+    this.Logger.FuncStart(this.RefreshUiButtonVisibilityStatus.name, this.AllMenuCommands.length);
 
-    for (var idx = 0; idx < this.AllMenuCommands.length; idx++) {
-      var oneCommand = this.AllMenuCommands[idx];
+    this.AllMenuCommandButtons.forEach((oneButtonModule) => oneButtonModule.RefreshUi());
 
-      if (oneCommand.ButtonSelector !== null) {
-        let passesOneTest: boolean = false;
-        var targetButton: HTMLElement = document.querySelector(oneCommand.ButtonSelector);
-
-        if (targetButton) {
-          passesOneTest = this.TestAgainstAllSetControllers(oneCommand);
-        } else {
-          this.Logger.LogAsJsonPretty('oneCommand', oneCommand);
-          this.Logger.ErrorAndContinue(this.RefreshUiButtonEnabledStatus.name, 'target button not found: ' + oneCommand.ButtonSelector);
-        }
-        this.SetOneButtonVisibility(targetButton, passesOneTest);
-      }
-    }
-
-    this.Logger.FuncEnd(this.RefreshUiButtonEnabledStatus.name);
+    this.Logger.FuncEnd(this.RefreshUiButtonVisibilityStatus.name);
   }
 }

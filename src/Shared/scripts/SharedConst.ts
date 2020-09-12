@@ -17,6 +17,12 @@ export class SharedConst {
         Default: 100,
       },
     },
+    KeyWords: {
+      Html: {
+        beforeend: 'beforeend',
+        optgroup: 'optgroup',
+      }
+    },
     Logger: {
       MinTimeDiffMs: 100
     },
