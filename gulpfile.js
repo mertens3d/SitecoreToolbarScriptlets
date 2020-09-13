@@ -19,8 +19,9 @@ var ArchiveJsMap = require('./gulp.support/tasks/ArchiveJsMap');
 
 var varsObj = new vars();
 
-gulp.task('CleanJsAndMapFromContent', (cb) => ArchiveJsMap.CleanContent(cb, varsObj));
-
+gulp.task('ArchiveJsAndMap', (cb) => ArchiveJsMap.CleanContent(cb));
+gulp.task('DeleteJsAndMap', (cb) => ArchiveJsMap.DelJsMap(cb));
+gulp.task('ArchiveAndDelete', gulp.series(['ArchiveJsAndMap', 'DeleteJsAndMap']));
 
 
 
@@ -52,4 +53,4 @@ gulp.task('putters', gulp.series(['CopyFromFinalToAddon']), function (resolve) {
   resolve();
 });
 
-gulp.task('default', gulp.series(['builders', 'putters']));
+gulp.task('default', gulp.series(['builders', 'putters','ArchiveAndDelete']));

@@ -1,30 +1,37 @@
 ﻿const gulp = require('gulp');
-const vars = require('./../vars');
-const uglify = require('gulp-terser'); //require('gulp-uglify-es');
-const rename = require('gulp-rename');
-var sort = require('gulp-sort');
-const concat = require('gulp-concat');
-const replace = require('gulp-replace');
+const del = require('del');
 
 function GetFolderName(prefix) {
   //https://stackoverflow.com/questions/3552461/how-to-format-a-javascript-date
   const o_date = new Intl.DateTimeFormat;
   const f_date = (m_ca, m_it) => Object({ ...m_ca, [m_it.type]: m_it.value });
   const m_date = o_date.formatToParts().reduce(f_date, {});
-  let suffix = m_date.year + '-' + m_date.month + '-' + m_date.day;
-  return prefix + suffix;
+  let date = new Date()
+  let suffix = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDay() + '-' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds();
+  let toReturn = prefix + suffix;
+  console.log('path: ' + toReturn);
+  return toReturn;
 }
 
-var filesToMove = [
-  './src/content/**/*.*',
+var filesToArchive = [
+  './src/content/**/*.js',
+  './src/content/**/*.map',
+  './src/PopUp/**/*.js',
+  './src/PopUp/**/*.map',
+  './src/Shared/**/*.js',
+  './src/Shared/**/*.map',
 ];
 
 module.exports = {
   CleanContent: function (cb) {
     console.log('s) CleanContent');
-    console.log('source filter: ' + vars.ContentJs.SourceDirFilter());
-    return gulp.src(filesToMove)
-
-      .pipe(gulp.dest(GetFolderName('/archive')));
+    console.log('source filter: ' + JSON.stringify(filesToArchive));
+    return gulp.src(filesToArchive, { base: './' })
+      .pipe(gulp.dest(GetFolderName('./archives/archive-')));
+  },
+  DelJsMap: function (cb) {
+    console.log('s) Delete Js and Map files');
+    console.log('source filter: ' + JSON.stringify(filesToArchive));
+    return del(filesToArchive, cb);
   },
 }

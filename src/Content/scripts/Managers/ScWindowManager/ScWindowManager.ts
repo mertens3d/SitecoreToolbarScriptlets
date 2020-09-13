@@ -1,4 +1,5 @@
-﻿import { RecipeBasics } from '../../../../Shared/scripts/Classes/RecipeBasics';
+﻿import { DefaultStateOfSitecoreWindow } from '../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
+import { RecipeBasics } from '../../../../Shared/scripts/Classes/RecipeBasics';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { QueryStrKey } from '../../../../Shared/scripts/Enums/QueryStrKey';
 import { ScWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
@@ -10,10 +11,12 @@ import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrl
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
-import { IDataStateOfDesktop } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { IDataMetaData } from '../../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
 import { IDataStateOfContentEditor } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
+import { IDataStateOfDesktop } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop';
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
 import { MiscAgent } from '../../Agents/MiscAgent/MiscAgent';
 import { RecipeInitFromQueryStr } from '../../ContentApi/Recipes/RecipeInitFromQueryStr/RecipeInitFromQueryStr';
 import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
@@ -21,10 +24,6 @@ import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
 import { LoggableBase } from '../LoggableBase';
 import { ScUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { ScWindowRecipePartials } from './ScWindowRecipePartials';
-import { DefaultStateOfSitecoreWindow } from '../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
-import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
-import { IDataFriendly } from '../../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
-import { IDataMetaData } from '../../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
 
 export class ScWindowManager extends LoggableBase implements IScWindowManager {
   __desktopProxyLazy: DesktopProxy = null;
