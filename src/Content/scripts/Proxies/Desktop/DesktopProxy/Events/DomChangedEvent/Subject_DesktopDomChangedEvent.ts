@@ -1,9 +1,9 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IDomChangedEvent_Payload } from "./IDomChangedEvent_Payload";
+import { IDesktopDomChangedEvent_Payload } from "./IDomChangedEvent_Payload";
 import { GenericEvent_Subject } from "../GenericEvent/GenericEvent_Subject";
 
-export class DesktopDomChangedEvent_Subject extends GenericEvent_Subject<IDomChangedEvent_Payload>  {
+export class DesktopDomChangedEvent_Subject extends GenericEvent_Subject<IDesktopDomChangedEvent_Payload>  {
   private AssociatedDoc: IDataOneDoc;
 
   constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc) {
@@ -32,7 +32,7 @@ export class DesktopDomChangedEvent_Subject extends GenericEvent_Subject<IDomCha
           }
         })
 
-        let message: IDomChangedEvent_Payload = {
+        let message: IDesktopDomChangedEvent_Payload = {
           MutatedElement: mutatedElement,
           AddedIframes: addedIframes
         }

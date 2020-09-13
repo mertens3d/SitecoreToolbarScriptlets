@@ -120,7 +120,7 @@ export class EventManager extends LoggableBase {
       targetElem.ondblclick = (evt) => {
         let data: ICommandHndlrDataForPopUp = this.BuildCommandData(oneCommand);
         data.Evt = evt,
-          data.Self.RouteAllCommandEvents(data)
+          data.EventMan.RouteAllCommandEvents(data)
       };
     }
   }
@@ -131,8 +131,8 @@ export class EventManager extends LoggableBase {
       targetElem.addEventListener('click', (evt) => {
         let data: ICommandHndlrDataForPopUp = this.BuildCommandData(oneCommand);
         data.Evt = evt;
-        data.Self = self;
-        data.Self.RouteAllCommandEvents(data);
+        data.EventMan = self;
+        data.EventMan.RouteAllCommandEvents(data);
       });
     } else {
       this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No Id: ' + oneCommand.PlaceHolderSelector);
@@ -143,7 +143,7 @@ export class EventManager extends LoggableBase {
     var self: EventManager = this;
 
     let data: ICommandHndlrDataForPopUp = {
-      Self: self,
+      EventMan: self,
       Command: oneCommand,
       Event: oneCommand.EventData,
       Evt: null,

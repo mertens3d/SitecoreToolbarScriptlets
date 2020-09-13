@@ -1,26 +1,24 @@
 ﻿import { GenericEvent_Subject } from "../GenericEvent/GenericEvent_Subject";
-import { ITreeMutatedEvent_Payload } from "./IPayload_ContentEditorTreeMutatedEvent";
+import { ITreeMutationEvent_Payload } from "./ITreeMutationEvent_Payload";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 
-export class ContentEditorTreeMutatedEvent_Subject extends GenericEvent_Subject<ITreeMutatedEvent_Payload> {
+export class ContentEditorTreeMutationEvent_Subject extends GenericEvent_Subject<ITreeMutationEvent_Payload> {
   private TreeElement: any;
   private HostIframeId: string;
-  private HostDoc: IDataOneDoc;
 
   constructor(logger: ILoggerAgent, treeElement: HTMLElement, hostIframeId: string, host: IDataOneDoc) {
-    super(logger, ContentEditorTreeMutatedEvent_Subject.name);
+    super(logger, ContentEditorTreeMutationEvent_Subject.name);
 
-    this.Logger.InstantiateStart(ContentEditorTreeMutatedEvent_Subject.name);
+    this.Logger.InstantiateStart(ContentEditorTreeMutationEvent_Subject.name);
     this.TreeElement = treeElement;
     this.HostIframeId = hostIframeId;
-    this.HostDoc = host;
     this.Logger.LogVal('this.HostIframeId', this.HostIframeId);
 
     this.InitMutationObserver();
 
-    this.Logger.InstantiateEnd(ContentEditorTreeMutatedEvent_Subject.name);
+    this.Logger.InstantiateEnd(ContentEditorTreeMutationEvent_Subject.name);
   }
   private InitMutationObserver() {
     this.Logger.FuncStart(this.InitMutationObserver.name);
@@ -48,7 +46,7 @@ export class ContentEditorTreeMutatedEvent_Subject extends GenericEvent_Subject<
         this.Logger.Log(mutatedAnchorElement.id);
 
         this.Logger.Log('mutated');
-        candidateNode = new ScContentTreeNodeProxy(this.Logger, this.HostDoc, mutatedAnchorElement);
+        candidateNode = new ScContentTreeNodeProxy(this.Logger, mutatedAnchorElement, mutatedAnchorElement);
         this.Logger.Log((<HTMLElement>mutation.target).innerText);
       }
     }
@@ -61,12 +59,13 @@ export class ContentEditorTreeMutatedEvent_Subject extends GenericEvent_Subject<
 
       if (candidateNode) {
         if (candidateNode.QueryIsActive()) {
-          let payload: ITreeMutatedEvent_Payload = {
+          let treeMutationEvent_Payload: ITreeMutationEvent_Payload = {
+            StateOfTree: null, // todo
             MutatedElement: <HTMLElement>(mutation.target),
             ActiveNode: candidateNode,
             AssociatedIframeElemId: this.HostIframeId
           }
-          this.NotifyObservers(payload);
+          this.NotifyObservers(treeMutationEvent_Payload);
         }
       }
     });

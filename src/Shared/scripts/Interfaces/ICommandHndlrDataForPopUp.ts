@@ -5,7 +5,7 @@ import { IMenuStateForMsg } from "../Classes/IMenuStateForMsg";
 
 export interface ICommandHndlrDataForPopUp {
   MenuState: IMenuStateForMsg;
-  Self: EventManager;
+  EventMan: EventManager;
   Command: IOneCommand;
   Event: IEventHandlerData;
   Evt: MouseEvent;

@@ -39,15 +39,16 @@ export interface IContentConst {
     SC: {
       ContentEditor: {
         ContentTreeNodeGlyph: string,
-        scContentTreeNodeIcon: string,
         RootAnchorNode: string,
+        ScContentTreeContainer: string,
+        scContentTreeNodeIcon: string,
       },
       Level2Nodes: {
-        MediaLibraryAnchorRootNode : string,
-        TemplatesAnchorRootNode : string,
-        LayoutRootAnchorNode : string,
-        SystemRootAnchorNode : string,
-        ContentRootAnchorNode : string,
+        MediaLibraryAnchorRootNode: string,
+        TemplatesAnchorRootNode: string,
+        LayoutRootAnchorNode: string,
+        SystemRootAnchorNode: string,
+        ContentRootAnchorNode: string,
       },
       Cancel: string,
       ContentIframe0: string,

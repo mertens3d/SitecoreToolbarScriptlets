@@ -15,8 +15,14 @@ var otherTasks = require('./gulp.support/tasks/otherTasks');
 var putTasks = require('./gulp.support/tasks/putTasks');
 var styleTasks = require('./gulp.support/tasks/styleTasks');
 var tsTasks = require('./gulp.support/tasks/tsTasks');
+var ArchiveJsMap = require('./gulp.support/tasks/ArchiveJsMap');
 
 var varsObj = new vars();
+
+gulp.task('CleanJsAndMapFromContent', (cb) => ArchiveJsMap.CleanContent(cb, varsObj));
+
+
+
 
 gulp.task('BookmarkText', (cb) => otherTasks.BookmarkText(cb, varsObj));
 gulp.task('BuildPopUpHtml', (cb) => htmlTasks.BuildHtml(cb, varsObj));

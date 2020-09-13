@@ -19,7 +19,7 @@ class Injectable {
   }
 
   FinalFolderNameFull() {
-    return this.AutoBuildRoot + '/' + this.FinalFolderNameShort ;
+    return this.AutoBuildRoot + '/' + this.FinalFolderNameShort;
   }
 
   SourceFinalAuto() {
@@ -52,7 +52,6 @@ class Injectable {
 
   AutoBuildMinFileNameFull() {
     return this.AutoBuildRoot + '/' + this.MinFileName();
-
   }
 
   WebpackFileFull() {
@@ -61,7 +60,7 @@ class Injectable {
 
   WebpackContentOutputFilePathAbs() {
     //return this.AutoBuildRoot;
-    return path.resolve( this.AutoBuildRoot + '/webpack');
+    return path.resolve(this.AutoBuildRoot + '/webpack');
   }
 
   debugInfo() {
@@ -78,7 +77,6 @@ class Injectable {
     console.log('\t');
     console.log('\tWebpackContentOutputFilePathAbs: ' + this.WebpackContentOutputFilePathAbs());
     console.log('\tTranspiledEntryPointFull: ' + this.Ts.TranspiledEntryPointFull());
-
 
     console.log('----------');
   }

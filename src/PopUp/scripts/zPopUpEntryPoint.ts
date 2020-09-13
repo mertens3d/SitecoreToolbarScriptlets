@@ -16,9 +16,8 @@ import { CommandManager } from "./Classes/AllCommands";
 import { PopConst } from "./Classes/PopConst";
 import { EventManager } from "./Managers/EventManager";
 import { Handlers } from "./Managers/Handlers";
-import { PopUpMessageManager } from "./Managers/MessageManager";
 import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessagesBroker";
-import { TabManager } from "./Managers/TabManager";
+import { BrowserTabAgent } from "./Managers/TabManager";
 import { UiManager } from "./Managers/UiManager/UiManager";
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 
@@ -29,20 +28,27 @@ class PopUpEntry {
   scUrlAgent: ScUrlAgent;
   handlers: Handlers;
   uiMan: UiManager;
-  messageMan: PopUpMessageManager;
   FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
   eventMan: EventManager;
   commandMan: any;
+  browserTabAgent: BrowserTabAgent;
+  PopUpMessageAgent: PopUpMessagesBroker;
 
   async main() {
     try {
       this.InstantiateAndInitSettingsAndLogger();
       this.InstantiateAgents();
-
       this.InstantiateMembers();
-      await this.InitMembers()
+
+      this.Logger.SectionMarker('Begin Init');
+
+      await this.InitHub()
+        .then(() => this.WireCustomevents())
+        .then(() => this.eventMan.TriggerPingEventAsync(this.commandMan.GetCommandById(MenuCommand.Ping)))
         .then(() => this.Logger.Log(this.main.name + ' completed'))
         .catch((err) => console.log(err));
+
+      this.Logger.SectionMarker('End Init');
 
       this.Logger.SectionMarker('Begin Standby');
     } catch (err) {
@@ -63,6 +69,11 @@ class PopUpEntry {
   }
 
   private async InstantiateMembers() {
+    //this.messageMan = new PopUpMessageManager(this.PopUpMessageAgent, this.Logger);
+    this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.browserTabAgent, this.PopUpMessageAgent);
+    this.commandMan = new CommandManager(this.Logger, this.handlers);
+    this.uiMan = new UiManager(this.Logger, this.SettingsAgent, this.browserTabAgent, this.commandMan); //after tabman, after HelperAgent
+    this.eventMan = new EventManager(this.Logger, this.SettingsAgent, this.uiMan, this.handlers); // after uiman
   }
 
   private InitLogger() {
@@ -89,25 +100,18 @@ class PopUpEntry {
 
   InstantiateAgents() {
     this.scUrlAgent = new ScUrlAgent(this.Logger);
+    this.browserTabAgent = new BrowserTabAgent(this.Logger, this.scUrlAgent, this.SettingsAgent);
+    this.PopUpMessageAgent = new PopUpMessagesBroker(this.Logger);
   }
 
   WireCustomevents() {
     this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(new ContentReplyReceivedEvent_Observer(this.Logger, this.uiMan));
-
     this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
     this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(this.FeedbackModuleMsg_Observer)
   }
 
   async InitHub(): Promise<void> {
     try {
-      let tabMan = new TabManager(this.Logger, this.scUrlAgent, null); //< -- todo null fix
-      let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger);
-      this.messageMan = new PopUpMessageManager(PopUpMessageBroker, this.Logger);
-      this.handlers = new Handlers(this.Logger, this.messageMan, this.SettingsAgent, tabMan);
-      this.commandMan = new CommandManager(this.Logger, this.handlers);
-      this.uiMan = new UiManager(this.Logger, this.SettingsAgent, tabMan, this.commandMan); //after tabman, after HelperAgent
-      this.eventMan = new EventManager(this.Logger, this.SettingsAgent, this.uiMan, this.handlers); // after uiman
-
       this.uiMan.InitUiManager();
 
       this.eventMan.InitEventManager(this.commandMan.AllMenuCommands);
@@ -120,20 +124,6 @@ class PopUpEntry {
     } catch (err) {
       this.Logger.ErrorAndThrow(this.InitHub.name, err);
     }
-  }
-
-  async InitMembers(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.SectionMarker('Begin Init');
-
-      await this.InitHub()
-        .then(() => this.WireCustomevents())
-        .then(() => this.eventMan.TriggerPingEventAsync(this.commandMan.GetCommandById(MenuCommand.Ping)))
-        .then(() => resolve())
-        .catch((err) => reject(this.InitMembers.name + ' ' + err));
-
-      this.Logger.SectionMarker('End Init');
-    });
   }
 }
 

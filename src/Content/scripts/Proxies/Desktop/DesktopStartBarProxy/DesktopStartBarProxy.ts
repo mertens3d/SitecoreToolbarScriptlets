@@ -8,28 +8,11 @@ import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectCon
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorProxy } from '../../ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from '../DesktopProxy/DesktopProxy';
-import { ITreeMutatedEvent_Payload } from '../DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
+import { ITreeMutationEvent_Payload } from '../DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { FrameHelper } from '../../../Helpers/IframeHelper';
 import { IFrameProxyMutated_Payload } from "../DesktopProxy/Events/Subject_DesktopIframeProxyMutatedEvent/IFrameProxyMutatedEvent_Payload";
-import { IGeneric_Observer } from '../DesktopProxy/Events/GenericEvent/IGeneric_Observer';
-
-
-export class TreeNodeChangedEvent_Observer extends LoggableBase implements IGeneric_Observer<ITreeMutatedEvent_Payload> {
-  private Owner: DesktopStartBarProxy;
-    Friendly: string;
-
-  constructor(logger: ILoggerAgent, owner: DesktopStartBarProxy) {
-    super(logger);
-    this.Owner = owner;
-    this.Friendly = TreeNodeChangedEvent_Observer.name;
-  }
-
-  Update(payload: ITreeMutatedEvent_Payload) {
-    //(payload: ITreeMutatedEvent_Payload) => { self.CallbackTreeNodeChanged(payload) });
-    this.Owner.CallbackTreeNodeChanged(payload);
-  }
-}
+import { TreeMutationEvent_Observer } from '../../ContentEditor/ContentEditorTreeProxy/TreeMutationEvent_Observer';
 
 
 export class DesktopStartBarProxy extends LoggableBase {
@@ -77,79 +60,39 @@ export class DesktopStartBarProxy extends LoggableBase {
     return foundStartBarProxy;
   }
 
-  private DesignMainIconNode(mainIconSrc: string): HTMLImageElement {
-    let newMainIconNode = <HTMLImageElement>document.createElement('img');
-    newMainIconNode.width = 16;
-    newMainIconNode.height = 16;
-    newMainIconNode.src = mainIconSrc;
-    newMainIconNode.style.position = 'relative';
-    newMainIconNode.style.left = '-8px';
-    newMainIconNode.style.top = '-8px';
-    newMainIconNode.style.marginRight = '-4px';
-    newMainIconNode.style.opacity = '0.5';
-    newMainIconNode.border = '0';
-    newMainIconNode.classList.add("scContentTreeNodeIcon");
-    return newMainIconNode;
-  }
+ 
 
-  private DesignItemIconNode(itemIconSource: string): HTMLImageElement {
-    let newItemIconNode = <HTMLImageElement>document.createElement('img');
-    newItemIconNode.width = 16;
-    newItemIconNode.height = 16;
-    newItemIconNode.src = itemIconSource;
-    newItemIconNode.border = '0px';
-    newItemIconNode.classList.add("scContentTreeNodeIcon");
-    return newItemIconNode;
-  }
-
-  ChangeStartBarButtonText(targetButton: DesktopStartBarButtonProxy, text: string, itemIconSource: string, mainIconSrc: string) {
-    this.Logger.FuncStart(this.ChangeStartBarButtonText.name);
-    this.Logger.LogVal('iconSrc', itemIconSource);
-    this.Logger.LogVal('mainIconSrc', mainIconSrc);
-    if (targetButton && itemIconSource.length > 0) {
-      let containerSpanElement: HTMLElement = targetButton.FoundStartBarButton.querySelector('div').querySelector('span');
-
-      let newItemIconNode: HTMLImageElement = this.DesignItemIconNode(itemIconSource)
-      let newMainIconNode: HTMLImageElement = this.DesignMainIconNode(mainIconSrc);
-
-      containerSpanElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
-    }
-    this.Logger.FuncEnd(this.ChangeStartBarButtonText.name);
-  }
-
-  CallBackConEdProxyAdded(payload: IFrameProxyMutated_Payload) {
-    this.Logger.FuncStart(this.CallBackConEdProxyAdded.name);
+  OnContentEditorProxyAdded(payload: IFrameProxyMutated_Payload) {
+    this.Logger.FuncStart(this.OnContentEditorProxyAdded.name);
 
     if (payload) {
       if (this.CeProxies.indexOf(payload.NewCeProxy) < 0) {
         this.CeProxies.push(payload.NewCeProxy);
 
-        let self = this;
-        payload.NewCeProxy.RegisterObserver(new TreeNodeChangedEvent_Observer(this.Logger, this));
+        let treeMutationEvent_Observer = new TreeMutationEvent_Observer(this.Logger);
+        payload.NewCeProxy.RegisterObserverForTreeMutation(treeMutationEvent_Observer);
       }
     } else {
-      this.Logger.ErrorAndThrow(this.CallBackConEdProxyAdded.name, 'Null ceProxy');
+      this.Logger.ErrorAndThrow(this.OnContentEditorProxyAdded.name, 'Null ceProxy');
     }
 
-    this.Logger.FuncEnd(this.CallBackConEdProxyAdded.name);
+    this.Logger.FuncEnd(this.OnContentEditorProxyAdded.name);
   }
 
-  CallbackTreeNodeChanged(payload: ITreeMutatedEvent_Payload) {
+  CallbackTreeNodeChanged(payload: ITreeMutationEvent_Payload) {
     this.Logger.FuncStart(this.CallbackTreeNodeChanged.name);
     // at this point we have a new active node (or some other change event)
 
     if (payload) {
       this.Logger.LogVal('target Iframe Id', payload.AssociatedIframeElemId);
+
       let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(payload.AssociatedIframeElemId);
+
       if (iframeElement) {
         if (payload.ActiveNode) {
-          let foundStartBarButton: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(payload.AssociatedIframeElemId);
+          let desktopStartBarButtonProxy: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(payload.AssociatedIframeElemId);
 
-          let itemIconSrc: string = payload.ActiveNode.GetIconSrc();
-          let mainIconSrc: string = payload.ActiveNode.GetMainIconSrc();
-
-          let bufferedString: string = StaticHelpers.BufferString(payload.ActiveNode.GetNodeLinkText(), ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
-          this.ChangeStartBarButtonText(foundStartBarButton, bufferedString, itemIconSrc, mainIconSrc);
+          desktopStartBarButtonProxy.Update(desktopStartBarButtonProxy, payload.ActiveNode);
         }
 
         //we need to know what the associated button is

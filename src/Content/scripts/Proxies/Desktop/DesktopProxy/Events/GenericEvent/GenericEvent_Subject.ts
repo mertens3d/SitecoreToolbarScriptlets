@@ -3,6 +3,12 @@ import { IGeneric_Observer } from "./IGeneric_Observer";
 import { IObservable } from "./IObservable";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 
+export class GenericEvent_Observer<T> extends LoggableBase implements IGeneric_Observer<T> {
+    Friendly: string;
+    UpdateAsync(payload: T):void {
+    }
+}
+
 export class GenericEvent_Subject<T> extends LoggableBase implements IObservable<T> {
   protected ObserverCollection: IGeneric_Observer<T>[] = [];
   protected Friendly: string;
@@ -38,7 +44,7 @@ export class GenericEvent_Subject<T> extends LoggableBase implements IObservable
 
   NotifyObservers(payload: T): void {
     this.Logger.FuncStart(this.NotifyObservers.name + ' ' + this.Friendly, 'length: ' + this.ObserverCollection.length);
-    this.ObserverCollection.forEach((observer) => observer.Update(payload));
+    this.ObserverCollection.forEach((observer) => observer.UpdateAsync(payload));
     this.Logger.FuncEnd(this.NotifyObservers.name);
   }
 }

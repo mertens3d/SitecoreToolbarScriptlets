@@ -1,23 +1,23 @@
+import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
+import { SettingKey } from "../../../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy";
+import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
 import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
 import { RecipeRestoreFrameOnDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
 import { FrameHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
+import { DesktopDomChangedEvent_Observer } from "./DesktopDomChangedEvent_Observer";
 import { DesktopIframeProxyBucket } from "./DesktopIframeProxyBucket";
 import { DesktopDomChangedEvent_Subject } from "./Events/DomChangedEvent/Subject_DesktopDomChangedEvent";
-import { IDomChangedEvent_Payload } from "./Events/DomChangedEvent/IDomChangedEvent_Payload";
-import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
-import { DesktopDomChangedEvent_Observer } from "./DesktopDomChangedEvent_Observer";
 import { FrameMutationEvent_Observer } from "./FrameMutationEvent_Observer";
 
 export class DesktopProxy extends LoggableBase {
-  private DesktopIframeProxyBucket: DesktopIframeProxyBucket;
+  private DesktopFrameProxyBucket: DesktopIframeProxyBucket;
 
   DesktopStartBarAgent: DesktopStartBarProxy;
   private __iframeHelper: FrameHelper;
@@ -25,7 +25,7 @@ export class DesktopProxy extends LoggableBase {
   private AssociatedDoc: IDataOneDoc;
   private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
-  private DomChangedEventSubject: DesktopDomChangedEvent_Subject;
+  private DomChangedEvent_Subject: DesktopDomChangedEvent_Subject;
 
   constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
@@ -35,42 +35,40 @@ export class DesktopProxy extends LoggableBase {
     this.SettingsAgent = settingsAgent;
     this.AssociatedDoc = associatedDoc;
 
-    this.DesktopIframeProxyBucket = new DesktopIframeProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
+    this.DesktopFrameProxyBucket = new DesktopIframeProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
 
     this.DesktopStartBarAgent = new DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
 
     let self = this;
-    this.DesktopIframeProxyBucket.DesktopIframeProxyAddedEvent_Subject.RegisterObserver(new FrameMutationEvent_Observer(self.Logger, self.DesktopStartBarAgent));
+    let frameMutationEvent_Observer = new FrameMutationEvent_Observer(self.Logger, self.DesktopStartBarAgent);
+    this.DesktopFrameProxyBucket.DesktopIframeProxyAddedEvent_Subject.RegisterObserver(frameMutationEvent_Observer);
 
-    this.DomChangedEventSubject = new DesktopDomChangedEvent_Subject(this.Logger, this.AssociatedDoc);
-
-    this.DomChangedEventSubject.RegisterObserver(new DesktopDomChangedEvent_Observer(this.Logger, this))
+    this.WireEvents();
 
     this.Logger.InstantiateEnd(DesktopProxy.name);
   }
 
+  WireEvents() {
+    let setting = this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton);
+    if (setting && setting.ValueAsBool()) {
+    }
+
+    this.DomChangedEvent_Subject = new DesktopDomChangedEvent_Subject(this.Logger, this.AssociatedDoc);
+    let DomChangeEvent_Observer = new DesktopDomChangedEvent_Observer(this.Logger, this, this.SettingsAgent);
+    this.DomChangedEvent_Subject.RegisterObserver(DomChangeEvent_Observer);
+  }
+
   async InitDesktopProxy(): Promise<void> {
     try {
-      await this.DesktopIframeProxyBucket.InitHostedIframes()
+      await this.DesktopFrameProxyBucket.InitHostedIframes()
         .catch((err) => this.Logger.ErrorAndThrow(this.InitDesktopProxy.name, err));
     } catch (err) {
       throw (this.InitDesktopProxy.name + ' ' + err);
     }
   }
 
-  Observer_DesktopDomChangedEvent(payload: IDomChangedEvent_Payload) {
-    this.Logger.Log("The desktop DOM changed - probably an iframe has been added");
-    if (payload && payload.AddedIframes.length > 0) {
-      payload.AddedIframes.forEach(async (iframeElement) => {
-        this.Logger.LogVal('added iframe id', iframeElement.id);
-
-        let iframeProxy: FrameProxy = new FrameProxy(this.Logger, iframeElement, iframeElement.id, this.SettingsAgent);
-
-        await iframeProxy.WaitForReady()
-          .then(() => this.DesktopIframeProxyBucket.AddToBucketFromIframeProxy(iframeProxy))
-      })
-    }
-    this.Logger.LogAsJsonPretty('payload', payload);
+  AddToFrameBucket(frameProxy: FrameProxy): any {
+    this.DesktopFrameProxyBucket.AddToBucketFromIframeProxy(frameProxy);
   }
 
   GetAssociatedDoc(): IDataOneDoc {

@@ -1,25 +1,25 @@
 ﻿import { Guid } from "../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IDataStateOfScContentTreeNode } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 
 export class ScContentTreeNodeProxy extends LoggableBase {
   private ScContentTreeNodeDivElem: HTMLDivElement;
-  private OwnerDoc: IDataOneDoc;
+   private ContainerElement: HTMLElement;
 
-  constructor(logger: ILoggerAgent, AssociatedDoc: IDataOneDoc, sourceElement: HTMLDivElement)
-  constructor(logger: ILoggerAgent, AssociatedDoc: IDataOneDoc, sourceElement: HTMLImageElement)
-  constructor(logger: ILoggerAgent, AssociatedDoc: IDataOneDoc, sourceElement: HTMLAnchorElement)
-  constructor(logger: ILoggerAgent, AssociatedDoc: IDataOneDoc, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement) {
+  constructor(logger: ILoggerAgent, sourceElement: HTMLDivElement, containerElement: HTMLElement)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement, containerElement: HTMLElement)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLAnchorElement, containerElement: HTMLElement)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement, containerElement: HTMLElement) {
     super(logger);
 
     this.Logger.InstantiateStart(ScContentTreeNodeProxy.name);
 
-    if (sourceElement && AssociatedDoc) {
-      this.OwnerDoc = AssociatedDoc;
+    this.ContainerElement = containerElement;
+
+    if (sourceElement && this.ContainerElement) {
 
       if (sourceElement.hasAttribute('src')) {
         this.InferFromImageElement(<HTMLImageElement>sourceElement);
@@ -105,7 +105,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
     if (candidate) {
       this.Logger.Log('found a candidate');
-      toReturn = new ScContentTreeNodeProxy(this.Logger, this.OwnerDoc, candidate);
+      toReturn = new ScContentTreeNodeProxy(this.Logger,  candidate, this.ContainerElement);
     } else {
       this.Logger.Log('no candidate found');
     }
@@ -131,7 +131,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
     let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
     if (penultimateElem) {
-      penultimateNode = new ScContentTreeNodeProxy(this.Logger, this.OwnerDoc, penultimateElem);
+      penultimateNode = new ScContentTreeNodeProxy(this.Logger, penultimateElem, this.ContainerElement);
     }
 
     //while (parentNode && maxIter > 0) {
@@ -163,10 +163,10 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     if (newData.IsActive) {
       var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.ItemId);
 
-      let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.OwnerDoc.ContentDoc.getElementById(hotTreeNodeId);
+      let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.ContainerElement.querySelector('[id=' + hotTreeNodeId + ']');
 
       if (hotTreeNode) {
-        let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, this.OwnerDoc, hotTreeNode);
+        let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, hotTreeNode, this.ContainerElement);
 
         if (hotTreeNodeProxy) {
           hotTreeNodeProxy.ActivateNode()

@@ -15,7 +15,7 @@ import { IDataStateOfSnapShotSelect } from '../../../../Shared/scripts/Interface
 import { IOneCommand } from '../../../../Shared/scripts/Interfaces/IOneCommand';
 import { CommandManager } from '../../Classes/AllCommands';
 import { PopConst } from '../../Classes/PopConst';
-import { TabManager } from '../TabManager';
+import { BrowserTabAgent } from '../TabManager';
 import { UiStateManager } from '../UiButtonStateManager';
 import { CancelButtonModule } from '../../UiModules/CancelButtonModule';
 import { SelectSnapshotModule } from '../../UiModules/SelectSnapshotModule/SelectSnapshotModule';
@@ -25,7 +25,7 @@ import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/Fe
 import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
-import { UiSelectSnapShot_Observer } from './UiSelectSnapShot_Observer';
+import { UiSelectSnapshotChangeEvent_Observer } from './UiSelectSnapShot_Observer';
 
 export class UiManager {
   AccordianManager: IAccordianManager;
@@ -46,11 +46,11 @@ export class UiManager {
   private FeedbackModuleLog: UiFeedbackModuleLog;
   private Logger: ILoggerAgent;
   private SettingsAgent: ISettingsAgent;
-  private TabMan: TabManager;
+  private TabMan: BrowserTabAgent;
   private CommandMan: CommandManager;
   CancelButtonModule: CancelButtonModule;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: TabManager, commandMan: CommandManager) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandMan: CommandManager) {
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
     this.TabMan = tabMan;
@@ -104,7 +104,8 @@ export class UiManager {
     this.ScheduleAutoSaveSnapShot();
     this.ScheduleAutoLogin();
 
-    this.ModuleSnapShots.SelectSnapshotModule_Subject.RegisterObserver(new UiSelectSnapShot_Observer(this.Logger, this));
+    let uiSelectSnapshotChangeEvent_Observer = new UiSelectSnapshotChangeEvent_Observer(this.Logger, this);
+    this.ModuleSnapShots.SelectSnapshotModule_Subject.RegisterObserver(uiSelectSnapshotChangeEvent_Observer);
 
     this.ButtonModulesManager.InitButtonStateManager();
 
@@ -221,7 +222,7 @@ export class UiManager {
   async UpdateUiFromContentReply(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, stateOfStorageSnapShots: IDataStateOfStorageSnapShots) {
     this.Logger.FuncStart(this.UpdateUiFromContentReply.name);
 
-    this.HydrateModules(this.TabMan.GetScUrlAgent(), stateOfSitecoreWindow, stateOfStorageSnapShots);
+    this.HydrateModules(  this.TabMan.GetScUrlAgent(), stateOfSitecoreWindow, stateOfStorageSnapShots);
     this.RefreshModuleUis()
     this.DrawCorrectNicknameInUI(stateOfStorageSnapShots.SnapShots);
 

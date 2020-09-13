@@ -1,25 +1,24 @@
 ﻿import { DefaultStateOfContentEditor } from '../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentEditor';
+import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
+import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
+import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
 import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
-import { IGeneric_Observer } from "../../Desktop/DesktopProxy/Events/GenericEvent/IGeneric_Observer";
-import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { ITreeMutatedEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorTreeMutatedEvent/IPayload_ContentEditorTreeMutatedEvent';
-import { LoggableBase } from '../../../Managers/LoggableBase';
-import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
+import { LoggableBase } from '../../../Managers/LoggableBase';
 import { TreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
+import { TreeMutationEvent_Observer } from '../ContentEditorTreeProxy/TreeMutationEvent_Observer';
 
 export class ContentEditorProxy extends LoggableBase {
   AssociatedTreeProxy: IContentEditorTreeProxy;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedId: GuidData;
   private SettingsAgent: ISettingsAgent;
-  private ParentIframeId: string = '';
 
   constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent, parentIframeId: string) {
     super(logger);
@@ -29,14 +28,18 @@ export class ContentEditorProxy extends LoggableBase {
     this.SettingsAgent = settingsAgent;
     this.AssociatedId = Guid.NewRandomGuid();
     this.AssociatedDoc = associatedDoc;
-    this.ParentIframeId = parentIframeId;
 
     this.ValidateAssociatedDocContentEditor();
 
-    this.AssociatedTreeProxy = new TreeProxy(this.Logger, this.AssociatedDoc, this.SettingsAgent, this.ParentIframeId);
+    this.AssociatedTreeProxy = new TreeProxy(this.Logger, this.AssociatedDoc, this.GetTreeContainer());
 
     this.Logger.InstantiateEnd(ContentEditorProxy.name);
   }
+
+  GetTreeContainer(): HTMLElement {
+    return this.AssociatedDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer)
+  }
+
 
   GetStateOfContentEditor(): IDataStateOfContentEditor {
     {
@@ -81,14 +84,14 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncEnd(this.WaitForReadyContentEditor.name);
   }
 
-  RegisterObserver(observer: IGeneric_Observer<ITreeMutatedEvent_Payload>) {
-    this.Logger.FuncStart(this.RegisterObserver.name);
+  RegisterObserverForTreeMutation(treeMutationEvent_Observer: TreeMutationEvent_Observer) {
+    this.Logger.FuncStart(this.RegisterObserverForTreeMutation.name);
     if (this.AssociatedTreeProxy) {
-      this.AssociatedTreeProxy.RegisterObserver(observer);
+      this.AssociatedTreeProxy.TreeMutationEvent_Subject.RegisterObserver(treeMutationEvent_Observer);
     } else {
-      this.Logger.WarningAndContinue(this.RegisterObserver.name, 'no associated tree proxy');
+      this.Logger.WarningAndContinue(this.RegisterObserverForTreeMutation.name, 'no associated tree proxy');
     }
-    this.Logger.FuncEnd(this.RegisterObserver.name);
+    this.Logger.FuncEnd(this.RegisterObserverForTreeMutation.name);
   }
 
   //async SetStateTree(oneTreeState: IDataStateOfTree): Promise<void> {

@@ -14,8 +14,8 @@ export class FrameMutationEvent_Observer extends LoggableBase implements IGeneri
         this.Friendly = FrameMutationEvent_Observer.name;
     }
 
-    Update(conEditProxy: IFrameProxyMutated_Payload) {
-        this.Owner.CallBackConEdProxyAdded(conEditProxy);
+    UpdateAsync(conEditProxy: IFrameProxyMutated_Payload):void {
+        this.Owner.OnContentEditorProxyAdded(conEditProxy);
 
         // (payload: IPayloadDesktop_DomChangedEvent) => { self.Observer_DesktopDomChangedEvent(payload) });
     }

@@ -42,6 +42,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="gulp.support\tasks\ArchiveJsMap.js" />
     <Content Include="gulp.support\Helper.js" />
     <Content Include="gulp.support\InjectableTs.js" />
     <Content Include="gulp.support\tasks\cleanTasks.js" />
@@ -56,9 +57,10 @@
     <Content Include="ReadmeResoures\external-tools-hotkey.png" />
     <Content Include="ReadmeResoures\external-tools.png" />
     <Content Include="ReadmeResoures\file.png" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\TreeMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\CommandCompleted_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DesktopDomChangedEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorTreeMutatedEvent\IPayload_MessageReply.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\IPayload_MessageReply.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\GenericEvent\IGeneric_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\Subject_DesktopIframeProxyMutatedEvent\IFrameProxyMutatedEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\FrameMutationEvent_Observer.ts" />
@@ -68,8 +70,8 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\ContentEditorTreeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DesktopIframeProxyBucket.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorTreeMutatedEvent\IPayload_ContentEditorTreeMutatedEvent.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorTreeMutatedEvent\Subject_ContentEditorTreeMutatedEvent.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\ITreeMutationEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\ContentEditorTreeMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\Subject_DesktopIframeProxyMutatedEvent\FrameProxyMutatedEvent_Subject.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DomChangedEvent\Subject_DesktopDomChangedEvent.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorContentTreeHolderProxy\ContentEditorContentTreeHolderProxy.ts" />
@@ -88,6 +90,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\LoggableBase.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowRecipePartials.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\TreeNodeChangedEvent_Observer.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\ButtonVisibilityTests.ts" />
@@ -231,23 +234,11 @@
     <Content Include="src\Browser-PolyFill\browser-polyfill.js" />
     <Content Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyAddedToDesktopEvent\IPayloadDesktop__ContentEditorProxyAddedToDesktop.js" />
     <Content Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyAddedToDesktopEvent\Subject_ContentEditorProxyAddedToDesktopEvent.js" />
-    <Content Include="src\PopUp\scripts\Managers\Handlers.js">
-      <DependentUpon>Handlers.ts</DependentUpon>
-    </Content>
     <Content Include="src\Shared\scripts\Interfaces\AbsoluteUrl.js">
       <DependentUpon>AbsoluteUrl.ts</DependentUpon>
     </Content>
     <Content Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.js">
       <DependentUpon>IAccordianManager.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Interfaces\Agents\ILoggerWriter.js">
-      <DependentUpon>ILoggerWriter.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Interfaces\Agents\IOneTreeDrone.js">
-      <DependentUpon>IOneTreeDrone.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Interfaces\Agents\IRepositoryAgent.js">
-      <DependentUpon>IRepositoryAgent.ts</DependentUpon>
     </Content>
     <Content Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.js">
       <DependentUpon>IToastAgent.ts</DependentUpon>
@@ -341,7 +332,6 @@
     <Content Include="gulp.support\CommonBase.js" />
     <Content Include="gulpfile.js" />
     <Content Include="jest.config.js" />
-    <Content Include="gulp.support\Secrets.example.js" />
     <Content Include="src\PopUp\html\menu.html" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISharedConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scMode.ts" />
@@ -385,23 +375,11 @@
     <None Include="src\PopUp\css\PageLevel.scss" />
     <None Include="src\PopUp\css\SnapShotSelect.scss" />
     <None Include="src\PopUp\css\vars.scss" />
-    <None Include="src\PopUp\scripts\Managers\Handlers.js.map">
-      <DependentUpon>Handlers.js</DependentUpon>
-    </None>
     <None Include="src\Shared\scripts\Interfaces\AbsoluteUrl.js.map">
       <DependentUpon>AbsoluteUrl.js</DependentUpon>
     </None>
     <None Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.js.map">
       <DependentUpon>IAccordianManager.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Interfaces\Agents\ILoggerWriter.js.map">
-      <DependentUpon>ILoggerWriter.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Interfaces\Agents\IOneTreeDrone.js.map">
-      <DependentUpon>IOneTreeDrone.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Interfaces\Agents\IRepositoryAgent.js.map">
-      <DependentUpon>IRepositoryAgent.js</DependentUpon>
     </None>
     <None Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.js.map">
       <DependentUpon>IToastAgent.js</DependentUpon>

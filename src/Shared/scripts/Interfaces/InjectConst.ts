@@ -87,8 +87,9 @@ export class ContentConst {
       SC: {
         ContentEditor: {
           ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
-          scContentTreeNodeIcon: '.scContentTreeNodeIcon',
           RootAnchorNode: '[id=Tree_Node_11111111111111111111111111111111]',
+          ScContentTreeContainer: '.scContentTreeContainer',
+          scContentTreeNodeIcon: '.scContentTreeNodeIcon',
         },
         Level2Nodes: {
           MediaLibraryAnchorRootNode: '[id=Tree_Node_3D6658D8A0BF4E75B3E2D050FABCF4E1]',
