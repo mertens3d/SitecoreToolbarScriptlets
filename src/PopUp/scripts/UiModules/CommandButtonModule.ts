@@ -9,13 +9,14 @@ import { IOneCommand } from "../../../Shared/scripts/Interfaces/IOneCommand";
 import { ButtonVisibilityTester } from "../Managers/UiManager/ButtonVisibilityTests";
 import { VisiblityTestResults } from "../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { MenuCommand } from "../../../Shared/scripts/Enums/2xxx-MenuCommand";
+import { ModuleType } from "../../../Shared/scripts/Interfaces/CommandButtonEvents";
 
 export class CommandButtonModule extends LoggableBase implements IUiModule {
   private Command: IOneCommand;
   private CurrentWindowType: ScWindowType;
   private ElemButton: HTMLButtonElement;
   private ElemButtonBackText: HTMLDivElement;
-  private ElemButtonWrapper: HTMLElement;
+  private PlaceHolderUiElem: HTMLElement;
   private SelectedSnapshot: GuidData;
   private StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   private Tester: ButtonVisibilityTester;
@@ -26,9 +27,12 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
     this.Command = oneCommand;
     this.Tester = tester;
 
-    if (this.Command.ButtonSelector && this.Command.ButtonSelector.length > 0) {
-      this.ElemButtonWrapper = document.querySelector(oneCommand.ButtonSelector);
-      this.BuildHtml();
+    if (this.Command.PlaceHolderSelector && this.Command.PlaceHolderSelector.length > 0) {
+      this.PlaceHolderUiElem = document.querySelector(oneCommand.PlaceHolderSelector);
+      if (this.Command.ModuleType === ModuleType.Button) {
+      this.BuildModuleButton();
+
+      }
     }
   }
 
@@ -66,21 +70,21 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
     this.ElemButton.type = "button";
   }
 
-  BuildHtml(): void {
-    this.Logger.FuncStart(this.BuildHtml.name, this.Command.InnerText + ' ' + MenuCommand[this.Command.Command]);
-    if (this.ElemButtonWrapper) {
+  BuildModuleButton(): void {
+    this.Logger.FuncStart(this.BuildModuleButton.name, this.Command.InnerText + ' ' + MenuCommand[this.Command.Command]);
+    if (this.PlaceHolderUiElem) {
       this.BuildButtonElem();
 
       this.BuildButtonOverlay();
 
-      this.ElemButtonWrapper.classList.add('btn-container');
+      this.PlaceHolderUiElem.classList.add('btn-container');
 
-      this.ElemButtonWrapper.appendChild(this.ElemDivBtnOverlay);
-      this.ElemButtonWrapper.appendChild(this.ElemButton);
+      this.PlaceHolderUiElem.appendChild(this.ElemDivBtnOverlay);
+      this.PlaceHolderUiElem.appendChild(this.ElemButton);
     } else {
-      this.Logger.ErrorAndContinue(CommandButtonModule.name, 'Could not find ' + this.Command.ButtonSelector);
+      this.Logger.ErrorAndContinue(CommandButtonModule.name, 'Could not find ' + this.Command.PlaceHolderSelector);
     }
-    this.Logger.FuncEnd(this.BuildHtml.name);
+    this.Logger.FuncEnd(this.BuildModuleButton.name);
   }
 
   Hydrate(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, currentWindowType: ScWindowType, selectedSnapshot: GuidData): void {
@@ -90,13 +94,13 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
   }
 
   RefreshUi(): void {
-    if (this.ElemButtonWrapper) {
+    if (this.PlaceHolderUiElem) {
       let allresults: VisiblityTestResults = this.TestAgainstAllSetControllers();
 
       this.SetCommandButtonVisibility(allresults);
     } else {
       this.Logger.LogAsJsonPretty('oneCommand', this.Command);
-      this.Logger.ErrorAndContinue(this.RefreshUi.name, 'target button not found: ' + this.Command.ButtonSelector);
+      this.Logger.ErrorAndContinue(this.RefreshUi.name, 'target button not found: ' + this.Command.PlaceHolderSelector);
     }
   }
   private SetCommandButtonVisibility(allresults: VisiblityTestResults) {

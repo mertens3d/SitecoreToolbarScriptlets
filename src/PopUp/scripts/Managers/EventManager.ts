@@ -102,7 +102,7 @@ export class EventManager extends LoggableBase {
 
   private __wireOneMenuButtonListener(oneCommand: IOneCommand): void {
     //this.Logger.FuncStart(this.__wireOneMenuButtonListener.name, oneCommand.ButtonSelector)
-    var targetElem: HTMLElement = this.UiMan.GetButtonByIdOrSelector(oneCommand.ButtonSelector);
+    var targetElem: HTMLElement = this.UiMan.GetButtonByIdOrSelector(oneCommand.PlaceHolderSelector);
 
     if (oneCommand.EventData.Event === CommandButtonEvents.OnSingleClick) {
       this.WireSingleClickEvent(oneCommand, targetElem);
@@ -135,7 +135,7 @@ export class EventManager extends LoggableBase {
         data.Self.RouteAllCommandEvents(data);
       });
     } else {
-      this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No Id: ' + oneCommand.ButtonSelector);
+      this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No Id: ' + oneCommand.PlaceHolderSelector);
     }
   }
 

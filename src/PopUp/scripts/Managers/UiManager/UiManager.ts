@@ -302,7 +302,7 @@ export class UiManager {
 
   AssignOnClickEventFromCmd(command: IOneCommand, handler: Function): void {
     if (command && command.Command !== MenuCommand.Unknown) {
-      this.AssignOnClickEvent(command.ButtonSelector, handler);
+      this.AssignOnClickEvent(command.PlaceHolderSelector, handler);
     }
   }
 

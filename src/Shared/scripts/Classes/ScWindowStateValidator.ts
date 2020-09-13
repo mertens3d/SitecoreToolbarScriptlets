@@ -70,7 +70,7 @@ export class ScWindowStateValidator extends LoggableBase {
       StateOfDesktop = new DefaultStateOfDesktop();
     }
 
-    if (!StateOfDesktop.IndexOfActiveFrame) {
+    if (StateOfDesktop.IndexOfActiveFrame === null) {
       StateOfDesktop.IndexOfActiveFrame = -1;
     }
 
