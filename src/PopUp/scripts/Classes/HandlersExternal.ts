@@ -1,5 +1,4 @@
-﻿import { GenericEvent_Subject } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/GenericEvent_Subject";
-import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
+﻿import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
@@ -11,16 +10,20 @@ import { IDataContentReplyReceivedEvent_Payload } from "../../../Shared/scripts/
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { PopUpMessageManager } from "../Managers/MessageManager";
 import { TabManager } from "../Managers/TabManager";
+import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+import { ValidMessageRecievedEvent_Subject } from "./ValidMessageRecievedEvent_Subject";
 
-export class HandlersExternalEvent_Subject extends GenericEvent_Subject<IDataContentReplyReceivedEvent_Payload>  {
+export class HandlersExternalEvent extends LoggableBase {
   private MessageManager: PopUpMessageManager;
   private SettingsAgent: ISettingsAgent;
   private TabMan: TabManager;
+  ValidMessageRecievedEvent: ValidMessageRecievedEvent_Subject;
 
   constructor(logger: ILoggerAgent, msgManager: PopUpMessageManager, settingsAgent: ISettingsAgent, tabMan: TabManager) {
-    super(logger, HandlersExternalEvent_Subject.name);
+    super(logger);
     this.MessageManager = msgManager;
     this.SettingsAgent = settingsAgent;
+    this.ValidMessageRecievedEvent = new ValidMessageRecievedEvent_Subject(this.Logger);
     this.TabMan = tabMan;
   }
 
@@ -44,7 +47,7 @@ export class HandlersExternalEvent_Subject extends GenericEvent_Subject<IDataCon
       //todo - put back?  this.UiMan.ClearCancelFlag();
 
       this.MessageManager.SendMessageToContentAsync(sendMsgPlayload)
-        .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.NotifyObservers(replyMessagePayload))
+        .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.ValidMessageRecievedEvent.NotifyObservers(replyMessagePayload))
         .then(() => resolve())
         .catch((err) => reject(err));
 

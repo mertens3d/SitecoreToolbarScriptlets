@@ -5,6 +5,7 @@ import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/D
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
 import { CommandButtonModule } from '../UiModules/CommandButtonModule';
+import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 
 export class UiStateManager extends LoggableBase {
   private AllMenuCommands: IOneCommand[];
@@ -31,10 +32,10 @@ export class UiStateManager extends LoggableBase {
     });
   }
 
-  HydrateUiButtonState(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): void {
+  HydrateUiButtonState(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, selectSnapShotId: GuidData): void {
     let currentWindowType: ScWindowType = stateOfSitecoreWindow.Meta.WindowType;
 
-    this.AllMenuCommandButtons.forEach((commandButton) => commandButton.Hydrate(stateOfSitecoreWindow, currentWindowType));
+    this.AllMenuCommandButtons.forEach((commandButton) => commandButton.Hydrate(stateOfSitecoreWindow, currentWindowType, selectSnapShotId));
 
   }
 

@@ -13,7 +13,7 @@ import { LoggerTimer } from "./LoggerTimer";
 export class LoggerAgent implements ILoggerAgent {
   private MaxIndent: number = 10;
   ErrorStack: IError[] = [];
-  private __allLogWriters: ILoggerWriter[] = [];
+  private AllLogWriters: ILoggerWriter[] = [];
   private __callDepth: number;
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
   private BufferWriter: LogWriterBuffer;
@@ -41,10 +41,10 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
   RemoveWriter(BufferWriter: LogWriterBuffer) {
-    for (var idx = 0; idx < this.__allLogWriters.length; idx++) {
-      let candidate: ILoggerWriter = this.__allLogWriters[idx];
+    for (var idx = 0; idx < this.AllLogWriters.length; idx++) {
+      let candidate: ILoggerWriter = this.AllLogWriters[idx];
       if (candidate == BufferWriter) {
-        this.__allLogWriters.splice(idx, 1);
+        this.AllLogWriters.splice(idx, 1);
         break;
       }
     }
@@ -52,7 +52,7 @@ export class LoggerAgent implements ILoggerAgent {
 
   AddWriter(writter: ILoggerWriter) {
     this.HasWriters = true;
-    this.__allLogWriters.push(writter);
+    this.AllLogWriters.push(writter);
   }
 
   SectionMarker(sectionTag: string): void {
@@ -171,14 +171,23 @@ export class LoggerAgent implements ILoggerAgent {
         text = timeDiff + text;
       }
 
-      this.__WriteToAllWriters(text);
+      this.WriteToAllWriters(text);
     }
   }
 
-  private __WriteToAllWriters(text: string) {
-    for (var idx = 0; idx < this.__allLogWriters.length; idx++) {
-      var oneWriter: ILoggerWriter = this.__allLogWriters[idx];
-      oneWriter.WriteText(text);
+  private WriteToAllWriters(text: string) {
+    if (this.AllLogWriters) {
+      this.AllLogWriters.forEach((oneWriter) => {
+        if (oneWriter) {
+          try {
+            oneWriter.WriteText(text)
+          } catch (err) {
+            console.log(this.WriteToAllWriters.name + ' ' + oneWriter.FriendlyName + ' | ' + err);
+          }
+        } else {
+          console.log('Null writer');
+        }
+      });
     }
   }
 

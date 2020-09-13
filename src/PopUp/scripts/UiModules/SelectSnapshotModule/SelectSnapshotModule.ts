@@ -18,18 +18,31 @@ import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
+import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
 
 
-export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapShotSelect> implements IUiModule {
+export class SelectSnapshotModule_Subject extends GenericEvent_Subject<IDataStateOfSnapShotSelect>  {
+  constructor( logger: ILoggerAgent) {
+    super(logger, SelectSnapshotModule_Subject.name);
+
+  }
+
+}
+
+
+export class SelectSnapshotModule extends LoggableBase implements IUiModule {
   StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   StateOfStorageSnapShots: IDataStateOfStorageSnapShots;
 
+
   private Selector: string;
   private StateHelpers: StateHelpers;
+    SelectSnapshotModule_Subject: SelectSnapshotModule_Subject;
 
   constructor(selector: string, logger: ILoggerAgent) {
-    super(logger, SelectSnapshotModule.name);
+    super(logger);
     this.Selector = selector;
+    this.SelectSnapshotModule_Subject = new SelectSnapshotModule_Subject(this.Logger);
     this.StateHelpers = new StateHelpers(this.Logger);
   }
 
@@ -48,7 +61,7 @@ export class SelectSnapshotModule extends GenericEvent_Subject<IDataStateOfSnapS
         let self = this;
         let payload: IDataStateOfSnapShotSelect = {
         }
-        this.NotifyObservers(payload);
+        this.SelectSnapshotModule_Subject.NotifyObservers(payload);
       });
     }
     this.Logger.FuncEnd(this.AssignOnChangeEvent.name, selector);

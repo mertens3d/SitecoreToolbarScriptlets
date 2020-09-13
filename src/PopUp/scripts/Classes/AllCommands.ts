@@ -1,16 +1,19 @@
-﻿import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
+﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { scMode } from '../../../Shared/scripts/Enums/scMode';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { Handlers } from '../Managers/Handlers';
 import { PopConst } from './PopConst';
 
-export class CommandManager {
+export class CommandManager extends LoggableBase{
   AllMenuCommands: IOneCommand[];
   private Handlers: Handlers;
 
-  constructor(handlers: Handlers) {
+  constructor(logger: ILoggerAgent, handlers: Handlers) {
+    super(logger);
     this.Handlers = handlers;
     this.AllMenuCommands = CommandManager.BuildAllCommands(this.Handlers);
   }
@@ -34,6 +37,8 @@ export class CommandManager {
       {
         Command: MenuCommand.CloseWindow,
         ButtonSelector: PopConst.Const.Selector.Btn.WindowClose,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.CloseWindow,
+        InnerText: "",
         VisibilityControllers: [],
         EventData: {
           Handler: handlers.Internal.CloseWindow,
@@ -45,6 +50,8 @@ export class CommandManager {
       {
         Command: MenuCommand.AddCeTab,
         ButtonSelector: PopConst.Const.Selector.HS.BigRed,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.AddCeTab,
+        InnerText: "Add CE Tab to DT",
         VisibilityControllers: [VisibilityType.Desktop],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -55,6 +62,8 @@ export class CommandManager {
       {
         Command: MenuCommand.GoScModeEdit,
         ButtonSelector: PopConst.Const.Selector.HS.ModeEdit,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModeEdit,
+        InnerText: "Edit",
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -65,6 +74,8 @@ export class CommandManager {
       {
         Command: MenuCommand.ScModeNormal,
         ButtonSelector: PopConst.Const.Selector.HS.ModeNorm,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModeNormal,
+        InnerText: "Normal",
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -75,6 +86,8 @@ export class CommandManager {
       {
         Command: MenuCommand.ScModePrev,
         ButtonSelector: PopConst.Const.Selector.HS.ModePrev,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModePrev,
+        InnerText: "Preview",
         VisibilityControllers: [VisibilityType.ActiveCeNode, VisibilityType.Edit],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -98,6 +111,8 @@ export class CommandManager {
       {
         Command: MenuCommand.UpdateNickname,
         ButtonSelector: PopConst.Const.Selector.HS.UpdateNicknameB,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.UpdateNickname,
+        InnerText: "Set Nickname",
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -108,6 +123,8 @@ export class CommandManager {
       {
         Command: MenuCommand.PresentationDetails,
         ButtonSelector: PopConst.Const.Selector.HS.PresentationDetails,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.PresentationDetails,
+        InnerText: "Presentation Details",
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -118,6 +135,8 @@ export class CommandManager {
       {
         Command: MenuCommand.CompactCE,
         ButtonSelector: PopConst.Const.Selector.HS.CompactCE,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.CompactCe,
+        InnerText: "Compact CE",
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -128,6 +147,8 @@ export class CommandManager {
       {
         Command: MenuCommand.PutAdminB,
         ButtonSelector: PopConst.Const.Selector.HS.AdminB,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.AdminB,
+        InnerText: "Admin B",
         VisibilityControllers: [VisibilityType.LoginPage],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -139,6 +160,8 @@ export class CommandManager {
       {
         Command: MenuCommand.GoContentEditor,
         ButtonSelector: PopConst.Const.Selector.HS.GoCE,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.GoContentEditor,
+        InnerText: "Content Editor",
         VisibilityControllers: [VisibilityType.NotLogin],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -150,6 +173,8 @@ export class CommandManager {
       {
         Command: MenuCommand.QuickPublish,
         ButtonSelector: PopConst.Const.Selector.HS.QuickPublish,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.QuickPublish,
+        InnerText: "Quick Publish",
         VisibilityControllers: [VisibilityType.ActiveCeNode],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -160,6 +185,8 @@ export class CommandManager {
       {
         Command: MenuCommand.GoDesktop,
         ButtonSelector: PopConst.Const.Selector.HS.Desktop,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.GoDesktop,
+        InnerText: "Desktop",
         VisibilityControllers: [VisibilityType.NotLogin],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -170,6 +197,8 @@ export class CommandManager {
       {
         Command: MenuCommand.Ping,
         ButtonSelector: null,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.Ping,
+        InnerText: "",
         VisibilityControllers: [],
         EventData: {
           Event: null,
@@ -181,6 +210,8 @@ export class CommandManager {
       {
         Command: MenuCommand.TakeSnapShot,
         ButtonSelector: PopConst.Const.Selector.HS.TakeSnapshot,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.TakeSnapShot,
+        InnerText: "Take Snapshot",
         VisibilityControllers: [VisibilityType.SnapShotable],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -192,6 +223,8 @@ export class CommandManager {
       {
         Command: MenuCommand.ToggleFavorite,
         ButtonSelector: PopConst.Const.Selector.HS.ToggleFavorite,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.ToggleFavorite,
+        InnerText: "Toggle as Favorite",
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
           Handler: handlers.External.ToggleFavorite,
@@ -202,6 +235,8 @@ export class CommandManager {
       {
         Command: MenuCommand.Cancel,
         ButtonSelector: PopConst.Const.Selector.HS.HsCancel,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.Cancel,
+        InnerText: "Cancel",
         VisibilityControllers: [VisibilityType.CommandIsRunning],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -212,6 +247,8 @@ export class CommandManager {
       {
         Command: MenuCommand.Remove,
         ButtonSelector: PopConst.Const.Selector.HS.HsRemoveFromStorage,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.RemoveFromStorage,
+        InnerText: "Delete Snapshot",
         VisibilityControllers: [VisibilityType.SnapShotSelected],
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -222,7 +259,9 @@ export class CommandManager {
       {
         Command: MenuCommand.RestoreStateTBDTab,
         ButtonSelector: PopConst.Const.Selector.HS.SelStateSnapShot,
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.RestoreStateTBD,
         VisibilityControllers: [],//[VisibilityType.SnapShotSelected],
+        InnerText: "Restore to TBD",
         EventData: {
           Event: CommandButtonEvents.OnDoubleClick,
           Handler: handlers.External.HndlrSnapShotRestoreTBDTab,
@@ -233,6 +272,8 @@ export class CommandManager {
         Command: MenuCommand.RestoreStateSameTab,
         ButtonSelector: PopConst.Const.Selector.HS.HsRestoreWindowStateSameTab,
         VisibilityControllers: [VisibilityType.SnapShotSelected],
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.RestoreSameTab,
+        InnerText: "Restore to this tab",
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
           Handler: handlers.External.HndlrSnapShotRestoreSameTab,
@@ -243,6 +284,8 @@ export class CommandManager {
         Command: MenuCommand.RestoreStateNewTab,
         ButtonSelector: PopConst.Const.Selector.HS.HsRestoreWindowStateNewTab,
         VisibilityControllers: [VisibilityType.SnapShotSelected],
+        IconClassName: PopConst.Const.ClassNames.HS.Buttons.RestoreNewTab,
+        InnerText: "Restore to new tab",
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
           Handler: handlers.External.HndlrSnapShotRestoreNewTab,

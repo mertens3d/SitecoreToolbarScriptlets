@@ -22,7 +22,7 @@ import { SelectSnapshotModule } from '../../UiModules/SelectSnapshotModule/Selec
 import { SettingsModule } from '../../UiModules/SettingsModule/SettingsModule';
 import { FeedbackModuleBrowserState } from '../../UiModules/UiFeedbackModules/FeedbackModuleBrowserState/FeedbackModuleBrowserState';
 import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/FeedbackModuleContentState/FeedbackModuleContentState';
-import { FeedbackModuleMessages } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
+import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
 import { UiSelectSnapShot_Observer } from './UiSelectSnapShot_Observer';
@@ -31,7 +31,7 @@ export class UiManager {
   AccordianManager: IAccordianManager;
   ButtonModulesManager: UiStateManager;
   CurrScWindowState: IDataStateOfSitecoreWindow;
-  FeedbackModuleMessages: FeedbackModuleMessages;
+  FeedbackModuleMessages: FeedbackModuleMessages_Observer;
   ModuleFeedbackOfPopUpState: FeedbackModulePopUpState;
   MenuEnabled: boolean = true;
   MenuFocused: boolean = true;
@@ -61,22 +61,30 @@ export class UiManager {
     this.ButtonModulesManager = new UiStateManager(this.Logger, this.CommandMan.AllMenuCommands);
     this.AccordianManager = new AccordianManager(this.Logger, this.SettingsAgent);
 
-    this.FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.DivOverlayModule, this.Logger);
+   
+    this.BuildModules();
+    this.WireEvents();
+    this.Logger.InstantiateEnd(UiManager.name);
+  }
+
+  BuildModules() {
+    this.Logger.FuncStart(this.BuildModules.name);
     this.FeedbackModuleLog = new UiFeedbackModuleLog(PopConst.Const.Selector.HS.FeedbackLogElement, this.Logger);
-
-    this.Logger.AddWriter(this.FeedbackModuleLog);
-
     this.ModuleFeedbackOfContentState = new FeedbackModuleContentState(PopConst.Const.Selector.HS.FeedbackContentState, this.Logger);
     this.ModuleFeedbackOfBrowserState = new FeedbackModuleBrowserState(PopConst.Const.Selector.HS.FeedbackBrowserState, this.Logger);
     this.ModuleFeedbackOfPopUpState = new FeedbackModulePopUpState(PopConst.Const.Selector.HS.FeedbackPopUpState, this.Logger);
-
     this.ModuleSnapShots = new SelectSnapshotModule(PopConst.Const.Selector.HS.SelStateSnapShot, this.Logger)
-
     this.SettingsModule = new SettingsModule(this.Logger, this.SettingsAgent, this.AccordianManager);
-
     this.CancelButtonModule = new CancelButtonModule(PopConst.Const.Selector.HS.HsCancel, this.Logger);
+    this.Logger.FuncEnd(this.BuildModules.name);
+  }
 
-    this.Logger.InstantiateEnd(UiManager.name);
+  WireEvents() {
+    this.Logger.FuncStart(this.WireEvents.name);
+    this.FeedbackModuleMessages = new FeedbackModuleMessages_Observer(PopConst.Const.Selector.HS.DivOverlayModule, this.Logger);
+    this.Logger.AddWriter(this.FeedbackModuleLog);
+    this.Logger.FuncEnd(this.WireEvents.name);
+
   }
 
   InitUiManager() {
@@ -96,7 +104,7 @@ export class UiManager {
     this.ScheduleAutoSaveSnapShot();
     this.ScheduleAutoLogin();
 
-    this.ModuleSnapShots.RegisterObserver(new UiSelectSnapShot_Observer(this.Logger, this));
+    this.ModuleSnapShots.SelectSnapshotModule_Subject.RegisterObserver(new UiSelectSnapShot_Observer(this.Logger, this));
 
     this.ButtonModulesManager.InitButtonStateManager();
 
@@ -115,7 +123,6 @@ export class UiManager {
 
   ContentReplyReceivedEventCallBack(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, stateOfStorageSnapshots: IDataStateOfStorageSnapShots) {
     this.Logger.FuncStart(this.ContentReplyReceivedEventCallBack.name);
-
 
     this.Logger.LogAsJsonPretty('stateOfStorageSnapshots', stateOfStorageSnapshots);
     this.UpdateUiFromContentReply(stateOfSitecoreWindow, stateOfStorageSnapshots);
@@ -195,12 +202,11 @@ export class UiManager {
       this.ModuleFeedbackOfBrowserState.HydrateFeedackBrowserState(scUrlAgent);
       this.ModuleSnapShots.HydrateStorageSnapShotModule(stateOfSitecoreWindow, stateOfSitecoreWindow.States, stateOfStorageSnapShots);
 
-      this.ButtonModulesManager.HydrateUiButtonState(stateOfSitecoreWindow);
+      this.ButtonModulesManager.HydrateUiButtonState(stateOfSitecoreWindow, this.ModuleSnapShots.GetSelectSnapshotId());
       this.ModuleFeedbackOfBrowserState.RefreshUi();
     }
     this.Logger.FuncEnd(this.HydrateModules.name);
   }
-
 
   RefreshModuleUis() {
     this.ModuleSnapShots.RefreshUi();

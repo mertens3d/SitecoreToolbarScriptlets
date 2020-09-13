@@ -16,28 +16,29 @@ export class GenericEvent_Subject<T> extends LoggableBase implements IObservable
 
   RegisterObserver(observer: IGeneric_Observer<T>): void {
     this.Logger.FuncStart(this.RegisterObserver.name, observer.Friendly + ' to ' + this.Friendly);
-      if (observer && this.ObserverCollection.indexOf(observer) < 0) {
-        this.Logger.Log(this.RegisterObserver.name + observer.Friendly);
-            this.ObserverCollection.push(observer);
-        }
+    if (observer && this.ObserverCollection.indexOf(observer) < 0) {
+      this.ObserverCollection.push(observer);
+    } else {
+      this.Logger.WarningAndContinue(this.RegisterObserver.name, 'Observer is null');
+    }
+    this.Logger.FuncEnd(this.RegisterObserver.name);
+  }
+
+  UnregisterObserver(observer: IGeneric_Observer<T>): void {
+    this.Logger.FuncStart(this.UnregisterObserver.name);
+    if (observer) {
+      let observerIndex = this.ObserverCollection.indexOf(observer);
+      if (observerIndex > -1) {
+        this.ObserverCollection.splice(observerIndex, 1);
+      }
     }
 
-    UnregisterObserver(observer: IGeneric_Observer<T>): void {
-        this.Logger.FuncStart(this.UnregisterObserver.name);
-        if (observer) {
-            let observerIndex = this.ObserverCollection.indexOf(observer);
-            if (observerIndex > -1) {
-                this.ObserverCollection.splice(observerIndex, 1);
-            }
-        }
-
-        this.Logger.FuncEnd(this.UnregisterObserver.name);
-    }
+    this.Logger.FuncEnd(this.UnregisterObserver.name);
+  }
 
   NotifyObservers(payload: T): void {
-
     this.Logger.FuncStart(this.NotifyObservers.name + ' ' + this.Friendly, 'length: ' + this.ObserverCollection.length);
-        this.ObserverCollection.forEach((observer) => observer.Update(payload));
-        this.Logger.FuncEnd(this.NotifyObservers.name);
-    }
+    this.ObserverCollection.forEach((observer) => observer.Update(payload));
+    this.Logger.FuncEnd(this.NotifyObservers.name);
+  }
 }

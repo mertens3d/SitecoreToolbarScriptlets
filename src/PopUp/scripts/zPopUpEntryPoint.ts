@@ -20,20 +20,28 @@ import { PopUpMessageManager } from "./Managers/MessageManager";
 import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessagesBroker";
 import { TabManager } from "./Managers/TabManager";
 import { UiManager } from "./Managers/UiManager/UiManager";
-import { FeedbackModuleMessages } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
+import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
   Logger: LoggerAgent;
   SettingsAgent: SettingsAgent;
+  scUrlAgent: ScUrlAgent;
+  handlers: Handlers;
+  uiMan: UiManager;
+  messageMan: PopUpMessageManager;
+  FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
+  eventMan: EventManager;
+  commandMan: any;
 
   async main() {
     try {
       this.InstantiateAndInitSettingsAndLogger();
+      this.InstantiateAgents();
 
       this.InstantiateMembers();
       await this.InitMembers()
-        .then(() =>  this.Logger.Log(this.main.name + ' completed'))
+        .then(() => this.Logger.Log(this.main.name + ' completed'))
         .catch((err) => console.log(err));
 
       this.Logger.SectionMarker('Begin Standby');
@@ -79,25 +87,32 @@ class PopUpEntry {
     this.Logger.FuncEnd(this.InitLogger.name);
   }
 
+  InstantiateAgents() {
+    this.scUrlAgent = new ScUrlAgent(this.Logger);
+  }
+
+  WireCustomevents() {
+    this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(new ContentReplyReceivedEvent_Observer(this.Logger, this.uiMan));
+
+    this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
+    this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(this.FeedbackModuleMsg_Observer)
+  }
+
   async InitHub(): Promise<void> {
     try {
-      let scUrlAgent = new ScUrlAgent(this.Logger);
-      let tabMan = new TabManager(this.Logger, scUrlAgent, null); //< -- todo null fix
-      let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
-      let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger, FeedbackModuleMsg);
-      let messageMan = new PopUpMessageManager(PopUpMessageBroker, this.Logger);
-      let handlers = new Handlers(this.Logger, messageMan, this.SettingsAgent, tabMan);
-      let commandMan: CommandManager = new CommandManager(handlers);
-      let uiMan = new UiManager(this.Logger, this.SettingsAgent, tabMan, commandMan); //after tabman, after HelperAgent
-      let eventMan = new EventManager(this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
+      let tabMan = new TabManager(this.Logger, this.scUrlAgent, null); //< -- todo null fix
+      let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger);
+      this.messageMan = new PopUpMessageManager(PopUpMessageBroker, this.Logger);
+      this.handlers = new Handlers(this.Logger, this.messageMan, this.SettingsAgent, tabMan);
+      this.commandMan = new CommandManager(this.Logger, this.handlers);
+      this.uiMan = new UiManager(this.Logger, this.SettingsAgent, tabMan, this.commandMan); //after tabman, after HelperAgent
+      this.eventMan = new EventManager(this.Logger, this.SettingsAgent, this.uiMan, this.handlers); // after uiman
 
-      let self = uiMan;
-      handlers.External.RegisterObserver(new ContentReplyReceivedEvent_Observer(this.Logger, uiMan));
+      this.uiMan.InitUiManager();
 
-      uiMan.InitUiManager();
+      this.eventMan.InitEventManager(this.commandMan.AllMenuCommands);
 
-      await scUrlAgent.InitScUrlAgent()
-        .then(() => eventMan.InitEventManager(commandMan.AllMenuCommands, commandMan.GetCommandById(MenuCommand.Ping)))
+      await this.scUrlAgent.InitScUrlAgent()
         .catch((err) => {
           this.Logger.ErrorAndContinue('Pop Up Entry Point Main', JSON.stringify(err));
           throw (err);
@@ -112,6 +127,8 @@ class PopUpEntry {
       this.Logger.SectionMarker('Begin Init');
 
       await this.InitHub()
+        .then(() => this.WireCustomevents())
+        .then(() => this.eventMan.TriggerPingEventAsync(this.commandMan.GetCommandById(MenuCommand.Ping)))
         .then(() => resolve())
         .catch((err) => reject(this.InitMembers.name + ' ' + err));
 

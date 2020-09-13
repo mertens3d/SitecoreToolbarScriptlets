@@ -22,6 +22,12 @@ $browserExtMaxWidth: 800px;
 $selWidth: 500px;
 
 
+$btnOverlayBackgroundColor: pink;
+
+
+
+
+
 // widths
 $padding: 4px;
 $margin: 4px;
@@ -42,8 +48,8 @@ $MaxScrollerWidth: 736px;
 $headerHeight: 40px;
 
 
-$hsBackgroundColor: $hsDarkerGray;
 $hsDarkerGray: #5b5b5b;
+$hsBackgroundColor: $hsDarkerGray;
 $hsTypMargin: 7px;
 
 $scBackgroundImage: url(/sitecore/login/drop_wallpaper.jpg);

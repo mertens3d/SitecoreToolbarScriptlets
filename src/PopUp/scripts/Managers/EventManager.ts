@@ -7,48 +7,40 @@ import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/IC
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { Handlers } from './Handlers';
 import { UiManager } from './UiManager/UiManager';
+import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 
-export class EventManager { //extends PopUpManagerBase
+export class EventManager extends LoggableBase {
   Handlers: Handlers
 
-  private Logger: ILoggerAgent;
   private SettingsAgent: ISettingsAgent;
   private UiMan: UiManager;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers) {
-    this.Logger = logger;
+    super(logger);
     this.SettingsAgent = settingsAgent;
     this.UiMan = uiMan;
     this.Handlers = handlers;
   }
 
-  async InitEventManager(allCommands: IOneCommand[], pingCommand: IOneCommand): Promise<void> {
+  InitEventManager(allCommands: IOneCommand[]): void {
     this.Logger.FuncStart(this.InitEventManager.name);
 
     try {
       this.__wireAllMenuButtons(allCommands);
       this.WireUiToSettings();
-
-      await this.TriggerPingEvent(pingCommand);
-
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.InitEventManager.name , err);
+      this.Logger.ErrorAndThrow(this.InitEventManager.name, err);
     }
     this.Logger.FuncEnd(this.InitEventManager.name);
   }
 
-  TriggerPingEvent(pingCommand: IOneCommand): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.TriggerPingEvent.name);
+  async TriggerPingEventAsync(pingCommand: IOneCommand): Promise<void> {
+    this.Logger.FuncStart(this.TriggerPingEventAsync.name);
 
-      let data = this.BuildCommandData(pingCommand);
+    let data = this.BuildCommandData(pingCommand);
+    this.RouteAllCommandEvents(data);
 
-      await this.RouteAllCommandEvents(data)
-        .then(() => resolve())
-        .catch((err) => reject(err));
-
-      this.Logger.FuncEnd(this.TriggerPingEvent.name);
-    })
+    this.Logger.FuncEnd(this.TriggerPingEventAsync.name);
   }
 
   private SetLabel(uiElem: HTMLElement, oneSetting: IGenericSetting) {

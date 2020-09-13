@@ -1,20 +1,26 @@
 ﻿import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFromContent } from "../../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+import { ScWindowStateValidator } from "../../../../Shared/scripts/Classes/ScWindowStateValidator";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IMessageBrokerFeedback } from "../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
 import { IDataContentReplyReceivedEvent_Payload } from "../../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
-import { ScWindowStateValidator } from "../../../../Shared/scripts/Classes/ScWindowStateValidator";
+
+//export class PopUpMessagesBroker_Subject extends GenericEvent_Subject<IDataContentReplyReceivedEvent_Payload> {
+
+
+//}
+
 
 export class PopUpMessagesBroker {
   LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
   private Logger: ILoggerAgent;
-  private MsgFeedback: IMessageBrokerFeedback;
 
-  constructor(loggerAgent: ILoggerAgent, msgFeedback: IMessageBrokerFeedback,) {
+  constructor(loggerAgent: ILoggerAgent) {
     this.Logger = loggerAgent;
-    this.MsgFeedback = msgFeedback;
+
+    //this.PopUpMessagesBroker_Subject = new PopUpMessagesBroker_Subject(this.Logger, PopUpMessagesBroker.name);
+
   }
 
   ReceiveResponseHndlr(response: any): Promise<IDataContentReplyReceivedEvent_Payload> {
@@ -25,7 +31,6 @@ export class PopUpMessagesBroker {
         StaticHelpers.MsgFlagAsString(response.MsgFlag)
 
         if (response) {
-          this.MsgFeedback.UpdateMsgStatusStack('Response Received: ' + StaticHelpers.MsgFlagAsString(response.MsgFlag));
 
           var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
 
@@ -59,7 +64,7 @@ export class PopUpMessagesBroker {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
 
-      this.MsgFeedback.UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
+      //this.MsgFeedback.UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
       //this.Logger.LogAsJsonPretty("messageToSend", messageToSend);
 
       let targetTab: browser.tabs.Tab;
