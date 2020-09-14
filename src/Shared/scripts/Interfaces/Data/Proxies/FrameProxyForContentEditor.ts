@@ -1,22 +1,19 @@
 ﻿import { ContentEditorProxy } from "../../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ContentEditorProxyMutationEvent_Observer } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
 import { FrameProxyMutationEvent_Subject } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/FrameProxyMutationEvent/FrameProxyMutatedEvent_Subject";
+import { DefaultStateOfFrame } from "../../../Classes/Defaults/DefaultStateOfFrame";
 import { RecipeBasics } from "../../../Classes/RecipeBasics";
 import { ILoggerAgent } from "../../Agents/ILoggerAgent";
 import { InitResultContentEditorProxy, InitResultsFrameProxy, ISettingsAgent } from "../../Agents/ISettingsAgent";
-import { FrameProxy } from "./FrameProxy";
-import { IContentEditorProxyMutationEvent_Payload } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Payload";
-import { IFrameProxyMutationEvent_Payload } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/FrameProxyMutationEvent/IFrameProxyMutationEvent_Payload";
 import { IDataStateOfFrame } from "../States/IDataStateOfFrame";
-import { DefaultStateOfFrame } from "../../../Classes/Defaults/DefaultStateOfFrame";
+import { FrameProxy } from "./FrameProxy";
 
 export class CEFrameProxy extends FrameProxy {
   ContentEditorProxy: ContentEditorProxy;
   ContentEditorProxyMutationEvent_Observer: ContentEditorProxyMutationEvent_Observer;
-  SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement, nickName: string, settingsAgent: ISettingsAgent) {
-    super(logger, iframeElem, nickName, settingsAgent);
+  constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement, nickName: string) {
+    super(logger, iframeElem, nickName);
   }
 
   GetStateOfCEFrame(): IDataStateOfFrame {
@@ -39,11 +36,11 @@ export class CEFrameProxy extends FrameProxy {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.OnReadyInitCEFrameProxy.name);
 
-      let recipeBasic = new RecipeBasics(this.Logger, this.SettingsAgent);
+      let recipeBasic = new RecipeBasics(this.Logger);
       let initResultFrameProxy = new InitResultsFrameProxy();
 
       await recipeBasic.WaitForPageReadyHtmlIframeElement(this.IframeElem)
-        .then(() => this.ContentEditorProxy = new ContentEditorProxy(this.GetContentDoc(), this.Logger, this.SettingsAgent))
+        .then(() => this.ContentEditorProxy = new ContentEditorProxy(this.GetContentDoc(), this.Logger))
         .then(() => this.ContentEditorProxy.OnReadyInitContentEditorProxy())
         .then((result: InitResultContentEditorProxy) => initResultFrameProxy.InitResultContentEditorProxy = result)
         .then(() => {

@@ -39,7 +39,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     this.ScUiMan = scUiMan;
     this.ScWinMan = scWinMan;
     this.SettingsAgent = settingsAgent;
-    this.FactoryHelp = new FactoryHelper(this.Logger, this.SettingsAgent);
+    this.FactoryHelp = new FactoryHelper(this.Logger);
     this.AtticAgent = atticAgent;
     this.Logger.FuncEnd(ContentAPIManager.name);
   }

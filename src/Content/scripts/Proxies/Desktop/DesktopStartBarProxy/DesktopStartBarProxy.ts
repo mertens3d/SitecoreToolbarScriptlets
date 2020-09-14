@@ -46,7 +46,7 @@ export class DesktopStartBarProxy extends LoggableBase {
 
   private GetIframeHelper() {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new FrameHelper(this.Logger, this.SettingsAgent);
+      this.__iframeHelper = new FrameHelper(this.Logger);
     }
     return this.__iframeHelper;
   }

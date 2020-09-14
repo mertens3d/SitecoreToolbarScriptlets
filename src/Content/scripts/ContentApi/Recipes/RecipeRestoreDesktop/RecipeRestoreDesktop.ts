@@ -28,7 +28,7 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
     this.TargetDoc = targetDoc;
     this.DataStateOfFrame = dataStateOfFrame;
     this.SettingsAgent = settingsAgent;
-    this.RecipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
+    this.RecipeBasics = new RecipeBasics(this.Logger);
     this.DesktopTabButtonTabAgent = ceButtonTabAgent;
 
     this.Logger.InstantiateEnd(RecipeRestoreFrameOnDesktop.name);

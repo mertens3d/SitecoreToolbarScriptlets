@@ -74,7 +74,7 @@ export class DesktopProxy extends LoggableBase {
 
   private GetFrameHelper(): FrameHelper {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new FrameHelper(this.Logger, this.SettingsAgent);
+      this.__iframeHelper = new FrameHelper(this.Logger);
     }
     return this.__iframeHelper;
   }
@@ -121,7 +121,7 @@ export class DesktopProxy extends LoggableBase {
 
   private GetIframeHelper(): FrameHelper {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new FrameHelper(this.Logger, this.SettingsAgent);
+      this.__iframeHelper = new FrameHelper(this.Logger);
     }
     return this.__iframeHelper;
   }

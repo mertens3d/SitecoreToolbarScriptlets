@@ -19,7 +19,7 @@ export class BrowserTabAgent {
     this.Logger.InstantiateStart(BrowserTabAgent.name);
     this.ScUrlAgent = scUrlAgent;
     this.SettingsAgent = settingsAgent;
-    this.RecipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
+    this.RecipeBasics = new RecipeBasics(this.Logger);
     this.Logger.InstantiateEnd(BrowserTabAgent.name);
   }
 

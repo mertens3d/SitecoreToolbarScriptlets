@@ -21,7 +21,7 @@ export class __RecipeBase {
 
   constructor(commandData: ICommandHndlrDataForContent) {
     this.Logger = commandData.Logger;
-    this.RecipeBasics = new RecipeBasics(this.Logger, commandData.SettingsAgent);
+    this.RecipeBasics = new RecipeBasics(this.Logger);
     this.ScWinMan = commandData.ScWinMan;
     this.AtticAgent = commandData.AtticAgent;
     this.TargetSnapShotId = commandData.TargetSnapShotId;

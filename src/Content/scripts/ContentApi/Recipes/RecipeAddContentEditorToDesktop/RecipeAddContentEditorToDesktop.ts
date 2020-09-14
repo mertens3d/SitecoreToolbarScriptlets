@@ -30,8 +30,8 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
     return new Promise(async (resolve, reject) => {
       let allIframeDataAtBeginning: FrameProxy[];
       let ceframeProxy: CEFrameProxy;
-      let frameHelper = new FrameHelper(this.Logger, this.SettingsAgent);
-      let recipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
+      let frameHelper = new FrameHelper(this.Logger);
+      let recipeBasics = new RecipeBasics(this.Logger);
 
 
       await frameHelper.GetLiveFrames(this.TargetDoc)

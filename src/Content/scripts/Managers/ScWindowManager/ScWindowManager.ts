@@ -65,7 +65,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
 
   ContentEditorProxy(): ContentEditorProxy {
     if (!this.__contentEditorProxyLazy) {
-      this.__contentEditorProxyLazy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent);
+      this.__contentEditorProxyLazy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger);
       return this.__contentEditorProxyLazy;
     }
   }
@@ -76,7 +76,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       //this.Logger.LogVal('auto rename', this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton).ValueAsBool());
 
       try {
-        let recipesBasic = new RecipeBasics(this.Logger, this.SettingsAgent);
+        let recipesBasic = new RecipeBasics(this.Logger);
         let initResultsScWindowManager: InitResultsScWindowManager = new InitResultsScWindowManager();
 
         await recipesBasic.WaitForPageReadyNative(this.GetTopLevelDoc())
@@ -160,7 +160,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
 
     try {
       if (this.GetScUrlAgent().QueryStringHasKey(QueryStrKey.hsTargetSs)) {
-        let recipe = new RecipeInitFromQueryStr(this.Logger, this.GetScUrlAgent(), this.AtticAgent, this.GetTopLevelDoc(), this.MakeScWinRecipeParts(), this.DesktopProxy(), this.ContentEditorProxy(), this.SettingsAgent);
+        let recipe = new RecipeInitFromQueryStr(this.Logger, this.GetScUrlAgent(), this.AtticAgent, this.GetTopLevelDoc(), this.MakeScWinRecipeParts(), this.DesktopProxy(), this.ContentEditorProxy());
         await recipe.Execute();
       }
 

@@ -10,9 +10,9 @@ import { CEFrameProxy } from "../Interfaces/Data/Proxies/FrameProxyForContentEdi
 export class FactoryHelper extends LoggableBase implements IFactoryHelper {
   SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent) {
     super(logger);
-    this.SettingsAgent = settingsAgent;
+   
   }
 
 
@@ -36,7 +36,7 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     var toReturn: FrameProxy = null;
 
     if (iframeElem && nickname) {
-      var toReturn: FrameProxy = new FrameProxy(this.Logger, iframeElem, nickname, this.SettingsAgent);
+      var toReturn: FrameProxy = new FrameProxy(this.Logger, iframeElem, nickname);
     } else {
       this.Logger.ErrorAndThrow(this.FrameProxyForPromiseFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
@@ -51,7 +51,7 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     var toReturn: CEFrameProxy = null;
 
     if (iframeElem && nickname) {
-      var toReturn = new CEFrameProxy(this.Logger, iframeElem, nickname, this.SettingsAgent);
+      var toReturn = new CEFrameProxy(this.Logger, iframeElem, nickname);
       await toReturn.OnReadyInitCEFrameProxy();
     } else {
       this.Logger.ErrorAndThrow(this.FrameProxyForDesktopFactory.name, 'one of these is null');

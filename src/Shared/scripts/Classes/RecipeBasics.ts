@@ -7,25 +7,22 @@ import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
 import { FrameProxy } from '../Interfaces/Data/Proxies/FrameProxy';
+import { CEFrameProxy } from '../Interfaces/Data/Proxies/FrameProxyForContentEditor';
 import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { SharedConst } from '../SharedConst';
 import { PromiseResult } from "./PromiseResult";
-import { ISettingsAgent } from '../Interfaces/Agents/ISettingsAgent';
-import { CEFrameProxy } from '../Interfaces/Data/Proxies/FrameProxyForContentEditor';
 
 export class RecipeBasics extends LoggableBase implements IRecipeBasics {
   private FactoryHelp: IFactoryHelper;
-  private SettingsAgent: ISettingsAgent;
   private  FrameHelper: FrameHelper;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent) {
     super(logger);
-    this.SettingsAgent = settingsAgent;
-    this.FrameHelper = new FrameHelper(this.Logger, this.SettingsAgent);
+    this.FrameHelper = new FrameHelper(this.Logger);
 
-    this.FactoryHelp = new FactoryHelper(this.Logger, settingsAgent);
+    this.FactoryHelp = new FactoryHelper(this.Logger);
   }
 
   async WaitForReadyIframe(dataOneIframe: FrameProxy): Promise<FrameProxy> {
@@ -189,7 +186,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       this.Logger.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
 
       await this.WaitForAndReturnFoundElem(haystackDoc, selector)
-        .then(async (foundElem: HTMLIFrameElement) => await this.FactoryHelp.FrameProxyForDesktopFactory(<HTMLIFrameElement>foundElem, iframeNickName))
+        .then(async (foundElem: HTMLIFrameElement) => await this.FactoryHelp.FrameProxyForPromiseFactory(<HTMLIFrameElement>foundElem, iframeNickName))
         .then((result: FrameProxy) => this.WaitForReadyIframe(result))
         .then((result) => resolve(result))
         .catch((err) => reject(err));

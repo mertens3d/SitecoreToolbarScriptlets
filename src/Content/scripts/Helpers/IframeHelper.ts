@@ -7,11 +7,9 @@ import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISetti
 import { FrameProxy } from "../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy";
 
 export class FrameHelper extends LoggableBase {
-  SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent) {
     super(logger);
-    this.SettingsAgent = settingsAgent;
   }
 
   async GetLiveFrames(targetDoc: IDataOneDoc): Promise<FrameProxy[]> {
@@ -31,9 +29,9 @@ export class FrameHelper extends LoggableBase {
         this.Logger.Log('pushing idx: ' + ifrIdx);
 
         var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        let factoryHelper = new FactoryHelper(this.Logger, this.SettingsAgent);
+        let factoryHelper = new FactoryHelper(this.Logger);
 
-        await factoryHelper.FrameProxyForDesktopFactory(iframeElem, 'desktop Iframe_' + ifrIdx)
+        await factoryHelper.FrameProxyForPromiseFactory(iframeElem, 'desktop Iframe_' + ifrIdx)
           .then((result) => toReturn.push(result));
       }
 

@@ -34,7 +34,7 @@ export class DesktopProxyMutationEvent_Subject extends HindeSiteEvent_Subject<ID
         mutation.addedNodes.forEach((addedNode) => {
           if (addedNode instanceof HTMLIFrameElement) {
 
-            let frameProxy = new CEFrameProxy(this.Logger, addedNode, 'todo', null);
+            let frameProxy = new CEFrameProxy(this.Logger, addedNode, 'todo');
             addedFrameProxies.push(frameProxy);
           }
         })

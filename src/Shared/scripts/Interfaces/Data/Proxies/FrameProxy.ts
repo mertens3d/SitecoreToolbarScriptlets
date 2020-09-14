@@ -15,16 +15,14 @@ export class FrameProxy extends LoggableBase {
   IframeElem: HTMLIFrameElement = null;
   Id: GuidData = null;
   Nickname: string = null;
-  SettingsAgent: ISettingsAgent;
   FrameProxyMutationEvent_Subject: FrameProxyMutationEvent_Subject;
 
 
-  constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement, nickName: string, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement, nickName: string) {
     super(logger);
     this.IframeElem = iframeElem;
     this.Id = Guid.NewRandomGuid();
     this.Nickname = nickName;
-    this.SettingsAgent = settingsAgent;
   }
 
 
@@ -53,6 +51,6 @@ export class FrameProxy extends LoggableBase {
   }
 
   GetContentDoc(): IDataOneDoc {
-    return new FactoryHelper(this.Logger, this.SettingsAgent).DataOneContentDocFactoryFromIframe(this);
+    return new FactoryHelper(this.Logger).DataOneContentDocFactoryFromIframe(this);
   }
 }

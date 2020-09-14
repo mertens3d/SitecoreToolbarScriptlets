@@ -5,17 +5,14 @@ import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScUrlAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
-import { IToastAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { ScWindowRecipePartials } from "../../../Managers/ScWindowManager/ScWindowRecipePartials";
-import { DesktopProxy } from "../../../Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { DesktopProxy } from "../../../Proxies/Desktop/DesktopProxy/DesktopProxy";
 
 export class RecipeInitFromQueryStr extends LoggableBase implements ICommandRecipes {
-  private SettingsAgent: ISettingsAgent;
   private AtticAgent: IContentAtticAgent;
   private OneCeAgent: ContentEditorProxy;
   private OneDesktopMan: DesktopProxy;
@@ -24,11 +21,10 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
   private ScWinRecipeParts: ScWindowRecipePartials;
   private TopLevelDoc: IDataOneDoc;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, contentEditorProxy: ContentEditorProxy, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, contentEditorProxy: ContentEditorProxy) {
     super(logger);
     this.ScUrlAgent = scUrlAgent;
-    this.SettingsAgent = settingsAgent;
-    this.RecipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
+    this.RecipeBasics = new RecipeBasics(this.Logger);
     this.AtticAgent = atticAgent;
     this.TopLevelDoc = topLevelDoc;
     this.ScWinRecipeParts = scWinRecipeParts;

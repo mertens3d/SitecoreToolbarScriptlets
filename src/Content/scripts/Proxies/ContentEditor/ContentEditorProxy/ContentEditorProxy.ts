@@ -19,18 +19,16 @@ import { TreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
 
 export class ContentEditorProxy extends LoggableBase {
   private ChildTreeProxy: IContentEditorTreeProxy;
-  private SettingsAgent: ISettingsAgent;
   private TreeMutationEvent_Observer: TreeMutationEvent_Observer;
   public ContentEditorProxyMutationEvent_Subject: ContentEditorProxyMutationEvent_Subject;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedHindsiteId: GuidData;
 
-  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
+  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent) {
     super(logger);
 
     this.Logger.InstantiateStart(ContentEditorProxy.name);
 
-    this.SettingsAgent = settingsAgent;
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.AssociatedDoc = associatedDoc;
 
@@ -115,7 +113,7 @@ export class ContentEditorProxy extends LoggableBase {
   async WaitForReadyContentEditor(): Promise<void> {
     this.Logger.FuncStart(this.WaitForReadyContentEditor.name);
     try {
-      let recipeBasics = new RecipeBasics(this.Logger, this.SettingsAgent);
+      let recipeBasics = new RecipeBasics(this.Logger);
 
       await recipeBasics.WaitForPageReadyNative(this.AssociatedDoc)
 
