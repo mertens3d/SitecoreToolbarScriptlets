@@ -13,6 +13,7 @@ import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { SharedConst } from '../SharedConst';
 import { PromiseResult } from "./PromiseResult";
 import { ISettingsAgent } from '../Interfaces/Agents/ISettingsAgent';
+import { CEFrameProxy } from '../Interfaces/Data/Proxies/FrameProxyForContentEditor';
 
 export class RecipeBasics extends LoggableBase implements IRecipeBasics {
   private FactoryHelp: IFactoryHelper;
@@ -188,12 +189,25 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       this.Logger.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
 
       await this.WaitForAndReturnFoundElem(haystackDoc, selector)
-        .then(async (foundElem: HTMLIFrameElement) => await this.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>foundElem, iframeNickName))
+        .then(async (foundElem: HTMLIFrameElement) => await this.FactoryHelp.FrameProxyForDesktopFactory(<HTMLIFrameElement>foundElem, iframeNickName))
         .then((result: FrameProxy) => this.WaitForReadyIframe(result))
         .then((result) => resolve(result))
         .catch((err) => reject(err));
 
       this.Logger.FuncEnd(this.WaitForIframeElemAndReturnWhenReady.name);
+    });
+  }
+  async WaitForNewIframeContentEditor(allIframesBefore: FrameProxy[], targetDoc: IDataOneDoc): Promise<CEFrameProxy> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForNewIframe.name);
+      let toReturn: CEFrameProxy = null; 
+
+      await this.WaitForNewIframe(allIframesBefore, targetDoc)
+        .then((result: FrameProxy) => toReturn = <CEFrameProxy>result)
+        .then(() => resolve(toReturn))
+        .catch((err) => reject(this.WaitForNewIframeContentEditor.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.WaitForNewIframe.name);
     });
   }
 

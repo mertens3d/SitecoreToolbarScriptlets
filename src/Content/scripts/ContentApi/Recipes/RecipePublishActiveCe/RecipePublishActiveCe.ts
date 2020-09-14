@@ -160,7 +160,7 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
   async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null): Promise<IDataPublishChain> {
     try {
       await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.TopLevelDoc, ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
-        .then((found: HTMLElement) => this.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>found, 'jqIframe'))
+        .then((found: HTMLElement) => this.FactoryHelp.FrameProxyForPromiseFactory(<HTMLIFrameElement>found, 'jqIframe'))
         .then((result: FrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
         .then(() => this.RecipeBasics.WaitForReadyIframe(dataPublishChain.JqIframe))

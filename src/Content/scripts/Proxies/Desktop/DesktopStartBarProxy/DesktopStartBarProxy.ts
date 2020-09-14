@@ -1,19 +1,15 @@
-﻿import { StaticHelpers } from '../../../../../Shared/scripts/Classes/StaticHelpers';
-import { BufferChar } from '../../../../../Shared/scripts/Enums/BufferChar';
-import { BufferDirection } from '../../../../../Shared/scripts/Enums/BufferDirection';
-import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+﻿import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
+import { FrameHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorProxy } from '../../ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from '../DesktopProxy/DesktopProxy';
 import { ITreeMutationEvent_Payload } from '../DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
-import { FrameHelper } from '../../../Helpers/IframeHelper';
-import { IFrameProxyMutated_Payload } from "../DesktopProxy/Events/Subject_DesktopIframeProxyMutatedEvent/IFrameProxyMutatedEvent_Payload";
-import { TreeMutationEvent_Observer } from '../../ContentEditor/ContentEditorTreeProxy/TreeMutationEvent_Observer';
-
+import { TreeMutationEvent_Observer } from '../DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer';
+import { IFrameProxyMutationEvent_Payload } from '../DesktopProxy/Events/FrameProxyMutationEvent/IFrameProxyMutationEvent_Payload';
 
 export class DesktopStartBarProxy extends LoggableBase {
   private CeProxies: ContentEditorProxy[] = [];
@@ -60,18 +56,17 @@ export class DesktopStartBarProxy extends LoggableBase {
     return foundStartBarProxy;
   }
 
- 
-
-  OnContentEditorProxyAdded(payload: IFrameProxyMutated_Payload) {
+  OnContentEditorProxyAdded(frameProxyMutated_Payload: IFrameProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.OnContentEditorProxyAdded.name);
 
-    if (payload) {
-      if (this.CeProxies.indexOf(payload.NewCeProxy) < 0) {
-        this.CeProxies.push(payload.NewCeProxy);
+    if (frameProxyMutated_Payload) {
+      //todo put in new error checking for duplicates
+      //if (this.CeProxies.indexOf(frameProxyMutated_Payload.ContentEditorProxyMutationPayload) < 0) {
+      //  this.CeProxies.push(frameProxyMutated_Payload.ContentEditorProxyMutationPayload);
 
-        let treeMutationEvent_Observer = new TreeMutationEvent_Observer(this.Logger);
-        payload.NewCeProxy.RegisterObserverForTreeMutation(treeMutationEvent_Observer);
-      }
+      let treeMutationEvent_Observer = new TreeMutationEvent_Observer(this.Logger, this);
+      //todo -replace frameProxyMutated_Payload.ContentEditorProxyMutationPayload.RegisterObserverForTreeMutation(treeMutationEvent_Observer);
+      //}
     } else {
       this.Logger.ErrorAndThrow(this.OnContentEditorProxyAdded.name, 'Null ceProxy');
     }
@@ -79,31 +74,30 @@ export class DesktopStartBarProxy extends LoggableBase {
     this.Logger.FuncEnd(this.OnContentEditorProxyAdded.name);
   }
 
-  CallbackTreeNodeChanged(payload: ITreeMutationEvent_Payload) {
-    this.Logger.FuncStart(this.CallbackTreeNodeChanged.name);
+  OnTreeMutationEvent_DesktopStartBarProxy(treeMutationEvent_Payload: ITreeMutationEvent_Payload) {
+    this.Logger.FuncStart(this.OnTreeMutationEvent_DesktopStartBarProxy.name);
     // at this point we have a new active node (or some other change event)
 
-    if (payload) {
-      this.Logger.LogVal('target Iframe Id', payload.AssociatedIframeElemId);
+    if (treeMutationEvent_Payload) {
+      this.Logger.Log('todo')
+      //let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(treeMutationEvent_Payload.AssociatedIframeElemId);
 
-      let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(payload.AssociatedIframeElemId);
+      //if (iframeElement) {
+      //  if (treeMutationEvent_Payload.ActiveNode) {
+      //    let desktopStartBarButtonProxy: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(treeMutationEvent_Payload.AssociatedIframeElemId);
 
-      if (iframeElement) {
-        if (payload.ActiveNode) {
-          let desktopStartBarButtonProxy: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(payload.AssociatedIframeElemId);
+      //    desktopStartBarButtonProxy.Update(desktopStartBarButtonProxy, treeMutationEvent_Payload.ActiveNode);
+      //  }
 
-          desktopStartBarButtonProxy.Update(desktopStartBarButtonProxy, payload.ActiveNode);
-        }
-
-        //we need to know what the associated button is
-        //we can get that by knowing the id of the CE
-      } else {
-        this.Logger.ErrorAndContinue(this.CallbackTreeNodeChanged.name, 'Did not find iframe');
-      }
+      //we need to know what the associated button is
+      //we can get that by knowing the id of the CE
+      //} else {
+      //  this.Logger.ErrorAndContinue(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Did not find Frame');
+      //}
     } else {
-      this.Logger.ErrorAndThrow(this.CallbackTreeNodeChanged.name, 'Null payload');
+      this.Logger.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Null payload');
     }
 
-    this.Logger.FuncEnd(this.CallbackTreeNodeChanged.name);
+    this.Logger.FuncEnd(this.OnTreeMutationEvent_DesktopStartBarProxy.name);
   }
 }

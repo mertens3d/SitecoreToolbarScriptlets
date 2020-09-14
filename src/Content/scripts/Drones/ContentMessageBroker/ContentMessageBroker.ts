@@ -12,7 +12,7 @@ import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
+import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 import { CommandHndlrDataForContent } from "../../../../Shared/scripts/Classes/CommandHndlrDataForContent/CommandHndlrDataForContent";

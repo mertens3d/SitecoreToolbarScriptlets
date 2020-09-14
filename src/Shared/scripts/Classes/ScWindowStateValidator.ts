@@ -4,7 +4,7 @@ import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
 import { DefaultStateOfSitecoreWindow } from "./Defaults/DefaultStateOfSitecoreWindow";
 import { DefaultStateOfSnapshotStorage } from "./Defaults/DefaultStateOfSnapshots";
 import { DefaultStateOfTree } from "./Defaults/DefaultStateOfTree";
-import { IDataContentReplyReceivedEvent_Payload } from "../Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IDataStateOfContentEditor } from "../Interfaces/Data/States/IDataStateOfContentEditor";
 import { IDataStateOfDesktop } from "../Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfSitecoreWindow } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";

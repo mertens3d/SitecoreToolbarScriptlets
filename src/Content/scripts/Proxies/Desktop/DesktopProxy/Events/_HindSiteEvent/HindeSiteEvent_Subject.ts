@@ -1,17 +1,11 @@
 ﻿import { LoggableBase } from "../../../../../Managers/LoggableBase";
-import { IGeneric_Observer } from "./IGeneric_Observer";
-import { IObservable } from "./IObservable";
+import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
+import { IHindeSiteObservable } from "./IHindeSiteObservable";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 
-export class GenericEvent_Observer<T> extends LoggableBase implements IGeneric_Observer<T> {
-    Friendly: string;
-    UpdateAsync(payload: T):void {
-    }
-}
-
-export class GenericEvent_Subject<T> extends LoggableBase implements IObservable<T> {
-  protected ObserverCollection: IGeneric_Observer<T>[] = [];
-  protected Friendly: string;
+export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSiteObservable<T> {
+  protected ObserverCollection: IHindSiteEvent_Observer<T>[] = [];
+  readonly Friendly: string;
 
   constructor(logger: ILoggerAgent, friendly: string) {
     super(logger);
@@ -20,7 +14,7 @@ export class GenericEvent_Subject<T> extends LoggableBase implements IObservable
     this.Logger.InstantiateEnd(this.Friendly);
   }
 
-  RegisterObserver(observer: IGeneric_Observer<T>): void {
+  RegisterObserver(observer: IHindSiteEvent_Observer<T>): void {
     this.Logger.FuncStart(this.RegisterObserver.name, observer.Friendly + ' to ' + this.Friendly);
     if (observer && this.ObserverCollection.indexOf(observer) < 0) {
       this.ObserverCollection.push(observer);
@@ -30,7 +24,7 @@ export class GenericEvent_Subject<T> extends LoggableBase implements IObservable
     this.Logger.FuncEnd(this.RegisterObserver.name);
   }
 
-  UnregisterObserver(observer: IGeneric_Observer<T>): void {
+  UnregisterObserver(observer: IHindSiteEvent_Observer<T>): void {
     this.Logger.FuncStart(this.UnregisterObserver.name);
     if (observer) {
       let observerIndex = this.ObserverCollection.indexOf(observer);
@@ -43,8 +37,12 @@ export class GenericEvent_Subject<T> extends LoggableBase implements IObservable
   }
 
   NotifyObservers(payload: T): void {
-    this.Logger.FuncStart(this.NotifyObservers.name + ' ' + this.Friendly, 'length: ' + this.ObserverCollection.length);
-    this.ObserverCollection.forEach((observer) => observer.UpdateAsync(payload));
+    this.Logger.FuncStart(this.NotifyObservers.name + ' of: ' + this.Friendly, ' observer count: ' + this.ObserverCollection.length);
+    this.ObserverCollection.forEach((observer) => {
+      observer.UpdateAsync(payload);
+
+    }
+      );
     this.Logger.FuncEnd(this.NotifyObservers.name);
   }
 }

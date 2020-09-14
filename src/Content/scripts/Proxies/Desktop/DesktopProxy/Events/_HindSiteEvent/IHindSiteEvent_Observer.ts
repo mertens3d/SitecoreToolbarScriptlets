@@ -1,4 +1,4 @@
-﻿export interface IGeneric_Observer<T> {
+﻿export interface IHindSiteEvent_Observer<T> {
   Friendly: string;
   UpdateAsync(payload: T): void;
 }

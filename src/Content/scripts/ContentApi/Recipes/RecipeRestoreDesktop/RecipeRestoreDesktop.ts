@@ -9,6 +9,7 @@ import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
+import { CEFrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxyForContentEditor';
 
 export class RecipeRestoreFrameOnDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
@@ -41,11 +42,11 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
     }
   }
 
-  private __restoreDataToOneIframe(oneTreeState: IDataStateOfFrame, frameProxy: FrameProxy) {
+  private __restoreDataToOneIframe(oneTreeState: IDataStateOfFrame, frameProxy: CEFrameProxy) {
     return new Promise<void>(async (resolve, reject) => {
       this.Logger.FuncStart(this.__restoreDataToOneIframe.name);
 
-      await frameProxy.SetStateFrame(oneTreeState)
+      await frameProxy.SetStateOfCEFrame(oneTreeState)
         .then(() => resolve())
         .catch((err) => reject(err));
 
@@ -59,12 +60,12 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
 
       if (this.MiscAgent.NotNullOrUndefined([this.TargetDoc, this.DataStateOfFrame], this.RunOneChain.name)) {
         //guaranteed to be on the correct page
-        var frameProxy: FrameProxy;
+        var frameProxy: CEFrameProxy;
         let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent, this.DesktopTabButtonTabAgent);
 
         await recipeAddCe.Execute()
-          .then((result: FrameProxy) => frameProxy = result)
-          .then(() => frameProxy.WaitForReady())
+          .then((result: CEFrameProxy) => frameProxy = result)
+          .then(() => frameProxy.OnReadyInitCEFrameProxy())
           .then(() => this.__restoreDataToOneIframe(this.DataStateOfFrame, frameProxy))
           .then(() => resolve())
           .catch(ex => {

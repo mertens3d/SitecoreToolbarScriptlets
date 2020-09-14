@@ -33,7 +33,7 @@ export class FrameHelper extends LoggableBase {
         var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
         let factoryHelper = new FactoryHelper(this.Logger, this.SettingsAgent);
 
-        await factoryHelper.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx)
+        await factoryHelper.FrameProxyForDesktopFactory(iframeElem, 'desktop Iframe_' + ifrIdx)
           .then((result) => toReturn.push(result));
       }
 

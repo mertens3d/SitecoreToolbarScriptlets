@@ -6,23 +6,23 @@ import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { BrowserTabAgent } from "../Managers/TabManager";
 import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { ValidMessageRecievedEvent_Subject } from "./ValidMessageRecievedEvent_Subject";
 import { PopUpMessagesBroker } from "../Managers/PopUpMessagesBroker/PopUpMessagesBroker";
+import { ContentReplyReceivedEvent_Subject } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
 
 export class HandlersExternalEvent extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
   private BrowserTabAgent: BrowserTabAgent;
-  ValidMessageRecievedEvent: ValidMessageRecievedEvent_Subject;
+  ValidMessageRecievedEvent: ContentReplyReceivedEvent_Subject;
   private MessageBroker: PopUpMessagesBroker;
 
   constructor(logger: ILoggerAgent,  settingsAgent: ISettingsAgent, browserTabAgent: BrowserTabAgent, popUpMessagesBroker: PopUpMessagesBroker) {
     super(logger);
     this.SettingsAgent = settingsAgent;
-    this.ValidMessageRecievedEvent = new ValidMessageRecievedEvent_Subject(this.Logger);
+    this.ValidMessageRecievedEvent = new ContentReplyReceivedEvent_Subject(this.Logger);
     this.BrowserTabAgent = browserTabAgent;
     this.MessageBroker = popUpMessagesBroker;
   }

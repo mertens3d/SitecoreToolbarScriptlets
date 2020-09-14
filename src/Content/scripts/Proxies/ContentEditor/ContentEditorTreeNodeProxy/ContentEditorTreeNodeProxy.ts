@@ -7,20 +7,17 @@ import { LoggableBase } from "../../../Managers/LoggableBase";
 
 export class ScContentTreeNodeProxy extends LoggableBase {
   private ScContentTreeNodeDivElem: HTMLDivElement;
-   private ContainerElement: HTMLElement;
 
-  constructor(logger: ILoggerAgent, sourceElement: HTMLDivElement, containerElement: HTMLElement)
-  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement, containerElement: HTMLElement)
-  constructor(logger: ILoggerAgent, sourceElement: HTMLAnchorElement, containerElement: HTMLElement)
-  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement, containerElement: HTMLElement) {
+  constructor(logger: ILoggerAgent, sourceElement: HTMLDivElement)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLAnchorElement)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement) {
     super(logger);
 
     this.Logger.InstantiateStart(ScContentTreeNodeProxy.name);
 
-    this.ContainerElement = containerElement;
 
-    if (sourceElement && this.ContainerElement) {
-
+    if (sourceElement ) {
       if (sourceElement.hasAttribute('src')) {
         this.InferFromImageElement(<HTMLImageElement>sourceElement);
       } else if (sourceElement.hasAttribute('href')) {
@@ -46,10 +43,11 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   }
 
   private InferFromAnchorElement(anchorElement: HTMLAnchorElement) {
-    this.Logger.Log(this.InferFromAnchorElement.name);
+    this.Logger.FuncStart(this.InferFromAnchorElement.name);
     if (anchorElement) {
       this.ScContentTreeNodeDivElem = <HTMLDivElement>anchorElement.parentElement
     }
+    this.Logger.FuncEnd(this.InferFromAnchorElement.name);
   }
 
   private InferFromImageElement(imageElement: HTMLImageElement) {
@@ -66,7 +64,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   }
 
   GetStateOfScContentTreeNode(): IDataStateOfScContentTreeNode {
-    var newData: IDataStateOfScContentTreeNode =  {
+    var newData: IDataStateOfScContentTreeNode = {
       IsExpanded: this.QueryIsExpanded(),
       IsActive: this.QueryIsActive(),
       Friendly: this.GetNodeLinkText(),
@@ -105,7 +103,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
     if (candidate) {
       this.Logger.Log('found a candidate');
-      toReturn = new ScContentTreeNodeProxy(this.Logger,  candidate, this.ContainerElement);
+      toReturn = new ScContentTreeNodeProxy(this.Logger, candidate);
     } else {
       this.Logger.Log('no candidate found');
     }
@@ -131,7 +129,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
     let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
     if (penultimateElem) {
-      penultimateNode = new ScContentTreeNodeProxy(this.Logger, penultimateElem, this.ContainerElement);
+      penultimateNode = new ScContentTreeNodeProxy(this.Logger, penultimateElem);
     }
 
     //while (parentNode && maxIter > 0) {
@@ -163,10 +161,10 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     if (newData.IsActive) {
       var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.ItemId);
 
-      let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.ContainerElement.querySelector('[id=' + hotTreeNodeId + ']');
+      let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector('[id=' + hotTreeNodeId + ']');
 
       if (hotTreeNode) {
-        let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, hotTreeNode, this.ContainerElement);
+        let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, hotTreeNode);
 
         if (hotTreeNodeProxy) {
           hotTreeNodeProxy.ActivateNode()
@@ -180,7 +178,6 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   }
 
   QueryIsActive(): boolean {
-    this.Logger.FuncStart(this.QueryIsActive.name);
     var toReturn: boolean = false;
 
     if (this.GetLinkNodeElem()) {
@@ -193,7 +190,6 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       this.Logger.Log('no node link elem');
     }
 
-    this.Logger.FuncEnd(this.QueryIsActive.name, toReturn.toString());
     return toReturn;
   }
 

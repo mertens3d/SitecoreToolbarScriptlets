@@ -5,6 +5,7 @@ import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
 import { Guid } from "./Guid";
 import { FrameProxy } from "../Interfaces/Data/Proxies/FrameProxy";
+import { CEFrameProxy } from "../Interfaces/Data/Proxies/FrameProxyForContentEditor";
 
 export class FactoryHelper extends LoggableBase implements IFactoryHelper {
   SettingsAgent: ISettingsAgent;
@@ -30,21 +31,35 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     }
     return toReturn;
   }
-
-  async DataOneIframeFactory(iframeElem: HTMLIFrameElement, nickname: string): Promise<FrameProxy> {
-    this.Logger.FuncStart(this.DataOneIframeFactory.name);
+  async FrameProxyForPromiseFactory(iframeElem: HTMLIFrameElement, nickname: string): Promise<FrameProxy> {
+    this.Logger.FuncStart(this.FrameProxyForPromiseFactory.name);
     var toReturn: FrameProxy = null;
 
     if (iframeElem && nickname) {
       var toReturn: FrameProxy = new FrameProxy(this.Logger, iframeElem, nickname, this.SettingsAgent);
-      await toReturn.WaitForReady();
     } else {
-      this.Logger.ErrorAndThrow(this.DataOneIframeFactory.name, 'one of these is null');
+      this.Logger.ErrorAndThrow(this.FrameProxyForPromiseFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
       this.Logger.LogAsJsonPretty('nickname', nickname);
     }
 
-    this.Logger.FuncEnd(this.DataOneIframeFactory.name);
+    this.Logger.FuncEnd(this.FrameProxyForPromiseFactory.name);
+    return toReturn;
+  }
+  async FrameProxyForDesktopFactory(iframeElem: HTMLIFrameElement, nickname: string): Promise<CEFrameProxy> {
+    this.Logger.FuncStart(this.FrameProxyForDesktopFactory.name);
+    var toReturn: CEFrameProxy = null;
+
+    if (iframeElem && nickname) {
+      var toReturn = new CEFrameProxy(this.Logger, iframeElem, nickname, this.SettingsAgent);
+      await toReturn.OnReadyInitCEFrameProxy();
+    } else {
+      this.Logger.ErrorAndThrow(this.FrameProxyForDesktopFactory.name, 'one of these is null');
+      this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
+      this.Logger.LogAsJsonPretty('nickname', nickname);
+    }
+
+    this.Logger.FuncEnd(this.FrameProxyForDesktopFactory.name);
     return toReturn;
   }
 }

@@ -9,7 +9,7 @@ import { IContentAtticAgent } from '../../../../Shared/scripts/Interfaces/Agents
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { ISettingsAgent, InitResultsScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataMetaData } from '../../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
@@ -65,26 +65,31 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
 
   ContentEditorProxy(): ContentEditorProxy {
     if (!this.__contentEditorProxyLazy) {
-      this.__contentEditorProxyLazy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
+      this.__contentEditorProxyLazy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent);
       return this.__contentEditorProxyLazy;
     }
   }
 
-  async InitScWindowManager(): Promise<void> {
-    this.Logger.FuncStart(this.InitScWindowManager.name);
-    //this.Logger.LogVal('auto rename', this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton).ValueAsBool());
+  async OnReadyInitScWindowManager(): Promise<InitResultsScWindowManager> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.OnReadyInitScWindowManager.name);
+      //this.Logger.LogVal('auto rename', this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton).ValueAsBool());
 
-    try {
-      let recipesBasic = new RecipeBasics(this.Logger, this.SettingsAgent);
+      try {
+        let recipesBasic = new RecipeBasics(this.Logger, this.SettingsAgent);
+        let initResultsScWindowManager: InitResultsScWindowManager = new InitResultsScWindowManager();
 
-      await this.DesktopProxy().InitDesktopProxy()
-        .then(() => recipesBasic.WaitForPageReadyNative(this.GetTopLevelDoc()))
-        .then(() => this.InitSettingsAndFromQueryStr())
-        .catch((err) => { throw (this.InitScWindowManager.name + ' | ' + err) });
-    } catch (err) {
-      throw (this.InitScWindowManager.name + ' ' + err);
-    }
-    this.Logger.FuncEnd(this.InitScWindowManager.name);
+        await recipesBasic.WaitForPageReadyNative(this.GetTopLevelDoc())
+          .then(() => this.DesktopProxy().OnReadyInitDesktopProxy())
+          .then((results) => initResultsScWindowManager.InitResultsDesktop = results)
+          .then(() => this.InitFromQueryStr())
+          .then(() => resolve(initResultsScWindowManager))
+          .catch((err) => { throw (this.OnReadyInitScWindowManager.name + ' | ' + err) });
+      } catch (err) {
+        throw (this.OnReadyInitScWindowManager.name + ' ' + err);
+      }
+      this.Logger.FuncEnd(this.OnReadyInitScWindowManager.name);
+    });
   }
 
   MakeScWinRecipeParts(): ScWindowRecipePartials {
@@ -150,8 +155,8 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     return this.TopDoc;
   }
 
-  async InitSettingsAndFromQueryStr(): Promise<void> {
-    this.Logger.FuncStart(this.InitSettingsAndFromQueryStr.name);
+  async InitFromQueryStr(): Promise<void> {
+    this.Logger.FuncStart(this.InitFromQueryStr.name);
 
     try {
       if (this.GetScUrlAgent().QueryStringHasKey(QueryStrKey.hsTargetSs)) {
@@ -159,7 +164,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
         await recipe.Execute();
       }
 
-      this.Logger.FuncEnd(this.InitSettingsAndFromQueryStr.name);
+      this.Logger.FuncEnd(this.InitFromQueryStr.name);
     }
     catch (err) {
       throw (err);

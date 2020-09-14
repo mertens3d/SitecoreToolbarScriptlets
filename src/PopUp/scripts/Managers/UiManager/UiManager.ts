@@ -25,7 +25,7 @@ import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/Fe
 import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/FeedbackModulePopUpState/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog/UiFeedbackModuleLog';
-import { UiSelectSnapshotChangeEvent_Observer } from './UiSelectSnapShot_Observer';
+import { UiSelectSnapshotMutationEvent_Observer } from '../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/UiSelectSnapshotMutatedEvent/UiSelectSnapshotMutatedEvent_Observer';
 
 export class UiManager {
   AccordianManager: IAccordianManager;
@@ -104,7 +104,7 @@ export class UiManager {
     this.ScheduleAutoSaveSnapShot();
     this.ScheduleAutoLogin();
 
-    let uiSelectSnapshotChangeEvent_Observer = new UiSelectSnapshotChangeEvent_Observer(this.Logger, this);
+    let uiSelectSnapshotChangeEvent_Observer = new UiSelectSnapshotMutationEvent_Observer(this.Logger, this);
     this.ModuleSnapShots.SelectSnapshotModule_Subject.RegisterObserver(uiSelectSnapshotChangeEvent_Observer);
 
     this.ButtonModulesManager.InitButtonStateManager();

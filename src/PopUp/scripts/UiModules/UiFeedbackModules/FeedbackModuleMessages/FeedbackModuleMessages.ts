@@ -1,12 +1,10 @@
-﻿import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
+﻿import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IMessageBrokerFeedback } from "../../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
-import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IGeneric_Observer } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/IGeneric_Observer";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
-import { GenericEvent_Observer } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/GenericEvent/GenericEvent_Subject";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { UiFeedbackModuleBase } from "../UiFeedbackModuleBase/UiFeedbackModuleBase";
+import { IHindSiteEvent_Observer } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/IHindSiteEvent_Observer";
 
-
-export class FeedbackModuleMessages_Observer extends UiFeedbackModuleBase implements IMessageBrokerFeedback, IGeneric_Observer<IDataContentReplyReceivedEvent_Payload> {
+export class FeedbackModuleMessages_Observer extends UiFeedbackModuleBase implements IMessageBrokerFeedback, IHindSiteEvent_Observer<IDataContentReplyReceivedEvent_Payload> {
   constructor(selector: string, loggerAgent: ILoggerAgent) {
     super(selector, loggerAgent)
   }

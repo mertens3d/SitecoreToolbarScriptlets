@@ -46,6 +46,7 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
 
   private async InitFromQueryString(): Promise<void> {
     return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.InitFromQueryString.name);
       if (this.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
         let qsValue: string = (this.ScUrlAgent.GetQueryStringValueByKey(QueryStrKey.hsTargetSs));
 
@@ -78,6 +79,8 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
         this.Logger.Log('Does not have qs target');
         resolve();
       }
+
+      this.Logger.FuncEnd(this.InitFromQueryString.name);
     });
   }
 }

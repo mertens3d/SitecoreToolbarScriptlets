@@ -1,10 +1,10 @@
-﻿import { ContentEditorTreeMutationEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/TreeMutationEvent/ContentEditorTreeMutationEvent_Subject";
+﻿import { TreeMutationEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject";
 import { IDataStateOfTree } from "../Data/States/IDataStateOfTree";
+import { InitResultsScWindowManager } from "./ISettingsAgent";
 
 export interface IContentEditorTreeProxy {
-  //RegisterObserver(observer: IGeneric_Observer<ITreeMutatedEvent_Payload>);
-  //GetOneLiveTreeData(): IDataStateOfTreeNode[];
+  OnReadyInitTreeProxy();
   GetStateOfTree(): IDataStateOfTree;
   SetStateOfTree(dataToRestore: IDataStateOfTree);
-  TreeMutationEvent_Subject: ContentEditorTreeMutationEvent_Subject;
+  TreeMutationEvent_Subject: TreeMutationEvent_Subject;
 }

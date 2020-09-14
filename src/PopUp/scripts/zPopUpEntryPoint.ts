@@ -1,5 +1,4 @@
-﻿import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/CommandCompleted_Observer";
-import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
+﻿import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
@@ -20,6 +19,7 @@ import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessage
 import { BrowserTabAgent } from "./Managers/TabManager";
 import { UiManager } from "./Managers/UiManager/UiManager";
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
+import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;

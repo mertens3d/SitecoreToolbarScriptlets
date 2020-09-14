@@ -8,13 +8,14 @@ import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Int
 import { IDataStateOfTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
-import { ContentEditorTreeMutationEvent_Subject } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/ContentEditorTreeMutationEvent_Subject';
+import { TreeMutationEvent_Subject } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject';
 import { ScContentTreeNodeProxy } from '../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
+import { InitResultsScWindowManager, InitResultTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 
 export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
   private AssociatedDoc: IDataOneDoc;
 
-  TreeMutationEvent_Subject: ContentEditorTreeMutationEvent_Subject;
+  TreeMutationEvent_Subject: TreeMutationEvent_Subject;
   private TreeContainerElement: HTMLElement;
 
   constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, treeContainerElement: HTMLElement) {
@@ -27,22 +28,20 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
 
     this.Logger.LogAsJsonPretty('this.AssociatedDoc', this.AssociatedDoc);
 
-    this.InitCeTreeProxy();
-    this.WireEvents();
-
     this.Logger.InstantiateEnd(TreeProxy.name);
   }
 
-  private InitCeTreeProxy() {
-    this.Logger.FuncStart(this.InitCeTreeProxy.name);
+  OnReadyInitTreeProxy():InitResultTreeProxy {
+    this.Logger.FuncStart(this.OnReadyInitTreeProxy.name);
+    let initResultTreeProxy = new InitResultTreeProxy();
 
-    this.Logger.FuncEnd(this.InitCeTreeProxy.name);
-  }
+    this.TreeMutationEvent_Subject = new TreeMutationEvent_Subject(this.Logger, this.TreeContainerElement, '', this.AssociatedDoc);
 
-  WireEvents() {
+    initResultTreeProxy.TreeInitialized = true;
 
-    this.TreeMutationEvent_Subject = new ContentEditorTreeMutationEvent_Subject(this.Logger, this.TreeContainerElement, '', this.AssociatedDoc);
+    this.Logger.FuncEnd(this.OnReadyInitTreeProxy.name);
 
+    return initResultTreeProxy;
   }
 
   GetTreeNodeByGlyph(targetNode: IDataStateOfScContentTreeNode): ScContentTreeNodeProxy {
@@ -57,7 +56,7 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
       var foundOnPageTreeGlyph: HTMLImageElement = <HTMLImageElement>this.TreeContainerElement.querySelector('[id=' + treeGlyphTargetId + ']');
 
       if (foundOnPageTreeGlyph) {
-        toReturn = new ScContentTreeNodeProxy(this.Logger, foundOnPageTreeGlyph, this.TreeContainerElement);
+        toReturn = new ScContentTreeNodeProxy(this.Logger, foundOnPageTreeGlyph);
         this.Logger.Log('Found it ' + toReturn.GetNodeLinkText());
       } else {
         this.Logger.Log('Not Found');
@@ -112,7 +111,7 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
     if (targetNode) {
       var firstChildGlyphNode: HTMLImageElement = <HTMLImageElement>targetNode.querySelector(ContentConst.Const.Selector.SC.ContentEditor.ContentTreeNodeGlyph);
       if (firstChildGlyphNode) {
-        let treeNodeProxy = new ScContentTreeNodeProxy(this.Logger, firstChildGlyphNode, this.TreeContainerElement);
+        let treeNodeProxy = new ScContentTreeNodeProxy(this.Logger, firstChildGlyphNode);
 
         this.Logger.LogVal('treeNodeProxy.IsContentTreeNode', treeNodeProxy.IsContentTreeNode() + ' ' + treeNodeProxy.GetNodeLinkText());
 

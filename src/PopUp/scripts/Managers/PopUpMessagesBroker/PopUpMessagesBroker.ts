@@ -4,9 +4,9 @@ import { ScWindowStateValidator } from "../../../../Shared/scripts/Classes/ScWin
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../../Shared/scripts/Interfaces/Events/IDataContentReplyReceivedEvent_Payload";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
-//export class PopUpMessagesBroker_Subject extends GenericEvent_Subject<IDataContentReplyReceivedEvent_Payload> {
+//export class PopUpMessagesBroker_Subject extends HindeSiteEvent_Subject<IDataContentReplyReceivedEvent_Payload> {
 
 
 //}

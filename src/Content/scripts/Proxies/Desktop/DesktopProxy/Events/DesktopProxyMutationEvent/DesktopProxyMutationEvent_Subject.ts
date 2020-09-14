@@ -1,18 +1,22 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IDesktopDomChangedEvent_Payload } from "./IDomChangedEvent_Payload";
-import { GenericEvent_Subject } from "../GenericEvent/GenericEvent_Subject";
+import { CEFrameProxy } from "../../../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxyForContentEditor";
+import { HindeSiteEvent_Subject } from "../_HindSiteEvent/HindeSiteEvent_Subject";
+import { IDesktopProxyMutationEvent_Payload } from "./IDesktopProxyMutationEvent_Payload";
 
-export class DesktopDomChangedEvent_Subject extends GenericEvent_Subject<IDesktopDomChangedEvent_Payload>  {
+export class DesktopProxyMutationEvent_Subject extends HindeSiteEvent_Subject<IDesktopProxyMutationEvent_Payload>  {
   private AssociatedDoc: IDataOneDoc;
 
   constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc) {
-    super(logger, DesktopDomChangedEvent_Subject.name);
+    super(logger, DesktopProxyMutationEvent_Subject.name);
 
-    this.Logger.InstantiateStart(DesktopDomChangedEvent_Subject.name);
+    this.Logger.InstantiateStart(DesktopProxyMutationEvent_Subject.name);
+    if (!targetDoc) {
+      this.Logger.ErrorAndThrow(DesktopProxyMutationEvent_Subject.name, 'No target doc');
+    }
     this.AssociatedDoc = targetDoc;
     this.InitMutationObserver();
-    this.Logger.InstantiateEnd(DesktopDomChangedEvent_Subject.name);
+    this.Logger.InstantiateEnd(DesktopProxyMutationEvent_Subject.name);
   }
 
   private HandleMutationEvent(mutations: MutationRecord[]) {
@@ -25,19 +29,23 @@ export class DesktopDomChangedEvent_Subject extends GenericEvent_Subject<IDeskto
         let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
         this.Logger.Log('-----> ' + mutatedElement.id);
 
-        let addedIframes: HTMLIFrameElement[] = [];
+        let addedFrameProxies: CEFrameProxy[] = [];
+
         mutation.addedNodes.forEach((addedNode) => {
           if (addedNode instanceof HTMLIFrameElement) {
-            addedIframes.push(<HTMLIFrameElement>addedNode);
+
+            let frameProxy = new CEFrameProxy(this.Logger, addedNode, 'todo', null);
+            addedFrameProxies.push(frameProxy);
           }
         })
 
-        let message: IDesktopDomChangedEvent_Payload = {
+        let desktopMutatedEvent_Payload: IDesktopProxyMutationEvent_Payload = {
           MutatedElement: mutatedElement,
-          AddedIframes: addedIframes
+          AddedCEFrameProxies: addedFrameProxies,
+          FrameProxyMutationEvent_Payload: null
         }
 
-        this.NotifyObservers(message);
+        this.NotifyObservers(desktopMutatedEvent_Payload);
       }
     });
   }
@@ -57,7 +65,7 @@ export class DesktopDomChangedEvent_Subject extends GenericEvent_Subject<IDeskto
         }
       }
       else {
-        this.Logger.ErrorAndThrow(this.InitMutationObserver.name, 'no TreeHolder Elem');
+        this.Logger.ErrorAndThrow(this.InitMutationObserver.name, 'no AssociatedDoc');
       }
     }
     catch (err) {

@@ -14,7 +14,7 @@ import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IC
 import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { IScWindowManager } from '../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { ISettingsAgent, InitResultsScWindowManager } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent/AutoSnapShotAgent';
 import { ContentAtticAgent } from './Agents/ContentAtticAgent/ContentAtticAgent';
 import { MiscAgent } from './Agents/MiscAgent/MiscAgent';
@@ -66,7 +66,8 @@ class ContentEntry {
 
     await scUiMan.InitSitecoreUiManager()
       .then(() => contentMessageMan.InitContentMessageManager())
-      .then(() => scWinMan.InitScWindowManager())
+      .then(() => scWinMan.OnReadyInitScWindowManager())
+      .then((result: InitResultsScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
 
       .then(() => {
         let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, scWinMan,
