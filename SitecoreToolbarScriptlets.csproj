@@ -156,6 +156,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUiModule.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUiVisiblityTestResult.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\CEFrameProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataFriendly.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataMetaData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataStateOfSitecoreWindow.ts" />
@@ -275,7 +276,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\IIterationResults.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\NewWindowDest.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\Guid.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\Proxies\FrameProxy.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\_BaseFrameProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Agents\MiscAgent\MiscAgent.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeRestoreDesktop\RecipeRestoreDesktop.ts" />
@@ -319,6 +320,7 @@
     <Folder Include="src\PopUp\scripts\Promises\" />
     <Folder Include="src\Shared\scripts\Agents\Agents\HelperAgent\" />
     <Folder Include="src\Shared\scripts\Agents\Agents\RestoreAgent\" />
+    <Folder Include="src\Shared\scripts\Interfaces\Data\Proxies\" />
     <Folder Include="src\Shared\scripts\Interfaces\Events\" />
   </ItemGroup>
   <ItemGroup>

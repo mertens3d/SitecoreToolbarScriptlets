@@ -51,7 +51,7 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
     if (targetNode && this.TreeContainerElement) {
       var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.ItemId);
 
-      this.Logger.Log('looking for: (' + targetNode.Friendly + ')' + treeGlyphTargetId + ' in id:' + this.TreeContainerElement.id);
+      this.Logger.Log('looking for: (' + targetNode.FriendlyTreeNode + ')' + treeGlyphTargetId + ' in id:' + this.TreeContainerElement.id);
 
       var foundOnPageTreeGlyph: HTMLImageElement = <HTMLImageElement>this.TreeContainerElement.querySelector('[id=' + treeGlyphTargetId + ']');
 

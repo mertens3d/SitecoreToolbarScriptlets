@@ -21,6 +21,11 @@ export class SharedConst {
       Html: {
         beforeend: 'beforeend',
         optgroup: 'optgroup',
+      },
+      Javascript: {
+        ReadyStates: {
+          Complete: "complete"
+        }
       }
     },
     Logger: {

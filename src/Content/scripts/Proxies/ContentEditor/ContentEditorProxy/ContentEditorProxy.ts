@@ -37,33 +37,35 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.InstantiateEnd(ContentEditorProxy.name);
   }
 
-  OnReadyInitContentEditorProxy(): InitResultContentEditorProxy {
-    this.Logger.FuncStart(this.OnReadyInitContentEditorProxy.name);
+  OnReadyInitContentEditorProxy(): Promise<InitResultContentEditorProxy> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.OnReadyInitContentEditorProxy.name);
 
-    let initResultContentEditorProxy = new InitResultContentEditorProxy();
-    try {
-      this.ChildTreeProxy = new TreeProxy(this.Logger, this.AssociatedDoc, this.GetTreeContainer());
+      let initResultContentEditorProxy = new InitResultContentEditorProxy();
+      let recipeBasic = new RecipeBasics(this.Logger);
+      await recipeBasic.WaitForPageReadyNative(this.AssociatedDoc)
+        .then(() => {
+          this.ChildTreeProxy = new TreeProxy(this.Logger, this.AssociatedDoc, this.GetTreeContainer());
 
-      initResultContentEditorProxy.InitResultTreeProxy = this.ChildTreeProxy.OnReadyInitTreeProxy();
+          initResultContentEditorProxy.InitResultTreeProxy = this.ChildTreeProxy.OnReadyInitTreeProxy();
 
-      this.ContentEditorProxyMutationEvent_Subject = new ContentEditorProxyMutationEvent_Subject(this.Logger);
+          this.ContentEditorProxyMutationEvent_Subject = new ContentEditorProxyMutationEvent_Subject(this.Logger);
 
-      this.TreeMutationEvent_Observer = new TreeMutationEvent_Observer(this.Logger, this);
+          this.TreeMutationEvent_Observer = new TreeMutationEvent_Observer(this.Logger, this);
 
-      if (this.ChildTreeProxy) {
-        this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
-      } else {
-        this.Logger.ErrorAndThrow(this.OnReadyInitContentEditorProxy.name, 'no child tree found');
-      }
+          if (this.ChildTreeProxy) {
+            this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
+          } else {
+            this.Logger.ErrorAndThrow(this.OnReadyInitContentEditorProxy.name, 'no child tree found');
+          }
 
-      initResultContentEditorProxy.ContentEditorProxyInitialized = true;
-    } catch (err) {
-      this.Logger.ErrorAndThrow(this.OnReadyInitContentEditorProxy.name, err);
-    }
+          initResultContentEditorProxy.ContentEditorProxyInitialized = true;
+        })
+        .then(() => resolve(initResultContentEditorProxy))
+        .catch((err) => reject(this.OnReadyInitContentEditorProxy.name + ' | ' + err));
 
-    this.Logger.FuncStart(this.OnReadyInitContentEditorProxy.name);
-
-    return (initResultContentEditorProxy);
+      this.Logger.FuncEnd(this.OnReadyInitContentEditorProxy.name);
+    });
   }
 
   GetTreeContainer(): HTMLElement {
@@ -74,7 +76,8 @@ export class ContentEditorProxy extends LoggableBase {
     let contentEditorProxyMutationEvent_Payload: IContentEditorProxyMutationEvent_Payload = {
       AddedIframes: [],
       MutatedElement: null,
-      TreeMutation: payload
+      TreeMutation: payload,
+      ContentEditorProxy:this
     }
     if (this.ContentEditorProxyMutationEvent_Subject) {
       this.ContentEditorProxyMutationEvent_Subject.NotifyObservers(contentEditorProxyMutationEvent_Payload);
@@ -188,7 +191,7 @@ export class ContentEditorProxy extends LoggableBase {
       this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
     }
 
-    this.Logger.FuncEnd(this.GetActiveNode.name, toReturn.Friendly);
+    this.Logger.FuncEnd(this.GetActiveNode.name, toReturn.FriendlyTreeNode);
     return toReturn;
   }
 }

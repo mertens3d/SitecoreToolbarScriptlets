@@ -2,14 +2,14 @@
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { FrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy';
+import { _BaseFrameProxy } from '../../../Proxies/_BaseFrameProxy';
 import { IDataStateOfFrame } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
-import { CEFrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxyForContentEditor';
+import { CEFrameProxy } from '../../../Proxies/CEFrameProxy';
 
 export class RecipeRestoreFrameOnDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;

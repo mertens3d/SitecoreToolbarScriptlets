@@ -2,7 +2,7 @@
 import { IDataPublishChain } from "./Data/IDataPublishChain";
 import { IScVerSpec } from "./IScVerSpec";
 import { IDataOneDoc } from "./data/IDataOneDoc";
-import { FrameProxy } from "./Data/Proxies/FrameProxy";
+import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProxy";
 //import { FrameProxy } from "./Data/Proxies/FrameProxy";
 
 export interface IRecipeBasics {
@@ -13,9 +13,9 @@ export interface IRecipeBasics {
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string);
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string, maxIteration: number);
   WaitForIframeElemAndReturnWhenReady(ContentDoc: IDataOneDoc, ContentIFrame1: string, arg2: string);
-  WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: IDataOneDoc): Promise<FrameProxy>;
+  WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: IDataOneDoc): Promise<_BaseFrameProxy>;
   WaitForPageReadyNative(targetDoc: IDataOneDoc);
-  WaitForReadyIframe(jqIframe: FrameProxy): Promise<FrameProxy>;
+  WaitForReadyFrameProxy(jqIframe: _BaseFrameProxy): Promise<_BaseFrameProxy>;
   WaitForThenClick(arg0: string[], arg1: IDataOneDoc);
-  GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<FrameProxy>
+  GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<_BaseFrameProxy>
 }

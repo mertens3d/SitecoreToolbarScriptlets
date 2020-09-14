@@ -7,7 +7,7 @@ export class HindSiteSetting implements IGenericSetting {
   Enabled: Enabled;
   DataType: SettingType;
   DefaultValue: any;
-  Friendly: string;
+  FriendlySetting: string;
   SettingFlavor: SettingFlavor;
   SettingKey: SettingKey;
   UiSelector: string;
@@ -20,7 +20,7 @@ export class HindSiteSetting implements IGenericSetting {
     this.UiSelector = uiSelector;
     this.DefaultValue = defaultValue;
     this.SettingFlavor = settingFlavor;
-    this.Friendly = friendly;
+    this.FriendlySetting = friendly;
     this.HasUi = hasUi;
     this.Enabled = enabled;
   }

@@ -9,7 +9,8 @@ import { DesktopProxy } from '../DesktopProxy/DesktopProxy';
 import { ITreeMutationEvent_Payload } from '../DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { TreeMutationEvent_Observer } from '../DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer';
-import { IFrameProxyMutationEvent_Payload } from '../DesktopProxy/Events/FrameProxyMutationEvent/IFrameProxyMutationEvent_Payload';
+import { ICEFrameProxyMutationEvent_Payload } from '../DesktopProxy/Events/FrameProxyMutationEvent/IFrameProxyMutationEvent_Payload';
+import { CEFrameProxy } from '../../CEFrameProxy';
 
 export class DesktopStartBarProxy extends LoggableBase {
   private CeProxies: ContentEditorProxy[] = [];
@@ -56,7 +57,7 @@ export class DesktopStartBarProxy extends LoggableBase {
     return foundStartBarProxy;
   }
 
-  OnContentEditorProxyAdded(frameProxyMutated_Payload: IFrameProxyMutationEvent_Payload) {
+  OnContentEditorProxyAdded(frameProxyMutated_Payload: ICEFrameProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.OnContentEditorProxyAdded.name);
 
     if (frameProxyMutated_Payload) {
@@ -74,26 +75,31 @@ export class DesktopStartBarProxy extends LoggableBase {
     this.Logger.FuncEnd(this.OnContentEditorProxyAdded.name);
   }
 
-  OnTreeMutationEvent_DesktopStartBarProxy(treeMutationEvent_Payload: ITreeMutationEvent_Payload) {
+  OnTreeMutationEvent_DesktopStartBarProxy(ceframeProxyMutationEvent_Payload: ICEFrameProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.OnTreeMutationEvent_DesktopStartBarProxy.name);
     // at this point we have a new active node (or some other change event)
 
-    if (treeMutationEvent_Payload) {
-      this.Logger.Log('todo')
-      //let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(treeMutationEvent_Payload.AssociatedIframeElemId);
+    if (ceframeProxyMutationEvent_Payload) {
+      if (ceframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload && ceframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutation) {
+        let treeMutationEvent_Payload: ITreeMutationEvent_Payload = ceframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutation;
+        let ceframeProxy: CEFrameProxy = ceframeProxyMutationEvent_Payload.CeFrameProxy;
 
-      //if (iframeElement) {
-      //  if (treeMutationEvent_Payload.ActiveNode) {
-      //    let desktopStartBarButtonProxy: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(treeMutationEvent_Payload.AssociatedIframeElemId);
+        if (treeMutationEvent_Payload.ActiveNode) {
+          let desktopStartBarButtonProxy: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(ceframeProxy.HTMLIframeElement.id);
 
-      //    desktopStartBarButtonProxy.Update(desktopStartBarButtonProxy, treeMutationEvent_Payload.ActiveNode);
-      //  }
+          desktopStartBarButtonProxy.Update(desktopStartBarButtonProxy, treeMutationEvent_Payload.ActiveNode);
+        }
+        //let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(treeMutationEvent_Payload.AssociatedIframeElemId);
 
-      //we need to know what the associated button is
-      //we can get that by knowing the id of the CE
-      //} else {
-      //  this.Logger.ErrorAndContinue(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Did not find Frame');
-      //}
+        //if (iframeElement) {
+        //  }
+
+        //we need to know what the associated button is
+        //we can get that by knowing the id of the CE
+        //} else {
+        //  this.Logger.ErrorAndContinue(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Did not find Frame');
+        //}
+      }
     } else {
       this.Logger.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Null payload');
     }

@@ -3,6 +3,6 @@
 export interface IDataStateOfScContentTreeNode {
   IsActive: Boolean;
   IsExpanded: Boolean;
-  Friendly: string;
+  FriendlyTreeNode: string;
   ItemId: GuidData;
 }

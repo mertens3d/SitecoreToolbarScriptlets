@@ -1,46 +1,59 @@
-﻿import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { LoggableBase } from "../Managers/LoggableBase";
-import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
+﻿import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { FrameProxy } from "../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy";
+import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { _BaseFrameProxy } from "../Proxies/_BaseFrameProxy";
+import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
+import { LoggableBase } from "../Managers/LoggableBase";
 
 export class FrameHelper extends LoggableBase {
-
   constructor(logger: ILoggerAgent) {
     super(logger);
   }
 
-  async GetLiveFrames(targetDoc: IDataOneDoc): Promise<FrameProxy[]> {
-    this.Logger.FuncStart(this.GetLiveFrames.name);
+  GetIFramesFromDoc(targetDoc: IDataOneDoc): HTMLIFrameElement[] {
+    let toReturnIframeAr: HTMLIFrameElement[] = [];
+    var queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
-    var toReturn: FrameProxy[] = [];
-
-    var iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
-
-    if (!iframeAr) {
-      iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
+    if (!queryResults) {
+      queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
     }
 
-    this.Logger.LogVal('found iframes count', iframeAr.length);
-    if (iframeAr) {
-      for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
-        this.Logger.Log('pushing idx: ' + ifrIdx);
+    if (queryResults) {
+      for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
+        var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>queryResults[ifrIdx];
+        if (iframeElem) {
+          toReturnIframeAr.push(iframeElem);
+        }
+      }
+    }
+    this.Logger.LogVal('found iframes count', toReturnIframeAr.length);
 
-        var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        let factoryHelper = new FactoryHelper(this.Logger);
+    return toReturnIframeAr;
+  }
 
-        await factoryHelper.FrameProxyForPromiseFactory(iframeElem, 'desktop Iframe_' + ifrIdx)
-          .then((result) => toReturn.push(result));
+  async GetIFramesAsFrameProxies(targetDoc: IDataOneDoc): Promise<_BaseFrameProxy[]> {
+    return new Promise((resolve, reject) => {
+      this.Logger.FuncStart(this.GetIFramesAsFrameProxies.name);
+
+      var toReturn: _BaseFrameProxy[] = [];
+      let iframeAr = this.GetIFramesFromDoc(targetDoc);
+      let recipeBasics = new RecipeBasics(this.Logger);
+
+      let factoryHelper = new FactoryHelper(this.Logger);
+
+      if (iframeAr) {
+        iframeAr.forEach(async (iframeElem: HTMLIFrameElement, ifrIdx) => {
+          await recipeBasics.WaitForPageReadyHtmlIframeElement(iframeElem)
+            .then(() => factoryHelper.FrameProxyForPromiseFactory(iframeElem, 'desktop Iframe_' + ifrIdx))
+            .then((result) => toReturn.push(result))
+            .catch((err) => reject(this.GetIFramesAsFrameProxies.name + ' | ' + err));
+        });
       }
 
-      //this.Logger.LogAsJsonPretty('toReturn', toReturn);
-      this.Logger.LogVal('GetAllLiveIframeData: iframe count', toReturn.length);
+      this.Logger.FuncEnd(this.GetIFramesAsFrameProxies.name, 'count: ' + toReturn.length);
 
-      this.Logger.FuncEnd(this.GetLiveFrames.name);
-
-      return toReturn;
-    }
+      resolve(toReturn);
+    });
   }
 }

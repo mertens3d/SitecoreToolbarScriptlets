@@ -10,6 +10,7 @@ import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interface
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../../Shared/scripts/Interfaces/IOneStorageData";
 import { DefaultStateOfSnapshotStorage } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
+import { DefaultFriendly, DefaultMetaData } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow";
 
 export class ContentAtticAgent implements IContentAtticAgent {
   private RepoAgent: IRepositoryAgent;
@@ -34,7 +35,6 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WriteStateOfSitecoreToStorage.name);
 
-
       let storageKey = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix + stateOfSitecoreWindow.Meta.SessionId + '.' + stateOfSitecoreWindow.Meta.TimeStamp.valueOf();
 
       stateOfSitecoreWindow.Meta.StorageKey = storageKey;
@@ -50,7 +50,6 @@ export class ContentAtticAgent implements IContentAtticAgent {
     });
   }
 
-  
   GetFromStorageBySnapShotId(needleId: GuidData): IDataStateOfSitecoreWindow {
     this.Logger.FuncStart(this.GetFromStorageBySnapShotId.name, needleId.Raw);
 
@@ -72,22 +71,30 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return DateOneWinStoreMatch;
   }
 
-  private __parseRawData(oneRaw: IOneStorageData) {
+  private ValidateStorageData(oneRaw: IOneStorageData): IDataStateOfSitecoreWindow {
     var candidate: IDataStateOfSitecoreWindow = <IDataStateOfSitecoreWindow>JSON.parse(oneRaw.data);
 
     if (candidate) {
-      candidate.Meta.TimeStamp = new Date(candidate.Meta.TimeStamp);
+      if (!candidate.Meta) {
+        candidate.Meta = new DefaultMetaData();
+      }
+      
+      candidate.Meta.TimeStamp = new Date(candidate.Meta.TimeStamp); 
 
       if (!candidate.Meta.WindowType) {
         candidate.Meta.WindowType = ScWindowType.Unknown;
         candidate.Friendly.WindowType = ScWindowType[candidate.Meta.WindowType];
       }
 
+      if (!candidate.Friendly) {
+        candidate.Friendly = new DefaultFriendly();
+      }
+
       if (!candidate.Friendly.NickName) {
         candidate.Friendly.NickName = '';
       }
     } else {
-      this.Logger.ErrorAndThrow(this.__parseRawData.name, 'Saved data did not import correctly')
+      this.Logger.ErrorAndThrow(this.ValidateStorageData.name, 'Saved data did not import correctly')
     }
     return candidate
   }
@@ -112,7 +119,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
 
     if (rawStorageData) {
       for (var idx = 0; idx < rawStorageData.length; idx++) {
-        toReturn.push(this.__parseRawData(rawStorageData[idx]));
+        toReturn.push(this.ValidateStorageData(rawStorageData[idx]));
       }
     }
 
@@ -252,9 +259,16 @@ export class ContentAtticAgent implements IContentAtticAgent {
   }
 
   TimeNicknameFavStrForConfirmation(data: IDataStateOfSitecoreWindow): string {
-    var result = data.Friendly.TimeStamp + ' ' + data.Friendly.NickName + ' ' + Guid.AsShort(data.Meta.SnapshotId);
-    result = result.replace(new RegExp(/&nbsp;/ig), '');
-    return result;
+    let toReturn: string = '';
+
+    if (data) {
+      var result = data.Friendly.TimeStamp + ' ' + data.Friendly.NickName + ' ' + Guid.AsShort(data.Meta.SnapshotId);
+      toReturn = result.replace(new RegExp(/&nbsp;/ig), '');
+    }
+    else {
+      this.Logger.ErrorAndThrow(this.TimeNicknameFavStrForConfirmation.name, 'null data');
+    }
+    return toReturn;
   }
 
   RemoveAndConfirmRemoval(storageMatch: IDataStateOfSitecoreWindow): void {

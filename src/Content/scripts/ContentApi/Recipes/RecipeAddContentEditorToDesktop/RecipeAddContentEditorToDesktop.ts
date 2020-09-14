@@ -1,14 +1,14 @@
 ﻿import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ISettingsAgent, InitResultsFrameProxy } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { ISettingsAgent, InitResultsCEFrameProxy } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { FrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy';
+import { _BaseFrameProxy } from '../../../Proxies/_BaseFrameProxy';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { FrameHelper } from '../../../Helpers/IframeHelper';
-import { CEFrameProxy } from '../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxyForContentEditor';
+import { CEFrameProxy } from '../../../Proxies/CEFrameProxy';
 
 export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements ICommandRecipes {
   private TargetDoc: IDataOneDoc;
@@ -28,13 +28,13 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
 
   Execute(): Promise<CEFrameProxy> {
     return new Promise(async (resolve, reject) => {
-      let allIframeDataAtBeginning: FrameProxy[];
+      let allIframeDataAtBeginning: _BaseFrameProxy[];
       let ceframeProxy: CEFrameProxy;
       let frameHelper = new FrameHelper(this.Logger);
       let recipeBasics = new RecipeBasics(this.Logger);
 
 
-      await frameHelper.GetLiveFrames(this.TargetDoc)
+      await frameHelper.GetIFramesAsFrameProxies(this.TargetDoc)
         .then((result) => allIframeDataAtBeginning = result)
         .catch((err) => reject(this.Execute.name + ' ' + err));
 
@@ -44,7 +44,7 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
         .then(() => recipeBasics.WaitForNewIframeContentEditor(allIframeDataAtBeginning, this.TargetDoc))
         .then((result: CEFrameProxy) => ceframeProxy = result)
         .then(() => ceframeProxy.OnReadyInitCEFrameProxy())
-        .then((result: InitResultsFrameProxy) => this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result))
+        .then((result: InitResultsCEFrameProxy) => this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result))
         .then(() => resolve(ceframeProxy))
         .catch((err) => reject(this.Execute.name + ' ' + err));
     });

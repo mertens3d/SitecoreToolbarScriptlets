@@ -47,9 +47,9 @@ export class EventManager extends LoggableBase {
     //if has label
     let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
     if (uiLabel) {
-      uiLabel.innerHTML = oneSetting.Friendly;
+      uiLabel.innerHTML = oneSetting.FriendlySetting;
     } else {
-      uiElem.innerHTML = oneSetting.Friendly;
+      uiElem.innerHTML = oneSetting.FriendlySetting;
     }
   }
 

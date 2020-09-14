@@ -140,7 +140,7 @@ export class UiManager {
         if (!setting.ValueAsBool()) {
           window.close();
         } else {
-          this.Logger.Log('Window not closed because of setting: ' + setting.Friendly)
+          this.Logger.Log('Window not closed because of setting: ' + setting.FriendlySetting)
         }
         resolve();
       } catch (err) {

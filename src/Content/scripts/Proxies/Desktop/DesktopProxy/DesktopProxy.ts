@@ -1,9 +1,9 @@
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 import { SettingKey } from "../../../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { ISettingsAgent, InitResultsScWindowManager, InitResultsDesktopProxy, InitResultsFrameProxy } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { ISettingsAgent, InitResultsScWindowManager, InitResultsDesktopProxy, InitResultsCEFrameProxy } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy";
+import { _BaseFrameProxy } from "../../_BaseFrameProxy";
 import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
 import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
@@ -12,22 +12,27 @@ import { FrameHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
 import { DesktopProxyMutationEvent_Observer } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer";
-import { DesktopFrameProxyBucket } from "./DesktopFrameProxyBucket";
+import { CEFrameProxyBucket } from "./DesktopFrameProxyBucket";
 import { DesktopProxyMutationEvent_Subject } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject";
 import { IDesktopProxyMutationEvent_Payload } from "./Events/DesktopProxyMutationEvent/IDesktopProxyMutationEvent_Payload";
-import { CEFrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxyForContentEditor";
+import { CEFrameProxy } from "../../CEFrameProxy";
+import { CEFrameProxyMutationEvent_Observer } from "./Events/FrameProxyMutationEvent/FrameProxyMutationEvent_Observer";
+import { ICEFrameProxyMutationEvent_Payload } from "./Events/FrameProxyMutationEvent/IFrameProxyMutationEvent_Payload";
+import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 
 export class DesktopProxy extends LoggableBase {
   private __iframeHelper: FrameHelper;
   private __dtStartBarAgent: DesktopStartBarProxy;
 
+  CEFrameProxyMutationEvent_Observer: CEFrameProxyMutationEvent_Observer;
   DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
   DesktopStartBarAgent: DesktopStartBarProxy;
   private AssociatedDoc: IDataOneDoc;
-  private DesktopFrameProxyBucket: DesktopFrameProxyBucket;
+  private DesktopFrameProxyBucket: CEFrameProxyBucket;
   private DomChangedEvent_Subject: DesktopProxyMutationEvent_Subject;
   private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
+  private RecipeBasics: RecipeBasics;
 
   constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
@@ -37,7 +42,7 @@ export class DesktopProxy extends LoggableBase {
       this.MiscAgent = miscAgent;
       this.SettingsAgent = settingsAgent;
       this.AssociatedDoc = associatedDoc;
-      this.DesktopFrameProxyBucket = new DesktopFrameProxyBucket(this.Logger, this);
+      this.RecipeBasics = new RecipeBasics(this.Logger);
     } else {
       this.Logger.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
     }
@@ -50,9 +55,10 @@ export class DesktopProxy extends LoggableBase {
 
       let initResultsDesktopProxy = new InitResultsDesktopProxy();
 
-      await this.OnReadyPopulateFrameProxyBucket()
-        .then(() => this.DesktopFrameProxyBucket.OnReadyInitCEFrames())
-        .then((results: InitResultsFrameProxy[]) => initResultsDesktopProxy.InitResultsFrameProxies = results)
+      this.CEFrameProxyMutationEvent_Observer = new CEFrameProxyMutationEvent_Observer(this.Logger, this);
+      this.DesktopFrameProxyBucket = new CEFrameProxyBucket(this.Logger);
+
+      await this.OnReadyPopulateCEFrameProxyBucket()
         .then(() => {
           this.DesktopStartBarAgent = new DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
           let self = this;
@@ -66,9 +72,17 @@ export class DesktopProxy extends LoggableBase {
     });
   }
 
-  OnFrameProxyMutation(desktopFrameProxyMutatationEvent_Payload: IDesktopProxyMutationEvent_Payload) {
+  OnCEFrameProxyMutationEvent(frameProxyMutatationEvent_Payload: ICEFrameProxyMutationEvent_Payload) {
+    this.Logger.FuncStart(this.OnCEFrameProxyMutationEvent.name);
+
+    this.DesktopStartBarAgent.OnTreeMutationEvent_DesktopStartBarProxy(frameProxyMutatationEvent_Payload);
+
+      this.Logger.FuncEnd(this.OnCEFrameProxyMutationEvent.name);
+  }
+
+  OnCEFrameProxyMutation(desktopCEFrameProxyMutatationEvent_Payload: IDesktopProxyMutationEvent_Payload) {
     if (this.DesktopProxyMutationEvent_Subject) {
-      this.DesktopProxyMutationEvent_Subject.NotifyObservers(desktopFrameProxyMutatationEvent_Payload);
+      this.DesktopProxyMutationEvent_Subject.NotifyObservers(desktopCEFrameProxyMutatationEvent_Payload);
     }
   }
 
@@ -79,17 +93,17 @@ export class DesktopProxy extends LoggableBase {
     return this.__iframeHelper;
   }
 
-  async OnReadyPopulateFrameProxyBucket(): Promise<void> {
+  async OnReadyPopulateCEFrameProxyBucket(): Promise<void> {
     try {
-      await this.GetFrameHelper().GetLiveFrames(this.AssociatedDoc)
+      await this.GetFrameHelper().GetIFramesAsFrameProxies(this.AssociatedDoc)
         .then((frameProxies: CEFrameProxy[]) => {
-          frameProxies.forEach(async (oneIframe) => {
-            this.DesktopFrameProxyBucket.AddToFrameProxyBucket(oneIframe);
+          frameProxies.forEach(async (oneIframe: _BaseFrameProxy) => {
+            this.AddCEFrameProxyAsync(<CEFrameProxy>oneIframe);
           });
-        })
+        });
     }
     catch (err) {
-      this.Logger.ErrorAndThrow(this.OnReadyPopulateFrameProxyBucket.name, err);
+      this.Logger.ErrorAndThrow(this.OnReadyPopulateCEFrameProxyBucket.name, err);
     }
   }
 
@@ -103,8 +117,34 @@ export class DesktopProxy extends LoggableBase {
     this.DomChangedEvent_Subject.RegisterObserver(DomChangeEvent_Observer);
   }
 
-  AddToFrameBucket(frameProxy: CEFrameProxy): any {
-    this.DesktopFrameProxyBucket.AddToFrameProxyBucket(frameProxy);
+  AddCEFrameProxyAsync(ceframeProxy: CEFrameProxy): void {
+    let initResultFrameProxy = new InitResultsCEFrameProxy();
+
+    if (ceframeProxy && ceframeProxy.ContentEditorProxy && ceframeProxy.ContentEditorProxy.AssociatedDoc) {
+      this.RecipeBasics.WaitForReadyFrameProxy(ceframeProxy)
+        .then(() => {
+          let result = this.DesktopFrameProxyBucket.AddToCEFrameProxyBucket(ceframeProxy);
+
+          if (result) {
+            ceframeProxy.OnReadyInitCEFrameProxy()
+              .then((result) => {
+                initResultFrameProxy = result;
+
+                let payload: IDesktopProxyMutationEvent_Payload = {
+                  AddedCEFrameProxies: [ceframeProxy],
+                  MutatedElement: null,
+                  FrameProxyMutationEvent_Payload: null
+                }
+                this.DesktopProxyMutationEvent_Subject.NotifyObservers(payload);
+              })
+              .then(() => ceframeProxy.FrameProxyMutationEvent_Subject.RegisterObserver(this.CEFrameProxyMutationEvent_Observer))
+              .catch((err) => this.Logger.ErrorAndThrow(this.AddCEFrameProxyAsync.name, err));
+          }
+        })
+    } else {
+      this.Logger.ErrorAndThrow(this.AddCEFrameProxyAsync.name, 'null ceframeProxy or ceframeProxy.Doc');
+    }
+    this.Logger.LogAsJsonPretty('InitResultsCEFrameProxy', initResultFrameProxy);
   }
 
   GetAssociatedDoc(): IDataOneDoc {
@@ -131,12 +171,12 @@ export class DesktopProxy extends LoggableBase {
 
     if (results) {
       for (var idx = 0; idx < results.length; idx++) {
-        let frameProxy: CEFrameProxy = results[idx];
+        let ceframeProxy: CEFrameProxy = results[idx];
 
-        let stateOfFrame = frameProxy.GetStateOfCEFrame();
+        let stateOfFrame = ceframeProxy.GetStateOfCEFrame();
 
         toReturnDesktopState.StateOfFrames.push(stateOfFrame);
-        if (frameProxy.GetZindex() === 1) {
+        if (ceframeProxy.GetZindex() === 1) {
           toReturnDesktopState.IndexOfActiveFrame = idx;
         }
       }
@@ -150,7 +190,7 @@ export class DesktopProxy extends LoggableBase {
       this.Logger.FuncStart(this.GetStateOfDesktop.name);
 
       try {
-        await this.GetIframeHelper().GetLiveFrames(this.AssociatedDoc)
+        await this.GetIframeHelper().GetIFramesAsFrameProxies(this.AssociatedDoc)
           .then((results: CEFrameProxy[]) => this.ProcessLiveFrames(results))
           .then((results: IDataStateOfDesktop) => resolve(results))
           .catch((err) => this.Logger.ErrorAndThrow(this.GetStateOfDesktop.name, err));

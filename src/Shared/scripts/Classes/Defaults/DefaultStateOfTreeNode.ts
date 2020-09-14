@@ -4,6 +4,6 @@ import { IDataStateOfScContentTreeNode } from "../../Interfaces/Data/States/IDat
 export class DefaultStateOfTreeNode implements IDataStateOfScContentTreeNode {
     IsActive = false;
     IsExpanded = false;
-    Friendly = '';
+    FriendlyTreeNode = '';
     ItemId = new GuidData();
 }

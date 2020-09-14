@@ -26,7 +26,7 @@ export class AccordianDrone {
       this.AddListener();
     } else {
       this.Logger.LogAsJsonPretty('this.AssociatedElement', this.AssociatedElement);
-      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'Sibling not found ' + this.AssociatedSetting.Friendly);
+      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'Sibling not found ' + this.AssociatedSetting.FriendlySetting);
     }
   }
 

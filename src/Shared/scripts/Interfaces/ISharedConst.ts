@@ -17,6 +17,11 @@
     Html: {
       beforeend: InsertPosition,
       optgroup: string,
+    },
+    Javascript: {
+      ReadyStates: {
+        Complete: DocumentReadyState
+      }
     }
   },
   Logger: {

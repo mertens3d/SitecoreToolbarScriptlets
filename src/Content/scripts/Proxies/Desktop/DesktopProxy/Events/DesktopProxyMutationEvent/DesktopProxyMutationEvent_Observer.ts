@@ -17,12 +17,12 @@ export class DesktopProxyMutationEvent_Observer extends HindSiteEvent_Observer<I
     if (payload && payload.AddedCEFrameProxies.length > 0) {
 
       payload.AddedCEFrameProxies.forEach(async (frameProxy) => {
-        this.Logger.LogVal('added iframe id', frameProxy.IframeElem.id);
+        this.Logger.LogVal('added iframe id', frameProxy.HTMLIframeElement.id);
 
         //let iframeProxy: FrameProxy = new FrameProxy(this.Logger, iframeElement, iframeElement.id, this.SettingsAgent);
 
         frameProxy.OnReadyInitCEFrameProxy()
-          .then(() => this.Owner.AddToFrameBucket(frameProxy))
+          .then(() => this.Owner.AddCEFrameProxyAsync(frameProxy))
           .catch((err) => { throw (DesktopProxyMutationEvent_Observer.name + ' | ' + err) });
       })
     }

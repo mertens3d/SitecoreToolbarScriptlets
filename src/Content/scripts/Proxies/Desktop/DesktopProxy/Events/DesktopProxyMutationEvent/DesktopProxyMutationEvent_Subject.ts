@@ -1,6 +1,6 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { CEFrameProxy } from "../../../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxyForContentEditor";
+import { CEFrameProxy } from "../../../../CEFrameProxy";
 import { HindeSiteEvent_Subject } from "../_HindSiteEvent/HindeSiteEvent_Subject";
 import { IDesktopProxyMutationEvent_Payload } from "./IDesktopProxyMutationEvent_Payload";
 
@@ -20,34 +20,39 @@ export class DesktopProxyMutationEvent_Subject extends HindeSiteEvent_Subject<ID
   }
 
   private HandleMutationEvent(mutations: MutationRecord[]) {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'childList') {
-        this.Logger.LogVal('mutation.type', mutation.type);
+    this.Logger.FuncStart(this.HandleMutationEvent.name);
+    if (this.HasObservers()) {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          this.Logger.LogVal('mutation.type', mutation.type);
 
-        this.Logger.Log('added nodes');
+          this.Logger.Log('added nodes');
 
-        let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
-        this.Logger.Log('-----> ' + mutatedElement.id);
+          let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
+          this.Logger.Log('-----> ' + mutatedElement.id);
 
-        let addedFrameProxies: CEFrameProxy[] = [];
+          let addedFrameProxies: CEFrameProxy[] = [];
 
-        mutation.addedNodes.forEach((addedNode) => {
-          if (addedNode instanceof HTMLIFrameElement) {
+          mutation.addedNodes.forEach((addedNode) => {
+            if (addedNode instanceof HTMLIFrameElement) {
+              let frameProxy = new CEFrameProxy(this.Logger, addedNode);
+              addedFrameProxies.push(frameProxy);
+            }
+          })
 
-            let frameProxy = new CEFrameProxy(this.Logger, addedNode, 'todo');
-            addedFrameProxies.push(frameProxy);
+          let desktopMutatedEvent_Payload: IDesktopProxyMutationEvent_Payload = {
+            MutatedElement: mutatedElement,
+            AddedCEFrameProxies: addedFrameProxies,
+            FrameProxyMutationEvent_Payload: null
           }
-        })
 
-        let desktopMutatedEvent_Payload: IDesktopProxyMutationEvent_Payload = {
-          MutatedElement: mutatedElement,
-          AddedCEFrameProxies: addedFrameProxies,
-          FrameProxyMutationEvent_Payload: null
+          this.NotifyObservers(desktopMutatedEvent_Payload);
         }
-
-        this.NotifyObservers(desktopMutatedEvent_Payload);
-      }
-    });
+      });
+    } else {
+      this.Logger.Log('No observers');
+    }
+    this.Logger.FuncEnd(this.HandleMutationEvent.name);
   }
 
   private InitMutationObserver() {

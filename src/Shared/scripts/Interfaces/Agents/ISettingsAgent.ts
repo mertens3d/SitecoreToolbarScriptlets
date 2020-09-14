@@ -4,34 +4,27 @@ import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";
 import { SettingFlavor } from "../../Enums/SettingFlavor";
 
 export class InitResultTreeProxy {
-    TreeInitialized: boolean = false;
-
+  TreeInitialized: boolean = false;
 }
 
 export class InitResultsScWindowManager {
   InitResultsDesktop: InitResultsDesktopProxy = null;
-
 }
 export class InitResultsDesktopProxy {
-  InitResultsFrameProxies: InitResultsFrameProxy[] = [];
-
+  InitResultsFrameProxies: InitResultsCEFrameProxy[] = [];
 }
-export class InitResultsFrameProxy {
-    InitResultContentEditorProxy: InitResultContentEditorProxy;
-    FrameProxyInitialized: boolean = false;
-
+export class InitResultsCEFrameProxy {
+  InitResultContentEditorProxy: InitResultContentEditorProxy;
+  FrameProxyInitialized: boolean = false;
 }
 export class InitResultContentEditorProxy {
-  InitResultTreeProxy: InitResultsFrameProxy;
+  InitResultTreeProxy: InitResultsCEFrameProxy;
   ContentEditorProxyInitialized: boolean = false;
-
-
 }
-
 
 export interface ISettingsAgent {
   CheckBoxSettingChanged(SettingKey: SettingKey, checked: boolean);
-  GetAllSettings():IGenericSetting[];
+  GetAllSettings(): IGenericSetting[];
   GetByKey(settingKey: SettingKey): IGenericSetting;
   GetSettingsByFlavor(targetFlavor: SettingFlavor[]): IGenericSetting[];
   InitSettingsAgent(allSettings: IGenericSetting[]): void;

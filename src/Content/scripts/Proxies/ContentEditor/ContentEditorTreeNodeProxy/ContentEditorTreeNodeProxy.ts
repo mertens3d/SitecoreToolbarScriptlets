@@ -67,7 +67,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     var newData: IDataStateOfScContentTreeNode = {
       IsExpanded: this.QueryIsExpanded(),
       IsActive: this.QueryIsActive(),
-      Friendly: this.GetNodeLinkText(),
+      FriendlyTreeNode: this.GetNodeLinkText(),
       ItemId: this.GetApparentItemId(),
     };
 

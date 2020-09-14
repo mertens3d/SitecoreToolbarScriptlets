@@ -20,7 +20,7 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
   private SelectedSnapshot: GuidData;
   private StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   private Tester: ButtonVisibilityTester;
-    ElemDivBtnOverlay: HTMLDivElement;
+  ElemDivBtnOverlay: HTMLDivElement;
 
   constructor(loggerAgent: ILoggerAgent, oneCommand: IOneCommand, tester: ButtonVisibilityTester) {
     super(loggerAgent);
@@ -30,8 +30,7 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
     if (this.Command.PlaceHolderSelector && this.Command.PlaceHolderSelector.length > 0) {
       this.PlaceHolderUiElem = document.querySelector(oneCommand.PlaceHolderSelector);
       if (this.Command.ModuleType === ModuleType.Button) {
-      this.BuildModuleButton();
-
+        this.BuildModuleButton();
       }
     }
   }
@@ -98,11 +97,9 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
       let allresults: VisiblityTestResults = this.TestAgainstAllSetControllers();
 
       this.SetCommandButtonVisibility(allresults);
-    } else {
-      this.Logger.LogAsJsonPretty('oneCommand', this.Command);
-      this.Logger.ErrorAndContinue(this.RefreshUi.name, 'target button not found: ' + this.Command.PlaceHolderSelector);
     }
   }
+
   private SetCommandButtonVisibility(allresults: VisiblityTestResults) {
     if (allresults && this.ElemButton) {
       if (!allresults.HasFailures()) {
@@ -112,8 +109,6 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
         if (this.ElemDivBtnOverlay) {
           this.ElemDivBtnOverlay.style.display = 'none';
         }
-
-
       } else {
         this.ElemButton.classList.add('disabled');
         this.ElemButton.setAttribute('disabled', 'disabled');

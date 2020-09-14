@@ -3,7 +3,7 @@ import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
 import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { FrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/Proxies/FrameProxy";
+import { _BaseFrameProxy } from "../../../Proxies/_BaseFrameProxy";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
@@ -33,7 +33,7 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
       try {
         if (currentWindowType === ScWindowType.Desktop) {
           await this.RecipeBasics.GetTopLevelIframe(targetDoc)
-            .then((topIframe: FrameProxy) => {
+            .then((topIframe: _BaseFrameProxy) => {
               resolve(topIframe.GetContentDoc());
             })
             .catch((err) => reject(this.GetDocToPublish.name + ' ' + err));
@@ -67,9 +67,9 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
     this.Logger.FuncStart(this.__debugDataPublishChain.name, nickname);
 
     this.Logger.LogVal('docToPublish', this.Logger.IsNullOrUndefined(dataPublishChain.DocToPublish));
-    this.Logger.LogVal('jqIframe', this.Logger.IsNullOrUndefined(dataPublishChain.JqIframe) + ' ' + (dataPublishChain.JqIframe ? dataPublishChain.JqIframe.IframeElem.src : ''));
-    this.Logger.LogVal('Iframe0blueIframe', this.Logger.IsNullOrUndefined(dataPublishChain.Iframe0Blue) + ' ' + (dataPublishChain.Iframe0Blue ? dataPublishChain.Iframe0Blue.IframeElem.src : ''));
-    this.Logger.LogVal('messageDialogIframeRed', this.Logger.IsNullOrUndefined(dataPublishChain.MessageDialogIframeRed) + ' ' + (dataPublishChain.MessageDialogIframeRed ? dataPublishChain.MessageDialogIframeRed.IframeElem.src : ''));
+    this.Logger.LogVal('jqIframe', this.Logger.IsNullOrUndefined(dataPublishChain.JqIframe) + ' ' + (dataPublishChain.JqIframe ? dataPublishChain.JqIframe.HTMLIframeElement.src : ''));
+    this.Logger.LogVal('Iframe0blueIframe', this.Logger.IsNullOrUndefined(dataPublishChain.Iframe0Blue) + ' ' + (dataPublishChain.Iframe0Blue ? dataPublishChain.Iframe0Blue.HTMLIframeElement.src : ''));
+    this.Logger.LogVal('messageDialogIframeRed', this.Logger.IsNullOrUndefined(dataPublishChain.MessageDialogIframeRed) + ' ' + (dataPublishChain.MessageDialogIframeRed ? dataPublishChain.MessageDialogIframeRed.HTMLIframeElement.src : ''));
 
     this.Logger.FuncEnd(this.__debugDataPublishChain.name);
 
@@ -161,9 +161,9 @@ export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecip
     try {
       await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.TopLevelDoc, ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
         .then((found: HTMLElement) => this.FactoryHelp.FrameProxyForPromiseFactory(<HTMLIFrameElement>found, 'jqIframe'))
-        .then((result: FrameProxy) => dataPublishChain.JqIframe = result)
+        .then((result: _BaseFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
-        .then(() => this.RecipeBasics.WaitForReadyIframe(dataPublishChain.JqIframe))
+        .then(() => this.RecipeBasics.WaitForReadyFrameProxy(dataPublishChain.JqIframe))
         .catch((err) => { throw (this.GetThePublishItemDialog.name + ' ' + err) });
     } catch (err) {
       throw (this.GetThePublishItemDialog.name + ' ' + err);

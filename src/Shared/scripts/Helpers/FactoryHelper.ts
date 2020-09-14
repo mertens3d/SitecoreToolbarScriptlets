@@ -4,8 +4,8 @@ import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
 import { Guid } from "./Guid";
-import { FrameProxy } from "../Interfaces/Data/Proxies/FrameProxy";
-import { CEFrameProxy } from "../Interfaces/Data/Proxies/FrameProxyForContentEditor";
+import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProxy";
+import { CEFrameProxy } from "../../../Content/scripts/Proxies/CEFrameProxy";
 
 export class FactoryHelper extends LoggableBase implements IFactoryHelper {
   SettingsAgent: ISettingsAgent;
@@ -16,27 +16,27 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
   }
 
 
-  DataOneContentDocFactoryFromIframe(dataOneIframe: FrameProxy): IDataOneDoc {
+  DataOneContentDocFactoryFromIframe(dataOneIframe: _BaseFrameProxy): IDataOneDoc {
     var toReturn: IDataOneDoc = null;
 
     if (dataOneIframe) {
       toReturn =
       {
-        ContentDoc: dataOneIframe.IframeElem.contentDocument,
+        ContentDoc: dataOneIframe.HTMLIframeElement.contentDocument,
         DocId: Guid.NewRandomGuid(),
-        Nickname: dataOneIframe.Nickname + ' - content doc'
+        Nickname: ' - content doc'
       }
     } else {
       this.Logger.ErrorAndThrow(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
     }
     return toReturn;
   }
-  async FrameProxyForPromiseFactory(iframeElem: HTMLIFrameElement, nickname: string): Promise<FrameProxy> {
+  FrameProxyForPromiseFactory(iframeElem: HTMLIFrameElement, nickname: string): _BaseFrameProxy {
     this.Logger.FuncStart(this.FrameProxyForPromiseFactory.name);
-    var toReturn: FrameProxy = null;
+    var toReturn: _BaseFrameProxy = null;
 
     if (iframeElem && nickname) {
-      var toReturn: FrameProxy = new FrameProxy(this.Logger, iframeElem, nickname);
+      var toReturn: _BaseFrameProxy = new _BaseFrameProxy(this.Logger, iframeElem);
     } else {
       this.Logger.ErrorAndThrow(this.FrameProxyForPromiseFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
@@ -46,20 +46,20 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     this.Logger.FuncEnd(this.FrameProxyForPromiseFactory.name);
     return toReturn;
   }
-  async FrameProxyForDesktopFactory(iframeElem: HTMLIFrameElement, nickname: string): Promise<CEFrameProxy> {
-    this.Logger.FuncStart(this.FrameProxyForDesktopFactory.name);
+
+  async CEFrameProxyFactory(iframeElem: HTMLIFrameElement): Promise<CEFrameProxy> {
+    this.Logger.FuncStart(this.CEFrameProxyFactory.name);
     var toReturn: CEFrameProxy = null;
 
-    if (iframeElem && nickname) {
-      var toReturn = new CEFrameProxy(this.Logger, iframeElem, nickname);
+    if (iframeElem ) {
+      var toReturn = new CEFrameProxy(this.Logger, iframeElem);
       await toReturn.OnReadyInitCEFrameProxy();
     } else {
-      this.Logger.ErrorAndThrow(this.FrameProxyForDesktopFactory.name, 'one of these is null');
+      this.Logger.ErrorAndThrow(this.CEFrameProxyFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
-      this.Logger.LogAsJsonPretty('nickname', nickname);
     }
 
-    this.Logger.FuncEnd(this.FrameProxyForDesktopFactory.name);
+    this.Logger.FuncEnd(this.CEFrameProxyFactory.name);
     return toReturn;
   }
 }

@@ -251,12 +251,16 @@ export class SelectSnapshotModule extends LoggableBase implements IUiModule {
 
     let candidateCe: IFirstActive = this.GetFirstDataWithActiveNode(data);
 
-    if (candidateCe && candidateCe.activeTreeNode) {
-      activeCeNode = candidateCe.activeTreeNode.Friendly.trim();
+    if (candidateCe && candidateCe.activeTreeNode && candidateCe.activeTreeNode.FriendlyTreeNode) {
+      activeCeNode = candidateCe.activeTreeNode.FriendlyTreeNode.trim();
       if (candidateCe.StateOfContentEditor.StateOfTree.StateOfTreeNodes.length >= 2) {
-        MainSectionNode = candidateCe.StateOfContentEditor.StateOfTree.StateOfTreeNodes[1].Friendly.trim();
+        MainSectionNode = candidateCe.StateOfContentEditor.StateOfTree.StateOfTreeNodes[1].FriendlyTreeNode.trim();
       }
+    } else {
+      MainSectionNode = 'todo ' + this.TimeNicknameFavStr.name;
     }
+
+
     let toReturn = StaticHelpers.BufferString(data.Friendly.TimeStamp, PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.space, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(typeStr, PopConst.Const.SnapShotFormat.lenPageType, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.Friendly.NickName, PopConst.Const.SnapShotFormat.lenNickname, BufferChar.Nbsp, BufferDirection.right)
