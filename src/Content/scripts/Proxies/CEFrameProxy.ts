@@ -13,6 +13,7 @@ import { ICEFrameProxyMutationEvent_Payload } from "./Desktop/DesktopProxy/Event
 export class CEFrameProxy extends _BaseFrameProxy {
   ContentEditorProxy: ContentEditorProxy;
   ContentEditorProxyMutationEvent_Observer: ContentEditorProxyMutationEvent_Observer;
+  Discriminator = CEFrameProxy.name;
 
   constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement) {
     super(logger, iframeElem);
@@ -52,7 +53,7 @@ export class CEFrameProxy extends _BaseFrameProxy {
       let recipeBasic = new RecipeBasics(this.Logger);
       let initResultFrameProxy = new InitResultsCEFrameProxy();
 
-      await recipeBasic.WaitForPageReadyHtmlIframeElement(this.HTMLIframeElement)
+      await recipeBasic.WaitForReadyNABHtmlIframeElement(this.HTMLIframeElement)
         .then(() => this.ContentEditorProxy = new ContentEditorProxy(this.GetContentDoc(), this.Logger))
         .then(() => this.ContentEditorProxy.OnReadyInitContentEditorProxy())
         .then((result: InitResultContentEditorProxy) => initResultFrameProxy.InitResultContentEditorProxy = result)

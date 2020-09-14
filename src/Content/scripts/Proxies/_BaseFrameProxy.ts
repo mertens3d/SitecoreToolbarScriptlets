@@ -11,6 +11,7 @@ export class _BaseFrameProxy extends LoggableBase {
   HTMLIframeElement: HTMLIFrameElement = null;
   Id: GuidData = null;
   FrameProxyMutationEvent_Subject: FrameProxyMutationEvent_Subject;
+  Discriminator: string = _BaseFrameProxy.name;
 
   constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement) {
     super(logger);

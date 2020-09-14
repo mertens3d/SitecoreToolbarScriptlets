@@ -89,10 +89,11 @@ export class ContentAtticAgent implements IContentAtticAgent {
       if (!candidate.Friendly) {
         candidate.Friendly = new DefaultFriendly();
       }
-
+        
       if (!candidate.Friendly.NickName) {
         candidate.Friendly.NickName = '';
       }
+      
     } else {
       this.Logger.ErrorAndThrow(this.ValidateStorageData.name, 'Saved data did not import correctly')
     }
@@ -101,6 +102,8 @@ export class ContentAtticAgent implements IContentAtticAgent {
 
   private GetAllLocalStorageAsIOneStorageData(): IOneStorageData[] {
     this.Logger.FuncStart(this.GetAllLocalStorageAsIOneStorageData.name);
+
+    
 
     let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
 
@@ -139,12 +142,14 @@ export class ContentAtticAgent implements IContentAtticAgent {
     var deleteFlag: boolean = false;
     var now: Date = new Date();
 
+    this.Logger.Log(SnapShotFlavor[candidate.Meta.Flavor]);
     if (candidate.Meta.Flavor == SnapShotFlavor.Autosave) {
       if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
         this.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.Meta.TimeStamp.toString());
         deleteFlag = true;
       }
       autoCount++;
+      this.Logger.LogVal('autoCount', autoCount);
     }
 
     if (now.getTime() - candidate.Meta.TimeStamp.getTime() > maxAutoSaveDiff) {
@@ -159,6 +164,8 @@ export class ContentAtticAgent implements IContentAtticAgent {
       } catch (e) {
         this.Logger.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.Meta.SnapshotId)
       }
+    } else {
+      this.Logger.Log('no delete flag');
     }
 
     this.Logger.FuncEnd(this.CleanOneStorageItem.name);
@@ -255,19 +262,6 @@ export class ContentAtticAgent implements IContentAtticAgent {
   FilterOutOldData(data: IDataStateOfSitecoreWindow[]): IDataStateOfSitecoreWindow[] {
     var toReturn: IDataStateOfSitecoreWindow[] = data;
 
-    return toReturn;
-  }
-
-  TimeNicknameFavStrForConfirmation(data: IDataStateOfSitecoreWindow): string {
-    let toReturn: string = '';
-
-    if (data) {
-      var result = data.Friendly.TimeStamp + ' ' + data.Friendly.NickName + ' ' + Guid.AsShort(data.Meta.SnapshotId);
-      toReturn = result.replace(new RegExp(/&nbsp;/ig), '');
-    }
-    else {
-      this.Logger.ErrorAndThrow(this.TimeNicknameFavStrForConfirmation.name, 'null data');
-    }
     return toReturn;
   }
 

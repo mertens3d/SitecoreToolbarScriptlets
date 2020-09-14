@@ -6,6 +6,7 @@ import { IDataStateOfStorageSnapShots } from "../../../../../../../Shared/script
 export interface IDataContentReplyReceivedEvent_Payload {
   ErrorStack: IError[];
   LastReq: MsgFlag;
+  LastReqFriendly: string;
   LastReqSuccessful: boolean;
   StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   StateOfStorageSnapShots: IDataStateOfStorageSnapShots;

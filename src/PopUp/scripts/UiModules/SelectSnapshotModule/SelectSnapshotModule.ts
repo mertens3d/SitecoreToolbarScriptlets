@@ -20,24 +20,19 @@ import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirs
 import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
 import { HindeSiteEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 
-
 export class SelectSnapshotModule_Subject extends HindeSiteEvent_Subject<IDataStateOfSnapShotSelect>  {
-  constructor( logger: ILoggerAgent) {
+  constructor(logger: ILoggerAgent) {
     super(logger, SelectSnapshotModule_Subject.name);
-
   }
-
 }
-
 
 export class SelectSnapshotModule extends LoggableBase implements IUiModule {
   StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   StateOfStorageSnapShots: IDataStateOfStorageSnapShots;
 
-
   private Selector: string;
   private StateHelpers: StateHelpers;
-    SelectSnapshotModule_Subject: SelectSnapshotModule_Subject;
+  SelectSnapshotModule_Subject: SelectSnapshotModule_Subject;
 
   constructor(selector: string, logger: ILoggerAgent) {
     super(logger);
@@ -223,10 +218,14 @@ export class SelectSnapshotModule extends LoggableBase implements IUiModule {
       activeTreeNode: null
     }
 
-    if ((data.Meta.WindowType === ScWindowType.Desktop) && data.States.StateOfDesktop && (data.States.StateOfDesktop.IndexOfActiveFrame > -1 )&& data.States.StateOfDesktop.StateOfFrames) {
-      let activeFrame: IDataStateOfFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.States.StateOfDesktop);
-      toReturn.StateOfContentEditor = activeFrame.StateOfContentEditor;
-      toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);
+    if (data.Meta.WindowType === ScWindowType.Desktop) {
+      if (data.States.StateOfDesktop && (data.States.StateOfDesktop.IndexOfActiveFrame > -1) && data.States.StateOfDesktop.StateOfFrames) {
+        let activeFrame: IDataStateOfFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.States.StateOfDesktop);
+        toReturn.StateOfContentEditor = activeFrame.StateOfContentEditor;
+        toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);
+      } else {
+        this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
+      }
     }
     else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.States.StateOfContentEditor && data.States.StateOfContentEditor.StateOfTree) {
       toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(toReturn.StateOfContentEditor);
@@ -259,7 +258,6 @@ export class SelectSnapshotModule extends LoggableBase implements IUiModule {
     } else {
       MainSectionNode = 'todo ' + this.TimeNicknameFavStr.name;
     }
-
 
     let toReturn = StaticHelpers.BufferString(data.Friendly.TimeStamp, PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.space, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(typeStr, PopConst.Const.SnapShotFormat.lenPageType, BufferChar.Nbsp, BufferDirection.right)

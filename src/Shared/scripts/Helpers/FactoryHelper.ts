@@ -12,9 +12,7 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
 
   constructor(logger: ILoggerAgent) {
     super(logger);
-   
   }
-
 
   DataOneContentDocFactoryFromIframe(dataOneIframe: _BaseFrameProxy): IDataOneDoc {
     var toReturn: IDataOneDoc = null;
@@ -31,19 +29,20 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     }
     return toReturn;
   }
-  FrameProxyForPromiseFactory(iframeElem: HTMLIFrameElement, nickname: string): _BaseFrameProxy {
-    this.Logger.FuncStart(this.FrameProxyForPromiseFactory.name);
+
+  BaseFramePromiseFactory(iframeElem: HTMLIFrameElement, nickname: string): _BaseFrameProxy {
+    this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
     var toReturn: _BaseFrameProxy = null;
 
     if (iframeElem && nickname) {
       var toReturn: _BaseFrameProxy = new _BaseFrameProxy(this.Logger, iframeElem);
     } else {
-      this.Logger.ErrorAndThrow(this.FrameProxyForPromiseFactory.name, 'one of these is null');
+      this.Logger.ErrorAndThrow(this.BaseFramePromiseFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
       this.Logger.LogAsJsonPretty('nickname', nickname);
     }
 
-    this.Logger.FuncEnd(this.FrameProxyForPromiseFactory.name);
+    this.Logger.FuncEnd(this.BaseFramePromiseFactory.name);
     return toReturn;
   }
 
@@ -51,7 +50,7 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     this.Logger.FuncStart(this.CEFrameProxyFactory.name);
     var toReturn: CEFrameProxy = null;
 
-    if (iframeElem ) {
+    if (iframeElem) {
       var toReturn = new CEFrameProxy(this.Logger, iframeElem);
       await toReturn.OnReadyInitCEFrameProxy();
     } else {
@@ -62,4 +61,4 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     this.Logger.FuncEnd(this.CEFrameProxyFactory.name);
     return toReturn;
   }
-}
+} 

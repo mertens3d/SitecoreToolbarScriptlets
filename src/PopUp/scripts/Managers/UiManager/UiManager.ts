@@ -124,8 +124,6 @@ export class UiManager {
 
   ContentReplyReceivedEventCallBack(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, stateOfStorageSnapshots: IDataStateOfStorageSnapShots) {
     this.Logger.FuncStart(this.ContentReplyReceivedEventCallBack.name);
-
-    this.Logger.LogAsJsonPretty('stateOfStorageSnapshots', stateOfStorageSnapshots);
     this.UpdateUiFromContentReply(stateOfSitecoreWindow, stateOfStorageSnapshots);
     this.Logger.FuncEnd(this.ContentReplyReceivedEventCallBack.name);
   }

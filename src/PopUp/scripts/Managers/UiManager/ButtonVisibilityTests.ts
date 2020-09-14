@@ -42,14 +42,30 @@ export class ButtonVisibilityTester extends LoggableBase {
   VisibilityTestSnapShotable(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): VisiblityTestResult {
     //todo may want to be able take snap shots of other window types
 
-    return this.VisibilityTestActiveCeNode(stateOfSitecoreWindow);
+    return this.VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow) && this.VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfSitecoreWindow);
   }
 
-  VisibilityTestActiveCeNode(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): VisiblityTestResult {
-    let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestActiveCeNode.name);
+  VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): VisiblityTestResult {
+    let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
 
-    visiblityTestResult.Passes = stateOfSitecoreWindow.Meta.WindowType === ScWindowType.ContentEditor ||
-      ((stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop) && stateOfSitecoreWindow.States.StateOfDesktop.IndexOfActiveFrame > -1);
+    visiblityTestResult.Passes = (
+      (stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop && stateOfSitecoreWindow.States.StateOfDesktop.IndexOfActiveFrame > -1)
+      ||
+      (stateOfSitecoreWindow.Meta.WindowType !== ScWindowType.Desktop));
+
+    if (!visiblityTestResult.Passes) {
+      visiblityTestResult.FriendlyFailReason = 'Requires an open Content Editor';
+    }
+
+    return visiblityTestResult;
+  }
+
+  VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): VisiblityTestResult {
+    let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestDesktopOrContentEditor.name);
+
+    visiblityTestResult.Passes = (stateOfSitecoreWindow.Meta.WindowType === ScWindowType.ContentEditor
+      ||
+      stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop);
 
     if (!visiblityTestResult.Passes) {
       visiblityTestResult.FriendlyFailReason = 'Requires Content Editor or Desktop';

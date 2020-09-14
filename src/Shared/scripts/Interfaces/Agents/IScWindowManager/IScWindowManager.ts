@@ -8,7 +8,7 @@ import { IScUrlAgent } from "../IScUrlAgent/IScUrlAgent";
 import { InitResultsScWindowManager } from "../ISettingsAgent";
 
 export interface IScWindowManager {
-  GetStateOfSiteCoreWindow(): Promise<IDataStateOfSitecoreWindow>;
+  GetStateOfSitecoreWindow(): Promise<IDataStateOfSitecoreWindow>;
   MakeScWinRecipeParts(): ScWindowRecipePartials;
   GetScUrlAgent(): IScUrlAgent;
   GetCurrentPageType(): ScWindowType;

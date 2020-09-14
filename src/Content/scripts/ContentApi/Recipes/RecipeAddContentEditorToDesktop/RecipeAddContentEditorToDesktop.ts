@@ -28,16 +28,12 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
 
   Execute(): Promise<CEFrameProxy> {
     return new Promise(async (resolve, reject) => {
-      let allIframeDataAtBeginning: _BaseFrameProxy[];
+      let allIframeDataAtBeginning: HTMLIFrameElement[];
       let ceframeProxy: CEFrameProxy;
       let frameHelper = new FrameHelper(this.Logger);
       let recipeBasics = new RecipeBasics(this.Logger);
 
-
-      await frameHelper.GetIFramesAsFrameProxies(this.TargetDoc)
-        .then((result) => allIframeDataAtBeginning = result)
-        .catch((err) => reject(this.Execute.name + ' ' + err));
-
+      allIframeDataAtBeginning = frameHelper.GetIFramesFromDataOneDoc(this.TargetDoc)
 
       await recipeBasics.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.TargetDoc)
         .then(() => recipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.TargetDoc))

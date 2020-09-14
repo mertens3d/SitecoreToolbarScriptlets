@@ -226,6 +226,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
           response.Payload = result;
           response.Payload.LastReq = msgFlag;
           response.MsgFlag = MsgFlag.RespTaskSuccessful;
+          response.Payload.LastReqFriendly = MsgFlag[msgFlag];
         })
         .then(() => resolve(response))
         .catch((err) => reject(err));

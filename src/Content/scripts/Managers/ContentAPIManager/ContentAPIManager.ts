@@ -41,6 +41,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     this.SettingsAgent = settingsAgent;
     this.FactoryHelp = new FactoryHelper(this.Logger);
     this.AtticAgent = atticAgent;
+    this.AtticAgent.CleanOutOldAutoSavedData();
     this.Logger.FuncEnd(ContentAPIManager.name);
   }
 
@@ -56,8 +57,9 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     return new Promise(async (resolve, reject) => {
       let reply: IDataContentReplyReceivedEvent_Payload = new DefaultContentReplyPayload();
 
-      await this.ScWinMan.GetStateOfSiteCoreWindow()
+      await this.ScWinMan.GetStateOfSitecoreWindow()
         .then((result: IDataStateOfSitecoreWindow) => reply.StateOfSitecoreWindow = result)
+
         .then(() => this.AtticAgent.GetStateOfStorageSnapShots())
         .then((result: IDataStateOfStorageSnapShots) => reply.StateOfStorageSnapShots = result)
         .then(() => reply.ErrorStack = this.Logger.ErrorStack)

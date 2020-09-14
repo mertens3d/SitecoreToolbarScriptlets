@@ -10,14 +10,14 @@ import { Guid } from "../../Helpers/Guid";
 import { DefaultStateOfContentEditor } from "./DefaultStateOfContentEditor";
 
 export class DefaultFriendly implements IDataFriendly {
-  Flavor = SnapShotFlavor[SnapShotFlavor.Unknown];
+  Flavor = SnapShotFlavor[SnapShotFlavor.Live];
   NickName = '';
   TimeStamp = '';
   WindowType = ScWindowType[ScWindowType.Unknown];
 }
 
 export class DefaultMetaData implements IDataMetaData {
-  Flavor = SnapShotFlavor.Unknown;
+  Flavor = SnapShotFlavor.Live;
   SessionId = '';
   SnapshotId = Guid.NewRandomGuid();
   StorageKey = '';

@@ -216,9 +216,14 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
 
             break;
 
-          case VisibilityType.ActiveCeNode:
-            allResults.TestResults.push(this.Tester.VisibilityTestActiveCeNode(this.StateOfSitecoreWindow));
+          case VisibilityType.DesktopOrContentEditor:
+            allResults.TestResults.push(this.Tester.VisibilityTestDesktopOrContentEditor(this.StateOfSitecoreWindow));
             break;
+
+          case VisibilityType.IfDesktopMin1ContentEditor:
+            allResults.TestResults.push(this.Tester.VisibilityTestIfDesktopMinOneConentEditorOpen(this.StateOfSitecoreWindow));
+            break;
+            
 
           case VisibilityType.ContentEditor:
             allResults.TestResults.push(this.Tester.VisibilityTestWindowType(ScWindowType.ContentEditor, this.CurrentWindowType));

@@ -52,6 +52,6 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
       observer.UpdateAsync(payload);
     }
     );
-    this.Logger.FuncEnd(this.NotifyObservers.name);
+    this.Logger.FuncEnd(this.NotifyObservers.name + ' of: ' + this.Friendly_Subject, ' observer count: ' + this.ObserverCollection.length);
   }
 }

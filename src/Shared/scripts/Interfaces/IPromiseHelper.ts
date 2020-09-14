@@ -14,8 +14,8 @@ export interface IRecipeBasics {
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string, maxIteration: number);
   WaitForIframeElemAndReturnWhenReady(ContentDoc: IDataOneDoc, ContentIFrame1: string, arg2: string);
   WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: IDataOneDoc): Promise<_BaseFrameProxy>;
-  WaitForPageReadyNative(targetDoc: IDataOneDoc);
-  WaitForReadyFrameProxy(jqIframe: _BaseFrameProxy): Promise<_BaseFrameProxy>;
+  WaitForReadyNABDocument(targetDoc: IDataOneDoc);
+  WaitForReadyNABFrameProxy(jqIframe: _BaseFrameProxy): Promise<_BaseFrameProxy>;
   WaitForThenClick(arg0: string[], arg1: IDataOneDoc);
   GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<_BaseFrameProxy>
 }

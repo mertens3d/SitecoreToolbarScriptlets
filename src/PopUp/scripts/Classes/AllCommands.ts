@@ -66,7 +66,7 @@ export class CommandManager extends LoggableBase{
         PlaceHolderSelector: PopConst.Const.Selector.HS.ModeEdit,
         IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModeEdit,
         InnerText: "Edit",
-        VisibilityControllers: [VisibilityType.ActiveCeNode],
+        VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
         ModuleType: ModuleType.Button,
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -79,7 +79,7 @@ export class CommandManager extends LoggableBase{
         PlaceHolderSelector: PopConst.Const.Selector.HS.ModeNorm,
         IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModeNormal,
         InnerText: "Normal",
-        VisibilityControllers: [VisibilityType.ActiveCeNode],
+        VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
         ModuleType: ModuleType.Button,
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -92,7 +92,7 @@ export class CommandManager extends LoggableBase{
         PlaceHolderSelector: PopConst.Const.Selector.HS.ModePrev,
         IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModePrev,
         InnerText: "Preview",
-        VisibilityControllers: [VisibilityType.ActiveCeNode, VisibilityType.Edit],
+        VisibilityControllers: [VisibilityType.DesktopOrContentEditor, VisibilityType.Edit],
         ModuleType: ModuleType.Button,
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -131,7 +131,7 @@ export class CommandManager extends LoggableBase{
         PlaceHolderSelector: PopConst.Const.Selector.HS.PresentationDetails,
         IconClassName: PopConst.Const.ClassNames.HS.Buttons.PresentationDetails,
         InnerText: "Presentation Details",
-        VisibilityControllers: [VisibilityType.ActiveCeNode],
+        VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
         ModuleType: ModuleType.Button,
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -144,7 +144,7 @@ export class CommandManager extends LoggableBase{
         PlaceHolderSelector: PopConst.Const.Selector.HS.CompactCE,
         IconClassName: PopConst.Const.ClassNames.HS.Buttons.CompactCe,
         InnerText: "Compact CE",
-        VisibilityControllers: [VisibilityType.ActiveCeNode],
+        VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
         ModuleType: ModuleType.Button,
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,
@@ -185,7 +185,7 @@ export class CommandManager extends LoggableBase{
         PlaceHolderSelector: PopConst.Const.Selector.HS.QuickPublish,
         IconClassName: PopConst.Const.ClassNames.HS.Buttons.QuickPublish,
         InnerText: "Quick Publish",
-        VisibilityControllers: [VisibilityType.ActiveCeNode],
+        VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
         ModuleType: ModuleType.Button,
         EventData: {
           Event: CommandButtonEvents.OnSingleClick,

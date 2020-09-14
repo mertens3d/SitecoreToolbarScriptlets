@@ -95,7 +95,7 @@ export class DesktopProxy extends LoggableBase {
 
   async OnReadyPopulateCEFrameProxyBucket(): Promise<void> {
     try {
-      await this.GetFrameHelper().GetIFramesAsFrameProxies(this.AssociatedDoc)
+      await this.GetFrameHelper().GetIFramesAsBaseFrameProxies(this.AssociatedDoc)
         .then((frameProxies: CEFrameProxy[]) => {
           frameProxies.forEach(async (oneIframe: _BaseFrameProxy) => {
             this.AddCEFrameProxyAsync(<CEFrameProxy>oneIframe);
@@ -121,7 +121,7 @@ export class DesktopProxy extends LoggableBase {
     let initResultFrameProxy = new InitResultsCEFrameProxy();
 
     if (ceframeProxy && ceframeProxy.ContentEditorProxy && ceframeProxy.ContentEditorProxy.AssociatedDoc) {
-      this.RecipeBasics.WaitForReadyFrameProxy(ceframeProxy)
+      this.RecipeBasics.WaitForReadyNABFrameProxy(ceframeProxy)
         .then(() => {
           let result = this.DesktopFrameProxyBucket.AddToCEFrameProxyBucket(ceframeProxy);
 
@@ -166,7 +166,7 @@ export class DesktopProxy extends LoggableBase {
     return this.__iframeHelper;
   }
 
-  ProcessLiveFrames(results: CEFrameProxy[]): IDataStateOfDesktop {
+  ProcessLiveCEFrameProxies(results: CEFrameProxy[]): IDataStateOfDesktop {
     let toReturnDesktopState: IDataStateOfDesktop = new DefaultStateOfDesktop();
 
     if (results) {
@@ -190,8 +190,8 @@ export class DesktopProxy extends LoggableBase {
       this.Logger.FuncStart(this.GetStateOfDesktop.name);
 
       try {
-        await this.GetIframeHelper().GetIFramesAsFrameProxies(this.AssociatedDoc)
-          .then((results: CEFrameProxy[]) => this.ProcessLiveFrames(results))
+        await this.GetIframeHelper().GetIFramesAsCEFrameProxies(this.AssociatedDoc)
+          .then((results: CEFrameProxy[]) => this.ProcessLiveCEFrameProxies(results))
           .then((results: IDataStateOfDesktop) => resolve(results))
           .catch((err) => this.Logger.ErrorAndThrow(this.GetStateOfDesktop.name, err));
       } catch (err) {

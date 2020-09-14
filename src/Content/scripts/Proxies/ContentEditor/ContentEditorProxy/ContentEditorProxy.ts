@@ -43,7 +43,7 @@ export class ContentEditorProxy extends LoggableBase {
 
       let initResultContentEditorProxy = new InitResultContentEditorProxy();
       let recipeBasic = new RecipeBasics(this.Logger);
-      await recipeBasic.WaitForPageReadyNative(this.AssociatedDoc)
+      await recipeBasic.WaitForReadyNABDocument(this.AssociatedDoc)
         .then(() => {
           this.ChildTreeProxy = new TreeProxy(this.Logger, this.AssociatedDoc, this.GetTreeContainer());
 
@@ -118,7 +118,7 @@ export class ContentEditorProxy extends LoggableBase {
     try {
       let recipeBasics = new RecipeBasics(this.Logger);
 
-      await recipeBasics.WaitForPageReadyNative(this.AssociatedDoc)
+      await recipeBasics.WaitForReadyNABDocument(this.AssociatedDoc)
 
         .catch((err) => this.Logger.ErrorAndThrow(this.WaitForReadyContentEditor.name, err));
     } catch (e) {

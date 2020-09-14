@@ -3,6 +3,7 @@ import { IDataStateOfSitecoreWindow } from "../../Data/States/IDataStateOfSiteco
 import { IDataStateOfStorageSnapShots } from "../../Data/States/IDataStateOfStorageSnapShots";
 
 export interface IContentAtticAgent {
+  CleanOutOldAutoSavedData(): void;
   WriteStateOfSitecoreToStorage(storageMatch: IDataStateOfSitecoreWindow);
   RemoveSnapshotFromStorageById(TargetSnapShotId: GuidData);
   WriteStateOfSitecoreToStorage(storageMatch: IDataStateOfSitecoreWindow);
