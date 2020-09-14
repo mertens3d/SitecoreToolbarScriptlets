@@ -6,7 +6,7 @@ import { Guid } from "../../Helpers/Guid";
 export class DefaultStateOfFrame implements IDataStateOfFrame {
   StateOfContentEditor = new DefaultStateOfContentEditor();
   StorageId = Guid.NewRandomGuid();
-  Styling = '';
+  Styling = null;
   WindowType: ScWindowType;
   ZIndex: number;
 }

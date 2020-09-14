@@ -42,15 +42,15 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
     }
   }
 
-  private __restoreDataToOneIframe(oneTreeState: IDataStateOfFrame, frameProxy: CEFrameProxy) {
+  private SetStateOfCEFrameProxy(oneTreeState: IDataStateOfFrame, frameProxy: CEFrameProxy) {
     return new Promise<void>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.__restoreDataToOneIframe.name);
+      this.Logger.FuncStart(this.SetStateOfCEFrameProxy.name);
 
       await frameProxy.SetStateOfCEFrame(oneTreeState)
         .then(() => resolve())
         .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.__restoreDataToOneIframe.name);
+      this.Logger.FuncEnd(this.SetStateOfCEFrameProxy.name);
     });
   }
 
@@ -66,7 +66,7 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
         await recipeAddCe.Execute()
           .then((result: CEFrameProxy) => frameProxy = result)
           .then(() => frameProxy.OnReadyInitCEFrameProxy())
-          .then(() => this.__restoreDataToOneIframe(this.DataStateOfFrame, frameProxy))
+          .then(() => this.SetStateOfCEFrameProxy(this.DataStateOfFrame, frameProxy))
           .then(() => resolve())
           .catch(ex => {
             reject(this.RunOneChain.name + ' ' + ex);

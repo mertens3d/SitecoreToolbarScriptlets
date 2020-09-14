@@ -5,7 +5,7 @@ import { DefaultStateOfFrame } from "../../../Shared/scripts/Classes/Defaults/De
 import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { InitResultContentEditorProxy, InitResultsCEFrameProxy, ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IDataStateOfFrame } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
+import { IDataStateOfFrame, IFrameStyling } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
 import { _BaseFrameProxy } from "./_BaseFrameProxy";
 import { IContentEditorProxyMutationEvent_Payload } from "./Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Payload";
 import { ICEFrameProxyMutationEvent_Payload } from "./Desktop/DesktopProxy/Events/FrameProxyMutationEvent/IFrameProxyMutationEvent_Payload";
@@ -22,7 +22,16 @@ export class CEFrameProxy extends _BaseFrameProxy {
   GetStateOfCEFrame(): IDataStateOfFrame {
     let toReturn: IDataStateOfFrame = new DefaultStateOfFrame();
 
-    toReturn.Styling = this.HTMLIframeElement.style.cssText;
+    let sourceStyle = this.HTMLIframeElement.style;
+
+    toReturn.Styling = {
+      height: sourceStyle.height,
+      left: sourceStyle.left,
+      position: sourceStyle.position,
+      top: sourceStyle.top,
+      width: sourceStyle.width,
+      zIndex: sourceStyle.zIndex
+    }
 
     if (this.ContentEditorProxy) {
       toReturn.StateOfContentEditor = this.ContentEditorProxy.GetStateOfContentEditor();
@@ -32,7 +41,15 @@ export class CEFrameProxy extends _BaseFrameProxy {
   }
 
   async SetStateOfCEFrame(stateOfFrame: IDataStateOfFrame): Promise<void> {
-    await this.ContentEditorProxy.SetStateOfContentEditor(stateOfFrame.StateOfContentEditor);
+    await this.ContentEditorProxy.SetStateOfContentEditor(stateOfFrame.StateOfContentEditor)
+      .then(() => {
+        this.HTMLIframeElement.style.height = stateOfFrame.Styling.height;
+        this.HTMLIframeElement.style.left = stateOfFrame.Styling.left;
+        this.HTMLIframeElement.style.position = stateOfFrame.Styling.position;
+        this.HTMLIframeElement.style.top = stateOfFrame.Styling.top;
+        this.HTMLIframeElement.style.width = stateOfFrame.Styling.width;
+        this.HTMLIframeElement.style.zIndex = stateOfFrame.Styling.zIndex;
+      });
   }
 
   OnContentEditorProxyMutation(payload: IContentEditorProxyMutationEvent_Payload) {
