@@ -1,19 +1,19 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
 import { ScWindowType } from "../../../Enums/scWindowType";
-import { AbsoluteUrl } from "../../../Interfaces/AbsoluteUrl";
+import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
-import { GenericUrlParts } from "../../../Interfaces/UrlParts";
+import { IGenericUrlParts } from "../../../Interfaces/IUrlParts";
 
 export class GenericUrlAgent implements IUrlAgent {
   protected Logger: ILoggerAgent;
-  protected UrlParts: GenericUrlParts;
+  protected UrlParts: IGenericUrlParts;
 
   constructor(logger: ILoggerAgent) {
     this.Logger = logger;
   }
 
-  GetUrlParts(): GenericUrlParts {
+  GetUrlParts(): IGenericUrlParts {
     return this.UrlParts;
   }
 
@@ -100,8 +100,8 @@ export class GenericUrlAgent implements IUrlAgent {
     }
   }
 
-  BuildFullUrlFromParts(): AbsoluteUrl {
-    let toReturn: AbsoluteUrl = {
+  BuildFullUrlFromParts(): IAbsoluteUrl {
+    let toReturn: IAbsoluteUrl = {
       AbsUrl: '',
     };
 

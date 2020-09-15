@@ -8,7 +8,7 @@ import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Da
 import { IDataStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
 import { RecipeRestoreFrameOnDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
-import { FrameHelper } from "../../../Helpers/IframeHelper";
+import { FrameHelper } from "../../../Helpers/FrameHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
 import { DesktopProxyMutationEvent_Observer } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer";
@@ -211,7 +211,7 @@ export class DesktopProxy extends LoggableBase {
           for (var idx = 0; idx < desktopState.StateOfDTFrames.length; idx++) {
             let stateOfFrame: IDataStateOfDTFrame = desktopState.StateOfDTFrames[idx];
 
-            var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.SettingsAgent, this.DesktopStartBarAgent);
+            var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent);
 
             //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
             await recipe.Execute()

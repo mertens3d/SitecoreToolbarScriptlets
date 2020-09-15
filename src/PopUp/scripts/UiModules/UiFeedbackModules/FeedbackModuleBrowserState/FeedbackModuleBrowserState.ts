@@ -2,7 +2,7 @@
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ScUrlAgent } from "../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 import { PopConst } from "../../../Classes/PopConst";
-import { GenericUrlParts } from "../../../../../Shared/scripts/Interfaces/UrlParts";
+import { IGenericUrlParts } from "../../../../../Shared/scripts/Interfaces/IUrlParts";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
 import { IUiModule } from "../../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
@@ -23,7 +23,7 @@ export class FeedbackModuleBrowserState extends UiFeedbackModuleBase implements 
 
     allStateText += this.indentedLineBreak + '<strong>Page Type:</strong> ' + StaticHelpers.ScWindowTypeFriendly(scUrlAgent.GetScWindowType());
 
-    let UrlParts: GenericUrlParts = scUrlAgent.GetUrlParts();
+    let UrlParts: IGenericUrlParts = scUrlAgent.GetUrlParts();
 
     allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + UrlParts.OriginalRaw;
 

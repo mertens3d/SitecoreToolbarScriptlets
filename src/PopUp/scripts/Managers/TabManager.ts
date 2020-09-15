@@ -3,7 +3,7 @@ import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationD
 import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
+import { IAbsoluteUrl } from '../../../Shared/scripts/Interfaces/IAbsoluteUrl';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
@@ -23,7 +23,7 @@ export class BrowserTabAgent {
     this.Logger.InstantiateEnd(BrowserTabAgent.name);
   }
 
-  GetFullUrl(): AbsoluteUrl {
+  GetFullUrl(): IAbsoluteUrl {
     return this.ScUrlAgent.BuildFullUrlFromParts();
   }
 
@@ -39,7 +39,7 @@ export class BrowserTabAgent {
     return this.ScUrlAgent.GetScWindowType();
   }
 
-  async CreateNewTab(tabUrl: AbsoluteUrl) {
+  async CreateNewTab(tabUrl: IAbsoluteUrl) {
     return new Promise<IDataBrowserTab>(async (resolve, reject) => {
       this.Logger.FuncStart(this.CreateNewTab.name, tabUrl.AbsUrl);
 
@@ -72,7 +72,7 @@ export class BrowserTabAgent {
 
         this.ScUrlAgent.SetFilePathFromWindowType(desiredPageType);
 
-        var absUrl: AbsoluteUrl = this.ScUrlAgent.BuildFullUrlFromParts();
+        var absUrl: IAbsoluteUrl = this.ScUrlAgent.BuildFullUrlFromParts();
 
         var callBackOnSuccessfulHrefChange: Function = function () {
           self.Logger.Log('Callback triggered');

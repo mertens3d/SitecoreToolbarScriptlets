@@ -15,11 +15,9 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
   private MiscAgent: MiscAgent;
   private TargetDoc: IDataOneDoc;
   private DataStateOfFrame: IDataStateOfDTFrame;
-  private RecipeBasics: RecipeBasics;
-  private SettingsAgent: ISettingsAgent;
   DesktopTabButtonTabAgent: DesktopStartBarProxy;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataStateOfFrame: IDataStateOfDTFrame, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopStartBarProxy) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataStateOfFrame: IDataStateOfDTFrame, ceButtonTabAgent: DesktopStartBarProxy) {
     super(logger);
     this.Logger.InstantiateStart(RecipeRestoreFrameOnDesktop.name);
 
@@ -27,8 +25,6 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
 
     this.TargetDoc = targetDoc;
     this.DataStateOfFrame = dataStateOfFrame;
-    this.SettingsAgent = settingsAgent;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
     this.DesktopTabButtonTabAgent = ceButtonTabAgent;
 
     this.Logger.InstantiateEnd(RecipeRestoreFrameOnDesktop.name);
@@ -61,7 +57,7 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
       if (this.MiscAgent.NotNullOrUndefined([this.TargetDoc, this.DataStateOfFrame], this.RunOneChain.name)) {
         //guaranteed to be on the correct page
         var dtFrameProxy: DTFrameProxy;
-        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent, this.DesktopTabButtonTabAgent);
+        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.DesktopTabButtonTabAgent);
 
         await recipeAddCe.Execute()
           .then((result: DTFrameProxy) => dtFrameProxy = result)

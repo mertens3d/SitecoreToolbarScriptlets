@@ -4,7 +4,7 @@ import { BufferDirection } from "../../../Enums/BufferDirection";
 import { GuidData } from "../../../Helpers/GuidData";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
-import { IDataDebugCallback } from "../../../Interfaces/DebugCallback";
+import { IDataDebugCallback } from "../../../Interfaces/IDataDebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
 import { IError } from "../../../Interfaces/IError";
 import { LogWriterBuffer } from "./LogWriterBuffer";
@@ -40,6 +40,7 @@ export class LoggerAgent implements ILoggerAgent {
       this.Log(bufferAr[idx]);
     }
   }
+
   RemoveWriter(BufferWriter: LogWriterBuffer) {
     for (var idx = 0; idx < this.AllLogWriters.length; idx++) {
       let candidate: ILoggerWriter = this.AllLogWriters[idx];
@@ -103,17 +104,23 @@ export class LoggerAgent implements ILoggerAgent {
   MarkerA() {
     this.__markerRaw('A');
   }
+
   MarkerB() {
     this.__markerRaw('B');
   }
+
   MarkerC() {
     this.__markerRaw('C');
   }
+
   MarkerD() {
     this.__markerRaw('D');
   }
+
   MarkerE() { this.__markerRaw('E'); }
+
   MarkerF() { this.__markerRaw('F'); }
+
   private __markerRaw(marker) {
     this.Log('Marker ' + marker);
   }
@@ -148,6 +155,7 @@ export class LoggerAgent implements ILoggerAgent {
     const debugPrefix = '  ~~~  ';
     this.Log(debugPrefix + textValName + ' : ' + textVal);
   }
+
   async Log(text, optionalValue: string = '', hasPrefix = false) {
     if (this.HasWriters) { 
       var indent = '  ';
@@ -200,6 +208,7 @@ export class LoggerAgent implements ILoggerAgent {
       oneCallback.Func(oneCallback.Caller, data);
     }
   }
+
   CtorName(ctorName: string) {
     this.Log('Constructor: ' + ctorName);
   }
@@ -226,6 +235,7 @@ export class LoggerAgent implements ILoggerAgent {
   InstantiateStart(text: string): void {
     this.FuncStart("[Instantiate] " + text);
   }
+
   InstantiateEnd(text: string): void {
     this.FuncEnd("[Instantiate] " + text);
   }
@@ -308,6 +318,7 @@ export class LoggerAgent implements ILoggerAgent {
       this.LogVal(title, 'Is Not Null');
     }
   }
+
   IsNullOrUndefined(subject): string {
     var toReturn = '{unknown}';
     if (subject) {

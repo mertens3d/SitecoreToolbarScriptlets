@@ -216,6 +216,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       this.Logger.FuncEnd(this.ReqMsgRouter.name);
     });
   }
+
   ConstructResponse(msgFlag: MsgFlag): Promise<MsgFromContent> {
     return new Promise(async (resolve, reject) => {
       let response = new MsgFromContent(MsgFlag.Unknown);

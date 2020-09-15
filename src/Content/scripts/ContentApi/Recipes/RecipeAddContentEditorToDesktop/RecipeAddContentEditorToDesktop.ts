@@ -7,20 +7,18 @@ import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/IComma
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { LoggableBase } from '../../../Managers/LoggableBase';
-import { FrameHelper } from '../../../Helpers/IframeHelper';
+import { FrameHelper } from '../../../Helpers/FrameHelper';
 import { DTFrameProxy } from '../../../Proxies/DTFrameProxy';
 
 export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements ICommandRecipes {
   private TargetDoc: IDataOneDoc;
-  private SettingsAgent: ISettingsAgent;
   DesktopTabButtonAgent: DesktopStartBarProxy;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopStartBarProxy) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, ceButtonTabAgent: DesktopStartBarProxy) {
     super(logger);
 
     this.Logger.InstantiateStart(RecipeAddNewContentEditorToDesktop.name);
     this.TargetDoc = targetDoc;
-    this.SettingsAgent = settingsAgent;
     this.DesktopTabButtonAgent = ceButtonTabAgent;
 
     this.Logger.InstantiateEnd(RecipeAddNewContentEditorToDesktop.name);

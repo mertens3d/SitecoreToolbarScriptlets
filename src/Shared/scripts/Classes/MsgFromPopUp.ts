@@ -3,7 +3,7 @@ import { ScWindowType } from "../Enums/scWindowType";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 import { IGenericSetting } from "../Interfaces/Agents/IGenericSetting";
 import { IMsgFromX } from "../Interfaces/IMsgPayload";
-import { MsgFromXBase } from "../Interfaces/MsgFromXBase";
+import { MsgFromXBase } from "./MsgFromXBase";
 import { PayloadDataFromPopUp } from "./PayloadDataReqPopUp";
 import { GuidData } from "../Helpers/GuidData";
 

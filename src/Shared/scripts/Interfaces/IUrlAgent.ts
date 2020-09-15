@@ -1,8 +1,8 @@
 ﻿import { QueryStrKey } from "../Enums/QueryStrKey";
-import { GenericUrlParts } from "./UrlParts";
+import { IGenericUrlParts } from "./IUrlParts";
 
 export interface IUrlAgent {
-  GetUrlParts(): GenericUrlParts;
+  GetUrlParts(): IGenericUrlParts;
   GetQueryStringValueByKey(hsTargetSs: QueryStrKey): string;
   QueryStringHasKey(hsTargetSs: QueryStrKey);
   BuildFullUrlFromParts(); //newUrlParts: any

@@ -1,7 +1,7 @@
 ﻿import { EventManager } from "../../../PopUp/scripts/Managers/EventManager";
 import { IEventHandlerData } from "./IEventHandlerData";
 import { IOneCommand } from "./IOneCommand";
-import { IMenuStateForMsg } from "../Classes/IMenuStateForMsg";
+import { IMenuStateForMsg } from "./IMenuStateForMsg";
 
 export interface ICommandHndlrDataForPopUp {
   MenuState: IMenuStateForMsg;

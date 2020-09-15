@@ -14,5 +14,4 @@ export interface IHindSiteScWindowApi {
   RemoveSnapShot(commandData: ICommandHndlrDataForContent): Promise<void>;
   PublischActiveCE(commandData: ICommandHndlrDataForContent): Promise<void>;
   //UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void>;
-
 }

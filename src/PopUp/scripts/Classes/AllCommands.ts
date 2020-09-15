@@ -3,7 +3,7 @@ import { MenuCommand } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { scMode } from '../../../Shared/scripts/Enums/scMode';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { CommandButtonEvents, ModuleType } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
+import { CommandButtonEvents, ModuleType } from '../../../Shared/scripts/Enums/CommandButtonEvents';
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { Handlers } from '../Managers/Handlers';
 import { PopConst } from './PopConst';

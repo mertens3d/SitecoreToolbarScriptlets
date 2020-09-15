@@ -11,7 +11,6 @@ export class ContentEditorProxyMutationEvent_Observer extends HindSiteEvent_Obse
   constructor(logger: ILoggerAgent, ownerFrameProxy: DTFrameProxy) {
     super(logger, ContentEditorProxyMutationEvent_Observer.name);
     this.OwnerDTFrameProxy = ownerFrameProxy;
-    //this.SettingsAgent = settingsAgent;
   }
 
   UpdateAsync(payload: IContentEditorProxyMutationEvent_Payload) {

@@ -1,9 +1,9 @@
-﻿import { FrameHelper } from '../../../Content/scripts/Helpers/IframeHelper';
+﻿import { FrameHelper } from '../../../Content/scripts/Helpers/FrameHelper';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
 import { Guid } from '../Helpers/Guid';
-import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
+import { IAbsoluteUrl } from '../Interfaces/IAbsoluteUrl';
 import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
 import { _BaseFrameProxy } from '../../../Content/scripts/Proxies/_BaseFrameProxy';
@@ -336,7 +336,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     });
   }
 
-  TabChainSetHrefWaitForComplete(href: AbsoluteUrl) {
+  TabChainSetHrefWaitForComplete(href: IAbsoluteUrl) {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
 

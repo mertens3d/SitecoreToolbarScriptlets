@@ -1,4 +1,4 @@
-﻿import { HindSiteSetting } from "./OneGenericSetting";
+﻿import { HindSiteSetting } from "./HindSiteSetting";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";

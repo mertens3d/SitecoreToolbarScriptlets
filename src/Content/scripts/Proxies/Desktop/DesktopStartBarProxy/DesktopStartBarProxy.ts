@@ -2,7 +2,7 @@
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { FrameHelper } from '../../../Helpers/IframeHelper';
+import { FrameHelper } from '../../../Helpers/FrameHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { ContentEditorProxy } from '../../ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from '../DesktopProxy/DesktopProxy';
