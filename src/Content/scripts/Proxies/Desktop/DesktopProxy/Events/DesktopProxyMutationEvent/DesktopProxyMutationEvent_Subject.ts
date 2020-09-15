@@ -1,6 +1,6 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { CEFrameProxy } from "../../../../CEFrameProxy";
+import { DTFrameProxy } from "../../../../DTFrameProxy";
 import { HindeSiteEvent_Subject } from "../_HindSiteEvent/HindeSiteEvent_Subject";
 import { IDesktopProxyMutationEvent_Payload } from "./IDesktopProxyMutationEvent_Payload";
 
@@ -25,19 +25,19 @@ export class DesktopProxyMutationEvent_Subject extends HindeSiteEvent_Subject<ID
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
           let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
-          let addedFrameProxies: CEFrameProxy[] = [];
+          let addedDTFrameProxies: DTFrameProxy[] = [];
 
           mutation.addedNodes.forEach((addedNode) => {
             if (addedNode instanceof HTMLIFrameElement) {
-              let frameProxy = new CEFrameProxy(this.Logger, addedNode);
-              addedFrameProxies.push(frameProxy);
+              let dtFrameProxy = new DTFrameProxy(this.Logger, addedNode);
+              addedDTFrameProxies.push(dtFrameProxy);
             }
           })
 
           let desktopMutatedEvent_Payload: IDesktopProxyMutationEvent_Payload = {
             MutatedElement: mutatedElement,
-            AddedCEFrameProxies: addedFrameProxies,
-            FrameProxyMutationEvent_Payload: null
+            AddedDTFrameProxies: addedDTFrameProxies,
+            DTFrameProxyMutationEvent_Payload: null
           }
 
           this.NotifyObservers(desktopMutatedEvent_Payload);

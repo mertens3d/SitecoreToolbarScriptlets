@@ -4,5 +4,5 @@ import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProx
 export interface IFactoryHelper {
   BaseFramePromiseFactory(arg0: HTMLIFrameElement, arg1: string);
   DataOneContentDocFactoryFromIframe(toReturnIframeData: _BaseFrameProxy): IDataOneDoc;
-  CEFrameProxyFactory(arg0: HTMLIFrameElement):  Promise<_BaseFrameProxy>;
+  DTFrameProxyFactory(arg0: HTMLIFrameElement):  Promise<_BaseFrameProxy>;
 }

@@ -1,7 +1,7 @@
 ﻿import { IDataStateOfDesktop } from "../../Interfaces/Data/States/IDataStateOfDesktop";
-import { IDataStateOfFrame } from "../../Interfaces/Data/States/IDataStateOfFrame";
+import { IDataStateOfDTFrame } from "../../Interfaces/Data/States/IDataStateOfDTFrame";
 
 export class DefaultStateOfDesktop implements IDataStateOfDesktop {
     IndexOfActiveFrame = -1;
-    StateOfFrames: IDataStateOfFrame[] = [];
+    StateOfDTFrames: IDataStateOfDTFrame[] = [];
 }

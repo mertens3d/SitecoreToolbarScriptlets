@@ -97,7 +97,6 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
           await this.ReqMsgRouter(reqMsgFromPopup)
             .then((contentResponse: MsgFromContent) => {
               this.Logger.Log('responding: ' + StaticHelpers.MsgFlagAsString(contentResponse.MsgFlag))
-              this.Logger.LogAsJsonPretty('contentResponse: ', contentResponse)
               resolve(contentResponse);
             })
             .catch((err) => {

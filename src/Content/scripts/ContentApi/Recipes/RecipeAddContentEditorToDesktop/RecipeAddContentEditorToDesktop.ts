@@ -1,6 +1,6 @@
 ﻿import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ISettingsAgent, InitResultsCEFrameProxy } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { ISettingsAgent, InitResultsDTFrameProxy } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { _BaseFrameProxy } from '../../../Proxies/_BaseFrameProxy';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
@@ -8,7 +8,7 @@ import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectCon
 import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { FrameHelper } from '../../../Helpers/IframeHelper';
-import { CEFrameProxy } from '../../../Proxies/CEFrameProxy';
+import { DTFrameProxy } from '../../../Proxies/DTFrameProxy';
 
 export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements ICommandRecipes {
   private TargetDoc: IDataOneDoc;
@@ -26,10 +26,10 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
     this.Logger.InstantiateEnd(RecipeAddNewContentEditorToDesktop.name);
   }
 
-  Execute(): Promise<CEFrameProxy> {
+  Execute(): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       let allIframeDataAtBeginning: HTMLIFrameElement[];
-      let ceframeProxy: CEFrameProxy;
+      let dtframeProxy: DTFrameProxy;
       let frameHelper = new FrameHelper(this.Logger);
       let recipeBasics = new RecipeBasics(this.Logger);
 
@@ -38,10 +38,10 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
       await recipeBasics.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.TargetDoc)
         .then(() => recipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.TargetDoc))
         .then(() => recipeBasics.WaitForNewIframeContentEditor(allIframeDataAtBeginning, this.TargetDoc))
-        .then((result: CEFrameProxy) => ceframeProxy = result)
-        .then(() => ceframeProxy.OnReadyInitCEFrameProxy())
-        .then((result: InitResultsCEFrameProxy) => this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result))
-        .then(() => resolve(ceframeProxy))
+        .then((result: DTFrameProxy) => dtframeProxy = result)
+        .then(() => dtframeProxy.OnReadyInitDTFrameProxy())
+        .then((result: InitResultsDTFrameProxy) => this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result))
+        .then(() => resolve(dtframeProxy))
         .catch((err) => reject(this.Execute.name + ' ' + err));
     });
   }

@@ -4,5 +4,5 @@ import { IDataMetaData } from "./IDataMetaData";
 export interface IDataStateOfSitecoreWindow {
     Friendly: IDataFriendly;
     Meta: IDataMetaData;
-    States: IDataSitecoreWindowStates;
+    ScWindowStates: IDataSitecoreWindowStates;
 }

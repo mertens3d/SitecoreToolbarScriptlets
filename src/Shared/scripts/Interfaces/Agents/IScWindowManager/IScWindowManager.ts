@@ -6,9 +6,10 @@ import { IDataOneDoc } from "../../Data/IDataOneDoc";
 import { IDataStateOfSitecoreWindow } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IScUrlAgent } from "../IScUrlAgent/IScUrlAgent";
 import { InitResultsScWindowManager } from "../ISettingsAgent";
+import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 
 export interface IScWindowManager {
-  GetStateOfSitecoreWindow(): Promise<IDataStateOfSitecoreWindow>;
+  GetStateOfSitecoreWindow(snapshotFlavor: SnapShotFlavor): Promise<IDataStateOfSitecoreWindow>;
   MakeScWinRecipeParts(): ScWindowRecipePartials;
   GetScUrlAgent(): IScUrlAgent;
   GetCurrentPageType(): ScWindowType;

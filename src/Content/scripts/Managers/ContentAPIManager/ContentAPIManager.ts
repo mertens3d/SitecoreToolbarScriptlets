@@ -11,7 +11,7 @@ import { RecipeAddNewContentEditorToDesktop } from "../../ContentApi/Recipes/Rec
 import { RecipePublishActiveCe } from "../../ContentApi/Recipes/RecipePublishActiveCe/RecipePublishActiveCe";
 import { RecipeRemoveItemFromStorage } from "../../ContentApi/Recipes/RecipeRemoveItemFromStorage/RecipeRemoveItemFromStorage";
 import { RecipeSetStateOfSitecoreWindow } from "../../ContentApi/Recipes/RecipeRestore/RecipeRestore";
-import { RecipeSaveState } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
+import { RecipeSaveStateManual } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
 import { RecipeToggleFavorite } from "../../ContentApi/Recipes/RecipeToggleFavorite/RecipeToggleFavorite";
 import { LoggableBase } from "../LoggableBase";
 import { ScUiManager } from "../SitecoreUiManager/SitecoreUiManager";
@@ -21,6 +21,7 @@ import { DefaultContentReplyPayload } from "../../../../Shared/scripts/Classes/D
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
+import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 
 export class ContentAPIManager extends LoggableBase implements IHindSiteScWindowApi {
   private AtticAgent: IContentAtticAgent;
@@ -57,9 +58,8 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     return new Promise(async (resolve, reject) => {
       let reply: IDataContentReplyReceivedEvent_Payload = new DefaultContentReplyPayload();
 
-      await this.ScWinMan.GetStateOfSitecoreWindow()
+      await this.ScWinMan.GetStateOfSitecoreWindow(SnapShotFlavor.Live)
         .then((result: IDataStateOfSitecoreWindow) => reply.StateOfSitecoreWindow = result)
-
         .then(() => this.AtticAgent.GetStateOfStorageSnapShots())
         .then((result: IDataStateOfStorageSnapShots) => reply.StateOfStorageSnapShots = result)
         .then(() => reply.ErrorStack = this.Logger.ErrorStack)
@@ -105,7 +105,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
 
   async SaveWindowState(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeSaveState(commandData);
+      let recipe = new RecipeSaveStateManual(commandData);
       await recipe.Execute()
         .then(resolve)
         .catch((err) => reject(err));

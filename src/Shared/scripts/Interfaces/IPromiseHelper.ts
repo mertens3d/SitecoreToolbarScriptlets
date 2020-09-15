@@ -3,7 +3,6 @@ import { IDataPublishChain } from "./Data/IDataPublishChain";
 import { IScVerSpec } from "./IScVerSpec";
 import { IDataOneDoc } from "./data/IDataOneDoc";
 import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProxy";
-//import { FrameProxy } from "./Data/Proxies/FrameProxy";
 
 export interface IRecipeBasics {
   RaceWaitAndClick(scStartButton: IScVerSpec, arg1: IDataOneDoc);

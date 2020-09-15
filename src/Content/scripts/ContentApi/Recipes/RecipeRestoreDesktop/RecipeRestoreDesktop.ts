@@ -3,23 +3,23 @@ import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/IL
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { _BaseFrameProxy } from '../../../Proxies/_BaseFrameProxy';
-import { IDataStateOfFrame } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame';
+import { IDataStateOfDTFrame } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
-import { CEFrameProxy } from '../../../Proxies/CEFrameProxy';
+import { DTFrameProxy } from '../../../Proxies/DTFrameProxy';
 
 export class RecipeRestoreFrameOnDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
   private TargetDoc: IDataOneDoc;
-  private DataStateOfFrame: IDataStateOfFrame;
+  private DataStateOfFrame: IDataStateOfDTFrame;
   private RecipeBasics: RecipeBasics;
   private SettingsAgent: ISettingsAgent;
   DesktopTabButtonTabAgent: DesktopStartBarProxy;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataStateOfFrame: IDataStateOfFrame, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopStartBarProxy) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataStateOfFrame: IDataStateOfDTFrame, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopStartBarProxy) {
     super(logger);
     this.Logger.InstantiateStart(RecipeRestoreFrameOnDesktop.name);
 
@@ -42,15 +42,15 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
     }
   }
 
-  private SetStateOfCEFrameProxy(oneTreeState: IDataStateOfFrame, frameProxy: CEFrameProxy) {
+  private SetStateOfDTFrameProxy(oneTreeState: IDataStateOfDTFrame, dtFrameProxy: DTFrameProxy) {
     return new Promise<void>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetStateOfCEFrameProxy.name);
+      this.Logger.FuncStart(this.SetStateOfDTFrameProxy.name);
 
-      await frameProxy.SetStateOfCEFrame(oneTreeState)
+      await dtFrameProxy.SetStateOfDTFrame(oneTreeState)
         .then(() => resolve())
         .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.SetStateOfCEFrameProxy.name);
+      this.Logger.FuncEnd(this.SetStateOfDTFrameProxy.name);
     });
   }
 
@@ -60,13 +60,13 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
 
       if (this.MiscAgent.NotNullOrUndefined([this.TargetDoc, this.DataStateOfFrame], this.RunOneChain.name)) {
         //guaranteed to be on the correct page
-        var frameProxy: CEFrameProxy;
+        var dtFrameProxy: DTFrameProxy;
         let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent, this.DesktopTabButtonTabAgent);
 
         await recipeAddCe.Execute()
-          .then((result: CEFrameProxy) => frameProxy = result)
-          .then(() => frameProxy.OnReadyInitCEFrameProxy())
-          .then(() => this.SetStateOfCEFrameProxy(this.DataStateOfFrame, frameProxy))
+          .then((result: DTFrameProxy) => dtFrameProxy = result)
+          .then(() => dtFrameProxy.OnReadyInitDTFrameProxy())
+          .then(() => this.SetStateOfDTFrameProxy(this.DataStateOfFrame, dtFrameProxy))
           .then(() => resolve())
           .catch(ex => {
             reject(this.RunOneChain.name + ' ' + ex);

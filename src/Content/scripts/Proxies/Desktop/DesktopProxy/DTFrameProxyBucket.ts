@@ -1,28 +1,28 @@
 ﻿import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { LoggableBase } from "../../../Managers/LoggableBase";
-import { CEFrameProxy } from "../../CEFrameProxy";
+import { DTFrameProxy } from "../../DTFrameProxy";
 
-export class CEFrameProxyBucket extends LoggableBase {
-  private FrameBucketUnits: CEFrameProxy[] = [];
+export class DTFrameProxyBucket extends LoggableBase {
+  private FrameBucketUnits: DTFrameProxy[] = [];
 
   constructor(logger: ILoggerAgent) {
     super(logger);
   }
 
-  AddToCEFrameProxyBucket(ceframeProxy: CEFrameProxy): boolean {
+  AddToDTFrameProxyBucket(dtframeProxy: DTFrameProxy): boolean {
     let toReturn: boolean = false;
-    if (!this.BucketHasSameItem(ceframeProxy)) {
-      this.FrameBucketUnits.push(ceframeProxy);
+    if (!this.BucketHasSameItem(dtframeProxy)) {
+      this.FrameBucketUnits.push(dtframeProxy);
       toReturn = true;
     }
     return (toReturn);
   }
 
-  private BucketHasSameItem(ceframeBucketItem: CEFrameProxy): boolean {
+  private BucketHasSameItem(dtFrameBucketItem: DTFrameProxy): boolean {
     let toReturn: boolean = true;
 
     //todo - I think we'll need to check against the iframe id
-    if (this.FrameBucketUnits.indexOf(ceframeBucketItem) < 0) {
+    if (this.FrameBucketUnits.indexOf(dtFrameBucketItem) < 0) {
       toReturn = false;
     } else {
       toReturn = true;

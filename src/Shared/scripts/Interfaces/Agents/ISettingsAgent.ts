@@ -11,14 +11,14 @@ export class InitResultsScWindowManager {
   InitResultsDesktop: InitResultsDesktopProxy = null;
 }
 export class InitResultsDesktopProxy {
-  InitResultsFrameProxies: InitResultsCEFrameProxy[] = [];
+  InitResultsFrameProxies: InitResultsDTFrameProxy[] = [];
 }
-export class InitResultsCEFrameProxy {
+export class InitResultsDTFrameProxy {
   InitResultContentEditorProxy: InitResultContentEditorProxy;
-  FrameProxyInitialized: boolean = false;
+  DTFrameProxyInitialized: boolean = false;
 }
 export class InitResultContentEditorProxy {
-  InitResultTreeProxy: InitResultsCEFrameProxy;
+  InitResultTreeProxy: InitResultsDTFrameProxy;
   ContentEditorProxyInitialized: boolean = false;
 }
 

@@ -1,22 +1,12 @@
 ﻿import { ScWindowType } from "../../../Enums/scWindowType";
 import { GuidData } from "../../../Helpers/GuidData";
 import { IDataStateOfContentEditor } from "./IDataStateOfContentEditor";
+import { FrameStyling } from "./IFrameStyling";
 
-
-export interface IFrameStyling {
-
-  position: string;
-  left: string;
-  top: string;
-  width: string;
-  height: string;
-  zIndex: string;
-}
-
-export interface IDataStateOfFrame {
+export interface IDataStateOfDTFrame {
   StateOfContentEditor: IDataStateOfContentEditor;
   StorageId: GuidData;
-  Styling: IFrameStyling;
+  Styling: FrameStyling;
   WindowType: ScWindowType;
   ZIndex: number
 }

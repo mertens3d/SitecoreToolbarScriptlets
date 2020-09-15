@@ -25,14 +25,14 @@ export class DefaultMetaData implements IDataMetaData {
   WindowType = ScWindowType.Unknown;
 }
 
-export class DefaultStates implements IDataSitecoreWindowStates {
+export class DefaultScWindowStates implements IDataSitecoreWindowStates {
   StateOfContentEditor = new DefaultStateOfContentEditor;
   StateOfDesktop = new DefaultStateOfDesktop();
 }
 export class DefaultStateOfSitecoreWindow implements IDataStateOfSitecoreWindow {
   Friendly = new DefaultFriendly();
   Meta = new DefaultMetaData();
-  States: IDataSitecoreWindowStates = new DefaultStates();
+  ScWindowStates: IDataSitecoreWindowStates = new DefaultScWindowStates();
 
   constructor() {
     this.Meta.TimeStamp = new Date();

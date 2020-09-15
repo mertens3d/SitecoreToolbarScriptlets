@@ -74,7 +74,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarButtonProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\ContentEditorTreeProxy.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DesktopFrameProxyBucket.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DTFrameProxyBucket.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\ITreeMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\TreeMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\FrameProxyMutationEvent\FrameProxyMutatedEvent_Subject.ts" />
@@ -156,7 +156,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUiModule.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUiVisiblityTestResult.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\CEFrameProxy.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\DTFrameProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataFriendly.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataMetaData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataStateOfSitecoreWindow.ts" />

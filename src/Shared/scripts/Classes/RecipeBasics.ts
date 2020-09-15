@@ -7,7 +7,7 @@ import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
 import { _BaseFrameProxy } from '../../../Content/scripts/Proxies/_BaseFrameProxy';
-import { CEFrameProxy } from '../../../Content/scripts/Proxies/CEFrameProxy';
+import { DTFrameProxy } from '../../../Content/scripts/Proxies/DTFrameProxy';
 import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
@@ -163,14 +163,14 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       this.Logger.FuncEnd(this.WaitForIframeElemAndReturnWhenReady.name);
     });
   }
-  async WaitForNewIframeContentEditor(allIframesBefore: HTMLIFrameElement[], targetDoc: IDataOneDoc): Promise<CEFrameProxy> {
+  async WaitForNewIframeContentEditor(allIframesBefore: HTMLIFrameElement[], targetDoc: IDataOneDoc): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframe.name);
-      let toReturn: CEFrameProxy = null;
+      let toReturn: DTFrameProxy = null;
 
       await this.WaitForNewIframeNative(allIframesBefore, targetDoc)
         .then((result: HTMLIFrameElement) => {
-          toReturn = new CEFrameProxy(this.Logger, result);
+          toReturn = new DTFrameProxy(this.Logger, result);
         })
         .then(() => resolve(toReturn))
         .catch((err) => reject(this.WaitForNewIframeContentEditor.name + ' | ' + err));

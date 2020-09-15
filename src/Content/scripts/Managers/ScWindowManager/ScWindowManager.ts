@@ -1,4 +1,4 @@
-﻿import { DefaultStateOfSitecoreWindow, DefaultStates, DefaultFriendly, DefaultMetaData } from '../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
+﻿import { DefaultStateOfSitecoreWindow, DefaultScWindowStates, DefaultFriendly, DefaultMetaData } from '../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
 import { RecipeBasics } from '../../../../Shared/scripts/Classes/RecipeBasics';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { QueryStrKey } from '../../../../Shared/scripts/Enums/QueryStrKey';
@@ -225,7 +225,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
 
   private GetStates(): Promise<IDataSitecoreWindowStates> {
     return new Promise(async (resolve, reject) => {
-      let toReturn: IDataSitecoreWindowStates = new DefaultStates();
+      let toReturn: IDataSitecoreWindowStates = new DefaultScWindowStates();
 
       if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
         await this.DesktopProxy().GetStateOfDesktop()
@@ -242,31 +242,35 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     });
   }
 
-  GetStateOfSitecoreWindow(): Promise<IDataStateOfSitecoreWindow> {
+  GetStateOfSitecoreWindow(snapshotFlavor: SnapShotFlavor): Promise<IDataStateOfSitecoreWindow> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetStateOfSitecoreWindow.name);
 
       let toReturnStateOfSitecoreWindow: IDataStateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
-      toReturnStateOfSitecoreWindow.Meta.SessionId = this.TabSessionId;
 
       await this.GetStates()
-        .then((results: IDataSitecoreWindowStates) => toReturnStateOfSitecoreWindow.States = results)
-        .then(() => toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData())
-
-        .then(() => toReturnStateOfSitecoreWindow.Friendly.WindowType = ScWindowType[toReturnStateOfSitecoreWindow.Meta.WindowType])
-
+        .then((dataSitecoreWindowStates: IDataSitecoreWindowStates) => toReturnStateOfSitecoreWindow.ScWindowStates = dataSitecoreWindowStates)
+        .then(() => toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor))
+        .then(() => toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(snapshotFlavor))
         .then(() => resolve(toReturnStateOfSitecoreWindow))
         .catch((err) => reject(this.GetStateOfSitecoreWindow.name + ' | ' + err));
-
       this.Logger.FuncEnd(this.GetStateOfSitecoreWindow.name);
     });
   }
 
-  PopulateMetaData(): IDataMetaData {
+  PopulateFriendly(snapshotFlavor: SnapShotFlavor): IDataFriendly {
+    let toReturn: IDataFriendly = new DefaultFriendly();
+    toReturn.WindowType = ScWindowType[this.ScUrlAgent.GetScWindowType()];
+    toReturn.Flavor = snapshotFlavor[snapshotFlavor];
+    return toReturn;
+  }
+
+  PopulateMetaData(snapshotFlavor: SnapShotFlavor): IDataMetaData {
     let toReturn: IDataMetaData = new DefaultMetaData();
     toReturn.WindowType = this.ScUrlAgent.GetScWindowType();
     toReturn.TimeStamp = new Date();
     toReturn.SessionId = this.TabSessionId;
+    toReturn.Flavor = snapshotFlavor;
     return toReturn;
   }
 }
