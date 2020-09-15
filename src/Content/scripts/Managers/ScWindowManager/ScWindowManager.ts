@@ -250,18 +250,21 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
 
       await this.GetStates()
         .then((dataSitecoreWindowStates: IDataSitecoreWindowStates) => toReturnStateOfSitecoreWindow.ScWindowStates = dataSitecoreWindowStates)
-        .then(() => toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor))
-        .then(() => toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(snapshotFlavor))
+        .then(() => {
+          toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor);
+          toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(toReturnStateOfSitecoreWindow.Meta)
+        })
         .then(() => resolve(toReturnStateOfSitecoreWindow))
         .catch((err) => reject(this.GetStateOfSitecoreWindow.name + ' | ' + err));
       this.Logger.FuncEnd(this.GetStateOfSitecoreWindow.name);
     });
   }
 
-  PopulateFriendly(snapshotFlavor: SnapShotFlavor): IDataFriendly {
+  PopulateFriendly(metadata: IDataMetaData): IDataFriendly {
     let toReturn: IDataFriendly = new DefaultFriendly();
-    toReturn.WindowType = ScWindowType[this.ScUrlAgent.GetScWindowType()];
-    toReturn.Flavor = snapshotFlavor[snapshotFlavor];
+    toReturn.WindowType = ScWindowType[metadata.WindowType];
+    toReturn.TimeStamp = StaticHelpers.MakeFriendlyDate(metadata.TimeStamp)
+    toReturn.Flavor = SnapShotFlavor[metadata.Flavor];
     return toReturn;
   }
 
