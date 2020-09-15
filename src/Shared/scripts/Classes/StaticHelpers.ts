@@ -66,13 +66,6 @@ export class StaticHelpers {
     return buffChar;
   }
 
-  //static ShortenString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
-  //  var toReturn = str;
-
-  //  return toReturn;
-
-  //}
-
   static BufferString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
     var toReturn = str;
     var buffChar: string = this.getBuffChar(buffCharEnum);

@@ -27,8 +27,6 @@ export class IterationDrone {
   DecrementAndKeepGoing() {
     var toReturn = false;
 
-    //!this.MsgMan().OperationCancelled &&
-
     if (this.__currentIteration > 0) {
       this.__currentIteration -= 1;
       this.__timeout += this.__timeout * SharedConst.Const.IterHelper.GrowthPerIteration;

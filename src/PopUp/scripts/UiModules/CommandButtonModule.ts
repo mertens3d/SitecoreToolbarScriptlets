@@ -122,87 +122,10 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
         }
       }
     } else {
-      this.Logger.ErrorAndContinue(this.SetCommandButtonVisibility.name, 'targetButton is NULL');
+      this.Logger.ErrorAndContinue(this.SetCommandButtonVisibility.name, 'targetButton is NULL: ' + MenuCommand[this.Command.Command]);
     }
   }
-  //private EnrollInEvents(): boolean {
-  //  let toReturn: boolean = false;
 
-  //  if (this.Command.VisibilityControllers.length > 0) {
-  //    for (var jdx = 0; jdx < this.Command.VisibilityControllers.length; jdx++) {
-  //      let oneControl: VisibilityType = this.Command.VisibilityControllers[jdx];
-
-  //      switch (oneControl) {
-  //        case VisibilityType.Desktop:
-  //          toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Desktop, this.CurrentWindowType)
-
-  //          break;
-
-  //        case VisibilityType.ActiveCeNode:
-  //          toReturn = this.Tester.VisibilityTestActiveCeNode(this.StateOfSitecoreWindow);
-  //          break;
-
-  //        case VisibilityType.ContentEditor:
-  //          toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.ContentEditor, this.CurrentWindowType)
-  //          break;
-
-  //        case VisibilityType.Edit:
-  //          toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Edit, this.CurrentWindowType)
-  //          break;
-
-  //        case VisibilityType.Launchpad:
-  //          toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Launchpad, this.CurrentWindowType)
-  //          break;
-
-  //        case VisibilityType.LoginPage:
-  //          toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.LoginPage, this.CurrentWindowType)
-  //          break;
-
-  //        case VisibilityType.Normal:
-  //          toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Normal, this.CurrentWindowType)
-  //          break;
-
-  //        case VisibilityType.Preview:
-  //          toReturn = this.Tester.VisibilityTestWindowType(ScWindowType.Preview, this.CurrentWindowType)
-  //          break;
-
-  //        case VisibilityType.SnapShotable:
-  //          this.EventManager.SelectionChangedEvent_Subject
-  //            toReturn = this.Tester.VisibilityTestSnapShotable(this.StateOfSitecoreWindow);
-  //          break;
-
-  //        case VisibilityType.SnapShotSelected:
-  //          toReturn = true;//todo put back this.Tester.VisibilityTestSnapShotSelected(this.currSelSnapshot);
-  //          break;
-
-  //        case VisibilityType.NotLogin:
-  //          toReturn = !this.Tester.VisibilityTestWindowType(ScWindowType.LoginPage, this.CurrentWindowType)
-  //          break;
-
-  //        case VisibilityType.CommandIsRunning:
-  //          toReturn = false; //todo
-  //          break;
-
-  //        case VisibilityType.Unknown:
-  //          this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
-  //          break;
-
-  //        default:
-  //          this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
-  //          break;
-  //      }
-
-  //      if (toReturn) {
-  //        break;
-  //      }
-  //    }
-  //  }
-  //  else {
-  //    toReturn = true;
-  //  }
-
-  //  return toReturn;
-  //}
   private TestAgainstAllSetControllers(): VisiblityTestResults {
     let allResults: VisiblityTestResults = new VisiblityTestResults();
 
@@ -223,7 +146,6 @@ export class CommandButtonModule extends LoggableBase implements IUiModule {
           case VisibilityType.IfDesktopMin1ContentEditor:
             allResults.TestResults.push(this.Tester.VisibilityTestIfDesktopMinOneConentEditorOpen(this.StateOfSitecoreWindow));
             break;
-            
 
           case VisibilityType.ContentEditor:
             allResults.TestResults.push(this.Tester.VisibilityTestWindowType(ScWindowType.ContentEditor, this.CurrentWindowType));

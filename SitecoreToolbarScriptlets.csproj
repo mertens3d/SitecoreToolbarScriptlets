@@ -57,7 +57,6 @@
     <Content Include="ReadmeResoures\external-tools-hotkey.png" />
     <Content Include="ReadmeResoures\external-tools.png" />
     <Content Include="ReadmeResoures\file.png" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\CEFrameProxyBucketItem.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Subject.ts" />
@@ -72,7 +71,6 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\FrameProxyMutationEvent\FrameProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarButtonProxy.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorProxy\DesktopIframeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeProxy\ContentEditorTreeProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DesktopFrameProxyBucket.ts" />

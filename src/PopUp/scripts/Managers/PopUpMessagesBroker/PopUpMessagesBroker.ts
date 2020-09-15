@@ -6,21 +6,12 @@ import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataContentReplyReceivedEvent_Payload } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
-//export class PopUpMessagesBroker_Subject extends HindeSiteEvent_Subject<IDataContentReplyReceivedEvent_Payload> {
-
-
-//}
-
-
 export class PopUpMessagesBroker {
   LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
   private Logger: ILoggerAgent;
 
   constructor(loggerAgent: ILoggerAgent) {
     this.Logger = loggerAgent;
-
-    //this.PopUpMessagesBroker_Subject = new PopUpMessagesBroker_Subject(this.Logger, PopUpMessagesBroker.name);
-
   }
 
   ReceiveResponseHndlr(response: any): Promise<IDataContentReplyReceivedEvent_Payload> {
@@ -31,7 +22,6 @@ export class PopUpMessagesBroker {
         StaticHelpers.MsgFlagAsString(response.MsgFlag)
 
         if (response) {
-
           var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
 
           if (asMsgFromContent) {
@@ -63,9 +53,6 @@ export class PopUpMessagesBroker {
   private SendMessageToSingleTab(messageToSend: MsgFromPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
-
-      //this.MsgFeedback.UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
-      //this.Logger.LogAsJsonPretty("messageToSend", messageToSend);
 
       let targetTab: browser.tabs.Tab;
 

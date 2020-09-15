@@ -149,10 +149,8 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log(debugPrefix + textValName + ' : ' + textVal);
   }
   async Log(text, optionalValue: string = '', hasPrefix = false) {
-    if (this.HasWriters) { //|| !this.LogHasBeenInit
+    if (this.HasWriters) { 
       var indent = '  ';
-      //text =  indent.repeat(this.__indentCount) + text;
-
       this.MaxIndent = 10;
 
       for (var idx = 0; idx < Math.min(this.__callDepth, this.MaxIndent); idx++) {
@@ -222,9 +220,6 @@ export class LoggerAgent implements ILoggerAgent {
     }
     this.Log(textOrFunc, '', true);
     this.__callDepth++;
-    //if (this.__callDepth >  10) {
-    //  this.__callDepth = 10;
-    //}
   }
 
   InstantiateStart(text: string): void {

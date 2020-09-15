@@ -19,8 +19,6 @@ export class DesktopProxyMutationEvent_Observer extends HindSiteEvent_Observer<I
       payload.AddedCEFrameProxies.forEach(async (frameProxy) => {
         this.Logger.LogVal('added iframe id', frameProxy.HTMLIframeElement.id);
 
-        //let iframeProxy: FrameProxy = new FrameProxy(this.Logger, iframeElement, iframeElement.id, this.SettingsAgent);
-
         frameProxy.OnReadyInitCEFrameProxy()
           .then(() => this.Owner.AddCEFrameProxyAsync(frameProxy))
           .catch((err) => { throw (DesktopProxyMutationEvent_Observer.name + ' | ' + err) });

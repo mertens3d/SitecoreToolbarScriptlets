@@ -136,9 +136,14 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
     return toReturn;
   }
 
-  GetRootNode(): HTMLElement {
+  GetRootNodeForFrameType(): HTMLElement {
     this.Logger.LogVal('Looking for: ', ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode);
     let toReturn: HTMLElement = this.TreeContainerElement.querySelector(ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode);
+
+    //if (!toReturn) {
+    //  toReturn = this.TreeContainerElement.querySelector(ContentConst.Const.Selector.SC.Level2Nodes.MediaLibraryAnchorRootNode);
+    //}
+
     return toReturn;
   }
 
@@ -187,7 +192,7 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
     var toReturn: IDataStateOfScContentTreeNode[] = [];
 
     if (this.AssociatedDoc) {
-      var rootNode: HTMLElement = this.GetRootNode();
+      var rootNode: HTMLElement = this.GetRootNodeForFrameType();
 
       if (rootNode) {
         this.Logger.Log('rootNode: ' + rootNode.innerHTML);

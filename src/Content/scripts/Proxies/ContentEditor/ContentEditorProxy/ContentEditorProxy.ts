@@ -77,7 +77,7 @@ export class ContentEditorProxy extends LoggableBase {
       AddedIframes: [],
       MutatedElement: null,
       TreeMutation: payload,
-      ContentEditorProxy:this
+      ContentEditorProxy: this
     }
     if (this.ContentEditorProxyMutationEvent_Subject) {
       this.ContentEditorProxyMutationEvent_Subject.NotifyObservers(contentEditorProxyMutationEvent_Payload);
@@ -137,22 +137,6 @@ export class ContentEditorProxy extends LoggableBase {
     }
     this.Logger.FuncEnd(this.RegisterObserverForTreeMutation.name);
   }
-
-  //async SetStateTree(oneTreeState: IDataStateOfTree): Promise<void> {
-  //  return new Promise(async (resolve, reject) => {
-  //    this.Logger.FuncStart(this.SetStateTree.name);
-
-  //    if (oneTreeState) {
-  //      await this.AssociatedTreeProxy.SetStateOfTree(oneTreeState)
-  //        .then(() => resolve())
-  //        .catch((err) => {
-  //          this.Logger.LogAsJsonPretty('oneTreeState', oneTreeState);
-  //          reject((this.SetStateTree.name + " " + err))
-  //        })
-  //    }
-  //    this.Logger.FuncEnd(this.SetStateTree.name);
-  //  });
-  //}
 
   SetCompactCss() {
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.AssociatedDoc.DocId));

@@ -16,8 +16,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
     this.Logger.InstantiateStart(ScContentTreeNodeProxy.name);
 
-
-    if (sourceElement ) {
+    if (sourceElement) {
       if (sourceElement.hasAttribute('src')) {
         this.InferFromImageElement(<HTMLImageElement>sourceElement);
       } else if (sourceElement.hasAttribute('href')) {
@@ -131,18 +130,6 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     if (penultimateElem) {
       penultimateNode = new ScContentTreeNodeProxy(this.Logger, penultimateElem);
     }
-
-    //while (parentNode && maxIter > 0) {
-    //  maxIter--;
-    //   parentNode = parentNode.GetParentTreeNode();
-
-    //  if (parentNode) {
-    //    if (parentNode.IsSitecoreRootNode()) {
-    //      penultimateNode = penultimateNode;
-    //      break;
-    //    }
-    //  }
-    //}
 
     if (penultimateNode !== null) {
       toReturn = penultimateNode.GetIconSrc();

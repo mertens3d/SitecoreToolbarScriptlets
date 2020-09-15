@@ -102,7 +102,7 @@ export class ContentConst {
         IdStartsWithTreeNode: '[id^=Tree_Node_]',
         IframeContent: {
           sc820: null,
-          sc920: 'iframe[src*=Content]'
+          sc920: 'iframe[src*=Content], iframe[src*=MediaShop]'
         },
 
         JqueryModalDialogsFrame: '[id=jqueryModalDialogsFrame]',

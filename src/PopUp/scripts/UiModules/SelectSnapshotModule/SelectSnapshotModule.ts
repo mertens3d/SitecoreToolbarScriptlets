@@ -190,28 +190,6 @@ export class SelectSnapshotModule extends LoggableBase implements IUiModule {
     this.Logger.FuncEnd(this.PopulateStateOfSnapShotSelectElement.name);
   }
 
-  //private GetFirstDesktopStateWithActiveNode(data: IDataDesktopState): IDataContentEditorState {
-  //  let toReturn: IDataContentEditorState = null;
-
-  //  if (data) {
-  //    for (var idx = 0; idx < data..AllCEAr.length; idx++) {
-  //      var candidateCe = data.AllCEAr[0];
-  //      for (var jdx = 0; jdx < candidateCe.AllTreeNodeAr.length; jdx++) {
-  //        var candidateNode = candidateCe.AllTreeNodeAr[jdx];
-  //        if (candidateNode.IsActive) {
-  //          break;
-  //        }
-  //      }
-
-  //      if (toReturn.ce !== null) {
-  //        break;
-  //      }
-  //    }
-  //  }
-
-  //  return toReturn;
-  //}
-
   GetFirstDataWithActiveNode(data: IDataStateOfSitecoreWindow): IFirstActive {
     let toReturn: IFirstActive = {
       StateOfContentEditor: null,
