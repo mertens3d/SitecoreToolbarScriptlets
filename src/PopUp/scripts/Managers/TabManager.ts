@@ -58,7 +58,7 @@ export class BrowserTabAgent {
   ChangeLocationSwitchBoard(desiredPageType: ScWindowType) {
     this.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + ScWindowType[desiredPageType]);
 
-    var iteration: IterationDrone = new IterationDrone(this.Logger, this.ChangeLocationSwitchBoard.name);
+    var iteration: IterationDrone = new IterationDrone(this.Logger, this.ChangeLocationSwitchBoard.name, true);
 
     if (iteration.DecrementAndKeepGoing()) {
       var currentScWindowType: ScWindowType = this.ScUrlAgent.GetScWindowType();//.ScWindowType;

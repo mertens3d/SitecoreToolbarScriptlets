@@ -1,6 +1,7 @@
 ﻿export interface ISharedConst {
   Debug: {
-    ForceLoggingEnabled: boolean
+    ForceLoggingEnabled: boolean,
+    SpeedUpAutoSaveIntervalFactor: number,
   },
   IterHelper: {
     GrowthPerIteration: number,

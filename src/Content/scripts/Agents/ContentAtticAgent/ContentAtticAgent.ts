@@ -78,8 +78,8 @@ export class ContentAtticAgent implements IContentAtticAgent {
       if (!candidate.Meta) {
         candidate.Meta = new DefaultMetaData();
       }
-      
-      candidate.Meta.TimeStamp = new Date(candidate.Meta.TimeStamp); 
+
+      candidate.Meta.TimeStamp = new Date(candidate.Meta.TimeStamp);
 
       if (!candidate.Meta.WindowType) {
         candidate.Meta.WindowType = ScWindowType.Unknown;
@@ -89,11 +89,10 @@ export class ContentAtticAgent implements IContentAtticAgent {
       if (!candidate.Friendly) {
         candidate.Friendly = new DefaultFriendly();
       }
-        
+
       if (!candidate.Friendly.NickName) {
         candidate.Friendly.NickName = '';
       }
-      
     } else {
       this.Logger.ErrorAndThrow(this.ValidateStorageData.name, 'Saved data did not import correctly')
     }
@@ -101,21 +100,12 @@ export class ContentAtticAgent implements IContentAtticAgent {
   }
 
   private GetAllLocalStorageAsIOneStorageData(): IOneStorageData[] {
-    this.Logger.FuncStart(this.GetAllLocalStorageAsIOneStorageData.name);
-
-    
-
     let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
-
     let result = this.RepoAgent.GetBulkLocalStorageByKeyPrefix(prefix);
-
-    this.Logger.FuncEnd(this.GetAllLocalStorageAsIOneStorageData.name);
-
     return result;
   }
 
   private GetAllStorage(): IDataStateOfSitecoreWindow[] {
-    this.Logger.FuncStart(this.GetAllStorage.name);
     var toReturn: IDataStateOfSitecoreWindow[] = [];
 
     let rawStorageData: IOneStorageData[] = this.GetAllLocalStorageAsIOneStorageData();
@@ -132,24 +122,20 @@ export class ContentAtticAgent implements IContentAtticAgent {
 
     toReturn = this.FilterOutOldData(toReturn);
 
-    this.Logger.FuncEnd(this.GetAllStorage.name);
     return toReturn;
   }
 
   private CleanOneStorageItem(candidate: IDataStateOfSitecoreWindow, autoCount: number): number {
-    this.Logger.FuncStart(this.CleanOneStorageItem.name);
     var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
     var deleteFlag: boolean = false;
     var now: Date = new Date();
 
-    this.Logger.Log(SnapShotFlavor[candidate.Meta.Flavor]);
-    if (candidate.Meta.Flavor == SnapShotFlavor.Autosave) {
+    if (candidate.Meta.Flavor == SnapShotFlavor.Autosave ) {
       if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
         this.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.Meta.TimeStamp.toString());
         deleteFlag = true;
       }
       autoCount++;
-      this.Logger.LogVal('autoCount', autoCount);
     }
 
     if (now.getTime() - candidate.Meta.TimeStamp.getTime() > maxAutoSaveDiff) {
@@ -164,11 +150,8 @@ export class ContentAtticAgent implements IContentAtticAgent {
       } catch (e) {
         this.Logger.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.Meta.SnapshotId)
       }
-    } else {
-      this.Logger.Log('no delete flag');
     }
 
-    this.Logger.FuncEnd(this.CleanOneStorageItem.name);
     return autoCount;
   }
 

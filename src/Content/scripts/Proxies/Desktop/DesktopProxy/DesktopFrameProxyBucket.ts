@@ -7,27 +7,18 @@ export class CEFrameProxyBucket extends LoggableBase {
 
   constructor(logger: ILoggerAgent) {
     super(logger);
-    this.Logger.InstantiateStart(CEFrameProxyBucket.name);
-
-    this.Logger.InstantiateEnd(CEFrameProxyBucket.name);
   }
 
   AddToCEFrameProxyBucket(ceframeProxy: CEFrameProxy): boolean {
-    this.Logger.FuncStart(this.AddToCEFrameProxyBucket.name);
     let toReturn: boolean = false;
-
     if (!this.BucketHasSameItem(ceframeProxy)) {
       this.FrameBucketUnits.push(ceframeProxy);
       toReturn = true;
     }
-
-    this.Logger.FuncEnd(this.AddToCEFrameProxyBucket.name);
     return (toReturn);
   }
 
   private BucketHasSameItem(ceframeBucketItem: CEFrameProxy): boolean {
-    this.Logger.FuncStart(this.BucketHasSameItem.name);
-
     let toReturn: boolean = true;
 
     //todo - I think we'll need to check against the iframe id
@@ -38,7 +29,6 @@ export class CEFrameProxyBucket extends LoggableBase {
       this.Logger.WarningAndContinue(this.BucketHasSameItem.name, 'Proxy already exists in bucket');
     }
 
-    this.Logger.FuncEnd(this.BucketHasSameItem.name, toReturn.toString());
     return toReturn;
   }
 }

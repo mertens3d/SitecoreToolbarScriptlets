@@ -24,13 +24,7 @@ export class DesktopProxyMutationEvent_Subject extends HindeSiteEvent_Subject<ID
     if (this.HasObservers()) {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
-          this.Logger.LogVal('mutation.type', mutation.type);
-
-          this.Logger.Log('added nodes');
-
           let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
-          this.Logger.Log('-----> ' + mutatedElement.id);
-
           let addedFrameProxies: CEFrameProxy[] = [];
 
           mutation.addedNodes.forEach((addedNode) => {

@@ -14,8 +14,6 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement) {
     super(logger);
 
-    this.Logger.InstantiateStart(ScContentTreeNodeProxy.name);
-
     if (sourceElement) {
       if (sourceElement.hasAttribute('src')) {
         this.InferFromImageElement(<HTMLImageElement>sourceElement);
@@ -29,28 +27,21 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     } else {
       this.Logger.ErrorAndThrow(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
     }
-
-    //this.InitTreeNodeProxy();
-    this.Logger.InstantiateEnd(ScContentTreeNodeProxy.name);
   }
 
   private InferFromDivElement(divElement: HTMLDivElement) {
-    this.Logger.Log(this.InferFromAnchorElement.name);
     if (divElement) {
       this.ScContentTreeNodeDivElem = divElement;
     }
   }
 
   private InferFromAnchorElement(anchorElement: HTMLAnchorElement) {
-    this.Logger.FuncStart(this.InferFromAnchorElement.name);
     if (anchorElement) {
       this.ScContentTreeNodeDivElem = <HTMLDivElement>anchorElement.parentElement
     }
-    this.Logger.FuncEnd(this.InferFromAnchorElement.name);
   }
 
   private InferFromImageElement(imageElement: HTMLImageElement) {
-    this.Logger.Log(this.InferFromImageElement.name);
     if (imageElement) {
       this.ScContentTreeNodeDivElem = <HTMLDivElement>imageElement.parentElement
     }
@@ -75,10 +66,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
   GetApparentItemId(): GuidData {
     let glyphNodeIdSuffix = this.GetGlyphNodeElem().id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
-
     let toReturnGuidData: GuidData = Guid.ParseGuid(glyphNodeIdSuffix, true);
-
-    this.Logger.LogVal('apparent id', toReturnGuidData.Raw);
     return toReturnGuidData;
   }
 
@@ -171,10 +159,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       var classList = this.GetLinkNodeElem().classList;
       if (classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive)) {
         toReturn = true;
-        this.Logger.Log('** isActive ' + this.ScContentTreeNodeDivElem.innerText);
       }
-    } else {
-      this.Logger.Log('no node link elem');
     }
 
     return toReturn;
@@ -230,19 +215,9 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   }
 
   IsContentTreeNode() {
-    this.Logger.FuncStart(this.IsContentTreeNode.name);
     var toReturn: boolean = false;
-
     var className = this.ScContentTreeNodeDivElem.className;
-
-    this.Logger.LogVal('className', className);
-
-    if (className === ContentConst.Const.ClassNames.SC.ContentTreeNode) {
-      //this.debug().Log('is Content Node');
-      toReturn = true;
-    }
-
-    this.Logger.FuncEnd(this.IsContentTreeNode.name, toReturn);
+    toReturn = className === ContentConst.Const.ClassNames.SC.ContentTreeNode;
     return toReturn;
   }
 

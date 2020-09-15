@@ -53,14 +53,11 @@ export class CEFrameProxy extends _BaseFrameProxy {
   }
 
   OnContentEditorProxyMutation(payload: IContentEditorProxyMutationEvent_Payload) {
-    this.Logger.FuncStart(this.OnContentEditorProxyMutation.name);
     let frameProxyMutationEvent_Payload: ICEFrameProxyMutationEvent_Payload = {
       ContentEditorProxyMutationPayload: payload,
       CeFrameProxy: this
     }
-
     this.FrameProxyMutationEvent_Subject.NotifyObservers(frameProxyMutationEvent_Payload);
-    this.Logger.FuncEnd(this.OnContentEditorProxyMutation.name);
   }
 
   OnReadyInitCEFrameProxy(): Promise<InitResultsCEFrameProxy> {

@@ -3,7 +3,8 @@
 export class SharedConst {
   static Const: ISharedConst = {
     Debug: {
-      ForceLoggingEnabled: false
+      ForceLoggingEnabled: false,
+      SpeedUpAutoSaveIntervalFactor: 3,
     },
     IterHelper: {
       GrowthPerIteration: 0.5,

@@ -263,33 +263,10 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
   }
 
   PopulateMetaData(): IDataMetaData {
-    this.Logger.FuncStart(this.PopulateMetaData.name);
     let toReturn: IDataMetaData = new DefaultMetaData();
-
     toReturn.WindowType = this.ScUrlAgent.GetScWindowType();
     toReturn.TimeStamp = new Date();
     toReturn.SessionId = this.TabSessionId;
-    this.Logger.LogAsJsonPretty('dataMetaData', toReturn);
-
-    this.Logger.FuncEnd(this.PopulateMetaData.name);
     return toReturn;
   }
-
-  //GetStateOfSitecore(snapShotFlavor: SnapShotFlavor): Promise<IDataStateOfSitecoreWindow> {
-  //  return new Promise(async (resolve, reject) => {
-  //    this.Logger.FuncStart(this.GetStateOfSitecore.name);
-
-  //    let currentPageType = this.GetCurrentPageType();
-  //    var toReturnStateOfSitecore: IDataStateOfSitecoreWindow = this.CreateShellIDataScWindowState(currentPageType, snapShotFlavor);
-
-  //    await this.DesktopProxy().GetStateOfDesktop()
-  //      .then((stateOfDesktop: IDataStateOfDesktop) => toReturnStateOfSitecore.StateOfDesktop = stateOfDesktop)
-  //      .then(() => this.ContentEditorProxy().GetStateOfContentEditor())
-  //      .then((stateOfContentEditor: IDataStateOfContentEditor) => toReturnStateOfSitecore.StateOfContentEditor = stateOfContentEditor)
-  //      .then(() => resolve(toReturnStateOfSitecore))
-  //      .catch((err) => reject(err));
-
-  //    this.Logger.FuncEnd(this.GetStateOfSitecore.name);
-  //  });
-  //}
 }

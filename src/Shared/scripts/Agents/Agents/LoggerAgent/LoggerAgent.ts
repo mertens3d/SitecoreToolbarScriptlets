@@ -153,7 +153,8 @@ export class LoggerAgent implements ILoggerAgent {
       var indent = '  ';
       this.MaxIndent = 10;
 
-      for (var idx = 0; idx < Math.min(this.__callDepth, this.MaxIndent); idx++) {
+      let indentDepth = this.__callDepth % this.MaxIndent;
+      for (var idx = 0; idx < indentDepth; idx++) {
         text = indent + text;
       }
 

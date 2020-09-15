@@ -4,7 +4,7 @@ import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
-import { ISettingsAgent, InitResultsScWindowManager, InitResultContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { InitResultContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
 import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
@@ -26,45 +26,30 @@ export class ContentEditorProxy extends LoggableBase {
 
   constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent) {
     super(logger);
-
-    this.Logger.InstantiateStart(ContentEditorProxy.name);
-
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.AssociatedDoc = associatedDoc;
-
     this.ValidateAssociatedDocContentEditor();
-
-    this.Logger.InstantiateEnd(ContentEditorProxy.name);
   }
 
   OnReadyInitContentEditorProxy(): Promise<InitResultContentEditorProxy> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.OnReadyInitContentEditorProxy.name);
-
       let initResultContentEditorProxy = new InitResultContentEditorProxy();
       let recipeBasic = new RecipeBasics(this.Logger);
       await recipeBasic.WaitForReadyNABDocument(this.AssociatedDoc)
         .then(() => {
           this.ChildTreeProxy = new TreeProxy(this.Logger, this.AssociatedDoc, this.GetTreeContainer());
-
           initResultContentEditorProxy.InitResultTreeProxy = this.ChildTreeProxy.OnReadyInitTreeProxy();
-
           this.ContentEditorProxyMutationEvent_Subject = new ContentEditorProxyMutationEvent_Subject(this.Logger);
-
           this.TreeMutationEvent_Observer = new TreeMutationEvent_Observer(this.Logger, this);
-
           if (this.ChildTreeProxy) {
             this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
           } else {
             this.Logger.ErrorAndThrow(this.OnReadyInitContentEditorProxy.name, 'no child tree found');
           }
-
           initResultContentEditorProxy.ContentEditorProxyInitialized = true;
         })
         .then(() => resolve(initResultContentEditorProxy))
         .catch((err) => reject(this.OnReadyInitContentEditorProxy.name + ' | ' + err));
-
-      this.Logger.FuncEnd(this.OnReadyInitContentEditorProxy.name);
     });
   }
 
@@ -93,7 +78,6 @@ export class ContentEditorProxy extends LoggableBase {
   }
 
   ValidateAssociatedDocContentEditor() {
-    this.Logger.FuncStart(this.ValidateAssociatedDocContentEditor.name);
     if (!this.AssociatedDoc) {
       this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No doc provided');
     }
@@ -108,9 +92,6 @@ export class ContentEditorProxy extends LoggableBase {
     else if (this.AssociatedDoc.ContentDoc.URL === SharedConst.Const.UrlSuffix.AboutBlank) {
       this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
     }
-
-    this.Logger.LogVal('URL', this.AssociatedDoc.ContentDoc.URL);
-    this.Logger.FuncEnd(this.ValidateAssociatedDocContentEditor.name);
   }
 
   async WaitForReadyContentEditor(): Promise<void> {

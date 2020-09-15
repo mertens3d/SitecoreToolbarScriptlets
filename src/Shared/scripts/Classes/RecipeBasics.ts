@@ -23,7 +23,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForReadyNABFrameProxy.name, Guid.AsShort(baseframeProxy.Id));
 
-      var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABFrameProxy.name);
+      var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABFrameProxy.name, true);
       let IsReady: boolean = false;
 
       await this.WaitForReadyNABHtmlIframeElement(baseframeProxy.HTMLIframeElement)
@@ -59,23 +59,14 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
   private IsDocumentReadyNAB(document: Document): boolean {
     // Ready and not About:Blank
     let toReturn: boolean = false;
-
     if (document) {
       let currentReadyState = document.readyState.toString();
       let isReadyStateComplete = currentReadyState === 'complete';
-
       let url = document.URL;
-
       if (isReadyStateComplete && url !== SharedConst.Const.UrlSuffix.AboutBlank && url != '') {
         toReturn = true;
       }
-
-      this.Logger.LogVal('url', url);;
-      this.Logger.LogVal('readyState', currentReadyState);;
-      this.Logger.LogVal('isReadyStateComplete', isReadyStateComplete);
-      this.Logger.LogVal('toReturn', toReturn);
     }
-
     return toReturn;
   }
 
@@ -84,17 +75,12 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       this.Logger.FuncStart(this.WaitForReadyNABHtmlIframeElement.name);
 
       if (targetIframe) {
-        var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABDocument.name);
-
+        var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABDocument.name, false);
         var isReady: boolean = false;
-
         let currentReadyState: string;
-
         while (iterationJr.DecrementAndKeepGoing() && !isReady) {
           currentReadyState = targetIframe.contentDocument.readyState.toString();
-
           isReady = this.IsDocumentReadyNAB(targetIframe.contentDocument);
-
           if (isReady) {
             break;
           } else {
@@ -109,7 +95,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
         if (iterationJr.IsExhausted) {
           reject(iterationJr.IsExhaustedMsg);
         }
-        this.Logger.Log('ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());
       }
       else {
         this.Logger.ErrorAndThrow(this.WaitForReadyNABHtmlIframeElement.name, 'No target doc');
@@ -120,49 +105,33 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
   async WaitForReadyNABDocument(targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForReadyNABDocument.name);
-
-      if (targetDoc) {
-        var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABDocument.name);
-
+            if (targetDoc) {
+        var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABDocument.name, false);
         var isReady: boolean = false;
-
-        let currentReadyState: string;
-
         while (iterationJr.DecrementAndKeepGoing() && !isReady) {
           isReady = this.IsDocumentReadyNAB(targetDoc.ContentDoc);
-
           if (isReady) {
             break;
           } else {
             await iterationJr.Wait();
           }
         }
-
         if (isReady) {
           resolve();
         }
-
         if (iterationJr.IsExhausted) {
           reject(iterationJr.IsExhaustedMsg);
         }
-        this.Logger.Log('ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());
       }
       else {
         this.Logger.ErrorAndThrow(this.WaitForReadyNABDocument.name, 'No target doc');
       }
-      this.Logger.FuncEnd(this.WaitForReadyNABDocument.name);;
     });
   }
 
   async GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<_BaseFrameProxy> {
-    this.Logger.FuncStart(this.GetTopLevelIframe.name);
-
     var toReturn: _BaseFrameProxy = null;
-
-    let factoryHelp = new FactoryHelper(this.Logger);
     let frameHelper = new FrameHelper(this.Logger);
-
     await frameHelper.GetIFramesAsBaseFrameProxies(targetDoc)
       .then((allIframe: _BaseFrameProxy[]) => {
         var maxZVal = -1;
@@ -176,9 +145,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
           }
         }
       })
-
-    this.Logger.FuncEnd(this.GetTopLevelIframe.name);
-
     return toReturn;
   }
 
@@ -221,7 +187,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
       var toReturn: HTMLIFrameElement = null;
 
-      var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframeNative.name)
+      var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframeNative.name, true)
       let beforeCount: number = allIframesBefore.length;
 
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
@@ -232,8 +198,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
         allIframesAfter = frameHelper.GetIFramesFromDataOneDoc(dateOneDoc);
 
         var count: number = allIframesAfter.length;
-        this.Logger.Log('iFrame count before: ' + beforeCount);
-        this.Logger.Log('iFrame count after: ' + allIframesAfter.length);
 
         if (count > beforeCount) {
           var newIframes: HTMLIFrameElement[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
@@ -260,7 +224,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
       var toReturn: _BaseFrameProxy = null;
 
-      var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframe.name)
+      var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframe.name, true)
       let beforeCount: number = allIframesBefore.length;
 
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
@@ -302,7 +266,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       var toReturnFoundElem: HTMLElement = null;
       let promiseResult: PromiseResult = new PromiseResult(this.WaitForAndReturnFoundElem.name, this.Logger);
 
-      var iterationJr = new IterationDrone(this.Logger, this.WaitForAndReturnFoundElem.name, overrideIterCount);
+      var iterationJr = new IterationDrone(this.Logger, this.WaitForAndReturnFoundElem.name, true, overrideIterCount);
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
         toReturnFoundElem = haystackDoc.ContentDoc.querySelector(selector);
@@ -346,7 +310,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
   TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let iterHelper = new IterationDrone(this.Logger, this.TabWaitForReadyStateCompleteNative.name);
+      let iterHelper = new IterationDrone(this.Logger, this.TabWaitForReadyStateCompleteNative.name, true);
 
       let result: PromiseResult = new PromiseResult(this.TabWaitForReadyStateCompleteNative.name, this.Logger);
 
@@ -411,7 +375,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
       if (targetDoc) {
         var found: HTMLElement = null;
-        var iterationJr = new IterationDrone(this.Logger, this.WaitForThenClick.name);
+        var iterationJr = new IterationDrone(this.Logger, this.WaitForThenClick.name, true);
 
         while (!found && iterationJr.DecrementAndKeepGoing()) {// todo put back && !this.MsgMan().OperationCancelled) {
           for (var idx = 0; idx < selectorAr.length; idx++) {

@@ -47,9 +47,7 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
   }
 
   async CEFrameProxyFactory(iframeElem: HTMLIFrameElement): Promise<CEFrameProxy> {
-    this.Logger.FuncStart(this.CEFrameProxyFactory.name);
     var toReturn: CEFrameProxy = null;
-
     if (iframeElem) {
       var toReturn = new CEFrameProxy(this.Logger, iframeElem);
       await toReturn.OnReadyInitCEFrameProxy();
@@ -57,8 +55,6 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
       this.Logger.ErrorAndThrow(this.CEFrameProxyFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
     }
-
-    this.Logger.FuncEnd(this.CEFrameProxyFactory.name);
     return toReturn;
   }
 } 
