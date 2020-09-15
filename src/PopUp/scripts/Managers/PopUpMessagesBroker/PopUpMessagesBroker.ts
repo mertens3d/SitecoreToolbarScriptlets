@@ -1,26 +1,20 @@
 ﻿import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
 import { MsgFromContent } from "../../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+import { ScWindowStateValidator } from "../../../../Shared/scripts/Classes/ScWindowStateValidator";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IMessageBrokerFeedback } from "../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
-import { ScWindowStateValidator } from "../../../../Shared/scripts/Classes/ScWindowStateValidator";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
 export class PopUpMessagesBroker {
-  LastKnownContentState: IContentState;
+  LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
   private Logger: ILoggerAgent;
-  private MsgFeedback: IMessageBrokerFeedback;
 
-  constructor(loggerAgent: ILoggerAgent, msgFeedback: IMessageBrokerFeedback,) {
+  constructor(loggerAgent: ILoggerAgent) {
     this.Logger = loggerAgent;
-    this.MsgFeedback = msgFeedback;
   }
 
-  InitMessageBroker() {
-  }
-
-  ReceiveResponseHndlr(response: any): Promise<IContentState> {
+  ReceiveResponseHndlr(response: any): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.ReceiveResponseHndlr.name);
 
@@ -28,20 +22,16 @@ export class PopUpMessagesBroker {
         StaticHelpers.MsgFlagAsString(response.MsgFlag)
 
         if (response) {
-          this.MsgFeedback.UpdateMsgStatusStack('Response Received: ' + StaticHelpers.MsgFlagAsString(response.MsgFlag));
-
           var asMsgFromContent: MsgFromContent = <MsgFromContent>response;
 
           if (asMsgFromContent) {
-            this.Logger.Log(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
-
             switch (response.MsgFlag) {
               case MsgFlag.RespCurState:
                 break;
               case MsgFlag.RespTaskSuccessful:
-                resolve(asMsgFromContent.ScWindowState);
+                resolve(asMsgFromContent.Payload);
                 break;
-              case MsgFlag.RespTaskFailed :
+              case MsgFlag.RespTaskFailed:
                 reject(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
                 break;
               default:
@@ -60,12 +50,9 @@ export class PopUpMessagesBroker {
     });
   }
 
-  private SendMessageToSingleTab(messageToSend: MsgFromPopUp): Promise<IContentState> {
+  private SendMessageToSingleTab(messageToSend: MsgFromPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
-
-      this.MsgFeedback.UpdateMsgStatusStack('Sending Msg: ' + StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
-      //this.Logger.LogAsJsonPretty("messageToSend", messageToSend);
 
       let targetTab: browser.tabs.Tab;
 
@@ -73,15 +60,16 @@ export class PopUpMessagesBroker {
         .then((result: browser.tabs.Tab[]) => { targetTab = result[0]; })
         .catch((err) => reject(err));
 
-      this.Logger.LogAsJsonPretty('targetTab', targetTab);
       this.Logger.LogVal('Tab Id', targetTab.id);
 
-        await browser.tabs.sendMessage(targetTab.id, messageToSend)
+      await browser.tabs.sendMessage(targetTab.id, messageToSend)
         .then((response: any) => this.ReceiveResponseHndlr(response))
-        .then((scWindowState: IContentState) => {
+        .then((scWindowState: IDataContentReplyReceivedEvent_Payload) => {
           let validator = new ScWindowStateValidator(this.Logger);
-          let validatedContentState: IContentState = validator.ValidateScWindowState(scWindowState);
-          resolve(validatedContentState);
+
+          let validatedPayload: IDataContentReplyReceivedEvent_Payload = validator.ValidatePayload(scWindowState);
+
+          resolve(validatedPayload);
         })
         .catch((ex) => { reject(ex) });
 
@@ -89,18 +77,15 @@ export class PopUpMessagesBroker {
     });
   }
 
-  async SendMessageToContentTab(msgPlayload: MsgFromPopUp): Promise<IContentState> {
+  async SendMessageToContentAsync(msgPlayload: MsgFromPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      this.Logger.FuncStart(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
 
-      await this.SendMessageToSingleTab(msgPlayload)
-        .then((result: IContentState) => {
-          this.Logger.MarkerD();
-          resolve(result);
-        })
+      this.SendMessageToSingleTab(msgPlayload)
+        .then((result: IDataContentReplyReceivedEvent_Payload) => resolve(result))
         .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.SendMessageToContentTab.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      this.Logger.FuncEnd(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
     });
   }
 }

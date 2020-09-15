@@ -62,7 +62,6 @@ export class GenericUrlAgent implements IUrlAgent {
         if (browser.tabs) {
           await browser.tabs.query({ currentWindow: true, active: true })
             .then((result: browser.tabs.Tab[]) => {
-              this.Logger.LogAsJsonPretty('result', result);
               let resultTab: browser.tabs.Tab = result[0];
 
               this.SetFromHref(resultTab.url);
@@ -97,7 +96,6 @@ export class GenericUrlAgent implements IUrlAgent {
       Parameters: new URLSearchParams(window.location.search),// this.ExtractParameters(parser.search),
       FilePath: parser.pathname,// this.ExtractFilePath(url, parser),
       Anchor: parser.hash,
-      ScWindowType: ScWindowType.Unknown,
       HasError: false,
     }
   }

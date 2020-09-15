@@ -7,10 +7,10 @@ import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { OneGenericSetting } from "./OneGenericSetting";
+import { HindSiteSetting } from "./OneGenericSetting";
 
 export class SettingsAgent implements ISettingsAgent {
-  private SettingsAr: OneGenericSetting[] = [];
+  private SettingsAr: HindSiteSetting[] = [];
   private Logger: ILoggerAgent;
   private RepoAgent: IRepositoryAgent;
 
@@ -37,7 +37,7 @@ export class SettingsAgent implements ISettingsAgent {
   InitSettingsAgent(allDefaultSettings: IGenericSetting[]): void {
     this.Logger.FuncStart(this.InitSettingsAgent.name, allDefaultSettings.length);
 
-    this.SettingsAr = <OneGenericSetting[]>allDefaultSettings;
+    this.SettingsAr = <HindSiteSetting[]>allDefaultSettings;
 
     let settingsFromStorage: IOneGenericSettingForStorage[] = this.ReadGenericSettingsFromStorage();
     this.UpdateSettingValuesFromStorage(settingsFromStorage)
@@ -113,13 +113,12 @@ export class SettingsAgent implements ISettingsAgent {
     this.SetByKey(SettingKey, valueAsNumber);
   }
 
-  GetByKey(needleSettingKey: SettingKey): OneGenericSetting {
-    this.Logger.FuncStart(this.GetByKey.name, StaticHelpers.SettingKeyAsString(needleSettingKey));
+  GetByKey(needleSettingKey: SettingKey): HindSiteSetting {
 
-    var toReturn: OneGenericSetting = null;
+    var toReturn: HindSiteSetting = null;
 
     for (var idx = 0; idx < this.SettingsAr.length; idx++) {
-      let candidate: OneGenericSetting = this.SettingsAr[idx];
+      let candidate: HindSiteSetting = this.SettingsAr[idx];
       if (candidate.SettingKey === needleSettingKey) {
         toReturn = candidate;
         break;
@@ -129,7 +128,7 @@ export class SettingsAgent implements ISettingsAgent {
     if (!toReturn) {
       this.Logger.ErrorAndContinue(this.NumberSettingChanged.name, 'Setting not found ' + StaticHelpers.SettingKeyAsString(needleSettingKey));
     }
-    this.Logger.FuncEnd(this.GetByKey.name, toReturn ? toReturn.ValueAsObj : 'null');
+
     return toReturn;
   }
 

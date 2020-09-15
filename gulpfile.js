@@ -15,8 +15,13 @@ var otherTasks = require('./gulp.support/tasks/otherTasks');
 var putTasks = require('./gulp.support/tasks/putTasks');
 var styleTasks = require('./gulp.support/tasks/styleTasks');
 var tsTasks = require('./gulp.support/tasks/tsTasks');
+var ArchiveJsMap = require('./gulp.support/tasks/ArchiveJsMap');
 
 var varsObj = new vars();
+
+gulp.task('ArchiveJsAndMap', (cb) => ArchiveJsMap.CleanContent(cb));
+gulp.task('DeleteJsAndMap', (cb) => ArchiveJsMap.DelJsMap(cb));
+gulp.task('ArchiveAndDelete', gulp.series(['ArchiveJsAndMap', 'DeleteJsAndMap']));
 
 gulp.task('BookmarkText', (cb) => otherTasks.BookmarkText(cb, varsObj));
 gulp.task('BuildPopUpHtml', (cb) => htmlTasks.BuildHtml(cb, varsObj));
@@ -35,11 +40,8 @@ gulp.task('WebpackPopUp', (cb) => otherTasks.WebPackOne(cb, varsObj.PopUpJs));
 gulp.task('CleanBuildStamp', (cb) => tsTasks.CleanBuildStamp(cb, varsObj));
 gulp.task('PopulateBuildTimeStamp', (cb) => tsTasks.BuildBuildNumber(cb, varsObj));
 
-
-
 gulp.task('WebpackAll', gulp.series(['WebpackContent', 'WebpackPopUp']));
 gulp.task('TimeStampAll', gulp.series(['CleanBuildStamp', 'PopulateBuildTimeStamp']));
-
 
 gulp.task('builders', gulp.series(['BuildPopUpStyles', 'BuildContentStyles', 'TimeStampAll', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml', 'PutToFinal']), function (resolve) {
   resolve();
@@ -49,4 +51,4 @@ gulp.task('putters', gulp.series(['CopyFromFinalToAddon']), function (resolve) {
   resolve();
 });
 
-gulp.task('default', gulp.series(['builders', 'putters']));
+gulp.task('default', gulp.series(['builders', 'putters', 'ArchiveAndDelete']));

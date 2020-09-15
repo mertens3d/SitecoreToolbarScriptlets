@@ -7,9 +7,9 @@ import { ILoggerAgent } from "./Agents/ILoggerAgent";
 import { IScWindowManager } from "./Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "./Agents/IToastAgent";
 import { IDataOneDoc } from "./Data/IDataOneDoc";
-import { DesktopProxy } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ContentEditorProxy } from "../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ISettingsAgent } from "./Agents/ISettingsAgent";
+import { DesktopProxy } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 
 export interface ICommandHndlrDataForContent {
   SettingsAgent: ISettingsAgent;

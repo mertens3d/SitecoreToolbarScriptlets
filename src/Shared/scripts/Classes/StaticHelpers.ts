@@ -14,11 +14,9 @@ export class StaticHelpers {
   }
 
   static SettingKeyAsString(settingKey: SettingKey) {
-
-    let toReturn : string = ''
+    let toReturn: string = ''
     try {
       toReturn = 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
-
     } catch (err) {
       toReturn = err;
     }
@@ -51,7 +49,6 @@ export class StaticHelpers {
     return toReturn;
   }
 
-
   private static getBuffChar(buffCharEnum: BufferChar) {
     var buffChar: string = ' ';
     if (buffCharEnum === BufferChar.space) {
@@ -68,15 +65,6 @@ export class StaticHelpers {
 
     return buffChar;
   }
-
-  //static ShortenString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
-  //  var toReturn = str;
-
-
-
-  //  return toReturn;
-
-  //}
 
   static BufferString(str: string, desiredLength: number, buffCharEnum: BufferChar, direction: BufferDirection): string {
     var toReturn = str;

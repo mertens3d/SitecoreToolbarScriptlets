@@ -30,3 +30,4 @@ node_modules
 /src/PopUp/scripts/**/*.js
 /src/Shared/scripts/**/*.js
 /src/Content/scripts/**/*.js.map
+/archives/archive*/**/*

@@ -8,32 +8,26 @@ import { IDataDebugCallback } from "../../../Interfaces/DebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
 import { IError } from "../../../Interfaces/IError";
 import { LogWriterBuffer } from "./LogWriterBuffer";
+import { LoggerTimer } from "./LoggerTimer";
 
 export class LoggerAgent implements ILoggerAgent {
-  private __callDepth: number;
-
+  private MaxIndent: number = 10;
   ErrorStack: IError[] = [];
-
+  private AllLogWriters: ILoggerWriter[] = [];
+  private __callDepth: number;
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
-
-  private __allLogWriters: ILoggerWriter[] = [];
-  private HasWriters: boolean;
   private BufferWriter: LogWriterBuffer;
+  private HasWriters: boolean;
+  Timer: LoggerTimer;
+  UseTimeStamp: boolean = true;
 
   constructor() {
+    this.Timer = new LoggerTimer;
     this.BufferWriter = new LogWriterBuffer();
     this.AddWriter(this.BufferWriter);
     this.__callDepth = -1;
-    this.LogTimeStamp();
+    this.LogVal('TimeStamp', this.Timer.LogTimeStamp());
   }
-
-  private LogTimeStamp() {
-    var dateobj = new Date();
-    var result = this.pad(dateobj.getDate()) + "/" + this.pad(dateobj.getMonth() + 1) + "/" + dateobj.getFullYear() + " " + this.pad(dateobj.getHours()) + ":" + this.pad(dateobj.getMinutes());
-    this.LogVal('TimeStamp', result);
-  }
-
-  private pad(n) { return n < 10 ? "0" + n : n; }
 
   FlushBuffer() {
     this.RemoveWriter(this.BufferWriter);
@@ -47,10 +41,10 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
   RemoveWriter(BufferWriter: LogWriterBuffer) {
-    for (var idx = 0; idx < this.__allLogWriters.length; idx++) {
-      let candidate: ILoggerWriter = this.__allLogWriters[idx];
+    for (var idx = 0; idx < this.AllLogWriters.length; idx++) {
+      let candidate: ILoggerWriter = this.AllLogWriters[idx];
       if (candidate == BufferWriter) {
-        this.__allLogWriters.splice(idx, 1);
+        this.AllLogWriters.splice(idx, 1);
         break;
       }
     }
@@ -58,7 +52,7 @@ export class LoggerAgent implements ILoggerAgent {
 
   AddWriter(writter: ILoggerWriter) {
     this.HasWriters = true;
-    this.__allLogWriters.push(writter);
+    this.AllLogWriters.push(writter);
   }
 
   SectionMarker(sectionTag: string): void {
@@ -66,8 +60,6 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log("======================= " + sectionTag + " =======================");
     this.Log("");
   }
-
-  
 
   ThrowIfNullOrUndefined(title: string, subject: any): void {
     if (!this.IsNotNullOrUndefinedBool(title, subject)) {
@@ -82,7 +74,7 @@ export class LoggerAgent implements ILoggerAgent {
         this.LogVal(title + ' Is Not Undefined', '!!! false !!!');
       }
       else {
-        this.LogVal(title + ' Is Not Null', 'true');
+        //this.LogVal(title + ' Is Not Null', 'true');
         toReturn = true;
       }
     }
@@ -107,6 +99,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
     this.FuncEnd(this.HndlrClearDebugText.name);
   }
+
   MarkerA() {
     this.__markerRaw('A');
   }
@@ -126,7 +119,11 @@ export class LoggerAgent implements ILoggerAgent {
   }
 
   LogAsJsonPretty(texValName: string, jsonObj: any) {
-    this.LogVal(texValName, JSON.stringify(jsonObj, null, 1));
+    try {
+      this.LogVal(texValName, JSON.stringify(jsonObj, null, 1));
+    } catch (err) {
+      this.Log('Unable to stringify obj');
+    }
   }
 
   LogVal(textValName: string, textVal: GuidData): void;
@@ -152,12 +149,14 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log(debugPrefix + textValName + ' : ' + textVal);
   }
   async Log(text, optionalValue: string = '', hasPrefix = false) {
-    if (this.HasWriters) { //|| !this.LogHasBeenInit
+    if (this.HasWriters) { 
       var indent = '  ';
-      //text =  indent.repeat(this.__indentCount) + text;
-      for (var idx = 0; idx < this.__callDepth; idx++) {
+      this.MaxIndent = 10;
+
+      for (var idx = 0; idx < Math.min(this.__callDepth, this.MaxIndent); idx++) {
         text = indent + text;
       }
+
       var prefixLength = 3;
       if (!hasPrefix) {
         for (var idx = 0; idx < prefixLength; idx++) {
@@ -169,14 +168,28 @@ export class LoggerAgent implements ILoggerAgent {
         Append: true
       });
 
-      this.__WriteToAllWriters(text);
+      if (this.UseTimeStamp) {
+        let timeDiff = this.Timer.GetTimeDiff() + '  ';
+        text = timeDiff + text;
+      }
+
+      this.WriteToAllWriters(text);
     }
   }
 
-  private __WriteToAllWriters(text: string) {
-    for (var idx = 0; idx < this.__allLogWriters.length; idx++) {
-      var oneWriter: ILoggerWriter = this.__allLogWriters[idx];
-      oneWriter.WriteText(text);
+  private WriteToAllWriters(text: string) {
+    if (this.AllLogWriters) {
+      this.AllLogWriters.forEach((oneWriter) => {
+        if (oneWriter) {
+          try {
+            oneWriter.WriteText(text)
+          } catch (err) {
+            console.log(this.WriteToAllWriters.name + ' ' + oneWriter.FriendlyName + ' | ' + err);
+          }
+        } else {
+          console.log('Null writer');
+        }
+      });
     }
   }
 
@@ -207,9 +220,6 @@ export class LoggerAgent implements ILoggerAgent {
     }
     this.Log(textOrFunc, '', true);
     this.__callDepth++;
-    if (this.__callDepth > 10) {
-      this.__callDepth = 10;
-    }
   }
 
   InstantiateStart(text: string): void {
@@ -230,11 +240,10 @@ export class LoggerAgent implements ILoggerAgent {
 
     text = 'e' + ' ' + this.__callDepth + ') ' + text;
     if (optionalValue !== null && (typeof optionalValue === typeof Boolean)) {
-      optionalValue = optionalValue.toString(); 
+      optionalValue = optionalValue.toString();
     }
 
-
-    if (! optionalValueInput) {
+    if (!optionalValueInput) {
       optionalValueInput = '';
     }
     var optionalValue = optionalValueInput.toString();

@@ -26,7 +26,7 @@ export class AccordianDrone {
       this.AddListener();
     } else {
       this.Logger.LogAsJsonPretty('this.AssociatedElement', this.AssociatedElement);
-      this.Logger.ErrorAndThrow(this.RestoreAccordionState.name, 'Sibling not found ' + this.AssociatedSetting.Friendly);
+      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'Sibling not found ' + this.AssociatedSetting.FriendlySetting);
     }
   }
 
@@ -39,14 +39,10 @@ export class AccordianDrone {
     }
   }
 
-  RestoreAccordionState(oneSetting: IGenericSetting) {
-    this.Logger.FuncStart(this.RestoreAccordionState.name, oneSetting.SettingKey);
-
+  DroneRestoreAccordionState(oneSetting: IGenericSetting) {
     if (this.AssociatedBodyElem) {
       this.SetAccordionClass(this.AssociatedBodyElem, oneSetting.ValueAsBool())
     }
-
-    this.Logger.FuncEnd(this.RestoreAccordionState.name);
   }
 
   private ToggleAccordion(evt: any) {

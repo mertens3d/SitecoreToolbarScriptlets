@@ -3,42 +3,56 @@ import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAg
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
 import { ConstAllSettings } from "../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings";
-import { OneGenericSetting } from "../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting";
+import { HindSiteSetting } from "../../Shared/scripts/Agents/Agents/SettingsAgent/OneGenericSetting";
 import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
 import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
 import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { IContentState } from "../../Shared/scripts/Interfaces/Data/IContentState";
+import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { CommandManager } from "./Classes/AllCommands";
 import { PopConst } from "./Classes/PopConst";
 import { EventManager } from "./Managers/EventManager";
 import { Handlers } from "./Managers/Handlers";
-import { MessageManager } from "./Managers/MessageManager";
 import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessagesBroker";
-import { TabManager } from "./Managers/TabManager";
-import { FeedbackModuleMessages } from "./Managers/UiManager/Modules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
+import { BrowserTabAgent } from "./Managers/TabManager";
 import { UiManager } from "./Managers/UiManager/UiManager";
-import { SharedConst } from "../../Shared/scripts/SharedConst";
+import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
+import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
   Logger: LoggerAgent;
   SettingsAgent: SettingsAgent;
+  scUrlAgent: ScUrlAgent;
+  handlers: Handlers;
+  uiMan: UiManager;
+  FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
+  eventMan: EventManager;
+  commandMan: any;
+  browserTabAgent: BrowserTabAgent;
+  PopUpMessageAgent: PopUpMessagesBroker;
 
   async main() {
     try {
       this.InstantiateAndInitSettingsAndLogger();
-
+      this.InstantiateAgents();
       this.InstantiateMembers();
-      await this.InitMembers()
-        .then(() => { })
+
+      this.Logger.SectionMarker('Begin Init');
+
+      await this.InitHub()
+        .then(() => this.WireCustomevents())
+        .then(() => this.eventMan.TriggerPingEventAsync(this.commandMan.GetCommandById(MenuCommand.Ping)))
+        .then(() => this.Logger.Log(this.main.name + ' completed'))
         .catch((err) => console.log(err));
 
+      this.Logger.SectionMarker('End Init');
+
       this.Logger.SectionMarker('Begin Standby');
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -55,17 +69,19 @@ class PopUpEntry {
   }
 
   private async InstantiateMembers() {
+    //this.messageMan = new PopUpMessageManager(this.PopUpMessageAgent, this.Logger);
+    this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.browserTabAgent, this.PopUpMessageAgent);
+    this.commandMan = new CommandManager(this.Logger, this.handlers);
+    this.uiMan = new UiManager(this.Logger, this.SettingsAgent, this.browserTabAgent, this.commandMan); //after tabman, after HelperAgent
+    this.eventMan = new EventManager(this.Logger, this.SettingsAgent, this.uiMan, this.handlers); // after uiman
   }
 
   private InitLogger() {
     this.Logger.FuncStart(this.InitLogger.name);
 
-    let enableLoggingSetting: OneGenericSetting = this.SettingsAgent.GetByKey(SettingKey.EnableLogging);
-    this.Logger.MarkerB();
+    let enableLoggingSetting: HindSiteSetting = this.SettingsAgent.GetByKey(SettingKey.EnableLogging);
 
-    this.Logger.LogAsJsonPretty('enableLoggingSetting', enableLoggingSetting);
-    this.Logger.MarkerC();
-    if (SharedConst.Const.Debug.ForceLoggingEnabled|| enableLoggingSetting.ValueAsBool()) {
+    if (SharedConst.Const.Debug.ForceLoggingEnabled || enableLoggingSetting.ValueAsBool()) {
       var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.Logger);
       var nextLogId = RollingLogId.GetNextLogId();
 
@@ -82,39 +98,32 @@ class PopUpEntry {
     this.Logger.FuncEnd(this.InitLogger.name);
   }
 
-  async InitHub() {
+  InstantiateAgents() {
+    this.scUrlAgent = new ScUrlAgent(this.Logger);
+    this.browserTabAgent = new BrowserTabAgent(this.Logger, this.scUrlAgent, this.SettingsAgent);
+    this.PopUpMessageAgent = new PopUpMessagesBroker(this.Logger);
+  }
 
-    let scUrlAgent = new ScUrlAgent(this.Logger);
-    let tabMan = new TabManager(this.Logger,  scUrlAgent, null); //< -- todo null fix
-    let FeedbackModuleMsg: FeedbackModuleMessages = new FeedbackModuleMessages(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
-    let PopUpMessageBroker: PopUpMessagesBroker = new PopUpMessagesBroker(this.Logger, FeedbackModuleMsg);
-    let messageMan = new MessageManager(PopUpMessageBroker, this.Logger);
-    let handlers = new Handlers(this.Logger, messageMan, this.SettingsAgent, tabMan);
-    let commandMan: CommandManager = new CommandManager(handlers);
-    let uiMan = new UiManager(this.Logger, this.SettingsAgent, tabMan, commandMan); //after tabman, after HelperAgent
-    let eventMan = new EventManager(this.Logger, this.SettingsAgent, uiMan, handlers); // after uiman
+  WireCustomevents() {
+    this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(new ContentReplyReceivedEvent_Observer(this.Logger, this.uiMan));
+    this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
+    this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(this.FeedbackModuleMsg_Observer)
+  }
 
-    let self = uiMan;
-    handlers.External.AddCallbackCommandComplete((contentState: IContentState) => { uiMan.CallBackCommandComplete(contentState); });
+  async InitHub(): Promise<void> {
+    try {
+      this.uiMan.InitUiManager();
 
-    await
-      tabMan.InitTabManager()
-        .then(() => PopUpMessageBroker.InitMessageBroker())
-        .then(() => uiMan.InitUiManager())
-        .then(() => scUrlAgent.InitScUrlAgent())
-        .then(() => eventMan.InitEventManager(commandMan.AllMenuCommands, commandMan.GetCommandById(MenuCommand.Ping)))
+      this.eventMan.InitEventManager(this.commandMan.AllMenuCommands);
+
+      await this.scUrlAgent.InitScUrlAgent()
         .catch((err) => {
           this.Logger.ErrorAndContinue('Pop Up Entry Point Main', JSON.stringify(err));
           throw (err);
         });
-  }
-  async InitMembers(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.SectionMarker('Begin Init');
-
-      this.InitHub();
-      this.Logger.SectionMarker('End Init');
-    });
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.InitHub.name, err);
+    }
   }
 }
 

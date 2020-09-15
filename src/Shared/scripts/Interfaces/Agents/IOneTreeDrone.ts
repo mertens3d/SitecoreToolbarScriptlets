@@ -1,9 +1,10 @@
-﻿import { IDataOneTreeNode } from "../Data/IDataOneTreeNode";
-import { IDataOneStorageOneTreeState } from "../Data/IDataOneStorageOneTreeState";
-import { IDataOneDoc } from "../Data/IDataOneDoc";
+﻿import { TreeMutationEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject";
+import { IDataStateOfTree } from "../Data/States/IDataStateOfTree";
+import { InitResultsScWindowManager } from "./ISettingsAgent";
 
 export interface IContentEditorTreeProxy {
-  WaitForAndRestoreManyAllNodes(dataToRestore: IDataOneStorageOneTreeState, AssociatedDoc: IDataOneDoc);
-  AddListenerToTreeMutationEvent(bar: Function);
-  GetOneLiveTreeData(): IDataOneTreeNode[];
+  OnReadyInitTreeProxy();
+  GetStateOfTree(): IDataStateOfTree;
+  SetStateOfTree(dataToRestore: IDataStateOfTree);
+  TreeMutationEvent_Subject: TreeMutationEvent_Subject;
 }

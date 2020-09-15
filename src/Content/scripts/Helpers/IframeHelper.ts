@@ -1,38 +1,122 @@
-﻿import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { LoggableBase } from "../Managers/LoggableBase";
-import { IframeProxy } from "../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
-import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
+﻿import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
+import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { _BaseFrameProxy } from "../Proxies/_BaseFrameProxy";
+import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
+import { LoggableBase } from "../Managers/LoggableBase";
+import { CEFrameProxy } from "../Proxies/CEFrameProxy";
 
-export class IframeHelper extends LoggableBase {
-  GetHostedIframes(targetDoc: IDataOneDoc): IframeProxy[] {
-    this.Logger.FuncStart(this.GetHostedIframes.name);
+export class FrameHelper extends LoggableBase {
+  private factoryHelper: FactoryHelper;
+  private RecipeBasics: RecipeBasics;
 
-    var toReturn: IframeProxy[] = [];
+  constructor(logger: ILoggerAgent) {
+    super(logger);
+    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.factoryHelper = new FactoryHelper(this.Logger);
+  }
 
-    var iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
+  GetIFramesFromDataOneDoc(targetDoc: IDataOneDoc): HTMLIFrameElement[] {
+    let toReturnIframeAr: HTMLIFrameElement[] = [];
+    var queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
-    if (!iframeAr) {
-      iframeAr = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
+    if (!queryResults) {
+      queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
     }
 
-    this.Logger.LogVal('found iframes count', iframeAr.length);
-    if (iframeAr) {
-      for (var ifrIdx = 0; ifrIdx < iframeAr.length; ifrIdx++) {
-        this.Logger.Log('pushing idx: ' + ifrIdx);
-
-        var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>iframeAr[ifrIdx];
-        let factoryHelper = new FactoryHelper(this.Logger);
-        var dataOneIframe: IframeProxy = factoryHelper.DataOneIframeFactory(iframeElem, 'desktop Iframe_' + ifrIdx);
-        toReturn.push(dataOneIframe);
+    if (queryResults) {
+      for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
+        var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>queryResults[ifrIdx];
+        if (iframeElem) {
+          toReturnIframeAr.push(iframeElem);
+        }
       }
-
-      //this.Logger.LogAsJsonPretty('toReturn', toReturn);
-      this.Logger.LogVal('GetAllLiveIframeData: iframe count', toReturn.length);
-
-      this.Logger.FuncEnd(this.GetHostedIframes.name);
-
-      return toReturn;
     }
+    this.Logger.LogVal('found iframes count', toReturnIframeAr.length);
+
+    return toReturnIframeAr;
+  }
+
+  async GetIFrameAsBaseFrameProxy(iframeElem: HTMLIFrameElement, ifrIdx: number): Promise<_BaseFrameProxy> {
+    return new Promise(async (resolve, reject) => {
+      await this.RecipeBasics.WaitForReadyNABHtmlIframeElement(iframeElem)
+        .then(() => this.factoryHelper.BaseFramePromiseFactory(iframeElem, 'desktop Iframe_' + ifrIdx))
+        .then((result: _BaseFrameProxy) => resolve(result))
+        .catch((err) => reject(this.GetIFramesAsBaseFrameProxies.name + ' | ' + err));
+    });
+  }
+
+  async GetIFrameAsCEFrameProxy(iframeElem: HTMLIFrameElement): Promise<CEFrameProxy> {
+    return new Promise(async (resolve, reject) => {
+      await this.RecipeBasics.WaitForReadyNABHtmlIframeElement(iframeElem)
+        .then(() => this.factoryHelper.CEFrameProxyFactory(iframeElem))
+        .then((result: CEFrameProxy) => resolve(result))
+        .catch((err) => reject(this.GetIFramesAsBaseFrameProxies.name + ' | ' + err));
+    });
+  }
+
+
+  async GetIFramesAsCEFrameProxies(dataOneDoc: IDataOneDoc): Promise<CEFrameProxy[]> {
+    return new Promise((resolve, reject) => {
+      this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
+
+      var toReturn: CEFrameProxy[] = [];
+      let iframeAr: HTMLIFrameElement[] = this.GetIFramesFromDataOneDoc(dataOneDoc);
+
+      let promiseAr: Promise<CEFrameProxy>[] = [];
+
+      iframeAr.forEach((iframeElem) => {
+        promiseAr.push(this.GetIFrameAsCEFrameProxy(iframeElem));
+      });
+
+      Promise.all(promiseAr)
+        .then((values: CEFrameProxy[]) => {
+          values.forEach((oneVal: CEFrameProxy) => {
+            toReturn.push(oneVal);
+          });
+          this.Logger.LogVal('count: ', toReturn.length);
+        })
+        .then(() => resolve(toReturn))
+        .catch((err) => reject(this.GetIFramesAsBaseFrameProxies.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.GetIFramesAsBaseFrameProxies.name);
+    });
+  }
+
+  async GetIFramesAsBaseFrameProxies(targetDoc: IDataOneDoc): Promise<_BaseFrameProxy[]> {
+    return new Promise((resolve, reject) => {
+      this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
+
+      var toReturn: _BaseFrameProxy[] = [];
+      let iframeAr = this.GetIFramesFromDataOneDoc(targetDoc);
+
+      //if (iframeAr) {
+      //  iframeAr.forEach(async (iframeElem: HTMLIFrameElement, ifrIdx) => {
+      //    await this.RecipeBasics.WaitForPageReadyHtmlIframeElement(iframeElem)
+      //      .then(() => factoryHelper.FrameProxyForPromiseFactory(iframeElem, 'desktop Iframe_' + ifrIdx))
+      //      .then((result: _BaseFrameProxy) => toReturn.push(result))
+      //      .catch((err) => reject(this.GetIFramesAsFrameProxies.name + ' | ' + err));
+      //  });
+      //}
+
+      let promAr: Promise<_BaseFrameProxy>[] = [];
+
+      iframeAr.forEach((iframeElem, index) => {
+        promAr.push(this.GetIFrameAsBaseFrameProxy(iframeElem, index));
+      });
+
+      Promise.all(promAr)
+        .then((values: _BaseFrameProxy[]) => {
+          values.forEach((oneVal: _BaseFrameProxy) => {
+            toReturn.push(oneVal);
+          });
+          this.Logger.LogVal('count: ', toReturn.length);
+        })
+        .then(() => resolve(toReturn))
+        .catch((err) => reject(this.GetIFramesAsBaseFrameProxies.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.GetIFramesAsBaseFrameProxies.name);
+    });
   }
 }

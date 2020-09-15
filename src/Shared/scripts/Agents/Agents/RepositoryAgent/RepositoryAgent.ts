@@ -53,7 +53,7 @@ export class RepositoryAgent implements IRepositoryAgent {
   ReadDataOfKey(targetKey: string): string {
     this.Logger.FuncStart(this.ReadDataOfKey.name);
 
-    let storageValue: browser.storage.StorageValue = null;
+    let storageValue: string = null;
     let toReturn: string = '';
 
     this.Logger.LogVal('target key ', targetKey);

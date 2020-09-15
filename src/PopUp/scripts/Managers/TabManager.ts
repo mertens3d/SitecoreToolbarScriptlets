@@ -6,20 +6,21 @@ import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { AbsoluteUrl } from '../../../Shared/scripts/Interfaces/AbsoluteUrl';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
-import { GenericUrlParts } from '../../../Shared/scripts/Interfaces/UrlParts';
+import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 
-export class TabManager {
+export class BrowserTabAgent {
   private ScUrlAgent: ScUrlAgent;
   private Logger: ILoggerAgent;
   private RecipeBasics: RecipeBasics;
+  SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: ScUrlAgent, recipeBasic: RecipeBasics) {
+  constructor(logger: ILoggerAgent, scUrlAgent: ScUrlAgent, settingsAgent: ISettingsAgent) {
     this.Logger = logger;
-    this.Logger.InstantiateStart(TabManager.name);
+    this.Logger.InstantiateStart(BrowserTabAgent.name);
     this.ScUrlAgent = scUrlAgent;
-    this.RecipeBasics = recipeBasic;
-
-    this.Logger.InstantiateEnd(TabManager.name);
+    this.SettingsAgent = settingsAgent;
+    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.Logger.InstantiateEnd(BrowserTabAgent.name);
   }
 
   GetFullUrl(): AbsoluteUrl {
@@ -30,18 +31,12 @@ export class TabManager {
     this.ScUrlAgent.SetParameterValueByKey(qsKey, qsValue)
   }
 
-  GetUrlParts(): GenericUrlParts {
-    return this.ScUrlAgent.GetUrlParts();
+  GetScUrlAgent(): ScUrlAgent {
+    return this.ScUrlAgent;
   }
 
   GetWindowType(): ScWindowType {
     return this.ScUrlAgent.GetScWindowType();
-  }
-
-  async InitTabManager() {
-    this.Logger.FuncStart(TabManager.name, this.InitTabManager.name);
-
-    this.Logger.FuncEnd(TabManager.name, this.InitTabManager.name);
   }
 
   async CreateNewTab(tabUrl: AbsoluteUrl) {
@@ -86,7 +81,6 @@ export class TabManager {
 
         this.RecipeBasics.TabChainSetHrefWaitForComplete(absUrl)
           .then(() => {
-            console.log('todo');
             // put back?
             //this.MsgMan().WaitForListeningTab(this.CurrentTabData)
           })

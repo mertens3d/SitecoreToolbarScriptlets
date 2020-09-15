@@ -3,6 +3,6 @@
 export interface IRepositoryAgent {
   RemoveByKey(key: string);
   GetBulkLocalStorageByKeyPrefix(targetPrefix: string): IOneStorageData[];
-  ReadDataOfKey(targetKey: string): string;
+  ReadDataOfKey(storageKey: string): string;
   WriteByKey(storageKey: string, storageJson: string): void;
 }

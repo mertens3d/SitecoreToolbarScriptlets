@@ -1,13 +1,13 @@
 ﻿import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
-import { TabManager } from "../Managers/TabManager";
+import { BrowserTabAgent } from "../Managers/TabManager";
 
 export class HandlersInternal {
-  private TabMan: TabManager;
+  private TabMan: BrowserTabAgent;
   private Logger: ILoggerAgent;
 
-  constructor(logger: ILoggerAgent, tabMan: TabManager) {
+  constructor(logger: ILoggerAgent, tabMan: BrowserTabAgent) {
     this.Logger = logger;
     this.TabMan = tabMan;
   }

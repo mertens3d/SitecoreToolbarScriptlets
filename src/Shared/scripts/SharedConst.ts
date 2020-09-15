@@ -17,8 +17,22 @@ export class SharedConst {
         Default: 100,
       },
     },
+    KeyWords: {
+      Html: {
+        beforeend: 'beforeend',
+        optgroup: 'optgroup',
+      },
+      Javascript: {
+        ReadyStates: {
+          Complete: "complete"
+        }
+      }
+    },
+    Logger: {
+      MinTimeDiffMs: 100
+    },
     ObjDiscriminator: {
-      DataOneTreeNode: 'IDataOneTreeNode',
+      //DataOneTreeNode: 'IDataOneTreeNode',
     },
     Settings: {
       Defaults: {

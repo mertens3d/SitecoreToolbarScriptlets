@@ -9,10 +9,9 @@ export class IterationDrone {
   IsExhausted: boolean;
   IsExhaustedMsg: string = 'Iteration helper exhausted';
   OperationCancelled: any;
- private   Logger: ILoggerAgent;
+  private Logger: ILoggerAgent;
 
   constructor(logger: ILoggerAgent, nickname: string, maxIterations: number = null) {
-
     this.Logger = logger;
     if (!maxIterations) {
       maxIterations = SharedConst.Const.IterHelper.MaxCount.Default;
@@ -23,15 +22,12 @@ export class IterationDrone {
     this.__timeout = SharedConst.Const.IterHelper.Timeouts.Default;
     this.__nickName = nickname;
     this.IsExhausted = false;
-
   }
 
   DecrementAndKeepGoing() {
     var toReturn = false;
 
-    //!this.MsgMan().OperationCancelled &&
-
-    if ( this.__currentIteration > 0) {
+    if (this.__currentIteration > 0) {
       this.__currentIteration -= 1;
       this.__timeout += this.__timeout * SharedConst.Const.IterHelper.GrowthPerIteration;
       if (this.__timeout > SharedConst.Const.IterHelper.Timeouts.Max) {
@@ -48,12 +44,14 @@ export class IterationDrone {
     return toReturn
   }
 
-  CurrentTimeout(): number{
+  CurrentTimeout(): number {
     return this.__timeout;
   }
+
   NotifyExhausted() {
     this.Logger.Log('Iteration: ' + this.__nickName + ' counter exhausted ' + this.__currentIteration + ':' + this.__maxIterations);
   }
+
   WaitAndThen(timeoutFunction: Function) {
     this.Logger.FuncStart(this.WaitAndThen.name, this.__nickName + ' ' + timeoutFunction.name);
     var self = this;

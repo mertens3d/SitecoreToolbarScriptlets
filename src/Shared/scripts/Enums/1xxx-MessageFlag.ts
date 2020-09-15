@@ -13,7 +13,7 @@
   ReqMarkFavorite = 1104,
   ReqOpenCE = 1105,
   ReqQuickPublish = 1106,
-  ReqRestoreClick = 1107,
+  ReqSetStateOfSitecoreWindow = 1107,
   Unused = 1108,
   ReqSetScMode = 1109,
   ReqTakeSnapShot = 1110,

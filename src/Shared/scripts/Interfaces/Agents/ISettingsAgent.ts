@@ -3,9 +3,28 @@ import { IGenericSetting } from "./IGenericSetting";
 import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";
 import { SettingFlavor } from "../../Enums/SettingFlavor";
 
+export class InitResultTreeProxy {
+  TreeInitialized: boolean = false;
+}
+
+export class InitResultsScWindowManager {
+  InitResultsDesktop: InitResultsDesktopProxy = null;
+}
+export class InitResultsDesktopProxy {
+  InitResultsFrameProxies: InitResultsCEFrameProxy[] = [];
+}
+export class InitResultsCEFrameProxy {
+  InitResultContentEditorProxy: InitResultContentEditorProxy;
+  FrameProxyInitialized: boolean = false;
+}
+export class InitResultContentEditorProxy {
+  InitResultTreeProxy: InitResultsCEFrameProxy;
+  ContentEditorProxyInitialized: boolean = false;
+}
+
 export interface ISettingsAgent {
   CheckBoxSettingChanged(SettingKey: SettingKey, checked: boolean);
-  GetAllSettings():IGenericSetting[];
+  GetAllSettings(): IGenericSetting[];
   GetByKey(settingKey: SettingKey): IGenericSetting;
   GetSettingsByFlavor(targetFlavor: SettingFlavor[]): IGenericSetting[];
   InitSettingsAgent(allSettings: IGenericSetting[]): void;

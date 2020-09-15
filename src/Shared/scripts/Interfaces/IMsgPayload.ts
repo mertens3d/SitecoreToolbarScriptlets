@@ -2,5 +2,5 @@
 
 export interface IMsgFromX {
   MsgFlag: MsgFlag;
-  Data: any;
+  Payload: any;
 }

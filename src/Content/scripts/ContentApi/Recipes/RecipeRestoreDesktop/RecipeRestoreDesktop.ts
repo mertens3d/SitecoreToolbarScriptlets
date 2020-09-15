@@ -1,54 +1,56 @@
 ﻿import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { IDataBucketRestoreDesktop } from '../../../../../Shared/scripts/Interfaces/Data/IDataBucketRestoreDesktop';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IframeProxy } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe';
-import { IDataOneStorageOneTreeState } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState';
+import { _BaseFrameProxy } from '../../../Proxies/_BaseFrameProxy';
+import { IDataStateOfFrame } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
-import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { ContentEditorProxy } from '../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
-import { IframeHelper } from '../../../Helpers/IframeHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
+import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
-import { DesktopTabButtonAgent } from '../../../Agents/DesktopTabButtonAgent/DesktopTabButtonAgent';
+import { CEFrameProxy } from '../../../Proxies/CEFrameProxy';
 
-export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipes {
+export class RecipeRestoreFrameOnDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
   private TargetDoc: IDataOneDoc;
-  private DataToRestore: IDataOneStorageOneTreeState;
+  private DataStateOfFrame: IDataStateOfFrame;
   private RecipeBasics: RecipeBasics;
   private SettingsAgent: ISettingsAgent;
-  DesktopTabButtonTabAgent: DesktopTabButtonAgent;
+  DesktopTabButtonTabAgent: DesktopStartBarProxy;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataToRestore: IDataOneStorageOneTreeState, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopTabButtonAgent) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataStateOfFrame: IDataStateOfFrame, settingsAgent: ISettingsAgent, ceButtonTabAgent: DesktopStartBarProxy) {
     super(logger);
-    this.Logger.InstantiateStart(RecipeRestoreDesktop.name);
+    this.Logger.InstantiateStart(RecipeRestoreFrameOnDesktop.name);
 
     this.MiscAgent = new MiscAgent(this.Logger);
 
     this.TargetDoc = targetDoc;
-    this.DataToRestore = dataToRestore;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.DataStateOfFrame = dataStateOfFrame;
     this.SettingsAgent = settingsAgent;
+    this.RecipeBasics = new RecipeBasics(this.Logger);
     this.DesktopTabButtonTabAgent = ceButtonTabAgent;
 
-    this.Logger.InstantiateEnd(RecipeRestoreDesktop.name);
+    this.Logger.InstantiateEnd(RecipeRestoreFrameOnDesktop.name);
   }
   async Execute(): Promise<void> {
-    await this.RunOneChain();
+    try {
+      await this.RunOneChain()
+        .catch((err) => { throw (this.Execute.name + ' ' + err) });
+    } catch (err) {
+      throw (this.Execute.name + ' ' + err);
+    }
   }
 
-  private __restoreDataToOneIframe(oneTreeState: IDataOneStorageOneTreeState, targetCeAgent: ContentEditorProxy) {
+  private SetStateOfCEFrameProxy(oneTreeState: IDataStateOfFrame, frameProxy: CEFrameProxy) {
     return new Promise<void>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.__restoreDataToOneIframe.name);
+      this.Logger.FuncStart(this.SetStateOfCEFrameProxy.name);
 
-      await targetCeAgent.SetTreeState(oneTreeState)
+      await frameProxy.SetStateOfCEFrame(oneTreeState)
         .then(() => resolve())
         .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.__restoreDataToOneIframe.name);
+      this.Logger.FuncEnd(this.SetStateOfCEFrameProxy.name);
     });
   }
 
@@ -56,15 +58,15 @@ export class RecipeRestoreDesktop extends LoggableBase implements ICommandRecipe
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RunOneChain.name);
 
-      if (this.MiscAgent.NotNullOrUndefined([this.TargetDoc, this.DataToRestore], this.RunOneChain.name)) {
+      if (this.MiscAgent.NotNullOrUndefined([this.TargetDoc, this.DataStateOfFrame], this.RunOneChain.name)) {
         //guaranteed to be on the correct page
-        var conEditProxy: ContentEditorProxy;
+        var frameProxy: CEFrameProxy;
         let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.SettingsAgent, this.DesktopTabButtonTabAgent);
 
         await recipeAddCe.Execute()
-          .then((result: ContentEditorProxy) => conEditProxy = result)
-          .then(() => conEditProxy.WaitForReadyAssociatedDocandInit())
-          .then(() => this.__restoreDataToOneIframe(this.DataToRestore, conEditProxy))
+          .then((result: CEFrameProxy) => frameProxy = result)
+          .then(() => frameProxy.OnReadyInitCEFrameProxy())
+          .then(() => this.SetStateOfCEFrameProxy(this.DataStateOfFrame, frameProxy))
           .then(() => resolve())
           .catch(ex => {
             reject(this.RunOneChain.name + ' ' + ex);

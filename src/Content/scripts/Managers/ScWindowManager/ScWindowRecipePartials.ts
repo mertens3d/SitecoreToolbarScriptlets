@@ -1,7 +1,7 @@
 ﻿import { ScWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataOneWindowStorage } from '../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage';
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { LoggableBase } from '../LoggableBase';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
@@ -15,19 +15,19 @@ export class ScWindowRecipePartials extends LoggableBase {
     this.ToastAgent = toastAgent;
   }
 
-  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage, desktopProxy: DesktopProxy, OneCEAgent: ContentEditorProxy): Promise<void> {
+  async RestoreStateToTargetDoc(targetDoc: IDataOneDoc, dataToRestore: IDataStateOfSitecoreWindow, desktopProxy: DesktopProxy, OneCEAgent: ContentEditorProxy): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RestoreStateToTargetDoc.name);
 
       if (dataToRestore) {
-        if (dataToRestore.WindowType == ScWindowType.Desktop) {
-          await desktopProxy.SetStateDesktop(targetDoc, dataToRestore)
+        if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
+          await desktopProxy.SetStateOfDesktop(dataToRestore.States.StateOfDesktop)
             .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
             .then(() => resolve())
-            .catch((err) => reject(err));
+            .catch((err) => reject(this.RestoreStateToTargetDoc.name + ' | ' + err));
         }
-        else if (dataToRestore.WindowType === ScWindowType.ContentEditor) {
-          await OneCEAgent.RestoreCEStateAsync(dataToRestore.AllCEAr[0])
+        else if (dataToRestore.Meta.WindowType === ScWindowType.ContentEditor) {
+          await OneCEAgent.SetStateOfContentEditor(dataToRestore.States.StateOfContentEditor)
             .then(() => this.ToastAgent.PopUpToastNotification(targetDoc, 'Restore Completed'))
             .then(() => resolve())
             .catch((err) => reject(err));

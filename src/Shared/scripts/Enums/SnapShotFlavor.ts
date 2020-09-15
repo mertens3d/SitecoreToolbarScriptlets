@@ -2,5 +2,6 @@
     Unknown,
     Autosave,
     Favorite,
-    Manual
+    Manual,
+    Live,
 }

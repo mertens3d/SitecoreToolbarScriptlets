@@ -3,10 +3,35 @@
 export class PopConst {
   static StorageRootPrefix: 'HindSite.';
 
-  static Const: IPopUpConst = {
+  static Const = {
     ClassNames: {
       HS: {
         Collapsed: 'in',
+
+        Buttons: {
+          AdminB: 'admin-b',
+          Cancel: 'cancel',
+          CloseWindow: 'close-window',
+          CompactCe: 'details',
+          Edit: 'edit',
+          GoContentEditor: 'ce',
+          GoDesktop: 'desktop-icon',
+          Ping: 'edit',
+          PresentationDetails: 'details',
+          QuickPublish: 'publish',
+          RemoveFromStorage: 'delete-snapshot',
+          RestoreNewTab: 'restore-snapshot',
+          RestoreSameTab: 'restore-snapshot',
+          RestoreStateTBD: 'restore-snapshot',
+          ScModeEdit: 'edit',
+          ScModeNormal: 'normal',
+          ScModePrev: 'preview-icon',
+          TakeSnapShot: 'take-snapshot',
+          ToggleFavorite: 'btn-favorite',
+          UpdateNickname: 'set-nickname',
+          AddCeTab: 'add-ce-tab',
+
+        },
       },
     },
    
@@ -86,7 +111,7 @@ export class PopConst {
         SettingAutoRenameCeTabButton: '[id=id-settings-auto-rename-ce-tab-button]',
         SettingNotUsed: '[id=id-settings-not-used]',
         SettingUseCompactCss: '[id=id-settings-use-compact]',
-        TakeSnapshot: '[id=SaveWindowState]',
+        TakeSnapshot: '[id=id-take-snapshot]',
         UpdateNicknameB: '[id=id-btn-update-nickname]',
       },
     },

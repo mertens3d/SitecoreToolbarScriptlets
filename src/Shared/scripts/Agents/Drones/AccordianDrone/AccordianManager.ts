@@ -19,9 +19,9 @@ export class AccordianManager implements IAccordianManager {
       let foundAccordian: AccordianDrone = this.GetAccordianByKey(oneSetting);
 
       if (foundAccordian) {
-        foundAccordian.RestoreAccordionState(oneSetting);
+        foundAccordian.DroneRestoreAccordionState(oneSetting);
       } else {
-        this.Logger.Log('No accordion found for ' + oneSetting.Friendly);
+        this.Logger.Log('No accordion found for ' + oneSetting.FriendlySetting);
       }
     } else {
       this.Logger.Log('No setting provided ');

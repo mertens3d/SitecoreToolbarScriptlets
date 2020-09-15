@@ -12,7 +12,7 @@ import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { IContentState } from "../../../../Shared/scripts/Interfaces/Data/IContentState";
+import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 import { CommandHndlrDataForContent } from "../../../../Shared/scripts/Classes/CommandHndlrDataForContent/CommandHndlrDataForContent";
@@ -49,7 +49,6 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     browser.runtime.onMessage.addListener(request => self.ContentReceiveRequest(request));
 
     this.Logger.Log('Listening for messages');
-    //this.ReadyForMessages = true;
     this.Logger.FuncEnd(this.BeginListening.name);
   }
 
@@ -59,9 +58,9 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
 
     if (reqMsgFromPopup) {
       if (reqMsgFromPopup.CurrentContentPrefs) {
-        if (reqMsgFromPopup.Data) {
+        if (reqMsgFromPopup.Payload) {
         } else {
-          reqMsgFromPopup.Data = new PayloadDataFromPopUp();
+          reqMsgFromPopup.Payload = new PayloadDataFromPopUp();
         }
       } else {
         this.Logger.ErrorAndThrow(this.ValidateRequest.name, 'No CurrentContentPrefs')
@@ -88,21 +87,17 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       this.Logger.Log('');
       this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(reqMsgFromPopup.MsgFlag));
 
-
-      
-
-
-          this.Logger.LogVal('ce butt', this.SettingsAgent.GetByKey(SettingKey.AutoLogin).ValueAsBool());
+      this.Logger.LogVal('ce butt', this.SettingsAgent.GetByKey(SettingKey.AutoLogin).ValueAsBool());
 
       if (reqMsgFromPopup) {
         reqMsgFromPopup = this.ValidateRequest(reqMsgFromPopup);
         if (reqMsgFromPopup.IsValid) {
           this.SettingsAgent.UpdateSettingsFromPopUpMsg(reqMsgFromPopup.CurrentContentPrefs)
 
-
-            await this.ReqMsgRouter(reqMsgFromPopup)
+          await this.ReqMsgRouter(reqMsgFromPopup)
             .then((contentResponse: MsgFromContent) => {
               this.Logger.Log('responding: ' + StaticHelpers.MsgFlagAsString(contentResponse.MsgFlag))
+              this.Logger.LogAsJsonPretty('contentResponse: ', contentResponse)
               resolve(contentResponse);
             })
             .catch((err) => {
@@ -133,7 +128,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     let RecipeToExecute: ICommandRecipes;
     switch (payload.MsgFlag) {
       case MsgFlag.ReqUpdateNickName:
-        RecipeToExecute = new RecipeChangeNickName(this.Logger, payload.Data.SnapShotSettings.SnapShotNewNickname, payload.Data.IdOfSelect, this.AtticAgent)
+        RecipeToExecute = new RecipeChangeNickName(this.Logger, payload.Payload.SnapShotSettings.SnapShotNewNickname, payload.Payload.IdOfSelect, this.AtticAgent)
         break;
 
       default:
@@ -169,8 +164,8 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
         commandToExecute = this.ApiManager.PublischActiveCE;
         break;
 
-      case MsgFlag.ReqRestoreClick:
-        commandToExecute = this.ApiManager.RestoreSnapshop;
+      case MsgFlag.ReqSetStateOfSitecoreWindow:
+        commandToExecute = this.ApiManager.SetStateOfSitecoreWindow;
         break;
 
       case MsgFlag.ReqToggleCompactCss:
@@ -197,8 +192,8 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(payload.MsgFlag));
 
-      if (payload.Data.IdOfSelect) {
-        payload.Data.IdOfSelect = new GuidData(payload.Data.IdOfSelect.Raw);
+      if (payload.Payload.IdOfSelect) {
+        payload.Payload.IdOfSelect = new GuidData(payload.Payload.IdOfSelect.Raw);
       }
 
       let commandToExecute: Function = this.CalculateCommandToExec(payload);
@@ -226,11 +221,12 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       let response = new MsgFromContent(MsgFlag.Unknown);
 
-      await this.ApiManager.GetStateContent()
-        .then((result: IContentState) => {
-          response.ScWindowState.LastReq = msgFlag;
+      await this.ApiManager.GetStateOfContent()
+        .then((result: IDataContentReplyReceivedEvent_Payload) => {
+          response.Payload = result;
+          response.Payload.LastReq = msgFlag;
           response.MsgFlag = MsgFlag.RespTaskSuccessful;
-          response.ScWindowState = result;
+          response.Payload.LastReqFriendly = MsgFlag[msgFlag];
         })
         .then(() => resolve(response))
         .catch((err) => reject(err));
@@ -243,9 +239,9 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       if (commandToExecute) {
         let commandData: ICommandHndlrDataForContent = new CommandHndlrDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent)
 
-        commandData.TargetSnapShotId = payload.Data.IdOfSelect;
+        commandData.TargetSnapShotId = payload.Payload.IdOfSelect;
         commandData.ContentMessageBroker = this;
-        commandData.TargetSnapShotFlavor = payload.Data.SnapShotSettings.Flavor;
+        commandData.TargetSnapShotFlavor = payload.Payload.SnapShotSettings.Flavor;
         commandData.TargetCeProxy = null; //todo
         commandData.TargetDoc = null; // todo
 

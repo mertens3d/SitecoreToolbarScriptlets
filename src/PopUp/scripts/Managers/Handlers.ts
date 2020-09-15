@@ -1,17 +1,19 @@
-﻿import { HandlersExternal } from "../Classes/HandlersExternal";
-import { HandlersInternal } from "../Classes/HandlersInternal";
+﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { MessageManager } from "./MessageManager";
-import { UiManager } from "./UiManager/UiManager";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { TabManager } from "./TabManager";
-export class Handlers {
-  External: HandlersExternal;
+import { HandlersExternalEvent } from "../Classes/HandlersExternal";
+import { HandlersInternal } from "../Classes/HandlersInternal";
+//import { PopUpMessageManager } from "./MessageManager";
+import { BrowserTabAgent } from "./TabManager";
+import { PopUpMessagesBroker } from "./PopUpMessagesBroker/PopUpMessagesBroker";
+export class Handlers extends LoggableBase {
+  External: HandlersExternalEvent;
   Internal: HandlersInternal;
 
-  constructor(logger: ILoggerAgent, msgManager: MessageManager,  settingsAgent: ISettingsAgent, tabMan: TabManager) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, browserTabAgent: BrowserTabAgent, popUpMessagesBroker: PopUpMessagesBroker) {
+    super(logger);
 
-    this.External = new HandlersExternal(logger, msgManager, settingsAgent, tabMan);
-    this.Internal = new HandlersInternal(logger, tabMan);
+    this.External = new HandlersExternalEvent(logger, settingsAgent, browserTabAgent, popUpMessagesBroker);
+    this.Internal = new HandlersInternal(logger, browserTabAgent);
   }
 }

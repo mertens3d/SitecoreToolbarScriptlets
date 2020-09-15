@@ -1,70 +1,150 @@
+import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
+import { SettingKey } from "../../../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IDataDesktopState } from "../../../../../Shared/scripts/Interfaces/Data/IDataDesktopState";
+import { ISettingsAgent, InitResultsScWindowManager, InitResultsDesktopProxy, InitResultsCEFrameProxy } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IframeProxy } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneIframe";
-import { IDataOneStorageOneTreeState } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneStorageOneTreeState";
-import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
-import { DesktopTabButtonAgent } from "../../../Agents/DesktopTabButtonAgent/DesktopTabButtonAgent";
+import { _BaseFrameProxy } from "../../_BaseFrameProxy";
+import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
+import { IDataStateOfFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
 import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
-import { RecipeRestoreDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
-import { IframeHelper } from "../../../Helpers/IframeHelper";
+import { RecipeRestoreFrameOnDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
+import { FrameHelper } from "../../../Helpers/IframeHelper";
 import { LoggableBase } from "../../../Managers/LoggableBase";
-import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
-import { DesktopIframeProxyBucket } from "./DesktopIframeProxyBucket";
-import { Subject_DesktopDomChangedEvent } from "./Events/DesktopDomChangedEvent/Subject_DesktopDomChangedEvent";
-import { IPayloadDesktop_DomChangedEvent } from "./Events/DesktopDomChangedEvent/IPayloadContentEditorDomChanged";
-import { IPayload__ConEdProxyAddedToDesktop } from "./Events/ContentEditorProxyAddedToDesktopEvent/IPayloadDesktop__ContentEditorProxyAddedToDesktop";
+import { DesktopProxyMutationEvent_Observer } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer";
+import { CEFrameProxyBucket } from "./DesktopFrameProxyBucket";
+import { DesktopProxyMutationEvent_Subject } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject";
+import { IDesktopProxyMutationEvent_Payload } from "./Events/DesktopProxyMutationEvent/IDesktopProxyMutationEvent_Payload";
+import { CEFrameProxy } from "../../CEFrameProxy";
+import { CEFrameProxyMutationEvent_Observer } from "./Events/FrameProxyMutationEvent/FrameProxyMutationEvent_Observer";
+import { ICEFrameProxyMutationEvent_Payload } from "./Events/FrameProxyMutationEvent/IFrameProxyMutationEvent_Payload";
+import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 
 export class DesktopProxy extends LoggableBase {
-  private DesktopIframeProxyBucket: DesktopIframeProxyBucket;
+  private __iframeHelper: FrameHelper;
+  private __dtStartBarAgent: DesktopStartBarProxy;
 
-  ConEdTabButtonAgent: DesktopTabButtonAgent;
-  private __iframeHelper: IframeHelper;
-  private _dtStartBarAgent: DesktopStartBarProxy;
+  CEFrameProxyMutationEvent_Observer: CEFrameProxyMutationEvent_Observer;
+  DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
+  DesktopStartBarAgent: DesktopStartBarProxy;
   private AssociatedDoc: IDataOneDoc;
-
+  private DesktopFrameProxyBucket: CEFrameProxyBucket;
+  private DomChangedEvent_Subject: DesktopProxyMutationEvent_Subject;
   private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
-  private Subject_DomChangedEvent: Subject_DesktopDomChangedEvent;
+  private RecipeBasics: RecipeBasics;
 
   constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
     super(logger);
 
     this.Logger.InstantiateStart(DesktopProxy.name);
-    this.MiscAgent = miscAgent;
-    this.SettingsAgent = settingsAgent;
-    this.AssociatedDoc = associatedDoc;
-
-    this.DesktopIframeProxyBucket = new DesktopIframeProxyBucket(this.Logger, this.AssociatedDoc, this.SettingsAgent);
-
-    this.ConEdTabButtonAgent = new DesktopTabButtonAgent(this.Logger, this);
-
-    let self = this;
-    this.DesktopIframeProxyBucket.ConEdProxyAddedEvent.RegisterObserver((conEditProxy: IPayload__ConEdProxyAddedToDesktop) => self.ConEdTabButtonAgent.CallBackConEdProxyAdded(conEditProxy));
-
-    this.Subject_DomChangedEvent = new Subject_DesktopDomChangedEvent(this.Logger, this.AssociatedDoc);
-
-    this.Subject_DomChangedEvent.RegisterObserver((payload: IPayloadDesktop_DomChangedEvent) => { self.Observer_DesktopDomChangedEvent(payload) });
-
-    this.DesktopIframeProxyBucket.InitHostedContentEditors();
+    if (associatedDoc) {
+      this.MiscAgent = miscAgent;
+      this.SettingsAgent = settingsAgent;
+      this.AssociatedDoc = associatedDoc;
+      this.RecipeBasics = new RecipeBasics(this.Logger);
+    } else {
+      this.Logger.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
+    }
 
     this.Logger.InstantiateEnd(DesktopProxy.name);
   }
+  async OnReadyInitDesktopProxy(): Promise<InitResultsDesktopProxy> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.OnReadyInitDesktopProxy.name);
 
-  Observer_DesktopDomChangedEvent(payload: IPayloadDesktop_DomChangedEvent) {
-    this.Logger.Log("The desktop DOM changed - probably an iframe has been added");
-    if (payload && payload.AddedIframes.length > 0) {
-      payload.AddedIframes.forEach(async (iframeElement) => {
-        this.Logger.LogVal('added iframe id', iframeElement.id);
+      let initResultsDesktopProxy = new InitResultsDesktopProxy();
 
-        let iframeProxy: IframeProxy = new IframeProxy(this.Logger, iframeElement, iframeElement.id);
-        await iframeProxy.WaitForReady()
-          .then(() => this.DesktopIframeProxyBucket.AddToBucketFromIframeProxy(iframeProxy))
-      })
+      this.CEFrameProxyMutationEvent_Observer = new CEFrameProxyMutationEvent_Observer(this.Logger, this);
+      this.DesktopFrameProxyBucket = new CEFrameProxyBucket(this.Logger);
+
+      await this.OnReadyPopulateCEFrameProxyBucket()
+        .then(() => {
+          this.DesktopStartBarAgent = new DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
+          let self = this;
+          this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject(self.Logger, this.AssociatedDoc);
+          this.WireEvents();
+        })
+        .then(() => resolve(initResultsDesktopProxy))
+        .catch((err) => this.Logger.ErrorAndThrow(this.OnReadyInitDesktopProxy.name, err));
+
+      this.Logger.FuncEnd(this.OnReadyInitDesktopProxy.name);
+    });
+  }
+
+  OnCEFrameProxyMutationEvent(frameProxyMutatationEvent_Payload: ICEFrameProxyMutationEvent_Payload) {
+    this.Logger.FuncStart(this.OnCEFrameProxyMutationEvent.name);
+
+    this.DesktopStartBarAgent.OnTreeMutationEvent_DesktopStartBarProxy(frameProxyMutatationEvent_Payload);
+
+      this.Logger.FuncEnd(this.OnCEFrameProxyMutationEvent.name);
+  }
+
+  OnCEFrameProxyMutation(desktopCEFrameProxyMutatationEvent_Payload: IDesktopProxyMutationEvent_Payload) {
+    if (this.DesktopProxyMutationEvent_Subject) {
+      this.DesktopProxyMutationEvent_Subject.NotifyObservers(desktopCEFrameProxyMutatationEvent_Payload);
     }
-    this.Logger.LogAsJsonPretty('payload', payload);
+  }
+
+  private GetFrameHelper(): FrameHelper {
+    if (this.__iframeHelper == null) {
+      this.__iframeHelper = new FrameHelper(this.Logger);
+    }
+    return this.__iframeHelper;
+  }
+
+  async OnReadyPopulateCEFrameProxyBucket(): Promise<void> {
+    try {
+      await this.GetFrameHelper().GetIFramesAsBaseFrameProxies(this.AssociatedDoc)
+        .then((frameProxies: CEFrameProxy[]) => {
+          frameProxies.forEach(async (oneIframe: _BaseFrameProxy) => {
+            this.AddCEFrameProxyAsync(<CEFrameProxy>oneIframe);
+          });
+        });
+    }
+    catch (err) {
+      this.Logger.ErrorAndThrow(this.OnReadyPopulateCEFrameProxyBucket.name, err);
+    }
+  }
+
+  WireEvents() {
+    let setting = this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton);
+    if (setting && setting.ValueAsBool()) {
+    }
+
+    this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc);
+    let DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer(this.Logger, this);
+    this.DomChangedEvent_Subject.RegisterObserver(DomChangeEvent_Observer);
+  }
+
+  AddCEFrameProxyAsync(ceframeProxy: CEFrameProxy): void {
+    let initResultFrameProxy = new InitResultsCEFrameProxy();
+
+    if (ceframeProxy && ceframeProxy.ContentEditorProxy && ceframeProxy.ContentEditorProxy.AssociatedDoc) {
+      this.RecipeBasics.WaitForReadyNABFrameProxy(ceframeProxy)
+        .then(() => {
+          let result = this.DesktopFrameProxyBucket.AddToCEFrameProxyBucket(ceframeProxy);
+
+          if (result) {
+            ceframeProxy.OnReadyInitCEFrameProxy()
+              .then((result) => {
+                initResultFrameProxy = result;
+
+                let payload: IDesktopProxyMutationEvent_Payload = {
+                  AddedCEFrameProxies: [ceframeProxy],
+                  MutatedElement: null,
+                  FrameProxyMutationEvent_Payload: null
+                }
+                this.DesktopProxyMutationEvent_Subject.NotifyObservers(payload);
+              })
+              .then(() => ceframeProxy.FrameProxyMutationEvent_Subject.RegisterObserver(this.CEFrameProxyMutationEvent_Observer))
+              .catch((err) => this.Logger.ErrorAndThrow(this.AddCEFrameProxyAsync.name, err));
+          }
+        })
+    } else {
+      this.Logger.ErrorAndThrow(this.AddCEFrameProxyAsync.name, 'null ceframeProxy or ceframeProxy.Doc');
+    }
+    this.Logger.LogAsJsonPretty('InitResultsCEFrameProxy', initResultFrameProxy);
   }
 
   GetAssociatedDoc(): IDataOneDoc {
@@ -72,85 +152,80 @@ export class DesktopProxy extends LoggableBase {
   }
 
   GetDtStartBarAgent(): DesktopStartBarProxy {
-    if (!this._dtStartBarAgent) {
-      this._dtStartBarAgent = new DesktopStartBarProxy(this.Logger, this.AssociatedDoc);
+    if (!this.__dtStartBarAgent) {
+      this.__dtStartBarAgent = new DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
     }
 
-    return this._dtStartBarAgent;
+    return this.__dtStartBarAgent;
   }
 
-  private GetIframeHelper(): IframeHelper {
+  private GetIframeHelper(): FrameHelper {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new IframeHelper(this.Logger);
+      this.__iframeHelper = new FrameHelper(this.Logger);
     }
     return this.__iframeHelper;
   }
 
-  GetStateDesktop(): IDataDesktopState {
-    this.Logger.FuncStart(this.GetStateDesktop.name);
+  ProcessLiveCEFrameProxies(results: CEFrameProxy[]): IDataStateOfDesktop {
+    let toReturnDesktopState: IDataStateOfDesktop = new DefaultStateOfDesktop();
 
-    var toReturnDesktopState: IDataDesktopState = this.CreateNewDtDataShell();
+    if (results) {
+      for (var idx = 0; idx < results.length; idx++) {
+        let ceframeProxy: CEFrameProxy = results[idx];
 
-    toReturnDesktopState.HostedIframes = this.GetIframeHelper().GetHostedIframes(this.AssociatedDoc);
+        let stateOfFrame = ceframeProxy.GetStateOfCEFrame();
 
-    if (toReturnDesktopState.HostedIframes && toReturnDesktopState.HostedIframes.length > 0) {
-      for (var iframeIdx = 0; iframeIdx < toReturnDesktopState.HostedIframes.length; iframeIdx++) {
-        this.Logger.LogVal('iframeIdx: ', iframeIdx);
-
-        var iframeProxy: IframeProxy = toReturnDesktopState.HostedIframes[iframeIdx];
-
-        var ceAgent = new ContentEditorProxy(iframeProxy.GetContentDoc(), this.Logger, this.SettingsAgent, iframeProxy.IframeElem.id);
-
-        //todo - should this be checking for min value. There may be a different iframe that is not ce that is top
-
-        let oneCeState: IDataOneStorageOneTreeState = ceAgent.GetStateTree();
-
-        toReturnDesktopState.HostedContentEditors.push(oneCeState);
-
-        if (iframeProxy.GetZindex() === 1) {
-          toReturnDesktopState.ActiveCEAgent = ceAgent;
-          toReturnDesktopState.ActiveCeState = oneCeState;
+        toReturnDesktopState.StateOfFrames.push(stateOfFrame);
+        if (ceframeProxy.GetZindex() === 1) {
+          toReturnDesktopState.IndexOfActiveFrame = idx;
         }
       }
     }
-
-    this.Logger.FuncEnd(this.GetStateDesktop.name, toReturnDesktopState.HostedContentEditors.length);
 
     return toReturnDesktopState;
   }
 
-  async SetStateDesktop(targetDoc: IDataOneDoc, dataToRestore: IDataOneWindowStorage): Promise<void> {
+  async GetStateOfDesktop(): Promise<IDataStateOfDesktop> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetStateDesktop.name);;
+      this.Logger.FuncStart(this.GetStateOfDesktop.name);
 
-      if (this.MiscAgent.NotNullOrUndefined([targetDoc, dataToRestore, dataToRestore.AllCEAr], this.SetStateDesktop.name)) {
-        for (var idx = 0; idx < dataToRestore.AllCEAr.length; idx++) {
-          let targetData: IDataOneStorageOneTreeState = dataToRestore.AllCEAr[idx];
-          this.Logger.Log('Restoring ' + (idx + 1) + ":" + dataToRestore.AllCEAr.length + ' active node: ' + targetData.ActiveNode.NodeFriendly);
-          var recipe: RecipeRestoreDesktop = new RecipeRestoreDesktop(this.Logger, targetDoc, targetData, this.SettingsAgent, this.ConEdTabButtonAgent);
-
-          await recipe.Execute()
-            //.then(() => this.EnrollListenerForActiveNodeChange())
-            .catch((err) => reject(err));
-        }
-
-        resolve();
-      } else {
-        reject(this.SetStateDesktop.name + ' bad data');
+      try {
+        await this.GetIframeHelper().GetIFramesAsCEFrameProxies(this.AssociatedDoc)
+          .then((results: CEFrameProxy[]) => this.ProcessLiveCEFrameProxies(results))
+          .then((results: IDataStateOfDesktop) => resolve(results))
+          .catch((err) => this.Logger.ErrorAndThrow(this.GetStateOfDesktop.name, err));
+      } catch (err) {
+        reject(this.GetStateOfDesktop.name + ' | ' + err);
       }
 
-      this.Logger.FuncEnd(this.SetStateDesktop.name);
+      this.Logger.FuncEnd(this.GetStateOfDesktop.name);
     });
   }
 
-  CreateNewDtDataShell(): IDataDesktopState {
-    var toReturn: IDataDesktopState = {
-      HostedContentEditors: [],
-      HostedIframes: [],
-      ActiveCEAgent: null,
-      ActiveCeState: null
-    }
+  async SetStateOfDesktop(desktopState: IDataStateOfDesktop): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.SetStateOfDesktop.name);;
 
-    return toReturn;
+      if (desktopState) {
+        if (this.MiscAgent.NotNullOrUndefined([this.AssociatedDoc, desktopState, desktopState.StateOfFrames], this.SetStateOfDesktop.name)) {
+          for (var idx = 0; idx < desktopState.StateOfFrames.length; idx++) {
+            let stateOfFrame: IDataStateOfFrame = desktopState.StateOfFrames[idx];
+
+            var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.SettingsAgent, this.DesktopStartBarAgent);
+
+            //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
+            await recipe.Execute()
+              .then(() => resolve())
+              .catch((err) => reject(err));
+          }
+        } else {
+          reject(this.SetStateOfDesktop.name + ' bad data');
+        }
+      } else {
+        reject(this.SetStateOfDesktop.name + '  No desktop state provided');
+      }
+
+      this.Logger.FuncEnd(this.SetStateOfDesktop.name);
+    });
   }
 }

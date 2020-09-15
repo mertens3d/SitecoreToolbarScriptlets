@@ -3,6 +3,11 @@
   ClassNames: {
     HS: {
       Collapsed: string,
+      Buttons: {
+
+
+
+      }
     },
   },
   ElemId: {

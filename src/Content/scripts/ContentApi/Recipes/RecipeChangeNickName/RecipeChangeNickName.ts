@@ -2,7 +2,7 @@
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataOneWindowStorage } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneWindowStorage";
+import { IDataStateOfSitecoreWindow } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { LoggableBase } from "../../../Managers/LoggableBase";
 
@@ -32,22 +32,22 @@ export class RecipeChangeNickName extends LoggableBase implements ICommandRecipe
 
       if (this.TargetSnapShotId) {
         if (this.NewNickname) {
-          var storageMatch: IDataOneWindowStorage;
+          var storageMatch: IDataStateOfSitecoreWindow;
 
-          storageMatch = this.AtticAgent.GetFromStorageById(this.TargetSnapShotId)
+          storageMatch = this.AtticAgent.GetFromStorageBySnapShotId(this.TargetSnapShotId)
 
           if (storageMatch) {
-            if ((storageMatch.Flavor === SnapShotFlavor.Autosave
+            if ((storageMatch.Meta.Flavor === SnapShotFlavor.Autosave
               ||
-              (storageMatch.Flavor === SnapShotFlavor.Unknown))) {
-              storageMatch.Flavor = SnapShotFlavor.Manual;
+              (storageMatch.Meta.Flavor === SnapShotFlavor.Unknown))) {
+              storageMatch.Meta.Flavor = SnapShotFlavor.Manual;
             }
-            storageMatch.NickName = this.NewNickname;// this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
+            storageMatch.Friendly.NickName = this.NewNickname;// this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
           } else {
             reject(this.UpdateNickname.name + ' - No storage match');
           }
 
-          this.AtticAgent.WriteStateToStorage(storageMatch);
+          this.AtticAgent.WriteStateOfSitecoreToStorage(storageMatch);
           resolve();
 
         } else {

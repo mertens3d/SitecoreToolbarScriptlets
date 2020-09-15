@@ -1,10 +1,10 @@
-﻿import { IframeProxy } from "./IDataOneIframe";
-import { IDataOneDoc } from "./IDataOneDoc";
+﻿import { IDataOneDoc } from "./IDataOneDoc";
+import { _BaseFrameProxy } from "../../../../Content/scripts/Proxies/_BaseFrameProxy";
 
 export interface IDataPublishChain {
   TopLevelDoc: IDataOneDoc,
-  Iframe0Blue: IframeProxy;
-  docToPublish: IDataOneDoc
-  jqIframe: IframeProxy;
-  messageDialogIframeRed: IframeProxy;
+  Iframe0Blue: _BaseFrameProxy;
+  DocToPublish: IDataOneDoc
+  JqIframe: _BaseFrameProxy;
+  MessageDialogIframeRed: _BaseFrameProxy;
 }

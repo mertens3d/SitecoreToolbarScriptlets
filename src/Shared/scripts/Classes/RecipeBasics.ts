@@ -1,4 +1,4 @@
-﻿import { IframeHelper } from '../../../Content/scripts/Helpers/IframeHelper';
+﻿import { FrameHelper } from '../../../Content/scripts/Helpers/IframeHelper';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
@@ -6,7 +6,8 @@ import { Guid } from '../Helpers/Guid';
 import { AbsoluteUrl } from '../Interfaces/AbsoluteUrl';
 import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
-import { IframeProxy } from '../Interfaces/Data/IDataOneIframe';
+import { _BaseFrameProxy } from '../../../Content/scripts/Proxies/_BaseFrameProxy';
+import { CEFrameProxy } from '../../../Content/scripts/Proxies/CEFrameProxy';
 import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
@@ -14,46 +15,49 @@ import { SharedConst } from '../SharedConst';
 import { PromiseResult } from "./PromiseResult";
 
 export class RecipeBasics extends LoggableBase implements IRecipeBasics {
-  private FactoryHelp: IFactoryHelper;
-
   constructor(logger: ILoggerAgent) {
     super(logger);
-    this.FactoryHelp = new FactoryHelper(this.Logger);
   }
 
-  async WaitForReadyIframe(dataOneIframe: IframeProxy): Promise<IframeProxy> {
+  async WaitForReadyNABFrameProxy(baseframeProxy: _BaseFrameProxy): Promise<_BaseFrameProxy> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForReadyIframe.name, dataOneIframe.Nickname + ' ' + Guid.AsShort(dataOneIframe.Id));
+      this.Logger.FuncStart(this.WaitForReadyNABFrameProxy.name, Guid.AsShort(baseframeProxy.Id));
 
-      var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyIframe.name);
+      var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABFrameProxy.name);
       let IsReady: boolean = false;
 
-      while (iterationJr.DecrementAndKeepGoing() && !IsReady) {
-        var currentReadyState: string = dataOneIframe.IframeElem.contentDocument.readyState.toString();
-        var isReadyStateComplete = currentReadyState === 'complete';
-        var currentDocUrl = dataOneIframe.IframeElem.contentDocument.URL;
+      await this.WaitForReadyNABHtmlIframeElement(baseframeProxy.HTMLIframeElement)
+        .then(() => resolve(baseframeProxy))
+        .catch((err) => reject(this.WaitForReadyNABFrameProxy.name + ' | ' + err));
 
-        if (isReadyStateComplete && (currentDocUrl !== SharedConst.Const.UrlSuffix.AboutBlank)) {
-          this.Logger.LogVal('currentDocUrl', currentDocUrl);
-          IsReady = true;
-        } else {
-          await iterationJr.Wait();
-        }
-      }
-      if (IsReady) {
-        this.Logger.Log(dataOneIframe.GetContentDoc().ContentDoc.URL);
-        resolve(dataOneIframe);
-      }
+      //while (iterationJr.DecrementAndKeepGoing() && !IsReady) {
+      //  var currentReadyState: string = baseframeProxy.HTMLIframeElement.contentDocument.readyState.toString();
+      //  var isReadyStateComplete = currentReadyState ===  SharedConst.Const.KeyWords.Javascript.ReadyStates.Complete;
+      //  var currentDocUrl = baseframeProxy.HTMLIframeElement.contentDocument.URL;
 
-      if (iterationJr.IsExhausted) {
-        reject(iterationJr.IsExhaustedMsg);
-      }
+      //  if (isReadyStateComplete && (currentDocUrl !== SharedConst.Const.UrlSuffix.AboutBlank)) {
+      //    this.Logger.LogVal('currentDocUrl', currentDocUrl);
+      //    IsReady = true;
+      //  } else {
+      //    await iterationJr.Wait();
+      //  }
+      //}
 
-      this.Logger.FuncEnd(this.WaitForReadyIframe.name);
+      //if (IsReady) {
+      //  this.Logger.Log(baseframeProxy.GetContentDoc().ContentDoc.URL);
+      //  resolve(baseframeProxy);
+      //}
+
+      //if (iterationJr.IsExhausted) {
+      //  reject(iterationJr.IsExhaustedMsg);
+      //}
+
+      this.Logger.FuncEnd(this.WaitForReadyNABFrameProxy.name);
     });
   }
 
-  private IsDocumentReady(document: Document): boolean {
+  private IsDocumentReadyNAB(document: Document): boolean {
+    // Ready and not About:Blank
     let toReturn: boolean = false;
 
     if (document) {
@@ -75,12 +79,12 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     return toReturn;
   }
 
-  async WaitForPageReadyHtmlIframeElement(targetIframe: HTMLIFrameElement) {
+  async WaitForReadyNABHtmlIframeElement(targetIframe: HTMLIFrameElement): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForPageReadyHtmlIframeElement.name);
+      this.Logger.FuncStart(this.WaitForReadyNABHtmlIframeElement.name);
 
       if (targetIframe) {
-        var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForPageReadyNative.name);
+        var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABDocument.name);
 
         var isReady: boolean = false;
 
@@ -89,7 +93,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
         while (iterationJr.DecrementAndKeepGoing() && !isReady) {
           currentReadyState = targetIframe.contentDocument.readyState.toString();
 
-          isReady = this.IsDocumentReady(targetIframe.contentDocument);
+          isReady = this.IsDocumentReadyNAB(targetIframe.contentDocument);
 
           if (isReady) {
             break;
@@ -108,25 +112,25 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
         this.Logger.Log('ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());
       }
       else {
-        this.Logger.ErrorAndThrow(this.WaitForPageReadyHtmlIframeElement.name, 'No target doc');
+        this.Logger.ErrorAndThrow(this.WaitForReadyNABHtmlIframeElement.name, 'No target doc');
       }
-      this.Logger.FuncEnd(this.WaitForPageReadyHtmlIframeElement.name);;
+      this.Logger.FuncEnd(this.WaitForReadyNABHtmlIframeElement.name);;
     });
   }
 
-  async WaitForPageReadyNative(targetDoc: IDataOneDoc) {
+  async WaitForReadyNABDocument(targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForPageReadyNative.name);
+      this.Logger.FuncStart(this.WaitForReadyNABDocument.name);
 
       if (targetDoc) {
-        var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForPageReadyNative.name);
+        var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABDocument.name);
 
         var isReady: boolean = false;
 
         let currentReadyState: string;
 
         while (iterationJr.DecrementAndKeepGoing() && !isReady) {
-          isReady = this.IsDocumentReady(targetDoc.ContentDoc);
+          isReady = this.IsDocumentReadyNAB(targetDoc.ContentDoc);
 
           if (isReady) {
             break;
@@ -145,85 +149,135 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
         this.Logger.Log('ready state: ' + currentReadyState + ' is ready: ' + isReady.toString());
       }
       else {
-        this.Logger.ErrorAndThrow(this.WaitForPageReadyNative.name, 'No target doc');
+        this.Logger.ErrorAndThrow(this.WaitForReadyNABDocument.name, 'No target doc');
       }
-      this.Logger.FuncEnd(this.WaitForPageReadyNative.name);;
+      this.Logger.FuncEnd(this.WaitForReadyNABDocument.name);;
     });
   }
 
-  GetTopLevelIframe(targetDoc: IDataOneDoc): IframeProxy {
+  async GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<_BaseFrameProxy> {
     this.Logger.FuncStart(this.GetTopLevelIframe.name);
 
-    var toReturn: IframeProxy = null;
+    var toReturn: _BaseFrameProxy = null;
 
-    var allIframe: IframeProxy[];
-    let iframeHelper = new IframeHelper(this.Logger);
+    let factoryHelp = new FactoryHelper(this.Logger);
+    let frameHelper = new FrameHelper(this.Logger);
 
-    allIframe = iframeHelper.GetHostedIframes(targetDoc)
-
-    var maxZVal = -1;
-    if (allIframe && allIframe.length > 0) {
-      for (var idx = 0; idx < allIframe.length; idx++) {
-        var candidateIframe = allIframe[idx];
-        if (candidateIframe && candidateIframe.GetZindex() > maxZVal) {
-          toReturn = candidateIframe;
-          maxZVal = candidateIframe.GetZindex();
+    await frameHelper.GetIFramesAsBaseFrameProxies(targetDoc)
+      .then((allIframe: _BaseFrameProxy[]) => {
+        var maxZVal = -1;
+        if (allIframe && allIframe.length > 0) {
+          for (var idx = 0; idx < allIframe.length; idx++) {
+            var candidateIframe = allIframe[idx];
+            if (candidateIframe && candidateIframe.GetZindex() > maxZVal) {
+              toReturn = candidateIframe;
+              maxZVal = candidateIframe.GetZindex();
+            }
+          }
         }
-      }
-    }
+      })
 
     this.Logger.FuncEnd(this.GetTopLevelIframe.name);
 
     return toReturn;
   }
 
-  async WaitForIframeElemAndReturnWhenReady(haystackDoc: IDataOneDoc, selector: string, iframeNickName: string): Promise<IframeProxy> {
+  async WaitForIframeElemAndReturnWhenReady(haystackDoc: IDataOneDoc, selector: string, iframeNickName: string): Promise<_BaseFrameProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
 
-      var toReturnIframeProxy: IframeProxy = null;
+      let factoryHelp = new FactoryHelper(this.Logger);
 
       await this.WaitForAndReturnFoundElem(haystackDoc, selector)
-        .then(async (foundElem: HTMLIFrameElement) => {
-          if (foundElem) {
-            toReturnIframeProxy = this.FactoryHelp.DataOneIframeFactory(<HTMLIFrameElement>foundElem, iframeNickName);
-          }
-        })
-        .then(() => this.WaitForReadyIframe(toReturnIframeProxy))
-        .then(() => {
-          resolve(toReturnIframeProxy);
-        })
+        .then(async (foundElem: HTMLIFrameElement) => await factoryHelp.BaseFramePromiseFactory(<HTMLIFrameElement>foundElem, iframeNickName))
+        .then((result: _BaseFrameProxy) => this.WaitForReadyNABFrameProxy(result))
+        .then((result) => resolve(result))
         .catch((err) => reject(err));
 
       this.Logger.FuncEnd(this.WaitForIframeElemAndReturnWhenReady.name);
     });
   }
-
-  async WaitForNewIframe(allIframesBefore: IframeProxy[], targetDoc: IDataOneDoc): Promise<IframeProxy> {
-    return new Promise<IframeProxy>(async (resolve, reject) => {
+  async WaitForNewIframeContentEditor(allIframesBefore: HTMLIFrameElement[], targetDoc: IDataOneDoc): Promise<CEFrameProxy> {
+    return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframe.name);
-      this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);
+      let toReturn: CEFrameProxy = null;
+
+      await this.WaitForNewIframeNative(allIframesBefore, targetDoc)
+        .then((result: HTMLIFrameElement) => {
+          toReturn = new CEFrameProxy(this.Logger, result);
+        })
+        .then(() => resolve(toReturn))
+        .catch((err) => reject(this.WaitForNewIframeContentEditor.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.WaitForNewIframe.name);
+    });
+  }
+
+  async WaitForNewIframeNative(allIframesBefore: HTMLIFrameElement[], dateOneDoc: IDataOneDoc): Promise<HTMLIFrameElement> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForNewIframeNative.name);
       this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, allIframesBefore);
-      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, targetDoc);
+      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, dateOneDoc);
 
-      var toReturn: IframeProxy = null;
+      var toReturn: HTMLIFrameElement = null;
 
-      var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframe.name)
+      var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframeNative.name)
       let beforeCount: number = allIframesBefore.length;
 
-      let iframeHelper = new IframeHelper(this.Logger);
-
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
-        var allIframesAfter: IframeProxy[];
+        var allIframesAfter: HTMLIFrameElement[];
 
-        allIframesAfter = iframeHelper.GetHostedIframes(targetDoc);
+        let frameHelper = new FrameHelper(this.Logger);
+
+        allIframesAfter = frameHelper.GetIFramesFromDataOneDoc(dateOneDoc);
 
         var count: number = allIframesAfter.length;
         this.Logger.Log('iFrame count before: ' + beforeCount);
         this.Logger.Log('iFrame count after: ' + allIframesAfter.length);
 
         if (count > beforeCount) {
-          var newIframes: IframeProxy[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
+          var newIframes: HTMLIFrameElement[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
+
+          toReturn = newIframes[0];
+          resolve(toReturn);
+        } else {
+          await iterationJr.Wait();
+        }
+      }
+
+      reject('probably ' + iterationJr.IsExhaustedMsg);
+
+      this.Logger.FuncEnd(this.WaitForNewIframeNative.name);
+    });
+  }
+
+  async WaitForNewIframe(allIframesBefore: _BaseFrameProxy[], targetDoc: IDataOneDoc): Promise<_BaseFrameProxy> {
+    return new Promise<_BaseFrameProxy>(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForNewIframe.name);
+      this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);
+      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, allIframesBefore);
+      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, targetDoc);
+
+      var toReturn: _BaseFrameProxy = null;
+
+      var iterationJr = new IterationDrone(this.Logger, this.WaitForNewIframe.name)
+      let beforeCount: number = allIframesBefore.length;
+
+      while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
+        var allIframesAfter: _BaseFrameProxy[];
+
+        let frameHelper = new FrameHelper(this.Logger);
+
+        await frameHelper.GetIFramesAsBaseFrameProxies(targetDoc)
+          .then((result) => allIframesAfter = result)
+          .catch((err) => reject(this.WaitForNewIframe.name + ' ' + err));
+
+        var count: number = allIframesAfter.length;
+        this.Logger.Log('iFrame count before: ' + beforeCount);
+        this.Logger.Log('iFrame count after: ' + allIframesAfter.length);
+
+        if (count > beforeCount) {
+          var newIframes: _BaseFrameProxy[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
 
           toReturn = newIframes[0];
         } else {
@@ -239,8 +293,8 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       }
     });
   }
-  async WaitForAndReturnFoundElem(haystackDoc: IDataOneDoc, selector: string, overrideIterCount = 8) {
-    return new Promise<HTMLElement>(async (resolve, reject) => {
+  async WaitForAndReturnFoundElem(haystackDoc: IDataOneDoc, selector: string, overrideIterCount = 8): Promise<HTMLElement> {
+    return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForAndReturnFoundElem.name);
       this.Logger.LogVal('selector', selector);
       this.Logger.LogVal('doc nickname', haystackDoc.Nickname);
@@ -327,8 +381,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
           let targetTab: browser.tabs.Tab = result[0];
           browser.tabs.update(targetTab.id, { url: href.AbsUrl });
           this.TabWaitForReadyStateCompleteNative(targetTab);
-        }
-        )
+        })
         .then(resolve)
         .catch((ex) => reject(ex));
 
@@ -357,8 +410,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       this.Logger.FuncStart(this.WaitForThenClick.name);
 
       if (targetDoc) {
-        this.Logger.LogAsJsonPretty('selectors', selectorAr);
-
         var found: HTMLElement = null;
         var iterationJr = new IterationDrone(this.Logger, this.WaitForThenClick.name);
 

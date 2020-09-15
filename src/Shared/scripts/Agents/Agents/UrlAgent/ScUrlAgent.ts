@@ -6,10 +6,9 @@ import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
-import { IContentState } from "../../../Interfaces/Data/IContentState";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
-export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
-  
+export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
   constructor(logger: ILoggerAgent) {
     super(logger);
   }
@@ -18,8 +17,12 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
     return new RegExp(regexPattern).test(url);
   }
 
-  async InitScUrlAgent() {
-    await super.InitGenericUrlAgent();
+  async InitScUrlAgent() : Promise<void>{
+    try {
+      await super.InitGenericUrlAgent();
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.InitScUrlAgent.name, err);
+    }
   }
 
   GetFullUrl() {
@@ -27,12 +30,10 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
   }
 
   GetScWindowType(): ScWindowType {  //absUrl: AbsoluteUrl
-    this.Logger.FuncStart(this.GetScWindowType.name);
     var toReturn: ScWindowType = ScWindowType.Unknown;
 
     let testPath: AbsoluteUrl = this.BuildFullUrlFromParts();
     if (testPath) {
-      this.Logger.LogVal('current url', testPath.AbsUrl);
       if (testPath.AbsUrl.indexOf(SharedConst.Const.UrlSuffix.Login) > -1) {
         toReturn = ScWindowType.LoginPage;
       }
@@ -60,17 +61,15 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
     } else {
       this.Logger.ErrorAndThrow(this.GetScWindowType.name, 'null url');
     }
-    this.Logger.FuncEnd(this.GetScWindowType.name, ScWindowType[toReturn]);
 
     return toReturn;
   }
 
-  BuildEditPrevNormUrl(newMode: scMode, contState: IContentState): void {
+  BuildEditPrevNormUrl(newMode: scMode, contState: IDataContentReplyReceivedEvent_Payload): void {
     this.UrlParts.Anchor = '';
     this.UrlParts.FilePath = '';
-    this.UrlParts.ScWindowType = ScWindowType.Unknown;
 
-    this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.ActiveNode.NodeId.AsBracedGuid());
+    //todo - put back once this method returns to use this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.StateOfTree.ActiveNode.NodeId.AsBracedGuid());
     this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[newMode]);
     this.SetParameterValueByKey(QueryStrKey.sc_lang, 'en');
     this.SetParameterValueByKey(QueryStrKey.sc_site, 'website');
@@ -81,7 +80,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent{
       //this.SetFilePathFromWindowType(newMode);
 
       if (this.UrlParts && this.UrlParts)
-        this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[ newMode])
+        this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[newMode])
     }
   }
 

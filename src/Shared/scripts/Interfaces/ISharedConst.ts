@@ -3,7 +3,6 @@
     ForceLoggingEnabled: boolean
   },
   IterHelper: {
-
     GrowthPerIteration: number,
     MaxCount: {
       OverridePublishing: number,
@@ -14,8 +13,22 @@
       Default: number,
     },
   },
+  KeyWords: {
+    Html: {
+      beforeend: InsertPosition,
+      optgroup: string,
+    },
+    Javascript: {
+      ReadyStates: {
+        Complete: DocumentReadyState
+      }
+    }
+  },
+  Logger: {
+    MinTimeDiffMs: number
+  },
   ObjDiscriminator: {
-    DataOneTreeNode: string,
+    //DataOneTreeNode: string,
   },
   Settings: {
     Defaults: {

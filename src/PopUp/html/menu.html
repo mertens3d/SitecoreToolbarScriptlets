@@ -7,80 +7,73 @@
   </title>
   <link href='PopUp.min.css' rel='stylesheet' type='text/css' />
 </head>
-<body>
-  <div class="big-wrapper">
-
+<body class="hindsite">
+  <div class="button-wrapper big-wrapper">
     <div id="menu-overlayx">
-      <div class="overlay-gray"></div>
+      <div class="button-wrapper overlay-gray"></div>
     </div>
 
     <form>
-      <div class="header">
-        <div class="left-side">
+      <div class="button-wrapper header">
+        <div class="button-wrapper left-side">
         </div>
-        <div class="right-side">
-          <div class="build-stamp" id="build-stamp"></div>
-          <div class="close-window" id="close-window"></div>
+        <div class="button-wrapper right-side">
+          <div class="button-wrapper build-stamp" id="build-stamp"></div>
+          <div class="button-wrapper close-window" id="close-window"></div>
         </div>
       </div>
-      <div class="header-push"></div>
+      <div class="button-wrapper header-push"></div>
 
       <fieldset class='top'>
-        <legend id='lgnd-fore-site' class="section">{error}</legend>
-        <div class="accordion-content">
-          <div class=' flex-container'>
-            <button id='sc-mode-edit' type='button' class="icon edit">Edit</button>
-            <button id='Prev' type='button' class='icon preview-icon'>Preview</button>
-            <button id='Norm' type='button' class="icon normal">Normal</button>
-            <button id='AdminB' type='button' class="icon admin-b">Admin B</button>
-            <button id='Desktop' type='button' class='icon desktop-icon'>Desktop</button>
-            <button id='CE' type='button' class="icon ce">Content Editor</button>
-            <button id='BigRed' type='button' class="icon add-ce-tab">Add CE Tab to DT</button>
-            <button id='QuickPublish' type='button' class="icon publish">Quick Publish</button>
-            <button id='PresentationDetails' type='button' class="icon details">Presentation Details</button>
-            <button id='CompactCE' type='button' class="icon details">Compact CE</button>
+        <legend id='lgnd-fore-site' class="button-wrapper section">{error}</legend>
+        <div class="button-wrapper accordion-content">
+          <div class='flex-container'>
+            <div id='sc-mode-edit'></div>
+            <div id='Prev'></div>
+            <div id='Norm'></div>
+            <div id='AdminB'></div>
+            <div id='Desktop'></div>
+            <div id='CE'></div>
+            <div id='BigRed'></div>
+            <div id='QuickPublish'></div>
+            <div id='PresentationDetails'></div>
+            <div id='CompactCE'></div>
           </div>
         </div>
       </fieldset>
 
       <fieldset class='top'>
-        <legend id='lgnd-hind-site' data-setting='lgnd-hind-site' class="section">{error}</legend>
+        <legend id='lgnd-hind-site' data-setting='lgnd-hind-site' class="button-wrapper section">{error}</legend>
         <div class='accordion-content'>
-          <div class="row flex-container">
-            <div class='col-full'>
 
-              <!--<input type='checkbox' /> todo favorites only-->
+          <div class="button-wrapper row flex-container">
+            <div class='col-full'>
               <select id='selState' size='10'>
               </select>
             </div>
           </div>
-          <div class="row flex-container">
-            
-            <div class="input-btn-wrapper">
-              <strong>todo (forced on)</strong>
-              <button id='SaveWindowState' type='button' class="icon take-snapshot">Take Snapshot</button>
-              </div>
+          <div class="button-wrapper row flex-container">
+            <div id='id-take-snapshot' type='div'></div>
 
-              <div class="input-btn-wrapper">
-                <input type="text" id="id-input-nickname" value="" placeholder="Nick Name">
-                <button id="id-btn-update-nickname" type="button" class="icon set-nickname">Set Nickname</button>
-              </div>
-
-              <button id='id-toggle-favorite' type='button' class="icon btn-favorite">Toggle as Favorite</button>
-              <button id='RemoveOneFromLocalStorage' type='button' class="icon delete-snapshot">Delete Snapshot</button>
-
-              <button id='id-restore-state-same-tab' type='button' class='icon restore-snapshot'>Restore to this tab</button>
-              <button id='id-restore-state-new-tab' type='button' class='icon restore-snapshot'>Restore to new tab</button>
-
-              <button id='Cancel' type='button' class="icon cancel">Cancel</button>
+            <div class=" input-btn-wrapper">
+              <input type="text" id="id-input-nickname" value="" placeholder="Nick Name">
+              <div id="id-btn-update-nickname"></div>
             </div>
+
+            <div id='id-toggle-favorite' type='div'></div>
+            <div id='RemoveOneFromLocalStorage' type='div'></div>
+
+            <div id='id-restore-state-same-tab' type='div' class='icon '></div>
+            <div id='id-restore-state-new-tab' type='div' class='icon'></div>
+
+            <div id='Cancel' type='div'></div>
+          </div>
         </div>
       </fieldset>
 
       <fieldset class='top'>
-        <legend id='lgnd-settings' data-setting='lgnd-settings' class="section">Settings/ Stats</legend>
+        <legend id='lgnd-settings' data-setting='lgnd-settings' class="button-wrapper section">Settings/ Stats</legend>
         <div class='accordion-content'>
-
 
           <h3>note: page refresh + open pop up required to fully propagate settings</h3>
           <br />
@@ -99,6 +92,11 @@
             <legend>Debug</legend>
             <input type="checkbox" id="id-settings-debug-keep-dialog-open" checked="checked" />
             <label for='id-settings-debug-keep-dialog-open'>{error}</label>
+            <p>Note: To reload, use this command at the console</p>
+            <dl>
+              <dt></dt>
+              <dd> location.reload(true) </dd>
+            </dl>
 
             <br />
             <input type='checkbox' id='id-settings-show-log-data' checked="checked" />
@@ -124,7 +122,6 @@
             <br />
             <input type="number" id="id-settings-auto-save-snap-shot-retain-days" min="1" max="100" value="100" />
             <label for='id-settings-auto-save-snap-shot-retain-days'>{error}</label>
-
           </fieldset>
 
           <br />
@@ -133,9 +130,8 @@
         </div>
       </fieldset>
 
-
       <fieldset class='top'>
-        <legend id='lgnd-pop-up-state' data-setting='lgnd-pop-up-state' class="section">{error}</legend>
+        <legend id='lgnd-pop-up-state' data-setting='lgnd-pop-up-state' class="button-wrapper section">{error}</legend>
         <div class='accordion-content'>
           <div class='flex-container'>
             <div class='col-full'>
@@ -148,7 +144,7 @@
       </fieldset>
 
       <fieldset class='top'>
-        <legend id='lgnd-content-state' data-setting='lgnd-content-state' class="section">{error}</legend>
+        <legend id='lgnd-content-state' data-setting='lgnd-content-state' class="button-wrapper section">{error}</legend>
         <div class='accordion-content'>
           <div class='flex-container'>
             <div class='col-full'>
@@ -161,7 +157,7 @@
       </fieldset>
 
       <fieldset class='top'>
-        <legend id='lgnd-browser-state' data-setting='lgnd-browser-state' class="section">{error}</legend>
+        <legend id='lgnd-browser-state' data-setting='lgnd-browser-state' class="button-wrapper section">{error}</legend>
         <div class='accordion-content'>
           <div class='flex-container'>
             <div class='col-full'>
@@ -173,7 +169,7 @@
         </div>
       </fieldset>
       <fieldset id='id-fieldset-debug' class='top'>
-        <legend id='lgnd-pop-up-log' data-setting='lgnd-pop-up-log' class="section">{error}</legend>
+        <legend id='lgnd-pop-up-log' data-setting='lgnd-pop-up-log' class="button-wrapper section">{error}</legend>
         <span id='spanParentInfo'></span>
         <div class='accordion-content'>
           <div class='col-full'>
@@ -185,14 +181,14 @@
       </fieldset>
 
       <fieldset class='top'>
-        <legend id='lgnd-messages' data-setting='lgnd-messages' class="section">{error}</legend>
+        <legend id='lgnd-messages' data-setting='lgnd-messages' class="button-wrapper section">{error}</legend>
         <div class='accordion-content'>
           <div class='flex-container'>
             <div class='col-full'>
               <div class='scroller'>
-                <div class="feedback-messages" id="feedback-messages"></div>
+                <div class="button-wrapper feedback-messages" id="feedback-messages"></div>
 
-                <div class="scroller-msg-stat">
+                <div class="button-wrapper scroller-msg-stat">
                 </div>
               </div>
             </div>

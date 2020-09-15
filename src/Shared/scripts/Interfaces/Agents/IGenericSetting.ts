@@ -5,7 +5,7 @@ import { SettingKey } from "../../Enums/3xxx-SettingKey";
 export interface IGenericSetting {
   DataType: SettingType;
   DefaultValue: any;
-  Friendly: string;
+  FriendlySetting: string;
   HasUi: boolean
   SettingFlavor: SettingFlavor;
   SettingKey: SettingKey;
