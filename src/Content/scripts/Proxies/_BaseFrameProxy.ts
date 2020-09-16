@@ -1,5 +1,5 @@
 import { LoggableBase } from "../Managers/LoggableBase";
-import { FrameProxyMutationEvent_Subject } from "./Desktop/DesktopProxy/Events/FrameProxyMutationEvent/FrameProxyMutatedEvent_Subject";
+import { DTFrameProxyMutationEvent_Subject } from "./Desktop/DesktopProxy/Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
@@ -10,7 +10,7 @@ export class _BaseFrameProxy extends LoggableBase {
   Index: number = -1;
   HTMLIframeElement: HTMLIFrameElement = null;
   Id: GuidData = null;
-  FrameProxyMutationEvent_Subject: FrameProxyMutationEvent_Subject;
+  DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   Discriminator: string = _BaseFrameProxy.name;
 
   constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement) {

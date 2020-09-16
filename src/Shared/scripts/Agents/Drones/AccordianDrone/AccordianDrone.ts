@@ -63,18 +63,15 @@ export class AccordianDrone {
   }
 
   private GetaccordionBodyElem(sib: HTMLElement): HTMLElement {
-    //this.debug().FuncStart(this.GetaccordionContentElem.name);
     var toReturn: HTMLElement;
     if (sib) {
       var siblings = sib.parentElement.getElementsByClassName('accordion-content');
-
       if (siblings) {
         var toReturn = <HTMLElement>siblings[0];
       } else {
         this.Logger.ErrorAndContinue(this.GetaccordionBodyElem.name, 'Sibling not found')
       }
     }
-
     return toReturn;
   }
 

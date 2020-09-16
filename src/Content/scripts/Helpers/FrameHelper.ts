@@ -5,7 +5,7 @@ import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc
 import { _BaseFrameProxy } from "../Proxies/_BaseFrameProxy";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { LoggableBase } from "../Managers/LoggableBase";
-import { CEFrameProxy } from "../Proxies/CEFrameProxy";
+import { DTFrameProxy } from "../Proxies/DTFrameProxy";
 
 export class FrameHelper extends LoggableBase {
   private factoryHelper: FactoryHelper;
@@ -47,32 +47,32 @@ export class FrameHelper extends LoggableBase {
     });
   }
 
-  async GetIFrameAsCEFrameProxy(iframeElem: HTMLIFrameElement): Promise<CEFrameProxy> {
+  async GetIFrameAsDTFrameProxy(iframeElem: HTMLIFrameElement): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       await this.RecipeBasics.WaitForReadyNABHtmlIframeElement(iframeElem)
-        .then(() => this.factoryHelper.CEFrameProxyFactory(iframeElem))
-        .then((result: CEFrameProxy) => resolve(result))
+        .then(() => this.factoryHelper.DTFrameProxyFactory(iframeElem))
+        .then((result: DTFrameProxy) => resolve(result))
         .catch((err) => reject(this.GetIFramesAsBaseFrameProxies.name + ' | ' + err));
     });
   }
 
 
-  async GetIFramesAsCEFrameProxies(dataOneDoc: IDataOneDoc): Promise<CEFrameProxy[]> {
+  async GetIFramesAsDTFrameProxies(dataOneDoc: IDataOneDoc): Promise<DTFrameProxy[]> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
-      var toReturn: CEFrameProxy[] = [];
+      var toReturn: DTFrameProxy[] = [];
       let iframeAr: HTMLIFrameElement[] = this.GetIFramesFromDataOneDoc(dataOneDoc);
 
-      let promiseAr: Promise<CEFrameProxy>[] = [];
+      let promiseAr: Promise<DTFrameProxy>[] = [];
 
       iframeAr.forEach((iframeElem) => {
-        promiseAr.push(this.GetIFrameAsCEFrameProxy(iframeElem));
+        promiseAr.push(this.GetIFrameAsDTFrameProxy(iframeElem));
       });
 
       Promise.all(promiseAr)
-        .then((values: CEFrameProxy[]) => {
-          values.forEach((oneVal: CEFrameProxy) => {
+        .then((values: DTFrameProxy[]) => {
+          values.forEach((oneVal: DTFrameProxy) => {
             toReturn.push(oneVal);
           });
           this.Logger.LogVal('count: ', toReturn.length);

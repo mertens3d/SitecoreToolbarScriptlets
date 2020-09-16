@@ -49,7 +49,7 @@ export class ButtonVisibilityTester extends LoggableBase {
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
 
     visiblityTestResult.Passes = (
-      (stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop && stateOfSitecoreWindow.States.StateOfDesktop.IndexOfActiveFrame > -1)
+      (stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop && stateOfSitecoreWindow.ScWindowStates.StateOfDesktop.IndexOfActiveFrame > -1)
       ||
       (stateOfSitecoreWindow.Meta.WindowType !== ScWindowType.Desktop));
 

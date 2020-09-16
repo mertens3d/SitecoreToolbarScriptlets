@@ -199,7 +199,7 @@ export class UiManager {
       this.ModuleFeedbackOfPopUpState.HydratePopUpStateUI(this.ModuleSnapShots.GetSelectSnapshotId());
       this.ModuleFeedbackOfContentState.HydrateContentStateFeedack(stateOfSitecoreWindow);
       this.ModuleFeedbackOfBrowserState.HydrateFeedackBrowserState(scUrlAgent);
-      this.ModuleSnapShots.HydrateStorageSnapShotModule(stateOfSitecoreWindow, stateOfSitecoreWindow.States, stateOfStorageSnapShots);
+      this.ModuleSnapShots.HydrateStorageSnapShotModule(stateOfSitecoreWindow, stateOfSitecoreWindow.ScWindowStates, stateOfStorageSnapShots);
 
       this.ButtonModulesManager.HydrateUiButtonState(stateOfSitecoreWindow, this.ModuleSnapShots.GetSelectSnapshotId());
       this.ModuleFeedbackOfBrowserState.RefreshUi();

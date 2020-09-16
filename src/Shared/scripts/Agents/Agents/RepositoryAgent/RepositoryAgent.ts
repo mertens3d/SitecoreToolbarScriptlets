@@ -52,30 +52,19 @@ export class RepositoryAgent implements IRepositoryAgent {
 
   ReadDataOfKey(targetKey: string): string {
     this.Logger.FuncStart(this.ReadDataOfKey.name);
-
     let storageValue: string = null;
     let toReturn: string = '';
-
-    this.Logger.LogVal('target key ', targetKey);
-
     storageValue = window.localStorage.getItem(targetKey); // is synchronous
-
     if (storageValue != null) {
-      //this.Logger.LogAsJsonPretty('toReturn', toReturn);
       toReturn = storageValue.toString();
     } else {
       this.Logger.Log(this.ReadDataOfKey.name, "No value returned from storage")
     }
     this.Logger.FuncEnd(this.ReadDataOfKey.name);
-
     return toReturn;
   }
 
   WriteByKey(storageKey: string, jsonString: string): void {
-    //this.Logger.FuncStart(this.WriteByKey.name);
-
     window.localStorage.setItem(storageKey, jsonString);
-
-    //this.Logger.FuncEnd(this.WriteByKey.name);
   }
 }

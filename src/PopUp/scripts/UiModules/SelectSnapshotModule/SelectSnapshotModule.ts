@@ -10,7 +10,7 @@ import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers"
 import { BufferChar } from "../../../../Shared/scripts/Enums/BufferChar";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { IDataStateOfFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfFrame";
+import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
@@ -197,15 +197,15 @@ export class SelectSnapshotModule extends LoggableBase implements IUiModule {
     }
 
     if (data.Meta.WindowType === ScWindowType.Desktop) {
-      if (data.States.StateOfDesktop && (data.States.StateOfDesktop.IndexOfActiveFrame > -1) && data.States.StateOfDesktop.StateOfFrames) {
-        let activeFrame: IDataStateOfFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.States.StateOfDesktop);
+      if (data.ScWindowStates &&    data.ScWindowStates.StateOfDesktop && (data.ScWindowStates.StateOfDesktop.IndexOfActiveFrame > -1) && data.ScWindowStates.StateOfDesktop.StateOfDTFrames) {
+        let activeFrame: IDataStateOfDTFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.ScWindowStates.StateOfDesktop);
         toReturn.StateOfContentEditor = activeFrame.StateOfContentEditor;
         toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);
       } else {
         this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
       }
     }
-    else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.States.StateOfContentEditor && data.States.StateOfContentEditor.StateOfTree) {
+    else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.ScWindowStates.StateOfContentEditor && data.ScWindowStates.StateOfContentEditor.StateOfTree) {
       toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(toReturn.StateOfContentEditor);
     } else {
       this.Logger.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(data.Meta.WindowType));

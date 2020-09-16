@@ -5,7 +5,7 @@ import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
 import { Guid } from "./Guid";
 import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProxy";
-import { CEFrameProxy } from "../../../Content/scripts/Proxies/CEFrameProxy";
+import { DTFrameProxy } from "../../../Content/scripts/Proxies/DTFrameProxy";
 
 export class FactoryHelper extends LoggableBase implements IFactoryHelper {
   SettingsAgent: ISettingsAgent;
@@ -46,19 +46,15 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     return toReturn;
   }
 
-  async CEFrameProxyFactory(iframeElem: HTMLIFrameElement): Promise<CEFrameProxy> {
-    this.Logger.FuncStart(this.CEFrameProxyFactory.name);
-    var toReturn: CEFrameProxy = null;
-
+  async DTFrameProxyFactory(iframeElem: HTMLIFrameElement): Promise<DTFrameProxy> {
+    var toReturn: DTFrameProxy = null;
     if (iframeElem) {
-      var toReturn = new CEFrameProxy(this.Logger, iframeElem);
-      await toReturn.OnReadyInitCEFrameProxy();
+      var toReturn = new DTFrameProxy(this.Logger, iframeElem);
+      await toReturn.OnReadyInitDTFrameProxy();
     } else {
-      this.Logger.ErrorAndThrow(this.CEFrameProxyFactory.name, 'one of these is null');
+      this.Logger.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
     }
-
-    this.Logger.FuncEnd(this.CEFrameProxyFactory.name);
     return toReturn;
   }
 } 

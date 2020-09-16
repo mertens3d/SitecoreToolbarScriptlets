@@ -7,7 +7,7 @@ import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { HindSiteSetting } from "./OneGenericSetting";
+import { HindSiteSetting } from "./HindSiteSetting";
 
 export class SettingsAgent implements ISettingsAgent {
   private SettingsAr: HindSiteSetting[] = [];
@@ -29,10 +29,6 @@ export class SettingsAgent implements ISettingsAgent {
     }
     this.Logger.FuncEnd(this.UpdateSettingsFromPopUpMsg.name);
   }
-
-  //SetContentSettings(currentContentPrefs: IGenericSetting[]) {
-  //  this.SettingsAr = <OneGenericSetting[]>currentContentPrefs;
-  //}
 
   InitSettingsAgent(allDefaultSettings: IGenericSetting[]): void {
     this.Logger.FuncStart(this.InitSettingsAgent.name, allDefaultSettings.length);
@@ -102,8 +98,6 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   CheckBoxSettingChanged(SettingKey: SettingKey, valueAsObj: any): void {
-    //this.Logger.Log(StaticHelpers.SettingKeyAsString(SettingKey));
-    //this.Logger.LogVal('valueAsObj', valueAsObj.toString());
     this.SetByKey(SettingKey, valueAsObj);
   }
 
@@ -133,30 +127,17 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   SetByKey(settingKey: SettingKey, value: any): void {
-    //this.Logger.FuncStart(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
-    //this.Logger.LogAsJsonPretty('value', value);
-
     let foundSetting = this.GetByKey(settingKey);
-
     if (foundSetting) {
       foundSetting.ValueAsObj = value;
-      //if (foundSetting.DefaultValue !== value) {
-      //  foundSetting.ValueAsObj = value;
-      //} else {
-      //  foundSetting.ValueAsObj = null;
-      //}
-
       this.WriteAllSettingValuesToStorage();
     } else {
       this.Logger.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
     }
-    //this.Logger.FuncEnd(this.SetByKey.name, StaticHelpers.SettingKeyAsString(settingKey));
   }
 
   private WriteAllSettingValuesToStorage() {
-    //this.Logger.FuncStart(this.WriteAllSettingValuesToStorage.name);
     let settingValues: IOneGenericSettingForStorage[] = [];
-
     for (var udx = 0; udx < this.SettingsAr.length; udx++) {
       if (this.SettingsAr[udx].ValueAsObj !== null) {
         settingValues.push(
@@ -167,8 +148,6 @@ export class SettingsAgent implements ISettingsAgent {
           });
       }
     }
-
     this.RepoAgent.WriteByKey(PopConst.Const.Storage.KeyGenericSettings, JSON.stringify(settingValues));
-    //this.Logger.FuncEnd(this.WriteAllSettingValuesToStorage.name);
   }
 }

@@ -1,7 +1,7 @@
 ﻿import { IContentEditorProxyMutationEvent_Payload } from "../ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Payload";
-import { CEFrameProxy } from "../../../../CEFrameProxy";
+import { DTFrameProxy } from "../../../../DTFrameProxy";
 
-export interface ICEFrameProxyMutationEvent_Payload {
-  CeFrameProxy: CEFrameProxy;
+export interface IDTFrameProxyMutationEvent_Payload {
+  DTFrameProxy: DTFrameProxy;
   ContentEditorProxyMutationPayload: IContentEditorProxyMutationEvent_Payload;
 }

@@ -20,7 +20,6 @@ export class StaticHelpers {
     } catch (err) {
       toReturn = err;
     }
-
     return toReturn;
   }
 
@@ -97,10 +96,10 @@ export class StaticHelpers {
     if (msg) {
       try {
         toReturn = 'MsgFlag.' + MsgFlag[msg] + '(' + msg + ')';
-      } catch (e) {
+      } catch (err) {
+        console.log(this.MsgFlagAsString.name + ' ' + err);
       }
     }
-
     return 'flag: ' + toReturn;
   }
 }

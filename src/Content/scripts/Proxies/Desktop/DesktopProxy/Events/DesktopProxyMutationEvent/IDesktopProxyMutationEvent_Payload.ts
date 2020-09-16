@@ -1,8 +1,8 @@
-﻿import { CEFrameProxy } from "../../../../CEFrameProxy";
-import { ICEFrameProxyMutationEvent_Payload } from "../FrameProxyMutationEvent/IFrameProxyMutationEvent_Payload";
+﻿import { DTFrameProxy } from "../../../../DTFrameProxy";
+import { IDTFrameProxyMutationEvent_Payload } from "../DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 
 export interface IDesktopProxyMutationEvent_Payload {
-  AddedCEFrameProxies: CEFrameProxy[];
-  FrameProxyMutationEvent_Payload: ICEFrameProxyMutationEvent_Payload;
+  AddedDTFrameProxies: DTFrameProxy[];
+  DTFrameProxyMutationEvent_Payload: IDTFrameProxyMutationEvent_Payload;
   MutatedElement: HTMLElement; //todo - needed?
 }

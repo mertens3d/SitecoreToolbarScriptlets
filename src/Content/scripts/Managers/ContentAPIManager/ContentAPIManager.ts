@@ -1,36 +1,35 @@
-﻿import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
+﻿import { DefaultContentReplyPayload } from "../../../../Shared/scripts/Classes/Defaults/DefaultScWindowState";
+import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
+import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { FactoryHelper } from "../../../../Shared/scripts/Helpers/FactoryHelper";
 import { IHindSiteScWindowApi } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
-import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { IFactoryHelper } from "../../../../Shared/scripts/Interfaces/IFactoryHelper";
 import { RecipeAddNewContentEditorToDesktop } from "../../ContentApi/Recipes/RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop";
 import { RecipePublishActiveCe } from "../../ContentApi/Recipes/RecipePublishActiveCe/RecipePublishActiveCe";
 import { RecipeRemoveItemFromStorage } from "../../ContentApi/Recipes/RecipeRemoveItemFromStorage/RecipeRemoveItemFromStorage";
 import { RecipeSetStateOfSitecoreWindow } from "../../ContentApi/Recipes/RecipeRestore/RecipeRestore";
-import { RecipeSaveState } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
+import { RecipeSaveStateManual } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
 import { RecipeToggleFavorite } from "../../ContentApi/Recipes/RecipeToggleFavorite/RecipeToggleFavorite";
+import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { LoggableBase } from "../LoggableBase";
 import { ScUiManager } from "../SitecoreUiManager/SitecoreUiManager";
-import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IFactoryHelper } from "../../../../Shared/scripts/Interfaces/IFactoryHelper";
-import { DefaultContentReplyPayload } from "../../../../Shared/scripts/Classes/Defaults/DefaultScWindowState";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 
 export class ContentAPIManager extends LoggableBase implements IHindSiteScWindowApi {
   private AtticAgent: IContentAtticAgent;
   private FactoryHelp: IFactoryHelper;
   private ScUiMan: ScUiManager;
   private ScWinMan: IScWindowManager;
-  private SettingsAgent: ISettingsAgent;
   private ToastAgent: IToastAgent;
 
-  constructor(logger: ILoggerAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager, settingsAgent: ISettingsAgent, atticAgent: IContentAtticAgent) {
+  constructor(logger: ILoggerAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager,  atticAgent: IContentAtticAgent) {
     super(logger);
 
     this.Logger.FuncStart(ContentAPIManager.name);
@@ -38,7 +37,6 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     this.ToastAgent = toastAgent;
     this.ScUiMan = scUiMan;
     this.ScWinMan = scWinMan;
-    this.SettingsAgent = settingsAgent;
     this.FactoryHelp = new FactoryHelper(this.Logger);
     this.AtticAgent = atticAgent;
     this.AtticAgent.CleanOutOldAutoSavedData();
@@ -57,9 +55,8 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     return new Promise(async (resolve, reject) => {
       let reply: IDataContentReplyReceivedEvent_Payload = new DefaultContentReplyPayload();
 
-      await this.ScWinMan.GetStateOfSitecoreWindow()
+      await this.ScWinMan.GetStateOfSitecoreWindow(SnapShotFlavor.Live)
         .then((result: IDataStateOfSitecoreWindow) => reply.StateOfSitecoreWindow = result)
-
         .then(() => this.AtticAgent.GetStateOfStorageSnapShots())
         .then((result: IDataStateOfStorageSnapShots) => reply.StateOfStorageSnapShots = result)
         .then(() => reply.ErrorStack = this.Logger.ErrorStack)
@@ -76,7 +73,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
 
   AddCETab(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.SettingsAgent, commandData.DesktopProxy.DesktopStartBarAgent).Execute()
+      await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.DesktopProxy.DesktopStartBarAgent).Execute()
         .then(() => {
           this.ToastAgent.PopUpToastNotification(commandData.ScWinMan.GetTopLevelDoc(), "Success");
           resolve();
@@ -105,7 +102,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
 
   async SaveWindowState(commandData: ICommandHndlrDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeSaveState(commandData);
+      let recipe = new RecipeSaveStateManual(commandData);
       await recipe.Execute()
         .then(resolve)
         .catch((err) => reject(err));

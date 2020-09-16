@@ -1,4 +1,4 @@
-﻿export interface OneParamPair {
+﻿export interface IOneParamPair {
     Key: string;
     value: string;
 }

@@ -3,7 +3,7 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 import { Guid } from "../../../Shared/scripts/Helpers/Guid";
-import { AbsoluteUrl } from "../../../Shared/scripts/Interfaces/AbsoluteUrl";
+import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
@@ -146,7 +146,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
     data.EventMan.Handlers.External.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.MenuState.SelectSnapshotId.Raw);
 
-    let newUrl: AbsoluteUrl = data.EventMan.Handlers.External.BrowserTabAgent.GetFullUrl();
+    let newUrl: IAbsoluteUrl = data.EventMan.Handlers.External.BrowserTabAgent.GetFullUrl();
 
     await data.EventMan.Handlers.External.CreateNewWindow(data, newUrl)
       .catch((ex) => {
@@ -206,7 +206,7 @@ export class HandlersExternalEvent extends LoggableBase {
     })
   }
 
-  CreateNewWindow(data: ICommandHndlrDataForPopUp, tabUrl: AbsoluteUrl): Promise<void> {
+  CreateNewWindow(data: ICommandHndlrDataForPopUp, tabUrl: IAbsoluteUrl): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.CreateNewWindow.name);
 

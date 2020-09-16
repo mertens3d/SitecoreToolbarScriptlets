@@ -1,7 +1,7 @@
 ﻿import { DefaultContentReplyPayload } from "./Defaults/DefaultScWindowState";
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
 import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
-import { DefaultStateOfSitecoreWindow } from "./Defaults/DefaultStateOfSitecoreWindow";
+import { DefaultStateOfSitecoreWindow, DefaultScWindowStates } from "./Defaults/DefaultStateOfSitecoreWindow";
 import { DefaultStateOfSnapshotStorage } from "./Defaults/DefaultStateOfSnapshots";
 import { DefaultStateOfTree } from "./Defaults/DefaultStateOfTree";
 import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
@@ -10,9 +10,9 @@ import { IDataStateOfDesktop } from "../Interfaces/Data/States/IDataStateOfDeskt
 import { IDataStateOfSitecoreWindow } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from "../Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+import { IDataSitecoreWindowStates } from "../Interfaces/Data/States/IDataStates";
 
 export class ScWindowStateValidator extends LoggableBase {
-  
   ValidatePayload(payload: IDataContentReplyReceivedEvent_Payload): IDataContentReplyReceivedEvent_Payload {
     this.Logger.FuncStart(this.ValidatePayload.name);
 
@@ -47,10 +47,19 @@ export class ScWindowStateValidator extends LoggableBase {
       StateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
     }
 
-    StateOfSitecoreWindow.States.StateOfDesktop = this.ValidateStateOfDesktop(StateOfSitecoreWindow.States.StateOfDesktop);
-    StateOfSitecoreWindow.States.StateOfContentEditor = this.ValidateStateOfContentEditor(StateOfSitecoreWindow.States.StateOfContentEditor);
+    StateOfSitecoreWindow.ScWindowStates = this.ValidateScWindowStates(StateOfSitecoreWindow.ScWindowStates);
 
     return StateOfSitecoreWindow;
+  }
+  ValidateScWindowStates(ccWindowStates: IDataSitecoreWindowStates): IDataSitecoreWindowStates {
+    if (!ccWindowStates) {
+      ccWindowStates = new DefaultScWindowStates();
+    }
+
+    ccWindowStates.StateOfDesktop = this.ValidateStateOfDesktop(ccWindowStates.StateOfDesktop);
+    ccWindowStates.StateOfContentEditor = this.ValidateStateOfContentEditor(ccWindowStates.StateOfContentEditor);
+
+    return ccWindowStates;
   }
 
   ValidateStateOfContentEditor(StateOfContentEditor: IDataStateOfContentEditor): IDataStateOfContentEditor {
@@ -74,8 +83,8 @@ export class ScWindowStateValidator extends LoggableBase {
       StateOfDesktop.IndexOfActiveFrame = -1;
     }
 
-    if (!StateOfDesktop.StateOfFrames) {
-      StateOfDesktop.StateOfFrames = [];
+    if (!StateOfDesktop.StateOfDTFrames) {
+      StateOfDesktop.StateOfDTFrames = [];
     }
 
     return StateOfDesktop;

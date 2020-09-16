@@ -1,7 +1,7 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
 import { scMode } from "../../../Enums/scMode";
 import { ScWindowType } from "../../../Enums/scWindowType";
-import { AbsoluteUrl } from "../../../Interfaces/AbsoluteUrl";
+import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
@@ -32,7 +32,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
   GetScWindowType(): ScWindowType {  //absUrl: AbsoluteUrl
     var toReturn: ScWindowType = ScWindowType.Unknown;
 
-    let testPath: AbsoluteUrl = this.BuildFullUrlFromParts();
+    let testPath: IAbsoluteUrl = this.BuildFullUrlFromParts();
     if (testPath) {
       if (testPath.AbsUrl.indexOf(SharedConst.Const.UrlSuffix.Login) > -1) {
         toReturn = ScWindowType.LoginPage;

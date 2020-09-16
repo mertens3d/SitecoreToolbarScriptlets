@@ -1,48 +1,36 @@
-﻿import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
-import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
-import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
-import { RecipeSaveState } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
-import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
-import { CommandHndlrDataForContent } from "../../../../Shared/scripts/Classes/CommandHndlrDataForContent/CommandHndlrDataForContent";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { RecipeAutoSaveState } from "../../ContentApi/Recipes/RecipeAutoSaveState";
+import { LoggableBase } from "../../Managers/LoggableBase";
+import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 
-export class AutoSnapShotAgent {
-  private SettingsAgent: ISettingsAgent;
-  private Logger: ILoggerAgent;
-  private AutoSaveHasBeenScheduled: boolean = false;
-  private ScWinMan: IScWindowManager;
+export class AutoSnapShotAgent extends LoggableBase {
   private AtticAgent: IContentAtticAgent;
-  private ScUiMan: ScUiManager;
-  private ToastAgent: IToastAgent;
+  private AutoSaveHasBeenScheduled: boolean = false;
+  private LastKnownSavedState: IDataStateOfSitecoreWindow = null;
+  private ScWinMan: IScWindowManager;
+  private SettingsAgent: ISettingsAgent;
+  private RecipeAutoSaveState: RecipeAutoSaveState;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, scWinMan: IScWindowManager,
-    atticAgent: IContentAtticAgent, scUiMan: ScUiManager,  toastAgent: IToastAgent
-  ) {
-    this.Logger = logger;
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, scWinMan: IScWindowManager, atticAgent: IContentAtticAgent) {
+    super(logger);
     this.SettingsAgent = settingsAgent;
     this.ScWinMan = scWinMan;
     this.AtticAgent = atticAgent;
-    this.ScUiMan = scUiMan;
-    this.ToastAgent = toastAgent;
+    this.RecipeAutoSaveState = new RecipeAutoSaveState(this.Logger, this.ScWinMan, this.AtticAgent);
   }
 
   async AutoSaveSnapShot() {
     this.Logger.FuncStart(this.AutoSaveSnapShot.name);
 
-    let commandData: ICommandHndlrDataForContent = new CommandHndlrDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent);
-
-    commandData.TargetSnapShotFlavor= SnapShotFlavor.Autosave;
-
-    let recipeSaveState: RecipeSaveState = new RecipeSaveState(commandData);
-
-    await recipeSaveState.Execute();
+    this.RecipeAutoSaveState.ExecuteAsync(this.LastKnownSavedState)
+      .then((result: IDataStateOfSitecoreWindow) => this.LastKnownSavedState = result);
 
     this.Logger.FuncEnd(this.AutoSaveSnapShot.name);
   }
@@ -62,7 +50,7 @@ export class AutoSnapShotAgent {
 
         window.setInterval(() => {
           self.AutoSaveSnapShot();
-        }, intervalMs)
+        }, intervalMs / SharedConst.Const.Debug.SpeedUpAutoSaveIntervalFactor)
 
         this.AutoSaveHasBeenScheduled = true;
       }

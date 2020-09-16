@@ -1,7 +1,9 @@
 ﻿import { GuidData } from "./GuidData";
 
 export class Guid {
+
   private static ShortGuidLength: number = 4;
+
   static NewRandomGuid(): GuidData {
     //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
     let guidData: GuidData = new GuidData();

@@ -1,4 +1,4 @@
-﻿import { CommandButtonEvents } from "./CommandButtonEvents";
+﻿import { CommandButtonEvents } from "../Enums/CommandButtonEvents";
 //export interface IHandlers {
 //  External: HandlersExternal,
 //  Internal: HandlersInternal,

@@ -9,7 +9,7 @@ import { IOneCommand } from "../../../Shared/scripts/Interfaces/IOneCommand";
 import { ButtonVisibilityTester } from "../Managers/UiManager/ButtonVisibilityTests";
 import { VisiblityTestResults } from "../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { MenuCommand } from "../../../Shared/scripts/Enums/2xxx-MenuCommand";
-import { ModuleType } from "../../../Shared/scripts/Interfaces/CommandButtonEvents";
+import { ModuleType } from "../../../Shared/scripts/Enums/CommandButtonEvents";
 
 export class CommandButtonModule extends LoggableBase implements IUiModule {
   private Command: IOneCommand;

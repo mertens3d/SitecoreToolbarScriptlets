@@ -14,7 +14,8 @@ import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IC
 import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { IScWindowManager } from '../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { ISettingsAgent, InitResultsScWindowManager } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { InitResultsScWindowManager, ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { SharedConst } from '../../Shared/scripts/SharedConst';
 import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent/AutoSnapShotAgent';
 import { ContentAtticAgent } from './Agents/ContentAtticAgent/ContentAtticAgent';
 import { MiscAgent } from './Agents/MiscAgent/MiscAgent';
@@ -23,8 +24,6 @@ import { ContentAPIManager } from './Managers/ContentAPIManager/ContentAPIManage
 import { ContentMessageManager } from './Managers/ContentMessageManager/ContentMessageManager';
 import { ScWindowManager } from './Managers/ScWindowManager/ScWindowManager';
 import { ScUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
-import { SharedConst } from '../../Shared/scripts/SharedConst';
-import { Guid } from '../../Shared/scripts/Helpers/Guid';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -52,12 +51,10 @@ class ContentEntry {
     let contentMessageMan: ContentMessageManager;
     let scWinMan: IScWindowManager;
 
-
-
     scWinMan = new ScWindowManager(this.Logger, scUiMan, this.MiscAgent, this.ToastAgent, this.AtticAgent, this.ScUrlAgent, this.SettingsAgent);
     scUiMan = new ScUiManager(this.Logger);
 
-    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan, this.SettingsAgent, this.AtticAgent);
+    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan, this.AtticAgent);
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
       this.ContentAPIMan, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan);
@@ -70,8 +67,7 @@ class ContentEntry {
       .then((result: InitResultsScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
 
       .then(() => {
-        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, scWinMan,
-          this.AtticAgent, scUiMan, this.ToastAgent);
+        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, scWinMan, this.AtticAgent);
         autoSnapShotAgent.ScheduleIntervalTasks();
       })
       .then(() => this.Logger.Log('Init success'))
@@ -131,7 +127,5 @@ class ContentEntry {
   }
 }
 
-//document.addEventListener("DOMContentLoaded", function() {
 let contentEntry: ContentEntry = new ContentEntry();
 contentEntry.Main();
-//});

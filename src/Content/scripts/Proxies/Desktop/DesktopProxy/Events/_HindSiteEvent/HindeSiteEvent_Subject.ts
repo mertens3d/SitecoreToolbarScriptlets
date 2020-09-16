@@ -10,8 +10,6 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
   constructor(logger: ILoggerAgent, friendly: string) {
     super(logger);
     this.Friendly_Subject = friendly;
-    this.Logger.InstantiateStart(this.Friendly_Subject);
-    this.Logger.InstantiateEnd(this.Friendly_Subject);
   }
 
   protected HasObservers(): boolean {
@@ -19,9 +17,8 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
   }
 
   RegisterObserver(observer: IHindSiteEvent_Observer<T>): void {
-    this.Logger.FuncStart(this.RegisterObserver.name);
     if (observer) {
-      this.Logger.Log(observer.Friendly + ' to ' + this.Friendly_Subject);
+      this.Logger.Log(this.RegisterObserver.name + ' ' + observer.Friendly + ' to ' + this.Friendly_Subject);
 
       if (this.ObserverCollection.indexOf(observer) < 0) {
         this.ObserverCollection.push(observer);
@@ -31,7 +28,6 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
     } else {
       this.Logger.ErrorAndThrow(this.RegisterObserver.name, 'Observer is null');
     }
-    this.Logger.FuncEnd(this.RegisterObserver.name);
   }
 
   UnregisterObserver(observer: IHindSiteEvent_Observer<T>): void {

@@ -2,7 +2,7 @@ import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
 import { IGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { CommandButtonEvents } from '../../../Shared/scripts/Interfaces/CommandButtonEvents';
+import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
 import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { Handlers } from './Handlers';
