@@ -4,10 +4,11 @@ import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerA
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
 import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
-import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
 import { Handlers } from './Handlers';
 import { UiManager } from './UiManager/UiManager';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+import { IMenuCommandParams, IMenuCommandParamsBucket } from '../../../Shared/scripts/Interfaces/MenuCommand';
+import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 
 export class EventManager extends LoggableBase {
   Handlers: Handlers
@@ -22,11 +23,11 @@ export class EventManager extends LoggableBase {
     this.Handlers = handlers;
   }
 
-  InitEventManager(allCommands: IOneCommand[]): void {
+  InitEventManager(menuCommandParamsBucket: IMenuCommandParamsBucket): void {
     this.Logger.FuncStart(this.InitEventManager.name);
 
     try {
-      this.__wireAllMenuButtons(allCommands);
+      this.WireAllMenuButtons(menuCommandParamsBucket);
       this.WireUiToSettings();
     } catch (err) {
       this.Logger.ErrorAndThrow(this.InitEventManager.name, err);
@@ -34,7 +35,7 @@ export class EventManager extends LoggableBase {
     this.Logger.FuncEnd(this.InitEventManager.name);
   }
 
-  async TriggerPingEventAsync(pingCommand: IOneCommand): Promise<void> {
+  async TriggerPingEventAsync(pingCommand: IMenuCommandParams): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);
 
     let data = this.BuildCommandData(pingCommand);
@@ -72,7 +73,7 @@ export class EventManager extends LoggableBase {
             })
           }
           else if (oneSetting.DataType === SettingType.Accordion) {
-            this.UiMan.AccordianManager.AddAccordianDrone(oneSetting, uiElem);
+            this.UiMan.AccordianModuleManager.AddAccordianDrone(oneSetting, uiElem);
           }
           else if (oneSetting.DataType == SettingType.Number) {
             let self = this;
@@ -88,31 +89,44 @@ export class EventManager extends LoggableBase {
     this.Logger.FuncEnd(this.WireUiToSettings.name);
   }
 
-  private __wireAllMenuButtons(allCommands: IOneCommand[]) {
-    this.Logger.FuncStart(this.__wireAllMenuButtons.name);
+  private WireAllMenuButtons(menuCommandParamsBucket: IMenuCommandParamsBucket) {
+    this.Logger.FuncStart(this.WireAllMenuButtons.name);
 
-    // --------------- hindsite
-    for (var idx = 0; idx < allCommands.length; idx++) {
-      let oneCommand: IOneCommand = allCommands[idx];
-      this.__wireOneMenuButtonListener(oneCommand);
+    if (menuCommandParamsBucket && menuCommandParamsBucket.MenuCommandParamsAr) {
+      menuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandParams) => {
+        if (menuCommandParams.PlaceHolderSelector && menuCommandParams.PlaceHolderSelector.length > 0) {
+          this.WireOneMenuButtonListener(menuCommandParams);
+        } else {
+          this.Logger.Log('No ui for this command: ' + MenuCommandKey[menuCommandParams.MenuCommandKey]);
+        }
+      })
+    } else {
+      this.Logger.ErrorAndThrow(this.WireAllMenuButtons.name, 'no bucket or no array inside');
     }
 
-    this.Logger.FuncEnd(this.__wireAllMenuButtons.name);
+    this.Logger.FuncEnd(this.WireAllMenuButtons.name);
   }
 
-  private __wireOneMenuButtonListener(oneCommand: IOneCommand): void {
-    //this.Logger.FuncStart(this.__wireOneMenuButtonListener.name, oneCommand.ButtonSelector)
-    var targetElem: HTMLElement = this.UiMan.GetButtonByIdOrSelector(oneCommand.PlaceHolderSelector);
-
-    if (oneCommand.EventData.Event === CommandButtonEvents.OnSingleClick) {
-      this.WireSingleClickEvent(oneCommand, targetElem);
-    } else if (oneCommand.EventData.Event === CommandButtonEvents.OnDoubleClick) {
-      this.__wireDoubleClickEvent(oneCommand, targetElem)
+  private WireOneMenuButtonListener(oneCommand: IMenuCommandParams): void {
+    this.Logger.FuncStart(this.WireOneMenuButtonListener.name);
+    if (oneCommand && oneCommand.PlaceHolderSelector) {
+      var targetElem: HTMLElement = document.querySelector(oneCommand.PlaceHolderSelector);
+      if (targetElem) {
+        if (oneCommand.EventData.Event === CommandButtonEvents.OnSingleClick) {
+          this.WireSingleClickEvent(oneCommand, targetElem);
+        } else if (oneCommand.EventData.Event === CommandButtonEvents.OnDoubleClick) {
+          this.__wireDoubleClickEvent(oneCommand, targetElem)
+        }
+      } else {
+        this.Logger.ErrorAndThrow(this.WireOneMenuButtonListener.name, 'did not find placeholder: ' + oneCommand.PlaceHolderSelector);
+      }
+    } else {
+      this.Logger.ErrorAndThrow(this.WireOneMenuButtonListener.name, 'no command or no command placeholder');
     }
-
-    //this.Logger.FuncEnd(this.__wireOneMenuButtonListener.name)
+    this.Logger.FuncEnd(this.WireOneMenuButtonListener.name);
   }
-  private __wireDoubleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
+
+  private __wireDoubleClickEvent(oneCommand: IMenuCommandParams, targetElem: HTMLElement): void {
     //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestoreNewTab(evt, this.PopHub); });
     //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.FeedbackLogElement, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
 
@@ -125,7 +139,7 @@ export class EventManager extends LoggableBase {
     }
   }
 
-  private WireSingleClickEvent(oneCommand: IOneCommand, targetElem: HTMLElement): void {
+  private WireSingleClickEvent(oneCommand: IMenuCommandParams, targetElem: HTMLElement): void {
     if (targetElem) {
       let self = this;
       targetElem.addEventListener('click', (evt) => {
@@ -139,12 +153,12 @@ export class EventManager extends LoggableBase {
     }
   }
 
-  private BuildCommandData(oneCommand: IOneCommand): ICommandHndlrDataForPopUp {
+  private BuildCommandData(oneCommand: IMenuCommandParams): ICommandHndlrDataForPopUp {
     var self: EventManager = this;
 
     let data: ICommandHndlrDataForPopUp = {
       EventMan: self,
-      Command: oneCommand,
+      MenuCommandParams: oneCommand,
       Event: oneCommand.EventData,
       Evt: null,
       MenuState: {

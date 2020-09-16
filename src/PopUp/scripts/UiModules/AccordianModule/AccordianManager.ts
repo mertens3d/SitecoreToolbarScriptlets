@@ -1,13 +1,13 @@
-﻿import { IAccordianManager } from "../../../Interfaces/Agents/IAccordianManager";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { AccordianDrone } from "./AccordianDrone";
+﻿import { IAccordianManager } from "../../../../Shared/scripts/Interfaces/Agents/IAccordianManager";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { AccordianModule } from "./AccordianModule";
 
-export class AccordianManager implements IAccordianManager {
+export class AccordianModulesManager implements IAccordianManager {
   private SettingsAgent: ISettingsAgent;
   private Logger: ILoggerAgent;
-  private AllAccordians: AccordianDrone[] = [];
+  private AllAccordians: AccordianModule[] = [];
 
   constructor(loggerAgent: ILoggerAgent, settingsAgent: ISettingsAgent) {
     this.Logger = loggerAgent;
@@ -16,7 +16,7 @@ export class AccordianManager implements IAccordianManager {
 
   async RestoreAccordionState(oneSetting: IGenericSetting): Promise<void> {
     if (oneSetting) {
-      let foundAccordian: AccordianDrone = this.GetAccordianByKey(oneSetting);
+      let foundAccordian: AccordianModule = this.GetAccordianByKey(oneSetting);
 
       if (foundAccordian) {
         foundAccordian.DroneRestoreAccordionState(oneSetting);
@@ -29,15 +29,15 @@ export class AccordianManager implements IAccordianManager {
   }
 
   AddAccordianDrone(oneSetting: IGenericSetting, uiElem: HTMLElement) {
-    let newAccordianDrone = new AccordianDrone(this.Logger, this.SettingsAgent, uiElem, oneSetting);
+    let newAccordianDrone = new AccordianModule(this.Logger, this.SettingsAgent, uiElem, oneSetting);
     this.AllAccordians.push(newAccordianDrone);
   }
 
-  GetAccordianByKey(oneSetting: IGenericSetting): AccordianDrone {
-    let toReturn: AccordianDrone = null;
+  GetAccordianByKey(oneSetting: IGenericSetting): AccordianModule {
+    let toReturn: AccordianModule = null;
 
     for (var idx = 0; idx < this.AllAccordians.length; idx++) {
-      let candidate: AccordianDrone = this.AllAccordians[idx];
+      let candidate: AccordianModule = this.AllAccordians[idx];
       if (candidate.AssociatedSetting.SettingKey === oneSetting.SettingKey) {
         toReturn = candidate;
         break;

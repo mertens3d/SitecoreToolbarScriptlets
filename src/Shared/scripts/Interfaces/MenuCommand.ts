@@ -1,11 +1,15 @@
-﻿import { MenuCommand } from "../Enums/2xxx-MenuCommand";
+﻿import { MenuCommandKey } from "../Enums/2xxx-MenuCommand";
 import { VisibilityType } from "../Enums/VisibilityType";
 import { IEventHandlerData } from "./IEventHandlerData";
-import { ModuleType } from "../Enums/CommandButtonEvents";
+import { ModuleType } from "../Enums/ModuleType";
 
-export interface IOneCommand {
+export interface IMenuCommandParamsBucket {
+
+  MenuCommandParamsAr: IMenuCommandParams[];
+}
+export interface IMenuCommandParams {
   PlaceHolderSelector: string,
-  Command: MenuCommand,
+  MenuCommandKey: MenuCommandKey,
   EventData: IEventHandlerData,
   IconClassName: string,
   InnerText: string

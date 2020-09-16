@@ -1,9 +1,9 @@
-﻿import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
+﻿import { PopConst } from "../../Classes/PopConst";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 
-export class AccordianDrone {
+export class AccordianModule {
   private SettingsAgent: ISettingsAgent;
   private Logger: ILoggerAgent;
    AssociatedSetting: IGenericSetting;

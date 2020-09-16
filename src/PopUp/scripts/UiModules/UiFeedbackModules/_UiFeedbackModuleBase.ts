@@ -1,17 +1,40 @@
-﻿import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
-import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
+﻿import { SharedConst } from "../../../../Shared/scripts/SharedConst";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
+import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 
-export class UiFeedbackModuleBase extends LoggableBase {
-  protected indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';
-  protected lineBreak = '<br/>';
+export class _UiModuleBase extends LoggableBase implements IUiModule {
 
   protected ElementSelector: string;
   protected __targetElement: HTMLElement;
 
-  constructor(selector: string, logger: ILoggerAgent)
-  {
+  constructor(logger: ILoggerAgent, selector: string ) {
     super(logger);
+    this.ElementSelector = selector;
+  }
+
+  Hydrate(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, currentWindowType: ScWindowType, selectSnapShotId: GuidData): void {
+  }
+  Init(): void {
+  }
+  RefreshUi(): void {
+  }
+
+}
+
+export class _UiFeedbackModuleBase extends _UiModuleBase implements IUiModule  {
+  protected indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';
+  protected lineBreak = '<br/>';
+
+  
+  
+
+  constructor(logger: ILoggerAgent, selector: string )
+  {
+    super(logger, selector);
     this.ElementSelector = selector;
   }
 

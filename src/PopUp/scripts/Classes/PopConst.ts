@@ -30,11 +30,10 @@ export class PopConst {
           ToggleFavorite: 'btn-favorite',
           UpdateNickname: 'set-nickname',
           AddCeTab: 'add-ce-tab',
-
         },
       },
     },
-   
+
     ElemId: {
       InputNickname: 'id-input-nickname',
       HindSiteParentInfo: 'spanParentInfo',
@@ -61,7 +60,7 @@ export class PopConst {
     },
     Selector: {
       Btn: {
-        WindowClose: '[id=close-window]',
+       
       },
       Legend: {
         LgndBrowserState: '[id=lgnd-browser-state]',
@@ -74,12 +73,11 @@ export class PopConst {
         LgndSettings: '[id=lgnd-settings]',
       },
       HS: {
-        AdminB: '[id=AdminB]',
         AutoSnapshotBeforeWindowChange: '[id=id-settings-auto-snapshot-on-window-change]',
         BigRed: '[id=BigRed]',
         BuildStamp: '[id=build-stamp]',
         CompactCE: '[id=CompactCE]',
-        Desktop: '[id=Desktop]',
+
         DivOverlayModule: '[id=menu-overlay]',
         DivStateContent: '[id=feedback-div-state-content]',
         FeedbackBrowserState: '[id=feedback-div-browser-state]',
@@ -97,9 +95,7 @@ export class PopConst {
         IdFieldSetDebug: '[id=id-fieldset-debug]',
         EnableLogging: '[id=id-settings-show-log-data]',
         ToggleFavorite: '[id=id-toggle-favorite]',
-        ModeEdit: '[id=sc-mode-edit]',
-        ModeNorm: '[id=Norm]',
-        ModePrev: '[id=Prev]',
+
         PrefAutoLogin: '[id=id-settings-auto-login]',
         PresentationDetails: '[id=PresentationDetails]',
         QuickPublish: '[id=QuickPublish]',
@@ -113,6 +109,14 @@ export class PopConst {
         SettingUseCompactCss: '[id=id-settings-use-compact]',
         TakeSnapshot: '[id=id-take-snapshot]',
         UpdateNicknameB: '[id=id-btn-update-nickname]',
+        ModulePlaceHolders: {
+          BtnAdminB: '[id=id-ph-btn-adminb]',
+          BtnModeEdit: '[id=id-ph-btn-sc-mode-edit]',
+          BtnModeNorm: '[id=id-ph-btn-norm]',
+          BtnModePrev: '[id=id-ph-btn-prev]',
+          Desktop: '[id=id-ph-btn-desktop]',
+          BtnWindowClose: '[id=id-ph-close-window]',
+        }
       },
     },
     Settings: {

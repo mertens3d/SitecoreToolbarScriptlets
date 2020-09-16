@@ -1,49 +1,64 @@
 ﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+import { ModuleType } from '../../../Shared/scripts/Enums/ModuleType';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IOneCommand } from '../../../Shared/scripts/Interfaces/IOneCommand';
-import { ButtonVisibilityTester } from './UiManager/ButtonVisibilityTests';
-import { CommandButtonModule } from '../UiModules/CommandButtonModule';
 import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
+import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent';
+import { IDataStateOfSitecoreWindow } from '../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow';
+import { IMenuCommandParams, IMenuCommandParamsBucket } from '../../../Shared/scripts/Interfaces/MenuCommand';
+import { TypButtonModule } from '../UiModules/ButtonModules/CommandButtonModule';
+import { UiVisibilityTestAgent } from './UiManager/ButtonVisibilityTests';
 
 export class UiStateManager extends LoggableBase {
-  private AllMenuCommands: IOneCommand[];
-  private AllMenuCommandButtons: CommandButtonModule[] = [];
-    Tester: ButtonVisibilityTester;
+  private UiModules: IUiModule[] = [];
+  private UiVisibilityTestAgent: IUiVisibilityTestAgent;
+  private MenuCommandParamsBucket: IMenuCommandParamsBucket;
 
-  constructor(logger: ILoggerAgent, allMenuCommands: IOneCommand[]) {
+  constructor(logger: ILoggerAgent, menuCommandParamsBucket: IMenuCommandParamsBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
     super(logger);
 
     this.Logger.InstantiateStart(UiStateManager.name);
-    this.AllMenuCommands = allMenuCommands;//: IOneCommand[]
+
+    this.UiVisibilityTestAgent = uiVisibilityTestAgent;
+    this.MenuCommandParamsBucket = menuCommandParamsBucket;
+
     this.Logger.InstantiateEnd(UiStateManager.name);
   }
 
   InitButtonStateManager() {
-    this.Tester = new ButtonVisibilityTester(this.Logger);
+    this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
 
     this.BuildCommandButtons();
   }
+
   private BuildCommandButtons() {
-    this.AllMenuCommands.forEach((oneCommand) => {
-      let newButtonCommandModule = new CommandButtonModule(this.Logger, oneCommand, this.Tester);
-      this.AllMenuCommandButtons.push(newButtonCommandModule);
-    });
+    if (this.MenuCommandParamsBucket) {
+
+      this.MenuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandParams) => {
+        if (menuCommandParams.ModuleType === ModuleType.ButtonTyp) {
+          let typeButtonModule = new TypButtonModule(this.Logger, menuCommandParams);
+          this.UiModules.push(typeButtonModule);
+        } else if (menuCommandParams.ModuleType === ModuleType.ButtonClose) {
+        }
+      });
+    } else {
+      this.Logger.ErrorAndThrow(this.BuildCommandButtons.name, 'no bucket');
+    }
+    
   }
 
-  HydrateUiButtonState(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, selectSnapShotId: GuidData): void {
+  HydrateUiModules(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, selectSnapShotId: GuidData): void {
     let currentWindowType: ScWindowType = stateOfSitecoreWindow.Meta.WindowType;
 
-    this.AllMenuCommandButtons.forEach((commandButton) => commandButton.Hydrate(stateOfSitecoreWindow, currentWindowType, selectSnapShotId));
-
+    this.UiModules.forEach((uiModule) => uiModule.Hydrate(stateOfSitecoreWindow, currentWindowType, selectSnapShotId));
   }
 
-  RefreshUiButtonVisibilityStatus(): void {
-    this.Logger.FuncStart(this.RefreshUiButtonVisibilityStatus.name, this.AllMenuCommands.length);
+  RefreshUiModuleVisibilityStatus(): void {
+    this.Logger.FuncStart(this.RefreshUiModuleVisibilityStatus.name, this.MenuCommandParamsBucket.MenuCommandParamsAr.length);
 
-    this.AllMenuCommandButtons.forEach((oneButtonModule) => oneButtonModule.RefreshUi());
+    this.UiModules.forEach((oneButtonModule) => oneButtonModule.RefreshUi());
 
-    this.Logger.FuncEnd(this.RefreshUiButtonVisibilityStatus.name);
+    this.Logger.FuncEnd(this.RefreshUiModuleVisibilityStatus.name);
   }
 }

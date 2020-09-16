@@ -1,6 +1,7 @@
 ﻿import { IDataStateOfSnapShotSelect } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSnapShotSelect";
 import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { StateHelpers } from "../../Classes/StateHelpers";
 import { PopConst } from "../../Classes/PopConst";
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
@@ -18,15 +19,10 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
 import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
 import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
-import { HindeSiteEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/HindeSiteEvent_Subject";
+import { SelectSnapshotModule_Subject } from "./SelectSnapshotModule_Subject";
+import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 
-export class SelectSnapshotModule_Subject extends HindeSiteEvent_Subject<IDataStateOfSnapShotSelect>  {
-  constructor(logger: ILoggerAgent) {
-    super(logger, SelectSnapshotModule_Subject.name);
-  }
-}
-
-export class SelectSnapshotModule extends LoggableBase implements IUiModule {
+export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiModule {
   StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   StateOfStorageSnapShots: IDataStateOfStorageSnapShots;
 
@@ -34,11 +30,14 @@ export class SelectSnapshotModule extends LoggableBase implements IUiModule {
   private StateHelpers: StateHelpers;
   SelectSnapshotModule_Subject: SelectSnapshotModule_Subject;
 
-  constructor(selector: string, logger: ILoggerAgent) {
-    super(logger);
+  constructor(logger: ILoggerAgent, selector: string) {
+    super(logger, selector);
     this.Selector = selector;
     this.SelectSnapshotModule_Subject = new SelectSnapshotModule_Subject(this.Logger);
     this.StateHelpers = new StateHelpers(this.Logger);
+  }
+
+  Hydrate(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, currentWindowType: ScWindowType, selectSnapShotId: GuidData): void {
   }
 
   Init(): void {
@@ -197,7 +196,7 @@ export class SelectSnapshotModule extends LoggableBase implements IUiModule {
     }
 
     if (data.Meta.WindowType === ScWindowType.Desktop) {
-      if (data.ScWindowStates &&    data.ScWindowStates.StateOfDesktop && (data.ScWindowStates.StateOfDesktop.IndexOfActiveFrame > -1) && data.ScWindowStates.StateOfDesktop.StateOfDTFrames) {
+      if (data.ScWindowStates && data.ScWindowStates.StateOfDesktop && (data.ScWindowStates.StateOfDesktop.IndexOfActiveFrame > -1) && data.ScWindowStates.StateOfDesktop.StateOfDTFrames) {
         let activeFrame: IDataStateOfDTFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.ScWindowStates.StateOfDesktop);
         toReturn.StateOfContentEditor = activeFrame.StateOfContentEditor;
         toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);

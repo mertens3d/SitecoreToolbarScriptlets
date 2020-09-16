@@ -1,16 +1,20 @@
-﻿import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../Shared/scripts/Interfaces/Agents/IUiModule";
+﻿import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { IMenuCommandParams } from "../../../../Shared/scripts/Interfaces/MenuCommand";
+import { _baseButtonModule } from "./CommandButtonModule";
 
-export class CancelButtonModule implements IUiModule {
+export class CancelButtonModule extends _baseButtonModule implements IUiModule {
   private Selector: string;
-  private Logger: ILoggerAgent;
 
-  constructor(selector: string, loggerAgent: ILoggerAgent) {
+  constructor(loggerAgent: ILoggerAgent, selector: string, menuCommandParameters: IMenuCommandParams) {
+    super(loggerAgent, menuCommandParameters)
     this.Logger = loggerAgent;
     this.Selector = selector;
   }
+
   Init(): void {
   }
+
   RefreshUi(): void {
   }
 

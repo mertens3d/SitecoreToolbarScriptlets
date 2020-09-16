@@ -7,7 +7,7 @@ import { HindSiteSetting } from "../../Shared/scripts/Agents/Agents/SettingsAgen
 import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
 import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
-import { MenuCommand } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
+import { MenuCommandKey } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
@@ -18,8 +18,8 @@ import { Handlers } from "./Managers/Handlers";
 import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessagesBroker";
 import { BrowserTabAgent } from "./Managers/TabManager";
 import { UiManager } from "./Managers/UiManager/UiManager";
-import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages/FeedbackModuleMessages";
 import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
+import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
@@ -30,7 +30,7 @@ class PopUpEntry {
   uiMan: UiManager;
   FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
   eventMan: EventManager;
-  commandMan: any;
+  commandMan: CommandManager;
   browserTabAgent: BrowserTabAgent;
   PopUpMessageAgent: PopUpMessagesBroker;
 
@@ -44,7 +44,7 @@ class PopUpEntry {
 
       await this.InitHub()
         .then(() => this.WireCustomevents())
-        .then(() => this.eventMan.TriggerPingEventAsync(this.commandMan.GetCommandById(MenuCommand.Ping)))
+        .then(() => this.eventMan.TriggerPingEventAsync(this.commandMan.GetMenuCommandParamsByKey(MenuCommandKey.Ping)))
         .then(() => this.Logger.Log(this.main.name + ' completed'))
         .catch((err) => console.log(err));
 
@@ -106,7 +106,7 @@ class PopUpEntry {
 
   WireCustomevents() {
     this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(new ContentReplyReceivedEvent_Observer(this.Logger, this.uiMan));
-    this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(PopConst.Const.Selector.HS.FeedbackMessages, this.Logger);
+    this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.FeedbackMessages);
     this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(this.FeedbackModuleMsg_Observer)
   }
 
@@ -114,7 +114,7 @@ class PopUpEntry {
     try {
       this.uiMan.InitUiManager();
 
-      this.eventMan.InitEventManager(this.commandMan.AllMenuCommands);
+      this.eventMan.InitEventManager(this.commandMan.MenuCommandParamsBucket);
 
       await this.scUrlAgent.InitScUrlAgent()
         .catch((err) => {
