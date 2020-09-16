@@ -100,17 +100,17 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\ButtonVisibilityTests.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\CommandButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\CommandButtonModule.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SelectSnapshotModule\SelectSnapshotModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\CancelButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\CancelButtonModule.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\StateHelpers.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleBrowserState\FeedbackModuleBrowserState.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleBrowserState.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingsModule\SettingsModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModulePopUpState\FeedbackModulePopUpState.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleContentState\FeedbackModuleContentState.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleMessages\FeedbackModuleMessages.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\UiFeedbackModuleBase\UiFeedbackModuleBase.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\UiFeedbackModuleLog\UiFeedbackModuleLog.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModulePopUpState.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleContentState.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleMessages.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\_UiFeedbackModuleBase.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\UiFeedbackModuleLog.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersExternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersInternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\AllCommands.ts" />
@@ -125,7 +125,7 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\TabManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiButtonStateManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\UrlAgent\ScUrlAgent.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\AccordianDrone\AccordianManager.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\AccordianModule\AccordianManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\RollingLogIdDrone\RollingLogIdDrone.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\emptyFile.ts" />
@@ -199,7 +199,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IError.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IEventHandlerData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IFactoryHelper.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneCommand.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\MenuCommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISelectionHeaders.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataStateOfStorageSnapShots.ts" />
@@ -314,8 +314,6 @@
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
     <Folder Include="src\PopUp\scripts\Managers\MessageManager\" />
-    <Folder Include="src\PopUp\scripts\Modules\" />
-    <Folder Include="src\PopUp\scripts\Promises\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentEditorProxy.ts" />
@@ -333,7 +331,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IdataOneSetting.ts" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\AccordianDrone\AccordianDrone.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\AccordianModule\AccordianModule.ts" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultScWindowState.ts" />
