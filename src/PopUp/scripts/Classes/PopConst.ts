@@ -60,7 +60,6 @@ export class PopConst {
     },
     Selector: {
       Btn: {
-       
       },
       Legend: {
         LgndBrowserState: '[id=lgnd-browser-state]',
@@ -74,9 +73,9 @@ export class PopConst {
       },
       HS: {
         AutoSnapshotBeforeWindowChange: '[id=id-settings-auto-snapshot-on-window-change]',
-        BigRed: '[id=BigRed]',
+
         BuildStamp: '[id=build-stamp]',
-        CompactCE: '[id=CompactCE]',
+        
 
         DivOverlayModule: '[id=menu-overlay]',
         DivStateContent: '[id=feedback-div-state-content]',
@@ -86,7 +85,6 @@ export class PopConst {
         FeedbackLogElement: '[id=feedback-pop-up-log]',
         FeedbackMessages: '[id=feedback-messages]',
         FeedbackStorage: '[id=feedback-storage]',
-        GoCE: '[id=CE]',
         HsCancel: '[id=Cancel]',
         HsRemoveFromStorage: '[id=RemoveOneFromLocalStorage]',
         HsRestoreWindowStateSameTab: '[id=id-restore-state-same-tab]',
@@ -97,8 +95,7 @@ export class PopConst {
         ToggleFavorite: '[id=id-toggle-favorite]',
 
         PrefAutoLogin: '[id=id-settings-auto-login]',
-        PresentationDetails: '[id=PresentationDetails]',
-        QuickPublish: '[id=QuickPublish]',
+      
         SelStateSnapShot: '[id=selState]',
         SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',
         SettingAutoSaveMaxCount: '[id=id-settings-auto-save-max-count]',
@@ -116,6 +113,11 @@ export class PopConst {
           BtnModePrev: '[id=id-ph-btn-prev]',
           Desktop: '[id=id-ph-btn-desktop]',
           BtnWindowClose: '[id=id-ph-close-window]',
+          BtnGoContentEditor: '[id=id-ph-btn-go-content-editor]',
+          BtnAddContentEditor: '[id=id-ph-btn-add-drframe-content-editor]',
+          BtnQuickPublish: '[id=id-ph-btn-quick-publish]',
+          BtnPresentationDetails: '[id=id-ph-btn-presentation-details]',
+          BtnCompactScUi: '[id=id-ph-btn-compact-sc-ui]',
         }
       },
     },

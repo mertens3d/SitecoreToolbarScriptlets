@@ -105,9 +105,14 @@ class PopUpEntry {
   }
 
   WireCustomevents() {
-    this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(new ContentReplyReceivedEvent_Observer(this.Logger, this.uiMan));
+    this.Logger.FuncStart(this.WireCustomevents.name);
+
+    let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, this.uiMan);
+    this.handlers.External.ContentReplyReceivedEvent_Observer.RegisterObserver(contentReplyReceivedEvent_Observer);
+
     this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.FeedbackMessages);
-    this.handlers.External.ValidMessageRecievedEvent.RegisterObserver(this.FeedbackModuleMsg_Observer)
+    this.handlers.External.ContentReplyReceivedEvent_Observer.RegisterObserver(this.FeedbackModuleMsg_Observer)
+    this.Logger.FuncEnd(this.WireCustomevents.name);
   }
 
   async InitHub(): Promise<void> {

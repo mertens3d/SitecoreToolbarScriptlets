@@ -1,13 +1,9 @@
-﻿import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+﻿import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
 import { IAccordianManager } from "../../../../Shared/scripts/Interfaces/Agents/IAccordianManager";
-import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
+import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
-import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { _UiModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 
 export class SettingsModule extends _UiModuleBase implements IUiModule {
@@ -19,9 +15,6 @@ export class SettingsModule extends _UiModuleBase implements IUiModule {
     super(logger, selector)
     this.SettingsAgent = settingsAgent;
     this.AccordianManager = accordianManager;
-  }
-
-  Hydrate(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, currentWindowType: ScWindowType, selectSnapShotId: GuidData): void {
   }
 
   Init(): void {

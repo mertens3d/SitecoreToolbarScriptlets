@@ -1,7 +1,6 @@
-﻿import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
+﻿import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { UiRefreshData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
+import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase.1";
 
 export class FeedbackModuleContentState extends _UiFeedbackModuleBase implements IUiModule {
 
@@ -12,9 +11,9 @@ export class FeedbackModuleContentState extends _UiFeedbackModuleBase implements
   RefreshUi(): void {
   }
 
-  HydrateContentStateFeedack(stateOfSitecoreWindow: IDataStateOfSitecoreWindow) {
+  HydrateContentStateFeedack(refreshData: UiRefreshData) {
     var allStateText: string = '';
-    allStateText += JSON.stringify(stateOfSitecoreWindow, null, 1);
+    allStateText += JSON.stringify(refreshData.StateOfSitecoreWindow, null, 1);
     this.WriteSingleLine(allStateText);
   }
 }

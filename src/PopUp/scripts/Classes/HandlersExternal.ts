@@ -16,13 +16,13 @@ import { ContentReplyReceivedEvent_Subject } from "../../../Content/scripts/Prox
 export class HandlersExternalEvent extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
   private BrowserTabAgent: BrowserTabAgent;
-  ValidMessageRecievedEvent: ContentReplyReceivedEvent_Subject;
+  ContentReplyReceivedEvent_Observer: ContentReplyReceivedEvent_Subject;
   private MessageBroker: PopUpMessagesBroker;
 
   constructor(logger: ILoggerAgent,  settingsAgent: ISettingsAgent, browserTabAgent: BrowserTabAgent, popUpMessagesBroker: PopUpMessagesBroker) {
     super(logger);
     this.SettingsAgent = settingsAgent;
-    this.ValidMessageRecievedEvent = new ContentReplyReceivedEvent_Subject(this.Logger);
+    this.ContentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Subject(this.Logger);
     this.BrowserTabAgent = browserTabAgent;
     this.MessageBroker = popUpMessagesBroker;
   }
@@ -53,7 +53,7 @@ export class HandlersExternalEvent extends LoggableBase {
       //todo - put back?  this.UiMan.ClearCancelFlag();
 
       this.SendMessageToContentAsync(sendMsgPlayload)
-        .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.ValidMessageRecievedEvent.NotifyObservers(replyMessagePayload))
+        .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.ContentReplyReceivedEvent_Observer.NotifyObservers(replyMessagePayload))
         .then(() => resolve())
         .catch((err) => reject(err));
 

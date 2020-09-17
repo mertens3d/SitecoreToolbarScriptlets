@@ -1,26 +1,24 @@
-﻿import { IDataStateOfSnapShotSelect } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSnapShotSelect";
-import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
-import { StateHelpers } from "../../Classes/StateHelpers";
-import { PopConst } from "../../Classes/PopConst";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IDataSitecoreWindowStates } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
-import { BufferDirection } from "../../../../Shared/scripts/Enums/BufferDirection";
-import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { BufferChar } from "../../../../Shared/scripts/Enums/BufferChar";
-import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
+import { BufferDirection } from "../../../../Shared/scripts/Enums/BufferDirection";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
-import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
+import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
-import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataStateOfSnapShotSelect } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSnapShotSelect";
+import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
+import { UiRefreshData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
+import { SharedConst } from "../../../../Shared/scripts/SharedConst";
+import { PopConst } from "../../Classes/PopConst";
+import { StateHelpers } from "../../Classes/StateHelpers";
+import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase.1";
 import { SelectSnapshotModule_Subject } from "./SelectSnapshotModule_Subject";
-import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 
 export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiModule {
   StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
@@ -35,9 +33,6 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
     this.Selector = selector;
     this.SelectSnapshotModule_Subject = new SelectSnapshotModule_Subject(this.Logger);
     this.StateHelpers = new StateHelpers(this.Logger);
-  }
-
-  Hydrate(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, currentWindowType: ScWindowType, selectSnapShotId: GuidData): void {
   }
 
   Init(): void {
@@ -61,13 +56,13 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
     this.Logger.FuncEnd(this.AssignOnChangeEvent.name, selector);
   }
 
-  HydrateStorageSnapShotModule(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, states: IDataSitecoreWindowStates, stateOfStorageSnapShots: IDataStateOfStorageSnapShots) {
-    this.StateOfSitecoreWindow = stateOfSitecoreWindow;
-    this.StateOfStorageSnapShots = stateOfStorageSnapShots;
-    this.PopulateStateOfSnapShotSelectElement();
+  HydrateStorageSnapShotModule(refreshData: UiRefreshData) {
+    this.StateOfSitecoreWindow = refreshData.StateOfSitecoreWindow;
+    this.StateOfStorageSnapShots = refreshData.StateOfStorageSnapShots;
   }
 
   RefreshUi(): void {
+    this.PopulateStateOfSnapShotSelectElement();
   }
 
   private __getSelectElem(): HTMLSelectElement {
@@ -201,7 +196,7 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
         toReturn.StateOfContentEditor = activeFrame.StateOfContentEditor;
         toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);
       } else {
-        this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
+        //this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
       }
     }
     else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.ScWindowStates.StateOfContentEditor && data.ScWindowStates.StateOfContentEditor.StateOfTree) {

@@ -1,9 +1,7 @@
-﻿import { IDataStateOfSitecoreWindow } from "../Data/States/IDataStateOfSitecoreWindow";
-import { ScWindowType } from "../../Enums/scWindowType";
-import { GuidData } from "../../Helpers/GuidData";
+﻿import { UiRefreshData } from "../MenuCommand";
 
 export interface IUiModule {
-  Hydrate(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, currentWindowType: ScWindowType, selectSnapShotId: GuidData): void;
+  Hydrate(refreshData: UiRefreshData ): void;
   Init(): void;
   RefreshUi(): void;
 }

@@ -1,4 +1,4 @@
-﻿import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
+﻿import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase.1";
 import { ILoggerWriter } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerWriter";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 

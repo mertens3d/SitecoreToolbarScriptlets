@@ -7,8 +7,9 @@ import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/IC
 import { Handlers } from './Handlers';
 import { UiManager } from './UiManager/UiManager';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
-import { IMenuCommandParams, IMenuCommandParamsBucket } from '../../../Shared/scripts/Interfaces/MenuCommand';
+import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
+import { IMenuCommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 
 export class EventManager extends LoggableBase {
   Handlers: Handlers
@@ -23,7 +24,7 @@ export class EventManager extends LoggableBase {
     this.Handlers = handlers;
   }
 
-  InitEventManager(menuCommandParamsBucket: IMenuCommandParamsBucket): void {
+  InitEventManager(menuCommandParamsBucket: IMenuCommandDefinitionBucket): void {
     this.Logger.FuncStart(this.InitEventManager.name);
 
     try {
@@ -35,7 +36,7 @@ export class EventManager extends LoggableBase {
     this.Logger.FuncEnd(this.InitEventManager.name);
   }
 
-  async TriggerPingEventAsync(pingCommand: IMenuCommandParams): Promise<void> {
+  async TriggerPingEventAsync(pingCommand: IMenuCommandDefinition): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);
 
     let data = this.BuildCommandData(pingCommand);
@@ -89,11 +90,11 @@ export class EventManager extends LoggableBase {
     this.Logger.FuncEnd(this.WireUiToSettings.name);
   }
 
-  private WireAllMenuButtons(menuCommandParamsBucket: IMenuCommandParamsBucket) {
+  private WireAllMenuButtons(menuCommandParamsBucket: IMenuCommandDefinitionBucket) {
     this.Logger.FuncStart(this.WireAllMenuButtons.name);
 
     if (menuCommandParamsBucket && menuCommandParamsBucket.MenuCommandParamsAr) {
-      menuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandParams) => {
+      menuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
         if (menuCommandParams.PlaceHolderSelector && menuCommandParams.PlaceHolderSelector.length > 0) {
           this.WireOneMenuButtonListener(menuCommandParams);
         } else {
@@ -107,15 +108,14 @@ export class EventManager extends LoggableBase {
     this.Logger.FuncEnd(this.WireAllMenuButtons.name);
   }
 
-  private WireOneMenuButtonListener(oneCommand: IMenuCommandParams): void {
-    this.Logger.FuncStart(this.WireOneMenuButtonListener.name);
+  private WireOneMenuButtonListener(oneCommand: IMenuCommandDefinition): void {
     if (oneCommand && oneCommand.PlaceHolderSelector) {
       var targetElem: HTMLElement = document.querySelector(oneCommand.PlaceHolderSelector);
       if (targetElem) {
         if (oneCommand.EventData.Event === CommandButtonEvents.OnSingleClick) {
           this.WireSingleClickEvent(oneCommand, targetElem);
         } else if (oneCommand.EventData.Event === CommandButtonEvents.OnDoubleClick) {
-          this.__wireDoubleClickEvent(oneCommand, targetElem)
+          this.WireDoubleClickEvent(oneCommand, targetElem)
         }
       } else {
         this.Logger.ErrorAndThrow(this.WireOneMenuButtonListener.name, 'did not find placeholder: ' + oneCommand.PlaceHolderSelector);
@@ -123,10 +123,9 @@ export class EventManager extends LoggableBase {
     } else {
       this.Logger.ErrorAndThrow(this.WireOneMenuButtonListener.name, 'no command or no command placeholder');
     }
-    this.Logger.FuncEnd(this.WireOneMenuButtonListener.name);
   }
 
-  private __wireDoubleClickEvent(oneCommand: IMenuCommandParams, targetElem: HTMLElement): void {
+  private WireDoubleClickEvent(oneCommand: IMenuCommandDefinition, targetElem: HTMLElement): void {
     //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestoreNewTab(evt, this.PopHub); });
     //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.FeedbackLogElement, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
 
@@ -139,7 +138,7 @@ export class EventManager extends LoggableBase {
     }
   }
 
-  private WireSingleClickEvent(oneCommand: IMenuCommandParams, targetElem: HTMLElement): void {
+  private WireSingleClickEvent(oneCommand: IMenuCommandDefinition, targetElem: HTMLElement): void {
     if (targetElem) {
       let self = this;
       targetElem.addEventListener('click', (evt) => {
@@ -153,7 +152,7 @@ export class EventManager extends LoggableBase {
     }
   }
 
-  private BuildCommandData(oneCommand: IMenuCommandParams): ICommandHndlrDataForPopUp {
+  private BuildCommandData(oneCommand: IMenuCommandDefinition): ICommandHndlrDataForPopUp {
     var self: EventManager = this;
 
     let data: ICommandHndlrDataForPopUp = {

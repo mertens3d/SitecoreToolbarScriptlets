@@ -1,7 +1,6 @@
 ﻿import { GuidData } from "./GuidData";
 
 export class Guid {
-
   private static ShortGuidLength: number = 4;
 
   static NewRandomGuid(): GuidData {
@@ -29,7 +28,9 @@ export class Guid {
   static AsShort(guidData: GuidData): string {
     var toReturn: string = '{error}';
 
-    toReturn = guidData.Raw.substr(0, Guid.ShortGuidLength);
+    if (guidData) {
+      toReturn = guidData.Raw.substr(0, Guid.ShortGuidLength);
+    }
 
     return toReturn;
   }

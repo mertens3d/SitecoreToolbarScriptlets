@@ -7,10 +7,11 @@ import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButton
 import { ModuleType } from "../../../Shared/scripts/Enums/ModuleType";
 import { Handlers } from '../Managers/Handlers';
 import { PopConst } from './PopConst';
-import { IMenuCommandParams, IMenuCommandParamsBucket } from '../../../Shared/scripts/Interfaces/MenuCommand';
+import { IMenuCommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
+import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 
 export class CommandManager extends LoggableBase {
-  public MenuCommandParamsBucket: IMenuCommandParamsBucket;
+  public MenuCommandParamsBucket: IMenuCommandDefinitionBucket;
   private Handlers: Handlers;
 
   constructor(logger: ILoggerAgent, handlers: Handlers) {
@@ -19,10 +20,10 @@ export class CommandManager extends LoggableBase {
     this.MenuCommandParamsBucket = this.BuildMenuCommandParamsBucket();
   }
 
-  GetMenuCommandParamsByKey(needleCommand: MenuCommandKey): IMenuCommandParams {
-    let toReturn: IMenuCommandParams = null;
+  GetMenuCommandParamsByKey(needleCommand: MenuCommandKey): IMenuCommandDefinition {
+    let toReturn: IMenuCommandDefinition = null;
     for (var idx = 0; idx < this.MenuCommandParamsBucket.MenuCommandParamsAr.length; idx++) {
-      let candidate: IMenuCommandParams = this.MenuCommandParamsBucket[idx];
+      let candidate: IMenuCommandDefinition = this.MenuCommandParamsBucket.MenuCommandParamsAr[idx];
       if (candidate.MenuCommandKey === needleCommand) {
         toReturn = candidate;
         break;
@@ -31,8 +32,8 @@ export class CommandManager extends LoggableBase {
     return toReturn;
   }
 
-  private BuildMenuCommandParamsBucket(): IMenuCommandParamsBucket {
-    let toReturn: IMenuCommandParamsBucket =
+  private BuildMenuCommandParamsBucket(): IMenuCommandDefinitionBucket {
+    let toReturn: IMenuCommandDefinitionBucket =
     {
       MenuCommandParamsAr: [
         {
@@ -51,7 +52,7 @@ export class CommandManager extends LoggableBase {
 
         {
           MenuCommandKey: MenuCommandKey.AddCeTab,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.BigRed,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders. BtnAddContentEditor,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.AddCeTab,
           InnerText: "Add CE Tab to DT",
           VisibilityControllers: [VisibilityType.Desktop],
@@ -129,7 +130,7 @@ export class CommandManager extends LoggableBase {
         },
         {
           MenuCommandKey: MenuCommandKey.PresentationDetails,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.PresentationDetails,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders. BtnPresentationDetails,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.PresentationDetails,
           InnerText: "Presentation Details",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -142,7 +143,7 @@ export class CommandManager extends LoggableBase {
         },
         {
           MenuCommandKey: MenuCommandKey.CompactCE,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.CompactCE,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders. BtnCompactScUi,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.CompactCe,
           InnerText: "Compact CE",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -169,7 +170,7 @@ export class CommandManager extends LoggableBase {
 
         {
           MenuCommandKey: MenuCommandKey.GoContentEditor,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.GoCE,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnGoContentEditor,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.GoContentEditor,
           InnerText: "Content Editor",
           VisibilityControllers: [VisibilityType.NotLogin],
@@ -183,7 +184,7 @@ export class CommandManager extends LoggableBase {
 
         {
           MenuCommandKey: MenuCommandKey.QuickPublish,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.QuickPublish,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders. BtnQuickPublish,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.QuickPublish,
           InnerText: "Quick Publish",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],

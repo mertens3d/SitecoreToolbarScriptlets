@@ -19,18 +19,19 @@ import { UiStateManager } from '../UiButtonStateManager';
 import { SelectSnapshotModule } from '../../UiModules/SelectSnapshotModule/SelectSnapshotModule';
 import { SettingsModule } from '../../UiModules/SettingsModule/SettingsModule';
 import { FeedbackModuleBrowserState } from '../../UiModules/UiFeedbackModules/FeedbackModuleBrowserState';
-import { UiVisibilityTestAgent } from './ButtonVisibilityTests';
 import { CancelButtonModule } from '../../UiModules/ButtonModules/CancelButtonModule';
 import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/FeedbackModulePopUpState';
-import { IMenuCommandParams } from '../../../../Shared/scripts/Interfaces/MenuCommand';
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
 import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/FeedbackModuleContentState';
 import { UiSelectSnapshotMutationEvent_Observer } from '../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/UiSelectSnapshotMutatedEvent/UiSelectSnapshotMutatedEvent_Observer';
 import { AccordianModulesManager } from '../../UiModules/AccordianModule/AccordianManager';
+import { UiVisibilityTestAgent } from './UiVisibilityTestAgent';
+import { UiRefreshData } from '../../../../Shared/scripts/Interfaces/MenuCommand';
+import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 
 export class UiManager {
-  MenuCommandParameters: IMenuCommandParams[];
+  MenuCommandParameters: IMenuCommandDefinition[];
   AccordianModuleManager: IAccordianManager;
   ButtonModulesManager: UiStateManager;
   CancelButtonModule: CancelButtonModule;
@@ -78,7 +79,7 @@ export class UiManager {
     this.ModuleFeedbackOfPopUpState = new FeedbackModulePopUpState(this.Logger, PopConst.Const.Selector.HS.FeedbackPopUpState);
     this.ModuleSnapShots = new SelectSnapshotModule(this.Logger, PopConst.Const.Selector.HS.SelStateSnapShot)
     this.SettingsModule = new SettingsModule(this.Logger, this.SettingsAgent, this.AccordianModuleManager, '');
-    this.CancelButtonModule = new CancelButtonModule(this.Logger, PopConst.Const.Selector.HS.HsCancel,  null);
+    this.CancelButtonModule = new CancelButtonModule(this.Logger, PopConst.Const.Selector.HS.HsCancel, null);
     this.Logger.FuncEnd(this.BuildModules.name);
   }
 
@@ -195,27 +196,29 @@ export class UiManager {
   //  this.Logger.FuncEnd(this.UpdateAtticFromUi.name);
   //}
 
-  HydrateModules(scUrlAgent: ScUrlAgent, stateOfSitecoreWindow: IDataStateOfSitecoreWindow, stateOfStorageSnapShots: IDataStateOfStorageSnapShots) {
+  HydrateModules(refreshData: UiRefreshData) {
     this.Logger.FuncStart(this.HydrateModules.name);
-    if (stateOfSitecoreWindow) {
-      
-
-      this.ModuleFeedbackOfPopUpState.HydratePopUpStateUI(this.ModuleSnapShots.GetSelectSnapshotId());
-      this.ModuleFeedbackOfContentState.HydrateContentStateFeedack(stateOfSitecoreWindow);
-      this.ModuleFeedbackOfBrowserState.HydrateFeedackBrowserState(scUrlAgent);
-      this.ModuleSnapShots.HydrateStorageSnapShotModule(stateOfSitecoreWindow, stateOfSitecoreWindow.ScWindowStates, stateOfStorageSnapShots);
-
-      this.ButtonModulesManager.HydrateUiModules(stateOfSitecoreWindow, this.ModuleSnapShots.GetSelectSnapshotId());
-
-      this.ModuleFeedbackOfBrowserState.RefreshUi();
+    if (refreshData) {
+      if (refreshData.StateOfSitecoreWindow) {
+        this.ModuleFeedbackOfPopUpState.HydratePopUpStateUI(refreshData);
+        this.ModuleFeedbackOfContentState.HydrateContentStateFeedack(refreshData);
+        this.ModuleFeedbackOfBrowserState.HydrateFeedackBrowserState(refreshData);
+        this.ModuleSnapShots.HydrateStorageSnapShotModule(refreshData);
+        this.ButtonModulesManager.HydrateUiModules(refreshData);
+      } else {
+        this.Logger.ErrorAndThrow(this.HydrateModules.name, 'null state');
+      }
     }
+
     this.Logger.FuncEnd(this.HydrateModules.name);
   }
 
   RefreshModuleUis() {
+    this.ButtonModulesManager.RefreshUiModuleVisibilityStatus();
+    this.DrawCorrectNicknameInUI();
+    this.ModuleFeedbackOfBrowserState.RefreshUi();
     this.ModuleSnapShots.RefreshUi();
     this.SettingsModule.RefreshUi();
-    this.ButtonModulesManager.RefreshUiModuleVisibilityStatus();
   }
 
   async RefreshUiUIManagerFromSnapShotSelect(uiData: IDataStateOfSnapShotSelect) {
@@ -225,11 +228,16 @@ export class UiManager {
   async UpdateUiFromContentReply(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, stateOfStorageSnapShots: IDataStateOfStorageSnapShots) {
     this.Logger.FuncStart(this.UpdateUiFromContentReply.name);
 
-    this.UiVisibilityTestAgent.Prime(this.TabMan.GetScUrlAgent(), stateOfSitecoreWindow, stateOfStorageSnapShots);
-    this.HydrateModules(this.TabMan.GetScUrlAgent(), stateOfSitecoreWindow, stateOfStorageSnapShots);
-    this.RefreshModuleUis()
-    this.DrawCorrectNicknameInUI(stateOfStorageSnapShots.SnapShots);
+    if (stateOfSitecoreWindow && stateOfSitecoreWindow.Meta) {
+      this.UiVisibilityTestAgent.Hydrate(stateOfSitecoreWindow, stateOfStorageSnapShots, stateOfSitecoreWindow.Meta.WindowType);
 
+      let refreshData: UiRefreshData = new UiRefreshData(stateOfSitecoreWindow, null, this.TabMan.GetScUrlAgent(), stateOfStorageSnapShots, null, this.UiVisibilityTestAgent);
+
+      this.HydrateModules(refreshData);
+      this.RefreshModuleUis()
+    } else {
+      this.Logger.ErrorAndThrow(this.UpdateUiFromContentReply.name, 'null state or meta');
+    }
     this.Logger.FuncEnd(this.UpdateUiFromContentReply.name);
   }
 
@@ -245,8 +253,11 @@ export class UiManager {
     return toReturn;
   }
 
-  private DrawCorrectNicknameInUI(snapShots: IDataStateOfSitecoreWindow[]) {
+  private DrawCorrectNicknameInUI() {
     this.Logger.FuncStart(this.DrawCorrectNicknameInUI.name);
+
+    let snapShots: IDataStateOfSitecoreWindow[] = null; //todo - put back logic   stateOfStorageSnapShots.SnapShots
+
     var targetId: GuidData = this.ModuleSnapShots.GetSelectSnapshotId()
     if (targetId) {
       this.Logger.Log('targetId : ' + targetId.Raw);
@@ -306,7 +317,7 @@ export class UiManager {
     }
   }
 
-  AssignOnClickEventFromCmd(command: IMenuCommandParams, handler: Function): void {
+  AssignOnClickEventFromCmd(command: IMenuCommandDefinition, handler: Function): void {
     if (command && command.MenuCommandKey !== MenuCommandKey.Unknown) {
       this.AssignOnClickEvent(command.PlaceHolderSelector, handler);
     }

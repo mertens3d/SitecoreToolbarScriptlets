@@ -1,18 +1,24 @@
-﻿import { MenuCommandKey } from "../Enums/2xxx-MenuCommand";
-import { VisibilityType } from "../Enums/VisibilityType";
-import { IEventHandlerData } from "./IEventHandlerData";
-import { ModuleType } from "../Enums/ModuleType";
+﻿import { IDataStateOfSitecoreWindow } from "./Data/States/IDataStateOfSitecoreWindow";
+import { GuidData } from "../Helpers/GuidData";
+import { IScUrlAgent } from "./Agents/IScUrlAgent/IScUrlAgent";
+import { IDataStateOfStorageSnapShots } from "./Data/States/IDataStateOfStorageSnapShots";
+import { IUiVisibilityTestAgent } from "./Agents/IUiVisibilityTestProctorAgent";
 
-export interface IMenuCommandParamsBucket {
+export class UiRefreshData {
+  ScUrlAgent: IScUrlAgent;
+  SelectSnapShot: GuidData;
+  SelectSnapShotId: GuidData;
+  StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
+  StateOfStorageSnapShots: IDataStateOfStorageSnapShots;
+  UiVisibilityTestAgent: IUiVisibilityTestAgent;
 
-  MenuCommandParamsAr: IMenuCommandParams[];
+  constructor(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, SelectSnapShot: GuidData, scUrlAgent: IScUrlAgent, stateOfStorageSnapShots: IDataStateOfStorageSnapShots, selectSnapShotId: GuidData, uiVisiblityTestAgent: IUiVisibilityTestAgent) {
+    this.StateOfSitecoreWindow = stateOfSitecoreWindow;
+    this.SelectSnapShot = SelectSnapShot;
+    this.ScUrlAgent = scUrlAgent;
+    this.StateOfStorageSnapShots = stateOfStorageSnapShots;
+    this.SelectSnapShotId = selectSnapShotId;
+    this.UiVisibilityTestAgent = uiVisiblityTestAgent;
+  }
 }
-export interface IMenuCommandParams {
-  PlaceHolderSelector: string,
-  MenuCommandKey: MenuCommandKey,
-  EventData: IEventHandlerData,
-  IconClassName: string,
-  InnerText: string
-  VisibilityControllers: VisibilityType[],
-  ModuleType: ModuleType,
-}
+

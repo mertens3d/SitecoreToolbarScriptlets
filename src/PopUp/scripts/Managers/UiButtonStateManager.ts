@@ -6,16 +6,18 @@ import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerA
 import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent';
 import { IDataStateOfSitecoreWindow } from '../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow';
-import { IMenuCommandParams, IMenuCommandParamsBucket } from '../../../Shared/scripts/Interfaces/MenuCommand';
-import { TypButtonModule } from '../UiModules/ButtonModules/CommandButtonModule';
-import { UiVisibilityTestAgent } from './UiManager/ButtonVisibilityTests';
+import { UiRefreshData } from '../../../Shared/scripts/Interfaces/MenuCommand';
+import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
+import { IMenuCommandDefinitionBucket } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { TypButtonModule } from '../UiModules/ButtonModules/TypButtonModule';
+import { UiVisibilityTestAgent } from './UiManager/UiVisibilityTestAgent';
 
 export class UiStateManager extends LoggableBase {
   private UiModules: IUiModule[] = [];
   private UiVisibilityTestAgent: IUiVisibilityTestAgent;
-  private MenuCommandParamsBucket: IMenuCommandParamsBucket;
+  private MenuCommandParamsBucket: IMenuCommandDefinitionBucket;
 
-  constructor(logger: ILoggerAgent, menuCommandParamsBucket: IMenuCommandParamsBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
+  constructor(logger: ILoggerAgent, menuCommandParamsBucket: IMenuCommandDefinitionBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
     super(logger);
 
     this.Logger.InstantiateStart(UiStateManager.name);
@@ -35,7 +37,7 @@ export class UiStateManager extends LoggableBase {
   private BuildCommandButtons() {
     if (this.MenuCommandParamsBucket) {
 
-      this.MenuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandParams) => {
+      this.MenuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
         if (menuCommandParams.ModuleType === ModuleType.ButtonTyp) {
           let typeButtonModule = new TypButtonModule(this.Logger, menuCommandParams);
           this.UiModules.push(typeButtonModule);
@@ -48,10 +50,10 @@ export class UiStateManager extends LoggableBase {
     
   }
 
-  HydrateUiModules(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, selectSnapShotId: GuidData): void {
-    let currentWindowType: ScWindowType = stateOfSitecoreWindow.Meta.WindowType;
+  HydrateUiModules(refreshData: UiRefreshData): void {
+    let currentWindowType: ScWindowType = refreshData.StateOfSitecoreWindow.Meta.WindowType;
 
-    this.UiModules.forEach((uiModule) => uiModule.Hydrate(stateOfSitecoreWindow, currentWindowType, selectSnapShotId));
+    this.UiModules.forEach((uiModule) => uiModule.Hydrate(refreshData));
   }
 
   RefreshUiModuleVisibilityStatus(): void {

@@ -99,8 +99,10 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Subject.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\PopUpMessagesBroker\PopUpMessagesBroker.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\ButtonVisibilityTests.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\CommandButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiVisibilityTestAgent.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\CloseButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\TypButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\_baseButtonModule.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SelectSnapshotModule\SelectSnapshotModule.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\CancelButtonModule.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\StateHelpers.ts" />
@@ -170,6 +172,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandRecipes.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\IDataContentReplyReceivedEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IDataPayloadSnapShot.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMenuCommandDefinitionBucket.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMenuStateForMsg.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneGenericSettingForStorage.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerAgent.ts" />
