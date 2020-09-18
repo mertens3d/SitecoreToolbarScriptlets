@@ -5,7 +5,7 @@ import { IContentAtticAgent } from "../../../../../Shared/scripts/Interfaces/Age
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowManager } from "../../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { ICommandHandlerDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { IRecipeBasics } from "../../../../../Shared/scripts/Interfaces/IPromiseHelper";
 import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 
@@ -19,7 +19,7 @@ export class __RecipeBase {
   protected TargetDoc: IDataOneDoc;
   protected TargetConEdProxy: ContentEditorProxy;
 
-  constructor(commandData: ICommandHndlrDataForContent) {
+  constructor(commandData: ICommandHandlerDataForContent) {
     this.Logger = commandData.Logger;
     this.RecipeBasics = new RecipeBasics(this.Logger);
     this.ScWinMan = commandData.ScWinMan;

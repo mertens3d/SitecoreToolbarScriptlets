@@ -1,0 +1,9 @@
+﻿import { HindSiteEvent_Observer, HindsiteEventHandler_Type } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/HindSiteEvent_Observer";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { ISelectSnapUiMutationEvent_Payload } from "./ISelectSnapUiMutationEvent_Payload";
+
+export class SelectSnapUiMutationEvent_Observer extends HindSiteEvent_Observer<ISelectSnapUiMutationEvent_Payload> {
+  constructor(logger: ILoggerAgent, callback: HindsiteEventHandler_Type = null) {
+    super(logger, SelectSnapUiMutationEvent_Observer.name, callback);
+  }
+}

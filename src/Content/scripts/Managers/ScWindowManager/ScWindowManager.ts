@@ -9,7 +9,8 @@ import { IContentAtticAgent } from '../../../../Shared/scripts/Interfaces/Agents
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { ISettingsAgent, InitResultsScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { InitResultsScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataMetaData } from '../../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';

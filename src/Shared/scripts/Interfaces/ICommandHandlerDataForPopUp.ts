@@ -3,10 +3,10 @@ import { IEventHandlerData } from "./IEventHandlerData";
 import { IMenuStateForMsg } from "./IMenuStateForMsg";
 import { IMenuCommandDefinition } from "./IMenuCommandDefinition";
 
-export interface ICommandHndlrDataForPopUp {
+export interface ICommandHandlerDataForPopUp {
   MenuState: IMenuStateForMsg;
   EventMan: EventManager;
   MenuCommandParams: IMenuCommandDefinition;
-  Event: IEventHandlerData;
+  EventHandlerData: IEventHandlerData;
   Evt: MouseEvent;
 }

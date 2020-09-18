@@ -11,14 +11,14 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
-import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
 import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
-import { CommandHndlrDataForContent } from "../../../../Shared/scripts/Classes/CommandHndlrDataForContent/CommandHndlrDataForContent";
 import { ICommandRecipes } from "../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { RecipeChangeNickName } from "../../ContentApi/Recipes/RecipeChangeNickName/RecipeChangeNickName";
 import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { CommandHandlerDataForContent } from "../../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandHandlerDataForContent";
+import { ICommandHandlerDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 
 export class ContentMessageBroker extends LoggableBase implements IContentMessageBroker {
   private SettingsAgent: ISettingsAgent;
@@ -237,7 +237,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteCommand.name);
       if (commandToExecute) {
-        let commandData: ICommandHndlrDataForContent = new CommandHndlrDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent)
+        let commandData: ICommandHandlerDataForContent = new CommandHandlerDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent)
 
         commandData.TargetSnapShotId = payload.Payload.IdOfSelect;
         commandData.ContentMessageBroker = this;

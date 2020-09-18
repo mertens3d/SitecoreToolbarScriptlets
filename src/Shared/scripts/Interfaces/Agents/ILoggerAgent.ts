@@ -19,8 +19,8 @@ export interface ILoggerAgent {
   FuncStart(textOrFunc: string, optionalValue?: boolean): void;
   FuncStart(textOrFunc: string, optionalValue?: number): void;
   FuncStart(textOrFunc: string, optionalValue?: string): void;
-  HndlrClearDebugText(self: ILoggerAgent): void
-  HndlrClearDebugText(self: ILoggerAgent, verify: boolean): void
+  HandlerClearDebugText(self: ILoggerAgent): void
+  HandlerClearDebugText(self: ILoggerAgent, verify: boolean): void
   InstantiateEnd(text: string): void;
   InstantiateStart(text: string): void;
   IsNotNullOrUndefinedBool(title: string, dataToCheck: any);

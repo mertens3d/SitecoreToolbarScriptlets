@@ -43,7 +43,7 @@ export class CommandManager extends LoggableBase {
           InnerText: "",
           VisibilityControllers: [],
           ModuleType: ModuleType.ButtonClose,
-          EventData: {
+          EventHandlerData: {
             Handler: this.Handlers.Internal.CloseWindow,
             Event: CommandButtonEvents.OnSingleClick,
             ParameterData: [],
@@ -57,7 +57,7 @@ export class CommandManager extends LoggableBase {
           InnerText: "Add CE Tab to DT",
           VisibilityControllers: [VisibilityType.Desktop],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.AddCETab,
             ParameterData: [],
@@ -70,7 +70,7 @@ export class CommandManager extends LoggableBase {
           InnerText: "Edit",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.SetScModeInternal,
             ParameterData: [scMode.Edit],
@@ -83,7 +83,7 @@ export class CommandManager extends LoggableBase {
           InnerText: "Normal",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.SetScModeInternal,
             ParameterData: [scMode.Normal],
@@ -96,7 +96,7 @@ export class CommandManager extends LoggableBase {
           InnerText: "Preview",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor, VisibilityType.Edit],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.SetScModeInternal,
             ParameterData: [scMode.Preview],
@@ -122,9 +122,9 @@ export class CommandManager extends LoggableBase {
           InnerText: "Set Nickname",
           VisibilityControllers: [VisibilityType.SnapShotSelected],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HndlrSnapShotUpdateNickName,
+            Handler: this.Handlers.External.HandlerForSnapShotUpdateNickName,
             ParameterData: [],
           }
         },
@@ -135,9 +135,9 @@ export class CommandManager extends LoggableBase {
           InnerText: "Presentation Details",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HndlrPresentationDetails,
+            Handler: this.Handlers.External.HandlerForPresentationDetails,
             ParameterData: [],
           }
         },
@@ -148,9 +148,9 @@ export class CommandManager extends LoggableBase {
           InnerText: "Compact CE",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HndlrCompactCE,
+            Handler: this.Handlers.External.HandlerForCompactCE,
             ParameterData: [],
           }
         },
@@ -161,7 +161,7 @@ export class CommandManager extends LoggableBase {
           InnerText: "Admin B",
           VisibilityControllers: [VisibilityType.LoginPage],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.PutAdminB,
             ParameterData: [],
@@ -175,7 +175,7 @@ export class CommandManager extends LoggableBase {
           InnerText: "Content Editor",
           VisibilityControllers: [VisibilityType.NotLogin],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.GoCeInternal,
             ParameterData: [],
@@ -189,7 +189,7 @@ export class CommandManager extends LoggableBase {
           InnerText: "Quick Publish",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.QuickPublish,
             ParameterData: [],
@@ -202,7 +202,7 @@ export class CommandManager extends LoggableBase {
           InnerText: "Desktop",
           VisibilityControllers: [VisibilityType.NotLogin],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.GoDesktopInternal,
             ParameterData: [],
@@ -215,9 +215,9 @@ export class CommandManager extends LoggableBase {
           InnerText: "",
           VisibilityControllers: [],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: null,
-            Handler: this.Handlers.External.HndlrPing,
+            Handler: this.Handlers.External.HandlerForPing,
             ParameterData: [],
           }
         },
@@ -229,9 +229,9 @@ export class CommandManager extends LoggableBase {
           InnerText: "Take Snapshot",
           VisibilityControllers: [VisibilityType.SnapShotable],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HndlrSnapShotCreate,
+            Handler: this.Handlers.External.HandlerForSnapShotCreate,
             ParameterData: [],
           }
         },
@@ -243,8 +243,8 @@ export class CommandManager extends LoggableBase {
           InnerText: "Toggle as Favorite",
           VisibilityControllers: [VisibilityType.SnapShotSelected],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
-            Handler: this.Handlers.External.ToggleFavorite,
+          EventHandlerData: {
+            Handler: this.Handlers.External.HandlerForToggleFavorite,
             Event: CommandButtonEvents.OnSingleClick,
             ParameterData: [],
           }
@@ -254,11 +254,11 @@ export class CommandManager extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.HsCancel,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.Cancel,
           InnerText: "Cancel",
-          VisibilityControllers: [VisibilityType.CommandIsRunning],
+          VisibilityControllers:[], //todo - put back [VisibilityType.CommandIsRunning],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.__hndlrCancelOperation,
+            Handler: this.Handlers.External.HandlerForCancelOperation,
             ParameterData: [],
           }
         },
@@ -269,9 +269,9 @@ export class CommandManager extends LoggableBase {
           InnerText: "Delete Snapshot",
           VisibilityControllers: [VisibilityType.SnapShotSelected],
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HndlrSnapShotRemove,
+            Handler: this.Handlers.External.HandlerForSnapShotRemove,
             ParameterData: [],
           }
         },
@@ -282,9 +282,9 @@ export class CommandManager extends LoggableBase {
           VisibilityControllers: [],//[VisibilityType.SnapShotSelected],
           InnerText: "Restore to TBD",
           ModuleType: ModuleType.Select,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnDoubleClick,
-            Handler: this.Handlers.External.HndlrSnapShotRestoreTBDTab,
+            Handler: this.Handlers.External.HandlerForSnapShotRestoreTBDTab,
             ParameterData: [],
           }
         },
@@ -295,9 +295,9 @@ export class CommandManager extends LoggableBase {
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.RestoreSameTab,
           InnerText: "Restore to this tab",
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HndlrSnapShotRestoreSameTab,
+            Handler: this.Handlers.External.HandlerForSnapShotRestoreSameTab,
             ParameterData: [],
           }
         },
@@ -308,9 +308,9 @@ export class CommandManager extends LoggableBase {
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.RestoreNewTab,
           InnerText: "Restore to new tab",
           ModuleType: ModuleType.ButtonTyp,
-          EventData: {
+          EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HndlrSnapShotRestoreNewTab,
+            Handler: this.Handlers.External.HandlerForSnapShotRestoreNewTab,
             ParameterData: [],
           }
         },

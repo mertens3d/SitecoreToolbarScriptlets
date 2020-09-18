@@ -11,7 +11,7 @@ import { ContentEditorProxy } from "../../../Content/scripts/Proxies/ContentEdit
 import { ISettingsAgent } from "./Agents/ISettingsAgent";
 import { DesktopProxy } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 
-export interface ICommandHndlrDataForContent {
+export interface ICommandHandlerDataForContent {
   SettingsAgent: ISettingsAgent;
   DesktopProxy: DesktopProxy;
   TargetCeProxy: ContentEditorProxy

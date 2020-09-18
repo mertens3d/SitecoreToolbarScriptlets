@@ -8,7 +8,7 @@ export class VisiblityTestResultsBucket extends LoggableBase {
     let oneFailed: boolean = false;
 
     if (this.TestResults) {
-      this.TestResults.forEach((oneTest) => oneFailed = oneFailed || !oneTest || !oneTest.Passes);
+      this.TestResults.forEach((oneTest) => oneFailed = oneFailed || !oneTest || !oneTest.DidItPass);
     } else {
       this.Logger.ErrorAndThrow(this.HasFailures.name, 'null test results');
     }
@@ -23,7 +23,7 @@ export class VisiblityTestResultsBucket extends LoggableBase {
       this.TestResults.forEach((oneTest) => {
         if (oneTest) {
 
-          if (!oneTest.Passes) {
+          if (!oneTest.DidItPass) {
             toReturn = ' ' + oneTest.FriendlyFailReason;
           }
         } else {

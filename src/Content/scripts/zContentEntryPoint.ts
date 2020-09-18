@@ -14,7 +14,8 @@ import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IC
 import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { IScWindowManager } from '../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { InitResultsScWindowManager, ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { InitResultsScWindowManager } from "../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { SharedConst } from '../../Shared/scripts/SharedConst';
 import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent/AutoSnapShotAgent';
 import { ContentAtticAgent } from './Agents/ContentAtticAgent/ContentAtticAgent';

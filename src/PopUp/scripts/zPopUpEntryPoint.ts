@@ -15,7 +15,7 @@ import { CommandManager } from "./Classes/AllCommands";
 import { PopConst } from "./Classes/PopConst";
 import { EventManager } from "./Managers/EventManager";
 import { Handlers } from "./Managers/Handlers";
-import { PopUpMessagesBroker } from "./Managers/PopUpMessagesBroker/PopUpMessagesBroker";
+import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
 import { BrowserTabAgent } from "./Managers/TabManager";
 import { UiManager } from "./Managers/UiManager/UiManager";
 import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
@@ -31,8 +31,8 @@ class PopUpEntry {
   FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
   eventMan: EventManager;
   commandMan: CommandManager;
-  browserTabAgent: BrowserTabAgent;
-  PopUpMessageAgent: PopUpMessagesBroker;
+  BrowserTabAgent: BrowserTabAgent;
+  PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
 
   async main() {
     try {
@@ -70,10 +70,10 @@ class PopUpEntry {
 
   private async InstantiateMembers() {
     //this.messageMan = new PopUpMessageManager(this.PopUpMessageAgent, this.Logger);
-    this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.browserTabAgent, this.PopUpMessageAgent);
+    this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.PopUpMessageBrokerAgent);
     this.commandMan = new CommandManager(this.Logger, this.handlers);
-    this.uiMan = new UiManager(this.Logger, this.SettingsAgent, this.browserTabAgent, this.commandMan); //after tabman, after HelperAgent
-    this.eventMan = new EventManager(this.Logger, this.SettingsAgent, this.uiMan, this.handlers); // after uiman
+    this.uiMan = new UiManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan); //after tabman, after HelperAgent
+    this.eventMan = new EventManager(this.Logger, this.SettingsAgent, this.uiMan, this.handlers, this.PopUpMessageBrokerAgent); // after uiman
   }
 
   private InitLogger() {
@@ -100,18 +100,18 @@ class PopUpEntry {
 
   InstantiateAgents() {
     this.scUrlAgent = new ScUrlAgent(this.Logger);
-    this.browserTabAgent = new BrowserTabAgent(this.Logger, this.scUrlAgent, this.SettingsAgent);
-    this.PopUpMessageAgent = new PopUpMessagesBroker(this.Logger);
+    this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.scUrlAgent, this.SettingsAgent);
+    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger);
   }
 
   WireCustomevents() {
     this.Logger.FuncStart(this.WireCustomevents.name);
 
     let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, this.uiMan);
-    this.handlers.External.ContentReplyReceivedEvent_Observer.RegisterObserver(contentReplyReceivedEvent_Observer);
+    this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(contentReplyReceivedEvent_Observer);
 
     this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.FeedbackMessages);
-    this.handlers.External.ContentReplyReceivedEvent_Observer.RegisterObserver(this.FeedbackModuleMsg_Observer)
+    this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(this.FeedbackModuleMsg_Observer)
     this.Logger.FuncEnd(this.WireCustomevents.name);
   }
 

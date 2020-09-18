@@ -10,9 +10,9 @@ import { IScWindowManager } from "../../Interfaces/Agents/IScWindowManager/IScWi
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../Interfaces/Data/IDataOneDoc";
-import { ICommandHndlrDataForContent } from "../../Interfaces/ICommandHndlrDataForContent";
+import { ICommandHandlerDataForContent } from "../../Interfaces/ICommandHandlerDataForContent";
 
-export class CommandHndlrDataForContent implements ICommandHndlrDataForContent {
+export class CommandHandlerDataForContent implements ICommandHandlerDataForContent {
   AtticAgent: IContentAtticAgent = null;
   ContentMessageBroker: ContentMessageBroker = null;
   DesktopProxy: DesktopProxy = null;

@@ -1,22 +1,45 @@
-﻿import { MsgFromPopUp } from "../../../../Shared/scripts/Classes/MsgFromPopUp";
-import { MsgFromContent } from "../../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
-import { ScWindowStateValidator } from "../../../../Shared/scripts/Classes/ScWindowStateValidator";
-import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+﻿import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
+import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+import { ScWindowStateValidator } from "../../../Shared/scripts/Classes/ScWindowStateValidator";
+import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
+import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
+import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { ContentReplyReceivedEvent_Subject } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
+import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
 
-export class PopUpMessagesBroker {
+export class PopUpMessagesBrokerAgent extends LoggableBase {
   LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
-  private Logger: ILoggerAgent;
+  ContentReplyReceivedEvent_Subject: ContentReplyReceivedEvent_Subject;
+
 
   constructor(loggerAgent: ILoggerAgent) {
-    this.Logger = loggerAgent;
+    super(loggerAgent);
+    this.ContentReplyReceivedEvent_Subject = new ContentReplyReceivedEvent_Subject(this.Logger);
   }
 
-  ReceiveResponseHndlr(response: any): Promise<IDataContentReplyReceivedEvent_Payload> {
+  private __cleardebugText() {
+    this.Logger.HandlerClearDebugText(this.Logger);
+  }
+
+   SendCommandToContent(sendMsgPlayload: MsgFromPopUp) {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.SendCommandToContent.name);
+      this.__cleardebugText();
+      //todo - put back?  this.UiMan.ClearCancelFlag();
+
+      this.SendMessageToContentAsync(sendMsgPlayload)
+        .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.ContentReplyReceivedEvent_Subject.NotifyObservers(replyMessagePayload))
+        .then(() => resolve())
+        .catch((err) => reject(err));
+
+      this.Logger.FuncEnd(this.SendCommandToContent.name);
+    });
+  }
+
+  ReceiveResponseHandler(response: any): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise((resolve, reject) => {
-      this.Logger.FuncStart(this.ReceiveResponseHndlr.name);
+      this.Logger.FuncStart(this.ReceiveResponseHandler.name);
 
       if (response) {
         StaticHelpers.MsgFlagAsString(response.MsgFlag)
@@ -40,13 +63,13 @@ export class PopUpMessagesBroker {
             }
           }
           else {
-            reject(this.ReceiveResponseHndlr.name + ' response is not class: ' + MsgFromContent.name);
+            reject(this.ReceiveResponseHandler.name + ' response is not class: ' + MsgFromContent.name);
           }
         }
       } else {
-        reject(this.ReceiveResponseHndlr.name + ' null or undefined response');
+        reject(this.ReceiveResponseHandler.name + ' null or undefined response');
       }
-      this.Logger.FuncEnd(this.ReceiveResponseHndlr.name);
+      this.Logger.FuncEnd(this.ReceiveResponseHandler.name);
     });
   }
 
@@ -63,7 +86,7 @@ export class PopUpMessagesBroker {
       this.Logger.LogVal('Tab Id', targetTab.id);
 
       await browser.tabs.sendMessage(targetTab.id, messageToSend)
-        .then((response: any) => this.ReceiveResponseHndlr(response))
+        .then((response: any) => this.ReceiveResponseHandler(response))
         .then((scWindowState: IDataContentReplyReceivedEvent_Payload) => {
           let validator = new ScWindowStateValidator(this.Logger);
 

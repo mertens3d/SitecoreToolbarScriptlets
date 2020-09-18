@@ -3,6 +3,8 @@
 declare global {
   interface Window {
     mywindow: any;
+
+   
   }
 }
 

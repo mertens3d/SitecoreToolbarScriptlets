@@ -1,6 +1,6 @@
 ﻿import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
+import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { BrowserTabAgent } from "../Managers/TabManager";
 
 export class HandlersInternal {
@@ -13,7 +13,7 @@ export class HandlersInternal {
   }
 
   __cleardebugTextWithConfirm(evt: any) {
-    this.Logger.HndlrClearDebugText(this.Logger, true);
+    this.Logger.HandlerClearDebugText(this.Logger, true);
   }
 
   GenericSettingChanged() {
@@ -33,7 +33,7 @@ export class HandlersInternal {
     //this.MsgMan().SendMessageToContent(new MsgFromPopUp(MsgFlag.ReqGoDesktop, this.PopHub))
   }
 
-  async SetScModeInternal(data: ICommandHndlrDataForPopUp): Promise<void> {
+  async SetScModeInternal(data: ICommandHandlerDataForPopUp): Promise<void> {
     try {
       // this needs to get moved to being handled in the content commands
 

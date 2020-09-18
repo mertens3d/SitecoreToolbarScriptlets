@@ -48,6 +48,14 @@ export class StaticHelpers {
     return toReturn;
   }
 
+  static IsNullOrUndefined(testSubject: any): boolean {
+    try {
+      return (typeof testSubject === 'undefined' || testSubject === null);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   private static getBuffChar(buffCharEnum: BufferChar) {
     var buffChar: string = ' ';
     if (buffCharEnum === BufferChar.space) {

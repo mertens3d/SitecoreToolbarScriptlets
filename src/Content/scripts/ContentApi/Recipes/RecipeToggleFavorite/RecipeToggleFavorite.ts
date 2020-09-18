@@ -1,11 +1,11 @@
 ﻿import { SnapShotFlavor } from "../../../../../Shared/scripts/Enums/SnapShotFlavor";
-import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { ICommandHandlerDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { IDataStateOfSitecoreWindow } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { __RecipeBase } from "../__RecipeBase/__RecipeBase";
 
 export class RecipeToggleFavorite extends __RecipeBase implements ICommandRecipes {
-  constructor(commandData: ICommandHndlrDataForContent) {
+  constructor(commandData: ICommandHandlerDataForContent) {
     super(commandData);
   }
 

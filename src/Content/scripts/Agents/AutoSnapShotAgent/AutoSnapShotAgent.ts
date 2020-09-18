@@ -38,7 +38,6 @@ export class AutoSnapShotAgent extends LoggableBase {
   ScheduleIntervalTasks() {
     this.Logger.FuncStart(this.ScheduleIntervalTasks.name);
     this.Logger.LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
-
     let autoSaveSetting: IGenericSetting = this.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin)
     this.Logger.LogVal('autoSaveSetting: ', autoSaveSetting.ValueAsInt());
 

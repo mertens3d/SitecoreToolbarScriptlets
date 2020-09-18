@@ -10,28 +10,24 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IDataStateOfSnapShotSelect } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSnapShotSelect";
-import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
-import { UiRefreshData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { PopConst } from "../../Classes/PopConst";
 import { StateHelpers } from "../../Classes/StateHelpers";
+import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload";
+import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject.1";
 import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase.1";
-import { SelectSnapshotModule_Subject } from "./SelectSnapshotModule_Subject";
 
 export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiModule {
-  StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
-  StateOfStorageSnapShots: IDataStateOfStorageSnapShots;
-
   private Selector: string;
   private StateHelpers: StateHelpers;
-  SelectSnapshotModule_Subject: SelectSnapshotModule_Subject;
+  public SelectSnapshotModule_Subject: SelectSnapUiMutationEvent_Subject;
 
   constructor(logger: ILoggerAgent, selector: string) {
     super(logger, selector);
     this.Selector = selector;
-    this.SelectSnapshotModule_Subject = new SelectSnapshotModule_Subject(this.Logger);
+    this.SelectSnapshotModule_Subject = new SelectSnapUiMutationEvent_Subject(this.Logger);
+
     this.StateHelpers = new StateHelpers(this.Logger);
   }
 
@@ -48,7 +44,8 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
     } else {
       targetElem.onchange = (() => {
         let self = this;
-        let payload: IDataStateOfSnapShotSelect = {
+        let payload: ISelectSnapUiMutationEvent_Payload = {
+          SelectSnapshotId: this.GetSelectSnapshotId()
         }
         this.SelectSnapshotModule_Subject.NotifyObservers(payload);
       });
@@ -56,13 +53,9 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
     this.Logger.FuncEnd(this.AssignOnChangeEvent.name, selector);
   }
 
-  HydrateStorageSnapShotModule(refreshData: UiRefreshData) {
-    this.StateOfSitecoreWindow = refreshData.StateOfSitecoreWindow;
-    this.StateOfStorageSnapShots = refreshData.StateOfStorageSnapShots;
-  }
-
   RefreshUi(): void {
     this.PopulateStateOfSnapShotSelectElement();
+    //this.SelectSnapshotModule_Subject.NotifyObservers();
   }
 
   private __getSelectElem(): HTMLSelectElement {
@@ -151,8 +144,8 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
 
     let priorValue: GuidData = this.GetSelectSnapshotId();
 
-    if (this.StateOfStorageSnapShots && this.StateOfStorageSnapShots.SnapShots) {
-      let snapShots: IDataStateOfSitecoreWindow[] = this.StateOfStorageSnapShots.SnapShots;
+    if (this.RefreshData.StateOfStorageSnapShots && this.RefreshData.StateOfStorageSnapShots.SnapShots) {
+      let snapShots: IDataStateOfSitecoreWindow[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
 
       var targetSel: HTMLSelectElement = this.__getSelectElem();
 

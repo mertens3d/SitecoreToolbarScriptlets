@@ -3,25 +3,28 @@ import { IGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IGene
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
-import { ICommandHndlrDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHndlrDataForPopUp";
+import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { Handlers } from './Handlers';
 import { UiManager } from './UiManager/UiManager';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { IMenuCommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
+import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
 
 export class EventManager extends LoggableBase {
   Handlers: Handlers
 
   private SettingsAgent: ISettingsAgent;
   private UiMan: UiManager;
+    PopUpMesssageBrokerAgent: PopUpMessagesBrokerAgent; // for .bind(this)
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers, popupMessageBrokerAgent: PopUpMessagesBrokerAgent) {
     super(logger);
     this.SettingsAgent = settingsAgent;
     this.UiMan = uiMan;
     this.Handlers = handlers;
+    this.PopUpMesssageBrokerAgent = popupMessageBrokerAgent;
   }
 
   InitEventManager(menuCommandParamsBucket: IMenuCommandDefinitionBucket): void {
@@ -112,9 +115,9 @@ export class EventManager extends LoggableBase {
     if (oneCommand && oneCommand.PlaceHolderSelector) {
       var targetElem: HTMLElement = document.querySelector(oneCommand.PlaceHolderSelector);
       if (targetElem) {
-        if (oneCommand.EventData.Event === CommandButtonEvents.OnSingleClick) {
+        if (oneCommand.EventHandlerData.Event === CommandButtonEvents.OnSingleClick) {
           this.WireSingleClickEvent(oneCommand, targetElem);
-        } else if (oneCommand.EventData.Event === CommandButtonEvents.OnDoubleClick) {
+        } else if (oneCommand.EventHandlerData.Event === CommandButtonEvents.OnDoubleClick) {
           this.WireDoubleClickEvent(oneCommand, targetElem)
         }
       } else {
@@ -131,7 +134,7 @@ export class EventManager extends LoggableBase {
 
     if (targetElem) {
       targetElem.ondblclick = (evt) => {
-        let data: ICommandHndlrDataForPopUp = this.BuildCommandData(oneCommand);
+        let data: ICommandHandlerDataForPopUp = this.BuildCommandData(oneCommand);
         data.Evt = evt,
           data.EventMan.RouteAllCommandEvents(data)
       };
@@ -142,7 +145,7 @@ export class EventManager extends LoggableBase {
     if (targetElem) {
       let self = this;
       targetElem.addEventListener('click', (evt) => {
-        let data: ICommandHndlrDataForPopUp = this.BuildCommandData(oneCommand);
+        let data: ICommandHandlerDataForPopUp = this.BuildCommandData(oneCommand);
         data.Evt = evt;
         data.EventMan = self;
         data.EventMan.RouteAllCommandEvents(data);
@@ -152,16 +155,19 @@ export class EventManager extends LoggableBase {
     }
   }
 
-  private BuildCommandData(oneCommand: IMenuCommandDefinition): ICommandHndlrDataForPopUp {
+  private BuildCommandData(oneCommand: IMenuCommandDefinition): ICommandHandlerDataForPopUp {
     var self: EventManager = this;
 
-    let data: ICommandHndlrDataForPopUp = {
+
+    oneCommand.EventHandlerData.Handler = oneCommand.EventHandlerData.Handler.bind(this);
+
+    let data: ICommandHandlerDataForPopUp = {
       EventMan: self,
       MenuCommandParams: oneCommand,
-      Event: oneCommand.EventData,
+      EventHandlerData: oneCommand.EventHandlerData,
       Evt: null,
       MenuState: {
-        SelectSnapshotId: this.UiMan.ModuleSnapShots.GetSelectSnapshotId(),
+        SelectSnapshotId: this.UiMan.ModuleSelectSnapShots.GetSelectSnapshotId(),
         CurrentNicknameValue: this.UiMan.GetValueInNickname()
       }
     }
@@ -169,10 +175,10 @@ export class EventManager extends LoggableBase {
     return data;
   }
 
-  async RouteAllCommandEvents(data: ICommandHndlrDataForPopUp): Promise<void> {
+  async RouteAllCommandEvents(data: ICommandHandlerDataForPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RouteAllCommandEvents.name);
-      await data.Event.Handler(data)
+      await data.EventHandlerData.Handler(data)
         .then(() => resolve())
         .catch((err) => reject(this.RouteAllCommandEvents.name + ' | ' + err));
       this.Logger.FuncEnd(this.RouteAllCommandEvents.name);

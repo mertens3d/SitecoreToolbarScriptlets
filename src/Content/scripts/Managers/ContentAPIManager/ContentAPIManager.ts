@@ -10,17 +10,17 @@ import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { ICommandHndlrDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { ICommandHandlerDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { IFactoryHelper } from "../../../../Shared/scripts/Interfaces/IFactoryHelper";
 import { RecipeAddNewContentEditorToDesktop } from "../../ContentApi/Recipes/RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop";
 import { RecipePublishActiveCe } from "../../ContentApi/Recipes/RecipePublishActiveCe/RecipePublishActiveCe";
 import { RecipeRemoveItemFromStorage } from "../../ContentApi/Recipes/RecipeRemoveItemFromStorage/RecipeRemoveItemFromStorage";
 import { RecipeSetStateOfSitecoreWindow } from "../../ContentApi/Recipes/RecipeRestore/RecipeRestore";
-import { RecipeSaveStateManual } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
 import { RecipeToggleFavorite } from "../../ContentApi/Recipes/RecipeToggleFavorite/RecipeToggleFavorite";
 import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { LoggableBase } from "../LoggableBase";
 import { ScUiManager } from "../SitecoreUiManager/SitecoreUiManager";
+import { RecipeSaveStateManual } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
 
 export class ContentAPIManager extends LoggableBase implements IHindSiteScWindowApi {
   private AtticAgent: IContentAtticAgent;
@@ -71,7 +71,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     });
   }
 
-  AddCETab(commandData: ICommandHndlrDataForContent): Promise<void> {
+  AddCETab(commandData: ICommandHandlerDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
       await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.DesktopProxy.DesktopStartBarAgent).Execute()
         .then(() => {
@@ -83,7 +83,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     });
   }
 
-  PublischActiveCE(commandData: ICommandHndlrDataForContent): Promise<void> {
+  PublischActiveCE(commandData: ICommandHandlerDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
       await new RecipePublishActiveCe(commandData, this.FactoryHelp).Execute()
         .then(() => resolve)
@@ -91,7 +91,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     });
   }
 
-  async RemoveSnapShot(commandData: ICommandHndlrDataForContent): Promise<void> {
+  async RemoveSnapShot(commandData: ICommandHandlerDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
       let recipe = new RecipeRemoveItemFromStorage(commandData, commandData.ToastAgent);
       await recipe.Execute()
@@ -100,7 +100,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     });
   }
 
-  async SaveWindowState(commandData: ICommandHndlrDataForContent): Promise<void> {
+  async SaveWindowState(commandData: ICommandHandlerDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
       let recipe = new RecipeSaveStateManual(commandData);
       await recipe.Execute()
@@ -117,7 +117,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     });
   }
 
-  SetStateOfSitecoreWindow(commandData: ICommandHndlrDataForContent): Promise<void> {
+  SetStateOfSitecoreWindow(commandData: ICommandHandlerDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
       let recipe = new RecipeSetStateOfSitecoreWindow(commandData.Logger, commandData.ScWinMan.GetScUrlAgent(), commandData.AtticAgent, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopProxy(), commandData.ToastAgent, commandData.ScWinMan.ContentEditorProxy(), commandData.TargetSnapShotId, commandData.SettingsAgent);// .ContentHub.ContentMessageMan.__restoreClick(commandData.PayloadData)
 
@@ -131,7 +131,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     throw new Error("Method not implemented.");
   }
 
-  MarkFavorite(commandData: ICommandHndlrDataForContent) {
+  MarkFavorite(commandData: ICommandHandlerDataForContent) {
     return new Promise(async (resolve, reject) => {
       await new RecipeToggleFavorite(commandData).Execute()
         .then(() => resolve())

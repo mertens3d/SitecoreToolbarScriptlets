@@ -6,7 +6,7 @@ import { ModuleType } from "../Enums/ModuleType";
 export interface IMenuCommandDefinition {
     PlaceHolderSelector: string;
     MenuCommandKey: MenuCommandKey;
-    EventData: IEventHandlerData;
+    EventHandlerData: IEventHandlerData;
     IconClassName: string;
     InnerText: string;
     VisibilityControllers: VisibilityType[];

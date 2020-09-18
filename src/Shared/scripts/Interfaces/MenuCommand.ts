@@ -12,9 +12,9 @@ export class UiRefreshData {
   StateOfStorageSnapShots: IDataStateOfStorageSnapShots;
   UiVisibilityTestAgent: IUiVisibilityTestAgent;
 
-  constructor(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, SelectSnapShot: GuidData, scUrlAgent: IScUrlAgent, stateOfStorageSnapShots: IDataStateOfStorageSnapShots, selectSnapShotId: GuidData, uiVisiblityTestAgent: IUiVisibilityTestAgent) {
+  constructor(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, scUrlAgent: IScUrlAgent, stateOfStorageSnapShots: IDataStateOfStorageSnapShots, selectSnapShotId: GuidData, uiVisiblityTestAgent: IUiVisibilityTestAgent) {
     this.StateOfSitecoreWindow = stateOfSitecoreWindow;
-    this.SelectSnapShot = SelectSnapShot;
+    this.SelectSnapShot = selectSnapShotId;
     this.ScUrlAgent = scUrlAgent;
     this.StateOfStorageSnapShots = stateOfStorageSnapShots;
     this.SelectSnapShotId = selectSnapShotId;

@@ -70,6 +70,8 @@ export class TypButtonModule extends _baseButtonModule implements IUiModule {
     this.Logger.FuncStart(this.RefreshUi.name, this.Friendly());
     if (this.PlaceHolderUiElem) {
       let allresults: VisiblityTestResultsBucket = this.RefreshData. UiVisibilityTestAgent.TestAgainstAllSetControllers(this.MenuCommandDefinition);
+
+      this.Logger.LogVal('length', allresults.TestResults.length);
       this.SetCommandButtonVisibility(allresults);
     } else {
       this.Logger.Log('no placeholder ' + this.Friendly())
@@ -80,7 +82,7 @@ export class TypButtonModule extends _baseButtonModule implements IUiModule {
   private SetCommandButtonVisibility(allresults: VisiblityTestResultsBucket) {
     this.Logger.FuncStart(this.SetCommandButtonVisibility.name, this.Friendly());
 
-    this.Logger.LogAsJsonPretty(this.Friendly(),allresults);
+    this.Logger.LogAsJsonPretty(this.Friendly(), allresults.TestResults);
 
     if (allresults && this.ElemButton) {
       if (!allresults.HasFailures()) {

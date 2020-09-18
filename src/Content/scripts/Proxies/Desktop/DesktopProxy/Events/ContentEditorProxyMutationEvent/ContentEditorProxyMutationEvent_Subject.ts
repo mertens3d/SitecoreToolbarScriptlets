@@ -1,6 +1,6 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { HindeSiteEvent_Subject } from "../_HindSiteEvent/HindeSiteEvent_Subject";
-import { IContentEditorProxyMutationEvent_Payload } from "./ContentEditorProxyMutationEvent_Payload";
+import { IContentEditorProxyMutationEvent_Payload } from "./IContentEditorProxyMutationEvent_Payload";
 
 export class ContentEditorProxyMutationEvent_Subject extends HindeSiteEvent_Subject<IContentEditorProxyMutationEvent_Payload>  {
   constructor(logger: ILoggerAgent) {

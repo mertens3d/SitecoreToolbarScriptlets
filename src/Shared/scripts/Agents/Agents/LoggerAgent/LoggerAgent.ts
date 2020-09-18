@@ -85,8 +85,8 @@ export class LoggerAgent implements ILoggerAgent {
     return toReturn;
   }
 
-  HndlrClearDebugText(self: ILoggerAgent, verify: boolean = false): void {
-    this.FuncStart(this.HndlrClearDebugText.name);
+  HandlerClearDebugText(self: ILoggerAgent, verify: boolean = false): void {
+    this.FuncStart(this.HandlerClearDebugText.name);
     var proceed: boolean = true;
     if (verify) {
       proceed = confirm('Clear Debug TextArea ?');
@@ -98,7 +98,7 @@ export class LoggerAgent implements ILoggerAgent {
         Append: false
       });
     }
-    this.FuncEnd(this.HndlrClearDebugText.name);
+    this.FuncEnd(this.HandlerClearDebugText.name);
   }
 
   MarkerA() {

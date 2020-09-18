@@ -3,13 +3,13 @@ import { DefaultStateOfTree } from "../../../../../Shared/scripts/Classes/Defaul
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
-import { InitResultTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
 import { IDataStateOfTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { TreeMutationEvent_Subject } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject';
+import { InitResultTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
 import { ScContentTreeNodeProxy } from '../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
 
 export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
