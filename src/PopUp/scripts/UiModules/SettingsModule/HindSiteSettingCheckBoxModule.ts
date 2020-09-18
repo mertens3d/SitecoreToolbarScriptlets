@@ -9,7 +9,7 @@ import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
 export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiModule {
   private SettingsAgent: ISettingsAgent
   private HindSiteSetting: IHindSiteSetting;
-  private  UiInputElement: HTMLInputElement;
+  private UiInputElement: HTMLInputElement;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, hindSiteSetting: IHindSiteSetting) {
     super(logger, hindSiteSetting.UiSelector);
@@ -26,7 +26,6 @@ export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiM
     }
     this.Logger.InstantiateEnd(HindSiteSettingCheckBoxModule.name);
   }
-
 
   Init() {
     this.Logger.FuncStart(this.Init.name, this.Friendly);
@@ -50,7 +49,7 @@ export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiM
   }
 
   RefreshUi() {
-    if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)){
+    if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
       let valueToDisplay: boolean = this.HindSiteSetting.ValueAsBool();
       this.UiInputElement.checked = valueToDisplay;
     }
