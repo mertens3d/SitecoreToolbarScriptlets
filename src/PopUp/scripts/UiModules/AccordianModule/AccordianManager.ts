@@ -1,6 +1,6 @@
 ﻿import { IAccordianManager } from "../../../../Shared/scripts/Interfaces/Agents/IAccordianManager";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { AccordianModule } from "./AccordianModule";
 
@@ -14,7 +14,7 @@ export class AccordianModulesManager implements IAccordianManager {
     this.SettingsAgent = settingsAgent;
   }
 
-  async RestoreAccordionState(oneSetting: IGenericSetting): Promise<void> {
+  async RestoreAccordionState(oneSetting: IHindSiteSetting): Promise<void> {
     if (oneSetting) {
       let foundAccordian: AccordianModule = this.GetAccordianByKey(oneSetting);
 
@@ -28,12 +28,12 @@ export class AccordianModulesManager implements IAccordianManager {
     }
   }
 
-  AddAccordianDrone(oneSetting: IGenericSetting, uiElem: HTMLElement) {
+  AddAccordianDrone(oneSetting: IHindSiteSetting, uiElem: HTMLElement) {
     let newAccordianDrone = new AccordianModule(this.Logger, this.SettingsAgent, uiElem, oneSetting);
     this.AllAccordians.push(newAccordianDrone);
   }
 
-  GetAccordianByKey(oneSetting: IGenericSetting): AccordianModule {
+  GetAccordianByKey(oneSetting: IHindSiteSetting): AccordianModule {
     let toReturn: AccordianModule = null;
 
     for (var idx = 0; idx < this.AllAccordians.length; idx++) {

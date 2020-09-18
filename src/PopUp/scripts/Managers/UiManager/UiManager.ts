@@ -5,7 +5,7 @@ import { MenuCommandKey } from '../../../../Shared/scripts/Enums/2xxx-MenuComman
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { GuidData } from '../../../../Shared/scripts/Helpers/GuidData';
 import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/IAccordianManager';
-import { IGenericSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
+import { IHindSiteSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
@@ -60,11 +60,12 @@ export class UiManager {
   private LastKnownStateOfStorageSnapShots: IDataStateOfStorageSnapShots;
   LastKnownSelectSnapshotId: any;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandMan: CommandManager) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandMan: CommandManager, moduleSelectSnapShots: SelectSnapshotModule) {
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
     this.TabMan = tabMan;
     this.CommandMan = commandMan;
+    this.ModuleSelectSnapShots = moduleSelectSnapShots;
 
     this.Logger.InstantiateStart(UiManager.name);
 
@@ -72,21 +73,21 @@ export class UiManager {
     this.ButtonModulesManager = new UiStateManager(this.Logger, this.CommandMan.MenuCommandParamsBucket, this.UiVisibilityTestAgent);
     this.AccordianModuleManager = new AccordianModulesManager(this.Logger, this.SettingsAgent);
 
-    this.BuildModules();
+    this.InstantiateModules();
     this.WireEvents();
     this.Logger.InstantiateEnd(UiManager.name);
   }
 
-  BuildModules() {
-    this.Logger.FuncStart(this.BuildModules.name);
+  InstantiateModules() {
+    this.Logger.FuncStart(this.InstantiateModules.name);
     this.FeedbackModuleLog = new UiFeedbackModuleLog(this.Logger, PopConst.Const.Selector.HS.FeedbackLogElement);
     this.ModuleFeedbackOfContentState = new FeedbackModuleContentState(this.Logger, PopConst.Const.Selector.HS.FeedbackContentState,);
     this.ModuleFeedbackOfBrowserState = new FeedbackModuleBrowserState(this.Logger, PopConst.Const.Selector.HS.FeedbackBrowserState);
     this.ModuleFeedbackOfPopUpState = new FeedbackModulePopUpState(this.Logger, PopConst.Const.Selector.HS.FeedbackPopUpState);
-    this.ModuleSelectSnapShots = new SelectSnapshotModule(this.Logger, PopConst.Const.Selector.HS.SelStateSnapShot)
+   
     this.SettingsModule = new SettingsModule(this.Logger, this.SettingsAgent, this.AccordianModuleManager, '');
     this.CancelButtonModule = new CancelButtonModule(this.Logger, PopConst.Const.Selector.HS.HsCancel, null);
-    this.Logger.FuncEnd(this.BuildModules.name);
+    this.Logger.FuncEnd(this.InstantiateModules.name);
   }
 
   WireEvents() {
@@ -134,7 +135,7 @@ export class UiManager {
       try {
         this.FeedbackModuleMessages.UpdateMsgStatusStack('Command Completed Successfully');
 
-        let setting: IGenericSetting = this.SettingsAgent.GetByKey(SettingKey.DebugKeepDialogOpen);
+        let setting: IHindSiteSetting = this.SettingsAgent.GetByKey(SettingKey.DebugKeepDialogOpen);
         if (!setting.ValueAsBool()) {
           window.close();
         } else {

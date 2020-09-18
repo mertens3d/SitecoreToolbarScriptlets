@@ -4,12 +4,12 @@ import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
 import { SharedConst } from "../../../SharedConst";
-import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
+import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { Enabled } from "../../../Enums/Enabled";
 import { ContentConst } from "../../../Interfaces/InjectConst";
 
 export class ConstAllSettings {
-  AllSettings: IGenericSetting[] = [
+  AllSettings: IHindSiteSetting[] = [
     new HindSiteSetting(
       SettingKey.LastUsedLogToStorageKey,
       SettingType.Number,

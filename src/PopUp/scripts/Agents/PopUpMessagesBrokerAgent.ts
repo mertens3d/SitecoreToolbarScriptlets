@@ -1,12 +1,12 @@
-﻿import { MsgFromPopUp } from "../../../Shared/scripts/Classes/MsgFromPopUp";
+﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+import { ContentReplyReceivedEvent_Subject } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { ScWindowStateValidator } from "../../../Shared/scripts/Classes/ScWindowStateValidator";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { ContentReplyReceivedEvent_Subject } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
-import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IMsgPayload";
 
 export class PopUpMessagesBrokerAgent extends LoggableBase {
   LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
@@ -22,7 +22,7 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
     this.Logger.HandlerClearDebugText(this.Logger);
   }
 
-   SendCommandToContent(sendMsgPlayload: MsgFromPopUp) {
+  SendCommandToContent(sendMsgPlayload: IStateOfPopUp) {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendCommandToContent.name);
       this.__cleardebugText();
@@ -73,9 +73,9 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
     });
   }
 
-  private SendMessageToSingleTab(messageToSend: MsgFromPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
+  private SendMessageToSingleTab(stateOfPopUp: IStateOfPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
+      this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
 
       let targetTab: browser.tabs.Tab;
 
@@ -85,7 +85,7 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
 
       this.Logger.LogVal('Tab Id', targetTab.id);
 
-      await browser.tabs.sendMessage(targetTab.id, messageToSend)
+      await browser.tabs.sendMessage(targetTab.id, stateOfPopUp)
         .then((response: any) => this.ReceiveResponseHandler(response))
         .then((scWindowState: IDataContentReplyReceivedEvent_Payload) => {
           let validator = new ScWindowStateValidator(this.Logger);
@@ -96,19 +96,19 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
         })
         .catch((ex) => { reject(ex) });
 
-      this.Logger.FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(messageToSend.MsgFlag));
+      this.Logger.FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
     });
   }
 
-  async SendMessageToContentAsync(msgPlayload: MsgFromPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
+  async SendMessageToContentAsync(stateOfPopUp: IStateOfPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      this.Logger.FuncStart(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
 
-      this.SendMessageToSingleTab(msgPlayload)
+      this.SendMessageToSingleTab(stateOfPopUp)
         .then((result: IDataContentReplyReceivedEvent_Payload) => resolve(result))
         .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(msgPlayload.MsgFlag));
+      this.Logger.FuncEnd(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
     });
   }
 }

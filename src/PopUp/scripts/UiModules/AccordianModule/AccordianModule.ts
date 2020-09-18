@@ -1,16 +1,16 @@
 ﻿import { PopConst } from "../../Classes/PopConst";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 
 export class AccordianModule {
   private SettingsAgent: ISettingsAgent;
   private Logger: ILoggerAgent;
-   AssociatedSetting: IGenericSetting;
+   AssociatedSetting: IHindSiteSetting;
   private AssociatedElement: HTMLElement;
   private AssociatedBodyElem: HTMLElement;
 
-  constructor(loggerAgent: ILoggerAgent, settingsAgent: ISettingsAgent, uiElem: HTMLElement, oneSetting: IGenericSetting) {
+  constructor(loggerAgent: ILoggerAgent, settingsAgent: ISettingsAgent, uiElem: HTMLElement, oneSetting: IHindSiteSetting) {
     this.Logger = loggerAgent;
     this.SettingsAgent = settingsAgent;
     this.AssociatedSetting = oneSetting;
@@ -39,7 +39,7 @@ export class AccordianModule {
     }
   }
 
-  DroneRestoreAccordionState(oneSetting: IGenericSetting) {
+  DroneRestoreAccordionState(oneSetting: IHindSiteSetting) {
     if (this.AssociatedBodyElem) {
       this.SetAccordionClass(this.AssociatedBodyElem, oneSetting.ValueAsBool())
     }

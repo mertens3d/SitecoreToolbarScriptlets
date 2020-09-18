@@ -1,7 +1,7 @@
 ﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
@@ -38,7 +38,7 @@ export class AutoSnapShotAgent extends LoggableBase {
   ScheduleIntervalTasks() {
     this.Logger.FuncStart(this.ScheduleIntervalTasks.name);
     this.Logger.LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
-    let autoSaveSetting: IGenericSetting = this.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin)
+    let autoSaveSetting: IHindSiteSetting = this.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin)
     this.Logger.LogVal('autoSaveSetting: ', autoSaveSetting.ValueAsInt());
 
     if (autoSaveSetting.ValueAsInt() > 0) {

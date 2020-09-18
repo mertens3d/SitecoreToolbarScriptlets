@@ -1,8 +1,7 @@
-﻿import { SnapShotFlavor } from "../../Enums/SnapShotFlavor";
-import { ScWindowType } from "../../Enums/scWindowType";
+﻿//import { SnapShotFlavor } from "../../Enums/SnapShotFlavor";
+//import { ScWindowType } from "../../Enums/scWindowType";
 
-export interface IDataPayloadSnapShot {
-  SnapShotNewNickname: string;
-  Flavor: SnapShotFlavor;
-  CurrentPageType: ScWindowType;
-}
+//export interface IDataPayloadSnapShot {
+
+//  CurrentPageType: ScWindowType;
+//}

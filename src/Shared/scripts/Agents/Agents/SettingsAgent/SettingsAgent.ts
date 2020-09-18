@@ -1,7 +1,7 @@
 ﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
-import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
+import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
@@ -19,18 +19,18 @@ export class SettingsAgent implements ISettingsAgent {
     this.RepoAgent = repoAgent;
   }
 
-  UpdateSettingsFromPopUpMsg(newSettings: IGenericSetting[]) {
+  UpdateSettingsFromPopUpMsg(newSettings: IHindSiteSetting[]) {
     this.Logger.FuncStart(this.UpdateSettingsFromPopUpMsg.name);
     if (newSettings) {
       for (var idx = 0; idx < newSettings.length; idx++) {
-        let oneSetting: IGenericSetting = newSettings[idx];
+        let oneSetting: IHindSiteSetting = newSettings[idx];
         this.SetByKey(oneSetting.SettingKey, oneSetting.ValueAsObj);
       }
     }
     this.Logger.FuncEnd(this.UpdateSettingsFromPopUpMsg.name);
   }
 
-  InitSettingsAgent(allDefaultSettings: IGenericSetting[]): void {
+  InitSettingsAgent(allDefaultSettings: IHindSiteSetting[]): void {
     this.Logger.FuncStart(this.InitSettingsAgent.name, allDefaultSettings.length);
 
     this.SettingsAr = <HindSiteSetting[]>allDefaultSettings;
@@ -41,7 +41,7 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncEnd(this.InitSettingsAgent.name);
   }
 
-  GetAllSettings(): IGenericSetting[] {
+  GetAllSettings(): IHindSiteSetting[] {
     return this.SettingsAr;
   }
 
@@ -70,7 +70,7 @@ export class SettingsAgent implements ISettingsAgent {
     try {
       for (var idx = 0; idx < settingsFromStorage.length; idx++) {
         let storageSetting: IOneGenericSettingForStorage = settingsFromStorage[idx];
-        let matchingSetting: IGenericSetting = this.GetByKey(storageSetting.SettingKey);
+        let matchingSetting: IHindSiteSetting = this.GetByKey(storageSetting.SettingKey);
         if (matchingSetting) {
           matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
         } else {
@@ -84,11 +84,11 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);
   }
 
-  GetSettingsByFlavor(targetFlavors: SettingFlavor[]): IGenericSetting[] {
-    let toReturn: IGenericSetting[] = [];
+  GetSettingsByFlavor(targetFlavors: SettingFlavor[]): IHindSiteSetting[] {
+    let toReturn: IHindSiteSetting[] = [];
 
     for (var idx = 0; idx < this.SettingsAr.length; idx++) {
-      let candidate: IGenericSetting = this.SettingsAr[idx];
+      let candidate: IHindSiteSetting = this.SettingsAr[idx];
       if (targetFlavors.indexOf(candidate.SettingFlavor) > -1) {
         toReturn.push(candidate);
       }

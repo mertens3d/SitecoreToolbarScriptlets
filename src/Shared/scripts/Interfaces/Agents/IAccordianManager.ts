@@ -1,6 +1,6 @@
-﻿import { IGenericSetting } from "./IGenericSetting";
+﻿import { IHindSiteSetting } from "./IGenericSetting";
 
 export interface IAccordianManager {
-    AddAccordianDrone( oneSetting: IGenericSetting, uiElem: HTMLElement);
-    RestoreAccordionState(oneSetting: IGenericSetting);
+    AddAccordianDrone( oneSetting: IHindSiteSetting, uiElem: HTMLElement);
+    RestoreAccordionState(oneSetting: IHindSiteSetting);
 }

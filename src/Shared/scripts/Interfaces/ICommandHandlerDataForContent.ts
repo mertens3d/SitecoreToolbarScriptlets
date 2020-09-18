@@ -16,7 +16,7 @@ export interface ICommandHandlerDataForContent {
   DesktopProxy: DesktopProxy;
   TargetCeProxy: ContentEditorProxy
   TargetDoc: IDataOneDoc;
-  TargetSnapShotFlavor: SnapShotFlavor,
+  //TargetSnapShotFlavor: SnapShotFlavor,
   TargetSnapShotId: GuidData;
   ScWinMan: IScWindowManager;
   ScUiMan: ScUiManager;

@@ -22,7 +22,7 @@ export class CommandHandlerDataForContent implements ICommandHandlerDataForConte
   TargetCeProxy: ContentEditorProxy;
   TargetDoc: IDataOneDoc = null;
   TargetNickName: string = '';
-  TargetSnapShotFlavor: SnapShotFlavor = SnapShotFlavor.Unknown;
+  //TargetSnapShotFlavor: SnapShotFlavor = SnapShotFlavor.Unknown;
   TargetSnapShotId: GuidData = null;
   ToastAgent: IToastAgent = null;
   TopLevelDoc = () => this.ScWinMan.GetTopLevelDoc();

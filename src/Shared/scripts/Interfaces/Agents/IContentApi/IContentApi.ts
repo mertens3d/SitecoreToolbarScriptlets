@@ -1,5 +1,4 @@
 ﻿import { ICommandHandlerDataForContent } from "../../ICommandHandlerDataForContent";
-import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
 
 export interface IHindSiteScWindowApi {
   GetStateOfContent();
@@ -7,9 +6,9 @@ export interface IHindSiteScWindowApi {
   AdminB();
   MarkFavorite(commandData: ICommandHandlerDataForContent);
   OpenContentEditor();
-  Ping(payloadData: PayloadDataFromPopUp);
+  Ping();
   SetStateOfSitecoreWindow(commandData: ICommandHandlerDataForContent): Promise<void>;
-  ToggleCompactCss(payloadData: PayloadDataFromPopUp);
+  ToggleCompactCss(commandData: ICommandHandlerDataForContent);
   SaveWindowState(commandData: ICommandHandlerDataForContent): Promise<void>;
   RemoveSnapShot(commandData: ICommandHandlerDataForContent): Promise<void>;
   PublischActiveCE(commandData: ICommandHandlerDataForContent): Promise<void>;

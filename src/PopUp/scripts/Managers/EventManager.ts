@@ -1,5 +1,5 @@
 import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
-import { IGenericSetting } from '../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
+import { IHindSiteSetting } from '../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
@@ -11,6 +11,7 @@ import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenu
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { IMenuCommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
+import { SelectSnapshotModule } from '../UiModules/SelectSnapshotModule/SelectSnapshotModule';
 
 export class EventManager extends LoggableBase {
   Handlers: Handlers
@@ -18,13 +19,15 @@ export class EventManager extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
   private UiMan: UiManager;
     PopUpMesssageBrokerAgent: PopUpMessagesBrokerAgent; // for .bind(this)
+    SelectSnapShotModule: SelectSnapshotModule;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers, popupMessageBrokerAgent: PopUpMessagesBrokerAgent) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers, popupMessageBrokerAgent: PopUpMessagesBrokerAgent, moduleSelectSnapShot: SelectSnapshotModule) {
     super(logger);
     this.SettingsAgent = settingsAgent;
     this.UiMan = uiMan;
     this.Handlers = handlers;
     this.PopUpMesssageBrokerAgent = popupMessageBrokerAgent;
+    this.SelectSnapShotModule = moduleSelectSnapShot;
   }
 
   InitEventManager(menuCommandParamsBucket: IMenuCommandDefinitionBucket): void {
@@ -48,7 +51,7 @@ export class EventManager extends LoggableBase {
     this.Logger.FuncEnd(this.TriggerPingEventAsync.name);
   }
 
-  private SetLabel(uiElem: HTMLElement, oneSetting: IGenericSetting) {
+  private SetLabel(uiElem: HTMLElement, oneSetting: IHindSiteSetting) {
     //if has label
     let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
     if (uiLabel) {
@@ -60,10 +63,10 @@ export class EventManager extends LoggableBase {
 
   private WireUiToSettings() {
     this.Logger.FuncStart(this.WireUiToSettings.name);
-    let genericSettings: IGenericSetting[] = this.SettingsAgent.GetAllSettings();
+    let genericSettings: IHindSiteSetting[] = this.SettingsAgent.GetAllSettings();
 
     for (var idx = 0; idx < genericSettings.length; idx++) {
-      let oneSetting: IGenericSetting = genericSettings[idx];
+      let oneSetting: IHindSiteSetting = genericSettings[idx];
       if (oneSetting.HasUi) {
         let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
 

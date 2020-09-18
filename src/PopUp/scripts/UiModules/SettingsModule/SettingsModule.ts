@@ -1,6 +1,6 @@
 ﻿import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
 import { IAccordianManager } from "../../../../Shared/scripts/Interfaces/Agents/IAccordianManager";
-import { IGenericSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
@@ -31,7 +31,7 @@ export class SettingsModule extends _UiModuleBase implements IUiModule {
     this.Logger.FuncStart(this.refreshUiSettings.name);
     let allSettings = this.SettingsAgent.GetAllSettings();
     for (var idx = 0; idx < allSettings.length; idx++) {
-      var oneSetting: IGenericSetting = allSettings[idx];
+      var oneSetting: IHindSiteSetting = allSettings[idx];
       if (oneSetting.UiSelector) {
         var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
         if (foundElem) {

@@ -1,5 +1,4 @@
 ﻿import { DefaultContentReplyPayload } from "../../../../Shared/scripts/Classes/Defaults/DefaultScWindowState";
-import { PayloadDataFromPopUp } from "../../../../Shared/scripts/Classes/PayloadDataReqPopUp";
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { FactoryHelper } from "../../../../Shared/scripts/Helpers/FactoryHelper";
@@ -65,11 +64,11 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     });
   }
 
-  Notify(payloadData: PayloadDataFromPopUp): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.ToastAgent.PopUpToastNotification(this.ScWinMan.GetTopLevelDoc(), payloadData.ScreenMessage);
-    });
-  }
+  //Notify(payloadData: PayloadDataFromPopUp): Promise<void> {
+  //  return new Promise(async (resolve, reject) => {
+  //    this.ToastAgent.PopUpToastNotification(this.ScWinMan.GetTopLevelDoc(), payloadData.ToastMessage);
+  //  });
+  //}
 
   AddCETab(commandData: ICommandHandlerDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -109,11 +108,11 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     });
   }
 
-  async ToggleCompactCss(payloadData: PayloadDataFromPopUp) {
+  async ToggleCompactCss(commandData: ICommandHandlerDataForContent) {
     return new Promise(async (resolve, reject) => {
-      await this.ToggleCompactCss(payloadData)
-        .then(() => resolve())
-        .catch((err) => reject(err));
+      //await this.ToggleCompactCss()
+      //  .then(() => resolve())
+      //  .catch((err) => reject(err));
     });
   }
 
@@ -139,7 +138,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     });
   }
 
-  Ping(payloadData: PayloadDataFromPopUp) {
+  Ping() {
     return new Promise(async (resolve, reject) => {
       resolve(MsgFlag.RespListeningAndReady);
     });

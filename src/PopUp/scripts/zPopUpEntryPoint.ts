@@ -9,7 +9,7 @@ import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAge
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
 import { MenuCommandKey } from "../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
-import { IGenericSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { IHindSiteSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { CommandManager } from "./Classes/AllCommands";
 import { PopConst } from "./Classes/PopConst";
@@ -20,6 +20,7 @@ import { BrowserTabAgent } from "./Managers/TabManager";
 import { UiManager } from "./Managers/UiManager/UiManager";
 import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
+import { SelectSnapshotModule } from "./UiModules/SelectSnapshotModule/SelectSnapshotModule";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
@@ -33,6 +34,7 @@ class PopUpEntry {
   commandMan: CommandManager;
   BrowserTabAgent: BrowserTabAgent;
   PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
+    ModuleSelectSnapShots: SelectSnapshotModule;
 
   async main() {
     try {
@@ -62,7 +64,7 @@ class PopUpEntry {
     this.RepoAgent = new RepositoryAgent(this.Logger);
     this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
 
-    var allSettings: IGenericSetting[] = new ConstAllSettings().AllSettings;
+    var allSettings: IHindSiteSetting[] = new ConstAllSettings().AllSettings;
     this.SettingsAgent.InitSettingsAgent(allSettings);
 
     this.InitLogger();
@@ -70,10 +72,13 @@ class PopUpEntry {
 
   private async InstantiateMembers() {
     //this.messageMan = new PopUpMessageManager(this.PopUpMessageAgent, this.Logger);
-    this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.PopUpMessageBrokerAgent);
+
+    this.ModuleSelectSnapShots = new SelectSnapshotModule(this.Logger, PopConst.Const.Selector.HS.SelStateSnapShot);
+
+    this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots);
     this.commandMan = new CommandManager(this.Logger, this.handlers);
-    this.uiMan = new UiManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan); //after tabman, after HelperAgent
-    this.eventMan = new EventManager(this.Logger, this.SettingsAgent, this.uiMan, this.handlers, this.PopUpMessageBrokerAgent); // after uiman
+    this.uiMan = new UiManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots); //after tabman, after HelperAgent
+    this.eventMan = new EventManager(this.Logger, this.SettingsAgent, this.uiMan, this.handlers, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots); // after uiman
   }
 
   private InitLogger() {

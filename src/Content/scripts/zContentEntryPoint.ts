@@ -11,7 +11,7 @@ import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
 import { IHindSiteScWindowApi } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
 import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
-import { IGenericSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
+import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { IScWindowManager } from '../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
@@ -95,7 +95,7 @@ class ContentEntry {
   private InitLogging() {
     this.Logger.FuncStart(this.InitLogging.name);
 
-    let enableLogger: IGenericSetting = this.SettingsAgent.GetByKey(SettingKey.EnableLogging);
+    let enableLogger: IHindSiteSetting = this.SettingsAgent.GetByKey(SettingKey.EnableLogging);
 
     if (enableLogger.ValueAsBool() || SharedConst.Const.Debug.ForceLoggingEnabled) {
       let consoleLogWrite = new LoggerConsoleWriter();
@@ -120,7 +120,7 @@ class ContentEntry {
 
     this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
 
-    var allSettings: IGenericSetting[] = new ConstAllSettings().AllSettings;
+    var allSettings: IHindSiteSetting[] = new ConstAllSettings().AllSettings;
 
     this.SettingsAgent.InitSettingsAgent(allSettings);
 

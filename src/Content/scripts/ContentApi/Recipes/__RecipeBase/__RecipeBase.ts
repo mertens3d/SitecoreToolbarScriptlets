@@ -25,7 +25,7 @@ export class __RecipeBase {
     this.ScWinMan = commandData.ScWinMan;
     this.AtticAgent = commandData.AtticAgent;
     this.TargetSnapShotId = commandData.TargetSnapShotId;
-    this.TargetSnapShotFlavor = commandData.TargetSnapShotFlavor
+    //this.TargetSnapShotFlavor = commandData.TargetSnapShotFlavor
     this.TargetDoc = commandData.TargetDoc;
     this.TargetConEdProxy = commandData.TargetCeProxy;
   }

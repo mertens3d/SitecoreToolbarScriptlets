@@ -1,9 +1,9 @@
 ﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
-import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
+import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { Enabled } from "../../../Enums/Enabled";
-export class HindSiteSetting implements IGenericSetting {
+export class HindSiteSetting implements IHindSiteSetting {
   Enabled: Enabled;
   DataType: SettingType;
   DefaultValue: any;
