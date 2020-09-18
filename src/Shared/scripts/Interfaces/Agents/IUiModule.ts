@@ -1,7 +1,9 @@
-﻿import { UiRefreshData } from "../MenuCommand";
+﻿import { UiHydrationData } from "../MenuCommand";
+import { ModuleKey } from "../../Enums/ModuleKey";
 
 export interface IUiModule {
-  Hydrate(refreshData: UiRefreshData ): void;
+  Hydrate(refreshData: UiHydrationData ): void;
   Init(): void;
   RefreshUi(): void;
+  ModuleKey: ModuleKey;
 }

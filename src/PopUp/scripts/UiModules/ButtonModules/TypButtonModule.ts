@@ -67,22 +67,22 @@ export class TypButtonModule extends _baseButtonModule implements IUiModule {
   }
 
   RefreshUi(): void {
-    this.Logger.FuncStart(this.RefreshUi.name, this.Friendly());
+    this.Logger.FuncStart(this.RefreshUi.name, this.Friendly);
     if (this.PlaceHolderUiElem) {
       let allresults: VisiblityTestResultsBucket = this.RefreshData. UiVisibilityTestAgent.TestAgainstAllSetControllers(this.MenuCommandDefinition);
 
       this.Logger.LogVal('length', allresults.TestResults.length);
       this.SetCommandButtonVisibility(allresults);
     } else {
-      this.Logger.Log('no placeholder ' + this.Friendly())
+      this.Logger.Log('no placeholder ' + this.Friendly)
     }
-    this.Logger.FuncEnd(this.RefreshUi.name, this.Friendly());
+    this.Logger.FuncEnd(this.RefreshUi.name, this.Friendly);
   }
 
   private SetCommandButtonVisibility(allresults: VisiblityTestResultsBucket) {
-    this.Logger.FuncStart(this.SetCommandButtonVisibility.name, this.Friendly());
+    this.Logger.FuncStart(this.SetCommandButtonVisibility.name, this.Friendly);
 
-    this.Logger.LogAsJsonPretty(this.Friendly(), allresults.TestResults);
+    this.Logger.LogAsJsonPretty(this.Friendly, allresults.TestResults);
 
     if (allresults && this.ElemButton) {
       if (!allresults.HasFailures()) {
@@ -108,6 +108,6 @@ export class TypButtonModule extends _baseButtonModule implements IUiModule {
       this.Logger.ErrorAndContinue(this.SetCommandButtonVisibility.name, 'targetButton is NULL: ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
     }
 
-    this.Logger.FuncEnd(this.SetCommandButtonVisibility.name, this.Friendly());
+    this.Logger.FuncEnd(this.SetCommandButtonVisibility.name, this.Friendly);
   }
 }

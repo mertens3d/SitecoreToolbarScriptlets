@@ -1,5 +1,6 @@
 ﻿export enum ModuleType {
     Select,
     ButtonTyp,
-    ButtonClose
+    ButtonClose,
+    ButtonInput
 }

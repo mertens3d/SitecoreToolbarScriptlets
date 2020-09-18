@@ -1,15 +1,13 @@
 ﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
-import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
+import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IGenericUrlParts } from "../../../../Shared/scripts/Interfaces/IUrlParts";
-import { UiRefreshData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
+import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
 import { PopConst } from "../../Classes/PopConst";
 import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase.1";
 
 export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements IUiModule {
-
+  ModuleKey = ModuleKey.BroswerState;
 
   Init(): void {
   }
@@ -17,7 +15,7 @@ export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements
   RefreshUi(): void {
   }
 
-  HydrateFeedackBrowserState(refreshData: UiRefreshData) {
+  Hydrate(refreshData: UiHydrationData) {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.FeedbackBrowserState);
 
     var allStateText: string = 'Browser State' + this.lineBreak;

@@ -5,19 +5,28 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { _UiModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
+import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
+import { SettingFlavor } from "../../../../Shared/scripts/Enums/SettingFlavor";
+import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 
-export class SettingsModule extends _UiModuleBase implements IUiModule {
+export class SettingsBucketModule extends _UiModuleBase implements IUiModule {
   Logger: ILoggerAgent;
   SettingsAgent: ISettingsAgent;
   AccordianManager: IAccordianManager;
+  ModuleKey = ModuleKey.Settings;
+  CheckBoxModulesBucket: HindSiteSettingCheckBoxModule[];
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, accordianManager: IAccordianManager, selector: string) {
     super(logger, selector)
     this.SettingsAgent = settingsAgent;
     this.AccordianManager = accordianManager;
+
+    this.CheckBoxModulesBucket = this.BuildCheckBoxSettingModules();
   }
 
   Init(): void {
+
+
   }
 
   RefreshUi(): void {
@@ -27,17 +36,29 @@ export class SettingsModule extends _UiModuleBase implements IUiModule {
     this.Logger.FuncEnd(this.RefreshUi.name);
   }
 
+  BuildCheckBoxSettingModules(): HindSiteSettingCheckBoxModule[] {
+    let toReturn: HindSiteSettingCheckBoxModule[] = [];
+
+    this.SettingsAgent.HindSiteSettings().forEach((hindSiteSetting: IHindSiteSetting) => {
+      if (hindSiteSetting.DataType === SettingType.BoolCheckBox) {
+        let hindSiteCheckboxSetting: HindSiteSettingCheckBoxModule = new HindSiteSettingCheckBoxModule(this.Logger, this.SettingsAgent, hindSiteSetting)
+
+        toReturn.push(hindSiteCheckboxSetting);
+      }
+    });
+
+    return toReturn;
+  }
+
   private refreshUiSettings() {
     this.Logger.FuncStart(this.refreshUiSettings.name);
-    let allSettings = this.SettingsAgent.GetAllSettings();
+    let allSettings = this.SettingsAgent.HindSiteSettings();
     for (var idx = 0; idx < allSettings.length; idx++) {
       var oneSetting: IHindSiteSetting = allSettings[idx];
       if (oneSetting.UiSelector) {
         var foundElem: HTMLElement = document.querySelector(oneSetting.UiSelector);
         if (foundElem) {
           if (oneSetting.DataType === SettingType.BoolCheckBox) {
-            let valueToDisplay: boolean = oneSetting.ValueAsBool();
-            (<HTMLInputElement>foundElem).checked = valueToDisplay;
           } else if (oneSetting.DataType === SettingType.Accordion) {
             this.AccordianManager.RestoreAccordionState(oneSetting);
           } else if (oneSetting.DataType == SettingType.Number) {

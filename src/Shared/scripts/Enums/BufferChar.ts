@@ -1,6 +1,6 @@
 ﻿export enum BufferChar {
-    space,
-    Nbsp,
-    Period,
-    Zero
+  space,
+  Nbsp,
+  Period,
+  Zero
 }

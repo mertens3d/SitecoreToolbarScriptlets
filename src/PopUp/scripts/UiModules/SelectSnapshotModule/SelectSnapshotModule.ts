@@ -1,5 +1,6 @@
 ﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { BufferChar } from "../../../../Shared/scripts/Enums/BufferChar";
+import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { BufferDirection } from "../../../../Shared/scripts/Enums/BufferDirection";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
@@ -22,6 +23,7 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
   private Selector: string;
   private StateHelpers: StateHelpers;
   public SelectSnapshotModule_Subject: SelectSnapUiMutationEvent_Subject;
+  ModuleKey = ModuleKey.SelectSnapShot;
 
   constructor(logger: ILoggerAgent, selector: string) {
     super(logger, selector);

@@ -41,7 +41,7 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncEnd(this.InitSettingsAgent.name);
   }
 
-  GetAllSettings(): IHindSiteSetting[] {
+  HindSiteSettings(): IHindSiteSetting[] {
     return this.SettingsAr;
   }
 
@@ -97,8 +97,9 @@ export class SettingsAgent implements ISettingsAgent {
     return toReturn;
   }
 
-  CheckBoxSettingChanged(SettingKey: SettingKey, valueAsObj: any): void {
-    this.SetByKey(SettingKey, valueAsObj);
+  CheckBoxSettingChanged(settingKey: SettingKey, valueAsObj: any): void {
+    this.Logger.LogVal(this.CheckBoxSettingChanged.name, SettingKey[settingKey]);
+    this.SetByKey(settingKey, valueAsObj);
   }
 
   NumberSettingChanged(SettingKey: SettingKey, valueAsNumber: number): void {

@@ -4,7 +4,7 @@ import { IScUrlAgent } from "./Agents/IScUrlAgent/IScUrlAgent";
 import { IDataStateOfStorageSnapShots } from "./Data/States/IDataStateOfStorageSnapShots";
 import { IUiVisibilityTestAgent } from "./Agents/IUiVisibilityTestProctorAgent";
 
-export class UiRefreshData {
+export class UiHydrationData {
   ScUrlAgent: IScUrlAgent;
   SelectSnapShot: GuidData;
   SelectSnapShotId: GuidData;

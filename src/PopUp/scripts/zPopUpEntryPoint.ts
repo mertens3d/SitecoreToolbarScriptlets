@@ -77,6 +77,9 @@ class PopUpEntry {
 
     this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots);
     this.commandMan = new CommandManager(this.Logger, this.handlers);
+
+
+
     this.uiMan = new UiManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots); //after tabman, after HelperAgent
     this.eventMan = new EventManager(this.Logger, this.SettingsAgent, this.uiMan, this.handlers, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots); // after uiman
   }

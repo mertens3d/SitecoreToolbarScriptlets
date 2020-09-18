@@ -18,8 +18,8 @@ export class EventManager extends LoggableBase {
 
   private SettingsAgent: ISettingsAgent;
   private UiMan: UiManager;
-    PopUpMesssageBrokerAgent: PopUpMessagesBrokerAgent; // for .bind(this)
-    SelectSnapShotModule: SelectSnapshotModule;
+  PopUpMesssageBrokerAgent: PopUpMessagesBrokerAgent; // for .bind(this)
+  SelectSnapShotModule: SelectSnapshotModule;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers, popupMessageBrokerAgent: PopUpMessagesBrokerAgent, moduleSelectSnapShot: SelectSnapshotModule) {
     super(logger);
@@ -63,23 +63,26 @@ export class EventManager extends LoggableBase {
 
   private WireUiToSettings() {
     this.Logger.FuncStart(this.WireUiToSettings.name);
-    let genericSettings: IHindSiteSetting[] = this.SettingsAgent.GetAllSettings();
+    let hindSiteSettings: IHindSiteSetting[] = this.SettingsAgent.HindSiteSettings();
 
-    for (var idx = 0; idx < genericSettings.length; idx++) {
-      let oneSetting: IHindSiteSetting = genericSettings[idx];
+    for (var idx = 0; idx < hindSiteSettings.length; idx++) {
+      let oneSetting: IHindSiteSetting = hindSiteSettings[idx];
       if (oneSetting.HasUi) {
         let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
 
         if (uiElem) {
-          this.SetLabel(uiElem, oneSetting)
-
-          if (oneSetting.DataType === SettingType.BoolCheckBox) {
-            let self = this;
-            uiElem.addEventListener('change', (evt) => {
-              self.SettingsAgent.CheckBoxSettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
-            })
+          if (oneSetting.DataType !== SettingType.BoolCheckBox) {
+            this.SetLabel(uiElem, oneSetting)
           }
-          else if (oneSetting.DataType === SettingType.Accordion) {
+
+          //if (oneSetting.DataType === SettingType.BoolCheckBox) {
+          //  let self = this;
+          //  uiElem.addEventListener('change', (evt) => {
+          //    self.SettingsAgent.CheckBoxSettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
+          //  })
+          //}
+
+          if (oneSetting.DataType === SettingType.Accordion) {
             this.UiMan.AccordianModuleManager.AddAccordianDrone(oneSetting, uiElem);
           }
           else if (oneSetting.DataType == SettingType.Number) {
@@ -113,8 +116,7 @@ export class EventManager extends LoggableBase {
 
     this.Logger.FuncEnd(this.WireAllMenuButtons.name);
   }
-
-  private WireOneMenuButtonListener(oneCommand: IMenuCommandDefinition): void {
+  WireOneMenuButtonListener(oneCommand: IMenuCommandDefinition): void {
     if (oneCommand && oneCommand.PlaceHolderSelector) {
       var targetElem: HTMLElement = document.querySelector(oneCommand.PlaceHolderSelector);
       if (targetElem) {
@@ -161,7 +163,6 @@ export class EventManager extends LoggableBase {
   private BuildCommandData(oneCommand: IMenuCommandDefinition): ICommandHandlerDataForPopUp {
     var self: EventManager = this;
 
-
     oneCommand.EventHandlerData.Handler = oneCommand.EventHandlerData.Handler.bind(this);
 
     let data: ICommandHandlerDataForPopUp = {
@@ -169,10 +170,6 @@ export class EventManager extends LoggableBase {
       MenuCommandParams: oneCommand,
       EventHandlerData: oneCommand.EventHandlerData,
       Evt: null,
-      MenuState: {
-        SelectSnapshotId: this.UiMan.ModuleSelectSnapShots.GetSelectSnapshotId(),
-        CurrentNicknameValue: this.UiMan.GetValueInNickname()
-      }
     }
 
     return data;

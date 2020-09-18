@@ -1,8 +1,10 @@
-﻿import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase.1";
-import { ILoggerWriter } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerWriter";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
+import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase.1";
 
-export class UiFeedbackModuleLog extends _UiFeedbackModuleBase implements ILoggerWriter {
+
+export class UiFeedbackModuleLog extends _UiFeedbackModuleBase implements IUiModule {
+  ModuleKey: ModuleKey = ModuleKey.FeedbackModuleLog;
   FriendlyName: string = UiFeedbackModuleLog.name;
 
 

@@ -146,7 +146,7 @@ export class HandlersExternalEvent extends LoggableBase {
     data.EventMan.Handlers.External.Logger.FuncStart(data.EventMan.Handlers.External.HandlerForSnapShotRestoreNewTab.name);
 
     this.ModuleSelectSnapShots
-    data.EventMan.Handlers.External.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.EventMan.SelectSnapShotModule.GetSelectSnapshotId().Raw);
+    data.EventMan.Handlers.External.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs,  data.EventMan.SelectSnapShotModule.GetSelectSnapshotId().Raw);
 
     let newUrl: IAbsoluteUrl = data.EventMan.Handlers.External.BrowserTabAgent.GetFullUrl();
 

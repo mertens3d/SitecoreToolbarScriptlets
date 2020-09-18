@@ -1,18 +1,16 @@
 ﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { ModuleType } from '../../../Shared/scripts/Enums/ModuleType';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { GuidData } from '../../../Shared/scripts/Helpers/GuidData';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent';
-import { IDataStateOfSitecoreWindow } from '../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow';
-import { UiRefreshData } from '../../../Shared/scripts/Interfaces/MenuCommand';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { IMenuCommandDefinitionBucket } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { UiHydrationData } from '../../../Shared/scripts/Interfaces/MenuCommand';
 import { TypButtonModule } from '../UiModules/ButtonModules/TypButtonModule';
 import { UiVisibilityTestAgent } from './UiManager/UiVisibilityTestAgent';
 
-export class UiStateManager extends LoggableBase {
+export class UiCommandsManager extends LoggableBase {
   private UiModules: IUiModule[] = [];
   private UiVisibilityTestAgent: IUiVisibilityTestAgent;
   private MenuCommandParamsBucket: IMenuCommandDefinitionBucket;
@@ -20,12 +18,12 @@ export class UiStateManager extends LoggableBase {
   constructor(logger: ILoggerAgent, menuCommandParamsBucket: IMenuCommandDefinitionBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
     super(logger);
 
-    this.Logger.InstantiateStart(UiStateManager.name);
+    this.Logger.InstantiateStart(UiCommandsManager.name);
 
     this.UiVisibilityTestAgent = uiVisibilityTestAgent;
     this.MenuCommandParamsBucket = menuCommandParamsBucket;
 
-    this.Logger.InstantiateEnd(UiStateManager.name);
+    this.Logger.InstantiateEnd(UiCommandsManager.name);
   }
 
   InitButtonStateManager() {
@@ -50,7 +48,7 @@ export class UiStateManager extends LoggableBase {
     
   }
 
-  HydrateUiModules(refreshData: UiRefreshData): void {
+  HydrateUiModules(refreshData: UiHydrationData): void {
     let currentWindowType: ScWindowType = refreshData.StateOfSitecoreWindow.Meta.WindowType;
 
     this.UiModules.forEach((uiModule) => uiModule.Hydrate(refreshData));

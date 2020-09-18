@@ -121,7 +121,7 @@ export class CommandManager extends LoggableBase {
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.UpdateNickname,
           InnerText: "Set Nickname",
           VisibilityControllers: [VisibilityType.SnapShotSelected],
-          ModuleType: ModuleType.ButtonTyp,
+          ModuleType: ModuleType.ButtonInput,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.HandlerForSnapShotUpdateNickName,

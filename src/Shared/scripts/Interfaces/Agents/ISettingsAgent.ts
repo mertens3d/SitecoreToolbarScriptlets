@@ -6,7 +6,7 @@ import { IHindSiteSetting } from "./IGenericSetting";
 
 export interface ISettingsAgent {
   CheckBoxSettingChanged(SettingKey: SettingKey, checked: boolean);
-  GetAllSettings(): IHindSiteSetting[];
+  HindSiteSettings(): IHindSiteSetting[];
   GetByKey(settingKey: SettingKey): IHindSiteSetting;
   GetSettingsByFlavor(targetFlavor: SettingFlavor[]): IHindSiteSetting[];
   InitSettingsAgent(allSettings: IHindSiteSetting[]): void;
