@@ -4,7 +4,7 @@ import { ModuleType } from "../../../../Shared/scripts/Enums/ModuleType";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
-import { _UiModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
+import { _UiModuleBase } from "../UiFeedbackModules/_UiModuleBase";
 
 export class _baseButtonModule extends _UiModuleBase {
   protected MenuCommandDefinition: IMenuCommandDefinition;

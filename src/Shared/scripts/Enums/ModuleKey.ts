@@ -7,5 +7,4 @@
     FeedbackModuleLog,
     Unknown,
     InputButton,
-    Settings
 }

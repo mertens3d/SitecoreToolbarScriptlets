@@ -4,7 +4,7 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
 import { IGenericUrlParts } from "../../../../Shared/scripts/Interfaces/IUrlParts";
 import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
 import { PopConst } from "../../Classes/PopConst";
-import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase.1";
+import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements IUiModule {
   ModuleKey = ModuleKey.BroswerState;

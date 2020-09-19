@@ -5,9 +5,10 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 
-export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiModule {
-  private SettingsAgent: ISettingsAgent
+export class HindSiteSettingNumberModule extends _UiModuleBase implements IUiModule {
+  private SettingsAgent: ISettingsAgent;
   private HindSiteSetting: IHindSiteSetting;
   private UiInputElement: HTMLInputElement;
 
@@ -21,44 +22,28 @@ export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiM
       this.SettingsAgent = settingsAgent;
       this.HindSiteSetting = hindSiteSetting;
       this.Friendly = HindSiteSettingCheckBoxModule.name + '-' + SettingKey[hindSiteSetting.SettingKey];
-    } else {
+    }
+    else {
       this.Logger.ErrorAndThrow(HindSiteSettingCheckBoxModule.name, 'Null settingsAgent or null hindSiteSetting');
     }
     this.Logger.InstantiateEnd(HindSiteSettingCheckBoxModule.name);
   }
 
   Init() {
-    this.Logger.FuncStart(this.Init.name, this.Friendly);
-    this.UiInputElement = <HTMLInputElement>this.GetUiElement();
-    this.WireEvent();
-    this.SetLabel();
-    this.Logger.FuncEnd(this.Init.name, this.Friendly);
-  }
+    let self = this;
+    this.UiInputElement = <HTMLInputElement> this.GetUiElement();
+    if (this.UiInputElement) {
 
-  private WireEvent() {
-    this.Logger.FuncStart(this.WireEvent.name, this.Friendly);
-    if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
-      this.UiInputElement.addEventListener('change', (evt) => {
-        let self = this;
-        self.SettingsAgent.CheckBoxSettingChanged(this.HindSiteSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
-      })
-    } else {
-      this.Logger.WarningAndContinue(this.WireEvent.name, 'null input element');
+    this.UiInputElement.addEventListener('change', (evt) => {
+      self.SettingsAgent.NumberSettingChanged(self.HindSiteSetting.SettingKey, parseInt((<HTMLInputElement>evt.target).value));
+    })
     }
-    this.Logger.FuncEnd(this.WireEvent.name, this.Friendly);
   }
 
   RefreshUi() {
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
-      let valueToDisplay: boolean = this.HindSiteSetting.ValueAsBool();
-      this.UiInputElement.checked = valueToDisplay;
-    }
-  }
-
-  private SetLabel() {
-    let uiLabel: HTMLElement = window.document.querySelector(this.HindSiteSetting.UiSelector.replace('id', 'for'));
-    if (uiLabel) {
-      uiLabel.innerHTML = this.HindSiteSetting.FriendlySetting;
+      let valueToDisplay: number = this.HindSiteSetting.ValueAsInt();
+      this.UiInputElement.value = valueToDisplay.toString();
     }
   }
 }

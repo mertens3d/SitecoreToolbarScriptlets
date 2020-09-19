@@ -35,7 +35,6 @@ export class EventManager extends LoggableBase {
 
     try {
       this.WireAllMenuButtons(menuCommandParamsBucket);
-      this.WireUiToSettings();
     } catch (err) {
       this.Logger.ErrorAndThrow(this.InitEventManager.name, err);
     }
@@ -49,54 +48,6 @@ export class EventManager extends LoggableBase {
     this.RouteAllCommandEvents(data);
 
     this.Logger.FuncEnd(this.TriggerPingEventAsync.name);
-  }
-
-  private SetLabel(uiElem: HTMLElement, oneSetting: IHindSiteSetting) {
-    //if has label
-    let uiLabel: HTMLElement = window.document.querySelector(oneSetting.UiSelector.replace('id', 'for'));
-    if (uiLabel) {
-      uiLabel.innerHTML = oneSetting.FriendlySetting;
-    } else {
-      uiElem.innerHTML = oneSetting.FriendlySetting;
-    }
-  }
-
-  private WireUiToSettings() {
-    this.Logger.FuncStart(this.WireUiToSettings.name);
-    let hindSiteSettings: IHindSiteSetting[] = this.SettingsAgent.HindSiteSettings();
-
-    for (var idx = 0; idx < hindSiteSettings.length; idx++) {
-      let oneSetting: IHindSiteSetting = hindSiteSettings[idx];
-      if (oneSetting.HasUi) {
-        let uiElem: HTMLElement = window.document.querySelector(oneSetting.UiSelector);
-
-        if (uiElem) {
-          if (oneSetting.DataType !== SettingType.BoolCheckBox) {
-            this.SetLabel(uiElem, oneSetting)
-          }
-
-          //if (oneSetting.DataType === SettingType.BoolCheckBox) {
-          //  let self = this;
-          //  uiElem.addEventListener('change', (evt) => {
-          //    self.SettingsAgent.CheckBoxSettingChanged(oneSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
-          //  })
-          //}
-
-          if (oneSetting.DataType === SettingType.Accordion) {
-            this.UiMan.AccordianModuleManager.AddAccordianDrone(oneSetting, uiElem);
-          }
-          else if (oneSetting.DataType == SettingType.Number) {
-            let self = this;
-            uiElem.addEventListener('change', (evt) => {
-              self.SettingsAgent.NumberSettingChanged(oneSetting.SettingKey, parseInt((<HTMLInputElement>evt.target).value));
-            })
-          }
-        } else {
-          this.Logger.ErrorAndThrow(this.WireUiToSettings.name, 'ui generic element not found');
-        }
-      }
-    }
-    this.Logger.FuncEnd(this.WireUiToSettings.name);
   }
 
   private WireAllMenuButtons(menuCommandParamsBucket: IMenuCommandDefinitionBucket) {

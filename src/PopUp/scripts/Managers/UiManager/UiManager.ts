@@ -18,9 +18,8 @@ import { CommandManager } from '../../Classes/AllCommands';
 import { PopConst } from '../../Classes/PopConst';
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
 import { SelectSnapUiMutationEvent_Observer } from '../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject';
-import { AccordianModulesManager } from '../../UiModules/AccordianModule/AccordianManager';
 import { SelectSnapshotModule } from '../../UiModules/SelectSnapshotModule/SelectSnapshotModule';
-import { SettingsBucketModule } from '../../UiModules/SettingsModule/SettingsModule';
+import { SettingsBasedModules } from '../../UiModules/SettingsModule/SettingsModule';
 import { FeedbackModuleBrowserState } from '../../UiModules/UiFeedbackModules/FeedbackModuleBrowserState';
 import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/FeedbackModuleContentState';
 import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages';
@@ -31,10 +30,10 @@ import { UiCommandsManager } from '../UiStateManager';
 import { UiVisibilityTestAgent } from './UiVisibilityTestAgent';
 import { CancelButtonModule } from '../../UiModules/ButtonModules/CancelButtonModule';
 import { HindSiteSettingCheckBoxModule } from '../../UiModules/SettingsModule/HindSiteSettingCheckBoxModule';
+import { LoggableBase } from '../../../../Content/scripts/Managers/LoggableBase';
 
-export class UiManager {
+export class UiManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];
-  AccordianModuleManager: IAccordianManager;
   UiCommandsManager: UiCommandsManager;
   CurrScWindowState: IDataStateOfSitecoreWindow;
   FeedbackModuleMessages: FeedbackModuleMessages_Observer;
@@ -43,7 +42,6 @@ export class UiManager {
   OtherFocused: boolean = false;
   ParentFocused: boolean = false;
   private CommandMan: CommandManager;
-  private Logger: ILoggerAgent;
   private SettingsAgent: ISettingsAgent;
   private TabMan: BrowserTabAgent;
   TabId: string;
@@ -55,7 +53,8 @@ export class UiManager {
   private UiModules: IUiModule[] = [];
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandMan: CommandManager, moduleSelectSnapShots: SelectSnapshotModule) {
-    this.Logger = logger;
+    super(logger);
+
     this.SettingsAgent = settingsAgent;
     this.TabMan = tabMan;
     this.CommandMan = commandMan;
@@ -66,7 +65,6 @@ export class UiManager {
 
     this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
     this.UiCommandsManager = new UiCommandsManager(this.Logger, this.CommandMan.MenuCommandParamsBucket, this.UiVisibilityTestAgent);
-    this.AccordianModuleManager = new AccordianModulesManager(this.Logger, this.SettingsAgent);
 
     this.InstantiateModules();
     this.WireEvents();
@@ -81,13 +79,11 @@ export class UiManager {
     this.UiModules.push(new FeedbackModulePopUpState(this.Logger, PopConst.Const.Selector.HS.FeedbackPopUpState));
     this.UiModules.push(new FeedbackModuleContentState(this.Logger, PopConst.Const.Selector.HS.FeedbackContentState));
 
-    let settingsBucketModule = new SettingsBucketModule(this.Logger, this.SettingsAgent, this.AccordianModuleManager, '');
-    this.UiModules.push(settingsBucketModule);
+    let settingsBasedModules = new SettingsBasedModules(this.Logger, this.SettingsAgent);
+    this.UiModules = this.UiModules.concat(settingsBasedModules.AccordianModules);
+    this.UiModules = this.UiModules.concat(settingsBasedModules.NumberModules);
+    this.UiModules = this.UiModules.concat(settingsBasedModules.CheckBoxModules);
 
-    let checkBoxModules = settingsBucketModule.CheckBoxModulesBucket;
-    if (checkBoxModules) {
-      checkBoxModules.forEach((checkboxModule: HindSiteSettingCheckBoxModule) => this.UiModules.push(checkboxModule));
-    }
 
     this.UiModules.push(new CancelButtonModule(this.Logger, PopConst.Const.Selector.HS.HsCancel, null));
 
@@ -116,7 +112,7 @@ export class UiManager {
 
     let moduleSelectSnapShot = this.GetModuleByKey(ModuleKey.SelectSnapShot);
     if (moduleSelectSnapShot) {
-      (<SelectSnapshotModule>  moduleSelectSnapShot).SelectSnapshotModule_Subject.RegisterObserver(this.SelectSnapshotModule_Observer);
+      (<SelectSnapshotModule>moduleSelectSnapShot).SelectSnapshotModule_Subject.RegisterObserver(this.SelectSnapshotModule_Observer);
     }
 
     let feedBackModuleLog: IUiModule = this.GetModuleByKey(ModuleKey.FeedbackModuleLog);
@@ -179,7 +175,6 @@ export class UiManager {
     this.Logger.FuncStart(this.HydrateModules.name);
     if (uiHydrationData) {
       if (uiHydrationData.StateOfSitecoreWindow) {
-
         if (this.UiModules) {
           this.UiModules.forEach((uiModule: IUiModule) => uiModule.Hydrate(uiHydrationData));
         }
@@ -252,8 +247,6 @@ export class UiManager {
     return toReturn;
   }
 
-  
-
   GetValueInNickname(): string {
     var toReturn: string = '';
     toReturn = (<HTMLInputElement>window.document.getElementById(PopConst.Const.ElemId.InputNickname)).value;
@@ -271,7 +264,7 @@ export class UiManager {
   AssignOnCheckedEvent(targetId: string, handler: Function): void {
     var targetElem: HTMLElement = document.getElementById(targetId);
     if (!targetElem) {
-      this.Logger.ErrorAndThrow(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
+      this.Logger.ErrorAndThrow(this.AssignOnCheckedEvent.name, 'No Id: ' + targetId);
     } else {
       targetElem.addEventListener('checked', (evt) => { handler(evt) });
     }

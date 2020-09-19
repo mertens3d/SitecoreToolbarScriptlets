@@ -17,13 +17,14 @@ import { PopConst } from "../../Classes/PopConst";
 import { StateHelpers } from "../../Classes/StateHelpers";
 import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload";
 import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject.1";
-import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase.1";
+import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 
 export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiModule {
   private Selector: string;
   private StateHelpers: StateHelpers;
   public SelectSnapshotModule_Subject: SelectSnapUiMutationEvent_Subject;
   ModuleKey = ModuleKey.SelectSnapShot;
+  private  SelectElement: HTMLSelectElement;
 
   constructor(logger: ILoggerAgent, selector: string) {
     super(logger, selector);
@@ -34,17 +35,17 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
   }
 
   Init(): void {
-    this.AssignOnChangeEvent(PopConst.Const.Selector.HS.SelStateSnapShot);
+    this.SelectElement = <HTMLSelectElement> document.querySelector(this.Selector);
+    this.AssignOnChangeEventToSnapShotModule();
   }
 
-  private AssignOnChangeEvent(selector: string): void {
-    this.Logger.FuncStart(this.AssignOnChangeEvent.name, selector);
+  private AssignOnChangeEventToSnapShotModule(): void {
+    this.Logger.FuncStart(this.AssignOnChangeEventToSnapShotModule.name, this.Selector);
 
-    var targetElem: HTMLElement = document.querySelector(selector);
-    if (!targetElem) {
-      this.Logger.ErrorAndThrow(this.AssignOnChangeEvent.name, 'No Id: ' + selector);
+    if (!this.SelectElement) {
+      this.Logger.ErrorAndThrow(this.AssignOnChangeEventToSnapShotModule.name, 'No Id: ' + this.Selector);
     } else {
-      targetElem.onchange = (() => {
+      this.SelectElement.onchange = (() => {
         let self = this;
         let payload: ISelectSnapUiMutationEvent_Payload = {
           SelectSnapshotId: this.GetSelectSnapshotId()
@@ -52,7 +53,7 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
         this.SelectSnapshotModule_Subject.NotifyObservers(payload);
       });
     }
-    this.Logger.FuncEnd(this.AssignOnChangeEvent.name, selector);
+    this.Logger.FuncEnd(this.AssignOnChangeEventToSnapShotModule.name, this.Selector);
   }
 
   RefreshUi(): void {
@@ -60,9 +61,6 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
     //this.SelectSnapshotModule_Subject.NotifyObservers();
   }
 
-  private __getSelectElem(): HTMLSelectElement {
-    return <HTMLSelectElement>window.document.querySelector(this.Selector);
-  }
 
   SelectHeaderStr(prefix: string): string {
     // '    Time Stamp          - Page Type - Nickname       - Favorite?';
@@ -80,7 +78,7 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
   }
 
   GetSelectSnapshotId(): GuidData {
-    let currentVal = this.__getSelectElem().value;
+    let currentVal = this.SelectElement.value;
     let toReturn: GuidData;
     if (currentVal) {
       toReturn = Guid.ParseGuid(currentVal, true);
@@ -149,10 +147,9 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
     if (this.RefreshData.StateOfStorageSnapShots && this.RefreshData.StateOfStorageSnapShots.SnapShots) {
       let snapShots: IDataStateOfSitecoreWindow[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
 
-      var targetSel: HTMLSelectElement = this.__getSelectElem();
-
-      if (targetSel) {
-        this.CleanExistingSelection(targetSel);
+     
+      if (this.SelectElement) {
+        this.CleanExistingSelection(this.SelectElement);
         var headers: ISelectionHeaders = this.WriteHeaders();
 
         if (snapShots && snapShots.length > 0) {
@@ -163,14 +160,14 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
           }
         }
 
-        targetSel.appendChild(headers.FavoriteTitle);
-        targetSel.appendChild(headers.Favorite);
+        this.SelectElement.appendChild(headers.FavoriteTitle);
+        this.SelectElement.appendChild(headers.Favorite);
 
-        targetSel.appendChild(headers.ManualTitle);
-        targetSel.appendChild(headers.Manual);
+        this.SelectElement.appendChild(headers.ManualTitle);
+        this.SelectElement.appendChild(headers.Manual);
 
-        targetSel.appendChild(headers.AutoTitle);
-        targetSel.appendChild(headers.Auto);
+        this.SelectElement.appendChild(headers.AutoTitle);
+        this.SelectElement.appendChild(headers.Auto);
       }
     } else {
       this.Logger.Log('no snap shots');
