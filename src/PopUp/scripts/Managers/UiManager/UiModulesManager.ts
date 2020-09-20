@@ -22,8 +22,7 @@ import { SelectSnapUiMutationEvent_ObserverWithCallback } from '../../Events/Sel
 import { ButtonBasedModules } from '../../UiModules/ButtonModules/ButtonBasedModules';
 import { TypCommandButtonModule } from '../../UiModules/ButtonModules/TypCommandButtonModule';
 import { SelectSnapshotModule } from '../../UiModules/SelectSnapshotModule/SelectSnapshotModule';
-import { HindSiteSettingCheckBoxModule } from '../../UiModules/SettingsModule/HindSiteSettingCheckBoxModule';
-import { SettingsBasedModules } from '../../UiModules/SettingsModule/SettingsBasedModules';
+import { SettingsBasedModules } from '../../UiModules/SettingBasedModules/SettingsBasedModules';
 import { FeedbackModuleBrowserState } from '../../UiModules/UiFeedbackModules/FeedbackModuleBrowserState';
 import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/FeedbackModuleContentState';
 import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages';

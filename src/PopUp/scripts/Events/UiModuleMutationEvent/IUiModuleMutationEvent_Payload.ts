@@ -6,5 +6,12 @@ export interface IUiModuleMutationEvent_Payload {
   CheckBoxModule: {
     Checked: boolean,
     SettingKey: SettingKey,
-  }
+
+  },
+  NumberModule: {
+    NumberValue: number,
+  },
+  AccordianModule: {
+    NewVal: boolean
+      }
 }

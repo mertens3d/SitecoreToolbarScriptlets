@@ -50,7 +50,7 @@ export class StaticHelpers {
 
   static IsNullOrUndefined(testSubject: any): boolean
   static IsNullOrUndefined(testSubject: any[]): boolean
-  static IsNullOrUndefined(testSubject: any| any[]): boolean {
+  static IsNullOrUndefined(testSubject: any | any[]): boolean {
     let toReturn: boolean = true;
     try {
       if (testSubject instanceof Array) {

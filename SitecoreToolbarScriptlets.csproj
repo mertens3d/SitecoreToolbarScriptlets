@@ -98,6 +98,9 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowRecipePartials.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\TreeMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Events\UiModuleManagerPassThroughEvent\IUiModuleManagerPassThroughEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Events\UiModuleManagerPassThroughEvent\UiModuleManagerPassThroughEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Events\UiModuleManagerPassThroughEvent\UiModuleManagerPassThroughEvent_Subject.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Events\UiModuleMutationEvent\IUiModuleMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Events\UiModuleMutationEvent\UiModuleMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Events\UiModuleMutationEvent\UiModuleMutationEvent_Subject.ts" />
@@ -117,10 +120,11 @@
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\CancelButtonModule.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\StateHelpers.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Events\SelectSnapUiMutationEvent\SelectSnapUiMutationEvent_ObserverWithCallback.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingsModule\HindSiteSettingCheckBoxModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingsModule\HindSiteSettingNumberModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\HindSiteSettingCheckBoxModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\HindSiteSettingNumberModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\_SettingsBasedModulesBase.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleBrowserState.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingsModule\SettingsBasedModules.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\SettingsBasedModules.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModulePopUpState.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleContentState.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleMessages.ts" />
@@ -130,13 +134,13 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersInternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\AllCommands.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Events\SelectSnapUiMutationEvent\SelectSnapshotUiMutationEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\_UiModuleBase.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\_UiModuleBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerTimer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LogWriterBuffer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\ToastAgent\ToastAgent.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\ConstAllSettings.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\DefaultSettings.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\Handlers.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\BrowserTabAgent.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiCommandsManager.ts" />
@@ -355,7 +359,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IdataOneSetting.ts" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\AccordianModule\AccordianModule.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\AccordianModule.ts" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultScWindowState.ts" />

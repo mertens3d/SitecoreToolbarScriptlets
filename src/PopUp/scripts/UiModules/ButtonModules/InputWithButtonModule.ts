@@ -28,8 +28,8 @@ export class InputWithButtonModule extends _baseButtonModule implements IUiModul
     this.InputElement.placeholder = "Nick Name";
     this.InputElement.value = '';
 
-    if (this.ContainerUiElem) {
-      this.ContainerUiElem.appendChild(this.InputElement);
+    if (this.ContainerUiDivElem) {
+      this.ContainerUiDivElem.appendChild(this.InputElement);
     }
   }
 

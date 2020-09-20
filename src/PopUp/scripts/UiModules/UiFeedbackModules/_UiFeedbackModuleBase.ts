@@ -1,7 +1,7 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { _UiModuleBase } from "./_UiModuleBase";
+import { _UiModuleBase } from "../_UiModuleBase";
 
 export class _UiFeedbackModuleBase extends _UiModuleBase {
   protected indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';

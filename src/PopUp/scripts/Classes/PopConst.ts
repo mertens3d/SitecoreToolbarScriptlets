@@ -59,18 +59,6 @@ export class PopConst {
       PublishComplete: 'Publishing Complete',
     },
     Selector: {
-      Btn: {
-      },
-      Legend: {
-        LgndBrowserState: '[id=lgnd-browser-state]',
-        LgndContentState: '[id=lgnd-content-state]',
-        LgndForeSite: '[id=lgnd-fore-site]',
-        LgndHindSite: '[id=lgnd-hind-site]',
-        LgndMessages: '[id=lgnd-messages]',
-        LgndPopUpLog: '[id=lgnd-pop-up-log]',
-        LgndPopUpState: '[id=lgnd-pop-up-state]',
-        LgndSettings: '[id=lgnd-settings]',
-      },
       HS: {
         AutoSnapshotBeforeWindowChange: '[id=id-settings-auto-snapshot-on-window-change]',
 
@@ -120,6 +108,14 @@ export class PopConst {
           BtnQuickPublish: '[id=id-ph-btn-quick-publish]',
           BtnPresentationDetails: '[id=id-ph-btn-presentation-details]',
           BtnCompactScUi: '[id=id-ph-btn-compact-sc-ui]',
+          LgndBrowserState: '[id=lgnd-browser-state]',
+          LgndContentState: '[id=lgnd-content-state]',
+          LgndForeSite: '[id=lgnd-fore-site]',
+          LgndHindSite: '[id=lgnd-hind-site]',
+          LgndMessages: '[id=lgnd-messages]',
+          LgndPopUpLog: '[id=lgnd-pop-up-log]',
+          LgndPopUpState: '[id=lgnd-pop-up-state]',
+          LgndSettings: '[id=lgnd-settings]',
         }
       },
     },

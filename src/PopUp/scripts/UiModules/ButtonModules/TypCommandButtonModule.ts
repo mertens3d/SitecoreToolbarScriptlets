@@ -36,7 +36,7 @@ export class TypCommandButtonModule extends _baseButtonModule implements IUiModu
   }
 
   private AddElemToBaseButton(): void {
-    this.ContainerUiElem.appendChild(this.ElemDivBtnOverlay);
+    this.ContainerUiDivElem.appendChild(this.ElemDivBtnOverlay);
   }
 
   private BuildButtonOverlay(): void {
@@ -64,15 +64,15 @@ export class TypCommandButtonModule extends _baseButtonModule implements IUiModu
 
   BuildButton(): void {
     this.Logger.FuncStart(this.BuildButton.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
-    if (this.ContainerUiElem) {
+    if (this.ContainerUiDivElem) {
       this.BuildButtonElem();
 
       this.BuildButtonOverlay();
 
-      this.ContainerUiElem.classList.add('btn-container');
+      this.ContainerUiDivElem.classList.add('btn-container');
 
-      this.ContainerUiElem.appendChild(this.ElemDivBtnOverlay);
-      this.ContainerUiElem.appendChild(this.HTMLButtonElement);
+      this.ContainerUiDivElem.appendChild(this.ElemDivBtnOverlay);
+      this.ContainerUiDivElem.appendChild(this.HTMLButtonElement);
     } else {
       this.Logger.ErrorAndContinue(TypCommandButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
@@ -81,7 +81,7 @@ export class TypCommandButtonModule extends _baseButtonModule implements IUiModu
 
   RefreshUi(): void {
     this.Logger.FuncStart(this.RefreshUi.name, this.Friendly);
-    if (this.ContainerUiElem) {
+    if (this.ContainerUiDivElem) {
       let allresults: VisiblityTestResultsBucket = this.RefreshData.UiVisibilityTestAgent.TestAgainstAllSetControllers(this.MenuCommandDefinition);
 
       this.Logger.LogVal('length', allresults.TestResults.length);

@@ -1,11 +1,11 @@
-﻿import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
-import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
+﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+import { ModuleKey } from "../../../Shared/scripts/Enums/ModuleKey";
+import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { UiHydrationData } from "../../../Shared/scripts/Interfaces/MenuCommand";
 
 export class _UiModuleBase extends LoggableBase {
   protected ContainerSelector: string;
-  protected ContainerUiElem: HTMLElement;
+  protected ContainerUiDivElem: HTMLDivElement;
   protected UiElement: HTMLElement;
   protected RefreshData: any;
   protected Friendly: string = 'Not Set';
@@ -17,7 +17,7 @@ export class _UiModuleBase extends LoggableBase {
   }
 
   protected InitUiModuleBase() {
-    this.ContainerUiElem = this.GetUiElement(this.ContainerSelector);
+    this.ContainerUiDivElem = <HTMLDivElement> this.GetUiElement(this.ContainerSelector);
   }
 
   protected GetUiElement(uiSelector: string): HTMLElement {

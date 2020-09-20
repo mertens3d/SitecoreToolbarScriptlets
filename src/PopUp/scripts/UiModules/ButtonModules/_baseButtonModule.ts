@@ -6,7 +6,7 @@ import { ICommandHandlerDataForPopUp } from "../../../../Shared/scripts/Interfac
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
 import { ISingleClickEvent_Payload } from "../../Events/SingleClickEvent/ISingleClickEvent_Payload";
-import { _UiModuleBase } from "../UiFeedbackModules/_UiModuleBase";
+import { _UiModuleBase } from "../_UiModuleBase";
 import { SingleClickEvent_Subject } from "../../Events/SingleClickEvent/SingleClickEvent_Subject";
 
 export class _baseButtonModule extends _UiModuleBase {
@@ -34,10 +34,10 @@ export class _baseButtonModule extends _UiModuleBase {
 
   BuildButton(): void {
     this.Logger.FuncStart(this.BuildButton.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
-    if (this.ContainerUiElem) {
+    if (this.ContainerUiDivElem) {
       this.BuildButtonElem();
-      this.ContainerUiElem.classList.add('btn-container');
-      this.ContainerUiElem.appendChild(this.HTMLButtonElement);
+      this.ContainerUiDivElem.classList.add('btn-container');
+      this.ContainerUiDivElem.appendChild(this.HTMLButtonElement);
     } else {
       this.Logger.ErrorAndContinue(this.BuildButton.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }

@@ -4,9 +4,9 @@ import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { AccordianModule } from "../AccordianModule/AccordianModule";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
+import { AccordianModule } from "./AccordianModule";
 
 
 export class SettingsBasedModules extends LoggableBase {
@@ -37,7 +37,7 @@ export class SettingsBasedModules extends LoggableBase {
     let toReturn: AccordianModule[] = [];
     this.SettingsAgent.HindSiteSettings().forEach((hindSiteSetting: IHindSiteSetting) => {
       if (hindSiteSetting.DataType === SettingType.Accordion) {
-        let newAccordianDrone = new AccordianModule(this.Logger, this.SettingsAgent, hindSiteSetting);
+        let newAccordianDrone = new AccordianModule(this.Logger, hindSiteSetting);
 
         toReturn.push(newAccordianDrone);
       }
@@ -65,7 +65,7 @@ export class SettingsBasedModules extends LoggableBase {
 
     this.SettingsAgent.HindSiteSettings().forEach((hindSiteSetting: IHindSiteSetting) => {
       if (hindSiteSetting.DataType === SettingType.Number) {
-        let hindSiteCheckboxSetting: HindSiteSettingNumberModule = new HindSiteSettingNumberModule(this.Logger, this.SettingsAgent, hindSiteSetting)
+        let hindSiteCheckboxSetting: HindSiteSettingNumberModule = new HindSiteSettingNumberModule(this.Logger,  hindSiteSetting)
 
         toReturn.push(hindSiteCheckboxSetting);
       }

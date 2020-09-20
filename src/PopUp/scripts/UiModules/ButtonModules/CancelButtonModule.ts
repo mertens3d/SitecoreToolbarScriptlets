@@ -24,7 +24,7 @@ export class CancelButtonModule extends _baseButtonModule implements IUiModuleBu
   }
 
   private __GetCancelButton(): HTMLElement {
-    return this.ContainerUiElem;
+    return this.ContainerUiDivElem;
   }
 
   SetCancelFlag() {

@@ -1,18 +1,15 @@
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
 import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
 import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
-import { _baseButtonModule } from '../UiModules/ButtonModules/_baseButtonModule';
 import { SelectSnapshotModule } from '../UiModules/SelectSnapshotModule/SelectSnapshotModule';
 import { Handlers } from './Handlers';
 import { UiModulesManager } from './UiManager/UiModulesManager';
-import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
-import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
-import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
-import { HindSiteSettingCheckBoxModule } from '../UiModules/SettingsModule/HindSiteSettingCheckBoxModule';
 
 export class EventManager extends LoggableBase {
   Handlers: Handlers

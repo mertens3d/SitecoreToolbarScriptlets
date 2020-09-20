@@ -18,7 +18,7 @@ import { StateHelpers } from "../../Classes/StateHelpers";
 import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload";
 import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject";
 import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
-import { _UiModuleBase } from "../UiFeedbackModules/_UiModuleBase";
+import { _UiModuleBase } from "../_UiModuleBase";
 
 export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   private Selector: string;
