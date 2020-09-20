@@ -6,23 +6,36 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
 import { _UiModuleBase } from "../UiFeedbackModules/_UiModuleBase";
 
 export class AccordianModule extends _UiModuleBase implements IUiModule {
-  
   private SettingsAgent: ISettingsAgent;
   public AssociatedSetting: IHindSiteSetting;
   private AssociatedElement: HTMLElement;
   private AssociatedBodyElem: HTMLElement;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, oneSetting: IHindSiteSetting) {
-    super(logger, oneSetting.UiSelector)
+    super(logger, oneSetting.UiContainerSelector)
     this.Logger.InstantiateStart(AccordianModule.name);
     this.SettingsAgent = settingsAgent;
     this.AssociatedSetting = oneSetting;
     this.Logger.InstantiateEnd(AccordianModule.name);
   }
 
+  WireEvents(): void {
+    if (this.AssociatedBodyElem) {
+      if (this.AssociatedElement) {
+        let self = this;
+        this.AssociatedElement.addEventListener('click', (evt) => {
+          self.ToggleAccordion(evt);
+        });
+      }
+    } else {
+      this.Logger.LogAsJsonPretty('this.AssociatedElement', this.AssociatedElement);
+      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'Sibling not found ' + this.AssociatedSetting.FriendlySetting);
+    }
+  }
+
   Init() {
     this.Logger.FuncStart(this.Init.name, AccordianModule.name);
-    this.AssociatedElement = window.document.querySelector(this.ElementSelector);
+    this.AssociatedElement = window.document.querySelector(this.ContainerSelector);
 
     if (this.AssociatedElement) {
       // let uiLabel: HTMLElement = window.document.querySelector(this.HindSiteSetting.UiSelector.replace('id', 'for'));
@@ -32,26 +45,12 @@ export class AccordianModule extends _UiModuleBase implements IUiModule {
 
     this.AssociatedBodyElem = this.GetaccordionBodyElem(this.AssociatedElement);
 
-    if (this.AssociatedBodyElem) {
-      this.AddListener();
-    } else {
-      this.Logger.LogAsJsonPretty('this.AssociatedElement', this.AssociatedElement);
-      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'Sibling not found ' + this.AssociatedSetting.FriendlySetting);
-    }
+    
     this.Logger.FuncEnd(this.Init.name, AccordianModule.name);
   }
 
   RefreshUi(): void {
     this.DroneRestoreAccordionState();
-  }
-
-  private AddListener() {
-    if (this.AssociatedElement) {
-      let self = this;
-      this.AssociatedElement.addEventListener('click', (evt) => {
-        self.ToggleAccordion(evt);
-      });
-    }
   }
 
   DroneRestoreAccordionState() {

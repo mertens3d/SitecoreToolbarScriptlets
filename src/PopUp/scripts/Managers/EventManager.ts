@@ -1,129 +1,61 @@
-import { SettingType } from '../../../Shared/scripts/Enums/SettingType';
-import { IHindSiteSetting } from '../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
-import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
-import { Handlers } from './Handlers';
-import { UiManager } from './UiManager/UiManager';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
-import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
-import { IMenuCommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
+import { SingleClickEvent_Observer } from "../Events/SelectSnapUiMutationEvent/SingleClickEvent_Observer";
+import { TypButtonModule } from '../UiModules/ButtonModules/TypButtonModule';
+import { _baseButtonModule } from '../UiModules/ButtonModules/_baseButtonModule';
 import { SelectSnapshotModule } from '../UiModules/SelectSnapshotModule/SelectSnapshotModule';
+import { Handlers } from './Handlers';
+import { UiModulesManager } from './UiManager/UiModulesManager';
+import { IUiModuleButton } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
 
 export class EventManager extends LoggableBase {
   Handlers: Handlers
 
-  private SettingsAgent: ISettingsAgent;
-  private UiMan: UiManager;
   PopUpMesssageBrokerAgent: PopUpMessagesBrokerAgent; // for .bind(this)
   SelectSnapShotModule: SelectSnapshotModule;
+  UiModulesMan: UiModulesManager;
+  CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, uiMan: UiManager, handlers: Handlers, popupMessageBrokerAgent: PopUpMessagesBrokerAgent, moduleSelectSnapShot: SelectSnapshotModule) {
+  constructor(logger: ILoggerAgent, handlers: Handlers, popupMessageBrokerAgent: PopUpMessagesBrokerAgent, moduleSelectSnapShot: SelectSnapshotModule, uimodulesMan: UiModulesManager) {
     super(logger);
-    this.SettingsAgent = settingsAgent;
-    this.UiMan = uiMan;
     this.Handlers = handlers;
     this.PopUpMesssageBrokerAgent = popupMessageBrokerAgent;
     this.SelectSnapShotModule = moduleSelectSnapShot;
+    this.UiModulesMan = uimodulesMan;
+    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent);
   }
 
-  InitEventManager(menuCommandParamsBucket: IMenuCommandDefinitionBucket): void {
-    this.Logger.FuncStart(this.InitEventManager.name);
+  OnSingleClickEvent<ISingleClickEvent_Payload> (singleClickEventPayload: ISingleClickEvent_Payload) {
+    alert('click');
 
-    try {
-      this.WireAllMenuButtons(menuCommandParamsBucket);
-    } catch (err) {
-      this.Logger.ErrorAndThrow(this.InitEventManager.name, err);
+  };
+
+  InitEventManager(): void {
+    this.ListenForCommandEvents();
+  }
+
+  ListenForCommandEvents() {
+    let baseButtonModules: IUiModuleButton[] = this.UiModulesMan.GetBaseButtonModules();
+
+    if (baseButtonModules) {
+      baseButtonModules.forEach((baseButtonModule: IUiModuleButton) => {
+        baseButtonModule.SingleButtonClickEvent_Subject.RegisterObserver(this.CommandButtonSingleClickEvent_Observer);
+      });
     }
-    this.Logger.FuncEnd(this.InitEventManager.name);
   }
 
-  async TriggerPingEventAsync(pingCommand: IMenuCommandDefinition): Promise<void> {
+  async TriggerPingEventAsync(): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);
 
-    let data = this.BuildCommandData(pingCommand);
-    this.RouteAllCommandEvents(data);
+    let pingButtomModule: TypButtonModule = this.UiModulesMan.GetCommandButtonByKey(MenuCommandKey.Ping)
+
+    // todo - put back let data = this.BuildCommandData(pingCommand);
+    // todo this.RouteAllCommandEvents(data);
 
     this.Logger.FuncEnd(this.TriggerPingEventAsync.name);
-  }
-
-  private WireAllMenuButtons(menuCommandParamsBucket: IMenuCommandDefinitionBucket) {
-    this.Logger.FuncStart(this.WireAllMenuButtons.name);
-
-    if (menuCommandParamsBucket && menuCommandParamsBucket.MenuCommandParamsAr) {
-      menuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
-        if (menuCommandParams.PlaceHolderSelector && menuCommandParams.PlaceHolderSelector.length > 0) {
-          this.WireOneMenuButtonListener(menuCommandParams);
-        } else {
-          this.Logger.Log('No ui for this command: ' + MenuCommandKey[menuCommandParams.MenuCommandKey]);
-        }
-      })
-    } else {
-      this.Logger.ErrorAndThrow(this.WireAllMenuButtons.name, 'no bucket or no array inside');
-    }
-
-    this.Logger.FuncEnd(this.WireAllMenuButtons.name);
-  }
-  WireOneMenuButtonListener(oneCommand: IMenuCommandDefinition): void {
-    if (oneCommand && oneCommand.PlaceHolderSelector) {
-      var targetElem: HTMLElement = document.querySelector(oneCommand.PlaceHolderSelector);
-      if (targetElem) {
-        if (oneCommand.EventHandlerData.Event === CommandButtonEvents.OnSingleClick) {
-          this.WireSingleClickEvent(oneCommand, targetElem);
-        } else if (oneCommand.EventHandlerData.Event === CommandButtonEvents.OnDoubleClick) {
-          this.WireDoubleClickEvent(oneCommand, targetElem)
-        }
-      } else {
-        this.Logger.ErrorAndThrow(this.WireOneMenuButtonListener.name, 'did not find placeholder: ' + oneCommand.PlaceHolderSelector);
-      }
-    } else {
-      this.Logger.ErrorAndThrow(this.WireOneMenuButtonListener.name, 'no command or no command placeholder');
-    }
-  }
-
-  private WireDoubleClickEvent(oneCommand: IMenuCommandDefinition, targetElem: HTMLElement): void {
-    //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestoreNewTab(evt, this.PopHub); });
-    //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.FeedbackLogElement, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
-
-    if (targetElem) {
-      targetElem.ondblclick = (evt) => {
-        let data: ICommandHandlerDataForPopUp = this.BuildCommandData(oneCommand);
-        data.Evt = evt,
-          data.EventMan.RouteAllCommandEvents(data)
-      };
-    }
-  }
-
-  private WireSingleClickEvent(oneCommand: IMenuCommandDefinition, targetElem: HTMLElement): void {
-    if (targetElem) {
-      let self = this;
-      targetElem.addEventListener('click', (evt) => {
-        let data: ICommandHandlerDataForPopUp = this.BuildCommandData(oneCommand);
-        data.Evt = evt;
-        data.EventMan = self;
-        data.EventMan.RouteAllCommandEvents(data);
-      });
-    } else {
-      this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No Id: ' + oneCommand.PlaceHolderSelector);
-    }
-  }
-
-  private BuildCommandData(oneCommand: IMenuCommandDefinition): ICommandHandlerDataForPopUp {
-    var self: EventManager = this;
-
-    oneCommand.EventHandlerData.Handler = oneCommand.EventHandlerData.Handler.bind(this);
-
-    let data: ICommandHandlerDataForPopUp = {
-      EventMan: self,
-      MenuCommandParams: oneCommand,
-      EventHandlerData: oneCommand.EventHandlerData,
-      Evt: null,
-    }
-
-    return data;
   }
 
   async RouteAllCommandEvents(data: ICommandHandlerDataForPopUp): Promise<void> {

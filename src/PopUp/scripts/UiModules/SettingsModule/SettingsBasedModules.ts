@@ -8,6 +8,7 @@ import { AccordianModule } from "../AccordianModule/AccordianModule";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
 
+
 export class SettingsBasedModules extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
   CheckBoxModules: IUiModule[];

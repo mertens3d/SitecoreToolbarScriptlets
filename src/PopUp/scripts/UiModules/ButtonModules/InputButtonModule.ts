@@ -1,12 +1,23 @@
-﻿import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+﻿import { IUiModule, IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { _baseButtonModule } from "./_baseButtonModule";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { PopConst } from "../../Classes/PopConst";
 
-export class InputButtonModule extends _baseButtonModule implements IUiModule {
-  ModuleKey = ModuleKey.InputButton;
+export class InputWithButtonModule extends _baseButtonModule implements IUiModuleButton {
+
+  WireEvents(): void {
+  }
+
+  Init(): void {
+    this.Init_BaseButtonModule();
+  }
+
+  RefreshUi(): void {
+  }
+
+  ModuleKey = ModuleKey.ButtonWithInput;
 
   DrawCorrectNicknameInUI() {
     this.Logger.FuncStart(this.DrawCorrectNicknameInUI.name);

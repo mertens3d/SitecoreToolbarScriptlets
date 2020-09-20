@@ -9,7 +9,7 @@ export interface IHindSiteSetting {
   HasUi: boolean
   SettingFlavor: SettingFlavor;
   SettingKey: SettingKey;
-  UiSelector: any;
+  UiContainerSelector: any;
   ValueAsBool(): boolean;
   ValueAsInt(): number
   ValueAsObj: any;

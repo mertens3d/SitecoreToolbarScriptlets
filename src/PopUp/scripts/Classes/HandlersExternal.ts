@@ -10,7 +10,7 @@ import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IMsgPayload";
 import { PopUpMessagesBrokerAgent } from "../Agents/PopUpMessagesBrokerAgent";
-import { BrowserTabAgent } from "../Managers/TabManager";
+import { BrowserTabAgent } from "../Managers/BrowserTabAgent";
 import { SelectSnapshotModule } from "../UiModules/SelectSnapshotModule/SelectSnapshotModule";
 
 export class HandlersExternalEvent extends LoggableBase {

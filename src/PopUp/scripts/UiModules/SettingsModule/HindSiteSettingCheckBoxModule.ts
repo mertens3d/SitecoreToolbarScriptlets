@@ -12,7 +12,7 @@ export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiM
   private UiInputElement: HTMLInputElement;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, hindSiteSetting: IHindSiteSetting) {
-    super(logger, hindSiteSetting.UiSelector);
+    super(logger, hindSiteSetting.UiContainerSelector);
 
     this.Logger.InstantiateStart(HindSiteSettingCheckBoxModule.name);
     if (!StaticHelpers.IsNullOrUndefined(settingsAgent)
@@ -29,10 +29,24 @@ export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiM
 
   Init() {
     this.Logger.FuncStart(this.Init.name, this.Friendly);
-    this.UiInputElement = <HTMLInputElement>this.GetUiElement();
-    this.WireEvent();
+    this.UiInputElement = <HTMLInputElement>this.GetUiElement(this.HindSiteSetting.UiContainerSelector);
     this.SetLabel();
     this.Logger.FuncEnd(this.Init.name, this.Friendly);
+  }
+
+  WireEvents(): void {
+    this.WireEvent();
+
+    var targetElem: HTMLElement = document.getElementById(this.HindSiteSetting.UiContainerSelector);
+    if (!targetElem) {
+      this.Logger.ErrorAndThrow(this.AssignOnCheckedEvent.name, 'No Id: ' + this.HindSiteSetting.UiContainerSelector);
+    } else {
+      // todo - put back targetElem.addEventListener('checked', (evt) => { this.HindSiteSetting. handler(evt) });
+    }
+  }
+
+  AssignOnCheckedEvent(targetId: string, handler: Function): void {
+    
   }
 
   private WireEvent() {
@@ -56,7 +70,7 @@ export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiM
   }
 
   private SetLabel() {
-    let uiLabel: HTMLElement = window.document.querySelector(this.HindSiteSetting.UiSelector.replace('id', 'for'));
+    let uiLabel: HTMLElement = window.document.querySelector(this.HindSiteSetting.UiContainerSelector.replace('id', 'for'));
     if (uiLabel) {
       uiLabel.innerHTML = this.HindSiteSetting.FriendlySetting;
     }

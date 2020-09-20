@@ -7,6 +7,9 @@ import { PopConst } from "../../Classes/PopConst";
 import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements IUiModule {
+
+  WireEvents(): void {
+  }
   ModuleKey = ModuleKey.BroswerState;
 
   Init(): void {

@@ -1,21 +1,40 @@
-﻿import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+﻿import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
+import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IUiModule, IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { _baseButtonModule } from "./_baseButtonModule";
 
-export class TypButtonModule extends _baseButtonModule implements IUiModule {
-  private ElemButton: HTMLButtonElement;
+export class TypButtonModule extends _baseButtonModule implements IUiModuleButton {
+  
+  ModuleKey = ModuleKey.ButtonTypical;
   private ElemButtonBackText: HTMLDivElement;
 
-  ElemDivBtnOverlay: HTMLDivElement;
+  private ElemDivBtnOverlay: HTMLDivElement;
 
-  constructor(loggerAgent: ILoggerAgent, oneCommand: IMenuCommandDefinition) {
-    super(loggerAgent, oneCommand);
+  constructor(loggerAgent: ILoggerAgent,  menuCommandParameters: IMenuCommandDefinition) {
+    super(loggerAgent, menuCommandParameters);
   }
+    
 
   Init(): void {
+    this.Logger.FuncStart(this.Init.name, TypButtonModule.name)
+    this.Init_BaseButtonModule();
+    this.BuildModuleButton();
+    this.Logger.FuncEnd(this.Init.name, TypButtonModule.name)
+  }
+
+  WireEvents(): void {
+    this.WireEvents_Base();
+  }
+
+  GetCommandKey() {
+    return this.MenuCommandDefinition.MenuCommandKey;
+  }
+
+  TriggerSingleClick() {
+    this.ElemButton.click();
   }
 
   private BuildButtonOverlayBackFill() {
@@ -51,15 +70,15 @@ export class TypButtonModule extends _baseButtonModule implements IUiModule {
 
   BuildModuleButton(): void {
     this.Logger.FuncStart(this.BuildModuleButton.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
-    if (this.PlaceHolderUiElem) {
+    if (this.ContainerUiElem) {
       this.BuildButtonElem();
 
       this.BuildButtonOverlay();
 
-      this.PlaceHolderUiElem.classList.add('btn-container');
+      this.ContainerUiElem.classList.add('btn-container');
 
-      this.PlaceHolderUiElem.appendChild(this.ElemDivBtnOverlay);
-      this.PlaceHolderUiElem.appendChild(this.ElemButton);
+      this.ContainerUiElem.appendChild(this.ElemDivBtnOverlay);
+      this.ContainerUiElem.appendChild(this.ElemButton);
     } else {
       this.Logger.ErrorAndContinue(TypButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
@@ -68,7 +87,7 @@ export class TypButtonModule extends _baseButtonModule implements IUiModule {
 
   RefreshUi(): void {
     this.Logger.FuncStart(this.RefreshUi.name, this.Friendly);
-    if (this.PlaceHolderUiElem) {
+    if (this.ContainerUiElem) {
       let allresults: VisiblityTestResultsBucket = this.RefreshData. UiVisibilityTestAgent.TestAgainstAllSetControllers(this.MenuCommandDefinition);
 
       this.Logger.LogVal('length', allresults.TestResults.length);

@@ -1,14 +1,14 @@
-﻿import { IDataContentReplyReceivedEvent_Payload } from '../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload';
+﻿import { LoggableBase } from '../../../../Content/scripts/Managers/LoggableBase';
+import { IDataContentReplyReceivedEvent_Payload } from '../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload';
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { MenuCommandKey } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { IAccordianManager } from '../../../../Shared/scripts/Interfaces/Agents/IAccordianManager';
 import { IHindSiteSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { IUiModule } from '../../../../Shared/scripts/Interfaces/Agents/IUiModule';
+import { IUiModule, IUiModuleButton } from '../../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots';
@@ -18,29 +18,27 @@ import { CommandManager } from '../../Classes/AllCommands';
 import { PopConst } from '../../Classes/PopConst';
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
 import { SelectSnapUiMutationEvent_Observer } from '../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject';
+import { ButtonBasedModules } from '../../UiModules/ButtonModules/ButtonBasedModules';
+import { TypButtonModule } from '../../UiModules/ButtonModules/TypButtonModule';
+import { _baseButtonModule } from '../../UiModules/ButtonModules/_baseButtonModule';
 import { SelectSnapshotModule } from '../../UiModules/SelectSnapshotModule/SelectSnapshotModule';
-import { SettingsBasedModules } from '../../UiModules/SettingsModule/SettingsModule';
+import { SettingsBasedModules } from '../../UiModules/SettingsModule/SettingsBasedModules';
 import { FeedbackModuleBrowserState } from '../../UiModules/UiFeedbackModules/FeedbackModuleBrowserState';
 import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/FeedbackModuleContentState';
 import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
-import { BrowserTabAgent } from '../TabManager';
-import { UiCommandsManager } from '../UiStateManager';
+import { BrowserTabAgent } from '../BrowserTabAgent';
+import { UiCommandsManager } from '../UiCommandsManager';
 import { UiVisibilityTestAgent } from './UiVisibilityTestAgent';
-import { CancelButtonModule } from '../../UiModules/ButtonModules/CancelButtonModule';
-import { HindSiteSettingCheckBoxModule } from '../../UiModules/SettingsModule/HindSiteSettingCheckBoxModule';
-import { LoggableBase } from '../../../../Content/scripts/Managers/LoggableBase';
+import { _UiModuleBase } from '../../UiModules/UiFeedbackModules/_UiModuleBase';
 
-export class UiManager extends LoggableBase {
+export class UiModulesManager extends LoggableBase {
+    
   MenuCommandParameters: IMenuCommandDefinition[];
   UiCommandsManager: UiCommandsManager;
   CurrScWindowState: IDataStateOfSitecoreWindow;
   FeedbackModuleMessages: FeedbackModuleMessages_Observer;
-  MenuEnabled: boolean = true;
-  MenuFocused: boolean = true;
-  OtherFocused: boolean = false;
-  ParentFocused: boolean = false;
   private CommandMan: CommandManager;
   private SettingsAgent: ISettingsAgent;
   private TabMan: BrowserTabAgent;
@@ -54,21 +52,33 @@ export class UiManager extends LoggableBase {
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandMan: CommandManager, moduleSelectSnapShots: SelectSnapshotModule) {
     super(logger);
+    this.Logger.InstantiateStart(UiModulesManager.name);
 
     this.SettingsAgent = settingsAgent;
     this.TabMan = tabMan;
     this.CommandMan = commandMan;
-
     this.UiModules.push(moduleSelectSnapShots);
 
-    this.Logger.InstantiateStart(UiManager.name);
 
     this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
     this.UiCommandsManager = new UiCommandsManager(this.Logger, this.CommandMan.MenuCommandParamsBucket, this.UiVisibilityTestAgent);
 
     this.InstantiateModules();
+    this.Logger.InstantiateEnd(UiModulesManager.name);
+  }
+
+  InitUiMan() {
+    this.Logger.FuncStart(this.InitUiMan.name, UiModulesManager.name);
+
+    this.WriteBuildNumToUi();
     this.WireEvents();
-    this.Logger.InstantiateEnd(UiManager.name);
+
+    if (this.UiModules) {
+      this.UiModules.forEach((uiModule: IUiModule) => uiModule.Init());
+    }
+
+    this.UiCommandsManager.InitButtonStateManager();
+    this.Logger.FuncEnd(this.InitUiMan.name, UiModulesManager.name);
   }
 
   InstantiateModules() {
@@ -84,19 +94,74 @@ export class UiManager extends LoggableBase {
     this.UiModules = this.UiModules.concat(settingsBasedModules.NumberModules);
     this.UiModules = this.UiModules.concat(settingsBasedModules.CheckBoxModules);
 
-
-    this.UiModules.push(new CancelButtonModule(this.Logger, PopConst.Const.Selector.HS.HsCancel, null));
+    let buttonBasedModules = new ButtonBasedModules(this.Logger, this.CommandMan)
+    this.Logger.LogVal('buttonBaseModules ', buttonBasedModules.AllButtonBasedModules.length);
+    this.UiModules = this.UiModules.concat(<IUiModule[]>buttonBasedModules.AllButtonBasedModules);
 
     this.Logger.FuncEnd(this.InstantiateModules.name);
   }
 
-  GetModuleByKey(moduleKey: ModuleKey): IUiModule {
+  FilterUiModulesByMenuCommandKey(uiModules: TypButtonModule[], menuCommandKey: MenuCommandKey): TypButtonModule {
+    let toReturn: TypButtonModule = null;
+
+    if (uiModules && uiModules.length > 0) {
+      for (let uiModule of uiModules) {
+        if (uiModule.GetCommandKey() === menuCommandKey) {
+          toReturn = uiModule;
+          break;
+        }
+      }
+    }
+    return toReturn;
+  }
+
+  //GetCommandModuleByKey(commandKey: MenuCommandKey): IUiModule {
+  //  let allButtonBased: IUiModule[] = this.GetModulesByKey(ModuleKey.TypicalButton);
+  //}
+
+ private GetFirstModuleByKey(moduleKey: ModuleKey): IUiModule {
     let toReturn: IUiModule = null;
+
+    let uiModules: IUiModule[] = this.GetModulesByKey(moduleKey);
+
+    if (uiModules && uiModules.length > 0) {
+      toReturn = uiModules[0];
+    }
+
+    return toReturn;
+  }
+
+  GetCommandButtonByKey(Ping: MenuCommandKey): TypButtonModule {
+    let uiModules: TypButtonModule[] = <TypButtonModule[]>this.GetModulesByKey(ModuleKey.ButtonTypical);
+    let toReturn: TypButtonModule = null;
+
+    if (uiModules) {
+      let typButton = this.FilterUiModulesByMenuCommandKey(uiModules, MenuCommandKey.Ping);
+      if (typButton) {
+        toReturn = typButton;
+      }
+    }
+    return toReturn;
+  }
+
+  GetBaseButtonModules(): IUiModuleButton[] {
+    let toReturn: IUiModuleButton[] = [];
+
+    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonTypical));
+    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonWithInput));
+    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonCancel));
+
+
+    return toReturn;
+  }
+
+ private GetModulesByKey(moduleKey: ModuleKey): IUiModule[] {
+    let toReturn: IUiModule[] = [];
 
     if (this.UiModules) {
       for (var idx = 0; idx < this.UiModules.length; idx++) {
         if (this.UiModules[idx].ModuleKey === moduleKey) {
-          toReturn = this.UiModules[idx];
+          toReturn.push(this.UiModules[idx]);
           break;
         }
       }
@@ -110,29 +175,24 @@ export class UiManager extends LoggableBase {
 
     this.SelectSnapshotModule_Observer = new SelectSnapUiMutationEvent_Observer(this.Logger, this.RefreshUiUIManagerFromSnapShotSelect.bind(this));
 
-    let moduleSelectSnapShot = this.GetModuleByKey(ModuleKey.SelectSnapShot);
-    if (moduleSelectSnapShot) {
-      (<SelectSnapshotModule>moduleSelectSnapShot).SelectSnapshotModule_Subject.RegisterObserver(this.SelectSnapshotModule_Observer);
+    let moduleSelectSnapShots: IUiModule[] = this.GetModulesByKey(ModuleKey.SelectSnapShot);
+
+    if (moduleSelectSnapShots && moduleSelectSnapShots.length > 0) {
+      let moduleSelectSnapShot = moduleSelectSnapShots[0];
+      if (moduleSelectSnapShot) {
+        (<SelectSnapshotModule>moduleSelectSnapShot).SelectSnapshotModule_Subject.RegisterObserver(this.SelectSnapshotModule_Observer);
+      }
     }
 
-    let feedBackModuleLog: IUiModule = this.GetModuleByKey(ModuleKey.FeedbackModuleLog);
+    let feedBackModuleLog: IUiModule = this.GetFirstModuleByKey(ModuleKey.FeedbackModuleLog);
+
     if (<UiFeedbackModuleLog>feedBackModuleLog) {
       //todo - put back   this.Logger.AddWriter(feedBackModuleLog);
     }
     this.Logger.FuncEnd(this.WireEvents.name);
   }
 
-  InitUiManager() {
-    this.Logger.FuncStart(this.InitUiManager.name);
-    this.WriteBuildNumToUi();
 
-    if (this.UiModules) {
-      this.UiModules.forEach((uiModule: IUiModule) => uiModule.Init());
-    }
-
-    this.UiCommandsManager.InitButtonStateManager();
-    this.Logger.FuncEnd(this.InitUiManager.name);
-  }
 
   OnContentReplyReceivedEventCallBack(dataContentReplyReceivedEvent_Payload: IDataContentReplyReceivedEvent_Payload) {
     this.Logger.FuncStart(this.OnContentReplyReceivedEventCallBack.name);
@@ -233,71 +293,5 @@ export class UiManager extends LoggableBase {
     } else {
       this.Logger.ErrorAndThrow(this.UpdateUiFromContentReply.name, 'null state or meta');
     }
-  }
-
-  ShowDebugDataOneWindow() {
-    this.Logger.FuncStart('ShowDebugDataOneWindow');
-    var toReturn: string[] = [];
-
-    for (var kdx = 0; kdx < toReturn.length; kdx++) {
-      this.Logger.Log(toReturn[kdx]);
-    }
-
-    this.Logger.FuncEnd('ShowDebugDataOneWindow');
-    return toReturn;
-  }
-
-  GetValueInNickname(): string {
-    var toReturn: string = '';
-    toReturn = (<HTMLInputElement>window.document.getElementById(PopConst.Const.ElemId.InputNickname)).value;
-    return toReturn;
-  }
-
-  GetButtonByIdOrSelector(targetId: string): HTMLElement {
-    var toReturn: HTMLElement = document.querySelector(targetId);
-    if (!toReturn) {
-      toReturn = document.querySelector('[id=' + targetId + ']');
-    }
-    return toReturn;
-  }
-
-  AssignOnCheckedEvent(targetId: string, handler: Function): void {
-    var targetElem: HTMLElement = document.getElementById(targetId);
-    if (!targetElem) {
-      this.Logger.ErrorAndThrow(this.AssignOnCheckedEvent.name, 'No Id: ' + targetId);
-    } else {
-      targetElem.addEventListener('checked', (evt) => { handler(evt) });
-    }
-  }
-
-  AssignOnClickEvent(targetId: string, handler: Function): void {
-    var targetElem = this.GetButtonByIdOrSelector(targetId);
-
-    if (!targetElem) {
-      this.Logger.ErrorAndThrow(this.AssignOnClickEvent.name, 'No Id: ' + targetId);
-    } else {
-      targetElem.addEventListener('click', (evt) => { handler(evt) });
-    }
-  }
-
-  AssignOnClickEventFromCmd(command: IMenuCommandDefinition, handler: Function): void {
-    if (command && command.MenuCommandKey !== MenuCommandKey.Unknown) {
-      this.AssignOnClickEvent(command.PlaceHolderSelector, handler);
-    }
-  }
-
-  AssignDblClickEvent(selector: string, handler: Function): void {
-    var targetElem: HTMLElement = document.querySelector(selector);
-    if (!targetElem) {
-      this.Logger.ErrorAndThrow(this.AssignOnClickEvent.name, 'No Id: ' + selector);
-    } else {
-      targetElem.ondblclick = (evt) => { handler(evt) };
-    }
-  }
-
-  PopulateSnapShotsAuto() {
-  }
-
-  PopulateSnapShotsNotAuto() {
   }
 }

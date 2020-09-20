@@ -10,15 +10,15 @@ export class _UiFeedbackModuleBase extends _UiModuleBase {
 
   constructor(logger: ILoggerAgent, selector: string) {
     super(logger, selector);
-    this.ElementSelector = selector;
+    this.ContainerSelector = selector;
   }
 
   private __getFeedbackElem(): HTMLElement {
     if (!this.UiElement) {
-      this.UiElement = <HTMLElement>document.querySelector(this.ElementSelector);
+      this.UiElement = <HTMLElement>document.querySelector(this.ContainerSelector);
 
       if (!this.UiElement) {
-        this.Logger.ErrorAndThrow(this.__getFeedbackElem.name, 'target not found: ' + this.ElementSelector);
+        this.Logger.ErrorAndThrow(this.__getFeedbackElem.name, 'target not found: ' + this.ContainerSelector);
       }
     }
 

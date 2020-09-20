@@ -4,6 +4,9 @@ import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModuleContentState extends _UiFeedbackModuleBase implements IUiModule {
+
+  WireEvents(): void {
+  }
   ModuleKey = ModuleKey.ContentState;
 
   Init(): void {

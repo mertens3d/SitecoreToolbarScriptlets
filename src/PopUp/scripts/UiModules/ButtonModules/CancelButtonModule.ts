@@ -1,27 +1,30 @@
-﻿import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { _baseButtonModule } from "./_baseButtonModule";
-import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-export class CancelButtonModule extends _baseButtonModule implements IUiModule {
-  private Selector: string;
-  ModuleKey = ModuleKey.CancelButton;
 
-  constructor(loggerAgent: ILoggerAgent, selector: string, menuCommandParameters: IMenuCommandDefinition) {
+export class CancelButtonModule extends _baseButtonModule implements IUiModuleButton {
+  ModuleKey = ModuleKey.ButtonCancel;
+
+  constructor(loggerAgent: ILoggerAgent, menuCommandParameters: IMenuCommandDefinition) {
     super(loggerAgent, menuCommandParameters);
     this.Logger = loggerAgent;
-    this.Selector = selector;
+  }
+
+  WireEvents(): void {
+    this.WireEvents_Base();
   }
 
   Init(): void {
+    this.Init_BaseButtonModule();
   }
 
   RefreshUi(): void {
   }
 
-
-  private __GetCancelButton() {
-    return document.getElementById(this.Selector);
+  private __GetCancelButton(): HTMLElement {
+    return this.ContainerUiElem;
   }
 
   SetCancelFlag() {

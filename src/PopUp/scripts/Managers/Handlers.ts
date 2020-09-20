@@ -4,7 +4,7 @@ import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISetti
 import { HandlersExternalEvent } from "../Classes/HandlersExternal";
 import { HandlersInternal } from "../Classes/HandlersInternal";
 //import { PopUpMessageManager } from "./MessageManager";
-import { BrowserTabAgent } from "./TabManager";
+import { BrowserTabAgent } from "./BrowserTabAgent";
 import { PopUpMessagesBrokerAgent } from "../Agents/PopUpMessagesBrokerAgent";
 import { SelectSnapshotModule } from "../UiModules/SelectSnapshotModule/SelectSnapshotModule";
 export class Handlers extends LoggableBase {

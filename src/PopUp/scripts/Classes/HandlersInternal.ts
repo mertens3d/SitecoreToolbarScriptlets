@@ -1,7 +1,7 @@
 ﻿import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
-import { BrowserTabAgent } from "../Managers/TabManager";
+import { BrowserTabAgent } from "../Managers/BrowserTabAgent";
 
 export class HandlersInternal {
   private TabMan: BrowserTabAgent;

@@ -1,7 +1,7 @@
 ﻿import { MenuCommandKey } from "../Enums/2xxx-MenuCommand";
 import { VisibilityType } from "../Enums/VisibilityType";
 import { IEventHandlerData } from "./IEventHandlerData";
-import { ModuleType } from "../Enums/ModuleType";
+import { ModuleKey } from "../Enums/ModuleKey";
 
 export interface IMenuCommandDefinition {
     PlaceHolderSelector: string;
@@ -10,5 +10,5 @@ export interface IMenuCommandDefinition {
     IconClassName: string;
     InnerText: string;
     VisibilityControllers: VisibilityType[];
-    ModuleType: ModuleType;
+    ModuleKey: ModuleKey;
 }

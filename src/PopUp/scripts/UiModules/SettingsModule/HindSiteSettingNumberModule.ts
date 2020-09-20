@@ -13,7 +13,7 @@ export class HindSiteSettingNumberModule extends _UiModuleBase implements IUiMod
   private UiInputElement: HTMLInputElement;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, hindSiteSetting: IHindSiteSetting) {
-    super(logger, hindSiteSetting.UiSelector);
+    super(logger, hindSiteSetting.UiContainerSelector);
 
     this.Logger.InstantiateStart(HindSiteSettingCheckBoxModule.name);
     if (!StaticHelpers.IsNullOrUndefined(settingsAgent)
@@ -30,15 +30,19 @@ export class HindSiteSettingNumberModule extends _UiModuleBase implements IUiMod
   }
 
   Init() {
-    let self = this;
-    this.UiInputElement = <HTMLInputElement> this.GetUiElement();
-    if (this.UiInputElement) {
+    this.UiInputElement = <HTMLInputElement>this.ContainerUiElem;
+  }
 
-    this.UiInputElement.addEventListener('change', (evt) => {
-      self.SettingsAgent.NumberSettingChanged(self.HindSiteSetting.SettingKey, parseInt((<HTMLInputElement>evt.target).value));
-    })
+  WireEvents(): void {
+    let self = this;
+    if (this.UiInputElement) {
+      this.UiInputElement.addEventListener('change', (evt) => {
+        self.SettingsAgent.NumberSettingChanged(self.HindSiteSetting.SettingKey, parseInt((<HTMLInputElement>evt.target).value));
+      })
     }
   }
+
+
 
   RefreshUi() {
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {

@@ -1,10 +1,13 @@
 ﻿export enum ModuleKey {
-    SelectSnapShot,
-    BroswerState,
-    PopUpState,
-    ContentState,
-    CancelButton,
-    FeedbackModuleLog,
-    Unknown,
-    InputButton,
+  Unknown = 0,
+
+  BroswerState,
+  ButtonCancel,
+  ButtonClose,
+  ButtonTypical,
+  ButtonWithInput,
+  ContentState,
+  FeedbackModuleLog,
+  PopUpState,
+  SelectSnapShot,
 }

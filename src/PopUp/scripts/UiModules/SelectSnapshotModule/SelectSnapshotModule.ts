@@ -18,8 +18,9 @@ import { StateHelpers } from "../../Classes/StateHelpers";
 import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload";
 import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject.1";
 import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
+import { _UiModuleBase } from "../UiFeedbackModules/_UiModuleBase";
 
-export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiModule {
+export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   private Selector: string;
   private StateHelpers: StateHelpers;
   public SelectSnapshotModule_Subject: SelectSnapUiMutationEvent_Subject;
@@ -33,9 +34,13 @@ export class SelectSnapshotModule extends _UiFeedbackModuleBase implements IUiMo
 
     this.StateHelpers = new StateHelpers(this.Logger);
   }
+ 
 
   Init(): void {
     this.SelectElement = <HTMLSelectElement> document.querySelector(this.Selector);
+  }
+
+  WireEvents(): void {
     this.AssignOnChangeEventToSnapShotModule();
   }
 

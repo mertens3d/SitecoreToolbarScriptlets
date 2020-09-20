@@ -4,26 +4,31 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
 
 export class _UiModuleBase extends LoggableBase {
-    protected ElementSelector: string;
-    protected UiElement: HTMLElement;
-    protected RefreshData: any;
-    protected Friendly: string = 'Not Set';
-    ModuleKey: ModuleKey = ModuleKey.Unknown;
+  protected ContainerSelector: string;
+  protected ContainerUiElem: HTMLElement;
+  protected UiElement: HTMLElement;
+  protected RefreshData: any;
+  protected Friendly: string = 'Not Set';
+  ModuleKey: ModuleKey = ModuleKey.Unknown;
 
-    constructor(logger: ILoggerAgent, selector: string) {
-        super(logger);
-        this.ElementSelector = selector;
-    }
+  constructor(logger: ILoggerAgent, containerSelector: string) {
+    super(logger);
+    this.ContainerSelector = containerSelector;
+  }
 
-    GetUiElement(): HTMLElement {
-        let toReturn: HTMLElement = null;
-        if (this.ElementSelector) {
-            toReturn = document.querySelector(this.ElementSelector);
-        }
-        return toReturn;
-    }
+  protected InitUiModuleBase() {
+    this.ContainerUiElem = this.GetUiElement(this.ContainerSelector);
+  }
 
-    Hydrate(refreshdata: UiHydrationData): void {
-        this.RefreshData = refreshdata;
+  protected GetUiElement(uiSelector: string): HTMLElement {
+    let toReturn: HTMLElement = null;
+    if (this.ContainerSelector) {
+      toReturn = document.querySelector(uiSelector);
     }
+    return toReturn;
+  }
+
+  Hydrate(refreshdata: UiHydrationData): void {
+    this.RefreshData = refreshdata;
+  }
 }
