@@ -6,11 +6,14 @@ import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
+import { SharedConst } from "../../../../Shared/scripts/SharedConst";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class HindSiteSettingNumberModule extends _UiModuleBase implements IUiModule {
   private SettingsAgent: ISettingsAgent;
   private HindSiteSetting: IHindSiteSetting;
   private UiInputElement: HTMLInputElement;
+  private LabelElement: HTMLLabelElement;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, hindSiteSetting: IHindSiteSetting) {
     super(logger, hindSiteSetting.UiContainerSelector);
@@ -30,7 +33,24 @@ export class HindSiteSettingNumberModule extends _UiModuleBase implements IUiMod
   }
 
   Init() {
-    this.UiInputElement = <HTMLInputElement>this.ContainerUiElem;
+    this.BuildHtml();
+  }
+
+  private BuildHtml() {
+    this.UiInputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
+    this.UiInputElement.id = 'nm-' + Guid.WithoutDashes(Guid.NewRandomGuid());
+    this.UiInputElement.type = SharedConst.Const.KeyWords.Html.Number;
+    this.UiInputElement.min = "0";
+    this.UiInputElement.max = "100";
+    this.UiInputElement.value = "15";
+
+    this.LabelElement = <HTMLLabelElement>document.createElement(SharedConst.Const.KeyWords.Html.Label);
+    this.LabelElement.setAttribute(SharedConst.Const.KeyWords.Html.For, this.UiInputElement.id);
+
+    if (this.ContainerUiElem) {
+      this.ContainerUiElem.appendChild(this.UiInputElement);
+      this.ContainerUiElem.appendChild(this.LabelElement);
+    }
   }
 
   WireEvents(): void {
@@ -41,8 +61,6 @@ export class HindSiteSettingNumberModule extends _UiModuleBase implements IUiMod
       })
     }
   }
-
-
 
   RefreshUi() {
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {

@@ -25,7 +25,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   private StateHelpers: StateHelpers;
   public SelectSnapshotModule_Subject: SelectSnapUiMutationEvent_Subject;
   ModuleKey = ModuleKey.SelectSnapShot;
-  private  SelectElement: HTMLSelectElement;
+  private SelectElement: HTMLSelectElement;
 
   constructor(logger: ILoggerAgent, selector: string) {
     super(logger, selector);
@@ -34,10 +34,9 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
 
     this.StateHelpers = new StateHelpers(this.Logger);
   }
- 
 
   Init(): void {
-    this.SelectElement = <HTMLSelectElement> document.querySelector(this.Selector);
+    this.SelectElement = <HTMLSelectElement>document.querySelector(this.Selector);
   }
 
   WireEvents(): void {
@@ -65,7 +64,6 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     this.PopulateStateOfSnapShotSelectElement();
     //this.SelectSnapshotModule_Subject.NotifyObservers();
   }
-
 
   SelectHeaderStr(prefix: string): string {
     // '    Time Stamp          - Page Type - Nickname       - Favorite?';
@@ -152,7 +150,6 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     if (this.RefreshData.StateOfStorageSnapShots && this.RefreshData.StateOfStorageSnapShots.SnapShots) {
       let snapShots: IDataStateOfSitecoreWindow[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
 
-     
       if (this.SelectElement) {
         this.CleanExistingSelection(this.SelectElement);
         var headers: ISelectionHeaders = this.WriteHeaders();
@@ -267,12 +264,16 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   }
 
   private AppendSnapShotToCorrectGroup(data: IDataStateOfSitecoreWindow, el: HTMLOptionElement, headers: ISelectionHeaders) {
-    if (data.Meta.Flavor === SnapShotFlavor.Autosave) {
-      headers.Auto.appendChild(el);
-    } else if (data.Meta.Flavor === SnapShotFlavor.Favorite) {
-      headers.Favorite.appendChild(el);
+    if (!StaticHelpers.IsNullOrUndefined([data, el, headers]))  {
+      if (data.Meta.Flavor === SnapShotFlavor.Autosave) {
+        headers.Auto.appendChild(el);
+      } else if (data.Meta.Flavor === SnapShotFlavor.Favorite) {
+        headers.Favorite.appendChild(el);
+      } else {
+        headers.Manual.appendChild(el);
+      }
     } else {
-      headers.Manual.appendChild(el);
+      this.Logger.WarningAndContinue(this.AppendSnapShotToCorrectGroup.name, 'null in parameters');
     }
   }
 

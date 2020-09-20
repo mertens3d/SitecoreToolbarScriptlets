@@ -13,11 +13,11 @@ export class HindSiteSetting implements IHindSiteSetting {
   UiContainerSelector: string;
   ValueAsObj: any;
 
-  constructor(settingKey: SettingKey, dataType: SettingType, valueAsObj: any, uiSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: Enabled, hasUi: boolean = true) {
+  constructor(settingKey: SettingKey, dataType: SettingType, valueAsObj: any, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: Enabled, hasUi: boolean = true) {
     this.SettingKey = settingKey;
     this.DataType = dataType;
     this.ValueAsObj = valueAsObj;
-    this.UiContainerSelector = uiSelector;
+    this.UiContainerSelector = uiContainerSelector;
     this.DefaultValue = defaultValue;
     this.SettingFlavor = settingFlavor;
     this.FriendlySetting = friendly;

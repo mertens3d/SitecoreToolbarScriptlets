@@ -62,20 +62,13 @@
               </div>
             </div>
             <div class='button-wrapper row flex-container'>
-              <div id='id-take-snapshot' type='div'></div>
-
-              <div class='input-btn-wrapper'>
-                <input type='text' id='id-input-nickname' value='' placeholder='Nick Name'>
-                <div id='id-btn-update-nickname'></div>
-              </div>
-
-              <div id='id-toggle-favorite' type='div'></div>
-              <div id='RemoveOneFromLocalStorage' type='div'></div>
-
-              <div id='id-restore-state-same-tab' type='div' class='icon'></div>
-              <div id='id-restore-state-new-tab' type='div' class='icon'></div>
-
-              <div id='Cancel' type='div'></div>
+              <div id='id-ph-btn-take-snapshot'></div>
+              <div id='id-ph-btn-update-nickname'></div>
+              <div id='id-ph-btn-toggle-favorite'></div>
+              <div id='id-ph-remove-one-from-local-storage'></div>
+              <div id='id-ph-btn-restore-state-same-tab'></div>
+              <div id='id-ph-btn-restore-state-new-tab'></div>
+              <div id='Cancel'></div>
             </div>
           </div>
         </fieldset>
@@ -90,43 +83,30 @@
 
             <h3>note: page refresh + open pop up required to fully propagate settings</h3>
             <br>
-            <input type='checkbox' id='id-settings-auto-login' checked='checked' disabled='disabled'>
-            <label for='id-settings-auto-login'>{error}</label>
-
+            <div id='id-ph-settings-auto-login'></div>
             <br>
-            <input type='checkbox' id='id-settings-use-compact' checked='' disabled='disabled'>
-            <label for='id-settings-use-compact'>{error}</label>
-
+            <div id='id-ph-settings-use-compact'></div>
             <br>
-            <input type='checkbox' id='id-settings-auto-rename-ce-tab-button' checked=''>
-            <label for='id-settings-auto-rename-ce-tab-button'>{error}</label>
-
+            <div id='id-settings-auto-rename-ce-tab-button'></div>
             <fieldset>
               <legend>Debug</legend>
-              <input type='checkbox' id='id-settings-debug-keep-dialog-open' checked='checked'>
-              <label for='id-settings-debug-keep-dialog-open'>{error}</label>
+              <div id='id-ph-settings-debug-keep-dialog-open'></div>
               <p>Note: To reload, use this command at the console</p>
               <dl>
                 <dt></dt>
                 <dd> location.reload(true) </dd>
               </dl>
-
               <br>
-              <input type='checkbox' id='id-settings-show-log-data' checked='checked'>
-              <label for='id-settings-show-log-data'>{error}</label>
+              <div id='id-ph-settings-show-log-data'></div>
             </fieldset>
 
             <br>
 
             <fieldset>
               <legend>Auto Snapshot</legend>
-
-              <input type='checkbox' id='id-settings-auto-snapshot-on-window-change' checked='checked' disabled='disabled'>
-              <label for='id-settings-auto-snapshot-on-window-change'>{error}</label>
-
+              <div id='id-settings-auto-snapshot-on-window-change'></div>
               <br>
-              <input type='number' id='id-settings-auto-save-interval' min='0' max='100' value='15'>
-              <label for='id-settings-auto-save-interval'>{error}</label>
+              <div id='id-settings-auto-save-interval'></div>
 
               <br>
               <input type='number' id='id-settings-auto-save-max-count' min='3' max='100' value='3'>
@@ -143,7 +123,6 @@
           </div>
         </fieldset>
       </div>
-
 
       <!-- accordion -->
 

@@ -15,7 +15,7 @@ export class _baseButtonModule extends _UiModuleBase {
   protected RefreshData: UiHydrationData;
   ModuleKey: ModuleKey = ModuleKey.Unknown;
   Friendly = this.MenuCommandDefinition ? MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey] : '{error 111}';
-  protected ElemButton: HTMLButtonElement;
+  protected HTMLButtonElement: HTMLButtonElement;
   public SingleButtonClickEvent_Subject: SingleClickEvent_Subject;
 
   constructor(loggerAgent: ILoggerAgent, menuCommandDefinition: IMenuCommandDefinition) {
@@ -25,12 +25,24 @@ export class _baseButtonModule extends _UiModuleBase {
 
   protected Init_BaseButtonModule(): void {
     this.InitUiModuleBase();
+    this.BuildButton();
   }
 
   protected WireEvents_Base(): void {
     this.WireClickEvents();
   }
 
+  BuildButton(): void {
+    this.Logger.FuncStart(this.BuildButton.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+    if (this.ContainerUiElem) {
+      this.BuildButtonElem();
+      this.ContainerUiElem.classList.add('btn-container');
+      this.ContainerUiElem.appendChild(this.HTMLButtonElement);
+    } else {
+      this.Logger.ErrorAndContinue(this.BuildButton.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
+    }
+    this.Logger.FuncEnd(this.BuildButton.name);
+  }
   WireClickEvents(): void {
     this.SingleButtonClickEvent_Subject = new SingleClickEvent_Subject(this.Logger, MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
 
@@ -49,10 +61,17 @@ export class _baseButtonModule extends _UiModuleBase {
       this.Logger.ErrorAndThrow(this.WireClickEvents.name, 'no command or no command placeholder');
     }
   }
-
+  protected BuildButtonElem(): void {
+    //<div id='PresentationDetails' type = 'button' class="button-wrapper icon details" > Presentation Details < /div>
+    this.HTMLButtonElement = document.createElement("button");
+    this.HTMLButtonElement.classList.add("icon");
+    this.HTMLButtonElement.classList.add(this.MenuCommandDefinition.IconClassName);
+    this.HTMLButtonElement.innerText = this.MenuCommandDefinition.InnerText;
+    this.HTMLButtonElement.type = "button";
+  }
   private WireSingleClickEvent(): void {
-    if (this.ElemButton) {
-      this.ElemButton.addEventListener('click', (evt) => {
+    if (this.HTMLButtonElement) {
+      this.HTMLButtonElement.addEventListener('click', (evt) => {
         let singleClickEvent_payload: ISingleClickEvent_Payload = {
           HandlerData: this.MenuCommandDefinition.EventHandlerData
         };
@@ -65,7 +84,7 @@ export class _baseButtonModule extends _UiModuleBase {
         //data.EventMan.RouteAllCommandEvents(data);
       });
     } else {
-      this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No Id: ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No button element: ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
   }
 
@@ -73,8 +92,8 @@ export class _baseButtonModule extends _UiModuleBase {
     //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.SelStateSnapShot, (evt) => { this.Handlers.External.HndlrSnapShotRestoreNewTab(evt, this.PopHub); });
     //this.UiMan().AssignDblClickEvent(PopConst.Const.Selector.HS.FeedbackLogElement, (evt) => { this.Handlers.Internal.__cleardebugTextWithConfirm(evt, this.PopHub); });
 
-    if (this.ElemButton) {
-      this.ElemButton.ondblclick = (evt) => {
+    if (this.HTMLButtonElement) {
+      this.HTMLButtonElement.ondblclick = (evt) => {
         let data: ICommandHandlerDataForPopUp = this.BuildCommandData();
         data.Evt = evt,
           data.EventMan.RouteAllCommandEvents(data)

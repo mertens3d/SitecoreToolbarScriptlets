@@ -5,11 +5,14 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { SharedConst } from "../../../../Shared/scripts/SharedConst";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiModule {
   private SettingsAgent: ISettingsAgent
   private HindSiteSetting: IHindSiteSetting;
   private UiInputElement: HTMLInputElement;
+  private LabelElement: HTMLLabelElement;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, hindSiteSetting: IHindSiteSetting) {
     super(logger, hindSiteSetting.UiContainerSelector);
@@ -29,50 +32,47 @@ export class HindSiteSettingCheckBoxModule extends _UiModuleBase implements IUiM
 
   Init() {
     this.Logger.FuncStart(this.Init.name, this.Friendly);
-    this.UiInputElement = <HTMLInputElement>this.GetUiElement(this.HindSiteSetting.UiContainerSelector);
-    this.SetLabel();
+    //this.UiInputElement = <HTMLInputElement>this.GetUiElement(this.HindSiteSetting.UiContainerSelector);
+    this.InitUiModuleBase();
+
+    this.BuildHtml();
+
     this.Logger.FuncEnd(this.Init.name, this.Friendly);
   }
 
   WireEvents(): void {
-    this.WireEvent();
-
-    var targetElem: HTMLElement = document.getElementById(this.HindSiteSetting.UiContainerSelector);
-    if (!targetElem) {
-      this.Logger.ErrorAndThrow(this.AssignOnCheckedEvent.name, 'No Id: ' + this.HindSiteSetting.UiContainerSelector);
-    } else {
-      // todo - put back targetElem.addEventListener('checked', (evt) => { this.HindSiteSetting. handler(evt) });
-    }
-  }
-
-  AssignOnCheckedEvent(targetId: string, handler: Function): void {
-    
-  }
-
-  private WireEvent() {
-    this.Logger.FuncStart(this.WireEvent.name, this.Friendly);
+    this.Logger.FuncStart(this.WireEvents.name, this.Friendly);
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
       this.UiInputElement.addEventListener('change', (evt) => {
         let self = this;
         self.SettingsAgent.CheckBoxSettingChanged(this.HindSiteSetting.SettingKey, (<HTMLInputElement>evt.target).checked);
       })
     } else {
-      this.Logger.WarningAndContinue(this.WireEvent.name, 'null input element');
+      this.Logger.WarningAndContinue(this.WireEvents.name, 'null input element');
     }
-    this.Logger.FuncEnd(this.WireEvent.name, this.Friendly);
+    this.Logger.FuncEnd(this.WireEvents.name, this.Friendly);
+  }
+
+  BuildHtml() {
+    this.UiInputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
+    this.UiInputElement.type = SharedConst.Const.KeyWords.Html.Checkbox;
+    this.UiInputElement.checked = true;
+    this.UiInputElement.id = "id-" + Guid.WithoutDashes(Guid.NewRandomGuid());
+
+    this.LabelElement = <HTMLLabelElement>document.createElement(SharedConst.Const.KeyWords.Html.Label)
+    this.LabelElement.innerHTML = this.Friendly;
+    this.LabelElement.setAttribute(SharedConst.Const.KeyWords.Html.For, this.UiInputElement.id);
+
+    if (this.ContainerUiElem) {
+      this.ContainerUiElem.appendChild(this.UiInputElement);
+      this.ContainerUiElem.appendChild(this.LabelElement);
+    }
   }
 
   RefreshUi() {
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
       let valueToDisplay: boolean = this.HindSiteSetting.ValueAsBool();
       this.UiInputElement.checked = valueToDisplay;
-    }
-  }
-
-  private SetLabel() {
-    let uiLabel: HTMLElement = window.document.querySelector(this.HindSiteSetting.UiContainerSelector.replace('id', 'for'));
-    if (uiLabel) {
-      uiLabel.innerHTML = this.HindSiteSetting.FriendlySetting;
     }
   }
 }

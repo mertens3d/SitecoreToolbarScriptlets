@@ -48,12 +48,21 @@ export class StaticHelpers {
     return toReturn;
   }
 
-  static IsNullOrUndefined(testSubject: any): boolean {
+  static IsNullOrUndefined(testSubject: any): boolean
+  static IsNullOrUndefined(testSubject: any[]): boolean
+  static IsNullOrUndefined(testSubject: any| any[]): boolean {
+    let toReturn: boolean = true;
     try {
+      if (testSubject instanceof Array) {
+        (<any[]>testSubject).forEach((testSubject: any) => toReturn = toReturn && this.IsNullOrUndefined(testSubject));
+      }
+
       return (typeof testSubject === 'undefined' || testSubject === null);
     } catch (err) {
       console.log(err)
     }
+
+    return toReturn;
   }
 
   private static getBuffChar(buffCharEnum: BufferChar) {

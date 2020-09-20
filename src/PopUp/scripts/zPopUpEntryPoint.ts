@@ -37,27 +37,39 @@ class PopUpEntry {
 
   async main() {
     try {
-      this.InstantiateAndInitSettingsAndLogger();
-      this.InstantiateAgents();
-      this.InstantiateMembers();
-
-      this.Logger.SectionMarker('Begin Init');
-
-      this.UiMan.InitUiMan();
-      this.EventMan.InitEventManager();
-
-      await this.scUrlAgent.InitScUrlAgent()
-        .then(() => this.WireCustomevents())
-        .then(() => this.EventMan.TriggerPingEventAsync())
-        .then(() => this.Logger.Log(this.main.name + ' completed'))
-        .catch((err) => console.log(err));
-
-      this.Logger.SectionMarker('End Init');
-
-      this.Logger.SectionMarker('Begin Standby');
+      this.Instantiate();
+      this.Init();
+      this.WireEvents();
+      this.Start();
     } catch (err) {
       console.log(err);
     }
+  }
+
+  private Init() {
+    this.Logger.SectionMarker('Begin Init');
+    this.UiMan.InitUiMan();
+    this.EventMan.InitEventManager();
+
+    this.Logger.SectionMarker('End Init');
+  }
+
+  private WireEvents() {
+    this.scUrlAgent.InitScUrlAgent()
+      .then(() => {
+        //wire
+        this.UiMan.WireEvents();
+        this.EventMan.WireEvents();
+        this.WireCustomevents();
+      })
+  }
+
+  private Start() {
+    this.EventMan.TriggerPingEventAsync();
+    this.Logger.SectionMarker('Begin Standby');
+
+    //.then(() => this.Logger.Log(this.main.name + ' completed'))
+    //.catch((err) => console.log(err));
   }
 
   private InstantiateAndInitSettingsAndLogger() {
@@ -72,7 +84,12 @@ class PopUpEntry {
     this.InitLogger();
   }
 
-  private async InstantiateMembers() {
+  private async Instantiate() {
+    this.InstantiateAndInitSettingsAndLogger();
+
+    this.scUrlAgent = new ScUrlAgent(this.Logger);
+    this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.scUrlAgent, this.SettingsAgent);
+    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger);
     //this.messageMan = new PopUpMessageManager(this.PopUpMessageAgent, this.Logger);
 
     this.ModuleSelectSnapShots = new SelectSnapshotModule(this.Logger, PopConst.Const.Selector.HS.SelStateSnapShot);
@@ -104,12 +121,6 @@ class PopUpEntry {
     this.Logger.FlushBuffer();
 
     this.Logger.FuncEnd(this.InitLogger.name);
-  }
-
-  InstantiateAgents() {
-    this.scUrlAgent = new ScUrlAgent(this.Logger);
-    this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.scUrlAgent, this.SettingsAgent);
-    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger);
   }
 
   WireCustomevents() {

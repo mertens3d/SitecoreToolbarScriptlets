@@ -4,12 +4,13 @@ import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerA
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
 import { SingleClickEvent_Observer } from "../Events/SelectSnapUiMutationEvent/SingleClickEvent_Observer";
-import { TypButtonModule } from '../UiModules/ButtonModules/TypButtonModule';
+import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
 import { _baseButtonModule } from '../UiModules/ButtonModules/_baseButtonModule';
 import { SelectSnapshotModule } from '../UiModules/SelectSnapshotModule/SelectSnapshotModule';
 import { Handlers } from './Handlers';
 import { UiModulesManager } from './UiManager/UiModulesManager';
 import { IUiModuleButton } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
+import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 
 export class EventManager extends LoggableBase {
   Handlers: Handlers
@@ -28,13 +29,19 @@ export class EventManager extends LoggableBase {
     this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent);
   }
 
-  OnSingleClickEvent<ISingleClickEvent_Payload> (singleClickEventPayload: ISingleClickEvent_Payload) {
+  OnSingleClickEvent<ISingleClickEvent_Payload>(singleClickEventPayload: ISingleClickEvent_Payload) {
     alert('click');
-
   };
 
   InitEventManager(): void {
+    this.Logger.FuncStart(this.InitEventManager.name);
+    this.Logger.FuncEnd(this.InitEventManager.name);
+  }
+
+  WireEvents(): void {
+    this.Logger.FuncStart(this.WireEvents.name);
     this.ListenForCommandEvents();
+    this.Logger.FuncEnd(this.WireEvents.name);
   }
 
   ListenForCommandEvents() {
@@ -42,7 +49,11 @@ export class EventManager extends LoggableBase {
 
     if (baseButtonModules) {
       baseButtonModules.forEach((baseButtonModule: IUiModuleButton) => {
-        baseButtonModule.SingleButtonClickEvent_Subject.RegisterObserver(this.CommandButtonSingleClickEvent_Observer);
+        if (!StaticHelpers.IsNullOrUndefined(baseButtonModule.SingleButtonClickEvent_Subject)) {
+          baseButtonModule.SingleButtonClickEvent_Subject.RegisterObserver(this.CommandButtonSingleClickEvent_Observer);
+        } else {
+          this.Logger.WarningAndContinue(this.ListenForCommandEvents.name, 'null SingleButtonClickEvent_Subject');
+        }
       });
     }
   }
@@ -50,7 +61,7 @@ export class EventManager extends LoggableBase {
   async TriggerPingEventAsync(): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);
 
-    let pingButtomModule: TypButtonModule = this.UiModulesMan.GetCommandButtonByKey(MenuCommandKey.Ping)
+    let pingButtomModule: TypCommandButtonModule = this.UiModulesMan.GetCommandButtonByKey(MenuCommandKey.Ping)
 
     // todo - put back let data = this.BuildCommandData(pingCommand);
     // todo this.RouteAllCommandEvents(data);

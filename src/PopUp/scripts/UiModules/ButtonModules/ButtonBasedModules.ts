@@ -7,16 +7,15 @@ import { CommandManager } from "../../Classes/AllCommands";
 import { SelectSnapshotModule } from "../SelectSnapshotModule/SelectSnapshotModule";
 import { CancelButtonModule } from "./CancelButtonModule";
 import { CloseButtonModule } from "./CloseButtonModule";
-import { InputWithButtonModule } from "./InputButtonModule";
-import { TypButtonModule } from "./TypButtonModule";
+import { InputWithButtonModule } from "./InputWithButtonModule";
+import { TypCommandButtonModule } from "./TypCommandButtonModule";
 import { _baseButtonModule } from "./_baseButtonModule";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
 export class ButtonBasedModules extends LoggableBase {
   AllButtonBasedModules: IUiModule[] = [];
-
   SelectSnapShotModule: SelectSnapshotModule;
-    CommandMan: CommandManager;
+  CommandMan: CommandManager;
 
   constructor(logger: ILoggerAgent, commandMan: CommandManager) {
     super(logger);
@@ -25,7 +24,6 @@ export class ButtonBasedModules extends LoggableBase {
 
     this.InstantiateButtonBasedModules();
     this.Logger.InstantiateEnd(ButtonBasedModules.name);
-    
   }
 
   private InstantiateButtonBasedModules() {
@@ -46,14 +44,14 @@ export class ButtonBasedModules extends LoggableBase {
       this.CommandMan.MenuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
         if (menuCommandParams.PlaceHolderSelector && menuCommandParams.PlaceHolderSelector.length > 0) {
           if (menuCommandParams.ModuleKey == ModuleKey.ButtonTypical) {
-            this.AllButtonBasedModules.push(<IUiModule>new TypButtonModule(this.Logger, menuCommandParams));
+            this.AllButtonBasedModules.push(<IUiModule>new TypCommandButtonModule(this.Logger, menuCommandParams));
           } else if (menuCommandParams.ModuleKey == ModuleKey.ButtonWithInput) {
             this.AllButtonBasedModules.push(new InputWithButtonModule(this.Logger, menuCommandParams));
           } else if (menuCommandParams.ModuleKey == ModuleKey.ButtonClose) {
             this.AllButtonBasedModules.push(new CloseButtonModule(this.Logger, menuCommandParams));
           } else if (menuCommandParams.ModuleKey == ModuleKey.ButtonCancel) {
             this.AllButtonBasedModules.push(new CancelButtonModule(this.Logger, menuCommandParams));
-          } 
+          }
         } else {
           this.Logger.Log('No ui for this command: ' + MenuCommandKey[menuCommandParams.MenuCommandKey]);
         }

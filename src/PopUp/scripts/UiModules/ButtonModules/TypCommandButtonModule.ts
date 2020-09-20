@@ -6,23 +6,20 @@ import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interface
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { _baseButtonModule } from "./_baseButtonModule";
 
-export class TypButtonModule extends _baseButtonModule implements IUiModuleButton {
-  
+export class TypCommandButtonModule extends _baseButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonTypical;
   private ElemButtonBackText: HTMLDivElement;
-
   private ElemDivBtnOverlay: HTMLDivElement;
 
-  constructor(loggerAgent: ILoggerAgent,  menuCommandParameters: IMenuCommandDefinition) {
+  constructor(loggerAgent: ILoggerAgent, menuCommandParameters: IMenuCommandDefinition) {
     super(loggerAgent, menuCommandParameters);
   }
-    
 
   Init(): void {
-    this.Logger.FuncStart(this.Init.name, TypButtonModule.name)
+    this.Logger.FuncStart(this.Init.name, TypCommandButtonModule.name)
     this.Init_BaseButtonModule();
-    this.BuildModuleButton();
-    this.Logger.FuncEnd(this.Init.name, TypButtonModule.name)
+    this.BuildButton();
+    this.Logger.FuncEnd(this.Init.name, TypCommandButtonModule.name)
   }
 
   WireEvents(): void {
@@ -34,7 +31,21 @@ export class TypButtonModule extends _baseButtonModule implements IUiModuleButto
   }
 
   TriggerSingleClick() {
-    this.ElemButton.click();
+    this.HTMLButtonElement.click();
+  }
+
+  private AddElemToBaseButton(): void {
+    this.ContainerUiElem.appendChild(this.ElemDivBtnOverlay);
+  }
+
+  private BuildButtonOverlay(): void {
+    this.ElemDivBtnOverlay = document.createElement("div");
+    this.ElemDivBtnOverlay.classList.add("btn-overlay");
+
+    let backFill = this.BuildButtonOverlayBackFill();
+    this.BuildButtonTextContainer();
+    this.ElemDivBtnOverlay.appendChild(backFill);
+    this.ElemDivBtnOverlay.appendChild(this.ElemButtonBackText);
   }
 
   private BuildButtonOverlayBackFill() {
@@ -50,26 +61,8 @@ export class TypButtonModule extends _baseButtonModule implements IUiModuleButto
     return this.ElemButtonBackText;
   }
 
-  private BuildButtonOverlay(): void {
-    this.ElemDivBtnOverlay = document.createElement("div");
-    this.ElemDivBtnOverlay.classList.add("btn-overlay");
-
-    let backFill = this.BuildButtonOverlayBackFill();
-    this.BuildButtonTextContainer();
-    this.ElemDivBtnOverlay.appendChild(backFill);
-    this.ElemDivBtnOverlay.appendChild(this.ElemButtonBackText);
-  }
-  private BuildButtonElem(): void {
-    //<div id='PresentationDetails' type = 'button' class="button-wrapper icon details" > Presentation Details < /div>
-    this.ElemButton = document.createElement("button");
-    this.ElemButton.classList.add("icon");
-    this.ElemButton.classList.add(this.MenuCommandDefinition.IconClassName);
-    this.ElemButton.innerText = this.MenuCommandDefinition.InnerText;
-    this.ElemButton.type = "button";
-  }
-
-  BuildModuleButton(): void {
-    this.Logger.FuncStart(this.BuildModuleButton.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+  BuildButton(): void {
+    this.Logger.FuncStart(this.BuildButton.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
     if (this.ContainerUiElem) {
       this.BuildButtonElem();
 
@@ -78,17 +71,17 @@ export class TypButtonModule extends _baseButtonModule implements IUiModuleButto
       this.ContainerUiElem.classList.add('btn-container');
 
       this.ContainerUiElem.appendChild(this.ElemDivBtnOverlay);
-      this.ContainerUiElem.appendChild(this.ElemButton);
+      this.ContainerUiElem.appendChild(this.HTMLButtonElement);
     } else {
-      this.Logger.ErrorAndContinue(TypButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.Logger.ErrorAndContinue(TypCommandButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
-    this.Logger.FuncEnd(this.BuildModuleButton.name);
+    this.Logger.FuncEnd(this.BuildButton.name);
   }
 
   RefreshUi(): void {
     this.Logger.FuncStart(this.RefreshUi.name, this.Friendly);
     if (this.ContainerUiElem) {
-      let allresults: VisiblityTestResultsBucket = this.RefreshData. UiVisibilityTestAgent.TestAgainstAllSetControllers(this.MenuCommandDefinition);
+      let allresults: VisiblityTestResultsBucket = this.RefreshData.UiVisibilityTestAgent.TestAgainstAllSetControllers(this.MenuCommandDefinition);
 
       this.Logger.LogVal('length', allresults.TestResults.length);
       this.SetCommandButtonVisibility(allresults);
@@ -103,17 +96,17 @@ export class TypButtonModule extends _baseButtonModule implements IUiModuleButto
 
     this.Logger.LogAsJsonPretty(this.Friendly, allresults.TestResults);
 
-    if (allresults && this.ElemButton) {
+    if (allresults && this.HTMLButtonElement) {
       if (!allresults.HasFailures()) {
-        this.ElemButton.classList.remove('disabled');
-        this.ElemButton.removeAttribute('disabled');
+        this.HTMLButtonElement.classList.remove('disabled');
+        this.HTMLButtonElement.removeAttribute('disabled');
 
         if (this.ElemDivBtnOverlay) {
           this.ElemDivBtnOverlay.style.display = 'none';
         }
       } else {
-        this.ElemButton.classList.add('disabled');
-        this.ElemButton.setAttribute('disabled', 'disabled');
+        this.HTMLButtonElement.classList.add('disabled');
+        this.HTMLButtonElement.setAttribute('disabled', 'disabled');
 
         if (this.ElemDivBtnOverlay) {
           this.ElemDivBtnOverlay.style.display = 'block';

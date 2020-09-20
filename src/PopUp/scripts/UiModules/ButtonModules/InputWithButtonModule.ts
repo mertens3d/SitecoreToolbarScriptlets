@@ -4,20 +4,33 @@ import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { PopConst } from "../../Classes/PopConst";
+import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 
 export class InputWithButtonModule extends _baseButtonModule implements IUiModuleButton {
+  ModuleKey = ModuleKey.ButtonWithInput;
+  private InputElement: HTMLInputElement;
 
   WireEvents(): void {
   }
 
   Init(): void {
     this.Init_BaseButtonModule();
+    this.BuildInputHtml();
   }
 
   RefreshUi(): void {
   }
 
-  ModuleKey = ModuleKey.ButtonWithInput;
+  private BuildInputHtml() {
+    this.InputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
+    this.InputElement.type = SharedConst.Const.KeyWords.Html.Text;
+    this.InputElement.placeholder = "Nick Name";
+    this.InputElement.value = '';
+
+    if (this.ContainerUiElem) {
+      this.ContainerUiElem.appendChild(this.InputElement);
+    }
+  }
 
   DrawCorrectNicknameInUI() {
     this.Logger.FuncStart(this.DrawCorrectNicknameInUI.name);
@@ -54,5 +67,4 @@ export class InputWithButtonModule extends _baseButtonModule implements IUiModul
     }
     this.Logger.FuncEnd(this.DrawCorrectNicknameInUI.name);
   }
-
 }

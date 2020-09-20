@@ -19,7 +19,7 @@ import { PopConst } from '../../Classes/PopConst';
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
 import { SelectSnapUiMutationEvent_Observer } from '../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject';
 import { ButtonBasedModules } from '../../UiModules/ButtonModules/ButtonBasedModules';
-import { TypButtonModule } from '../../UiModules/ButtonModules/TypButtonModule';
+import { TypCommandButtonModule } from '../../UiModules/ButtonModules/TypCommandButtonModule';
 import { _baseButtonModule } from '../../UiModules/ButtonModules/_baseButtonModule';
 import { SelectSnapshotModule } from '../../UiModules/SelectSnapshotModule/SelectSnapshotModule';
 import { SettingsBasedModules } from '../../UiModules/SettingsModule/SettingsBasedModules';
@@ -71,7 +71,6 @@ export class UiModulesManager extends LoggableBase {
     this.Logger.FuncStart(this.InitUiMan.name, UiModulesManager.name);
 
     this.WriteBuildNumToUi();
-    this.WireEvents();
 
     if (this.UiModules) {
       this.UiModules.forEach((uiModule: IUiModule) => uiModule.Init());
@@ -79,6 +78,36 @@ export class UiModulesManager extends LoggableBase {
 
     this.UiCommandsManager.InitButtonStateManager();
     this.Logger.FuncEnd(this.InitUiMan.name, UiModulesManager.name);
+  }
+
+  WireEvents() {
+    this.Logger.FuncStart(this.WireEvents.name);
+
+
+    if (this.UiModules) {
+      this.UiModules.forEach((uiModule: IUiModule) => uiModule.WireEvents());
+    }
+
+
+    this.FeedbackModuleMessages = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.DivOverlayModule);
+
+    this.SelectSnapshotModule_Observer = new SelectSnapUiMutationEvent_Observer(this.Logger, this.RefreshUiUIManagerFromSnapShotSelect.bind(this));
+
+    let moduleSelectSnapShots: IUiModule[] = this.GetModulesByKey(ModuleKey.SelectSnapShot);
+
+    if (moduleSelectSnapShots && moduleSelectSnapShots.length > 0) {
+      let moduleSelectSnapShot = moduleSelectSnapShots[0];
+      if (moduleSelectSnapShot) {
+        (<SelectSnapshotModule>moduleSelectSnapShot).SelectSnapshotModule_Subject.RegisterObserver(this.SelectSnapshotModule_Observer);
+      }
+    }
+
+    let feedBackModuleLog: IUiModule = this.GetFirstModuleByKey(ModuleKey.FeedbackModuleLog);
+
+    if (<UiFeedbackModuleLog>feedBackModuleLog) {
+      //todo - put back   this.Logger.AddWriter(feedBackModuleLog);
+    }
+    this.Logger.FuncEnd(this.WireEvents.name);
   }
 
   InstantiateModules() {
@@ -101,8 +130,8 @@ export class UiModulesManager extends LoggableBase {
     this.Logger.FuncEnd(this.InstantiateModules.name);
   }
 
-  FilterUiModulesByMenuCommandKey(uiModules: TypButtonModule[], menuCommandKey: MenuCommandKey): TypButtonModule {
-    let toReturn: TypButtonModule = null;
+  FilterUiModulesByMenuCommandKey(uiModules: TypCommandButtonModule[], menuCommandKey: MenuCommandKey): TypCommandButtonModule {
+    let toReturn: TypCommandButtonModule = null;
 
     if (uiModules && uiModules.length > 0) {
       for (let uiModule of uiModules) {
@@ -131,9 +160,9 @@ export class UiModulesManager extends LoggableBase {
     return toReturn;
   }
 
-  GetCommandButtonByKey(Ping: MenuCommandKey): TypButtonModule {
-    let uiModules: TypButtonModule[] = <TypButtonModule[]>this.GetModulesByKey(ModuleKey.ButtonTypical);
-    let toReturn: TypButtonModule = null;
+  GetCommandButtonByKey(Ping: MenuCommandKey): TypCommandButtonModule {
+    let uiModules: TypCommandButtonModule[] = <TypCommandButtonModule[]>this.GetModulesByKey(ModuleKey.ButtonTypical);
+    let toReturn: TypCommandButtonModule = null;
 
     if (uiModules) {
       let typButton = this.FilterUiModulesByMenuCommandKey(uiModules, MenuCommandKey.Ping);
@@ -167,29 +196,6 @@ export class UiModulesManager extends LoggableBase {
       }
     }
     return toReturn;
-  }
-
-  WireEvents() {
-    this.Logger.FuncStart(this.WireEvents.name);
-    this.FeedbackModuleMessages = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.DivOverlayModule);
-
-    this.SelectSnapshotModule_Observer = new SelectSnapUiMutationEvent_Observer(this.Logger, this.RefreshUiUIManagerFromSnapShotSelect.bind(this));
-
-    let moduleSelectSnapShots: IUiModule[] = this.GetModulesByKey(ModuleKey.SelectSnapShot);
-
-    if (moduleSelectSnapShots && moduleSelectSnapShots.length > 0) {
-      let moduleSelectSnapShot = moduleSelectSnapShots[0];
-      if (moduleSelectSnapShot) {
-        (<SelectSnapshotModule>moduleSelectSnapShot).SelectSnapshotModule_Subject.RegisterObserver(this.SelectSnapshotModule_Observer);
-      }
-    }
-
-    let feedBackModuleLog: IUiModule = this.GetFirstModuleByKey(ModuleKey.FeedbackModuleLog);
-
-    if (<UiFeedbackModuleLog>feedBackModuleLog) {
-      //todo - put back   this.Logger.AddWriter(feedBackModuleLog);
-    }
-    this.Logger.FuncEnd(this.WireEvents.name);
   }
 
 

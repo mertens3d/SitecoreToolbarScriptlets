@@ -6,7 +6,7 @@ import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agent
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { IMenuCommandDefinitionBucket } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { UiHydrationData } from '../../../Shared/scripts/Interfaces/MenuCommand';
-import { TypButtonModule } from '../UiModules/ButtonModules/TypButtonModule';
+import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
 import { UiVisibilityTestAgent } from './UiManager/UiVisibilityTestAgent';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 
@@ -36,7 +36,7 @@ export class UiCommandsManager extends LoggableBase {
 
       this.MenuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
         if (menuCommandParams.ModuleKey === ModuleKey.ButtonTypical) {
-          let typeButtonModule = new TypButtonModule(this.Logger, menuCommandParams);
+          let typeButtonModule = new TypCommandButtonModule(this.Logger, menuCommandParams);
           this.UiModules.push(typeButtonModule);
         } else if (menuCommandParams.ModuleKey === ModuleKey.ButtonClose) {
         }

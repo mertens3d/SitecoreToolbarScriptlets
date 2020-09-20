@@ -75,7 +75,6 @@ export class PopConst {
         AutoSnapshotBeforeWindowChange: '[id=id-settings-auto-snapshot-on-window-change]',
 
         BuildStamp: '[id=build-stamp]',
-        
 
         DivOverlayModule: '[id=menu-overlay]',
         DivStateContent: '[id=feedback-div-state-content]',
@@ -86,27 +85,30 @@ export class PopConst {
         FeedbackMessages: '[id=feedback-messages]',
         FeedbackStorage: '[id=feedback-storage]',
         HsCancel: '[id=Cancel]',
-        HsRemoveFromStorage: '[id=RemoveOneFromLocalStorage]',
-        HsRestoreWindowStateSameTab: '[id=id-restore-state-same-tab]',
-        HsRestoreWindowStateNewTab: '[id=id-restore-state-new-tab]',
-        iCBoxdSettingsAutoLogin: '[id=id-settings-auto-login]',
+        HsRemoveFromStorage: '[id=id-ph-remove-one-from-local-storage]',
+        HsRestoreWindowStateSameTab: '[id=id-ph-btn-restore-state-same-tab]',
+        HsRestoreWindowStateNewTab: '[id=id-ph-btn-restore-state-new-tab]',
+        iCBoxdSettingsAutoLogin: '[id=id-ph-settings-auto-login]',
         IdFieldSetDebug: '[id=id-fieldset-debug]',
-        EnableLogging: '[id=id-settings-show-log-data]',
-        ToggleFavorite: '[id=id-toggle-favorite]',
 
-        PrefAutoLogin: '[id=id-settings-auto-login]',
-      
+        ToggleFavorite: '[id=id-ph-btn-toggle-favorite]',
+
+       
+
         SelStateSnapShot: '[id=selState]',
         SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',
         SettingAutoSaveMaxCount: '[id=id-settings-auto-save-max-count]',
-        SettingDebugKeepDialogOpen: '[id=id-settings-debug-keep-dialog-open]',
+
         SettingAutoSaveSnapshotRetainDays: '[id=id-settings-auto-save-snap-shot-retain-days]',
         SettingAutoRenameCeTabButton: '[id=id-settings-auto-rename-ce-tab-button]',
         SettingNotUsed: '[id=id-settings-not-used]',
-        SettingUseCompactCss: '[id=id-settings-use-compact]',
-        TakeSnapshot: '[id=id-take-snapshot]',
-        UpdateNicknameB: '[id=id-btn-update-nickname]',
+        TakeSnapshot: '[id=id-ph-btn-take-snapshot]',
+        UpdateNicknameB: '[id=id-ph-btn-update-nickname]',
         ModulePlaceHolders: {
+          PrefAutoLogin: '[id=id-ph-settings-auto-login]',
+          SettingUseCompactCss: '[id=id-ph-settings-use-compact]',
+          SettingDebugKeepDialogOpen: '[id=id-ph-settings-debug-keep-dialog-open]',
+          CbEnableLogging: '[id=id-ph-settings-show-log-data]',
           BtnAdminB: '[id=id-ph-btn-adminb]',
           BtnModeEdit: '[id=id-ph-btn-sc-mode-edit]',
           BtnModeNorm: '[id=id-ph-btn-norm]',

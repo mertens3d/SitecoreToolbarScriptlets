@@ -22,6 +22,13 @@ export class SharedConst {
       Html: {
         beforeend: 'beforeend',
         optgroup: 'optgroup',
+        Checkbox: 'checkbox',
+        Checked: 'checked',
+        Input: 'input',
+        Label: 'label',
+        For: 'for',
+        Text: 'text',
+        Number: 'number',
       },
       Javascript: {
         ReadyStates: {
