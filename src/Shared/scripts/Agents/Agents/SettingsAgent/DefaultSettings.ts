@@ -11,21 +11,21 @@ import { ModuleKey } from "../../../Enums/ModuleKey";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
 
 export class DefaultSettings extends LoggableBase {
- private SettingsAgent: ISettingsAgent;
+  private SettingsAgent: ISettingsAgent;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
     super(logger);
     this.SettingsAgent = settingsAgent;
   }
 
-  GetDefaultSettings(): IHindSiteSetting[] {
-  
-    let toReturn: IHindSiteSetting[] = [
-  
+  GetDefaultSettingsWrapper(): HindSiteSettingWrapper[]{
+    let rawData: IHindSiteSetting[] = [
+
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.LastUsedLogToStorageKey,
         SettingType.Number,
         null,
@@ -35,11 +35,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasNoUi,
         ModuleKey.Unknown,
-        this.SettingsAgent,
 
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.EnableLogging,
         SettingType.BoolCheckBox,
         PopConst.Const.Selector.HS.ModulePlaceHolders.CbEnableLogging,
@@ -49,10 +48,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.CheckBox,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.UseCompactCss,
         SettingType.BoolCheckBox,
         PopConst.Const.Selector.HS.ModulePlaceHolders.SettingUseCompactCss,
@@ -62,10 +61,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Disabled,
         UiPresence.HasUi,
         ModuleKey.CheckBox,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.AutoSnapshotBeforeWindowChange,
         SettingType.BoolCheckBox,
         PopConst.Const.Selector.HS.AutoSnapshotBeforeWindowChange,
@@ -75,10 +74,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Disabled,
         UiPresence.HasUi,
         ModuleKey.CheckBox,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.AutoLogin,
         SettingType.BoolCheckBox,
         PopConst.Const.Selector.HS.iCBoxdSettingsAutoLogin,
@@ -88,10 +87,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Disabled,
         UiPresence.HasUi,
         ModuleKey.CheckBox,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.LgndPopUpLog,
         SettingType.Accordion,
         PopConst.Const.Selector.HS.ModulePlaceHolders.LgndPopUpLog,
@@ -101,10 +100,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Accordion,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.LgndForeSite,
         SettingType.Accordion,
         PopConst.Const.Selector.HS.ModulePlaceHolders.LgndForeSite,
@@ -114,10 +113,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Accordion,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.LgndHindSite,
         SettingType.Accordion,
         PopConst.Const.Selector.HS.ModulePlaceHolders.LgndHindSite,
@@ -127,10 +126,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Accordion,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.LgndSettings,
         SettingType.Accordion,
         PopConst.Const.Selector.HS.ModulePlaceHolders.LgndSettings,
@@ -140,10 +139,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Accordion,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.LgndMessages,
         SettingType.Accordion,
         PopConst.Const.Selector.HS.ModulePlaceHolders.LgndMessages,
@@ -153,10 +152,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Accordion,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.LgndPopUpState,
         SettingType.Accordion,
         PopConst.Const.Selector.HS.ModulePlaceHolders.LgndPopUpState,
@@ -166,10 +165,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Accordion,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.LgndContentState,
         SettingType.Accordion,
         PopConst.Const.Selector.HS.ModulePlaceHolders.LgndContentState,
@@ -179,11 +178,11 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Accordion,
-        this.SettingsAgent,
+
       ),
 
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.LgndBrowserState,
         SettingType.Accordion,
         PopConst.Const.Selector.HS.ModulePlaceHolders.LgndBrowserState,
@@ -193,11 +192,11 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Accordion,
-        this.SettingsAgent,
+
       ),
 
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.MaxAutoSaveCount,
         SettingType.Number,
         PopConst.Const.Selector.HS.SettingAutoSaveMaxCount,
@@ -207,11 +206,11 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Disabled,
         UiPresence.HasUi,
         ModuleKey.Number,
-        this.SettingsAgent,
+
       ),
 
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.AutoSaveIntervalMin,
         SettingType.Number,
         PopConst.Const.Selector.HS.SettingAutoSaveInterval,
@@ -221,11 +220,11 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Number,
-        this.SettingsAgent,
+
       ),
 
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.DebugKeepDialogOpen,
         SettingType.BoolCheckBox,
         PopConst.Const.Selector.HS.ModulePlaceHolders.SettingDebugKeepDialogOpen,
@@ -235,10 +234,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.CheckBox,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.AutoSaveRetainDays,
         SettingType.Number,
         PopConst.Const.Selector.HS.SettingAutoSaveSnapshotRetainDays,
@@ -248,10 +247,10 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Number,
-        this.SettingsAgent,
+
       ),
       new HindSiteSetting(
-        this.Logger,
+
         SettingKey.AutoRenameCeButton,
         SettingType.BoolCheckBox,
         PopConst.Const.Selector.HS.SettingAutoRenameCeTabButton,
@@ -261,9 +260,15 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.CheckBox,
-        this.SettingsAgent,
+
       )
     ];
+
+    let toReturn: HindSiteSettingWrapper[] = [];
+
+    rawData.forEach((settingValue: HindSiteSetting) => {
+      toReturn.push(new HindSiteSettingWrapper(this.Logger, this.SettingsAgent, settingValue));
+    })
 
     return toReturn;
   }

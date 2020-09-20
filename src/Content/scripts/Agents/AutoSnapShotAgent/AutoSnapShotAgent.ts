@@ -9,6 +9,7 @@ import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interface
 import { RecipeAutoSaveState } from "../../ContentApi/Recipes/RecipeAutoSaveState";
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
+import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 
 export class AutoSnapShotAgent extends LoggableBase {
   private AtticAgent: IContentAtticAgent;
@@ -38,14 +39,14 @@ export class AutoSnapShotAgent extends LoggableBase {
   ScheduleIntervalTasks() {
     this.Logger.FuncStart(this.ScheduleIntervalTasks.name);
     this.Logger.LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
-    let autoSaveSetting: IHindSiteSetting = this.SettingsAgent.GetByKey(SettingKey.AutoSaveIntervalMin)
-    this.Logger.LogVal('autoSaveSetting: ', autoSaveSetting.ValueAsInt());
+    let autoSaveSetting: HindSiteSettingWrapper = this.SettingsAgent.HindSiteSettingsBucket.GetByKey(SettingKey.AutoSaveIntervalMin)
+    this.Logger.LogVal('autoSaveSetting: ', autoSaveSetting.HindSiteSetting.ValueAsInt());
 
-    if (autoSaveSetting.ValueAsInt() > 0) {
+    if (autoSaveSetting.HindSiteSetting.ValueAsInt() > 0) {
       if (!this.AutoSaveHasBeenScheduled) {
         var self = this;
 
-        var intervalMs = StaticHelpers.MinToMs(autoSaveSetting.ValueAsInt());
+        var intervalMs = StaticHelpers.MinToMs(autoSaveSetting.HindSiteSetting.ValueAsInt());
 
         window.setInterval(() => {
           self.AutoSaveSnapShot();

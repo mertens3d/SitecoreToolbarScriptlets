@@ -3,13 +3,13 @@ import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuComman
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { CommandManager } from "../../Classes/AllCommands";
+import { CommandManager } from "../../Classes/CommandManager";
 import { SelectSnapshotModule } from "../SelectSnapshotModule/SelectSnapshotModule";
 import { CancelButtonModule } from "./CancelButtonModule";
 import { CloseButtonModule } from "./CloseButtonModule";
 import { InputWithButtonModule } from "./InputWithButtonModule";
 import { TypCommandButtonModule } from "./TypCommandButtonModule";
-import { _baseButtonModule } from "./_baseButtonModule";
+import { _base_ButtonModule } from "./_baseButtonModule";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
 export class ButtonBasedModules extends LoggableBase {

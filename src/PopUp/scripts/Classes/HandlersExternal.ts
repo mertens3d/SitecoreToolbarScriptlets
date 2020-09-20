@@ -12,6 +12,8 @@ import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IMsgPayload";
 import { PopUpMessagesBrokerAgent } from "../Agents/PopUpMessagesBrokerAgent";
 import { BrowserTabAgent } from "../Managers/BrowserTabAgent";
 import { SelectSnapshotModule } from "../UiModules/SelectSnapshotModule/SelectSnapshotModule";
+import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
+import { IHindSiteSetting } from "../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 
 export class HandlersExternalEvent extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
@@ -27,10 +29,14 @@ export class HandlersExternalEvent extends LoggableBase {
     this.ModuleSelectSnapShots = moduleSelectSnapShots;
   }
 
-  private GetStateOfPopUp(msgFlag: MsgFlag, data: ICommandHandlerDataForPopUp): IStateOfPopUp {
+  public GetStateOfPopUp(msgFlag: MsgFlag): IStateOfPopUp {
     this.Logger.FuncStart(this.GetStateOfPopUp.name);
 
-    let settingsToSend = this.SettingsAgent.GetSettingsByFlavor([SettingFlavor.ContentAndPopUpStoredInPopUp, SettingFlavor.ContentOnly]);
+    let wrappedSettings: HindSiteSettingWrapper[] = this.SettingsAgent.GetSettingsByFlavor([SettingFlavor.ContentAndPopUpStoredInPopUp, SettingFlavor.ContentOnly]);
+
+
+    let settingsToSend: IHindSiteSetting[] = [];
+    wrappedSettings.forEach((wrappedSetting: HindSiteSettingWrapper) => settingsToSend.push(wrappedSetting.HindSiteSetting));
 
     //stateOfPopUp.Payload.IdOfSelect = data.MenuState.SelectSnapshotId;
 
@@ -63,7 +69,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
   async AddCETab(commandHndlrData: ICommandHandlerDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let stateOfPopUp: IStateOfPopUp = commandHndlrData.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqAddCETab, commandHndlrData);
+      let stateOfPopUp: IStateOfPopUp = commandHndlrData.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqAddCETab);
 
       this.PopUPMessageBroker.SendCommandToContent(stateOfPopUp)
         .then(() => resolve())
@@ -73,7 +79,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
   async PutAdminB(data: ICommandHandlerDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqAdminB, data);
+      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqAdminB);
 
       await data.EventMan.PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPopUp)
         .then(() => resolve())
@@ -83,7 +89,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
   async QuickPublish(data: ICommandHandlerDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqQuickPublish, data);
+      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqQuickPublish);
 
       await data.EventMan.PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPopUp)
         .then(() => resolve())
@@ -93,7 +99,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
   async HandlerForSnapShotCreate(data: ICommandHandlerDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqTakeSnapShot, data);
+      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqTakeSnapShot);
 
       await data.EventMan.PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPopUp)
         .then(() => resolve())
@@ -118,7 +124,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
   async HandlerForPing(data: ICommandHandlerDataForPopUp): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
-      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.Ping, data);
+      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.Ping);
 
       await data.EventMan. PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPopUp)
         .then(() => resolve())
@@ -130,7 +136,7 @@ export class HandlersExternalEvent extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       data.EventMan.Handlers.External.Logger.FuncStart(data.EventMan.Handlers.External.HandlerForSnapShotRestoreSameTab.name);
 
-      var stateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqSetStateOfSitecoreWindow, data);
+      var stateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqSetStateOfSitecoreWindow);
       
      
 
@@ -160,7 +166,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
   async HandlerForSnapShotUpdateNickName(data: ICommandHandlerDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqUpdateNickName, data);
+      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqUpdateNickName);
 
   
 
@@ -175,7 +181,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
   HandlerForToggleFavorite(data: ICommandHandlerDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      var stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqMarkFavorite, data);
+      var stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqMarkFavorite);
       await data.EventMan.PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPopUp)
         .then(() => resolve())
         .catch((err) => reject(err));
@@ -184,7 +190,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
   HandlerForSnapShotRemove(data: ICommandHandlerDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqRemoveFromStorage, data);
+      let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqRemoveFromStorage);
 
       var result: boolean = confirm('Remove ?: ' + Guid.AsShort(stateOfPopUp.SelectSnapshotId));
       if (result === true) {
@@ -199,7 +205,7 @@ export class HandlersExternalEvent extends LoggableBase {
 
   HandlerForCompactCE(data: ICommandHandlerDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
-      let stateOfPupUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqToggleCompactCss, data);
+      let stateOfPupUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqToggleCompactCss);
 
       await data.EventMan.PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPupUp)
         .then(() => resolve())

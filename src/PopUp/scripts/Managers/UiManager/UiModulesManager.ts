@@ -15,7 +15,7 @@ import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interface
 import { IDataStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots';
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { UiHydrationData } from '../../../../Shared/scripts/Interfaces/MenuCommand';
-import { CommandManager } from '../../Classes/AllCommands';
+import { CommandManager } from '../../Classes/CommandManager';
 import { PopConst } from '../../Classes/PopConst';
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
 import { SelectSnapUiMutationEvent_ObserverWithCallback } from '../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_ObserverWithCallback';
@@ -221,7 +221,6 @@ export class UiModulesManager extends LoggableBase {
       for (var idx = 0; idx < this.UiModules.length; idx++) {
         if (this.UiModules[idx].ModuleKey === moduleKey) {
           toReturn.push(this.UiModules[idx]);
-          break;
         }
       }
     }

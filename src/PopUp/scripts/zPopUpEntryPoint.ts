@@ -11,7 +11,7 @@ import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IHindSiteSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
-import { CommandManager } from "./Classes/AllCommands";
+import { CommandManager } from "./Classes/CommandManager";
 import { PopConst } from "./Classes/PopConst";
 import { BrowserTabAgent } from "./Managers/BrowserTabAgent";
 import { EventManager } from "./Managers/EventManager";
@@ -20,11 +20,14 @@ import { UiModulesManager } from "./Managers/UiManager/UiModulesManager";
 import { SelectSnapshotModule } from "./UiModules/SelectSnapshotModule/SelectSnapshotModule";
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
 import { DefaultSettings } from "../../Shared/scripts/Agents/Agents/SettingsAgent/DefaultSettings";
+import { HindSiteSettingWrapper } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
+import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { HindSiteSettingsBucket } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingsBucket";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
   Logger: LoggerAgent;
-  SettingsAgent: SettingsAgent;
+  SettingsAgent: ISettingsAgent;
   scUrlAgent: ScUrlAgent;
   handlers: Handlers;
   UiModulesMan: UiModulesManager;
@@ -39,37 +42,41 @@ class PopUpEntry {
     try {
       this.Instantiate();
       this.Init();
-      this.MakeTwoWayIntroductions();
-      this.WireEvents();
-      this.Start();
     } catch (err) {
       console.log(err);
     }
   }
 
-  private Init() {
+  private async Init() {
     this.Logger.SectionMarker('Begin Init');
-    this.UiModulesMan.InitUiMan();
-    this.EventMan.InitEventManager();
+
+    await this.scUrlAgent.InitScUrlAgent()
+      .then(() => {
+        this.UiModulesMan.InitUiMan();
+        this.EventMan.InitEventManager();
+        this.MakeTwoWayIntroductions();
+        this.WireEvents();
+        this.Start();
+      })
+      .catch((err) => this.Logger.ErrorAndThrow(this.Init.name, err));
 
     this.Logger.SectionMarker('End Init');
   }
 
   private WireEvents() {
-    this.scUrlAgent.InitScUrlAgent()
-      .then(() => {
-        //wire
-        this.UiModulesMan.WireEvents();
-        this.EventMan.WireEvents();
-        this.WireCustomevents();
-    
-      })
+    this.Logger.SectionMarker('Begin Wiring');
+    this.UiModulesMan.WireEvents();
+    this.EventMan.WireEvents();
+    this.WireCustomevents();
+    this.Logger.SectionMarker('End Wiring');
   }
+
   MakeTwoWayIntroductions() {
     this.SettingsAgent.IntroduceUiModulesManager(this.UiModulesMan);
   }
+
   private Start() {
-    this.EventMan.TriggerPingEventAsync();
+    this.commandMan.TriggerPingEventAsync();
     this.Logger.SectionMarker('Begin Standby');
 
     //.then(() => this.Logger.Log(this.main.name + ' completed'))
@@ -78,13 +85,9 @@ class PopUpEntry {
 
   private InstantiateAndInitSettingsAndLogger() {
     this.Logger = new LoggerAgent();
-
     this.RepoAgent = new RepositoryAgent(this.Logger);
     this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
-
-    var allSettings: IHindSiteSetting[] =( new DefaultSettings(this.Logger, this.SettingsAgent)).GetDefaultSettings();
-    this.SettingsAgent.Init_SettingsAgent(allSettings);
-
+    this.SettingsAgent.Init_SettingsAgent();
     this.InitLogger();
   }
 
@@ -99,7 +102,7 @@ class PopUpEntry {
     this.ModuleSelectSnapShots = new SelectSnapshotModule(this.Logger, PopConst.Const.Selector.HS.SelStateSnapShot);
 
     this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots);
-    this.commandMan = new CommandManager(this.Logger, this.handlers);
+    this.commandMan = new CommandManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent);
 
     this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots); //after tabman, after HelperAgent
     this.EventMan = new EventManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots, this.UiModulesMan); // after uiman
@@ -108,9 +111,9 @@ class PopUpEntry {
   private InitLogger() {
     this.Logger.FuncStart(this.InitLogger.name);
 
-    let enableLoggingSetting: HindSiteSetting = this.SettingsAgent.GetByKey(SettingKey.EnableLogging);
+    let enableLoggingSetting: HindSiteSettingWrapper = this.SettingsAgent.HindSiteSettingsBucket.GetByKey(SettingKey.EnableLogging);
 
-    if (SharedConst.Const.Debug.ForceLoggingEnabled || enableLoggingSetting.ValueAsBool()) {
+    if (SharedConst.Const.Debug.ForceLoggingEnabled || enableLoggingSetting.HindSiteSetting.ValueAsBool()) {
       var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.Logger);
       var nextLogId = RollingLogId.GetNextLogId();
 

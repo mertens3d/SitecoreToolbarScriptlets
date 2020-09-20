@@ -108,7 +108,6 @@
     <TypeScriptCompile Include="src\PopUp\scripts\Events\SelectSnapUiMutationEvent\SelectSnapUiMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Events\SingleClickEvent\SingleClickEvent_Subject.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Events\SingleClickEvent\SingleClickEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\MessageManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Agents\PopUpMessagesBrokerAgent.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiVisibilityTestAgent.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\ButtonBasedModules.ts" />
@@ -132,13 +131,15 @@
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\UiFeedbackModuleLog.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersExternal.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersInternal.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Classes\AllCommands.ts" />
+    <TypeScriptCompile Include="src\PopUp\scripts\Classes\CommandManager.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Events\SelectSnapUiMutationEvent\SelectSnapshotUiMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\UiModules\_UiModuleBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerTimer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LogWriterBuffer.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\HindSiteSettingsBucket.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\HindSiteSettingWrapper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\ToastAgent\ToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\DefaultSettings.ts" />
     <TypeScriptCompile Include="src\PopUp\scripts\Managers\Handlers.ts" />

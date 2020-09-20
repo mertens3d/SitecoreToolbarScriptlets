@@ -1,10 +1,9 @@
 ﻿import { CommandButtonEvents } from "../Enums/CommandButtonEvents";
-//export interface IHandlers {
-//  External: HandlersExternal,
-//  Internal: HandlersInternal,
-//}
+import { MsgFlag } from "../Enums/1xxx-MessageFlag";
+
 export interface IEventHandlerData {
-    Handler: Function;
-    Event: CommandButtonEvents;
-    ParameterData: any[];
+  Event: CommandButtonEvents;
+  Handler: Function;
+  MsgFlag: MsgFlag;
+  ParameterData: any[];
 }

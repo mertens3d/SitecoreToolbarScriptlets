@@ -10,6 +10,7 @@ import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandBut
 import { SelectSnapshotModule } from '../UiModules/SelectSnapshotModule/SelectSnapshotModule';
 import { Handlers } from './Handlers';
 import { UiModulesManager } from './UiManager/UiModulesManager';
+import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 
 export class EventManager extends LoggableBase {
   Handlers: Handlers
@@ -29,7 +30,7 @@ export class EventManager extends LoggableBase {
   }
 
   OnSingleClickEvent<ISingleClickEvent_Payload>(singleClickEventPayload: ISingleClickEvent_Payload) {
-    alert('click');
+    this.Logger.Log('single click');
   };
 
   InitEventManager(): void {
@@ -59,22 +60,13 @@ export class EventManager extends LoggableBase {
         if (!StaticHelpers.IsNullOrUndefined(baseButtonModule.SingleButtonClickEvent_Subject)) {
           baseButtonModule.SingleButtonClickEvent_Subject.RegisterObserver(this.CommandButtonSingleClickEvent_Observer);
         } else {
-          this.Logger.WarningAndContinue(this.ListenForCommandEvents.name, 'null SingleButtonClickEvent_Subject');
+          this.Logger.WarningAndContinue(this.ListenForCommandEvents.name, 'null SingleButtonClickEvent_Subject ' + ModuleKey[ baseButtonModule.ModuleKey]);
         }
       });
     }
   }
 
-  async TriggerPingEventAsync(): Promise<void> {
-    this.Logger.FuncStart(this.TriggerPingEventAsync.name);
-
-    let pingButtomModule: TypCommandButtonModule = this.UiModulesMan.GetCommandButtonByKey(MenuCommandKey.Ping)
-
-    // todo - put back let data = this.BuildCommandData(pingCommand);
-    // todo this.RouteAllCommandEvents(data);
-
-    this.Logger.FuncEnd(this.TriggerPingEventAsync.name);
-  }
+ 
 
   async RouteAllCommandEvents(data: ICommandHandlerDataForPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {

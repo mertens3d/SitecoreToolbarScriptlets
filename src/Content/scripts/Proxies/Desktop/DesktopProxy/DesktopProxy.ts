@@ -110,9 +110,9 @@ export class DesktopProxy extends LoggableBase {
   }
 
   WireEvents() {
-    let setting = this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton);
-    if (setting && setting.ValueAsBool()) {
-    }
+    //let setting = this.SettingsAgent.SetByKey(SettingKey.AutoRenameCeButton);
+    //if (setting && setting.ValueAsBool()) {
+    //}
 
     this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc);
     let DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer(this.Logger, this);

@@ -2,9 +2,9 @@
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { _baseButtonModule } from "./_baseButtonModule";
+import { _base_ButtonModule } from "./_baseButtonModule";
 
-export class CancelButtonModule extends _baseButtonModule implements IUiModuleButton {
+export class CancelButtonModule extends _base_ButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonCancel;
 
   constructor(loggerAgent: ILoggerAgent, menuCommandParameters: IMenuCommandDefinition) {

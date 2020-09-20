@@ -7,6 +7,7 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
 import { AccordianModule } from "./AccordianModule";
+import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 
 
 export class SettingsBasedModules extends LoggableBase {
@@ -35,8 +36,8 @@ export class SettingsBasedModules extends LoggableBase {
 
   BuildAccordianModules() { //oneSetting: IHindSiteSetting, uiElem: HTMLElement
     let toReturn: AccordianModule[] = [];
-    this.SettingsAgent.HindSiteSettings().forEach((hindSiteSetting: IHindSiteSetting) => {
-      if (hindSiteSetting.DataType === SettingType.Accordion) {
+    this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((hindSiteSetting: HindSiteSettingWrapper) => {
+      if (hindSiteSetting.HindSiteSetting.DataType === SettingType.Accordion) {
         let newAccordianDrone = new AccordianModule(this.Logger, hindSiteSetting);
 
         toReturn.push(newAccordianDrone);
@@ -49,9 +50,9 @@ export class SettingsBasedModules extends LoggableBase {
   BuildCheckBoxSettingModules(): HindSiteSettingCheckBoxModule[] {
     let toReturn: HindSiteSettingCheckBoxModule[] = [];
 
-    this.SettingsAgent.HindSiteSettings().forEach((hindSiteSetting: IHindSiteSetting) => {
-      if (hindSiteSetting.DataType === SettingType.BoolCheckBox) {
-        let hindSiteCheckboxSetting: HindSiteSettingCheckBoxModule = new HindSiteSettingCheckBoxModule(this.Logger,  hindSiteSetting)
+    this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((settingWrapper: HindSiteSettingWrapper) => {
+      if (settingWrapper.HindSiteSetting.DataType === SettingType.BoolCheckBox) {
+        let hindSiteCheckboxSetting: HindSiteSettingCheckBoxModule = new HindSiteSettingCheckBoxModule(this.Logger,  settingWrapper)
 
         toReturn.push(hindSiteCheckboxSetting);
       }
@@ -63,9 +64,9 @@ export class SettingsBasedModules extends LoggableBase {
   BuildNumberSettingModules(): HindSiteSettingNumberModule[] {
     let toReturn: HindSiteSettingNumberModule[] = [];
 
-    this.SettingsAgent.HindSiteSettings().forEach((hindSiteSetting: IHindSiteSetting) => {
-      if (hindSiteSetting.DataType === SettingType.Number) {
-        let hindSiteCheckboxSetting: HindSiteSettingNumberModule = new HindSiteSettingNumberModule(this.Logger,  hindSiteSetting)
+    this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((settingWrapper: HindSiteSettingWrapper) => {
+      if (settingWrapper.HindSiteSetting.DataType === SettingType.Number) {
+        let hindSiteCheckboxSetting: HindSiteSettingNumberModule = new HindSiteSettingNumberModule(this.Logger,  settingWrapper)
 
         toReturn.push(hindSiteCheckboxSetting);
       }

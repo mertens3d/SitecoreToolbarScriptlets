@@ -4,7 +4,7 @@ import { IMenuCommandDefinition } from "./IMenuCommandDefinition";
 
 export interface ICommandHandlerDataForPopUp {
   EventMan: EventManager;
-  MenuCommandParams: IMenuCommandDefinition;
+  MenuCommandDefinition: IMenuCommandDefinition;
   EventHandlerData: IEventHandlerData;
   Evt: MouseEvent;
 }

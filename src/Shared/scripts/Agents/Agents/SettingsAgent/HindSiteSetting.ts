@@ -4,11 +4,8 @@ import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { UiEnableState, UiPresence } from "../../../Enums/Enabled";
 import { ModuleKey } from "../../../Enums/ModuleKey";
-import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
-import { StaticHelpers } from "../../../Classes/StaticHelpers";
-export class HindSiteSetting extends LoggableBase implements IHindSiteSetting {
+
+export class HindSiteSetting implements IHindSiteSetting {
   Enabled: UiEnableState;
   DataType: SettingType;
   DefaultValue: any;
@@ -19,15 +16,8 @@ export class HindSiteSetting extends LoggableBase implements IHindSiteSetting {
   ValueAsObj: any;
   HasUi: UiPresence;
   ModuleType: ModuleKey;
-  private SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, settingKey: SettingKey, dataType: SettingType, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: UiEnableState, hasUi: UiPresence, moduleType: ModuleKey, settingsAgent: ISettingsAgent) {
-    super(logger);
-
-    if (StaticHelpers.IsNullOrUndefined(settingsAgent)) {
-      this.Logger.ErrorAndThrow(HindSiteSetting.name, 'No settings agent');
-    }
-
+  constructor(settingKey: SettingKey, dataType: SettingType, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: UiEnableState, hasUi: UiPresence, moduleType: ModuleKey) {
     this.SettingKey = settingKey;
     this.DataType = dataType;
     this.ValueAsObj = defaultValue;
@@ -38,15 +28,6 @@ export class HindSiteSetting extends LoggableBase implements IHindSiteSetting {
     this.HasUi = UiPresence.Unknown;
     this.Enabled = enabled;
     this.ModuleType = moduleType;
-    this.SettingsAgent = settingsAgent;
-  }
-
-  SaveChange(checked: boolean) {
-    if (this.SettingsAgent) {
-      this.SettingsAgent.BooleanSettingChanged(this.SettingKey, checked);
-    } else {
-      this.Logger.ErrorAndThrow(this.SaveChange.name, 'No ISettingsAgent');
-    }
   }
 
   ValueAsInt(): number {

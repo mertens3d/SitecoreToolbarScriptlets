@@ -22,21 +22,19 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
     if (!StaticHelpers.IsNullOrUndefined(this.AccordionTriggerElem)) {
       this.AccordionTriggerElem.addEventListener('click', (evt) => this.OnToggleAccordion(evt));
     } else {
-      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'trigger not found ' + this.HindSiteSetting.FriendlySetting);
+      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'trigger not found ' + this.SettingWrapper.HindSiteSetting.FriendlySetting);
     }
   }
 
   BuildHtml() {
-    if (!StaticHelpers.IsNullOrUndefined(  this.ContainerUiDivElem)) {
+    if (!StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
       // let uiLabel: HTMLElement = window.document.querySelector(this.HindSiteSetting.UiSelector.replace('id', 'for'));
 
       this.AccordionTriggerElem = this.ContainerUiDivElem.querySelector('.accordion-trigger');
       this.AccordionContentElem = this.ContainerUiDivElem.querySelector('.accordion-content');
 
       if (!StaticHelpers.IsNullOrUndefined([this.AccordionTriggerElem, this.AccordionContentElem])) {
-        this.AccordionTriggerElem.innerHTML = this.HindSiteSetting.FriendlySetting;
-      
-
+        this.AccordionTriggerElem.innerHTML = this.SettingWrapper.HindSiteSetting.FriendlySetting;
       } else {
         this.Logger.ErrorAndThrow(this.BuildHtml.name, 'null trigger: ' + this.ContainerSelector);
       }
@@ -60,10 +58,10 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
   private OnToggleAccordion(evt: any) {
     this.Logger.FuncStart(this.OnToggleAccordion.name);
 
-    if (this.AccordionContentElem && this.HindSiteSetting) {
-      var newVal: boolean = !(this.HindSiteSetting.ValueAsBool());
+    if (this.AccordionContentElem && this.SettingWrapper) {
+      var newVal: boolean = !(this.SettingWrapper.HindSiteSetting.ValueAsBool());
 
-      if (this.HindSiteSetting) {
+      if (this.SettingWrapper) {
         let iUiElementChangeEvent_Payload: IUiModuleMutationEvent_Payload = {
           ModuleKey: this.ModuleKey,
           CheckBoxModule: null,
@@ -73,7 +71,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
           }
         }
 
-        this.HindSiteSetting.SaveChange(newVal);
+        this.SettingWrapper.SaveChange(newVal);
         this.UiElementChangeEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
         this.SetAccordionClass();
       }
@@ -85,7 +83,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
   }
 
   private SetAccordionClass() {
-    if (this.HindSiteSetting.ValueAsBool() === true) {
+    if (this.SettingWrapper.HindSiteSetting.ValueAsBool() === true) {
       this.AccordionContentElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
     } else {
       this.AccordionContentElem.classList.add(PopConst.Const.ClassNames.HS.Collapsed);

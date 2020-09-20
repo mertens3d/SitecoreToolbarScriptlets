@@ -4,7 +4,6 @@ import { SettingKey } from "../../Enums/3xxx-SettingKey";
 import { UiPresence } from "../../Enums/Enabled";
 
 export interface IHindSiteSetting {
-  SaveChange(checked: boolean);
   DataType: SettingType;
   DefaultValue: any;
   FriendlySetting: string;

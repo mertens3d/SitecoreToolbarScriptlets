@@ -1,35 +1,36 @@
 ﻿import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
-import { _baseButtonModule } from "./_baseButtonModule";
+import { _base_ButtonModule } from "./_baseButtonModule";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { PopConst } from "../../Classes/PopConst";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 
-export class InputWithButtonModule extends _baseButtonModule implements IUiModuleButton {
+export class InputWithButtonModule extends _base_ButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonWithInput;
   private InputElement: HTMLInputElement;
 
   WireEvents(): void {
+    this.WireEvents_Base();
   }
 
   Init(): void {
     this.Init_BaseButtonModule();
-    this.BuildInputHtml();
+    this.BuildElements();
   }
 
   RefreshUi(): void {
   }
 
-  private BuildInputHtml() {
+  private BuildElements() {
     this.InputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
     this.InputElement.type = SharedConst.Const.KeyWords.Html.Text;
     this.InputElement.placeholder = "Nick Name";
     this.InputElement.value = '';
 
     if (this.ContainerUiDivElem) {
-      this.ContainerUiDivElem.appendChild(this.InputElement);
+      this.ContainerUiDivElem.insertBefore(this.InputElement, this.HTMLButtonElement);
     }
   }
 

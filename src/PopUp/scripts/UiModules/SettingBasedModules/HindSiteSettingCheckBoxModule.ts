@@ -37,23 +37,23 @@ export class HindSiteSettingCheckBoxModule extends _SettingsBasedModulesBase imp
       ModuleKey: this.ModuleKey,
       CheckBoxModule: {
         Checked: (<HTMLInputElement>evt.target).checked,
-        SettingKey: this.HindSiteSetting.SettingKey
+        SettingKey: this.SettingWrapper.HindSiteSetting.SettingKey
       },
       NumberModule: null,
       AccordianModule: null,
     }
-    this.HindSiteSetting.SaveChange((<HTMLInputElement>evt.target).checked);
+    this.SettingWrapper.SaveChange((<HTMLInputElement>evt.target).checked);
     this.UiElementChangeEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
   }
 
   BuildHtml() {
     this.UiInputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
     this.UiInputElement.type = SharedConst.Const.KeyWords.Html.Checkbox;
-    this.UiInputElement.checked = this.HindSiteSetting.ValueAsBool();
+    this.UiInputElement.checked = this.SettingWrapper.HindSiteSetting.ValueAsBool();
     this.UiInputElement.id = "id-" + Guid.WithoutDashes(Guid.NewRandomGuid());
 
     this.LabelElement = <HTMLLabelElement>document.createElement(SharedConst.Const.KeyWords.Html.Label)
-    this.LabelElement.innerHTML = this.HindSiteSetting.FriendlySetting;
+    this.LabelElement.innerHTML = this.SettingWrapper.HindSiteSetting.FriendlySetting;
     this.LabelElement.setAttribute(SharedConst.Const.KeyWords.Html.For, this.UiInputElement.id);
 
     if (this.ContainerUiDivElem) {
@@ -64,7 +64,7 @@ export class HindSiteSettingCheckBoxModule extends _SettingsBasedModulesBase imp
 
   RefreshUi() {
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
-      let valueToDisplay: boolean = this.HindSiteSetting.ValueAsBool();
+      let valueToDisplay: boolean = this.SettingWrapper.HindSiteSetting.ValueAsBool();
       this.UiInputElement.checked = valueToDisplay;
     }
   }

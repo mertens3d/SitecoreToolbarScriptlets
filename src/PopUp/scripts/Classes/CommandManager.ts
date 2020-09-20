@@ -9,14 +9,20 @@ import { PopConst } from './PopConst';
 import { IMenuCommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
+import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
+import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
+import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
+import { IStateOfPopUp } from '../../../Shared/scripts/Interfaces/IMsgPayload';
 
 export class CommandManager extends LoggableBase {
   public MenuCommandParamsBucket: IMenuCommandDefinitionBucket;
   private Handlers: Handlers;
+  private PopUpMsgBroker: PopUpMessagesBrokerAgent;
 
-  constructor(logger: ILoggerAgent, handlers: Handlers) {
+  constructor(logger: ILoggerAgent, handlers: Handlers, popUpMessageBroker: PopUpMessagesBrokerAgent) {
     super(logger);
     this.Handlers = handlers;
+    this.PopUpMsgBroker = popUpMessageBroker;
     this.MenuCommandParamsBucket = this.BuildMenuCommandParamsBucket();
   }
 
@@ -31,7 +37,19 @@ export class CommandManager extends LoggableBase {
     }
     return toReturn;
   }
+  async TriggerPingEventAsync(): Promise<void> {
+    this.Logger.FuncStart(this.TriggerPingEventAsync.name);
 
+    try {
+      let stateOPopUp: IStateOfPopUp = this.Handlers.External.GetStateOfPopUp(MsgFlag.Ping);
+      this.PopUpMsgBroker.SendCommandToContentImprovedAsync(stateOPopUp)
+    } catch (err) {
+      throw (this.TriggerPingEventAsync.name + ' | ' + err);
+    }
+
+    
+    this.Logger.FuncEnd(this.TriggerPingEventAsync.name);
+  }
   private BuildMenuCommandParamsBucket(): IMenuCommandDefinitionBucket {
     let toReturn: IMenuCommandDefinitionBucket =
     {
@@ -47,12 +65,13 @@ export class CommandManager extends LoggableBase {
             Handler: this.Handlers.Internal.CloseWindow,
             Event: CommandButtonEvents.OnSingleClick,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqClosePopUpWindow,
           }
         },
 
         {
           MenuCommandKey: MenuCommandKey.AddCeTab,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders. BtnAddContentEditor,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnAddContentEditor,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.AddCeTab,
           InnerText: "Add CE Tab to DT",
           VisibilityControllers: [VisibilityType.Desktop],
@@ -61,6 +80,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.AddCETab,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqAddCETab,
           }
         },
         {
@@ -74,6 +94,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.SetScModeInternal,
             ParameterData: [scMode.Edit],
+            MsgFlag: MsgFlag.ReqSetScMode,
           }
         },
         {
@@ -87,6 +108,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.SetScModeInternal,
             ParameterData: [scMode.Normal],
+            MsgFlag: MsgFlag.ReqSetScMode,
           }
         },
         {
@@ -100,6 +122,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.SetScModeInternal,
             ParameterData: [scMode.Preview],
+            MsgFlag: MsgFlag.ReqSetScMode,
           }
         },
         //{
@@ -126,11 +149,12 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.HandlerForSnapShotUpdateNickName,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqUpdateNickName,
           }
         },
         {
           MenuCommandKey: MenuCommandKey.PresentationDetails,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders. BtnPresentationDetails,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnPresentationDetails,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.PresentationDetails,
           InnerText: "Presentation Details",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -139,11 +163,12 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.HandlerForPresentationDetails,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqOpenPresentationDetails,
           }
         },
         {
           MenuCommandKey: MenuCommandKey.CompactCE,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders. BtnCompactScUi,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnCompactScUi,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.CompactCe,
           InnerText: "Compact CE",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -152,6 +177,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.HandlerForCompactCE,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqToggleCompactCss,
           }
         },
         {
@@ -165,6 +191,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.PutAdminB,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqAdminB,
           }
         },
 
@@ -179,12 +206,13 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.GoCeInternal,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqOpenCE,
           }
         },
 
         {
           MenuCommandKey: MenuCommandKey.QuickPublish,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders. BtnQuickPublish,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnQuickPublish,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.QuickPublish,
           InnerText: "Quick Publish",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -193,6 +221,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.QuickPublish,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqQuickPublish,
           }
         },
         {
@@ -206,6 +235,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.Internal.GoDesktopInternal,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqGoDesktop,
           }
         },
         {
@@ -219,6 +249,7 @@ export class CommandManager extends LoggableBase {
             Event: null,
             Handler: this.Handlers.External.HandlerForPing,
             ParameterData: [],
+            MsgFlag: MsgFlag.Ping,
           }
         },
         // ------ hind site
@@ -233,6 +264,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.HandlerForSnapShotCreate,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqTakeSnapShot,
           }
         },
 
@@ -247,6 +279,7 @@ export class CommandManager extends LoggableBase {
             Handler: this.Handlers.External.HandlerForToggleFavorite,
             Event: CommandButtonEvents.OnSingleClick,
             ParameterData: [],
+            MsgFlag: MsgFlag.ToggleFavorite,
           }
         },
         {
@@ -254,12 +287,13 @@ export class CommandManager extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.HsCancel,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.Cancel,
           InnerText: "Cancel",
-          VisibilityControllers:[], //todo - put back [VisibilityType.CommandIsRunning],
+          VisibilityControllers: [], //todo - put back [VisibilityType.CommandIsRunning],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.HandlerForCancelOperation,
             ParameterData: [],
+            MsgFlag: MsgFlag.CancelCommand,
           }
         },
         {
@@ -273,6 +307,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.HandlerForSnapShotRemove,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqRemoveFromStorage,
           }
         },
         {
@@ -286,6 +321,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnDoubleClick,
             Handler: this.Handlers.External.HandlerForSnapShotRestoreTBDTab,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqSetStateOfSitecoreWindow,
           }
         },
         {
@@ -299,6 +335,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.HandlerForSnapShotRestoreSameTab,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqSetStateOfSitecoreWindow,
           }
         },
         {
@@ -312,6 +349,7 @@ export class CommandManager extends LoggableBase {
             Event: CommandButtonEvents.OnSingleClick,
             Handler: this.Handlers.External.HandlerForSnapShotRestoreNewTab,
             ParameterData: [],
+            MsgFlag: MsgFlag.ReqSetStateOfSitecoreWindow,
           }
         },
       ]

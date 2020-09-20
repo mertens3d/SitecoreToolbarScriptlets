@@ -17,12 +17,17 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
     return new RegExp(regexPattern).test(url);
   }
 
-  async InitScUrlAgent() : Promise<void>{
+
+
+  async InitScUrlAgent(): Promise<void>{
+    this.Logger.FuncStart(this.InitScUrlAgent.name);
+
     try {
-      await super.InitGenericUrlAgent();
+      await this.InitGenericUrlAgent();
     } catch (err) {
       this.Logger.ErrorAndThrow(this.InitScUrlAgent.name, err);
     }
+    this.Logger.FuncEnd(this.InitScUrlAgent.name);
   }
 
   GetFullUrl() {

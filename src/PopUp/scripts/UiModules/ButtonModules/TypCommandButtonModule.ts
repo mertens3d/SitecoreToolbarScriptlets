@@ -5,9 +5,10 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { _baseButtonModule } from "./_baseButtonModule";
+import { _base_ButtonModule } from "./_baseButtonModule";
+import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 
-export class TypCommandButtonModule extends _baseButtonModule implements IUiModuleButton {
+export class TypCommandButtonModule extends _base_ButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonTypical;
   private ElemButtonBackText: HTMLDivElement;
   private ElemDivBtnOverlay: HTMLDivElement;
@@ -19,7 +20,7 @@ export class TypCommandButtonModule extends _baseButtonModule implements IUiModu
   Init(): void {
     this.Logger.FuncStart(this.Init.name, TypCommandButtonModule.name)
     this.Init_BaseButtonModule();
-    this.BuildButton();
+    this.BuildElements();
     this.Logger.FuncEnd(this.Init.name, TypCommandButtonModule.name)
   }
 
@@ -62,10 +63,9 @@ export class TypCommandButtonModule extends _baseButtonModule implements IUiModu
     return this.ElemButtonBackText;
   }
 
-  BuildButton(): void {
-    this.Logger.FuncStart(this.BuildButton.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
-    if (this.ContainerUiDivElem) {
-      this.BuildButtonElem();
+  BuildElements(): void {
+    this.Logger.FuncStart(this.BuildElements.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+    if (!StaticHelpers.IsNullOrUndefined( this.ContainerUiDivElem)) {
 
       this.BuildButtonOverlay();
 
@@ -76,7 +76,7 @@ export class TypCommandButtonModule extends _baseButtonModule implements IUiModu
     } else {
       this.Logger.ErrorAndContinue(TypCommandButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
-    this.Logger.FuncEnd(this.BuildButton.name);
+    this.Logger.FuncEnd(this.BuildElements.name);
   }
 
   RefreshUi(): void {

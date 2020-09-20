@@ -12,7 +12,6 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
   LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
   ContentReplyReceivedEvent_Subject: ContentReplyReceivedEvent_Subject;
 
-
   constructor(loggerAgent: ILoggerAgent) {
     super(loggerAgent);
     this.ContentReplyReceivedEvent_Subject = new ContentReplyReceivedEvent_Subject(this.Logger);
@@ -35,6 +34,20 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
 
       this.Logger.FuncEnd(this.SendCommandToContent.name);
     });
+  }
+
+  async SendCommandToContentImprovedAsync(sendMsgPlayload: IStateOfPopUp): Promise<void> {
+    this.Logger.FuncStart(this.SendCommandToContent.name);
+    try {
+      this.__cleardebugText();
+      //todo - put back?  this.UiMan.ClearCancelFlag();
+
+      this.SendMessageToContentAsync(sendMsgPlayload)
+        .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.ContentReplyReceivedEvent_Subject.NotifyObservers(replyMessagePayload))
+    } catch (err) {
+      throw (this.SendCommandToContentImprovedAsync.name + ' | ' + err);
+    }
+    this.Logger.FuncEnd(this.SendCommandToContent.name);
   }
 
   ReceiveResponseHandler(response: any): Promise<IDataContentReplyReceivedEvent_Payload> {
@@ -76,6 +89,9 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
   private SendMessageToSingleTab(stateOfPopUp: IStateOfPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
+
+
+      this.Logger.LogAsJsonPretty('stateOfPopUp', stateOfPopUp);
 
       let targetTab: browser.tabs.Tab;
 

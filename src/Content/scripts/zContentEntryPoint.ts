@@ -25,6 +25,7 @@ import { ContentMessageManager } from './Managers/ContentMessageManager/ContentM
 import { ScWindowManager } from './Managers/ScWindowManager/ScWindowManager';
 import { ScUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
 import { DefaultSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/DefaultSettings';
+import { HindSiteSettingWrapper } from '../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -121,10 +122,7 @@ class ContentEntry {
 
     this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
 
-    let defaultSettings = new DefaultSettings(this.Logger, this.SettingsAgent);
-    var allSettings: IHindSiteSetting[] = defaultSettings.GetDefaultSettings();
-
-    this.SettingsAgent.Init_SettingsAgent(allSettings);
+    this.SettingsAgent.Init_SettingsAgent();
 
     this.InitLogging();
   }

@@ -24,7 +24,7 @@ export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase imple
 
     this.LabelElement = <HTMLLabelElement>document.createElement(SharedConst.Const.KeyWords.Html.Label);
     this.LabelElement.setAttribute(SharedConst.Const.KeyWords.Html.For, this.UiInputElement.id);
-    this.LabelElement.innerHTML = this.HindSiteSetting.FriendlySetting;
+    this.LabelElement.innerHTML = this.SettingWrapper.HindSiteSetting.FriendlySetting;
 
     if (this.ContainerUiDivElem) {
       this.ContainerUiDivElem.appendChild(this.UiInputElement);
@@ -47,13 +47,13 @@ export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase imple
       },
       AccordianModule: null,
     }
-    this.HindSiteSetting.SaveChange((<HTMLInputElement>evt.target).checked);
+    this.SettingWrapper.SaveChange((<HTMLInputElement>evt.target).checked);
     this.UiElementChangeEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
   }
 
   RefreshUi() {
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
-      let valueToDisplay: number = this.HindSiteSetting.ValueAsInt();
+      let valueToDisplay: number = this.SettingWrapper.HindSiteSetting.ValueAsInt();
       this.UiInputElement.value = valueToDisplay.toString();
     }
   }

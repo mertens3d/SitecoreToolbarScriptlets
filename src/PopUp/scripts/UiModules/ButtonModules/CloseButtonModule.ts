@@ -1,7 +1,7 @@
 ﻿import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { _baseButtonModule } from "./_baseButtonModule";
+import { _base_ButtonModule } from "./_baseButtonModule";
 
-export class CloseButtonModule extends _baseButtonModule implements IUiModule {
+export class CloseButtonModule extends _base_ButtonModule implements IUiModule {
   RefreshUi(): void {
   }
   Init(): void {

@@ -9,7 +9,7 @@ import { ISingleClickEvent_Payload } from "../../Events/SingleClickEvent/ISingle
 import { _UiModuleBase } from "../_UiModuleBase";
 import { SingleClickEvent_Subject } from "../../Events/SingleClickEvent/SingleClickEvent_Subject";
 
-export class _baseButtonModule extends _UiModuleBase {
+export class _base_ButtonModule extends _UiModuleBase {
   protected MenuCommandDefinition: IMenuCommandDefinition;
 
   protected RefreshData: UiHydrationData;
@@ -25,23 +25,23 @@ export class _baseButtonModule extends _UiModuleBase {
 
   protected Init_BaseButtonModule(): void {
     this.InitUiModuleBase();
-    this.BuildButton();
+    this.BuildElements_Base();
   }
 
   protected WireEvents_Base(): void {
     this.WireClickEvents();
   }
 
-  BuildButton(): void {
-    this.Logger.FuncStart(this.BuildButton.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+  private BuildElements_Base(): void {
+    this.Logger.FuncStart(this.BuildElements_Base.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
     if (this.ContainerUiDivElem) {
       this.BuildButtonElem();
       this.ContainerUiDivElem.classList.add('btn-container');
       this.ContainerUiDivElem.appendChild(this.HTMLButtonElement);
     } else {
-      this.Logger.ErrorAndContinue(this.BuildButton.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.Logger.ErrorAndContinue(this.BuildElements_Base.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
-    this.Logger.FuncEnd(this.BuildButton.name);
+    this.Logger.FuncEnd(this.BuildElements_Base.name);
   }
 
   WireClickEvents(): void {
@@ -63,7 +63,7 @@ export class _baseButtonModule extends _UiModuleBase {
     }
   }
 
-  protected BuildButtonElem(): void {
+  private BuildButtonElem(): void {
     //<div id='PresentationDetails' type = 'button' class="button-wrapper icon details" > Presentation Details < /div>
     this.HTMLButtonElement = document.createElement("button");
     this.HTMLButtonElement.classList.add("icon");
@@ -97,8 +97,8 @@ export class _baseButtonModule extends _UiModuleBase {
     if (this.HTMLButtonElement) {
       this.HTMLButtonElement.ondblclick = (evt) => {
         let data: ICommandHandlerDataForPopUp = this.BuildCommandData();
-        data.Evt = evt,
-          data.EventMan.RouteAllCommandEvents(data)
+        data.Evt = evt;
+        data.EventMan.RouteAllCommandEvents(data);
       };
     }
   }
@@ -108,7 +108,7 @@ export class _baseButtonModule extends _UiModuleBase {
 
     let data: ICommandHandlerDataForPopUp = {
       EventMan: null,
-      MenuCommandParams: this.MenuCommandDefinition,
+      MenuCommandDefinition: this.MenuCommandDefinition,
       EventHandlerData: this.MenuCommandDefinition.EventHandlerData,
       Evt: null,
     }
