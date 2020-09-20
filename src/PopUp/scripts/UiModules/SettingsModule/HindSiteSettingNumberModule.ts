@@ -8,12 +8,14 @@ import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { UiModuleMutationEvent_Subject } from "../../Events/UiModuleMutationEvent/UiModuleMutationEvent_Subject";
 
 export class HindSiteSettingNumberModule extends _UiModuleBase implements IUiModule {
   private SettingsAgent: ISettingsAgent;
   private HindSiteSetting: IHindSiteSetting;
   private UiInputElement: HTMLInputElement;
   private LabelElement: HTMLLabelElement;
+  public UiElementChangeEvent_Subject: UiModuleMutationEvent_Subject;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, hindSiteSetting: IHindSiteSetting) {
     super(logger, hindSiteSetting.UiContainerSelector);
@@ -34,6 +36,7 @@ export class HindSiteSettingNumberModule extends _UiModuleBase implements IUiMod
 
   Init() {
     this.BuildHtml();
+    this.UiElementChangeEvent_Subject = new UiModuleMutationEvent_Subject(this.Logger);
   }
 
   private BuildHtml() {

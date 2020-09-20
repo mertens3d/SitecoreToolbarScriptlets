@@ -2,7 +2,7 @@
 import { HindSiteEvent_Observer } from '../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/HindSiteEvent_Observer';
 import { HindsiteEventHandler_Type } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/HindsiteEventHandler_Type";
 import { IHindSiteEvent_Observer } from '../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/IHindSiteEvent_Observer';
-import { ISingleClickEvent_Payload } from './ISelectSnapUiMutationEvent_Payload';
+import { ISingleClickEvent_Payload } from "./ISingleClickEvent_Payload";
 
 export class SingleClickEvent_Observer extends HindSiteEvent_Observer<ISingleClickEvent_Payload> implements IHindSiteEvent_Observer<ISingleClickEvent_Payload> {
 

@@ -1,4 +1,5 @@
-﻿import { IUiModule, IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+﻿import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { _baseButtonModule } from "./_baseButtonModule";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";

@@ -3,7 +3,6 @@ import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/Logg
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
-import { ConstAllSettings } from "../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings";
 import { HindSiteSetting } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSetting";
 import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
 import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
@@ -20,6 +19,7 @@ import { Handlers } from "./Managers/Handlers";
 import { UiModulesManager } from "./Managers/UiManager/UiModulesManager";
 import { SelectSnapshotModule } from "./UiModules/SelectSnapshotModule/SelectSnapshotModule";
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
+import { DefaultSettings } from "../../Shared/scripts/Agents/Agents/SettingsAgent/DefaultSettings";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
@@ -27,7 +27,7 @@ class PopUpEntry {
   SettingsAgent: SettingsAgent;
   scUrlAgent: ScUrlAgent;
   handlers: Handlers;
-  UiMan: UiModulesManager;
+  UiModulesMan: UiModulesManager;
   FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
   EventMan: EventManager;
   commandMan: CommandManager;
@@ -39,6 +39,7 @@ class PopUpEntry {
     try {
       this.Instantiate();
       this.Init();
+      this.MakeTwoWayIntroductions();
       this.WireEvents();
       this.Start();
     } catch (err) {
@@ -48,7 +49,7 @@ class PopUpEntry {
 
   private Init() {
     this.Logger.SectionMarker('Begin Init');
-    this.UiMan.InitUiMan();
+    this.UiModulesMan.InitUiMan();
     this.EventMan.InitEventManager();
 
     this.Logger.SectionMarker('End Init');
@@ -58,12 +59,15 @@ class PopUpEntry {
     this.scUrlAgent.InitScUrlAgent()
       .then(() => {
         //wire
-        this.UiMan.WireEvents();
+        this.UiModulesMan.WireEvents();
         this.EventMan.WireEvents();
         this.WireCustomevents();
+    
       })
   }
-
+  MakeTwoWayIntroductions() {
+    this.SettingsAgent.IntroduceUiModulesManager(this.UiModulesMan);
+  }
   private Start() {
     this.EventMan.TriggerPingEventAsync();
     this.Logger.SectionMarker('Begin Standby');
@@ -78,8 +82,8 @@ class PopUpEntry {
     this.RepoAgent = new RepositoryAgent(this.Logger);
     this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
 
-    var allSettings: IHindSiteSetting[] = new ConstAllSettings().AllSettings;
-    this.SettingsAgent.InitSettingsAgent(allSettings);
+    var allSettings: IHindSiteSetting[] =( new DefaultSettings(this.Logger, this.SettingsAgent)).GetDefaultSettings();
+    this.SettingsAgent.Init_SettingsAgent(allSettings);
 
     this.InitLogger();
   }
@@ -97,8 +101,8 @@ class PopUpEntry {
     this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots);
     this.commandMan = new CommandManager(this.Logger, this.handlers);
 
-    this.UiMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots); //after tabman, after HelperAgent
-    this.EventMan = new EventManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots, this.UiMan); // after uiman
+    this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots); //after tabman, after HelperAgent
+    this.EventMan = new EventManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots, this.UiModulesMan); // after uiman
   }
 
   private InitLogger() {
@@ -126,7 +130,7 @@ class PopUpEntry {
   WireCustomevents() {
     this.Logger.FuncStart(this.WireCustomevents.name);
 
-    let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, this.UiMan);
+    let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, this.UiModulesMan);
     this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(contentReplyReceivedEvent_Observer);
 
     this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.FeedbackMessages);

@@ -1,6 +1,6 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { _baseButtonModule } from "./_baseButtonModule";
 

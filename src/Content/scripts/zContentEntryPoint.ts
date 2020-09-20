@@ -2,7 +2,6 @@ import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/Logg
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
 import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent';
-import { ConstAllSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/ConstAllSettings';
 import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
 import { ScUrlAgent } from '../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
@@ -25,6 +24,7 @@ import { ContentAPIManager } from './Managers/ContentAPIManager/ContentAPIManage
 import { ContentMessageManager } from './Managers/ContentMessageManager/ContentMessageManager';
 import { ScWindowManager } from './Managers/ScWindowManager/ScWindowManager';
 import { ScUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
+import { DefaultSettings } from '../../Shared/scripts/Agents/Agents/SettingsAgent/DefaultSettings';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -40,6 +40,7 @@ class ContentEntry {
     await this.InstantiateAndInitLoggerAndSettings()
       .then(() => this.InstantiateAndInitAgents())
       .then(() => this.InstantiateAndInitManagers())
+
       .catch((err) => this.Logger.ErrorAndThrow(this.Main.name, err));
 
     this.Logger.SectionMarker('Initialize Managers');
@@ -120,9 +121,10 @@ class ContentEntry {
 
     this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
 
-    var allSettings: IHindSiteSetting[] = new ConstAllSettings().AllSettings;
+    let defaultSettings = new DefaultSettings(this.Logger, this.SettingsAgent);
+    var allSettings: IHindSiteSetting[] = defaultSettings.GetDefaultSettings();
 
-    this.SettingsAgent.InitSettingsAgent(allSettings);
+    this.SettingsAgent.Init_SettingsAgent(allSettings);
 
     this.InitLogging();
   }

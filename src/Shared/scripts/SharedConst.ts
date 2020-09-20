@@ -47,6 +47,7 @@ export class SharedConst {
         EnableLogging: false,
         LogToStorage: false,
         UseCompactCss: false,
+        LastUsedLogToStorageKey: 0
       }
     },
 

@@ -41,6 +41,7 @@
   Settings: {
     Defaults: {
       EnableLogging: boolean,
+      LastUsedLogToStorageKey: number,
       LogToStorage: boolean,
       UseCompactCss: boolean,
     }

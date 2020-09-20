@@ -16,7 +16,7 @@ import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { PopConst } from "../../Classes/PopConst";
 import { StateHelpers } from "../../Classes/StateHelpers";
 import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload";
-import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject.1";
+import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject";
 import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 import { _UiModuleBase } from "../UiFeedbackModules/_UiModuleBase";
 

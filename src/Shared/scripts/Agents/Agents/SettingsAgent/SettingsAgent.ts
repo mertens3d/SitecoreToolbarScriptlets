@@ -1,22 +1,49 @@
-﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
-import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
-import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+﻿import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
+import { UiModuleManagerPassThroughEvent_Observer } from "../../../../../PopUp/scripts/Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Observer";
+import { UiModulesManager } from "../../../../../PopUp/scripts/Managers/UiManager/UiModulesManager";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
+import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
-import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
+import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
+import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
+import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
 import { HindSiteSetting } from "./HindSiteSetting";
 
 export class SettingsAgent implements ISettingsAgent {
   private SettingsAr: HindSiteSetting[] = [];
   private Logger: ILoggerAgent;
   private RepoAgent: IRepositoryAgent;
+  private UiElementChangeEvent_Observer: UiModuleManagerPassThroughEvent_Observer;
+  private UiModulesManager: UiModulesManager;
 
   constructor(logger: ILoggerAgent, repoAgent: IRepositoryAgent) {
     this.Logger = logger;
     this.RepoAgent = repoAgent;
+  }
+
+  Init_SettingsAgent(allDefaultSettings: IHindSiteSetting[]): void {
+    this.Logger.FuncStart(this.Init_SettingsAgent.name, allDefaultSettings.length);
+
+    this.SettingsAr = <HindSiteSetting[]>allDefaultSettings;
+
+    let settingsFromStorage: IOneGenericSettingForStorage[] = this.ReadGenericSettingsFromStorage();
+    this.UpdateSettingValuesFromStorage(settingsFromStorage)
+
+    this.Logger.FuncEnd(this.Init_SettingsAgent.name);
+  }
+
+  IntroduceUiModulesManager(uiModulesManager: UiModulesManager) {
+    this.UiModulesManager = uiModulesManager;
+  }
+
+  WireEvents() {
+    this.UiElementChangeEvent_Observer = new UiModuleManagerPassThroughEvent_Observer(this.Logger, this.OnUiModuleManagerPassThroughEvent);
+  }
+
+  OnUiModuleManagerPassThroughEvent<IUiModuleManagerPassThroughEvent_Payload>(payload: IUiModuleManagerPassThroughEvent_Payload) {
+    alert('pass through');
   }
 
   UpdateSettingsFromPopUpMsg(newSettings: IHindSiteSetting[]) {
@@ -28,17 +55,6 @@ export class SettingsAgent implements ISettingsAgent {
       }
     }
     this.Logger.FuncEnd(this.UpdateSettingsFromPopUpMsg.name);
-  }
-
-  InitSettingsAgent(allDefaultSettings: IHindSiteSetting[]): void {
-    this.Logger.FuncStart(this.InitSettingsAgent.name, allDefaultSettings.length);
-
-    this.SettingsAr = <HindSiteSetting[]>allDefaultSettings;
-
-    let settingsFromStorage: IOneGenericSettingForStorage[] = this.ReadGenericSettingsFromStorage();
-    this.UpdateSettingValuesFromStorage(settingsFromStorage)
-
-    this.Logger.FuncEnd(this.InitSettingsAgent.name);
   }
 
   HindSiteSettings(): IHindSiteSetting[] {
@@ -97,9 +113,9 @@ export class SettingsAgent implements ISettingsAgent {
     return toReturn;
   }
 
-  CheckBoxSettingChanged(settingKey: SettingKey, valueAsObj: any): void {
-    this.Logger.LogVal(this.CheckBoxSettingChanged.name, SettingKey[settingKey]);
-    this.SetByKey(settingKey, valueAsObj);
+  BooleanSettingChanged(settingKey: SettingKey, valueAsBool: boolean): void {
+    this.Logger.LogVal(this.BooleanSettingChanged.name, SettingKey[settingKey]);
+    this.SetByKey(settingKey, valueAsBool);
   }
 
   NumberSettingChanged(SettingKey: SettingKey, valueAsNumber: number): void {
@@ -109,7 +125,6 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   GetByKey(needleSettingKey: SettingKey): HindSiteSetting {
-
     var toReturn: HindSiteSetting = null;
 
     for (var idx = 0; idx < this.SettingsAr.length; idx++) {

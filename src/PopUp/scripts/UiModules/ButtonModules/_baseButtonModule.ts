@@ -5,9 +5,9 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { ICommandHandlerDataForPopUp } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
-import { ISingleClickEvent_Payload } from "../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload";
-import { SingleClickEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject.1";
+import { ISingleClickEvent_Payload } from "../../Events/SingleClickEvent/ISingleClickEvent_Payload";
 import { _UiModuleBase } from "../UiFeedbackModules/_UiModuleBase";
+import { SingleClickEvent_Subject } from "../../Events/SingleClickEvent/SingleClickEvent_Subject";
 
 export class _baseButtonModule extends _UiModuleBase {
   protected MenuCommandDefinition: IMenuCommandDefinition;
@@ -43,6 +43,7 @@ export class _baseButtonModule extends _UiModuleBase {
     }
     this.Logger.FuncEnd(this.BuildButton.name);
   }
+
   WireClickEvents(): void {
     this.SingleButtonClickEvent_Subject = new SingleClickEvent_Subject(this.Logger, MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
 
@@ -61,6 +62,7 @@ export class _baseButtonModule extends _UiModuleBase {
       this.Logger.ErrorAndThrow(this.WireClickEvents.name, 'no command or no command placeholder');
     }
   }
+
   protected BuildButtonElem(): void {
     //<div id='PresentationDetails' type = 'button' class="button-wrapper icon details" > Presentation Details < /div>
     this.HTMLButtonElement = document.createElement("button");

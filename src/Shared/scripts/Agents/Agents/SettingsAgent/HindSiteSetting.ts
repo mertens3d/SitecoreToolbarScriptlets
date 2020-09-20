@@ -2,9 +2,14 @@
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { Enabled } from "../../../Enums/Enabled";
-export class HindSiteSetting implements IHindSiteSetting {
-  Enabled: Enabled;
+import { UiEnableState, UiPresence } from "../../../Enums/Enabled";
+import { ModuleKey } from "../../../Enums/ModuleKey";
+import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
+import { StaticHelpers } from "../../../Classes/StaticHelpers";
+export class HindSiteSetting extends LoggableBase implements IHindSiteSetting {
+  Enabled: UiEnableState;
   DataType: SettingType;
   DefaultValue: any;
   FriendlySetting: string;
@@ -12,27 +17,43 @@ export class HindSiteSetting implements IHindSiteSetting {
   SettingKey: SettingKey;
   UiContainerSelector: string;
   ValueAsObj: any;
+  HasUi: UiPresence;
+  ModuleType: ModuleKey;
+  private SettingsAgent: ISettingsAgent;
 
-  constructor(settingKey: SettingKey, dataType: SettingType, valueAsObj: any, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: Enabled, hasUi: boolean = true) {
+  constructor(logger: ILoggerAgent, settingKey: SettingKey, dataType: SettingType, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: UiEnableState, hasUi: UiPresence, moduleType: ModuleKey, settingsAgent: ISettingsAgent) {
+    super(logger);
+
+    if (StaticHelpers.IsNullOrUndefined(settingsAgent)) {
+      this.Logger.ErrorAndThrow(HindSiteSetting.name, 'No settings agent');
+    }
+
     this.SettingKey = settingKey;
     this.DataType = dataType;
-    this.ValueAsObj = valueAsObj;
+    this.ValueAsObj = defaultValue;
     this.UiContainerSelector = uiContainerSelector;
     this.DefaultValue = defaultValue;
     this.SettingFlavor = settingFlavor;
     this.FriendlySetting = friendly;
-    this.HasUi = hasUi;
+    this.HasUi = UiPresence.Unknown;
     this.Enabled = enabled;
+    this.ModuleType = moduleType;
+    this.SettingsAgent = settingsAgent;
   }
 
-  HasUi: boolean;
+  SaveChange(checked: boolean) {
+    if (this.SettingsAgent) {
+      this.SettingsAgent.BooleanSettingChanged(this.SettingKey, checked);
+    } else {
+      this.Logger.ErrorAndThrow(this.SaveChange.name, 'No ISettingsAgent');
+    }
+  }
 
   ValueAsInt(): number {
     var toReturn: number = Number.MIN_SAFE_INTEGER;
     if (this.ValueAsObj !== undefined && this.ValueAsObj !== null) {
-
       toReturn = parseInt(this.ValueAsObj.toString());
-    } 
+    }
 
     return toReturn;
   }

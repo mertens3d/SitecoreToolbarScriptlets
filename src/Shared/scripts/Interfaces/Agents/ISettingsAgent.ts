@@ -5,11 +5,11 @@ import { IHindSiteSetting } from "./IGenericSetting";
 
 
 export interface ISettingsAgent {
-  CheckBoxSettingChanged(SettingKey: SettingKey, checked: boolean);
+  BooleanSettingChanged(SettingKey: SettingKey, checked: boolean);
   HindSiteSettings(): IHindSiteSetting[];
   GetByKey(settingKey: SettingKey): IHindSiteSetting;
   GetSettingsByFlavor(targetFlavor: SettingFlavor[]): IHindSiteSetting[];
-  InitSettingsAgent(allSettings: IHindSiteSetting[]): void;
+  Init_SettingsAgent(allSettings: IHindSiteSetting[]): void;
   LogAllSettings();
   NumberSettingChanged(SettingKey: SettingKey, checked: number);
   ReadGenericSettingsFromStorage(): IOneGenericSettingForStorage[];

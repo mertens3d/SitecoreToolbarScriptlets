@@ -18,11 +18,20 @@ export class SettingsBasedModules extends LoggableBase {
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
     super(logger)
     this.SettingsAgent = settingsAgent;
+    this.Instantiate_SettingsBasedModules();
+    
+  }
+
+  Instantiate_SettingsBasedModules() {
+    this.Logger.FuncStart(this.Instantiate_SettingsBasedModules.name);
 
     this.CheckBoxModules = this.BuildCheckBoxSettingModules();
     this.NumberModules = this.BuildNumberSettingModules();
     this.AccordianModules = this.BuildAccordianModules();
+
+    this.Logger.FuncEnd(this.Instantiate_SettingsBasedModules.name);
   }
+
 
   BuildAccordianModules() { //oneSetting: IHindSiteSetting, uiElem: HTMLElement
     let toReturn: AccordianModule[] = [];
@@ -42,7 +51,7 @@ export class SettingsBasedModules extends LoggableBase {
 
     this.SettingsAgent.HindSiteSettings().forEach((hindSiteSetting: IHindSiteSetting) => {
       if (hindSiteSetting.DataType === SettingType.BoolCheckBox) {
-        let hindSiteCheckboxSetting: HindSiteSettingCheckBoxModule = new HindSiteSettingCheckBoxModule(this.Logger, this.SettingsAgent, hindSiteSetting)
+        let hindSiteCheckboxSetting: HindSiteSettingCheckBoxModule = new HindSiteSettingCheckBoxModule(this.Logger,  hindSiteSetting)
 
         toReturn.push(hindSiteCheckboxSetting);
       }
