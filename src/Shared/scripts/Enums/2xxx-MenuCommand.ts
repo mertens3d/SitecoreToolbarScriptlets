@@ -18,7 +18,7 @@
     GoContentEditor = 2016,
     PutAdminB = 2017,
     PresentationDetails = 2017,
-    CompactCE = 2019,
+    CompactScUi = 2019,
     Ping = 2020,
     UpdateNickname = 2021,
     QuickPublish = 2022,

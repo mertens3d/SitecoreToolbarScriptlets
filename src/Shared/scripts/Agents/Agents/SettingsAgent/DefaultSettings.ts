@@ -12,6 +12,7 @@ import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
+import { HindSiteSettingForNumbers } from "./HindSiteSettingForNumbers";
 
 export class DefaultSettings extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
@@ -21,7 +22,7 @@ export class DefaultSettings extends LoggableBase {
     this.SettingsAgent = settingsAgent;
   }
 
-  GetDefaultSettingsWrapper(): HindSiteSettingWrapper[]{
+  GetDefaultSettingsWrapper(): HindSiteSettingWrapper[] {
     let rawData: IHindSiteSetting[] = [
 
       new HindSiteSetting(
@@ -195,7 +196,7 @@ export class DefaultSettings extends LoggableBase {
 
       ),
 
-      new HindSiteSetting(
+      new HindSiteSettingForNumbers(
 
         SettingKey.MaxAutoSaveCount,
         SettingType.Number,
@@ -206,10 +207,11 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Disabled,
         UiPresence.HasUi,
         ModuleKey.Number,
-
+        1,
+        100
       ),
 
-      new HindSiteSetting(
+      new HindSiteSettingForNumbers(
 
         SettingKey.AutoSaveIntervalMin,
         SettingType.Number,
@@ -220,6 +222,8 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Number,
+        0,
+        100
 
       ),
 
@@ -236,7 +240,7 @@ export class DefaultSettings extends LoggableBase {
         ModuleKey.CheckBox,
 
       ),
-      new HindSiteSetting(
+      new HindSiteSettingForNumbers(
 
         SettingKey.AutoSaveRetainDays,
         SettingType.Number,
@@ -247,7 +251,8 @@ export class DefaultSettings extends LoggableBase {
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.Number,
-
+        0,
+        100,
       ),
       new HindSiteSetting(
 

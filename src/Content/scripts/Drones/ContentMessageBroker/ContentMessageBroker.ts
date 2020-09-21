@@ -150,15 +150,15 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
         commandToExecute = this.ApiManager.OpenContentEditor;
         break;
 
-      case MsgFlag.ReqMarkFavorite:
-        commandToExecute = this.ApiManager.MarkFavorite;
+      case MsgFlag.ReqToggleFavorite:
+        commandToExecute = this.ApiManager.ToggleFavorite;
         break;
 
       case MsgFlag.ReqQuickPublish:
         commandToExecute = this.ApiManager.PublischActiveCE;
         break;
 
-      case MsgFlag.ReqSetStateOfSitecoreWindow:
+      case MsgFlag.ReqSetStateOfSitecoreSameWindow:
         commandToExecute = this.ApiManager.SetStateOfSitecoreWindow;
         break;
 

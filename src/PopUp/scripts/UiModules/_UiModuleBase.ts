@@ -1,7 +1,7 @@
 ﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
 import { ModuleKey } from "../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { UiHydrationData } from "../../../Shared/scripts/Interfaces/MenuCommand";
+import { UiHydrationData } from "../../../Shared/scripts/Interfaces/UiHydrationData";
 
 export class _UiModuleBase extends LoggableBase {
   protected ContainerSelector: string;

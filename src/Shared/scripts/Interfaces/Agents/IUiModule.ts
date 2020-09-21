@@ -1,4 +1,4 @@
-﻿import { UiHydrationData } from "../MenuCommand";
+﻿import { UiHydrationData } from "../UiHydrationData";
 import { ModuleKey } from "../../Enums/ModuleKey";
 
 export interface IUiModule {

@@ -2,7 +2,7 @@
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IGenericUrlParts } from "../../../../Shared/scripts/Interfaces/IUrlParts";
-import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
+import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/UiHydrationData";
 import { PopConst } from "../../Classes/PopConst";
 import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 

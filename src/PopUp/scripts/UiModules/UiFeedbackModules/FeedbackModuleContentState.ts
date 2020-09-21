@@ -1,5 +1,5 @@
 ﻿import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
+import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/UiHydrationData";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 

@@ -8,7 +8,7 @@ import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
 import { AccordianModule } from "./AccordianModule";
 import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
-
+import { UiPresence } from "../../../../Shared/scripts/Enums/Enabled";
 
 export class SettingsBasedModules extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
@@ -20,7 +20,6 @@ export class SettingsBasedModules extends LoggableBase {
     super(logger)
     this.SettingsAgent = settingsAgent;
     this.Instantiate_SettingsBasedModules();
-    
   }
 
   Instantiate_SettingsBasedModules() {
@@ -32,7 +31,6 @@ export class SettingsBasedModules extends LoggableBase {
 
     this.Logger.FuncEnd(this.Instantiate_SettingsBasedModules.name);
   }
-
 
   BuildAccordianModules() { //oneSetting: IHindSiteSetting, uiElem: HTMLElement
     let toReturn: AccordianModule[] = [];
@@ -51,8 +49,8 @@ export class SettingsBasedModules extends LoggableBase {
     let toReturn: HindSiteSettingCheckBoxModule[] = [];
 
     this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((settingWrapper: HindSiteSettingWrapper) => {
-      if (settingWrapper.HindSiteSetting.DataType === SettingType.BoolCheckBox) {
-        let hindSiteCheckboxSetting: HindSiteSettingCheckBoxModule = new HindSiteSettingCheckBoxModule(this.Logger,  settingWrapper)
+      if (settingWrapper.HindSiteSetting.DataType === SettingType.BoolCheckBox && settingWrapper.HindSiteSetting.HasUi === UiPresence.HasUi) {
+        let hindSiteCheckboxSetting: HindSiteSettingCheckBoxModule = new HindSiteSettingCheckBoxModule(this.Logger, settingWrapper)
 
         toReturn.push(hindSiteCheckboxSetting);
       }
@@ -65,8 +63,8 @@ export class SettingsBasedModules extends LoggableBase {
     let toReturn: HindSiteSettingNumberModule[] = [];
 
     this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((settingWrapper: HindSiteSettingWrapper) => {
-      if (settingWrapper.HindSiteSetting.DataType === SettingType.Number) {
-        let hindSiteCheckboxSetting: HindSiteSettingNumberModule = new HindSiteSettingNumberModule(this.Logger,  settingWrapper)
+      if (settingWrapper.HindSiteSetting.DataType === SettingType.Number && settingWrapper.HindSiteSetting.HasUi === UiPresence.HasUi) {
+        let hindSiteCheckboxSetting: HindSiteSettingNumberModule = new HindSiteSettingNumberModule(this.Logger, settingWrapper)
 
         toReturn.push(hindSiteCheckboxSetting);
       }

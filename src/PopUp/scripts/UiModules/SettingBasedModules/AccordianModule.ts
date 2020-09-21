@@ -1,9 +1,9 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { PopConst } from "../../Classes/PopConst";
-import { IUiModuleMutationEvent_Payload } from "../../Events/UiModuleMutationEvent/IUiModuleMutationEvent_Payload";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+import { IUiSettingBasedModuleMutationEven_Payload } from "../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload";
 
 export class AccordianModule extends _SettingsBasedModulesBase implements IUiModule {
   private AccordionContentElem: HTMLElement;
@@ -22,7 +22,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
     if (!StaticHelpers.IsNullOrUndefined(this.AccordionTriggerElem)) {
       this.AccordionTriggerElem.addEventListener('click', (evt) => this.OnToggleAccordion(evt));
     } else {
-      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'trigger not found ' + this.SettingWrapper.HindSiteSetting.FriendlySetting);
+      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'trigger not found ' + this.SettingJacket.HindSiteSetting.FriendlySetting);
     }
   }
 
@@ -34,7 +34,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
       this.AccordionContentElem = this.ContainerUiDivElem.querySelector('.accordion-content');
 
       if (!StaticHelpers.IsNullOrUndefined([this.AccordionTriggerElem, this.AccordionContentElem])) {
-        this.AccordionTriggerElem.innerHTML = this.SettingWrapper.HindSiteSetting.FriendlySetting;
+        this.AccordionTriggerElem.innerHTML = this.SettingJacket.HindSiteSetting.FriendlySetting;
       } else {
         this.Logger.ErrorAndThrow(this.BuildHtml.name, 'null trigger: ' + this.ContainerSelector);
       }
@@ -58,11 +58,11 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
   private OnToggleAccordion(evt: any) {
     this.Logger.FuncStart(this.OnToggleAccordion.name);
 
-    if (this.AccordionContentElem && this.SettingWrapper) {
-      var newVal: boolean = !(this.SettingWrapper.HindSiteSetting.ValueAsBool());
+    if (this.AccordionContentElem && this.SettingJacket) {
+      var newVal: boolean = !(this.SettingJacket.HindSiteSetting.ValueAsBool());
 
-      if (this.SettingWrapper) {
-        let iUiElementChangeEvent_Payload: IUiModuleMutationEvent_Payload = {
+      if (this.SettingJacket) {
+        let iUiElementChangeEvent_Payload: IUiSettingBasedModuleMutationEven_Payload = {
           ModuleKey: this.ModuleKey,
           CheckBoxModule: null,
           NumberModule: null,
@@ -71,8 +71,8 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
           }
         }
 
-        this.SettingWrapper.SaveChange(newVal);
-        this.UiElementChangeEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
+        this.SettingJacket.SaveChangeBoolean(newVal);
+        this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
         this.SetAccordionClass();
       }
     }
@@ -83,7 +83,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
   }
 
   private SetAccordionClass() {
-    if (this.SettingWrapper.HindSiteSetting.ValueAsBool() === true) {
+    if (this.SettingJacket.HindSiteSetting.ValueAsBool() === true) {
       this.AccordionContentElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
     } else {
       this.AccordionContentElem.classList.add(PopConst.Const.ClassNames.HS.Collapsed);

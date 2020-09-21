@@ -14,7 +14,7 @@ export interface ISettingsAgent {
   BooleanSettingChanged(SettingKey: SettingKey, checked: boolean);
   HindSiteSettingsBucket: HindSiteSettingsBucket;
   Init_SettingsAgent(): void;
-  NumberSettingChanged(SettingKey: SettingKey, checked: number);
+  NumberSettingChanged(SettingKey: SettingKey, value: number);
   ReadGenericSettingsFromStorage(): IOneGenericSettingForStorage[];
   SetByKey(settingKey: SettingKey, value: any): any;
   UpdateSettingsFromPopUpMsg(CurrentContentPrefs: IHindSiteSetting[]);

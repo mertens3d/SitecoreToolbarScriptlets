@@ -1,5 +1,5 @@
-﻿import { IUiModuleMutationEvent_Payload } from "../UiModuleMutationEvent/IUiModuleMutationEvent_Payload";
+﻿import { IUiSettingBasedModuleMutationEven_Payload } from "../UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload";
 
 export interface IUiModuleManagerPassThroughEvent_Payload {
-  ModuleMutationEvent_Payload: IUiModuleMutationEvent_Payload
+  ModuleMutationEvent_Payload: IUiSettingBasedModuleMutationEven_Payload
 }

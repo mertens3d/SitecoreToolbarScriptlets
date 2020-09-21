@@ -1,25 +1,23 @@
 ﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+import { MsgFlag, CommandType } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
-import { scMode } from '../../../Shared/scripts/Enums/scMode';
+import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
+import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
-import { Handlers } from '../Managers/Handlers';
-import { PopConst } from './PopConst';
-import { IMenuCommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
-import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
-import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
-import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
+import { IMenuCommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IStateOfPopUp } from '../../../Shared/scripts/Interfaces/IMsgPayload';
+import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
+import { PopConst } from './PopConst';
+import { HandlersForInternal } from './HandlersExternal';
 
 export class CommandManager extends LoggableBase {
   public MenuCommandParamsBucket: IMenuCommandDefinitionBucket;
-  private Handlers: Handlers;
+  private Handlers: HandlersForInternal;
   private PopUpMsgBroker: PopUpMessagesBrokerAgent;
 
-  constructor(logger: ILoggerAgent, handlers: Handlers, popUpMessageBroker: PopUpMessagesBrokerAgent) {
+  constructor(logger: ILoggerAgent, handlers: HandlersForInternal, popUpMessageBroker: PopUpMessagesBrokerAgent) {
     super(logger);
     this.Handlers = handlers;
     this.PopUpMsgBroker = popUpMessageBroker;
@@ -37,19 +35,20 @@ export class CommandManager extends LoggableBase {
     }
     return toReturn;
   }
+
   async TriggerPingEventAsync(): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);
 
     try {
-      let stateOPopUp: IStateOfPopUp = this.Handlers.External.GetStateOfPopUp(MsgFlag.Ping);
+      let stateOPopUp: IStateOfPopUp = this.Handlers.GetStateOfPopUp(MsgFlag.Ping);
       this.PopUpMsgBroker.SendCommandToContentImprovedAsync(stateOPopUp)
     } catch (err) {
       throw (this.TriggerPingEventAsync.name + ' | ' + err);
     }
 
-    
     this.Logger.FuncEnd(this.TriggerPingEventAsync.name);
   }
+
   private BuildMenuCommandParamsBucket(): IMenuCommandDefinitionBucket {
     let toReturn: IMenuCommandDefinitionBucket =
     {
@@ -57,30 +56,28 @@ export class CommandManager extends LoggableBase {
         {
           MenuCommandKey: MenuCommandKey.CloseWindow,
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnWindowClose,
-          IconClassName: PopConst.Const.ClassNames.HS.Buttons.CloseWindow,
+          IconClassName: PopConst.Const.ClassNames.HS.Buttons.Icons.CloseWindow,
           InnerText: "",
           VisibilityControllers: [],
           ModuleKey: ModuleKey.ButtonClose,
           EventHandlerData: {
-            Handler: this.Handlers.Internal.CloseWindow,
             Event: CommandButtonEvents.OnSingleClick,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqClosePopUpWindow,
+            CommandTYpe: CommandType.PopUp,
           }
         },
 
         {
           MenuCommandKey: MenuCommandKey.AddCeTab,
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnAddContentEditor,
-          IconClassName: PopConst.Const.ClassNames.HS.Buttons.AddCeTab,
+          IconClassName: PopConst.Const.ClassNames.HS.Buttons.Icons.AddContentEditorTab,
           InnerText: "Add CE Tab to DT",
           VisibilityControllers: [VisibilityType.Desktop],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.AddCETab,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqAddCETab,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -92,9 +89,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.Internal.SetScModeInternal,
-            ParameterData: [scMode.Edit],
-            MsgFlag: MsgFlag.ReqSetScMode,
+            MsgFlag: MsgFlag.ReqSetScModeEdit,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -106,9 +102,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.Internal.SetScModeInternal,
-            ParameterData: [scMode.Normal],
-            MsgFlag: MsgFlag.ReqSetScMode,
+            MsgFlag: MsgFlag.ReqSetScModeNormal,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -120,9 +115,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.Internal.SetScModeInternal,
-            ParameterData: [scMode.Preview],
-            MsgFlag: MsgFlag.ReqSetScMode,
+            MsgFlag: MsgFlag.ReqSetScModePreview,
+            CommandTYpe: CommandType.Content,
           }
         },
         //{
@@ -147,9 +141,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonWithInput,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HandlerForSnapShotUpdateNickName,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqUpdateNickName,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -161,23 +154,21 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HandlerForPresentationDetails,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqOpenPresentationDetails,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
-          MenuCommandKey: MenuCommandKey.CompactCE,
+          MenuCommandKey: MenuCommandKey.CompactScUi,
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnCompactScUi,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.CompactCe,
-          InnerText: "Compact CE",
+          InnerText: "Toggle Compact Css",
           VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HandlerForCompactCE,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqToggleCompactCss,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -189,9 +180,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.PutAdminB,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqAdminB,
+            CommandTYpe: CommandType.Content,
           }
         },
 
@@ -204,9 +194,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.Internal.GoCeInternal,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqOpenCE,
+            CommandTYpe: CommandType.Content,
           }
         },
 
@@ -219,9 +208,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.QuickPublish,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqQuickPublish,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -233,9 +221,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.Internal.GoDesktopInternal,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqGoDesktop,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -247,9 +234,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: null,
-            Handler: this.Handlers.External.HandlerForPing,
-            ParameterData: [],
             MsgFlag: MsgFlag.Ping,
+            CommandTYpe: CommandType.Content,
           }
         },
         // ------ hind site
@@ -262,9 +248,9 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HandlerForSnapShotCreate,
-            ParameterData: [],
+
             MsgFlag: MsgFlag.ReqTakeSnapShot,
+            CommandTYpe: CommandType.Content,
           }
         },
 
@@ -276,10 +262,10 @@ export class CommandManager extends LoggableBase {
           VisibilityControllers: [VisibilityType.SnapShotSelected],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
-            Handler: this.Handlers.External.HandlerForToggleFavorite,
             Event: CommandButtonEvents.OnSingleClick,
-            ParameterData: [],
-            MsgFlag: MsgFlag.ToggleFavorite,
+
+            MsgFlag: MsgFlag.ReqToggleFavorite,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -291,9 +277,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HandlerForCancelOperation,
-            ParameterData: [],
             MsgFlag: MsgFlag.CancelCommand,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -305,9 +290,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HandlerForSnapShotRemove,
-            ParameterData: [],
             MsgFlag: MsgFlag.ReqRemoveFromStorage,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -319,9 +303,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.SelectSnapShot,
           EventHandlerData: {
             Event: CommandButtonEvents.OnDoubleClick,
-            Handler: this.Handlers.External.HandlerForSnapShotRestoreTBDTab,
-            ParameterData: [],
-            MsgFlag: MsgFlag.ReqSetStateOfSitecoreWindow,
+            MsgFlag: MsgFlag.ReqSetStateOfSitecoreNewWindow,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -333,9 +316,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: null,//this.Handlers.External.HandlerForSnapShotRestoreSameTab,
-            ParameterData: [],
-            MsgFlag: MsgFlag.ReqSetStateOfSitecoreWindow,
+            MsgFlag: MsgFlag.ReqSetStateOfSitecoreSameWindow,
+            CommandTYpe: CommandType.Content,
           }
         },
         {
@@ -347,9 +329,8 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HandlerForSnapShotRestoreNewTab,
-            ParameterData: [],
-            MsgFlag: MsgFlag.ReqSetStateOfSitecoreWindow,
+            MsgFlag: MsgFlag.ReqSetStateOfSitecoreSameWindow,
+            CommandTYpe: CommandType.PopUp,
           }
         },
       ]

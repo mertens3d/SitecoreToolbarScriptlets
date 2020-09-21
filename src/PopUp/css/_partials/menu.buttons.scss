@@ -1,5 +1,7 @@
 ﻿@import 'vars.scss';
 
+
+
 .hindsite {
   $btnHeight: 60px;
 
@@ -37,6 +39,21 @@
     width: $scLaunchPagebuttonWidth;
     pointer-events: none;
 
+    input {
+      display: inline-block;
+      width: 88PX;
+      overflow: hidden;
+      pointer-events: auto;
+    }
+
+    #id-ph-btn-update-nickname {
+      height: 40px;
+      display: inline-block;
+      width: 100%;
+      margin: 0;
+    }
+
+
     .btn-overlay {
       position: absolute;
       width: 100%;
@@ -63,13 +80,13 @@
         right: 0;
       }
 
-      .back-text{
+      .back-text {
         background: white;
         padding: 5px;
         position: absolute;
         top: 0;
         bottom: 0;
-        left:0;
+        left: 0;
         right: 0;
         cursor: default;
         pointer-events: auto;
@@ -134,7 +151,7 @@
     background-image: $sc_pencil;
   }
 
-  .add-ce-tab {
+  .icon-add-ce-tab {
     background-image: $sc_add;
   }
 
@@ -160,10 +177,13 @@
 
   .set-nickname {
     background-image: $sc_rename;
+    padding-top: 31px;
   }
 
-  #id-input-nickname {
-    height: 16px;
+  #id-ph-btn-update-nickname {
+    Button {
+      height: 16px;
+    }
   }
 
   .input-btn-wrapper {
@@ -175,18 +195,5 @@
     padding-bottom: 6px;
     padding-top: 0;
     overflow: hidden;
-  }
-
-  input#id-input-nickname {
-    display: inline-block;
-    width: 88PX;
-    overflow: hidden;
-  }
-
-  button#id-ph-btn-update-nickname {
-    height: 40px;
-    display: inline-block;
-    width: 100%;
-    margin: 0;
   }
 }

@@ -4,7 +4,7 @@ export interface IHindSiteScWindowApi {
   GetStateOfContent();
   AddCETab(commandData: ICommandHandlerDataForContent): Promise<void>
   AdminB();
-  MarkFavorite(commandData: ICommandHandlerDataForContent);
+  ToggleFavorite(commandData: ICommandHandlerDataForContent);
   OpenContentEditor();
   Ping();
   SetStateOfSitecoreWindow(commandData: ICommandHandlerDataForContent): Promise<void>;

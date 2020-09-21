@@ -3,33 +3,29 @@ import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/Logg
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
-import { HindSiteSetting } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSetting";
+import { HindSiteSettingWrapper } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
 import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
-import { IHindSiteSetting } from "../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
 import { CommandManager } from "./Classes/CommandManager";
 import { PopConst } from "./Classes/PopConst";
 import { BrowserTabAgent } from "./Managers/BrowserTabAgent";
 import { EventManager } from "./Managers/EventManager";
-import { Handlers } from "./Managers/Handlers";
 import { UiModulesManager } from "./Managers/UiManager/UiModulesManager";
 import { SelectSnapshotModule } from "./UiModules/SelectSnapshotModule/SelectSnapshotModule";
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
-import { DefaultSettings } from "../../Shared/scripts/Agents/Agents/SettingsAgent/DefaultSettings";
-import { HindSiteSettingWrapper } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
-import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { HindSiteSettingsBucket } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingsBucket";
+import { HandlersForInternal } from "./Classes/HandlersExternal";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
   Logger: LoggerAgent;
   SettingsAgent: ISettingsAgent;
   scUrlAgent: ScUrlAgent;
-  handlers: Handlers;
+  handlers: HandlersForInternal;
   UiModulesMan: UiModulesManager;
   FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
   EventMan: EventManager;
@@ -101,7 +97,7 @@ class PopUpEntry {
 
     this.ModuleSelectSnapShots = new SelectSnapshotModule(this.Logger, PopConst.Const.Selector.HS.SelStateSnapShot);
 
-    this.handlers = new Handlers(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots);
+    this.handlers = new HandlersForInternal(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.ModuleSelectSnapShots);
     this.commandMan = new CommandManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent);
 
     this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots); //after tabman, after HelperAgent

@@ -4,7 +4,7 @@ import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ICommandHandlerDataForPopUp } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/MenuCommand";
+import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/UiHydrationData";
 import { ISingleClickEvent_Payload } from "../../Events/SingleClickEvent/ISingleClickEvent_Payload";
 import { _UiModuleBase } from "../_UiModuleBase";
 import { SingleClickEvent_Subject } from "../../Events/SingleClickEvent/SingleClickEvent_Subject";
@@ -98,13 +98,12 @@ export class _base_ButtonModule extends _UiModuleBase {
       this.HTMLButtonElement.ondblclick = (evt) => {
         let data: ICommandHandlerDataForPopUp = this.BuildCommandData();
         data.Evt = evt;
-        data.EventMan.RouteAllCommandEvents(data);
+        //data.EventMan.RouteAllCommandEvents(data);
       };
     }
   }
 
   private BuildCommandData(): ICommandHandlerDataForPopUp {
-    this.MenuCommandDefinition.EventHandlerData.Handler = this.MenuCommandDefinition.EventHandlerData.Handler.bind(this);
 
     let data: ICommandHandlerDataForPopUp = {
       EventMan: null,

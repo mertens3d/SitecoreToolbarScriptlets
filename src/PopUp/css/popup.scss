@@ -1,9 +1,10 @@
 @import "vars";
-@import 'PageLevel.scss';
-@import 'FieldSetLevel.scss';
-@import 'ContentLevel.scss';
-@import 'menu.buttons';
+@import '_partials/PageLevel.scss';
+@import '_partials/FieldSetLevel.scss';
+@import '_partials/ContentLevel.scss';
+@import '_partials/menu.buttons';
 @import '_partials/overlay.scss';
-@import 'Grid.scss';
-@import 'header.scss';
-@import 'SnapShotSelect.scss';
+@import '_partials/Grid.scss';
+@import '_partials/header.scss';
+@import '_partials/SnapShotSelect.scss';
+@import '_partials/global.scss';

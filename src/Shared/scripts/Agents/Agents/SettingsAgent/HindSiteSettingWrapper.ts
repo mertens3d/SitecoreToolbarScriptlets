@@ -19,13 +19,20 @@ export class HindSiteSettingWrapper extends LoggableBase {
       this.Logger.ErrorAndThrow(HindSiteSetting.name, 'No settings agent');
     }
   }
-
-  SaveChange(checked: boolean) {
+  SaveChangeNumber(value: number) {
+    if (this.SettingsAgent) {
+      this.SettingsAgent.NumberSettingChanged(this.HindSiteSetting.SettingKey, value);
+    }
+    else {
+      this.Logger.ErrorAndThrow(this.SaveChangeBoolean.name, 'No ISettingsAgent');
+    }
+  }
+  SaveChangeBoolean(checked: boolean) {
     if (this.SettingsAgent) {
       this.SettingsAgent.BooleanSettingChanged(this.HindSiteSetting.SettingKey, checked);
     }
     else {
-      this.Logger.ErrorAndThrow(this.SaveChange.name, 'No ISettingsAgent');
+      this.Logger.ErrorAndThrow(this.SaveChangeBoolean.name, 'No ISettingsAgent');
     }
   }
 }

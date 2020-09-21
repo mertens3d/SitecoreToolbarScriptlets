@@ -11,7 +11,7 @@ export class PopConst {
         Buttons: {
           AdminB: 'admin-b',
           Cancel: 'cancel',
-          CloseWindow: 'close-window',
+
           CompactCe: 'details',
           Edit: 'edit',
           GoContentEditor: 'ce',
@@ -29,7 +29,10 @@ export class PopConst {
           TakeSnapShot: 'take-snapshot',
           ToggleFavorite: 'btn-favorite',
           UpdateNickname: 'set-nickname',
-          AddCeTab: 'add-ce-tab',
+          Icons: {
+            CloseWindow: 'icon-close-window',
+            AddContentEditorTab: 'icon-add-ce-tab',
+          }
         },
       },
     },
@@ -80,8 +83,6 @@ export class PopConst {
         IdFieldSetDebug: '[id=id-fieldset-debug]',
 
         ToggleFavorite: '[id=id-ph-btn-toggle-favorite]',
-
-       
 
         SelStateSnapShot: '[id=selState]',
         SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',

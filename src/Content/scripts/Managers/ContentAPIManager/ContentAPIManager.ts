@@ -130,7 +130,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     throw new Error("Method not implemented.");
   }
 
-  MarkFavorite(commandData: ICommandHandlerDataForContent) {
+  ToggleFavorite(commandData: ICommandHandlerDataForContent) {
     return new Promise(async (resolve, reject) => {
       await new RecipeToggleFavorite(commandData).Execute()
         .then(() => resolve())

@@ -14,7 +14,7 @@ import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Ag
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots';
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { UiHydrationData } from '../../../../Shared/scripts/Interfaces/MenuCommand';
+import { UiHydrationData } from '../../../../Shared/scripts/Interfaces/UiHydrationData';
 import { CommandManager } from '../../Classes/CommandManager';
 import { PopConst } from '../../Classes/PopConst';
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
@@ -33,7 +33,7 @@ import { UiCommandsManager } from '../UiCommandsManager';
 import { UiVisibilityTestAgent } from './UiVisibilityTestAgent';
 import { UiModuleManagerPassThroughEvent_Subject } from '../../Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Subject';
 import { IUiModuleManagerPassThroughEvent_Payload } from '../../Events/UiModuleManagerPassThroughEvent/IUiModuleManagerPassThroughEvent_Payload';
-import { IUiModuleMutationEvent_Payload } from '../../Events/UiModuleMutationEvent/IUiModuleMutationEvent_Payload';
+import { IUiSettingBasedModuleMutationEven_Payload } from '../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload';
 
 export class UiModulesManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];
@@ -116,14 +116,17 @@ export class UiModulesManager extends LoggableBase {
     this.Logger.FuncEnd(this.WireEvents.name);
   }
 
-  OnUiModuleMutationEvent(uiModuleMutationEvent_Payload: IUiModuleMutationEvent_Payload) {
+  OnUiSettingBasedModuleMutationEvent(uiModuleMutationEvent_Payload: IUiSettingBasedModuleMutationEven_Payload) {
+    this.Logger.FuncStart(this.OnUiSettingBasedModuleMutationEvent.name);
     if (this.UiModuleManagerMutationEvent_Subject) {
       let uiModulePassThroughEvent_Payload: IUiModuleManagerPassThroughEvent_Payload = {
         ModuleMutationEvent_Payload: uiModuleMutationEvent_Payload
       }
 
+      this.Logger.LogAsJsonPretty('uiModulePassThroughEvent_Payload', uiModulePassThroughEvent_Payload);
       this.UiModuleManagerMutationEvent_Subject.NotifyObservers(uiModulePassThroughEvent_Payload);
     }
+    this.Logger.FuncEnd(this.OnUiSettingBasedModuleMutationEvent.name);
   }
 
   private WireEventsOnCheckBoxes() {

@@ -5,7 +5,7 @@ import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { IMenuCommandDefinitionBucket } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
-import { UiHydrationData } from '../../../Shared/scripts/Interfaces/MenuCommand';
+import { UiHydrationData } from '../../../Shared/scripts/Interfaces/UiHydrationData';
 import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
 import { UiVisibilityTestAgent } from './UiManager/UiVisibilityTestAgent';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';

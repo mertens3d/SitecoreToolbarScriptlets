@@ -1,9 +1,10 @@
-﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+﻿import { HindSiteSettingForNumbers } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingForNumbers";
+import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
-import { IUiModuleMutationEvent_Payload } from "../../Events/UiModuleMutationEvent/IUiModuleMutationEvent_Payload";
+import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
+import { IUiSettingBasedModuleMutationEven_Payload } from "../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload";
 
 export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase implements IUiModule {
   private UiInputElement: HTMLInputElement;
@@ -18,13 +19,18 @@ export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase imple
     this.UiInputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
     this.UiInputElement.id = 'nm-' + Guid.WithoutDashes(Guid.NewRandomGuid());
     this.UiInputElement.type = SharedConst.Const.KeyWords.Html.Number;
-    this.UiInputElement.min = "0";
-    this.UiInputElement.max = "100";
-    this.UiInputElement.value = "15";
+
+    let hindsiteSettingForNumbers: HindSiteSettingForNumbers = <HindSiteSettingForNumbers>this.SettingJacket.HindSiteSetting;
+    if (hindsiteSettingForNumbers) {
+
+      this.UiInputElement.min = hindsiteSettingForNumbers.Min.toString();
+      this.UiInputElement.max = hindsiteSettingForNumbers.Max.toString();
+    }
+    this.UiInputElement.value = this.SettingJacket.HindSiteSetting.ValueAsInt().toString();
 
     this.LabelElement = <HTMLLabelElement>document.createElement(SharedConst.Const.KeyWords.Html.Label);
     this.LabelElement.setAttribute(SharedConst.Const.KeyWords.Html.For, this.UiInputElement.id);
-    this.LabelElement.innerHTML = this.SettingWrapper.HindSiteSetting.FriendlySetting;
+    this.LabelElement.innerHTML = this.SettingJacket.HindSiteSetting.FriendlySetting;
 
     if (this.ContainerUiDivElem) {
       this.ContainerUiDivElem.appendChild(this.UiInputElement);
@@ -39,21 +45,24 @@ export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase imple
   }
 
   private OnSettingChanged(evt: Event) {
-    let iUiElementChangeEvent_Payload: IUiModuleMutationEvent_Payload = {
+
+    let numberValue: number = parseInt((<HTMLInputElement>evt.target).value);
+
+    let iUiElementChangeEvent_Payload: IUiSettingBasedModuleMutationEven_Payload = {
       ModuleKey: this.ModuleKey,
       CheckBoxModule: null,
       NumberModule: {
-        NumberValue: parseInt((<HTMLInputElement>evt.target).value)
+        NumberValue: numberValue
       },
       AccordianModule: null,
     }
-    this.SettingWrapper.SaveChange((<HTMLInputElement>evt.target).checked);
-    this.UiElementChangeEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
+    this.SettingJacket.SaveChangeNumber(numberValue);
+    this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
   }
 
   RefreshUi() {
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
-      let valueToDisplay: number = this.SettingWrapper.HindSiteSetting.ValueAsInt();
+      let valueToDisplay: number = this.SettingJacket.HindSiteSetting.ValueAsInt();
       this.UiInputElement.value = valueToDisplay.toString();
     }
   }

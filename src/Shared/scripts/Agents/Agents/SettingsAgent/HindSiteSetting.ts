@@ -6,7 +6,7 @@ import { UiEnableState, UiPresence } from "../../../Enums/Enabled";
 import { ModuleKey } from "../../../Enums/ModuleKey";
 
 export class HindSiteSetting implements IHindSiteSetting {
-  Enabled: UiEnableState;
+  EnabledState: UiEnableState;
   DataType: SettingType;
   DefaultValue: any;
   FriendlySetting: string;
@@ -17,7 +17,7 @@ export class HindSiteSetting implements IHindSiteSetting {
   HasUi: UiPresence;
   ModuleType: ModuleKey;
 
-  constructor(settingKey: SettingKey, dataType: SettingType, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: UiEnableState, hasUi: UiPresence, moduleType: ModuleKey) {
+  constructor(settingKey: SettingKey, dataType: SettingType, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enableState: UiEnableState, hasUi: UiPresence, moduleType: ModuleKey) {
     this.SettingKey = settingKey;
     this.DataType = dataType;
     this.ValueAsObj = defaultValue;
@@ -25,8 +25,8 @@ export class HindSiteSetting implements IHindSiteSetting {
     this.DefaultValue = defaultValue;
     this.SettingFlavor = settingFlavor;
     this.FriendlySetting = friendly;
-    this.HasUi = UiPresence.Unknown;
-    this.Enabled = enabled;
+    this.HasUi = hasUi;
+    this.EnabledState = enableState;
     this.ModuleType = moduleType;
   }
 

@@ -1,4 +1,8 @@
-﻿export enum MsgFlag {
+﻿export enum CommandType {
+    PopUp,
+    Content
+}
+export enum MsgFlag {
     Unknown = 0,
     GetAllStorageOneWindow = 1001,
     NewWindowTest = 1002,
@@ -10,16 +14,15 @@
     ReqAdminB = 1101,
     ReqGoDesktop = 1102,
     ReqLoginWithAdminB = 1103,
-    ReqMarkFavorite = 1104,
+    ReqToggleFavorite = 1104,
     ReqOpenCE = 1105,
     ReqQuickPublish = 1106,
-    ReqSetStateOfSitecoreWindow = 1107,
+    ReqSetStateOfSitecoreSameWindow = 1107,
     Unused = 1108,
-    ReqSetScMode = 1109,
+    ReqSetScModePreview = 1109,
     ReqTakeSnapShot = 1110,
     ReqToggleCompactCss = 1111,
     ReqUpdateNickName = 1112,
-
     // 200 - response
     RespCurState = 1200,
     RespTaskFailed = 1201,
@@ -30,6 +33,9 @@
     RespNotReady = 1206,
     ReqClosePopUpWindow,
     ReqOpenPresentationDetails,
-    ToggleFavorite,
-    CancelCommand
+    
+    CancelCommand,
+    ReqSetScModeNormal,
+    ReqSetScModeEdit,
+    ReqSetStateOfSitecoreNewWindow
 }

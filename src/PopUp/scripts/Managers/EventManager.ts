@@ -9,18 +9,18 @@ import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
 import { ISingleClickEvent_Payload } from '../Events/SingleClickEvent/ISingleClickEvent_Payload';
 import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
 import { SelectSnapshotModule } from '../UiModules/SelectSnapshotModule/SelectSnapshotModule';
-import { Handlers } from './Handlers';
 import { UiModulesManager } from './UiManager/UiModulesManager';
+import { HandlersForInternal } from '../Classes/HandlersExternal';
 
 export class EventManager extends LoggableBase {
-  Handlers: Handlers
+  Handlers: HandlersForInternal
 
   PopUpMesssageBrokerAgent: PopUpMessagesBrokerAgent; // for .bind(this)
   SelectSnapShotModule: SelectSnapshotModule;
   UiModulesMan: UiModulesManager;
   CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
 
-  constructor(logger: ILoggerAgent, handlers: Handlers, popupMessageBrokerAgent: PopUpMessagesBrokerAgent, moduleSelectSnapShot: SelectSnapshotModule, uimodulesMan: UiModulesManager) {
+  constructor(logger: ILoggerAgent, handlers: HandlersForInternal, popupMessageBrokerAgent: PopUpMessagesBrokerAgent, moduleSelectSnapShot: SelectSnapshotModule, uimodulesMan: UiModulesManager) {
     super(logger);
     this.Handlers = handlers;
     this.PopUpMesssageBrokerAgent = popupMessageBrokerAgent;
@@ -31,7 +31,7 @@ export class EventManager extends LoggableBase {
 
   OnSingleClickEvent(singleClickEventPayload: ISingleClickEvent_Payload) {
     this.Logger.Log('single click');
-    let stateOPopUp: IStateOfPopUp = this.Handlers.External.GetStateOfPopUp(singleClickEventPayload.HandlerData.MsgFlag);
+    let stateOPopUp: IStateOfPopUp = this.Handlers.GetStateOfPopUp(singleClickEventPayload.HandlerData.MsgFlag);
     this.PopUpMesssageBrokerAgent.SendCommandToContentImprovedAsync(stateOPopUp)
   };
 
@@ -64,13 +64,13 @@ export class EventManager extends LoggableBase {
     }
   }
 
-  async RouteAllCommandEvents(data: ICommandHandlerDataForPopUp): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RouteAllCommandEvents.name);
-      await data.EventHandlerData.Handler(data)
-        .then(() => resolve())
-        .catch((err) => reject(this.RouteAllCommandEvents.name + ' | ' + err));
-      this.Logger.FuncEnd(this.RouteAllCommandEvents.name);
-    });
-  }
+  //async RouteAllCommandEvents(data: ICommandHandlerDataForPopUp): Promise<void> {
+  //  return new Promise(async (resolve, reject) => {
+  //    this.Logger.FuncStart(this.RouteAllCommandEvents.name);
+  //    await data.EventHandlerData.Handler(data)
+  //      .then(() => resolve())
+  //      .catch((err) => reject(this.RouteAllCommandEvents.name + ' | ' + err));
+  //    this.Logger.FuncEnd(this.RouteAllCommandEvents.name);
+  //  });
+  //}
 }
