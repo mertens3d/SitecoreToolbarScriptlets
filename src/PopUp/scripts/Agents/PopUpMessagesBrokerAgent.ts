@@ -91,8 +91,6 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
       this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
 
 
-      this.Logger.LogAsJsonPretty('stateOfPopUp', stateOfPopUp);
-
       let targetTab: browser.tabs.Tab;
 
       await browser.tabs.query({ currentWindow: true, active: true })

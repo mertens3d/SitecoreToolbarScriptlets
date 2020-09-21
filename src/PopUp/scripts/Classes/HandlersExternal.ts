@@ -19,7 +19,7 @@ export class HandlersExternalEvent extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
   private BrowserTabAgent: BrowserTabAgent;
   private PopUPMessageBroker: PopUpMessagesBrokerAgent;
-    ModuleSelectSnapShots: SelectSnapshotModule;
+  ModuleSelectSnapShots: SelectSnapshotModule;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, browserTabAgent: BrowserTabAgent, popUpMessagesBroker: PopUpMessagesBrokerAgent, moduleSelectSnapShots: SelectSnapshotModule) {
     super(logger);
@@ -34,11 +34,8 @@ export class HandlersExternalEvent extends LoggableBase {
 
     let wrappedSettings: HindSiteSettingWrapper[] = this.SettingsAgent.GetSettingsByFlavor([SettingFlavor.ContentAndPopUpStoredInPopUp, SettingFlavor.ContentOnly]);
 
-
     let settingsToSend: IHindSiteSetting[] = [];
     wrappedSettings.forEach((wrappedSetting: HindSiteSettingWrapper) => settingsToSend.push(wrappedSetting.HindSiteSetting));
-
-    //stateOfPopUp.Payload.IdOfSelect = data.MenuState.SelectSnapshotId;
 
     var stateOfPopUp: IStateOfPopUp = {
       MsgFlag: msgFlag,
@@ -49,13 +46,8 @@ export class HandlersExternalEvent extends LoggableBase {
       CurrentNicknameValue: '',
       SnapShotNewNickname: '',
       ToastMessage: ''
-
     }
 
-
-
-    //(msgFlag, , , settingsToSend);
-    //this.Logger.FuncEnd(this.GetStateOfPopUp.name);
     return stateOfPopUp;
   }
 
@@ -126,7 +118,7 @@ export class HandlersExternalEvent extends LoggableBase {
     return new Promise<void>(async (resolve, reject) => {
       let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.Ping);
 
-      await data.EventMan. PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPopUp)
+      await data.EventMan.PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPopUp)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -137,8 +129,6 @@ export class HandlersExternalEvent extends LoggableBase {
       data.EventMan.Handlers.External.Logger.FuncStart(data.EventMan.Handlers.External.HandlerForSnapShotRestoreSameTab.name);
 
       var stateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqSetStateOfSitecoreWindow);
-      
-     
 
       await data.EventMan.PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPopUp)
         .then(() => resolve())
@@ -152,7 +142,7 @@ export class HandlersExternalEvent extends LoggableBase {
     data.EventMan.Handlers.External.Logger.FuncStart(data.EventMan.Handlers.External.HandlerForSnapShotRestoreNewTab.name);
 
     this.ModuleSelectSnapShots
-    data.EventMan.Handlers.External.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs,  data.EventMan.SelectSnapShotModule.GetSelectSnapshotId().Raw);
+    data.EventMan.Handlers.External.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.EventMan.SelectSnapShotModule.GetSelectSnapshotId().Raw);
 
     let newUrl: IAbsoluteUrl = data.EventMan.Handlers.External.BrowserTabAgent.GetFullUrl();
 
@@ -167,8 +157,6 @@ export class HandlersExternalEvent extends LoggableBase {
   async HandlerForSnapShotUpdateNickName(data: ICommandHandlerDataForPopUp) {
     return new Promise<void>(async (resolve, reject) => {
       let stateOfPopUp: IStateOfPopUp = data.EventMan.Handlers.External.GetStateOfPopUp(MsgFlag.ReqUpdateNickName);
-
-  
 
       await data.EventMan.PopUpMesssageBrokerAgent.SendCommandToContent(stateOfPopUp)
         .then(() => resolve())

@@ -1,16 +1,16 @@
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
-import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
+import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
+import { IStateOfPopUp } from '../../../Shared/scripts/Interfaces/IMsgPayload';
 import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
+import { ISingleClickEvent_Payload } from '../Events/SingleClickEvent/ISingleClickEvent_Payload';
 import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
-import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
 import { SelectSnapshotModule } from '../UiModules/SelectSnapshotModule/SelectSnapshotModule';
 import { Handlers } from './Handlers';
 import { UiModulesManager } from './UiManager/UiModulesManager';
-import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 
 export class EventManager extends LoggableBase {
   Handlers: Handlers
@@ -26,11 +26,13 @@ export class EventManager extends LoggableBase {
     this.PopUpMesssageBrokerAgent = popupMessageBrokerAgent;
     this.SelectSnapShotModule = moduleSelectSnapShot;
     this.UiModulesMan = uimodulesMan;
-    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent);
+    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent.bind(this));
   }
 
-  OnSingleClickEvent<ISingleClickEvent_Payload>(singleClickEventPayload: ISingleClickEvent_Payload) {
+  OnSingleClickEvent(singleClickEventPayload: ISingleClickEvent_Payload) {
     this.Logger.Log('single click');
+    let stateOPopUp: IStateOfPopUp = this.Handlers.External.GetStateOfPopUp(singleClickEventPayload.HandlerData.MsgFlag);
+    this.PopUpMesssageBrokerAgent.SendCommandToContentImprovedAsync(stateOPopUp)
   };
 
   InitEventManager(): void {
@@ -42,14 +44,10 @@ export class EventManager extends LoggableBase {
     this.Logger.FuncStart(this.WireEvents.name);
     this.ListenForCommandEvents();
 
-
-
     this.Logger.FuncEnd(this.WireEvents.name);
   }
 
   ListenForSettingsEvents() {
-    
-
   }
 
   ListenForCommandEvents() {
@@ -60,13 +58,11 @@ export class EventManager extends LoggableBase {
         if (!StaticHelpers.IsNullOrUndefined(baseButtonModule.SingleButtonClickEvent_Subject)) {
           baseButtonModule.SingleButtonClickEvent_Subject.RegisterObserver(this.CommandButtonSingleClickEvent_Observer);
         } else {
-          this.Logger.WarningAndContinue(this.ListenForCommandEvents.name, 'null SingleButtonClickEvent_Subject ' + ModuleKey[ baseButtonModule.ModuleKey]);
+          this.Logger.WarningAndContinue(this.ListenForCommandEvents.name, 'null SingleButtonClickEvent_Subject ' + ModuleKey[baseButtonModule.ModuleKey]);
         }
       });
     }
   }
-
- 
 
   async RouteAllCommandEvents(data: ICommandHandlerDataForPopUp): Promise<void> {
     return new Promise(async (resolve, reject) => {

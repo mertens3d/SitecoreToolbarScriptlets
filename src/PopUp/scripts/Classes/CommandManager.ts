@@ -333,7 +333,7 @@ export class CommandManager extends LoggableBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            Handler: this.Handlers.External.HandlerForSnapShotRestoreSameTab,
+            Handler: null,//this.Handlers.External.HandlerForSnapShotRestoreSameTab,
             ParameterData: [],
             MsgFlag: MsgFlag.ReqSetStateOfSitecoreWindow,
           }
