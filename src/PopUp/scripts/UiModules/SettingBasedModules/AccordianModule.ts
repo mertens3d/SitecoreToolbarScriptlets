@@ -62,8 +62,11 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
       var newVal: boolean = !(this.SettingJacket.HindSiteSetting.ValueAsBool());
 
       if (this.SettingJacket) {
+        this.SettingJacket.SaveChangeBoolean(newVal);
+
         let iUiElementChangeEvent_Payload: IUiSettingBasedModuleMutationEven_Payload = {
           ModuleKey: this.ModuleKey,
+          HindSiteSetting: this.SettingJacket.HindSiteSetting,
           CheckBoxModule: null,
           NumberModule: null,
           AccordianModule: {
@@ -71,7 +74,6 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
           }
         }
 
-        this.SettingJacket.SaveChangeBoolean(newVal);
         this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
         this.SetAccordionClass();
       }

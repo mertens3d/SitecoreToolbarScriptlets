@@ -36,6 +36,7 @@ export class HindSiteSettingCheckBoxModule extends _SettingsBasedModulesBase imp
   private OnCheckboxChanged(evt: Event) {
     let iUiElementChangeEvent_Payload: IUiSettingBasedModuleMutationEven_Payload = {
       ModuleKey: this.ModuleKey,
+      HindSiteSetting: this.SettingJacket.HindSiteSetting,
       CheckBoxModule: {
         Checked: (<HTMLInputElement>evt.target).checked,
         SettingKey: this.SettingJacket.HindSiteSetting.SettingKey

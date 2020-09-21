@@ -29,7 +29,8 @@ export class HindSiteSettingWrapper extends LoggableBase {
   }
   SaveChangeBoolean(checked: boolean) {
     if (this.SettingsAgent) {
-      this.SettingsAgent.BooleanSettingChanged(this.HindSiteSetting.SettingKey, checked);
+      this.HindSiteSetting.ValueAsObj = checked;
+      //this.SettingsAgent.BooleanSettingChanged(this.HindSiteSetting.SettingKey, checked);
     }
     else {
       this.Logger.ErrorAndThrow(this.SaveChangeBoolean.name, 'No ISettingsAgent');

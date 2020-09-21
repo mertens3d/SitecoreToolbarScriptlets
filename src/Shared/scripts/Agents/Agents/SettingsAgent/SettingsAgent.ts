@@ -48,9 +48,12 @@ export class SettingsAgent implements ISettingsAgent {
 
   IntroduceUiModulesManager(uiModulesManager: UiModulesManager) {
     this.UiModulesManager = uiModulesManager;
+
+    
   }
 
   WireEvents() {
+    
     this.UiElementChangeEvent_Observer = new UiModuleManagerPassThroughEvent_Observer(this.Logger, this.OnUiModuleManagerPassThroughEvent);
   }
 

@@ -5,8 +5,9 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { _UiModuleBase } from "../_UiModuleBase";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { UiSettingBasedModuleMutationEvent_Subject } from "../../Events/UiSettingBasedModuleMutationEvent/UiSettingBasedModuleMutationEvent_Subject";
+import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
-export class _SettingsBasedModulesBase extends _UiModuleBase {
+export abstract class _SettingsBasedModulesBase extends _UiModuleBase implements IUiModule {
   protected SettingJacket: HindSiteSettingWrapper;
   public UiSettingBasedModuleMutationEvent_Subject: UiSettingBasedModuleMutationEvent_Subject;
 
@@ -25,10 +26,14 @@ export class _SettingsBasedModulesBase extends _UiModuleBase {
     this.Logger.InstantiateEnd(HindSiteSettingCheckBoxModule.name);
   }
 
+  abstract Init(): void
+
+  abstract WireEvents(): void
+
+  abstract RefreshUi(): void
+
   Init_BaseSettingsBasedModule() {
     this.InitUiModuleBase();
     this.UiSettingBasedModuleMutationEvent_Subject = new UiSettingBasedModuleMutationEvent_Subject(this.Logger);
-
-   
   }
 }

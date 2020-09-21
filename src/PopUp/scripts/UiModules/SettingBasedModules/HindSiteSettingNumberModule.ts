@@ -51,6 +51,7 @@ export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase imple
     let iUiElementChangeEvent_Payload: IUiSettingBasedModuleMutationEven_Payload = {
       ModuleKey: this.ModuleKey,
       CheckBoxModule: null,
+      HindSiteSetting: this.SettingJacket.HindSiteSetting,
       NumberModule: {
         NumberValue: numberValue
       },

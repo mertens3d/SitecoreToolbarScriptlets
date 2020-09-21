@@ -9,12 +9,13 @@ import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
 import { AccordianModule } from "./AccordianModule";
 import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { UiPresence } from "../../../../Shared/scripts/Enums/Enabled";
+import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
 
 export class SettingsBasedModules extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
-  CheckBoxModules: IUiModule[];
-  AccordianModules: IUiModule[];
-  NumberModules: HindSiteSettingNumberModule[];
+  CheckBoxModules: _SettingsBasedModulesBase[];
+  AccordianModules: _SettingsBasedModulesBase[];
+  NumberModules: _SettingsBasedModulesBase[];
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
     super(logger)
@@ -27,12 +28,12 @@ export class SettingsBasedModules extends LoggableBase {
 
     this.CheckBoxModules = this.BuildCheckBoxSettingModules();
     this.NumberModules = this.BuildNumberSettingModules();
-    this.AccordianModules = this.BuildAccordianModules();
+    this.AccordianModules = <_SettingsBasedModulesBase[]> this.BuildAccordianModules();
 
     this.Logger.FuncEnd(this.Instantiate_SettingsBasedModules.name);
   }
 
-  BuildAccordianModules() { //oneSetting: IHindSiteSetting, uiElem: HTMLElement
+  BuildAccordianModules(): AccordianModule[] { //oneSetting: IHindSiteSetting, uiElem: HTMLElement
     let toReturn: AccordianModule[] = [];
     this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((hindSiteSetting: HindSiteSettingWrapper) => {
       if (hindSiteSetting.HindSiteSetting.DataType === SettingType.Accordion) {
