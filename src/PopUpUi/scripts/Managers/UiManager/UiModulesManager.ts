@@ -38,13 +38,14 @@ import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/Feed
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
 import { BrowserTabAgent } from '../BrowserTabAgent';
 import { UiCommandsManager } from '../UiCommandsManager';
+import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 
 export class UiModulesManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];
   UiCommandsMan: UiCommandsManager;
   CurrScWindowState: IDataStateOfSitecoreWindow;
   FeedbackModuleMessages: FeedbackModuleMessages_Observer;
-  private CommandMan: CommandManager;
+  private CommandDefinitionBucket: ICommandDefinitionBucket;
   private SettingsAgent: ISettingsAgent;
   private TabMan: BrowserTabAgent;
   TabId: string;
@@ -60,19 +61,19 @@ export class UiModulesManager extends LoggableBase {
   UiModuleManagerMutationEvent_Subject: UiModuleManagerPassThroughEvent_Subject;
   FacetSettingsBasedModules: _SettingsBasedModulesBase[] = [];
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandMan: CommandManager, moduleSelectSnapShots: SelectSnapshotModule, uiCommandsManager: UiCommandsManager, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandDefinitionBucket: ICommandDefinitionBucket, moduleSelectSnapShots: SelectSnapshotModule, uiCommandsManager: UiCommandsManager, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
     super(logger);
     this.Logger.InstantiateStart(UiModulesManager.name);
 
     this.SettingsAgent = settingsAgent;
     this.TabMan = tabMan;
-    this.CommandMan = commandMan;
+    this.CommandDefinitionBucket = commandDefinitionBucket;
     this.UiModules.push(moduleSelectSnapShots);
     this.ModuleSelectSnapShots = moduleSelectSnapShots;
     this.UiVisibilityTestAgent = uiVisibilityTestAgent
     this.UiCommandsMan = uiCommandsManager;
 
-    if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.TabMan, this.CommandMan, this.ModuleSelectSnapShots, this.UiCommandsMan, this.UiVisibilityTestAgent])) {
+    if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.TabMan, this.CommandDefinitionBucket, this.ModuleSelectSnapShots, this.UiCommandsMan, this.UiVisibilityTestAgent])) {
       throw (UiModulesManager.name + ' null at constructor');
     }
 
@@ -97,7 +98,7 @@ export class UiModulesManager extends LoggableBase {
 
     this.UiModules = this.UiModules.concat(this.FacetSettingsBasedModules)
 
-    let buttonBasedModules = new ButtonBasedModules(this.Logger, this.CommandMan)
+    let buttonBasedModules = new ButtonBasedModules(this.Logger, this.CommandDefinitionBucket)
     this.Logger.LogVal('buttonBaseModules ', buttonBasedModules.AllButtonBasedModules.length);
     this.UiModules = this.UiModules.concat(<IUiModule[]>buttonBasedModules.AllButtonBasedModules);
 

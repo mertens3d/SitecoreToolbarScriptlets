@@ -4,12 +4,12 @@ import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
-import { IUiToCommandMappingBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
+import { ICommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { PopConst } from './PopConst';
 
-export class PopUpCommands extends LoggableBase {
-    public BuildMenuCommandParamsBucket(): IUiToCommandMappingBucket {
-        let toReturn: IUiToCommandMappingBucket = {
+export class CommandDefintionFactory extends LoggableBase {
+    public BuildMenuCommandParamsBucket(): ICommandDefinitionBucket {
+        let toReturn: ICommandDefinitionBucket = {
             MenuCommandParamsAr: [
                 {
                     MenuCommandKey: MenuCommandKey.CloseWindow,

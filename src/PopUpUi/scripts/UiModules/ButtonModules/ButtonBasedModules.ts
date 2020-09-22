@@ -11,16 +11,17 @@ import { InputWithButtonModule } from "./InputWithButtonModule";
 import { TypCommandButtonModule } from "./TypCommandButtonModule";
 import { _base_ButtonModule } from "./_baseButtonModule";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { ICommandDefinitionBucket } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 
 export class ButtonBasedModules extends LoggableBase {
   AllButtonBasedModules: IUiModule[] = [];
   SelectSnapShotModule: SelectSnapshotModule;
-  CommandMan: CommandManager;
+  CommandDefinitionBucket: ICommandDefinitionBucket;
 
-  constructor(logger: ILoggerAgent, commandMan: CommandManager) {
+  constructor(logger: ILoggerAgent, commandMan: ICommandDefinitionBucket) {
     super(logger);
     this.Logger.InstantiateStart(ButtonBasedModules.name);
-    this.CommandMan = commandMan;
+    this.CommandDefinitionBucket = commandMan;
 
     this.InstantiateButtonBasedModules();
     this.Logger.InstantiateEnd(ButtonBasedModules.name);
@@ -40,8 +41,8 @@ export class ButtonBasedModules extends LoggableBase {
   public PopulateMenuButtons() {
     this.Logger.FuncStart(this.PopulateMenuButtons.name);
 
-    if (this.CommandMan.MenuCommandParamsBucket && this.CommandMan.MenuCommandParamsBucket.MenuCommandParamsAr) {
-      this.CommandMan.MenuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
+    if (this.CommandDefinitionBucket && this.CommandDefinitionBucket.MenuCommandParamsAr) {
+      this.CommandDefinitionBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
         if (menuCommandParams.PlaceHolderSelector && menuCommandParams.PlaceHolderSelector.length > 0) {
           if (menuCommandParams.ModuleKey == ModuleKey.ButtonTypical) {
             this.AllButtonBasedModules.push(<IUiModule>new TypCommandButtonModule(this.Logger, menuCommandParams));

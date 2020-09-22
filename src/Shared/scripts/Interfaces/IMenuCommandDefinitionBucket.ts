@@ -1,6 +1,6 @@
 ﻿import { IMenuCommandDefinition } from "./IMenuCommandDefinition";
 
-export interface IUiToCommandMappingBucket {
+export interface ICommandDefinitionBucket {
 
     MenuCommandParamsAr: IMenuCommandDefinition[];
 }

@@ -1,39 +1,34 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { ContentReplyReceivedEvent_Subject } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { MsgFromContent } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
-import { ScWindowStateValidator } from "../../../Shared/scripts/Classes/ScWindowStateValidator";
-import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IStateOfPopUpUi } from "../../../Shared/scripts/Interfaces/IMsgPayload";
-import { UiModulesManager } from "../Managers/UiManager/UiModulesManager";
+﻿import { LoggableBase } from "../../Content/scripts/Managers/LoggableBase";
+import { ContentReplyReceivedEvent_Subject } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
+import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { MsgFromContent } from "../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+import { ScWindowStateValidator } from "../../Shared/scripts/Classes/ScWindowStateValidator";
+import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
+import { MsgFlag } from "../../Shared/scripts/Enums/1xxx-MessageFlag";
+import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IStateOfPopUpUi } from "../../Shared/scripts/Interfaces/IMsgPayload";
 
 export class PopUpMessagesBrokerAgent extends LoggableBase {
   LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
   ContentReplyReceivedEvent_Subject: ContentReplyReceivedEvent_Subject;
-  ModulesMan: UiModulesManager;
 
-  constructor(loggerAgent: ILoggerAgent, modulesMan: UiModulesManager) {
+  constructor(loggerAgent: ILoggerAgent) {
     super(loggerAgent);
     this.ContentReplyReceivedEvent_Subject = new ContentReplyReceivedEvent_Subject(this.Logger);
-    this.ModulesMan = modulesMan;
   }
 
   private __cleardebugText() {
     this.Logger.HandlerClearDebugText(this.Logger);
   }
 
-  async SendCommandToContentImprovedAsync(msgFlag: MsgFlag): Promise<void> {
+  async SendCommandToContentImprovedAsync(msgFlag: MsgFlag, stateOfPopUp: IStateOfPopUpUi): Promise<void> {
     this.Logger.FuncStart(this.SendCommandToContentImprovedAsync.name);
     try {
       this.__cleardebugText();
 
-      let stateOPopUp: IStateOfPopUpUi = this.ModulesMan.GetStateOfPopUp(msgFlag);
-
       //todo - put back?  this.UiMan.ClearCancelFlag();
 
-      this.SendMessageToContentAsync(stateOPopUp)
+      this.SendMessageToContentAsync(stateOfPopUp)
         .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.ContentReplyReceivedEvent_Subject.NotifyObservers(replyMessagePayload))
     } catch (err) {
       throw (this.SendCommandToContentImprovedAsync.name + ' | ' + err);

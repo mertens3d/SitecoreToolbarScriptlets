@@ -10,22 +10,24 @@ import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLog
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
-import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
+
 import { CommandManager } from "./Classes/CommandManager";
 import { PopConst } from "./Classes/PopConst";
 import { BrowserTabAgent } from "./Managers/BrowserTabAgent";
-import { EventManager } from "./Managers/EventManager";
+import { UiEventManager } from "./Managers/UiEventManager";
 import { UiModulesManager } from "./Managers/UiManager/UiModulesManager";
 import { SelectSnapshotModule } from "./UiModules/SelectSnapshotModule/SelectSnapshotModule";
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
 import { HandlersForInternal } from "./Classes/HandlersExternal";
-import { PopUpCommands } from "./Classes/PopUpCommands";
-import { IUiToCommandMappingBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { CommandDefintionFactory } from "./Classes/PopUpCommands";
+import { ICommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { UiCommandsManager } from "./Managers/UiCommandsManager";
 import { UiVisibilityTestAgent } from "./Managers/UiManager/UiVisibilityTestAgent";
 import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
+import { UiCommandFlagRaisedEvent_Subject } from "./Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject";
+import { PopUpMessagesBrokerAgent } from "../../PopUpController/Agents/PopUpMessagesBrokerAgent";
 
-class PopUpUiEntry {
+export class PopUpUiEntry {
   RepoAgent: RepositoryAgent;
   Logger: LoggerAgent;
   SettingsAgent: ISettingsAgent;
@@ -33,17 +35,20 @@ class PopUpUiEntry {
   handlers: HandlersForInternal;
   UiModulesMan: UiModulesManager;
   FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
-  EventMan: EventManager;
-  commandMan: CommandManager;
+  EventMan: UiEventManager;
+
   BrowserTabAgent: BrowserTabAgent;
-  PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
+
   ModuleSelectSnapShots: SelectSnapshotModule;
-  PopUpCommands: IUiToCommandMappingBucket;
+  CommandDefintionBucket: ICommandDefinitionBucket;
   UiCommandsMan: UiCommandsManager;
   UiVisibilityTestAgent: IUiVisibilityTestAgent;
+  UiCommandRaisedFlag_Subject: UiCommandFlagRaisedEvent_Subject;
+  CommandDefinitionBucket: ICommandDefinitionBucket;
 
-  async main() {
+  async main(commandDefinitionBucket: ICommandDefinitionBucket) {
     try {
+      this.CommandDefinitionBucket = commandDefinitionBucket;
       this.Instantiate();
       this.Init();
     } catch (err) {
@@ -58,7 +63,7 @@ class PopUpUiEntry {
       .then(() => {
         this.UiModulesMan.InitUiMan();
         this.EventMan.InitEventManager();
-        this.commandMan.Init();
+
         this.MakeTwoWayIntroductions();
         this.WireEvents();
         this.Start();
@@ -81,7 +86,6 @@ class PopUpUiEntry {
   }
 
   private Start() {
-    this.commandMan.TriggerPingEventAsync();
     this.Logger.SectionMarker('Begin Standby');
 
     //.then(() => this.Logger.Log(this.main.name + ' completed'))
@@ -107,16 +111,11 @@ class PopUpUiEntry {
 
     this.handlers = new HandlersForInternal(this.Logger, this.BrowserTabAgent);
 
-    this.PopUpCommands = new PopUpCommands(this.Logger).BuildMenuCommandParamsBucket();
-
-    this.commandMan = new CommandManager(this.Logger, this.PopUpMessageBrokerAgent, this.PopUpCommands);
-
     this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
-    this.UiCommandsMan = new UiCommandsManager(this.Logger, this.commandMan.MenuCommandParamsBucket, this.UiVisibilityTestAgent);
+    this.UiCommandsMan = new UiCommandsManager(this.Logger, this.CommandDefinitionBucket, this.UiVisibilityTestAgent);
 
-    this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots, this.UiCommandsMan, this.UiVisibilityTestAgent); //after tabman, after HelperAgent
-    this.EventMan = new EventManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent,  this.UiModulesMan); // after uiman
-    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger, this.UiModulesMan);
+    this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.CommandDefinitionBucket, this.ModuleSelectSnapShots, this.UiCommandsMan, this.UiVisibilityTestAgent); //after tabman, after HelperAgent
+    this.EventMan = new UiEventManager(this.Logger, this.handlers, this.UiModulesMan); // after uiman
   }
 
   private InitLogger() {
@@ -144,15 +143,8 @@ class PopUpUiEntry {
   WireCustomevents() {
     this.Logger.FuncStart(this.WireCustomevents.name);
 
-    let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, this.UiModulesMan);
-    this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(contentReplyReceivedEvent_Observer);
-
     this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.FeedbackMessages);
-    this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(this.FeedbackModuleMsg_Observer)
+
     this.Logger.FuncEnd(this.WireCustomevents.name);
   }
 }
-
-let popUpEntry: PopUpUiEntry = new PopUpUiEntry();
-
-popUpEntry.main();

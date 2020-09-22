@@ -98,41 +98,46 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowRecipePartials.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\TreeMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\UiModuleManagerPassThroughEvent\IUiModuleManagerPassThroughEvent_Payload.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\UiModuleManagerPassThroughEvent\UiModuleManagerPassThroughEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\UiModuleManagerPassThroughEvent\UiModuleManagerPassThroughEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\UiSettingBasedModuleMutationEvent\IUiSettingBasedModuleMutationEvent_Payload.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\UiSettingBasedModuleMutationEvent\UiSettingBasedModuleMutationEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\UiSettingBasedModuleMutationEvent\UiSettingBasedModuleMutationEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\SingleClickEvent\ISingleClickEvent_Payload.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\SelectSnapUiMutationEvent\SelectSnapUiMutationEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\SingleClickEvent\SingleClickEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\SingleClickEvent\SingleClickEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Agents\PopUpMessagesBrokerAgent.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiVisibilityTestAgent.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\ButtonBasedModules.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\CloseButtonModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\InputWithButtonModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\TypCommandButtonModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\_baseButtonModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SelectSnapshotModule\SelectSnapshotModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\ButtonModules\CancelButtonModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Classes\StateHelpers.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\SelectSnapUiMutationEvent\SelectSnapUiMutationEvent_ObserverWithCallback.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\HindSiteSettingCheckBoxModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\HindSiteSettingNumberModule.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\_SettingsBasedModulesBase.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleBrowserState.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\SettingsBasedModules.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModulePopUpState.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleContentState.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\FeedbackModuleMessages.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\_UiFeedbackModuleBase.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\UiFeedbackModules\UiFeedbackModuleLog.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Classes\HandlersExternal.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Classes\CommandManager.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\SelectSnapUiMutationEvent\SelectSnapshotUiMutationEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\_UiModuleBase.ts" />
+    <TypeScriptCompile Include="src\PopUpController\scripts\zPopUpControllerEntryPoint.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\PopUpCommands.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiCommandFlagRaisedEvent\IUiCommandFlagRaisedEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiCommandFlagRaisedEvent\UiCommandFlagRaisedEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiCommandFlagRaisedEvent\UiCommandFlagRaisedEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiModuleManagerPassThroughEvent\IUiModuleManagerPassThroughEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiModuleManagerPassThroughEvent\UiModuleManagerPassThroughEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiModuleManagerPassThroughEvent\UiModuleManagerPassThroughEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiSettingBasedModuleMutationEvent\IUiSettingBasedModuleMutationEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiSettingBasedModuleMutationEvent\UiSettingBasedModuleMutationEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiSettingBasedModuleMutationEvent\UiSettingBasedModuleMutationEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SingleClickEvent\ISingleClickEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SelectSnapUiMutationEvent\SelectSnapUiMutationEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SingleClickEvent\SingleClickEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SingleClickEvent\SingleClickEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\PopUpController\Agents\PopUpMessagesBrokerAgent.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\UiManager\UiVisibilityTestAgent.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\ButtonModules\ButtonBasedModules.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\ButtonModules\CloseButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\ButtonModules\InputWithButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\ButtonModules\TypCommandButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\ButtonModules\_baseButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\SelectSnapshotModule\SelectSnapshotModule.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\ButtonModules\CancelButtonModule.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\StateHelpers.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SelectSnapUiMutationEvent\SelectSnapUiMutationEvent_ObserverWithCallback.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\SettingBasedModules\HindSiteSettingCheckBoxModule.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\SettingBasedModules\HindSiteSettingNumberModule.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\SettingBasedModules\_SettingsBasedModulesBase.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\FeedbackModuleBrowserState.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\SettingBasedModules\SettingsBasedModules.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\FeedbackModulePopUpState.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\FeedbackModuleContentState.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\FeedbackModuleMessages.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\_UiFeedbackModuleBase.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\UiFeedbackModuleLog.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\HandlersExternal.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\CommandManager.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SelectSnapUiMutationEvent\SelectSnapshotUiMutationEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\_UiModuleBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerStorageWriter.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerTimer.ts" />
@@ -142,8 +147,8 @@
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\HindSiteSettingWrapper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\ToastAgent\ToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\DefaultSettings.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\BrowserTabAgent.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiCommandsManager.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\BrowserTabAgent.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\UiCommandsManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\UrlAgent\ScUrlAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\RollingLogIdDrone\RollingLogIdDrone.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\AutoBuild\BuildNum.ts" />
@@ -188,7 +193,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataFriendly.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataMetaData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataStateOfSitecoreWindow.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Events\SelectSnapUiMutationEvent\ISelectSnapUiMutationEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SelectSnapUiMutationEvent\ISelectSnapUiMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataStateOfDTFrame.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataStateOfTree.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IDataStates.ts" />
@@ -238,13 +243,13 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneParamPair.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUrlParts.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\__global.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\zPopUpEntryPoint.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\zPopUpUiEntryPoint.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgPayloadResponseFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataReqPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\1xxx-MessageFlag.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMsgPayload.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Classes\PopConst.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\PopConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUiMan.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\RepositoryAgent\RepositoryAgent.ts" />
     <None Include="Readme.Installing.md" />
@@ -258,9 +263,9 @@
     <None Include="src\Content\css\vars.scss" />
     <None Include="src\Content\css\_contentTree.scss" />
     <None Include="src\Content\css\_header.scss" />
-    <None Include="src\PopUp\css\_partials\ContentLevel.scss" />
-    <None Include="src\PopUp\css\_partials\global.scss" />
-    <None Include="src\PopUp\css\_partials\header.scss" />
+    <None Include="src\PopUpUi\css\_partials\ContentLevel.scss" />
+    <None Include="src\PopUpUi\css\_partials\global.scss" />
+    <None Include="src\PopUpUi\css\_partials\header.scss" />
     <Content Include="src\Browser-PolyFill\browser-polyfill.js" />
     <Content Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.js">
       <DependentUpon>IAccordianManager.ts</DependentUpon>
@@ -279,10 +284,9 @@
     <None Include="Dist\HindSite\manifest.json" />
     <None Include="jsconfig.json" />
     <Content Include="Dist\HindSite\popup\choose_setting.css" />
-    <Content Include="gulp.support\CommonBase.js" />
     <Content Include="gulpfile.js" />
     <Content Include="jest.config.js" />
-    <Content Include="src\PopUp\html\menu.html" />
+    <Content Include="src\PopUpUi\html\popUpUi.html" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISharedConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scMode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDataDebugCallback.ts" />
@@ -309,22 +313,22 @@
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\Guid.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\_BaseFrameProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Agents\MiscAgent\MiscAgent.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\UiManager\UiModulesManager.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\UiManager\UiModulesManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeRestoreDesktop\RecipeRestoreDesktop.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\RecipeBasics.ts" />
-    <TypeScriptCompile Include="src\PopUp\scripts\Managers\EventManager.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\UiEventManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DesktopProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\IterationDrone\IterationDrone.ts" />
     <TypeScriptCompile Include="src\Content\scripts\zContentEntryPoint.ts" />
     <None Include="Readme.md" />
-    <None Include="src\PopUp\css\_partials\Grid.scss" />
-    <None Include="src\PopUp\css\_partials\FieldSetLevel.scss" />
-    <None Include="src\PopUp\css\_partials\menu.buttons.scss" />
-    <None Include="src\PopUp\css\_partials\overlay.scss" />
-    <None Include="src\PopUp\css\_partials\PageLevel.scss" />
-    <None Include="src\PopUp\css\_partials\SnapShotSelect.scss" />
-    <None Include="src\PopUp\css\vars.scss" />
+    <None Include="src\PopUpUi\css\_partials\Grid.scss" />
+    <None Include="src\PopUpUi\css\_partials\FieldSetLevel.scss" />
+    <None Include="src\PopUpUi\css\_partials\menu.buttons.scss" />
+    <None Include="src\PopUpUi\css\_partials\overlay.scss" />
+    <None Include="src\PopUpUi\css\_partials\PageLevel.scss" />
+    <None Include="src\PopUpUi\css\_partials\SnapShotSelect.scss" />
+    <None Include="src\PopUpUi\css\vars.scss" />
     <None Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.js.map">
       <DependentUpon>IAccordianManager.js</DependentUpon>
     </None>
@@ -336,12 +340,11 @@
     </None>
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
-    <None Include="src\PopUp\css\popup.scss" />
+    <None Include="src\PopUpUi\css\popup.scss" />
     <TypeScriptCompile Include="src\tests\SitecoreUiManager.Fake.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dist\HindSite\AutoBuild\final\" />
-    <Folder Include="Dist\HindSite\content_scripts\" />
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
   </ItemGroup>
@@ -361,7 +364,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IdataOneSetting.ts" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\PopUp\scripts\UiModules\SettingBasedModules\AccordianModule.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\SettingBasedModules\AccordianModule.ts" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultScWindowState.ts" />
