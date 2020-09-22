@@ -4,7 +4,7 @@ import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerA
 import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { IMenuCommandDefinitionBucket } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { IUiToCommandMappingBucket } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { UiHydrationData } from '../../../Shared/scripts/Interfaces/UiHydrationData';
 import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
 import { UiVisibilityTestAgent } from './UiManager/UiVisibilityTestAgent';
@@ -13,9 +13,9 @@ import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 export class UiCommandsManager extends LoggableBase {
   private UiModules: IUiModule[] = [];
   private UiVisibilityTestAgent: IUiVisibilityTestAgent;
-  private MenuCommandParamsBucket: IMenuCommandDefinitionBucket;
+  private MenuCommandParamsBucket: IUiToCommandMappingBucket;
 
-  constructor(logger: ILoggerAgent, menuCommandParamsBucket: IMenuCommandDefinitionBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
+  constructor(logger: ILoggerAgent, menuCommandParamsBucket: IUiToCommandMappingBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
     super(logger);
 
     this.Logger.InstantiateStart(UiCommandsManager.name);

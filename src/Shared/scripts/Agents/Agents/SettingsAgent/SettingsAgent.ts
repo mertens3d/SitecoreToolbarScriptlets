@@ -1,6 +1,6 @@
-﻿import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { UiModuleManagerPassThroughEvent_Observer } from "../../../../../PopUp/scripts/Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Observer";
-import { UiModulesManager } from "../../../../../PopUp/scripts/Managers/UiManager/UiModulesManager";
+﻿import { PopConst } from "../../../../../PopUpUi/scripts/Classes/PopConst";
+import { UiModuleManagerPassThroughEvent_Observer } from "../../../../../PopUpUi/scripts/Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Observer";
+import { UiModulesManager } from "../../../../../PopUpUi/scripts/Managers/UiManager/UiModulesManager";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";

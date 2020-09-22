@@ -10,8 +10,8 @@ export class ToastAgent implements IToastAgent {
     this.Logger = loggerAgent;
   }
 
-  PopUpToastNotification(targetDoc: IDataOneDoc = null, Message: string) {
-    this.Logger.FuncStart(this.PopUpToastNotification.name);
+  RaiseToastNotification(targetDoc: IDataOneDoc = null, Message: string) {
+    this.Logger.FuncStart(this.RaiseToastNotification.name);
 
     this.Logger.LogVal("Message", Message);
 
@@ -41,7 +41,7 @@ export class ToastAgent implements IToastAgent {
       bodyTag.appendChild(toastContainer);
     }
 
-    this.Logger.FuncEnd(this.PopUpToastNotification.name);
+    this.Logger.FuncEnd(this.RaiseToastNotification.name);
   }
 
   CreateSliderDiv(targetDoc: IDataOneDoc, Message: string): HTMLElement {

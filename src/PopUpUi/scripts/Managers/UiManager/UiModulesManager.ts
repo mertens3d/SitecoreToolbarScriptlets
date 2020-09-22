@@ -1,10 +1,13 @@
 ﻿import { LoggableBase } from '../../../../Content/scripts/Managers/LoggableBase';
 import { IDataContentReplyReceivedEvent_Payload } from '../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload';
+import { HindSiteSettingWrapper } from '../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper';
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
+import { MsgFlag } from '../../../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { MenuCommandKey } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
+import { SettingFlavor } from '../../../../Shared/scripts/Enums/SettingFlavor';
 import { IHindSiteSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
@@ -14,15 +17,20 @@ import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Ag
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots';
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
+import { IStateOfPopUpUi } from '../../../../Shared/scripts/Interfaces/IMsgPayload';
 import { UiHydrationData } from '../../../../Shared/scripts/Interfaces/UiHydrationData';
 import { CommandManager } from '../../Classes/CommandManager';
 import { PopConst } from '../../Classes/PopConst';
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
 import { SelectSnapUiMutationEvent_ObserverWithCallback } from '../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_ObserverWithCallback';
+import { UiModuleManagerPassThroughEvent_Subject } from '../../Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Subject';
+import { IUiSettingBasedModuleMutationEven_Payload } from '../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload';
+import { UiSettingBasedModuleMutationEvent_Observer } from '../../Events/UiSettingBasedModuleMutationEvent/UiSettingBasedModuleMutationEvent_Observer';
 import { ButtonBasedModules } from '../../UiModules/ButtonModules/ButtonBasedModules';
 import { TypCommandButtonModule } from '../../UiModules/ButtonModules/TypCommandButtonModule';
 import { SelectSnapshotModule } from '../../UiModules/SelectSnapshotModule/SelectSnapshotModule';
 import { SettingsBasedModules } from '../../UiModules/SettingBasedModules/SettingsBasedModules';
+import { _SettingsBasedModulesBase } from '../../UiModules/SettingBasedModules/_SettingsBasedModulesBase';
 import { FeedbackModuleBrowserState } from '../../UiModules/UiFeedbackModules/FeedbackModuleBrowserState';
 import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/FeedbackModuleContentState';
 import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages';
@@ -30,16 +38,6 @@ import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/Feed
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
 import { BrowserTabAgent } from '../BrowserTabAgent';
 import { UiCommandsManager } from '../UiCommandsManager';
-import { UiVisibilityTestAgent } from './UiVisibilityTestAgent';
-import { UiModuleManagerPassThroughEvent_Subject } from '../../Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Subject';
-import { IUiModuleManagerPassThroughEvent_Payload } from '../../Events/UiModuleManagerPassThroughEvent/IUiModuleManagerPassThroughEvent_Payload';
-import { IUiSettingBasedModuleMutationEven_Payload } from '../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload';
-import { _SettingsBasedModulesBase } from '../../UiModules/SettingBasedModules/_SettingsBasedModulesBase';
-import { UiSettingBasedModuleMutationEvent_Observer } from '../../Events/UiSettingBasedModuleMutationEvent/UiSettingBasedModuleMutationEvent_Observer';
-import { MsgFlag } from '../../../../Shared/scripts/Enums/1xxx-MessageFlag';
-import { IStateOfPopUp } from '../../../../Shared/scripts/Interfaces/IMsgPayload';
-import { HindSiteSettingWrapper } from '../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper';
-import { SettingFlavor } from '../../../../Shared/scripts/Enums/SettingFlavor';
 
 export class UiModulesManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];
@@ -119,7 +117,7 @@ export class UiModulesManager extends LoggableBase {
     this.Logger.FuncEnd(this.InitUiMan.name, UiModulesManager.name);
   }
 
-  public GetStateOfPopUp(msgFlag: MsgFlag): IStateOfPopUp {
+  public GetStateOfPopUp(msgFlag: MsgFlag): IStateOfPopUpUi {
     this.Logger.FuncStart(this.GetStateOfPopUp.name);
 
     let wrappedSettings: HindSiteSettingWrapper[] = this.SettingsAgent.GetSettingsByFlavor([SettingFlavor.ContentAndPopUpStoredInPopUp, SettingFlavor.ContentOnly]);
@@ -127,7 +125,7 @@ export class UiModulesManager extends LoggableBase {
     let settingsToSend: IHindSiteSetting[] = [];
     wrappedSettings.forEach((wrappedSetting: HindSiteSettingWrapper) => settingsToSend.push(wrappedSetting.HindSiteSetting));
 
-    var stateOfPopUp: IStateOfPopUp = {
+    var stateOfPopUpUI: IStateOfPopUpUi = {
       MsgFlag: msgFlag,
       //WindowType: this.BrowserTabAgent.GetWindowType(),
       SelectSnapshotId: this.ModuleSelectSnapShots.GetSelectSnapshotId(),
@@ -138,7 +136,7 @@ export class UiModulesManager extends LoggableBase {
       ToastMessage: ''
     }
 
-    return stateOfPopUp;
+    return stateOfPopUpUI;
   }
 
   WireEvents() {

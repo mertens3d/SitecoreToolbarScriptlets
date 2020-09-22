@@ -40,7 +40,7 @@
   "browser_action": {
     "default_icon": "icons/glasses.png",
     "default_title": "Hind•Site",
-    "default_popup": "/AutoBuild/final/PopUp.min.html"
+    "default_popup": "/AutoBuild/final/PopUpUi.min.html"
   },
   "commands": {
     "_execute_browser_action": {

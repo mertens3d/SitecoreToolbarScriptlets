@@ -15,7 +15,7 @@ export class RecipeRemoveItemFromStorage extends __RecipeBase implements IComman
     try {
       this.AtticAgent.RemoveSnapshotFromStorageById(this.TargetSnapShotId);
 
-      this.ToastAgent.PopUpToastNotification(this.ScWinMan.GetTopLevelDoc(), "Success");
+      this.ToastAgent.RaiseToastNotification(this.ScWinMan.GetTopLevelDoc(), "Success");
     } catch (err) {
 
       this.Logger.ErrorAndThrow(this.Execute.name, err);

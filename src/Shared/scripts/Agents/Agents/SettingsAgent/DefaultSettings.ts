@@ -2,7 +2,7 @@
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
-import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
+import { PopConst } from "../../../../../PopUpUi/scripts/Classes/PopConst";
 import { SharedConst } from "../../../SharedConst";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { UiEnableState, UiPresence } from "../../../Enums/Enabled";

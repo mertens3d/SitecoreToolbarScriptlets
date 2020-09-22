@@ -20,6 +20,7 @@ module.exports = {
     'moduleResolution': 'node',
     "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"]
   },
+
   BuildTypeScriptAll: function (cb, vars) {
     return gulp.src([vars.SharedJs.Ts.SourceFilter()])
       .pipe(sort())

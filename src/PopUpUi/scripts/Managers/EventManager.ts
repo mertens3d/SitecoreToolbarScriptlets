@@ -3,31 +3,26 @@ import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
-import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
-import { IStateOfPopUp } from '../../../Shared/scripts/Interfaces/IMsgPayload';
 import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
+import { HandlersForInternal } from '../Classes/HandlersExternal';
 import { ISingleClickEvent_Payload } from '../Events/SingleClickEvent/ISingleClickEvent_Payload';
 import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
-import { SelectSnapshotModule } from '../UiModules/SelectSnapshotModule/SelectSnapshotModule';
 import { UiModulesManager } from './UiManager/UiModulesManager';
-import { HandlersForInternal } from '../Classes/HandlersExternal';
 
 export class EventManager extends LoggableBase {
   Handlers: HandlersForInternal
 
   PopUpMesssageBrokerAgent: PopUpMessagesBrokerAgent; // for .bind(this)
-  SelectSnapShotModule: SelectSnapshotModule;
   UiModulesMan: UiModulesManager;
   CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
 
-  constructor(logger: ILoggerAgent, handlers: HandlersForInternal, popupMessageBrokerAgent: PopUpMessagesBrokerAgent, moduleSelectSnapShot: SelectSnapshotModule, uimodulesMan: UiModulesManager) {
+  constructor(logger: ILoggerAgent, handlers: HandlersForInternal, popupMessageBrokerAgent: PopUpMessagesBrokerAgent,  uimodulesMan: UiModulesManager) {
     super(logger);
     this.Handlers = handlers;
     this.PopUpMesssageBrokerAgent = popupMessageBrokerAgent;
-    this.SelectSnapShotModule = moduleSelectSnapShot;
     this.UiModulesMan = uimodulesMan;
 
-    if (StaticHelpers.IsNullOrUndefined([handlers, popupMessageBrokerAgent, moduleSelectSnapShot, uimodulesMan])) {
+    if (StaticHelpers.IsNullOrUndefined([handlers, popupMessageBrokerAgent,uimodulesMan])) {
       throw (UiModulesManager.name + ' null at constructor');
     }
 

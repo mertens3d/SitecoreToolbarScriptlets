@@ -1,4 +1,4 @@
-﻿import { UiModulesManager } from "../../../../PopUp/scripts/Managers/UiManager/UiModulesManager";
+﻿import { UiModulesManager } from "../../../../PopUpUi/scripts/Managers/UiManager/UiModulesManager";
 import { HindSiteSettingsBucket } from "../../Agents/Agents/SettingsAgent/HindSiteSettingsBucket";
 import { SettingKey } from "../../Enums/3xxx-SettingKey";
 import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";

@@ -1,7 +1,7 @@
 ﻿class InjectableTs {
   constructor(name, autoBuildRootFolder) {
     this.Name = name;
-    this.TranspiledFolder = autoBuildRootFolder +  '/TsTranspiled';
+    this.TranspiledFolder = autoBuildRootFolder + '/TsTranspiled';
     this.TranspiledEntryPointFile = '';
   }
 

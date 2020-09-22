@@ -4,14 +4,14 @@ import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { IMenuCommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
+import { IUiToCommandMappingBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
 
 export class CommandManager extends LoggableBase {
-  public MenuCommandParamsBucket: IMenuCommandDefinitionBucket;
+  public MenuCommandParamsBucket: IUiToCommandMappingBucket;
   private PopUpMsgBroker: PopUpMessagesBrokerAgent;
 
-  constructor(logger: ILoggerAgent, popUpMessageBroker: PopUpMessagesBrokerAgent, popupCommands: IMenuCommandDefinitionBucket) {
+  constructor(logger: ILoggerAgent, popUpMessageBroker: PopUpMessagesBrokerAgent, popupCommands: IUiToCommandMappingBucket) {
     super(logger);
 
     this.MenuCommandParamsBucket = popupCommands;
@@ -21,6 +21,10 @@ export class CommandManager extends LoggableBase {
     }
    
   }
+  Init() {
+  }
+
+
 
   GetMenuCommandParamsByKey(needleCommand: MenuCommandKey): IMenuCommandDefinition {
     let toReturn: IMenuCommandDefinition = null;
@@ -33,10 +37,6 @@ export class CommandManager extends LoggableBase {
     }
     return toReturn;
   }
-
-  Init() {
-  }
-
 
   async TriggerPingEventAsync(): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);

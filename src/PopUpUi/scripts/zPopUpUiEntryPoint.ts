@@ -20,12 +20,12 @@ import { SelectSnapshotModule } from "./UiModules/SelectSnapshotModule/SelectSna
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
 import { HandlersForInternal } from "./Classes/HandlersExternal";
 import { PopUpCommands } from "./Classes/PopUpCommands";
-import { IMenuCommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { IUiToCommandMappingBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { UiCommandsManager } from "./Managers/UiCommandsManager";
 import { UiVisibilityTestAgent } from "./Managers/UiManager/UiVisibilityTestAgent";
 import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 
-class PopUpEntry {
+class PopUpUiEntry {
   RepoAgent: RepositoryAgent;
   Logger: LoggerAgent;
   SettingsAgent: ISettingsAgent;
@@ -38,7 +38,7 @@ class PopUpEntry {
   BrowserTabAgent: BrowserTabAgent;
   PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
   ModuleSelectSnapShots: SelectSnapshotModule;
-  PopUpCommands: IMenuCommandDefinitionBucket;
+  PopUpCommands: IUiToCommandMappingBucket;
   UiCommandsMan: UiCommandsManager;
   UiVisibilityTestAgent: IUiVisibilityTestAgent;
 
@@ -115,7 +115,7 @@ class PopUpEntry {
     this.UiCommandsMan = new UiCommandsManager(this.Logger, this.commandMan.MenuCommandParamsBucket, this.UiVisibilityTestAgent);
 
     this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots, this.UiCommandsMan, this.UiVisibilityTestAgent); //after tabman, after HelperAgent
-    this.EventMan = new EventManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots, this.UiModulesMan); // after uiman
+    this.EventMan = new EventManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent,  this.UiModulesMan); // after uiman
     this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger, this.UiModulesMan);
   }
 
@@ -153,6 +153,6 @@ class PopUpEntry {
   }
 }
 
-let popUpEntry: PopUpEntry = new PopUpEntry();
+let popUpEntry: PopUpUiEntry = new PopUpUiEntry();
 
 popUpEntry.main();

@@ -3,7 +3,7 @@ import { ScWindowType } from "../Enums/scWindowType";
 import { GuidData } from "../Helpers/GuidData";
 import { IHindSiteSetting } from "./Agents/IGenericSetting";
 
-export interface IStateOfPopUp {
+export interface IStateOfPopUpUi {
   IsValid: boolean;
   CurrentContentPrefs: IHindSiteSetting[];
   MsgFlag: MsgFlag;

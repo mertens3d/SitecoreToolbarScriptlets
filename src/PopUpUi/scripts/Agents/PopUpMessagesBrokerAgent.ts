@@ -6,13 +6,13 @@ import { ScWindowStateValidator } from "../../../Shared/scripts/Classes/ScWindow
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IMsgPayload";
+import { IStateOfPopUpUi } from "../../../Shared/scripts/Interfaces/IMsgPayload";
 import { UiModulesManager } from "../Managers/UiManager/UiModulesManager";
 
 export class PopUpMessagesBrokerAgent extends LoggableBase {
   LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
   ContentReplyReceivedEvent_Subject: ContentReplyReceivedEvent_Subject;
-    ModulesMan: UiModulesManager;
+  ModulesMan: UiModulesManager;
 
   constructor(loggerAgent: ILoggerAgent, modulesMan: UiModulesManager) {
     super(loggerAgent);
@@ -29,7 +29,7 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
     try {
       this.__cleardebugText();
 
-      let stateOPopUp: IStateOfPopUp = this.ModulesMan.GetStateOfPopUp(msgFlag);
+      let stateOPopUp: IStateOfPopUpUi = this.ModulesMan.GetStateOfPopUp(msgFlag);
 
       //todo - put back?  this.UiMan.ClearCancelFlag();
 
@@ -77,10 +77,9 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
     });
   }
 
-  private SendMessageToSingleTab(stateOfPopUp: IStateOfPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
+  private SendMessageToSingleTab(stateOfPopUpUI: IStateOfPopUpUi): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
-
+      this.Logger.FuncStart(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(stateOfPopUpUI.MsgFlag));
 
       let targetTab: browser.tabs.Tab;
 
@@ -90,7 +89,7 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
 
       this.Logger.LogVal('Tab Id', targetTab.id);
 
-      await browser.tabs.sendMessage(targetTab.id, stateOfPopUp)
+      await browser.tabs.sendMessage(targetTab.id, stateOfPopUpUI)
         .then((response: any) => this.ReceiveResponseHandler(response))
         .then((scWindowState: IDataContentReplyReceivedEvent_Payload) => {
           let validator = new ScWindowStateValidator(this.Logger);
@@ -101,19 +100,19 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
         })
         .catch((ex) => { reject(ex) });
 
-      this.Logger.FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
+      this.Logger.FuncEnd(this.SendMessageToSingleTab.name, StaticHelpers.MsgFlagAsString(stateOfPopUpUI.MsgFlag));
     });
   }
 
-  async SendMessageToContentAsync(stateOfPopUp: IStateOfPopUp): Promise<IDataContentReplyReceivedEvent_Payload> {
+  async SendMessageToContentAsync(stateOfPopUpUI: IStateOfPopUpUi): Promise<IDataContentReplyReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
+      this.Logger.FuncStart(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(stateOfPopUpUI.MsgFlag));
 
-      this.SendMessageToSingleTab(stateOfPopUp)
+      this.SendMessageToSingleTab(stateOfPopUpUI)
         .then((result: IDataContentReplyReceivedEvent_Payload) => resolve(result))
         .catch((err) => reject(err));
 
-      this.Logger.FuncEnd(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
+      this.Logger.FuncEnd(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(stateOfPopUpUI.MsgFlag));
     });
   }
 }

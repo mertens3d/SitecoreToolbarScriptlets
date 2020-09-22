@@ -13,7 +13,7 @@ import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISe
 import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { ICommandHandlerDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { ICommandRecipes } from "../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { IStateOfPopUp } from "../../../../Shared/scripts/Interfaces/IMsgPayload";
+import { IStateOfPopUpUi } from "../../../../Shared/scripts/Interfaces/IMsgPayload";
 import { RecipeChangeNickName } from "../../ContentApi/Recipes/RecipeChangeNickName/RecipeChangeNickName";
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
@@ -51,45 +51,45 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     this.Logger.FuncEnd(this.BeginListening.name);
   }
 
-  ValidateRequest(stateOfPopUp: IStateOfPopUp): IStateOfPopUp {
+  ValidateRequest(stateOfPopUpUIUi: IStateOfPopUpUi): IStateOfPopUpUi {
     this.Logger.FuncStart(this.ValidateRequest.name);
     var isValid: boolean = true;
 
-    if (stateOfPopUp) {
-      if (stateOfPopUp.CurrentContentPrefs) {
+    if (stateOfPopUpUIUi) {
+      if (stateOfPopUpUIUi.CurrentContentPrefs) {
       } else {
         this.Logger.ErrorAndThrow(this.ValidateRequest.name, 'No CurrentContentPrefs')
-        stateOfPopUp.IsValid = false;
+        stateOfPopUpUIUi.IsValid = false;
         isValid = false;
       }
     } else {
-      this.Logger.ErrorAndThrow(this.ValidateRequest.name, 'no reqMsgFromPopup');
+      this.Logger.ErrorAndThrow(this.ValidateRequest.name, 'no stateOfPopUpUIUi');
     }
 
-    stateOfPopUp.IsValid = isValid;
+    stateOfPopUpUIUi.IsValid = isValid;
     this.Logger.FuncEnd(this.ValidateRequest.name, isValid.toString());
-    return stateOfPopUp;
+    return stateOfPopUpUIUi;
   }
 
   private NotifyFail(failrReason: string) {
     this.Logger.ErrorAndContinue(this.NotifyFail.name, 'Fail ' + failrReason);
   }
 
-  async ContentReceiveRequest(stateOfPopUp: IStateOfPopUp): Promise<MsgFromContent> {
+  async ContentReceiveRequest(stateOfPopUpUIUi: IStateOfPopUpUi): Promise<MsgFromContent> {
     return new Promise(async (resolve, reject) => {
       this.Logger.Log('');
       this.Logger.Log('');
       this.Logger.Log('');
-      this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
+      this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(stateOfPopUpUIUi.MsgFlag));
 
       this.Logger.LogVal('ce butt', this.SettingsAgent.GetByKey(SettingKey.AutoLogin).ValueAsBool());
 
-      if (stateOfPopUp) {
-        stateOfPopUp = this.ValidateRequest(stateOfPopUp);
-        if (stateOfPopUp.IsValid) {
-          this.SettingsAgent.UpdateSettingsFromPopUpMsg(stateOfPopUp.CurrentContentPrefs)
+      if (stateOfPopUpUIUi) {
+        stateOfPopUpUIUi = this.ValidateRequest(stateOfPopUpUIUi);
+        if (stateOfPopUpUIUi.IsValid) {
+          this.SettingsAgent.UpdateSettingsFromPopUpMsg(stateOfPopUpUIUi.CurrentContentPrefs)
 
-          await this.ReqMsgRouter(stateOfPopUp)
+          await this.ReqMsgRouter(stateOfPopUpUIUi)
             .then((contentResponse: MsgFromContent) => {
               this.Logger.Log('responding: ' + StaticHelpers.MsgFlagAsString(contentResponse.MsgFlag))
               resolve(contentResponse);
@@ -107,7 +107,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
         reject('no request')
       }
 
-      this.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
+      this.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(stateOfPopUpUIUi.MsgFlag));
       this.Logger.Log('');
       this.Logger.Log('');
       this.Logger.Log('');
@@ -118,11 +118,11 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     })
   }
 
-  private CalculateRecipeToExec(stateOfPopUp: IStateOfPopUp): ICommandRecipes {
+  private CalculateRecipeToExec(stateOfPopUpUI: IStateOfPopUpUi): ICommandRecipes {
     let RecipeToExecute: ICommandRecipes;
-    switch (stateOfPopUp.MsgFlag) {
+    switch (stateOfPopUpUI.MsgFlag) {
       case MsgFlag.ReqUpdateNickName:
-        RecipeToExecute = new RecipeChangeNickName(this.Logger, stateOfPopUp.SnapShotNewNickname, stateOfPopUp.SelectSnapshotId, this.AtticAgent)
+        RecipeToExecute = new RecipeChangeNickName(this.Logger, stateOfPopUpUI.SnapShotNewNickname, stateOfPopUpUI.SelectSnapshotId, this.AtticAgent)
         break;
 
       default:
@@ -130,10 +130,10 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     }
     return RecipeToExecute;
   }
-  private CalculateCommandToExec(stateOfPopUp: IStateOfPopUp): Function {
+  private CalculateCommandToExec(stateOfPopUpUIUi: IStateOfPopUpUi): Function {
     let commandToExecute: Function = null;
 
-    switch (stateOfPopUp.MsgFlag) {
+    switch (stateOfPopUpUIUi.MsgFlag) {
       case MsgFlag.ReqAddCETab:
         commandToExecute = this.ApiManager.AddCETab;
         break;
@@ -175,36 +175,36 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
         break;
 
       default:
-        this.Logger.Log('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(stateOfPopUp.MsgFlag));
+        this.Logger.Log('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(stateOfPopUpUIUi.MsgFlag));
         break;
     }
 
     return commandToExecute;
   }
 
-  async ReqMsgRouter(stateOfPopup: IStateOfPopUp): Promise<MsgFromContent> {
+  async ReqMsgRouter(stateOfPopupUi: IStateOfPopUpUi): Promise<MsgFromContent> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(stateOfPopup.MsgFlag));
+      this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(stateOfPopupUi.MsgFlag));
 
-      if (stateOfPopup.SelectSnapshotId) {
-        stateOfPopup.SelectSnapshotId = new GuidData(stateOfPopup.SelectSnapshotId.Raw);
+      if (stateOfPopupUi.SelectSnapshotId) {
+        stateOfPopupUi.SelectSnapshotId = new GuidData(stateOfPopupUi.SelectSnapshotId.Raw);
       }
 
-      let commandToExecute: Function = this.CalculateCommandToExec(stateOfPopup);
+      let commandToExecute: Function = this.CalculateCommandToExec(stateOfPopupUi);
       if (commandToExecute) {
-        await this.ExecuteCommand(commandToExecute, stateOfPopup)
+        await this.ExecuteCommand(commandToExecute, stateOfPopupUi)
           .then((response: MsgFromContent) => resolve(response))
           .catch((err) => reject(err));
       } else {
-        let recipeToExecute: ICommandRecipes = this.CalculateRecipeToExec(stateOfPopup);
+        let recipeToExecute: ICommandRecipes = this.CalculateRecipeToExec(stateOfPopupUi);
 
         if (recipeToExecute) {
           await recipeToExecute.Execute()
-            .then(() => this.ConstructResponse(stateOfPopup.MsgFlag))
+            .then(() => this.ConstructResponse(stateOfPopupUi.MsgFlag))
             .then((response: MsgFromContent) => resolve(response))
             .catch((err) => reject(err));
         } else {
-          reject('Unhandled MsgFlag: ' + StaticHelpers.MsgFlagAsString(stateOfPopup.MsgFlag));
+          reject('Unhandled MsgFlag: ' + StaticHelpers.MsgFlagAsString(stateOfPopupUi.MsgFlag));
         }
       }
 
@@ -228,20 +228,20 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     });
   }
 
-  ExecuteCommand(commandToExecute: Function, stateOfPopUp: IStateOfPopUp): Promise<MsgFromContent> {
+  ExecuteCommand(commandToExecute: Function, stateOfPopUpUIUi: IStateOfPopUpUi): Promise<MsgFromContent> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteCommand.name);
       if (commandToExecute) {
         let commandData: ICommandHandlerDataForContent = new CommandHandlerDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent)
 
-        commandData.TargetSnapShotId = stateOfPopUp.SelectSnapshotId;
+        commandData.TargetSnapShotId = stateOfPopUpUIUi.SelectSnapshotId;
         commandData.ContentMessageBroker = this;
-        //commandData.TargetSnapShotFlavor = stateOfPopUp.Payload.SnapShotSettings.Flavor;
+        //commandData.TargetSnapShotFlavor = stateOfPopUpUI.Payload.SnapShotSettings.Flavor;
         commandData.TargetCeProxy = null; //todo
         commandData.TargetDoc = null; // todo
 
         await commandToExecute(commandData)
-          .then(() => this.ConstructResponse(stateOfPopUp.MsgFlag))
+          .then(() => this.ConstructResponse(stateOfPopUpUIUi.MsgFlag))
           .then((response: MsgFromContent) => resolve(response))
           .catch((err) => reject(err));
       }

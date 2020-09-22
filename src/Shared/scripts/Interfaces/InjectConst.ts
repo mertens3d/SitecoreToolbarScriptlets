@@ -166,8 +166,8 @@ export class ContentConst {
       Desktop: {
         StartBarApplicationPrefix: 'startbar_application_',
       },
-      PopUp: 'PopUp',
-      PopUpStyles: 'PopUpStyles',
+      PopUpUi: 'PopUpUi',
+      PopUpUiStyles: 'PopUpUiStyles',
       TreeMenuExpandedPng: 'treemenu_expanded.png',
       TreeMenuCollapsedPng: 'treemenu_collapsed.png',
       scDefaultAdminPassword: 'b',

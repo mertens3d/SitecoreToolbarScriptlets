@@ -35,12 +35,13 @@ gulp.task('PutToFinal', (cb) => putTasks.PutToFinal(cb, varsObj));
 gulp.task('CopyFromFinalToAddon', (cb) => putTasks.CopyFromFinalToAddon(cb, varsObj));
 
 gulp.task('WebpackContent', (cb) => otherTasks.WebPackOne(cb, varsObj.ContentJs));
-gulp.task('WebpackPopUp', (cb) => otherTasks.WebPackOne(cb, varsObj.PopUpJs));
+gulp.task('WebpackPopUpUi', (cb) => otherTasks.WebPackOne(cb, varsObj.PopUpUiJs));
+gulp.task('WebpackPopUpController', (cb) => otherTasks.WebPackOne(cb, varsObj.PopUpControllerJs));
 
 gulp.task('CleanBuildStamp', (cb) => tsTasks.CleanBuildStamp(cb, varsObj));
 gulp.task('PopulateBuildTimeStamp', (cb) => tsTasks.BuildBuildNumber(cb, varsObj));
 
-gulp.task('WebpackAll', gulp.series(['WebpackContent', 'WebpackPopUp']));
+gulp.task('WebpackAll', gulp.series(['WebpackContent', 'WebpackPopUpUi', 'WebpackPopUpController']));
 gulp.task('TimeStampAll', gulp.series(['CleanBuildStamp', 'PopulateBuildTimeStamp']));
 
 gulp.task('builders', gulp.series(['BuildPopUpStyles', 'BuildContentStyles', 'TimeStampAll', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml', 'PutToFinal']), function (resolve) {

@@ -102,8 +102,8 @@ export interface IContentConst {
     Desktop: {
       StartBarApplicationPrefix: string
     },
-    PopUp: string,
-    PopUpStyles: string,
+    PopUpUi: string,
+    PopUpUiStyles: string,
     TreeMenuExpandedPng: string,
     TreeMenuCollapsedPng: string,
     scDefaultAdminPassword: string,

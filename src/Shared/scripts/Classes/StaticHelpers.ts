@@ -55,9 +55,9 @@ export class StaticHelpers {
     try {
       if (testSubject instanceof Array) {
         (<any[]>testSubject).forEach((testSubject: any) => toReturn = toReturn || this.IsNullOrUndefined(testSubject));
+      } else {
+        toReturn = (typeof testSubject === 'undefined' || testSubject === null);
       }
-
-      toReturn = (typeof testSubject === 'undefined' || testSubject === null);
     } catch (err) {
       console.log(err)
     }

@@ -38,7 +38,7 @@ export class HandlersForInternal extends LoggableBase {
   async HandlerForSnapShotRestoreNewTab(data: ICommandHandlerDataForPopUp) {
     data.EventMan.Handlers.Logger.FuncStart(data.EventMan.Handlers.HandlerForSnapShotRestoreNewTab.name);
 
-    data.EventMan.Handlers.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.EventMan.SelectSnapShotModule.GetSelectSnapshotId().Raw);
+    //todo - put back in -- data.EventMan.Handlers.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.EventMan.SelectSnapShotModule.GetSelectSnapshotId().Raw);
 
     let newUrl: IAbsoluteUrl = data.EventMan.Handlers.BrowserTabAgent.GetFullUrl();
 

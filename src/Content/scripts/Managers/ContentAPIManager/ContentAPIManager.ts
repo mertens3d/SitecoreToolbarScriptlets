@@ -74,7 +74,7 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     return new Promise(async (resolve, reject) => {
       await new RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.DesktopProxy.DesktopStartBarAgent).Execute()
         .then(() => {
-          this.ToastAgent.PopUpToastNotification(commandData.ScWinMan.GetTopLevelDoc(), "Success");
+          this.ToastAgent.RaiseToastNotification(commandData.ScWinMan.GetTopLevelDoc(), "Success");
           resolve();
         })
 
