@@ -19,6 +19,11 @@ import { UiModulesManager } from "./Managers/UiManager/UiModulesManager";
 import { SelectSnapshotModule } from "./UiModules/SelectSnapshotModule/SelectSnapshotModule";
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
 import { HandlersForInternal } from "./Classes/HandlersExternal";
+import { PopUpCommands } from "./Classes/PopUpCommands";
+import { IMenuCommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { UiCommandsManager } from "./Managers/UiCommandsManager";
+import { UiVisibilityTestAgent } from "./Managers/UiManager/UiVisibilityTestAgent";
+import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 
 class PopUpEntry {
   RepoAgent: RepositoryAgent;
@@ -33,6 +38,9 @@ class PopUpEntry {
   BrowserTabAgent: BrowserTabAgent;
   PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
   ModuleSelectSnapShots: SelectSnapshotModule;
+  PopUpCommands: IMenuCommandDefinitionBucket;
+  UiCommandsMan: UiCommandsManager;
+  UiVisibilityTestAgent: IUiVisibilityTestAgent;
 
   async main() {
     try {
@@ -50,6 +58,7 @@ class PopUpEntry {
       .then(() => {
         this.UiModulesMan.InitUiMan();
         this.EventMan.InitEventManager();
+        this.commandMan.Init();
         this.MakeTwoWayIntroductions();
         this.WireEvents();
         this.Start();
@@ -92,16 +101,22 @@ class PopUpEntry {
 
     this.scUrlAgent = new ScUrlAgent(this.Logger);
     this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.scUrlAgent, this.SettingsAgent);
-    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger);
     //this.messageMan = new PopUpMessageManager(this.PopUpMessageAgent, this.Logger);
 
     this.ModuleSelectSnapShots = new SelectSnapshotModule(this.Logger, PopConst.Const.Selector.HS.SelStateSnapShot);
 
-    this.handlers = new HandlersForInternal(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.ModuleSelectSnapShots);
-    this.commandMan = new CommandManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent);
+    this.handlers = new HandlersForInternal(this.Logger, this.BrowserTabAgent);
 
-    this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots); //after tabman, after HelperAgent
+    this.PopUpCommands = new PopUpCommands(this.Logger).BuildMenuCommandParamsBucket();
+
+    this.commandMan = new CommandManager(this.Logger, this.PopUpMessageBrokerAgent, this.PopUpCommands);
+
+    this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
+    this.UiCommandsMan = new UiCommandsManager(this.Logger, this.commandMan.MenuCommandParamsBucket, this.UiVisibilityTestAgent);
+
+    this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.commandMan, this.ModuleSelectSnapShots, this.UiCommandsMan, this.UiVisibilityTestAgent); //after tabman, after HelperAgent
     this.EventMan = new EventManager(this.Logger, this.handlers, this.PopUpMessageBrokerAgent, this.ModuleSelectSnapShots, this.UiModulesMan); // after uiman
+    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger, this.UiModulesMan);
   }
 
   private InitLogger() {

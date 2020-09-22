@@ -34,17 +34,20 @@ export class HindSiteSettingCheckBoxModule extends _SettingsBasedModulesBase imp
   }
 
   private OnCheckboxChanged(evt: Event) {
+
+    let newValue: boolean = (<HTMLInputElement>evt.target).checked;
+
     let iUiElementChangeEvent_Payload: IUiSettingBasedModuleMutationEven_Payload = {
       ModuleKey: this.ModuleKey,
       HindSiteSetting: this.SettingJacket.HindSiteSetting,
       CheckBoxModule: {
-        Checked: (<HTMLInputElement>evt.target).checked,
+        Checked: newValue,
         SettingKey: this.SettingJacket.HindSiteSetting.SettingKey
       },
       NumberModule: null,
       AccordianModule: null,
     }
-    this.SettingJacket.SaveChangeBoolean((<HTMLInputElement>evt.target).checked);
+    this.SettingJacket.HindSiteSetting.ValueAsObj = newValue;
     this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
   }
 

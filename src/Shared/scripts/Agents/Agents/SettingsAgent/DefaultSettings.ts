@@ -15,11 +15,9 @@ import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
 import { HindSiteSettingForNumbers } from "./HindSiteSettingForNumbers";
 
 export class DefaultSettings extends LoggableBase {
-  private SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent) {
     super(logger);
-    this.SettingsAgent = settingsAgent;
   }
 
   GetDefaultSettingsWrapper(): HindSiteSettingWrapper[] {
@@ -272,7 +270,7 @@ export class DefaultSettings extends LoggableBase {
     let toReturn: HindSiteSettingWrapper[] = [];
 
     rawData.forEach((settingValue: HindSiteSetting) => {
-      toReturn.push(new HindSiteSettingWrapper(this.Logger, this.SettingsAgent, settingValue));
+      toReturn.push(new HindSiteSettingWrapper(this.Logger,  settingValue));
     })
 
     return toReturn;

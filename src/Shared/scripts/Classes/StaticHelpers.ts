@@ -51,13 +51,13 @@ export class StaticHelpers {
   static IsNullOrUndefined(testSubject: any): boolean
   static IsNullOrUndefined(testSubject: any[]): boolean
   static IsNullOrUndefined(testSubject: any | any[]): boolean {
-    let toReturn: boolean = true;
+    let toReturn: boolean = false;
     try {
       if (testSubject instanceof Array) {
-        (<any[]>testSubject).forEach((testSubject: any) => toReturn = toReturn && this.IsNullOrUndefined(testSubject));
+        (<any[]>testSubject).forEach((testSubject: any) => toReturn = toReturn || this.IsNullOrUndefined(testSubject));
       }
 
-      return (typeof testSubject === 'undefined' || testSubject === null);
+      toReturn = (typeof testSubject === 'undefined' || testSubject === null);
     } catch (err) {
       console.log(err)
     }

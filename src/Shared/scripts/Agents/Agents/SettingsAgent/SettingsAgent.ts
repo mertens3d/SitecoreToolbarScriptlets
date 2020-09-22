@@ -22,7 +22,7 @@ export class SettingsAgent implements ISettingsAgent {
   constructor(logger: ILoggerAgent, repoAgent: IRepositoryAgent) {
     this.Logger = logger;
     this.RepoAgent = repoAgent;
-    this.HindSiteSettingsBucket = new HindSiteSettingsBucket(this.Logger, this);
+    this.HindSiteSettingsBucket = new HindSiteSettingsBucket(this.Logger);
   }
 
   GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[]{

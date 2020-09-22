@@ -7,47 +7,38 @@ import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IMsgPayload";
+import { UiModulesManager } from "../Managers/UiManager/UiModulesManager";
 
 export class PopUpMessagesBrokerAgent extends LoggableBase {
   LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
   ContentReplyReceivedEvent_Subject: ContentReplyReceivedEvent_Subject;
+    ModulesMan: UiModulesManager;
 
-  constructor(loggerAgent: ILoggerAgent) {
+  constructor(loggerAgent: ILoggerAgent, modulesMan: UiModulesManager) {
     super(loggerAgent);
     this.ContentReplyReceivedEvent_Subject = new ContentReplyReceivedEvent_Subject(this.Logger);
+    this.ModulesMan = modulesMan;
   }
 
   private __cleardebugText() {
     this.Logger.HandlerClearDebugText(this.Logger);
   }
 
-  SendCommandToContent(sendMsgPlayload: IStateOfPopUp) {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SendCommandToContent.name);
-      this.__cleardebugText();
-      //todo - put back?  this.UiMan.ClearCancelFlag();
-
-      this.SendMessageToContentAsync(sendMsgPlayload)
-        .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.ContentReplyReceivedEvent_Subject.NotifyObservers(replyMessagePayload))
-        .then(() => resolve())
-        .catch((err) => reject(err));
-
-      this.Logger.FuncEnd(this.SendCommandToContent.name);
-    });
-  }
-
-  async SendCommandToContentImprovedAsync(sendMsgPlayload: IStateOfPopUp): Promise<void> {
-    this.Logger.FuncStart(this.SendCommandToContent.name);
+  async SendCommandToContentImprovedAsync(msgFlag: MsgFlag): Promise<void> {
+    this.Logger.FuncStart(this.SendCommandToContentImprovedAsync.name);
     try {
       this.__cleardebugText();
+
+      let stateOPopUp: IStateOfPopUp = this.ModulesMan.GetStateOfPopUp(msgFlag);
+
       //todo - put back?  this.UiMan.ClearCancelFlag();
 
-      this.SendMessageToContentAsync(sendMsgPlayload)
+      this.SendMessageToContentAsync(stateOPopUp)
         .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.ContentReplyReceivedEvent_Subject.NotifyObservers(replyMessagePayload))
     } catch (err) {
       throw (this.SendCommandToContentImprovedAsync.name + ' | ' + err);
     }
-    this.Logger.FuncEnd(this.SendCommandToContent.name);
+    this.Logger.FuncEnd(this.SendCommandToContentImprovedAsync.name);
   }
 
   ReceiveResponseHandler(response: any): Promise<IDataContentReplyReceivedEvent_Payload> {

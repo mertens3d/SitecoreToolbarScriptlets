@@ -26,16 +26,22 @@ export class EventManager extends LoggableBase {
     this.PopUpMesssageBrokerAgent = popupMessageBrokerAgent;
     this.SelectSnapShotModule = moduleSelectSnapShot;
     this.UiModulesMan = uimodulesMan;
-    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent.bind(this));
+
+    if (StaticHelpers.IsNullOrUndefined([handlers, popupMessageBrokerAgent, moduleSelectSnapShot, uimodulesMan])) {
+      throw (UiModulesManager.name + ' null at constructor');
+    }
+
+
   }
 
   OnSingleClickEvent(singleClickEventPayload: ISingleClickEvent_Payload) {
     this.Logger.Log('single click');
-    let stateOPopUp: IStateOfPopUp = this.Handlers.GetStateOfPopUp(singleClickEventPayload.HandlerData.MsgFlag);
-    this.PopUpMesssageBrokerAgent.SendCommandToContentImprovedAsync(stateOPopUp)
+    //let stateOPopUp: IStateOfPopUp = this.UiModulesMan.GetStateOfPopUp(singleClickEventPayload.HandlerData.MsgFlag);
+    this.PopUpMesssageBrokerAgent.SendCommandToContentImprovedAsync(singleClickEventPayload.HandlerData.MsgFlag)
   };
 
   InitEventManager(): void {
+    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent.bind(this));
     this.Logger.FuncStart(this.InitEventManager.name);
     this.Logger.FuncEnd(this.InitEventManager.name);
   }

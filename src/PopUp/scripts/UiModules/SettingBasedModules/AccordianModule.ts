@@ -62,8 +62,6 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
       var newVal: boolean = !(this.SettingJacket.HindSiteSetting.ValueAsBool());
 
       if (this.SettingJacket) {
-        this.SettingJacket.SaveChangeBoolean(newVal);
-
         let iUiElementChangeEvent_Payload: IUiSettingBasedModuleMutationEven_Payload = {
           ModuleKey: this.ModuleKey,
           HindSiteSetting: this.SettingJacket.HindSiteSetting,
@@ -73,9 +71,9 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
             NewVal: newVal
           }
         }
-
-        this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
+        this.SettingJacket.HindSiteSetting.ValueAsObj = newVal;
         this.SetAccordionClass();
+        this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
       }
     }
     else {
@@ -85,7 +83,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
   }
 
   private SetAccordionClass() {
-    if (this.SettingJacket.HindSiteSetting.ValueAsBool() === true) {
+    if (this.SettingJacket.HindSiteSetting.ValueAsBool() !== true) {
       this.AccordionContentElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
     } else {
       this.AccordionContentElem.classList.add(PopConst.Const.ClassNames.HS.Collapsed);

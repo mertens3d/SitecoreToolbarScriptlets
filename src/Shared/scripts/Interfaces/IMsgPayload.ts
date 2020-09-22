@@ -7,7 +7,7 @@ export interface IStateOfPopUp {
   IsValid: boolean;
   CurrentContentPrefs: IHindSiteSetting[];
   MsgFlag: MsgFlag;
-  WindowType: ScWindowType
+  //WindowType: ScWindowType
   SelectSnapshotId: GuidData;
   CurrentNicknameValue: string;
   ToastMessage: string;

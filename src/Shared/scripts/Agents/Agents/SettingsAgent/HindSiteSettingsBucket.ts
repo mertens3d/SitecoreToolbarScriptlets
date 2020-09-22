@@ -9,12 +9,10 @@ import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 
 export class HindSiteSettingsBucket extends LoggableBase {
   SettingWrappers: HindSiteSettingWrapper[] = [];
-  private SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent) {
     super(logger);
-    this.SettingsAgent = settingsAgent;
-    this.SettingWrappers = (new DefaultSettings(this.Logger, this.SettingsAgent)).GetDefaultSettingsWrapper();
+    this.SettingWrappers = (new DefaultSettings(this.Logger)).GetDefaultSettingsWrapper();
   }
 
   GetByKey(needleSettingKey: SettingKey): HindSiteSettingWrapper {
