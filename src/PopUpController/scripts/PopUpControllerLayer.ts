@@ -22,8 +22,11 @@ import { CommandManager } from "../Managers/CommandManager";
 import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
 import { PopUpBrowserProxy } from "./Proxies/BrowserProxy";
 import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { CommandType } from "../../Shared/scripts/Enums/CommandType";
+import { HandlersForInternal } from "../../PopUpUi/scripts/Classes/HandlersForInternal";
+import { BrowserTabAgent } from "../../PopUpUi/scripts/Managers/BrowserTabAgent";
 
-class PopUpControllerEntry {
+class PopUpControllerLayer {
   private RepoAgent: IRepositoryAgent;
   private SettingsAgent: ISettingsAgent;
   private PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
@@ -34,7 +37,8 @@ class PopUpControllerEntry {
   private CommandDefintionBucket: ICommandDefinitionBucket;
   private ScUrlAgent: IScUrlAgent;
   private BrowserProxy: PopUpBrowserProxy;
-
+  HandlersForInternal: HandlersForInternal;
+  BrowserTabAgent: BrowserTabAgent;
   public async Startup() {
     try {
       this.Preamble_SettingsAndLogger();
@@ -70,7 +74,10 @@ class PopUpControllerEntry {
 
     this.CommandDefintionBucket = new CommandDefintionFactory(this.Logger).BuildMenuCommandParamsBucket();
     this.UiLayer = new HindSiteUiLayer(this.Logger, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
-    this.commandMan = new CommandManager(this.Logger, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket, this.UiLayer);
+
+    this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.ScUrlAgent, this.SettingsAgent);
+    this.HandlersForInternal = new HandlersForInternal(this.Logger, this.BrowserTabAgent);
+    this.commandMan = new CommandManager(this.Logger, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket, this.UiLayer, this.HandlersForInternal);
 
     this.Logger.FuncEnd(this.InstantiateManagers_Controller.name);
   }
@@ -98,10 +105,9 @@ class PopUpControllerEntry {
       this.UiLayer.UiCommandRaisedFlag_Subject.RegisterObserver(this.UiCommandRaisedFlag_Observer);
       let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, this.OnContentReplyReceivedEventCallBack.bind(this));
 
-
       this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(contentReplyReceivedEvent_Observer);
 
-     //todo put this back somehow this.FeedbackModuleMsg_Observer) this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(null);
+      //todo put this back somehow this.FeedbackModuleMsg_Observer) this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(null);
     }
 
     this.Logger.FuncEnd(this.WireEvents_Controller.name);
@@ -110,11 +116,8 @@ class PopUpControllerEntry {
   OnContentReplyReceivedEventCallBack(dataContentReplyReceivedEvent_Payload: IDataContentReplyReceivedEvent_Payload) {
     this.Logger.FuncStart(this.OnContentReplyReceivedEventCallBack.name);
     if (this.UiLayer) {
-
-      this.UiLayer.OnContentReplyReceived(dataContentReplyReceivedEvent_Payload); 
-
+      this.UiLayer.OnContentReplyReceived(dataContentReplyReceivedEvent_Payload);
     }
-
 
     this.Logger.FuncEnd(this.OnContentReplyReceivedEventCallBack.name);
   }
@@ -122,7 +125,11 @@ class PopUpControllerEntry {
   OnUiCommandRaisedEvent(uiCommandFlagRaisedEvent_Payload: IUiCommandFlagRaisedEvent_Payload) {
     this.Logger.Log('Controller got command message');
 
-    this.PopUpMessageBrokerAgent.SendCommandToContentImprovedAsync(uiCommandFlagRaisedEvent_Payload.MsgFlag, uiCommandFlagRaisedEvent_Payload.StateOfPopUp)
+    if (uiCommandFlagRaisedEvent_Payload.CommandType === CommandType.Content) {
+      this.PopUpMessageBrokerAgent.SendCommandToContentImprovedAsync(uiCommandFlagRaisedEvent_Payload.MsgFlag, uiCommandFlagRaisedEvent_Payload.StateOfPopUp)
+    } else {
+      this.commandMan.HandleCommandTypePopUp(uiCommandFlagRaisedEvent_Payload);
+    }
   }
 
   private Start() {
@@ -152,6 +159,6 @@ class PopUpControllerEntry {
   }
 }
 
-let popUpControllerEntry: PopUpControllerEntry = new PopUpControllerEntry();
+let popUpControllerLayer: PopUpControllerLayer = new PopUpControllerLayer();
 
-popUpControllerEntry.Startup();
+popUpControllerLayer.Startup();

@@ -1,20 +1,18 @@
 ﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { BrowserTabAgent } from "../Managers/BrowserTabAgent";
+import { IUiCommandFlagRaisedEvent_Payload } from "../Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
+import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 
 export class HandlersForInternal extends LoggableBase {
   private BrowserTabAgent: BrowserTabAgent;
 
-
   constructor(logger: ILoggerAgent, browserTabAgent: BrowserTabAgent) {
     super(logger);
     this.BrowserTabAgent = browserTabAgent;
-  
   }
-
 
   CloseWindow(evt: any) {
     window.close();
@@ -22,35 +20,35 @@ export class HandlersForInternal extends LoggableBase {
 
   async HandlerForSnapShotRestoreTBDTab(data: ICommandHandlerDataForPopUp): Promise<void> {
     //TBD = To Be Determined
-    data.EventMan.Handlers.Logger.FuncStart(data.EventMan.Handlers.HandlerForSnapShotRestoreTBDTab.name);
+    this.Logger.FuncStart(this.HandlerForSnapShotRestoreTBDTab.name);
     try {
       if (!data.Evt.ctrlKey) {
-        //await data.EventMan.Handlers.HandlerForSnapShotRestoreSameTab(data);
+        //await this.HandlerForSnapShotRestoreSameTab(data);
       } else {
-        await data.EventMan.Handlers.HandlerForSnapShotRestoreNewTab(data);
+        //todo - put back maybe await this.HandlerForSnapShotRestoreNewTab(data);
       }
     } catch (err) {
       throw (err);
     }
-    data.EventMan.Handlers.Logger.FuncEnd(data.EventMan.Handlers.HandlerForSnapShotRestoreTBDTab.name);
+    this.Logger.FuncEnd(this.HandlerForSnapShotRestoreTBDTab.name);
   }
 
-  async HandlerForSnapShotRestoreNewTab(data: ICommandHandlerDataForPopUp) {
-    data.EventMan.Handlers.Logger.FuncStart(data.EventMan.Handlers.HandlerForSnapShotRestoreNewTab.name);
+  async HandlerForSnapShotRestoreNewTab(uiCommandFlagRaisedEvent_Payload: IUiCommandFlagRaisedEvent_Payload) {
+    this.Logger.FuncStart(this.HandlerForSnapShotRestoreNewTab.name);
 
-    //todo - put back in -- data.EventMan.Handlers.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, data.EventMan.SelectSnapShotModule.GetSelectSnapshotId().Raw);
+    this.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, uiCommandFlagRaisedEvent_Payload.StateOfPopUp.SelectSnapShotId.Raw);
 
-    let newUrl: IAbsoluteUrl = data.EventMan.Handlers.BrowserTabAgent.GetFullUrl();
+    let newUrl: IAbsoluteUrl = this.BrowserTabAgent.GetFullUrl();
 
-    await data.EventMan.Handlers.CreateNewWindow(data, newUrl)
+    await this.CreateNewWindow(newUrl)
       .catch((ex) => {
-        data.EventMan.Handlers.Logger.ErrorAndThrow(data.EventMan.Handlers.HandlerForSnapShotRestoreNewTab.name, ex.toString());
+        this.Logger.ErrorAndThrow(this.HandlerForSnapShotRestoreNewTab.name, ex.toString());
       });
 
-    data.EventMan.Handlers.Logger.FuncEnd(this.HandlerForSnapShotRestoreNewTab.name);
+    this.Logger.FuncEnd(this.HandlerForSnapShotRestoreNewTab.name);
   }
 
-  CreateNewWindow(data: ICommandHandlerDataForPopUp, tabUrl: IAbsoluteUrl): Promise<void> {
+  CreateNewWindow(tabUrl: IAbsoluteUrl): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.CreateNewWindow.name);
 

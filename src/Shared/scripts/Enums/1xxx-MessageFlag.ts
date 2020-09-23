@@ -1,8 +1,4 @@
-﻿export enum CommandType {
-    PopUp,
-    Content
-}
-export enum MsgFlag {
+﻿export enum MsgFlag {
     Unknown = 0,
     GetAllStorageOneWindow = 1001,
     NewWindowTest = 1002,

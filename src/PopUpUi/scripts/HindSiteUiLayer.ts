@@ -1,31 +1,27 @@
 ﻿import { LoggableBase } from "../../Content/scripts/Managers/LoggableBase";
-import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { ICommandDefinitionBucket, IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
-import { HandlersForInternal } from "./Classes/HandlersExternal";
+import { IStateOfPopUp } from "../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { PopConst } from "./Classes/PopConst";
+import { UiCommandFlagRaisedEvent_Observer } from "./Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
 import { UiCommandFlagRaisedEvent_Subject } from "./Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject";
-import { BrowserTabAgent } from "./Managers/BrowserTabAgent";
 import { UiCommandsManager } from "./Managers/UiCommandsManager";
 import { UiEventManager } from "./Managers/UiEventManager";
 import { UiModulesManager } from "./Managers/UiManager/UiModulesManager";
 import { UiVisibilityTestAgent } from "./Managers/UiManager/UiVisibilityTestAgent";
 import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
-import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
-import { IStateOfPopUp } from "../../Shared/scripts/Interfaces/IStateOfPopUp";
-import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { UiCommandFlagRaisedEvent_Observer } from "./Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
-import { IUiCommandFlagRaisedEvent_Payload } from "./Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
 
 export class HindSiteUiLayer extends LoggableBase implements IHindSiteUiLayer {
-  BrowserTabAgent: BrowserTabAgent;
+
   readonly CommandDefinitionBucket: ICommandDefinitionBucket;
   private UiEventMan: UiEventManager;
   FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
-  handlers: HandlersForInternal;
+  
   readonly SettingsAgent: ISettingsAgent;
   private readonly ScUrlAgent: IScUrlAgent;
   UiCommandRaisedFlag_Subject: UiCommandFlagRaisedEvent_Subject;
@@ -74,13 +70,13 @@ export class HindSiteUiLayer extends LoggableBase implements IHindSiteUiLayer {
     this.Logger.FuncStart(this.Instantiate_Ui.name);
 
     try {
-      this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.ScUrlAgent, this.SettingsAgent);
+
       this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
 
-      this.handlers = new HandlersForInternal(this.Logger, this.BrowserTabAgent);
+      
       this.UiCommandsMan = new UiCommandsManager(this.Logger, this.CommandDefinitionBucket, this.UiVisibilityTestAgent);
-      this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.BrowserTabAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScUrlAgent); //after tabman, after HelperAgent
-      this.UiEventMan = new UiEventManager(this.Logger, this.handlers, this.UiModulesMan); // after uiman
+      this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScUrlAgent); //after tabman, after HelperAgent
+      this.UiEventMan = new UiEventManager(this.Logger,  this.UiModulesMan); // after uiman
     } catch (err) {
       console.log(err);
     }

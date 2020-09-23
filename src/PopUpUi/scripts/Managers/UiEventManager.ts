@@ -5,7 +5,7 @@ import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerA
 import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IStateOfUiModules } from "../../../Shared/scripts/Interfaces/IStateOfUiModules";
-import { HandlersForInternal } from '../Classes/HandlersExternal';
+import { HandlersForInternal } from '../Classes/HandlersForInternal';
 import { ISingleClickEvent_Payload } from '../Events/SingleClickEvent/ISingleClickEvent_Payload';
 import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
 import { IUiCommandFlagRaisedEvent_Payload } from '../Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
@@ -13,18 +13,16 @@ import { UiCommandFlagRaisedEvent_Subject } from '../Events/UiCommandFlagRaisedE
 import { UiModulesManager } from './UiManager/UiModulesManager';
 
 export class UiEventManager extends LoggableBase {
-  Handlers: HandlersForInternal
 
   UiModulesMan: UiModulesManager;
   CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
   UiCommandRaisedFlag_UiEventManagerRelay_Subject: UiCommandFlagRaisedEvent_Subject;
 
-  constructor(logger: ILoggerAgent, handlers: HandlersForInternal, uimodulesMan: UiModulesManager) {
+  constructor(logger: ILoggerAgent,  uimodulesMan: UiModulesManager) {
     super(logger);
-    this.Handlers = handlers;
     this.UiModulesMan = uimodulesMan;
 
-    if (StaticHelpers.IsNullOrUndefined([handlers, uimodulesMan])) {
+    if (StaticHelpers.IsNullOrUndefined([ uimodulesMan])) {
       throw (UiModulesManager.name + ' null at constructor');
     }
   }
@@ -54,7 +52,7 @@ export class UiEventManager extends LoggableBase {
 
     let payload: IUiCommandFlagRaisedEvent_Payload = {
       MsgFlag: singleClickEventPayload.HandlerData.MsgFlag,
-
+      CommandType: singleClickEventPayload.HandlerData.CommandType,
       StateOfPopUp: this.GetStateOfPopUp()
     };
 

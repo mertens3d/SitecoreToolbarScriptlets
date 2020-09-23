@@ -100,7 +100,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\TreeMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Subject.ts" />
     <TypeScriptCompile Include="src\PopUpController\scripts\Proxies\BrowserProxy.ts" />
-    <TypeScriptCompile Include="src\PopUpController\scripts\zPopUpControllerEntryPoint.ts" />
+    <TypeScriptCompile Include="src\PopUpController\scripts\PopUpControllerLayer.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\PopUpCommands.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiCommandFlagRaisedEvent\IUiCommandFlagRaisedEvent_Payload.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiCommandFlagRaisedEvent\UiCommandFlagRaisedEvent_Observer.ts" />
@@ -136,7 +136,7 @@
     <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\FeedbackModuleMessages.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\_UiFeedbackModuleBase.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\UiFeedbackModuleLog.ts" />
-    <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\HandlersExternal.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\HandlersForInternal.ts" />
     <TypeScriptCompile Include="src\PopUpController\Managers\CommandManager.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SelectSnapUiMutationEvent\SelectSnapshotUiMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\_UiModuleBase.ts" />
@@ -165,6 +165,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfTreeNode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\ScWindowStateValidator.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeAddContentEditorToDesktop\RecipeAddContentEditorToDesktop.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\CommandType.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\Enabled.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\ModuleKey.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\QueryStrKey.ts" />

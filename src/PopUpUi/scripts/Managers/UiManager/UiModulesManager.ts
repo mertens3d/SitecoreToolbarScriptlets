@@ -1,15 +1,14 @@
 ﻿import { LoggableBase } from '../../../../Content/scripts/Managers/LoggableBase';
-import { IDataContentReplyReceivedEvent_Payload } from '../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload';
 import { HindSiteSettingWrapper } from '../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper';
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
-import { MsgFlag } from '../../../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { MenuCommandKey } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { SettingFlavor } from '../../../../Shared/scripts/Enums/SettingFlavor';
 import { IHindSiteSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IUiModule } from '../../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
@@ -18,7 +17,6 @@ import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interface
 import { IDataStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots';
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
-import { IStateOfPopUp } from "../../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IStateOfUiModules } from "../../../../Shared/scripts/Interfaces/IStateOfUiModules";
 import { UiHydrationData } from '../../../../Shared/scripts/Interfaces/UiHydrationData';
 import { PopConst } from '../../Classes/PopConst';
@@ -37,9 +35,7 @@ import { FeedbackModuleContentState } from '../../UiModules/UiFeedbackModules/Fe
 import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModules/FeedbackModuleMessages';
 import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
-import { BrowserTabAgent } from '../BrowserTabAgent';
 import { UiCommandsManager } from '../UiCommandsManager';
-import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 
 export class UiModulesManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];
@@ -48,7 +44,6 @@ export class UiModulesManager extends LoggableBase {
   FeedbackModuleMessages: FeedbackModuleMessages_Observer;
   private CommandDefinitionBucket: ICommandDefinitionBucket;
   private SettingsAgent: ISettingsAgent;
-  private TabMan: BrowserTabAgent;
   TabId: string;
   private UiVisibilityTestAgent: IUiVisibilityTestAgent;
   UiSettingBasedModuleMutationEvent_Observer: UiSettingBasedModuleMutationEvent_Observer;
@@ -63,18 +58,17 @@ export class UiModulesManager extends LoggableBase {
   FacetSettingsBasedModules: _SettingsBasedModulesBase[] = [];
   private ScUrlAgent: IScUrlAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiCommandsManager: UiCommandsManager, uiVisibilityTestAgent: IUiVisibilityTestAgent, scUrlagent: IScUrlAgent) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiCommandsManager: UiCommandsManager, uiVisibilityTestAgent: IUiVisibilityTestAgent, scUrlagent: IScUrlAgent) {
     super(logger);
     this.Logger.InstantiateStart(UiModulesManager.name);
 
     this.SettingsAgent = settingsAgent;
-    this.TabMan = tabMan;
     this.CommandDefinitionBucket = commandDefinitionBucket;
     this.UiVisibilityTestAgent = uiVisibilityTestAgent
     this.UiCommandsMan = uiCommandsManager;
     this.ScUrlAgent = scUrlagent;
 
-    if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.TabMan, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScUrlAgent])) {
+    if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent,  this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScUrlAgent])) {
       throw (UiModulesManager.name + ' null at constructor');
     }
 

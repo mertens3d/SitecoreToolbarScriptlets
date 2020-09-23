@@ -7,21 +7,25 @@ import { IMenuCommandDefinition } from "../../Shared/scripts/Interfaces/IMenuCom
 import { ICommandDefinitionBucket, IHindSiteUiLayer } from '../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { PopUpMessagesBrokerAgent } from '../scripts/Agents/PopUpMessagesBrokerAgent';
 import { IStateOfPopUp } from "../../Shared/scripts/Interfaces/IStateOfPopUp";
+import { IUiCommandFlagRaisedEvent_Payload } from '../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
+import { HandlersForInternal } from '../../PopUpUi/scripts/Classes/HandlersForInternal';
 
 export class CommandManager extends LoggableBase {
+
   public CommandDefinitionBucket: ICommandDefinitionBucket;
   private PopUpMsgBroker: PopUpMessagesBrokerAgent;
-  private  UiLayer: IHindSiteUiLayer;
+  private UiLayer: IHindSiteUiLayer;
+    HandlersForInternal: HandlersForInternal;
 
-  constructor(logger: ILoggerAgent, popUpMessageBroker: PopUpMessagesBrokerAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiLayer:IHindSiteUiLayer) {
+  constructor(logger: ILoggerAgent, popUpMessageBroker: PopUpMessagesBrokerAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiLayer: IHindSiteUiLayer, handlerInternal: HandlersForInternal) {
     super(logger);
 
     this.CommandDefinitionBucket = commandDefinitionBucket;
     this.PopUpMsgBroker = popUpMessageBroker;
+    this.HandlersForInternal = handlerInternal;
     this.UiLayer = uiLayer;
 
-
-    if (StaticHelpers.IsNullOrUndefined([this.CommandDefinitionBucket, this.PopUpMsgBroker, this.UiLayer])) {
+    if (StaticHelpers.IsNullOrUndefined([this.CommandDefinitionBucket, this.PopUpMsgBroker, this.UiLayer, this.HandlersForInternal])) {
       throw (CommandManager.name + ' | null at constructor');
     }
   }
@@ -41,14 +45,23 @@ export class CommandManager extends LoggableBase {
     return toReturn;
   }
 
+  HandleCommandTypePopUp(uiCommandFlagRaisedEvent_Payload: IUiCommandFlagRaisedEvent_Payload) {
+    this.Logger.Log(this.HandleCommandTypePopUp.name + ' should be handling ' + MsgFlag[uiCommandFlagRaisedEvent_Payload.MsgFlag]);
+
+    switch (uiCommandFlagRaisedEvent_Payload.MsgFlag) {
+      case MsgFlag.ReqSetStateOfSitecoreNewWindow:
+        this.HandlersForInternal.HandlerForSnapShotRestoreNewTab(uiCommandFlagRaisedEvent_Payload)
+        break;
+    }
+
+  }
+
+
   async TriggerPingEventAsync(): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);
 
     try {
-
-        
       let stateOfPopUp: IStateOfPopUp = this.UiLayer.GetStateOfPopUp();
-
 
       this.PopUpMsgBroker.SendCommandToContentImprovedAsync(MsgFlag.Ping, stateOfPopUp) //todo put correct value in for null. query the ui?
     } catch (err) {

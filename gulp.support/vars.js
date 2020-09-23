@@ -16,7 +16,7 @@ class Vars {
     this.PopUpUiJs.Ts.TranspiledEntryPointFile = 'HindSiteUiLayer.js';
 
     this.PopUpControllerJs = new InjectableClass('PopUpController', '/**/*.js', 'js', this.FinalFolderShort);
-    this.PopUpControllerJs.Ts.TranspiledEntryPointFile = 'zPopUpControllerEntryPoint.js';
+    this.PopUpControllerJs.Ts.TranspiledEntryPointFile = 'PopUpControllerLayer.js';
 
     this.ContentJs = new InjectableClass('Content', '/**/*.js', 'js', this.FinalFolderShort);
     this.ContentJs.Ts.TranspiledEntryPointFile = 'zContentEntryPoint.js';

@@ -1,13 +1,12 @@
-﻿import { ScUrlAgent } from '../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
-import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
+﻿import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { IAbsoluteUrl } from '../../../Shared/scripts/Interfaces/IAbsoluteUrl';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
-import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
+import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
+import { IAbsoluteUrl } from '../../../Shared/scripts/Interfaces/IAbsoluteUrl';
 
 export class BrowserTabAgent {
   private ScUrlAgent: IScUrlAgent;
