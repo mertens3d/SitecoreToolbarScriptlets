@@ -40,7 +40,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.EnableLogging,
         SettingType.BoolCheckBox,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.CbEnableLogging,
+        PopConst.Const.Selector.HS.ModuleContainers.CbEnableLogging,
         SharedConst.Const.Settings.Defaults.EnableLogging,
         SettingFlavor.ContentAndPopUpStoredInPopUp,
         'Enable Logging',
@@ -53,7 +53,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.UseCompactCss,
         SettingType.BoolCheckBox,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.SettingUseCompactCss,
+        PopConst.Const.Selector.HS.ModuleContainers.SettingUseCompactCss,
         SharedConst.Const.Settings.Defaults.UseCompactCss,
         SettingFlavor.ContentOnly,
         'Use Compact CSS',
@@ -92,7 +92,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.LgndPopUpLog,
         SettingType.Accordion,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.LgndPopUpLog,
+        PopConst.Const.Selector.HS.ModuleContainers.LgndPopUpLog,
         PopConst.Const.Settings.Defaults.LgndPopUpLog,
         SettingFlavor.PopUp,
         'Pop Up Log',
@@ -105,7 +105,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.LgndForeSite,
         SettingType.Accordion,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.LgndForeSite,
+        PopConst.Const.Selector.HS.ModuleContainers.LgndForeSite,
         PopConst.Const.Settings.Defaults.LgndForeSite,
         SettingFlavor.PopUp,
         'Fore&bull;Site',
@@ -118,7 +118,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.LgndHindSite,
         SettingType.Accordion,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.LgndHindSite,
+        PopConst.Const.Selector.HS.ModuleContainers.LgndHindSite,
         PopConst.Const.Settings.Defaults.LgndHindSite,
         SettingFlavor.PopUp,
         'Hind&bull;Site',
@@ -131,7 +131,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.LgndSettings,
         SettingType.Accordion,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.LgndSettings,
+        PopConst.Const.Selector.HS.ModuleContainers.LgndSettings,
         PopConst.Const.Settings.Defaults.LgndSettings,
         SettingFlavor.PopUp,
         'Settings',
@@ -144,7 +144,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.LgndMessages,
         SettingType.Accordion,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.LgndMessages,
+        PopConst.Const.Selector.HS.ModuleContainers.LgndMessages,
         PopConst.Const.Settings.Defaults.LgndMessages,
         SettingFlavor.PopUp,
         'Messages',
@@ -157,7 +157,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.LgndPopUpState,
         SettingType.Accordion,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.LgndPopUpState,
+        PopConst.Const.Selector.HS.ModuleContainers.LgndPopUpState,
         PopConst.Const.Settings.Defaults.LgndPopUpState,
         SettingFlavor.PopUp,
         'Pop Up State',
@@ -170,7 +170,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.LgndContentState,
         SettingType.Accordion,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.LgndContentState,
+        PopConst.Const.Selector.HS.ModuleContainers.LgndContentState,
         PopConst.Const.Settings.Defaults.LgndContentState,
         SettingFlavor.PopUp,
         'Content State',
@@ -184,7 +184,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.LgndBrowserState,
         SettingType.Accordion,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.LgndBrowserState,
+        PopConst.Const.Selector.HS.ModuleContainers.LgndBrowserState,
         PopConst.Const.Settings.Defaults.LgndBrowserState,
         SettingFlavor.PopUp,
         'Browser State',
@@ -229,7 +229,7 @@ export class DefaultSettings extends LoggableBase {
 
         SettingKey.DebugKeepDialogOpen,
         SettingType.BoolCheckBox,
-        PopConst.Const.Selector.HS.ModulePlaceHolders.SettingDebugKeepDialogOpen,
+        PopConst.Const.Selector.HS.ModuleContainers.SettingDebugKeepDialogOpen,
         PopConst.Const.Settings.Defaults.DebugKeepDialogOpen,
         SettingFlavor.PopUp,
         '(Debug) Keep Dialog Open',

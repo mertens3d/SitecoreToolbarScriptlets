@@ -21,33 +21,28 @@ import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBas
 import { _UiModuleBase } from "../_UiModuleBase";
 
 export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
-  private Selector: string;
   private StateHelpers: StateHelpers;
   public SelectSnapshotModule_Subject: SelectSnapUiMutationEvent_Subject;
   ModuleKey = ModuleKey.SelectSnapShot;
   private SelectElement: HTMLSelectElement;
 
-  constructor(logger: ILoggerAgent, selector: string) {
-    super(logger, selector);
-    this.Selector = selector;
+  constructor(logger: ILoggerAgent, containerSelector: string) {
+    super(logger, containerSelector);
     this.SelectSnapshotModule_Subject = new SelectSnapUiMutationEvent_Subject(this.Logger);
 
     this.StateHelpers = new StateHelpers(this.Logger);
   }
 
   Init(): void {
-    this.SelectElement = <HTMLSelectElement>document.querySelector(this.Selector);
+    this.Init_UiModuleBase();
+    this.SelectElement = <HTMLSelectElement>this.ContainerUiDivElem.querySelector('select');
   }
 
-  WireEvents(): void {
-    this.AssignOnChangeEventToSnapShotModule();
-  }
-
-  private AssignOnChangeEventToSnapShotModule(): void {
-    this.Logger.FuncStart(this.AssignOnChangeEventToSnapShotModule.name, this.Selector);
+  WireEvents_Module(): void {
+    this.Logger.FuncStart(this.WireEvents_Module.name, this.ContainerSelector);
 
     if (!this.SelectElement) {
-      this.Logger.ErrorAndThrow(this.AssignOnChangeEventToSnapShotModule.name, 'No Id: ' + this.Selector);
+      this.Logger.ErrorAndThrow(this.WireEvents_Module.name, 'No Id: ' + this.ContainerSelector);
     } else {
       this.SelectElement.onchange = (() => {
         let self = this;
@@ -57,7 +52,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
         this.SelectSnapshotModule_Subject.NotifyObservers(payload);
       });
     }
-    this.Logger.FuncEnd(this.AssignOnChangeEventToSnapShotModule.name, this.Selector);
+    this.Logger.FuncEnd(this.WireEvents_Module.name, this.ContainerSelector);
   }
 
   RefreshUi(): void {
@@ -264,7 +259,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   }
 
   private AppendSnapShotToCorrectGroup(data: IDataStateOfSitecoreWindow, el: HTMLOptionElement, headers: ISelectionHeaders) {
-    if (!StaticHelpers.IsNullOrUndefined([data, el, headers]))  {
+    if (!StaticHelpers.IsNullOrUndefined([data, el, headers])) {
       if (data.Meta.Flavor === SnapShotFlavor.Autosave) {
         headers.Auto.appendChild(el);
       } else if (data.Meta.Flavor === SnapShotFlavor.Favorite) {

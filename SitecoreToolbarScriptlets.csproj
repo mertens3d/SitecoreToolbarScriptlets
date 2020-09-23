@@ -58,6 +58,7 @@
     <Content Include="ReadmeResoures\external-tools.png" />
     <Content Include="ReadmeResoures\file.png" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeAutoSaveState.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Subject.ts" />
@@ -98,6 +99,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowRecipePartials.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\TreeMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\PopUpController\scripts\Proxies\BrowserProxy.ts" />
     <TypeScriptCompile Include="src\PopUpController\scripts\zPopUpControllerEntryPoint.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\PopUpCommands.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Events\UiCommandFlagRaisedEvent\IUiCommandFlagRaisedEvent_Payload.ts" />
@@ -113,7 +115,7 @@
     <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SelectSnapUiMutationEvent\SelectSnapUiMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SingleClickEvent\SingleClickEvent_Subject.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SingleClickEvent\SingleClickEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\PopUpController\Agents\PopUpMessagesBrokerAgent.ts" />
+    <TypeScriptCompile Include="src\PopUpController\scripts\Agents\PopUpMessagesBrokerAgent.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\UiManager\UiVisibilityTestAgent.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\ButtonModules\ButtonBasedModules.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\ButtonModules\CloseButtonModule.ts" />
@@ -135,7 +137,7 @@
     <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\_UiFeedbackModuleBase.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\UiFeedbackModules\UiFeedbackModuleLog.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\HandlersExternal.ts" />
-    <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\CommandManager.ts" />
+    <TypeScriptCompile Include="src\PopUpController\Managers\CommandManager.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SelectSnapUiMutationEvent\SelectSnapshotUiMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\UiModules\_UiModuleBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\LoggerConsoleWriter.ts" />
@@ -170,6 +172,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\IContentApi.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentAtticAgent\IContentAtticAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IFirstActive.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\InitResultContentEditorProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\InitResultsDesktopProxy.ts" />
@@ -234,6 +237,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IError.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IEventHandlerData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IFactoryHelper.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\IBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\UiHydrationData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPromiseHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ISelectionHeaders.ts" />

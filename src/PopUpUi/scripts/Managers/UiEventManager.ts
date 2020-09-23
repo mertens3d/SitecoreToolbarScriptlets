@@ -3,7 +3,8 @@ import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
-import { IStateOfPopUpUi } from '../../../Shared/scripts/Interfaces/IMsgPayload';
+import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
+import { IStateOfUiModules } from "../../../Shared/scripts/Interfaces/IStateOfUiModules";
 import { HandlersForInternal } from '../Classes/HandlersExternal';
 import { ISingleClickEvent_Payload } from '../Events/SingleClickEvent/ISingleClickEvent_Payload';
 import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
@@ -18,45 +19,53 @@ export class UiEventManager extends LoggableBase {
   CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
   UiCommandRaisedFlag_Subject: UiCommandFlagRaisedEvent_Subject;
 
-  constructor(logger: ILoggerAgent, handlers: HandlersForInternal,  uimodulesMan: UiModulesManager) {
+  constructor(logger: ILoggerAgent, handlers: HandlersForInternal, uimodulesMan: UiModulesManager) {
     super(logger);
     this.Handlers = handlers;
     this.UiModulesMan = uimodulesMan;
 
-    if (StaticHelpers.IsNullOrUndefined([handlers,  uimodulesMan])) {
+    if (StaticHelpers.IsNullOrUndefined([handlers, uimodulesMan])) {
       throw (UiModulesManager.name + ' null at constructor');
     }
   }
 
-  Init_EventManager() {
+  Init_UiEventManager() {
+    this.Logger.FuncStart(this.Init_UiEventManager.name);
     this.UiCommandRaisedFlag_Subject = new UiCommandFlagRaisedEvent_Subject(this.Logger);
+    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent.bind(this));
+    this.Logger.FuncEnd(this.Init_UiEventManager.name);
+  }
+
+  GetStateOfPopUp(): IStateOfPopUp {
+    let stateOfUiModules: IStateOfUiModules = this.UiModulesMan.GetStateOfModules(); //todo - this msgFlag is redundant to the payload below
+
+    let StateOfPopup: IStateOfPopUp = {
+      NewNickName: stateOfUiModules.SnapShotNewNickname,
+      SelectSnapShotId: stateOfUiModules.SelectSnapshotId,
+    }
+
+    return StateOfPopup;
   }
 
   OnSingleClickEvent(singleClickEventPayload: ISingleClickEvent_Payload) {
     this.Logger.Log('single click');
-    //let stateOPopUp: IStateOfPopUp = this.UiModulesMan.GetStateOfPopUp(singleClickEventPayload.HandlerData.MsgFlag);
 
-    let stateOPopUp: IStateOfPopUpUi = this.UiModulesMan.GetStateOfPopUp(singleClickEventPayload.HandlerData.MsgFlag); //todo - this msgFlag is redundunt to the payload below
+    
 
     let payload: IUiCommandFlagRaisedEvent_Payload = {
       MsgFlag: singleClickEventPayload.HandlerData.MsgFlag,
-      StateOfPopUp: stateOPopUp,
+
+      StateOfPopUp: this.GetStateOfPopUp()
     };
 
     this.UiCommandRaisedFlag_Subject.NotifyObservers(payload);
   };
 
-  InitEventManager(): void {
-    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent.bind(this));
-    this.Logger.FuncStart(this.InitEventManager.name);
-    this.Logger.FuncEnd(this.InitEventManager.name);
-  }
-
-  WireEvents(): void {
-    this.Logger.FuncStart(this.WireEvents.name);
+  WireEvents_UiEventMan(): void {
+    this.Logger.FuncStart(this.WireEvents_UiEventMan.name);
     this.ListenForCommandEvents();
 
-    this.Logger.FuncEnd(this.WireEvents.name);
+    this.Logger.FuncEnd(this.WireEvents_UiEventMan.name);
   }
 
   ListenForSettingsEvents() {

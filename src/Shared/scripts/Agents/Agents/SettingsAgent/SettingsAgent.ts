@@ -1,8 +1,8 @@
 ﻿import { PopConst } from "../../../../../PopUpUi/scripts/Classes/PopConst";
 import { UiModuleManagerPassThroughEvent_Observer } from "../../../../../PopUpUi/scripts/Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Observer";
-import { UiModulesManager } from "../../../../../PopUpUi/scripts/Managers/UiManager/UiModulesManager";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
+import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
@@ -10,14 +10,12 @@ import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
 import { HindSiteSettingsBucket } from "./HindSiteSettingsBucket";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
-import { SettingFlavor } from "../../../Enums/SettingFlavor";
 
 export class SettingsAgent implements ISettingsAgent {
   HindSiteSettingsBucket: HindSiteSettingsBucket;
   private Logger: ILoggerAgent;
   private RepoAgent: IRepositoryAgent;
   private UiElementChangeEvent_Observer: UiModuleManagerPassThroughEvent_Observer;
-  private UiModulesManager: UiModulesManager;
 
   constructor(logger: ILoggerAgent, repoAgent: IRepositoryAgent) {
     this.Logger = logger;
@@ -25,7 +23,7 @@ export class SettingsAgent implements ISettingsAgent {
     this.HindSiteSettingsBucket = new HindSiteSettingsBucket(this.Logger);
   }
 
-  GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[]{
+  GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[] {
     return this.HindSiteSettingsBucket.GetSettingsByFlavor(arg0);
   }
 
@@ -40,20 +38,13 @@ export class SettingsAgent implements ISettingsAgent {
 
   Init_SettingsAgent(): void {
     this.Logger.FuncStart(this.Init_SettingsAgent.name);
-    
+
     let settingsFromStorage: IOneGenericSettingForStorage[] = this.ReadGenericSettingsFromStorage();
     this.UpdateSettingValuesFromStorage(settingsFromStorage)
     this.Logger.FuncEnd(this.Init_SettingsAgent.name);
   }
 
-  IntroduceUiModulesManager(uiModulesManager: UiModulesManager) {
-    this.UiModulesManager = uiModulesManager;
-
-    
-  }
-
   WireEvents() {
-    
     this.UiElementChangeEvent_Observer = new UiModuleManagerPassThroughEvent_Observer(this.Logger, this.OnUiModuleManagerPassThroughEvent);
   }
 

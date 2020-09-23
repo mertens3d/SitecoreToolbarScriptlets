@@ -7,7 +7,7 @@ export class CloseButtonModule extends _base_ButtonModule implements IUiModule {
   Init(): void {
     this.Init_BaseButtonModule();
   }
-  WireEvents(): void {
+  WireEvents_Module(): void {
     this.WireEvents_Base();
   }
 }

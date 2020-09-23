@@ -33,9 +33,10 @@ export enum MsgFlag {
     RespNotReady = 1206,
     ReqClosePopUpWindow,
     ReqOpenPresentationDetails,
-    
+
     CancelCommand,
     ReqSetScModeNormal,
     ReqSetScModeEdit,
-    ReqSetStateOfSitecoreNewWindow
+    ReqSetStateOfSitecoreNewWindow,
+    RespFailedDidNotValidate
 }

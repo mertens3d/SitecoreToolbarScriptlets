@@ -8,7 +8,7 @@ import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements IUiModule {
 
-  WireEvents(): void {
+  WireEvents_Module(): void {
   }
   ModuleKey = ModuleKey.BroswerState;
 

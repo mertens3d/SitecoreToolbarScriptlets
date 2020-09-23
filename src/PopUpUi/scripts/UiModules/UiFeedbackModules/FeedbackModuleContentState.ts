@@ -5,7 +5,7 @@ import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModuleContentState extends _UiFeedbackModuleBase implements IUiModule {
 
-  WireEvents(): void {
+  WireEvents_Module(): void {
   }
   ModuleKey = ModuleKey.ContentState;
 

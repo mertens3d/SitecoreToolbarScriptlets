@@ -17,9 +17,10 @@ import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Ag
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots';
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { IStateOfPopUpUi } from '../../../../Shared/scripts/Interfaces/IMsgPayload';
+import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
+import { IStateOfPopUp } from "../../../../Shared/scripts/Interfaces/IStateOfPopUp";
+import { IStateOfUiModules } from "../../../../Shared/scripts/Interfaces/IStateOfUiModules";
 import { UiHydrationData } from '../../../../Shared/scripts/Interfaces/UiHydrationData';
-import { CommandManager } from '../../Classes/CommandManager';
 import { PopConst } from '../../Classes/PopConst';
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
 import { SelectSnapUiMutationEvent_ObserverWithCallback } from '../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_ObserverWithCallback';
@@ -38,7 +39,7 @@ import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/Feed
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
 import { BrowserTabAgent } from '../BrowserTabAgent';
 import { UiCommandsManager } from '../UiCommandsManager';
-import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
+import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 
 export class UiModulesManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];
@@ -60,23 +61,22 @@ export class UiModulesManager extends LoggableBase {
   private UiModules: IUiModule[] = [];
   UiModuleManagerMutationEvent_Subject: UiModuleManagerPassThroughEvent_Subject;
   FacetSettingsBasedModules: _SettingsBasedModulesBase[] = [];
+  private ScUrlAgent: IScUrlAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandDefinitionBucket: ICommandDefinitionBucket, moduleSelectSnapShots: SelectSnapshotModule, uiCommandsManager: UiCommandsManager, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, tabMan: BrowserTabAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiCommandsManager: UiCommandsManager, uiVisibilityTestAgent: IUiVisibilityTestAgent, scUrlagent: IScUrlAgent) {
     super(logger);
     this.Logger.InstantiateStart(UiModulesManager.name);
 
     this.SettingsAgent = settingsAgent;
     this.TabMan = tabMan;
     this.CommandDefinitionBucket = commandDefinitionBucket;
-    this.UiModules.push(moduleSelectSnapShots);
-    this.ModuleSelectSnapShots = moduleSelectSnapShots;
     this.UiVisibilityTestAgent = uiVisibilityTestAgent
     this.UiCommandsMan = uiCommandsManager;
+    this.ScUrlAgent = scUrlagent;
 
-    if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.TabMan, this.CommandDefinitionBucket, this.ModuleSelectSnapShots, this.UiCommandsMan, this.UiVisibilityTestAgent])) {
+    if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.TabMan, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScUrlAgent])) {
       throw (UiModulesManager.name + ' null at constructor');
     }
-
 
     this.InstantiateModules();
     this.Logger.InstantiateEnd(UiModulesManager.name);
@@ -84,6 +84,9 @@ export class UiModulesManager extends LoggableBase {
 
   InstantiateModules() {
     this.Logger.FuncStart(this.InstantiateModules.name);
+
+    this.ModuleSelectSnapShots = new SelectSnapshotModule(this.Logger, PopConst.Const.Selector.HS.ModuleContainers.SelStateSnapShot);
+    this.UiModules.push(this.ModuleSelectSnapShots);
 
     this.UiModules.push(new UiFeedbackModuleLog(this.Logger, PopConst.Const.Selector.HS.FeedbackLogElement));
     this.UiModules.push(new FeedbackModuleBrowserState(this.Logger, PopConst.Const.Selector.HS.FeedbackBrowserState));
@@ -105,79 +108,86 @@ export class UiModulesManager extends LoggableBase {
     this.Logger.FuncEnd(this.InstantiateModules.name);
   }
 
-  InitUiMan() {
-    this.Logger.FuncStart(this.InitUiMan.name, UiModulesManager.name);
+  Init_UiMan() {
+    this.Logger.FuncStart(this.Init_UiMan.name, UiModulesManager.name);
 
     this.WriteBuildNumToUi();
 
     if (this.UiModules) {
-      this.UiModules.forEach((uiModule: IUiModule) => uiModule.Init());
+      this.UiModules.forEach((uiModule: IUiModule) => {
+        if (uiModule) {
+          uiModule.Init()
+        } else {
+          this.Logger.ErrorAndThrow(this.Init_UiMan.name, 'null module');
+        }
+      }
+
+      );
     }
 
-    this.UiCommandsMan.InitButtonStateManager();
-    this.Logger.FuncEnd(this.InitUiMan.name, UiModulesManager.name);
+    this.UiCommandsMan.Init_ButtonStateManager();
+    this.Logger.FuncEnd(this.Init_UiMan.name, UiModulesManager.name);
   }
 
-  public GetStateOfPopUp(msgFlag: MsgFlag): IStateOfPopUpUi {
-    this.Logger.FuncStart(this.GetStateOfPopUp.name);
+  public GetStateOfModules(): IStateOfUiModules {
+    this.Logger.FuncStart(this.GetStateOfModules.name);
 
     let wrappedSettings: HindSiteSettingWrapper[] = this.SettingsAgent.GetSettingsByFlavor([SettingFlavor.ContentAndPopUpStoredInPopUp, SettingFlavor.ContentOnly]);
 
     let settingsToSend: IHindSiteSetting[] = [];
     wrappedSettings.forEach((wrappedSetting: HindSiteSettingWrapper) => settingsToSend.push(wrappedSetting.HindSiteSetting));
 
-    var stateOfPopUpUI: IStateOfPopUpUi = {
-      MsgFlag: msgFlag,
-      //WindowType: this.BrowserTabAgent.GetWindowType(),
+    var stateOfUiModules: IStateOfUiModules = {
       SelectSnapshotId: this.ModuleSelectSnapShots.GetSelectSnapshotId(),
-      CurrentContentPrefs: settingsToSend,
-      IsValid: false,
       CurrentNicknameValue: '',
       SnapShotNewNickname: '',
-      ToastMessage: ''
     }
 
-    return stateOfPopUpUI;
+    return stateOfUiModules;
   }
 
-  WireEvents() {
-    this.Logger.FuncStart(this.WireEvents.name);
+  WireEvents_ModulesManager() {
+    this.Logger.FuncStart(this.WireEvents_ModulesManager.name);
 
-    this.UiModuleManagerMutationEvent_Subject = new UiModuleManagerPassThroughEvent_Subject(this.Logger);
+    try {
+      this.UiModuleManagerMutationEvent_Subject = new UiModuleManagerPassThroughEvent_Subject(this.Logger);
 
-    if (this.UiModules) {
-      this.UiModules.forEach((uiModule: IUiModule) => uiModule.WireEvents());
-    }
-
-    this.FeedbackModuleMessages = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.DivOverlayModule);
-
-    this.SelectSnapshotModule_Observer = new SelectSnapUiMutationEvent_ObserverWithCallback(this.Logger, this.OnRefreshUiUIManagerFromSnapShotSelect.bind(this));
-    this.UiSettingBasedModuleMutationEvent_Observer = new UiSettingBasedModuleMutationEvent_Observer(this.Logger, this.OnUiSettingBasedModuleMutationEvent.bind(this));
-
-    let moduleSelectSnapShots: IUiModule[] = this.GetModulesByKey(ModuleKey.SelectSnapShot);
-
-    if (moduleSelectSnapShots && moduleSelectSnapShots.length > 0) {
-      let moduleSelectSnapShot = moduleSelectSnapShots[0];
-      if (moduleSelectSnapShot) {
-        (<SelectSnapshotModule>moduleSelectSnapShot).SelectSnapshotModule_Subject.RegisterObserver(this.SelectSnapshotModule_Observer);
+      if (this.UiModules) {
+        this.UiModules.forEach((uiModule: IUiModule) => uiModule.WireEvents_Module());
       }
+
+      this.FeedbackModuleMessages = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.DivOverlayModule);
+
+      this.SelectSnapshotModule_Observer = new SelectSnapUiMutationEvent_ObserverWithCallback(this.Logger, this.OnRefreshUiUIManagerFromSnapShotSelect.bind(this));
+      this.UiSettingBasedModuleMutationEvent_Observer = new UiSettingBasedModuleMutationEvent_Observer(this.Logger, this.OnUiSettingBasedModuleMutationEvent.bind(this));
+
+      let moduleSelectSnapShots: IUiModule[] = this.GetModulesByKey(ModuleKey.SelectSnapShot);
+
+      if (moduleSelectSnapShots && moduleSelectSnapShots.length > 0) {
+        let moduleSelectSnapShot = moduleSelectSnapShots[0];
+        if (moduleSelectSnapShot) {
+          (<SelectSnapshotModule>moduleSelectSnapShot).SelectSnapshotModule_Subject.RegisterObserver(this.SelectSnapshotModule_Observer);
+        }
+      }
+
+      if (this.FacetSettingsBasedModules) {
+        this.FacetSettingsBasedModules.forEach((settingBased: _SettingsBasedModulesBase) => {
+          settingBased.UiSettingBasedModuleMutationEvent_Subject.RegisterObserver(this.UiSettingBasedModuleMutationEvent_Observer);
+        })
+      }
+
+      let feedBackModuleLog: IUiModule = this.GetFirstModuleByKey(ModuleKey.FeedbackModuleLog);
+
+      if (<UiFeedbackModuleLog>feedBackModuleLog) {
+        //todo - put back   this.Logger.AddWriter(feedBackModuleLog);
+      }
+
+      this.WireEventsOnCheckBoxes();
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.WireEvents_ModulesManager.name, err);
     }
 
-    if (this.FacetSettingsBasedModules) {
-      this.FacetSettingsBasedModules.forEach((settingBased: _SettingsBasedModulesBase) => {
-        settingBased.UiSettingBasedModuleMutationEvent_Subject.RegisterObserver(this.UiSettingBasedModuleMutationEvent_Observer);
-      })
-    }
-
-    let feedBackModuleLog: IUiModule = this.GetFirstModuleByKey(ModuleKey.FeedbackModuleLog);
-
-    if (<UiFeedbackModuleLog>feedBackModuleLog) {
-      //todo - put back   this.Logger.AddWriter(feedBackModuleLog);
-    }
-
-    this.WireEventsOnCheckBoxes();
-
-    this.Logger.FuncEnd(this.WireEvents.name);
+    this.Logger.FuncEnd(this.WireEvents_ModulesManager.name);
   }
 
   OnUiSettingBasedModuleMutationEvent(uiModuleMutationEvent_Payload: IUiSettingBasedModuleMutationEven_Payload) {
@@ -277,12 +287,6 @@ export class UiModulesManager extends LoggableBase {
     return toReturn;
   }
 
-  OnContentReplyReceivedEventCallBack(dataContentReplyReceivedEvent_Payload: IDataContentReplyReceivedEvent_Payload) {
-    this.Logger.FuncStart(this.OnContentReplyReceivedEventCallBack.name);
-    this.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfSitecoreWindow, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
-    this.Logger.FuncEnd(this.OnContentReplyReceivedEventCallBack.name);
-  }
-
   ClosePopUp(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.ClosePopUp.name);
@@ -365,11 +369,11 @@ export class UiModulesManager extends LoggableBase {
     this.Logger.FuncEnd(this.UpdateUiFromContentReply.name);
   }
 
-  private async UpdateUiCommon(): Promise<void> {
+  private UpdateUiCommon(): void {
     if (this.LastKnownstateOfSitecoreWindow && this.LastKnownstateOfSitecoreWindow.Meta) {
       this.UiVisibilityTestAgent.Hydrate(this.LastKnownstateOfSitecoreWindow, this.LastKnownStateOfStorageSnapShots, this.LastKnownstateOfSitecoreWindow.Meta.WindowType, this.LastKnownSelectSnapshotId);
 
-      let refreshData: UiHydrationData = new UiHydrationData(this.LastKnownstateOfSitecoreWindow, this.TabMan.GetScUrlAgent(), this.LastKnownStateOfStorageSnapShots, this.LastKnownSelectSnapshotId, this.UiVisibilityTestAgent);
+      let refreshData: UiHydrationData = new UiHydrationData(this.LastKnownstateOfSitecoreWindow, this.ScUrlAgent, this.LastKnownStateOfStorageSnapShots, this.LastKnownSelectSnapshotId, this.UiVisibilityTestAgent);
 
       this.HydrateModules(refreshData);
       this.RefreshModuleUis()

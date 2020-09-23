@@ -22,15 +22,15 @@ export class HindSiteSettingCheckBoxModule extends _SettingsBasedModulesBase imp
     this.Logger.FuncEnd(this.Init.name, this.Friendly);
   }
 
-  WireEvents(): void {
-    this.Logger.FuncStart(this.WireEvents.name, this.Friendly);
+  WireEvents_Module(): void {
+    this.Logger.FuncStart(this.WireEvents_Module.name, this.Friendly);
 
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
       this.UiInputElement.addEventListener('change', (evt: Event) => this.OnCheckboxChanged(evt))
     } else {
-      this.Logger.WarningAndContinue(this.WireEvents.name, 'null input element');
+      this.Logger.WarningAndContinue(this.WireEvents_Module.name, 'null input element');
     }
-    this.Logger.FuncEnd(this.WireEvents.name, this.Friendly);
+    this.Logger.FuncEnd(this.WireEvents_Module.name, this.Friendly);
   }
 
   private OnCheckboxChanged(evt: Event) {

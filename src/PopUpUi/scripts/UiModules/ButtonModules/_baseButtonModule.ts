@@ -24,7 +24,7 @@ export class _base_ButtonModule extends _UiModuleBase {
   }
 
   protected Init_BaseButtonModule(): void {
-    this.InitUiModuleBase();
+    this.Init_UiModuleBase();
     this.BuildElements_Base();
   }
 

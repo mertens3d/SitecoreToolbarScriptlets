@@ -38,7 +38,7 @@ export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase imple
     }
   }
 
-  WireEvents(): void {
+  WireEvents_Module(): void {
     if (this.UiInputElement) {
       this.UiInputElement.addEventListener('change', (evt) => this.OnSettingChanged(evt));
     }

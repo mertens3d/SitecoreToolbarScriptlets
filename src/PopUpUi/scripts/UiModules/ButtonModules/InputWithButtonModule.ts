@@ -11,7 +11,7 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
   ModuleKey = ModuleKey.ButtonWithInput;
   private InputElement: HTMLInputElement;
 
-  WireEvents(): void {
+  WireEvents_Module(): void {
     this.WireEvents_Base();
   }
 

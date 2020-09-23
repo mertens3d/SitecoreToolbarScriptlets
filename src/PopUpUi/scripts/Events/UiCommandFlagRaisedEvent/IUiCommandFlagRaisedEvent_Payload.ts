@@ -1,7 +1,7 @@
 ﻿import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { IStateOfPopUpUi } from "../../../../Shared/scripts/Interfaces/IMsgPayload";
+import { IStateOfPopUp } from "../../../../Shared/scripts/Interfaces/IStateOfPopUp";
 
 export interface IUiCommandFlagRaisedEvent_Payload {
   MsgFlag: MsgFlag,
-  StateOfPopUp: IStateOfPopUpUi
+  StateOfPopUp: IStateOfPopUp
 }

@@ -24,7 +24,7 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
     this.Logger.FuncEnd(this.Init.name, TypCommandButtonModule.name)
   }
 
-  WireEvents(): void {
+  WireEvents_Module(): void {
     this.WireEvents_Base();
   }
 

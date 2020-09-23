@@ -18,7 +18,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
     this.Logger.FuncEnd(this.Init.name, AccordianModule.name);
   }
 
-  WireEvents(): void {
+  WireEvents_Module(): void {
     if (!StaticHelpers.IsNullOrUndefined(this.AccordionTriggerElem)) {
       this.AccordionTriggerElem.addEventListener('click', (evt) => this.OnToggleAccordion(evt));
     } else {

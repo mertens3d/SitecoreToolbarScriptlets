@@ -12,7 +12,7 @@ export class CancelButtonModule extends _base_ButtonModule implements IUiModuleB
     this.Logger = loggerAgent;
   }
 
-  WireEvents(): void {
+  WireEvents_Module(): void {
     this.WireEvents_Base();
   }
 

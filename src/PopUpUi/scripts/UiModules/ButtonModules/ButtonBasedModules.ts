@@ -2,16 +2,14 @@
 import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { CommandManager } from "../../Classes/CommandManager";
+import { ICommandDefinitionBucket } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { SelectSnapshotModule } from "../SelectSnapshotModule/SelectSnapshotModule";
 import { CancelButtonModule } from "./CancelButtonModule";
 import { CloseButtonModule } from "./CloseButtonModule";
 import { InputWithButtonModule } from "./InputWithButtonModule";
 import { TypCommandButtonModule } from "./TypCommandButtonModule";
-import { _base_ButtonModule } from "./_baseButtonModule";
-import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { ICommandDefinitionBucket } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 
 export class ButtonBasedModules extends LoggableBase {
   AllButtonBasedModules: IUiModule[] = [];

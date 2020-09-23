@@ -25,7 +25,7 @@ export class UiCommandsManager extends LoggableBase {
     this.Logger.InstantiateEnd(UiCommandsManager.name);
   }
 
-  InitButtonStateManager() {
+  Init_ButtonStateManager() {
     this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
 
     this.BuildCommandButtons();

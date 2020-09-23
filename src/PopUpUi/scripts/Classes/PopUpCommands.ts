@@ -13,7 +13,7 @@ export class CommandDefintionFactory extends LoggableBase {
             MenuCommandParamsAr: [
                 {
                     MenuCommandKey: MenuCommandKey.CloseWindow,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnWindowClose,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnWindowClose,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.Icons.CloseWindow,
                     InnerText: "",
                     VisibilityControllers: [],
@@ -27,7 +27,7 @@ export class CommandDefintionFactory extends LoggableBase {
 
                 {
                     MenuCommandKey: MenuCommandKey.AddCeTab,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnAddContentEditor,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnAddContentEditor,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.Icons.AddContentEditorTab,
                     InnerText: "Add CE Tab to DT",
                     VisibilityControllers: [VisibilityType.Desktop],
@@ -40,7 +40,7 @@ export class CommandDefintionFactory extends LoggableBase {
                 },
                 {
                     MenuCommandKey: MenuCommandKey.GoScModeEdit,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnModeEdit,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnModeEdit,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModeEdit,
                     InnerText: "Edit",
                     VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -53,7 +53,7 @@ export class CommandDefintionFactory extends LoggableBase {
                 },
                 {
                     MenuCommandKey: MenuCommandKey.ScModeNormal,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnModeNorm,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnModeNorm,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModeNormal,
                     InnerText: "Normal",
                     VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -66,7 +66,7 @@ export class CommandDefintionFactory extends LoggableBase {
                 },
                 {
                     MenuCommandKey: MenuCommandKey.ScModePrev,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnModePrev,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnModePrev,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModePrev,
                     InnerText: "Preview",
                     VisibilityControllers: [VisibilityType.DesktopOrContentEditor, VisibilityType.Edit],
@@ -103,7 +103,7 @@ export class CommandDefintionFactory extends LoggableBase {
                 },
                 {
                     MenuCommandKey: MenuCommandKey.PresentationDetails,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnPresentationDetails,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnPresentationDetails,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.PresentationDetails,
                     InnerText: "Presentation Details",
                     VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -116,7 +116,7 @@ export class CommandDefintionFactory extends LoggableBase {
                 },
                 {
                     MenuCommandKey: MenuCommandKey.CompactScUi,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnCompactScUi,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnCompactScUi,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.CompactCe,
                     InnerText: "Toggle Compact Css",
                     VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -129,7 +129,7 @@ export class CommandDefintionFactory extends LoggableBase {
                 },
                 {
                     MenuCommandKey: MenuCommandKey.PutAdminB,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnAdminB,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnAdminB,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.AdminB,
                     InnerText: "Admin B",
                     VisibilityControllers: [VisibilityType.LoginPage],
@@ -143,7 +143,7 @@ export class CommandDefintionFactory extends LoggableBase {
 
                 {
                     MenuCommandKey: MenuCommandKey.GoContentEditor,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnGoContentEditor,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnGoContentEditor,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.GoContentEditor,
                     InnerText: "Content Editor",
                     VisibilityControllers: [VisibilityType.NotLogin],
@@ -157,7 +157,7 @@ export class CommandDefintionFactory extends LoggableBase {
 
                 {
                     MenuCommandKey: MenuCommandKey.QuickPublish,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.BtnQuickPublish,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnQuickPublish,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.QuickPublish,
                     InnerText: "Quick Publish",
                     VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
@@ -170,7 +170,7 @@ export class CommandDefintionFactory extends LoggableBase {
                 },
                 {
                     MenuCommandKey: MenuCommandKey.GoDesktop,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModulePlaceHolders.Desktop,
+                    PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.Desktop,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.GoDesktop,
                     InnerText: "Desktop",
                     VisibilityControllers: [VisibilityType.NotLogin],
@@ -251,8 +251,8 @@ export class CommandDefintionFactory extends LoggableBase {
                     }
                 },
                 {
-                    MenuCommandKey: MenuCommandKey.RestoreStateTBDTab,
-                    PlaceHolderSelector: PopConst.Const.Selector.HS.SelStateSnapShot,
+                  MenuCommandKey: MenuCommandKey.RestoreStateTBDTab,
+                  PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.SelStateSnapShot,
                     IconClassName: PopConst.Const.ClassNames.HS.Buttons.RestoreStateTBD,
                     VisibilityControllers: [],
                     InnerText: "Restore to TBD",

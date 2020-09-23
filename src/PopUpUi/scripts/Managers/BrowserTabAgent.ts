@@ -7,14 +7,15 @@ import { IAbsoluteUrl } from '../../../Shared/scripts/Interfaces/IAbsoluteUrl';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 
 export class BrowserTabAgent {
-  private ScUrlAgent: ScUrlAgent;
+  private ScUrlAgent: IScUrlAgent;
   private Logger: ILoggerAgent;
   private RecipeBasics: RecipeBasics;
   SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: ScUrlAgent, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
     this.Logger = logger;
     this.Logger.InstantiateStart(BrowserTabAgent.name);
     this.ScUrlAgent = scUrlAgent;
@@ -29,10 +30,6 @@ export class BrowserTabAgent {
 
   SetQueryStringKeyValue(qsKey: QueryStrKey, qsValue: string) {
     this.ScUrlAgent.SetParameterValueByKey(qsKey, qsValue)
-  }
-
-  GetScUrlAgent(): ScUrlAgent {
-    return this.ScUrlAgent;
   }
 
   GetWindowType(): ScWindowType {

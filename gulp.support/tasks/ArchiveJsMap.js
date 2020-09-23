@@ -18,6 +18,8 @@ var filesToArchive = [
   './src/content/**/*.map',
   './src/PopUpUi/**/*.js',
   './src/PopUpUi/**/*.map',
+  './src/PopUpController/**/*.js',
+  './src/PopUpController/**/*.map',
   './src/Shared/**/*.js',
   './src/Shared/**/*.map',
 ];

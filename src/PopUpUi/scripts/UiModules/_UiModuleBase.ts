@@ -2,6 +2,7 @@
 import { ModuleKey } from "../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { UiHydrationData } from "../../../Shared/scripts/Interfaces/UiHydrationData";
+import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 
 export class _UiModuleBase extends LoggableBase {
   protected ContainerSelector: string;
@@ -16,8 +17,16 @@ export class _UiModuleBase extends LoggableBase {
     this.ContainerSelector = containerSelector;
   }
 
-  protected InitUiModuleBase() {
-    this.ContainerUiDivElem = <HTMLDivElement> this.GetUiElement(this.ContainerSelector);
+  protected Init_UiModuleBase() {
+    this.Logger.FuncStart(this.Init_UiModuleBase.name, this.Friendly);
+
+    this.ContainerUiDivElem = <HTMLDivElement>this.GetUiElement(this.ContainerSelector);
+
+    if (StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
+      this.Logger.ErrorAndThrow(this.Init_UiModuleBase.name, 'Null: ' + this.ContainerSelector);
+    }
+
+    this.Logger.FuncEnd(this.Init_UiModuleBase.name, this.Friendly);
   }
 
   protected GetUiElement(uiSelector: string): HTMLElement {

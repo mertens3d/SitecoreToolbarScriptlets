@@ -28,12 +28,12 @@ export abstract class _SettingsBasedModulesBase extends _UiModuleBase implements
 
   abstract Init(): void
 
-  abstract WireEvents(): void
+  abstract WireEvents_Module(): void
 
   abstract RefreshUi(): void
 
   Init_BaseSettingsBasedModule() {
-    this.InitUiModuleBase();
+    this.Init_UiModuleBase();
     this.UiSettingBasedModuleMutationEvent_Subject = new UiSettingBasedModuleMutationEvent_Subject(this.Logger);
   }
 }

@@ -1,7 +1,7 @@
-﻿import { PopUpMessagesBrokerAgent } from "../../PopUpController/Agents/PopUpMessagesBrokerAgent";
+﻿import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
 import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
 import { HindSiteSettingWrapper } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
-import { CommandManager } from "../../PopUpUi/scripts/Classes/CommandManager";
+import { CommandManager } from "../Managers/CommandManager";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
 import { IRepositoryAgent } from "../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
@@ -11,42 +11,99 @@ import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
-import { PopUpUiEntry } from "../../PopUpUi/scripts/zPopUpUiEntryPoint";
+import { HindSiteUi } from "../../PopUpUi/scripts/zPopUpUiEntryPoint";
 import { UiCommandFlagRaisedEvent_Observer } from "../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
 import { IUiCommandFlagRaisedEvent_Payload } from "../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
 import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
 import { CommandDefintionFactory } from "../../PopUpUi/scripts/Classes/PopUpCommands";
+import { StateHelpers } from "../../PopUpUi/scripts/Classes/StateHelpers";
+import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
+import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { ICommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { PopUpBrowserProxy } from "./Proxies/BrowserProxy";
+import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 
 class PopUpControllerEntry {
-  RepoAgent: IRepositoryAgent;
-  SettingsAgent: ISettingsAgent;
-  PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
-  Logger: LoggerAgent;
-  commandMan: CommandManager;
-  UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
-  PopUpUiEntry: PopUpUiEntry;
-  CommandDefintionBucket: import("C:/projects/SitecoreToolbarScriptlets/src/Shared/scripts/Interfaces/IMenuCommandDefinitionBucket").ICommandDefinitionBucket;
+  private RepoAgent: IRepositoryAgent;
+  private SettingsAgent: ISettingsAgent;
+  private PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
+  private Logger: LoggerAgent;
+  private commandMan: CommandManager;
+  private UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
+  private UiLayer: HindSiteUi;
+  private CommandDefintionBucket: ICommandDefinitionBucket;
+  private ScUrlAgent: IScUrlAgent;
+  private BrowserProxy: PopUpBrowserProxy;
 
-  async main() {
+  public async Startup() {
     try {
-      this.Instantiate();
-      this.PopUpUiEntry = new PopUpUiEntry();
-      this.PopUpUiEntry.main(this.commandMan.CommandDefinitionBucket);
-      this.PopUpUiEntry.EventMan.UiCommandRaisedFlag_Subject.RegisterObserver(this.UiCommandRaisedFlag_Observer);
-      this.Init();
+      this.Preamble_SettingsAndLogger();
+
+      this.BrowserProxy = new PopUpBrowserProxy(this.Logger);
+      await this.BrowserProxy.Init_BrowserProxy()
+        .then(() => {
+          this.InstantiateAgents_Controller();
+          this.InstantiateManagers_Controller();
+          this.Init_Controller();
+        });
     } catch (err) {
+      console.log(err);
     }
   }
 
-  private async Init() {
-    this.Logger.SectionMarker('Begin Init');
-    this.commandMan.Init();
-    this.WireEvents();
-    this.Start();
+  private Preamble_SettingsAndLogger() {
+    this.Logger = new LoggerAgent();
+    this.RepoAgent = new RepositoryAgent(this.Logger);
+    this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
+    this.SettingsAgent.Init_SettingsAgent();
+    this.Init_Logger();
   }
 
-  private WireEvents() {
-    this.WireCustomevents();
+  private InstantiateAgents_Controller() {
+    this.ScUrlAgent = new ScUrlAgent(this.Logger, this.BrowserProxy);
+    this.ScUrlAgent.Init_ScUrlAgent();
+    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger, this.BrowserProxy, this.SettingsAgent);
+  }
+
+  private async InstantiateManagers_Controller() {
+    this.Logger.FuncStart(this.InstantiateManagers_Controller.name);
+
+    this.CommandDefintionBucket = new CommandDefintionFactory(this.Logger).BuildMenuCommandParamsBucket();
+    this.UiLayer = new HindSiteUi(this.Logger, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
+    this.commandMan = new CommandManager(this.Logger, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket, this.UiLayer);
+
+    this.Logger.FuncEnd(this.InstantiateManagers_Controller.name);
+  }
+
+  private async Init_Controller() {
+    this.Logger.SectionMarker(this.Init_Controller.name);
+
+    this.Logger.FuncStart(this.Init_Controller.name);
+
+    this.commandMan.Init_CommandManager();
+    this.WireEvents_Controller();
+    this.Start();
+
+    this.Logger.FuncEnd(this.Init_Controller.name);
+  }
+
+  private WireEvents_Controller() {
+    this.Logger.FuncStart(this.WireEvents_Controller.name);
+
+    this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.Logger, this.OnUiCommandRaisedEvent.bind(this))
+
+    if (StaticHelpers.IsNullOrUndefined([this.UiLayer.UiCommandRaisedFlag_Subject, this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject])) {
+      this.Logger.ErrorAndThrow(this.WireEvents_Controller.name, 'Null check');
+    } else {
+      this.UiLayer.UiCommandRaisedFlag_Subject.RegisterObserver(this.UiCommandRaisedFlag_Observer);
+      let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, this.UiLayer.OnContentReplyReceivedEventCallBack.bind(this.UiLayer)); //todo wire null to ui
+
+      this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(contentReplyReceivedEvent_Observer);
+
+     //todo put this back somehow this.FeedbackModuleMsg_Observer) this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(null);
+    }
+
+    this.Logger.FuncEnd(this.WireEvents_Controller.name);
   }
 
   OnUiCommandRaisedEvent(uiCommandFlagRaisedEvent_Payload: IUiCommandFlagRaisedEvent_Payload) {
@@ -59,24 +116,8 @@ class PopUpControllerEntry {
     this.commandMan.TriggerPingEventAsync();
   }
 
-  private InstantiateAndInitSettingsAndLogger() {
-    this.Logger = new LoggerAgent();
-    this.RepoAgent = new RepositoryAgent(this.Logger);
-    this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
-    this.SettingsAgent.Init_SettingsAgent();
-    this.InitLogger();
-  }
-
-  private async Instantiate() {
-    this.InstantiateAndInitSettingsAndLogger();
-    this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.Logger, this.OnUiCommandRaisedEvent.bind(this))
-
-    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger);
-    this.CommandDefintionBucket = new CommandDefintionFactory(this.Logger).BuildMenuCommandParamsBucket();
-    this.commandMan = new CommandManager(this.Logger, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket);
-  }
-  private InitLogger() {
-    this.Logger.FuncStart(this.InitLogger.name);
+  private Init_Logger() {
+    this.Logger.FuncStart(this.Init_Logger.name);
 
     let enableLoggingSetting: HindSiteSettingWrapper = this.SettingsAgent.HindSiteSettingsBucket.GetByKey(SettingKey.EnableLogging);
 
@@ -94,15 +135,10 @@ class PopUpControllerEntry {
     }
     this.Logger.FlushBuffer();
 
-    this.Logger.FuncEnd(this.InitLogger.name);
-  }
-  WireCustomevents() {
-    let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, null); //todo wire null to ui
-    this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(contentReplyReceivedEvent_Observer);
-    this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(null);//todo put this back somehow this.FeedbackModuleMsg_Observer)
+    this.Logger.FuncEnd(this.Init_Logger.name);
   }
 }
 
 let popUpControllerEntry: PopUpControllerEntry = new PopUpControllerEntry();
 
-popUpControllerEntry.main();
+popUpControllerEntry.Startup();

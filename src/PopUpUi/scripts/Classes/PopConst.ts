@@ -84,7 +84,6 @@ export class PopConst {
 
         ToggleFavorite: '[id=id-ph-btn-toggle-favorite]',
 
-        SelStateSnapShot: '[id=selState]',
         SettingAutoSaveInterval: '[id=id-settings-auto-save-interval]',
         SettingAutoSaveMaxCount: '[id=id-settings-auto-save-max-count]',
 
@@ -93,7 +92,8 @@ export class PopConst {
         SettingNotUsed: '[id=id-settings-not-used]',
         TakeSnapshot: '[id=id-ph-btn-take-snapshot]',
         UpdateNicknameB: '[id=id-ph-btn-update-nickname]',
-        ModulePlaceHolders: {
+        ModuleContainers: {
+          SelStateSnapShot: '[id=id-container-select-state]',
           PrefAutoLogin: '[id=id-ph-settings-auto-login]',
           SettingUseCompactCss: '[id=id-ph-settings-use-compact]',
           SettingDebugKeepDialogOpen: '[id=id-ph-settings-debug-keep-dialog-open]',

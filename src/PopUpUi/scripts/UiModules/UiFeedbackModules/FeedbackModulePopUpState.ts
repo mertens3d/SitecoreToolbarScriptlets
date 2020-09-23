@@ -6,7 +6,7 @@ import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModulePopUpState extends _UiFeedbackModuleBase implements IUiModule {
 
-  WireEvents(): void {
+  WireEvents_Module(): void {
   
   }
 

@@ -1,16 +1,14 @@
-﻿import { UiModulesManager } from "../../../../PopUpUi/scripts/Managers/UiManager/UiModulesManager";
-import { HindSiteSettingsBucket } from "../../Agents/Agents/SettingsAgent/HindSiteSettingsBucket";
+﻿import { HindSiteSettingsBucket } from "../../Agents/Agents/SettingsAgent/HindSiteSettingsBucket";
+import { HindSiteSettingWrapper } from "../../Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingKey } from "../../Enums/3xxx-SettingKey";
+import { SettingFlavor } from "../../Enums/SettingFlavor";
 import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";
 import { IHindSiteSetting } from "./IGenericSetting";
-import { SettingFlavor } from "../../Enums/SettingFlavor";
-import { HindSiteSettingWrapper } from "../../Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 
 
 export interface ISettingsAgent {
   GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[];
   GetByKey(EnableLogging: SettingKey): IHindSiteSetting;
-  IntroduceUiModulesManager(UiModulesMan: UiModulesManager);
   BooleanSettingChanged(SettingKey: SettingKey, checked: boolean);
   HindSiteSettingsBucket: HindSiteSettingsBucket;
   Init_SettingsAgent(): void;
