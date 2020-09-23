@@ -17,7 +17,7 @@ export class UiEventManager extends LoggableBase {
 
   UiModulesMan: UiModulesManager;
   CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
-  UiCommandRaisedFlag_Subject: UiCommandFlagRaisedEvent_Subject;
+  UiCommandRaisedFlag_UiEventManagerRelay_Subject: UiCommandFlagRaisedEvent_Subject;
 
   constructor(logger: ILoggerAgent, handlers: HandlersForInternal, uimodulesMan: UiModulesManager) {
     super(logger);
@@ -31,7 +31,7 @@ export class UiEventManager extends LoggableBase {
 
   Init_UiEventManager() {
     this.Logger.FuncStart(this.Init_UiEventManager.name);
-    this.UiCommandRaisedFlag_Subject = new UiCommandFlagRaisedEvent_Subject(this.Logger);
+    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject = new UiCommandFlagRaisedEvent_Subject(this.Logger);
     this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent.bind(this));
     this.Logger.FuncEnd(this.Init_UiEventManager.name);
   }
@@ -58,7 +58,7 @@ export class UiEventManager extends LoggableBase {
       StateOfPopUp: this.GetStateOfPopUp()
     };
 
-    this.UiCommandRaisedFlag_Subject.NotifyObservers(payload);
+    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject.NotifyObservers(payload);
   };
 
   WireEvents_UiEventMan(): void {

@@ -4,7 +4,7 @@ import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
-import { ICommandDefinitionBucket, IUiLayer } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { ICommandDefinitionBucket, IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { HandlersForInternal } from "./Classes/HandlersExternal";
 import { PopConst } from "./Classes/PopConst";
 import { UiCommandFlagRaisedEvent_Subject } from "./Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject";
@@ -17,8 +17,10 @@ import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/F
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IStateOfPopUp } from "../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { UiCommandFlagRaisedEvent_Observer } from "./Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
+import { IUiCommandFlagRaisedEvent_Payload } from "./Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
 
-export class HindSiteUi extends LoggableBase implements IUiLayer {
+export class HindSiteUiLayer extends LoggableBase implements IHindSiteUiLayer {
   BrowserTabAgent: BrowserTabAgent;
   readonly CommandDefinitionBucket: ICommandDefinitionBucket;
   private UiEventMan: UiEventManager;
@@ -30,10 +32,11 @@ export class HindSiteUi extends LoggableBase implements IUiLayer {
   UiCommandsMan: UiCommandsManager;
   UiModulesMan: UiModulesManager;
   UiVisibilityTestAgent: IUiVisibilityTestAgent;
+    UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, scUrlAgent: IScUrlAgent) {
     super(logger);
-    this.Logger.InstantiateStart(HindSiteUi.name);
+    this.Logger.InstantiateStart(HindSiteUiLayer.name);
 
     try {
       this.SettingsAgent = settingsAgent;
@@ -41,17 +44,17 @@ export class HindSiteUi extends LoggableBase implements IUiLayer {
       this.ScUrlAgent = scUrlAgent;
 
       if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.ScUrlAgent, this.CommandDefinitionBucket])) {
-        this.Logger.ErrorAndThrow(HindSiteUi.name, 'null at constructor');
+        this.Logger.ErrorAndThrow(HindSiteUiLayer.name, 'null at constructor');
       }
 
       this.Instantiate_Ui();
       this.Init_Ui();
       this.WireEvents_Ui();
     } catch (err) {
-      this.Logger.ErrorAndThrow(HindSiteUi.name, err);
+      this.Logger.ErrorAndThrow(HindSiteUiLayer.name, err);
     }
 
-    this.Logger.InstantiateEnd(HindSiteUi.name);
+    this.Logger.InstantiateEnd(HindSiteUiLayer.name);
   }
 
   GetStateOfPopUp(): IStateOfPopUp {
@@ -60,10 +63,10 @@ export class HindSiteUi extends LoggableBase implements IUiLayer {
     
   }
 
-  OnContentReplyReceivedEventCallBack(dataContentReplyReceivedEvent_Payload: IDataContentReplyReceivedEvent_Payload) {
-    this.Logger.FuncStart(this.OnContentReplyReceivedEventCallBack.name);
+  OnContentReplyReceived(dataContentReplyReceivedEvent_Payload: IDataContentReplyReceivedEvent_Payload) {
+    this.Logger.FuncStart(this.OnContentReplyReceived.name);
     this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfSitecoreWindow, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
-    this.Logger.FuncEnd(this.OnContentReplyReceivedEventCallBack.name);
+    this.Logger.FuncEnd(this.OnContentReplyReceived.name);
   }
 
 
@@ -101,8 +104,16 @@ export class HindSiteUi extends LoggableBase implements IUiLayer {
     this.UiEventMan.WireEvents_UiEventMan();
 
     this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.FeedbackMessages);
-    this.UiCommandRaisedFlag_Subject = new UiCommandFlagRaisedEvent_Subject(this.Logger);
+    this.UiCommandRaisedFlag_Subject = this.UiEventMan.UiCommandRaisedFlag_UiEventManagerRelay_Subject;
+
+
+    //this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.Logger, this.OnUiCommandEvent_UiEventManagerRelay.bind(this));
+
 
     this.Logger.FuncEnd(this.WireEvents_Ui.name);
   }
+
+  //private OnUiCommandEvent_UiEventManagerRelay(uiCommandFlagRaisedEvent_Payload: IUiCommandFlagRaisedEvent_Payload) {
+  //  this.UiCommandRaisedFlag_Subject.NotifyObservers(uiCommandFlagRaisedEvent_Payload);
+  //}
 }

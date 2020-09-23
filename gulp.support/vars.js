@@ -13,7 +13,7 @@ class Vars {
     this.ContentStyles = new InjectableClass('Content', '/**/content.scss', 'css', this.FinalFolderShort);
 
     this.PopUpUiJs = new InjectableClass('PopUpUi', '/**/*.js', 'js', this.FinalFolderShort);
-    this.PopUpUiJs.Ts.TranspiledEntryPointFile = 'zPopUpUiEntryPoint.js';
+    this.PopUpUiJs.Ts.TranspiledEntryPointFile = 'HindSiteUiLayer.js';
 
     this.PopUpControllerJs = new InjectableClass('PopUpController', '/**/*.js', 'js', this.FinalFolderShort);
     this.PopUpControllerJs.Ts.TranspiledEntryPointFile = 'zPopUpControllerEntryPoint.js';

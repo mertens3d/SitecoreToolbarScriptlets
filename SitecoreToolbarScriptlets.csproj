@@ -247,7 +247,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneParamPair.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUrlParts.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\__global.ts" />
-    <TypeScriptCompile Include="src\PopUpUi\scripts\zPopUpUiEntryPoint.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\HindSiteUiLayer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgPayloadResponseFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataReqPopUp.ts" />
