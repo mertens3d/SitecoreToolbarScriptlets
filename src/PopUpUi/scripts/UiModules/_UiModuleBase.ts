@@ -9,7 +9,7 @@ export class _UiModuleBase extends LoggableBase {
   protected ContainerUiDivElem: HTMLDivElement;
   protected UiElement: HTMLElement;
   protected RefreshData: any;
-  protected Friendly: string = 'Not Set';
+  Friendly: string = 'Not Set';
   ModuleKey: ModuleKey = ModuleKey.Unknown;
 
   constructor(logger: ILoggerAgent, containerSelector: string) {
@@ -36,6 +36,7 @@ export class _UiModuleBase extends LoggableBase {
     }
     return toReturn;
   }
+
 
   Hydrate(refreshdata: UiHydrationData): void {
     this.RefreshData = refreshdata;

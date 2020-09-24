@@ -14,12 +14,15 @@ import { IFactoryHelper } from "../../../../Shared/scripts/Interfaces/IFactoryHe
 import { RecipeAddNewContentEditorToDesktop } from "../../ContentApi/Recipes/RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop";
 import { RecipePublishActiveCe } from "../../ContentApi/Recipes/RecipePublishActiveCe/RecipePublishActiveCe";
 import { RecipeRemoveItemFromStorage } from "../../ContentApi/Recipes/RecipeRemoveItemFromStorage/RecipeRemoveItemFromStorage";
+import { RecipeForceAutoSnapShot } from "../../ContentApi/Recipes/RecipeRemoveItemFromStorage/RecipeForceAutoSnapShot";
 import { RecipeSetStateOfSitecoreWindow } from "../../ContentApi/Recipes/RecipeRestore/RecipeRestore";
 import { RecipeToggleFavorite } from "../../ContentApi/Recipes/RecipeToggleFavorite/RecipeToggleFavorite";
 import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { LoggableBase } from "../LoggableBase";
 import { ScUiManager } from "../SitecoreUiManager/SitecoreUiManager";
 import { RecipeSaveStateManual } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
+import { AutoSnapShotAgent } from "../../Agents/AutoSnapShotAgent/AutoSnapShotAgent";
+import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 
 export class ContentAPIManager extends LoggableBase implements IHindSiteScWindowApi {
   private AtticAgent: IContentAtticAgent;
@@ -27,8 +30,9 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
   private ScUiMan: ScUiManager;
   private ScWinMan: IScWindowManager;
   private ToastAgent: IToastAgent;
+  AutoSnapShotAgent: AutoSnapShotAgent;
 
-  constructor(logger: ILoggerAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager,  atticAgent: IContentAtticAgent) {
+  constructor(logger: ILoggerAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent) {
     super(logger);
 
     this.Logger.FuncStart(ContentAPIManager.name);
@@ -39,6 +43,12 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     this.FactoryHelp = new FactoryHelper(this.Logger);
     this.AtticAgent = atticAgent;
     this.AtticAgent.CleanOutOldAutoSavedData();
+    this.AutoSnapShotAgent = autoSnapShotAgent;
+
+    if (StaticHelpers.IsNullOrUndefined([this.AutoSnapShotAgent])) {
+      this.Logger.ErrorAndThrow(ContentAPIManager.name, 'null check');
+    }
+
     this.Logger.FuncEnd(ContentAPIManager.name);
   }
 
@@ -87,6 +97,18 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
       await new RecipePublishActiveCe(commandData, this.FactoryHelp).Execute()
         .then(() => resolve)
         .catch((err) => reject(err));
+    });
+  }
+
+  async DebugForceAutoSnapShot(commandData: ICommandHandlerDataForContent): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      let recipe = new RecipeForceAutoSnapShot(commandData);
+
+      recipe.Execute()
+        .then(() => resolve())
+        .catch((err) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
+
+      
     });
   }
 

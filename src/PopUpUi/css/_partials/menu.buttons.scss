@@ -1,6 +1,4 @@
-﻿@import 'vars.scss';
-
-
+﻿@import "../vars";
 
 .hindsite {
   $btnHeight: 60px;
@@ -52,7 +50,6 @@
       width: 100%;
       margin: 0;
     }
-
 
     .btn-overlay {
       position: absolute;

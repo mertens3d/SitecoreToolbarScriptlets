@@ -14,7 +14,7 @@ $sc_White: rgb(255, 255, 255);
 $scFontFamily: 'Open Sans', Arial, sans-serif;
 
 $scSectionBackgroundColor: rgb(71, 71, 71);
-$scSectionTitleHeight: 22px;
+$scSectionTitleHeight: 18px;
 
 $browserExtMaxHeight: 600px;
 $browserExtMaxWidth: 800px;
@@ -41,11 +41,30 @@ $selColWidth: $margin + $padding + $selWidth + $padding +$margin;
 $selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $scLaunchPagebuttonWidth + $padding +$margin + 40px;
 
 
+// ---------------- browsers
+ $chromeScrollBarWidth: 16px;
+ $chromeScrollTriggerWidth: 6px;
+// -------------------- heights
+$ChromeMaxHeight: 580px; //seems about the max
+
+
+$headerHeight: 30px;
+$footerHeight: 30px;
+
+$PopUpScrollableHeight: $ChromeMaxHeight - $headerHeight -$footerHeight; // the max seems to be around here. We might as well control it so that we control the scroll-y
+
+// --------------- Widths
+$ChromeMaxWidth: 800px; //seems about the max
+$PopUpUiWidth: $ChromeMaxWidth; // max in chrome seems to be 784 which results in a 800px total -- 16px for the scroll?
+$HeaderFooterWidth: $ChromeMaxWidth - $chromeScrollTriggerWidth - 10; //needs to be around 777
+$BigWrapperScrollableWidth: 100%;
+
+
+
 $AccordianWidth: 750px;
 //heights
 
 $MaxScrollerWidth: 736px;
-$headerHeight: 40px;
 
 
 $hsDarkerGray: #5b5b5b;

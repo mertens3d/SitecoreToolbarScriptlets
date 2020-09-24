@@ -167,6 +167,17 @@ export class DefaultSettings extends LoggableBase {
 
       ),
       new HindSiteSetting(
+        SettingKey.LgndPopUpDebug,
+        SettingType.Accordion,
+        PopConst.Const.Selector.HS.ModuleContainers.LgndPopUpDebug,
+        PopConst.Const.Settings.Defaults.LgndPopUpState,
+        SettingFlavor.PopUp,
+        'Debugging',
+        UiEnableState.Enabled,
+        UiPresence.HasUi,
+        ModuleKey.Accordion,
+      ),
+      new HindSiteSetting(
 
         SettingKey.LgndContentState,
         SettingType.Accordion,
@@ -264,7 +275,7 @@ export class DefaultSettings extends LoggableBase {
         UiPresence.HasUi,
         ModuleKey.CheckBox,
 
-      )
+      ),
     ];
 
     let toReturn: HindSiteSettingWrapper[] = [];

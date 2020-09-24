@@ -264,6 +264,7 @@ export class UiModulesManager extends LoggableBase {
     toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonTypical));
     toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonWithInput));
     toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonCancel));
+    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonClose));
 
     return toReturn;
   }
@@ -312,8 +313,12 @@ export class UiModulesManager extends LoggableBase {
     }
   }
 
-  HydrateModules(uiHydrationData: UiHydrationData) {
-    this.Logger.FuncStart(this.HydrateModules.name);
+  HydrateUiModules(uiHydrationData: UiHydrationData) {
+    this.Logger.FuncStart(this.HydrateUiModules.name);
+
+
+    this.Logger.LogAsJsonPretty('uiHydrationData.SelectSnapShot', uiHydrationData.SelectSnapShot);
+
     if (uiHydrationData) {
       if (uiHydrationData.StateOfSitecoreWindow) {
         if (this.UiModules) {
@@ -322,11 +327,11 @@ export class UiModulesManager extends LoggableBase {
 
         this.UiCommandsMan.HydrateUiModules(uiHydrationData);
       } else {
-        this.Logger.ErrorAndThrow(this.HydrateModules.name, 'null state');
+        this.Logger.ErrorAndThrow(this.HydrateUiModules.name, 'null state');
       }
     }
 
-    this.Logger.FuncEnd(this.HydrateModules.name);
+    this.Logger.FuncEnd(this.HydrateUiModules.name);
   }
 
   RefreshModuleUis() {
@@ -351,9 +356,9 @@ export class UiModulesManager extends LoggableBase {
   async UpdateUiFromContentReply(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, stateOfStorageSnapShots: IDataStateOfStorageSnapShots) {
     this.Logger.FuncStart(this.UpdateUiFromContentReply.name);
 
-    if (StaticHelpers.IsNullOrUndefined(this.LastKnownSelectSnapshotId)) {
-      //this.LastKnownSelectSnapshotId = this.ModuleSelectSnapShots.GetSelectSnapshotId();
-    }
+    //if (StaticHelpers.IsNullOrUndefined(this.LastKnownSelectSnapshotId)) {
+      this.LastKnownSelectSnapshotId = this.ModuleSelectSnapShots.GetSelectSnapshotId();
+    //}
 
     this.LastKnownstateOfSitecoreWindow = stateOfSitecoreWindow;
     this.LastKnownStateOfStorageSnapShots = stateOfStorageSnapShots;
@@ -369,7 +374,7 @@ export class UiModulesManager extends LoggableBase {
 
       let refreshData: UiHydrationData = new UiHydrationData(this.LastKnownstateOfSitecoreWindow, this.ScUrlAgent, this.LastKnownStateOfStorageSnapShots, this.LastKnownSelectSnapshotId, this.UiVisibilityTestAgent);
 
-      this.HydrateModules(refreshData);
+      this.HydrateUiModules(refreshData);
       this.RefreshModuleUis()
     } else {
       this.Logger.ErrorAndThrow(this.UpdateUiFromContentReply.name, 'null state or meta');

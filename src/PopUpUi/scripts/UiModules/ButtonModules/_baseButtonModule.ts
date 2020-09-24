@@ -9,13 +9,12 @@ import { ISingleClickEvent_Payload } from "../../Events/SingleClickEvent/ISingle
 import { _UiModuleBase } from "../_UiModuleBase";
 import { SingleClickEvent_Subject } from "../../Events/SingleClickEvent/SingleClickEvent_Subject";
 
-export class _base_ButtonModule extends _UiModuleBase {
-  protected MenuCommandDefinition: IMenuCommandDefinition;
-
-  protected RefreshData: UiHydrationData;
-  ModuleKey: ModuleKey = ModuleKey.Unknown;
-  Friendly = this.MenuCommandDefinition ? MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey] : '{error 111}';
+export abstract class _base_ButtonModule extends _UiModuleBase {
+  abstract ModuleKey: ModuleKey = ModuleKey.Unknown;
   protected HTMLButtonElement: HTMLButtonElement;
+  protected MenuCommandDefinition: IMenuCommandDefinition;
+  protected RefreshData: UiHydrationData;
+  public Friendly = this.MenuCommandDefinition ? MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey] : this.ContainerSelector;
   public SingleButtonClickEvent_Subject: SingleClickEvent_Subject;
 
   constructor(loggerAgent: ILoggerAgent, menuCommandDefinition: IMenuCommandDefinition) {
@@ -79,11 +78,6 @@ export class _base_ButtonModule extends _UiModuleBase {
         };
 
         this.SingleButtonClickEvent_Subject.NotifyObservers(singleClickEvent_payload);
-
-        //let data: ICommandHandlerDataForPopUp = this.BuildCommandData();
-        //data.Evt = evt;
-        //data.EventMan = eventMan;
-        //data.EventMan.RouteAllCommandEvents(data);
       });
     } else {
       this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No button element: ' + this.MenuCommandDefinition.PlaceHolderSelector);
@@ -104,7 +98,6 @@ export class _base_ButtonModule extends _UiModuleBase {
   }
 
   private BuildCommandData(): ICommandHandlerDataForPopUp {
-
     let data: ICommandHandlerDataForPopUp = {
       EventMan: null,
       MenuCommandDefinition: this.MenuCommandDefinition,

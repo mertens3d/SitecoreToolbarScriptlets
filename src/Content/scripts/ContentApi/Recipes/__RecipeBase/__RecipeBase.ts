@@ -8,8 +8,9 @@ import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IData
 import { ICommandHandlerDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { IRecipeBasics } from "../../../../../Shared/scripts/Interfaces/IPromiseHelper";
 import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { AutoSnapShotAgent } from "../../../Agents/AutoSnapShotAgent/AutoSnapShotAgent";
 
-export class __RecipeBase {
+ export abstract class __RecipeBase {
   protected AtticAgent: IContentAtticAgent;
   protected Logger: ILoggerAgent;
   protected RecipeBasics: IRecipeBasics;
@@ -17,7 +18,8 @@ export class __RecipeBase {
   protected TargetSnapShotId: GuidData;
   protected TargetSnapShotFlavor: SnapShotFlavor;
   protected TargetDoc: IDataOneDoc;
-  protected TargetConEdProxy: ContentEditorProxy;
+   protected TargetConEdProxy: ContentEditorProxy;
+   protected AutoSnapShotAgent: AutoSnapShotAgent;
 
   constructor(commandData: ICommandHandlerDataForContent) {
     this.Logger = commandData.Logger;
@@ -28,5 +30,6 @@ export class __RecipeBase {
     //this.TargetSnapShotFlavor = commandData.TargetSnapShotFlavor
     this.TargetDoc = commandData.TargetDoc;
     this.TargetConEdProxy = commandData.TargetCeProxy;
+    this.AutoSnapShotAgent = commandData.AutoSnapShotAgent;
   }
 }

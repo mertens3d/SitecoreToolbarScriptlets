@@ -5,6 +5,8 @@ import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class UiFeedbackModuleLog extends _UiFeedbackModuleBase implements IUiModule {
 
+  Friendly = UiFeedbackModuleLog.name;
+
   WireEvents_Module(): void {
   }
   

@@ -9,6 +9,7 @@ import { IUiSettingBasedModuleMutationEven_Payload } from "../../Events/UiSettin
 export class HindSiteSettingCheckBoxModule extends _SettingsBasedModulesBase implements IUiModule {
   private UiInputElement: HTMLInputElement;
   private LabelElement: HTMLLabelElement;
+  Friendly = HindSiteSettingCheckBoxModule.name;
 
   Init() {
     this.Logger.FuncStart(this.Init.name, this.Friendly);

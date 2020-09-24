@@ -22,4 +22,7 @@
     Ping = 2020,
     UpdateNickname = 2021,
     QuickPublish = 2022,
+    DebugForceAutoSnapShot,
+    DebugClearPopUpConsole,
+    DebugTriggerPopUpReload
 }

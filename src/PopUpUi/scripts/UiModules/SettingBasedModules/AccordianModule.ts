@@ -9,6 +9,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
   private AccordionContentElem: HTMLElement;
   ModuleKey = ModuleKey.Accordion;
   private AccordionTriggerElem: HTMLElement;
+  Friendly = AccordianModule.name;
 
   Init() {
     this.Logger.FuncStart(this.Init.name, AccordianModule.name);
@@ -85,8 +86,10 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
   private SetAccordionClass() {
     if (this.SettingJacket.HindSiteSetting.ValueAsBool() !== true) {
       this.AccordionContentElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
+      this.AccordionTriggerElem.classList.remove(PopConst.Const.ClassNames.HS.Down);
     } else {
       this.AccordionContentElem.classList.add(PopConst.Const.ClassNames.HS.Collapsed);
+      this.AccordionTriggerElem.classList.add(PopConst.Const.ClassNames.HS.Down);
     }
   }
 }

@@ -9,6 +9,7 @@ import { IUiSettingBasedModuleMutationEven_Payload } from "../../Events/UiSettin
 export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase implements IUiModule {
   private UiInputElement: HTMLInputElement;
   private LabelElement: HTMLLabelElement;
+  Friendly = HindSiteSettingNumberModule.name;
 
   Init() {
     this.Init_BaseSettingsBasedModule();

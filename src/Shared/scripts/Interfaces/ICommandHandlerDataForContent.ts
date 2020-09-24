@@ -10,6 +10,7 @@ import { IDataOneDoc } from "./Data/IDataOneDoc";
 import { ContentEditorProxy } from "../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ISettingsAgent } from "./Agents/ISettingsAgent";
 import { DesktopProxy } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { AutoSnapShotAgent } from "../../../Content/scripts/Agents/AutoSnapShotAgent/AutoSnapShotAgent";
 
 export interface ICommandHandlerDataForContent {
   SettingsAgent: ISettingsAgent;
@@ -25,4 +26,5 @@ export interface ICommandHandlerDataForContent {
   Logger: ILoggerAgent;
   ContentMessageBroker: ContentMessageBroker,
   TopLevelDoc(): IDataOneDoc,
+  AutoSnapShotAgent: AutoSnapShotAgent
 }

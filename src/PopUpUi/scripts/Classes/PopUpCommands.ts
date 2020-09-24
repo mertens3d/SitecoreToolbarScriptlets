@@ -225,19 +225,19 @@ export class CommandDefintionFactory extends LoggableBase {
             CommandType: CommandType.Content,
           }
         },
-        {
-          MenuCommandKey: MenuCommandKey.Cancel,
-          PlaceHolderSelector: PopConst.Const.Selector.HS.HsCancel,
-          IconClassName: PopConst.Const.ClassNames.HS.Buttons.Cancel,
-          InnerText: "Cancel",
-          VisibilityControllers: [],
-          ModuleKey: ModuleKey.ButtonTypical,
-          EventHandlerData: {
-            Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.CancelCommand,
-            CommandType: CommandType.Content,
-          }
-        },
+        //{
+        //  MenuCommandKey: MenuCommandKey.Cancel,
+        //  PlaceHolderSelector: PopConst.Const.Selector.HS.HsCancel,
+        //  IconClassName: PopConst.Const.ClassNames.HS.Buttons.Cancel,
+        //  InnerText: "Cancel",
+        //  VisibilityControllers: [],
+        //  ModuleKey: ModuleKey.ButtonTypical,
+        //  EventHandlerData: {
+        //    Event: CommandButtonEvents.OnSingleClick,
+        //    MsgFlag: MsgFlag.CancelCommand,
+        //    CommandType: CommandType.Content,
+        //  }
+        //},
         {
           MenuCommandKey: MenuCommandKey.Remove,
           PlaceHolderSelector: PopConst.Const.Selector.HS.HsRemoveFromStorage,
@@ -287,6 +287,45 @@ export class CommandDefintionFactory extends LoggableBase {
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
             MsgFlag: MsgFlag.ReqSetStateOfSitecoreNewWindow,
+            CommandType: CommandType.PopUp,
+          }
+        },
+        {
+          MenuCommandKey: MenuCommandKey.DebugForceAutoSnapShot,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnDebugForceAutoSnapShot,
+          VisibilityControllers: [VisibilityType.SnapShotable],
+          IconClassName: PopConst.Const.ClassNames.HS.Buttons.TakeSnapShot,
+          InnerText: "Force Auto Snapshot",
+          ModuleKey: ModuleKey.ButtonTypical,
+          EventHandlerData: {
+            Event: CommandButtonEvents.OnSingleClick,
+            MsgFlag: MsgFlag.ReqDebugAutoSnapShot,
+            CommandType: CommandType.Content,
+          }
+        },
+        {
+          MenuCommandKey: MenuCommandKey.DebugClearPopUpConsole,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnDebugClearPopUpConsole,
+          VisibilityControllers: [],
+          IconClassName: PopConst.Const.ClassNames.HS.Buttons.RemoveFromStorage,
+          InnerText: "Clear PopUp Console",
+          ModuleKey: ModuleKey.ButtonTypical,
+          EventHandlerData: {
+            Event: CommandButtonEvents.OnSingleClick,
+            MsgFlag: MsgFlag.ReqDebugClearConsole,
+            CommandType: CommandType.PopUp,
+          }
+        },
+        {
+          MenuCommandKey: MenuCommandKey.DebugTriggerPopUpReload,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnDebugTriggerPopUpReload,
+          VisibilityControllers: [],
+          IconClassName: PopConst.Const.ClassNames.HS.Buttons.RemoveFromStorage,
+          InnerText: "Trigger Reload",
+          ModuleKey: ModuleKey.ButtonTypical,
+          EventHandlerData: {
+            Event: CommandButtonEvents.OnSingleClick,
+            MsgFlag: MsgFlag.ReqDebugTriggerReload,
             CommandType: CommandType.PopUp,
           }
         },

@@ -25,6 +25,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   public SelectSnapshotModule_Subject: SelectSnapUiMutationEvent_Subject;
   ModuleKey = ModuleKey.SelectSnapShot;
   private SelectElement: HTMLSelectElement;
+  Friendly = SelectSnapshotModule.name;
 
   constructor(logger: ILoggerAgent, containerSelector: string) {
     super(logger, containerSelector);
@@ -55,6 +56,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     this.Logger.FuncEnd(this.WireEvents_Module.name, this.ContainerSelector);
   }
 
+
   RefreshUi(): void {
     this.PopulateStateOfSnapShotSelectElement();
     //this.SelectSnapshotModule_Subject.NotifyObservers();
@@ -76,13 +78,16 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   }
 
   GetSelectSnapshotId(): GuidData {
+    this.Logger.FuncStart(this.GetSelectSnapshotId.name);
     let currentVal = this.SelectElement.value;
+    this.Logger.LogVal('currentVal', currentVal);
     let toReturn: GuidData;
     if (currentVal) {
       toReturn = Guid.ParseGuid(currentVal, true);
     } else {
       toReturn = GuidData.GetEmptyGuid();
     }
+    this.Logger.FuncEnd(this.GetSelectSnapshotId.name);
     return toReturn;
   }
 

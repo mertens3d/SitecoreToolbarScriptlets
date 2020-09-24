@@ -119,6 +119,7 @@ class PopUpControllerLayer {
       this.UiLayer.OnContentReplyReceived(dataContentReplyReceivedEvent_Payload);
     }
 
+    this.Logger.Log('Return to standby');
     this.Logger.FuncEnd(this.OnContentReplyReceivedEventCallBack.name);
   }
 

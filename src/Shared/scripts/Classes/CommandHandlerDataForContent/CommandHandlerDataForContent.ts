@@ -11,6 +11,7 @@ import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../Interfaces/Data/IDataOneDoc";
 import { ICommandHandlerDataForContent } from "../../Interfaces/ICommandHandlerDataForContent";
+import { AutoSnapShotAgent } from "../../../../Content/scripts/Agents/AutoSnapShotAgent/AutoSnapShotAgent";
 
 export class CommandHandlerDataForContent implements ICommandHandlerDataForContent {
   AtticAgent: IContentAtticAgent = null;
@@ -27,13 +28,15 @@ export class CommandHandlerDataForContent implements ICommandHandlerDataForConte
   ToastAgent: IToastAgent = null;
   TopLevelDoc = () => this.ScWinMan.GetTopLevelDoc();
   SettingsAgent: ISettingsAgent;
+    AutoSnapShotAgent: AutoSnapShotAgent;
 
-  constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, scWinMan: IScWindowManager, toastAgent: IToastAgent, scUiMan: ScUiManager, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, scWinMan: IScWindowManager, toastAgent: IToastAgent, scUiMan: ScUiManager, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent) {
     this.Logger = logger;
     this.AtticAgent = atticAgent;
     this.ScWinMan = scWinMan;
     this.ToastAgent = toastAgent;
     this.ScUiMan = scUiMan;
     this.SettingsAgent = settingsAgent;
+    this.AutoSnapShotAgent = autoSnapShotAgent;
   }
 }

@@ -61,6 +61,10 @@ export class HindSiteUiLayer extends LoggableBase implements IHindSiteUiLayer {
 
   OnContentReplyReceived(dataContentReplyReceivedEvent_Payload: IDataContentReplyReceivedEvent_Payload) {
     this.Logger.FuncStart(this.OnContentReplyReceived.name);
+
+    //calling twice as a workaround to make sure snapshot select is populated before visibility tests are run
+    //todo - fix
+    this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfSitecoreWindow, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
     this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfSitecoreWindow, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
     this.Logger.FuncEnd(this.OnContentReplyReceived.name);
   }

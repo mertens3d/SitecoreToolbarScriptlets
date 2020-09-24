@@ -7,4 +7,5 @@ export interface IUiModule {
   WireEvents_Module(): void;
   RefreshUi(): void;
   ModuleKey: ModuleKey;
+  Friendly: string;
 }

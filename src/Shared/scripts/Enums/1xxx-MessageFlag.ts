@@ -34,5 +34,8 @@
     ReqSetScModeNormal,
     ReqSetScModeEdit,
     ReqSetStateOfSitecoreNewWindow,
-    RespFailedDidNotValidate
+    RespFailedDidNotValidate,
+    ReqDebugAutoSnapShot,
+    ReqDebugTriggerReload,
+    ReqDebugClearConsole
 }

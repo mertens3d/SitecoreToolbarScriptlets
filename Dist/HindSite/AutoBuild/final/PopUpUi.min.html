@@ -8,6 +8,14 @@
   <link href='PopUpUi.min.css' rel='stylesheet' type='text/css'>
 </head>
 <body class='hindsite'>
+  <div class='header'>
+    <div class='left-side'>
+    </div>
+    <div class='right-side'>
+      <div class='button-wrapper close-window' id='id-ph-close-window'></div>
+    </div>
+  </div>
+
   <div class='button-wrapper big-wrapper'>
     <div id='menu-overlayx'>
       <div class='button-wrapper overlay-gray'></div>
@@ -15,17 +23,7 @@
 
     <form>
 
-      <div class='button-wrapper header'>
-        <div class='button-wrapper left-side'>
-        </div>
-        <div class='button-wrapper right-side'>
-          <div class='button-wrapper build-stamp' id='build-stamp'></div>
-          <div class='button-wrapper close-window' id='id-ph-close-window'></div>
-        </div>
-      </div>
-
-      <div class='button-wrapper header-push'></div>
-
+      <!--<div class="button-wrapper header-push"></div>-->
       <!-- accordion -->
 
       <div class='accordion-wrapper' id='lgnd-fore-site'>
@@ -70,7 +68,6 @@
               <div id='id-ph-remove-one-from-local-storage'></div>
               <div id='id-ph-btn-restore-state-same-tab'></div>
               <div id='id-ph-btn-restore-state-new-tab'></div>
-              <div id='Cancel'></div>
             </div>
           </div>
         </fieldset>
@@ -107,11 +104,8 @@
             <fieldset>
               <legend>Auto Snapshot</legend>
               <div id='id-settings-auto-snapshot-on-window-change'></div>
-              <br>
               <div id='id-settings-auto-save-interval'></div>
-              <br>
               <div id='id-settings-auto-save-max-count'></div>
-              <br>
               <div id='id-settings-auto-save-snap-shot-retain-days'></div>
             </fieldset>
 
@@ -122,6 +116,23 @@
         </fieldset>
       </div>
 
+      <!-- accordion -->
+      <div class='accordion-wrapper' id='lgnd-pop-up-debug'>
+        <fieldset class='top'>
+          <legend data-setting='lgnd-pop-up-state' class='button-wrapper section accordion-trigger'>{error}</legend>
+          <div class='accordion-content'>
+            <div class='flex-container'>
+              <div class='col-full'>
+                <div class='button-wrapper row flex-container'>
+                  <div id='id-container-btn-debug-force-auto-snapshot'></div>
+                  <div id='id-container-btn-debug-clear-console'></div>
+                  <div id='id-container-btn-debug-trigger-pop-up-reload'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
       <!-- accordion -->
 
       <div class='accordion-wrapper' id='lgnd-pop-up-state'>
@@ -209,6 +220,15 @@
         </fieldset>
       </div>
     </form>
+  </div>
+
+  <div class='footer'>
+    <div class='left-side'>
+    </div>
+    <div class='right-side'>
+      <div class='build-stamp' id='build-stamp'>
+      </div>
+    </div>
   </div>
 
   <!--type='module'-->

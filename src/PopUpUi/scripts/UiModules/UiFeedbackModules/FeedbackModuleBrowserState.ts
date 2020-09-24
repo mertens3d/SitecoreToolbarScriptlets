@@ -8,8 +8,11 @@ import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements IUiModule {
 
+  Friendly = FeedbackModuleBrowserState.name;
+
   WireEvents_Module(): void {
   }
+
   ModuleKey = ModuleKey.BroswerState;
 
   Init(): void {

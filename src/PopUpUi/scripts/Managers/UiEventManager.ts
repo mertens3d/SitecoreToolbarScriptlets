@@ -70,16 +70,20 @@ export class UiEventManager extends LoggableBase {
   }
 
   ListenForCommandEvents() {
+    this.Logger.FuncStart(this.ListenForCommandEvents.name);
     let baseButtonModules: IUiModuleButton[] = this.UiModulesMan.GetBaseButtonModules();
 
     if (baseButtonModules) {
       baseButtonModules.forEach((baseButtonModule: IUiModuleButton) => {
         if (!StaticHelpers.IsNullOrUndefined(baseButtonModule.SingleButtonClickEvent_Subject)) {
+
+          this.Logger.LogVal('baseButtonModule.Friendly', baseButtonModule.Friendly);
           baseButtonModule.SingleButtonClickEvent_Subject.RegisterObserver(this.CommandButtonSingleClickEvent_Observer);
         } else {
           this.Logger.WarningAndContinue(this.ListenForCommandEvents.name, 'null SingleButtonClickEvent_Subject ' + ModuleKey[baseButtonModule.ModuleKey]);
         }
       });
     }
+    this.Logger.FuncEnd(this.ListenForCommandEvents.name);
   }
 }

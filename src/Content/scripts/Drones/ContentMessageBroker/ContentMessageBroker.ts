@@ -19,6 +19,7 @@ import { RecipeChangeNickName } from "../../ContentApi/Recipes/RecipeChangeNickN
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { AutoSnapShotAgent } from "../../Agents/AutoSnapShotAgent/AutoSnapShotAgent";
 
 export class ContentMessageBroker extends LoggableBase implements IContentMessageBroker {
   private SettingsAgent: ISettingsAgent;
@@ -28,8 +29,9 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
   private ScUiMan: ScUiManager;
   private ScWinMan: IScWindowManager;
   ContentBrowserProxy: IContentBrowserProxy;
+    AutoSnapShotAgent: AutoSnapShotAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScWindowApi, atticMan: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager, contentBrowserProxy: IContentBrowserProxy) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScWindowApi, atticMan: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent) {
     super(logger);
     this.Logger.InstantiateStart(ContentMessageBroker.name);
 
@@ -41,6 +43,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     this.ScUiMan = scUiMan;
     this.ScWinMan = scWinMan;
     this.ContentBrowserProxy = contentBrowserProxy;
+    this.AutoSnapShotAgent = autoSnapShotAgent;
     this.Logger.InstantiateEnd(ContentMessageBroker.name);
   }
 
@@ -136,6 +139,9 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     }
     return RecipeToExecute;
   }
+
+
+
   private CalculateCommandToExec(messageFromController: IMessageControllerToContent): Function {
     let commandToExecute: Function = null;
 
@@ -178,6 +184,10 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
 
       case MsgFlag.ReqRemoveFromStorage:
         commandToExecute = this.ApiManager.RemoveSnapShot;
+        break;
+
+      case MsgFlag.ReqDebugAutoSnapShot:
+        commandToExecute = this.ApiManager.DebugForceAutoSnapShot;
         break;
 
       default:
@@ -238,7 +248,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteCommand.name);
       if (commandToExecute) {
-        let commandData: ICommandHandlerDataForContent = new CommandHandlerDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent)
+        let commandData: ICommandHandlerDataForContent = new CommandHandlerDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent, this.AutoSnapShotAgent);
 
         commandData.TargetSnapShotId = messageFromController.SelectSnapshotId;
         commandData.ContentMessageBroker = this;

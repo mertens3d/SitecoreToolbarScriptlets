@@ -52,6 +52,21 @@ export class CommandManager extends LoggableBase {
       case MsgFlag.ReqSetStateOfSitecoreNewWindow:
         this.HandlersForInternal.HandlerForSnapShotRestoreNewTab(uiCommandFlagRaisedEvent_Payload)
         break;
+      case MsgFlag.ReqDebugClearConsole:
+        console.clear();
+        break;
+      case MsgFlag.ReqDebugTriggerReload:
+        location.reload(true);
+        break;
+
+      case MsgFlag.ReqClosePopUpWindow:
+        window.close();
+        break;
+
+
+      default:
+        this.Logger.WarningAndContinue(this.HandleCommandTypePopUp.name, 'Unhandled command');
+        break
     }
 
   }

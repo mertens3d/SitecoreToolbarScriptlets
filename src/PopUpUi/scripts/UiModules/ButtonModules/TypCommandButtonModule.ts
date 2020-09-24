@@ -32,13 +32,6 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
     return this.MenuCommandDefinition.MenuCommandKey;
   }
 
-  TriggerSingleClick() {
-    this.HTMLButtonElement.click();
-  }
-
-  private AddElemToBaseButton(): void {
-    this.ContainerUiDivElem.appendChild(this.ElemDivBtnOverlay);
-  }
 
   private BuildButtonOverlay(): void {
     this.ElemDivBtnOverlay = document.createElement("div");
@@ -84,16 +77,19 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
     if (this.ContainerUiDivElem) {
       let allresults: VisiblityTestResultsBucket = this.RefreshData.UiVisibilityTestAgent.TestAgainstAllSetControllers(this.MenuCommandDefinition);
 
-      this.Logger.LogVal('length', allresults.TestResults.length);
-      this.SetCommandButtonVisibility(allresults);
+      this.Logger.LogVal('test count', allresults.TestResults.length);
+      this.SetCommandButtonVisibilityBaseOnResults(allresults);
     } else {
       this.Logger.Log('no placeholder ' + this.Friendly)
     }
+
+ 
+
     this.Logger.FuncEnd(this.RefreshUi.name, this.Friendly);
   }
 
-  private SetCommandButtonVisibility(allresults: VisiblityTestResultsBucket) {
-    this.Logger.FuncStart(this.SetCommandButtonVisibility.name, this.Friendly);
+  private SetCommandButtonVisibilityBaseOnResults(allresults: VisiblityTestResultsBucket) {
+    this.Logger.FuncStart(this.SetCommandButtonVisibilityBaseOnResults.name, this.Friendly);
 
     this.Logger.LogAsJsonPretty(this.Friendly, allresults.TestResults);
 
@@ -118,9 +114,9 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
         }
       }
     } else {
-      this.Logger.ErrorAndContinue(this.SetCommandButtonVisibility.name, 'targetButton is NULL: ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+      this.Logger.ErrorAndContinue(this.SetCommandButtonVisibilityBaseOnResults.name, 'targetButton is NULL: ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
     }
 
-    this.Logger.FuncEnd(this.SetCommandButtonVisibility.name, this.Friendly);
+    this.Logger.FuncEnd(this.SetCommandButtonVisibilityBaseOnResults.name, this.Friendly);
   }
 }

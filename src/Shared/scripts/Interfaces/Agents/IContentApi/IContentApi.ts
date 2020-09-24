@@ -12,5 +12,6 @@ export interface IHindSiteScWindowApi {
   SaveWindowState(commandData: ICommandHandlerDataForContent): Promise<void>;
   RemoveSnapShot(commandData: ICommandHandlerDataForContent): Promise<void>;
   PublischActiveCE(commandData: ICommandHandlerDataForContent): Promise<void>;
+  DebugForceAutoSnapShot(commandData: ICommandHandlerDataForContent): Promise<void>;
   //UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void>;
 }

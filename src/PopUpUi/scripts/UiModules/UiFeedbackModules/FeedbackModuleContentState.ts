@@ -5,8 +5,11 @@ import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModuleContentState extends _UiFeedbackModuleBase implements IUiModule {
 
+  Friendly = FeedbackModuleContentState.name;
+
   WireEvents_Module(): void {
   }
+
   ModuleKey = ModuleKey.ContentState;
 
   Init(): void {

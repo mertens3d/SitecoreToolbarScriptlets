@@ -37,6 +37,7 @@ class ContentEntry {
   private AtticAgent: IContentAtticAgent;
   ScUrlAgent: ScUrlAgent;
   ContentBrowserProxy: IContentBrowserProxy;
+  AutoSnapShotAgent: AutoSnapShotAgent;
 
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
@@ -72,11 +73,13 @@ class ContentEntry {
     scWinMan = new ScWindowManager(this.Logger, scUiMan, this.MiscAgent, this.ToastAgent, this.AtticAgent, this.ScUrlAgent, this.SettingsAgent);
     scUiMan = new ScUiManager(this.Logger);
 
-    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan, this.AtticAgent);
+    this.AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, scWinMan, this.AtticAgent);
+
+    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan, this.AtticAgent, this.AutoSnapShotAgent);
     this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
-      this.ContentAPIMan, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan, this.ContentBrowserProxy);
+      this.ContentAPIMan, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan, this.ContentBrowserProxy, this.AutoSnapShotAgent);
 
     contentMessageMan = new ContentMessageManager(this.Logger, scWinMan, contentMessageBroker);
 
@@ -84,10 +87,9 @@ class ContentEntry {
       .then(() => contentMessageMan.InitContentMessageManager())
       .then(() => scWinMan.OnReadyInitScWindowManager())
       .then((result: InitResultsScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
-
       .then(() => {
-        let autoSnapShotAgent: AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, scWinMan, this.AtticAgent);
-        autoSnapShotAgent.ScheduleIntervalTasks();
+       
+        this.AutoSnapShotAgent.ScheduleIntervalTasks();
       })
       .then(() => this.Logger.Log('Init success'))
       .catch((err) => this.Logger.ErrorAndThrow('Content Entry Point', err));
