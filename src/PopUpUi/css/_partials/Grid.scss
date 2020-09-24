@@ -1,0 +1,39 @@
+﻿@import "../vars";
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.col-right {
+}
+
+.col-full {
+  width: 100%;
+}
+
+.col-left {
+  display: flex;
+  vertical-align: top;
+  width: 75%;
+  /*button {
+    display: inline-block;
+    width: 100px;
+  }*/
+}
+
+.col-6-btn {
+  display: flex;
+  flex-wrap: wrap;
+  float: right;
+  width: $selButtonColWidth;
+  /*border: 1px solid black;*/
+}
+
+.col-6 {
+  display: flex;
+  flex-wrap: wrap;
+  width: $oneColWidth * 6;
+  align-content: flex-start;
+}

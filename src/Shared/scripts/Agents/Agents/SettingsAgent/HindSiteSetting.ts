@@ -1,38 +1,41 @@
 ﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
-import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { Enabled } from "../../../Enums/Enabled";
-export class HindSiteSetting implements IGenericSetting {
-  Enabled: Enabled;
+import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
+import { UiEnableState } from "../../../Enums/Enabled";
+import { UiPresence } from "../../../Enums/UiPresence";
+import { ModuleKey } from "../../../Enums/ModuleKey";
+
+export class HindSiteSetting implements IHindSiteSetting {
+  EnabledState: UiEnableState;
   DataType: SettingType;
   DefaultValue: any;
   FriendlySetting: string;
   SettingFlavor: SettingFlavor;
   SettingKey: SettingKey;
-  UiSelector: string;
+  UiContainerSelector: string;
   ValueAsObj: any;
+  HasUi: UiPresence;
+  ModuleType: ModuleKey;
 
-  constructor(settingKey: SettingKey, dataType: SettingType, valueAsObj: any, uiSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enabled: Enabled, hasUi: boolean = true) {
+  constructor(settingKey: SettingKey, dataType: SettingType, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enableState: UiEnableState, hasUi: UiPresence, moduleType: ModuleKey) {
     this.SettingKey = settingKey;
     this.DataType = dataType;
-    this.ValueAsObj = valueAsObj;
-    this.UiSelector = uiSelector;
+    this.ValueAsObj = defaultValue;
+    this.UiContainerSelector = uiContainerSelector;
     this.DefaultValue = defaultValue;
     this.SettingFlavor = settingFlavor;
     this.FriendlySetting = friendly;
     this.HasUi = hasUi;
-    this.Enabled = enabled;
+    this.EnabledState = enableState;
+    this.ModuleType = moduleType;
   }
-
-  HasUi: boolean;
 
   ValueAsInt(): number {
     var toReturn: number = Number.MIN_SAFE_INTEGER;
     if (this.ValueAsObj !== undefined && this.ValueAsObj !== null) {
-
       toReturn = parseInt(this.ValueAsObj.toString());
-    } 
+    }
 
     return toReturn;
   }

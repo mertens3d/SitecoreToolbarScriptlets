@@ -1,25 +1,40 @@
 ﻿import { VisiblityTestResult } from "./VisiblityTestResult";
+import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
 
-export class VisiblityTestResults {
+export class VisiblityTestResultsBucket extends LoggableBase {
   TestResults: VisiblityTestResult[] = [];
 
   HasFailures(): boolean {
     let oneFailed: boolean = false;
 
-    this.TestResults.forEach((oneTest) => oneFailed = oneFailed || !oneTest.Passes);
+    if (this.TestResults) {
+      this.TestResults.forEach((oneTest) => oneFailed = oneFailed || !oneTest || !oneTest.DidItPass);
+    } else {
+      this.Logger.ErrorAndThrow(this.HasFailures.name, 'null test results');
+    }
     return oneFailed;
   }
 
   GetFriendlyFails(): string {
     let toReturn: string = '';
 
-    this.TestResults.forEach((oneTest) => {
-      if (!oneTest.Passes) {
-        toReturn = ' ' + oneTest.FriendlyFailReason;
-      }
-    });
+    if (this.TestResults) {
+
+      this.TestResults.forEach((oneTest) => {
+        if (oneTest) {
+
+          if (!oneTest.DidItPass) {
+            toReturn = ' ' + oneTest.FriendlyFailReason;
+          }
+        } else {
+          this.Logger.LogAsJsonPretty('this.TestResults', this.TestResults);
+          this.Logger.ErrorAndThrow(this.GetFriendlyFails.name, 'null single test result');
+        }
+      });
+    } else {
+      this.Logger.ErrorAndThrow(this.GetFriendlyFails.name, 'null testResults');
+    }
 
     return toReturn;
   }
 }
-

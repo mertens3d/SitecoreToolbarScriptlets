@@ -1,5 +1,4 @@
-﻿import { PayloadDataFromPopUp } from '../../../../Shared/scripts/Classes/PayloadDataReqPopUp';
-import { IContentMessageBroker } from '../../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
+﻿import { IContentMessageBroker } from '../../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
@@ -9,7 +8,6 @@ export class ContentMessageManager extends LoggableBase {
   private ContentMessageBroker: IContentMessageBroker;
   OperationCancelled: any;
   private ScWinMan: IScWindowManager;
- 
 
   constructor(logger: ILoggerAgent, scWinMan: IScWindowManager, contentMessageBroker: IContentMessageBroker) {
     super(logger);
@@ -18,7 +16,6 @@ export class ContentMessageManager extends LoggableBase {
     this.ScWinMan = scWinMan;
 
     this.ContentMessageBroker = contentMessageBroker;
-
 
     this.Logger.FuncEnd(ContentMessageManager.name);
   }
@@ -30,7 +27,7 @@ export class ContentMessageManager extends LoggableBase {
     this.Logger.FuncEnd(this.InitContentMessageManager.name);
   }
 
-  private ToggleCompactCss(Data: PayloadDataFromPopUp): Promise<void> {
+  private ToggleCompactCss(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ToggleCompactCss.name);
 

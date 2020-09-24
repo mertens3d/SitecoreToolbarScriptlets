@@ -1,15 +1,12 @@
-﻿import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
-import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+﻿import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { _BaseFrameProxy } from '../../../Proxies/_BaseFrameProxy';
 import { IDataStateOfDTFrame } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
-import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
 import { DTFrameProxy } from '../../../Proxies/DTFrameProxy';
+import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
 
 export class RecipeRestoreFrameOnDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;

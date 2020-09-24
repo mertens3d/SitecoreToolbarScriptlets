@@ -1,12 +1,8 @@
 ﻿export interface IPopUpConst {
-
   ClassNames: {
     HS: {
       Collapsed: string,
       Buttons: {
-
-
-
       }
     },
   },

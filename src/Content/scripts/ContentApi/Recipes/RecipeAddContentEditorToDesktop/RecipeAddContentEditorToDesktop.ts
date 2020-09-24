@@ -1,6 +1,5 @@
 ﻿import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ISettingsAgent, InitResultsDTFrameProxy } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { _BaseFrameProxy } from '../../../Proxies/_BaseFrameProxy';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
@@ -9,6 +8,7 @@ import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarPr
 import { LoggableBase } from '../../../Managers/LoggableBase';
 import { FrameHelper } from '../../../Helpers/FrameHelper';
 import { DTFrameProxy } from '../../../Proxies/DTFrameProxy';
+import { InitResultsDTFrameProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy';
 
 export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements ICommandRecipes {
   private TargetDoc: IDataOneDoc;
@@ -38,7 +38,9 @@ export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements 
         .then(() => recipeBasics.WaitForNewIframeContentEditor(allIframeDataAtBeginning, this.TargetDoc))
         .then((result: DTFrameProxy) => dtframeProxy = result)
         .then(() => dtframeProxy.OnReadyInitDTFrameProxy())
-        .then((result: InitResultsDTFrameProxy) => this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result))
+        .then((result: InitResultsDTFrameProxy) => {
+            return this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result);
+        })
         .then(() => resolve(dtframeProxy))
         .catch((err) => reject(this.Execute.name + ' ' + err));
     });

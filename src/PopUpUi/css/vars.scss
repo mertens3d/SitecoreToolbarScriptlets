@@ -1,0 +1,91 @@
+﻿$scBackgroundColor: #f7f7f7;
+$scHoverColor: #E3E3E3;
+$buttonDisabledColor: white;
+$scLaunchPadBtnBackground: white;
+$scLaunchPageButtonHeight: 96px;
+$scLaunchPagebuttonWidth: 96px;
+$scTextColorLight: #ccc;
+$scTextColorNorm: #131313;
+
+$scRed: #dc291e;
+$sc_Black: #2b2b2b ;
+$sc_White: rgb(255, 255, 255);
+
+$scFontFamily: 'Open Sans', Arial, sans-serif;
+
+$scSectionBackgroundColor: rgb(71, 71, 71);
+$scSectionTitleHeight: 18px;
+
+$browserExtMaxHeight: 600px;
+$browserExtMaxWidth: 800px;
+
+$selWidth: 500px;
+
+
+$btnOverlayBackgroundColor: pink;
+$btnTypHeight: 64px;
+
+
+
+
+// widths
+$padding: 4px;
+$margin: 4px;
+
+$colWidthOneUnit: 96px;
+
+$oneColWidth: $padding + $colWidthOneUnit;
+
+$selColWidth: $margin + $padding + $selWidth + $padding +$margin;
+
+$selButtonColWidth: $margin + $padding + $scLaunchPagebuttonWidth + $padding + $scLaunchPagebuttonWidth + $padding +$margin + 40px;
+
+
+// ---------------- browsers
+ $chromeScrollBarWidth: 16px;
+ $chromeScrollTriggerWidth: 6px;
+// -------------------- heights
+$ChromeMaxHeight: 580px; //seems about the max
+
+
+$headerHeight: 30px;
+$footerHeight: 30px;
+
+$PopUpScrollableHeight: $ChromeMaxHeight - $headerHeight -$footerHeight; // the max seems to be around here. We might as well control it so that we control the scroll-y
+
+// --------------- Widths
+$ChromeMaxWidth: 800px; //seems about the max
+$PopUpUiWidth: $ChromeMaxWidth; // max in chrome seems to be 784 which results in a 800px total -- 16px for the scroll?
+$HeaderFooterWidth: $ChromeMaxWidth - $chromeScrollTriggerWidth - 10; //needs to be around 777
+$BigWrapperScrollableWidth: 100%;
+
+
+
+$AccordianWidth: 750px;
+//heights
+
+$MaxScrollerWidth: 736px;
+
+
+$hsDarkerGray: #5b5b5b;
+$hsBackgroundColor: $hsDarkerGray;
+$hsTypMargin: 7px;
+
+$scBackgroundImage: url(/sitecore/login/drop_wallpaper.jpg);
+$sc_accordionUp: "/icons/accordion_up.png";
+$sc_add: url(/icons/add.png);
+$sc_camera_1: url("/icons/Camera (1).png");
+$sc_delete: url("/icons/delete.png");
+$sc_desktop: url(/icons/windows%20table.png);
+$sc_heart: url("/icons/heart.png");
+$sc_layout_details: url(/icons/layout_details.png);
+$sc_log_in: url(/icons/log_in.png);
+$sc_open_document: url("/icons/open_document.png");
+$sc_paint: url("/icons/Paint.png");
+$sc_pencil: url(/icons/pencil.png);
+$sc_preview: url(/icons/Preview.png);
+$sc_publish: url(/icons/publish.png);
+$sc_rename: url( /icons/rename.png);
+$sc_sign_stop: url(/icons/sign_stop.png);
+$sc_store: url( /icons/store.png);
+$sc_web: url("/icons/web.png");

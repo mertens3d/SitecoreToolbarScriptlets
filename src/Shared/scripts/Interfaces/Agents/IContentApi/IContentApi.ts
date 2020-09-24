@@ -1,17 +1,18 @@
-﻿import { ICommandHndlrDataForContent } from "../../ICommandHndlrDataForContent";
-import { PayloadDataFromPopUp } from "../../../Classes/PayloadDataReqPopUp";
+﻿import { ICommandHandlerDataForContent } from "../../ICommandHandlerDataForContent";
 
 export interface IHindSiteScWindowApi {
   GetStateOfContent();
-  AddCETab(commandData: ICommandHndlrDataForContent): Promise<void>
+  AddCETab(commandData: ICommandHandlerDataForContent): Promise<void>
   AdminB();
-  MarkFavorite(commandData: ICommandHndlrDataForContent);
+  ToggleFavorite(commandData: ICommandHandlerDataForContent);
   OpenContentEditor();
-  Ping(payloadData: PayloadDataFromPopUp);
-  SetStateOfSitecoreWindow(commandData: ICommandHndlrDataForContent): Promise<void>;
-  ToggleCompactCss(payloadData: PayloadDataFromPopUp);
-  SaveWindowState(commandData: ICommandHndlrDataForContent): Promise<void>;
-  RemoveSnapShot(commandData: ICommandHndlrDataForContent): Promise<void>;
-  PublischActiveCE(commandData: ICommandHndlrDataForContent): Promise<void>;
+  Ping();
+  SetNickName(commandData: ICommandHandlerDataForContent): Promise<void>;
+  SetStateOfSitecoreWindow(commandData: ICommandHandlerDataForContent): Promise<void>;
+  ToggleCompactCss(commandData: ICommandHandlerDataForContent);
+  SaveWindowState(commandData: ICommandHandlerDataForContent): Promise<void>;
+  RemoveSnapShot(commandData: ICommandHandlerDataForContent): Promise<void>;
+  PublischActiveCE(commandData: ICommandHandlerDataForContent): Promise<void>;
+  DebugForceAutoSnapShot(commandData: ICommandHandlerDataForContent): Promise<void>;
   //UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void>;
 }

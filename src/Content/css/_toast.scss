@@ -29,8 +29,6 @@ body {
       font-size: 15px;
       font-weight: bold;
 
-
-
       .header {
         font-weight: bold;
         padding: 5px;
@@ -39,9 +37,8 @@ body {
 
       .message {
         font-weight: normal;
-        padding: 5px; 
+        padding: 5px;
       }
-
 
       &.slide-up {
         -webkit-transform: translate(0, 0);

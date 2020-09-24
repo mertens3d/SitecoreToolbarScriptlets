@@ -1,14 +1,13 @@
 ﻿import { FrameHelper } from '../../../Content/scripts/Helpers/FrameHelper';
 import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+import { DTFrameProxy } from '../../../Content/scripts/Proxies/DTFrameProxy';
+import { _BaseFrameProxy } from '../../../Content/scripts/Proxies/_BaseFrameProxy';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
 import { Guid } from '../Helpers/Guid';
-import { IAbsoluteUrl } from '../Interfaces/IAbsoluteUrl';
 import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
-import { _BaseFrameProxy } from '../../../Content/scripts/Proxies/_BaseFrameProxy';
-import { DTFrameProxy } from '../../../Content/scripts/Proxies/DTFrameProxy';
-import { IFactoryHelper } from '../Interfaces/IFactoryHelper';
+import { IAbsoluteUrl } from '../Interfaces/IAbsoluteUrl';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { SharedConst } from '../SharedConst';
@@ -22,36 +21,10 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
   async WaitForReadyNABFrameProxy(baseframeProxy: _BaseFrameProxy): Promise<_BaseFrameProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForReadyNABFrameProxy.name, Guid.AsShort(baseframeProxy.Id));
-
-      var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABFrameProxy.name, true);
-      let IsReady: boolean = false;
-
       await this.WaitForReadyNABHtmlIframeElement(baseframeProxy.HTMLIframeElement)
         .then(() => resolve(baseframeProxy))
         .catch((err) => reject(this.WaitForReadyNABFrameProxy.name + ' | ' + err));
-
-      //while (iterationJr.DecrementAndKeepGoing() && !IsReady) {
-      //  var currentReadyState: string = baseframeProxy.HTMLIframeElement.contentDocument.readyState.toString();
-      //  var isReadyStateComplete = currentReadyState ===  SharedConst.Const.KeyWords.Javascript.ReadyStates.Complete;
-      //  var currentDocUrl = baseframeProxy.HTMLIframeElement.contentDocument.URL;
-
-      //  if (isReadyStateComplete && (currentDocUrl !== SharedConst.Const.UrlSuffix.AboutBlank)) {
-      //    this.Logger.LogVal('currentDocUrl', currentDocUrl);
-      //    IsReady = true;
-      //  } else {
-      //    await iterationJr.Wait();
-      //  }
-      //}
-
-      //if (IsReady) {
-      //  this.Logger.Log(baseframeProxy.GetContentDoc().ContentDoc.URL);
-      //  resolve(baseframeProxy);
-      //}
-
-      //if (iterationJr.IsExhausted) {
-      //  reject(iterationJr.IsExhaustedMsg);
-      //}
-
+     
       this.Logger.FuncEnd(this.WaitForReadyNABFrameProxy.name);
     });
   }

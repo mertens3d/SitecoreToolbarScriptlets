@@ -1,48 +1,66 @@
-﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
-import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
-import { IGenericSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+﻿import { PopConst } from "../../../../../PopUpUi/scripts/Classes/PopConst";
+import { UiModuleManagerPassThroughEvent_Observer } from "../../../../../PopUpUi/scripts/Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Observer";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
+import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
-import { PopConst } from "../../../../../PopUp/scripts/Classes/PopConst";
-import { HindSiteSetting } from "./HindSiteSetting";
+import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
+import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
+import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
+import { HindSiteSettingsBucket } from "./HindSiteSettingsBucket";
+import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
 
 export class SettingsAgent implements ISettingsAgent {
-  private SettingsAr: HindSiteSetting[] = [];
+  HindSiteSettingsBucket: HindSiteSettingsBucket;
   private Logger: ILoggerAgent;
   private RepoAgent: IRepositoryAgent;
+  private UiElementChangeEvent_Observer: UiModuleManagerPassThroughEvent_Observer;
 
   constructor(logger: ILoggerAgent, repoAgent: IRepositoryAgent) {
     this.Logger = logger;
     this.RepoAgent = repoAgent;
+    this.HindSiteSettingsBucket = new HindSiteSettingsBucket(this.Logger);
   }
 
-  UpdateSettingsFromPopUpMsg(newSettings: IGenericSetting[]) {
+  GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[] {
+    return this.HindSiteSettingsBucket.GetSettingsByFlavor(arg0);
+  }
+
+  GetByKey(settingKey: SettingKey): IHindSiteSetting {
+    let toReturn: IHindSiteSetting = null;
+    let settingsWrapper = this.HindSiteSettingsBucket.GetByKey(settingKey);
+    if (settingsWrapper) {
+      toReturn = settingsWrapper.HindSiteSetting;
+    }
+    return toReturn;
+  }
+
+  Init_SettingsAgent(): void {
+    this.Logger.FuncStart(this.Init_SettingsAgent.name);
+
+    let settingsFromStorage: IOneGenericSettingForStorage[] = this.ReadGenericSettingsFromStorage();
+    this.UpdateSettingValuesFromStorage(settingsFromStorage)
+    this.Logger.FuncEnd(this.Init_SettingsAgent.name);
+  }
+
+  WireEvents() {
+    this.UiElementChangeEvent_Observer = new UiModuleManagerPassThroughEvent_Observer(this.Logger, this.OnUiModuleManagerPassThroughEvent);
+  }
+
+  OnUiModuleManagerPassThroughEvent<IUiModuleManagerPassThroughEvent_Payload>(payload: IUiModuleManagerPassThroughEvent_Payload) {
+    alert('pass through');
+  }
+
+  UpdateSettingsFromPopUpMsg(newSettings: IHindSiteSetting[]) {
     this.Logger.FuncStart(this.UpdateSettingsFromPopUpMsg.name);
     if (newSettings) {
       for (var idx = 0; idx < newSettings.length; idx++) {
-        let oneSetting: IGenericSetting = newSettings[idx];
+        let oneSetting: IHindSiteSetting = newSettings[idx];
         this.SetByKey(oneSetting.SettingKey, oneSetting.ValueAsObj);
       }
     }
     this.Logger.FuncEnd(this.UpdateSettingsFromPopUpMsg.name);
-  }
-
-  InitSettingsAgent(allDefaultSettings: IGenericSetting[]): void {
-    this.Logger.FuncStart(this.InitSettingsAgent.name, allDefaultSettings.length);
-
-    this.SettingsAr = <HindSiteSetting[]>allDefaultSettings;
-
-    let settingsFromStorage: IOneGenericSettingForStorage[] = this.ReadGenericSettingsFromStorage();
-    this.UpdateSettingValuesFromStorage(settingsFromStorage)
-
-    this.Logger.FuncEnd(this.InitSettingsAgent.name);
-  }
-
-  GetAllSettings(): IGenericSetting[] {
-    return this.SettingsAr;
   }
 
   ReadGenericSettingsFromStorage(): IOneGenericSettingForStorage[] {
@@ -61,20 +79,24 @@ export class SettingsAgent implements ISettingsAgent {
     return toReturn;
   }
 
-  LogAllSettings() {
-    this.Logger.LogAsJsonPretty('this.SettingsAr', this.SettingsAr);
-  }
-
   UpdateSettingValuesFromStorage(settingsFromStorage: IOneGenericSettingForStorage[]): void {
     this.Logger.FuncStart(this.UpdateSettingValuesFromStorage.name);
     try {
       for (var idx = 0; idx < settingsFromStorage.length; idx++) {
         let storageSetting: IOneGenericSettingForStorage = settingsFromStorage[idx];
-        let matchingSetting: IGenericSetting = this.GetByKey(storageSetting.SettingKey);
-        if (matchingSetting) {
-          matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
+
+        let settingWrapper: HindSiteSettingWrapper = this.HindSiteSettingsBucket.GetByKey(storageSetting.SettingKey);
+
+        if (settingWrapper) {
+          let matchingSetting: IHindSiteSetting = settingWrapper.HindSiteSetting;
+
+          if (matchingSetting) {
+            matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
+          } else {
+            this.Logger.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+          }
         } else {
-          this.Logger.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+          this.Logger.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, 'null matching setting');
         }
       }
     } catch (err) {
@@ -84,21 +106,9 @@ export class SettingsAgent implements ISettingsAgent {
     this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);
   }
 
-  GetSettingsByFlavor(targetFlavors: SettingFlavor[]): IGenericSetting[] {
-    let toReturn: IGenericSetting[] = [];
-
-    for (var idx = 0; idx < this.SettingsAr.length; idx++) {
-      let candidate: IGenericSetting = this.SettingsAr[idx];
-      if (targetFlavors.indexOf(candidate.SettingFlavor) > -1) {
-        toReturn.push(candidate);
-      }
-    }
-
-    return toReturn;
-  }
-
-  CheckBoxSettingChanged(SettingKey: SettingKey, valueAsObj: any): void {
-    this.SetByKey(SettingKey, valueAsObj);
+  BooleanSettingChanged(settingKey: SettingKey, valueAsBool: boolean): void {
+    this.Logger.LogVal(this.BooleanSettingChanged.name, SettingKey[settingKey]);
+    this.SetByKey(settingKey, valueAsBool);
   }
 
   NumberSettingChanged(SettingKey: SettingKey, valueAsNumber: number): void {
@@ -107,29 +117,10 @@ export class SettingsAgent implements ISettingsAgent {
     this.SetByKey(SettingKey, valueAsNumber);
   }
 
-  GetByKey(needleSettingKey: SettingKey): HindSiteSetting {
-
-    var toReturn: HindSiteSetting = null;
-
-    for (var idx = 0; idx < this.SettingsAr.length; idx++) {
-      let candidate: HindSiteSetting = this.SettingsAr[idx];
-      if (candidate.SettingKey === needleSettingKey) {
-        toReturn = candidate;
-        break;
-      }
-    }
-
-    if (!toReturn) {
-      this.Logger.ErrorAndContinue(this.NumberSettingChanged.name, 'Setting not found ' + StaticHelpers.SettingKeyAsString(needleSettingKey));
-    }
-
-    return toReturn;
-  }
-
   SetByKey(settingKey: SettingKey, value: any): void {
-    let foundSetting = this.GetByKey(settingKey);
+    let foundSetting = this.HindSiteSettingsBucket.GetByKey(settingKey);
     if (foundSetting) {
-      foundSetting.ValueAsObj = value;
+      foundSetting.HindSiteSetting.ValueAsObj = value;
       this.WriteAllSettingValuesToStorage();
     } else {
       this.Logger.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
@@ -138,13 +129,15 @@ export class SettingsAgent implements ISettingsAgent {
 
   private WriteAllSettingValuesToStorage() {
     let settingValues: IOneGenericSettingForStorage[] = [];
-    for (var udx = 0; udx < this.SettingsAr.length; udx++) {
-      if (this.SettingsAr[udx].ValueAsObj !== null) {
+    for (var udx = 0; udx < this.HindSiteSettingsBucket.SettingWrappers.length; udx++) {
+      let hindSiteWrapper: HindSiteSettingWrapper = this.HindSiteSettingsBucket.SettingWrappers[udx];
+
+      if (hindSiteWrapper.HindSiteSetting.ValueAsObj !== null) {
         settingValues.push(
           {
-            SettingKey: this.SettingsAr[udx].SettingKey,
-            ValueAsObj: this.SettingsAr[udx].ValueAsObj,
-            SettingKeyFriendly: StaticHelpers.SettingKeyAsString(this.SettingsAr[udx].SettingKey)
+            SettingKey: hindSiteWrapper.HindSiteSetting.SettingKey,
+            ValueAsObj: hindSiteWrapper.HindSiteSetting.ValueAsObj,
+            SettingKeyFriendly: StaticHelpers.SettingKeyAsString(hindSiteWrapper.HindSiteSetting.SettingKey)
           });
       }
     }

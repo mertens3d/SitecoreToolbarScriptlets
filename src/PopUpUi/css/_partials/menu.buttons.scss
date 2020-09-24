@@ -1,0 +1,195 @@
+﻿@import "../vars";
+
+.hindsite {
+
+
+  button {
+    /*border-radius: 5px;*/
+    background: none;
+    background-color: $scLaunchPadBtnBackground;
+    background-size: 30px 30px;
+    box-shadow: none;
+    cursor: pointer;
+    height: 100%;
+    opacity: 1;
+    padding-top: 26px;
+    vertical-align: top;
+    white-space: normal;
+    width: 100%;
+    word-wrap: break-word;
+    pointer-events: auto;
+
+    &:hover {
+      background-color: $scHoverColor;
+    }
+  }
+
+  .btn-container {
+    overflow: hidden;
+    /*height: $btnTypHeight;*/
+    /*width: $scLaunchPagebuttonWidth;*/
+    position: relative;
+    border: 0;
+    border-radius: 0px;
+    margin: $hsTypMargin;
+    height: $btnTypHeight;
+    width: $scLaunchPagebuttonWidth;
+    pointer-events: none;
+
+    input {
+      display: inline-block;
+      width: 88PX;
+      overflow: hidden;
+      pointer-events: auto;
+    }
+
+    #id-ph-btn-update-nickname {
+      height: 40px;
+      display: inline-block;
+      width: 100%;
+      margin: 0;
+    }
+
+    .btn-overlay {
+      position: absolute;
+      width: 100%;
+      margin: auto auto;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+
+      &:hover {
+        opacity: 1;
+        -webkit-transition: all 0.2s ease-in-out;
+        -moz-transition: all 0.2s ease-in-out;
+        -o-transition: all 0.2s ease-in-out;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .back-fill {
+        position: absolute;
+        background-color: $scRed;
+        opacity: 0.3;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .back-text {
+        background: white;
+        padding: 5px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        cursor: default;
+        pointer-events: auto;
+      }
+    }
+  }
+
+  .disabled {
+    cursor: default;
+    background-color: $buttonDisabledColor;
+    opacity: 1;
+
+    &:hover {
+      background-color: $buttonDisabledColor;
+    }
+  }
+
+  .icon {
+    background-repeat: no-repeat;
+    background-position: top;
+  }
+
+  .admin-b-icon {
+    background-image: url(/~/icon/office/32x32/log_in.png);
+    background-repeat: no-repeat;
+    background-position: top;
+  }
+
+  .restore-snapshot {
+    background-image: $sc_open_document;
+  }
+
+  .delete-snapshot {
+    background-image: $sc_delete;
+  }
+
+  .btn-favorite {
+    background-image: $sc_heart;
+  }
+
+  .edit {
+    background-image: $sc_paint;
+  }
+
+  .normal {
+    background-image: $sc_web;
+  }
+
+  .preview-icon {
+    background-image: $sc_preview;
+  }
+
+  .admin-b {
+    background-image: $sc_log_in;
+  }
+
+  .desktop-icon {
+    background-image: $sc_desktop;
+  }
+
+  .ce {
+    background-image: $sc_pencil;
+  }
+
+  .icon-add-ce-tab {
+    background-image: $sc_add;
+  }
+
+  .details {
+    background-image: $sc_layout_details;
+  }
+
+  .take-snapshot {
+    background-image: $sc_camera_1;
+  }
+
+  .publish {
+    background-image: $sc_publish;
+  }
+
+  .cancel {
+    background-image: $sc_sign_stop;
+  }
+
+  .draw-storage {
+    background-image: $sc_store;
+  }
+
+  .set-nickname {
+    background-image: $sc_rename;
+    padding-top: $btnTypHeight - 26px;
+  }
+
+  #id-ph-btn-update-nickname {
+    Button {
+      height: 16px;
+    }
+  }
+
+  .input-btn-wrapper {
+    display: block;
+    width: 96px;
+    margin: 6px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 6px;
+    padding-top: 0;
+    overflow: hidden;
+  }
+}

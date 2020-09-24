@@ -1,7 +1,6 @@
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 import { SettingKey } from "../../../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { ISettingsAgent, InitResultsScWindowManager, InitResultsDesktopProxy, InitResultsDTFrameProxy } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { _BaseFrameProxy } from "../../_BaseFrameProxy";
 import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
@@ -19,6 +18,9 @@ import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutatio
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { DTFrameProxyBucket } from "./DTFrameProxyBucket";
 import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
+import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { InitResultsDesktopProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy";
+import { InitResultsDTFrameProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
 
 export class DesktopProxy extends LoggableBase {
   private __iframeHelper: FrameHelper;
@@ -108,9 +110,9 @@ export class DesktopProxy extends LoggableBase {
   }
 
   WireEvents() {
-    let setting = this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton);
-    if (setting && setting.ValueAsBool()) {
-    }
+    //let setting = this.SettingsAgent.SetByKey(SettingKey.AutoRenameCeButton);
+    //if (setting && setting.ValueAsBool()) {
+    //}
 
     this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc);
     let DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer(this.Logger, this);
@@ -206,8 +208,8 @@ export class DesktopProxy extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateOfDesktop.name);;
 
-      if (desktopState) {
-        if (this.MiscAgent.NotNullOrUndefined([this.AssociatedDoc, desktopState, desktopState.StateOfDTFrames], this.SetStateOfDesktop.name)) {
+      if (desktopState && desktopState.StateOfDTFrames && desktopState.StateOfDTFrames.length > 0) {
+        if (this.MiscAgent.NotNullOrUndefined([this.AssociatedDoc], this.SetStateOfDesktop.name)) {
           for (var idx = 0; idx < desktopState.StateOfDTFrames.length; idx++) {
             let stateOfFrame: IDataStateOfDTFrame = desktopState.StateOfDTFrames[idx];
 

@@ -5,11 +5,12 @@ import { IContentAtticAgent } from "../../../../../Shared/scripts/Interfaces/Age
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowManager } from "../../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { ICommandHandlerDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { IRecipeBasics } from "../../../../../Shared/scripts/Interfaces/IPromiseHelper";
 import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { AutoSnapShotAgent } from "../../../Agents/AutoSnapShotAgent/AutoSnapShotAgent";
 
-export class __RecipeBase {
+ export abstract class __RecipeBase {
   protected AtticAgent: IContentAtticAgent;
   protected Logger: ILoggerAgent;
   protected RecipeBasics: IRecipeBasics;
@@ -17,16 +18,18 @@ export class __RecipeBase {
   protected TargetSnapShotId: GuidData;
   protected TargetSnapShotFlavor: SnapShotFlavor;
   protected TargetDoc: IDataOneDoc;
-  protected TargetConEdProxy: ContentEditorProxy;
+   protected TargetConEdProxy: ContentEditorProxy;
+   protected AutoSnapShotAgent: AutoSnapShotAgent;
 
-  constructor(commandData: ICommandHndlrDataForContent) {
+  constructor(commandData: ICommandHandlerDataForContent) {
     this.Logger = commandData.Logger;
     this.RecipeBasics = new RecipeBasics(this.Logger);
     this.ScWinMan = commandData.ScWinMan;
     this.AtticAgent = commandData.AtticAgent;
     this.TargetSnapShotId = commandData.TargetSnapShotId;
-    this.TargetSnapShotFlavor = commandData.TargetSnapShotFlavor
+    //this.TargetSnapShotFlavor = commandData.TargetSnapShotFlavor
     this.TargetDoc = commandData.TargetDoc;
     this.TargetConEdProxy = commandData.TargetCeProxy;
+    this.AutoSnapShotAgent = commandData.AutoSnapShotAgent;
   }
 }

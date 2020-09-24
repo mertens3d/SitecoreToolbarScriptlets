@@ -1,6 +1,5 @@
-﻿export enum Enabled {
-    Unknown,
-    Enabled,
-    Disabled
-
+﻿export enum UiEnableState {
+  Unknown,
+  Enabled,
+  Disabled,
 }

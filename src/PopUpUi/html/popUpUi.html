@@ -1,0 +1,209 @@
+﻿<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>
+    Hind&bull;Site POPUP
+  </title>
+  <link href='PopUpUi.min.css' rel='stylesheet' type='text/css' />
+</head>
+<body class="hindsite">
+  <div class="header">
+    <div class="left-side">
+    </div>
+    <div class="right-side">
+      <div class="button-wrapper close-window" id="id-ph-close-window"></div>
+    </div>
+  </div>
+  <div class="button-wrapper big-wrapper">
+    <div id="menu-overlayx">
+      <div class="button-wrapper overlay-gray"></div>
+    </div>
+    <form>
+      <div class="accordion-wrapper" id='lgnd-fore-site'>
+        <fieldset class='top'>
+          <legend class="button-wrapper section accordion-trigger">{error}</legend>
+          <div class="button-wrapper accordion-content">
+            <div class='flex-container'>
+              <div id='id-ph-btn-sc-mode-edit'></div>
+              <div id='id-ph-btn-prev'></div>
+              <div id='id-ph-btn-norm'></div>
+              <div id='id-ph-btn-adminb'></div>
+              <div id='id-ph-btn-desktop'></div>
+              <div id='id-ph-btn-go-content-editor'></div>
+              <div id='id-ph-btn-add-drframe-content-editor'></div>
+              <div id='id-ph-btn-quick-publish'></div>
+              <div id='id-ph-btn-presentation-details'></div>
+              <div id='id-ph-btn-compact-sc-ui'></div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <!-- accordion -->
+      <div class="accordion-wrapper" id='lgnd-hind-site'>
+        <fieldset class='top'>
+          <legend data-setting='lgnd-hind-site' class="button-wrapper section accordion-trigger">{error}</legend>
+          <div class='accordion-content'>
+
+            <div class="button-wrapper row flex-container">
+              <div class='col-full'>
+                <div id="id-container-select-state">
+                  <select id='selState' size='10'>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="button-wrapper row flex-container">
+              <div id='id-ph-btn-take-snapshot'></div>
+              <div id="id-ph-btn-update-nickname"></div>
+              <div id='id-ph-btn-toggle-favorite'></div>
+              <div id='id-ph-remove-one-from-local-storage'></div>
+              <div id='id-ph-btn-restore-state-same-tab'></div>
+              <div id='id-ph-btn-restore-state-new-tab'></div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <!-- accordion -->
+      <div class="accordion-wrapper" id='lgnd-settings'>
+        <fieldset class='top'>
+          <legend data-setting='lgnd-settings' class="button-wrapper section accordion-trigger">Settings/ Stats</legend>
+          <div class='accordion-content'>
+
+            <fieldset>
+              <legend>Options</legend>
+              <h3>note: page refresh + open pop up required to fully propagate settings</h3>
+              <br />
+              <div id="id-ph-settings-auto-login"></div>
+              <br />
+              <div id="id-ph-settings-use-compact"></div>
+              <br />
+              <div id="id-settings-auto-rename-ce-tab-button"></div>
+            </fieldset>
+            <fieldset>
+              <legend>Auto Snapshot</legend>
+              <div id="id-settings-auto-snapshot-on-window-change"></div>
+              <div id="id-settings-auto-save-interval"></div>
+              <div id="id-settings-auto-save-max-count"></div>
+              <div id="id-settings-auto-save-snap-shot-retain-days"></div>
+            </fieldset>
+
+            <br />
+            <div id="stat-caller-id"></div>
+            <div id="stat-self-id"></div>
+          </div>
+        </fieldset>
+      </div>
+      <!-- accordion -->
+      <div class="accordion-wrapper" id='lgnd-pop-up-debug'>
+        <fieldset class='top'>
+          <legend data-setting='lgnd-pop-up-state' class="button-wrapper section accordion-trigger">{error}</legend>
+          <div class='accordion-content'>
+            <div class='flex-container'>
+              <div class='col-full'>
+                <fieldset>
+                  <legend>Debug</legend>
+                  <div id="id-ph-settings-debug-keep-dialog-open"></div>
+                  <div id="id-ph-settings-show-log-data"></div>
+                  <div class="button-wrapper row flex-container">
+                    <div id='id-container-btn-debug-force-auto-snapshot'></div>
+                    <div id='id-container-btn-debug-clear-console'></div>
+                    <div id='id-container-btn-debug-trigger-pop-up-reload'></div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <!-- accordion -->
+      <div class="accordion-wrapper" id='lgnd-pop-up-state'>
+        <fieldset class='top'>
+          <legend data-setting='lgnd-pop-up-state' class="button-wrapper section accordion-trigger">{error}</legend>
+          <div class='accordion-content'>
+            <div class='flex-container'>
+              <div class='col-full'>
+                <div class='scroller'>
+                  <div id='feedback-div-pop-up-state'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <!-- accordion -->
+      <div class="accordion-wrapper" id="lgnd-content-state">
+        <fieldset class='top'>
+          <legend data-setting='lgnd-content-state' class="button-wrapper section accordion-trigger">{error}</legend>
+          <div class='accordion-content'>
+            <div class='flex-container'>
+              <div class='col-full'>
+                <div class='scroller'>
+                  <div id='feedback-div-state-content'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <!-- accordion -->
+      <div class="accordion-wrapper" id="lgnd-browser-state">
+        <fieldset class='top'>
+          <legend data-setting='lgnd-browser-state' class="button-wrapper section accordion-trigger">{error}</legend>
+          <div class='accordion-content'>
+            <div class='flex-container'>
+              <div class='col-full'>
+                <div class='scroller'>
+                  <div id='feedback-div-browser-state'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <!-- accordion -->
+      <div class="accordion-wrapper" id="lgnd-pop-up-log">
+        <fieldset id='id-fieldset-debug' class='top'>
+          <legend data-setting='lgnd-pop-up-log' class="button-wrapper section accordion-trigger">{error}</legend>
+          <span id='spanParentInfo'></span>
+          <div class='accordion-content'>
+            <div class='col-full'>
+              <div class='scroller'>
+                <div id='feedback-pop-up-log'></div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <!-- accordion -->
+      <div class="accordion-wrapper" id='lgnd-messages'>
+        <fieldset class='top'>
+          <legend data-setting='lgnd-messages' class="button-wrapper section accordion-trigger">{error}</legend>
+          <div class='accordion-content'>
+            <div class='flex-container'>
+              <div class='col-full'>
+                <div class='scroller'>
+                  <div class="button-wrapper feedback-messages" id="feedback-messages"></div>
+                  <div class="button-wrapper scroller-msg-stat">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </form>
+  </div>
+  <div class="footer">
+    <div class=" left-side">
+    </div>
+    <div class="right-side">
+      <div class="build-stamp" id="build-stamp">
+      </div>
+    </div>
+  </div>
+  <script type="application/javascript" src="browser-polyfill.js"></script>
+  <script src='popupui.min.js'></script>
+  <script src='popupcontroller.min.js'></script>
+</body>
+</html>

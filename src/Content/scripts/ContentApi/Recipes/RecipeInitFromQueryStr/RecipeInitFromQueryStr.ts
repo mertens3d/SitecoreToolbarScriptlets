@@ -68,8 +68,7 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
             reject('Either no snapshot provided or an illegal one was found');
           }
         } else {
-        this.Logger.Log('guid is not a valid guid');
-
+          this.Logger.Log('guid is not a valid guid');
         }
       } else {
         this.Logger.Log('Does not have qs target');

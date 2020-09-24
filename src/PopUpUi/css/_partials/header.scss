@@ -1,0 +1,81 @@
+﻿@import "../vars";
+
+.header-push {
+  height: $headerHeight; // don't know why this isn't right $headerHeight;
+  position: relative;
+}
+
+.header, .footer {
+  background-color: $sc_Black;
+  color: $sc_White;
+  font-size: 11px;
+  left: 0;
+  padding-top: 6px;
+  padding-left: 6px;
+  position: relative;
+  text-align: right;
+  top: 0;
+  width: $HeaderFooterWidth;
+  z-index: 100;
+  box-sizing: border-box;
+
+  .left-side {
+    float: left;
+  }
+
+  .right-side {
+    float: right;
+    /*width: 130px;*/
+    margin-right: 0px;
+    margin-top: -6px;
+  }
+}
+
+.footer {
+  height: $footerHeight;
+
+  .build-stamp {
+    display: inline-block;
+    text-align: right;
+    padding-top: 7px;
+    padding-right: 7px;
+  }
+}
+
+.header {
+  height: $headerHeight;
+
+  .close-window {
+    width: $headerHeight;
+    height: $headerHeight;
+    float: right;
+    margin: 0;
+
+    button {
+      background-color: $sc_Black;
+    }
+  }
+
+  .icon-close-window {
+    color: $sc_White;
+    display: inline-block;
+    padding: 4px;
+    padding-right: 19px;
+    text-align: right;
+    position: relative;
+    left: 5px;
+
+    &:hover {
+      background-color: $scRed;
+      cursor: pointer;
+    }
+
+    &::before {
+      color: $sc_White;
+      content: 'X';
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 300;
+    }
+  }
+}

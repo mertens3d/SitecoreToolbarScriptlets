@@ -1,15 +1,18 @@
 ﻿import { SettingFlavor } from "../../Enums/SettingFlavor";
 import { SettingType } from "../../Enums/SettingType";
 import { SettingKey } from "../../Enums/3xxx-SettingKey";
+import { UiEnableState } from "../../Enums/Enabled";
+import { UiPresence } from "../../Enums/UiPresence";
 
-export interface IGenericSetting {
+export interface IHindSiteSetting {
   DataType: SettingType;
   DefaultValue: any;
+  EnabledState: UiEnableState;
   FriendlySetting: string;
-  HasUi: boolean
+  HasUi: UiPresence
   SettingFlavor: SettingFlavor;
   SettingKey: SettingKey;
-  UiSelector: any;
+  UiContainerSelector: any;
   ValueAsBool(): boolean;
   ValueAsInt(): number
   ValueAsObj: any;

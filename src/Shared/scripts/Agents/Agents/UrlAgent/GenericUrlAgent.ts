@@ -4,13 +4,16 @@ import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/IUrlParts";
+import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
+import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
 
-export class GenericUrlAgent implements IUrlAgent {
-  protected Logger: ILoggerAgent;
+export class GenericUrlAgent extends LoggableBase implements IUrlAgent {
   protected UrlParts: IGenericUrlParts;
+  private BrowserProxy: IPopUpBrowserProxy;
 
-  constructor(logger: ILoggerAgent) {
-    this.Logger = logger;
+  constructor(logger: ILoggerAgent, browserProxy: IPopUpBrowserProxy) {
+    super(logger);
+    this.BrowserProxy = browserProxy;
   }
 
   GetUrlParts(): IGenericUrlParts {
@@ -54,35 +57,40 @@ export class GenericUrlAgent implements IUrlAgent {
     this.UrlParts.FilePath = newFilePath;
   }
 
-  protected InitGenericUrlAgent(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        this.Logger.FuncStart(this.InitGenericUrlAgent.name);
+  private async Init_FromBrowserProxy(): Promise<void> {
+    this.Logger.Log(this.Init_FromBrowserProxy.name)
 
-        if (browser.tabs) {
-          await browser.tabs.query({ currentWindow: true, active: true })
-            .then((result: browser.tabs.Tab[]) => {
-              let resultTab: browser.tabs.Tab = result[0];
+    if (this.BrowserProxy) {
+      this.SetFromHref(this.BrowserProxy.Url);
+    } else {
+      throw (this.Init_FromBrowserProxy.name + '| no proxy');
+    }
+  }
+  private InitFromWindowLocation() {
+    try {
+      this.Logger.Log('Init from window.location.href')
+      let urlToUse = window.location.href;
+      this.SetFromHref(urlToUse);
+    } catch (err) {
+      throw (this.InitFromWindowLocation.name + err);
+    }
+  }
 
-              this.SetFromHref(resultTab.url);
+  protected  Init_GenericUrlAgent(): void {
+    try {
+      this.Logger.FuncStart(this.Init_GenericUrlAgent.name);
 
-              resolve();
-            })
-            .catch((err) => reject(err));
-        }
-        else {
-          this.Logger.Log('Init from window.location.href')
-          let urlToUse = window.location.href;
-          this.SetFromHref(urlToUse);
-        }
-
-        resolve();
-      } catch (ex) {
-        reject(ex);
+      if (this.BrowserProxy) {
+        this.Init_FromBrowserProxy();
       }
+      else {
+         this.InitFromWindowLocation();
+      }
+    } catch (err) {
+      throw (this.Init_GenericUrlAgent.name + ' | ' + err);
+    }
 
-      this.Logger.FuncEnd(this.InitGenericUrlAgent.name);
-    });
+    this.Logger.FuncEnd(this.Init_GenericUrlAgent.name);
   }
 
   private SetFromHref(href: string) {

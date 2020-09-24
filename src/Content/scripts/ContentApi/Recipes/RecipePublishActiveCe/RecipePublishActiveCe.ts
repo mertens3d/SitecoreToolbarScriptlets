@@ -1,6 +1,6 @@
 ﻿import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
-import { ICommandHndlrDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHndlrDataForContent";
+import { ICommandHandlerDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { _BaseFrameProxy } from "../../../Proxies/_BaseFrameProxy";
@@ -13,7 +13,7 @@ import { IFactoryHelper } from "../../../../../Shared/scripts/Interfaces/IFactor
 export class RecipePublishActiveCe extends __RecipeBase implements ICommandRecipes {
   private FactoryHelp: IFactoryHelper;
 
-  constructor(commandData: ICommandHndlrDataForContent, factoryHelp: IFactoryHelper) {
+  constructor(commandData: ICommandHandlerDataForContent, factoryHelp: IFactoryHelper) {
     super(commandData);
     this.FactoryHelp = factoryHelp;
   }

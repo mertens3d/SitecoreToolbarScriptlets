@@ -18,6 +18,13 @@
     Html: {
       beforeend: InsertPosition,
       optgroup: string,
+      Checkbox: string,
+      Checked: string,
+      Input: string,
+      Label: string,
+      For: string,
+      Text: string,
+      Number: string,
     },
     Javascript: {
       ReadyStates: {
@@ -34,6 +41,7 @@
   Settings: {
     Defaults: {
       EnableLogging: boolean,
+      LastUsedLogToStorageKey: number,
       LogToStorage: boolean,
       UseCompactCss: boolean,
     }

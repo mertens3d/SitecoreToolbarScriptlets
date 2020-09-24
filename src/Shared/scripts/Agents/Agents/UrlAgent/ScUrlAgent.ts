@@ -7,22 +7,22 @@ import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IDataContentReplyReceivedEvent_Payload } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
 
 export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
-  constructor(logger: ILoggerAgent) {
-    super(logger);
+  constructor(logger: ILoggerAgent, browserProxy: IPopUpBrowserProxy) {
+    super(logger, browserProxy);
   }
 
   private __urlTestAgainstRegex(regexPattern: RegExp, url: string) {
     return new RegExp(regexPattern).test(url);
   }
 
-  async InitScUrlAgent() : Promise<void>{
-    try {
-      await super.InitGenericUrlAgent();
-    } catch (err) {
-      this.Logger.ErrorAndThrow(this.InitScUrlAgent.name, err);
-    }
+  Init_ScUrlAgent(): void {
+    this.Logger.FuncStart(this.Init_ScUrlAgent.name);
+
+    this.Init_GenericUrlAgent();
+    this.Logger.FuncEnd(this.Init_ScUrlAgent.name);
   }
 
   GetFullUrl() {

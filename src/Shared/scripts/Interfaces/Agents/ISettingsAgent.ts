@@ -1,36 +1,19 @@
-﻿import { SettingKey } from "../../Enums/3xxx-SettingKey";
-import { IGenericSetting } from "./IGenericSetting";
-import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";
+﻿import { HindSiteSettingsBucket } from "../../Agents/Agents/SettingsAgent/HindSiteSettingsBucket";
+import { HindSiteSettingWrapper } from "../../Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
+import { SettingKey } from "../../Enums/3xxx-SettingKey";
 import { SettingFlavor } from "../../Enums/SettingFlavor";
+import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";
+import { IHindSiteSetting } from "./IGenericSetting";
 
-export class InitResultTreeProxy {
-  TreeInitialized: boolean = false;
-}
-
-export class InitResultsScWindowManager {
-  InitResultsDesktop: InitResultsDesktopProxy = null;
-}
-export class InitResultsDesktopProxy {
-  InitResultsFrameProxies: InitResultsDTFrameProxy[] = [];
-}
-export class InitResultsDTFrameProxy {
-  InitResultContentEditorProxy: InitResultContentEditorProxy;
-  DTFrameProxyInitialized: boolean = false;
-}
-export class InitResultContentEditorProxy {
-  InitResultTreeProxy: InitResultsDTFrameProxy;
-  ContentEditorProxyInitialized: boolean = false;
-}
 
 export interface ISettingsAgent {
-  CheckBoxSettingChanged(SettingKey: SettingKey, checked: boolean);
-  GetAllSettings(): IGenericSetting[];
-  GetByKey(settingKey: SettingKey): IGenericSetting;
-  GetSettingsByFlavor(targetFlavor: SettingFlavor[]): IGenericSetting[];
-  InitSettingsAgent(allSettings: IGenericSetting[]): void;
-  LogAllSettings();
-  NumberSettingChanged(SettingKey: SettingKey, checked: number);
+  GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[];
+  GetByKey(EnableLogging: SettingKey): IHindSiteSetting;
+  BooleanSettingChanged(SettingKey: SettingKey, checked: boolean);
+  HindSiteSettingsBucket: HindSiteSettingsBucket;
+  Init_SettingsAgent(): void;
+  NumberSettingChanged(SettingKey: SettingKey, value: number);
   ReadGenericSettingsFromStorage(): IOneGenericSettingForStorage[];
   SetByKey(settingKey: SettingKey, value: any): any;
-  UpdateSettingsFromPopUpMsg(CurrentContentPrefs: IGenericSetting[]);
+  UpdateSettingsFromPopUpMsg(CurrentContentPrefs: IHindSiteSetting[]);
 }

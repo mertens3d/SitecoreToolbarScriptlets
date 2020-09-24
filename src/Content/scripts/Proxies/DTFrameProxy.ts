@@ -1,14 +1,15 @@
 ﻿import { DefaultStateOfFrame } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfFrame";
 import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { InitResultContentEditorProxy, InitResultsDTFrameProxy } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IDataStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { ContentEditorProxy } from "./ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ContentEditorProxyMutationEvent_Observer } from "./Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
-import { IContentEditorProxyMutationEvent_Payload } from "./Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Payload";
-import { DTFrameProxyMutationEvent_Subject } from "./Desktop/DesktopProxy/Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
+import { IContentEditorProxyMutationEvent_Payload } from "./Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
 import { _BaseFrameProxy } from "./_BaseFrameProxy";
 import { IDTFrameProxyMutationEvent_Payload } from "./Desktop/DesktopProxy/Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
+import { IDataStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
+import { InitResultsDTFrameProxy } from "../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
+import { DTFrameProxyMutationEvent_Subject } from "./Desktop/DesktopProxy/Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
+import { InitResultContentEditorProxy } from "../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy";
 
 export class DTFrameProxy extends _BaseFrameProxy {
   ContentEditorProxy: ContentEditorProxy;

@@ -3,7 +3,7 @@ import { Guid } from "./Guid";
 
 export class GuidData {
   private static ConstEmptyGuid: string = '00000000-0000-0000-0000-000000000000';
-  readonly Raw: string; 
+  readonly Raw: string;
 
   constructor(raw: string = null) {
     if (!raw) {
@@ -30,6 +30,4 @@ export class GuidData {
   FormatJustNumbers(str: string): string {
     return str.replace(SharedConst.Const.Regex.CleanGuid, '');
   }
-
-  
 }

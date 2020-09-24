@@ -1,5 +1,5 @@
 ﻿export class VisiblityTestResult {
-  Passes: boolean = true;
+  DidItPass: boolean = true;
   FriendlyFailReason: string = '';
   TestNameFriendly: string;
 

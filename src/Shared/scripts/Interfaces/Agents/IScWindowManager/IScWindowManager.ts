@@ -5,7 +5,7 @@ import { ScWindowType } from "../../../Enums/scWindowType";
 import { IDataOneDoc } from "../../Data/IDataOneDoc";
 import { IDataStateOfSitecoreWindow } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IScUrlAgent } from "../IScUrlAgent/IScUrlAgent";
-import { InitResultsScWindowManager } from "../ISettingsAgent";
+import { InitResultsScWindowManager } from "../InitResultsScWindowManager";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 
 export interface IScWindowManager {
