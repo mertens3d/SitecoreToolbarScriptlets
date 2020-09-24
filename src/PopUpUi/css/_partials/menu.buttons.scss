@@ -1,7 +1,7 @@
 ﻿@import "../vars";
 
 .hindsite {
-  $btnHeight: 60px;
+
 
   button {
     /*border-radius: 5px;*/
@@ -26,14 +26,13 @@
 
   .btn-container {
     overflow: hidden;
-    /*height: $btnHeight;*/
+    /*height: $btnTypHeight;*/
     /*width: $scLaunchPagebuttonWidth;*/
     position: relative;
     border: 0;
     border-radius: 0px;
     margin: $hsTypMargin;
-    height: $scLaunchPageButtonHeight;
-    height: $btnHeight;
+    height: $btnTypHeight;
     width: $scLaunchPagebuttonWidth;
     pointer-events: none;
 
@@ -174,7 +173,7 @@
 
   .set-nickname {
     background-image: $sc_rename;
-    padding-top: 34px;
+    padding-top: $btnTypHeight - 26px;
   }
 
   #id-ph-btn-update-nickname {

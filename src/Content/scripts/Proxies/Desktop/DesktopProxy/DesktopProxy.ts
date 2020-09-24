@@ -208,8 +208,8 @@ export class DesktopProxy extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateOfDesktop.name);;
 
-      if (desktopState) {
-        if (this.MiscAgent.NotNullOrUndefined([this.AssociatedDoc, desktopState, desktopState.StateOfDTFrames], this.SetStateOfDesktop.name)) {
+      if (desktopState && desktopState.StateOfDTFrames && desktopState.StateOfDTFrames.length > 0) {
+        if (this.MiscAgent.NotNullOrUndefined([this.AssociatedDoc], this.SetStateOfDesktop.name)) {
           for (var idx = 0; idx < desktopState.StateOfDTFrames.length; idx++) {
             let stateOfFrame: IDataStateOfDTFrame = desktopState.StateOfDTFrames[idx];
 

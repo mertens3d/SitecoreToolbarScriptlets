@@ -152,9 +152,22 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
         //todo toReturnAgraget.TestResults.push( false; //todo
         break;
 
+
+      case VisibilityType.DISABLED:
+        toReturn = {
+          DidItPass : false,
+          FriendlyFailReason : 'Disabled/ Not working yet',
+          TestNameFriendly: 'Disabler',
+          
+                  }
+        break;
+
       case VisibilityType.Unknown:
         this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
         break;
+
+
+
 
       default:
         this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');

@@ -8,9 +8,10 @@
     Normal = 6,
     Preview = 7,
     SnapShotSelected = 8,
-    NotLogin =9,
+    NotLogin = 9,
     CommandIsRunning = 10,
     DesktopOrContentEditor = 11,
     SnapShotable = 12,
-    IfDesktopMin1ContentEditor = 13
+    IfDesktopMin1ContentEditor = 13,
+    DISABLED
 }

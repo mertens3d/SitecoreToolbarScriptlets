@@ -31,7 +31,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnAddContentEditor,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.Icons.AddContentEditorTab,
           InnerText: "Add CE Tab to DT",
-          VisibilityControllers: [VisibilityType.Desktop],
+          VisibilityControllers: [VisibilityType.Desktop, VisibilityType.DISABLED],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -44,7 +44,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnModeEdit,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModeEdit,
           InnerText: "Edit",
-          VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
+          VisibilityControllers: [VisibilityType.DISABLED,VisibilityType.DesktopOrContentEditor],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -57,7 +57,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnModeNorm,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModeNormal,
           InnerText: "Normal",
-          VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
+          VisibilityControllers: [VisibilityType.DISABLED,VisibilityType.DesktopOrContentEditor ],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -70,7 +70,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnModePrev,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.ScModePrev,
           InnerText: "Preview",
-          VisibilityControllers: [VisibilityType.DesktopOrContentEditor, VisibilityType.Edit],
+          VisibilityControllers: [ VisibilityType.DISABLED, VisibilityType.DesktopOrContentEditor, VisibilityType.Edit],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -93,7 +93,7 @@ export class CommandDefintionFactory extends LoggableBase {
           MenuCommandKey: MenuCommandKey.UpdateNickname,
           PlaceHolderSelector: PopConst.Const.Selector.HS.UpdateNicknameB,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.UpdateNickname,
-          InnerText: "et Nickname",
+          InnerText: "",
           VisibilityControllers: [VisibilityType.SnapShotSelected],
           ModuleKey: ModuleKey.ButtonWithInput,
           EventHandlerData: {
@@ -107,7 +107,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnPresentationDetails,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.PresentationDetails,
           InnerText: "Presentation Details",
-          VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
+          VisibilityControllers: [VisibilityType.DesktopOrContentEditor, VisibilityType.DISABLED],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -120,7 +120,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnCompactScUi,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.CompactCe,
           InnerText: "Toggle Compact Css",
-          VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
+          VisibilityControllers: [VisibilityType.DesktopOrContentEditor, VisibilityType.DISABLED],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -133,7 +133,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnAdminB,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.AdminB,
           InnerText: "Admin B",
-          VisibilityControllers: [VisibilityType.LoginPage],
+          VisibilityControllers: [VisibilityType.DISABLED, VisibilityType.LoginPage, ],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -147,7 +147,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnGoContentEditor,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.GoContentEditor,
           InnerText: "Content Editor",
-          VisibilityControllers: [VisibilityType.NotLogin],
+          VisibilityControllers: [VisibilityType.DISABLED, VisibilityType.NotLogin, ],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -161,7 +161,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnQuickPublish,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.QuickPublish,
           InnerText: "Quick Publish",
-          VisibilityControllers: [VisibilityType.DesktopOrContentEditor],
+          VisibilityControllers: [VisibilityType.DISABLED, VisibilityType.DesktopOrContentEditor, ],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -174,7 +174,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.Desktop,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.GoDesktop,
           InnerText: "Desktop",
-          VisibilityControllers: [VisibilityType.NotLogin],
+          VisibilityControllers: [VisibilityType.DISABLED, VisibilityType.NotLogin,],
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
@@ -321,7 +321,7 @@ export class CommandDefintionFactory extends LoggableBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnDebugTriggerPopUpReload,
           VisibilityControllers: [],
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.RemoveFromStorage,
-          InnerText: "Trigger Reload",
+          InnerText: "location .reload(true)",
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,

@@ -80,27 +80,16 @@
           <legend data-setting='lgnd-settings' class='button-wrapper section accordion-trigger'>Settings/ Stats</legend>
           <div class='accordion-content'>
 
-            <h3>note: page refresh + open pop up required to fully propagate settings</h3>
-            <br>
-            <div id='id-ph-settings-auto-login'></div>
-            <br>
-            <div id='id-ph-settings-use-compact'></div>
-            <br>
-            <div id='id-settings-auto-rename-ce-tab-button'></div>
             <fieldset>
-              <legend>Debug</legend>
-              <div id='id-ph-settings-debug-keep-dialog-open'></div>
-              <p>Note: To reload, use this command at the console</p>
-              <dl>
-                <dt></dt>
-                <dd> location.reload(true) </dd>
-              </dl>
+              <legend>Options</legend>
+              <h3>note: page refresh + open pop up required to fully propagate settings</h3>
               <br>
-              <div id='id-ph-settings-show-log-data'></div>
+              <div id='id-ph-settings-auto-login'></div>
+              <br>
+              <div id='id-ph-settings-use-compact'></div>
+              <br>
+              <div id='id-settings-auto-rename-ce-tab-button'></div>
             </fieldset>
-
-            <br>
-
             <fieldset>
               <legend>Auto Snapshot</legend>
               <div id='id-settings-auto-snapshot-on-window-change'></div>
@@ -123,11 +112,19 @@
           <div class='accordion-content'>
             <div class='flex-container'>
               <div class='col-full'>
-                <div class='button-wrapper row flex-container'>
-                  <div id='id-container-btn-debug-force-auto-snapshot'></div>
-                  <div id='id-container-btn-debug-clear-console'></div>
-                  <div id='id-container-btn-debug-trigger-pop-up-reload'></div>
-                </div>
+                <fieldset>
+                  <legend>Debug</legend>
+
+                  <div id='id-ph-settings-debug-keep-dialog-open'></div>
+
+                  <div id='id-ph-settings-show-log-data'></div>
+
+                  <div class='button-wrapper row flex-container'>
+                    <div id='id-container-btn-debug-force-auto-snapshot'></div>
+                    <div id='id-container-btn-debug-clear-console'></div>
+                    <div id='id-container-btn-debug-trigger-pop-up-reload'></div>
+                  </div>
+                </fieldset>
               </div>
             </div>
           </div>

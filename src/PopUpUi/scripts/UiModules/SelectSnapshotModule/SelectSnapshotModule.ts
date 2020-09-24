@@ -254,8 +254,15 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
 
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Meta.Flavor === SnapShotFlavor.Favorite ? '*' : ''), PopConst.Const.SnapShotFormat.lenFavorite, BufferChar.Nbsp, BufferDirection.right)
       //+ PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
-      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(Guid.AsShort(data.Meta.SnapshotId), PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right)
-    //todo - put back    + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data. AllCEAr.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+      + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(Guid.AsShort(data.Meta.SnapshotId), PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right);
+
+    let count: string = "";
+
+    if (data.ScWindowStates.StateOfDesktop.StateOfDTFrames) {
+      count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.ScWindowStates.StateOfDesktop.StateOfDTFrames.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+    }
+    toReturn = toReturn + count;
+
     return toReturn;
   }
 

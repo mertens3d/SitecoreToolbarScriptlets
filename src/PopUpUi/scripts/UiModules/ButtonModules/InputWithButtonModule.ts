@@ -23,7 +23,7 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
   private BuildElements() {
     this.InputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
     this.InputElement.type = SharedConst.Const.KeyWords.Html.Text;
-    this.InputElement.placeholder = "Nick Name";
+    this.InputElement.placeholder = "Set Nick Name";
     this.InputElement.value = '';
 
     if (this.ContainerUiDivElem) {

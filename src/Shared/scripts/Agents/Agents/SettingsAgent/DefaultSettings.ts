@@ -243,8 +243,8 @@ export class DefaultSettings extends LoggableBase {
         PopConst.Const.Selector.HS.ModuleContainers.SettingDebugKeepDialogOpen,
         PopConst.Const.Settings.Defaults.DebugKeepDialogOpen,
         SettingFlavor.PopUp,
-        '(Debug) Keep Dialog Open',
-        UiEnableState.Enabled,
+        'Keep Dialog Open',
+        UiEnableState.Disabled,
         UiPresence.HasUi,
         ModuleKey.CheckBox,
 
