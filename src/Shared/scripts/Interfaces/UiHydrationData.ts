@@ -11,14 +11,15 @@ export class UiHydrationData {
   StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
   StateOfStorageSnapShots: IDataStateOfStorageSnapShots;
   UiVisibilityTestAgent: IUiVisibilityTestAgent;
+  SelectSnapShotNickname: any;
 
-  constructor(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, scUrlAgent: IScUrlAgent, stateOfStorageSnapShots: IDataStateOfStorageSnapShots, selectSnapShotId: GuidData, uiVisiblityTestAgent: IUiVisibilityTestAgent) {
+  constructor(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, scUrlAgent: IScUrlAgent, stateOfStorageSnapShots: IDataStateOfStorageSnapShots, selectSnapShotId: GuidData, uiVisiblityTestAgent: IUiVisibilityTestAgent, selectSnapShotName: string) {
     this.StateOfSitecoreWindow = stateOfSitecoreWindow;
     this.SelectSnapShot = selectSnapShotId;
     this.ScUrlAgent = scUrlAgent;
     this.StateOfStorageSnapShots = stateOfStorageSnapShots;
     this.SelectSnapShotId = selectSnapShotId;
+    this.SelectSnapShotNickname = selectSnapShotName;
     this.UiVisibilityTestAgent = uiVisiblityTestAgent;
   }
 }
-

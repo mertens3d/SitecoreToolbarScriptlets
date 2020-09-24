@@ -23,6 +23,7 @@ import { ScUiManager } from "../SitecoreUiManager/SitecoreUiManager";
 import { RecipeSaveStateManual } from "../../ContentApi/Recipes/RecipeSaveState/RecipeSaveState";
 import { AutoSnapShotAgent } from "../../Agents/AutoSnapShotAgent/AutoSnapShotAgent";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+import { RecipeChangeNickName } from "../../ContentApi/Recipes/RecipeChangeNickName/RecipeChangeNickName";
 
 export class ContentAPIManager extends LoggableBase implements IHindSiteScWindowApi {
   private AtticAgent: IContentAtticAgent;
@@ -112,6 +113,23 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
     });
   }
 
+  async SetNickName(commandData: ICommandHandlerDataForContent): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+
+      //RecipeToExecute = new RecipeChangeNickName(this.Logger, messageFromController.SnapShotNewNickname, messageFromController.SelectSnapshotId, this.AtticAgent)
+
+
+      let recipe = new RecipeChangeNickName(commandData);
+
+      recipe.Execute()
+        .then(() => resolve())
+        .catch((err) => reject(this.SetNickName.name + ' | ' + err));
+
+
+    });
+  }
+
+
   async RemoveSnapShot(commandData: ICommandHandlerDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
       let recipe = new RecipeRemoveItemFromStorage(commandData, commandData.ToastAgent);
@@ -165,6 +183,8 @@ export class ContentAPIManager extends LoggableBase implements IHindSiteScWindow
       resolve(MsgFlag.RespListeningAndReady);
     });
   }
+
+
 
   AdminB() {
     this.ScUiMan.AdminB(this.ScWinMan.GetTopLevelDoc(), null);

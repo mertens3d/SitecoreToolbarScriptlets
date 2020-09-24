@@ -36,6 +36,7 @@ import { FeedbackModuleMessages_Observer } from '../../UiModules/UiFeedbackModul
 import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/FeedbackModulePopUpState';
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
 import { UiCommandsManager } from '../UiCommandsManager';
+import { InputWithButtonModule } from '../../UiModules/ButtonModules/InputWithButtonModule';
 
 export class UiModulesManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];
@@ -57,6 +58,8 @@ export class UiModulesManager extends LoggableBase {
   UiModuleManagerMutationEvent_Subject: UiModuleManagerPassThroughEvent_Subject;
   FacetSettingsBasedModules: _SettingsBasedModulesBase[] = [];
   private ScUrlAgent: IScUrlAgent;
+  FacetRenameButton: InputWithButtonModule;
+    LastKnownSelectSnapshotNickname: string;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiCommandsManager: UiCommandsManager, uiVisibilityTestAgent: IUiVisibilityTestAgent, scUrlagent: IScUrlAgent) {
     super(logger);
@@ -131,10 +134,15 @@ export class UiModulesManager extends LoggableBase {
     let settingsToSend: IHindSiteSetting[] = [];
     wrappedSettings.forEach((wrappedSetting: HindSiteSettingWrapper) => settingsToSend.push(wrappedSetting.HindSiteSetting));
 
+    let newNickname: string = "";
+    if (this.FacetRenameButton) {
+      newNickname = this.FacetRenameButton.GetInputValue();
+    }
+
     var stateOfUiModules: IStateOfUiModules = {
       SelectSnapshotId: this.ModuleSelectSnapShots.GetSelectSnapshotId(),
       CurrentNicknameValue: '',
-      SnapShotNewNickname: '',
+      SnapShotNewNickname: newNickname,
     }
 
     return stateOfUiModules;
@@ -155,7 +163,7 @@ export class UiModulesManager extends LoggableBase {
       this.SelectSnapshotModule_Observer = new SelectSnapUiMutationEvent_ObserverWithCallback(this.Logger, this.OnRefreshUiUIManagerFromSnapShotSelect.bind(this));
       this.UiSettingBasedModuleMutationEvent_Observer = new UiSettingBasedModuleMutationEvent_Observer(this.Logger, this.OnUiSettingBasedModuleMutationEvent.bind(this));
 
-      let moduleSelectSnapShots: IUiModule[] = this.GetModulesByKey(ModuleKey.SelectSnapShot);
+      let moduleSelectSnapShots: IUiModule[] = this.GetModulesByModuleKey(ModuleKey.SelectSnapShot);
 
       if (moduleSelectSnapShots && moduleSelectSnapShots.length > 0) {
         let moduleSelectSnapShot = moduleSelectSnapShots[0];
@@ -236,7 +244,7 @@ export class UiModulesManager extends LoggableBase {
   private GetFirstModuleByKey(moduleKey: ModuleKey): IUiModule {
     let toReturn: IUiModule = null;
 
-    let uiModules: IUiModule[] = this.GetModulesByKey(moduleKey);
+    let uiModules: IUiModule[] = this.GetModulesByModuleKey(moduleKey);
 
     if (uiModules && uiModules.length > 0) {
       toReturn = uiModules[0];
@@ -246,7 +254,7 @@ export class UiModulesManager extends LoggableBase {
   }
 
   GetCommandButtonByKey(Ping: MenuCommandKey): TypCommandButtonModule {
-    let uiModules: TypCommandButtonModule[] = <TypCommandButtonModule[]>this.GetModulesByKey(ModuleKey.ButtonTypical);
+    let uiModules: TypCommandButtonModule[] = <TypCommandButtonModule[]>this.GetModulesByModuleKey(ModuleKey.ButtonTypical);
     let toReturn: TypCommandButtonModule = null;
 
     if (uiModules) {
@@ -261,15 +269,16 @@ export class UiModulesManager extends LoggableBase {
   GetBaseButtonModules(): IUiModuleButton[] {
     let toReturn: IUiModuleButton[] = [];
 
-    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonTypical));
-    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonWithInput));
-    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonCancel));
-    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByKey(ModuleKey.ButtonClose));
+    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByModuleKey(ModuleKey.ButtonTypical));
+    this.FacetRenameButton = <InputWithButtonModule>this.GetFirstModuleByKey(ModuleKey.ButtonWithInput)
+    toReturn = toReturn.concat(this.FacetRenameButton);
+    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByModuleKey(ModuleKey.ButtonCancel));
+    toReturn = toReturn.concat(<IUiModuleButton[]>this.GetModulesByModuleKey(ModuleKey.ButtonClose));
 
     return toReturn;
   }
 
-  private GetModulesByKey(moduleKey: ModuleKey): IUiModule[] {
+  private GetModulesByModuleKey(moduleKey: ModuleKey): IUiModule[] {
     let toReturn: IUiModule[] = [];
 
     if (this.UiModules) {
@@ -358,6 +367,7 @@ export class UiModulesManager extends LoggableBase {
 
     //if (StaticHelpers.IsNullOrUndefined(this.LastKnownSelectSnapshotId)) {
       this.LastKnownSelectSnapshotId = this.ModuleSelectSnapShots.GetSelectSnapshotId();
+      this.LastKnownSelectSnapshotNickname = this.ModuleSelectSnapShots.GetSelectSnapshotNickname();
     //}
 
     this.LastKnownstateOfSitecoreWindow = stateOfSitecoreWindow;
@@ -372,7 +382,7 @@ export class UiModulesManager extends LoggableBase {
     if (this.LastKnownstateOfSitecoreWindow && this.LastKnownstateOfSitecoreWindow.Meta) {
       this.UiVisibilityTestAgent.Hydrate(this.LastKnownstateOfSitecoreWindow, this.LastKnownStateOfStorageSnapShots, this.LastKnownstateOfSitecoreWindow.Meta.WindowType, this.LastKnownSelectSnapshotId);
 
-      let refreshData: UiHydrationData = new UiHydrationData(this.LastKnownstateOfSitecoreWindow, this.ScUrlAgent, this.LastKnownStateOfStorageSnapShots, this.LastKnownSelectSnapshotId, this.UiVisibilityTestAgent);
+      let refreshData: UiHydrationData = new UiHydrationData(this.LastKnownstateOfSitecoreWindow, this.ScUrlAgent, this.LastKnownStateOfStorageSnapShots, this.LastKnownSelectSnapshotId, this.UiVisibilityTestAgent, this.LastKnownSelectSnapshotNickname);
 
       this.HydrateUiModules(refreshData);
       this.RefreshModuleUis()

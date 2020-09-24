@@ -20,9 +20,6 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
     this.BuildElements();
   }
 
-  RefreshUi(): void {
-  }
-
   private BuildElements() {
     this.InputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
     this.InputElement.type = SharedConst.Const.KeyWords.Html.Text;
@@ -32,6 +29,22 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
     if (this.ContainerUiDivElem) {
       this.ContainerUiDivElem.insertBefore(this.InputElement, this.HTMLButtonElement);
     }
+  }
+
+  GetInputValue(): string {
+    let toReturn: string = "";
+    if (this.InputElement) {
+      toReturn = this.InputElement.value;
+    }
+
+    return toReturn;
+  }
+
+  RefreshUi(): void {
+    //if (this.InputElement) {
+    //  this.InputElement.value = this.RefreshData.SelectSnapShotNickname;
+    //}
+    this.DrawCorrectNicknameInUI();
   }
 
   DrawCorrectNicknameInUI() {
@@ -47,25 +60,25 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
       var storageValues = snapShots;
 
       if (storageValues) {
-        var storageMatch;
 
         for (var idx = 0; idx < storageValues.length; idx++) {
           var candidate = storageValues[idx];
+          //this.Logger.LogAsJsonPretty('candidate', candidate);
           if (candidate.Meta.SnapshotId.Raw === this.RefreshData.SelectSnapShotId.Raw) {
-            storageMatch = candidate;
-            break;
-          }
-        }
+            this.Logger.Log('found one');
+            if (this.InputElement) {
+              this.InputElement.value = candidate.Friendly.NickName;
 
-        if (storageMatch) {
-          var inputElem = <HTMLInputElement>window.document.getElementById(PopConst.Const.ElemId.InputNickname);
-          if (inputElem) {
-            inputElem.value = storageMatch.NickName;
+              break;
+            }
           }
         }
-      } else {
+      }
+      else {
         this.Logger.WarningAndContinue(this.DrawCorrectNicknameInUI.name, 'null storage values');
       }
+    } else {
+      this.Logger.Log('No targetId');
     }
     this.Logger.FuncEnd(this.DrawCorrectNicknameInUI.name);
   }

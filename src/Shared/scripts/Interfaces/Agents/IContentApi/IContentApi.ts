@@ -7,6 +7,7 @@ export interface IHindSiteScWindowApi {
   ToggleFavorite(commandData: ICommandHandlerDataForContent);
   OpenContentEditor();
   Ping();
+  SetNickName(commandData: ICommandHandlerDataForContent): Promise<void>;
   SetStateOfSitecoreWindow(commandData: ICommandHandlerDataForContent): Promise<void>;
   ToggleCompactCss(commandData: ICommandHandlerDataForContent);
   SaveWindowState(commandData: ICommandHandlerDataForContent): Promise<void>;

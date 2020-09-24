@@ -28,7 +28,8 @@ export class CommandHandlerDataForContent implements ICommandHandlerDataForConte
   ToastAgent: IToastAgent = null;
   TopLevelDoc = () => this.ScWinMan.GetTopLevelDoc();
   SettingsAgent: ISettingsAgent;
-    AutoSnapShotAgent: AutoSnapShotAgent;
+  AutoSnapShotAgent: AutoSnapShotAgent;
+  NewNickName: string;
 
   constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, scWinMan: IScWindowManager, toastAgent: IToastAgent, scUiMan: ScUiManager, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent) {
     this.Logger = logger;

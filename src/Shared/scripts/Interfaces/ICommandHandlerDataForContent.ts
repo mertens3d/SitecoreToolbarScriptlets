@@ -13,6 +13,7 @@ import { DesktopProxy } from "../../../Content/scripts/Proxies/Desktop/DesktopPr
 import { AutoSnapShotAgent } from "../../../Content/scripts/Agents/AutoSnapShotAgent/AutoSnapShotAgent";
 
 export interface ICommandHandlerDataForContent {
+  NewNickName: string;
   SettingsAgent: ISettingsAgent;
   DesktopProxy: DesktopProxy;
   TargetCeProxy: ContentEditorProxy

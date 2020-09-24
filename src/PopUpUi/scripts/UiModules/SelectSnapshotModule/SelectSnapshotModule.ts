@@ -56,7 +56,6 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     this.Logger.FuncEnd(this.WireEvents_Module.name, this.ContainerSelector);
   }
 
-
   RefreshUi(): void {
     this.PopulateStateOfSnapShotSelectElement();
     //this.SelectSnapshotModule_Subject.NotifyObservers();
@@ -87,6 +86,28 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     } else {
       toReturn = GuidData.GetEmptyGuid();
     }
+    this.Logger.FuncEnd(this.GetSelectSnapshotId.name);
+    return toReturn;
+  }
+
+  GetSelectSnapshotNickname(): string {
+    this.Logger.FuncStart(this.GetSelectSnapshotId.name);
+    let selectedIndex = this.SelectElement.selectedIndex;
+    this.Logger.LogVal('selectedIndex', selectedIndex);
+    let toReturn: string;
+
+    if (selectedIndex && this.RefreshData && this.RefreshData.StateOfStorageSnapShots) {
+      let snapShots: IDataStateOfSitecoreWindow[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
+      if (snapShots) {
+        let selected: IDataStateOfSitecoreWindow = snapShots[selectedIndex];
+        if (selected) {
+          toReturn = selected.Friendly.NickName;
+        }
+      }
+    } else {
+      this.Logger.WarningAndContinue(this.GetSelectSnapshotNickname.name, 'no match');
+    }
+
     this.Logger.FuncEnd(this.GetSelectSnapshotId.name);
     return toReturn;
   }

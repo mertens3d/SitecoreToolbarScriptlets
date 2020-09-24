@@ -93,7 +93,7 @@ export class CommandDefintionFactory extends LoggableBase {
           MenuCommandKey: MenuCommandKey.UpdateNickname,
           PlaceHolderSelector: PopConst.Const.Selector.HS.UpdateNicknameB,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.UpdateNickname,
-          InnerText: "Set Nickname",
+          InnerText: "et Nickname",
           VisibilityControllers: [VisibilityType.SnapShotSelected],
           ModuleKey: ModuleKey.ButtonWithInput,
           EventHandlerData: {

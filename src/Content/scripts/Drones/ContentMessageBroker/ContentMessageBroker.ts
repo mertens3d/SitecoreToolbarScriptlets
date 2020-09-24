@@ -130,9 +130,9 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
   private CalculateRecipeToExec(messageFromController: IMessageControllerToContent): ICommandRecipes {
     let RecipeToExecute: ICommandRecipes;
     switch (messageFromController.MsgFlag) {
-      case MsgFlag.ReqUpdateNickName:
-        RecipeToExecute = new RecipeChangeNickName(this.Logger, messageFromController.SnapShotNewNickname, messageFromController.SelectSnapshotId, this.AtticAgent)
-        break;
+      //case MsgFlag.ReqUpdateNickName:
+      //  RecipeToExecute = new RecipeChangeNickName(this.Logger, messageFromController.SnapShotNewNickname, messageFromController.SelectSnapshotId, this.AtticAgent)
+      //  break;
 
       default:
         break;
@@ -149,6 +149,12 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       case MsgFlag.ReqAddCETab:
         commandToExecute = this.ApiManager.AddCETab;
         break;
+
+
+      case MsgFlag.ReqUpdateNickName:
+        commandToExecute = this.ApiManager.SetNickName;
+        break;
+
 
       case MsgFlag.ReqAdminB:
         commandToExecute = this.ApiManager.AdminB;
@@ -255,6 +261,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
         //commandData.TargetSnapShotFlavor = stateOfPopUpUI.Payload.SnapShotSettings.Flavor;
         commandData.TargetCeProxy = null; //todo
         commandData.TargetDoc = null; // todo
+        commandData.NewNickName = messageFromController.SnapShotNewNickname;
 
         await commandToExecute(commandData)
           .then(() => this.ConstructResponse(messageFromController.MsgFlag))
