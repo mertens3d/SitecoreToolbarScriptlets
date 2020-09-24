@@ -13,13 +13,8 @@ export class HindSiteSettingCheckBoxModule extends _SettingsBasedModulesBase imp
 
   Init() {
     this.Logger.FuncStart(this.Init.name, this.Friendly);
-
-    //this.UiInputElement = <HTMLInputElement>this.GetUiElement(this.HindSiteSetting.UiContainerSelector);
-
     this.Init_BaseSettingsBasedModule();
-
     this.BuildHtml();
-
     this.Logger.FuncEnd(this.Init.name, this.Friendly);
   }
 

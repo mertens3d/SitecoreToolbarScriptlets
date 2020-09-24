@@ -15,11 +15,10 @@ import { IToastAgent } from "../../../../Shared/scripts/Interfaces/Agents/IToast
 import { ICommandHandlerDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { ICommandRecipes } from "../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { IMessageControllerToContent } from "../../../../Shared/scripts/Interfaces/IStateOfController";
-import { RecipeChangeNickName } from "../../ContentApi/Recipes/RecipeChangeNickName/RecipeChangeNickName";
+import { AutoSnapShotAgent } from "../../Agents/AutoSnapShotAgent/AutoSnapShotAgent";
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { AutoSnapShotAgent } from "../../Agents/AutoSnapShotAgent/AutoSnapShotAgent";
 
 export class ContentMessageBroker extends LoggableBase implements IContentMessageBroker {
   private SettingsAgent: ISettingsAgent;
@@ -29,7 +28,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
   private ScUiMan: ScUiManager;
   private ScWinMan: IScWindowManager;
   ContentBrowserProxy: IContentBrowserProxy;
-    AutoSnapShotAgent: AutoSnapShotAgent;
+  AutoSnapShotAgent: AutoSnapShotAgent;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScWindowApi, atticMan: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent) {
     super(logger);
@@ -140,8 +139,6 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return RecipeToExecute;
   }
 
-
-
   private CalculateCommandToExec(messageFromController: IMessageControllerToContent): Function {
     let commandToExecute: Function = null;
 
@@ -150,11 +147,9 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
         commandToExecute = this.ApiManager.AddCETab;
         break;
 
-
       case MsgFlag.ReqUpdateNickName:
         commandToExecute = this.ApiManager.SetNickName;
         break;
-
 
       case MsgFlag.ReqAdminB:
         commandToExecute = this.ApiManager.AdminB;

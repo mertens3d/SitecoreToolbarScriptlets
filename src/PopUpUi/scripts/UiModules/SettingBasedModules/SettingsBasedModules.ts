@@ -8,7 +8,7 @@ import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
 import { AccordianModule } from "./AccordianModule";
 import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
-import { UiPresence } from "../../../../Shared/scripts/Enums/Enabled";
+import { UiPresence } from "../../../../Shared/scripts/Enums/UiPresence";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
 
 export class SettingsBasedModules extends LoggableBase {

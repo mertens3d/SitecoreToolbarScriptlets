@@ -8,7 +8,6 @@ export class ContentMessageManager extends LoggableBase {
   private ContentMessageBroker: IContentMessageBroker;
   OperationCancelled: any;
   private ScWinMan: IScWindowManager;
- 
 
   constructor(logger: ILoggerAgent, scWinMan: IScWindowManager, contentMessageBroker: IContentMessageBroker) {
     super(logger);
@@ -17,7 +16,6 @@ export class ContentMessageManager extends LoggableBase {
     this.ScWinMan = scWinMan;
 
     this.ContentMessageBroker = contentMessageBroker;
-
 
     this.Logger.FuncEnd(ContentMessageManager.name);
   }

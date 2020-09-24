@@ -19,7 +19,6 @@ export class RecipeChangeNickName extends __RecipeBase implements ICommandRecipe
     if (StaticHelpers.IsNullOrUndefined([this.NewNickname, this.TargetSnapShotId, this.AtticAgent])) {
       this.Logger.ErrorAndThrow(RecipeChangeNickName.name, 'Null check');
     }
-
   }
 
   Execute(): Promise<void> {
@@ -53,7 +52,6 @@ export class RecipeChangeNickName extends __RecipeBase implements ICommandRecipe
 
           this.AtticAgent.WriteStateOfSitecoreToStorage(storageMatch);
           resolve();
-
         } else {
           reject(this.UpdateNickname.name + ' - something was missing');
         }

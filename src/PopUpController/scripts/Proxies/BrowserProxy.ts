@@ -28,15 +28,10 @@ export class PopUpBrowserProxy extends LoggableBase implements IPopUpBrowserProx
   }
 
   SendMessageAsync_BrowserProxy(message: IMessageControllerToContent): Promise<IMessageContentToController> {
-    return new Promise(async ( resolve, reject) => {
-      //await browser.tabs.query({ currentWindow: true, active: true })
-      //  .then((result: browser.tabs.Tab[]) => { targetTab = result[0]; })
-      //  .catch((err) => reject(err));
-
-      //this.Logger.LogVal('Tab Id', targetTab.id);
+    return new Promise(async (resolve, reject) => {
       browser.tabs.sendMessage(this.BrowserTabId, message)
         .then((response: IMessageContentToController) => resolve(response))
-        .catch((err) => reject(this.SendMessageAsync_BrowserProxy.name + ' | ' + JSON.stringify( err)))
+        .catch((err) => reject(this.SendMessageAsync_BrowserProxy.name + ' | ' + JSON.stringify(err)))
     })
   }
 }

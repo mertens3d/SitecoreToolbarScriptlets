@@ -2,7 +2,8 @@
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { UiEnableState, UiPresence } from "../../../Enums/Enabled";
+import { UiEnableState } from "../../../Enums/Enabled";
+import { UiPresence } from "../../../Enums/UiPresence";
 import { ModuleKey } from "../../../Enums/ModuleKey";
 
 export class HindSiteSetting implements IHindSiteSetting {

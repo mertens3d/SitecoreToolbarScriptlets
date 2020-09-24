@@ -14,7 +14,5 @@ export class DTFrameProxyMutationEvent_Observer extends HindSiteEvent_Observer<I
 
   UpdateAsync(frameProxyMutatationEvent_Payload: IDTFrameProxyMutationEvent_Payload): void {
     this.Owner.OnDTFrameProxyMutationEvent(frameProxyMutatationEvent_Payload);
-
-    // (payload: IPayloadDesktop_DomChangedEvent) => { self.Observer_DesktopDomChangedEvent(payload) });
   }
 }

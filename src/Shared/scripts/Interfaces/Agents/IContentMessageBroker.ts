@@ -1,4 +1,3 @@
-﻿
-export interface IContentMessageBroker {
-    BeginListening();
+﻿export interface IContentMessageBroker {
+  BeginListening();
 }

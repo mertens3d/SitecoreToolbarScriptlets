@@ -1,12 +1,9 @@
 ﻿import { SettingFlavor } from "../../Enums/SettingFlavor";
 import { SettingType } from "../../Enums/SettingType";
 import { SettingKey } from "../../Enums/3xxx-SettingKey";
-import { UiPresence, UiEnableState } from "../../Enums/Enabled";
+import { UiEnableState } from "../../Enums/Enabled";
+import { UiPresence } from "../../Enums/UiPresence";
 
-export interface IHindSiteSettingForNumbers extends IHindSiteSetting {
-  Min: number,
-  Max: number,
-}
 export interface IHindSiteSetting {
   DataType: SettingType;
   DefaultValue: any;

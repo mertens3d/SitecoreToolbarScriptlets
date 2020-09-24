@@ -1,11 +1,9 @@
-﻿import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
-import { _base_ButtonModule } from "./_baseButtonModule";
-import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { PopConst } from "../../Classes/PopConst";
+import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
+import { _base_ButtonModule } from "./_baseButtonModule";
 
 export class InputWithButtonModule extends _base_ButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonWithInput;
@@ -41,9 +39,6 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
   }
 
   RefreshUi(): void {
-    //if (this.InputElement) {
-    //  this.InputElement.value = this.RefreshData.SelectSnapShotNickname;
-    //}
     this.DrawCorrectNicknameInUI();
   }
 

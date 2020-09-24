@@ -2,6 +2,4 @@
 
 export interface IDataBrowserTab {
   ScUrlAgent: ScUrlAgent;
-  //Tab: browser.tabs.Tab,
-  //UrlAgent: IUrlAgent,
 }

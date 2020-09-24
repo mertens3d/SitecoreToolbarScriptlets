@@ -1,9 +1,9 @@
 ﻿import { LoggableBase } from "../../../../../Managers/LoggableBase";
 import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
-import { IHindeSiteObservable } from "./IHindeSiteObservable";
+import { IHindeSite_Observable } from "./IHindeSite_Observable";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 
-export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSiteObservable<T> {
+export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSite_Observable<T> {
   protected ObserverCollection: IHindSiteEvent_Observer<T>[] = [];
   readonly Friendly_Subject: string;
 

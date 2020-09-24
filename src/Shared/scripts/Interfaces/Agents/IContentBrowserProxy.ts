@@ -2,6 +2,5 @@
 import { IMessageControllerToContent } from "../IStateOfController";
 
 export interface IContentBrowserProxy {
-    AddListener(callback: (request: IMessageControllerToContent) => Promise<MsgContentToController>);
-
+  AddListener(callback: (request: IMessageControllerToContent) => Promise<MsgContentToController>);
 }

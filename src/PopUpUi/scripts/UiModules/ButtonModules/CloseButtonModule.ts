@@ -24,18 +24,13 @@ export class CloseButtonModule extends _base_ButtonModule implements IUiModuleBu
     return this.MenuCommandDefinition.MenuCommandKey;
   }
 
-
   BuildElements(): void {
     this.Logger.FuncStart(this.BuildElements.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
     if (!StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
-
-      //this.ContainerUiDivElem.classList.add('btn-container');
-
       this.ContainerUiDivElem.appendChild(this.HTMLButtonElement);
     } else {
       this.Logger.ErrorAndContinue(CloseButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
     this.Logger.FuncEnd(this.BuildElements.name);
   }
-
 }

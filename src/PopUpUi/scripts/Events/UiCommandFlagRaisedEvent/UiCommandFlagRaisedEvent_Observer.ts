@@ -5,9 +5,7 @@ import { HindsiteEventHandler_Type } from '../../../../Content/scripts/Proxies/D
 import { IUiCommandFlagRaisedEvent_Payload } from './IUiCommandFlagRaisedEvent_Payload';
 
 export class UiCommandFlagRaisedEvent_Observer extends HindSiteEvent_Observer<IUiCommandFlagRaisedEvent_Payload> implements IHindSiteEvent_Observer<IUiCommandFlagRaisedEvent_Payload> {
-
   constructor(logger: ILoggerAgent, callback: HindsiteEventHandler_Type) {
     super(logger, UiCommandFlagRaisedEvent_Observer.name, callback);
-
-    }
+  }
 }
