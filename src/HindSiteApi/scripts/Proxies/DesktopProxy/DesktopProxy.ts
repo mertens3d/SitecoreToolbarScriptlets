@@ -1,50 +1,50 @@
-import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
-import { SettingKey } from "../../../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { _BaseFrameProxy } from "../../_BaseFrameProxy";
-import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
-import { IDataStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
-import { MiscAgent } from "../../../Agents/MiscAgent/MiscAgent";
-import { RecipeRestoreFrameOnDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
-import { FrameHelper } from "../../../Helpers/FrameHelper";
-import { LoggableBase } from "../../../Managers/LoggableBase";
-import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
-import { DesktopProxyMutationEvent_Observer } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer";
-import { DesktopProxyMutationEvent_Subject } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject";
-import { IDesktopProxyMutationEvent_Payload } from "./Events/DesktopProxyMutationEvent/IDesktopProxyMutationEvent_Payload";
-import { DTFrameProxy } from "../../DTFrameProxy";
-import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
-import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
-import { DTFrameProxyBucket } from "./DTFrameProxyBucket";
-import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
-import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { InitResultsDesktopProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy";
-import { InitResultsDTFrameProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
+import { DTFrameProxyMutationEvent_Observer } from "../../Events/DesktopProxy/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
+import { DefaultStateOfDesktop } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
+import { RecipeBasicsForContent } from "../../../../Shared/scripts/Classes/RecipeBasics";
+import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { InitResultsDesktopProxy } from "../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy";
+import { InitResultsDTFrameProxy } from "../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
+import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { IDataStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
+import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
+import { IDTFrameProxyMutationEvent_Payload } from "../../../../Shared/scripts/Interfaces/Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
+import { IDesktopProxy, IDesktopStartBarProxy } from "../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy";
+import { RecipeRestoreFrameOnDesktop } from "../../../../Content/scripts/ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop";
+import { FrameHelper } from "../../../../Content/scripts/Helpers/FrameHelper";
+import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
+import { DTFrameProxy } from "../../../../Content/scripts/Proxies/DTFrameProxy";
+import { _BaseFrameProxy } from "../../../../Content/scripts/Proxies/_BaseFrameProxy";
+import { DesktopStartBarProxy } from "../../../../Content/scripts/Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy";
+import { DTFrameProxyBucket } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/DTFrameProxyBucket";
+import { DesktopProxyMutationEvent_Observer } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer";
+import { DesktopProxyMutationEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject";
+import { IDesktopProxyMutationEvent_Payload } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/IDesktopProxyMutationEvent_Payload";
+import { IContentBrowserProxy } from "../../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
+import { ICommandHandlerDataForContent } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 
-export class DesktopProxy extends LoggableBase {
+export class DesktopProxy extends LoggableBase implements IDesktopProxy {
   private __iframeHelper: FrameHelper;
   private __dtStartBarAgent: DesktopStartBarProxy;
 
-  DTFrameProxyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
-  DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
-  DesktopStartBarAgent: DesktopStartBarProxy;
+  private DTFrameProxyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
+  private DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
+  DesktopStartBarAgent: IDesktopStartBarProxy;
   private AssociatedDoc: IDataOneDoc;
   private DesktopFrameProxyBucket: DTFrameProxyBucket;
   private DomChangedEvent_Subject: DesktopProxyMutationEvent_Subject;
-  private MiscAgent: MiscAgent;
-  private SettingsAgent: ISettingsAgent;
-  private RecipeBasics: RecipeBasics;
+  private RecipeBasics: RecipeBasicsForContent;
+  private ContentBrowserProxy: IContentBrowserProxy;
 
-  constructor(logger: ILoggerAgent, miscAgent: MiscAgent, associatedDoc: IDataOneDoc, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, contentBrowserProxy: IContentBrowserProxy) {
     super(logger);
 
     this.Logger.InstantiateStart(DesktopProxy.name);
     if (associatedDoc) {
-      this.MiscAgent = miscAgent;
-      this.SettingsAgent = settingsAgent;
       this.AssociatedDoc = associatedDoc;
-      this.RecipeBasics = new RecipeBasics(this.Logger);
+
+      this.ContentBrowserProxy = contentBrowserProxy;
+      this.RecipeBasics = new RecipeBasicsForContent(this.Logger, this.ContentBrowserProxy);
     } else {
       this.Logger.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
     }
@@ -57,14 +57,14 @@ export class DesktopProxy extends LoggableBase {
 
       let initResultsDesktopProxy = new InitResultsDesktopProxy();
 
-      this.DTFrameProxyMutationEvent_Observer = new DTFrameProxyMutationEvent_Observer(this.Logger, this);
+      this.DTFrameProxyMutationEvent_Observer = new DTFrameProxyMutationEvent_Observer(this.Logger, this.OnDTFrameProxyMutationEvent.bind(this));
       this.DesktopFrameProxyBucket = new DTFrameProxyBucket(this.Logger);
 
       await this.OnReadyPopulateDTFrameProxyBucket()
         .then(() => {
-          this.DesktopStartBarAgent = new DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
+          this.DesktopStartBarAgent = new DesktopStartBarProxy(this.Logger, this.ContentBrowserProxy, this.AssociatedDoc);
           let self = this;
-          this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject(self.Logger, this.AssociatedDoc);
+          this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject(self.Logger, this.AssociatedDoc, this.ContentBrowserProxy);
           this.WireEvents();
         })
         .then(() => resolve(initResultsDesktopProxy))
@@ -79,7 +79,7 @@ export class DesktopProxy extends LoggableBase {
 
     this.DesktopStartBarAgent.OnTreeMutationEvent_DesktopStartBarProxy(frameProxyMutatationEvent_Payload);
 
-      this.Logger.FuncEnd(this.OnDTFrameProxyMutationEvent.name);
+    this.Logger.FuncEnd(this.OnDTFrameProxyMutationEvent.name);
   }
 
   OnDTFrameProxyMutation(desktopDTFrameProxyMutatationEvent_Payload: IDesktopProxyMutationEvent_Payload) {
@@ -90,7 +90,7 @@ export class DesktopProxy extends LoggableBase {
 
   private GetFrameHelper(): FrameHelper {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new FrameHelper(this.Logger);
+      this.__iframeHelper = new FrameHelper(this.Logger, this.ContentBrowserProxy);
     }
     return this.__iframeHelper;
   }
@@ -114,9 +114,20 @@ export class DesktopProxy extends LoggableBase {
     //if (setting && setting.ValueAsBool()) {
     //}
 
-    this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc);
-    let DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer(this.Logger, this);
+    this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc, this.ContentBrowserProxy);
+    let DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer(this.Logger, this.CallbackToName.bind(this));
     this.DomChangedEvent_Subject.RegisterObserver(DomChangeEvent_Observer);
+  }
+
+  CallbackToName(payload: IDesktopProxyMutationEvent_Payload) {
+    this.Logger.Log("The desktop DOM changed - probably an iframe has been added");
+    if (payload && payload.AddedDTFrameProxies.length > 0) {
+      payload.AddedDTFrameProxies.forEach(async (dtFrameProxy: DTFrameProxy) => {
+        dtFrameProxy.OnReadyInitDTFrameProxy()
+          .then(() => this.AddDTFrameProxyAsync(dtFrameProxy))
+          .catch((err) => { throw (DesktopProxyMutationEvent_Observer.name + ' | ' + err) });
+      });
+    }
   }
 
   AddDTFrameProxyAsync(dtframeProxy: DTFrameProxy): void {
@@ -155,7 +166,7 @@ export class DesktopProxy extends LoggableBase {
 
   GetDtStartBarAgent(): DesktopStartBarProxy {
     if (!this.__dtStartBarAgent) {
-      this.__dtStartBarAgent = new DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
+      this.__dtStartBarAgent = new DesktopStartBarProxy(this.Logger, this.ContentBrowserProxy, this.AssociatedDoc);
     }
 
     return this.__dtStartBarAgent;
@@ -163,7 +174,7 @@ export class DesktopProxy extends LoggableBase {
 
   private GetIframeHelper(): FrameHelper {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new FrameHelper(this.Logger);
+      this.__iframeHelper = new FrameHelper(this.Logger, this.ContentBrowserProxy);
     }
     return this.__iframeHelper;
   }
@@ -204,16 +215,16 @@ export class DesktopProxy extends LoggableBase {
     });
   }
 
-  async SetStateOfDesktop(desktopState: IDataStateOfDesktop): Promise<void> {
+  async SetStateOfDesktop(desktopState: IDataStateOfDesktop, commanddata: ICommandHandlerDataForContent): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateOfDesktop.name);;
 
       if (desktopState && desktopState.StateOfDTFrames && desktopState.StateOfDTFrames.length > 0) {
-        if (this.MiscAgent.NotNullOrUndefined([this.AssociatedDoc], this.SetStateOfDesktop.name)) {
+        if (!StaticHelpers.IsNullOrUndefined([this.AssociatedDoc])) {
           for (var idx = 0; idx < desktopState.StateOfDTFrames.length; idx++) {
             let stateOfFrame: IDataStateOfDTFrame = desktopState.StateOfDTFrames[idx];
 
-            var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent);
+            var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(commanddata, stateOfFrame);
 
             //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
             await recipe.Execute()

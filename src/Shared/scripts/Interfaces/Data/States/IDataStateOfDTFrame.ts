@@ -3,6 +3,7 @@ import { GuidData } from "../../../Helpers/GuidData";
 import { IDataStateOfContentEditor } from "./IDataStateOfContentEditor";
 import { FrameStyling } from "./IFrameStyling";
 
+export interface IApiFactory { }
 export interface IDataStateOfDTFrame {
   StateOfContentEditor: IDataStateOfContentEditor;
   StorageId: GuidData;

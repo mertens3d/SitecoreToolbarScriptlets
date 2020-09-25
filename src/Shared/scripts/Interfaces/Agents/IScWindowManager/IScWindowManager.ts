@@ -1,12 +1,11 @@
 ﻿import { ScWindowRecipePartials } from "../../../../../Content/scripts/Managers/ScWindowManager/ScWindowRecipePartials";
-import { ContentEditorProxy } from "../../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { DesktopProxy } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { IContentEditorProxy, IDesktopProxy } from "../../Proxies/IDesktopProxy";
 import { ScWindowType } from "../../../Enums/scWindowType";
+import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { IDataOneDoc } from "../../Data/IDataOneDoc";
 import { IDataStateOfSitecoreWindow } from "../../Data/States/IDataStateOfSitecoreWindow";
-import { IScUrlAgent } from "../IScUrlAgent/IScUrlAgent";
 import { InitResultsScWindowManager } from "../InitResultsScWindowManager";
-import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
+import { IScUrlAgent } from "../IScUrlAgent/IScUrlAgent";
 
 export interface IScWindowManager {
   GetStateOfSitecoreWindow(snapshotFlavor: SnapShotFlavor): Promise<IDataStateOfSitecoreWindow>;
@@ -15,7 +14,7 @@ export interface IScWindowManager {
   GetCurrentPageType(): ScWindowType;
   OnReadyInitScWindowManager(): Promise<InitResultsScWindowManager>;
   SetCompactCss(targetDoc: IDataOneDoc);
-  ContentEditorProxy(): ContentEditorProxy;
-  DesktopProxy(): DesktopProxy;
+  ContentEditorProxy(): IContentEditorProxy;
+  DesktopProxy(): IDesktopProxy;
   GetTopLevelDoc(): IDataOneDoc;
 }

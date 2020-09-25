@@ -1,6 +1,6 @@
 ﻿import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
-import { LoggableBase } from '../../Managers/LoggableBase';
+import { LoggableBase } from '../../../../Shared/scripts/LoggableBase';
 
 export class MiscAgent extends LoggableBase {
   constructor(logger: ILoggerAgent) {

@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { ContentReplyReceivedEvent_Subject } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
 import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { MsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";

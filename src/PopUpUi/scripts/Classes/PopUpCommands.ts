@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+﻿import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
 import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';

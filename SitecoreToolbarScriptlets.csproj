@@ -63,15 +63,20 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\IContentEditorProxyMutationEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\FactoryApi.ts" />
+    <TypeScriptCompile Include="src\HindSiteApi\scripts\Classes\Factory.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IFactoryApi.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Api\IHindSiteApi.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Events\ContentEditorProxyMutationEvent\IContentEditorProxyMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\_HindSiteEvent\HindsiteEventHandler_Type.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\_HindSiteEvent\HindSiteEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\_HindSiteEvent\HindeSiteEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\_HindSiteEvent\IHindSiteEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DTFrameProxyMutationEvent\IDTFrameProxyMutationEvent_Payload.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\_HindSiteEvent\IHindeSite_Observable.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DTFrameProxyMutationEvent\DTFrameProxyMutationEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\_HindSiteEvent\HindsiteEventHandler_Type.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\_HindSiteEvent\HindSiteEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\_HindSiteEvent\HindeSiteEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\_HindSiteEvent\IHindSiteEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Events\DTFrameProxyMutationEvent\IDTFrameProxyMutationEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\_HindSiteEvent\IHindeSite_Observable.ts" />
+    <TypeScriptCompile Include="src\HindSiteApi\scripts\Events\DesktopProxy\DTFrameProxyMutationEvent\DTFrameProxyMutationEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\IDesktopProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopStartBarProxy\DesktopStartBarButtonProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorTreeNodeProxy\ContentEditorTreeNodeProxy.ts" />
@@ -79,7 +84,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DTFrameProxyBucket.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\ITreeMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\TreeMutationEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DTFrameProxyMutationEvent\DTFrameProxyMutationEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\HindSiteApi\scripts\Events\DesktopProxy\DTFrameProxyMutationEvent\DTFrameProxyMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeInitFromQueryStr\RecipeInitFromQueryStr.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Drones\ContentMessageBroker\ContentMessageBroker.ts" />
@@ -93,11 +98,12 @@
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeSaveState\RecipeSaveState.ts" />
     <TypeScriptCompile Include="src\Content\scripts\ContentApi\Recipes\RecipeToggleFavorite\RecipeToggleFavorite.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Helpers\FrameHelper.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Managers\LoggableBase.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\LoggableBase.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowManager.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Managers\ScWindowManager\ScWindowRecipePartials.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\TreeMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\HindSiteApi\scripts\ApiEntryPoint.ts" />
     <TypeScriptCompile Include="src\PopUpController\scripts\Proxies\BrowserProxy.ts" />
     <TypeScriptCompile Include="src\PopUpController\scripts\PopUpControllerLayer.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Classes\PopUpCommands.ts" />
@@ -148,7 +154,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\HindSiteSettingWrapper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\ToastAgent\ToastAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\DefaultSettings.ts" />
-    <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\BrowserTabAgent.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\PopUpBrowserTabAgent.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\UiCommandsManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\UrlAgent\ScUrlAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\RollingLogIdDrone\RollingLogIdDrone.ts" />
@@ -171,7 +177,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Enums\UiPresence.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\GuidData.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAccordianManager.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\IContentApi.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Api\IContentApi.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentAtticAgent\IContentAtticAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IFirstActive.ts" />
@@ -272,12 +278,6 @@
     <None Include="src\PopUpUi\css\_partials\global.scss" />
     <None Include="src\PopUpUi\css\_partials\header.scss" />
     <Content Include="src\Browser-PolyFill\browser-polyfill.js" />
-    <Content Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.js">
-      <DependentUpon>IToastAgent.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Shared\scripts\Interfaces\Agents\IUiModule.js">
-      <DependentUpon>IUiModule.ts</DependentUpon>
-    </Content>
     <Content Include="webpack.config.js" />
     <None Include=".editorconfig" />
     <None Include=".jshintrc" />
@@ -320,7 +320,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\RecipeBasics.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\UiEventManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
-    <TypeScriptCompile Include="src\Content\scripts\Proxies\Desktop\DesktopProxy\DesktopProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteApi\scripts\Proxies\DesktopProxy\DesktopProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\IterationDrone\IterationDrone.ts" />
     <TypeScriptCompile Include="src\Content\scripts\zContentEntryPoint.ts" />
     <None Include="Readme.md" />
@@ -331,12 +331,6 @@
     <None Include="src\PopUpUi\css\_partials\PageLevel.scss" />
     <None Include="src\PopUpUi\css\_partials\SnapShotSelect.scss" />
     <None Include="src\PopUpUi\css\vars.scss" />
-    <None Include="src\Shared\scripts\Interfaces\Agents\IToastAgent.js.map">
-      <DependentUpon>IToastAgent.js</DependentUpon>
-    </None>
-    <None Include="src\Shared\scripts\Interfaces\Agents\IUiModule.js.map">
-      <DependentUpon>IUiModule.js</DependentUpon>
-    </None>
     <None Include="tsconfig.json" />
     <None Include="tslint.json" />
     <None Include="src\PopUpUi\css\popup.scss" />
@@ -346,6 +340,9 @@
     <Folder Include="Dist\HindSite\AutoBuild\final\" />
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
+    <Folder Include="src\HindSiteApi\scripts\Interfaces\Proxies\" />
+    <Folder Include="src\HindSiteApi\scripts\Recipes\" />
+    <Folder Include="src\Shared\scripts\Interfaces\Api\IContentApi\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentEditorProxy.ts" />

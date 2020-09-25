@@ -1,5 +1,5 @@
-import { LoggableBase } from "../Managers/LoggableBase";
-import { DTFrameProxyMutationEvent_Subject } from "./Desktop/DesktopProxy/Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
+import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
+import { DTFrameProxyMutationEvent_Subject } from "../../../HindSiteApi/scripts/Events/DesktopProxy/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";

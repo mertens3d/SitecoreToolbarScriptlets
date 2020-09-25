@@ -1,6 +1,6 @@
-﻿import { LoggableBase } from "../../../../../Managers/LoggableBase";
+﻿import { LoggableBase } from "../../LoggableBase";
 import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
-import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
 import { HindsiteEventHandler_Type } from "./HindsiteEventHandler_Type";
 
 export class HindSiteEvent_Observer<T> extends LoggableBase implements IHindSiteEvent_Observer<T> {

@@ -1,19 +1,19 @@
-﻿import { LoggableBase } from '../../../Managers/LoggableBase';
-import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { DesktopStartBarProxy } from './DesktopStartBarProxy';
-import { ScContentTreeNodeProxy } from '../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
-import { StaticHelpers } from '../../../../../Shared/scripts/Classes/StaticHelpers';
+﻿import { StaticHelpers } from '../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../Shared/scripts/Enums/BufferDirection';
+import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
+import { IDesktopStartBarProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy';
+import { LoggableBase } from '../../../../../Shared/scripts/LoggableBase';
+import { ScContentTreeNodeProxy } from '../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
 
 export class DesktopStartBarButtonProxy extends LoggableBase {
   private StartBarButtonElemId: string;
-  private OwnerStartBar: DesktopStartBarProxy;
-   FoundStartBarButton: HTMLElement;
-  private  ScContentTreeNodeProxy: ScContentTreeNodeProxy;
+  private OwnerStartBar: IDesktopStartBarProxy;
+  FoundStartBarButton: HTMLElement;
+  private ScContentTreeNodeProxy: ScContentTreeNodeProxy;
 
-  constructor(logger: ILoggerAgent, iframeElemId: string, ownerStartBar: DesktopStartBarProxy) {
+  constructor(logger: ILoggerAgent, iframeElemId: string, ownerStartBar: IDesktopStartBarProxy) {
     super(logger);
     this.OwnerStartBar = ownerStartBar;
 
@@ -56,7 +56,6 @@ export class DesktopStartBarButtonProxy extends LoggableBase {
     let mainIconSrc: string = scContentTreeNodeProxy.GetMainIconSrc();
 
     let text: string = StaticHelpers.BufferString(scContentTreeNodeProxy.GetNodeLinkText(), ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
-
 
     this.Logger.LogVal('iconSrc', itemIconSource);
     this.Logger.LogVal('mainIconSrc', mainIconSrc);

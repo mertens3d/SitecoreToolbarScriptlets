@@ -7,7 +7,7 @@ import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastA
 import { ScUrlAgent } from '../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
-import { IHindSiteScWindowApi } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
+import { IHindSiteScWindowApi } from '../../Shared/scripts/Interfaces/Api/IHindSiteScWindowApi';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
 import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
@@ -20,17 +20,19 @@ import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent/AutoSnapShotAgent'
 import { ContentAtticAgent } from './Agents/ContentAtticAgent/ContentAtticAgent';
 import { MiscAgent } from './Agents/MiscAgent/MiscAgent';
 import { ContentMessageBroker } from './Drones/ContentMessageBroker/ContentMessageBroker';
-import { ContentAPIManager } from './Managers/ContentAPIManager/ContentAPIManager';
+import { HindSiteScWindowApi } from '../../HindSiteApi/scripts/Concretions/HindSiteScWindowApi';
 import { ContentMessageManager } from './Managers/ContentMessageManager/ContentMessageManager';
 import { ScWindowManager } from './Managers/ScWindowManager/ScWindowManager';
 import { ScUiManager } from './Managers/SitecoreUiManager/SitecoreUiManager';
 import { ContentBrowserProxy } from './Drones/ContentMessageBroker/ContentBrowserProxy';
 import { IContentBrowserProxy } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
+import { ApiEntry } from '../../HindSiteApi/scripts/ApiEntryPoint';
+import { DesktopStartBarProxy } from './Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
   private Logger: LoggerAgent;
-  private ContentAPIMan: IHindSiteScWindowApi;
+  private ContentAPI: IHindSiteScWindowApi;
   private ToastAgent: ToastAgent;
   private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
@@ -38,6 +40,8 @@ class ContentEntry {
   ScUrlAgent: ScUrlAgent;
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
+  HindSiteApi: ApiEntry;
+    DtStartBarProxy: DesktopStartBarProxy;
 
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
@@ -69,17 +73,23 @@ class ContentEntry {
     let scUiMan: ScUiManager;
     let contentMessageMan: ContentMessageManager;
     let scWinMan: IScWindowManager;
+    this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
+    this.HindSiteApi = new ApiEntry(this.Logger, this.ContentBrowserProxy);
 
-    scWinMan = new ScWindowManager(this.Logger, scUiMan, this.MiscAgent, this.ToastAgent, this.AtticAgent, this.ScUrlAgent, this.SettingsAgent);
+    scWinMan = new ScWindowManager(this.Logger, scUiMan, this.MiscAgent, this.ToastAgent, this.AtticAgent, this.ScUrlAgent, this.SettingsAgent, this.HindSiteApi, this.ContentBrowserProxy);
+
     scUiMan = new ScUiManager(this.Logger);
 
     this.AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, scWinMan, this.AtticAgent);
 
-    this.ContentAPIMan = new ContentAPIManager(this.Logger, this.ToastAgent, scUiMan, scWinMan, this.AtticAgent, this.AutoSnapShotAgent);
-    this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
+    this.ContentAPI = new HindSiteScWindowApi(this.Logger, scUiMan, scWinMan, this.ContentBrowserProxy);
+
+    this.AtticAgent.CleanOutOldAutoSavedData();
+
+    this.DtStartBarProxy = new DesktopStartBarProxy(this.Logger, this.ContentBrowserProxy, null); //todo null
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
-      this.ContentAPIMan, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan, this.ContentBrowserProxy, this.AutoSnapShotAgent);
+      this.ContentAPI, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.DtStartBarProxy);
 
     contentMessageMan = new ContentMessageManager(this.Logger, scWinMan, contentMessageBroker);
 
@@ -88,13 +98,11 @@ class ContentEntry {
       .then(() => scWinMan.OnReadyInitScWindowManager())
       .then((result: InitResultsScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
       .then(() => {
-       
         this.AutoSnapShotAgent.ScheduleIntervalTasks();
       })
       .then(() => this.Logger.Log('Init success'))
       .catch((err) => this.Logger.ErrorAndThrow('Content Entry Point', err));
   }
-
 
   private InitLogging() {
     this.Logger.FuncStart(this.InitLogging.name);

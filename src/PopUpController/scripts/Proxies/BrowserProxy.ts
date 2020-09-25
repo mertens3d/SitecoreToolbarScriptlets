@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMsgPayload";
@@ -25,6 +25,16 @@ export class PopUpBrowserProxy extends LoggableBase implements IPopUpBrowserProx
       this.Logger.ErrorAndThrow(this.Init_BrowserProxy.name, err);
     }
     this.Logger.FuncEnd(this.Init_BrowserProxy.name);
+  }
+
+  async BrowserTabsCreate(absUrl: string): Promise<void> {
+    try {
+      await browser.tabs.create({ url: absUrl })
+        .catch((err) => this.Logger.ErrorAndThrow(this.BrowserTabsCreate.name, err));
+    }
+    catch (err) {
+      this.Logger.ErrorAndThrow(this.BrowserTabsCreate.name, err)
+    }
   }
 
   SendMessageAsync_BrowserProxy(message: IMessageControllerToContent): Promise<IMessageContentToController> {

@@ -4,7 +4,7 @@ import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers"
 import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { IHindSiteScWindowApi } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScWindowApi } from "../../../../Shared/scripts/Interfaces/Api/IHindSiteScWindowApi";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IContentBrowserProxy } from "../../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 import { IContentMessageBroker } from "../../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
@@ -16,9 +16,10 @@ import { ICommandHandlerDataForContent } from "../../../../Shared/scripts/Interf
 import { ICommandRecipes } from "../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { IMessageControllerToContent } from "../../../../Shared/scripts/Interfaces/IStateOfController";
 import { AutoSnapShotAgent } from "../../Agents/AutoSnapShotAgent/AutoSnapShotAgent";
-import { LoggableBase } from "../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 import { ScUiManager } from "../../Managers/SitecoreUiManager/SitecoreUiManager";
 import { IDataContentReplyReceivedEvent_Payload } from "../../Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IDesktopStartBarProxy } from "../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy";
 
 export class ContentMessageBroker extends LoggableBase implements IContentMessageBroker {
   private SettingsAgent: ISettingsAgent;
@@ -29,8 +30,9 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
   private ScWinMan: IScWindowManager;
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
+    DesktopStartBarProxy: IDesktopStartBarProxy;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScWindowApi, atticMan: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScWindowApi, atticMan: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, desktopStartBarProxy: IDesktopStartBarProxy) {
     super(logger);
     this.Logger.InstantiateStart(ContentMessageBroker.name);
 
@@ -43,6 +45,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     this.ScWinMan = scWinMan;
     this.ContentBrowserProxy = contentBrowserProxy;
     this.AutoSnapShotAgent = autoSnapShotAgent;
+    this.DesktopStartBarProxy = desktopStartBarProxy;
     this.Logger.InstantiateEnd(ContentMessageBroker.name);
   }
 
@@ -208,6 +211,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       }
 
       let commandToExecute: Function = this.CalculateCommandToExec(messageFromController);
+
       if (commandToExecute) {
         await this.ExecuteCommand(commandToExecute, messageFromController)
           .then((response: MsgContentToController) => resolve(response))
@@ -235,6 +239,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
 
       await this.ApiManager.GetStateOfContent()
         .then((result: IDataContentReplyReceivedEvent_Payload) => {
+          response.Payload.StateOfStorageSnapShots = this.AtticAgent.GetStateOfStorageSnapShots();
           response.Payload = result;
           response.Payload.LastReq = msgFlag;
           response.MsgFlag = MsgFlag.RespTaskSuccessful;
@@ -249,7 +254,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteCommand.name);
       if (commandToExecute) {
-        let commandData: ICommandHandlerDataForContent = new CommandHandlerDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent, this.AutoSnapShotAgent);
+        let commandData: ICommandHandlerDataForContent = new CommandHandlerDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent, this.AutoSnapShotAgent, this.ContentBrowserProxy, this.DesktopStartBarProxy);
 
         commandData.TargetSnapShotId = messageFromController.SelectSnapshotId;
         commandData.ContentMessageBroker = this;

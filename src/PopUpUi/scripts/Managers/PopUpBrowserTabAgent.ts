@@ -1,26 +1,30 @@
-﻿import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
-import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
+﻿import { PopUpBrowserProxy } from '../../../PopUpController/scripts/Proxies/BrowserProxy';
+import { RecipeBasicsForPopUp } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+import { IContentBrowserProxy } from '../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
 import { IAbsoluteUrl } from '../../../Shared/scripts/Interfaces/IAbsoluteUrl';
 
-export class BrowserTabAgent {
+export class PopUpBrowserTabAgent {
   private ScUrlAgent: IScUrlAgent;
   private Logger: ILoggerAgent;
-  private RecipeBasics: RecipeBasics;
+  private RecipeBasicsForPopUp: RecipeBasicsForPopUp;
   SettingsAgent: ISettingsAgent;
+  private PopUpBrowswerProxy: PopUpBrowserProxy;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent, popupBrowserProxy: PopUpBrowserProxy) {
     this.Logger = logger;
-    this.Logger.InstantiateStart(BrowserTabAgent.name);
+    this.Logger.InstantiateStart(PopUpBrowserTabAgent.name);
     this.ScUrlAgent = scUrlAgent;
     this.SettingsAgent = settingsAgent;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
-    this.Logger.InstantiateEnd(BrowserTabAgent.name);
+    this.PopUpBrowswerProxy = popupBrowserProxy;
+    this.RecipeBasicsForPopUp = new RecipeBasicsForPopUp(this.Logger, this.PopUpBrowswerProxy);
+
+    this.Logger.InstantiateEnd(PopUpBrowserTabAgent.name);
   }
 
   GetFullUrl(): IAbsoluteUrl {
@@ -44,47 +48,46 @@ export class BrowserTabAgent {
       //let newTab: IDataBrowserTab;
 
       //this.UiMan().MessageFeedbackModule.UpdateMsgStatusStack('Opening new tab');
+      await this.PopUpBrowswerProxy.BrowserTabsCreate(tabUrl.AbsUrl);
 
-      await browser.tabs.create({ url: tabUrl.AbsUrl })
-        .then(() => resolve())
-        .catch((err) => reject(err));
+      
     })
   }
 
-  ChangeLocationSwitchBoard(desiredPageType: ScWindowType) {
-    this.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + ScWindowType[desiredPageType]);
+  //ChangeLocationSwitchBoard(desiredPageType: ScWindowType) {
+  //  this.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + ScWindowType[desiredPageType]);
 
-    var iteration: IterationDrone = new IterationDrone(this.Logger, this.ChangeLocationSwitchBoard.name, true);
+  //  var iteration: IterationDrone = new IterationDrone(this.Logger, this.ChangeLocationSwitchBoard.name, true);
 
-    if (iteration.DecrementAndKeepGoing()) {
-      var currentScWindowType: ScWindowType = this.ScUrlAgent.GetScWindowType();//.ScWindowType;
+  //  if (iteration.DecrementAndKeepGoing()) {
+  //    var currentScWindowType: ScWindowType = this.ScUrlAgent.GetScWindowType();//.ScWindowType;
 
-      if (currentScWindowType === ScWindowType.LoginPage) {
-        var self = this;
-      }
+  //    if (currentScWindowType === ScWindowType.LoginPage) {
+  //      var self = this;
+  //    }
 
-      else if (currentScWindowType === ScWindowType.Launchpad || currentScWindowType === ScWindowType.ContentEditor || currentScWindowType === ScWindowType.Desktop) {
-        var self = this;
+  //    else if (currentScWindowType === ScWindowType.Launchpad || currentScWindowType === ScWindowType.ContentEditor || currentScWindowType === ScWindowType.Desktop) {
+  //      var self = this;
 
-        this.ScUrlAgent.SetFilePathFromWindowType(desiredPageType);
+  //      this.ScUrlAgent.SetFilePathFromWindowType(desiredPageType);
 
-        var absUrl: IAbsoluteUrl = this.ScUrlAgent.BuildFullUrlFromParts();
+  //      var absUrl: IAbsoluteUrl = this.ScUrlAgent.BuildFullUrlFromParts();
 
-        var callBackOnSuccessfulHrefChange: Function = function () {
-          self.Logger.Log('Callback triggered');
-          self.ChangeLocationSwitchBoard(desiredPageType)
-        }
+  //      var callBackOnSuccessfulHrefChange: Function = function () {
+  //        self.Logger.Log('Callback triggered');
+  //        self.ChangeLocationSwitchBoard(desiredPageType)
+  //      }
 
-        this.RecipeBasics.TabChainSetHrefWaitForComplete(absUrl)
-          .then(() => {
-            // put back?
-            //this.MsgMan().WaitForListeningTab(this.CurrentTabData)
-          })
-          .then(() => callBackOnSuccessfulHrefChange);
-      }
-    }
-    this.Logger.FuncEnd(this.ChangeLocationSwitchBoard.name);
-  }
+  //      this.RecipeBasics.TabChainSetHrefWaitForComplete(absUrl)
+  //        .then(() => {
+  //          // put back?
+  //          //this.MsgMan().WaitForListeningTab(this.CurrentTabData)
+  //        })
+  //        .then(() => callBackOnSuccessfulHrefChange);
+  //    }
+  //  }
+  //  this.Logger.FuncEnd(this.ChangeLocationSwitchBoard.name);
+  //}
 
   //async SetScModeFromCeDt(newMode: scMode, currentPageType: scWindowType) {
   //  return new Promise(async (resolve, reject) => {

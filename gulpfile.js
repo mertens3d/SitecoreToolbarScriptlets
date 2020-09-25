@@ -19,8 +19,8 @@ var ArchiveJsMap = require('./gulp.support/tasks/ArchiveJsMap');
 
 var varsObj = new vars();
 
-gulp.task('ArchiveJsAndMap', (cb) => ArchiveJsMap.CleanContent(cb));
-gulp.task('DeleteJsAndMap', (cb) => ArchiveJsMap.DelJsMap(cb));
+gulp.task('ArchiveJsAndMap', (cb) => ArchiveJsMap.ArchiveJsAndMaps(cb));
+gulp.task('DeleteJsAndMap', (cb) => ArchiveJsMap.DeleteJsAndMap(cb));
 gulp.task('ArchiveAndDelete', gulp.series(['ArchiveJsAndMap', 'DeleteJsAndMap']));
 
 gulp.task('BookmarkText', (cb) => otherTasks.BookmarkText(cb, varsObj));
@@ -35,13 +35,14 @@ gulp.task('PutToFinal', (cb) => putTasks.PutToFinal(cb, varsObj));
 gulp.task('CopyFromFinalToAddon', (cb) => putTasks.CopyFromFinalToAddon(cb, varsObj));
 
 gulp.task('WebpackContent', (cb) => otherTasks.WebPackOne(cb, varsObj.ContentJs));
+gulp.task('WebpackHindSiteApi', (cb) => otherTasks.WebPackOne(cb, varsObj.HindSiteApiJs));
 gulp.task('WebpackPopUpUi', (cb) => otherTasks.WebPackOne(cb, varsObj.PopUpUiJs));
 gulp.task('WebpackPopUpController', (cb) => otherTasks.WebPackOne(cb, varsObj.PopUpControllerJs));
 
 gulp.task('CleanBuildStamp', (cb) => tsTasks.CleanBuildStamp(cb, varsObj));
 gulp.task('PopulateBuildTimeStamp', (cb) => tsTasks.BuildBuildNumber(cb, varsObj));
 
-gulp.task('WebpackAll', gulp.series(['WebpackContent', 'WebpackPopUpUi', 'WebpackPopUpController']));
+gulp.task('WebpackAll', gulp.series(['WebpackContent', 'WebpackHindSiteApi', 'WebpackPopUpUi', 'WebpackPopUpController']));
 gulp.task('TimeStampAll', gulp.series(['CleanBuildStamp', 'PopulateBuildTimeStamp']));
 
 gulp.task('builders', gulp.series(['BuildPopUpStyles', 'BuildContentStyles', 'TimeStampAll', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml', 'PutToFinal']), function (resolve) {

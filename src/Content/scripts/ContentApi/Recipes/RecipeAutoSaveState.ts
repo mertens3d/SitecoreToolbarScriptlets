@@ -8,7 +8,7 @@ import { IDataStateOfScContentTreeNode } from "../../../../Shared/scripts/Interf
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfTree } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree";
 import { IDataSitecoreWindowStates } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
-import { LoggableBase } from "../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 
 export class RecipeAutoSaveState extends LoggableBase {

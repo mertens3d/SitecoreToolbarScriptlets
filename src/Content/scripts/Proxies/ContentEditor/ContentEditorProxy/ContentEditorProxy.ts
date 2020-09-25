@@ -1,5 +1,5 @@
 ﻿import { DefaultStateOfContentEditor } from '../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentEditor';
-import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+import { RecipeBasicsForContent } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
@@ -9,32 +9,36 @@ import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfa
 import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
-import { LoggableBase } from '../../../Managers/LoggableBase';
+import { LoggableBase } from '../../../../../Shared/scripts/LoggableBase';
 import { TreeMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer';
 import { TreeProxy } from "../ContentEditorTreeProxy/ContentEditorTreeProxy";
 import { ContentEditorProxyMutationEvent_Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
-import { IContentEditorProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
+import { IContentEditorProxyMutationEvent_Payload } from '../../../../../Shared/scripts/Interfaces/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
 import { ITreeMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
 import { InitResultContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy';
+import { IContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy';
+import { IContentBrowserProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
 
-export class ContentEditorProxy extends LoggableBase {
+export class ContentEditorProxy extends LoggableBase implements IContentEditorProxy {
   private ChildTreeProxy: IContentEditorTreeProxy;
   private TreeMutationEvent_Observer: TreeMutationEvent_Observer;
   public ContentEditorProxyMutationEvent_Subject: ContentEditorProxyMutationEvent_Subject;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedHindsiteId: GuidData;
+    ContentBrowserProxy: IContentBrowserProxy;
 
-  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent) {
+  constructor(associatedDoc: IDataOneDoc, logger: ILoggerAgent, contentBrowserProxy: IContentBrowserProxy) {
     super(logger);
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.AssociatedDoc = associatedDoc;
     this.ValidateAssociatedDocContentEditor();
+    this.ContentBrowserProxy = contentBrowserProxy;
   }
 
   OnReadyInitContentEditorProxy(): Promise<InitResultContentEditorProxy> {
     return new Promise(async (resolve, reject) => {
       let initResultContentEditorProxy = new InitResultContentEditorProxy();
-      let recipeBasic = new RecipeBasics(this.Logger);
+      let recipeBasic = new RecipeBasicsForContent(this.Logger, this.ContentBrowserProxy);
       await recipeBasic.WaitForReadyNABDocument(this.AssociatedDoc)
         .then(() => {
           this.ChildTreeProxy = new TreeProxy(this.Logger, this.AssociatedDoc, this.GetTreeContainer());
@@ -97,7 +101,7 @@ export class ContentEditorProxy extends LoggableBase {
   async WaitForReadyContentEditor(): Promise<void> {
     this.Logger.FuncStart(this.WaitForReadyContentEditor.name);
     try {
-      let recipeBasics = new RecipeBasics(this.Logger);
+      let recipeBasics = new RecipeBasicsForContent(this.Logger, this.ContentBrowserProxy);
 
       await recipeBasics.WaitForReadyNABDocument(this.AssociatedDoc)
 

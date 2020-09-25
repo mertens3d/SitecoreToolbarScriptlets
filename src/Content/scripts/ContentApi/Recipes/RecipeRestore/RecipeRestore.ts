@@ -1,33 +1,26 @@
-﻿import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
+﻿import { IContentEditorProxy, IDesktopProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy";
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScUrlAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
+import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { LoggableBase } from "../../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
 import { ScWindowRecipePartials } from "../../../Managers/ScWindowManager/ScWindowRecipePartials";
-import { DesktopProxy } from "../../../Proxies/Desktop/DesktopProxy/DesktopProxy";
-import { ISettingsAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { ICommandHandlerDataForContent } from "../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
+import { __RecipeBase } from "../__RecipeBase/__RecipeBase";
 
-export class RecipeSetStateOfSitecoreWindow extends LoggableBase implements ICommandRecipes {
+export class RecipeSetStateOfSitecoreWindow extends __RecipeBase implements ICommandRecipes {
   TargetSnapShotId: GuidData;
-  private AtticAgent: IContentAtticAgent;
-  private OneCeAgent: ContentEditorProxy;
-  private OneDesktopMan: DesktopProxy;
+  private OneCeAgent: IContentEditorProxy;
+  private OneDesktopMan: IDesktopProxy;
   private ScWinRecipeParts: ScWindowRecipePartials;
   private TopLevelDoc: IDataOneDoc;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, toastAgent: IToastAgent, oneCEAgent: ContentEditorProxy, targetSnapShotId: GuidData, settingsAgent: ISettingsAgent) {
-    super(logger);
-    this.AtticAgent = atticAgent;
-    this.TopLevelDoc = topLevelDoc;
-    this.ScWinRecipeParts = scWinRecipeParts;
-    this.OneDesktopMan = oneDesktopMan;
-    this.OneCeAgent = oneCEAgent;
-    this.TargetSnapShotId = targetSnapShotId;
+  constructor(commandData: ICommandHandlerDataForContent) {
+    super(commandData);
   }
 
   async Execute(): Promise<void> {
@@ -44,7 +37,7 @@ export class RecipeSetStateOfSitecoreWindow extends LoggableBase implements ICom
             var targetDoc: IDataOneDoc = this.TopLevelDoc;
 
             if (targetDoc) {
-              await this.ScWinRecipeParts.RestoreStateToTargetDoc(targetDoc, dataOneWindowStorage, this.OneDesktopMan, this.OneCeAgent)
+              await this.ScWinRecipeParts.RestoreStateToTargetDoc(null, null) //todo put back this.CommandData)
                 .then(() => resolve())
                 .catch((err) => reject(err))
             }

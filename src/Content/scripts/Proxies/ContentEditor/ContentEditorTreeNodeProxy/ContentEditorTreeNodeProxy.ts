@@ -3,7 +3,7 @@ import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataStateOfScContentTreeNode } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { LoggableBase } from "../../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
 
 export class ScContentTreeNodeProxy extends LoggableBase {
   private ScContentTreeNodeDivElem: HTMLDivElement;

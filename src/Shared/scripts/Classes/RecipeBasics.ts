@@ -1,21 +1,37 @@
 ﻿import { FrameHelper } from '../../../Content/scripts/Helpers/FrameHelper';
-import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { DTFrameProxy } from '../../../Content/scripts/Proxies/DTFrameProxy';
 import { _BaseFrameProxy } from '../../../Content/scripts/Proxies/_BaseFrameProxy';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
 import { Guid } from '../Helpers/Guid';
+import { IBrowserTab, IContentBrowserProxy } from '../Interfaces/Agents/IContentBrowserProxy';
 import { ILoggerAgent } from '../Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
 import { IAbsoluteUrl } from '../Interfaces/IAbsoluteUrl';
-import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
+import { IRecipeBasicsForContent, IRecipeBasicsForPopUp } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
+import { IPopUpBrowserProxy } from '../Interfaces/Proxies/IBrowserProxy';
+import { LoggableBase } from '../LoggableBase';
 import { SharedConst } from '../SharedConst';
 import { PromiseResult } from "./PromiseResult";
 
-export class RecipeBasics extends LoggableBase implements IRecipeBasics {
-  constructor(logger: ILoggerAgent) {
+export class RecipeBasicsForPopUp extends LoggableBase implements IRecipeBasicsForPopUp {
+private  PopUpBrowserProxy: IPopUpBrowserProxy;
+  constructor(logger: ILoggerAgent, popUpBrowserProxy: IPopUpBrowserProxy) {
+  super(logger);
+  this.PopUpBrowserProxy = popUpBrowserProxy;
+}
+
+}
+
+export class RecipeBasicsForContent extends LoggableBase implements IRecipeBasicsForContent {
+  private ContentBrowserProxy: IContentBrowserProxy;
+
+
+  constructor(logger: ILoggerAgent, contentBrowserProxy: IContentBrowserProxy) {
     super(logger);
+
+    this.ContentBrowserProxy = contentBrowserProxy;
   }
 
   async WaitForReadyNABFrameProxy(baseframeProxy: _BaseFrameProxy): Promise<_BaseFrameProxy> {
@@ -24,7 +40,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       await this.WaitForReadyNABHtmlIframeElement(baseframeProxy.HTMLIframeElement)
         .then(() => resolve(baseframeProxy))
         .catch((err) => reject(this.WaitForReadyNABFrameProxy.name + ' | ' + err));
-     
+
       this.Logger.FuncEnd(this.WaitForReadyNABFrameProxy.name);
     });
   }
@@ -78,7 +94,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
   async WaitForReadyNABDocument(targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {
-            if (targetDoc) {
+      if (targetDoc) {
         var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABDocument.name, false);
         var isReady: boolean = false;
         while (iterationJr.DecrementAndKeepGoing() && !isReady) {
@@ -104,7 +120,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
   async GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<_BaseFrameProxy> {
     var toReturn: _BaseFrameProxy = null;
-    let frameHelper = new FrameHelper(this.Logger);
+    let frameHelper = new FrameHelper(this.Logger, this.ContentBrowserProxy);
     await frameHelper.GetIFramesAsBaseFrameProxies(targetDoc)
       .then((allIframe: _BaseFrameProxy[]) => {
         var maxZVal = -1;
@@ -143,7 +159,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
       await this.WaitForNewIframeNative(allIframesBefore, targetDoc)
         .then((result: HTMLIFrameElement) => {
-          toReturn = new DTFrameProxy(this.Logger, result);
+          toReturn = new DTFrameProxy(this.Logger, result, this.ContentBrowserProxy);
         })
         .then(() => resolve(toReturn))
         .catch((err) => reject(this.WaitForNewIframeContentEditor.name + ' | ' + err));
@@ -166,7 +182,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
         var allIframesAfter: HTMLIFrameElement[];
 
-        let frameHelper = new FrameHelper(this.Logger);
+        let frameHelper = new FrameHelper(this.Logger, this.ContentBrowserProxy);
 
         allIframesAfter = frameHelper.GetIFramesFromDataOneDoc(dateOneDoc);
 
@@ -203,7 +219,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
         var allIframesAfter: _BaseFrameProxy[];
 
-        let frameHelper = new FrameHelper(this.Logger);
+        let frameHelper = new FrameHelper(this.Logger, this.ContentBrowserProxy);
 
         await frameHelper.GetIFramesAsBaseFrameProxies(targetDoc)
           .then((result) => allIframesAfter = result)
@@ -281,18 +297,18 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     });
   }
 
-  TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void> {
+  TabWaitForReadyStateCompleteNative(browserTab: IBrowserTab): Promise<void> {
     return new Promise(async (resolve, reject) => {
       let iterHelper = new IterationDrone(this.Logger, this.TabWaitForReadyStateCompleteNative.name, true);
 
       let result: PromiseResult = new PromiseResult(this.TabWaitForReadyStateCompleteNative.name, this.Logger);
 
-      while (browserTab.status !== 'complete' && iterHelper.DecrementAndKeepGoing()) {
-        this.Logger.LogVal('tab status', browserTab.status);
+      while (browserTab.status() !== 'complete' && iterHelper.DecrementAndKeepGoing()) {
+        this.Logger.LogVal('tab status', browserTab.status());
         await iterHelper.Wait;
       }
 
-      if (browserTab.status === 'complete') {
+      if (browserTab.status() === 'complete') {
         result.MarkSuccessful();
       } else {
         result.MarkFailed('browser status: ' + browserTab.status)
@@ -313,12 +329,8 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
 
-      await browser.tabs.query({ currentWindow: true, active: true })
-        .then((result: browser.tabs.Tab[]) => {
-          let targetTab: browser.tabs.Tab = result[0];
-          browser.tabs.update(targetTab.id, { url: href.AbsUrl });
-          this.TabWaitForReadyStateCompleteNative(targetTab);
-        })
+      await this.ContentBrowserProxy.BrowserTabsUpdate(href.AbsUrl)
+        .then((targetTab: IBrowserTab) => this.TabWaitForReadyStateCompleteNative(targetTab))
         .then(resolve)
         .catch((ex) => reject(ex));
 

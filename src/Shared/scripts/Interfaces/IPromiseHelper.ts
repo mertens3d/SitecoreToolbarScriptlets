@@ -3,11 +3,18 @@ import { IDataPublishChain } from "./Data/IDataPublishChain";
 import { IScVerSpec } from "./IScVerSpec";
 import { IDataOneDoc } from "./data/IDataOneDoc";
 import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProxy";
+import { IBrowserTab } from "./Agents/IContentBrowserProxy";
 
-export interface IRecipeBasics {
+export interface IRecipeBasicsForPopUp {
+
+}
+
+
+
+export interface IRecipeBasicsForContent {
   RaceWaitAndClick(scStartButton: IScVerSpec, arg1: IDataOneDoc);
   TabChainSetHrefWaitForComplete(newHref: IAbsoluteUrl);
-  TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void>;
+  TabWaitForReadyStateCompleteNative(browserTab: IBrowserTab): Promise<void>;
   WaitForAndClickWithPayload(MenuDropDownPublishItem: string, docToPublish: IDataOneDoc, payload: IDataPublishChain);
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string);
   WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string, maxIteration: number);

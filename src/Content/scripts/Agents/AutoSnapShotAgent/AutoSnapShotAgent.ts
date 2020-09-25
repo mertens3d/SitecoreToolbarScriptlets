@@ -8,7 +8,7 @@ import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISe
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { RecipeAutoSaveState } from "../../ContentApi/Recipes/RecipeAutoSaveState";
-import { LoggableBase } from "../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 
 export class AutoSnapShotAgent extends LoggableBase {
   

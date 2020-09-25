@@ -1,19 +1,22 @@
-﻿import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
+﻿import { RecipeBasicsForContent } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { _BaseFrameProxy } from "../Proxies/_BaseFrameProxy";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
-import { LoggableBase } from "../Managers/LoggableBase";
+import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "../Proxies/DTFrameProxy";
+import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 
 export class FrameHelper extends LoggableBase {
   private factoryHelper: FactoryHelper;
-  private RecipeBasics: RecipeBasics;
+  private RecipeBasics: RecipeBasicsForContent;
+    ContentBrowserProxy: IContentBrowserProxy;
 
-  constructor(logger: ILoggerAgent) {
+  constructor(logger: ILoggerAgent, contentBrowserProxy: IContentBrowserProxy) {
     super(logger);
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.ContentBrowserProxy = contentBrowserProxy;
+    this.RecipeBasics = new RecipeBasicsForContent(this.Logger, this.ContentBrowserProxy);
     this.factoryHelper = new FactoryHelper(this.Logger);
   }
 

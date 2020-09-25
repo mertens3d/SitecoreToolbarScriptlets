@@ -9,7 +9,7 @@ import { IDataStateOfContentEditor } from "../Interfaces/Data/States/IDataStateO
 import { IDataStateOfDesktop } from "../Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfSitecoreWindow } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from "../Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+import { LoggableBase } from "../LoggableBase";
 import { IDataSitecoreWindowStates } from "../Interfaces/Data/States/IDataStates";
 
 export class ScWindowStateValidator extends LoggableBase {

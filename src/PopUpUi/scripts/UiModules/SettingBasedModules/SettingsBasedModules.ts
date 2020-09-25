@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
 import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";

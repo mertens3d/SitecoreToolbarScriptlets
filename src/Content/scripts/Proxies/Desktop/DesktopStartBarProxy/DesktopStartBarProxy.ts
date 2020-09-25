@@ -1,45 +1,43 @@
 ﻿import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { IDTFrameProxyMutationEvent_Payload } from '../../../../../Shared/scripts/Interfaces/Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
+import { IDesktopProxy, IDesktopStartBarProxy, IDTFrameProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy";
 import { FrameHelper } from '../../../Helpers/FrameHelper';
-import { LoggableBase } from '../../../Managers/LoggableBase';
-import { ContentEditorProxy } from '../../ContentEditor/ContentEditorProxy/ContentEditorProxy';
-import { DesktopProxy } from '../DesktopProxy/DesktopProxy';
+import { LoggableBase } from '../../../../../Shared/scripts/LoggableBase';
 import { ITreeMutationEvent_Payload } from '../DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
-import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { TreeMutationEvent_Observer } from '../DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer';
-import { IDTFrameProxyMutationEvent_Payload } from '../DesktopProxy/Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
-import { DTFrameProxy } from '../../DTFrameProxy';
+import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
+import { IContentBrowserProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
 
-export class DesktopStartBarProxy extends LoggableBase {
-  private CeProxies: ContentEditorProxy[] = [];
-  private OwnerDesktopProxy: DesktopProxy;
-  private SettingsAgent: ISettingsAgent;
+export class DesktopStartBarProxy extends LoggableBase implements IDesktopStartBarProxy {
   private __statBarElem: HTMLElement;
   private __iframeHelper: FrameHelper;
+  private ContentBrowserProxy: IContentBrowserProxy;
+    AssociatedDoc: IDataOneDoc;
 
-  constructor(logger: ILoggerAgent, ownerDesktopProxy: DesktopProxy, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, contentBrowserProxy: IContentBrowserProxy, associatedDoc: IDataOneDoc) {
     super(logger);
-    this.SettingsAgent = settingsAgent;
     this.Logger.InstantiateStart(DesktopStartBarProxy.name);
-    this.OwnerDesktopProxy = ownerDesktopProxy;
 
+    this.ContentBrowserProxy = contentBrowserProxy;
+
+    this.AssociatedDoc = associatedDoc;
     //this.EnrollListenerForActiveNodeChange();
     this.Logger.InstantiateEnd(DesktopStartBarProxy.name);
   }
 
   GetAssociatedDoc(): IDataOneDoc {
-    return this.OwnerDesktopProxy.GetAssociatedDoc();
+    return this.AssociatedDoc
   }
 
   GetStartBarButtonById(targetId: string) {
-    return this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.querySelector('[id=' + targetId + ']');
+    return this.AssociatedDoc.ContentDoc.querySelector('[id=' + targetId + ']');
   }
 
   GetStartBarElement(): HTMLElement {
     if (!this.__statBarElem) {
-      this.__statBarElem = this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.querySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
+      this.__statBarElem = this.AssociatedDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
     }
 
     return this.__statBarElem;
@@ -47,7 +45,7 @@ export class DesktopStartBarProxy extends LoggableBase {
 
   private GetIframeHelper() {
     if (this.__iframeHelper == null) {
-      this.__iframeHelper = new FrameHelper(this.Logger);
+      this.__iframeHelper = new FrameHelper(this.Logger, this.ContentBrowserProxy);
     }
     return this.__iframeHelper;
   }
@@ -82,7 +80,7 @@ export class DesktopStartBarProxy extends LoggableBase {
     if (dtframeProxyMutationEvent_Payload) {
       if (dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload && dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutation) {
         let treeMutationEvent_Payload: ITreeMutationEvent_Payload = dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutation;
-        let dtframeProxy: DTFrameProxy = dtframeProxyMutationEvent_Payload.DTFrameProxy;
+        let dtframeProxy: IDTFrameProxy = dtframeProxyMutationEvent_Payload.DTFrameProxy;
 
         if (treeMutationEvent_Payload.ActiveNode) {
           let desktopStartBarButtonProxy: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(dtframeProxy.HTMLIframeElement.id);

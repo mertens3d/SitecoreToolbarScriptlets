@@ -1,36 +1,38 @@
-﻿import { DefaultStateOfSitecoreWindow, DefaultScWindowStates, DefaultFriendly, DefaultMetaData } from '../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
-import { RecipeBasics } from '../../../../Shared/scripts/Classes/RecipeBasics';
+﻿import { DefaultFriendly, DefaultMetaData, DefaultScWindowStates, DefaultStateOfSitecoreWindow } from '../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
+import { RecipeBasicsForContent } from '../../../../Shared/scripts/Classes/RecipeBasics';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { QueryStrKey } from '../../../../Shared/scripts/Enums/QueryStrKey';
 import { ScWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
 import { SnapShotFlavor } from '../../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../../Shared/scripts/Helpers/Guid';
 import { IContentAtticAgent } from '../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
+import { IContentBrowserProxy } from '../../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
+import { IHindSiteApi } from "../../../../Shared/scripts/Interfaces/Agents/IHindSiteApi.1";
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { InitResultsScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { InitResultsScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { IDataFriendly } from '../../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
 import { IDataMetaData } from '../../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
 import { IDataStateOfContentEditor } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
 import { IDataStateOfDesktop } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop';
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataSitecoreWindowStates } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStates';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
+import { IContentEditorProxy, IDesktopProxy } from "../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy";
+import { LoggableBase } from '../../../../Shared/scripts/LoggableBase';
 import { MiscAgent } from '../../Agents/MiscAgent/MiscAgent';
 import { RecipeInitFromQueryStr } from '../../ContentApi/Recipes/RecipeInitFromQueryStr/RecipeInitFromQueryStr';
 import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
-import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
-import { LoggableBase } from '../LoggableBase';
 import { ScUiManager } from '../SitecoreUiManager/SitecoreUiManager';
 import { ScWindowRecipePartials } from './ScWindowRecipePartials';
-import { IDataSitecoreWindowStates } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStates';
-import { IDataFriendly } from '../../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
 
 export class ScWindowManager extends LoggableBase implements IScWindowManager {
-  __desktopProxyLazy: DesktopProxy = null;
-  __contentEditorProxyLazy: ContentEditorProxy = null;
+  __desktopProxyLazy: IDesktopProxy = null;
+  __contentEditorProxyLazy: IContentEditorProxy = null;
   private MiscAgent: MiscAgent;
   private ToastAgent: IToastAgent;
   private ScUrlAgent: IScUrlAgent;
@@ -38,9 +40,11 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
   private AtticAgent: IContentAtticAgent;
   SettingsAgent: ISettingsAgent;
   TabSessionId: string;
+   private HindSiteApi: IHindSiteApi;
+  private ContentBrowserProxy: IContentBrowserProxy;
 
   constructor(logger: ILoggerAgent, scUiMan: ScUiManager, miscAgent: MiscAgent, toastAgent: IToastAgent, atticAgent: IContentAtticAgent,
-    scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
+    scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent, hindSiteApi: IHindSiteApi, contentBrowserProxy: IContentBrowserProxy) {
     super(logger);
     this.Logger.InstantiateStart(ScWindowManager.name);
     this.MiscAgent = miscAgent;
@@ -48,6 +52,8 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     this.AtticAgent = atticAgent;
     this.ScUrlAgent = scUrlAgent;
     this.SettingsAgent = settingsAgent;
+    this.HindSiteApi = hindSiteApi;
+    this.ContentBrowserProxy = contentBrowserProxy;
 
     this.TabSessionId = sessionStorage.getItem(ContentConst.Const.Storage.SessionKey);
 
@@ -59,16 +65,16 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
     this.Logger.InstantiateEnd(ScWindowManager.name);
   }
 
-  DesktopProxy(): DesktopProxy {
+  DesktopProxy(): IDesktopProxy {
     if (!this.__desktopProxyLazy) {
-      this.__desktopProxyLazy = new DesktopProxy(this.Logger, this.MiscAgent, this.GetTopLevelDoc(), this.SettingsAgent);
+      this.__desktopProxyLazy = this.HindSiteApi.Factory.NewDesktopProxy(this.GetTopLevelDoc());
     }
     return this.__desktopProxyLazy;
   }
 
-  ContentEditorProxy(): ContentEditorProxy {
+  ContentEditorProxy(): IContentEditorProxy {
     if (!this.__contentEditorProxyLazy) {
-      this.__contentEditorProxyLazy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger);
+      this.__contentEditorProxyLazy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.ContentBrowserProxy);
       return this.__contentEditorProxyLazy;
     }
   }
@@ -79,7 +85,7 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       //this.Logger.LogVal('auto rename', this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton).ValueAsBool());
 
       try {
-        let recipesBasic = new RecipeBasics(this.Logger);
+        let recipesBasic = new RecipeBasicsForContent(this.Logger, this.ContentBrowserProxy);
         let initResultsScWindowManager: InitResultsScWindowManager = new InitResultsScWindowManager();
 
         await recipesBasic.WaitForReadyNABDocument(this.GetTopLevelDoc())
@@ -156,14 +162,16 @@ export class ScWindowManager extends LoggableBase implements IScWindowManager {
       }
     }
     return this.TopDoc;
-  }
+  } 
 
   async InitFromQueryStr(): Promise<void> {
     this.Logger.FuncStart(this.InitFromQueryStr.name);
 
+    //ICommandHandlerDataForContent
+
     try {
       if (this.GetScUrlAgent().QueryStringHasKey(QueryStrKey.hsTargetSs)) {
-        let recipe = new RecipeInitFromQueryStr(this.Logger, this.GetScUrlAgent(), this.AtticAgent, this.GetTopLevelDoc(), this.MakeScWinRecipeParts(), this.DesktopProxy(), this.ContentEditorProxy());
+        let recipe = new RecipeInitFromQueryStr(this.Logger, this.GetScUrlAgent(), this.AtticAgent, this.GetTopLevelDoc(), this.MakeScWinRecipeParts(), this.DesktopProxy(), this.ContentEditorProxy(), this.ContentBrowserProxy);
         await recipe.Execute();
       }
 

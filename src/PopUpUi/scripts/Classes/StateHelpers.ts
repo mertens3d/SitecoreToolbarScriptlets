@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { IDataStateOfDesktop } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { IDataStateOfTree } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree";

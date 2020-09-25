@@ -1,17 +1,17 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
-import { BrowserTabAgent } from "../Managers/BrowserTabAgent";
+import { PopUpBrowserTabAgent } from "../Managers/PopUpBrowserTabAgent";
 import { IUiCommandFlagRaisedEvent_Payload } from "../Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 
 export class HandlersForInternal extends LoggableBase {
-  private BrowserTabAgent: BrowserTabAgent;
+  private PopUpBrowserTabAgent: PopUpBrowserTabAgent;
 
-  constructor(logger: ILoggerAgent, browserTabAgent: BrowserTabAgent) {
+  constructor(logger: ILoggerAgent, browserTabAgent: PopUpBrowserTabAgent) {
     super(logger);
-    this.BrowserTabAgent = browserTabAgent;
+    this.PopUpBrowserTabAgent = browserTabAgent;
   }
 
   CloseWindow(evt: any) {
@@ -36,9 +36,9 @@ export class HandlersForInternal extends LoggableBase {
   async HandlerForSnapShotRestoreNewTab(uiCommandFlagRaisedEvent_Payload: IUiCommandFlagRaisedEvent_Payload) {
     this.Logger.FuncStart(this.HandlerForSnapShotRestoreNewTab.name);
 
-    this.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, uiCommandFlagRaisedEvent_Payload.StateOfPopUp.SelectSnapShotId.Raw);
+    this.PopUpBrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, uiCommandFlagRaisedEvent_Payload.StateOfPopUp.SelectSnapShotId.Raw);
 
-    let newUrl: IAbsoluteUrl = this.BrowserTabAgent.GetFullUrl();
+    let newUrl: IAbsoluteUrl = this.PopUpBrowserTabAgent.GetFullUrl();
 
     await this.CreateNewWindow(newUrl)
       .catch((ex) => {
@@ -52,7 +52,7 @@ export class HandlersForInternal extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.CreateNewWindow.name);
 
-      await this.BrowserTabAgent.CreateNewTab(tabUrl)
+      await this.PopUpBrowserTabAgent.CreateNewTab(tabUrl)
         .then(() => resolve())
         .catch((err) => reject(err));
 

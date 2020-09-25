@@ -2,7 +2,7 @@
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IScWindowManager } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { LoggableBase } from '../LoggableBase';
+import { LoggableBase } from '../../../../Shared/scripts/LoggableBase';
 
 export class ContentMessageManager extends LoggableBase {
   private ContentMessageBroker: IContentMessageBroker;

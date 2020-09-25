@@ -1,8 +1,8 @@
-﻿import { DTFrameProxy } from "../../../../DTFrameProxy";
-import { IDTFrameProxyMutationEvent_Payload } from "../DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
+﻿import { IDTFrameProxyMutationEvent_Payload } from "../../../../../../../Shared/scripts/Interfaces/Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
+import { IDTFrameProxy } from "../../../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy";
 
 export interface IDesktopProxyMutationEvent_Payload {
-  AddedDTFrameProxies: DTFrameProxy[];
+  AddedDTFrameProxies: IDTFrameProxy[];
   DTFrameProxyMutationEvent_Payload: IDTFrameProxyMutationEvent_Payload;
   MutatedElement: HTMLElement; //todo - needed?
 }

@@ -1,45 +1,36 @@
-﻿import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
-import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { _BaseFrameProxy } from '../../../Proxies/_BaseFrameProxy';
+﻿import { RecipeBasicsForContent } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+import { InitResultsDTFrameProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy';
+import { ICommandHandlerDataForContent } from '../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
-import { LoggableBase } from '../../../Managers/LoggableBase';
+import { IDTFrameProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy';
 import { FrameHelper } from '../../../Helpers/FrameHelper';
-import { DTFrameProxy } from '../../../Proxies/DTFrameProxy';
-import { InitResultsDTFrameProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy';
+import { __RecipeBase } from '../__RecipeBase/__RecipeBase';
 
-export class RecipeAddNewContentEditorToDesktop extends LoggableBase implements ICommandRecipes {
-  private TargetDoc: IDataOneDoc;
-  DesktopTabButtonAgent: DesktopStartBarProxy;
-
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, ceButtonTabAgent: DesktopStartBarProxy) {
-    super(logger);
+export class RecipeAddNewContentEditorToDesktop extends __RecipeBase implements ICommandRecipes {
+  constructor(commandData: ICommandHandlerDataForContent) {
+    super(commandData);
 
     this.Logger.InstantiateStart(RecipeAddNewContentEditorToDesktop.name);
-    this.TargetDoc = targetDoc;
-    this.DesktopTabButtonAgent = ceButtonTabAgent;
-
     this.Logger.InstantiateEnd(RecipeAddNewContentEditorToDesktop.name);
   }
 
-  Execute(): Promise<DTFrameProxy> {
+  Execute(): Promise<IDTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       let allIframeDataAtBeginning: HTMLIFrameElement[];
-      let dtframeProxy: DTFrameProxy;
-      let frameHelper = new FrameHelper(this.Logger);
-      let recipeBasics = new RecipeBasics(this.Logger);
+      let dtframeProxy: IDTFrameProxy;
+      let frameHelper = new FrameHelper(this.Logger, this.ContentBrowserProxy);
+      let recipeBasics = new RecipeBasicsForContent(this.Logger, this.ContentBrowserProxy);
 
       allIframeDataAtBeginning = frameHelper.GetIFramesFromDataOneDoc(this.TargetDoc)
 
       await recipeBasics.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.TargetDoc)
         .then(() => recipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.TargetDoc))
         .then(() => recipeBasics.WaitForNewIframeContentEditor(allIframeDataAtBeginning, this.TargetDoc))
-        .then((result: DTFrameProxy) => dtframeProxy = result)
+        .then((result: IDTFrameProxy) => dtframeProxy = result)
         .then(() => dtframeProxy.OnReadyInitDTFrameProxy())
         .then((result: InitResultsDTFrameProxy) => {
-            return this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result);
+          return this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result);
         })
         .then(() => resolve(dtframeProxy))
         .catch((err) => reject(this.Execute.name + ' ' + err));

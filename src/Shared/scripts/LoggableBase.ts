@@ -1,4 +1,4 @@
-﻿import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+﻿import { ILoggerAgent } from './Interfaces/Agents/ILoggerAgent';
 
 export abstract class LoggableBase {
   protected Logger: ILoggerAgent;

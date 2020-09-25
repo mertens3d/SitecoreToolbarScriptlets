@@ -24,7 +24,7 @@ import { PopUpBrowserProxy } from "./Proxies/BrowserProxy";
 import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { CommandType } from "../../Shared/scripts/Enums/CommandType";
 import { HandlersForInternal } from "../../PopUpUi/scripts/Classes/HandlersForInternal";
-import { BrowserTabAgent } from "../../PopUpUi/scripts/Managers/BrowserTabAgent";
+import { PopUpBrowserTabAgent } from "../../PopUpUi/scripts/Managers/PopUpBrowserTabAgent";
 
 class PopUpControllerLayer {
   private RepoAgent: IRepositoryAgent;
@@ -36,15 +36,15 @@ class PopUpControllerLayer {
   private UiLayer: IHindSiteUiLayer;
   private CommandDefintionBucket: ICommandDefinitionBucket;
   private ScUrlAgent: IScUrlAgent;
-  private BrowserProxy: PopUpBrowserProxy;
+  private PopUpBrowserProxy: PopUpBrowserProxy;
   HandlersForInternal: HandlersForInternal;
-  BrowserTabAgent: BrowserTabAgent;
+  BrowserTabAgent: PopUpBrowserTabAgent;
   public async Startup() {
     try {
       this.Preamble_SettingsAndLogger();
 
-      this.BrowserProxy = new PopUpBrowserProxy(this.Logger);
-      await this.BrowserProxy.Init_BrowserProxy()
+      this.PopUpBrowserProxy = new PopUpBrowserProxy(this.Logger);
+      await this.PopUpBrowserProxy.Init_BrowserProxy()
         .then(() => {
           this.InstantiateAgents_Controller();
           this.InstantiateManagers_Controller();
@@ -64,9 +64,9 @@ class PopUpControllerLayer {
   }
 
   private InstantiateAgents_Controller() {
-    this.ScUrlAgent = new ScUrlAgent(this.Logger, this.BrowserProxy);
+    this.ScUrlAgent = new ScUrlAgent(this.Logger, this.PopUpBrowserProxy);
     this.ScUrlAgent.Init_ScUrlAgent();
-    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger, this.BrowserProxy, this.SettingsAgent);
+    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger, this.PopUpBrowserProxy, this.SettingsAgent);
   }
 
   private async InstantiateManagers_Controller() {
@@ -75,7 +75,7 @@ class PopUpControllerLayer {
     this.CommandDefintionBucket = new CommandDefintionFactory(this.Logger).BuildMenuCommandParamsBucket();
     this.UiLayer = new HindSiteUiLayer(this.Logger, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
 
-    this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.ScUrlAgent, this.SettingsAgent);
+    this.BrowserTabAgent = new PopUpBrowserTabAgent(this.Logger, this.ScUrlAgent, this.SettingsAgent, this.PopUpBrowserProxy);
     this.HandlersForInternal = new HandlersForInternal(this.Logger, this.BrowserTabAgent);
     this.commandMan = new CommandManager(this.Logger, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket, this.UiLayer, this.HandlersForInternal);
 

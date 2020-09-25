@@ -1,6 +1,6 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
-import { HindeSiteEvent_Subject } from "../_HindSiteEvent/HindeSiteEvent_Subject";
+import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { ITreeMutationEvent_Payload } from "./ITreeMutationEvent_Payload";
 
 export class TreeMutationEvent_Subject extends HindeSiteEvent_Subject<ITreeMutationEvent_Payload> {

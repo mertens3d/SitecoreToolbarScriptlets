@@ -1,19 +1,24 @@
-﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
+import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { DTFrameProxy } from "../../../../DTFrameProxy";
-import { HindeSiteEvent_Subject } from "../_HindSiteEvent/HindeSiteEvent_Subject";
 import { IDesktopProxyMutationEvent_Payload } from "./IDesktopProxyMutationEvent_Payload";
+import { IDTFrameProxy } from "../../../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy";
+import { DTFrameProxy } from "../../../../DTFrameProxy";
+import { IContentBrowserProxy } from "../../../../../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 
 export class DesktopProxyMutationEvent_Subject extends HindeSiteEvent_Subject<IDesktopProxyMutationEvent_Payload>  {
   private AssociatedDoc: IDataOneDoc;
+  private ContentBrowserProxy: IContentBrowserProxy;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc) {
+  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, contentBrowserProxy: IContentBrowserProxy) {
     super(logger, DesktopProxyMutationEvent_Subject.name);
 
     this.Logger.InstantiateStart(DesktopProxyMutationEvent_Subject.name);
     if (!targetDoc) {
       this.Logger.ErrorAndThrow(DesktopProxyMutationEvent_Subject.name, 'No target doc');
     }
+
+    this.ContentBrowserProxy = contentBrowserProxy;
     this.AssociatedDoc = targetDoc;
     this.InitMutationObserver();
     this.Logger.InstantiateEnd(DesktopProxyMutationEvent_Subject.name);
@@ -25,11 +30,11 @@ export class DesktopProxyMutationEvent_Subject extends HindeSiteEvent_Subject<ID
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
           let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
-          let addedDTFrameProxies: DTFrameProxy[] = [];
+          let addedDTFrameProxies: IDTFrameProxy[] = [];
 
           mutation.addedNodes.forEach((addedNode) => {
             if (addedNode instanceof HTMLIFrameElement) {
-              let dtFrameProxy = new DTFrameProxy(this.Logger, addedNode);
+              let dtFrameProxy = new DTFrameProxy(this.Logger, addedNode, this.ContentBrowserProxy);
               addedDTFrameProxies.push(dtFrameProxy);
             }
           })

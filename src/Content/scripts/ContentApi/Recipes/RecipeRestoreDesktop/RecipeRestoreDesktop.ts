@@ -1,28 +1,22 @@
-﻿import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataStateOfDTFrame } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame';
+﻿import { IDataStateOfDTFrame } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame';
+import { ICommandHandlerDataForContent } from '../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent';
 import { ICommandRecipes } from '../../../../../Shared/scripts/Interfaces/ICommandRecipes';
+import { IDTFrameProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy';
 import { MiscAgent } from '../../../Agents/MiscAgent/MiscAgent';
-import { LoggableBase } from '../../../Managers/LoggableBase';
-import { DesktopStartBarProxy } from '../../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
-import { DTFrameProxy } from '../../../Proxies/DTFrameProxy';
 import { RecipeAddNewContentEditorToDesktop } from '../RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop';
+import { __RecipeBase } from '../__RecipeBase/__RecipeBase';
 
-export class RecipeRestoreFrameOnDesktop extends LoggableBase implements ICommandRecipes {
+export class RecipeRestoreFrameOnDesktop extends __RecipeBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
-  private TargetDoc: IDataOneDoc;
   private DataStateOfFrame: IDataStateOfDTFrame;
-  DesktopTabButtonTabAgent: DesktopStartBarProxy;
 
-  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataStateOfFrame: IDataStateOfDTFrame, ceButtonTabAgent: DesktopStartBarProxy) {
-    super(logger);
+  constructor(commandData: ICommandHandlerDataForContent, dataStateOfFrame: IDataStateOfDTFrame) {
+    super(commandData);
     this.Logger.InstantiateStart(RecipeRestoreFrameOnDesktop.name);
 
     this.MiscAgent = new MiscAgent(this.Logger);
 
-    this.TargetDoc = targetDoc;
     this.DataStateOfFrame = dataStateOfFrame;
-    this.DesktopTabButtonTabAgent = ceButtonTabAgent;
 
     this.Logger.InstantiateEnd(RecipeRestoreFrameOnDesktop.name);
   }
@@ -35,7 +29,7 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
     }
   }
 
-  private SetStateOfDTFrameProxy(oneTreeState: IDataStateOfDTFrame, dtFrameProxy: DTFrameProxy) {
+  private SetStateOfDTFrameProxy(oneTreeState: IDataStateOfDTFrame, dtFrameProxy: IDTFrameProxy) {
     return new Promise<void>(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateOfDTFrameProxy.name);
 
@@ -53,11 +47,11 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
 
       if (this.MiscAgent.NotNullOrUndefined([this.TargetDoc, this.DataStateOfFrame], this.RunOneChain.name)) {
         //guaranteed to be on the correct page
-        var dtFrameProxy: DTFrameProxy;
-        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.TargetDoc, this.DesktopTabButtonTabAgent);
+        var dtFrameProxy: IDTFrameProxy;
+        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.CommandData);
 
         await recipeAddCe.Execute()
-          .then((result: DTFrameProxy) => dtFrameProxy = result)
+          .then((result: IDTFrameProxy) => dtFrameProxy = result)
           .then(() => dtFrameProxy.OnReadyInitDTFrameProxy())
           .then(() => this.SetStateOfDTFrameProxy(this.DataStateOfFrame, dtFrameProxy))
           .then(() => resolve())

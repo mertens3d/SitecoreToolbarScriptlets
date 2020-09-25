@@ -1,9 +1,9 @@
-﻿import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
+﻿import { IContentEditorProxy } from "../../../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy";
 import { IDataStateOfTree } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree";
-import { ContentEditorProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
 
 export interface ITreeMutationEvent_Payload {
-  OwnerContentEditorProxy: ContentEditorProxy;
+  OwnerContentEditorProxy: IContentEditorProxy;
   ActiveNode: ScContentTreeNodeProxy;
   MutatedElement: HTMLElement;
   StateOfTree: IDataStateOfTree;

@@ -4,7 +4,7 @@ import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/Data/IDataOne
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
-import { LoggableBase } from "../LoggableBase";
+import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 
 export class ScUiManager extends LoggableBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IDataStateOfSitecoreWindow;

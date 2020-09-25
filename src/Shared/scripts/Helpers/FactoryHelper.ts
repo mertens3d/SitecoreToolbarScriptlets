@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../LoggableBase";
 import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";

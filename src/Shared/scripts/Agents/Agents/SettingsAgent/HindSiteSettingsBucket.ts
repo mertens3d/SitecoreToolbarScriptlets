@@ -1,5 +1,5 @@
 ﻿import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
-import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
+import { LoggableBase } from "../../../LoggableBase";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";

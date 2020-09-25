@@ -1,4 +1,4 @@
-﻿import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
+﻿import { RecipeBasicsForContent } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { QueryStrKey } from "../../../../../Shared/scripts/Enums/QueryStrKey";
 import { Guid } from "../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
@@ -7,24 +7,26 @@ import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IL
 import { IScUrlAgent } from "../../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { LoggableBase } from "../../../Managers/LoggableBase";
+import { IContentEditorProxy, IDesktopProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IDesktopProxy";
+import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
 import { ScWindowRecipePartials } from "../../../Managers/ScWindowManager/ScWindowRecipePartials";
-import { ContentEditorProxy } from "../../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { DesktopProxy } from "../../../Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { IContentBrowserProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 
 export class RecipeInitFromQueryStr extends LoggableBase implements ICommandRecipes {
   private AtticAgent: IContentAtticAgent;
-  private OneCeAgent: ContentEditorProxy;
-  private OneDesktopMan: DesktopProxy;
-  private RecipeBasics: RecipeBasics;
+  private OneCeAgent: IContentEditorProxy;
+  private OneDesktopMan: IDesktopProxy;
+  private RecipeBasics: RecipeBasicsForContent;
   private ScUrlAgent: IScUrlAgent;
   private ScWinRecipeParts: ScWindowRecipePartials;
   private TopLevelDoc: IDataOneDoc;
+  private ContentBrowserProxy: IContentBrowserProxy;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: DesktopProxy, contentEditorProxy: ContentEditorProxy) {
+  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, atticAgent: IContentAtticAgent, topLevelDoc: IDataOneDoc, scWinRecipeParts: ScWindowRecipePartials, oneDesktopMan: IDesktopProxy, contentEditorProxy: IContentEditorProxy, contentBrowserProxy: IContentBrowserProxy) {
     super(logger);
     this.ScUrlAgent = scUrlAgent;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.ContentBrowserProxy = contentBrowserProxy;
+    this.RecipeBasics = new RecipeBasicsForContent(this.Logger, this.ContentBrowserProxy);
     this.AtticAgent = atticAgent;
     this.TopLevelDoc = topLevelDoc;
     this.ScWinRecipeParts = scWinRecipeParts;
@@ -55,6 +57,7 @@ export class RecipeInitFromQueryStr extends LoggableBase implements ICommandReci
 
             if (this.TopLevelDoc) {
               dataOneWindowStorage = this.AtticAgent.GetFromStorageBySnapShotId(targetGuid);
+
 
               await this.RecipeBasics.WaitForReadyNABDocument(this.TopLevelDoc)
                 .then(() => this.ScWinRecipeParts.RestoreStateToTargetDoc(this.TopLevelDoc, dataOneWindowStorage, this.OneDesktopMan, this.OneCeAgent))

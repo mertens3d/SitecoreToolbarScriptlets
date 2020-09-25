@@ -1,5 +1,5 @@
 ﻿import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { LoggableBase } from "../../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "../../DTFrameProxy";
 
 export class DTFrameProxyBucket extends LoggableBase {

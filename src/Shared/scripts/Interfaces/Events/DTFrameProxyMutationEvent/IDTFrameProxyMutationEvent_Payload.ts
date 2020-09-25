@@ -1,7 +1,7 @@
 ﻿import { IContentEditorProxyMutationEvent_Payload } from "../ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
-import { DTFrameProxy } from "../../../../DTFrameProxy";
+import { IDTFrameProxy } from "../../Proxies/IDesktopProxy";
 
 export interface IDTFrameProxyMutationEvent_Payload {
-  DTFrameProxy: DTFrameProxy;
+  DTFrameProxy: IDTFrameProxy;
   ContentEditorProxyMutationPayload: IContentEditorProxyMutationEvent_Payload;
 }
