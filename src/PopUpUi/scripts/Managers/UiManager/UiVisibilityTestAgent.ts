@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";

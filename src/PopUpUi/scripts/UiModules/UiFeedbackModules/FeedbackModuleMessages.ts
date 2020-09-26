@@ -1,5 +1,5 @@
-﻿import { IDataContentReplyReceivedEvent_Payload } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { IHindSiteEvent_Observer } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/IHindSiteEvent_Observer";
+﻿import { IDataContentReplyReceivedEvent_Payload } from "../../../../Content/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IHindSiteEvent_Observer } from "../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer";
 import { IMessageBrokerFeedback } from "../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
 import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 

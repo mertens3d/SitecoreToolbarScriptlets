@@ -6,7 +6,7 @@ import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../../Content/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
 
 export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {

@@ -4,12 +4,12 @@ import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
 import { DefaultStateOfSitecoreWindow, DefaultScWindowStates } from "./Defaults/DefaultStateOfSitecoreWindow";
 import { DefaultStateOfSnapshotStorage } from "./Defaults/DefaultStateOfSnapshots";
 import { DefaultStateOfTree } from "./Defaults/DefaultStateOfTree";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IDataStateOfContentEditor } from "../Interfaces/Data/States/IDataStateOfContentEditor";
 import { IDataStateOfDesktop } from "../Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfSitecoreWindow } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from "../Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+import { LoggableBase } from "../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
 import { IDataSitecoreWindowStates } from "../Interfaces/Data/States/IDataStates";
 
 export class ScWindowStateValidator extends LoggableBase {

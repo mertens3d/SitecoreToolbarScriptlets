@@ -18,6 +18,7 @@ module.exports = {
     return gulp.src([
       vars.PopUpHtml.AutoBuildMinFileNameFull(),
       vars.ContentJs.WebpackFileFull(),
+      vars.HindSiteApiJs.WebpackFileFull(),
       vars.PopUpUiJs.WebpackFileFull(),
       vars.PopUpControllerJs.WebpackFileFull(),
       vars.PopUpStyles.AutoBuildMinFileNameFull(),
@@ -33,6 +34,7 @@ module.exports = {
     return gulp.src([
       path.join(vars.PopUpHtml.FinalFolderNameFull(), vars.PopUpHtml.MinFileName()),
       path.join(vars.ContentJs.FinalFolderNameFull(), vars.ContentJs.MinFileName()),
+      path.join(vars.HindSiteApiJs.FinalFolderNameFull(), vars.HindSiteApiJs.MinFileName()),
       path.join(vars.PopUpUiJs.FinalFolderNameFull(), vars.PopUpUiJs.MinFileName()),
       path.join(vars.PopUpControllerJs.FinalFolderNameFull(), vars.PopUpControllerJs.MinFileName()),
       path.join(vars.PopUpStyles.FinalFolderNameFull(), vars.PopUpStyles.MinFileName()),

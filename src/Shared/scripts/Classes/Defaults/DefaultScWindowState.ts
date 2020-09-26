@@ -1,5 +1,5 @@
 ﻿import { MsgFlag } from "../../Enums/1xxx-MessageFlag";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../../Content/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IError } from "../../Interfaces/IError";
 import { DefaultStateOfSitecoreWindow } from "./DefaultStateOfSitecoreWindow";
 import { DefaultStateOfSnapshotStorage } from "./DefaultStateOfSnapshots";

@@ -1,7 +1,7 @@
-﻿import { FrameHelper } from '../../../Content/scripts/Helpers/FrameHelper';
-import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
-import { DTFrameProxy } from '../../../Content/scripts/Proxies/DTFrameProxy';
-import { _BaseFrameProxy } from '../../../Content/scripts/Proxies/_BaseFrameProxy';
+﻿import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
+import { LoggableBase } from '../../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
+import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/DTFrameProxy';
+import { _BaseFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/_BaseFrameProxy';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
 import { Guid } from '../Helpers/Guid';

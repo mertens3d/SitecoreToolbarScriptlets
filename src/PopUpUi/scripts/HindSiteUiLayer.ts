@@ -1,5 +1,5 @@
-﻿import { LoggableBase } from "../../Content/scripts/Managers/LoggableBase";
-import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+﻿import { LoggableBase } from "../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";

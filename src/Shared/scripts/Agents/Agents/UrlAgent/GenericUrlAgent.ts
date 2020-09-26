@@ -5,7 +5,7 @@ import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/IUrlParts";
 import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
-import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
+import { LoggableBase } from "../../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
 
 export class GenericUrlAgent extends LoggableBase implements IUrlAgent {
   protected UrlParts: IGenericUrlParts;

@@ -1,6 +1,6 @@
-﻿import { ScWindowRecipePartials } from "../../../../../Content/scripts/Managers/ScWindowManager/ScWindowRecipePartials";
-import { ContentEditorProxy } from "../../../../../Content/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { DesktopProxy } from "../../../../../Content/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
+﻿import { ScWindowRecipePartials } from "../../../../../HindSiteScUiProxy/scripts/Managers/ScWindowManager/ScWindowRecipePartials";
+import { ContentEditorProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { DesktopProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ScWindowType } from "../../../Enums/scWindowType";
 import { IDataOneDoc } from "../../Data/IDataOneDoc";
 import { IDataStateOfSitecoreWindow } from "../../Data/States/IDataStateOfSitecoreWindow";

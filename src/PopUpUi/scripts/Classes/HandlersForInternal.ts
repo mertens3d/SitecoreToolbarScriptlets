@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";

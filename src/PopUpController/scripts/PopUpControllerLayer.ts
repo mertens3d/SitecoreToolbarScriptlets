@@ -1,5 +1,4 @@
-﻿import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
-import { CommandDefintionFactory } from "../../PopUpUi/scripts/Classes/PopUpCommands";
+﻿import { CommandDefintionFactory } from "../../PopUpUi/scripts/Classes/PopUpCommands";
 import { IUiCommandFlagRaisedEvent_Payload } from "../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
 import { UiCommandFlagRaisedEvent_Observer } from "../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
 import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
@@ -21,10 +20,11 @@ import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { CommandManager } from "../Managers/CommandManager";
 import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
 import { PopUpBrowserProxy } from "./Proxies/BrowserProxy";
-import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { CommandType } from "../../Shared/scripts/Enums/CommandType";
 import { HandlersForInternal } from "../../PopUpUi/scripts/Classes/HandlersForInternal";
 import { BrowserTabAgent } from "../../PopUpUi/scripts/Managers/BrowserTabAgent";
+import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
 
 class PopUpControllerLayer {
   private RepoAgent: IRepositoryAgent;

@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
+﻿import { LoggableBase } from '../../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';

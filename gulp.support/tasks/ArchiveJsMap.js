@@ -16,6 +16,8 @@ function GetFolderName(prefix) {
 var filesToArchive = [
   './src/content/**/*.js',
   './src/content/**/*.map',
+  './src/HindSiteApi/**/*.js',
+  './src/HindSiteApi/**/*.map',
   './src/PopUpUi/**/*.js',
   './src/PopUpUi/**/*.map',
   './src/PopUpController/**/*.js',
@@ -25,13 +27,13 @@ var filesToArchive = [
 ];
 
 module.exports = {
-  CleanContent: function (cb) {
-    console.log('s) CleanContent');
+  ArchiveJsAndMaps: function (cb) {
+    console.log('s) CleanOutJsAndMaps');
     console.log('source filter: ' + JSON.stringify(filesToArchive));
     return gulp.src(filesToArchive, { base: './' })
       .pipe(gulp.dest(GetFolderName('./archives/archive-')));
   },
-  DelJsMap: function (cb) {
+  DeleteJsAndMap: function (cb) {
     console.log('s) Delete Js and Map files');
     console.log('source filter: ' + JSON.stringify(filesToArchive));
     return del(filesToArchive, cb);

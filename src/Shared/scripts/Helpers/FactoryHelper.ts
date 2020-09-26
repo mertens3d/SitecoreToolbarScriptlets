@@ -1,11 +1,11 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
 import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
 import { Guid } from "./Guid";
-import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProxy";
-import { DTFrameProxy } from "../../../Content/scripts/Proxies/DTFrameProxy";
+import { _BaseFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/_BaseFrameProxy";
+import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/DTFrameProxy";
 
 export class FactoryHelper extends LoggableBase implements IFactoryHelper {
   SettingsAgent: ISettingsAgent;

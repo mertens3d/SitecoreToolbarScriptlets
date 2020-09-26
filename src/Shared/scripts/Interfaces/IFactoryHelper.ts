@@ -1,5 +1,5 @@
 ﻿import { IDataOneDoc } from "./Data/IDataOneDoc";
-import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProxy";
+import { _BaseFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/_BaseFrameProxy";
 
 export interface IFactoryHelper {
   BaseFramePromiseFactory(arg0: HTMLIFrameElement, arg1: string);

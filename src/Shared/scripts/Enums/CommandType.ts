@@ -1,4 +1,7 @@
 ﻿export enum CommandType {
-    PopUp,
-    Content
+  Unknown = 0,
+  PopUp,
+  Content,
+  Api,
+  ContentInternal
 }

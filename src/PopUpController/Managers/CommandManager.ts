@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from '../../Content/scripts/Managers/LoggableBase';
+﻿import { LoggableBase } from '../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
 import { StaticHelpers } from '../../Shared/scripts/Classes/StaticHelpers';
 import { MsgFlag } from '../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { MenuCommandKey } from '../../Shared/scripts/Enums/2xxx-MenuCommand';

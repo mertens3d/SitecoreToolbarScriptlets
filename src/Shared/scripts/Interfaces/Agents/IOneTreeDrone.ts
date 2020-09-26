@@ -1,4 +1,4 @@
-﻿import { TreeMutationEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject";
+﻿import { TreeMutationEvent_Subject } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject";
 import { IDataStateOfTree } from "../Data/States/IDataStateOfTree";
 import { InitResultsScWindowManager } from "./InitResultsScWindowManager";
 

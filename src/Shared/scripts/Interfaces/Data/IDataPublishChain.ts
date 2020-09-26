@@ -1,5 +1,5 @@
 ﻿import { IDataOneDoc } from "./IDataOneDoc";
-import { _BaseFrameProxy } from "../../../../Content/scripts/Proxies/_BaseFrameProxy";
+import { _BaseFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/_BaseFrameProxy";
 
 export interface IDataPublishChain {
   TopLevelDoc: IDataOneDoc,

@@ -10,7 +10,7 @@ import { UiPresence } from "../../../Enums/UiPresence";
 import { ContentConst } from "../../../Interfaces/InjectConst";
 import { ModuleKey } from "../../../Enums/ModuleKey";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
+import { LoggableBase } from "../../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
 import { HindSiteSettingForNumbers } from "./HindSiteSettingForNumbers";
