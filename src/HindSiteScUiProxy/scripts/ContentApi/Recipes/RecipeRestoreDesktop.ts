@@ -1,21 +1,20 @@
-﻿import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+﻿import { MiscAgent } from '../../../../Content/scripts/Agents/MiscAgent';
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IScWindowProxy } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataStateOfDTFrame } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame';
 import { ICommandRecipes } from '../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { LoggableBase } from '../../../../Shared/scripts/LoggableBase';
-import { DesktopStartBarProxy } from '../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { DTFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
+import { DesktopStartBarProxy } from '../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { RecipeAddNewContentEditorToDesktop } from './RecipeAddContentEditorToDesktop';
-import { MiscAgent } from '../../../../Content/scripts/Agents/MiscAgent';
-import { IScWindowProxy } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { ScWindowProxy } from '../../Proxies/ScWindowProxy';
 
 export class RecipeRestoreFrameOnDesktop extends LoggableBase implements ICommandRecipes {
   private MiscAgent: MiscAgent;
   private TargetDoc: IDataOneDoc;
   private DataStateOfFrame: IDataStateOfDTFrame;
   DesktopTabButtonTabAgent: DesktopStartBarProxy;
-    ScWinProxy: IScWindowProxy;
+  private  ScWinProxy: IScWindowProxy;
 
   constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataStateOfFrame: IDataStateOfDTFrame, ceButtonTabAgent: DesktopStartBarProxy, scWinProxy: IScWindowProxy) {
     super(logger);
@@ -58,8 +57,7 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
         //guaranteed to be on the correct page
         var dtFrameProxy: DTFrameProxy;
 
-        this.Logger.ErrorAndThrow(this.RunOneChain.name, 'fix null');
-        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, null, this.ScWinProxy); //todo - fix the null
+        let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.ScWinProxy, this.TargetDoc); //todo - fix the null
 
         await recipeAddCe.Execute()
           .then((result: DTFrameProxy) => dtFrameProxy = result)

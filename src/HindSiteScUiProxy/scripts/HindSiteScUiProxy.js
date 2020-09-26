@@ -52,7 +52,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HindSiteScUiProxy = void 0;
 var SnapShotFlavor_1 = require("../../Shared/scripts/Enums/SnapShotFlavor");
 var LoggableBase_1 = require("../../Shared/scripts/LoggableBase");
-var RecipeAddContentEditorToDesktop_1 = require("./ContentApi/Recipes/RecipeAddContentEditorToDesktop");
 var ScWindowProxy_1 = require("./Proxies/ScWindowProxy");
 var HindSiteScUiProxy = /** @class */ (function (_super) {
     __extends(HindSiteScUiProxy, _super);
@@ -112,20 +111,14 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
     //    this.ToastAgent.PopUpToastNotification(this.scWinProxy.GetTopLevelDoc(), payloadData.ToastMessage);
     //  });
     //}
-    HindSiteScUiProxy.prototype.AddCETab = function (apiCallPayload) {
+    HindSiteScUiProxy.prototype.AddCETabAsync = function (apiCallPayload) {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, new RecipeAddContentEditorToDesktop_1.RecipeAddNewContentEditorToDesktop(this.Logger, apiCallPayload, this.ScWindowProxy).Execute()
-                            .then(function () {
-                            resolve();
-                        })
-                            .catch(function (err) { return reject(err); })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                this.ScWindowProxy.DesktopProxy.AddContentEditorTabAsync()
+                    .then(function () { return resolve(); })
+                    .catch(function (err) { return reject(); });
+                return [2 /*return*/];
             });
         }); });
     };

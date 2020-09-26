@@ -11,11 +11,10 @@ import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
 import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
 
 export class CommandManager extends LoggableBase {
-
   public CommandDefinitionBucket: ICommandDefinitionBucket;
   private PopUpMsgBroker: PopUpMessagesBrokerAgent;
   private UiLayer: IHindSiteUiLayer;
-    HandlersForInternal: HandlersForInternal;
+  HandlersForInternal: HandlersForInternal;
 
   constructor(logger: ILoggerAgent, popUpMessageBroker: PopUpMessagesBrokerAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiLayer: IHindSiteUiLayer, handlerInternal: HandlersForInternal) {
     super(logger);
@@ -63,14 +62,11 @@ export class CommandManager extends LoggableBase {
         window.close();
         break;
 
-
       default:
         this.Logger.WarningAndContinue(this.HandleCommandTypePopUp.name, 'Unhandled command');
         break
     }
-
   }
-
 
   async TriggerPingEventAsync(): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);
@@ -78,7 +74,7 @@ export class CommandManager extends LoggableBase {
     try {
       let stateOfPopUp: IStateOfPopUp = this.UiLayer.GetStateOfPopUp();
 
-      this.PopUpMsgBroker.SendCommandToContentImprovedAsync(MsgFlag.Ping, stateOfPopUp) //todo put correct value in for null. query the ui?
+      this.PopUpMsgBroker.SendCommandToContentAsync(MsgFlag.Ping, stateOfPopUp) //todo put correct value in for null. query the ui?
     } catch (err) {
       throw (this.TriggerPingEventAsync.name + ' | ' + err);
     }

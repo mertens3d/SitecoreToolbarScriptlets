@@ -127,7 +127,7 @@ class PopUpControllerLayer {
     this.Logger.Log('Controller got command message');
 
     if (uiCommandFlagRaisedEvent_Payload.CommandType === CommandType.Content) {
-      this.PopUpMessageBrokerAgent.SendCommandToContentImprovedAsync(uiCommandFlagRaisedEvent_Payload.MsgFlag, uiCommandFlagRaisedEvent_Payload.StateOfPopUp)
+      this.PopUpMessageBrokerAgent.SendCommandToContentAsync(uiCommandFlagRaisedEvent_Payload.MsgFlag, uiCommandFlagRaisedEvent_Payload.StateOfPopUp)
     } else {
       this.commandMan.HandleCommandTypePopUp(uiCommandFlagRaisedEvent_Payload);
     }

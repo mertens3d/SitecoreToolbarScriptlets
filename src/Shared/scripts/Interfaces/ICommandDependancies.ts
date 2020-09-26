@@ -1,10 +1,11 @@
 ﻿import { AutoSnapShotAgent } from "../../../Content/scripts/Agents/AutoSnapShotAgent";
 import { IHindSiteScUiProxy } from "./Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "./Agents/IContentAtticAgent/IContentAtticAgent";
-import { IApiCallPayload } from "./ICommandHandlerDataForContent";
+import { ILoggerAgent } from "./Agents/ILoggerAgent";
 
 export interface ICommandDependancies {
-    AutoSnapShotAgent: AutoSnapShotAgent;
-    AtticAgent: IContentAtticAgent;
-    ScUiProxy: IHindSiteScUiProxy;
+  AtticAgent: IContentAtticAgent;
+  AutoSnapShotAgent: AutoSnapShotAgent;
+  Logger: ILoggerAgent;
+  ScUiProxy: IHindSiteScUiProxy;
 }

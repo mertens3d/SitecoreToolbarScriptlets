@@ -100,7 +100,7 @@ var ScWindowProxy = /** @class */ (function (_super) {
         }); });
     };
     ScWindowProxy.prototype.Instantiate = function () {
-        this.DesktopProxy = new DesktopProxy_1.DesktopProxy(this.Logger, this.GetTopLevelDoc());
+        this.DesktopProxy = new DesktopProxy_1.DesktopProxy(this.Logger, this.GetTopLevelDoc(), this);
         this.ContentEditorProxy = new ContentEditorProxy_1.ContentEditorProxy(this.GetTopLevelDoc(), this.Logger);
     };
     ScWindowProxy.prototype.Init = function () {

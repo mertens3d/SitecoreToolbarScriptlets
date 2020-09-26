@@ -17,12 +17,25 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 export class InternalCommandRunner extends LoggableBase {
   Dependancies: ICommandDependancies;
 
+    ScUiProxy: IHindSiteScUiProxy;
+    AutoSnapShotAgent: AutoSnapShotAgent;
+    AtticAgent: IContentAtticAgent;
+
+
   constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy) {
     super(logger);
+    this.AtticAgent = atticAgent;
+    this.AutoSnapShotAgent = autoSnapShotAgent;
+    this.ScUiProxy = scUiProxy;
+
+  
+
+
     this.Dependancies = {
       AtticAgent: atticAgent,
       AutoSnapShotAgent: autoSnapShotAgent,
-      ScUiProxy: scUiProxy
+      ScUiProxy: scUiProxy,
+      Logger: this.Logger,
     }
   }
 
@@ -85,13 +98,13 @@ export class InternalCommandRunner extends LoggableBase {
     });
   }
 
-  SetStateOfSitecoreWindow(internalCommandPayload: ICommandParams): Promise<void> {
+  SetStateOfSitecoreWindow(commandParams: ICommandParams, dependancies: ICommandDependancies): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.LogVal("IdOfSelect", internalCommandPayload.TargetSnapShotId);
-      let dataOneWindowStorage: IDataStateOfSitecoreWindow = this.Dependancies.AtticAgent.GetFromStorageBySnapShotId(internalCommandPayload.TargetSnapShotId);
+      dependancies.Logger.LogAsJsonPretty("IdOfSelect", commandParams.TargetSnapShotId);
+      let dataOneWindowStorage: IDataStateOfSitecoreWindow = dependancies.AtticAgent.GetFromStorageBySnapShotId(commandParams.TargetSnapShotId);
 
       if (dataOneWindowStorage) {
-        this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(internalCommandPayload.ApiPayload, dataOneWindowStorage)
+        dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(commandParams.ApiPayload, dataOneWindowStorage)
           .then(() => resolve())
           .catch((err) => reject(this.SetStateOfSitecoreWindow.name + ' | ' + err));
       };

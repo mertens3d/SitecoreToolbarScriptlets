@@ -46,8 +46,8 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
     return messageControllerToContent;
   }
 
-  async SendCommandToContentImprovedAsync(msgFlag: MsgFlag, stateOfPopUp: IStateOfPopUp): Promise<void> {
-    this.Logger.FuncStart(this.SendCommandToContentImprovedAsync.name);
+  async SendCommandToContentAsync(msgFlag: MsgFlag, stateOfPopUp: IStateOfPopUp): Promise<void> {
+    this.Logger.FuncStart(this.SendCommandToContentAsync.name);
     try {
       if (!StaticHelpers.IsNullOrUndefined([stateOfPopUp])) {
         this.__cleardebugText();
@@ -56,14 +56,14 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
 
         this.SendMessageToContentAsync(messageControllerToContent)
           .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.HandleReply(replyMessagePayload))
-          .catch((err) => this.Logger.ErrorAndThrow(this.SendCommandToContentImprovedAsync.name, err));
+          .catch((err) => this.Logger.ErrorAndThrow(this.SendCommandToContentAsync.name, err));
       } else {
-        this.Logger.ErrorAndThrow(this.SendCommandToContentImprovedAsync.name, 'null check');
+        this.Logger.ErrorAndThrow(this.SendCommandToContentAsync.name, 'null check');
       }
     } catch (err) {
-      throw (this.SendCommandToContentImprovedAsync.name + ' | ' + err);
+      throw (this.SendCommandToContentAsync.name + ' | ' + err);
     }
-    this.Logger.FuncEnd(this.SendCommandToContentImprovedAsync.name);
+    this.Logger.FuncEnd(this.SendCommandToContentAsync.name);
   }
 
   private HandleReply(replyMessagePayload: IDataContentReplyReceivedEvent_Payload) {

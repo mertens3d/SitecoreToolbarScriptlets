@@ -39,7 +39,7 @@ class ContentEntry {
   ScUrlAgent: ScUrlAgent;
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
-  InternalCommandRunner: InternalCommandRunner;
+
   CommandRouter: CommandRouter;
 
   async Main() {
@@ -86,9 +86,9 @@ class ContentEntry {
 
     this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
 
-    this.InternalCommandRunner = new InternalCommandRunner(this.Logger, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy);
+   
 
-    this.CommandRouter = new CommandRouter(this.Logger, this.InternalCommandRunner, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent);
+    this.CommandRouter = new CommandRouter(this.Logger,  this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent);
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
       this.ScUiProxy, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);

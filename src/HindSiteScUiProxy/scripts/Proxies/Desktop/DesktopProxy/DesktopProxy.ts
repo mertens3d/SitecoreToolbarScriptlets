@@ -19,9 +19,10 @@ import { DesktopProxyMutationEvent_Subject } from "./Events/DesktopProxyMutation
 import { IDesktopProxyMutationEvent_Payload } from "./Events/DesktopProxyMutationEvent/IDesktopProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
+import { IScWindowProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { RecipeAddNewContentEditorToDesktop } from "../../../ContentApi/Recipes/RecipeAddContentEditorToDesktop";
 
 export class DesktopProxy extends LoggableBase {
-
   private __iframeHelper: FrameHelper;
 
   DTFrameProxyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
@@ -31,11 +32,12 @@ export class DesktopProxy extends LoggableBase {
   private DesktopFrameProxyBucket: DTFrameProxyBucket;
   private DomChangedEvent_Subject: DesktopProxyMutationEvent_Subject;
   private RecipeBasics: RecipeBasics;
+  private OwnerScWinProxy: IScWindowProxy;
 
-  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc) {
+  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, OwnerScWinProxy: IScWindowProxy) {
     super(logger);
-
     this.Logger.InstantiateStart(DesktopProxy.name);
+
     if (associatedDoc) {
       this.AssociatedDoc = associatedDoc;
       this.RecipeBasics = new RecipeBasics(this.Logger);
@@ -43,10 +45,12 @@ export class DesktopProxy extends LoggableBase {
       this.Logger.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
     }
 
-    this.Logger.InstantiateEnd(DesktopProxy.name);
-  } 
+    this.OwnerScWinProxy = OwnerScWinProxy;
 
-  async PublishItem():Promise<void> {
+    this.Logger.InstantiateEnd(DesktopProxy.name);
+  }
+
+  async PublishItem(): Promise<void> {
     let dtFrameProxy: DTFrameProxy = this.DesktopFrameProxyBucket.GetActiveFrame();
     if (dtFrameProxy) {
       await dtFrameProxy.ContentEditorProxy.PublishItem();
@@ -74,6 +78,16 @@ export class DesktopProxy extends LoggableBase {
 
       this.Logger.FuncEnd(this.OnReadyInitDesktopProxy.name);
     });
+  }
+
+  async AddContentEditorTabAsync(): Promise<void> {
+    try {
+      let recipe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.OwnerScWinProxy, this.AssociatedDoc);
+      recipe.Execute()
+        .catch((err) => this.Logger.ErrorAndThrow(this.AddContentEditorTabAsync.name, err));
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.AddContentEditorTabAsync.name, err);
+    }
   }
 
   OnDTFrameProxyMutationEvent(frameProxyMutatationEvent_Payload: IDTFrameProxyMutationEvent_Payload) {
@@ -155,8 +169,6 @@ export class DesktopProxy extends LoggableBase {
     return this.AssociatedDoc;
   }
 
-
-
   private GetIframeHelper(): FrameHelper {
     if (this.__iframeHelper == null) {
       this.__iframeHelper = new FrameHelper(this.Logger);
@@ -209,8 +221,7 @@ export class DesktopProxy extends LoggableBase {
           for (var idx = 0; idx < stateOfDesktop.StateOfDTFrames.length; idx++) {
             let stateOfFrame: IDataStateOfDTFrame = stateOfDesktop.StateOfDTFrames[idx];
 
-            this.Logger.ErrorAndThrow(this.SetStateOfDesktop.name, 'fix null');
-            var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent, null);
+            var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent, this.OwnerScWinProxy);
 
             //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
             await recipe.Execute()

@@ -6,7 +6,7 @@ export interface IHindSiteScUiProxy {
   GetStateOfSitecoreWindow(Manual: SnapShotFlavor);
   OnReadyInitScWindowManager(): any;
   RaiseToastNotification(arg0: string): any;
-  AddCETab(commandData: IApiCallPayload): Promise<void>
+  AddCETabAsync(commandData: IApiCallPayload): Promise<void>
   AdminB(commandData: IApiCallPayload);
   GetStateOfScWindow();
   OpenContentEditor();

@@ -49,37 +49,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecipeAddNewContentEditorToDesktop = exports.RecipeAdminB = void 0;
+exports.RecipeAddNewContentEditorToDesktop = void 0;
 var RecipeBasics_1 = require("../../../../Shared/scripts/Classes/RecipeBasics");
 var InjectConst_1 = require("../../../../Shared/scripts/Interfaces/InjectConst");
 var FrameHelper_1 = require("../../Helpers/FrameHelper");
 var _ApiRecipeBase_1 = require("./__RecipeBase/_ApiRecipeBase");
-var RecipeAdminB = /** @class */ (function (_super) {
-    __extends(RecipeAdminB, _super);
-    function RecipeAdminB(logger, apiCallPayload, targetDoc, ceButtonTabAgent, scWinProxy) {
-        var _this = _super.call(this, logger) || this;
-        _this.Logger.InstantiateStart(RecipeAdminB.name);
-        _this.Logger.InstantiateEnd(RecipeAdminB.name);
-        return _this;
-    }
-    RecipeAdminB.prototype.Execute = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                reject('not implemented');
-                return [2 /*return*/];
-            });
-        }); });
-    };
-    ;
-    return RecipeAdminB;
-}(_ApiRecipeBase_1._ApiRecipeBase));
-exports.RecipeAdminB = RecipeAdminB;
 var RecipeAddNewContentEditorToDesktop = /** @class */ (function (_super) {
     __extends(RecipeAddNewContentEditorToDesktop, _super);
-    function RecipeAddNewContentEditorToDesktop(logger, apiPayload, scWinProxy) {
+    function RecipeAddNewContentEditorToDesktop(logger, scWinProxy, targetDoc) {
         var _this = _super.call(this, logger) || this;
         _this.Logger.InstantiateStart(RecipeAddNewContentEditorToDesktop.name);
+        _this.TargetDoc = targetDoc;
         _this.Logger.InstantiateEnd(RecipeAddNewContentEditorToDesktop.name);
         return _this;
     }
@@ -91,6 +71,7 @@ var RecipeAddNewContentEditorToDesktop = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.Logger.IfNullOrUndefinedThrow(RecipeAddNewContentEditorToDesktop.name, this.TargetDoc);
                         frameHelper = new FrameHelper_1.FrameHelper(this.Logger);
                         recipeBasics = new RecipeBasics_1.RecipeBasics(this.Logger);
                         allIframeDataAtBeginning = frameHelper.GetIFramesFromDataOneDoc(this.TargetDoc);

@@ -50,9 +50,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipeRestoreFrameOnDesktop = void 0;
+var MiscAgent_1 = require("../../../../Content/scripts/Agents/MiscAgent");
 var LoggableBase_1 = require("../../../../Shared/scripts/LoggableBase");
 var RecipeAddContentEditorToDesktop_1 = require("./RecipeAddContentEditorToDesktop");
-var MiscAgent_1 = require("../../../../Content/scripts/Agents/MiscAgent");
 var RecipeRestoreFrameOnDesktop = /** @class */ (function (_super) {
     __extends(RecipeRestoreFrameOnDesktop, _super);
     function RecipeRestoreFrameOnDesktop(logger, targetDoc, dataStateOfFrame, ceButtonTabAgent, scWinProxy) {
@@ -117,8 +117,7 @@ var RecipeRestoreFrameOnDesktop = /** @class */ (function (_super) {
                                 case 0:
                                     this.Logger.FuncStart(this.RunOneChain.name);
                                     if (!this.MiscAgent.NotNullOrUndefined([this.TargetDoc, this.DataStateOfFrame], this.RunOneChain.name)) return [3 /*break*/, 2];
-                                    this.Logger.ErrorAndThrow(this.RunOneChain.name, 'fix null');
-                                    recipeAddCe = new RecipeAddContentEditorToDesktop_1.RecipeAddNewContentEditorToDesktop(this.Logger, null, this.ScWinProxy);
+                                    recipeAddCe = new RecipeAddContentEditorToDesktop_1.RecipeAddNewContentEditorToDesktop(this.Logger, this.ScWinProxy, this.TargetDoc);
                                     return [4 /*yield*/, recipeAddCe.Execute()
                                             .then(function (result) { return dtFrameProxy = result; })
                                             .then(function () { return dtFrameProxy.OnReadyInitDTFrameProxy(); })

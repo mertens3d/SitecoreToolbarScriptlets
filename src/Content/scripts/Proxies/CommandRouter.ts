@@ -17,25 +17,29 @@ import { ScUiManager } from "../../../HindSiteScUiProxy/scripts/Managers/Sitecor
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
+import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 
 export class CommandRouter extends LoggableBase {
-  private ContentCommandRunner: InternalCommandRunner;
-  private HindSiteScWindowApi: IHindSiteScUiProxy;
+  private InternalCommandRunner: InternalCommandRunner;
+  private ScUiProxy: IHindSiteScUiProxy;
   private ToastAgent: IToastAgent;
   private ScUiMan: ScUiManager;
   private AtticAgent: IContentAtticAgent;
   private SettingsAgent: ISettingsAgent;
   private AutoSnapShotAgent: AutoSnapShotAgent;
 
-  constructor(logger: ILoggerAgent, internalCommandRunner: InternalCommandRunner, hindSiteScWindowApi: IHindSiteScUiProxy,toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent,) {
+  constructor(logger: ILoggerAgent, scUiProxy: IHindSiteScUiProxy,toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent,) {
     super(logger);
-    this.ContentCommandRunner = internalCommandRunner;
     this.ToastAgent = toastAgent;
     this.ScUiMan = scUiMan;
-    this.HindSiteScWindowApi = hindSiteScWindowApi;
+    this.ScUiProxy = scUiProxy;
     this.AtticAgent = atticAgent;
     this.SettingsAgent = settingsAgent;
     this.AutoSnapShotAgent = autoSnapShotAgent;
+
+
+    this.InternalCommandRunner = new InternalCommandRunner(this.Logger, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy);
+
   }
 
   private ExecuteInternalCommand(commandToExecute: Function, messageFromController: IMessageControllerToContent): Promise<void> {
@@ -46,6 +50,17 @@ export class CommandRouter extends LoggableBase {
 
         commandParams.TargetSnapShotId = messageFromController.StateOfPopUI.SelectSnapShotId;
         commandParams.NewNickname = messageFromController.StateOfPopUI.NewNickName;
+        let dependancies: ICommandDependancies = {
+          AtticAgent : this.AtticAgent,
+          AutoSnapShotAgent: this.AutoSnapShotAgent,
+          Logger: this.Logger,
+          ScUiProxy: this.ScUiProxy,
+         
+        }
+
+        await commandToExecute.bind(this.InternalCommandRunner)(commandParams, dependancies)
+          .then(() => resolve())
+          .catch((err) => reject(this.ExecuteInternalCommand.name + ' | ' + err));
       }
 
       this.Logger.FuncEnd(this.ExecuteInternalCommand.name);
@@ -72,13 +87,13 @@ export class CommandRouter extends LoggableBase {
 
       if (commandData.CommandType == CommandType.Api) {
         await this.ExecuteApiCommand(commandData.commandToExecute, msgFlag)
-          .then(() => this.HindSiteScWindowApi.RaiseToastNotification('Completed'))
+          .then(() => this.ScUiProxy.RaiseToastNotification('Completed'))
           .then(() => resolve())
           .catch((err) => reject(err));
       }
       else if (commandData.CommandType = CommandType.ContentInternal) {
         await this.ExecuteInternalCommand(commandData.commandToExecute, messageFromController)
-          .then(() => this.HindSiteScWindowApi.RaiseToastNotification('Completed'))
+          .then(() => this.ScUiProxy.RaiseToastNotification('Completed'))
           .then(() => resolve())
           .catch((err) => reject(err));
       }
@@ -117,63 +132,63 @@ export class CommandRouter extends LoggableBase {
     switch (msgFlag) {
       case MsgFlag.ReqAddCETab:
         commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.HindSiteScWindowApi.AddCETab;
+        commandData.commandToExecute = this.ScUiProxy.AddCETabAsync;
         break;
 
       case MsgFlag.ReqUpdateNickName:
 
         commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.ContentCommandRunner.SetNickName;
+        commandData.commandToExecute = this.InternalCommandRunner.SetNickName;
         break;
 
       case MsgFlag.ReqAdminB:
         commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.HindSiteScWindowApi.AdminB;
+        commandData.commandToExecute = this.ScUiProxy.AdminB;
         break;
 
       case MsgFlag.Ping:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ContentCommandRunner.Ping;
+        commandData.CommandType = CommandType.ContentInternal;
+        commandData.commandToExecute = this.InternalCommandRunner.Ping;
         break;
 
       case MsgFlag.ReqOpenCE:
         commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.HindSiteScWindowApi.OpenContentEditor;
+        commandData.commandToExecute = this.ScUiProxy.OpenContentEditor;
         break;
 
       case MsgFlag.ReqToggleFavorite:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ContentCommandRunner.ToggleFavorite;
+        commandData.CommandType = CommandType.ContentInternal;
+        commandData.commandToExecute = this.InternalCommandRunner.ToggleFavorite;
         break;
 
       case MsgFlag.ReqQuickPublish:
         commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.HindSiteScWindowApi.PublischActiveCE;
+        commandData.commandToExecute = this.ScUiProxy.PublischActiveCE;
         break;
 
       case MsgFlag.ReqSetStateOfSitecoreSameWindow:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ContentCommandRunner.SetStateOfSitecoreWindow;
+        commandData.CommandType = CommandType.ContentInternal;
+        commandData.commandToExecute = this.InternalCommandRunner.SetStateOfSitecoreWindow;
         break;
 
       case MsgFlag.ReqToggleCompactCss:
         commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.HindSiteScWindowApi.ToggleCompactCss;
+        commandData.commandToExecute = this.ScUiProxy.ToggleCompactCss;
         break;
 
       case MsgFlag.ReqTakeSnapShot:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ContentCommandRunner.SaveWindowState;
+        commandData.CommandType = CommandType.ContentInternal;
+        commandData.commandToExecute = this.InternalCommandRunner.SaveWindowState;
         break;
 
       case MsgFlag.ReqRemoveFromStorage:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ContentCommandRunner.RemoveSnapShot;
+        commandData.CommandType = CommandType.ContentInternal;
+        commandData.commandToExecute = this.InternalCommandRunner.RemoveSnapShot;
         break;
 
       case MsgFlag.ReqDebugAutoSnapShot:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ContentCommandRunner.DebugForceAutoSnapShot;
+        commandData.CommandType = CommandType.ContentInternal;
+        commandData.commandToExecute = this.InternalCommandRunner.DebugForceAutoSnapShot;
         break;
 
       default:

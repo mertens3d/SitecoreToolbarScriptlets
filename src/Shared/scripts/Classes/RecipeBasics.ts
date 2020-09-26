@@ -155,8 +155,8 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
   async WaitForNewIframeNative(allIframesBefore: HTMLIFrameElement[], dateOneDoc: IDataOneDoc): Promise<HTMLIFrameElement> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframeNative.name);
-      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, allIframesBefore);
-      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, dateOneDoc);
+      this.Logger.IfNullOrUndefinedThrow(this.WaitForNewIframe.name, allIframesBefore);
+      this.Logger.IfNullOrUndefinedThrow(this.WaitForNewIframe.name, dateOneDoc);
 
       var toReturn: HTMLIFrameElement = null;
 
@@ -192,8 +192,8 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     return new Promise<_BaseFrameProxy>(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframe.name);
       this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);
-      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, allIframesBefore);
-      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, targetDoc);
+      this.Logger.IfNullOrUndefinedThrow(this.WaitForNewIframe.name, allIframesBefore);
+      this.Logger.IfNullOrUndefinedThrow(this.WaitForNewIframe.name, targetDoc);
 
       var toReturn: _BaseFrameProxy = null;
 

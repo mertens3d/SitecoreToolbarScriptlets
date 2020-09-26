@@ -63,9 +63,10 @@ var DTFrameProxyBucket_1 = require("./DTFrameProxyBucket");
 var DesktopProxyMutationEvent_Observer_1 = require("./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer");
 var DesktopProxyMutationEvent_Subject_1 = require("./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject");
 var DTFrameProxyMutationEvent_Observer_1 = require("./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer");
+var RecipeAddContentEditorToDesktop_1 = require("../../../ContentApi/Recipes/RecipeAddContentEditorToDesktop");
 var DesktopProxy = /** @class */ (function (_super) {
     __extends(DesktopProxy, _super);
-    function DesktopProxy(logger, associatedDoc) {
+    function DesktopProxy(logger, associatedDoc, OwnerScWinProxy) {
         var _this = _super.call(this, logger) || this;
         _this.Logger.InstantiateStart(DesktopProxy.name);
         if (associatedDoc) {
@@ -75,6 +76,7 @@ var DesktopProxy = /** @class */ (function (_super) {
         else {
             _this.Logger.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
         }
+        _this.OwnerScWinProxy = OwnerScWinProxy;
         _this.Logger.InstantiateEnd(DesktopProxy.name);
         return _this;
     }
@@ -125,6 +127,23 @@ var DesktopProxy = /** @class */ (function (_super) {
                             }
                         });
                     }); })];
+            });
+        });
+    };
+    DesktopProxy.prototype.AddContentEditorTabAsync = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var recipe;
+            var _this = this;
+            return __generator(this, function (_a) {
+                try {
+                    recipe = new RecipeAddContentEditorToDesktop_1.RecipeAddNewContentEditorToDesktop(this.Logger, this.OwnerScWinProxy, this.AssociatedDoc);
+                    recipe.Execute()
+                        .catch(function (err) { return _this.Logger.ErrorAndThrow(_this.AddContentEditorTabAsync.name, err); });
+                }
+                catch (err) {
+                    this.Logger.ErrorAndThrow(this.AddContentEditorTabAsync.name, err);
+                }
+                return [2 /*return*/];
             });
         });
     };
@@ -284,8 +303,7 @@ var DesktopProxy = /** @class */ (function (_super) {
                                 case 1:
                                     if (!(idx < stateOfDesktop.StateOfDTFrames.length)) return [3 /*break*/, 4];
                                     stateOfFrame = stateOfDesktop.StateOfDTFrames[idx];
-                                    this.Logger.ErrorAndThrow(this.SetStateOfDesktop.name, 'fix null');
-                                    recipe = new RecipeRestoreDesktop_1.RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent, null);
+                                    recipe = new RecipeRestoreDesktop_1.RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent, this.OwnerScWinProxy);
                                     //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
                                     return [4 /*yield*/, recipe.Execute()
                                             .then(function () { return resolve(); })

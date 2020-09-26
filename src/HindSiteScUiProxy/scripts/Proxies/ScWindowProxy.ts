@@ -57,7 +57,7 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
   }
 
   Instantiate() {
-    this.DesktopProxy = new DesktopProxy(this.Logger, this.GetTopLevelDoc());
+    this.DesktopProxy = new DesktopProxy(this.Logger, this.GetTopLevelDoc(), this);
     this.ContentEditorProxy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger);
   }
 

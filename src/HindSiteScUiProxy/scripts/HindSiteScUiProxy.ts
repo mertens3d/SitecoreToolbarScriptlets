@@ -18,7 +18,7 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProx
   private ScWindowProxy: IScWindowProxy;
   private ScUrlAgent: IScUrlAgent;
   private TopLevelDoc: IDataOneDoc;
-    ToastAgent: ToastAgent;
+  ToastAgent: ToastAgent;
 
   constructor(logger: ILoggerAgent, scUiMan: ScUiManager, scUrlAgent: IScUrlAgent, TopDoc: IDataOneDoc, toastAgent: ToastAgent) {
     super(logger);
@@ -75,13 +75,11 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProx
   //  });
   //}
 
-  AddCETab(apiCallPayload: IApiCallPayload): Promise<void> {
+  AddCETabAsync(apiCallPayload: IApiCallPayload): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await new RecipeAddNewContentEditorToDesktop(this.Logger, apiCallPayload, this.ScWindowProxy).Execute()
-        .then(() => {
-          resolve();
-        })
-        .catch((err) => reject(err));
+      this.ScWindowProxy.DesktopProxy.AddContentEditorTabAsync()
+        .then(() => resolve())
+        .catch((err) => reject())
     });
   }
 
@@ -112,7 +110,6 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProx
   OpenContentEditor() {
     throw new Error("Method not implemented.");
   }
-
 
   AdminB(commandData: IApiCallPayload) {
     this.ScUiMan.AdminB(this.TopLevelDoc, null);

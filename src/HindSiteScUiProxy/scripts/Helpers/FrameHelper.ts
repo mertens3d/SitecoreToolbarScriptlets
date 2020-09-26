@@ -19,19 +19,24 @@ export class FrameHelper extends LoggableBase {
 
   GetIFramesFromDataOneDoc(targetDoc: IDataOneDoc): HTMLIFrameElement[] {
     let toReturnIframeAr: HTMLIFrameElement[] = [];
-    var queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
-    if (!queryResults) {
-      queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
-    }
+    if (! this.Logger.IfNullOrUndefinedThrow(this.GetIFramesFromDataOneDoc.name, targetDoc)) {
+      var queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
-    if (queryResults) {
-      for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
-        var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>queryResults[ifrIdx];
-        if (iframeElem) {
-          toReturnIframeAr.push(iframeElem);
+      if (!queryResults) {
+        queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
+      }
+
+      if (queryResults) {
+        for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
+          var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>queryResults[ifrIdx];
+          if (iframeElem) {
+            toReturnIframeAr.push(iframeElem);
+          }
         }
       }
+    } else {
+      this.Logger.ErrorAndThrow(this.GetIFramesFromDataOneDoc.name, 'null check');
     }
     this.Logger.LogVal('found iframes count', toReturnIframeAr.length);
 
@@ -55,7 +60,6 @@ export class FrameHelper extends LoggableBase {
         .catch((err) => reject(this.GetIFramesAsBaseFrameProxies.name + ' | ' + err));
     });
   }
-
 
   async GetIFramesAsDTFrameProxies(dataOneDoc: IDataOneDoc): Promise<DTFrameProxy[]> {
     return new Promise((resolve, reject) => {

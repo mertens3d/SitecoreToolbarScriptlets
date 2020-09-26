@@ -64,17 +64,22 @@ var FrameHelper = /** @class */ (function (_super) {
     }
     FrameHelper.prototype.GetIFramesFromDataOneDoc = function (targetDoc) {
         var toReturnIframeAr = [];
-        var queryResults = targetDoc.ContentDoc.querySelectorAll(InjectConst_1.ContentConst.Const.Selector.SC.IframeContent.sc920);
-        if (!queryResults) {
-            queryResults = targetDoc.ContentDoc.querySelectorAll(InjectConst_1.ContentConst.Const.Selector.SC.IframeContent.sc820);
-        }
-        if (queryResults) {
-            for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
-                var iframeElem = queryResults[ifrIdx];
-                if (iframeElem) {
-                    toReturnIframeAr.push(iframeElem);
+        if (!this.Logger.IfNullOrUndefinedThrow(this.GetIFramesFromDataOneDoc.name, targetDoc)) {
+            var queryResults = targetDoc.ContentDoc.querySelectorAll(InjectConst_1.ContentConst.Const.Selector.SC.IframeContent.sc920);
+            if (!queryResults) {
+                queryResults = targetDoc.ContentDoc.querySelectorAll(InjectConst_1.ContentConst.Const.Selector.SC.IframeContent.sc820);
+            }
+            if (queryResults) {
+                for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
+                    var iframeElem = queryResults[ifrIdx];
+                    if (iframeElem) {
+                        toReturnIframeAr.push(iframeElem);
+                    }
                 }
             }
+        }
+        else {
+            this.Logger.ErrorAndThrow(this.GetIFramesFromDataOneDoc.name, 'null check');
         }
         this.Logger.LogVal('found iframes count', toReturnIframeAr.length);
         return toReturnIframeAr;

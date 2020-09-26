@@ -35,6 +35,6 @@ export interface ILoggerAgent {
   MarkerC();
   MarkerD();
   SectionMarker(arg0: string);
-  ThrowIfNullOrUndefined(arg0: string, allAgents: any);
-  ThrowIfNullOrUndefined(title: string, dataToCheck: any): void;
+  IfNullOrUndefinedThrow(arg0: string, allAgents: any);
+  IfNullOrUndefinedThrow(title: string, dataToCheck: any): void;
 }

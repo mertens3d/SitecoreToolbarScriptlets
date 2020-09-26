@@ -62,11 +62,34 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log("");
   }
 
-  ThrowIfNullOrUndefined(title: string, subject: any): void {
-    if (!this.IsNotNullOrUndefinedBool(title, subject)) {
-      throw 'Failed';
+  //IsNullOrUndefinedThrow(title: string, subject: any): void {
+  //  if (!this.IsNotNullOrUndefinedBool(title, subject)) {
+  //    throw 'Failed';
+  //  }
+  //}
+
+  IfNullOrUndefinedThrow(title: string, testSubject: any, ): boolean
+  IfNullOrUndefinedThrow(title: string, testSubject: any[] ): boolean
+  IfNullOrUndefinedThrow(title: string, testSubject: any | any[]): boolean {
+    let toReturn: boolean = false;
+    try {
+      if (testSubject instanceof Array) {
+        (<any[]>testSubject).forEach((testSubject: any) => toReturn = toReturn || this.IfNullOrUndefinedThrow(testSubject, title));
+      } else {
+        toReturn = (typeof testSubject === 'undefined' || testSubject === null);
+      }
+    } catch (err) {
+      console.log(err)
     }
+
+    if (toReturn) {
+      this.ErrorAndThrow(title, 'Failed Null check');
+    }
+
+    return toReturn;
   }
+
+
 
   IsNotNullOrUndefinedBool(title, subject): boolean {
     var toReturn: boolean = false;
@@ -157,7 +180,7 @@ export class LoggerAgent implements ILoggerAgent {
   }
 
   async Log(text, optionalValue: string = '', hasPrefix = false) {
-    if (this.HasWriters) { 
+    if (this.HasWriters) {
       var indent = '  ';
       this.MaxIndent = 10;
 
@@ -318,6 +341,8 @@ export class LoggerAgent implements ILoggerAgent {
       this.LogVal(title, 'Is Not Null');
     }
   }
+
+ 
 
   IsNullOrUndefined(subject): string {
     var toReturn = '{unknown}';
