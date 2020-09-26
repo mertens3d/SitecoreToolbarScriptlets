@@ -73,11 +73,13 @@ export class CommandRouter extends LoggableBase {
       if (commandData.CommandType == CommandType.Api) {
         await this.ExecuteApiCommand(commandData.commandToExecute, msgFlag)
           .then(() => this.HindSiteScWindowApi.RaiseToastNotification('Completed'))
+          .then(() => resolve())
           .catch((err) => reject(err));
       }
       else if (commandData.CommandType = CommandType.ContentInternal) {
         await this.ExecuteInternalCommand(commandData.commandToExecute, messageFromController)
           .then(() => this.HindSiteScWindowApi.RaiseToastNotification('Completed'))
+          .then(() => resolve())
           .catch((err) => reject(err));
       }
 

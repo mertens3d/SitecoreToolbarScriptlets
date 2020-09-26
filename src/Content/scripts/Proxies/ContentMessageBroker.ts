@@ -140,6 +140,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
 
   ConstructResponse(msgFlag: MsgFlag): Promise<MsgContentToController> {
     return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.ConstructResponse.name);
       let response = new MsgContentToController(MsgFlag.Unknown);
 
       await this.HindSiteScWindowApi.GetStateOfScWindow()
@@ -150,12 +151,12 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
           response.Payload.LastReqFriendly = MsgFlag[msgFlag];
           response.Payload.ErrorStack = response.Payload.ErrorStack.concat(result.ErrorStack);
         })
-
         .then(() => this.AtticAgent.GetStateOfStorageSnapShots())
         .then((result: IDataStateOfStorageSnapShots) => response.Payload.StateOfStorageSnapShots = result)
-
         .then(() => resolve(response))
         .catch((err) => reject(err));
+
+      this.Logger.FuncEnd(this.ConstructResponse.name);
     });
   }
 }
