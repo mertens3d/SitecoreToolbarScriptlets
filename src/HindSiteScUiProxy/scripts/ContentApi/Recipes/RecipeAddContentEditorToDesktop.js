@@ -49,69 +49,69 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecipeChangeNickName = void 0;
-var SnapShotFlavor_1 = require("../../../../../Shared/scripts/Enums/SnapShotFlavor");
-var __RecipeBase_1 = require("../__RecipeBase/__RecipeBase");
-var StaticHelpers_1 = require("../../../../../Shared/scripts/Classes/StaticHelpers");
-var RecipeChangeNickName = /** @class */ (function (_super) {
-    __extends(RecipeChangeNickName, _super);
-    function RecipeChangeNickName(commandData) {
-        var _this = _super.call(this, commandData) || this;
-        _this.NewNickname = commandData.NewNickName;
-        _this.TargetSnapShotId = commandData.TargetSnapShotId;
-        _this.AtticAgent = commandData.AtticAgent;
-        if (StaticHelpers_1.StaticHelpers.IsNullOrUndefined([_this.NewNickname, _this.TargetSnapShotId, _this.AtticAgent])) {
-            _this.Logger.ErrorAndThrow(RecipeChangeNickName.name, 'Null check');
-        }
+exports.RecipeAddNewContentEditorToDesktop = exports.RecipeAdminB = void 0;
+var RecipeBasics_1 = require("../../../../Shared/scripts/Classes/RecipeBasics");
+var InjectConst_1 = require("../../../../Shared/scripts/Interfaces/InjectConst");
+var FrameHelper_1 = require("../../Helpers/FrameHelper");
+var _ApiRecipeBase_1 = require("./__RecipeBase/_ApiRecipeBase");
+var RecipeAdminB = /** @class */ (function (_super) {
+    __extends(RecipeAdminB, _super);
+    function RecipeAdminB(logger, apiCallPayload, targetDoc, ceButtonTabAgent, scWinProxy) {
+        var _this = _super.call(this, logger, apiCallPayload, scWinProxy) || this;
+        _this.Logger.InstantiateStart(RecipeAdminB.name);
+        _this.Logger.InstantiateEnd(RecipeAdminB.name);
         return _this;
     }
-    RecipeChangeNickName.prototype.Execute = function () {
+    RecipeAdminB.prototype.Execute = function () {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                this.UpdateNickname()
-                    .then(function () { return resolve(); })
-                    .catch(function (err) { return reject(err); });
+                reject('not implemented');
                 return [2 /*return*/];
             });
         }); });
     };
-    RecipeChangeNickName.prototype.UpdateNickname = function () {
+    ;
+    return RecipeAdminB;
+}(_ApiRecipeBase_1._ApiRecipeBase));
+exports.RecipeAdminB = RecipeAdminB;
+var RecipeAddNewContentEditorToDesktop = /** @class */ (function (_super) {
+    __extends(RecipeAddNewContentEditorToDesktop, _super);
+    function RecipeAddNewContentEditorToDesktop(logger, apiPayload, scWinProxy) {
+        var _this = _super.call(this, logger, apiPayload, scWinProxy) || this;
+        _this.Logger.InstantiateStart(RecipeAddNewContentEditorToDesktop.name);
+        _this.Logger.InstantiateEnd(RecipeAddNewContentEditorToDesktop.name);
+        return _this;
+    }
+    RecipeAddNewContentEditorToDesktop.prototype.Execute = function () {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            var storageMatch;
+            var allIframeDataAtBeginning, dtframeProxy, frameHelper, recipeBasics;
+            var _this = this;
             return __generator(this, function (_a) {
-                this.Logger.FuncStart(this.UpdateNickname.name);
-                if (this.TargetSnapShotId) {
-                    if (this.NewNickname) {
-                        storageMatch = this.AtticAgent.GetFromStorageBySnapShotId(this.TargetSnapShotId);
-                        if (storageMatch) {
-                            if ((storageMatch.Meta.Flavor === SnapShotFlavor_1.SnapShotFlavor.Autosave
-                                ||
-                                    (storageMatch.Meta.Flavor === SnapShotFlavor_1.SnapShotFlavor.Unknown))) {
-                                storageMatch.Meta.Flavor = SnapShotFlavor_1.SnapShotFlavor.Manual;
-                            }
-                            storageMatch.Friendly.NickName = this.NewNickname; // this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
-                        }
-                        else {
-                            reject(this.UpdateNickname.name + ' - No storage match');
-                        }
-                        this.AtticAgent.WriteStateOfSitecoreToStorage(storageMatch);
-                        resolve();
-                    }
-                    else {
-                        reject(this.UpdateNickname.name + ' - something was missing');
-                    }
+                switch (_a.label) {
+                    case 0:
+                        frameHelper = new FrameHelper_1.FrameHelper(this.Logger);
+                        recipeBasics = new RecipeBasics_1.RecipeBasics(this.Logger);
+                        allIframeDataAtBeginning = frameHelper.GetIFramesFromDataOneDoc(this.TargetDoc);
+                        return [4 /*yield*/, recipeBasics.RaceWaitAndClick(InjectConst_1.ContentConst.Const.Selector.SC.scStartButton, this.TargetDoc)
+                                .then(function () { return recipeBasics.WaitForThenClick([InjectConst_1.ContentConst.Const.Selector.SC.StartMenuLeftOption], _this.TargetDoc); })
+                                .then(function () { return recipeBasics.WaitForNewIframeContentEditor(allIframeDataAtBeginning, _this.TargetDoc); })
+                                .then(function (result) { return dtframeProxy = result; })
+                                .then(function () { return dtframeProxy.OnReadyInitDTFrameProxy(); })
+                                .then(function (result) {
+                                return _this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result);
+                            })
+                                .then(function () { return resolve(dtframeProxy); })
+                                .catch(function (err) { return reject(_this.Execute.name + ' ' + err); })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
                 }
-                else {
-                    reject(this.UpdateNickname.name + ' no payload or id');
-                }
-                this.Logger.FuncEnd(this.UpdateNickname.name);
-                return [2 /*return*/];
             });
         }); });
     };
-    return RecipeChangeNickName;
-}(__RecipeBase_1.__RecipeBase));
-exports.RecipeChangeNickName = RecipeChangeNickName;
-//# sourceMappingURL=RecipeChangeNickName.js.map
+    return RecipeAddNewContentEditorToDesktop;
+}(_ApiRecipeBase_1._ApiRecipeBase));
+exports.RecipeAddNewContentEditorToDesktop = RecipeAddNewContentEditorToDesktop;
+//# sourceMappingURL=RecipeAddContentEditorToDesktop.js.map

@@ -6,6 +6,7 @@ export class ToastAgent implements IToastAgent {
   private Logger: ILoggerAgent;
   private classSlideUp: string = 'slide-up';
   private classSlideDown: string = 'slide-down';
+
   constructor(loggerAgent: ILoggerAgent) {
     this.Logger = loggerAgent;
   }

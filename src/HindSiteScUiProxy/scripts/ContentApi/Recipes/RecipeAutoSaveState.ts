@@ -1,7 +1,7 @@
 ﻿import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IScWindowManager } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { IScWindowProxy } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IDataStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor";
 import { IDataStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfScContentTreeNode } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
@@ -10,27 +10,28 @@ import { IDataStateOfTree } from "../../../../Shared/scripts/Interfaces/Data/Sta
 import { IDataSitecoreWindowStates } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
 import { LoggableBase } from "../../Managers/LoggableBase";
 import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
+import { HindSiteScUiProxy } from "../../HindSiteScUiProxy";
+import { IHindSiteScWindowApi } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 
 export class RecipeAutoSaveState extends LoggableBase {
-  private ScWinMan: IScWindowManager;
+  private ScUiProxy: IHindSiteScWindowApi;
   private AtticAgent: IContentAtticAgent;
 
-  constructor(logger: ILoggerAgent, scWinMan: IScWindowManager, atticAgent: IContentAtticAgent) {
+  constructor(logger: ILoggerAgent, scUiProxy: IHindSiteScWindowApi, atticAgent: IContentAtticAgent) {
     super(logger);
-    this.ScWinMan = scWinMan;
+    this.ScUiProxy = scUiProxy;
     this.AtticAgent = atticAgent;
   }
 
   async ExecuteAsync(windowStatePrior: IDataStateOfSitecoreWindow): Promise<IDataStateOfSitecoreWindow> {
     return new Promise(async (resolve, reject) => {
-      this.ScWinMan.GetStateOfSitecoreWindow(SnapShotFlavor.Autosave)
+      this.ScUiProxy.GetStateOfSitecoreWindow(SnapShotFlavor.Autosave)
         .then((windowStateNew: IDataStateOfSitecoreWindow) => {
           if (!this.AreStateOfSitecoreWindowsEqual(windowStateNew, windowStatePrior)) {
             this.Logger.Log('states are different, save snap shot');
-            
+
             this.AtticAgent.WriteStateOfSitecoreToStorage(windowStateNew);
           } else {
-
             this.Logger.Log('states are same, no save');
           }
           resolve(windowStateNew);
@@ -56,7 +57,7 @@ export class RecipeAutoSaveState extends LoggableBase {
 
     toReturn = toReturn && (((stateOfTreeA === null) === (stateOfTreeB === null)));
 
-    if (stateOfTreeA ) {
+    if (stateOfTreeA) {
       toReturn = toReturn && (stateOfTreeA.ActiveTreeNodeIndex === stateOfTreeB.ActiveTreeNodeIndex);
 
       for (var idx = 0; idx < stateOfTreeA.StateOfTreeNodes.length; idx++) {

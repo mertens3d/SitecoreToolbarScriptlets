@@ -51,25 +51,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DesktopProxy = void 0;
 var DefaultStateOfDesktop_1 = require("../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop");
-var RecipeRestoreDesktop_1 = require("../../../ContentApi/Recipes/RecipeRestoreDesktop/RecipeRestoreDesktop");
+var RecipeBasics_1 = require("../../../../../Shared/scripts/Classes/RecipeBasics");
+var StaticHelpers_1 = require("../../../../../Shared/scripts/Classes/StaticHelpers");
+var InitResultsDesktopProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy");
+var InitResultsDTFrameProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy");
+var RecipeRestoreDesktop_1 = require("../../../ContentApi/Recipes/RecipeRestoreDesktop");
 var FrameHelper_1 = require("../../../Helpers/FrameHelper");
 var LoggableBase_1 = require("../../../Managers/LoggableBase");
 var DesktopStartBarProxy_1 = require("../DesktopStartBarProxy/DesktopStartBarProxy");
+var DTFrameProxyBucket_1 = require("./DTFrameProxyBucket");
 var DesktopProxyMutationEvent_Observer_1 = require("./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer");
 var DesktopProxyMutationEvent_Subject_1 = require("./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject");
-var RecipeBasics_1 = require("../../../../../Shared/scripts/Classes/RecipeBasics");
-var DTFrameProxyBucket_1 = require("./DTFrameProxyBucket");
 var DTFrameProxyMutationEvent_Observer_1 = require("./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer");
-var InitResultsDesktopProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy");
-var InitResultsDTFrameProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy");
-var StaticHelpers_1 = require("../../../../../Shared/scripts/Classes/StaticHelpers");
 var DesktopProxy = /** @class */ (function (_super) {
     __extends(DesktopProxy, _super);
-    function DesktopProxy(logger, associatedDoc, settingsAgent) {
+    function DesktopProxy(logger, associatedDoc) {
         var _this = _super.call(this, logger) || this;
         _this.Logger.InstantiateStart(DesktopProxy.name);
         if (associatedDoc) {
-            _this.SettingsAgent = settingsAgent;
             _this.AssociatedDoc = associatedDoc;
             _this.RecipeBasics = new RecipeBasics_1.RecipeBasics(_this.Logger);
         }
@@ -95,7 +94,7 @@ var DesktopProxy = /** @class */ (function (_super) {
                                     this.DesktopFrameProxyBucket = new DTFrameProxyBucket_1.DTFrameProxyBucket(this.Logger);
                                     return [4 /*yield*/, this.OnReadyPopulateDTFrameProxyBucket()
                                             .then(function () {
-                                            _this.DesktopStartBarAgent = new DesktopStartBarProxy_1.DesktopStartBarProxy(_this.Logger, _this, _this.SettingsAgent);
+                                            _this.DesktopStartBarAgent = new DesktopStartBarProxy_1.DesktopStartBarProxy(_this.Logger, _this);
                                             var self = _this;
                                             _this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject_1.DesktopProxyMutationEvent_Subject(self.Logger, _this.AssociatedDoc);
                                             _this.WireEvents();
@@ -138,9 +137,9 @@ var DesktopProxy = /** @class */ (function (_super) {
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, this.GetFrameHelper().GetIFramesAsBaseFrameProxies(this.AssociatedDoc)
                                 .then(function (frameProxies) {
-                                frameProxies.forEach(function (oneIframe) { return __awaiter(_this, void 0, void 0, function () {
+                                frameProxies.forEach(function (frameProxy) { return __awaiter(_this, void 0, void 0, function () {
                                     return __generator(this, function (_a) {
-                                        this.AddDTFrameProxyAsync(oneIframe);
+                                        this.AddDTFrameProxyAsync(frameProxy);
                                         return [2 /*return*/];
                                     });
                                 }); });
@@ -168,7 +167,7 @@ var DesktopProxy = /** @class */ (function (_super) {
     DesktopProxy.prototype.AddDTFrameProxyAsync = function (dtframeProxy) {
         var _this = this;
         var initResultFrameProxy = new InitResultsDTFrameProxy_1.InitResultsDTFrameProxy();
-        if (dtframeProxy && dtframeProxy.ContentEditorProxy && dtframeProxy.ContentEditorProxy.AssociatedDoc) {
+        if (!StaticHelpers_1.StaticHelpers.IsNullOrUndefined([dtframeProxy, dtframeProxy.ContentEditorProxy, dtframeProxy.ContentEditorProxy.AssociatedDoc])) {
             this.RecipeBasics.WaitForReadyNABFrameProxy(dtframeProxy)
                 .then(function () {
                 var result = _this.DesktopFrameProxyBucket.AddToDTFrameProxyBucket(dtframeProxy);
@@ -195,12 +194,6 @@ var DesktopProxy = /** @class */ (function (_super) {
     };
     DesktopProxy.prototype.GetAssociatedDoc = function () {
         return this.AssociatedDoc;
-    };
-    DesktopProxy.prototype.GetDtStartBarAgent = function () {
-        if (!this.__dtStartBarAgent) {
-            this.__dtStartBarAgent = new DesktopStartBarProxy_1.DesktopStartBarProxy(this.Logger, this, this.SettingsAgent);
-        }
-        return this.__dtStartBarAgent;
     };
     DesktopProxy.prototype.GetIframeHelper = function () {
         if (this.__iframeHelper == null) {
@@ -274,7 +267,8 @@ var DesktopProxy = /** @class */ (function (_super) {
                                 case 1:
                                     if (!(idx < stateOfDesktop.StateOfDTFrames.length)) return [3 /*break*/, 4];
                                     stateOfFrame = stateOfDesktop.StateOfDTFrames[idx];
-                                    recipe = new RecipeRestoreDesktop_1.RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent);
+                                    this.Logger.ErrorAndThrow(this.SetStateOfDesktop.name, 'fix null');
+                                    recipe = new RecipeRestoreDesktop_1.RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent, null);
                                     //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
                                     return [4 /*yield*/, recipe.Execute()
                                             .then(function () { return resolve(); })

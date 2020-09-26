@@ -1,5 +1,4 @@
-﻿import { LoggableBase } from '../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
-import { HindSiteSettingWrapper } from '../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper';
+﻿import { HindSiteSettingWrapper } from '../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper';
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { MenuCommandKey } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
@@ -37,6 +36,7 @@ import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/Feed
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
 import { UiCommandsManager } from '../UiCommandsManager';
 import { InputWithButtonModule } from '../../UiModules/ButtonModules/InputWithButtonModule';
+import { LoggableBase } from '../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
 
 export class UiModulesManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];

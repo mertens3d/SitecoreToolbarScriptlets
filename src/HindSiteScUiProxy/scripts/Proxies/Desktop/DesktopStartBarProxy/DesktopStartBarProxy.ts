@@ -1,27 +1,22 @@
 ﻿import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ISettingsAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { FrameHelper } from '../../../Helpers/FrameHelper';
 import { LoggableBase } from '../../../Managers/LoggableBase';
-import { ContentEditorProxy } from '../../ContentEditor/ContentEditorProxy/ContentEditorProxy';
+import { DTFrameProxy } from '../DesktopProxy/FrameProxies/DTFrameProxy';
 import { DesktopProxy } from '../DesktopProxy/DesktopProxy';
-import { ITreeMutationEvent_Payload } from '../DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
-import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
-import { TreeMutationEvent_Observer } from '../DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer';
 import { IDTFrameProxyMutationEvent_Payload } from '../DesktopProxy/Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
-import { DTFrameProxy } from '../../DTFrameProxy';
+import { ITreeMutationEvent_Payload } from '../DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
+import { TreeMutationEvent_Observer } from '../DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer';
+import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 
 export class DesktopStartBarProxy extends LoggableBase {
-  private CeProxies: ContentEditorProxy[] = [];
   private OwnerDesktopProxy: DesktopProxy;
-  private SettingsAgent: ISettingsAgent;
   private __statBarElem: HTMLElement;
   private __iframeHelper: FrameHelper;
 
-  constructor(logger: ILoggerAgent, ownerDesktopProxy: DesktopProxy, settingsAgent: ISettingsAgent) {
+  constructor(logger: ILoggerAgent, ownerDesktopProxy: DesktopProxy) {
     super(logger);
-    this.SettingsAgent = settingsAgent;
     this.Logger.InstantiateStart(DesktopStartBarProxy.name);
     this.OwnerDesktopProxy = ownerDesktopProxy;
 

@@ -49,35 +49,59 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecipeSaveStateManual = void 0;
-var __RecipeBase_1 = require("../__RecipeBase/__RecipeBase");
-var SnapShotFlavor_1 = require("../../../../../Shared/scripts/Enums/SnapShotFlavor");
-var RecipeSaveStateManual = /** @class */ (function (_super) {
-    __extends(RecipeSaveStateManual, _super);
-    function RecipeSaveStateManual(commandData) {
-        return _super.call(this, commandData) || this;
+exports.RecipeSetStateOfSitecoreWindow = void 0;
+var LoggableBase_1 = require("../../Managers/LoggableBase");
+var RecipeSetStateOfSitecoreWindow = /** @class */ (function (_super) {
+    __extends(RecipeSetStateOfSitecoreWindow, _super);
+    function RecipeSetStateOfSitecoreWindow(logger, topLevelDoc, scWinRecipeParts, oneDesktopMan, oneCEAgent, dataOneWindowStorage) {
+        var _this = _super.call(this, logger) || this;
+        _this.TopLevelDoc = topLevelDoc;
+        _this.ScWinRecipeParts = scWinRecipeParts;
+        _this.OneDesktopMan = oneDesktopMan;
+        _this.OneCeAgent = oneCEAgent;
+        _this.DataOneWindowStorage = dataOneWindowStorage;
+        return _this;
     }
-    RecipeSaveStateManual.prototype.Execute = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+    RecipeSetStateOfSitecoreWindow.prototype.Execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.ScWinMan.GetStateOfSitecoreWindow(SnapShotFlavor_1.SnapShotFlavor.Manual)
-                            .then(function (windowState) {
-                            _this.AtticAgent.WriteStateOfSitecoreToStorage(windowState);
-                            //todo - put back this.Logger.WarningAndContinue(this.Execute.name, 'empty ce ar - not writing to storage');
-                        })
-                            .then(function () { return resolve(); })
-                            .catch(function (err) { return reject(err); })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                        var targetDoc, err_1;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    this.Logger.FuncStart(this.Execute.name);
+                                    _a.label = 1;
+                                case 1:
+                                    _a.trys.push([1, 5, , 6]);
+                                    if (!this.DataOneWindowStorage) return [3 /*break*/, 4];
+                                    targetDoc = this.TopLevelDoc;
+                                    if (!targetDoc) return [3 /*break*/, 3];
+                                    return [4 /*yield*/, this.ScWinRecipeParts.SetStateOfScWin(this.DataOneWindowStorage, this.OneDesktopMan, this.OneCeAgent)
+                                            .then(function () { return resolve(); })
+                                            .catch(function (err) { return reject(err); })];
+                                case 2:
+                                    _a.sent();
+                                    return [3 /*break*/, 4];
+                                case 3:
+                                    reject(this.Execute.name + ' no target window');
+                                    _a.label = 4;
+                                case 4: return [3 /*break*/, 6];
+                                case 5:
+                                    err_1 = _a.sent();
+                                    reject(err_1);
+                                    return [3 /*break*/, 6];
+                                case 6:
+                                    this.Logger.FuncEnd(this.Execute.name);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
             });
-        }); });
+        });
     };
-    return RecipeSaveStateManual;
-}(__RecipeBase_1._ApiRecipeBase));
-exports.RecipeSaveStateManual = RecipeSaveStateManual;
-//# sourceMappingURL=RecipeSaveState.js.map
+    return RecipeSetStateOfSitecoreWindow;
+}(LoggableBase_1.LoggableBase));
+exports.RecipeSetStateOfSitecoreWindow = RecipeSetStateOfSitecoreWindow;
+//# sourceMappingURL=RecipeSetStateOfSitecoreWindow.js.map

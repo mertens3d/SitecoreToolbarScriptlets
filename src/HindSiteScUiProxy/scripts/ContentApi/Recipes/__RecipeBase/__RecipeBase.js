@@ -12,6 +12,7 @@ var _ApiRecipeBase = /** @class */ (function () {
         this.TargetDoc = commandData.TargetDoc;
         this.TargetConEdProxy = commandData.TargetCeProxy;
         this.AutoSnapShotAgent = commandData.AutoSnapShotAgent;
+        this.TopLevelDoc = commandData.TopLevelDoc;
     }
     return _ApiRecipeBase;
 }());

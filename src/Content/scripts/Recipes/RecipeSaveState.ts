@@ -5,27 +5,19 @@ import { IInternalCommandPayload } from "../../../Shared/scripts/Interfaces/ICom
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
 
-export class RecipeToggleFavorite extends _ContentRecipeBase implements ICommandRecipes {
-  constructor(logger: ILoggerAgent,  commandData: IInternalCommandPayload) {
+export class RecipeSaveStateManual extends _ContentRecipeBase implements ICommandRecipes {
+  constructor(logger: ILoggerAgent, commandData: IInternalCommandPayload) {
     super(logger, commandData);
   }
-
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      if (this.TargetSnapShotId) {
-        let result: IDataStateOfSitecoreWindow = this.AtticAgent.GetFromStorageBySnapShotId(this.TargetSnapShotId);
-
-        if (result.Meta.Flavor === SnapShotFlavor.Favorite) {
-          result.Meta.Flavor = SnapShotFlavor.Manual;
-        } else {
-          result.Meta.Flavor = SnapShotFlavor.Favorite;
-        }
-        this.AtticAgent.WriteStateOfSitecoreToStorage(result);
-
-        resolve();
-      } else {
-        reject('no targetId');
-      }
+      await this.CommandData.ScUiProxy.GetStateOfSitecoreWindow(SnapShotFlavor.Manual)
+        .then((windowState: IDataStateOfSitecoreWindow) => {
+          this.AtticAgent.WriteStateOfSitecoreToStorage(windowState);
+          //todo - put back this.Logger.WarningAndContinue(this.Execute.name, 'empty ce ar - not writing to storage');
+        })
+        .then(() => resolve())
+        .catch((err) => reject(err));
     });
   }
 }

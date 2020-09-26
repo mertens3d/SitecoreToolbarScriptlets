@@ -90,14 +90,14 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
 
     if (this.HTMLButtonElement) {
       this.HTMLButtonElement.ondblclick = (evt) => {
-        let data: ICommandHandlerDataForPopUp = this.BuildCommandData();
+        let data: ICommandHandlerDataForPopUp = this.BuildCommandDataForPopUp();
         data.Evt = evt;
         //data.EventMan.RouteAllCommandEvents(data);
       };
     }
   }
 
-  private BuildCommandData(): ICommandHandlerDataForPopUp {
+  private BuildCommandDataForPopUp(): ICommandHandlerDataForPopUp {
     let data: ICommandHandlerDataForPopUp = {
       EventMan: null,
       MenuCommandDefinition: this.MenuCommandDefinition,

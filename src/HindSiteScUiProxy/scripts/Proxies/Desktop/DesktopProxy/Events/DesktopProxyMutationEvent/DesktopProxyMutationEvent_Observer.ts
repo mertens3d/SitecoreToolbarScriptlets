@@ -1,7 +1,7 @@
 ﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { DesktopProxy } from "../../DesktopProxy";
 import { IDesktopProxyMutationEvent_Payload } from "./IDesktopProxyMutationEvent_Payload";
-import { DTFrameProxy } from "../../../../DTFrameProxy";
+import { DTFrameProxy } from "../../FrameProxies/DTFrameProxy";
 import { HindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer";
 import { IHindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer";
 

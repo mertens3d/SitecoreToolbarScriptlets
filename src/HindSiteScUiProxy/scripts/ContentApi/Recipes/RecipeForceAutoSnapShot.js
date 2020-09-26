@@ -49,38 +49,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecipeToggleFavorite = void 0;
-var SnapShotFlavor_1 = require("../../../../../Shared/scripts/Enums/SnapShotFlavor");
-var __RecipeBase_1 = require("../__RecipeBase/__RecipeBase");
-var RecipeToggleFavorite = /** @class */ (function (_super) {
-    __extends(RecipeToggleFavorite, _super);
-    function RecipeToggleFavorite(commandData) {
-        return _super.call(this, commandData) || this;
+exports.RecipeForceAutoSnapShot = void 0;
+var _ApiRecipeBase_1 = require("./__RecipeBase/_ApiRecipeBase");
+var RecipeForceAutoSnapShot = /** @class */ (function (_super) {
+    __extends(RecipeForceAutoSnapShot, _super);
+    function RecipeForceAutoSnapShot() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    RecipeToggleFavorite.prototype.Execute = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            var result;
+    RecipeForceAutoSnapShot.prototype.Execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                if (this.TargetSnapShotId) {
-                    result = this.AtticAgent.GetFromStorageBySnapShotId(this.TargetSnapShotId);
-                    if (result.Meta.Flavor === SnapShotFlavor_1.SnapShotFlavor.Favorite) {
-                        result.Meta.Flavor = SnapShotFlavor_1.SnapShotFlavor.Manual;
-                    }
-                    else {
-                        result.Meta.Flavor = SnapShotFlavor_1.SnapShotFlavor.Favorite;
-                    }
-                    this.AtticAgent.WriteStateOfSitecoreToStorage(result);
-                    resolve();
+                try {
+                    this.AutoSnapShotAgent.AutoSaveSnapShot();
                 }
-                else {
-                    reject('no targetId');
+                catch (err) {
+                    this.Logger.ErrorAndThrow(this.Execute.name, err);
                 }
                 return [2 /*return*/];
             });
-        }); });
+        });
     };
-    return RecipeToggleFavorite;
-}(__RecipeBase_1._ApiRecipeBase));
-exports.RecipeToggleFavorite = RecipeToggleFavorite;
-//# sourceMappingURL=RecipeToggleFavorite.js.map
+    return RecipeForceAutoSnapShot;
+}(_ApiRecipeBase_1._ApiRecipeBase));
+exports.RecipeForceAutoSnapShot = RecipeForceAutoSnapShot;
+//# sourceMappingURL=RecipeForceAutoSnapShot.js.map

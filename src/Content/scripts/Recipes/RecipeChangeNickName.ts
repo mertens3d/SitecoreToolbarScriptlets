@@ -3,7 +3,7 @@ import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { InternalCommandPayload } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
+import { IInternalCommandPayload } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
 
@@ -12,7 +12,7 @@ export class RecipeChangeNickName extends _ContentRecipeBase implements ICommand
   AtticAgent: IContentAtticAgent;
     
 
-  constructor(logger: ILoggerAgent,commandData: InternalCommandPayload) {
+  constructor(logger: ILoggerAgent,commandData: IInternalCommandPayload) {
     super(logger, commandData);
     this.NewNickname = commandData.NewNickName;
     this.AtticAgent = commandData.AtticAgent;

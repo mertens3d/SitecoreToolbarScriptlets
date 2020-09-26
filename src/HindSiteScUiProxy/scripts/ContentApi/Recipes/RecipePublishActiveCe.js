@@ -50,15 +50,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipePublishActiveCe = void 0;
-var PromiseResult_1 = require("../../../../../Shared/scripts/Classes/PromiseResult");
-var scWindowType_1 = require("../../../../../Shared/scripts/Enums/scWindowType");
-var InjectConst_1 = require("../../../../../Shared/scripts/Interfaces/InjectConst");
-var SharedConst_1 = require("../../../../../Shared/scripts/SharedConst");
-var __RecipeBase_1 = require("../__RecipeBase/__RecipeBase");
+var PromiseResult_1 = require("../../../../Shared/scripts/Classes/PromiseResult");
+var scWindowType_1 = require("../../../../Shared/scripts/Enums/scWindowType");
+var InjectConst_1 = require("../../../../Shared/scripts/Interfaces/InjectConst");
+var SharedConst_1 = require("../../../../Shared/scripts/SharedConst");
+var _ApiRecipeBase_1 = require("./__RecipeBase/_ApiRecipeBase");
 var RecipePublishActiveCe = /** @class */ (function (_super) {
     __extends(RecipePublishActiveCe, _super);
-    function RecipePublishActiveCe(commandData, factoryHelp) {
-        var _this = _super.call(this, commandData) || this;
+    function RecipePublishActiveCe(logger, commandData, scWinProxy, factoryHelp, topLevelDoc) {
+        var _this = _super.call(this, logger, commandData, scWinProxy) || this;
+        _this.TopLevelDoc = topLevelDoc;
         _this.FactoryHelp = factoryHelp;
         return _this;
     }
@@ -67,7 +68,7 @@ var RecipePublishActiveCe = /** @class */ (function (_super) {
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.PublishActiveCE(this.ScWinMan.GetTopLevelDoc())
+                    case 0: return [4 /*yield*/, this.PublishActiveCE(this.TopLevelDoc)
                             .then(function () { return resolve(); })
                             .catch(function (err) { return reject(err); })];
                     case 1:
@@ -77,7 +78,7 @@ var RecipePublishActiveCe = /** @class */ (function (_super) {
             });
         }); });
     };
-    RecipePublishActiveCe.prototype.GetDocToPublish = function (currentWindowType, targetDoc) {
+    RecipePublishActiveCe.prototype.GetDocToPublish = function (scWindowType, targetDoc) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
@@ -91,7 +92,7 @@ var RecipePublishActiveCe = /** @class */ (function (_super) {
                                     _a.label = 1;
                                 case 1:
                                     _a.trys.push([1, 5, , 6]);
-                                    if (!(currentWindowType === scWindowType_1.ScWindowType.Desktop)) return [3 /*break*/, 3];
+                                    if (!(scWindowType === scWindowType_1.ScWindowType.Desktop)) return [3 /*break*/, 3];
                                     return [4 /*yield*/, this.RecipeBasics.GetTopLevelIframe(targetDoc)
                                             .then(function (topIframe) {
                                             resolve(topIframe.GetContentDoc());
@@ -101,7 +102,7 @@ var RecipePublishActiveCe = /** @class */ (function (_super) {
                                     _a.sent();
                                     return [3 /*break*/, 4];
                                 case 3:
-                                    resolve(this.ScWinMan.GetTopLevelDoc());
+                                    resolve(this.TopLevelDoc);
                                     _a.label = 4;
                                 case 4: return [3 /*break*/, 6];
                                 case 5:
@@ -119,7 +120,7 @@ var RecipePublishActiveCe = /** @class */ (function (_super) {
     };
     RecipePublishActiveCe.prototype.PublishActiveCE = function (targetDoc) {
         return __awaiter(this, void 0, void 0, function () {
-            var currentWindowType, err_2;
+            var scWindowType, err_2;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -128,8 +129,8 @@ var RecipePublishActiveCe = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        currentWindowType = this.ScWinMan.GetCurrentPageType();
-                        return [4 /*yield*/, this.GetDocToPublish(currentWindowType, targetDoc)
+                        scWindowType = this.scWinProxy.GetCurrentPageType();
+                        return [4 /*yield*/, this.GetDocToPublish(scWindowType, targetDoc)
                                 .then(function (docToPublish) { return _this.PublishCE(docToPublish); })
                                 .catch(function (err) { throw (err); })];
                     case 2:
@@ -167,7 +168,7 @@ var RecipePublishActiveCe = /** @class */ (function (_super) {
                         _a.trys.push([1, 3, , 4]);
                         dataPublishChain = {
                             DocToPublish: docToPublish,
-                            TopLevelDoc: this.ScWinMan.GetTopLevelDoc(),
+                            TopLevelDoc: this.scWinProxy.GetTopLevelDoc(),
                             Iframe0Blue: null,
                             JqIframe: null,
                             MessageDialogIframeRed: null
@@ -427,6 +428,6 @@ var RecipePublishActiveCe = /** @class */ (function (_super) {
         }); });
     };
     return RecipePublishActiveCe;
-}(__RecipeBase_1._ApiRecipeBase));
+}(_ApiRecipeBase_1._ApiRecipeBase));
 exports.RecipePublishActiveCe = RecipePublishActiveCe;
 //# sourceMappingURL=RecipePublishActiveCe.js.map

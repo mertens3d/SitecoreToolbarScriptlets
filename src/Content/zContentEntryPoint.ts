@@ -1,3 +1,5 @@
+import { HindSiteScUiProxy } from '../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
+import { ScUiManager } from '../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager';
 import { LoggerAgent } from '../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
 import { LoggerConsoleWriter } from '../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
@@ -9,24 +11,21 @@ import { RollingLogIdDrone } from '../Shared/scripts/Agents/Drones/RollingLogIdD
 import { SettingKey } from '../Shared/scripts/Enums/3xxx-SettingKey';
 import { IHindSiteScWindowApi, ISnapShotsAgent } from '../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 import { IContentAtticAgent } from '../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
+import { IContentBrowserProxy } from '../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
 import { IContentMessageBroker } from '../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { IHindSiteSetting } from '../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { InitResultsScWindowManager } from "../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { IRepositoryAgent } from '../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
-import { IScWindowManager } from '../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { ISettingsAgent } from '../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { IDataOneDoc } from '../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { SharedConst } from '../Shared/scripts/SharedConst';
 import { AutoSnapShotAgent } from './scripts/Agents/AutoSnapShotAgent';
 import { ContentAtticAgent } from './scripts/Agents/ContentAtticAgent';
-import { ContentMessageBroker, ContentInternalCommandRunner } from './scripts/Proxies/ContentMessageBroker';
-import { HindSiteScUiProxy } from '../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
+import { MiscAgent } from './scripts/Agents/MiscAgent';
+import { SnapShotsAgent } from './scripts/Agents/SnapShotsAgent';
 import { ContentMessageManager } from './scripts/Managers/ContentMessageManager';
 import { ContentBrowserProxy } from './scripts/Proxies/ContentBrowserProxy';
-import { IContentBrowserProxy } from '../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
-import { MiscAgent } from './scripts/Agents/MiscAgent';
-import { ScUiManager } from '../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager';
-import { ScWindowManager } from '../HindSiteScUiProxy/scripts/Managers/ScWindowManager/ScWindowManager';
-import { SnapShotsAgent } from './scripts/Agents/SnapShotsAgent';
+import { ContentMessageBroker, InternalCommandRunner } from './scripts/Proxies/ContentMessageBroker';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -40,7 +39,7 @@ class ContentEntry {
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
   SnapShotsAgent: ISnapShotsAgent;
-    ContentInternalCommandRunner: ContentInternalCommandRunner;
+  InternalCommandRunner: InternalCommandRunner;
 
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
@@ -71,30 +70,36 @@ class ContentEntry {
 
     let scUiMan: ScUiManager;
     let contentMessageMan: ContentMessageManager;
-    let scWinMan: IScWindowManager;
 
-    scWinMan = new ScWindowManager(this.Logger, scUiMan, this.MiscAgent, this.ToastAgent, this.AtticAgent, this.ScUrlAgent, this.SettingsAgent);
     scUiMan = new ScUiManager(this.Logger);
 
-    this.AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, scWinMan, this.AtticAgent);
+    let topLevelDoc: IDataOneDoc = {
+      ContentDoc: document,
+      DocId: null,
+      Nickname: 'TopLevelDoc'
+    };
 
-    this.ScUiProxy = new HindSiteScUiProxy(this.Logger, this.ToastAgent, scUiMan, scWinMan, this.AtticAgent, this.AutoSnapShotAgent);
+    this.ScUiProxy = new HindSiteScUiProxy(this.Logger, scUiMan, this.ScUrlAgent, topLevelDoc);
+
+    this.AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, this.AtticAgent, this.ScUiProxy);
+
+    this.AtticAgent.CleanOutOldAutoSavedData();
+
     this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
 
     this.SnapShotsAgent = new SnapShotsAgent(this.Logger);
 
-    this.ContentInternalCommandRunner = new ContentInternalCommandRunner(this.Logger, this.AtticAgent, this.ScUiProxy);
-
-
+    this.InternalCommandRunner = new InternalCommandRunner(this.Logger, this.AtticAgent, this.ScUiProxy);
+    this.InternalCommandRunner.InitFromQueryString();
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
-      this.ScUiProxy, this.AtticAgent, this.ToastAgent, scUiMan, scWinMan, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.SnapShotsAgent, this.ContentInternalCommandRunner);
+      this.ScUiProxy, this.AtticAgent, this.ToastAgent, scUiMan, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.SnapShotsAgent, this.InternalCommandRunner);
 
-    contentMessageMan = new ContentMessageManager(this.Logger, scWinMan, contentMessageBroker);
+    contentMessageMan = new ContentMessageManager(this.Logger, contentMessageBroker);
 
     await scUiMan.InitSitecoreUiManager()
       .then(() => contentMessageMan.InitContentMessageManager())
-      .then(() => scWinMan.OnReadyInitScWindowManager())
+      .then(() => this.ScUiProxy.OnReadyInitScWindowManager())
       .then((result: InitResultsScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
       .then(() => {
         this.AutoSnapShotAgent.ScheduleIntervalTasks();

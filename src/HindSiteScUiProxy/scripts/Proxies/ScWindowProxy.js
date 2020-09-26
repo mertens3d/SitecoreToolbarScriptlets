@@ -50,44 +50,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScWindowProxy = void 0;
-var DefaultStateOfSitecoreWindow_1 = require("../../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow");
-var RecipeBasics_1 = require("../../../../Shared/scripts/Classes/RecipeBasics");
-var StaticHelpers_1 = require("../../../../Shared/scripts/Classes/StaticHelpers");
-var scWindowType_1 = require("../../../../Shared/scripts/Enums/scWindowType");
-var SnapShotFlavor_1 = require("../../../../Shared/scripts/Enums/SnapShotFlavor");
-var Guid_1 = require("../../../../Shared/scripts/Helpers/Guid");
-var InitResultsScWindowManager_1 = require("../../../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager");
-var InjectConst_1 = require("../../../../Shared/scripts/Interfaces/InjectConst");
-var ContentEditorProxy_1 = require("../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy");
-var DesktopProxy_1 = require("../../Proxies/Desktop/DesktopProxy/DesktopProxy");
-var LoggableBase_1 = require("../LoggableBase");
-var ScWindowRecipePartials_1 = require("./ScWindowRecipePartials");
+var DefaultStateOfSitecoreWindow_1 = require("../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow");
+var RecipeBasics_1 = require("../../../Shared/scripts/Classes/RecipeBasics");
+var StaticHelpers_1 = require("../../../Shared/scripts/Classes/StaticHelpers");
+var scWindowType_1 = require("../../../Shared/scripts/Enums/scWindowType");
+var SnapShotFlavor_1 = require("../../../Shared/scripts/Enums/SnapShotFlavor");
+var Guid_1 = require("../../../Shared/scripts/Helpers/Guid");
+var InitResultsScWindowManager_1 = require("../../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager");
+var InjectConst_1 = require("../../../Shared/scripts/Interfaces/InjectConst");
+var ContentEditorProxy_1 = require("./ContentEditor/ContentEditorProxy/ContentEditorProxy");
+var DesktopProxy_1 = require("./Desktop/DesktopProxy/DesktopProxy");
+var LoggableBase_1 = require("../Managers/LoggableBase");
 var ScWindowProxy = /** @class */ (function (_super) {
     __extends(ScWindowProxy, _super);
     function ScWindowProxy(logger, scUrlAgent) {
         var _this = _super.call(this, logger) || this;
-        _this.__desktopProxyLazy = null;
-        _this.__contentEditorProxyLazy = null;
         _this.Logger.InstantiateStart(ScWindowProxy.name);
         _this.ScUrlAgent = scUrlAgent;
-        _this.TabSessionId = sessionStorage.getItem(InjectConst_1.ContentConst.Const.Storage.SessionKey);
-        if (!_this.TabSessionId) {
-            _this.TabSessionId = Guid_1.Guid.WithoutDashes(Guid_1.Guid.NewRandomGuid());
-            sessionStorage.setItem(InjectConst_1.ContentConst.Const.Storage.SessionKey, _this.TabSessionId);
-        }
         _this.Logger.InstantiateEnd(ScWindowProxy.name);
         return _this;
     }
-    ScWindowProxy.prototype.DesktopProxy = function () {
-        if (!this.__desktopProxyLazy) {
-            this.__desktopProxyLazy = new DesktopProxy_1.DesktopProxy(this.Logger, this.GetTopLevelDoc());
-        }
-        return this.__desktopProxyLazy;
+    ScWindowProxy.prototype.Instantiate = function () {
+        this.DesktopProxy = new DesktopProxy_1.DesktopProxy(this.Logger, this.GetTopLevelDoc());
+        this.ContentEditorProxy = new ContentEditorProxy_1.ContentEditorProxy(this.GetTopLevelDoc(), this.Logger);
     };
-    ScWindowProxy.prototype.ContentEditorProxy = function () {
-        if (!this.__contentEditorProxyLazy) {
-            this.__contentEditorProxyLazy = new ContentEditorProxy_1.ContentEditorProxy(this.GetTopLevelDoc(), this.Logger);
-            return this.__contentEditorProxyLazy;
+    ScWindowProxy.prototype.Init = function () {
+        this.TabSessionId = sessionStorage.getItem(InjectConst_1.ContentConst.Const.Storage.SessionKey);
+        if (!this.TabSessionId) {
+            this.TabSessionId = Guid_1.Guid.WithoutDashes(Guid_1.Guid.NewRandomGuid());
+            sessionStorage.setItem(InjectConst_1.ContentConst.Const.Storage.SessionKey, this.TabSessionId);
         }
     };
     ScWindowProxy.prototype.OnReadyInitScWindowManager = function () {
@@ -95,30 +86,21 @@ var ScWindowProxy = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                        var recipesBasic, initResultsScWindowManager_1, err_1;
+                        var recipesBasic, initResultsScWindowManager;
                         var _this = this;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
                                     this.Logger.FuncStart(this.OnReadyInitScWindowManager.name);
-                                    _a.label = 1;
-                                case 1:
-                                    _a.trys.push([1, 3, , 4]);
                                     recipesBasic = new RecipeBasics_1.RecipeBasics(this.Logger);
-                                    initResultsScWindowManager_1 = new InitResultsScWindowManager_1.InitResultsScWindowManager();
+                                    initResultsScWindowManager = new InitResultsScWindowManager_1.InitResultsScWindowManager();
                                     return [4 /*yield*/, recipesBasic.WaitForReadyNABDocument(this.GetTopLevelDoc())
-                                            .then(function () { return _this.DesktopProxy().OnReadyInitDesktopProxy(); })
-                                            .then(function (results) { return initResultsScWindowManager_1.InitResultsDesktop = results; })
-                                            //.then(() => this.InitFromQueryStr())
-                                            .then(function () { return resolve(initResultsScWindowManager_1); })
-                                            .catch(function (err) { throw (_this.OnReadyInitScWindowManager.name + ' | ' + err); })];
-                                case 2:
+                                            .then(function () { return _this.DesktopProxy.OnReadyInitDesktopProxy(); })
+                                            .then(function (results) { return initResultsScWindowManager.InitResultsDesktop = results; })
+                                            .then(function () { return resolve(initResultsScWindowManager); })
+                                            .catch(function (err) { return reject(_this.OnReadyInitScWindowManager.name + ' | ' + err); })];
+                                case 1:
                                     _a.sent();
-                                    return [3 /*break*/, 4];
-                                case 3:
-                                    err_1 = _a.sent();
-                                    throw (this.OnReadyInitScWindowManager.name + ' ' + err_1);
-                                case 4:
                                     this.Logger.FuncEnd(this.OnReadyInitScWindowManager.name);
                                     return [2 /*return*/];
                             }
@@ -127,12 +109,9 @@ var ScWindowProxy = /** @class */ (function (_super) {
             });
         });
     };
-    ScWindowProxy.prototype.MakeScWinRecipeParts = function () {
-        return new ScWindowRecipePartials_1.ScWindowRecipePartials(this.Logger);
-    };
     ScWindowProxy.prototype.GetCurrentStateByPageType = function (scWindowType) {
         return __awaiter(this, void 0, void 0, function () {
-            var toReturn, dtResult_1, err_2;
+            var toReturn, dtResult_1, err_1;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -143,7 +122,7 @@ var ScWindowProxy = /** @class */ (function (_super) {
                     case 1:
                         _a.trys.push([1, 5, , 6]);
                         if (!(scWindowType === scWindowType_1.ScWindowType.Desktop)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.DesktopProxy().GetStateOfDesktop()
+                        return [4 /*yield*/, this.DesktopProxy.GetStateOfDesktop()
                                 .then(function (result) {
                                 dtResult_1 = result;
                                 if (dtResult_1.ActiveCEAgent) {
@@ -156,7 +135,7 @@ var ScWindowProxy = /** @class */ (function (_super) {
                         return [3 /*break*/, 4];
                     case 3:
                         if (scWindowType === scWindowType_1.ScWindowType.ContentEditor) {
-                            toReturn = this.ContentEditorProxy().GetStateOfContentEditor();
+                            toReturn = this.ContentEditorProxy.GetStateOfContentEditor();
                         }
                         else if (scWindowType === scWindowType_1.ScWindowType.LoginPage
                             || scWindowType === scWindowType_1.ScWindowType.Launchpad
@@ -170,8 +149,8 @@ var ScWindowProxy = /** @class */ (function (_super) {
                         _a.label = 4;
                     case 4: return [3 /*break*/, 6];
                     case 5:
-                        err_2 = _a.sent();
-                        this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, err_2);
+                        err_1 = _a.sent();
+                        this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, err_1);
                         return [3 /*break*/, 6];
                     case 6:
                         this.Logger.FuncEnd(this.GetCurrentStateByPageType.name);
@@ -180,16 +159,12 @@ var ScWindowProxy = /** @class */ (function (_super) {
             });
         });
     };
-    ScWindowProxy.prototype.GetScUrlAgent = function () {
-        return this.ScUrlAgent;
-    };
     ScWindowProxy.prototype.GetCurrentPageType = function () {
         return this.ScUrlAgent.GetScWindowType();
     };
     ScWindowProxy.prototype.GetTopLevelDoc = function () {
         if (!this.TopDoc) {
             this.TopDoc = {
-                //ParentDoc: null,
                 ContentDoc: window.document,
                 DocId: Guid_1.Guid.NewRandomGuid(),
                 Nickname: 'top doc'
@@ -197,71 +172,18 @@ var ScWindowProxy = /** @class */ (function (_super) {
         }
         return this.TopDoc;
     };
-    //async InitFromQueryStr(): Promise<void> {
-    //  this.Logger.FuncStart(this.InitFromQueryStr.name);
-    //  try {
-    //    if (this.GetScUrlAgent().QueryStringHasKey(QueryStrKey.hsTargetSs)) {
-    //      let recipe = new RecipeInitFromQueryStr(this.Logger, this.GetScUrlAgent(), this.AtticAgent, this.GetTopLevelDoc(), this.MakeScWinRecipeParts(), this.DesktopProxy(), this.ContentEditorProxy());
-    //      await recipe.Execute();
-    //    }
-    //    this.Logger.FuncEnd(this.InitFromQueryStr.name);
-    //  }
-    //  catch (err) {
-    //    throw (err);
-    //  }
-    //}
     ScWindowProxy.prototype.SetCompactCss = function (targetDoc) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: 
-                    //if (this.ScUiMan().GetCurrentPageType() === scWindowType.ContentEditor) {
-                    return [4 /*yield*/, this.ContentEditorProxy().SetCompactCss()];
+                    case 0: return [4 /*yield*/, this.ContentEditorProxy.SetCompactCss()];
                     case 1:
-                        //if (this.ScUiMan().GetCurrentPageType() === scWindowType.ContentEditor) {
                         _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
-    ScWindowProxy.prototype.CreateShellIDataScWindowState = function (windowType, flavor) {
-        this.Logger.FuncStart(this.CreateShellIDataScWindowState.name);
-        var activeWindowSnapShot = new DefaultStateOfSitecoreWindow_1.DefaultStateOfSitecoreWindow();
-        activeWindowSnapShot.Meta.Flavor = flavor;
-        activeWindowSnapShot.Meta.WindowType = windowType;
-        activeWindowSnapShot.Meta.SessionId = this.TabSessionId;
-        this.Logger.FuncEnd(this.CreateShellIDataScWindowState.name);
-        return activeWindowSnapShot;
-    };
-    //private async PopulateIfTopIsContentEditor(scWindowState: IDataStateOfSitecore): Promise<void> {
-    //  try {
-    //    if (this.GetCurrentPageType() === ScWindowType.ContentEditor) {
-    //      let contentEditorProxy = new ContentEditorProxy(this.GetTopLevelDoc(), this.Logger, this.SettingsAgent, null);
-    //      await contentEditorProxy.WaitForReadyContentEditor()
-    //        .then(() => contentEditorProxy.GetStateOfTree())
-    //        .then((stateOfContentEditor: IDataStateOfContentEditor) => {
-    //          scWindowState.StateOfContentEditor = stateOfContentEditor;
-    //        })
-    //        .catch((err) => { throw (err) });
-    //    }
-    //  } catch (err) {
-    //    this.Logger.ErrorAndThrow(this.PopulateIfTopIsContentEditor.name, err);
-    //  }
-    //}
-    //private async PopulateIfTopIsDeskTop(scWindowState: IDataStateOfSitecore): Promise<void> {
-    //  this.Logger.FuncStart(this.PopulateIfTopIsDeskTop.name);
-    //  try {
-    //    if (this.GetCurrentPageType() === ScWindowType.Desktop) {
-    //      await this.DesktopUiProxy.GetStateDesktop()
-    //        .then((desktopState: IDataSateOfDesktop) => scWindowState.StateOfDesktop = desktopState)
-    //        .catch((err) => { throw (this.PopulateIfTopIsDeskTop.name + ' ' + err) });
-    //    }
-    //  } catch (err) {
-    //    this.Logger.ErrorAndThrow(this.PopulateIfTopIsContentEditor.name, err);
-    //  }
-    //  this.Logger.FuncEnd(this.PopulateIfTopIsDeskTop.name);
-    //}
     ScWindowProxy.prototype.GetStates = function () {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
@@ -272,7 +194,7 @@ var ScWindowProxy = /** @class */ (function (_super) {
                     case 0:
                         toReturn = new DefaultStateOfSitecoreWindow_1.DefaultScWindowStates();
                         if (!(this.ScUrlAgent.GetScWindowType() === scWindowType_1.ScWindowType.Desktop)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.DesktopProxy().GetStateOfDesktop()
+                        return [4 /*yield*/, this.DesktopProxy.GetStateOfDesktop()
                                 .then(function (result) { return toReturn.StateOfDesktop = result; })
                                 .then(function () { return resolve(toReturn); })
                                 .catch(function (err) { return reject(_this.GetStateOfSitecoreWindow.name + ' | ' + err); })];
@@ -281,7 +203,7 @@ var ScWindowProxy = /** @class */ (function (_super) {
                         _a.label = 2;
                     case 2:
                         if (this.ScUrlAgent.GetScWindowType() === scWindowType_1.ScWindowType.ContentEditor) {
-                            result = this.ContentEditorProxy().GetStateOfContentEditor();
+                            result = this.ContentEditorProxy.GetStateOfContentEditor();
                             toReturn.StateOfContentEditor = result;
                             resolve(toReturn);
                         }
@@ -316,6 +238,55 @@ var ScWindowProxy = /** @class */ (function (_super) {
             });
         }); });
     };
+    ScWindowProxy.prototype.SetStateOfScWin = function (dataToRestore) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                        var _this = this;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    this.Logger.FuncStart(this.SetStateOfScWin.name);
+                                    if (!dataToRestore) return [3 /*break*/, 8];
+                                    if (!(dataToRestore.Meta.WindowType == scWindowType_1.ScWindowType.Desktop)) return [3 /*break*/, 4];
+                                    if (!dataToRestore.ScWindowStates.StateOfDesktop) return [3 /*break*/, 2];
+                                    return [4 /*yield*/, this.DesktopProxy.SetStateOfDesktop(dataToRestore.ScWindowStates.StateOfDesktop)
+                                            .then(function () { return resolve(); })
+                                            .catch(function (err) { return reject(_this.SetStateOfScWin.name + ' | ' + err); })];
+                                case 1:
+                                    _a.sent();
+                                    return [3 /*break*/, 3];
+                                case 2:
+                                    this.Logger.ErrorAndThrow(this.SetStateOfScWin.name, 'no states in dataToRestore');
+                                    _a.label = 3;
+                                case 3: return [3 /*break*/, 7];
+                                case 4:
+                                    if (!(dataToRestore.Meta.WindowType === scWindowType_1.ScWindowType.ContentEditor)) return [3 /*break*/, 6];
+                                    return [4 /*yield*/, this.ContentEditorProxy.SetStateOfContentEditor(dataToRestore.ScWindowStates.StateOfContentEditor)
+                                            .then(function () { return resolve(); })
+                                            .catch(function (err) { return reject(err); })];
+                                case 5:
+                                    _a.sent();
+                                    return [3 /*break*/, 7];
+                                case 6:
+                                    reject(this.SetStateOfScWin.name + 'Data not restored. Not in Desktop or Content Editor');
+                                    _a.label = 7;
+                                case 7: return [3 /*break*/, 9];
+                                case 8:
+                                    this.Logger.WarningAndContinue(this.SetStateOfScWin.name, " No data found to restore");
+                                    resolve();
+                                    _a.label = 9;
+                                case 9:
+                                    reject(this.SetStateOfScWin.name + ' : unknown reason');
+                                    this.Logger.FuncEnd(this.SetStateOfScWin.name);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+            });
+        });
+    };
     ScWindowProxy.prototype.PopulateFriendly = function (metadata) {
         var toReturn = new DefaultStateOfSitecoreWindow_1.DefaultFriendly();
         toReturn.WindowType = scWindowType_1.ScWindowType[metadata.WindowType];
@@ -334,4 +305,4 @@ var ScWindowProxy = /** @class */ (function (_super) {
     return ScWindowProxy;
 }(LoggableBase_1.LoggableBase));
 exports.ScWindowProxy = ScWindowProxy;
-//# sourceMappingURL=ScWindowManager.js.map
+//# sourceMappingURL=ScWindowProxy.js.map

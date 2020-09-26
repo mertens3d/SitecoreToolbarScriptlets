@@ -1,0 +1,62 @@
+﻿import { RecipeBasics } from '../../../../Shared/scripts/Classes/RecipeBasics';
+import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { _BaseFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy';
+import { ICommandRecipes } from '../../../../Shared/scripts/Interfaces/ICommandRecipes';
+import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
+import { DesktopStartBarProxy } from '../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
+import { LoggableBase } from '../../Managers/LoggableBase';
+import { FrameHelper } from '../../Helpers/FrameHelper';
+import { DTFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
+import { InitResultsDTFrameProxy } from '../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy';
+import { _ApiRecipeBase } from './__RecipeBase/_ApiRecipeBase';
+import { IApiCallPayload } from '../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent';
+import { IScWindowProxy } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
+
+export class RecipeAdminB extends _ApiRecipeBase implements ICommandRecipes {
+  constructor(logger: ILoggerAgent, apiCallPayload: IApiCallPayload, targetDoc: IDataOneDoc, ceButtonTabAgent: DesktopStartBarProxy, scWinProxy: IScWindowProxy) {
+    super(logger, apiCallPayload, scWinProxy);
+
+    this.Logger.InstantiateStart(RecipeAdminB.name);
+
+    this.Logger.InstantiateEnd(RecipeAdminB.name);
+  }
+  Execute(): Promise<DTFrameProxy> {
+    return new Promise(async (resolve, reject) => {
+      reject('not implemented');
+    });
+  };
+
+}
+export class RecipeAddNewContentEditorToDesktop extends _ApiRecipeBase implements ICommandRecipes {
+
+  constructor(logger: ILoggerAgent, apiPayload: IApiCallPayload,  scWinProxy: IScWindowProxy) {
+    super(logger, apiPayload, scWinProxy);
+
+    this.Logger.InstantiateStart(RecipeAddNewContentEditorToDesktop.name);
+
+    this.Logger.InstantiateEnd(RecipeAddNewContentEditorToDesktop.name);
+  }
+
+  Execute(): Promise<DTFrameProxy> {
+    return new Promise(async (resolve, reject) => {
+      let allIframeDataAtBeginning: HTMLIFrameElement[];
+      let dtframeProxy: DTFrameProxy;
+      let frameHelper = new FrameHelper(this.Logger);
+      let recipeBasics = new RecipeBasics(this.Logger);
+
+      allIframeDataAtBeginning = frameHelper.GetIFramesFromDataOneDoc(this.TargetDoc)
+
+      await recipeBasics.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.TargetDoc)
+        .then(() => recipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], this.TargetDoc))
+        .then(() => recipeBasics.WaitForNewIframeContentEditor(allIframeDataAtBeginning, this.TargetDoc))
+        .then((result: DTFrameProxy) => dtframeProxy = result)
+        .then(() => dtframeProxy.OnReadyInitDTFrameProxy())
+        .then((result: InitResultsDTFrameProxy) => {
+          return this.Logger.LogAsJsonPretty('InitResultsFrameProxy', result);
+        })
+        .then(() => resolve(dtframeProxy))
+        .catch((err) => reject(this.Execute.name + ' ' + err));
+    });
+  }
+}

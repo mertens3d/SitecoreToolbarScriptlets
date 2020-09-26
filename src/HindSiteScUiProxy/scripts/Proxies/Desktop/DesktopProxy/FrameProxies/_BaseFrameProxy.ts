@@ -1,10 +1,10 @@
-import { LoggableBase } from "../Managers/LoggableBase";
-import { DTFrameProxyMutationEvent_Subject } from "./Desktop/DesktopProxy/Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
-import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
-import { Guid } from "../../../Shared/scripts/Helpers/Guid";
-import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { LoggableBase } from "../../../../Managers/LoggableBase";
+import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
+import { FactoryHelper } from "../../../../../../Shared/scripts/Helpers/FactoryHelper";
+import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";
+import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
+import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IDataOneDoc } from "../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 
 export class _BaseFrameProxy extends LoggableBase {
   Index: number = -1;

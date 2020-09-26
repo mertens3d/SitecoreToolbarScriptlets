@@ -8,6 +8,7 @@ import { LoggableBase } from "../LoggableBase";
 
 export class ScUiManager extends LoggableBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IDataStateOfSitecoreWindow;
+    TopLevelDoc: IDataOneDoc;
 
   constructor(logger: ILoggerAgent) {
     super(logger)

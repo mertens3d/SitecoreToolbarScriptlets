@@ -1,4 +1,4 @@
-﻿import { DTFrameProxy } from "../../../../DTFrameProxy";
+﻿import { DTFrameProxy } from "../../FrameProxies/DTFrameProxy";
 import { IDTFrameProxyMutationEvent_Payload } from "../DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 
 export interface IDesktopProxyMutationEvent_Payload {

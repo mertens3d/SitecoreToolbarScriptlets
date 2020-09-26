@@ -1,6 +1,6 @@
 ﻿import { LoggableBase } from "../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
 import { ScUiManager } from "../../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
-import { CommandHandlerDataForContent, CommandPayloadForInternal } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandHandlerDataForContent";
+import { ApiCommandPayload, CommandPayloadForInternal } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandHandlerDataForContent";
 import { MsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
@@ -11,10 +11,10 @@ import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IC
 import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 import { IContentMessageBroker } from "../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IScWindowManager } from "../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { IScWindowProxy } from "../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../Shared/scripts/Interfaces/Agents/IToastAgent";
-import { IApiCommandPayload, InternalCommandPayload } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
+import { IApiCallPayload, IInternalCommandPayload } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { IDataContentReplyReceivedEvent_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
@@ -22,13 +22,17 @@ import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
 import { RecipeRemoveItemFromStorage } from "../Recipes/RecipeRemoveItemFromStorage";
+import { IDataStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { RecipeInitFromQueryStr } from "../Recipes/RecipeInitFromQueryStr";
+import { RecipeSaveStateManual } from "../Recipes/RecipeSaveState";
+import { RecipeForceAutoSnapShot } from "../Recipes/RecipeForceAutoSnapShot";
 
 export class CommandToExecuteData extends LoggableBase {
   commandToExecute: Function;
   CommandType: CommandType;
 }
 
-export class ContentInternalCommandRunner extends LoggableBase {
+export class InternalCommandRunner extends LoggableBase {
   AtticAgent: IContentAtticAgent;
   HineyScApi: IHindSiteScWindowApi;
 
@@ -38,7 +42,26 @@ export class ContentInternalCommandRunner extends LoggableBase {
     this.HineyScApi = hindSiteScApi;
   }
 
-  ToggleFavorite(commandData: InternalCommandPayload) {
+  async DebugForceAutoSnapShot(commandData: IInternalCommandPayload): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      let recipe = new RecipeForceAutoSnapShot(this.Logger, commandData);
+
+      recipe.Execute()
+        .then(() => resolve())
+        .catch((err) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
+    });
+  }
+
+  async SaveWindowState(commandData: IInternalCommandPayload): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      let recipe = new RecipeSaveStateManual(this.Logger, commandData);
+      await recipe.Execute()
+        .then(resolve)
+        .catch((err) => reject(err));
+    });
+  }
+
+  ToggleFavorite(commandData: IInternalCommandPayload) {
     return new Promise(async (resolve, reject) => {
       await new RecipeToggleFavorite(this.Logger, commandData).Execute()
         .then(() => resolve())
@@ -46,7 +69,12 @@ export class ContentInternalCommandRunner extends LoggableBase {
     });
   }
 
-  async RemoveSnapShot(commandData: InternalCommandPayload): Promise<void> {
+  InitFromQueryString() {
+    let commandData = null;//todo we need to build this like from ContentMessageBroker.BuildCommandPayloadForInternal
+    let recipe = new RecipeInitFromQueryStr(this.Logger, commandData);
+  }
+
+  async RemoveSnapShot(commandData: IInternalCommandPayload): Promise<void> {
     return new Promise(async (resolve, reject) => {
       let recipe = new RecipeRemoveItemFromStorage(this.Logger, commandData);
       await recipe.Execute()
@@ -55,14 +83,13 @@ export class ContentInternalCommandRunner extends LoggableBase {
     });
   }
 
-
-  SetStateOfSitecoreWindow(internalCommandPayload: InternalCommandPayload): Promise<void> {
+  SetStateOfSitecoreWindow(internalCommandPayload: IInternalCommandPayload): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.LogVal("IdOfSelect", internalCommandPayload.TargetSnapShotId);
       let dataOneWindowStorage: IDataStateOfSitecoreWindow = this.AtticAgent.GetFromStorageBySnapShotId(internalCommandPayload.TargetSnapShotId);
 
       if (dataOneWindowStorage) {
-        this.HineyScApi.SetStateOfSitecoreWindow(internalCommandPayload.ApiPayload, dataOneWindowStorage)
+        this.HineyScApi.SetStateOfSitecoreWindowAsync(internalCommandPayload.ApiPayload, dataOneWindowStorage)
           .then(() => resolve())
           .catch((err) => reject(this.SetStateOfSitecoreWindow.name + ' | ' + err));
       };
@@ -77,12 +104,11 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
   private AtticAgent: IContentAtticAgent;
   private ToastAgent: IToastAgent;
   private ScUiMan: ScUiManager;
-  private ScWinMan: IScWindowManager;
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
-  ContentCommandRunner: ContentInternalCommandRunner;
+  ContentCommandRunner: InternalCommandRunner;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScWindowApi, atticMan: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, scWinMan: IScWindowManager, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, snapShotsAgent: ISnapShotsAgent, contentInternalCommandRunner: ContentInternalCommandRunner) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScWindowApi, atticMan: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, snapShotsAgent: ISnapShotsAgent, contentInternalCommandRunner: InternalCommandRunner) {
     super(logger);
     this.Logger.InstantiateStart(ContentMessageBroker.name);
 
@@ -92,7 +118,6 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     this.AtticAgent = atticMan;
     this.ToastAgent = toastAgent;
     this.ScUiMan = scUiMan;
-    this.ScWinMan = scWinMan;
     this.ContentBrowserProxy = contentBrowserProxy;
     this.AutoSnapShotAgent = autoSnapShotAgent;
     this.SnapShotsAgent = snapShotsAgent;
@@ -234,7 +259,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
 
       case MsgFlag.ReqTakeSnapShot:
         commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.HindSiteScWindowApi.SaveWindowState;
+        commandData.commandToExecute = this.ContentCommandRunner.SaveWindowState;
         break;
 
       case MsgFlag.ReqRemoveFromStorage:
@@ -244,7 +269,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
 
       case MsgFlag.ReqDebugAutoSnapShot:
         commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.HindSiteScWindowApi.DebugForceAutoSnapShot;
+        commandData.commandToExecute = this.ContentCommandRunner.DebugForceAutoSnapShot;
         break;
 
       default:
@@ -268,6 +293,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       if (commandToExecute.CommandType == CommandType.Api) {
         await this.ExecuteApiCommand(commandToExecute.commandToExecute, messageFromController)
           .then((response: MsgContentToController) => resolve(response))
+          .then(() => this.HindSiteScWindowApi.RaiseToastNotification('Completed'))
           .catch((err) => reject(err));
       } else if (commandToExecute.CommandType = CommandType.ContentInternal) {
       }
@@ -285,30 +311,44 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       let response = new MsgContentToController(MsgFlag.Unknown);
 
-      await this.HindSiteScWindowApi.GetStateOfContent()
+      await this.HindSiteScWindowApi.GetStateOfScWindow()
         .then((result: IDataContentReplyReceivedEvent_Payload) => {
           response.Payload = result;
           response.Payload.LastReq = msgFlag;
           response.MsgFlag = MsgFlag.RespTaskSuccessful;
           response.Payload.LastReqFriendly = MsgFlag[msgFlag];
+          response.Payload.ErrorStack = response.Payload.ErrorStack.concat(result.ErrorStack);
         })
+
+        .then(() => this.AtticAgent.GetStateOfStorageSnapShots())
+        .then((result: IDataStateOfStorageSnapShots) => response.Payload.StateOfStorageSnapShots = result)
+
         .then(() => resolve(response))
         .catch((err) => reject(err));
     });
   }
 
-  BuildScProxyPayload(): IApiCommandPayload {
-    let commandData: IApiCommandPayload = new CommandHandlerDataForContent(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent, this.AutoSnapShotAgent);
+  BuildScProxyPayload(): IApiCallPayload {
+    let commandData: IApiCallPayload = new ApiCommandPayload(this.ScUiMan);
 
     return commandData;
   }
+
+  BuildCommandPayloadForInternal(): IInternalCommandPayload {
+    let scProxyPayload = this.BuildScProxyPayload();
+    let commandData: IInternalCommandPayload = new CommandPayloadForInternal(this.Logger, this.AtticAgent, this.ToastAgent, this.ScUiMan, this.SettingsAgent, this.AutoSnapShotAgent, scProxyPayload);
+
+    return commandData;
+  }
+
   ExecuteInternalCommand(commandToExecute: Function, messageFromController: IMessageControllerToContent): Promise<MsgContentToController> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteInternalCommand.name);
       if (commandToExecute) {
-        let scProxyPayload = this.BuildScProxyPayload();
-        let commandData: InternalCommandPayload = new CommandPayloadForInternal(this.Logger, this.AtticAgent, this.ScWinMan, this.ToastAgent, this.ScUiMan, this.SettingsAgent, this.AutoSnapShotAgent, scProxyPayload);
+        let commandData = this.BuildCommandPayloadForInternal();
+
         commandData.TargetSnapShotId = messageFromController.SelectSnapshotId;
+
         commandData.NewNickName = messageFromController.SnapShotNewNickname;
       }
 
@@ -321,11 +361,6 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
       this.Logger.FuncStart(this.ExecuteApiCommand.name);
       if (commandToExecute) {
         let commandData = this.BuildScProxyPayload();
-
-        commandData.ContentMessageBroker = this;
-        //commandData.TargetSnapShotFlavor = stateOfPopUpUI.Payload.SnapShotSettings.Flavor;
-        commandData.TargetCeProxy = null; //todo
-        commandData.TargetDoc = null; // todo
 
         await commandToExecute(commandData)
           .then(() => this.ConstructResponse(messageFromController.MsgFlag))

@@ -2,10 +2,10 @@
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { _BaseFrameProxy } from "../Proxies/_BaseFrameProxy";
+import { _BaseFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { LoggableBase } from "../Managers/LoggableBase";
-import { DTFrameProxy } from "../Proxies/DTFrameProxy";
+import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
 export class FrameHelper extends LoggableBase {
   private factoryHelper: FactoryHelper;

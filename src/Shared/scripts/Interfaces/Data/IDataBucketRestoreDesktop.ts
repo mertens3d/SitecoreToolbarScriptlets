@@ -1,4 +1,4 @@
-﻿import { _BaseFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/_BaseFrameProxy";
+﻿import { _BaseFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
 import { IDataOneDoc } from "./IDataOneDoc";
 import { IDataStateOfContentEditor } from "./States/IDataStateOfContentEditor";
 

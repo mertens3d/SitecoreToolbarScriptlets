@@ -50,35 +50,42 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HindSiteScUiProxy = void 0;
-var DefaultScWindowState_1 = require("../../Shared/scripts/Classes/Defaults/DefaultScWindowState");
-var StaticHelpers_1 = require("../../Shared/scripts/Classes/StaticHelpers");
+var RecipeBasics_1 = require("../../Shared/scripts/Classes/RecipeBasics");
 var _1xxx_MessageFlag_1 = require("../../Shared/scripts/Enums/1xxx-MessageFlag");
 var SnapShotFlavor_1 = require("../../Shared/scripts/Enums/SnapShotFlavor");
 var FactoryHelper_1 = require("../../Shared/scripts/Helpers/FactoryHelper");
-var RecipeAddContentEditorToDesktop_1 = require("./ContentApi/Recipes/RecipeAddContentEditorToDesktop/RecipeAddContentEditorToDesktop");
-var RecipePublishActiveCe_1 = require("./ContentApi/Recipes/RecipePublishActiveCe/RecipePublishActiveCe");
-var RecipeForceAutoSnapShot_1 = require("./ContentApi/Recipes/RecipeRemoveItemFromStorage/RecipeForceAutoSnapShot");
-var RecipeRestore_1 = require("./ContentApi/Recipes/RecipeRestore/RecipeRestore");
-var RecipeSaveState_1 = require("./ContentApi/Recipes/RecipeSaveState/RecipeSaveState");
+var RecipeAddContentEditorToDesktop_1 = require("./ContentApi/Recipes/RecipeAddContentEditorToDesktop");
+var RecipePublishActiveCe_1 = require("./ContentApi/Recipes/RecipePublishActiveCe");
 var LoggableBase_1 = require("./Managers/LoggableBase");
+var ScWindowProxy_1 = require("./Proxies/ScWindowProxy");
+var ScWindowRecipePartials_1 = require("./Managers/ScWindowManager/ScWindowRecipePartials");
 var HindSiteScUiProxy = /** @class */ (function (_super) {
     __extends(HindSiteScUiProxy, _super);
-    function HindSiteScUiProxy(logger, toastAgent, scUiMan, scWinMan, atticAgent, autoSnapShotAgent) {
+    function HindSiteScUiProxy(logger, scUiMan, scUrlAgent, TopDoc) {
         var _this = _super.call(this, logger) || this;
         _this.Logger.FuncStart(HindSiteScUiProxy.name);
-        _this.ToastAgent = toastAgent;
+        _this.ScUrlAgent = scUrlAgent;
         _this.ScUiMan = scUiMan;
-        _this.ScWinMan = scWinMan;
+        _this.TopLevelDoc = TopDoc;
         _this.FactoryHelp = new FactoryHelper_1.FactoryHelper(_this.Logger);
-        _this.AtticAgent = atticAgent;
-        _this.AtticAgent.CleanOutOldAutoSavedData();
-        _this.AutoSnapShotAgent = autoSnapShotAgent;
-        if (StaticHelpers_1.StaticHelpers.IsNullOrUndefined([_this.AutoSnapShotAgent])) {
-            _this.Logger.ErrorAndThrow(HindSiteScUiProxy.name, 'null check');
-        }
+        _this.RecipeBasics = new RecipeBasics_1.RecipeBasics(_this.Logger);
+        _this.ScWinRecipeParts = new ScWindowRecipePartials_1.ScWindowRecipePartials(_this.Logger);
+        _this.InitscWinProxy();
         _this.Logger.FuncEnd(HindSiteScUiProxy.name);
         return _this;
     }
+    HindSiteScUiProxy.prototype.OnReadyInitScWindowManager = function () {
+        this.ScWindowProxy.OnReadyInitScWindowManager();
+    };
+    HindSiteScUiProxy.prototype.InitscWinProxy = function () {
+        this.ScWindowProxy = new ScWindowProxy_1.ScWindowProxy(this.Logger, this.ScUrlAgent);
+    };
+    HindSiteScUiProxy.prototype.GetStateOfSitecoreWindow = function (snapshotFlavor) {
+        return this.ScWindowProxy.GetStateOfSitecoreWindow(snapshotFlavor);
+    };
+    HindSiteScUiProxy.prototype.RaiseToastNotification = function (arg0) {
+        throw new Error("Method not implemented.");
+    };
     //async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void> {
     //  return new Promise(async (resolve, reject) => {
     //    await new RecipeChangeNickName(commandData).Execute()
@@ -86,7 +93,7 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
     //      .catch((err) => reject(err));
     //  })
     //}
-    HindSiteScUiProxy.prototype.GetStateOfContent = function () {
+    HindSiteScUiProxy.prototype.GetStateOfScWindow = function () {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
             var reply;
@@ -94,11 +101,9 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        reply = new DefaultScWindowState_1.DefaultContentReplyPayload();
-                        return [4 /*yield*/, this.ScWinMan.GetStateOfSitecoreWindow(SnapShotFlavor_1.SnapShotFlavor.Live)
-                                .then(function (result) { return reply.StateOfSitecoreWindow = result; })
-                                .then(function () { return _this.AtticAgent.GetStateOfStorageSnapShots(); })
-                                .then(function (result) { return reply.StateOfStorageSnapShots = result; })
+                        reply = null;
+                        return [4 /*yield*/, this.ScWindowProxy.GetStateOfSitecoreWindow(SnapShotFlavor_1.SnapShotFlavor.Live)
+                                .then(function (result) { return reply = result; })
                                 .then(function () { return reply.ErrorStack = _this.Logger.ErrorStack; })
                                 .then(function () { return resolve(reply); })
                                 .catch(function (err) { return reject(err); })];
@@ -111,18 +116,16 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
     };
     //Notify(payloadData: PayloadDataFromPopUp): Promise<void> {
     //  return new Promise(async (resolve, reject) => {
-    //    this.ToastAgent.PopUpToastNotification(this.ScWinMan.GetTopLevelDoc(), payloadData.ToastMessage);
+    //    this.ToastAgent.PopUpToastNotification(this.scWinProxy.GetTopLevelDoc(), payloadData.ToastMessage);
     //  });
     //}
-    HindSiteScUiProxy.prototype.AddCETab = function (commandData) {
+    HindSiteScUiProxy.prototype.AddCETab = function (apiCallPayload) {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new RecipeAddContentEditorToDesktop_1.RecipeAddNewContentEditorToDesktop(commandData.Logger, commandData.TargetDoc, commandData.DesktopProxy.DesktopStartBarAgent).Execute()
+                    case 0: return [4 /*yield*/, new RecipeAddContentEditorToDesktop_1.RecipeAddNewContentEditorToDesktop(this.Logger, apiCallPayload, this.ScWindowProxy).Execute()
                             .then(function () {
-                            _this.ToastAgent.RaiseToastNotification(commandData.ScWinMan.GetTopLevelDoc(), "Success");
                             resolve();
                         })
                             .catch(function (err) { return reject(err); })];
@@ -138,7 +141,7 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new RecipePublishActiveCe_1.RecipePublishActiveCe(commandData, this.FactoryHelp).Execute()
+                    case 0: return [4 /*yield*/, new RecipePublishActiveCe_1.RecipePublishActiveCe(this.Logger, commandData, this.ScWindowProxy, this.FactoryHelp, this.TopLevelDoc).Execute()
                             .then(function () { return resolve; })
                             .catch(function (err) { return reject(err); })];
                     case 1:
@@ -147,46 +150,6 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
                 }
             });
         }); });
-    };
-    HindSiteScUiProxy.prototype.DebugForceAutoSnapShot = function (commandData) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                        var recipe;
-                        var _this = this;
-                        return __generator(this, function (_a) {
-                            recipe = new RecipeForceAutoSnapShot_1.RecipeForceAutoSnapShot(commandData);
-                            recipe.Execute()
-                                .then(function () { return resolve(); })
-                                .catch(function (err) { return reject(_this.DebugForceAutoSnapShot.name + ' | ' + err); });
-                            return [2 /*return*/];
-                        });
-                    }); })];
-            });
-        });
-    };
-    HindSiteScUiProxy.prototype.SaveWindowState = function (commandData) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                        var recipe;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    recipe = new RecipeSaveState_1.RecipeSaveStateManual(commandData);
-                                    return [4 /*yield*/, recipe.Execute()
-                                            .then(resolve)
-                                            .catch(function (err) { return reject(err); })];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); })];
-            });
-        });
     };
     HindSiteScUiProxy.prototype.ToggleCompactCss = function (commandData) {
         return __awaiter(this, void 0, void 0, function () {
@@ -200,21 +163,14 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
             });
         });
     };
-    HindSiteScUiProxy.prototype.SetStateOfSitecoreWindow = function (commandData, dataOneWindowStorage) {
+    HindSiteScUiProxy.prototype.SetStateOfSitecoreWindowAsync = function (commandData, dataOneWindowStorage) {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            var recipe;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        recipe = new RecipeRestore_1.RecipeSetStateOfSitecoreWindow(commandData.Logger, commandData.ScWinMan.GetTopLevelDoc(), commandData.ScWinMan.MakeScWinRecipeParts(), commandData.ScWinMan.DesktopProxy(), commandData.ScWinMan.ContentEditorProxy(), dataOneWindowStorage);
-                        return [4 /*yield*/, recipe.Execute()
-                                .then(function () { return resolve(); })
-                                .catch(function (err) { return reject(err); })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                this.ScWindowProxy.SetStateOfScWin(dataOneWindowStorage)
+                    .then(function () { return resolve(); })
+                    .catch(function (err) { return reject(err); });
+                return [2 /*return*/];
             });
         }); });
     };
@@ -230,8 +186,8 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
             });
         }); });
     };
-    HindSiteScUiProxy.prototype.AdminB = function () {
-        this.ScUiMan.AdminB(this.ScWinMan.GetTopLevelDoc(), null);
+    HindSiteScUiProxy.prototype.AdminB = function (commandData) {
+        this.ScUiMan.AdminB(this.TopLevelDoc, null);
     };
     return HindSiteScUiProxy;
 }(LoggableBase_1.LoggableBase));

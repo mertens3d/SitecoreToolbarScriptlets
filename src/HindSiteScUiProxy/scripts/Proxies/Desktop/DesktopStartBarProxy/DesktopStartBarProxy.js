@@ -17,14 +17,12 @@ exports.DesktopStartBarProxy = void 0;
 var InjectConst_1 = require("../../../../../Shared/scripts/Interfaces/InjectConst");
 var FrameHelper_1 = require("../../../Helpers/FrameHelper");
 var LoggableBase_1 = require("../../../Managers/LoggableBase");
-var DesktopStartBarButtonProxy_1 = require("./DesktopStartBarButtonProxy");
 var TreeMutationEvent_Observer_1 = require("../DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer");
+var DesktopStartBarButtonProxy_1 = require("./DesktopStartBarButtonProxy");
 var DesktopStartBarProxy = /** @class */ (function (_super) {
     __extends(DesktopStartBarProxy, _super);
-    function DesktopStartBarProxy(logger, ownerDesktopProxy, settingsAgent) {
+    function DesktopStartBarProxy(logger, ownerDesktopProxy) {
         var _this = _super.call(this, logger) || this;
-        _this.CeProxies = [];
-        _this.SettingsAgent = settingsAgent;
         _this.Logger.InstantiateStart(DesktopStartBarProxy.name);
         _this.OwnerDesktopProxy = ownerDesktopProxy;
         //this.EnrollListenerForActiveNodeChange();

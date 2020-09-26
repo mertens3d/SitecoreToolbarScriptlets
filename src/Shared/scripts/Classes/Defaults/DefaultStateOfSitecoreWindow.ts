@@ -8,6 +8,7 @@ import { StaticHelpers } from "../StaticHelpers";
 import { DefaultStateOfDesktop } from "./DefaultStateOfDesktop";
 import { Guid } from "../../Helpers/Guid";
 import { DefaultStateOfContentEditor } from "./DefaultStateOfContentEditor";
+import { IError } from "../../Interfaces/IError";
 
 export class DefaultFriendly implements IDataFriendly {
   Flavor = SnapShotFlavor[SnapShotFlavor.Live];
@@ -33,6 +34,7 @@ export class DefaultStateOfSitecoreWindow implements IDataStateOfSitecoreWindow 
   Friendly = new DefaultFriendly();
   Meta = new DefaultMetaData();
   ScWindowStates: IDataSitecoreWindowStates = new DefaultScWindowStates();
+  ErrorStack: IError[] = [];
 
   constructor() {
     this.Meta.TimeStamp = new Date();

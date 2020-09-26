@@ -334,4 +334,4 @@ var ScWindowProxy = /** @class */ (function (_super) {
     return ScWindowProxy;
 }(LoggableBase_1.LoggableBase));
 exports.ScWindowProxy = ScWindowProxy;
-//# sourceMappingURL=ScWindowManager.js.map
+//# sourceMappingURL=ScWindowProxy.js.map

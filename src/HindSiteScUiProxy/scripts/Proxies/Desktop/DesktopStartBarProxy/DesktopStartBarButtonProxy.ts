@@ -2,7 +2,7 @@
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { DesktopStartBarProxy } from './DesktopStartBarProxy';
-import { ScContentTreeNodeProxy } from '../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
+import { ScContentTreeNodeProxy } from '../../ContentEditor/ContentEditorProxy/ContentEditorTreeProxy/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
 import { StaticHelpers } from '../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../Shared/scripts/Enums/BufferDirection';
