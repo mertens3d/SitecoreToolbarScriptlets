@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TreeMutationEvent_Subject = void 0;
-var ContentEditorTreeNodeProxy_1 = require("../../../../ContentEditor/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy");
+var ContentEditorTreeNodeProxy_1 = require("../../../../ContentEditor/ContentEditorProxy/ContentEditorTreeProxy/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy");
 var HindeSiteEvent_Subject_1 = require("../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject");
 var TreeMutationEvent_Subject = /** @class */ (function (_super) {
     __extends(TreeMutationEvent_Subject, _super);

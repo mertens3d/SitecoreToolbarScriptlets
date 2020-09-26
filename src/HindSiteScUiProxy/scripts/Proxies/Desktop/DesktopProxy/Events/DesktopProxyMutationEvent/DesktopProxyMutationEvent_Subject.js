@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DesktopProxyMutationEvent_Subject = void 0;
-var DTFrameProxy_1 = require("../../../../DTFrameProxy");
+var DTFrameProxy_1 = require("../../FrameProxies/DTFrameProxy");
 var HindeSiteEvent_Subject_1 = require("../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject");
 var DesktopProxyMutationEvent_Subject = /** @class */ (function (_super) {
     __extends(DesktopProxyMutationEvent_Subject, _super);

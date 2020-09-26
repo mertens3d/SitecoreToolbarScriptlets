@@ -13,7 +13,7 @@ import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { PopConst } from "../../Classes/PopConst";
+import { PopConst } from "../../../../Shared/scripts/Const/PopConst";
 import { StateHelpers } from "../../Classes/StateHelpers";
 import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload";
 import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject";
@@ -84,7 +84,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     if (currentVal) {
       toReturn = Guid.ParseGuid(currentVal, true);
     } else {
-      toReturn = GuidData.GetEmptyGuid();
+      toReturn = Guid.GetEmptyGuid();
     }
     this.Logger.FuncEnd(this.GetSelectSnapshotId.name);
     return toReturn;
@@ -282,7 +282,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     if ((data.Meta.SessionId && prior && data.Meta.SnapshotId.Raw === prior.Raw) ||
       (idx === 0 && !prior)
       ||
-      (idx === 0 && prior.Raw === GuidData.GetEmptyGuid().Raw)
+      (idx === 0 && prior.Raw === Guid.GetEmptyGuid().Raw)
 
     ) {
       el.selected = true;

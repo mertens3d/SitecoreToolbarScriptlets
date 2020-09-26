@@ -1,5 +1,5 @@
 ﻿const gulp = require('gulp');
-const vars = require('./../vars');
+const vars = require('../vars');
 const uglify = require('gulp-terser'); //require('gulp-uglify-es');
 const rename = require('gulp-rename');
 var sort = require('gulp-sort');

@@ -1,6 +1,6 @@
 ﻿import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
 import { IHindeSite_Observable } from "./IHindeSite_Observable";
-import { LoggableBase } from "../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+import { LoggableBase } from "../../LoggableBase";
 import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
 
 export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSite_Observable<T> {

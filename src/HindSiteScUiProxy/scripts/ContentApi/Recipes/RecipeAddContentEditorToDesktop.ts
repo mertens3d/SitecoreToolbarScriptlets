@@ -1,21 +1,19 @@
 ﻿import { RecipeBasics } from '../../../../Shared/scripts/Classes/RecipeBasics';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { InitResultsDTFrameProxy } from '../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy';
+import { IScWindowProxy } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { _BaseFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy';
+import { IApiCallPayload } from '../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent';
 import { ICommandRecipes } from '../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { ContentConst } from '../../../../Shared/scripts/Interfaces/InjectConst';
-import { DesktopStartBarProxy } from '../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
-import { LoggableBase } from '../../Managers/LoggableBase';
 import { FrameHelper } from '../../Helpers/FrameHelper';
 import { DTFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
-import { InitResultsDTFrameProxy } from '../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy';
+import { DesktopStartBarProxy } from '../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { _ApiRecipeBase } from './__RecipeBase/_ApiRecipeBase';
-import { IApiCallPayload } from '../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent';
-import { IScWindowProxy } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 
 export class RecipeAdminB extends _ApiRecipeBase implements ICommandRecipes {
   constructor(logger: ILoggerAgent, apiCallPayload: IApiCallPayload, targetDoc: IDataOneDoc, ceButtonTabAgent: DesktopStartBarProxy, scWinProxy: IScWindowProxy) {
-    super(logger, apiCallPayload, scWinProxy);
+    super(logger);
 
     this.Logger.InstantiateStart(RecipeAdminB.name);
 
@@ -31,7 +29,7 @@ export class RecipeAdminB extends _ApiRecipeBase implements ICommandRecipes {
 export class RecipeAddNewContentEditorToDesktop extends _ApiRecipeBase implements ICommandRecipes {
 
   constructor(logger: ILoggerAgent, apiPayload: IApiCallPayload,  scWinProxy: IScWindowProxy) {
-    super(logger, apiPayload, scWinProxy);
+    super(logger);
 
     this.Logger.InstantiateStart(RecipeAddNewContentEditorToDesktop.name);
 

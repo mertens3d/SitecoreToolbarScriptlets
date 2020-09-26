@@ -16,6 +16,16 @@ export class Guid {
     return toReturn;
   }
 
+
+
+  static GetEmptyGuid(): GuidData {
+    return new GuidData();
+  }
+
+  static AsBracedGuid(guidData: GuidData): string {
+    return '{' + guidData.Raw + "}";
+  }
+
   static IsValidGuidStr(candidateStr: string): boolean {
     let toReturn: boolean = false;
     let regexGuid: string = '^[\}]?[0-9a-f]{8}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{4}[\-]?[0-9a-f]{12}[\}]?$';

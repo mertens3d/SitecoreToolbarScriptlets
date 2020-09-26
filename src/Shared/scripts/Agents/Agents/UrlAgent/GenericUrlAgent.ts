@@ -1,11 +1,10 @@
-﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
-import { ScWindowType } from "../../../Enums/scWindowType";
-import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
+﻿import { LoggableBase } from "../../../LoggableBase";
+import { QueryStrKey } from "../../../Enums/QueryStrKey";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/IUrlParts";
 import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
-import { LoggableBase } from "../../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
 
 export class GenericUrlAgent extends LoggableBase implements IUrlAgent {
   protected UrlParts: IGenericUrlParts;

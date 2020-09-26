@@ -9,6 +9,7 @@ import { ContentEditorProxy } from "../../../../../HindSiteScUiProxy/scripts/Pro
 import { DesktopProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 
 export interface IScWindowProxy {
+  PublishActiveCE();
   ContentEditorProxy: ContentEditorProxy;
   DesktopProxy: DesktopProxy;
   GetCurrentPageType(): ScWindowType;

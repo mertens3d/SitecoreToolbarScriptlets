@@ -9,7 +9,7 @@ import { IDataStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Da
 import { IDataStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { RecipeRestoreFrameOnDesktop } from "../../../ContentApi/Recipes/RecipeRestoreDesktop";
 import { FrameHelper } from "../../../Helpers/FrameHelper";
-import { LoggableBase } from "../../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { _BaseFrameProxy } from "./FrameProxies/_BaseFrameProxy";
 import { DesktopStartBarProxy } from "../DesktopStartBarProxy/DesktopStartBarProxy";
@@ -21,6 +21,7 @@ import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutatio
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 
 export class DesktopProxy extends LoggableBase {
+
   private __iframeHelper: FrameHelper;
 
   DTFrameProxyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
@@ -43,7 +44,15 @@ export class DesktopProxy extends LoggableBase {
     }
 
     this.Logger.InstantiateEnd(DesktopProxy.name);
+  } 
+
+  async PublishItem():Promise<void> {
+    let dtFrameProxy: DTFrameProxy = this.DesktopFrameProxyBucket.GetActiveFrame();
+    if (dtFrameProxy) {
+      await dtFrameProxy.ContentEditorProxy.PublishItem();
+    }
   }
+
   async OnReadyInitDesktopProxy(): Promise<InitResultsDesktopProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.OnReadyInitDesktopProxy.name);

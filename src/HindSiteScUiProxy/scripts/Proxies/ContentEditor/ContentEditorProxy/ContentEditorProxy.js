@@ -55,11 +55,12 @@ var RecipeBasics_1 = require("../../../../../Shared/scripts/Classes/RecipeBasics
 var Guid_1 = require("../../../../../Shared/scripts/Helpers/Guid");
 var InjectConst_1 = require("../../../../../Shared/scripts/Interfaces/InjectConst");
 var SharedConst_1 = require("../../../../../Shared/scripts/SharedConst");
-var LoggableBase_1 = require("../../../Managers/LoggableBase");
+var LoggableBase_1 = require("../../../../../Shared/scripts/LoggableBase");
 var TreeMutationEvent_Observer_1 = require("../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer");
-var ContentEditorTreeProxy_1 = require("../ContentEditorTreeProxy/ContentEditorTreeProxy");
+var ContentEditorTreeProxy_1 = require("./ContentEditorTreeProxy/ContentEditorTreeProxy");
 var ContentEditorProxyMutationEvent_Subject_1 = require("../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject");
 var InitResultContentEditorProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy");
+var ContentEditorPublishProxy_1 = require("./ContentEditorPublishProxy");
 var ContentEditorProxy = /** @class */ (function (_super) {
     __extends(ContentEditorProxy, _super);
     function ContentEditorProxy(associatedDoc, logger) {
@@ -69,6 +70,21 @@ var ContentEditorProxy = /** @class */ (function (_super) {
         _this.ValidateAssociatedDocContentEditor();
         return _this;
     }
+    ContentEditorProxy.prototype.PublishItem = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var publishProxy;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        publishProxy = new ContentEditorPublishProxy_1.ContentEditorPublishProxy(this.Logger, this, this.AssociatedDoc);
+                        return [4 /*yield*/, publishProxy.Execute()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     ContentEditorProxy.prototype.OnReadyInitContentEditorProxy = function () {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {

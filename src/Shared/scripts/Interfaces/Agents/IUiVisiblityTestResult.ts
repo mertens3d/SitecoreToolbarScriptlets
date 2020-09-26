@@ -1,5 +1,5 @@
 ﻿import { VisiblityTestResult } from "./VisiblityTestResult";
-import { LoggableBase } from "../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+import { LoggableBase } from "../../LoggableBase";
 
 export class VisiblityTestResultsBucket extends LoggableBase {
   TestResults: VisiblityTestResult[] = [];

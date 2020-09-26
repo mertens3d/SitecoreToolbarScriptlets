@@ -1,10 +1,10 @@
-﻿import { LoggableBase } from "../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
-import { BrowserTabAgent } from "../Managers/BrowserTabAgent";
-import { IUiCommandFlagRaisedEvent_Payload } from "../Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
+import { BrowserTabAgent } from "../Agents/BrowserTabAgent";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
+import { IUiCommandFlagRaisedEvent_Payload } from "../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
 
 export class HandlersForInternal extends LoggableBase {
   private BrowserTabAgent: BrowserTabAgent;

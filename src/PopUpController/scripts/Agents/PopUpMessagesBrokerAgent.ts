@@ -1,7 +1,4 @@
-﻿import { LoggableBase } from "../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
-import { ContentReplyReceivedEvent_Subject } from "../../../Content/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { MsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+﻿import { MsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { ScWindowStateValidator } from "../../../Shared/scripts/Classes/ScWindowStateValidator";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
@@ -14,6 +11,9 @@ import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISetti
 import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
+import { IDataContentReplyReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { ContentReplyReceivedEvent_Subject } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
 
 export class PopUpMessagesBrokerAgent extends LoggableBase {
   LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
@@ -41,8 +41,7 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
       CurrentContentPrefs: settingsToSend,
       IsValid: false,
       MsgFlag: msgFlag,
-      SelectSnapshotId: stateOfPopUp.SelectSnapShotId,
-      SnapShotNewNickname: stateOfPopUp.NewNickName
+      StateOfPopUI: stateOfPopUp,
     }
     return messageControllerToContent;
   }

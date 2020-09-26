@@ -130,7 +130,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     var deleteFlag: boolean = false;
     var now: Date = new Date();
 
-    if (candidate.Meta.Flavor == SnapShotFlavor.Autosave ) {
+    if (candidate.Meta.Flavor == SnapShotFlavor.Autosave) {
       if (autoCount > ContentConst.Const.MaxAutoToSaveCount) {
         this.Logger.LogVal('Delete (max count :' + ContentConst.Const.MaxAutoToSaveCount + ')', candidate.Meta.TimeStamp.toString());
         deleteFlag = true;

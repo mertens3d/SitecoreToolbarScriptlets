@@ -50,14 +50,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TreeProxy = void 0;
-var IterationDrone_1 = require("../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone");
-var DefaultStateOfTree_1 = require("../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfTree");
-var Guid_1 = require("../../../../../Shared/scripts/Helpers/Guid");
-var InjectConst_1 = require("../../../../../Shared/scripts/Interfaces/InjectConst");
-var LoggableBase_1 = require("../../../Managers/LoggableBase");
-var TreeMutationEvent_Subject_1 = require("../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject");
-var InitResultTreeProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy");
-var ContentEditorTreeNodeProxy_1 = require("../ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy");
+var IterationDrone_1 = require("../../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone");
+var DefaultStateOfTree_1 = require("../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfTree");
+var Guid_1 = require("../../../../../../Shared/scripts/Helpers/Guid");
+var InjectConst_1 = require("../../../../../../Shared/scripts/Interfaces/InjectConst");
+var LoggableBase_1 = require("../../../../../../Shared/scripts/LoggableBase");
+var TreeMutationEvent_Subject_1 = require("../../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject");
+var InitResultTreeProxy_1 = require("../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy");
+var ContentEditorTreeNodeProxy_1 = require("./ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy");
 var TreeProxy = /** @class */ (function (_super) {
     __extends(TreeProxy, _super);
     function TreeProxy(logger, associatedDoc, treeContainerElement) {

@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from '../../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
+﻿import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
 import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
@@ -6,7 +6,7 @@ import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButton
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { ICommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
-import { PopConst } from './PopConst';
+import { PopConst } from '../../../Shared/scripts/Const/PopConst';
 
 export class CommandDefintionFactory extends LoggableBase {
   public BuildMenuCommandParamsBucket(): ICommandDefinitionBucket {

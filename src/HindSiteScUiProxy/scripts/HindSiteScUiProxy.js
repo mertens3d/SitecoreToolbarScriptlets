@@ -50,26 +50,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HindSiteScUiProxy = void 0;
-var RecipeBasics_1 = require("../../Shared/scripts/Classes/RecipeBasics");
-var _1xxx_MessageFlag_1 = require("../../Shared/scripts/Enums/1xxx-MessageFlag");
 var SnapShotFlavor_1 = require("../../Shared/scripts/Enums/SnapShotFlavor");
-var FactoryHelper_1 = require("../../Shared/scripts/Helpers/FactoryHelper");
+var LoggableBase_1 = require("../../Shared/scripts/LoggableBase");
 var RecipeAddContentEditorToDesktop_1 = require("./ContentApi/Recipes/RecipeAddContentEditorToDesktop");
-var RecipePublishActiveCe_1 = require("./ContentApi/Recipes/RecipePublishActiveCe");
-var LoggableBase_1 = require("./Managers/LoggableBase");
 var ScWindowProxy_1 = require("./Proxies/ScWindowProxy");
-var ScWindowRecipePartials_1 = require("./Managers/ScWindowManager/ScWindowRecipePartials");
 var HindSiteScUiProxy = /** @class */ (function (_super) {
     __extends(HindSiteScUiProxy, _super);
-    function HindSiteScUiProxy(logger, scUiMan, scUrlAgent, TopDoc) {
+    function HindSiteScUiProxy(logger, scUiMan, scUrlAgent, TopDoc, toastAgent) {
         var _this = _super.call(this, logger) || this;
         _this.Logger.FuncStart(HindSiteScUiProxy.name);
         _this.ScUrlAgent = scUrlAgent;
         _this.ScUiMan = scUiMan;
         _this.TopLevelDoc = TopDoc;
-        _this.FactoryHelp = new FactoryHelper_1.FactoryHelper(_this.Logger);
-        _this.RecipeBasics = new RecipeBasics_1.RecipeBasics(_this.Logger);
-        _this.ScWinRecipeParts = new ScWindowRecipePartials_1.ScWindowRecipePartials(_this.Logger);
+        _this.ToastAgent = toastAgent;
         _this.InitscWinProxy();
         _this.Logger.FuncEnd(HindSiteScUiProxy.name);
         return _this;
@@ -84,7 +77,7 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
         return this.ScWindowProxy.GetStateOfSitecoreWindow(snapshotFlavor);
     };
     HindSiteScUiProxy.prototype.RaiseToastNotification = function (arg0) {
-        throw new Error("Method not implemented.");
+        this.ToastAgent.RaiseToastNotification(this.TopLevelDoc, arg0);
     };
     //async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void> {
     //  return new Promise(async (resolve, reject) => {
@@ -140,14 +133,10 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, new RecipePublishActiveCe_1.RecipePublishActiveCe(this.Logger, commandData, this.ScWindowProxy, this.FactoryHelp, this.TopLevelDoc).Execute()
-                            .then(function () { return resolve; })
-                            .catch(function (err) { return reject(err); })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                this.ScWindowProxy.PublishActiveCE()
+                    .then(function () { return resolve(); })
+                    .ca;
+                return [2 /*return*/];
             });
         }); });
     };
@@ -176,15 +165,6 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
     };
     HindSiteScUiProxy.prototype.OpenContentEditor = function () {
         throw new Error("Method not implemented.");
-    };
-    HindSiteScUiProxy.prototype.Ping = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                resolve(_1xxx_MessageFlag_1.MsgFlag.RespListeningAndReady);
-                return [2 /*return*/];
-            });
-        }); });
     };
     HindSiteScUiProxy.prototype.AdminB = function (commandData) {
         this.ScUiMan.AdminB(this.TopLevelDoc, null);

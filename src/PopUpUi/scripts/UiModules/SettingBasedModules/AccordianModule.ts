@@ -1,6 +1,6 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { PopConst } from "../../Classes/PopConst";
+import { PopConst } from "../../../../Shared/scripts/Const/PopConst";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { IUiSettingBasedModuleMutationEven_Payload } from "../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload";

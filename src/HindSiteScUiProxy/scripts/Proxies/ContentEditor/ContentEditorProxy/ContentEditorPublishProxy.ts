@@ -1,30 +1,40 @@
-﻿import { PromiseResult } from "../../../../Shared/scripts/Classes/PromiseResult";
-import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
-import { IApiCallPayload } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
-import { ICommandRecipes } from "../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { _BaseFrameProxy } from "../../Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
-import { IDataPublishChain } from "../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
-import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { _ApiRecipeBase } from "./__RecipeBase/_ApiRecipeBase";
-import { IFactoryHelper } from "../../../../Shared/scripts/Interfaces/IFactoryHelper";
-import { IScWindowProxy } from "../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
+import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
+import { IApiCallPayload } from "../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
+import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
+import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { _BaseFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
+import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
+import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
+import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
+import { _ApiRecipeBase } from "../../../ContentApi/Recipes/__RecipeBase/_ApiRecipeBase";
+import { IFactoryHelper } from "../../../../../Shared/scripts/Interfaces/IFactoryHelper";
+import { IScWindowProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
+import { ContentEditorProxy } from "./ContentEditorProxy";
+import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
+import { FactoryHelper } from "../../../../../Shared/scripts/Helpers/FactoryHelper";
 
-export class RecipePublishActiveCe extends _ApiRecipeBase implements ICommandRecipes {
-  private FactoryHelp: IFactoryHelper;
-  private TopLevelDoc: IDataOneDoc;
+export class ContentEditorPublishProxy extends LoggableBase  {
+  ContentEditorProxy: ContentEditorProxy;
+    RecipeBasics: RecipeBasics;
+    AssociatedDoc: IDataOneDoc;
+    FactoryHelp: FactoryHelper;
 
-  constructor(logger: ILoggerAgent, commandData: IApiCallPayload, scWinProxy: IScWindowProxy, factoryHelp: IFactoryHelper, topLevelDoc: IDataOneDoc) {
-    super(logger, commandData, scWinProxy);
-    this.TopLevelDoc = topLevelDoc;
-    this.FactoryHelp = factoryHelp;
+  constructor(logger: ILoggerAgent, contentEditorProxy: ContentEditorProxy, associatedDoc: IDataOneDoc) {
+    super(logger);
+
+    this.ContentEditorProxy = contentEditorProxy;
+    this.AssociatedDoc = associatedDoc;
+    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.FactoryHelp = new FactoryHelper(this.Logger);
+
   }
 
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await this.PublishActiveCE(this.TopLevelDoc)
+      await this.PublishActiveCE()
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -43,7 +53,7 @@ export class RecipePublishActiveCe extends _ApiRecipeBase implements ICommandRec
             .catch((err) => reject(this.GetDocToPublish.name + ' ' + err));
         }
         else {
-          resolve(this.TopLevelDoc);
+          resolve(this.AssociatedDoc);
         }
       } catch (err) {
         reject(this.GetDocToPublish.name + ' ' + err)
@@ -53,12 +63,10 @@ export class RecipePublishActiveCe extends _ApiRecipeBase implements ICommandRec
     })
   }
 
-  async PublishActiveCE(targetDoc: IDataOneDoc): Promise<void> {
+  async PublishActiveCE(): Promise<void> {
     this.Logger.FuncStart(this.PublishActiveCE.name);
     try {
-      var scWindowType = this.scWinProxy.GetCurrentPageType();
-      await this.GetDocToPublish(scWindowType, targetDoc)
-        .then((docToPublish: IDataOneDoc) => this.PublishCE(docToPublish))
+      await this.PublishCE(this.AssociatedDoc)
         .catch((err) => { throw (err) });
     }
     catch (err) {
@@ -86,7 +94,7 @@ export class RecipePublishActiveCe extends _ApiRecipeBase implements ICommandRec
     try {
       var dataPublishChain: IDataPublishChain = {
         DocToPublish: docToPublish,
-        TopLevelDoc: this.scWinProxy.GetTopLevelDoc(),
+        TopLevelDoc: this.AssociatedDoc,// this.scWinProxy.GetTopLevelDoc(),
         Iframe0Blue: null,
         JqIframe: null,
         MessageDialogIframeRed: null

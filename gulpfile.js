@@ -9,9 +9,9 @@ var gulpif = require('gulp-if');
 
 var htmlTasks = require('./gulp.support/tasks/htmlTasks');
 var InjectableClass = require('./gulp.support/OneInjectable.js');
-var jstasks = require('./gulp.support/tasks/jstasks');
+var jstasks = require('./gulp.support/tasks/jsTasks');
 var lazypipe = require('lazypipe');
-var otherTasks = require('./gulp.support/tasks/otherTasks');
+var otherTasks = require('./gulp.support/tasks/webPackTasks');
 var putTasks = require('./gulp.support/tasks/putTasks');
 var styleTasks = require('./gulp.support/tasks/styleTasks');
 var tsTasks = require('./gulp.support/tasks/tsTasks');
@@ -29,8 +29,9 @@ gulp.task('BuildPopUpStyles', (cb) => styleTasks.BuildPopUpStyles(cb, varsObj));
 gulp.task('BuildContentStyles', (cb) => styleTasks.BuildCompactCEStyles(cb, varsObj));
 gulp.task('BuildTypescriptAll', (cb) => tsTasks.BuildTypeScriptAll(cb, varsObj));
 gulp.task('cleanAddons', (cb) => cleanTasks.cleanAddons(cb, varsObj));
-gulp.task('cleanAutoBuildFolder', (cb) => cleanTasks.cleanAutoBuildFolder(cb, varsObj));
-gulp.task('combineJs', (cb) => jstasks.combineJs(cb, varsObj));
+gulp.task('CleanAutoBuildFolder', (cb) => cleanTasks.cleanAutoBuildFolder(cb, varsObj));
+gulp.task('ArchiveAutoBuildFolder', (cb) => cleanTasks.ArchiveAutoBuildFolder(cb, varsObj));
+gulp.task('CombineJs', (cb) => jstasks.combineJs(cb, varsObj));
 gulp.task('PutToFinal', (cb) => putTasks.PutToFinal(cb, varsObj));
 gulp.task('CopyFromFinalToAddon', (cb) => putTasks.CopyFromFinalToAddon(cb, varsObj));
 
@@ -42,6 +43,7 @@ gulp.task('WebpackPopUpController', (cb) => otherTasks.WebPackOne(cb, varsObj.Po
 gulp.task('CleanBuildStamp', (cb) => tsTasks.CleanBuildStamp(cb, varsObj));
 gulp.task('PopulateBuildTimeStamp', (cb) => tsTasks.BuildBuildNumber(cb, varsObj));
 
+gulp.task('PreClean', gulp.series(['ArchiveAutoBuildFolder', 'CleanAutoBuildFolder']));
 gulp.task('WebpackAll', gulp.series(['WebpackContent', 'WebpackHindSiteApi', 'WebpackPopUpUi', 'WebpackPopUpController']));
 gulp.task('TimeStampAll', gulp.series(['CleanBuildStamp', 'PopulateBuildTimeStamp']));
 
@@ -53,4 +55,4 @@ gulp.task('putters', gulp.series(['CopyFromFinalToAddon']), function (resolve) {
   resolve();
 });
 
-gulp.task('default', gulp.series(['builders', 'putters', 'ArchiveAndDelete']));
+gulp.task('default', gulp.series(['PreClean','builders', 'putters', 'ArchiveAndDelete']));

@@ -1,14 +1,14 @@
-﻿import { LoggableBase } from '../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
-import { StaticHelpers } from '../../Shared/scripts/Classes/StaticHelpers';
-import { MsgFlag } from '../../Shared/scripts/Enums/1xxx-MessageFlag';
-import { MenuCommandKey } from '../../Shared/scripts/Enums/2xxx-MenuCommand';
-import { ILoggerAgent } from '../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IMenuCommandDefinition } from "../../Shared/scripts/Interfaces/IMenuCommandDefinition";
-import { ICommandDefinitionBucket, IHindSiteUiLayer } from '../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
-import { PopUpMessagesBrokerAgent } from '../scripts/Agents/PopUpMessagesBrokerAgent';
-import { IStateOfPopUp } from "../../Shared/scripts/Interfaces/IStateOfPopUp";
-import { IUiCommandFlagRaisedEvent_Payload } from '../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
-import { HandlersForInternal } from '../../PopUpUi/scripts/Classes/HandlersForInternal';
+﻿import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
+import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
+import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
+import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
+import { ICommandDefinitionBucket, IHindSiteUiLayer } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
+import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
+import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
+import { HandlersForInternal } from '../Classes/HandlersForInternal';
+import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
+import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
 
 export class CommandManager extends LoggableBase {
 

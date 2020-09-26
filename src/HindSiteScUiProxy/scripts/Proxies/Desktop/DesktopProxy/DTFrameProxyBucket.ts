@@ -1,8 +1,9 @@
 ﻿import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { LoggableBase } from "../../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 
 export class DTFrameProxyBucket extends LoggableBase {
+
   private FrameBucketUnits: DTFrameProxy[] = [];
 
   constructor(logger: ILoggerAgent) {
@@ -16,6 +17,10 @@ export class DTFrameProxyBucket extends LoggableBase {
       toReturn = true;
     }
     return (toReturn);
+  }
+
+  GetActiveFrame(): DTFrameProxy {
+    throw new Error("Method not implemented.");
   }
 
   private BucketHasSameItem(dtFrameBucketItem: DTFrameProxy): boolean {

@@ -1,9 +1,9 @@
-﻿import { LoggableBase } from "../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
-import { IDataStateOfDesktop } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
+﻿import { IDataStateOfDesktop } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { IDataStateOfTree } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree";
 import { IDataStateOfScContentTreeNode } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
 import { IDataStateOfContentEditor } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor";
+import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 
 export class StateHelpers extends LoggableBase {
 

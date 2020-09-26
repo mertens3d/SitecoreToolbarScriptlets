@@ -1,32 +1,26 @@
-﻿import { RecipeBasics } from "../../Shared/scripts/Classes/RecipeBasics";
-import { MsgFlag } from "../../Shared/scripts/Enums/1xxx-MessageFlag";
+﻿import { MsgFlag } from "../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
-import { FactoryHelper } from "../../Shared/scripts/Helpers/FactoryHelper";
-import { IHindSiteScWindowApi } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiProxy } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IScWindowProxy } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IDataOneDoc } from "../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IDataStateOfSitecoreWindow } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
-import { IFactoryHelper } from "../../Shared/scripts/Interfaces/IFactoryHelper";
+import { LoggableBase } from "../../Shared/scripts/LoggableBase";
 import { RecipeAddNewContentEditorToDesktop } from "./ContentApi/Recipes/RecipeAddContentEditorToDesktop";
-import { RecipePublishActiveCe } from "./ContentApi/Recipes/RecipePublishActiveCe";
-import { LoggableBase } from "./Managers/LoggableBase";
-import { ScWindowProxy } from "./Proxies/ScWindowProxy";
-import { ScWindowRecipePartials } from "./Managers/ScWindowManager/ScWindowRecipePartials";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
+import { ScWindowProxy } from "./Proxies/ScWindowProxy";
+import { ToastAgent } from "../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent";
 
-export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScWindowApi {
-  private FactoryHelp: IFactoryHelper;
+export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProxy {
   private ScUiMan: ScUiManager;
   private ScWindowProxy: IScWindowProxy;
-  private RecipeBasics: RecipeBasics;
-  private ScWinRecipeParts: ScWindowRecipePartials;
   private ScUrlAgent: IScUrlAgent;
   private TopLevelDoc: IDataOneDoc;
+    ToastAgent: ToastAgent;
 
-  constructor(logger: ILoggerAgent, scUiMan: ScUiManager, scUrlAgent: IScUrlAgent, TopDoc: IDataOneDoc) {
+  constructor(logger: ILoggerAgent, scUiMan: ScUiManager, scUrlAgent: IScUrlAgent, TopDoc: IDataOneDoc, toastAgent: ToastAgent) {
     super(logger);
 
     this.Logger.FuncStart(HindSiteScUiProxy.name);
@@ -34,11 +28,7 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScWindow
     this.ScUrlAgent = scUrlAgent;
     this.ScUiMan = scUiMan;
     this.TopLevelDoc = TopDoc;
-    this.FactoryHelp = new FactoryHelper(this.Logger);
-    this.RecipeBasics = new RecipeBasics(this.Logger);
-
-    this.ScWinRecipeParts = new ScWindowRecipePartials(this.Logger);
-
+    this.ToastAgent = toastAgent;
     this.InitscWinProxy();
 
     this.Logger.FuncEnd(HindSiteScUiProxy.name);
@@ -56,7 +46,7 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScWindow
   }
 
   RaiseToastNotification(arg0: string) {
-    throw new Error("Method not implemented.");
+    this.ToastAgent.RaiseToastNotification(this.TopLevelDoc, arg0);
   }
 
   //async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void> {
@@ -97,9 +87,9 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScWindow
 
   PublischActiveCE(commandData: IApiCallPayload): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      await new RecipePublishActiveCe(this.Logger, commandData, this.ScWindowProxy, this.FactoryHelp, this.TopLevelDoc).Execute()
-        .then(() => resolve)
-        .catch((err) => reject(err));
+      this.ScWindowProxy.PublishActiveCE()
+        .then(() => resolve())
+        .ca
     });
   }
 
@@ -123,11 +113,6 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScWindow
     throw new Error("Method not implemented.");
   }
 
-  Ping() {
-    return new Promise(async (resolve, reject) => {
-      resolve(MsgFlag.RespListeningAndReady);
-    });
-  }
 
   AdminB(commandData: IApiCallPayload) {
     this.ScUiMan.AdminB(this.TopLevelDoc, null);

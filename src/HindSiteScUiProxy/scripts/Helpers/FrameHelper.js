@@ -53,7 +53,7 @@ exports.FrameHelper = void 0;
 var RecipeBasics_1 = require("../../../Shared/scripts/Classes/RecipeBasics");
 var FactoryHelper_1 = require("../../../Shared/scripts/Helpers/FactoryHelper");
 var InjectConst_1 = require("../../../Shared/scripts/Interfaces/InjectConst");
-var LoggableBase_1 = require("../Managers/LoggableBase");
+var LoggableBase_1 = require("../../../Shared/scripts/LoggableBase");
 var FrameHelper = /** @class */ (function (_super) {
     __extends(FrameHelper, _super);
     function FrameHelper(logger) {

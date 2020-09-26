@@ -4,7 +4,7 @@ import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerA
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { _BaseFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
-import { LoggableBase } from "../Managers/LoggableBase";
+import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
 export class FrameHelper extends LoggableBase {

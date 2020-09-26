@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DTFrameProxyBucket = void 0;
-var LoggableBase_1 = require("../../../Managers/LoggableBase");
+var LoggableBase_1 = require("../../../../../Shared/scripts/LoggableBase");
 var DTFrameProxyBucket = /** @class */ (function (_super) {
     __extends(DTFrameProxyBucket, _super);
     function DTFrameProxyBucket(logger) {
@@ -29,6 +29,9 @@ var DTFrameProxyBucket = /** @class */ (function (_super) {
             toReturn = true;
         }
         return (toReturn);
+    };
+    DTFrameProxyBucket.prototype.GetActiveFrame = function () {
+        throw new Error("Method not implemented.");
     };
     DTFrameProxyBucket.prototype.BucketHasSameItem = function (dtFrameBucketItem) {
         var toReturn = true;

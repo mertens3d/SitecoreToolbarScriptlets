@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from '../../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
+﻿import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
 import { IContentMessageBroker } from '../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 

@@ -1,4 +1,4 @@
-﻿import { IPopUpConst } from "../../../Shared/scripts/Interfaces/IPopUpConst";
+﻿import { IPopUpConst } from "../Interfaces/IPopUpConst";
 
 export class PopConst {
   static StorageRootPrefix: 'HindSite.';

@@ -2,7 +2,7 @@
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { FrameHelper } from '../../../Helpers/FrameHelper';
-import { LoggableBase } from '../../../Managers/LoggableBase';
+import { LoggableBase } from '../../../../../Shared/scripts/LoggableBase';
 import { DTFrameProxy } from '../DesktopProxy/FrameProxies/DTFrameProxy';
 import { DesktopProxy } from '../DesktopProxy/DesktopProxy';
 import { IDTFrameProxyMutationEvent_Payload } from '../DesktopProxy/Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';

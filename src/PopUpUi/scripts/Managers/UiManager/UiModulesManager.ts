@@ -18,7 +18,7 @@ import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IM
 import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IStateOfUiModules } from "../../../../Shared/scripts/Interfaces/IStateOfUiModules";
 import { UiHydrationData } from '../../../../Shared/scripts/Interfaces/UiHydrationData';
-import { PopConst } from '../../Classes/PopConst';
+import { PopConst } from '../../../../Shared/scripts/Const/PopConst';
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
 import { SelectSnapUiMutationEvent_ObserverWithCallback } from '../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_ObserverWithCallback';
 import { UiModuleManagerPassThroughEvent_Subject } from '../../Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Subject';
@@ -36,7 +36,7 @@ import { FeedbackModulePopUpState } from '../../UiModules/UiFeedbackModules/Feed
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
 import { UiCommandsManager } from '../UiCommandsManager';
 import { InputWithButtonModule } from '../../UiModules/ButtonModules/InputWithButtonModule';
-import { LoggableBase } from '../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
+import { LoggableBase } from '../../../../Shared/scripts/LoggableBase';
 
 export class UiModulesManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];

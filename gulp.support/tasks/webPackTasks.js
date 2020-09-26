@@ -24,6 +24,9 @@ module.exports = {
             path: targetVar.WebpackContentOutputFilePathAbs(),
             filename: targetVar.MinFileName() // 'jsContent.min.js'
           },
+          externals: {
+            PopUpUILayer: 'PopUpUiLayer' // i don't know if this is working or not
+          },
           optimization: {
             minimize: false
           }, 

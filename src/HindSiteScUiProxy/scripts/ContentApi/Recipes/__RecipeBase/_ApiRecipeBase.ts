@@ -8,14 +8,12 @@ import { IRecipeBasics } from "../../../../../Shared/scripts/Interfaces/IPromise
 export abstract class _ApiRecipeBase {
   protected Logger: ILoggerAgent;
   protected RecipeBasics: IRecipeBasics;
-  protected scWinProxy: IScWindowProxy;
   protected TargetSnapShotFlavor: SnapShotFlavor;
   protected TargetDoc: IDataOneDoc;
 
-  constructor(logger: ILoggerAgent,  scWinProxy: IScWindowProxy,) {
+  constructor(logger: ILoggerAgent) {
     this.Logger = logger;
     this.RecipeBasics = new RecipeBasics(this.Logger);
-    this.scWinProxy = scWinProxy;
     this.TargetDoc = null; //todo
   }
 }

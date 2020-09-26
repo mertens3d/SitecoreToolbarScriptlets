@@ -57,7 +57,7 @@ var InitResultsDesktopProxy_1 = require("../../../../../Shared/scripts/Interface
 var InitResultsDTFrameProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy");
 var RecipeRestoreDesktop_1 = require("../../../ContentApi/Recipes/RecipeRestoreDesktop");
 var FrameHelper_1 = require("../../../Helpers/FrameHelper");
-var LoggableBase_1 = require("../../../Managers/LoggableBase");
+var LoggableBase_1 = require("../../../../../Shared/scripts/LoggableBase");
 var DesktopStartBarProxy_1 = require("../DesktopStartBarProxy/DesktopStartBarProxy");
 var DTFrameProxyBucket_1 = require("./DTFrameProxyBucket");
 var DesktopProxyMutationEvent_Observer_1 = require("./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer");
@@ -78,6 +78,23 @@ var DesktopProxy = /** @class */ (function (_super) {
         _this.Logger.InstantiateEnd(DesktopProxy.name);
         return _this;
     }
+    DesktopProxy.prototype.PublishItem = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var dtFrameProxy;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dtFrameProxy = this.DesktopFrameProxyBucket.GetActiveFrame();
+                        if (!dtFrameProxy) return [3 /*break*/, 2];
+                        return [4 /*yield*/, dtFrameProxy.ContentEditorProxy.PublishItem()];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        });
+    };
     DesktopProxy.prototype.OnReadyInitDesktopProxy = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;

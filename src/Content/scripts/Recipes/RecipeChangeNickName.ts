@@ -1,23 +1,17 @@
 ﻿import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
-import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IInternalCommandPayload } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
+import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
+import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
 
 export class RecipeChangeNickName extends _ContentRecipeBase implements ICommandRecipes {
-  private NewNickname: string;
-  AtticAgent: IContentAtticAgent;
-    
+  constructor(logger: ILoggerAgent, commandParams: ICommandParams, dependancies: ICommandDependancies) {
+    super(logger, commandParams, dependancies, RecipeChangeNickName.name);
 
-  constructor(logger: ILoggerAgent,commandData: IInternalCommandPayload) {
-    super(logger, commandData);
-    this.NewNickname = commandData.NewNickName;
-    this.AtticAgent = commandData.AtticAgent;
-
-    if (StaticHelpers.IsNullOrUndefined([this.NewNickname, this.TargetSnapShotId, this.AtticAgent])) {
+    if (StaticHelpers.IsNullOrUndefined([this.CommandParams.NewNickname, this.CommandParams.TargetSnapShotId, this.Dependancies.AtticAgent])) {
       this.Logger.ErrorAndThrow(RecipeChangeNickName.name, 'Null check');
     }
   }
@@ -34,11 +28,11 @@ export class RecipeChangeNickName extends _ContentRecipeBase implements ICommand
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.UpdateNickname.name);
 
-      if (this.TargetSnapShotId) {
-        if (this.NewNickname) {
+      if (this.CommandParams.TargetSnapShotId) {
+        if (this.CommandParams.NewNickname) {
           var storageMatch: IDataStateOfSitecoreWindow;
 
-          storageMatch = this.AtticAgent.GetFromStorageBySnapShotId(this.TargetSnapShotId)
+          storageMatch = this.Dependancies.AtticAgent.GetFromStorageBySnapShotId(this.CommandParams.TargetSnapShotId)
 
           if (storageMatch) {
             if ((storageMatch.Meta.Flavor === SnapShotFlavor.Autosave
@@ -46,12 +40,12 @@ export class RecipeChangeNickName extends _ContentRecipeBase implements ICommand
               (storageMatch.Meta.Flavor === SnapShotFlavor.Unknown))) {
               storageMatch.Meta.Flavor = SnapShotFlavor.Manual;
             }
-            storageMatch.Friendly.NickName = this.NewNickname;// this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
+            storageMatch.Friendly.NickName = this.CommandParams.NewNickname;// this.CommandData.PayloadData.SnapShotSettings.SnapShotNewNickname;
           } else {
             reject(this.UpdateNickname.name + ' - No storage match');
           }
 
-          this.AtticAgent.WriteStateOfSitecoreToStorage(storageMatch);
+          this.Dependancies.AtticAgent.WriteStateOfSitecoreToStorage(storageMatch);
           resolve();
         } else {
           reject(this.UpdateNickname.name + ' - something was missing');

@@ -51,7 +51,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipeAutoSaveState = void 0;
 var SnapShotFlavor_1 = require("../../../../Shared/scripts/Enums/SnapShotFlavor");
-var LoggableBase_1 = require("../../Managers/LoggableBase");
+var LoggableBase_1 = require("../../../../Shared/scripts/LoggableBase");
 var RecipeAutoSaveState = /** @class */ (function (_super) {
     __extends(RecipeAutoSaveState, _super);
     function RecipeAutoSaveState(logger, scUiProxy, atticAgent) {

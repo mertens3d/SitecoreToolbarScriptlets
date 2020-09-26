@@ -1,19 +1,18 @@
-﻿import { HindSiteSetting } from "./HindSiteSetting";
+﻿import { PopConst } from "../../../Const/PopConst";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
-import { SettingType } from "../../../Enums/SettingType";
-import { SettingFlavor } from "../../../Enums/SettingFlavor";
-import { PopConst } from "../../../../../PopUpUi/scripts/Classes/PopConst";
-import { SharedConst } from "../../../SharedConst";
-import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { UiEnableState } from "../../../Enums/Enabled";
-import { UiPresence } from "../../../Enums/UiPresence";
-import { ContentConst } from "../../../Interfaces/InjectConst";
 import { ModuleKey } from "../../../Enums/ModuleKey";
-import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { LoggableBase } from "../../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+import { SettingFlavor } from "../../../Enums/SettingFlavor";
+import { SettingType } from "../../../Enums/SettingType";
+import { UiPresence } from "../../../Enums/UiPresence";
+import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
+import { ContentConst } from "../../../Interfaces/InjectConst";
+import { LoggableBase } from "../../../LoggableBase";
+import { SharedConst } from "../../../SharedConst";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
+import { HindSiteSetting } from "./HindSiteSetting";
 import { HindSiteSettingForNumbers } from "./HindSiteSettingForNumbers";
+import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
 
 export class DefaultSettings extends LoggableBase {
 

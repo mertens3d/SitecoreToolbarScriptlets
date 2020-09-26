@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../LoggableBase";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { HindSiteSetting } from "./HindSiteSetting";

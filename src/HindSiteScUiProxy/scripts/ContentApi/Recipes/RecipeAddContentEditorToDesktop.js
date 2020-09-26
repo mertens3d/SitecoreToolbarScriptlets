@@ -57,7 +57,7 @@ var _ApiRecipeBase_1 = require("./__RecipeBase/_ApiRecipeBase");
 var RecipeAdminB = /** @class */ (function (_super) {
     __extends(RecipeAdminB, _super);
     function RecipeAdminB(logger, apiCallPayload, targetDoc, ceButtonTabAgent, scWinProxy) {
-        var _this = _super.call(this, logger, apiCallPayload, scWinProxy) || this;
+        var _this = _super.call(this, logger) || this;
         _this.Logger.InstantiateStart(RecipeAdminB.name);
         _this.Logger.InstantiateEnd(RecipeAdminB.name);
         return _this;
@@ -78,7 +78,7 @@ exports.RecipeAdminB = RecipeAdminB;
 var RecipeAddNewContentEditorToDesktop = /** @class */ (function (_super) {
     __extends(RecipeAddNewContentEditorToDesktop, _super);
     function RecipeAddNewContentEditorToDesktop(logger, apiPayload, scWinProxy) {
-        var _this = _super.call(this, logger, apiPayload, scWinProxy) || this;
+        var _this = _super.call(this, logger) || this;
         _this.Logger.InstantiateStart(RecipeAddNewContentEditorToDesktop.name);
         _this.Logger.InstantiateEnd(RecipeAddNewContentEditorToDesktop.name);
         return _this;

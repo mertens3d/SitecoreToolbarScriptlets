@@ -3,7 +3,7 @@ import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToast
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
-import { LoggableBase } from '../LoggableBase';
+import { LoggableBase } from '../../../../Shared/scripts/LoggableBase';
 import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
 

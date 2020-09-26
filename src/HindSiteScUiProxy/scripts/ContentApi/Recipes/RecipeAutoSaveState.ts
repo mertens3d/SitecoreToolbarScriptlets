@@ -8,16 +8,16 @@ import { IDataStateOfScContentTreeNode } from "../../../../Shared/scripts/Interf
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfTree } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree";
 import { IDataSitecoreWindowStates } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
-import { LoggableBase } from "../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { HindSiteScUiProxy } from "../../HindSiteScUiProxy";
-import { IHindSiteScWindowApi } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiProxy } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 
 export class RecipeAutoSaveState extends LoggableBase {
-  private ScUiProxy: IHindSiteScWindowApi;
+  private ScUiProxy: IHindSiteScUiProxy;
   private AtticAgent: IContentAtticAgent;
 
-  constructor(logger: ILoggerAgent, scUiProxy: IHindSiteScWindowApi, atticAgent: IContentAtticAgent) {
+  constructor(logger: ILoggerAgent, scUiProxy: IHindSiteScUiProxy, atticAgent: IContentAtticAgent) {
     super(logger);
     this.ScUiProxy = scUiProxy;
     this.AtticAgent = atticAgent;

@@ -1,10 +1,10 @@
-﻿import { LoggableBase } from "../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
-import { ModuleKey } from "../../../Shared/scripts/Enums/ModuleKey";
+﻿import { ModuleKey } from "../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { UiHydrationData } from "../../../Shared/scripts/Interfaces/UiHydrationData";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
+import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 
-export class _UiModuleBase extends LoggableBase {
+export abstract class _UiModuleBase extends LoggableBase {
   protected ContainerSelector: string;
   protected ContainerUiDivElem: HTMLDivElement;
   protected UiElement: HTMLElement;

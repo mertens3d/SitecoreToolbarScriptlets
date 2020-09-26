@@ -6,7 +6,8 @@ import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScUrlAgent } from "../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IInternalCommandPayload } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
+import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
+import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
 
@@ -16,8 +17,8 @@ export class RecipeInitFromQueryStr extends _ContentRecipeBase implements IComma
   private ScWinRecipeParts: ScWindowRecipePartials;
   private TopLevelDoc: IDataOneDoc;
 
-  constructor(logger: ILoggerAgent, commandData: IInternalCommandPayload) {
-    super(logger, commandData);
+  constructor(logger: ILoggerAgent, commandData: ICommandParams, dependancies: ICommandDependancies) {
+    super(logger, commandData, dependancies, RecipeInitFromQueryStr.name);
     this.RecipeBasics = new RecipeBasics(this.Logger);
   }
 
@@ -38,14 +39,14 @@ export class RecipeInitFromQueryStr extends _ContentRecipeBase implements IComma
         if (Guid.IsValidGuidStr(qsValue)) {
           let targetGuid: GuidData = Guid.ParseGuid(qsValue, false);
 
-          if (targetGuid && targetGuid !== GuidData.GetEmptyGuid()) {
+          if (targetGuid && targetGuid !== Guid.GetEmptyGuid()) {
             this.Logger.LogVal("targetGuid", targetGuid.Raw);
             var dataOneWindowStorage;
 
             if (this.TopLevelDoc) {
-              dataOneWindowStorage = this.AtticAgent.GetFromStorageBySnapShotId(targetGuid);
+              dataOneWindowStorage = this.Dependancies.AtticAgent.GetFromStorageBySnapShotId(targetGuid);
 
-              this.CommandData.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandData.ApiPayload, dataOneWindowStorage);
+              this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ApiPayload, dataOneWindowStorage);
             }
             else {
               reject(this.InitFromQueryString.name + ' no targetDoc');

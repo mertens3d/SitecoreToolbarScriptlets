@@ -1,14 +1,12 @@
-﻿import { LoggableBase } from "../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
+import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
-import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { UiPresence } from "../../../../Shared/scripts/Enums/UiPresence";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { AccordianModule } from "./AccordianModule";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
-import { AccordianModule } from "./AccordianModule";
-import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
-import { UiPresence } from "../../../../Shared/scripts/Enums/UiPresence";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
 
 export class SettingsBasedModules extends LoggableBase {
@@ -19,8 +17,10 @@ export class SettingsBasedModules extends LoggableBase {
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
     super(logger)
+    this.Logger.InstantiateStart(SettingsBasedModules.name);
     this.SettingsAgent = settingsAgent;
     this.Instantiate_SettingsBasedModules();
+    this.Logger.InstantiateEnd(SettingsBasedModules.name);
   }
 
   Instantiate_SettingsBasedModules() {

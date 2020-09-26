@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScWindowRecipePartials = void 0;
-var LoggableBase_1 = require("../LoggableBase");
+var LoggableBase_1 = require("../../../../Shared/scripts/LoggableBase");
 var ScWindowRecipePartials = /** @class */ (function (_super) {
     __extends(ScWindowRecipePartials, _super);
     function ScWindowRecipePartials(logger) {

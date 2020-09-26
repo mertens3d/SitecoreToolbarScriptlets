@@ -1,7 +1,4 @@
-﻿import { CommandDefintionFactory } from "../../PopUpUi/scripts/Classes/PopUpCommands";
-import { IUiCommandFlagRaisedEvent_Payload } from "../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
-import { UiCommandFlagRaisedEvent_Observer } from "../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
-import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
+﻿import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
 import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
@@ -17,14 +14,17 @@ import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { ICommandDefinitionBucket, IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
-import { CommandManager } from "../Managers/CommandManager";
+import { CommandManager } from "./Managers/CommandManager";
 import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
 import { PopUpBrowserProxy } from "./Proxies/BrowserProxy";
-import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { CommandType } from "../../Shared/scripts/Enums/CommandType";
-import { HandlersForInternal } from "../../PopUpUi/scripts/Classes/HandlersForInternal";
-import { BrowserTabAgent } from "../../PopUpUi/scripts/Managers/BrowserTabAgent";
-import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
+import { HandlersForInternal } from "./Classes/HandlersForInternal";
+import { BrowserTabAgent } from "./Agents/BrowserTabAgent";
+import { IUiCommandFlagRaisedEvent_Payload } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
+import { CommandDefintionFactory } from "./Classes/PopUpCommands";
+import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
+import { ContentReplyReceivedEvent_Observer } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
+import { IDataContentReplyReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
 class PopUpControllerLayer {
   private RepoAgent: IRepositoryAgent;
@@ -73,7 +73,7 @@ class PopUpControllerLayer {
     this.Logger.FuncStart(this.InstantiateManagers_Controller.name);
 
     this.CommandDefintionBucket = new CommandDefintionFactory(this.Logger).BuildMenuCommandParamsBucket();
-    this.UiLayer = new HindSiteUiLayer(this.Logger, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
+    this.UiLayer = new HindSiteUiLayer.HindSiteUiLayer(this.Logger, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
 
     this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.ScUrlAgent, this.SettingsAgent);
     this.HandlersForInternal = new HandlersForInternal(this.Logger, this.BrowserTabAgent);

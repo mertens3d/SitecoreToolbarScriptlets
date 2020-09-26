@@ -7,7 +7,7 @@ import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/ID
 import { IDataStateOfScContentTreeNode } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
 import { IDataStateOfTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { LoggableBase } from '../../../../Managers/LoggableBase';
+import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { TreeMutationEvent_Subject } from '../../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject';
 import { InitResultTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
 import { ScContentTreeNodeProxy } from './ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';

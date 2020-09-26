@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DesktopStartBarButtonProxy = void 0;
-var LoggableBase_1 = require("../../../Managers/LoggableBase");
+var LoggableBase_1 = require("../../../../../Shared/scripts/LoggableBase");
 var InjectConst_1 = require("../../../../../Shared/scripts/Interfaces/InjectConst");
 var StaticHelpers_1 = require("../../../../../Shared/scripts/Classes/StaticHelpers");
 var BufferChar_1 = require("../../../../../Shared/scripts/Enums/BufferChar");

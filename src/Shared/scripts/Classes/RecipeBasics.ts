@@ -1,5 +1,4 @@
 ﻿import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
-import { LoggableBase } from '../../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
 import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
 import { _BaseFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
@@ -12,6 +11,7 @@ import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { SharedConst } from '../SharedConst';
 import { PromiseResult } from "./PromiseResult";
+import { LoggableBase } from '../LoggableBase';
 
 export class RecipeBasics extends LoggableBase implements IRecipeBasics {
   constructor(logger: ILoggerAgent) {

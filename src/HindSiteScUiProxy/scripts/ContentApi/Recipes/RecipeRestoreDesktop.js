@@ -50,7 +50,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipeRestoreFrameOnDesktop = void 0;
-var LoggableBase_1 = require("../../Managers/LoggableBase");
+var LoggableBase_1 = require("../../../../Shared/scripts/LoggableBase");
 var RecipeAddContentEditorToDesktop_1 = require("./RecipeAddContentEditorToDesktop");
 var MiscAgent_1 = require("../../../../Content/scripts/Agents/MiscAgent");
 var RecipeRestoreFrameOnDesktop = /** @class */ (function (_super) {

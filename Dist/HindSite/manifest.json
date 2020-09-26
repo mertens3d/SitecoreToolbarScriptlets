@@ -14,7 +14,9 @@
       "matches": [ "http://*/*", "https://*/*" ],
       "js": [
         "AutoBuild/final/browser-polyfill.js",
-        "AutoBuild/final/content.min.js"
+        "AutoBuild/final/content.min.js",
+        "AutoBuild/final/HindSiteScUiProxy.min.js"
+
       ],
 
       "all_frames": false

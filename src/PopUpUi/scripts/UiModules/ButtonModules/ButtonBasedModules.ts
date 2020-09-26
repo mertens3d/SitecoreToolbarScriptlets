@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";

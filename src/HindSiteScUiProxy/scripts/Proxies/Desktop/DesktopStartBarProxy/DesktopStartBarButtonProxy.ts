@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from '../../../Managers/LoggableBase';
+﻿import { LoggableBase } from '../../../../../Shared/scripts/LoggableBase';
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { DesktopStartBarProxy } from './DesktopStartBarProxy';

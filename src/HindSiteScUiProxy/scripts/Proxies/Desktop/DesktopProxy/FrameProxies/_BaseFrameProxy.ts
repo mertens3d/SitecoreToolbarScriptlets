@@ -1,4 +1,4 @@
-import { LoggableBase } from "../../../../Managers/LoggableBase";
+import { LoggableBase } from "../../../../../../Shared/scripts/LoggableBase";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { FactoryHelper } from "../../../../../../Shared/scripts/Helpers/FactoryHelper";
 import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";

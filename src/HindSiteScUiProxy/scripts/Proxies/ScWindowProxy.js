@@ -60,16 +60,45 @@ var InitResultsScWindowManager_1 = require("../../../Shared/scripts/Interfaces/A
 var InjectConst_1 = require("../../../Shared/scripts/Interfaces/InjectConst");
 var ContentEditorProxy_1 = require("./ContentEditor/ContentEditorProxy/ContentEditorProxy");
 var DesktopProxy_1 = require("./Desktop/DesktopProxy/DesktopProxy");
-var LoggableBase_1 = require("../Managers/LoggableBase");
+var LoggableBase_1 = require("../../../Shared/scripts/LoggableBase");
 var ScWindowProxy = /** @class */ (function (_super) {
     __extends(ScWindowProxy, _super);
     function ScWindowProxy(logger, scUrlAgent) {
         var _this = _super.call(this, logger) || this;
         _this.Logger.InstantiateStart(ScWindowProxy.name);
         _this.ScUrlAgent = scUrlAgent;
+        _this.Instantiate();
         _this.Logger.InstantiateEnd(ScWindowProxy.name);
         return _this;
     }
+    ScWindowProxy.prototype.PublishActiveCE = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(this.GetCurrentPageType() == scWindowType_1.ScWindowType.ContentEditor)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.ContentEditorProxy.PublishItem()
+                                .then(function () { return resolve(); })];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        if (this.GetCurrentPageType() == scWindowType_1.ScWindowType.Desktop) {
+                            this.DesktopProxy.PublishItem()
+                                .then(function () { return resolve(); })
+                                .catch(function (err) { return reject(_this.PublishActiveCE.name + ' | ' + err); });
+                        }
+                        else {
+                            reject(this.PublishActiveCE.name + ' Unhandled page type');
+                        }
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); });
+    };
     ScWindowProxy.prototype.Instantiate = function () {
         this.DesktopProxy = new DesktopProxy_1.DesktopProxy(this.Logger, this.GetTopLevelDoc());
         this.ContentEditorProxy = new ContentEditorProxy_1.ContentEditorProxy(this.GetTopLevelDoc(), this.Logger);

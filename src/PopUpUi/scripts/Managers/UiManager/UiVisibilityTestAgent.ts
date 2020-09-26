@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+﻿import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";
@@ -10,6 +10,7 @@ import { VisiblityTestResult } from "../../../../Shared/scripts/Interfaces/Agent
 import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
 export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibilityTestAgent {
   private StateOfSitecoreWindow: any;
@@ -43,7 +44,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
   VisibilityTestSnapShotSelected(currSelSnapshot: GuidData): VisiblityTestResult {
     let OneResult = new VisiblityTestResult(this.VisibilityTestSnapShotSelected.name);
 
-    OneResult.DidItPass = !StaticHelpers.IsNullOrUndefined(currSelSnapshot) && (currSelSnapshot.AsBracedGuid() !== GuidData.GetEmptyGuid().AsBracedGuid());
+    OneResult.DidItPass = !StaticHelpers.IsNullOrUndefined(currSelSnapshot) && (Guid.AsBracedGuid(currSelSnapshot) !== Guid.AsBracedGuid(  Guid.GetEmptyGuid()));
 
     if (!OneResult.DidItPass) {
       OneResult.FriendlyFailReason = "No snapshot selected";

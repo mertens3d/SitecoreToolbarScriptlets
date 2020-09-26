@@ -16,7 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DesktopStartBarProxy = void 0;
 var InjectConst_1 = require("../../../../../Shared/scripts/Interfaces/InjectConst");
 var FrameHelper_1 = require("../../../Helpers/FrameHelper");
-var LoggableBase_1 = require("../../../Managers/LoggableBase");
+var LoggableBase_1 = require("../../../../../Shared/scripts/LoggableBase");
 var TreeMutationEvent_Observer_1 = require("../DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer");
 var DesktopStartBarButtonProxy_1 = require("./DesktopStartBarButtonProxy");
 var DesktopStartBarProxy = /** @class */ (function (_super) {

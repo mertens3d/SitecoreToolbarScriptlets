@@ -1,4 +1,4 @@
-﻿import { PopConst } from "../../../../../PopUpUi/scripts/Classes/PopConst";
+﻿import { PopConst } from "../../../Const/PopConst";
 import { UiModuleManagerPassThroughEvent_Observer } from "../../../../../PopUpUi/scripts/Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Observer";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";

@@ -4,16 +4,17 @@ import { ScUiManager } from "../../../../HindSiteScUiProxy/scripts/Managers/Site
 import { ContentEditorProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DesktopProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { GuidData } from "../../Helpers/GuidData";
-import { IHindSiteScWindowApi } from "../../Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiProxy } from "../../Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../Interfaces/Data/IDataOneDoc";
-import { IApiCallPayload, IInternalCommandPayload } from "../../Interfaces/ICommandHandlerDataForContent";
+import { IApiCallPayload } from "../../Interfaces/ICommandHandlerDataForContent";
+import { ICommandParams } from "../../Interfaces/ICommandParams";
 
-export class CommandPayloadForInternal implements IInternalCommandPayload {
-  NewNickName: string;
+export class CommandPayloadForInternal implements ICommandParams {
+  NewNickname: string;
   TargetSnapShotId: GuidData;
   AtticAgent: IContentAtticAgent;
   ContentMessageBroker: ContentMessageBroker = null;
@@ -28,7 +29,7 @@ export class CommandPayloadForInternal implements IInternalCommandPayload {
   SettingsAgent: ISettingsAgent;
   AutoSnapShotAgent: AutoSnapShotAgent;
   ApiPayload: IApiCallPayload;
-  ScUiProxy: IHindSiteScWindowApi;
+  ScUiProxy: IHindSiteScUiProxy;
 
   constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, apiPayload: IApiCallPayload) {
     this.Logger = logger;

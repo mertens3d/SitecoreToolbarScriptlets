@@ -1,36 +1,37 @@
-import { HindSiteScUiProxy } from '../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
-import { ScUiManager } from '../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager';
-import { LoggerAgent } from '../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
-import { LoggerConsoleWriter } from '../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
-import { LoggerStorageWriter } from '../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
-import { RepositoryAgent } from '../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent';
-import { SettingsAgent } from '../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
-import { ToastAgent } from '../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
-import { ScUrlAgent } from '../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
-import { RollingLogIdDrone } from '../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
-import { SettingKey } from '../Shared/scripts/Enums/3xxx-SettingKey';
-import { IHindSiteScWindowApi, ISnapShotsAgent } from '../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
-import { IContentAtticAgent } from '../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
-import { IContentBrowserProxy } from '../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
-import { IContentMessageBroker } from '../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
-import { IHindSiteSetting } from '../Shared/scripts/Interfaces/Agents/IGenericSetting';
-import { InitResultsScWindowManager } from "../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
-import { IRepositoryAgent } from '../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
-import { ISettingsAgent } from '../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { IDataOneDoc } from '../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { SharedConst } from '../Shared/scripts/SharedConst';
-import { AutoSnapShotAgent } from './scripts/Agents/AutoSnapShotAgent';
-import { ContentAtticAgent } from './scripts/Agents/ContentAtticAgent';
-import { MiscAgent } from './scripts/Agents/MiscAgent';
-import { SnapShotsAgent } from './scripts/Agents/SnapShotsAgent';
-import { ContentMessageManager } from './scripts/Managers/ContentMessageManager';
-import { ContentBrowserProxy } from './scripts/Proxies/ContentBrowserProxy';
-import { ContentMessageBroker, InternalCommandRunner } from './scripts/Proxies/ContentMessageBroker';
+import { HindSiteScUiProxy } from '../../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
+import { ScUiManager } from '../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager';
+import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
+import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
+import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
+import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent';
+import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
+import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
+import { ScUrlAgent } from '../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
+import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
+import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
+import { IHindSiteScUiProxy } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
+import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
+import { IContentBrowserProxy } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
+import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
+import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
+import { InitResultsScWindowManager } from "../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
+import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
+import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { IDataOneDoc } from '../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { SharedConst } from '../../Shared/scripts/SharedConst';
+import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent';
+import { ContentAtticAgent } from './Agents/ContentAtticAgent';
+import { MiscAgent } from './Agents/MiscAgent';
+import { ContentMessageManager } from './Managers/ContentMessageManager';
+import { CommandRouter } from "./Proxies/CommandRouter";
+import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
+import { ContentMessageBroker } from './Proxies/ContentMessageBroker';
+import { InternalCommandRunner } from "./Proxies/InternalCommandRunner";
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
   private Logger: LoggerAgent;
-  private ScUiProxy: IHindSiteScWindowApi;
+  private ScUiProxy: IHindSiteScUiProxy;
   private ToastAgent: ToastAgent;
   private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
@@ -38,14 +39,14 @@ class ContentEntry {
   ScUrlAgent: ScUrlAgent;
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
-  SnapShotsAgent: ISnapShotsAgent;
   InternalCommandRunner: InternalCommandRunner;
+  CommandRouter: CommandRouter;
 
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
     this.InstantiateAndInitAgents_Content();
     this.InstantiateAndInit_Managers();
-
+    this.AtticAgent.CleanOutOldAutoSavedData();
     this.Logger.SectionMarker('Initialize Managers');
   }
 
@@ -79,21 +80,18 @@ class ContentEntry {
       Nickname: 'TopLevelDoc'
     };
 
-    this.ScUiProxy = new HindSiteScUiProxy(this.Logger, scUiMan, this.ScUrlAgent, topLevelDoc);
+    this.ScUiProxy = new HindSiteScUiProxy(this.Logger, scUiMan, this.ScUrlAgent, topLevelDoc, this.ToastAgent);
 
     this.AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, this.AtticAgent, this.ScUiProxy);
 
-    this.AtticAgent.CleanOutOldAutoSavedData();
-
     this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
 
-    this.SnapShotsAgent = new SnapShotsAgent(this.Logger);
+    this.InternalCommandRunner = new InternalCommandRunner(this.Logger, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy);
 
-    this.InternalCommandRunner = new InternalCommandRunner(this.Logger, this.AtticAgent, this.ScUiProxy);
-    this.InternalCommandRunner.InitFromQueryString();
+    this.CommandRouter = new CommandRouter(this.Logger, this.InternalCommandRunner, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent);
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
-      this.ScUiProxy, this.AtticAgent, this.ToastAgent, scUiMan, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.SnapShotsAgent, this.InternalCommandRunner);
+      this.ScUiProxy, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
 
     contentMessageMan = new ContentMessageManager(this.Logger, contentMessageBroker);
 
@@ -101,6 +99,7 @@ class ContentEntry {
       .then(() => contentMessageMan.InitContentMessageManager())
       .then(() => this.ScUiProxy.OnReadyInitScWindowManager())
       .then((result: InitResultsScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
+      //todo put back .then(() => this.InternalCommandRunner.InitFromQueryString())
       .then(() => {
         this.AutoSnapShotAgent.ScheduleIntervalTasks();
       })

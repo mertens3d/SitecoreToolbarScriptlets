@@ -2,7 +2,7 @@
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataStateOfDTFrame } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame';
 import { ICommandRecipes } from '../../../../Shared/scripts/Interfaces/ICommandRecipes';
-import { LoggableBase } from '../../Managers/LoggableBase';
+import { LoggableBase } from '../../../../Shared/scripts/LoggableBase';
 import { DesktopStartBarProxy } from '../../Proxies/Desktop/DesktopStartBarProxy/DesktopStartBarProxy';
 import { DTFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
 import { RecipeAddNewContentEditorToDesktop } from './RecipeAddContentEditorToDesktop';

@@ -1,19 +1,23 @@
-﻿import { IInternalCommandPayload } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
-import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
-import { LoggableBase } from "../../../HindSiteScUiProxy/scripts/Managers/LoggableBase";
+﻿import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
+import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
+import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
+import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 
 export abstract class _ContentRecipeBase extends LoggableBase {
-  CommandData: IInternalCommandPayload;
+  CommandParams: ICommandParams;
 
-  TargetSnapShotId: GuidData;
-  AtticAgent: IContentAtticAgent;
+  Friendly: string;
+  Dependancies: ICommandDependancies;
 
-  constructor(logger: ILoggerAgent, commandData: IInternalCommandPayload) {
+  constructor(logger: ILoggerAgent, commandParams: ICommandParams, dependancies: ICommandDependancies, friendly: string) {
     super(logger)
-    this.CommandData = commandData;
-    this.TargetSnapShotId = commandData.TargetSnapShotId;
-    this.AtticAgent = commandData.AtticAgent;
+    if (!StaticHelpers.IsNullOrUndefined(commandParams)) {
+      this.Friendly = friendly;
+      this.CommandParams = commandParams;
+      this.Dependancies = dependancies;
+    } else {
+      this.Logger.ErrorAndThrow(_ContentRecipeBase.name, 'null check: ' + this.Friendly);
+    }
   }
 }

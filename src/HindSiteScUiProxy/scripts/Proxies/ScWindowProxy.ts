@@ -19,7 +19,7 @@ import { IDataSitecoreWindowStates } from '../../../Shared/scripts/Interfaces/Da
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
-import { LoggableBase } from '../Managers/LoggableBase';
+import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
 import { ScWindowRecipePartials } from '../Managers/ScWindowManager/ScWindowRecipePartials';
 import { InitResultsDesktopProxy } from '../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy';
 
@@ -36,7 +36,24 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
     this.Logger.InstantiateStart(ScWindowProxy.name);
     this.ScUrlAgent = scUrlAgent;
 
+    this.Instantiate();
     this.Logger.InstantiateEnd(ScWindowProxy.name);
+  }
+
+  PublishActiveCE() {
+    return new Promise(async (resolve, reject) => {
+
+      if (this.GetCurrentPageType() == ScWindowType.ContentEditor) {
+        await this.ContentEditorProxy.PublishItem()
+          .then(() => resolve());
+      } else if (this.GetCurrentPageType() == ScWindowType.Desktop) {
+        this.DesktopProxy.PublishItem()
+          .then(() => resolve())
+          .catch((err) => reject(this.PublishActiveCE.name + ' | ' + err));
+      } else {
+        reject(this.PublishActiveCE.name +  ' Unhandled page type');
+      }
+    });
   }
 
   Instantiate() {
@@ -105,8 +122,6 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
     this.Logger.FuncEnd(this.GetCurrentStateByPageType.name);
     return toReturn;
   }
-
-
 
   GetCurrentPageType(): ScWindowType {
     return this.ScUrlAgent.GetScWindowType()

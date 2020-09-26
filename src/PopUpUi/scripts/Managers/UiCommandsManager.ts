@@ -1,5 +1,4 @@
-﻿import { LoggableBase } from '../../../HindSiteScUiProxy/scripts/Managers/LoggableBase';
-import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+﻿import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent';
@@ -9,6 +8,7 @@ import { UiHydrationData } from '../../../Shared/scripts/Interfaces/UiHydrationD
 import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
 import { UiVisibilityTestAgent } from './UiManager/UiVisibilityTestAgent';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
+import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
 
 export class UiCommandsManager extends LoggableBase {
   private UiModules: IUiModule[] = [];

@@ -9,15 +9,18 @@ import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfa
 import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
-import { LoggableBase } from '../../../Managers/LoggableBase';
+import { LoggableBase } from '../../../../../Shared/scripts/LoggableBase';
 import { TreeMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer';
 import { TreeProxy } from "./ContentEditorTreeProxy/ContentEditorTreeProxy";
 import { ContentEditorProxyMutationEvent_Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
 import { IContentEditorProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
 import { ITreeMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
 import { InitResultContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy';
+import { DTFrameProxy } from '../../Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
+import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
 
 export class ContentEditorProxy extends LoggableBase {
+ 
   private ChildTreeProxy: IContentEditorTreeProxy;
   private TreeMutationEvent_Observer: TreeMutationEvent_Observer;
   public ContentEditorProxyMutationEvent_Subject: ContentEditorProxyMutationEvent_Subject;
@@ -31,6 +34,15 @@ export class ContentEditorProxy extends LoggableBase {
     this.ValidateAssociatedDocContentEditor();
   }
 
+
+  async PublishItem(): Promise<void> {
+
+    let publishProxy = new ContentEditorPublishProxy(this.Logger, this, this.AssociatedDoc);
+    await publishProxy.Execute();
+
+
+  }
+ 
   OnReadyInitContentEditorProxy(): Promise<InitResultContentEditorProxy> {
     return new Promise(async (resolve, reject) => {
       let initResultContentEditorProxy = new InitResultContentEditorProxy();
