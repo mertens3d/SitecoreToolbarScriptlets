@@ -46,7 +46,7 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProx
   }
 
   RaiseToastNotification(arg0: string) {
-    this.ToastAgent.RaiseToastNotification(this.TopLevelDoc, arg0);
+    this.ToastAgent.RaiseToastNotification( arg0);
   }
 
   //async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void> {

@@ -76,7 +76,7 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
         return this.ScWindowProxy.GetStateOfSitecoreWindow(snapshotFlavor);
     };
     HindSiteScUiProxy.prototype.RaiseToastNotification = function (arg0) {
-        this.ToastAgent.RaiseToastNotification(this.TopLevelDoc, arg0);
+        this.ToastAgent.RaiseToastNotification(arg0);
     };
     //async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void> {
     //  return new Promise(async (resolve, reject) => {

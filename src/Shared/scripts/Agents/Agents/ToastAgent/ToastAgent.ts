@@ -1,61 +1,102 @@
 ﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
-import { IDataOneDoc } from "../../../Interfaces/Data/IDataOneDoc";
 
 export class ToastAgent implements IToastAgent {
   private Logger: ILoggerAgent;
   private classSlideUp: string = 'slide-up';
   private classSlideDown: string = 'slide-down';
+  private ToastContainer: HTMLElement;
+  private FlagSlider: HTMLElement;
+  private BodyTag: HTMLBodyElement;
+  private HasBeenInit: boolean = false;
+  private TargetDoc: Document;
 
-  constructor(loggerAgent: ILoggerAgent) {
+  constructor(loggerAgent: ILoggerAgent, targetDoc: Document) {
     this.Logger = loggerAgent;
+    this.TargetDoc = targetDoc;
+    this.DivineElements();
   }
 
-  RaiseToastNotification(targetDoc: IDataOneDoc = null, Message: string) {
+  async RaisePerpetualToast(message: string): Promise<void> {
+    this.Logger.FuncStart(this.RaisePerpetualToast.name);
+    this.SetSliderDivText(message);
+    await this.RaiseToastA();
+    this.Logger.FuncEnd(this.RaisePerpetualToast.name);
+  }
+
+  async LowerPerpetualToast() {
+    var self = this;
+    //setTimeout(async function () {
+    this.FlagSlider.classList.remove(self.classSlideUp);
+    this.FlagSlider.classList.add(self.classSlideDown);
+
+    //setTimeout(function () {
+    //  this.ToastContainer.remove();
+    //}, 3000)
+    //}, 0);
+  }
+
+  private DivineElements() {
+    if (!this.HasBeenInit) {
+      this.BodyTag = this.TargetDoc.getElementsByTagName('body')[0];//(treeGlyphTargetId);
+      this.ToastContainer = this.CreateToastContainer(this.TargetDoc);
+      this.FlagSlider = this.CreateSliderDiv();
+      this.BodyTag.appendChild(this.ToastContainer);
+    }
+    this.HasBeenInit = true;
+  }
+
+  private async RaiseToastA(): Promise<void> {
+    try {
+      var self = this;
+      await setTimeout(async function () {
+        self.ToastContainer.appendChild(self.FlagSlider);
+        self.FlagSlider.classList.remove(self.classSlideDown);
+        self.FlagSlider.classList.add(self.classSlideUp);
+      }, 1000);
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.RaiseToastA.name, err);
+    }
+  }
+
+  RaiseToastNotification(message: string) {
     this.Logger.FuncStart(this.RaiseToastNotification.name);
 
-    this.Logger.LogVal("Message", Message);
+    this.SetSliderDivText(message);
 
-    if (targetDoc) {
-      let bodyTag = targetDoc.ContentDoc.getElementsByTagName('body')[0];//(treeGlyphTargetId);
+    this.RaiseToastA();
 
-      let toastContainer: HTMLElement = this.CreateToastContainer(targetDoc);
-      let flagSlider: HTMLElement = this.CreateSliderDiv(targetDoc, Message);
+    var self = this;
 
-      toastContainer.appendChild(flagSlider);
-      var self = this;
-
+    setTimeout(async function () {
       setTimeout(async function () {
-        flagSlider.classList.remove(self.classSlideDown);
-        flagSlider.classList.add(self.classSlideUp);
+        this.FlagSlider.classList.remove(self.classSlideUp);
+        this.FlagSlider.classList.add(self.classSlideDown);
 
-        setTimeout(async function () {
-          flagSlider.classList.remove(self.classSlideUp);
-          flagSlider.classList.add(self.classSlideDown);
-
-          setTimeout(function () {
-            toastContainer.remove();
-          }, 3000)
-        }, 3000);//ContentConst.Const.Timeouts.WaitBeforeRemovingCompleteFlagOnContent);
-      }, 3000)
-
-      bodyTag.appendChild(toastContainer);
-    }
+        setTimeout(function () {
+          this.ToastContainer.remove();
+        }, 3000)
+      }, 3000);//ContentConst.Const.Timeouts.WaitBeforeRemovingCompleteFlagOnContent);
+    }, 3000)
 
     this.Logger.FuncEnd(this.RaiseToastNotification.name);
   }
 
-  CreateSliderDiv(targetDoc: IDataOneDoc, Message: string): HTMLElement {
-    let flagSlider: HTMLElement = targetDoc.ContentDoc.createElement('div');
+  private SetSliderDivText(sliderDivText: string) {
+    if (this.FlagSlider) {
+      this.FlagSlider.innerHTML = '<div class="header">HindSite</div><div class="message">' + sliderDivText + '</div>';
+    }
+  }
+  private CreateSliderDiv(): HTMLElement {
+    let flagSlider: HTMLElement = this.TargetDoc.createElement('div');
     flagSlider.classList.add('slider');
     flagSlider.classList.add(this.classSlideDown);
-    flagSlider.innerHTML = '<div class="header">HindSite</div><div class="message">' + Message + '</div>';
 
     return flagSlider;
   }
 
-  CreateToastContainer(targetDoc: IDataOneDoc): HTMLElement {
-    let flagContainer: HTMLElement = targetDoc.ContentDoc.createElement('div');
+  CreateToastContainer(targetDoc: Document): HTMLElement {
+    let flagContainer: HTMLElement = targetDoc.createElement('div');
     flagContainer.classList.add('toast');
 
     return flagContainer

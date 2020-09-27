@@ -1,5 +1,7 @@
 ﻿import { IDataOneDoc } from "../Data/IDataOneDoc";
 
 export interface IToastAgent {
-  RaiseToastNotification(targetDoc: IDataOneDoc, ScreenMessage: string);
+  LowerPerpetualToast();
+  RaisePerpetualToast(arg0: string);
+  RaiseToastNotification( ScreenMessage: string);
 }

@@ -63,7 +63,16 @@ export class CommandRouter extends LoggableBase {
           ScUrlAgent: this.ScUrlAgent
         }
 
-        await commandToExecute.bind(this.InternalCommandRunner)(commandParams, dependancies)
+        await this.ToastAgent.RaisePerpetualToast('Starting to do something')
+          .then(() => {
+            let self = this;
+            setTimeout(async () => {
+              await commandToExecute.bind(self.InternalCommandRunner)(commandParams, dependancies)
+                .then(() => self.ToastAgent.LowerPerpetualToast().bind(self.ToastAgent))
+            }, 1000)
+          }
+          )
+          //.then(() => )
           .then(() => resolve())
           .catch((err) => reject(this.ExecuteInternalCommand.name + ' | ' + err));
       }
@@ -98,7 +107,7 @@ export class CommandRouter extends LoggableBase {
       }
       else if (commandData.CommandType = CommandType.ContentInternal) {
         await this.ExecuteInternalCommand(commandData.commandToExecute, routingParams)
-          .then(() => this.ScUiProxy.RaiseToastNotification('Completed'))
+          //.then(() => this.ScUiProxy.RaiseToastNotification('Completed'))
           .then(() => resolve())
           .catch((err) => reject(err));
       }

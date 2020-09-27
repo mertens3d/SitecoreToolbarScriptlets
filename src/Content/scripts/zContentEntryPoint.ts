@@ -59,7 +59,7 @@ class ContentEntry {
 
       this.AtticAgent = new ContentAtticAgent(this.RepoAgent, this.Logger);
       this.MiscAgent = new MiscAgent(this.Logger);
-      this.ToastAgent = new ToastAgent(this.Logger);
+      this.ToastAgent = new ToastAgent(this.Logger, document);
 
       this.ScUrlAgent = new ScUrlAgent(this.Logger, null);
       this.ScUrlAgent.Init_ScUrlAgent()
