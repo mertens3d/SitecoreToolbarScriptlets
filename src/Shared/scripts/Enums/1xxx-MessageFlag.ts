@@ -37,5 +37,6 @@
     RespFailedDidNotValidate,
     ReqDebugAutoSnapShot,
     ReqDebugTriggerReload,
-    ReqDebugClearConsole
+    ReqDebugClearConsole,
+    InitFromQueryString
 }

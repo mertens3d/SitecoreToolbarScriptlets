@@ -32,7 +32,6 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
     return this.MenuCommandDefinition.MenuCommandKey;
   }
 
-
   private BuildButtonOverlay(): void {
     this.ElemDivBtnOverlay = document.createElement("div");
     this.ElemDivBtnOverlay.classList.add("btn-overlay");
@@ -58,8 +57,7 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
 
   BuildElements(): void {
     this.Logger.FuncStart(this.BuildElements.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
-    if (!StaticHelpers.IsNullOrUndefined( this.ContainerUiDivElem)) {
-
+    if (!StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
       this.BuildButtonOverlay();
 
       this.ContainerUiDivElem.classList.add('btn-container');
@@ -82,8 +80,6 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
     } else {
       this.Logger.Log('no placeholder ' + this.Friendly)
     }
-
- 
 
     this.Logger.FuncEnd(this.RefreshUi.name, this.Friendly);
   }

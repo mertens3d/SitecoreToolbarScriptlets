@@ -27,6 +27,8 @@ import { CommandRouter } from "./Proxies/CommandRouter";
 import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
 import { ContentMessageBroker } from './Proxies/ContentMessageBroker';
 import { InternalCommandRunner } from "./Proxies/InternalCommandRunner";
+import { MsgFlag } from '../../Shared/scripts/Enums/1xxx-MessageFlag';
+import { IMessageControllerToContent, ICommandRouterParams } from '../../Shared/scripts/Interfaces/IStateOfController';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -88,18 +90,25 @@ class ContentEntry {
 
    
 
-    this.CommandRouter = new CommandRouter(this.Logger,  this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent);
+    this.CommandRouter = new CommandRouter(this.Logger, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.ScUrlAgent);
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
       this.ScUiProxy, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
 
     contentMessageMan = new ContentMessageManager(this.Logger, contentMessageBroker);
 
+    let pingMsg: ICommandRouterParams = {
+      MsgFlag: MsgFlag.InitFromQueryString,
+      NewNickName: null,
+      SelectSnapShotId: null,
+    }
+
+
     await scUiMan.InitSitecoreUiManager()
       .then(() => contentMessageMan.InitContentMessageManager())
       .then(() => this.ScUiProxy.OnReadyInitScWindowManager())
       .then((result: InitResultsScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
-      //todo put back .then(() => this.InternalCommandRunner.InitFromQueryString())
+      .then(() => this.CommandRouter.RouteCommand( pingMsg))//.InternalCommandRunner.InitFromQueryString())
       .then(() => {
         this.AutoSnapShotAgent.ScheduleIntervalTasks();
       })

@@ -14,7 +14,7 @@ import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerA
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../../Shared/scripts/Interfaces/Agents/IToastAgent";
 import { IDataStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
+import { IMessageControllerToContent, ICommandRouterParams } from "../../../Shared/scripts/Interfaces/IStateOfController";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { InternalCommandRunner } from "./InternalCommandRunner";
 import { CommandRouter } from "./CommandRouter";
@@ -129,7 +129,14 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(messageFromController.MsgFlag));
 
-      await this.CommandRouter.RouteCommand(messageFromController.MsgFlag, messageFromController)
+
+      let commandRouterParams: ICommandRouterParams = {
+        MsgFlag: messageFromController.MsgFlag,
+        NewNickName: messageFromController.StateOfPopUI.NewNickName,
+        SelectSnapShotId: messageFromController.StateOfPopUI.SelectSnapShotId
+      }
+
+      await this.CommandRouter.RouteCommand( commandRouterParams)
         .then(() => this.ConstructResponse(messageFromController.MsgFlag))
         .then((response: MsgContentToController) => resolve(response))
         .catch((err) => reject(this.ReqMsgRouter.name + ' | ' + err));

@@ -197,8 +197,23 @@ var DesktopProxy = /** @class */ (function (_super) {
         //if (setting && setting.ValueAsBool()) {
         //}
         this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject_1.DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc);
-        var DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer_1.DesktopProxyMutationEvent_Observer(this.Logger, this);
+        var DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer_1.DesktopProxyMutationEvent_Observer(this.Logger, this.OnDesktopProxyMutationEvent.bind(this));
         this.DomChangedEvent_Subject.RegisterObserver(DomChangeEvent_Observer);
+    };
+    DesktopProxy.prototype.OnDesktopProxyMutationEvent = function (payload) {
+        var _this = this;
+        this.Logger.Log("The desktop DOM changed - probably an iframe has been added");
+        if (payload && payload.AddedDTFrameProxies.length > 0) {
+            payload.AddedDTFrameProxies.forEach(function (dtFrameProxy) { return __awaiter(_this, void 0, void 0, function () {
+                var _this = this;
+                return __generator(this, function (_a) {
+                    dtFrameProxy.OnReadyInitDTFrameProxy()
+                        .then(function () { return _this.AddDTFrameProxyAsync(dtFrameProxy); })
+                        .catch(function (err) { throw (DesktopProxyMutationEvent_Observer_1.DesktopProxyMutationEvent_Observer.name + ' | ' + err); });
+                    return [2 /*return*/];
+                });
+            }); });
+        }
     };
     DesktopProxy.prototype.AddDTFrameProxyAsync = function (dtframeProxy) {
         var _this = this;

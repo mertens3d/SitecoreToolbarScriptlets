@@ -13,29 +13,21 @@ import { RecipeSaveStateManual } from "../Recipes/RecipeSaveState";
 import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
 import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
+import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 
 export class InternalCommandRunner extends LoggableBase {
   Dependancies: ICommandDependancies;
 
-    ScUiProxy: IHindSiteScUiProxy;
-    AutoSnapShotAgent: AutoSnapShotAgent;
-    AtticAgent: IContentAtticAgent;
 
-
-  constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy) {
+  constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy, scUrlAgent: ScUrlAgent) {
     super(logger);
-    this.AtticAgent = atticAgent;
-    this.AutoSnapShotAgent = autoSnapShotAgent;
-    this.ScUiProxy = scUiProxy;
-
-  
-
 
     this.Dependancies = {
       AtticAgent: atticAgent,
       AutoSnapShotAgent: autoSnapShotAgent,
       ScUiProxy: scUiProxy,
       Logger: this.Logger,
+      ScUrlAgent: scUrlAgent
     }
   }
 
@@ -84,9 +76,13 @@ export class InternalCommandRunner extends LoggableBase {
     });
   }
 
-  InitFromQueryString() {
-    let commandParams = null; //todo we need to build this like from ContentMessageBroker.BuildCommandPayloadForInternal
-    let recipe = new RecipeInitFromQueryStr(this.Logger, commandParams, this.Dependancies);
+  async InitFromQueryString(commandParams: ICommandParams): Promise<void> {
+    try {
+      let recipe = new RecipeInitFromQueryStr(this.Logger, commandParams, this.Dependancies);
+      recipe.Execute()
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.InitFromQueryString.name, err);
+    }
   }
 
   async RemoveSnapShot(commandParams: ICommandParams): Promise<void> {

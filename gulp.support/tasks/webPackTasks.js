@@ -9,10 +9,13 @@ const vars = require('../vars');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  WebPackOne: function (cb, targetVar) {
+  WebPackOne: function (cb, targetVar, regexIgnore) {
     console.log('s) WebPackOne');
     console.log(typeof targetVar);
-    targetVar.debugInfo();
+
+    console.log('source: ' + targetVar.Ts.TranspiledFolder);
+    console.log('regexIgnore: ' + regexIgnore);
+
     console.log('e) WebPackOne');
 
     return gulp.src(targetVar.Ts.TranspiledFolder)
@@ -24,12 +27,9 @@ module.exports = {
             path: targetVar.WebpackContentOutputFilePathAbs(),
             filename: targetVar.MinFileName() // 'jsContent.min.js'
           },
-          externals: {
-            PopUpUILayer: 'PopUpUiLayer' // i don't know if this is working or not
-          },
           optimization: {
             minimize: false
-          }, 
+          },
           plugins: [
             new CopyWebpackPlugin([
               {

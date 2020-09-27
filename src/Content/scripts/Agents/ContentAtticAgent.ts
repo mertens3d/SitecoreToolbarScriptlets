@@ -198,32 +198,32 @@ export class ContentAtticAgent implements IContentAtticAgent {
     stateOfSnapshotStorage.SnapShots = result;
     stateOfSnapshotStorage.CreationDate = new Date();
     this.UpdateCounts(stateOfSnapshotStorage);
-    stateOfSnapshotStorage.SnapShots = this.ConvertGuidData(stateOfSnapshotStorage.SnapShots);
+    //stateOfSnapshotStorage.SnapShots = this.ConvertGuidData(stateOfSnapshotStorage.SnapShots);
 
     this.Logger.FuncEnd(this.GetStateOfStorageSnapShots.name);
 
     return stateOfSnapshotStorage;
   }
 
-  ConvertGuidData(candidateSnapShots: IDataStateOfSitecoreWindow[]): IDataStateOfSitecoreWindow[] {
-    let toReturn: IDataStateOfSitecoreWindow[] = []
+  //ConvertGuidData(candidateSnapShots: IDataStateOfSitecoreWindow[]): IDataStateOfSitecoreWindow[] {
+  //  let toReturn: IDataStateOfSitecoreWindow[] = []
 
-    for (var idx = 0; idx < candidateSnapShots.length; idx++) {
-      var candidate = candidateSnapShots[idx];
+  //  for (var idx = 0; idx < candidateSnapShots.length; idx++) {
+  //    var candidate = candidateSnapShots[idx];
 
-      try {
-        if (candidate.Meta.SessionId && Guid.IsValidGuidStr(candidate.Meta.SnapshotId.Raw)) {
-          //candidate.Meta.SnapshotId = new GuidData(candidate.Meta.SnapshotId.Raw);
-          toReturn.push(candidate);
-        } else {
-          this.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.Meta.SnapshotId.Raw)
-        }
-      } catch (err) {
-      }
-    }
+  //    try {
+  //      if (candidate.Meta.SessionId && Guid.IsValidGuidStr(candidate.Meta.SnapshotId.Raw)) {
+  //        //candidate.Meta.SnapshotId = new GuidData(candidate.Meta.SnapshotId.Raw);
+  //        toReturn.push(candidate);
+  //      } else {
+  //        this.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.Meta.SnapshotId.Raw)
+  //      }
+  //    } catch (err) {
+  //    }
+  //  }
 
-    return toReturn;
-  }
+  //  return toReturn;
+  //}
 
   UpdateCounts(storageAllSnapshots: IDataStateOfStorageSnapShots) {
     storageAllSnapshots.FavoriteCount = 0;

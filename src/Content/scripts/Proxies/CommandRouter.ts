@@ -9,7 +9,7 @@ import { ISnapShotsAgent } from "../../../Shared/scripts/Interfaces/Agents/ICont
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
-import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
+import { IMessageControllerToContent, ICommandRouterParams } from "../../../Shared/scripts/Interfaces/IStateOfController";
 import { CommandToExecuteData } from "./CommandToExecuteData";
 import { InternalCommandRunner } from "./InternalCommandRunner";
 import { IToastAgent } from "../../../Shared/scripts/Interfaces/Agents/IToastAgent";
@@ -18,6 +18,7 @@ import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IC
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
+import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 
 export class CommandRouter extends LoggableBase {
   private InternalCommandRunner: InternalCommandRunner;
@@ -27,8 +28,9 @@ export class CommandRouter extends LoggableBase {
   private AtticAgent: IContentAtticAgent;
   private SettingsAgent: ISettingsAgent;
   private AutoSnapShotAgent: AutoSnapShotAgent;
+  private ScUrlAgent: ScUrlAgent;
 
-  constructor(logger: ILoggerAgent, scUiProxy: IHindSiteScUiProxy,toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent,) {
+  constructor(logger: ILoggerAgent, scUiProxy: IHindSiteScUiProxy, toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, scUrlAgent: ScUrlAgent) {
     super(logger);
     this.ToastAgent = toastAgent;
     this.ScUiMan = scUiMan;
@@ -36,26 +38,29 @@ export class CommandRouter extends LoggableBase {
     this.AtticAgent = atticAgent;
     this.SettingsAgent = settingsAgent;
     this.AutoSnapShotAgent = autoSnapShotAgent;
+    this.ScUrlAgent = scUrlAgent;
 
-
-    this.InternalCommandRunner = new InternalCommandRunner(this.Logger, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy);
-
+    this.InternalCommandRunner = new InternalCommandRunner(this.Logger, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.ScUrlAgent);
   }
 
-  private ExecuteInternalCommand(commandToExecute: Function, messageFromController: IMessageControllerToContent): Promise<void> {
+  private ExecuteInternalCommand(commandToExecute: Function, routingParams: ICommandRouterParams): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteInternalCommand.name);
       if (commandToExecute) {
+        this.Logger.LogVal('msgFlag', MsgFlag[routingParams.MsgFlag]);
         let commandParams = this.BuildCommandPayloadForInternal();
 
-        commandParams.TargetSnapShotId = messageFromController.StateOfPopUI.SelectSnapShotId;
-        commandParams.NewNickname = messageFromController.StateOfPopUI.NewNickName;
+        if (routingParams) {
+          commandParams.TargetSnapShotId = routingParams.SelectSnapShotId;
+          commandParams.NewNickname = routingParams.NewNickName;
+        }
+
         let dependancies: ICommandDependancies = {
-          AtticAgent : this.AtticAgent,
+          AtticAgent: this.AtticAgent,
           AutoSnapShotAgent: this.AutoSnapShotAgent,
           Logger: this.Logger,
           ScUiProxy: this.ScUiProxy,
-         
+          ScUrlAgent: this.ScUrlAgent
         }
 
         await commandToExecute.bind(this.InternalCommandRunner)(commandParams, dependancies)
@@ -80,19 +85,19 @@ export class CommandRouter extends LoggableBase {
     return commandData;
   }
 
-  RouteCommand(msgFlag: MsgFlag, messageFromController: IMessageControllerToContent): Promise<void> {
+  RouteCommand(routingParams: ICommandRouterParams): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RouteCommand.name, msgFlag[msgFlag]);
-      let commandData: CommandToExecuteData = this.CalculateCommandToExec(msgFlag);
+      this.Logger.FuncStart(this.RouteCommand.name, MsgFlag[routingParams.MsgFlag]);
+      let commandData: CommandToExecuteData = this.CalculateCommandToExec(routingParams.MsgFlag);
 
       if (commandData.CommandType == CommandType.Api) {
-        await this.ExecuteApiCommand(commandData.commandToExecute, msgFlag)
+        await this.ExecuteApiCommand(commandData.commandToExecute, routingParams.MsgFlag)
           .then(() => this.ScUiProxy.RaiseToastNotification('Completed'))
           .then(() => resolve())
           .catch((err) => reject(err));
       }
       else if (commandData.CommandType = CommandType.ContentInternal) {
-        await this.ExecuteInternalCommand(commandData.commandToExecute, messageFromController)
+        await this.ExecuteInternalCommand(commandData.commandToExecute, routingParams)
           .then(() => this.ScUiProxy.RaiseToastNotification('Completed'))
           .then(() => resolve())
           .catch((err) => reject(err));
@@ -189,6 +194,11 @@ export class CommandRouter extends LoggableBase {
       case MsgFlag.ReqDebugAutoSnapShot:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.DebugForceAutoSnapShot;
+        break;
+
+      case MsgFlag.InitFromQueryString:
+        commandData.CommandType = CommandType.ContentInternal;
+        commandData.commandToExecute = this.InternalCommandRunner.InitFromQueryString;
         break;
 
       default:

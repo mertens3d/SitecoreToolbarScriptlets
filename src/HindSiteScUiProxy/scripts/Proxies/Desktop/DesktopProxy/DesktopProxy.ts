@@ -131,9 +131,22 @@ export class DesktopProxy extends LoggableBase {
     //}
 
     this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc);
-    let DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer(this.Logger, this);
+    let DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer(this.Logger, this.OnDesktopProxyMutationEvent.bind(this));
     this.DomChangedEvent_Subject.RegisterObserver(DomChangeEvent_Observer);
   }
+
+  OnDesktopProxyMutationEvent(payload: IDesktopProxyMutationEvent_Payload) {
+    this.Logger.Log("The desktop DOM changed - probably an iframe has been added");
+    if (payload && payload.AddedDTFrameProxies.length > 0) {
+
+      payload.AddedDTFrameProxies.forEach(async (dtFrameProxy: DTFrameProxy) => {
+        dtFrameProxy.OnReadyInitDTFrameProxy()
+          .then(() => this.AddDTFrameProxyAsync(dtFrameProxy))
+          .catch((err) => { throw (DesktopProxyMutationEvent_Observer.name + ' | ' + err) });
+      });
+    }
+  }
+
 
   AddDTFrameProxyAsync(dtframeProxy: DTFrameProxy): void {
     let initResultFrameProxy = new InitResultsDTFrameProxy();

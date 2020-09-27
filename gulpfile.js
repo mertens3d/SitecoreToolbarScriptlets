@@ -11,7 +11,7 @@ var htmlTasks = require('./gulp.support/tasks/htmlTasks');
 var InjectableClass = require('./gulp.support/OneInjectable.js');
 var jstasks = require('./gulp.support/tasks/jsTasks');
 var lazypipe = require('lazypipe');
-var otherTasks = require('./gulp.support/tasks/webPackTasks');
+var WebPackTasks = require('./gulp.support/tasks/webPackTasks');
 var putTasks = require('./gulp.support/tasks/putTasks');
 var styleTasks = require('./gulp.support/tasks/styleTasks');
 var tsTasks = require('./gulp.support/tasks/tsTasks');
@@ -23,7 +23,7 @@ gulp.task('ArchiveJsAndMap', (cb) => ArchiveJsMap.ArchiveJsAndMaps(cb));
 gulp.task('DeleteJsAndMap', (cb) => ArchiveJsMap.DeleteJsAndMap(cb));
 gulp.task('ArchiveAndDelete', gulp.series(['ArchiveJsAndMap', 'DeleteJsAndMap']));
 
-gulp.task('BookmarkText', (cb) => otherTasks.BookmarkText(cb, varsObj));
+gulp.task('BookmarkText', (cb) => WebPackTasks.BookmarkText(cb, varsObj));
 gulp.task('BuildPopUpHtml', (cb) => htmlTasks.BuildHtml(cb, varsObj));
 gulp.task('BuildPopUpStyles', (cb) => styleTasks.BuildPopUpStyles(cb, varsObj));
 gulp.task('BuildContentStyles', (cb) => styleTasks.BuildCompactCEStyles(cb, varsObj));
@@ -35,10 +35,16 @@ gulp.task('CombineJs', (cb) => jstasks.combineJs(cb, varsObj));
 gulp.task('PutToFinal', (cb) => putTasks.PutToFinal(cb, varsObj));
 gulp.task('CopyFromFinalToAddon', (cb) => putTasks.CopyFromFinalToAddon(cb, varsObj));
 
-gulp.task('WebpackContent', (cb) => otherTasks.WebPackOne(cb, varsObj.ContentJs));
-gulp.task('WebpackHindSiteApi', (cb) => otherTasks.WebPackOne(cb, varsObj.HindSiteApiJs));
-gulp.task('WebpackPopUpUi', (cb) => otherTasks.WebPackOne(cb, varsObj.PopUpUiJs));
-gulp.task('WebpackPopUpController', (cb) => otherTasks.WebPackOne(cb, varsObj.PopUpControllerJs));
+gulp.task('WebpackContent', (cb) => WebPackTasks.WebPackOne(cb, varsObj.ContentJs, '/' + varsObj.HindSiteApiJs.Name + '|' + varsObj.PopUpUiJs.Name + '|' + varsObj.PopUpControllerJs.Name + '/'));
+gulp.task('WebpackHindSiteApi', (cb) => cb());//WebPackTasks.WebPackOne(cb, varsObj.HindSiteApiJs));
+gulp.task('WebpackPopUpUi', (cb) => cb());// WebPackTasks.WebPackOne(cb, varsObj.PopUpUiJs));
+
+//var controllerNoParseRegex =  varsObj.ContentJs.SourceDirFilter() + '|' + varsObj.PopUpUiJs.SourceDirFilter() + '|' + varsObj.HindSiteApiJs.SourceDirFilter() ;
+var controllerNoParseRegex = './src/' + varsObj.PopUpUiJs.Name;
+//controllerNoParseRegex = controllerNoParseRegex.replace(/\//g, '\/\/');
+//controllerNoParseRegex = '/' + controllerNoParseRegex + '/';
+
+gulp.task('WebpackPopUpController', (cb) => WebPackTasks.WebPackOne(cb, varsObj.PopUpControllerJs, controllerNoParseRegex  ));
 
 gulp.task('CleanBuildStamp', (cb) => tsTasks.CleanBuildStamp(cb, varsObj));
 gulp.task('PopulateBuildTimeStamp', (cb) => tsTasks.BuildBuildNumber(cb, varsObj));
@@ -55,4 +61,4 @@ gulp.task('putters', gulp.series(['CopyFromFinalToAddon']), function (resolve) {
   resolve();
 });
 
-gulp.task('default', gulp.series(['PreClean','builders', 'putters', 'ArchiveAndDelete']));
+gulp.task('default', gulp.series(['PreClean', 'builders', 'putters', 'ArchiveAndDelete']));

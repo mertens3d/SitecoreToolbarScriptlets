@@ -279,7 +279,8 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
 
     el.value = data.Meta.SnapshotId.Raw;
 
-    if ((data.Meta.SessionId && prior && data.Meta.SnapshotId.Raw === prior.Raw) ||
+    //data.Meta.SessionId &&
+    if (( prior && data.Meta.SnapshotId.Raw === prior.Raw) ||
       (idx === 0 && !prior)
       ||
       (idx === 0 && prior.Raw === Guid.GetEmptyGuid().Raw)
