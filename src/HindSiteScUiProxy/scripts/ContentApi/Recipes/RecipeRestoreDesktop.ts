@@ -30,7 +30,7 @@ export class RecipeRestoreFrameOnDesktop extends LoggableBase implements IComman
   }
   async Execute(): Promise<void> {
     try {
-      await this.RunOneChain()
+      this.RunOneChain()
         .catch((err) => { throw (this.Execute.name + ' ' + err) });
     } catch (err) {
       throw (this.Execute.name + ' ' + err);

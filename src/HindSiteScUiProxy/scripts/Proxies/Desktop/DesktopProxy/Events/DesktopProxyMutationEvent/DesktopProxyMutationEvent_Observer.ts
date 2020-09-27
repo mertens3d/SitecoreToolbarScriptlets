@@ -6,13 +6,8 @@ import { DesktopProxy } from "../../DesktopProxy";
 import { IDesktopProxyMutationEvent_Payload } from "./IDesktopProxyMutationEvent_Payload";
 
 export class DesktopProxyMutationEvent_Observer extends HindSiteEvent_Observer<IDesktopProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<IDesktopProxyMutationEvent_Payload>  {
-  private Owner: DesktopProxy;
 
   constructor(logger: ILoggerAgent, callback: HindsiteEventHandler_Type) {
     super(logger, DesktopProxyMutationEvent_Observer.name, callback);
-  }
-
-  UpdateAsync(payload: IDesktopProxyMutationEvent_Payload) {
-   
   }
 }

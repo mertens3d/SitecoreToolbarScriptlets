@@ -59,7 +59,11 @@ var ScContentTreeNodeProxy = /** @class */ (function (_super) {
         return this.ScContentTreeNodeDivElem.querySelector(":scope > img");
     };
     ScContentTreeNodeProxy.prototype.GetLinkNodeElem = function () {
-        return this.ScContentTreeNodeDivElem.querySelector(":scope > a");
+        var toReturn = this.ScContentTreeNodeDivElem.querySelector(":scope > a");
+        if (!toReturn) {
+            this.Logger.ErrorAndContinue(this.GetGlyphNodeElem.name, 'Did not get the elem');
+        }
+        return toReturn;
     };
     ScContentTreeNodeProxy.prototype.GetStateOfScContentTreeNode = function () {
         var newData = {

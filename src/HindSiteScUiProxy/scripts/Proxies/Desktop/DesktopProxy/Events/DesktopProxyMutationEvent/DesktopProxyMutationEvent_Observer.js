@@ -20,8 +20,6 @@ var DesktopProxyMutationEvent_Observer = /** @class */ (function (_super) {
     function DesktopProxyMutationEvent_Observer(logger, callback) {
         return _super.call(this, logger, DesktopProxyMutationEvent_Observer.name, callback) || this;
     }
-    DesktopProxyMutationEvent_Observer.prototype.UpdateAsync = function (payload) {
-    };
     return DesktopProxyMutationEvent_Observer;
 }(HindSiteEvent_Observer_1.HindSiteEvent_Observer));
 exports.DesktopProxyMutationEvent_Observer = DesktopProxyMutationEvent_Observer;

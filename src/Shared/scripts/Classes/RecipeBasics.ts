@@ -24,7 +24,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       await this.WaitForReadyNABHtmlIframeElement(baseframeProxy.HTMLIframeElement)
         .then(() => resolve(baseframeProxy))
         .catch((err) => reject(this.WaitForReadyNABFrameProxy.name + ' | ' + err));
-     
+
       this.Logger.FuncEnd(this.WaitForReadyNABFrameProxy.name);
     });
   }
@@ -78,7 +78,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
   async WaitForReadyNABDocument(targetDoc: IDataOneDoc) {
     return new Promise(async (resolve, reject) => {
-            if (targetDoc) {
+      if (targetDoc) {
         var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForReadyNABDocument.name, false);
         var isReady: boolean = false;
         while (iterationJr.DecrementAndKeepGoing() && !isReady) {

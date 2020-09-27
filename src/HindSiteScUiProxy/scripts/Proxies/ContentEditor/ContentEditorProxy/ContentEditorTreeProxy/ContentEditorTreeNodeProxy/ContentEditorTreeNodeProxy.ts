@@ -50,7 +50,14 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     return <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector(":scope > img");
   }
   private GetLinkNodeElem(): HTMLElement {
-    return this.ScContentTreeNodeDivElem.querySelector(":scope > a");
+
+    let toReturn: HTMLElement = this.ScContentTreeNodeDivElem.querySelector(":scope > a");
+
+    if (!toReturn) {
+      this.Logger.ErrorAndContinue(this.GetGlyphNodeElem.name, 'Did not get the elem');
+    }
+
+    return toReturn;
   }
 
   GetStateOfScContentTreeNode(): IDataStateOfScContentTreeNode {

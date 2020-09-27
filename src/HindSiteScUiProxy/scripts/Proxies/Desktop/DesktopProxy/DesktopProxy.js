@@ -197,8 +197,8 @@ var DesktopProxy = /** @class */ (function (_super) {
         //if (setting && setting.ValueAsBool()) {
         //}
         this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject_1.DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc);
-        var DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer_1.DesktopProxyMutationEvent_Observer(this.Logger, this.OnDesktopProxyMutationEvent.bind(this));
-        this.DomChangedEvent_Subject.RegisterObserver(DomChangeEvent_Observer);
+        this.DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer_1.DesktopProxyMutationEvent_Observer(this.Logger, this.OnDesktopProxyMutationEvent.bind(this));
+        this.DomChangedEvent_Subject.RegisterObserver(this.DomChangeEvent_Observer);
     };
     DesktopProxy.prototype.OnDesktopProxyMutationEvent = function (payload) {
         var _this = this;
@@ -217,8 +217,9 @@ var DesktopProxy = /** @class */ (function (_super) {
     };
     DesktopProxy.prototype.AddDTFrameProxyAsync = function (dtframeProxy) {
         var _this = this;
+        this.Logger.FuncStart(this.AddContentEditorTabAsync.name);
         var initResultFrameProxy = new InitResultsDTFrameProxy_1.InitResultsDTFrameProxy();
-        if (!StaticHelpers_1.StaticHelpers.IsNullOrUndefined([dtframeProxy, dtframeProxy.ContentEditorProxy, dtframeProxy.ContentEditorProxy.AssociatedDoc])) {
+        if (!StaticHelpers_1.StaticHelpers.IsNullOrUndefined([dtframeProxy, dtframeProxy.ContentEditorProxy])) {
             this.RecipeBasics.WaitForReadyNABFrameProxy(dtframeProxy)
                 .then(function () {
                 var result = _this.DesktopFrameProxyBucket.AddToDTFrameProxyBucket(dtframeProxy);
@@ -242,6 +243,7 @@ var DesktopProxy = /** @class */ (function (_super) {
             this.Logger.ErrorAndThrow(this.AddDTFrameProxyAsync.name, 'null dtframeProxy or dtframeProxy.Doc');
         }
         this.Logger.LogAsJsonPretty('InitResultsDTFrameProxy', initResultFrameProxy);
+        this.Logger.FuncEnd(this.AddContentEditorTabAsync.name);
     };
     DesktopProxy.prototype.GetAssociatedDoc = function () {
         return this.AssociatedDoc;
@@ -320,11 +322,13 @@ var DesktopProxy = /** @class */ (function (_super) {
                                     stateOfFrame = stateOfDesktop.StateOfDTFrames[idx];
                                     recipe = new RecipeRestoreDesktop_1.RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent, this.OwnerScWinProxy);
                                     //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
+                                    //promAr.push(recipe.Execute());
                                     return [4 /*yield*/, recipe.Execute()
                                             .then(function () { return resolve(); })
                                             .catch(function (err) { return reject(err); })];
                                 case 2:
                                     //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
+                                    //promAr.push(recipe.Execute());
                                     _a.sent();
                                     _a.label = 3;
                                 case 3:
@@ -339,6 +343,9 @@ var DesktopProxy = /** @class */ (function (_super) {
                                     reject(this.SetStateOfDesktop.name + '  No desktop state provided');
                                     _a.label = 8;
                                 case 8:
+                                    //await  Promise.all(promAr)
+                                    //    .then(() => resolve())
+                                    //    .catch((err) => reject(this.SetStateOfDesktop.name + ' | ' + err));
                                     this.Logger.FuncEnd(this.SetStateOfDesktop.name);
                                     return [2 /*return*/];
                             }

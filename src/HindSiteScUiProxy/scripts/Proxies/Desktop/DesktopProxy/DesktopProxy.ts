@@ -33,6 +33,7 @@ export class DesktopProxy extends LoggableBase {
   private DomChangedEvent_Subject: DesktopProxyMutationEvent_Subject;
   private RecipeBasics: RecipeBasics;
   private OwnerScWinProxy: IScWindowProxy;
+  DomChangeEvent_Observer: DesktopProxyMutationEvent_Observer;
 
   constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, OwnerScWinProxy: IScWindowProxy) {
     super(logger);
@@ -131,14 +132,13 @@ export class DesktopProxy extends LoggableBase {
     //}
 
     this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc);
-    let DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer(this.Logger, this.OnDesktopProxyMutationEvent.bind(this));
-    this.DomChangedEvent_Subject.RegisterObserver(DomChangeEvent_Observer);
+    this.DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer(this.Logger, this.OnDesktopProxyMutationEvent.bind(this));
+    this.DomChangedEvent_Subject.RegisterObserver(this.DomChangeEvent_Observer);
   }
 
   OnDesktopProxyMutationEvent(payload: IDesktopProxyMutationEvent_Payload) {
     this.Logger.Log("The desktop DOM changed - probably an iframe has been added");
     if (payload && payload.AddedDTFrameProxies.length > 0) {
-
       payload.AddedDTFrameProxies.forEach(async (dtFrameProxy: DTFrameProxy) => {
         dtFrameProxy.OnReadyInitDTFrameProxy()
           .then(() => this.AddDTFrameProxyAsync(dtFrameProxy))
@@ -147,11 +147,12 @@ export class DesktopProxy extends LoggableBase {
     }
   }
 
-
   AddDTFrameProxyAsync(dtframeProxy: DTFrameProxy): void {
+    this.Logger.FuncStart(this.AddContentEditorTabAsync.name);
+
     let initResultFrameProxy = new InitResultsDTFrameProxy();
 
-    if (!StaticHelpers.IsNullOrUndefined([dtframeProxy, dtframeProxy.ContentEditorProxy, dtframeProxy.ContentEditorProxy.AssociatedDoc])) {
+    if (!StaticHelpers.IsNullOrUndefined([dtframeProxy, dtframeProxy.ContentEditorProxy])) {
       this.RecipeBasics.WaitForReadyNABFrameProxy(dtframeProxy)
         .then(() => {
           let result = this.DesktopFrameProxyBucket.AddToDTFrameProxyBucket(dtframeProxy);
@@ -176,6 +177,8 @@ export class DesktopProxy extends LoggableBase {
       this.Logger.ErrorAndThrow(this.AddDTFrameProxyAsync.name, 'null dtframeProxy or dtframeProxy.Doc');
     }
     this.Logger.LogAsJsonPretty('InitResultsDTFrameProxy', initResultFrameProxy);
+
+    this.Logger.FuncEnd(this.AddContentEditorTabAsync.name);
   }
 
   GetAssociatedDoc(): IDataOneDoc {
@@ -229,6 +232,8 @@ export class DesktopProxy extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateOfDesktop.name);;
 
+      //let promAr: Promise<void>[] = [];
+
       if (stateOfDesktop && stateOfDesktop.StateOfDTFrames && stateOfDesktop.StateOfDTFrames.length > 0) {
         if (!StaticHelpers.IsNullOrUndefined([this.AssociatedDoc])) {
           for (var idx = 0; idx < stateOfDesktop.StateOfDTFrames.length; idx++) {
@@ -237,6 +242,9 @@ export class DesktopProxy extends LoggableBase {
             var recipe: RecipeRestoreFrameOnDesktop = new RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent, this.OwnerScWinProxy);
 
             //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
+
+            //promAr.push(recipe.Execute());
+
             await recipe.Execute()
               .then(() => resolve())
               .catch((err) => reject(err));
@@ -247,6 +255,10 @@ export class DesktopProxy extends LoggableBase {
       } else {
         reject(this.SetStateOfDesktop.name + '  No desktop state provided');
       }
+
+      //await  Promise.all(promAr)
+      //    .then(() => resolve())
+      //    .catch((err) => reject(this.SetStateOfDesktop.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.SetStateOfDesktop.name);
     });
