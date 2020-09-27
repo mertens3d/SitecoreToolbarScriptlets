@@ -29,6 +29,7 @@ import { ContentMessageBroker } from './Proxies/ContentMessageBroker';
 import { InternalCommandRunner } from "./Proxies/InternalCommandRunner";
 import { MsgFlag } from '../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { IMessageControllerToContent, ICommandRouterParams } from '../../Shared/scripts/Interfaces/IStateOfController';
+import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -88,8 +89,6 @@ class ContentEntry {
 
     this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
 
-   
-
     this.CommandRouter = new CommandRouter(this.Logger, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.ScUrlAgent);
 
     let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
@@ -97,23 +96,38 @@ class ContentEntry {
 
     contentMessageMan = new ContentMessageManager(this.Logger, contentMessageBroker);
 
-    let pingMsg: ICommandRouterParams = {
-      MsgFlag: MsgFlag.InitFromQueryString,
-      NewNickName: null,
-      SelectSnapShotId: null,
-    }
-
-
     await scUiMan.InitSitecoreUiManager()
       .then(() => contentMessageMan.InitContentMessageManager())
       .then(() => this.ScUiProxy.OnReadyInitScWindowManager())
       .then((result: InitResultsScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
-      .then(() => this.CommandRouter.RouteCommand( pingMsg))//.InternalCommandRunner.InitFromQueryString())
       .then(() => {
         this.AutoSnapShotAgent.ScheduleIntervalTasks();
       })
+      .then(() => this.StartUp())
       .then(() => this.Logger.Log('Init success'))
       .catch((err) => this.Logger.ErrorAndThrow('Content Entry Point', err));
+  }
+
+  private StartUp() {
+    this.Logger.FuncStart(this.StartUp.name);
+    //priorities are (first highest)
+    // query string
+    // settings
+    let setStateFromX: ICommandRouterParams = {
+      MsgFlag: MsgFlag.SetStateFromQueryString,
+      NewNickName: null,
+      SelectSnapShotId: null,
+    }
+
+    if (this.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
+      setStateFromX.MsgFlag = MsgFlag.SetStateFromQueryString,
+        this.CommandRouter.RouteCommand(setStateFromX);
+    } else if ((this.SettingsAgent.GetByKey(SettingKey.AutoRestoreState)).ValueAsBool()) {
+      this.Logger.Log('yup...has the setting');
+      setStateFromX.MsgFlag = MsgFlag.SetStateFromMostRecent;
+      this.CommandRouter.RouteCommand(setStateFromX);
+    }
+    this.Logger.FuncEnd(this.StartUp.name);
   }
 
   private InitLogging() {

@@ -38,5 +38,7 @@
     ReqDebugAutoSnapShot,
     ReqDebugTriggerReload,
     ReqDebugClearConsole,
-    InitFromQueryString
+    SetStateFromQueryString,
+    SetStateFromMostRecent,
+    SetStateFromStorage
 }

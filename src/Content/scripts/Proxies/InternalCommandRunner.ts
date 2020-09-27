@@ -7,7 +7,7 @@ import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParam
 import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { RecipeForceAutoSnapShot } from "../Recipes/RecipeForceAutoSnapShot";
-import { RecipeInitFromQueryStr } from "../Recipes/RecipeInitFromQueryStr";
+import { RecipeInitFromQueryStr, RecipeSetStateFromMostRecent } from "../Recipes/RecipeInitFromQueryStr";
 import { RecipeRemoveItemFromStorage } from "../Recipes/RecipeRemoveItemFromStorage";
 import { RecipeSaveStateManual } from "../Recipes/RecipeSaveState";
 import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
@@ -17,7 +17,6 @@ import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrl
 
 export class InternalCommandRunner extends LoggableBase {
   Dependancies: ICommandDependancies;
-
 
   constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy, scUrlAgent: ScUrlAgent) {
     super(logger);
@@ -75,13 +74,24 @@ export class InternalCommandRunner extends LoggableBase {
         .catch((err) => reject(err));
     });
   }
+  
 
-  async InitFromQueryString(commandParams: ICommandParams): Promise<void> {
+
+  async SetStateFromMostRecent(commandParams: ICommandParams): Promise<void> {
+    try {
+      let recipe = new RecipeSetStateFromMostRecent(this.Logger, commandParams, this.Dependancies);
+      recipe.Execute()
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.SetStateFromQueryString.name, err);
+    }
+  }
+
+  async SetStateFromQueryString(commandParams: ICommandParams): Promise<void> {
     try {
       let recipe = new RecipeInitFromQueryStr(this.Logger, commandParams, this.Dependancies);
       recipe.Execute()
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.InitFromQueryString.name, err);
+      this.Logger.ErrorAndThrow(this.SetStateFromQueryString.name, err);
     }
   }
 

@@ -196,9 +196,14 @@ export class CommandRouter extends LoggableBase {
         commandData.commandToExecute = this.InternalCommandRunner.DebugForceAutoSnapShot;
         break;
 
-      case MsgFlag.InitFromQueryString:
+      case MsgFlag.SetStateFromQueryString:
         commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.InitFromQueryString;
+        commandData.commandToExecute = this.InternalCommandRunner.SetStateFromQueryString;
+        break;
+
+      case MsgFlag.SetStateFromMostRecent:
+        commandData.CommandType = CommandType.ContentInternal;
+        commandData.commandToExecute = this.InternalCommandRunner.SetStateFromMostRecent;
         break;
 
       default:

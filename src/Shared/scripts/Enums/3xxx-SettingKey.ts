@@ -31,5 +31,6 @@
     //both - 400'x
     LastUsedLogToStorageKey = 3400,
     AutoSnapshotBeforeWindowChange,
-    LgndPopUpDebug
+    LgndPopUpDebug,
+    AutoRestoreState
 }

@@ -98,8 +98,8 @@ export class PopConst {
           BtnAdminB: '[id=id-ph-btn-adminb]',
           BtnCompactScUi: '[id=id-ph-btn-compact-sc-ui]',
           BtnDebugClearPopUpConsole: '[id=id-container-btn-debug-clear-console]',
-          BtnDebugTriggerPopUpReload: '[id=id-container-btn-debug-trigger-pop-up-reload]',
           BtnDebugForceAutoSnapShot: '[id=id-container-btn-debug-force-auto-snapshot]',
+          BtnDebugTriggerPopUpReload: '[id=id-container-btn-debug-trigger-pop-up-reload]',
           BtnGoContentEditor: '[id=id-ph-btn-go-content-editor]',
           BtnModeEdit: '[id=id-ph-btn-sc-mode-edit]',
           BtnModeNorm: '[id=id-ph-btn-norm]',
@@ -114,12 +114,13 @@ export class PopConst {
           LgndForeSite: '[id=lgnd-fore-site]',
           LgndHindSite: '[id=lgnd-hind-site]',
           LgndMessages: '[id=lgnd-messages]',
+          LgndPopUpDebug: '[id=lgnd-pop-up-debug]',
           LgndPopUpLog: '[id=lgnd-pop-up-log]',
           LgndPopUpState: '[id=lgnd-pop-up-state]',
-          LgndPopUpDebug: '[id=lgnd-pop-up-debug]',
           LgndSettings: '[id=lgnd-settings]',
           PrefAutoLogin: '[id=id-ph-settings-auto-login]',
           SelStateSnapShot: '[id=id-container-select-state]',
+          SettingAutoRestoreState: '[id=id-settings-auto-restore-state]',
           SettingDebugKeepDialogOpen: '[id=id-ph-settings-debug-keep-dialog-open]',
           SettingUseCompactCss: '[id=id-ph-settings-use-compact]',
         }
@@ -128,6 +129,7 @@ export class PopConst {
     Settings: {
       Defaults: {
         AutoSaveEnabled: false,
+        AutoRestoreState: false,
         DebugKeepDialogOpen: false,
         LgndBrowserState: false,
         LgndContentState: false,

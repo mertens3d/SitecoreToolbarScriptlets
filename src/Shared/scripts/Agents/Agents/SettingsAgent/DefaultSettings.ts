@@ -249,6 +249,19 @@ export class DefaultSettings extends LoggableBase {
         ModuleKey.CheckBox,
 
       ),
+      new HindSiteSetting(
+
+        SettingKey.AutoRestoreState,
+        SettingType.BoolCheckBox,
+        PopConst.Const.Selector.HS.ModuleContainers.SettingAutoRestoreState,
+        PopConst.Const.Settings.Defaults.AutoRestoreState,
+        SettingFlavor.ContentAndPopUpStoredInPopUp,
+        'Auto-Restore State',
+        UiEnableState.Enabled,
+        UiPresence.HasUi,
+        ModuleKey.CheckBox,
+
+      ),
       new HindSiteSettingForNumbers(
 
         SettingKey.AutoSaveRetainDays,

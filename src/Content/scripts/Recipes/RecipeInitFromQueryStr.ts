@@ -6,9 +6,36 @@ import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/IComman
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
+import { IDataStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+
+export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements ICommandRecipes {
+  constructor(logger: ILoggerAgent, commandData: ICommandParams, dependancies: ICommandDependancies) {
+    super(logger, commandData, dependancies, RecipeInitFromQueryStr.name);
+  }
+
+  Execute(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      let dataStorage: IDataStateOfStorageSnapShots = this.Dependancies.AtticAgent.GetStateOfStorageSnapShots();
+
+      if (dataStorage) {
+        let mostRecentDate: Date = new Date(1970, 1, 1);
+
+        let mostRecent: IDataStateOfSitecoreWindow = null;
+        dataStorage.SnapShots.forEach((snapShot) => {
+          if (snapShot.Meta.TimeStamp > mostRecentDate) {
+            mostRecentDate = snapShot.Meta.TimeStamp;
+            mostRecent = snapShot;
+          }
+        });
+
+        this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ApiPayload, mostRecent);
+      }
+    });
+  }
+}
 
 export class RecipeInitFromQueryStr extends _ContentRecipeBase implements ICommandRecipes {
-
   constructor(logger: ILoggerAgent, commandData: ICommandParams, dependancies: ICommandDependancies) {
     super(logger, commandData, dependancies, RecipeInitFromQueryStr.name);
   }
@@ -36,7 +63,6 @@ export class RecipeInitFromQueryStr extends _ContentRecipeBase implements IComma
 
             dataOneWindowStorage = this.Dependancies.AtticAgent.GetFromStorageBySnapShotId(targetGuid);
             this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ApiPayload, dataOneWindowStorage);
-
           } else {
             reject('Either no snapshot provided or an illegal one was found');
           }
