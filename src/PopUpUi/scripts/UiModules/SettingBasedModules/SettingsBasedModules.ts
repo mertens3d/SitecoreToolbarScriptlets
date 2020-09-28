@@ -8,19 +8,24 @@ import { AccordianModule } from "./AccordianModule";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
+import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 
 export class SettingsBasedModules extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
   CheckBoxModules: _SettingsBasedModulesBase[];
   AccordianModules: _SettingsBasedModulesBase[];
   NumberModules: _SettingsBasedModulesBase[];
+  private DebuggingEnabled: boolean;
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
     super(logger)
-    this.Logger.InstantiateStart(SettingsBasedModules.name);
+    this.Logger.CTORStart(SettingsBasedModules.name);
     this.SettingsAgent = settingsAgent;
+    this.DebuggingEnabled = this.SettingsAgent.GetByKey(SettingKey.EnableDebugging).ValueAsBool();
     this.Instantiate_SettingsBasedModules();
-    this.Logger.InstantiateEnd(SettingsBasedModules.name);
+
+    this.Logger.CTOREnd(SettingsBasedModules.name);
   }
 
   Instantiate_SettingsBasedModules() {
@@ -28,18 +33,26 @@ export class SettingsBasedModules extends LoggableBase {
 
     this.CheckBoxModules = this.BuildCheckBoxSettingModules();
     this.NumberModules = this.BuildNumberSettingModules();
-    this.AccordianModules = <_SettingsBasedModulesBase[]> this.BuildAccordianModules();
+    this.AccordianModules = <_SettingsBasedModulesBase[]>this.BuildAccordianModules();
 
     this.Logger.FuncEnd(this.Instantiate_SettingsBasedModules.name);
   }
 
   BuildAccordianModules(): AccordianModule[] { //oneSetting: IHindSiteSetting, uiElem: HTMLElement
     let toReturn: AccordianModule[] = [];
-    this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((hindSiteSetting: HindSiteSettingWrapper) => {
-      if (hindSiteSetting.HindSiteSetting.DataType === SettingType.Accordion) {
-        let newAccordianDrone = new AccordianModule(this.Logger, hindSiteSetting);
 
-        toReturn.push(newAccordianDrone);
+    this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((settingWrapper: HindSiteSettingWrapper) => {
+      let isNormalAccordian: boolean = settingWrapper.HindSiteSetting.ModuleType === ModuleKey.AccordionTypical;
+      let isDebuggingAccordian: boolean = settingWrapper.HindSiteSetting.ModuleType === ModuleKey.AccordionDebugging;
+
+      if (isNormalAccordian || isDebuggingAccordian) {
+        let accordianModule = new AccordianModule(this.Logger, settingWrapper);
+        toReturn.push(accordianModule);
+
+        if (isNormalAccordian || (isDebuggingAccordian && this.DebuggingEnabled)) {
+        } else {
+          accordianModule.DisableSelf();
+        }
       }
     });
 

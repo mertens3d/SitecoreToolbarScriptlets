@@ -6,17 +6,18 @@ import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers"
 import { IUiSettingBasedModuleMutationEven_Payload } from "../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload";
 
 export class AccordianModule extends _SettingsBasedModulesBase implements IUiModule {
+
   private AccordionContentElem: HTMLElement;
-  ModuleKey = ModuleKey.Accordion;
+  ModuleKey = ModuleKey.AccordionTypical;
   private AccordionTriggerElem: HTMLElement;
   Friendly = AccordianModule.name;
+  private IsEnabled: boolean = true;
 
-  Init() {
-    this.Logger.FuncStart(this.Init.name, AccordianModule.name);
+  Init_Module() {
+    this.Logger.FuncStart(this.Init_Module.name, AccordianModule.name);
     this.Init_BaseSettingsBasedModule();
-    this.BuildHtml();
-    this.SetAccordionClass();
-    this.Logger.FuncEnd(this.Init.name, AccordianModule.name);
+    
+    this.Logger.FuncEnd(this.Init_Module.name, AccordianModule.name);
   }
 
   WireEvents_Module(): void {
@@ -26,10 +27,17 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
       this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'trigger not found ' + this.SettingJacket.HindSiteSetting.FriendlySetting);
     }
   }
-
-  BuildHtml() {
+  DisableSelf() {
+    console.log(this.ContainerSelector);
+    this.IsEnabled = false;
+    
+  }
+  BuildHtmlForModule(): void {
+    this.Logger.FuncStart(this.BuildHtmlForModule.name);
     if (!StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
       // let uiLabel: HTMLElement = window.document.querySelector(this.HindSiteSetting.UiSelector.replace('id', 'for'));
+
+      this.ContainerUiDivElem.style.display = 'block';
 
       this.AccordionTriggerElem = this.ContainerUiDivElem.querySelector('.accordion-trigger');
       this.AccordionContentElem = this.ContainerUiDivElem.querySelector('.accordion-content');
@@ -37,16 +45,28 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
       if (!StaticHelpers.IsNullOrUndefined([this.AccordionTriggerElem, this.AccordionContentElem])) {
         this.AccordionTriggerElem.innerHTML = this.SettingJacket.HindSiteSetting.FriendlySetting;
       } else {
-        this.Logger.ErrorAndThrow(this.BuildHtml.name, 'null trigger: ' + this.ContainerSelector);
+        this.Logger.ErrorAndThrow(this.BuildHtmlForModule.name, 'null trigger: ' + this.ContainerSelector);
       }
     }
 
     if (StaticHelpers.IsNullOrUndefined([this.AccordionTriggerElem, this.AccordionContentElem])) {
-      this.Logger.ErrorAndThrow(this.BuildHtml.name, AccordianModule.name + '  missing elem')
+      this.Logger.ErrorAndThrow(this.BuildHtmlForModule.name, AccordianModule.name + '  missing elem')
     }
+
+
+    this.SetAccordionClass();
+
+    if (!this.IsEnabled) {
+      console.log(this.ContainerSelector);
+      this.ContainerUiDivElem.style.display = 'none';
+    }
+
+
+    this.Logger.FuncEnd(this.BuildHtmlForModule.name);
+
   }
 
-  RefreshUi(): void {
+  RefreshUi_Module(): void {
     this.DroneRestoreAccordionState();
   }
 
@@ -84,12 +104,16 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
   }
 
   private SetAccordionClass() {
-    if (this.SettingJacket.HindSiteSetting.ValueAsBool() !== true) {
-      this.AccordionContentElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
-      this.AccordionTriggerElem.classList.remove(PopConst.Const.ClassNames.HS.Down);
+    if (this.AccordionContentElem && this.AccordionTriggerElem) {
+      if (this.SettingJacket.HindSiteSetting.ValueAsBool() !== true) {
+        this.AccordionContentElem.classList.remove(PopConst.Const.ClassNames.HS.Collapsed);
+        this.AccordionTriggerElem.classList.remove(PopConst.Const.ClassNames.HS.Down);
+      } else {
+        this.AccordionContentElem.classList.add(PopConst.Const.ClassNames.HS.Collapsed);
+        this.AccordionTriggerElem.classList.add(PopConst.Const.ClassNames.HS.Down);
+      }
     } else {
-      this.AccordionContentElem.classList.add(PopConst.Const.ClassNames.HS.Collapsed);
-      this.AccordionTriggerElem.classList.add(PopConst.Const.ClassNames.HS.Down);
+      this.Logger.ErrorAndContinue(this.SetAccordionClass.name, 'null elems');
     }
   }
 }

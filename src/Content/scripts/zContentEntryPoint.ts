@@ -14,7 +14,7 @@ import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/ICont
 import { IContentBrowserProxy } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
 import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
-import { InitResultsScWindowManager } from "../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
+import { InitReportScWindowManager } from "../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataOneDoc } from '../../Shared/scripts/Interfaces/Data/IDataOneDoc';
@@ -98,8 +98,8 @@ class ContentEntry {
 
     await scUiMan.InitSitecoreUiManager()
       .then(() => contentMessageMan.InitContentMessageManager())
-      .then(() => this.ScUiProxy.OnReadyInitScWindowManager())
-      .then((result: InitResultsScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
+      .then(() => this.ScUiProxy.OnReady_InitScWindowManager())
+      .then((result: InitReportScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
       .then(() => {
         this.AutoSnapShotAgent.ScheduleIntervalTasks();
       })
@@ -133,7 +133,7 @@ class ContentEntry {
   private InitLogging() {
     this.Logger.FuncStart(this.InitLogging.name);
 
-    let enableLogger: IHindSiteSetting = this.SettingsAgent.GetByKey(SettingKey.EnableLogging);
+    let enableLogger: IHindSiteSetting = this.SettingsAgent.GetByKey(SettingKey.EnableDebugging);
 
     if (enableLogger.ValueAsBool() || SharedConst.Const.Debug.ForceLoggingEnabled) {
       let consoleLogWrite = new LoggerConsoleWriter();

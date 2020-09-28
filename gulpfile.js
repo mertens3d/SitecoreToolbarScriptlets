@@ -21,7 +21,7 @@ var varsObj = new vars();
 
 gulp.task('ArchiveJsAndMap', (cb) => ArchiveJsMap.ArchiveJsAndMaps(cb));
 gulp.task('DeleteJsAndMap', (cb) => ArchiveJsMap.DeleteJsAndMap(cb));
-gulp.task('ArchiveAndDelete', gulp.series(['ArchiveJsAndMap', 'DeleteJsAndMap']));
+gulp.task('ArchiveAndDeleteJsAndMap', gulp.series(['ArchiveJsAndMap', 'DeleteJsAndMap']));
 
 gulp.task('BookmarkText', (cb) => WebPackTasks.BookmarkText(cb, varsObj));
 gulp.task('BuildPopUpHtml', (cb) => htmlTasks.BuildHtml(cb, varsObj));
@@ -61,4 +61,4 @@ gulp.task('putters', gulp.series(['CopyFromFinalToAddon']), function (resolve) {
   resolve();
 });
 
-gulp.task('default', gulp.series(['PreClean', 'builders', 'putters', 'ArchiveAndDelete']));
+gulp.task('default', gulp.series(['PreClean', 'builders', 'putters', 'ArchiveAndDeleteJsAndMap']));

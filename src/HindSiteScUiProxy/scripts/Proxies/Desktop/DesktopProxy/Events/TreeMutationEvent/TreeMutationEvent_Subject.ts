@@ -4,6 +4,7 @@ import { ITreeMutationEvent_Payload } from "./ITreeMutationEvent_Payload";
 import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 
 export class TreeMutationEvent_Subject extends HindeSiteEvent_Subject<ITreeMutationEvent_Payload> {
+
   private TreeElement: any;
 
   constructor(logger: ILoggerAgent, treeElement: HTMLElement) {

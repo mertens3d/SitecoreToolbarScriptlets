@@ -7,13 +7,13 @@ import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IC
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataStateOfLiveHindSite } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
 
 export class AutoSnapShotAgent extends LoggableBase {
   private AtticAgent: IContentAtticAgent;
   private AutoSaveHasBeenScheduled: boolean = false;
-  private LastKnownSavedState: IDataStateOfSitecoreWindow = null;
+  private LastKnownSavedState: IDataStateOfLiveHindSite = null;
   private SettingsAgent: ISettingsAgent;
   private RecipeAutoSaveState: RecipeAutoSaveState;
   ScUiProxy: IHindSiteScUiProxy;
@@ -33,7 +33,7 @@ export class AutoSnapShotAgent extends LoggableBase {
     }
 
     this.RecipeAutoSaveState.ExecuteAsync(this.LastKnownSavedState)
-      .then((result: IDataStateOfSitecoreWindow) => this.LastKnownSavedState = result);
+      .then((result: IDataStateOfLiveHindSite) => this.LastKnownSavedState = result);
 
     this.Logger.FuncEnd(this.AutoSaveSnapShot.name);
   }

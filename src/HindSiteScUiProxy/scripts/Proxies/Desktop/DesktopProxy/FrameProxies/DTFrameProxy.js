@@ -64,6 +64,50 @@ var DTFrameProxy = /** @class */ (function (_super) {
         _this.Discriminator = DTFrameProxy.name;
         return _this;
     }
+    DTFrameProxy.prototype.Instantiate_DTFrameProxy = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                        var recipeBasic;
+                        var _this = this;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    this.Logger.FuncStart(this.Instantiate_DTFrameProxy.name);
+                                    recipeBasic = new RecipeBasics_1.RecipeBasics(this.Logger);
+                                    this.initReportFrameProxy = new InitResultsDTFrameProxy_1.ReportResultsInitDTFrameProxy();
+                                    return [4 /*yield*/, recipeBasic.WaitForReadyNABHtmlIframeElement(this.HTMLIframeElement)
+                                            .then(function () { return _this.ContentEditorProxy = new ContentEditorProxy_1.ContentEditorProxy(_this.Logger, _this.GetContentDoc()); })
+                                            .then(function () { return _this.ContentEditorProxy.Instantiate_ContentEditorProxy(); })
+                                            .then(function () {
+                                            _this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject_1.DTFrameProxyMutationEvent_Subject(_this.Logger);
+                                            _this.ContentEditorProxyMutationEvent_Observer = new ContentEditorProxyMutationEvent_Observer_1.ContentEditorProxyMutationEvent_Observer(_this.Logger, _this);
+                                            _this.initReportFrameProxy.DTFrameProxyInitialized = true;
+                                        })
+                                            .then(function () { return resolve(); })
+                                            .catch(function (err) { return reject(_this.Instantiate_DTFrameProxy.name + ' | ' + err); })];
+                                case 1:
+                                    _a.sent();
+                                    this.Logger.FuncEnd(this.Instantiate_DTFrameProxy.name);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+            });
+        });
+    };
+    DTFrameProxy.prototype.WireEvents_DTFrameProxy = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.Logger.FuncStart(this.WireEvents_DTFrameProxy.name);
+                this.ContentEditorProxy.ContentEditorProxyMutationEvent_Subject.RegisterObserver(this.ContentEditorProxyMutationEvent_Observer);
+                this.ContentEditorProxy.WireEvents_ContentEditorProxy();
+                this.Logger.FuncEnd(this.WireEvents_DTFrameProxy.name);
+                return [2 /*return*/];
+            });
+        });
+    };
     DTFrameProxy.prototype.GetStateOfDTFrame = function () {
         var toReturn = new DefaultStateOfFrame_1.DefaultStateOfFrame();
         var sourceStyle = this.HTMLIframeElement.style;
@@ -80,22 +124,40 @@ var DTFrameProxy = /** @class */ (function (_super) {
         }
         return toReturn;
     };
+    DTFrameProxy.prototype.SetFrameStyling = function (stateOfDTFrame) {
+        this.Logger.FuncStart(this.SetFrameStyling.name);
+        this.HTMLIframeElement.style.height = stateOfDTFrame.Styling.height;
+        this.HTMLIframeElement.style.left = stateOfDTFrame.Styling.left;
+        this.HTMLIframeElement.style.position = stateOfDTFrame.Styling.position;
+        this.HTMLIframeElement.style.top = stateOfDTFrame.Styling.top;
+        this.HTMLIframeElement.style.width = stateOfDTFrame.Styling.width;
+        this.HTMLIframeElement.style.zIndex = stateOfDTFrame.Styling.zIndex;
+        this.Logger.FuncEnd(this.SetFrameStyling.name);
+    };
     DTFrameProxy.prototype.SetStateOfDTFrame = function (stateOfDTFrame) {
         return __awaiter(this, void 0, void 0, function () {
+            var err_1;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.ContentEditorProxy.SetStateOfContentEditor(stateOfDTFrame.StateOfContentEditor)
-                            .then(function () {
-                            _this.HTMLIframeElement.style.height = stateOfDTFrame.Styling.height;
-                            _this.HTMLIframeElement.style.left = stateOfDTFrame.Styling.left;
-                            _this.HTMLIframeElement.style.position = stateOfDTFrame.Styling.position;
-                            _this.HTMLIframeElement.style.top = stateOfDTFrame.Styling.top;
-                            _this.HTMLIframeElement.style.width = stateOfDTFrame.Styling.width;
-                            _this.HTMLIframeElement.style.zIndex = stateOfDTFrame.Styling.zIndex;
-                        })];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        this.Logger.FuncStart(this.SetStateOfDTFrame.name);
+                        this.DTFrameProxyMutationEvent_Subject.DisableNotifications();
+                        return [4 /*yield*/, this.ContentEditorProxy.SetStateOfContentEditorAsync(stateOfDTFrame.StateOfContentEditor)
+                                .then(function () {
+                                _this.SetFrameStyling(stateOfDTFrame);
+                                _this.DTFrameProxyMutationEvent_Subject.EnableNotifications();
+                            })];
                     case 1:
                         _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_1 = _a.sent();
+                        this.Logger.ErrorAndThrow(this.SetStateOfDTFrame.name, err_1);
+                        return [3 /*break*/, 3];
+                    case 3:
+                        this.Logger.FuncEnd(this.SetStateOfDTFrame.name);
                         return [2 /*return*/];
                 }
             });
@@ -107,36 +169,6 @@ var DTFrameProxy = /** @class */ (function (_super) {
             DTFrameProxy: this
         };
         this.DTFrameProxyMutationEvent_Subject.NotifyObservers(dtFrameProxyMutationEvent_Payload);
-    };
-    DTFrameProxy.prototype.OnReadyInitDTFrameProxy = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            var recipeBasic, initResultFrameProxy;
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.Logger.FuncStart(this.OnReadyInitDTFrameProxy.name);
-                        recipeBasic = new RecipeBasics_1.RecipeBasics(this.Logger);
-                        initResultFrameProxy = new InitResultsDTFrameProxy_1.InitResultsDTFrameProxy();
-                        return [4 /*yield*/, recipeBasic.WaitForReadyNABHtmlIframeElement(this.HTMLIframeElement)
-                                .then(function () { return _this.ContentEditorProxy = new ContentEditorProxy_1.ContentEditorProxy(_this.GetContentDoc(), _this.Logger); })
-                                .then(function () { return _this.ContentEditorProxy.OnReadyInitContentEditorProxy(); })
-                                .then(function (result) { return initResultFrameProxy.InitResultContentEditorProxy = result; })
-                                .then(function () {
-                                _this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject_1.DTFrameProxyMutationEvent_Subject(_this.Logger);
-                                _this.ContentEditorProxyMutationEvent_Observer = new ContentEditorProxyMutationEvent_Observer_1.ContentEditorProxyMutationEvent_Observer(_this.Logger, _this);
-                                _this.ContentEditorProxy.ContentEditorProxyMutationEvent_Subject.RegisterObserver(_this.ContentEditorProxyMutationEvent_Observer);
-                                initResultFrameProxy.DTFrameProxyInitialized = true;
-                            })
-                                .then(function () { return resolve(initResultFrameProxy); })
-                                .catch(function (err) { return reject(_this.OnReadyInitDTFrameProxy.name + ' | ' + err); })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); });
     };
     return DTFrameProxy;
 }(_BaseFrameProxy_1._BaseFrameProxy));

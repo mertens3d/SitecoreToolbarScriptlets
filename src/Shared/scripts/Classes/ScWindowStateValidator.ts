@@ -1,16 +1,17 @@
 ﻿import { DefaultContentReplyPayload } from "./Defaults/DefaultScWindowState";
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
 import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
-import { DefaultStateOfSitecoreWindow, DefaultScWindowStates } from "./Defaults/DefaultStateOfSitecoreWindow";
+import { DefaultStateOfLiveHindSite, DefaultScWindowStates } from "./Defaults/DefaultStateOfSitecoreWindow";
 import { DefaultStateOfSnapshotStorage } from "./Defaults/DefaultStateOfSnapshots";
 import { DefaultStateOfTree } from "./Defaults/DefaultStateOfTree";
 import { IDataStateOfContentEditor } from "../Interfaces/Data/States/IDataStateOfContentEditor";
 import { IDataStateOfDesktop } from "../Interfaces/Data/States/IDataStateOfDesktop";
-import { IDataStateOfSitecoreWindow } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataStateOfLiveHindSite } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfStorageSnapShots } from "../Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { IDataSitecoreWindowStates } from "../Interfaces/Data/States/IDataStates";
+import { IDataStateOfSitecoreWindow } from "../Interfaces/Data/States/IDataStates";
 import { LoggableBase } from "../LoggableBase";
 import { IDataContentReplyReceivedEvent_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IDataStateOfDesktopArea } from "../Interfaces/Data/States/IDataStateOfDesktopArea";
 
 export class ScWindowStateValidator extends LoggableBase {
   ValidatePayload(payload: IDataContentReplyReceivedEvent_Payload): IDataContentReplyReceivedEvent_Payload {
@@ -23,7 +24,7 @@ export class ScWindowStateValidator extends LoggableBase {
       this.Logger.ErrorAndContinue(this.ValidatePayload.name, 'Null contentState');
     }
 
-    payload.StateOfSitecoreWindow = this.ValidateStateOfSitecoreWindow(payload.StateOfSitecoreWindow);
+    payload.StateOfLiveHindSite = this.ValidateStateOfSitecoreWindow(payload.StateOfLiveHindSite);
     payload.StateOfStorageSnapShots = this.ValidateStateOfSnapshots(payload.StateOfStorageSnapShots);
 
     if (!payload.ErrorStack) {
@@ -42,16 +43,16 @@ export class ScWindowStateValidator extends LoggableBase {
     return stateOfSnapShots;
   }
 
-  ValidateStateOfSitecoreWindow(StateOfSitecoreWindow: IDataStateOfSitecoreWindow): IDataStateOfSitecoreWindow {
+  ValidateStateOfSitecoreWindow(StateOfSitecoreWindow: IDataStateOfLiveHindSite): IDataStateOfLiveHindSite {
     if (!StateOfSitecoreWindow) {
-      StateOfSitecoreWindow = new DefaultStateOfSitecoreWindow();
+      StateOfSitecoreWindow = new DefaultStateOfLiveHindSite();
     }
 
-    StateOfSitecoreWindow.ScWindowStates = this.ValidateScWindowStates(StateOfSitecoreWindow.ScWindowStates);
+    StateOfSitecoreWindow.StateOfSitecoreWindow = this.ValidateScWindowStates(StateOfSitecoreWindow.StateOfSitecoreWindow);
 
     return StateOfSitecoreWindow;
   }
-  ValidateScWindowStates(ccWindowStates: IDataSitecoreWindowStates): IDataSitecoreWindowStates {
+  ValidateScWindowStates(ccWindowStates: IDataStateOfSitecoreWindow): IDataStateOfSitecoreWindow {
     if (!ccWindowStates) {
       ccWindowStates = new DefaultScWindowStates();
     }
@@ -74,18 +75,24 @@ export class ScWindowStateValidator extends LoggableBase {
     return StateOfContentEditor;
   }
 
+  ValidateStateOfDesktopArea(stateOfDesktopArea: IDataStateOfDesktopArea): IDataStateOfDesktopArea {
+    if (stateOfDesktopArea.IndexOfActiveFrame === null) {
+      stateOfDesktopArea.IndexOfActiveFrame = -1;
+    }
+
+    if (!stateOfDesktopArea.StateOfDTFrames) {
+      stateOfDesktopArea.StateOfDTFrames = [];
+    }
+
+    return stateOfDesktopArea;
+  }
+
   ValidateStateOfDesktop(StateOfDesktop: IDataStateOfDesktop): IDataStateOfDesktop {
     if (!StateOfDesktop) {
       StateOfDesktop = new DefaultStateOfDesktop();
     }
 
-    if (StateOfDesktop.IndexOfActiveFrame === null) {
-      StateOfDesktop.IndexOfActiveFrame = -1;
-    }
-
-    if (!StateOfDesktop.StateOfDTFrames) {
-      StateOfDesktop.StateOfDTFrames = [];
-    }
+    StateOfDesktop.StateOfDTArea = this.ValidateStateOfDesktopArea(StateOfDesktop.StateOfDTArea);
 
     return StateOfDesktop;
   }

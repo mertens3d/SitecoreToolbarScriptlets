@@ -19,6 +19,9 @@ import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISetti
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { CommandStartEndCancelEvent_Observer } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Observer";
+import { ICommandStartEndCancelEvent_Payload, CommandState_State } from "../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
+import { CommandStartEndCancelEvent_Subject } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Subject";
 
 export class CommandRouter extends LoggableBase {
   private InternalCommandRunner: InternalCommandRunner;
@@ -29,6 +32,9 @@ export class CommandRouter extends LoggableBase {
   private SettingsAgent: ISettingsAgent;
   private AutoSnapShotAgent: AutoSnapShotAgent;
   private ScUrlAgent: ScUrlAgent;
+  CommandTriggeredEvent_Observer: CommandStartEndCancelEvent_Observer;
+  CommandTriggeredEvent_Subject: CommandStartEndCancelEvent_Subject;
+  private Dependancies: ICommandDependancies;
 
   constructor(logger: ILoggerAgent, scUiProxy: IHindSiteScUiProxy, toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, scUrlAgent: ScUrlAgent) {
     super(logger);
@@ -41,6 +47,30 @@ export class CommandRouter extends LoggableBase {
     this.ScUrlAgent = scUrlAgent;
 
     this.InternalCommandRunner = new InternalCommandRunner(this.Logger, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.ScUrlAgent);
+
+    this.CommandTriggeredEvent_Subject = new CommandStartEndCancelEvent_Subject(this.Logger, CommandRouter.name);
+    this.CommandTriggeredEvent_Observer = new CommandStartEndCancelEvent_Observer(this.Logger, this.OnCommandStartEndCancelEvent.bind(this));
+    this.CommandTriggeredEvent_Subject.RegisterObserver(this.CommandTriggeredEvent_Observer);
+
+    this.Dependancies = {
+      AtticAgent: this.AtticAgent,
+      AutoSnapShotAgent: this.AutoSnapShotAgent,
+      Logger: this.Logger,
+      ScUiProxy: this.ScUiProxy,
+      ScUrlAgent: this.ScUrlAgent
+    }
+  }
+
+  async OnCommandStartEndCancelEvent(payload: ICommandStartEndCancelEvent_Payload): Promise<void> {
+    this.Logger.FuncStart(this.OnCommandStartEndCancelEvent.name);
+    if (payload.CommandState == CommandState_State.CommandStarted) {
+      await this.ToastAgent.RaisePerpetualToast('Starting to do something')
+    } else if (payload.CommandState == CommandState_State.CommandCompletedSuccessfully) {
+      //self.ToastAgent.OnRaiseToastReq().bind(self.ToastAgent))
+      await this.ToastAgent.LowerPerpetualToast('Command completed successfully');
+    }
+
+    this.Logger.FuncEnd(this.OnCommandStartEndCancelEvent.name);
   }
 
   private ExecuteInternalCommand(commandToExecute: Function, routingParams: ICommandRouterParams): Promise<void> {
@@ -55,28 +85,24 @@ export class CommandRouter extends LoggableBase {
           commandParams.NewNickname = routingParams.NewNickName;
         }
 
-        let dependancies: ICommandDependancies = {
-          AtticAgent: this.AtticAgent,
-          AutoSnapShotAgent: this.AutoSnapShotAgent,
-          Logger: this.Logger,
-          ScUiProxy: this.ScUiProxy,
-          ScUrlAgent: this.ScUrlAgent
+        let payload: ICommandStartEndCancelEvent_Payload = {
+          CommandState: CommandState_State.CommandStarted
         }
+        let self = this;
 
-        await this.ToastAgent.RaisePerpetualToast('Starting to do something')
+        await commandToExecute.bind(self.InternalCommandRunner)(commandParams, this.Dependancies)
+          .then(() => this.Logger.MarkerC())
           .then(() => {
-            let self = this;
-            setTimeout(async () => {
-              await commandToExecute.bind(self.InternalCommandRunner)(commandParams, dependancies)
-                .then(() => self.ToastAgent.LowerPerpetualToast().bind(self.ToastAgent))
-            }, 1000)
-          }
-          )
-          //.then(() => )
+            let payloadComplete: ICommandStartEndCancelEvent_Payload = {
+              CommandState: CommandState_State.CommandCompletedSuccessfully
+            }
+            //this.CommandTriggeredEvent_Subject.NotifyObservers(payloadComplete);
+          })
+          .then(() => this.Logger.MarkerD())
           .then(() => resolve())
-          .catch((err) => reject(this.ExecuteInternalCommand.name + ' | ' + err));
+          .catch((err) => this.Logger.ErrorAndThrow(this.ExecuteInternalCommand.name, err));
+        //}, 1000)
       }
-
       this.Logger.FuncEnd(this.ExecuteInternalCommand.name);
     });
   }
@@ -94,7 +120,7 @@ export class CommandRouter extends LoggableBase {
     return commandData;
   }
 
-  RouteCommand(routingParams: ICommandRouterParams): Promise<void> {
+  async RouteCommand(routingParams: ICommandRouterParams): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RouteCommand.name, MsgFlag[routingParams.MsgFlag]);
       let commandData: CommandToExecuteData = this.CalculateCommandToExec(routingParams.MsgFlag);
@@ -146,7 +172,7 @@ export class CommandRouter extends LoggableBase {
     switch (msgFlag) {
       case MsgFlag.ReqAddCETab:
         commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ScUiProxy.AddCETabAsync;
+        commandData.commandToExecute = this.ScUiProxy.AddContentEditorToDesktopAsync;
         break;
 
       case MsgFlag.ReqUpdateNickName:

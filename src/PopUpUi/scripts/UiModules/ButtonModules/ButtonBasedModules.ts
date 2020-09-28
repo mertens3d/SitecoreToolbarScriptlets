@@ -11,18 +11,18 @@ import { CloseButtonModule } from "./CloseButtonModule";
 import { InputWithButtonModule } from "./InputWithButtonModule";
 import { TypCommandButtonModule } from "./TypCommandButtonModule";
 
-export class ButtonBasedModules extends LoggableBase {
+export class ButtonBasedModulesBucket extends LoggableBase {
   AllButtonBasedModules: IUiModule[] = [];
   SelectSnapShotModule: SelectSnapshotModule;
   CommandDefinitionBucket: ICommandDefinitionBucket;
 
   constructor(logger: ILoggerAgent, commandMan: ICommandDefinitionBucket) {
     super(logger);
-    this.Logger.InstantiateStart(ButtonBasedModules.name);
+    this.Logger.CTORStart(ButtonBasedModulesBucket.name);
     this.CommandDefinitionBucket = commandMan;
 
     this.InstantiateButtonBasedModules();
-    this.Logger.InstantiateEnd(ButtonBasedModules.name);
+    this.Logger.CTOREnd(ButtonBasedModulesBucket.name);
   }
 
   private InstantiateButtonBasedModules() {

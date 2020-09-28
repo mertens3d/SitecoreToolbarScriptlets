@@ -32,7 +32,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
 
   constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter) {
     super(logger);
-    this.Logger.InstantiateStart(ContentMessageBroker.name);
+    this.Logger.CTORStart(ContentMessageBroker.name);
 
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
@@ -42,7 +42,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     this.ContentBrowserProxy = contentBrowserProxy;
     this.AutoSnapShotAgent = autoSnapShotAgent;
     this.CommandRouter = commandRouter;
-    this.Logger.InstantiateEnd(ContentMessageBroker.name);
+    this.Logger.CTOREnd(ContentMessageBroker.name);
   }
 
   BeginListening() {
@@ -129,16 +129,18 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(messageFromController.MsgFlag));
 
-
       let commandRouterParams: ICommandRouterParams = {
         MsgFlag: messageFromController.MsgFlag,
         NewNickName: messageFromController.StateOfPopUI.NewNickName,
         SelectSnapShotId: messageFromController.StateOfPopUI.SelectSnapShotId
       }
 
-      await this.CommandRouter.RouteCommand( commandRouterParams)
+      await this.CommandRouter.RouteCommand(commandRouterParams)
         .then(() => this.ConstructResponse(messageFromController.MsgFlag))
-        .then((response: MsgContentToController) => resolve(response))
+        .then((response: MsgContentToController) => {
+          this.Logger.LogAsJsonPretty('resolving', response)
+          resolve(response)
+        })
         .catch((err) => reject(this.ReqMsgRouter.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.ReqMsgRouter.name);

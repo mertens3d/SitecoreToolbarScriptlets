@@ -100,7 +100,7 @@ export class SettingsAgent implements ISettingsAgent {
         }
       }
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, err);
+      this.Logger.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, err);
     }
 
     this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);

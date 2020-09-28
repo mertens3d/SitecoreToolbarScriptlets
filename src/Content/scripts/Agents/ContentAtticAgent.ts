@@ -6,7 +6,7 @@ import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IC
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
 import { IDataStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { IDataStateOfSitecoreWindow } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataStateOfLiveHindSite } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../Shared/scripts/Interfaces/IOneStorageData";
 import { DefaultStateOfSnapshotStorage } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
@@ -31,7 +31,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.SettingAutoSnapshotRetainDays = settingAutoSnapshotRetainDays;
   }
 
-  async WriteStateOfSitecoreToStorage(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): Promise<void> {
+  async WriteStateOfSitecoreToStorage(stateOfSitecoreWindow: IDataStateOfLiveHindSite): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WriteStateOfSitecoreToStorage.name);
 
@@ -50,10 +50,10 @@ export class ContentAtticAgent implements IContentAtticAgent {
     });
   }
 
-  GetFromStorageBySnapShotId(needleId: GuidData): IDataStateOfSitecoreWindow {
+  GetFromStorageBySnapShotId(needleId: GuidData): IDataStateOfLiveHindSite {
     this.Logger.FuncStart(this.GetFromStorageBySnapShotId.name, needleId.Raw);
 
-    var DateOneWinStoreMatch: IDataStateOfSitecoreWindow = null;
+    var DateOneWinStoreMatch: IDataStateOfLiveHindSite = null;
 
     let foundStorage: IDataStateOfStorageSnapShots = this.GetStateOfStorageSnapShots();
 
@@ -61,18 +61,20 @@ export class ContentAtticAgent implements IContentAtticAgent {
       var candidate = foundStorage.SnapShots[idx];
       if (candidate.Meta.SnapshotId.Raw === needleId.Raw) {
         DateOneWinStoreMatch = candidate;
-        this.Logger.Log('found match');
         break;
       }
     }
 
+    if (!DateOneWinStoreMatch) {
+      this.Logger.WarningAndContinue(this.GetFromStorageBySnapShotId.name, 'No match found for: ' + needleId.Raw);
+    }
     this.Logger.FuncEnd(this.GetFromStorageBySnapShotId.name);
 
     return DateOneWinStoreMatch;
   }
 
-  private ValidateStorageData(oneRaw: IOneStorageData): IDataStateOfSitecoreWindow {
-    var candidate: IDataStateOfSitecoreWindow = <IDataStateOfSitecoreWindow>JSON.parse(oneRaw.data);
+  private ValidateStorageData(oneRaw: IOneStorageData): IDataStateOfLiveHindSite {
+    var candidate: IDataStateOfLiveHindSite = <IDataStateOfLiveHindSite>JSON.parse(oneRaw.data);
 
     if (candidate) {
       if (!candidate.Meta) {
@@ -105,8 +107,8 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return result;
   }
 
-  private GetAllStorage(): IDataStateOfSitecoreWindow[] {
-    var toReturn: IDataStateOfSitecoreWindow[] = [];
+  private GetAllStorage(): IDataStateOfLiveHindSite[] {
+    var toReturn: IDataStateOfLiveHindSite[] = [];
 
     let rawStorageData: IOneStorageData[] = this.GetAllLocalStorageAsIOneStorageData();
 
@@ -116,7 +118,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       }
     }
 
-    toReturn.sort((a: IDataStateOfSitecoreWindow, b: IDataStateOfSitecoreWindow) =>
+    toReturn.sort((a: IDataStateOfLiveHindSite, b: IDataStateOfLiveHindSite) =>
       +b.Meta.TimeStamp - +a.Meta.TimeStamp
     );
 
@@ -125,7 +127,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return toReturn;
   }
 
-  private CleanOneStorageItem(candidate: IDataStateOfSitecoreWindow, autoCount: number): number {
+  private CleanOneStorageItem(candidate: IDataStateOfLiveHindSite, autoCount: number): number {
     var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
     var deleteFlag: boolean = false;
     var now: Date = new Date();
@@ -189,19 +191,11 @@ export class ContentAtticAgent implements IContentAtticAgent {
   }
 
   GetStateOfStorageSnapShots(): IDataStateOfStorageSnapShots {
-    this.Logger.FuncStart(this.GetStateOfStorageSnapShots.name);
-
     let stateOfSnapshotStorage: IDataStateOfStorageSnapShots = new DefaultStateOfSnapshotStorage();
-
-    let result: IDataStateOfSitecoreWindow[] = this.GetAllStorage();
-
+    let result: IDataStateOfLiveHindSite[] = this.GetAllStorage();
     stateOfSnapshotStorage.SnapShots = result;
     stateOfSnapshotStorage.CreationDate = new Date();
     this.UpdateCounts(stateOfSnapshotStorage);
-    //stateOfSnapshotStorage.SnapShots = this.ConvertGuidData(stateOfSnapshotStorage.SnapShots);
-
-    this.Logger.FuncEnd(this.GetStateOfStorageSnapShots.name);
-
     return stateOfSnapshotStorage;
   }
 
@@ -242,13 +236,13 @@ export class ContentAtticAgent implements IContentAtticAgent {
     }
   }
 
-  FilterOutOldData(data: IDataStateOfSitecoreWindow[]): IDataStateOfSitecoreWindow[] {
-    var toReturn: IDataStateOfSitecoreWindow[] = data;
+  FilterOutOldData(data: IDataStateOfLiveHindSite[]): IDataStateOfLiveHindSite[] {
+    var toReturn: IDataStateOfLiveHindSite[] = data;
 
     return toReturn;
   }
 
-  RemoveAndConfirmRemoval(storageMatch: IDataStateOfSitecoreWindow): void {
+  RemoveAndConfirmRemoval(storageMatch: IDataStateOfLiveHindSite): void {
     this.Logger.LogVal('Key to Delete', storageMatch.Meta.SnapshotId);
 
     let storageKey = storageMatch.Meta.StorageKey;
@@ -266,7 +260,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.Logger.FuncStart(this.RemoveSnapshotFromStorageById.name);
     try {
       if (targetId) {
-        var storageMatch: IDataStateOfSitecoreWindow = this.GetFromStorageBySnapShotId(targetId)
+        var storageMatch: IDataStateOfLiveHindSite = this.GetFromStorageBySnapShotId(targetId)
         if (storageMatch) {
           this.RemoveAndConfirmRemoval(storageMatch)
         } else {

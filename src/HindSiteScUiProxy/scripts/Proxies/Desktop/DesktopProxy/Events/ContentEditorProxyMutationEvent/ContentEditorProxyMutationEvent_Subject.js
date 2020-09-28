@@ -18,10 +18,7 @@ var HindeSiteEvent_Subject_1 = require("../../../../../../../Shared/scripts/Even
 var ContentEditorProxyMutationEvent_Subject = /** @class */ (function (_super) {
     __extends(ContentEditorProxyMutationEvent_Subject, _super);
     function ContentEditorProxyMutationEvent_Subject(logger) {
-        var _this = _super.call(this, logger, ContentEditorProxyMutationEvent_Subject.name) || this;
-        _this.Logger.InstantiateStart(ContentEditorProxyMutationEvent_Subject.name);
-        _this.Logger.InstantiateEnd(ContentEditorProxyMutationEvent_Subject.name);
-        return _this;
+        return _super.call(this, logger, ContentEditorProxyMutationEvent_Subject.name) || this;
     }
     return ContentEditorProxyMutationEvent_Subject;
 }(HindeSiteEvent_Subject_1.HindeSiteEvent_Subject));

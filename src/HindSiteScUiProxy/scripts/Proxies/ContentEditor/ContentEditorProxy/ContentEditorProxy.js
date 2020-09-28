@@ -53,21 +53,23 @@ exports.ContentEditorProxy = void 0;
 var DefaultStateOfContentEditor_1 = require("../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentEditor");
 var RecipeBasics_1 = require("../../../../../Shared/scripts/Classes/RecipeBasics");
 var Guid_1 = require("../../../../../Shared/scripts/Helpers/Guid");
-var InjectConst_1 = require("../../../../../Shared/scripts/Interfaces/InjectConst");
-var SharedConst_1 = require("../../../../../Shared/scripts/SharedConst");
-var LoggableBase_1 = require("../../../../../Shared/scripts/LoggableBase");
-var TreeMutationEvent_Observer_1 = require("../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer");
-var ContentEditorTreeProxy_1 = require("./ContentEditorTreeProxy/ContentEditorTreeProxy");
-var ContentEditorProxyMutationEvent_Subject_1 = require("../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject");
 var InitResultContentEditorProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy");
+var InjectConst_1 = require("../../../../../Shared/scripts/Interfaces/InjectConst");
+var LoggableBase_1 = require("../../../../../Shared/scripts/LoggableBase");
+var SharedConst_1 = require("../../../../../Shared/scripts/SharedConst");
+var ContentEditorProxyMutationEvent_Subject_1 = require("../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject");
+var TreeMutationEvent_Observer_1 = require("../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer");
 var ContentEditorPublishProxy_1 = require("./ContentEditorPublishProxy");
+var ContentEditorTreeProxy_1 = require("./ContentEditorTreeProxy/ContentEditorTreeProxy");
 var ContentEditorProxy = /** @class */ (function (_super) {
     __extends(ContentEditorProxy, _super);
-    function ContentEditorProxy(associatedDoc, logger) {
+    function ContentEditorProxy(logger, associatedDoc) {
         var _this = _super.call(this, logger) || this;
+        _this.Logger.CTORStart(ContentEditorProxy.name);
         _this.AssociatedHindsiteId = Guid_1.Guid.NewRandomGuid();
         _this.AssociatedDoc = associatedDoc;
         _this.ValidateAssociatedDocContentEditor();
+        _this.Logger.CTOREnd(ContentEditorProxy.name);
         return _this;
     }
     ContentEditorProxy.prototype.PublishItem = function () {
@@ -85,52 +87,59 @@ var ContentEditorProxy = /** @class */ (function (_super) {
             });
         });
     };
-    ContentEditorProxy.prototype.OnReadyInitContentEditorProxy = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            var initResultContentEditorProxy, recipeBasic;
+    ContentEditorProxy.prototype.Instantiate_ContentEditorProxy = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var recipeBasic, err_1;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        initResultContentEditorProxy = new InitResultContentEditorProxy_1.InitResultContentEditorProxy();
+                        this.Logger.FuncStart(this.Instantiate_ContentEditorProxy.name);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        this.initResultContentEditorProxy = new InitResultContentEditorProxy_1.InitReportContentEditorProxy();
                         recipeBasic = new RecipeBasics_1.RecipeBasics(this.Logger);
                         return [4 /*yield*/, recipeBasic.WaitForReadyNABDocument(this.AssociatedDoc)
                                 .then(function () {
-                                _this.ChildTreeProxy = new ContentEditorTreeProxy_1.TreeProxy(_this.Logger, _this.AssociatedDoc, _this.GetTreeContainer());
-                                initResultContentEditorProxy.InitResultTreeProxy = _this.ChildTreeProxy.OnReadyInitTreeProxy();
                                 _this.ContentEditorProxyMutationEvent_Subject = new ContentEditorProxyMutationEvent_Subject_1.ContentEditorProxyMutationEvent_Subject(_this.Logger);
-                                _this.TreeMutationEvent_Observer = new TreeMutationEvent_Observer_1.TreeMutationEvent_Observer(_this.Logger, _this);
-                                if (_this.ChildTreeProxy) {
-                                    _this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(_this.TreeMutationEvent_Observer);
-                                }
-                                else {
-                                    _this.Logger.ErrorAndThrow(_this.OnReadyInitContentEditorProxy.name, 'no child tree found');
-                                }
-                                initResultContentEditorProxy.ContentEditorProxyInitialized = true;
+                                _this.TreeMutationEvent_Observer = new TreeMutationEvent_Observer_1.TreeMutationEvent_Observer(_this.Logger, _this.CallBackOnContentEditorProxyTreeMutationEvent.bind(_this));
                             })
-                                .then(function () { return resolve(initResultContentEditorProxy); })
-                                .catch(function (err) { return reject(_this.OnReadyInitContentEditorProxy.name + ' | ' + err); })];
-                    case 1:
+                                .then(function () { return _this.ChildTreeProxy = new ContentEditorTreeProxy_1.TreeProxy(_this.Logger, _this.AssociatedDoc, _this.GetTreeContainer()); })
+                                .then(function () { return _this.ChildTreeProxy.Instantiate_TreeProxy(); })
+                                .then(function () { return _this.initResultContentEditorProxy.ContentEditorProxyInitialized = true; })
+                                .catch(function (err) { return _this.Logger.ErrorAndThrow(_this.Instantiate_ContentEditorProxy.name, err); })];
+                    case 2:
                         _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_1 = _a.sent();
+                        this.Logger.ErrorAndThrow(this.Instantiate_ContentEditorProxy.name, err_1);
+                        return [3 /*break*/, 4];
+                    case 4:
+                        this.Logger.FuncEnd(this.Instantiate_ContentEditorProxy.name);
                         return [2 /*return*/];
                 }
             });
-        }); });
+        });
+    };
+    ContentEditorProxy.prototype.WireEvents_ContentEditorProxy = function () {
+        this.Logger.FuncStart(this.WireEvents_ContentEditorProxy.name);
+        this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
+        this.Logger.FuncEnd(this.WireEvents_ContentEditorProxy.name);
     };
     ContentEditorProxy.prototype.GetTreeContainer = function () {
         return this.AssociatedDoc.ContentDoc.querySelector(InjectConst_1.ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer);
     };
-    ContentEditorProxy.prototype.ContentEditorProxyOnTreeMutationEvent = function (payload) {
+    ContentEditorProxy.prototype.CallBackOnContentEditorProxyTreeMutationEvent = function (treeMutationEvent_Payload) {
+        this.Logger.FuncStart(this.CallBackOnContentEditorProxyTreeMutationEvent.name);
         var contentEditorProxyMutationEvent_Payload = {
-            AddedIframes: [],
-            MutatedElement: null,
-            TreeMutation: payload,
-            ContentEditorProxy: this
+            TreeMutationEvent_Payload: treeMutationEvent_Payload,
         };
         if (this.ContentEditorProxyMutationEvent_Subject) {
             this.ContentEditorProxyMutationEvent_Subject.NotifyObservers(contentEditorProxyMutationEvent_Payload);
         }
+        this.Logger.FuncEnd(this.CallBackOnContentEditorProxyTreeMutationEvent.name);
     };
     ContentEditorProxy.prototype.GetStateOfContentEditor = function () {
         {
@@ -180,23 +189,22 @@ var ContentEditorProxy = /** @class */ (function (_super) {
             });
         });
     };
-    ContentEditorProxy.prototype.RegisterObserverForTreeMutation = function (treeMutationEvent_Observer) {
-        this.Logger.FuncStart(this.RegisterObserverForTreeMutation.name);
-        if (this.ChildTreeProxy) {
-            treeMutationEvent_Observer.SetAssociatedContentEditorProxy(this);
-            this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(treeMutationEvent_Observer);
-        }
-        else {
-            this.Logger.WarningAndContinue(this.RegisterObserverForTreeMutation.name, 'no associated tree proxy');
-        }
-        this.Logger.FuncEnd(this.RegisterObserverForTreeMutation.name);
-    };
+    //RegisterObserverForTreeMutation(treeMutationEvent_Observer: TreeMutationEvent_Observer) {
+    //  this.Logger.FuncStart(this.RegisterObserverForTreeMutation.name);
+    //  if (this.ChildTreeProxy) {
+    //    treeMutationEvent_Observer.SetAssociatedContentEditorProxy(this);
+    //    this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(treeMutationEvent_Observer);
+    //  } else {
+    //    this.Logger.WarningAndContinue(this.RegisterObserverForTreeMutation.name, 'no associated tree proxy');
+    //  }
+    //  this.Logger.FuncEnd(this.RegisterObserverForTreeMutation.name);
+    //}
     ContentEditorProxy.prototype.SetCompactCss = function () {
         this.Logger.FuncStart(this.SetCompactCss.name, Guid_1.Guid.AsShort(this.AssociatedDoc.DocId));
         //  browser.tabs.insertCSS(ass integer tabId, object details, function callback);
         this.Logger.FuncStart(this.SetCompactCss.name, Guid_1.Guid.AsShort(this.AssociatedDoc.DocId));
     };
-    ContentEditorProxy.prototype.SetStateOfContentEditor = function (dataToRestore) {
+    ContentEditorProxy.prototype.SetStateOfContentEditorAsync = function (dataToRestore) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
@@ -205,14 +213,21 @@ var ContentEditorProxy = /** @class */ (function (_super) {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    this.Logger.FuncStart(this.SetStateOfContentEditor.name, Guid_1.Guid.AsShort(this.AssociatedDoc.DocId));
+                                    this.Logger.FuncStart(this.SetStateOfContentEditorAsync.name, Guid_1.Guid.AsShort(this.AssociatedDoc.DocId));
+                                    this.ContentEditorProxyMutationEvent_Subject.DisableNotifications();
                                     this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfTree.StateOfTreeNodes.length);
                                     return [4 /*yield*/, this.ChildTreeProxy.SetStateOfTree(dataToRestore.StateOfTree)
-                                            .then(function () { return resolve(true); })
-                                            .catch(function (err) { return reject(_this.SetStateOfContentEditor.name + " " + err); })];
+                                            .then(function () {
+                                            _this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
+                                            resolve(true);
+                                        })
+                                            .catch(function (err) {
+                                            _this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
+                                            reject(_this.SetStateOfContentEditorAsync.name + " " + err);
+                                        })];
                                 case 1:
                                     _a.sent();
-                                    this.Logger.FuncEnd(this.SetStateOfContentEditor.name);
+                                    this.Logger.FuncEnd(this.SetStateOfContentEditorAsync.name);
                                     return [2 /*return*/];
                             }
                         });

@@ -24,23 +24,22 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
 
   protected Init_BaseButtonModule(): void {
     this.Init_UiModuleBase();
-    this.BuildElements_Base();
   }
 
   protected WireEvents_Base(): void {
     this.WireClickEvents();
   }
 
-  private BuildElements_Base(): void {
-    this.Logger.FuncStart(this.BuildElements_Base.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+  BuildHtmlForModule_base_ButtonModule(): void {
+    this.Logger.FuncStart(this.BuildHtmlForModule_base_ButtonModule.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
     if (this.ContainerUiDivElem) {
       this.BuildButtonElem();
       this.ContainerUiDivElem.classList.add('btn-container');
       this.ContainerUiDivElem.appendChild(this.HTMLButtonElement);
     } else {
-      this.Logger.ErrorAndContinue(this.BuildElements_Base.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.Logger.ErrorAndContinue(this.BuildHtmlForModule_base_ButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
-    this.Logger.FuncEnd(this.BuildElements_Base.name);
+    this.Logger.FuncEnd(this.BuildHtmlForModule_base_ButtonModule.name);
   }
 
   WireClickEvents(): void {
@@ -106,11 +105,5 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
     }
 
     return data;
-  }
-
-  Hydrate(refreshData: UiHydrationData): void {
-    this.Logger.FuncStart(this.Hydrate.name, this.Friendly);
-    this.RefreshData = refreshData;
-    this.Logger.FuncEnd(this.Hydrate.name, this.Friendly);
   }
 }

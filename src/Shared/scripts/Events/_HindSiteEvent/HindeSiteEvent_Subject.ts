@@ -2,14 +2,27 @@
 import { IHindeSite_Observable } from "./IHindeSite_Observable";
 import { LoggableBase } from "../../LoggableBase";
 import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
+import { StaticHelpers } from "../../Classes/StaticHelpers";
+import { BufferChar } from "../../Enums/BufferChar";
+import { BufferDirection } from "../../Enums/BufferDirection";
 
 export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSite_Observable<T> {
   protected ObserverCollection: IHindSiteEvent_Observer<T>[] = [];
   readonly Friendly_Subject: string;
+  private IsMuted: boolean;
 
   constructor(logger: ILoggerAgent, friendly: string) {
     super(logger);
     this.Friendly_Subject = friendly;
+  }
+
+  DisableNotifications() {
+    this.IsMuted = true;
+    this.Logger.LogVal('Is Muted', this.IsMuted.toString());
+  }
+  EnableNotifications() {
+    this.IsMuted = false;
+    this.Logger.LogVal('Is Muted', this.IsMuted.toString());
   }
 
   protected HasObservers(): boolean {
@@ -18,7 +31,7 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
 
   RegisterObserver(observer: IHindSiteEvent_Observer<T>): void {
     if (observer) {
-      this.Logger.Log(this.RegisterObserver.name + ' ' + observer.Friendly + ' to ' + this.Friendly_Subject);
+      //this.Logger.Log(this.RegisterObserver.name + ' ' + observer.Friendly + ' to ' + this.Friendly_Subject);
 
       if (this.ObserverCollection.indexOf(observer) < 0) {
         this.ObserverCollection.push(observer);
@@ -43,11 +56,16 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
   }
 
   NotifyObservers(payload: T): void {
-    this.Logger.FuncStart(this.NotifyObservers.name + ' of: ' + this.Friendly_Subject, ' observer count: ' + this.ObserverCollection.length);
-    this.ObserverCollection.forEach((observer) => {
-      observer.UpdateAsync(payload);
+    let bufferedFriendly = StaticHelpers.BufferString(this.Friendly_Subject, 20, BufferChar.Period, BufferDirection.right);
+    this.Logger.FuncStart(this.NotifyObservers.name + ' of: ' + bufferedFriendly, ' obs. count: ' + this.ObserverCollection.length);
+
+    if (!this.IsMuted) {
+      this.ObserverCollection.forEach((observer) => {
+        observer.UpdateAsync(payload);
+      });
+    } else {
+      this.Logger.Log('not Notifying...Subject is muted');
     }
-    );
-    this.Logger.FuncEnd(this.NotifyObservers.name + ' of: ' + this.Friendly_Subject, ' observer count: ' + this.ObserverCollection.length);
+    this.Logger.FuncEnd(this.NotifyObservers.name + ' of: ' + bufferedFriendly, ' obs. count: ' + this.ObserverCollection.length);
   }
 }

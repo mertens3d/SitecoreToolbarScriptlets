@@ -40,7 +40,7 @@
   },
   Settings: {
     Defaults: {
-      EnableLogging: boolean,
+      EnableDebugging: boolean,
       LastUsedLogToStorageKey: number,
       LogToStorage: boolean,
       UseCompactCss: boolean,

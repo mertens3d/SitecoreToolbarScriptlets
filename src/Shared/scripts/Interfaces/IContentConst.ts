@@ -4,6 +4,7 @@ export interface IContentConst {
   DefaultMaxAutoSaveAgeDays: number;
   MaxAutoToSaveCount: number;
   DefaultAutoRenameCeTabButton: boolean;
+  DefaultShowDebuggingModules: boolean;
 
   ElemId: {
     sc: {

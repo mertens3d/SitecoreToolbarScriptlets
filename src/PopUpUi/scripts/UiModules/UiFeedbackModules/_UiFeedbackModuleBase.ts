@@ -3,31 +3,48 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _UiModuleBase } from "../_UiModuleBase";
 
-export class _UiFeedbackModuleBase extends _UiModuleBase {
+export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
   protected indentedLineBreak = '<br/>&nbsp;&nbsp;&nbsp;';
   protected lineBreak = '<br/>';
   ModuleKey: ModuleKey = ModuleKey.Unknown;
+  FeedbackTextContainer: HTMLDivElement;
 
   constructor(logger: ILoggerAgent, selector: string) {
     super(logger, selector);
     this.ContainerSelector = selector;
   }
 
-  private __getFeedbackElem(): HTMLElement {
-    if (!this.UiElement) {
-      this.UiElement = <HTMLElement>document.querySelector(this.ContainerSelector);
+  Init_Module() {
+    this.Init_UiModuleBase();
+  }
 
-      if (!this.UiElement) {
-        this.Logger.ErrorAndThrow(this.__getFeedbackElem.name, 'target not found: ' + this.ContainerSelector);
-      }
+  abstract RefreshUi_Module();
+  abstract WireEvents_Module();
+
+
+  BuildHtmlForModule() {
+    this.FeedbackTextContainer = document.createElement('div');
+    let scroller = document.createElement('div');
+    scroller.classList.add('scroller');
+    let fullCol = document.createElement('div');
+    fullCol.classList.add('col-full');
+    let flexContainer = document.createElement('div');
+    flexContainer.classList.add('flex-container');
+
+    scroller.appendChild(this.FeedbackTextContainer);
+    fullCol.appendChild(scroller);
+    flexContainer.appendChild(fullCol);
+
+    if (this.ContainerUiDivElem) {
+      this.ContainerUiDivElem.appendChild(flexContainer);
+    } else {
+      this.Logger.ErrorAndContinue(this.BuildHtmlForModule.name, this.Friendly);
     }
-
-    return this.UiElement;
   }
 
   AddHtmlString(htmlText: string) {
     if (htmlText) {
-      this.__getFeedbackElem().insertAdjacentHTML(SharedConst.Const.KeyWords.Html.beforeend, htmlText);
+      this.FeedbackTextContainer.insertAdjacentHTML(SharedConst.Const.KeyWords.Html.beforeend, htmlText);
     }
     else {
       this.Logger.ErrorAndThrow(this.AddHtmlString.name, 'htmlText');
@@ -46,9 +63,8 @@ export class _UiFeedbackModuleBase extends _UiModuleBase {
   }
 
   ClearFeedbackElem(): void {
-    var elem: HTMLElement = this.__getFeedbackElem();
-    if (elem) {
-      elem.innerHTML = '';
+    if (this.FeedbackTextContainer) {
+      this.FeedbackTextContainer.innerHTML = '';
     }
     else {
       this.Logger.ErrorAndThrow(this.ClearFeedbackElem.name, 'No feedback elem found');
@@ -80,10 +96,11 @@ export class _UiFeedbackModuleBase extends _UiModuleBase {
     return input.replace(/\t/g, "&nbsp;&nbsp;xxxxxx");
   }
 
+  ConvertNBSP(input: string): string {
+    return input.replace(/&nbsp;/g, "&nbsp;&nbsp;");
+  }
+
   WriteSingleLine(text: string): void {
-    var ta = this.__getFeedbackElem();
-    if (ta) {
-      ta.innerHTML += this.ConvertIndents(this.ConvertTabs(this.ConvertLineBreaks(text)) + '<br/>');
-    }
+    this.FeedbackTextContainer.innerHTML += this.ConvertNBSP( this.ConvertIndents(this.ConvertTabs(this.ConvertLineBreaks(text)) + '<br/>'));
   }
 }

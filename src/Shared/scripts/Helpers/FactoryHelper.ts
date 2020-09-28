@@ -50,7 +50,7 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     var toReturn: DTFrameProxy = null;
     if (iframeElem) {
       var toReturn = new DTFrameProxy(this.Logger, iframeElem);
-      await toReturn.OnReadyInitDTFrameProxy();
+      await toReturn.Instantiate_DTFrameProxy();
     } else {
       this.Logger.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);

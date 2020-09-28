@@ -1,8 +1,8 @@
-﻿import { IDataStateOfSitecoreWindow } from "./IDataStateOfSitecoreWindow";
+﻿import { IDataStateOfLiveHindSite } from "./IDataStateOfSitecoreWindow";
 
 export interface IDataStateOfStorageSnapShots {
   CreationDate: Date;
-  SnapShots: IDataStateOfSitecoreWindow[];
+  SnapShots: IDataStateOfLiveHindSite[];
   FavoriteCount: number;
   PlainCount: number,
   SnapShotsAutoCount: number;

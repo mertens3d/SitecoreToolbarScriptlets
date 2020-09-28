@@ -16,11 +16,11 @@ export class BrowserTabAgent {
 
   constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
     this.Logger = logger;
-    this.Logger.InstantiateStart(BrowserTabAgent.name);
+    this.Logger.CTORStart(BrowserTabAgent.name);
     this.ScUrlAgent = scUrlAgent;
     this.SettingsAgent = settingsAgent;
     this.RecipeBasics = new RecipeBasics(this.Logger);
-    this.Logger.InstantiateEnd(BrowserTabAgent.name);
+    this.Logger.CTOREnd(BrowserTabAgent.name);
   }
 
   GetFullUrl(): IAbsoluteUrl {

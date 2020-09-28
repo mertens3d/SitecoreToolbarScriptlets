@@ -328,24 +328,14 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
   async RaceWaitAndClick(selector: IScVerSpec, targetDoc: IDataOneDoc): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RaceWaitAndClick.name);
-
       await this.WaitForThenClick([selector.sc920, selector.sc820], targetDoc)
-        .then(() => {
-          this.Logger.FuncEnd(this.RaceWaitAndClick.name);
-          resolve();
-        })
-        .catch((ex) => {
-          this.Logger.FuncEnd(this.RaceWaitAndClick.name);
-          reject(ex);
-        });
+        .then(() => resolve())
+        .catch((err) => reject(this.RaceWaitAndClick.name + ' | ' + err));
     });
   }
 
   WaitForThenClick(selectorAr: string[], targetDoc: IDataOneDoc): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForThenClick.name);
-
       if (targetDoc) {
         var found: HTMLElement = null;
         var iterationJr = new IterationDrone(this.Logger, this.WaitForThenClick.name, true);
@@ -354,23 +344,21 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
           for (var idx = 0; idx < selectorAr.length; idx++) {
             found = targetDoc.ContentDoc.querySelector(selectorAr[idx]);
             if (found) {
-              this.Logger.LogVal('found target', selectorAr[idx]);
               break;
             }
           }
+        }
 
-          if (found) {
+        if (found) {
+          try {
             this.Logger.Log('clicking');
-            try {
-              found.click();
-
-              resolve();
-            } catch (err) {
-              reject(err);
-            }
-          } else {
-            await iterationJr.Wait()
+            found.click();
+            resolve();
+          } catch (err) {
+            reject(this.WaitForThenClick.name + ' | ' + err);
           }
+        } else {
+          await iterationJr.Wait()
         }
       } else {
         reject('no target doc');
@@ -379,8 +367,6 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
       if (!found && iterationJr.IsExhausted) {
         reject(iterationJr.IsExhaustedMsg);
       }
-
-      this.Logger.FuncEnd(this.WaitForThenClick.name);
     });
   }
 }

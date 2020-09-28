@@ -9,7 +9,7 @@ import { IDataStateOfTree } from '../../../../../../Shared/scripts/Interfaces/Da
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { TreeMutationEvent_Subject } from '../../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject';
-import { InitResultTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
+import { InitReportTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
 import { ScContentTreeNodeProxy } from './ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
 
 export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
@@ -17,6 +17,7 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
 
   TreeMutationEvent_Subject: TreeMutationEvent_Subject;
   private TreeContainerElement: HTMLElement;
+  private initReportTreeProxy: InitReportTreeProxy;
 
   constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, treeContainerElement: HTMLElement) {
     super(logger);
@@ -25,11 +26,27 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
     this.TreeContainerElement = treeContainerElement;
   }
 
-  OnReadyInitTreeProxy(): InitResultTreeProxy {
-    let initResultTreeProxy = new InitResultTreeProxy();
-    this.TreeMutationEvent_Subject = new TreeMutationEvent_Subject(this.Logger, this.TreeContainerElement);
-    initResultTreeProxy.TreeInitialized = true;
-    return initResultTreeProxy;
+  async Instantiate_TreeProxy(): Promise<void> {
+    this.Logger.FuncStart(this.Instantiate_TreeProxy.name);
+
+    try {
+      this.initReportTreeProxy = new InitReportTreeProxy();
+      this.initReportTreeProxy.TreeInstantiated = true;
+      this.TreeMutationEvent_Subject = new TreeMutationEvent_Subject(this.Logger, this.TreeContainerElement);
+
+      this.Logger.FuncEnd(this.Instantiate_TreeProxy.name);
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.Instantiate_TreeProxy.name, err);
+    }
+
+    this.Logger.FuncEnd(this.Instantiate_TreeProxy.name);
+  }
+
+  WireEvents_TreeProxy() {
+    this.Logger.FuncStart(this.WireEvents_TreeProxy.name);
+    this.initReportTreeProxy.EventsWired = true;
+
+    this.Logger.FuncEnd(this.WireEvents_TreeProxy.name);
   }
 
   GetTreeNodeByGlyph(targetNode: IDataStateOfScContentTreeNode): ScContentTreeNodeProxy {
@@ -46,27 +63,33 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
     return toReturn;
   }
 
-  async SetStateOfTree(stateOfContentEditor: IDataStateOfTree) {
+  async SetStateOfTree(stateOfContentEditor: IDataStateOfTree): Promise<void> {
     this.Logger.FuncStart(this.SetStateOfTree.name);
+    try {
+      this.TreeMutationEvent_Subject.DisableNotifications();
 
-    let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.SetStateOfTree.name, true);
+      let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.SetStateOfTree.name, true);
 
-    while (stateOfContentEditor.StateOfTreeNodes.length > 0 && iterHelper.DecrementAndKeepGoing()) {
-      var nextNode: IDataStateOfScContentTreeNode = stateOfContentEditor.StateOfTreeNodes.shift();
-
-      await this.SetStateOfTreeNode(nextNode);
+      while (stateOfContentEditor.StateOfTreeNodes.length > 0 && iterHelper.DecrementAndKeepGoing()) {
+        var nextNode: IDataStateOfScContentTreeNode = stateOfContentEditor.StateOfTreeNodes.shift();
+        await this.SetStateOfTreeNode_TreeProxy(nextNode);
+      }
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.SetStateOfTree.name, err);
     }
-
+    this.TreeMutationEvent_Subject.EnableNotifications();
     this.Logger.FuncEnd(this.SetStateOfTree.name);
   }
 
-  async SetStateOfTreeNode(dataStateOfTreeNode: IDataStateOfScContentTreeNode): Promise<void> {
-    this.Logger.FuncStart(this.SetStateOfTreeNode.name);
+  async SetStateOfTreeNode_TreeProxy(dataStateOfTreeNode: IDataStateOfScContentTreeNode): Promise<void> {
+    this.Logger.FuncStart(this.SetStateOfTreeNode_TreeProxy.name);
 
     try {
-      var iterHelper = new IterationDrone(this.Logger, this.SetStateOfTreeNode.name, true);
+      var iterHelper = new IterationDrone(this.Logger, this.SetStateOfTreeNode_TreeProxy.name, true);
 
       let treeNodeProxy: ScContentTreeNodeProxy = null;
+
+      this.TreeMutationEvent_Subject.DisableNotifications();
 
       while (!treeNodeProxy && iterHelper.DecrementAndKeepGoing()) {
         treeNodeProxy = this.GetTreeNodeByGlyph(dataStateOfTreeNode);
@@ -74,14 +97,16 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
         if (treeNodeProxy) {
           treeNodeProxy.SetStateOfTreeNode(dataStateOfTreeNode);
         } else {
-          this.Logger.Log('not Found...waiting: ');
           await iterHelper.Wait();
         }
       }
     } catch (err) {
-      throw (this.SetStateOfTreeNode.name + ' | ' + err);
+      throw (this.SetStateOfTreeNode_TreeProxy.name + ' | ' + err);
     }
-    this.Logger.FuncEnd(this.SetStateOfTreeNode.name);
+
+    this.TreeMutationEvent_Subject.EnableNotifications();
+
+    this.Logger.FuncEnd(this.SetStateOfTreeNode_TreeProxy.name);
   }
 
   WalkNodeRecursive(targetNode: HTMLElement, depth: number): IDataStateOfScContentTreeNode[] {
@@ -114,9 +139,6 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
 
   GetRootNodeForFrameType(): HTMLElement {
     let toReturn: HTMLElement = this.TreeContainerElement.querySelector(ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode);
-    //if (!toReturn) {
-    //  toReturn = this.TreeContainerElement.querySelector(ContentConst.Const.Selector.SC.Level2Nodes.MediaLibraryAnchorRootNode);
-    //}
     return toReturn;
   }
 

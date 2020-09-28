@@ -15,7 +15,7 @@
 
     //popup settings - 2200's
     MaxAutoSaveCount = 3200,
-    EnableLogging = 3201,
+    EnableDebugging = 3201,
 
     //accordion - 3300's
     LgndPopUpLog = 3300,
@@ -32,5 +32,6 @@
     LastUsedLogToStorageKey = 3400,
     AutoSnapshotBeforeWindowChange,
     LgndPopUpDebug,
-    AutoRestoreState
+    AutoRestoreState,
+    _not_used,
 }

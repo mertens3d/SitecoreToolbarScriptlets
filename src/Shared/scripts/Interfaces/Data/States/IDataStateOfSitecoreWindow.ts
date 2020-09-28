@@ -1,9 +1,10 @@
-﻿import { IDataSitecoreWindowStates } from './IDataStates';
+﻿import { IDataStateOfSitecoreWindow } from './IDataStates';
 import { IDataFriendly } from "./IDataFriendly";
 import { IDataMetaData } from "./IDataMetaData";
-export interface IDataStateOfSitecoreWindow {
-    ErrorStack: import("C:/projects/SitecoreToolbarScriptlets/src/Shared/scripts/Interfaces/IError").IError[];
+import { IError } from '../../IError';
+export interface IDataStateOfLiveHindSite {
+    ErrorStack: IError[];
     Friendly: IDataFriendly;
     Meta: IDataMetaData;
-    ScWindowStates: IDataSitecoreWindowStates;
+    StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
 }

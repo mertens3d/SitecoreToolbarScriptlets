@@ -11,12 +11,11 @@ export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase imple
   private LabelElement: HTMLLabelElement;
   Friendly = HindSiteSettingNumberModule.name;
 
-  Init() {
+  Init_Module() {
     this.Init_BaseSettingsBasedModule();
-    this.BuildHtml();
   }
 
-  private BuildHtml() {
+   BuildHtmlForModule() {
     this.UiInputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
     this.UiInputElement.id = 'nm-' + Guid.WithoutDashes(Guid.NewRandomGuid());
     this.UiInputElement.type = SharedConst.Const.KeyWords.Html.Number;
@@ -63,7 +62,7 @@ export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase imple
     this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
   }
 
-  RefreshUi() {
+  RefreshUi_Module() {
     if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
       let valueToDisplay: number = this.SettingJacket.HindSiteSetting.ValueAsInt();
       this.UiInputElement.value = valueToDisplay.toString();

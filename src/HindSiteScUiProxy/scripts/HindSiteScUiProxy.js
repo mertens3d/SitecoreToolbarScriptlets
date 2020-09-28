@@ -57,17 +57,39 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
     __extends(HindSiteScUiProxy, _super);
     function HindSiteScUiProxy(logger, scUiMan, scUrlAgent, TopDoc, toastAgent) {
         var _this = _super.call(this, logger) || this;
-        _this.Logger.FuncStart(HindSiteScUiProxy.name);
+        _this.Logger.CTORStart(HindSiteScUiProxy.name);
         _this.ScUrlAgent = scUrlAgent;
         _this.ScUiMan = scUiMan;
         _this.TopLevelDoc = TopDoc;
         _this.ToastAgent = toastAgent;
         _this.InitscWinProxy();
-        _this.Logger.FuncEnd(HindSiteScUiProxy.name);
+        _this.Logger.CTOREnd(HindSiteScUiProxy.name);
         return _this;
     }
-    HindSiteScUiProxy.prototype.OnReadyInitScWindowManager = function () {
-        this.ScWindowProxy.OnReadyInitScWindowManager();
+    HindSiteScUiProxy.prototype.OnReady_InitScWindowManager = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.Logger.FuncStart(this.OnReady_InitScWindowManager.name);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.ScWindowProxy.Instantiate_ScWindowProxy()];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_1 = _a.sent();
+                        this.Logger.ErrorAndThrow(this.OnReady_InitScWindowManager.name, err_1);
+                        return [3 /*break*/, 4];
+                    case 4:
+                        this.Logger.FuncEnd(this.OnReady_InitScWindowManager.name);
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     HindSiteScUiProxy.prototype.InitscWinProxy = function () {
         this.ScWindowProxy = new ScWindowProxy_1.ScWindowProxy(this.Logger, this.ScUrlAgent);
@@ -111,11 +133,11 @@ var HindSiteScUiProxy = /** @class */ (function (_super) {
     //    this.ToastAgent.PopUpToastNotification(this.scWinProxy.GetTopLevelDoc(), payloadData.ToastMessage);
     //  });
     //}
-    HindSiteScUiProxy.prototype.AddCETabAsync = function (apiCallPayload) {
+    HindSiteScUiProxy.prototype.AddContentEditorToDesktopAsync = function (apiCallPayload) {
         var _this = this;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                this.ScWindowProxy.DesktopProxy.AddContentEditorTabAsync()
+                this.ScWindowProxy.DesktopProxy.AddContentEditorAsync()
                     .then(function () { return resolve(); })
                     .catch(function (err) { return reject(); });
                 return [2 /*return*/];

@@ -51,252 +51,132 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DesktopProxy = void 0;
 var DefaultStateOfDesktop_1 = require("../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop");
-var RecipeBasics_1 = require("../../../../../Shared/scripts/Classes/RecipeBasics");
 var StaticHelpers_1 = require("../../../../../Shared/scripts/Classes/StaticHelpers");
 var InitResultsDesktopProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy");
-var InitResultsDTFrameProxy_1 = require("../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy");
-var RecipeRestoreDesktop_1 = require("../../../ContentApi/Recipes/RecipeRestoreDesktop");
-var FrameHelper_1 = require("../../../Helpers/FrameHelper");
 var LoggableBase_1 = require("../../../../../Shared/scripts/LoggableBase");
-var DesktopStartBarProxy_1 = require("../DesktopStartBarProxy/DesktopStartBarProxy");
-var DTFrameProxyBucket_1 = require("./DTFrameProxyBucket");
-var DesktopProxyMutationEvent_Observer_1 = require("./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer");
-var DesktopProxyMutationEvent_Subject_1 = require("./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject");
-var DTFrameProxyMutationEvent_Observer_1 = require("./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer");
-var RecipeAddContentEditorToDesktop_1 = require("../../../ContentApi/Recipes/RecipeAddContentEditorToDesktop");
+var DesktopPopUpMenuProxy_1 = require("./DesktopPopUpMenuProxy");
+var DesktopStartBarProxy_1 = require("./DesktopStartBarProxy/DesktopStartBarProxy");
+var DTAreaProxyMutationEvent_Observer_1 = require("./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer");
+var DTAreaProxy_1 = require("./DTAreaProxy");
 var DesktopProxy = /** @class */ (function (_super) {
     __extends(DesktopProxy, _super);
-    function DesktopProxy(logger, associatedDoc, OwnerScWinProxy) {
+    function DesktopProxy(logger, associatedDoc) {
         var _this = _super.call(this, logger) || this;
-        _this.Logger.InstantiateStart(DesktopProxy.name);
+        _this.Logger.CTORStart(DesktopProxy.name);
         if (associatedDoc) {
             _this.AssociatedDoc = associatedDoc;
-            _this.RecipeBasics = new RecipeBasics_1.RecipeBasics(_this.Logger);
         }
         else {
             _this.Logger.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
         }
-        _this.OwnerScWinProxy = OwnerScWinProxy;
-        _this.Logger.InstantiateEnd(DesktopProxy.name);
+        _this.Logger.CTOREnd(DesktopProxy.name);
         return _this;
     }
     DesktopProxy.prototype.PublishItem = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var dtFrameProxy;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.DTAreaProxy.PublishTopFrame()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    DesktopProxy.prototype.Instantiate_DesktopProxy = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var initReportDesktopProxy, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        dtFrameProxy = this.DesktopFrameProxyBucket.GetActiveFrame();
-                        if (!dtFrameProxy) return [3 /*break*/, 2];
-                        return [4 /*yield*/, dtFrameProxy.ContentEditorProxy.PublishItem()];
+                        _a.trys.push([0, 3, , 4]);
+                        this.Logger.FuncStart(this.Instantiate_DesktopProxy.name);
+                        initReportDesktopProxy = new InitResultsDesktopProxy_1.InitReport_DesktopProxy();
+                        this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer_1.DTAreaProxyMutationEvent_Observer(this.Logger, this.OnAreaProxyMutationEvent);
+                        this.DTAreaProxy = new DTAreaProxy_1.DTAreaProxy(this.Logger, this.AssociatedDoc);
+                        return [4 /*yield*/, this.DTAreaProxy.Instantiate_DTAreaProxy()];
                     case 1:
                         _a.sent();
-                        _a.label = 2;
-                    case 2: return [2 /*return*/];
+                        this.DTStartBarProxy = new DesktopStartBarProxy_1.DTStartBarProxy(this.Logger, this.AssociatedDoc);
+                        return [4 /*yield*/, this.DTStartBarProxy.Instantiate_DTStartBarProxy()];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_1 = _a.sent();
+                        this.Logger.ErrorAndThrow(this.Instantiate_DesktopProxy.name, err_1);
+                        return [3 /*break*/, 4];
+                    case 4:
+                        this.Logger.FuncEnd(this.Instantiate_DesktopProxy.name);
+                        return [2 /*return*/];
                 }
             });
         });
     };
-    DesktopProxy.prototype.OnReadyInitDesktopProxy = function () {
+    DesktopProxy.prototype.WireEvents_DesktopProxy = function () {
+        this.Logger.FuncStart(this.WireEvents_DesktopProxy.name);
+        this.DTAreaProxy.WireEvents_DTAreaProxy();
+        this.Logger.FuncEnd(this.WireEvents_DesktopProxy.name);
+    };
+    DesktopProxy.prototype.AddContentEditorAsync = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                        var initResultsDesktopProxy;
-                        var _this = this;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    this.Logger.FuncStart(this.OnReadyInitDesktopProxy.name);
-                                    initResultsDesktopProxy = new InitResultsDesktopProxy_1.InitResultsDesktopProxy();
-                                    this.DTFrameProxyMutationEvent_Observer = new DTFrameProxyMutationEvent_Observer_1.DTFrameProxyMutationEvent_Observer(this.Logger, this);
-                                    this.DesktopFrameProxyBucket = new DTFrameProxyBucket_1.DTFrameProxyBucket(this.Logger);
-                                    return [4 /*yield*/, this.OnReadyPopulateDTFrameProxyBucket()
-                                            .then(function () {
-                                            _this.DesktopStartBarAgent = new DesktopStartBarProxy_1.DesktopStartBarProxy(_this.Logger, _this);
-                                            var self = _this;
-                                            _this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject_1.DesktopProxyMutationEvent_Subject(self.Logger, _this.AssociatedDoc);
-                                            _this.WireEvents();
-                                        })
-                                            .then(function () { return resolve(initResultsDesktopProxy); })
-                                            .catch(function (err) { return _this.Logger.ErrorAndThrow(_this.OnReadyInitDesktopProxy.name, err); })];
-                                case 1:
-                                    _a.sent();
-                                    this.Logger.FuncEnd(this.OnReadyInitDesktopProxy.name);
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); })];
-            });
-        });
-    };
-    DesktopProxy.prototype.AddContentEditorTabAsync = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var recipe;
-            var _this = this;
-            return __generator(this, function (_a) {
-                try {
-                    recipe = new RecipeAddContentEditorToDesktop_1.RecipeAddNewContentEditorToDesktop(this.Logger, this.OwnerScWinProxy, this.AssociatedDoc);
-                    recipe.Execute()
-                        .catch(function (err) { return _this.Logger.ErrorAndThrow(_this.AddContentEditorTabAsync.name, err); });
-                }
-                catch (err) {
-                    this.Logger.ErrorAndThrow(this.AddContentEditorTabAsync.name, err);
-                }
-                return [2 /*return*/];
-            });
-        });
-    };
-    DesktopProxy.prototype.OnDTFrameProxyMutationEvent = function (frameProxyMutatationEvent_Payload) {
-        this.Logger.FuncStart(this.OnDTFrameProxyMutationEvent.name);
-        this.DesktopStartBarAgent.OnTreeMutationEvent_DesktopStartBarProxy(frameProxyMutatationEvent_Payload);
-        this.Logger.FuncEnd(this.OnDTFrameProxyMutationEvent.name);
-    };
-    DesktopProxy.prototype.OnDTFrameProxyMutation = function (desktopDTFrameProxyMutatationEvent_Payload) {
-        if (this.DesktopProxyMutationEvent_Subject) {
-            this.DesktopProxyMutationEvent_Subject.NotifyObservers(desktopDTFrameProxyMutatationEvent_Payload);
-        }
-    };
-    DesktopProxy.prototype.GetFrameHelper = function () {
-        if (this.__iframeHelper == null) {
-            this.__iframeHelper = new FrameHelper_1.FrameHelper(this.Logger);
-        }
-        return this.__iframeHelper;
-    };
-    DesktopProxy.prototype.OnReadyPopulateDTFrameProxyBucket = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var err_1;
+            var err_2;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.GetFrameHelper().GetIFramesAsBaseFrameProxies(this.AssociatedDoc)
-                                .then(function (frameProxies) {
-                                frameProxies.forEach(function (frameProxy) { return __awaiter(_this, void 0, void 0, function () {
-                                    return __generator(this, function (_a) {
-                                        this.AddDTFrameProxyAsync(frameProxy);
-                                        return [2 /*return*/];
-                                    });
-                                }); });
-                            })];
+                        this.DTPopUpMenuProxy = new DesktopPopUpMenuProxy_1.DTPopUpMenuProxy(this.Logger);
+                        return [4 /*yield*/, this.DTStartBarProxy.TriggerRedButton()
+                                .then(function () { return _this.DTPopUpMenuProxy.RecipeAddNewContentEditorToDesktop(_this.AssociatedDoc); })
+                                .catch(function (err) { return _this.Logger.ErrorAndThrow(_this.AddContentEditorAsync.name, err); })];
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
-                        err_1 = _a.sent();
-                        this.Logger.ErrorAndThrow(this.OnReadyPopulateDTFrameProxyBucket.name, err_1);
+                        err_2 = _a.sent();
+                        this.Logger.ErrorAndThrow(this.AddContentEditorAsync.name, err_2);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    DesktopProxy.prototype.WireEvents = function () {
-        //let setting = this.SettingsAgent.SetByKey(SettingKey.AutoRenameCeButton);
-        //if (setting && setting.ValueAsBool()) {
-        //}
-        this.DomChangedEvent_Subject = new DesktopProxyMutationEvent_Subject_1.DesktopProxyMutationEvent_Subject(this.Logger, this.AssociatedDoc);
-        this.DomChangeEvent_Observer = new DesktopProxyMutationEvent_Observer_1.DesktopProxyMutationEvent_Observer(this.Logger, this.OnDesktopProxyMutationEvent.bind(this));
-        this.DomChangedEvent_Subject.RegisterObserver(this.DomChangeEvent_Observer);
+    DesktopProxy.prototype.OnAreaProxyMutationEvent = function (payload) {
     };
-    DesktopProxy.prototype.OnDesktopProxyMutationEvent = function (payload) {
-        var _this = this;
-        this.Logger.Log("The desktop DOM changed - probably an iframe has been added");
-        if (payload && payload.AddedDTFrameProxies.length > 0) {
-            payload.AddedDTFrameProxies.forEach(function (dtFrameProxy) { return __awaiter(_this, void 0, void 0, function () {
-                var _this = this;
-                return __generator(this, function (_a) {
-                    dtFrameProxy.OnReadyInitDTFrameProxy()
-                        .then(function () { return _this.AddDTFrameProxyAsync(dtFrameProxy); })
-                        .catch(function (err) { throw (DesktopProxyMutationEvent_Observer_1.DesktopProxyMutationEvent_Observer.name + ' | ' + err); });
-                    return [2 /*return*/];
-                });
-            }); });
-        }
+    DesktopProxy.prototype.OnDTFrameProxyMutationEvent = function (frameProxyMutatationEvent_Payload) {
+        this.Logger.FuncStart(this.OnDTFrameProxyMutationEvent.name);
+        this.DTStartBarProxy.OnTreeMutationEvent_DesktopStartBarProxy(frameProxyMutatationEvent_Payload);
+        this.Logger.FuncEnd(this.OnDTFrameProxyMutationEvent.name);
     };
-    DesktopProxy.prototype.AddDTFrameProxyAsync = function (dtframeProxy) {
-        var _this = this;
-        this.Logger.FuncStart(this.AddContentEditorTabAsync.name);
-        var initResultFrameProxy = new InitResultsDTFrameProxy_1.InitResultsDTFrameProxy();
-        if (!StaticHelpers_1.StaticHelpers.IsNullOrUndefined([dtframeProxy, dtframeProxy.ContentEditorProxy])) {
-            this.RecipeBasics.WaitForReadyNABFrameProxy(dtframeProxy)
-                .then(function () {
-                var result = _this.DesktopFrameProxyBucket.AddToDTFrameProxyBucket(dtframeProxy);
-                if (result) {
-                    dtframeProxy.OnReadyInitDTFrameProxy()
-                        .then(function (result) {
-                        initResultFrameProxy = result;
-                        var payload = {
-                            AddedDTFrameProxies: [dtframeProxy],
-                            MutatedElement: null,
-                            DTFrameProxyMutationEvent_Payload: null
-                        };
-                        _this.DesktopProxyMutationEvent_Subject.NotifyObservers(payload);
-                    })
-                        .then(function () { return dtframeProxy.DTFrameProxyMutationEvent_Subject.RegisterObserver(_this.DTFrameProxyMutationEvent_Observer); })
-                        .catch(function (err) { return _this.Logger.ErrorAndThrow(_this.AddDTFrameProxyAsync.name, err); });
-                }
-            });
-        }
-        else {
-            this.Logger.ErrorAndThrow(this.AddDTFrameProxyAsync.name, 'null dtframeProxy or dtframeProxy.Doc');
-        }
-        this.Logger.LogAsJsonPretty('InitResultsDTFrameProxy', initResultFrameProxy);
-        this.Logger.FuncEnd(this.AddContentEditorTabAsync.name);
-    };
+    //OnDTFrameProxyMutation(desktopDTFrameProxyMutatationEvent_Payload: INativeIFrameAddedEvent_Payload) {
+    //  //todo - put back?
+    //  //if (this.DesktopProxyMutationEvent_Subject) {
+    //  //  this.DesktopProxyMutationEvent_Subject.NotifyObservers(desktopDTFrameProxyMutatationEvent_Payload);
+    //  //}
+    //}
     DesktopProxy.prototype.GetAssociatedDoc = function () {
         return this.AssociatedDoc;
-    };
-    DesktopProxy.prototype.GetIframeHelper = function () {
-        if (this.__iframeHelper == null) {
-            this.__iframeHelper = new FrameHelper_1.FrameHelper(this.Logger);
-        }
-        return this.__iframeHelper;
-    };
-    DesktopProxy.prototype.ProcessLiveDTFrameProxies = function (results) {
-        var toReturnDesktopState = new DefaultStateOfDesktop_1.DefaultStateOfDesktop();
-        if (results) {
-            for (var idx = 0; idx < results.length; idx++) {
-                var dtframeProxy = results[idx];
-                var stateOfFrame = dtframeProxy.GetStateOfDTFrame();
-                toReturnDesktopState.StateOfDTFrames.push(stateOfFrame);
-                if (dtframeProxy.GetZindex() === 1) {
-                    toReturnDesktopState.IndexOfActiveFrame = idx;
-                }
-            }
-        }
-        return toReturnDesktopState;
     };
     DesktopProxy.prototype.GetStateOfDesktop = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                        var err_2;
-                        var _this = this;
+                        var toReturnDesktopState;
                         return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    this.Logger.FuncStart(this.GetStateOfDesktop.name);
-                                    _a.label = 1;
-                                case 1:
-                                    _a.trys.push([1, 3, , 4]);
-                                    return [4 /*yield*/, this.GetIframeHelper().GetIFramesAsDTFrameProxies(this.AssociatedDoc)
-                                            .then(function (results) { return _this.ProcessLiveDTFrameProxies(results); })
-                                            .then(function (results) { return resolve(results); })
-                                            .catch(function (err) { return _this.Logger.ErrorAndThrow(_this.GetStateOfDesktop.name, err); })];
-                                case 2:
-                                    _a.sent();
-                                    return [3 /*break*/, 4];
-                                case 3:
-                                    err_2 = _a.sent();
-                                    reject(this.GetStateOfDesktop.name + ' | ' + err_2);
-                                    return [3 /*break*/, 4];
-                                case 4:
-                                    this.Logger.FuncEnd(this.GetStateOfDesktop.name);
-                                    return [2 /*return*/];
+                            this.Logger.FuncStart(this.GetStateOfDesktop.name);
+                            try {
+                                toReturnDesktopState = new DefaultStateOfDesktop_1.DefaultStateOfDesktop();
+                                toReturnDesktopState.StateOfDTArea = this.DTAreaProxy.GetStateOfFrames();
+                                resolve(toReturnDesktopState);
                             }
+                            catch (err) {
+                                reject(this.GetStateOfDesktop.name + ' | ' + err);
+                            }
+                            this.Logger.FuncEnd(this.GetStateOfDesktop.name);
+                            return [2 /*return*/];
                         });
                     }); })];
             });
@@ -307,28 +187,23 @@ var DesktopProxy = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                        var idx, stateOfFrame, recipe;
+                        var idx;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
                                     this.Logger.FuncStart(this.SetStateOfDesktop.name);
                                     ;
-                                    if (!(stateOfDesktop && stateOfDesktop.StateOfDTFrames && stateOfDesktop.StateOfDTFrames.length > 0)) return [3 /*break*/, 7];
+                                    if (!(stateOfDesktop && stateOfDesktop.StateOfDTArea)) return [3 /*break*/, 7];
                                     if (!!StaticHelpers_1.StaticHelpers.IsNullOrUndefined([this.AssociatedDoc])) return [3 /*break*/, 5];
+                                    this.DTAreaProxy.AddToIncomingSetStateList(stateOfDesktop.StateOfDTArea);
                                     idx = 0;
                                     _a.label = 1;
                                 case 1:
-                                    if (!(idx < stateOfDesktop.StateOfDTFrames.length)) return [3 /*break*/, 4];
-                                    stateOfFrame = stateOfDesktop.StateOfDTFrames[idx];
-                                    recipe = new RecipeRestoreDesktop_1.RecipeRestoreFrameOnDesktop(this.Logger, this.AssociatedDoc, stateOfFrame, this.DesktopStartBarAgent, this.OwnerScWinProxy);
-                                    //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
-                                    //promAr.push(recipe.Execute());
-                                    return [4 /*yield*/, recipe.Execute()
+                                    if (!(idx < stateOfDesktop.StateOfDTArea.StateOfDTFrames.length)) return [3 /*break*/, 4];
+                                    return [4 /*yield*/, this.AddContentEditorAsync()
                                             .then(function () { return resolve(); })
                                             .catch(function (err) { return reject(err); })];
                                 case 2:
-                                    //todo - do I need to await this? can't it just be triggered? we're not waiting on anything to finish
-                                    //promAr.push(recipe.Execute());
                                     _a.sent();
                                     _a.label = 3;
                                 case 3:

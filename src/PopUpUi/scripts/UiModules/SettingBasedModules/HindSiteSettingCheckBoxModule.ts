@@ -19,11 +19,10 @@ import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
     }
 
 
-    Init() {
-      this.Logger.FuncStart(this.Init.name, this.Friendly);
+    Init_Module() {
+      this.Logger.FuncStart(this.Init_Module.name, this.Friendly);
       this.Init_BaseSettingsBasedModule();
-      this.BuildHtml();
-      this.Logger.FuncEnd(this.Init.name, this.Friendly);
+      this.Logger.FuncEnd(this.Init_Module.name, this.Friendly);
     }
 
     WireEvents_Module(): void {
@@ -55,7 +54,7 @@ import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
       this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
     }
 
-    BuildHtml() {
+    BuildHtmlForModule() {
       this.UiInputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
       this.UiInputElement.type = SharedConst.Const.KeyWords.Html.Checkbox;
       this.UiInputElement.checked = this.SettingJacket.HindSiteSetting.ValueAsBool();
@@ -76,7 +75,7 @@ import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
       }
     }
 
-    RefreshUi() {
+    RefreshUi_Module() {
       if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
         let valueToDisplay: boolean = this.SettingJacket.HindSiteSetting.ValueAsBool();
         this.UiInputElement.checked = valueToDisplay;

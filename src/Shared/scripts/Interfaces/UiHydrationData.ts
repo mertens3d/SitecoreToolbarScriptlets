@@ -1,4 +1,4 @@
-﻿import { IDataStateOfSitecoreWindow } from "./Data/States/IDataStateOfSitecoreWindow";
+﻿import { IDataStateOfLiveHindSite } from "./Data/States/IDataStateOfSitecoreWindow";
 import { GuidData } from "../Helpers/GuidData";
 import { IScUrlAgent } from "./Agents/IScUrlAgent/IScUrlAgent";
 import { IDataStateOfStorageSnapShots } from "./Data/States/IDataStateOfStorageSnapShots";
@@ -8,13 +8,13 @@ export class UiHydrationData {
   ScUrlAgent: IScUrlAgent;
   SelectSnapShot: GuidData;
   SelectSnapShotId: GuidData;
-  StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
+  StateOfLiveHindSite: IDataStateOfLiveHindSite;
   StateOfStorageSnapShots: IDataStateOfStorageSnapShots;
   UiVisibilityTestAgent: IUiVisibilityTestAgent;
   SelectSnapShotNickname: any;
 
-  constructor(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, scUrlAgent: IScUrlAgent, stateOfStorageSnapShots: IDataStateOfStorageSnapShots, selectSnapShotId: GuidData, uiVisiblityTestAgent: IUiVisibilityTestAgent, selectSnapShotName: string) {
-    this.StateOfSitecoreWindow = stateOfSitecoreWindow;
+  constructor(stateOfSitecoreWindow: IDataStateOfLiveHindSite, scUrlAgent: IScUrlAgent, stateOfStorageSnapShots: IDataStateOfStorageSnapShots, selectSnapShotId: GuidData, uiVisiblityTestAgent: IUiVisibilityTestAgent, selectSnapShotName: string) {
+    this.StateOfLiveHindSite = stateOfSitecoreWindow;
     this.SelectSnapShot = selectSnapShotId;
     this.ScUrlAgent = scUrlAgent;
     this.StateOfStorageSnapShots = stateOfStorageSnapShots;

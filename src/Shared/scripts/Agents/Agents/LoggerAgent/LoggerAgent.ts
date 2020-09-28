@@ -11,7 +11,7 @@ import { LogWriterBuffer } from "./LogWriterBuffer";
 import { LoggerTimer } from "./LoggerTimer";
 
 export class LoggerAgent implements ILoggerAgent {
-  private MaxIndent: number = 10;
+  private MaxIndent: number = 20;
   ErrorStack: IError[] = [];
   private AllLogWriters: ILoggerWriter[] = [];
   private __callDepth: number;
@@ -182,7 +182,6 @@ export class LoggerAgent implements ILoggerAgent {
   async Log(text, optionalValue: string = '', hasPrefix = false) {
     if (this.HasWriters) {
       var indent = '  ';
-      this.MaxIndent = 10;
 
       let indentDepth = this.__callDepth % this.MaxIndent;
       for (var idx = 0; idx < indentDepth; idx++) {
@@ -255,12 +254,12 @@ export class LoggerAgent implements ILoggerAgent {
     this.__callDepth++;
   }
 
-  InstantiateStart(text: string): void {
-    this.FuncStart("[Instantiate] " + text);
+  CTORStart(text: string): void {
+    this.FuncStart("[CTOR] " + text);
   }
 
-  InstantiateEnd(text: string): void {
-    this.FuncEnd("[Instantiate] " + text);
+  CTOREnd(text: string): void {
+    this.FuncEnd("[CTOR] " + text);
   }
 
   FuncEnd(text, optionalValueInput?: number);

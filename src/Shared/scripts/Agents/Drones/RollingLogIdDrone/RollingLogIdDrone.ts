@@ -11,7 +11,7 @@ export class RollingLogIdDrone {
 
   constructor(settingsAgent: ISettingsAgent, loggerAgent: ILoggerAgent) {
     this.Logger = loggerAgent;
-    this.Logger.InstantiateStart(RollingLogIdDrone.name);
+    this.Logger.CTORStart(RollingLogIdDrone.name);
     this.SettingsAgent = settingsAgent;
   }
 

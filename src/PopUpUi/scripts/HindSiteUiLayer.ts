@@ -10,7 +10,7 @@ import { UiCommandsManager } from "./Managers/UiCommandsManager";
 import { UiEventManager } from "./Managers/UiEventManager";
 import { UiModulesManager } from "./Managers/UiManager/UiModulesManager";
 import { UiVisibilityTestAgent } from "./Managers/UiManager/UiVisibilityTestAgent";
-import { FeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
+import { DebuggingFeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
 import { LoggableBase } from "../../Shared/scripts/LoggableBase";
 import { UiCommandFlagRaisedEvent_Subject } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject";
 import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
@@ -20,7 +20,7 @@ export namespace HindSiteUiLayer {
   export class HindSiteUiLayer extends LoggableBase implements IHindSiteUiLayer {
     readonly CommandDefinitionBucket: ICommandDefinitionBucket;
     private UiEventMan: UiEventManager;
-    FeedbackModuleMsg_Observer: FeedbackModuleMessages_Observer;
+    FeedbackModuleMsg_Observer: DebuggingFeedbackModuleMessages_Observer;
 
     readonly SettingsAgent: ISettingsAgent;
     private readonly ScUrlAgent: IScUrlAgent;
@@ -32,7 +32,7 @@ export namespace HindSiteUiLayer {
 
     constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, scUrlAgent: IScUrlAgent) {
       super(logger);
-      this.Logger.InstantiateStart(HindSiteUiLayer.name);
+      this.Logger.CTORStart(HindSiteUiLayer.name);
 
       try {
         this.SettingsAgent = settingsAgent;
@@ -50,7 +50,7 @@ export namespace HindSiteUiLayer {
         this.Logger.ErrorAndThrow(HindSiteUiLayer.name, err);
       }
 
-      this.Logger.InstantiateEnd(HindSiteUiLayer.name);
+      this.Logger.CTOREnd(HindSiteUiLayer.name);
     }
 
     GetStateOfPopUp(): IStateOfPopUp {
@@ -62,8 +62,8 @@ export namespace HindSiteUiLayer {
 
       //calling twice as a workaround to make sure snapshot select is populated before visibility tests are run
       //todo - fix
-      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfSitecoreWindow, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
-      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfSitecoreWindow, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
+      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfLiveHindSite, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
+      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfLiveHindSite, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
       this.Logger.FuncEnd(this.OnContentReplyReceived.name);
     }
 
@@ -87,6 +87,7 @@ export namespace HindSiteUiLayer {
       this.Logger.FuncEnd(this.Init_Ui.name);
 
       this.UiModulesMan.Init_UiMan();
+      
       this.UiEventMan.Init_UiEventManager();
 
       this.Logger.FuncEnd(this.Init_Ui.name);
@@ -98,7 +99,7 @@ export namespace HindSiteUiLayer {
       this.UiModulesMan.WireEvents_ModulesManager();
       this.UiEventMan.WireEvents_UiEventMan();
 
-      this.FeedbackModuleMsg_Observer = new FeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.FeedbackMessages);
+      this.FeedbackModuleMsg_Observer = new DebuggingFeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.FeedbackMessages);
       this.UiCommandRaisedFlag_Subject = this.UiEventMan.UiCommandRaisedFlag_UiEventManagerRelay_Subject;
 
       //this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.Logger, this.OnUiCommandEvent_UiEventManagerRelay.bind(this));

@@ -94,6 +94,7 @@ export class PopConst {
         TakeSnapshot: '[id=id-ph-btn-take-snapshot]',
         UpdateNicknameB: '[id=id-ph-btn-update-nickname]',
         ModuleContainers: {
+        SettingShowDebuggingModules: '[id=id-setting-show-debugging-modules]',
           BtnAddContentEditor: '[id=id-ph-btn-add-drframe-content-editor]',
           BtnAdminB: '[id=id-ph-btn-adminb]',
           BtnCompactScUi: '[id=id-ph-btn-compact-sc-ui]',
@@ -107,7 +108,7 @@ export class PopConst {
           BtnPresentationDetails: '[id=id-ph-btn-presentation-details]',
           BtnQuickPublish: '[id=id-ph-btn-quick-publish]',
           BtnWindowClose: '[id=id-ph-close-window]',
-          CbEnableLogging: '[id=id-ph-settings-show-log-data]',
+          SettingEnableDebugging: '[id=id-ph-settings-enable-debugging]',
           Desktop: '[id=id-ph-btn-desktop]',
           LgndBrowserState: '[id=lgnd-browser-state]',
           LgndContentState: '[id=lgnd-content-state]',

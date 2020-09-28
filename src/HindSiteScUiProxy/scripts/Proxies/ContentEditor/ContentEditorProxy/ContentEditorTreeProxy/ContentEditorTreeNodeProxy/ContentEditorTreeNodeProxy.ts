@@ -138,7 +138,6 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       this.ExpandNode();
     }
 
-    this.Logger.LogVal('IsActive', newData.IsActive.toString());
 
     if (newData.IsActive) {
       var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.ItemId);
@@ -176,12 +175,13 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     this.Logger.FuncStart(this.ActivateNode.name);
 
     if (this.GetLinkNodeElem()) {
-      this.Logger.Log('clicking it to activate');
+      this.Logger.Log('activating node');
 
       this.GetLinkNodeElem().click();
 
       // check
       if (!this.QueryIsActive()) {
+        // todo - we may need to put a time delay in this
         this.Logger.WarningAndContinue(this.ActivateNode.name, 'Did not work. Trying to activate: ' + this.GetNodeLinkText());
       }
     } else {
@@ -201,14 +201,10 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   }
 
   ExpandNode(): void {
-    this.Logger.FuncStart(this.ExpandNode.name);
     if (!this.QueryIsExpanded()) {
       this.Logger.Log('clicking it to expand');
       this.GetGlyphNodeElem().click();
-    } else {
-      this.Logger.Log('Already expanded');
     }
-    this.Logger.FuncEnd(this.ExpandNode.name);
   }
 
   GetNodeLinkText() {

@@ -1,12 +1,11 @@
-﻿import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
+﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { _base_ButtonModule } from "./_baseButtonModule";
-import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 
 export class TypCommandButtonModule extends _base_ButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonTypical;
@@ -17,11 +16,11 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
     super(loggerAgent, menuCommandParameters);
   }
 
-  Init(): void {
-    this.Logger.FuncStart(this.Init.name, TypCommandButtonModule.name)
+  Init_Module(): void {
+    this.Logger.FuncStart(this.Init_Module.name, TypCommandButtonModule.name)
     this.Init_BaseButtonModule();
-    this.BuildElements();
-    this.Logger.FuncEnd(this.Init.name, TypCommandButtonModule.name)
+    
+    this.Logger.FuncEnd(this.Init_Module.name, TypCommandButtonModule.name)
   }
 
   WireEvents_Module(): void {
@@ -30,6 +29,11 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
 
   GetCommandKey() {
     return this.MenuCommandDefinition.MenuCommandKey;
+  }
+
+  BuildHtmlForModule() {
+    this.BuildHtmlForModule_base_ButtonModule();
+    this.BuildElements();
   }
 
   private BuildButtonOverlay(): void {
@@ -70,9 +74,9 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
     this.Logger.FuncEnd(this.BuildElements.name);
   }
 
-  RefreshUi(): void {
-    this.Logger.FuncStart(this.RefreshUi.name, this.Friendly);
-    if (this.ContainerUiDivElem) {
+  RefreshUi_Module(): void {
+    this.Logger.FuncStart(this.RefreshUi_Module.name, this.Friendly);
+    if (this.DoesContainerExist()) {
       let allresults: VisiblityTestResultsBucket = this.RefreshData.UiVisibilityTestAgent.TestAgainstAllSetControllers(this.MenuCommandDefinition);
 
       this.Logger.LogVal('test count', allresults.TestResults.length);
@@ -81,7 +85,7 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
       this.Logger.Log('no placeholder ' + this.Friendly)
     }
 
-    this.Logger.FuncEnd(this.RefreshUi.name, this.Friendly);
+    this.Logger.FuncEnd(this.RefreshUi_Module.name, this.Friendly);
   }
 
   private SetCommandButtonVisibilityBaseOnResults(allresults: VisiblityTestResultsBucket) {

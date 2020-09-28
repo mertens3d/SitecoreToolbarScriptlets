@@ -51,6 +51,7 @@ export class ContentConst {
     MaxAutoToSaveCount: 10,
     DefaultMaxAutoSaveAgeDays: 7,
     DefaultAutoRenameCeTabButton: false,
+    DefaultShowDebuggingModules: false,
     Iterations: {
       MaxSetHrefEffort: 10,
       MaxIterationSwitchBoard: 20,

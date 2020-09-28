@@ -1,6 +1,7 @@
-﻿import { IDataStateOfDTFrame } from "./IDataStateOfDTFrame";
+﻿import { IDataStateOfDesktopArea } from "./IDataStateOfDesktopArea";
 
 export interface IDataStateOfDesktop {
-  IndexOfActiveFrame: number;
-  StateOfDTFrames: IDataStateOfDTFrame[];
+  
+  StateOfDTArea: IDataStateOfDesktopArea;
+
 }

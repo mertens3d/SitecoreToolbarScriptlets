@@ -16,8 +16,8 @@ function GetFolderName(prefix) {
 var filesToArchive = [
   './src/content/**/*.js',
   './src/content/**/*.map',
-  './src/HindSiteApi/**/*.js',
-  './src/HindSiteApi/**/*.map',
+  './src/HindSiteScUiProxy/**/*.js',
+  './src/HindSiteScUiProxy/**/*.map',
   './src/PopUpUi/**/*.js',
   './src/PopUpUi/**/*.map',
   './src/PopUpController/**/*.js',

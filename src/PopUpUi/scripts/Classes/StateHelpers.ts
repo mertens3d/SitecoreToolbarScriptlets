@@ -16,13 +16,13 @@ export class StateHelpers extends LoggableBase {
   }
 
   GetActiveFrameFromStateOfDesktop(stateOfDesktop: IDataStateOfDesktop): IDataStateOfDTFrame {
-    return stateOfDesktop.StateOfDTFrames[stateOfDesktop.IndexOfActiveFrame];
+    return stateOfDesktop.StateOfDTArea.StateOfDTFrames[stateOfDesktop.StateOfDTArea.IndexOfActiveFrame];
   }
 
   GetActiveContentEditFromStateOfDesktop(stateOfDesktop: IDataStateOfDesktop): IDataStateOfContentEditor {
     let toReturn: IDataStateOfContentEditor = null;
-    if (stateOfDesktop && stateOfDesktop.IndexOfActiveFrame > -1) {
-      return stateOfDesktop.StateOfDTFrames[stateOfDesktop.IndexOfActiveFrame].StateOfContentEditor;
+    if (stateOfDesktop && stateOfDesktop.StateOfDTArea.IndexOfActiveFrame > -1) {
+      return stateOfDesktop.StateOfDTArea.StateOfDTFrames[stateOfDesktop.StateOfDTArea.IndexOfActiveFrame].StateOfContentEditor;
     }
     return toReturn;
   }

@@ -14,7 +14,7 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
     constructor(logger: ILoggerAgent, hindSiteSetting: HindSiteSettingWrapper) {
       super(logger, hindSiteSetting.HindSiteSetting.UiContainerSelector);
 
-      this.Logger.InstantiateStart(_SettingsBasedModulesBase.name);
+      this.Logger.CTORStart(_SettingsBasedModulesBase.name);
 
       if (!StaticHelpers.IsNullOrUndefined(hindSiteSetting)) {
         this.SettingJacket = hindSiteSetting;
@@ -23,14 +23,17 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
       else {
         this.Logger.ErrorAndThrow(_SettingsBasedModulesBase.name, 'Null settingsAgent or null hindSiteSetting');
       }
-      this.Logger.InstantiateEnd(_SettingsBasedModulesBase.name);
+      this.Logger.CTOREnd(_SettingsBasedModulesBase.name);
     }
 
-    abstract Init(): void
+    abstract BuildHtmlForModule():void
+    
+
+    abstract Init_Module(): void
 
     abstract WireEvents_Module(): void
 
-    abstract RefreshUi(): void
+    abstract RefreshUi_Module(): void
 
     Init_BaseSettingsBasedModule() {
       this.Init_UiModuleBase();

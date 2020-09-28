@@ -18,11 +18,11 @@ export class UiCommandsManager extends LoggableBase {
   constructor(logger: ILoggerAgent, menuCommandParamsBucket: ICommandDefinitionBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
     super(logger);
 
-    this.Logger.InstantiateStart(UiCommandsManager.name);
+    this.Logger.CTORStart(UiCommandsManager.name);
     this.UiVisibilityTestAgent = uiVisibilityTestAgent;
     this.MenuCommandParamsBucket = menuCommandParamsBucket;
 
-    this.Logger.InstantiateEnd(UiCommandsManager.name);
+    this.Logger.CTOREnd(UiCommandsManager.name);
   }
 
   Init_ButtonStateManager() {
@@ -47,16 +47,14 @@ export class UiCommandsManager extends LoggableBase {
     
   }
 
-  HydrateUiModules(refreshData: UiHydrationData): void {
-    let currentWindowType: ScWindowType = refreshData.StateOfSitecoreWindow.Meta.WindowType;
-
+  HydrateUi_UICommandManager(refreshData: UiHydrationData): void {
     this.UiModules.forEach((uiModule) => uiModule.Hydrate(refreshData));
   }
 
   RefreshUiModuleVisibilityStatus(): void {
     this.Logger.FuncStart(this.RefreshUiModuleVisibilityStatus.name, this.MenuCommandParamsBucket.MenuCommandParamsAr.length);
 
-    this.UiModules.forEach((oneButtonModule) => oneButtonModule.RefreshUi());
+    this.UiModules.forEach((oneButtonModule) => oneButtonModule.RefreshUi_Module());
 
     this.Logger.FuncEnd(this.RefreshUiModuleVisibilityStatus.name);
   }

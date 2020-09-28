@@ -1,7 +1,7 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataStateOfLiveHindSite } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _base_ButtonModule } from "./_baseButtonModule";
 
@@ -13,12 +13,13 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
     this.WireEvents_Base();
   }
 
-  Init(): void {
+  Init_Module(): void {
     this.Init_BaseButtonModule();
-    this.BuildElements();
   }
 
-  private BuildElements() {
+  BuildHtmlForModule() {
+    this.BuildHtmlForModule_base_ButtonModule();
+    
     this.InputElement = <HTMLInputElement>document.createElement(SharedConst.Const.KeyWords.Html.Input);
     this.InputElement.type = SharedConst.Const.KeyWords.Html.Text;
     this.InputElement.placeholder = "Set Nick Name";
@@ -38,14 +39,14 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
     return toReturn;
   }
 
-  RefreshUi(): void {
+  RefreshUi_Module(): void {
     this.DrawCorrectNicknameInUI();
   }
 
   DrawCorrectNicknameInUI() {
     this.Logger.FuncStart(this.DrawCorrectNicknameInUI.name);
 
-    let snapShots: IDataStateOfSitecoreWindow[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
+    let snapShots: IDataStateOfLiveHindSite[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
 
     var targetId: GuidData = this.RefreshData.SelectSnapShotId;
 

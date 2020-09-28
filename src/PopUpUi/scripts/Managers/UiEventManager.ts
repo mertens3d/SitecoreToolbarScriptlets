@@ -12,16 +12,15 @@ import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClic
 import { UiModulesManager } from './UiManager/UiModulesManager';
 
 export class UiEventManager extends LoggableBase {
-
   UiModulesMan: UiModulesManager;
   CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
   UiCommandRaisedFlag_UiEventManagerRelay_Subject: UiCommandFlagRaisedEvent_Subject;
 
-  constructor(logger: ILoggerAgent,  uimodulesMan: UiModulesManager) {
+  constructor(logger: ILoggerAgent, uimodulesMan: UiModulesManager) {
     super(logger);
     this.UiModulesMan = uimodulesMan;
 
-    if (StaticHelpers.IsNullOrUndefined([ uimodulesMan])) {
+    if (StaticHelpers.IsNullOrUndefined([uimodulesMan])) {
       throw (UiModulesManager.name + ' null at constructor');
     }
   }
@@ -46,8 +45,6 @@ export class UiEventManager extends LoggableBase {
 
   OnSingleClickEvent(singleClickEventPayload: ISingleClickEvent_Payload) {
     this.Logger.Log('single click');
-
-    
 
     let payload: IUiCommandFlagRaisedEvent_Payload = {
       MsgFlag: singleClickEventPayload.HandlerData.MsgFlag,
@@ -75,8 +72,6 @@ export class UiEventManager extends LoggableBase {
     if (baseButtonModules) {
       baseButtonModules.forEach((baseButtonModule: IUiModuleButton) => {
         if (!StaticHelpers.IsNullOrUndefined(baseButtonModule.SingleButtonClickEvent_Subject)) {
-
-          this.Logger.LogVal('baseButtonModule.Friendly', baseButtonModule.Friendly);
           baseButtonModule.SingleButtonClickEvent_Subject.RegisterObserver(this.CommandButtonSingleClickEvent_Observer);
         } else {
           this.Logger.WarningAndContinue(this.ListenForCommandEvents.name, 'null SingleButtonClickEvent_Subject ' + ModuleKey[baseButtonModule.ModuleKey]);

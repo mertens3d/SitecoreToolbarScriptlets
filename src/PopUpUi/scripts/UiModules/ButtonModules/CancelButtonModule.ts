@@ -16,11 +16,15 @@ export class CancelButtonModule extends _base_ButtonModule implements IUiModuleB
     this.WireEvents_Base();
   }
 
-  Init(): void {
+  Init_Module(): void {
     this.Init_BaseButtonModule();
   }
 
-  RefreshUi(): void {
+  BuildHtmlForModule() {
+    this.BuildHtmlForModule_base_ButtonModule();
+  }
+
+  RefreshUi_Module(): void {
   }
 
   private __GetCancelButton(): HTMLElement {

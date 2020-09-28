@@ -1,5 +1,5 @@
-﻿import { InitResultsDesktopProxy } from "./InitResultsDesktopProxy";
+﻿import { InitReport_DesktopProxy } from "./InitResultsDesktopProxy";
 
-export class InitResultsScWindowManager {
-    InitResultsDesktop: InitResultsDesktopProxy = null;
+export class InitReportScWindowManager {
+    InitResultsDesktop: InitReport_DesktopProxy = null;
 }

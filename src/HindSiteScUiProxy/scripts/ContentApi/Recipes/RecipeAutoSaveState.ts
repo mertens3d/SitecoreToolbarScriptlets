@@ -5,9 +5,9 @@ import { IScWindowProxy } from "../../../../Shared/scripts/Interfaces/Agents/ISc
 import { IDataStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor";
 import { IDataStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
 import { IDataStateOfScContentTreeNode } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IDataStateOfLiveHindSite } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IDataStateOfTree } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree";
-import { IDataSitecoreWindowStates } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
+import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
 import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 import { IDataStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { HindSiteScUiProxy } from "../../HindSiteScUiProxy";
@@ -23,10 +23,10 @@ export class RecipeAutoSaveState extends LoggableBase {
     this.AtticAgent = atticAgent;
   }
 
-  async ExecuteAsync(windowStatePrior: IDataStateOfSitecoreWindow): Promise<IDataStateOfSitecoreWindow> {
+  async ExecuteAsync(windowStatePrior: IDataStateOfLiveHindSite): Promise<IDataStateOfLiveHindSite> {
     return new Promise(async (resolve, reject) => {
       this.ScUiProxy.GetStateOfSitecoreWindow(SnapShotFlavor.Autosave)
-        .then((windowStateNew: IDataStateOfSitecoreWindow) => {
+        .then((windowStateNew: IDataStateOfLiveHindSite) => {
           if (!this.AreStateOfSitecoreWindowsEqual(windowStateNew, windowStatePrior)) {
             this.Logger.Log('states are different, save snap shot');
 
@@ -96,21 +96,21 @@ export class RecipeAutoSaveState extends LoggableBase {
     return toReturn;
   }
 
-  AreStateOfSitecoreWindowsEqual(stateOfSitecoreWindowA: IDataStateOfSitecoreWindow, stateOfSitecoreWindowB: IDataStateOfSitecoreWindow): boolean {
+  AreStateOfSitecoreWindowsEqual(stateOfSitecoreWindowA: IDataStateOfLiveHindSite, stateOfSitecoreWindowB: IDataStateOfLiveHindSite): boolean {
     this.Logger.FuncStart(this.AreDataSitecoreWindowStatesEqual.name);
 
     let toReturn: boolean = true;
 
     toReturn = toReturn && (((stateOfSitecoreWindowA === null) === (stateOfSitecoreWindowB === null)));
 
-    toReturn = toReturn && this.AreDataSitecoreWindowStatesEqual(stateOfSitecoreWindowA.ScWindowStates, stateOfSitecoreWindowB.ScWindowStates);
+    toReturn = toReturn && this.AreDataSitecoreWindowStatesEqual(stateOfSitecoreWindowA.StateOfSitecoreWindow, stateOfSitecoreWindowB.StateOfSitecoreWindow);
 
     this.Logger.LogVal(this.AreStateOfSitecoreWindowsEqual.name, toReturn);
     this.Logger.FuncEnd(this.AreDataSitecoreWindowStatesEqual.name);
     return toReturn;
   }
 
-  AreDataSitecoreWindowStatesEqual(stateOfSitecoreWindowA: IDataSitecoreWindowStates, stateOfSitecoreWindowB: IDataSitecoreWindowStates): boolean {
+  AreDataSitecoreWindowStatesEqual(stateOfSitecoreWindowA: IDataStateOfSitecoreWindow, stateOfSitecoreWindowB: IDataStateOfSitecoreWindow): boolean {
     let toReturn: boolean = true;
 
     toReturn = toReturn && (((stateOfSitecoreWindowA === null) === (stateOfSitecoreWindowB === null)));
@@ -128,13 +128,13 @@ export class RecipeAutoSaveState extends LoggableBase {
     let toReturn: boolean = true;
 
     //todo - this is a crude comparison and will not cover cases of different order
-    toReturn = stateOfDesktopA.IndexOfActiveFrame === stateOfDesktopB.IndexOfActiveFrame
+    toReturn = stateOfDesktopA.StateOfDTArea.IndexOfActiveFrame === stateOfDesktopB.StateOfDTArea.IndexOfActiveFrame
 
-    toReturn = toReturn && (stateOfDesktopA.StateOfDTFrames.length === stateOfDesktopB.StateOfDTFrames.length);
+    toReturn = toReturn && (stateOfDesktopA.StateOfDTArea.StateOfDTFrames.length === stateOfDesktopB.StateOfDTArea.StateOfDTFrames.length);
 
-    if (toReturn && stateOfDesktopA.StateOfDTFrames.length > 0) {
+    if (toReturn && stateOfDesktopA.StateOfDTArea.StateOfDTFrames.length > 0) {
       for (var idx = 0; idx < length; idx++) {
-        toReturn = toReturn && this.AreStatesOfFrameEqual(stateOfDesktopA.StateOfDTFrames[idx], stateOfDesktopB.StateOfDTFrames[idx]);
+        toReturn = toReturn && this.AreStatesOfFrameEqual(stateOfDesktopA.StateOfDTArea.StateOfDTFrames[idx], stateOfDesktopB.StateOfDTArea.StateOfDTFrames[idx]);
       }
     }
 
