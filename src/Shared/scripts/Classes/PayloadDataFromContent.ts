@@ -1,5 +1,5 @@
-﻿import { IDataContentReplyReceivedEvent_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+﻿import { IControllerMessageReceivedEvent_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
 export class PayloadDataFromContent {
-  ContentReplyPayload: IDataContentReplyReceivedEvent_Payload;
+  ContentReplyPayload: IControllerMessageReceivedEvent_Payload;
 }

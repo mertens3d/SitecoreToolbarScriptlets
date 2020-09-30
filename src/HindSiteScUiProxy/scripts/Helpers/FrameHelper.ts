@@ -6,6 +6,7 @@ import { _BaseFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/_B
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+import { DocumentReadyState, ReadyStateNAB } from "../../../Shared/scripts/Enums/ReadyState";
 
 export class FrameHelper extends LoggableBase {
   private factoryHelper: FactoryHelper;
@@ -20,24 +21,23 @@ export class FrameHelper extends LoggableBase {
   GetIFramesFromDataOneDoc(targetDoc: IDataOneDoc): HTMLIFrameElement[] {
     let toReturnIframeAr: HTMLIFrameElement[] = [];
 
-    if (! this.Logger.IfNullOrUndefinedThrow(this.GetIFramesFromDataOneDoc.name, targetDoc)) {
-      var queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
+    this.Logger.ThrowIfNullOrUndefined(this.GetIFramesFromDataOneDoc.name, [targetDoc]);
 
-      if (!queryResults) {
-        queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
-      }
+    var queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
-      if (queryResults) {
-        for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
-          var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>queryResults[ifrIdx];
-          if (iframeElem) {
-            toReturnIframeAr.push(iframeElem);
-          }
+    if (!queryResults) {
+      queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
+    }
+
+    if (queryResults) {
+      for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
+        var iframeElem: HTMLIFrameElement = <HTMLIFrameElement>queryResults[ifrIdx];
+        if (iframeElem) {
+          toReturnIframeAr.push(iframeElem);
         }
       }
-    } else {
-      this.Logger.ErrorAndThrow(this.GetIFramesFromDataOneDoc.name, 'null check');
     }
+
     this.Logger.LogVal('found iframes count', toReturnIframeAr.length);
 
     return toReturnIframeAr;
@@ -45,8 +45,15 @@ export class FrameHelper extends LoggableBase {
 
   async GetIFrameAsBaseFrameProxy(iframeElem: HTMLIFrameElement, ifrIdx: number): Promise<_BaseFrameProxy> {
     return new Promise(async (resolve, reject) => {
-      await this.RecipeBasics.WaitForReadyNABHtmlIframeElement(iframeElem)
-        .then(() => this.factoryHelper.BaseFramePromiseFactory(iframeElem, 'desktop Iframe_' + ifrIdx))
+      let friendly = 'desktop Iframe_' + ifrIdx;
+
+      await this.RecipeBasics.WaitForCompleteNABHtmlIframeElement(iframeElem, friendly)
+        .then((result: ReadyStateNAB) => {
+          if (!result.IsCompleteNAB()) {
+            reject(result.DocumentReadtStateFriendly())
+          }
+        })
+        .then(() => this.factoryHelper.BaseFramePromiseFactory(iframeElem, friendly))
         .then((result: _BaseFrameProxy) => resolve(result))
         .catch((err) => reject(this.GetIFramesAsBaseFrameProxies.name + ' | ' + err));
     });
@@ -54,7 +61,7 @@ export class FrameHelper extends LoggableBase {
 
   async GetIFrameAsDTFrameProxy(iframeElem: HTMLIFrameElement): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
-      await this.RecipeBasics.WaitForReadyNABHtmlIframeElement(iframeElem)
+      await this.RecipeBasics.WaitForCompleteNABHtmlIframeElement(iframeElem, iframeElem.id)
         .then(() => this.factoryHelper.DTFrameProxyFactory(iframeElem))
         .then((result: DTFrameProxy) => resolve(result))
         .catch((err) => reject(this.GetIFramesAsBaseFrameProxies.name + ' | ' + err));

@@ -1,6 +1,6 @@
 ﻿import { ScWindowType } from "../../../Enums/scWindowType";
 import { IDataOneDoc } from "../../Data/IDataOneDoc";
-import { IDataStateOfLiveHindSite } from "../../Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUiProxy } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IScUrlAgent } from "../IScUrlAgent/IScUrlAgent";
 import { InitReportScWindowManager } from "../InitResultsScWindowManager";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
@@ -13,9 +13,9 @@ export interface IScWindowProxy {
   ContentEditorProxy: ContentEditorProxy;
   DesktopProxy: DesktopProxy;
   GetCurrentPageType(): ScWindowType;
-  GetStateOfSitecoreWindow(snapshotFlavor: SnapShotFlavor): Promise<IDataStateOfLiveHindSite>;
+  GetStateOfScUiProxy(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUiProxy>;
   GetTopLevelDoc(): IDataOneDoc;
   Instantiate_ScWindowProxy(): Promise<void>;
   SetCompactCss(targetDoc: IDataOneDoc);
-  SetStateOfScWin(dataToRestore: IDataStateOfLiveHindSite): Promise<void>
+  SetStateOfScWin(dataToRestore: IStateOfScUiProxy): Promise<void>
 }

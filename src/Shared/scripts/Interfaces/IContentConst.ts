@@ -39,7 +39,8 @@ export interface IContentConst {
   Selector: {
     SC: {
       ContentEditor: {
-        ContentTreeNodeGlyph: string,
+        ScContentTreeNodeGlyph: string,
+        ScContentTreeNode: string,
         RootAnchorNode: string,
         ScContentTreeContainer: string,
         scContentTreeNodeIcon: string,

@@ -14,7 +14,7 @@ import { DebuggingFeedbackModuleMessages_Observer } from "./UiModules/UiFeedback
 import { LoggableBase } from "../../Shared/scripts/LoggableBase";
 import { UiCommandFlagRaisedEvent_Subject } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject";
 import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
-import { IDataContentReplyReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
 export namespace HindSiteUiLayer {
   export class HindSiteUiLayer extends LoggableBase implements IHindSiteUiLayer {
@@ -57,14 +57,17 @@ export namespace HindSiteUiLayer {
       return this.UiEventMan.GetStateOfPopUp();
     }
 
-    OnContentReplyReceived(dataContentReplyReceivedEvent_Payload: IDataContentReplyReceivedEvent_Payload) {
+    OnContentReplyReceived(dataContentReplyReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
       this.Logger.FuncStart(this.OnContentReplyReceived.name);
 
       //calling twice as a workaround to make sure snapshot select is populated before visibility tests are run
       //todo - fix
-      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfLiveHindSite, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
-      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfLiveHindSite, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
+      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfScUiProxy_Live, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
+      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfScUiProxy_Live, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
       this.Logger.FuncEnd(this.OnContentReplyReceived.name);
+
+
+      
     }
 
     private async Instantiate_Ui() {

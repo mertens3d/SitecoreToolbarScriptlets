@@ -7,12 +7,13 @@ import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHe
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { IStateOfScContentTreeNodeProxy } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
+import { IStateOfContentEditorTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree';
 
 export class DesktopStartBarButtonProxy extends LoggableBase {
   private StartBarButtonElemId: string;
   private AssociatedDoc: IDataOneDoc;
-   FoundStartBarButton: HTMLElement;
-  private  ScContentTreeNodeProxy: ScContentTreeNodeProxy;
+  FoundStartBarButton: HTMLElement;
 
   constructor(logger: ILoggerAgent, iframeElemId: string, associatedDoc: IDataOneDoc) {
     super(logger);
@@ -48,26 +49,27 @@ export class DesktopStartBarButtonProxy extends LoggableBase {
     return newItemIconNode;
   }
 
-  Update(targetButton: DesktopStartBarButtonProxy, scContentTreeNodeProxy: ScContentTreeNodeProxy) {
+  Update(targetButton: DesktopStartBarButtonProxy, stateOfContentEditorTreeProxy: IStateOfContentEditorTreeProxy) {
     this.Logger.FuncStart(this.Update.name);
 
-    this.ScContentTreeNodeProxy = scContentTreeNodeProxy;
+    if (stateOfContentEditorTreeProxy.ActiveNodeCoord.SiblingIndex > -1) {
+      let activeNode: IStateOfScContentTreeNodeProxy = stateOfContentEditorTreeProxy.StateOfTreeNodes[stateOfContentEditorTreeProxy.ActiveNodeCoord.SiblingIndex];
 
-    let itemIconSource: string = scContentTreeNodeProxy.GetIconSrc();
-    let mainIconSrc: string = scContentTreeNodeProxy.GetMainIconSrc();
+      let itemIconSource: string = activeNode.IconSrc;//    .GetIconSrc();
+      let mainIconSrc: string = activeNode.MainIconSrc;//.GetMainIconSrc();
 
-    let text: string = StaticHelpers.BufferString(scContentTreeNodeProxy.GetNodeLinkText(), ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
+      let text: string = StaticHelpers.BufferString(activeNode.FriendlyTreeNode, ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
 
+      this.Logger.LogVal('iconSrc', itemIconSource);
+      this.Logger.LogVal('mainIconSrc', mainIconSrc);
+      if (targetButton && itemIconSource.length > 0) {
+        let containerSpanElement: HTMLElement = targetButton.FoundStartBarButton.querySelector('div').querySelector('span');
 
-    this.Logger.LogVal('iconSrc', itemIconSource);
-    this.Logger.LogVal('mainIconSrc', mainIconSrc);
-    if (targetButton && itemIconSource.length > 0) {
-      let containerSpanElement: HTMLElement = targetButton.FoundStartBarButton.querySelector('div').querySelector('span');
+        let newItemIconNode: HTMLImageElement = this.DesignItemIconNode(itemIconSource)
+        let newMainIconNode: HTMLImageElement = this.DesignMainIconNode(mainIconSrc);
 
-      let newItemIconNode: HTMLImageElement = this.DesignItemIconNode(itemIconSource)
-      let newMainIconNode: HTMLImageElement = this.DesignMainIconNode(mainIconSrc);
-
-      containerSpanElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
+        containerSpanElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
+      }
     }
     this.Logger.FuncEnd(this.Update.name);
   }

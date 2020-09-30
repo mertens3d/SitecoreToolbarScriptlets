@@ -1,11 +1,11 @@
 ﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
+import { IMessageContentToController_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IMessageContentToController } from "../Interfaces/IMsgPayload";
+import { DefaultMessageContentToController_Payload } from "./Defaults/DefaultScWindowState";
 import { MsgFromXBase } from "./MsgFromXBase";
-import { DefaultContentReplyPayload } from "./Defaults/DefaultScWindowState";
-import { IDataContentReplyReceivedEvent_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
-export class MsgContentToController extends MsgFromXBase implements IMessageContentToController {
-  Payload: IDataContentReplyReceivedEvent_Payload = new DefaultContentReplyPayload()
+export class DefaultMsgContentToController extends MsgFromXBase implements IMessageContentToController {
+  Payload: IMessageContentToController_Payload = new DefaultMessageContentToController_Payload()
 
   constructor(msgFlag: MsgFlag) {
     super(msgFlag);

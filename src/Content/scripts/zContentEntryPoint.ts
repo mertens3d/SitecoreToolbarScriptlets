@@ -12,7 +12,7 @@ import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
 import { IHindSiteScUiProxy } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
 import { IContentBrowserProxy } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
-import { IContentMessageBroker } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
+import { IMessageBroker_Content } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { InitReportScWindowManager } from "../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
@@ -25,7 +25,7 @@ import { MiscAgent } from './Agents/MiscAgent';
 import { ContentMessageManager } from './Managers/ContentMessageManager';
 import { CommandRouter } from "./Proxies/CommandRouter";
 import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
-import { ContentMessageBroker } from './Proxies/ContentMessageBroker';
+import { MessageBroker_Content } from './Proxies/ContentMessageBroker';
 import { InternalCommandRunner } from "./Proxies/InternalCommandRunner";
 import { MsgFlag } from '../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { IMessageControllerToContent, ICommandRouterParams } from '../../Shared/scripts/Interfaces/IStateOfController';
@@ -48,9 +48,13 @@ class ContentEntry {
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
     this.InstantiateAndInitAgents_Content();
-    this.InstantiateAndInit_Managers();
-    this.AtticAgent.CleanOutOldAutoSavedData();
-    this.Logger.SectionMarker('Initialize Managers');
+    await this.InstantiateAndInit_Managers()
+      .then(() => {
+        this.AtticAgent.CleanOutOldAutoSavedData();
+      })
+
+    this.Logger.SectionMarker('e) ' + this.Main.name);
+    this.Logger.Log('standing by');
   }
 
   private InstantiateAndInitAgents_Content(): void {
@@ -70,42 +74,48 @@ class ContentEntry {
   }
 
   private async InstantiateAndInit_Managers(): Promise<void> {
-    this.Logger.SectionMarker('Instantiate and Initialize Managers');
+    try {
+      this.Logger.SectionMarker('Instantiate and Initialize Managers');
 
-    let scUiMan: ScUiManager;
-    let contentMessageMan: ContentMessageManager;
+      let scUiMan: ScUiManager;
+      let contentMessageMan: ContentMessageManager;
 
-    scUiMan = new ScUiManager(this.Logger);
+      scUiMan = new ScUiManager(this.Logger);
 
-    let topLevelDoc: IDataOneDoc = {
-      ContentDoc: document,
-      DocId: null,
-      Nickname: 'TopLevelDoc'
-    };
+      let topLevelDoc: IDataOneDoc = {
+        ContentDoc: document,
+        DocId: null,
+        Nickname: 'TopLevelDoc'
+      };
 
-    this.ScUiProxy = new HindSiteScUiProxy(this.Logger, scUiMan, this.ScUrlAgent, topLevelDoc, this.ToastAgent);
+      this.ScUiProxy = new HindSiteScUiProxy(this.Logger, scUiMan, this.ScUrlAgent, topLevelDoc, this.ToastAgent);
 
-    this.AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, this.AtticAgent, this.ScUiProxy);
+      this.AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, this.AtticAgent, this.ScUiProxy);
 
-    this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
+      this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
 
-    this.CommandRouter = new CommandRouter(this.Logger, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.ScUrlAgent);
+      this.CommandRouter = new CommandRouter(this.Logger, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.ScUrlAgent);
 
-    let contentMessageBroker: IContentMessageBroker = new ContentMessageBroker(this.Logger, this.SettingsAgent,
-      this.ScUiProxy, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
+      let contentMessageBroker: IMessageBroker_Content = new MessageBroker_Content(this.Logger, this.SettingsAgent,
+        this.ScUiProxy, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter, this.ScUrlAgent);
 
-    contentMessageMan = new ContentMessageManager(this.Logger, contentMessageBroker);
+      contentMessageMan = new ContentMessageManager(this.Logger, contentMessageBroker);
 
-    await scUiMan.InitSitecoreUiManager()
-      .then(() => contentMessageMan.InitContentMessageManager())
-      .then(() => this.ScUiProxy.OnReady_InitScWindowManager())
-      .then((result: InitReportScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
-      .then(() => {
-        this.AutoSnapShotAgent.ScheduleIntervalTasks();
-      })
-      .then(() => this.StartUp())
-      .then(() => this.Logger.Log('Init success'))
-      .catch((err) => this.Logger.ErrorAndThrow('Content Entry Point', err));
+      await scUiMan.InitSitecoreUiManager()
+        .then(() => contentMessageMan.InitContentMessageManager())
+        .then(() => this.ScUiProxy.OnReady_InstantiateHindSiteScUiProxy())
+        .then((result: InitReportScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
+        .then(() => {
+          this.AutoSnapShotAgent.ScheduleIntervalTasks();
+        })
+        .then(() => this.StartUp())
+        .then(() => this.Logger.Log('Init success'))
+        .catch((err) => this.Logger.ErrorAndThrow('Content Entry Point', err));
+
+      this.Logger.SectionMarker('e) Instantiate and Initialize Managers');
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.InstantiateAndInit_Managers.name, err);
+    }
   }
 
   private StartUp() {

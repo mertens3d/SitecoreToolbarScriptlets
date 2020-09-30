@@ -1,6 +1,6 @@
-﻿import { IDataStateOfScContentTreeNode } from './IDataStateOfScContentTreeNode';
+﻿import { IStateOfScContentTreeNodeProxy, ITreeNodeProxyCoord } from './IDataStateOfScContentTreeNode';
 
-export interface IDataStateOfTree {
-  ActiveTreeNodeIndex: number;
-  StateOfTreeNodes: IDataStateOfScContentTreeNode[];
+export interface IStateOfContentEditorTreeProxy {
+  ActiveNodeCoord: ITreeNodeProxyCoord;
+  StateOfTreeNodes: IStateOfScContentTreeNodeProxy;
 }

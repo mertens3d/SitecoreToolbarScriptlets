@@ -1,29 +1,41 @@
 ﻿import { IterationDrone } from '../../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
-import { DefaultStateOfTree } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfTree";
+import { DefaultStateOfContentEditorTreeProxy } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfTree";
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { IContentEditorTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
+import { IContentTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataStateOfScContentTreeNode } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
-import { IDataStateOfTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree';
+import { IStateOfScContentTreeNodeProxy } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
+import { IStateOfContentEditorTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
-import { TreeMutationEvent_Subject } from '../../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject';
+import { NativeClassNameChangeEvent_Subject } from "../../../Desktop/DesktopProxy/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";
+import { TreeMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject";
 import { InitReportTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
 import { ScContentTreeNodeProxy } from './ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
+import { NativeClassNameChangeEvent_Observer } from '../../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer';
+import { ITreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
+import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
+import { INativeClassNameChangeEvent_Payload } from '../../../Desktop/DesktopProxy/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
+import { DefaultStateOfScContentTreeNodeProxy } from '../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfTreeNode';
 
-export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
+//ContentTree is the name Sitecore uses
+export class ContentTreeProxy extends LoggableBase implements IContentTreeProxy {
+  NativeClassNameChangeEvent_Observer: NativeClassNameChangeEvent_Observer;
+  NativeClassNameChangeEvent_Subject: NativeClassNameChangeEvent_Subject;
   private AssociatedDoc: IDataOneDoc;
-
-  TreeMutationEvent_Subject: TreeMutationEvent_Subject;
-  private TreeContainerElement: HTMLElement;
   private initReportTreeProxy: InitReportTreeProxy;
+  private TreeContainerElement: HTMLElement;
+  RecipeBasics: RecipeBasics;
+
+  public TreeMutationEvent_Subject: TreeMutationEvent_Subject;
 
   constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, treeContainerElement: HTMLElement) {
     super(logger);
 
+    this.Logger.ThrowIfNullOrUndefined(ContentTreeProxy.name, [associatedDoc, treeContainerElement]);
     this.AssociatedDoc = associatedDoc;
     this.TreeContainerElement = treeContainerElement;
+    this.RecipeBasics = new RecipeBasics(this.Logger);
   }
 
   async Instantiate_TreeProxy(): Promise<void> {
@@ -32,9 +44,11 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
     try {
       this.initReportTreeProxy = new InitReportTreeProxy();
       this.initReportTreeProxy.TreeInstantiated = true;
+
       this.TreeMutationEvent_Subject = new TreeMutationEvent_Subject(this.Logger, this.TreeContainerElement);
 
-      this.Logger.FuncEnd(this.Instantiate_TreeProxy.name);
+      this.NativeClassNameChangeEvent_Subject = new NativeClassNameChangeEvent_Subject(this.Logger, this.TreeContainerElement);
+      this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.Logger, this.CallBackOnNativeClassNameChangeEvent.bind(this));
     } catch (err) {
       this.Logger.ErrorAndThrow(this.Instantiate_TreeProxy.name, err);
     }
@@ -44,12 +58,29 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
 
   WireEvents_TreeProxy() {
     this.Logger.FuncStart(this.WireEvents_TreeProxy.name);
-    this.initReportTreeProxy.EventsWired = true;
 
+    this.NativeClassNameChangeEvent_Subject.RegisterObserver(this.NativeClassNameChangeEvent_Observer);
+
+    this.initReportTreeProxy.EventsWired = true;
     this.Logger.FuncEnd(this.WireEvents_TreeProxy.name);
   }
 
-  GetTreeNodeByGlyph(targetNode: IDataStateOfScContentTreeNode): ScContentTreeNodeProxy {
+  private CallBackOnNativeClassNameChangeEvent(NativeClassNameChangeEvent_Payload: INativeClassNameChangeEvent_Payload) {
+    this.Logger.FuncStart(this.CallBackOnNativeClassNameChangeEvent.name);
+    if (this.TreeMutationEvent_Subject) {
+      let TreeMutationEvent_Payload: ITreeProxyMutationEvent_Payload = {
+        //ActiveNode: NativeClassNameChangeEvent_Payload.ActiveNode,
+        //MutatedElement: NativeClassNameChangeEvent_Payload.MutatedElement,
+        //OwnerContentEditorProxy: NativeClassNameChangeEvent_Payload.OwnerContentEditorProxy,
+        StateOfContentEditorTreeProxy: NativeClassNameChangeEvent_Payload.StateOfContentEditorTreeProxy
+      }
+
+      this.TreeMutationEvent_Subject.NotifyObservers(TreeMutationEvent_Payload)
+    }
+    this.Logger.FuncEnd(this.CallBackOnNativeClassNameChangeEvent.name);
+  }
+
+  GetTreeNodeByGlyph(targetNode: IStateOfScContentTreeNodeProxy): ScContentTreeNodeProxy {
     let toReturn: ScContentTreeNodeProxy = null;
 
     if (targetNode && this.TreeContainerElement) {
@@ -57,32 +88,35 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
       var foundOnPageTreeGlyph: HTMLImageElement = <HTMLImageElement>this.TreeContainerElement.querySelector('[id=' + treeGlyphTargetId + ']');
 
       if (foundOnPageTreeGlyph) {
-        toReturn = new ScContentTreeNodeProxy(this.Logger, foundOnPageTreeGlyph);
+        toReturn = new ScContentTreeNodeProxy(this.Logger, foundOnPageTreeGlyph,0,0,1);
       }
     }
     return toReturn;
   }
 
-  async SetStateOfTree(stateOfContentEditor: IDataStateOfTree): Promise<void> {
+  async SetStateOfTree(stateOfContentEditor: IStateOfContentEditorTreeProxy): Promise<void> {
     this.Logger.FuncStart(this.SetStateOfTree.name);
     try {
       this.TreeMutationEvent_Subject.DisableNotifications();
 
       let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.SetStateOfTree.name, true);
 
-      while (stateOfContentEditor.StateOfTreeNodes.length > 0 && iterHelper.DecrementAndKeepGoing()) {
-        var nextNode: IDataStateOfScContentTreeNode = stateOfContentEditor.StateOfTreeNodes.shift();
-        await this.SetStateOfTreeNode_TreeProxy(nextNode);
-      }
+      //todo - put back let promises = stateOfContentEditor.StateOfTreeNodes.map(async treeNode => {
+      //  const numFruit = await this.SetStateOfTreeNode_TreeProxy(treeNode);
+      //  return numFruit;
+      //})
+
+      //await Promise.all(promises);
     } catch (err) {
       this.Logger.ErrorAndThrow(this.SetStateOfTree.name, err);
     }
+
     this.TreeMutationEvent_Subject.EnableNotifications();
     this.Logger.FuncEnd(this.SetStateOfTree.name);
   }
 
-  async SetStateOfTreeNode_TreeProxy(dataStateOfTreeNode: IDataStateOfScContentTreeNode): Promise<void> {
-    this.Logger.FuncStart(this.SetStateOfTreeNode_TreeProxy.name);
+  async SetStateOfTreeNode_TreeProxy(dataStateOfTreeNode: IStateOfScContentTreeNodeProxy): Promise<void> {
+    this.Logger.FuncStart(this.SetStateOfTreeNode_TreeProxy.name, dataStateOfTreeNode.FriendlyTreeNode);
 
     try {
       var iterHelper = new IterationDrone(this.Logger, this.SetStateOfTreeNode_TreeProxy.name, true);
@@ -106,35 +140,49 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
 
     this.TreeMutationEvent_Subject.EnableNotifications();
 
-    this.Logger.FuncEnd(this.SetStateOfTreeNode_TreeProxy.name);
+    this.Logger.FuncEnd(this.SetStateOfTreeNode_TreeProxy.name, dataStateOfTreeNode.FriendlyTreeNode);
   }
 
-  WalkNodeRecursive(targetNode: HTMLElement, depth: number): IDataStateOfScContentTreeNode[] {
-    var toReturn: IDataStateOfScContentTreeNode[] = [];
-    depth = depth - 1;
-
-    if (targetNode) {
-      var firstChildGlyphNode: HTMLImageElement = <HTMLImageElement>targetNode.querySelector(ContentConst.Const.Selector.SC.ContentEditor.ContentTreeNodeGlyph);
-      if (firstChildGlyphNode) {
-        let treeNodeProxy = new ScContentTreeNodeProxy(this.Logger, firstChildGlyphNode);
-
-        if (treeNodeProxy.IsContentTreeNode()) {
-          if (treeNodeProxy.QueryIsExpanded() || treeNodeProxy.QueryIsActive()) {
-            let newData: IDataStateOfScContentTreeNode = treeNodeProxy.GetStateOfScContentTreeNode();
-            toReturn.push(newData);
-          }
-        }
+  WalkNodeRecursive(targetNode: HTMLElement, depth: number, itemIndex: number, siblingCount: number): Promise<IStateOfScContentTreeNodeProxy[]> {
+    return new Promise(async (resolve, reject) => {
+      let friendly: string = 'depth: ' + depth + ' index: ' + (itemIndex + 1) + ' of: ' + siblingCount + ' total siblings';
+      this.Logger.FuncStart(this.WalkNodeRecursive.name, friendly);
+      if (targetNode.id) {
+        this.Logger.Log('targetNode.id', targetNode.id);
       }
 
-      var childNodes: HTMLCollection = targetNode.children;
-      if (childNodes && childNodes.length > 0 && depth > 0) {
-        for (var jdx = 0; jdx < childNodes.length; jdx++) {
-          var oneChild = <HTMLElement>childNodes[jdx];
-          toReturn = toReturn.concat(this.WalkNodeRecursive(oneChild, depth));
-        }
+      var toReturn: IStateOfScContentTreeNodeProxy[] = [];
+      depth = depth - 1;
+
+      let treeNodeProxy: ScContentTreeNodeProxy = null;
+      let stateOftreeNodeProxy: IStateOfScContentTreeNodeProxy = null;
+      let childNodePromisesAr: Promise<IStateOfScContentTreeNodeProxy[]>[] = [];
+
+      if (targetNode) {
+        await this.RecipeBasics.WaitAndReturnFoundFromContainer(targetNode, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.WalkNodeRecursive.name)
+          .then(async (firstChildGlyphNode: HTMLImageElement) => treeNodeProxy = new ScContentTreeNodeProxy(this.Logger, firstChildGlyphNode, depth, itemIndex, siblingCount))
+          .then(() => treeNodeProxy.GetStateOfScContentTreeNode())
+          .then((stateOfContentTreeNodeProxy: IStateOfScContentTreeNodeProxy) => stateOftreeNodeProxy = stateOfContentTreeNodeProxy)
+          .then(() => {
+            if (treeNodeProxy.IsContentTreeNode()) {
+              if (stateOftreeNodeProxy.IsExpanded || stateOftreeNodeProxy.IsActive) {
+                this.Logger.LogVal(this.WalkNodeRecursive.name, stateOftreeNodeProxy.FriendlyTreeNode);
+                toReturn.push(stateOftreeNodeProxy);
+              }
+            }
+          })
+          .then(() => {
+            let childNodes = targetNode.querySelectorAll(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon); //targetNode.children;
+            childNodePromisesAr = [];
+            childNodes.forEach((oneChild: HTMLElement, index) => childNodePromisesAr.push(this.WalkNodeRecursive(oneChild, depth, index, childNodes.length)));
+          })
+          .then(() => Promise.all(childNodePromisesAr))
+          .then((values: IStateOfScContentTreeNodeProxy[][]) => values.forEach((value: IStateOfScContentTreeNodeProxy[]) => toReturn = toReturn.concat(value)))
+          .then(() => resolve(toReturn))
+          .catch((err) => reject(this.WalkNodeRecursive.name + ' | ' + err));
       }
-    }
-    return toReturn;
+      this.Logger.FuncEnd(this.WalkNodeRecursive.name, friendly)
+    });
   }
 
   GetRootNodeForFrameType(): HTMLElement {
@@ -142,23 +190,52 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
     return toReturn;
   }
 
-  GetStateOfTree(): IDataStateOfTree {
-    let toReturnOneTreeState: IDataStateOfTree = new DefaultStateOfTree();
-    try {
-      toReturnOneTreeState.StateOfTreeNodes = this.GetStateOfTreeNodes();
-      toReturnOneTreeState.ActiveTreeNodeIndex = null;
-      toReturnOneTreeState.ActiveTreeNodeIndex = this.GetActiveNode(toReturnOneTreeState.StateOfTreeNodes);
-    } catch (err) {
-      throw (this.GetStateOfTree.name + ' | ' + err);
+  GetActiveTreeNodeFromAncestorNode(stateOfScContentTreeNodeProxy: IStateOfScContentTreeNodeProxy) {
+    let foundNode: IStateOfScContentTreeNodeProxy = null;
+    if (stateOfScContentTreeNodeProxy.IsActive) {
+      foundNode = stateOfScContentTreeNodeProxy;
+    } else {
+      stateOfScContentTreeNodeProxy.Children.forEach((child: IStateOfScContentTreeNodeProxy) => {
+        let candidate = this.GetActiveTreeNodeFromAncestorNode(child);
+        if (candidate! = null) {
+          foundNode = candidate;
+        }
+      })
+
+      return foundNode;
     }
-    return toReturnOneTreeState;
+
+    return foundNode;
+  }
+  GetStateOfContentEditorTreeProxy(): Promise<IStateOfContentEditorTreeProxy> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetStateOfContentEditorTreeProxy.name);
+
+      let stateOfTreeProxy: IStateOfContentEditorTreeProxy = new DefaultStateOfContentEditorTreeProxy();
+
+      await this.GetStateOfContentTreeNodes()
+        .then((result: IStateOfScContentTreeNodeProxy) => stateOfTreeProxy.StateOfTreeNodes = result)
+        .then(() => {
+
+          let activeNode = this.GetActiveTreeNodeFromAncestorNode(stateOfTreeProxy.StateOfTreeNodes);
+          if (activeNode) {
+            stateOfTreeProxy.ActiveNodeCoord.SiblingIndex = activeNode.Coord.LevelWidth;
+            stateOfTreeProxy.ActiveNodeCoord.LevelIndex = activeNode.Coord.LevelIndex;
+          }
+          this.Logger.LogAsJsonPretty('stateOfTreeProxy', stateOfTreeProxy);
+        })
+        .then(() => resolve(stateOfTreeProxy))
+        .catch((err) => reject(this.GetStateOfContentEditorTreeProxy.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.GetStateOfContentEditorTreeProxy.name);
+    });
   }
 
-  GetActiveNode(allTreeNodeAr: IDataStateOfScContentTreeNode[]) {
+  GetActiveNode(allTreeNodeAr: IStateOfScContentTreeNodeProxy[]) {
     let toReturn: number = -1;
     if (allTreeNodeAr) {
       for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
-        let candidate: IDataStateOfScContentTreeNode = allTreeNodeAr[idx];
+        let candidate: IStateOfScContentTreeNodeProxy = allTreeNodeAr[idx];
         if (candidate.IsActive) {
           toReturn = idx;
           break;
@@ -171,24 +248,46 @@ export class TreeProxy extends LoggableBase implements IContentEditorTreeProxy {
     return toReturn;
   }
 
-  private GetStateOfTreeNodes(): IDataStateOfScContentTreeNode[] {
-    var toReturn: IDataStateOfScContentTreeNode[] = [];
+  private GetStateOfContentTreeNodes(): Promise<IStateOfScContentTreeNodeProxy> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetStateOfContentTreeNodes.name);
+      var toReturn: IStateOfScContentTreeNodeProxy[] = [];
 
-    if (this.AssociatedDoc) {
-      var rootNode: HTMLElement = this.GetRootNodeForFrameType();
+      if (this.AssociatedDoc) {
+        var rootTreeNodeHtmlElement: HTMLElement = this.GetRootNodeForFrameType();
+        let treeNodeProxy: ScContentTreeNodeProxy;
+        if (rootTreeNodeHtmlElement) {
+          var rootParent = rootTreeNodeHtmlElement.parentElement;
 
-      if (rootNode) {
-        var rootParent = rootNode.parentElement;
-        toReturn = this.WalkNodeRecursive(rootParent, ContentConst.Const.MaxIter);
+          await this.RecipeBasics.WaitAndReturnFoundFromContainer(rootParent, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodes.name)
+            .then(async (firstChildGlyphNode: HTMLImageElement) => {
+              treeNodeProxy = new ScContentTreeNodeProxy(this.Logger, firstChildGlyphNode, 0,0,1)
+              if (treeNodeProxy) {
+                this.Logger.Log('root found');
+              }
+            })
+            .then(() => treeNodeProxy.GetStateOfScContentTreeNode())
+            .then((stateOfScContentTreeNodeProxy: IStateOfScContentTreeNodeProxy) => {
+             
+              
+              resolve(stateOfScContentTreeNodeProxy)
+
+            });
+
+          //await this.WalkNodeRecursive(rootParent, ContentConst.Const.MaxIter, 0, 1)
+          //  .then((results: IStateOfScContentTreeNodeProxy[]) => {
+          //    resolve(results)
+          //  })
+          //  .catch((err) => reject(this.GetStateOfContentTreeNodes.name + ' | ' + err));
+        }
+        else {
+          this.Logger.ErrorAndThrow(this.GetStateOfContentTreeNodes.name, 'no root node');
+        }
       }
       else {
-        this.Logger.ErrorAndThrow(this.GetStateOfTreeNodes.name, 'no root node');
+        this.Logger.ErrorAndThrow(this.GetStateOfContentTreeNodes.name, 'no targetDoc');
       }
-    }
-    else {
-      this.Logger.ErrorAndThrow(this.GetStateOfTreeNodes.name, 'no targetDoc');
-    }
-
-    return toReturn;
+      this.Logger.FuncEnd(this.GetStateOfContentTreeNodes.name);
+    });
   }
 }

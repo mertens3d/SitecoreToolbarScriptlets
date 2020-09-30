@@ -4,34 +4,38 @@ import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { InitReportContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy';
-import { IContentEditorTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
+import { IContentTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IOneTreeDrone';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IDataStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
-import { IDataStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
+import { IStateOfContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
+import { IStateOfScContentTreeNodeProxy } from '../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../../../Shared/scripts/LoggableBase';
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
 import { ContentEditorProxyMutationEvent_Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
 import { IContentEditorProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
-import { ITreeMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
+import { ITreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload';
 import { TreeMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Observer';
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
-import { TreeProxy } from "./ContentEditorTreeProxy/ContentEditorTreeProxy";
+import { ContentTreeProxy } from "./ContentEditorTreeProxy/ContentEditorTreeProxy";
+import { DefaultStateOfContentEditorTreeProxy } from '../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfTree';
 
 export class ContentEditorProxy extends LoggableBase {
-  private ChildTreeProxy: IContentEditorTreeProxy;
+  private ContentEditorTreeProxy: IContentTreeProxy;
   private TreeMutationEvent_Observer: TreeMutationEvent_Observer;
   public ContentEditorProxyMutationEvent_Subject: ContentEditorProxyMutationEvent_Subject;
   readonly AssociatedDoc: IDataOneDoc;
   readonly AssociatedHindsiteId: GuidData;
   initResultContentEditorProxy: InitReportContentEditorProxy;
+  Friendly: string;
+  private RecipeBasic: RecipeBasics;
 
-  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc) {
+  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, friendly: string) {
     super(logger);
     this.Logger.CTORStart(ContentEditorProxy.name);
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.AssociatedDoc = associatedDoc;
     this.ValidateAssociatedDocContentEditor();
+    this.Friendly = friendly
     this.Logger.CTOREnd(ContentEditorProxy.name);
   }
 
@@ -44,14 +48,15 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncStart(this.Instantiate_ContentEditorProxy.name);
     try {
       this.initResultContentEditorProxy = new InitReportContentEditorProxy();
-      let recipeBasic = new RecipeBasics(this.Logger);
-      await recipeBasic.WaitForReadyNABDocument(this.AssociatedDoc)
+      this.RecipeBasic = new RecipeBasics(this.Logger);
+      await this.RecipeBasic.WaitForCompleteNABDataOneDoc(this.AssociatedDoc, this.Friendly)
         .then(() => {
           this.ContentEditorProxyMutationEvent_Subject = new ContentEditorProxyMutationEvent_Subject(this.Logger);
           this.TreeMutationEvent_Observer = new TreeMutationEvent_Observer(this.Logger, this.CallBackOnContentEditorProxyTreeMutationEvent.bind(this));
         })
-        .then(() => this.ChildTreeProxy = new TreeProxy(this.Logger, this.AssociatedDoc, this.GetTreeContainer()))
-        .then(() => this.ChildTreeProxy.Instantiate_TreeProxy())
+        .then(() => this.RecipeBasic.WaitForAndReturnFoundElem(this.AssociatedDoc, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
+        .then((treeContainer: HTMLElement) => this.ContentEditorTreeProxy = new ContentTreeProxy(this.Logger, this.AssociatedDoc, treeContainer))
+        .then(() => this.ContentEditorTreeProxy.Instantiate_TreeProxy())
         .then(() => this.initResultContentEditorProxy.ContentEditorProxyInitialized = true)
         .catch((err) => this.Logger.ErrorAndThrow(this.Instantiate_ContentEditorProxy.name, err));
     } catch (err) {
@@ -62,15 +67,12 @@ export class ContentEditorProxy extends LoggableBase {
 
   WireEvents_ContentEditorProxy() {
     this.Logger.FuncStart(this.WireEvents_ContentEditorProxy.name);
-    this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
+    this.ContentEditorTreeProxy.WireEvents_TreeProxy()
+    this.ContentEditorTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
     this.Logger.FuncEnd(this.WireEvents_ContentEditorProxy.name);
   }
 
-  GetTreeContainer(): HTMLElement {
-    return this.AssociatedDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer)
-  }
-
-  CallBackOnContentEditorProxyTreeMutationEvent(treeMutationEvent_Payload: ITreeMutationEvent_Payload) {
+  CallBackOnContentEditorProxyTreeMutationEvent(treeMutationEvent_Payload: ITreeProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.CallBackOnContentEditorProxyTreeMutationEvent.name);
     let contentEditorProxyMutationEvent_Payload: IContentEditorProxyMutationEvent_Payload = {
       TreeMutationEvent_Payload: treeMutationEvent_Payload,
@@ -82,12 +84,18 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncEnd(this.CallBackOnContentEditorProxyTreeMutationEvent.name);
   }
 
-  GetStateOfContentEditor(): IDataStateOfContentEditor {
-    {
-      let toReturnStateOfContentEditor: IDataStateOfContentEditor = new DefaultStateOfContentEditor();
-      toReturnStateOfContentEditor.StateOfTree = this.ChildTreeProxy.GetStateOfTree();
-      return toReturnStateOfContentEditor;
-    }
+  GetStateOfContentEditorProxy(): Promise<IStateOfContentEditorProxy> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetStateOfContentEditorProxy.name);
+
+      let toReturnStateOfContentEditor: IStateOfContentEditorProxy = new DefaultStateOfContentEditor();
+
+      await this.ContentEditorTreeProxy.GetStateOfContentEditorTreeProxy()
+        .then((stateOfContentEditorTreeProxy: DefaultStateOfContentEditorTreeProxy) => toReturnStateOfContentEditor.StateOfContentEditorTreeProxy = stateOfContentEditorTreeProxy)
+        .then(() => resolve(toReturnStateOfContentEditor))
+        .catch((err) => reject(this.GetStateOfContentEditorProxy.name + ' | ' + err));
+      this.Logger.FuncEnd(this.GetStateOfContentEditorProxy.name);
+    });
   }
 
   ValidateAssociatedDocContentEditor() {
@@ -107,18 +115,18 @@ export class ContentEditorProxy extends LoggableBase {
     }
   }
 
-  async WaitForReadyContentEditor(): Promise<void> {
-    this.Logger.FuncStart(this.WaitForReadyContentEditor.name);
+  async WaitForCompleteNABContentEditor(): Promise<void> {
+    this.Logger.FuncStart(this.WaitForCompleteNABContentEditor.name);
     try {
       let recipeBasics = new RecipeBasics(this.Logger);
 
-      await recipeBasics.WaitForReadyNABDocument(this.AssociatedDoc)
+      await recipeBasics.WaitForCompleteNABDataOneDoc(this.AssociatedDoc, this.Friendly)
 
-        .catch((err) => this.Logger.ErrorAndThrow(this.WaitForReadyContentEditor.name, err));
+        .catch((err) => this.Logger.ErrorAndThrow(this.WaitForCompleteNABContentEditor.name, err));
     } catch (e) {
     }
 
-    this.Logger.FuncEnd(this.WaitForReadyContentEditor.name);
+    this.Logger.FuncEnd(this.WaitForCompleteNABContentEditor.name);
   }
 
   //RegisterObserverForTreeMutation(treeMutationEvent_Observer: TreeMutationEvent_Observer) {
@@ -140,15 +148,15 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.AssociatedDoc.DocId));
   }
 
-  async SetStateOfContentEditorAsync(dataToRestore: IDataStateOfContentEditor): Promise<Boolean> {
+  async SetStateOfContentEditorAsync(dataToRestore: IStateOfContentEditorProxy): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateOfContentEditorAsync.name, Guid.AsShort(this.AssociatedDoc.DocId));
 
       this.ContentEditorProxyMutationEvent_Subject.DisableNotifications();
 
-      this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfTree.StateOfTreeNodes.length);
+      //this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfContentEditorTreeProxy.StateOfTreeNodes.length);
 
-      await this.ChildTreeProxy.SetStateOfTree(dataToRestore.StateOfTree)
+      await this.ContentEditorTreeProxy.SetStateOfTree(dataToRestore.StateOfContentEditorTreeProxy)
         .then(() => {
           this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
           resolve(true);
@@ -162,12 +170,12 @@ export class ContentEditorProxy extends LoggableBase {
     });
   }
 
-  GetActiveNode(allTreeNodeAr: IDataStateOfScContentTreeNode[]) {
+  GetActiveNode(allTreeNodeAr: IStateOfScContentTreeNodeProxy[]) {
     this.Logger.FuncStart(this.GetActiveNode.name);
-    let toReturn: IDataStateOfScContentTreeNode = null;
+    let toReturn: IStateOfScContentTreeNodeProxy = null;
     if (allTreeNodeAr) {
       for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
-        let candidate: IDataStateOfScContentTreeNode = allTreeNodeAr[idx];
+        let candidate: IStateOfScContentTreeNodeProxy = allTreeNodeAr[idx];
         if (candidate.IsActive) {
           toReturn = candidate;
           break;

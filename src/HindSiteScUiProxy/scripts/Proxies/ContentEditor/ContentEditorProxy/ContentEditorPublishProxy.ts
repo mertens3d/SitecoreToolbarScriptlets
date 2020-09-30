@@ -175,7 +175,7 @@ export class ContentEditorPublishProxy extends LoggableBase  {
         .then((found: HTMLElement) => this.FactoryHelp.BaseFramePromiseFactory(<HTMLIFrameElement>found, 'jqIframe'))
         .then((result: _BaseFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
-        .then(() => this.RecipeBasics.WaitForReadyNABFrameProxy(dataPublishChain.JqIframe))
+        .then(() => dataPublishChain.JqIframe.WaitForCompleteNABFrameProxyOrReject())
         .catch((err) => { throw (this.GetThePublishItemDialog.name + ' ' + err) });
     } catch (err) {
       throw (this.GetThePublishItemDialog.name + ' ' + err);

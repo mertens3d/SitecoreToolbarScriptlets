@@ -1,48 +1,49 @@
-﻿import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
-import { ScUiManager } from "../../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
-import { MsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+﻿import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
+import { IControllerMessageReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
-import { ISnapShotsAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/ISnapShotsAgent";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
-import { IContentMessageBroker } from "../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
+import { IMessageBroker_Content } from "../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IScUrlAgent } from "../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IToastAgent } from "../../../Shared/scripts/Interfaces/Agents/IToastAgent";
-import { IDataStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { IMessageControllerToContent, ICommandRouterParams } from "../../../Shared/scripts/Interfaces/IStateOfController";
+import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { ICommandRouterParams, IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
+import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
-import { InternalCommandRunner } from "./InternalCommandRunner";
 import { CommandRouter } from "./CommandRouter";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMsgPayload";
 
-export class ContentMessageBroker extends LoggableBase implements IContentMessageBroker {
+export class MessageBroker_Content extends LoggableBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
-  private HindSiteScWindowApi: IHindSiteScUiProxy;
+  private HindSiteScUiProxy: IHindSiteScUiProxy;
 
   private AtticAgent: IContentAtticAgent;
 
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
   CommandRouter: CommandRouter;
+  ScUrlAgent: IScUrlAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter) {
+  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter, scUrlAgent: IScUrlAgent) {
     super(logger);
-    this.Logger.CTORStart(ContentMessageBroker.name);
+    this.Logger.CTORStart(MessageBroker_Content.name);
 
     this.Logger = logger;
     this.SettingsAgent = settingsAgent;
-    this.HindSiteScWindowApi = apiManager;
+    this.HindSiteScUiProxy = apiManager;
     this.AtticAgent = atticMan;
 
     this.ContentBrowserProxy = contentBrowserProxy;
     this.AutoSnapShotAgent = autoSnapShotAgent;
     this.CommandRouter = commandRouter;
-    this.Logger.CTOREnd(ContentMessageBroker.name);
+    this.ScUrlAgent = scUrlAgent;
+
+    this.Logger.CTOREnd(MessageBroker_Content.name);
   }
 
   BeginListening() {
@@ -82,7 +83,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     this.Logger.ErrorAndContinue(this.NotifyFail.name, 'Fail ' + failrReason);
   }
 
-  async ContentReceiveRequest(messageFromController: IMessageControllerToContent): Promise<MsgContentToController> {
+  async ContentReceiveRequest(messageFromController: IMessageControllerToContent): Promise<IMessageContentToController> {
     return new Promise(async (resolve, reject) => {
       this.Logger.Log('');
       this.Logger.Log('');
@@ -97,17 +98,16 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
           this.SettingsAgent.UpdateSettingsFromPopUpMsg(messageFromController.CurrentContentPrefs)
 
           await this.ReqMsgRouter(messageFromController)
-            .then((contentResponse: MsgContentToController) => {
-              this.Logger.Log('responding: ' + StaticHelpers.MsgFlagAsString(contentResponse.MsgFlag))
-              resolve(contentResponse);
+            .then((msgContentToController: IMessageContentToController) => {
+              this.Logger.Log('responding: ' + StaticHelpers.MsgFlagAsString(msgContentToController.MsgFlag))
+              resolve(msgContentToController);
             })
             .catch((err) => {
               this.NotifyFail(err);
-              resolve(new MsgContentToController(MsgFlag.RespTaskFailed));
-              //reject(err);
+              resolve(new DefaultMsgContentToController(MsgFlag.RespTaskFailed));
             });
         } else {
-          resolve(new MsgContentToController(MsgFlag.RespFailedDidNotValidate))
+          resolve(new DefaultMsgContentToController(MsgFlag.RespFailedDidNotValidate))
         }
       }
       else {
@@ -125,7 +125,7 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     })
   }
 
-  async ReqMsgRouter(messageFromController: IMessageControllerToContent): Promise<MsgContentToController> {
+  async ReqMsgRouter(messageFromController: IMessageControllerToContent): Promise<DefaultMsgContentToController> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(messageFromController.MsgFlag));
 
@@ -137,8 +137,8 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
 
       await this.CommandRouter.RouteCommand(commandRouterParams)
         .then(() => this.ConstructResponse(messageFromController.MsgFlag))
-        .then((response: MsgContentToController) => {
-          this.Logger.LogAsJsonPretty('resolving', response)
+        .then((response: DefaultMsgContentToController) => {
+          
           resolve(response)
         })
         .catch((err) => reject(this.ReqMsgRouter.name + ' | ' + err));
@@ -147,22 +147,22 @@ export class ContentMessageBroker extends LoggableBase implements IContentMessag
     });
   }
 
-  ConstructResponse(msgFlag: MsgFlag): Promise<MsgContentToController> {
+  async ConstructResponse(msgFlag: MsgFlag): Promise<DefaultMsgContentToController> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ConstructResponse.name);
-      let response = new MsgContentToController(MsgFlag.Unknown);
+      let responseContentToController = new DefaultMsgContentToController(MsgFlag.Unknown);
 
-      await this.HindSiteScWindowApi.GetStateOfScWindow()
-        .then((result: IDataContentReplyReceivedEvent_Payload) => {
-          response.Payload = result;
-          response.Payload.LastReq = msgFlag;
-          response.MsgFlag = MsgFlag.RespTaskSuccessful;
-          response.Payload.LastReqFriendly = MsgFlag[msgFlag];
-          response.Payload.ErrorStack = response.Payload.ErrorStack.concat(result.ErrorStack);
+      await this.HindSiteScUiProxy.GetStateOfScUiProxy()
+        .then((stateOfScUiProxy: IStateOfScUiProxy) => {
+          responseContentToController.Payload.StateOfScUiProxy_Live = stateOfScUiProxy;
+          responseContentToController.Payload.LastReq = msgFlag;
+          responseContentToController.MsgFlag = MsgFlag.RespTaskSuccessful;
+          responseContentToController.Payload.LastReqFriendly = MsgFlag[msgFlag];
+          responseContentToController.Payload.ErrorStack = ['todo'];
         })
         .then(() => this.AtticAgent.GetStateOfStorageSnapShots())
-        .then((result: IDataStateOfStorageSnapShots) => response.Payload.StateOfStorageSnapShots = result)
-        .then(() => resolve(response))
+        .then((stateOfStorageSnapShots: IStateOfStorageSnapShots) => responseContentToController.Payload.StateOfStorageSnapShots = stateOfStorageSnapShots)
+        .then(() => resolve(responseContentToController))
         .catch((err) => reject(err));
 
       this.Logger.FuncEnd(this.ConstructResponse.name);

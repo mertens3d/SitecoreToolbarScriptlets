@@ -1,10 +1,10 @@
-﻿import { IDataStateOfDTFrame } from "../../Interfaces/Data/States/IDataStateOfDTFrame";
+﻿import { IStateOfDTFrameProxy } from "../../Interfaces/Data/States/IDataStateOfDTFrame";
 import { DefaultStateOfContentEditor } from "./DefaultStateOfContentEditor";
 import { ScWindowType } from "../../Enums/scWindowType";
 import { Guid } from "../../Helpers/Guid";
 
-export class DefaultStateOfFrame implements IDataStateOfDTFrame {
-  StateOfContentEditor = new DefaultStateOfContentEditor();
+export class DefaultStateOfDTFrameProxy implements IStateOfDTFrameProxy {
+  StateOfContentEditorProxy = new DefaultStateOfContentEditor();
   StorageId = Guid.NewRandomGuid();
   Styling = null;
   WindowType: ScWindowType;

@@ -1,6 +1,7 @@
-﻿import { DefaultFriendly, DefaultMetaData, DefaultScWindowStates, DefaultStateOfLiveHindSite } from '../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
+﻿import { DefaultFriendly, DefaultMetaData, DefaultStateOfScUiProxy, DefaultStateOfScWindowProxy } from '../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
 import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
+import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
@@ -12,16 +13,14 @@ import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISetti
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataFriendly } from '../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
 import { IDataMetaData } from '../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
-import { IDataStateOfContentEditor } from '../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
-import { IDataStateOfDesktop } from '../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop';
-import { IDataStateOfLiveHindSite } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IDataStateOfSitecoreWindow } from '../../../Shared/scripts/Interfaces/Data/States/IDataStates';
+import { IStateOfContentEditorProxy } from '../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
+import { IDataStateOfDesktopProxy } from '../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop';
+import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScWindowProxy } from '../../../Shared/scripts/Interfaces/Data/States/IDataStates';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
 import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
-import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
-import { ScWindowRecipePartials } from '../Managers/ScWindowManager/ScWindowRecipePartials';
-import { InitReport_DesktopProxy } from '../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy';
 
 export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
   private ScUrlAgent: IScUrlAgent;
@@ -36,8 +35,6 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
     super(logger);
     this.Logger.CTORStart(ScWindowProxy.name);
     this.ScUrlAgent = scUrlAgent;
-
-    this.Instantiate_ScWindowProxy();
     this.Logger.CTOREnd(ScWindowProxy.name);
   }
 
@@ -70,9 +67,10 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
       this.Logger.FuncStart(this.Instantiate_ScWindowProxy.name);
       let recipesBasic = new RecipeBasics(this.Logger);
       this.InitReportScWindowManager = new InitReportScWindowManager();
-      await recipesBasic.WaitForReadyNABDocument(this.GetTopLevelDoc())
 
-        .then(() => {
+      await recipesBasic.WaitForCompleteNABDataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
+
+        .then((result: ReadyStateNAB) => {
           if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
             this.DesktopProxy = new DesktopProxy(this.Logger, this.GetTopLevelDoc());
             this.DesktopProxy.Instantiate_DesktopProxy()
@@ -81,7 +79,7 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
         })
         .then(() => {
           if (this.ScUrlAgent.GetScWindowType() === ScWindowType.ContentEditor) {
-            this.ContentEditorProxy = new ContentEditorProxy(this.Logger, this.GetTopLevelDoc());
+            this.ContentEditorProxy = new ContentEditorProxy(this.Logger, this.GetTopLevelDoc(), 'Solo Content Editor doc');
             this.ContentEditorProxy.Instantiate_ContentEditorProxy()
               .then(() => this.ContentEditorProxy.WireEvents_ContentEditorProxy())
           }
@@ -95,44 +93,44 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
     this.Logger.FuncEnd(this.Instantiate_ScWindowProxy.name);
   }
 
-  async GetCurrentStateByPageType(scWindowType: ScWindowType): Promise<IDataStateOfContentEditor> {
-    this.Logger.FuncStart(this.GetCurrentStateByPageType.name, StaticHelpers.ScWindowTypeFriendly(scWindowType));
-    let toReturn: IDataStateOfContentEditor = null;
+  //async GetCurrentStateByPageType(scWindowType: ScWindowType): Promise<IStateOfContentEditorProxy> {
+  //  return new Promise(async (resolve, reject) => {
+  //    this.Logger.FuncStart(this.GetCurrentStateByPageType.name, StaticHelpers.ScWindowTypeFriendly(scWindowType));
+  //    let toReturn: IStateOfContentEditorProxy = null;
 
-    try {
-      if (scWindowType === ScWindowType.Desktop) {
-        let dtResult;
+  //      if (scWindowType === ScWindowType.Desktop) {
+  //        let dtResult;
 
-        await this.DesktopProxy.GetStateOfDesktop()
-          .then((result) => {
-            dtResult = result;
+  //        await this.DesktopProxy.GetStateOfDesktop()
+  //          .then((result) => {
+  //            dtResult = result;
 
-            if (dtResult.ActiveCEAgent) {
-              toReturn = dtResult.ActiveCEAgent.GetStateTree();
-            }
-          })
-          .catch((err) => this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, err));
-      }
+  //            if (dtResult.ActiveCEAgent) {
+  //              toReturn = dtResult.ActiveCEAgent.GetStateTree();
+  //            }
+  //          })
+  //          .then(() => resolve(toReturn))
+  //          .catch((err) => this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, err));
+  //      }
 
-      else if (scWindowType === ScWindowType.ContentEditor) {
-        toReturn = this.ContentEditorProxy.GetStateOfContentEditor();
-      }
-      else if (scWindowType === ScWindowType.LoginPage
-        || scWindowType === ScWindowType.Launchpad
-        || scWindowType === ScWindowType.Edit
-        || scWindowType === ScWindowType.Preview
-        || scWindowType === ScWindowType.Normal) {
-      }
-      else {
-        this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, 'unknown page type ' + StaticHelpers.ScWindowTypeFriendly(scWindowType));
-      }
-    } catch (err) {
-      this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, err);
-    }
+  //      else if (scWindowType === ScWindowType.ContentEditor) {
+  //        await this.ContentEditorProxy.GetStateOfContentEditorProxy()
+  //          .then((stateOfContentEditorProxy: IStateOfContentEditorProxy) => toReturn = stateOfContentEditorProxy)
+  //          .catch((err) => this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, err));
+  //      }
+  //      else if (scWindowType === ScWindowType.LoginPage
+  //        || scWindowType === ScWindowType.Launchpad
+  //        || scWindowType === ScWindowType.Edit
+  //        || scWindowType === ScWindowType.Preview
+  //        || scWindowType === ScWindowType.Normal) {
+  //      }
+  //      else {
+  //        this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, 'unknown page type ' + StaticHelpers.ScWindowTypeFriendly(scWindowType));
+  //    }
 
-    this.Logger.FuncEnd(this.GetCurrentStateByPageType.name);
-    return toReturn;
-  }
+  //    this.Logger.FuncEnd(this.GetCurrentStateByPageType.name);
+  //  });
+  //}
 
   GetCurrentPageType(): ScWindowType {
     return this.ScUrlAgent.GetScWindowType()
@@ -153,51 +151,52 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
     await this.ContentEditorProxy.SetCompactCss();
   }
 
-  private GetStates(): Promise<IDataStateOfSitecoreWindow> {
+  private GetStates(): Promise<IStateOfScWindowProxy> {
     return new Promise(async (resolve, reject) => {
-      let toReturn: IDataStateOfSitecoreWindow = new DefaultScWindowStates();
+      let toReturn: IStateOfScWindowProxy = new DefaultStateOfScWindowProxy();
 
       if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
         await this.DesktopProxy.GetStateOfDesktop()
-          .then((result: IDataStateOfDesktop) => toReturn.StateOfDesktop = result)
+          .then((result: IDataStateOfDesktopProxy) => toReturn.StateOfDesktopProxy = result)
           .then(() => resolve(toReturn))
-          .catch((err) => reject(this.GetStateOfSitecoreWindow.name + ' | ' + err));
+          .catch((err) => reject(this.GetStates.name + ' | ' + err));
       }
 
       if (this.ScUrlAgent.GetScWindowType() === ScWindowType.ContentEditor) {
-        let result = this.ContentEditorProxy.GetStateOfContentEditor();
-        toReturn.StateOfContentEditor = result;
-        resolve(toReturn);
+        await this.ContentEditorProxy.GetStateOfContentEditorProxy()
+          .then((stateOfContentEditorProxy: IStateOfContentEditorProxy) => toReturn.StateOfContentEditor = stateOfContentEditorProxy)
+          .then(() => resolve(toReturn))
+          .catch((err) => reject(this.GetStates.name + ' | ' + err));
       }
     });
   }
 
-  GetStateOfSitecoreWindow(snapshotFlavor: SnapShotFlavor): Promise<IDataStateOfLiveHindSite> {
+  GetStateOfScUiProxy(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUiProxy> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetStateOfSitecoreWindow.name);
+      this.Logger.FuncStart(this.GetStateOfScUiProxy.name);
 
-      let toReturnStateOfSitecoreWindow: IDataStateOfLiveHindSite = new DefaultStateOfLiveHindSite();
+      let toReturnStateOfSitecoreWindow: IStateOfScUiProxy = new DefaultStateOfScUiProxy();
 
       await this.GetStates()
-        .then((dataSitecoreWindowStates: IDataStateOfSitecoreWindow) => toReturnStateOfSitecoreWindow.StateOfSitecoreWindow = dataSitecoreWindowStates)
+        .then((dataSitecoreWindowStates: IStateOfScWindowProxy) => toReturnStateOfSitecoreWindow.StateOfScWindowProxy = dataSitecoreWindowStates)
         .then(() => {
           toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor);
           toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(toReturnStateOfSitecoreWindow.Meta)
         })
         .then(() => resolve(toReturnStateOfSitecoreWindow))
-        .catch((err) => reject(this.GetStateOfSitecoreWindow.name + ' | ' + err));
-      this.Logger.FuncEnd(this.GetStateOfSitecoreWindow.name);
+        .catch((err) => reject(this.GetStateOfScUiProxy.name + ' | ' + err));
+      this.Logger.FuncEnd(this.GetStateOfScUiProxy.name);
     });
   }
 
-  async SetStateOfScWin(dataToRestore: IDataStateOfLiveHindSite): Promise<void> {
+  async SetStateOfScWin(dataToRestore: IStateOfScUiProxy): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateOfScWin.name);
 
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
-          if (dataToRestore.StateOfSitecoreWindow.StateOfDesktop) {
-            await this.DesktopProxy.SetStateOfDesktop(dataToRestore.StateOfSitecoreWindow.StateOfDesktop)
+          if (dataToRestore.StateOfScWindowProxy.StateOfDesktopProxy) {
+            await this.DesktopProxy.SetStateOfDesktop(dataToRestore.StateOfScWindowProxy.StateOfDesktopProxy)
               .then(() => resolve())
               .catch((err) => reject(this.SetStateOfScWin.name + ' | ' + err));
           } else {
@@ -205,7 +204,7 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
           }
         }
         else if (dataToRestore.Meta.WindowType === ScWindowType.ContentEditor) {
-          await this.ContentEditorProxy.SetStateOfContentEditorAsync(dataToRestore.StateOfSitecoreWindow.StateOfContentEditor)
+          await this.ContentEditorProxy.SetStateOfContentEditorAsync(dataToRestore.StateOfScWindowProxy.StateOfContentEditor)
             .then(() => resolve())
             .catch((err) => reject(err));
         }

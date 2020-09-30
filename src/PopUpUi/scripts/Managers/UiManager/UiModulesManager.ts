@@ -13,8 +13,8 @@ import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISe
 import { IUiModule } from '../../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
-import { IDataStateOfLiveHindSite } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IDataStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots';
+import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots';
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IStateOfUiModules } from "../../../../Shared/scripts/Interfaces/IStateOfUiModules";
@@ -42,7 +42,7 @@ import { _UiModuleBase } from '../../UiModules/_UiModuleBase';
 export class UiModulesManager extends LoggableBase {
   MenuCommandParameters: IMenuCommandDefinition[];
   UiCommandsMan: UiCommandsManager;
-  CurrScWindowState: IDataStateOfLiveHindSite;
+  CurrScWindowState: IStateOfScUiProxy;
   DebuggingFeedbackModuleMessages: DebuggingFeedbackModuleMessages_Observer;
   private CommandDefinitionBucket: ICommandDefinitionBucket;
   private SettingsAgent: ISettingsAgent;
@@ -50,8 +50,8 @@ export class UiModulesManager extends LoggableBase {
   private UiVisibilityTestAgent: IUiVisibilityTestAgent;
   UiSettingBasedModuleMutationEvent_Observer: UiSettingBasedModuleMutationEvent_Observer;
   SelectSnapshotModule_Observer: SelectSnapUiMutationEvent_ObserverWithCallback;
-  private LastKnownStateOfLiveHindSite: IDataStateOfLiveHindSite;
-  private LastKnownStateOfStorageSnapShots: IDataStateOfStorageSnapShots;
+  private LastKnownStateOfLiveHindSite: IStateOfScUiProxy;
+  private LastKnownStateOfStorageSnapShots: IStateOfStorageSnapShots;
   LastKnownSelectSnapshotId: any;
   FacetModuleSelectSnapShots: SelectSnapshotModule;
 
@@ -373,7 +373,7 @@ export class UiModulesManager extends LoggableBase {
     this.Logger.FuncEnd(this.OnRefreshUiUIManagerFromSnapShotSelect.name);
   }
 
-  async UpdateUiFromContentReply(stateOfLiveHindSite: IDataStateOfLiveHindSite, stateOfStorageSnapShots: IDataStateOfStorageSnapShots) {
+  async UpdateUiFromContentReply(stateOfLiveHindSite: IStateOfScUiProxy, stateOfStorageSnapShots: IStateOfStorageSnapShots) {
     this.Logger.FuncStart(this.UpdateUiFromContentReply.name);
 
     //if (StaticHelpers.IsNullOrUndefined(this.LastKnownSelectSnapshotId)) {

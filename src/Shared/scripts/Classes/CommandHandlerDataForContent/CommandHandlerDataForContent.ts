@@ -1,5 +1,5 @@
 ﻿import { AutoSnapShotAgent } from "../../../../Content/scripts/Agents/AutoSnapShotAgent";
-import { ContentMessageBroker } from "../../../../Content/scripts/Proxies/ContentMessageBroker";
+import { MessageBroker_Content } from "../../../../Content/scripts/Proxies/ContentMessageBroker";
 import { ScUiManager } from "../../../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
 import { ContentEditorProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DesktopProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
@@ -17,7 +17,7 @@ export class CommandPayloadForInternal implements ICommandParams {
   NewNickname: string;
   TargetSnapShotId: GuidData;
   AtticAgent: IContentAtticAgent;
-  ContentMessageBroker: ContentMessageBroker = null;
+  ContentMessageBroker: MessageBroker_Content = null;
   DesktopProxy: DesktopProxy = null;
   Logger: ILoggerAgent = null;
   ScUiMan: ScUiManager = null;

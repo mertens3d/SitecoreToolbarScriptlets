@@ -7,7 +7,7 @@ import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IControllerMessageReceivedEvent_Payload } from "../../../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
 export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
   constructor(logger: ILoggerAgent, browserProxy: IPopUpBrowserProxy) {
@@ -65,7 +65,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
     return toReturn;
   }
 
-  BuildEditPrevNormUrl(newMode: scMode, contState: IDataContentReplyReceivedEvent_Payload): void {
+  BuildEditPrevNormUrl(newMode: scMode, contState: IControllerMessageReceivedEvent_Payload): void {
     this.UrlParts.Anchor = '';
     this.UrlParts.FilePath = '';
 

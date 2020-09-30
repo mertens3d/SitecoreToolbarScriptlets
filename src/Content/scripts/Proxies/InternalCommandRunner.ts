@@ -1,7 +1,7 @@
 ﻿import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataStateOfLiveHindSite } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
@@ -109,7 +109,7 @@ export class InternalCommandRunner extends LoggableBase {
   SetStateOfSitecoreWindow(commandParams: ICommandParams, dependancies: ICommandDependancies): Promise<void> {
     return new Promise(async (resolve, reject) => {
       dependancies.Logger.LogAsJsonPretty("IdOfSelect", commandParams.TargetSnapShotId);
-      let dataOneWindowStorage: IDataStateOfLiveHindSite = dependancies.AtticAgent.GetFromStorageBySnapShotId(commandParams.TargetSnapShotId);
+      let dataOneWindowStorage: IStateOfScUiProxy = dependancies.AtticAgent.GetFromStorageBySnapShotId(commandParams.TargetSnapShotId);
 
       if (dataOneWindowStorage) {
         dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(commandParams.ApiPayload, dataOneWindowStorage)

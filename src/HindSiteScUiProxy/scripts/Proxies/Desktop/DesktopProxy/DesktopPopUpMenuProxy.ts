@@ -18,7 +18,7 @@ export class DTPopUpMenuProxy extends LoggableBase {
     //}
 
       //Execute(): Promise<DTFrameProxy> {
-      this.Logger.IfNullOrUndefinedThrow(this.RecipeAddNewContentEditorToDesktop.name, AssociatedDoc);
+      this.Logger.ThrowIfNullOrUndefined(this.RecipeAddNewContentEditorToDesktop.name, AssociatedDoc);
 
       let allIframeDataAtBeginning: HTMLIFrameElement[];
       let dtframeProxy: DTFrameProxy;

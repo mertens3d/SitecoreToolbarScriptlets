@@ -5,11 +5,11 @@ import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
-import { IDataStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { IDataStateOfLiveHindSite } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../Shared/scripts/Interfaces/IOneStorageData";
-import { DefaultStateOfSnapshotStorage } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
+import { DefaultStateOfStorageSnapshots } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
 import { DefaultFriendly, DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow";
 
 export class ContentAtticAgent implements IContentAtticAgent {
@@ -31,7 +31,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.SettingAutoSnapshotRetainDays = settingAutoSnapshotRetainDays;
   }
 
-  async WriteStateOfSitecoreToStorage(stateOfSitecoreWindow: IDataStateOfLiveHindSite): Promise<void> {
+  async WriteStateOfSitecoreToStorage(stateOfSitecoreWindow: IStateOfScUiProxy): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WriteStateOfSitecoreToStorage.name);
 
@@ -50,12 +50,12 @@ export class ContentAtticAgent implements IContentAtticAgent {
     });
   }
 
-  GetFromStorageBySnapShotId(needleId: GuidData): IDataStateOfLiveHindSite {
+  GetFromStorageBySnapShotId(needleId: GuidData): IStateOfScUiProxy {
     this.Logger.FuncStart(this.GetFromStorageBySnapShotId.name, needleId.Raw);
 
-    var DateOneWinStoreMatch: IDataStateOfLiveHindSite = null;
+    var DateOneWinStoreMatch: IStateOfScUiProxy = null;
 
-    let foundStorage: IDataStateOfStorageSnapShots = this.GetStateOfStorageSnapShots();
+    let foundStorage: IStateOfStorageSnapShots = this.GetStateOfStorageSnapShots();
 
     for (var idx = 0; idx < foundStorage.SnapShots.length; idx++) {
       var candidate = foundStorage.SnapShots[idx];
@@ -73,8 +73,8 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return DateOneWinStoreMatch;
   }
 
-  private ValidateStorageData(oneRaw: IOneStorageData): IDataStateOfLiveHindSite {
-    var candidate: IDataStateOfLiveHindSite = <IDataStateOfLiveHindSite>JSON.parse(oneRaw.data);
+  private ValidateStorageData(oneRaw: IOneStorageData): IStateOfScUiProxy {
+    var candidate: IStateOfScUiProxy = <IStateOfScUiProxy>JSON.parse(oneRaw.data);
 
     if (candidate) {
       if (!candidate.Meta) {
@@ -107,8 +107,8 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return result;
   }
 
-  private GetAllStorage(): IDataStateOfLiveHindSite[] {
-    var toReturn: IDataStateOfLiveHindSite[] = [];
+  private GetAllStorage(): IStateOfScUiProxy[] {
+    var toReturn: IStateOfScUiProxy[] = [];
 
     let rawStorageData: IOneStorageData[] = this.GetAllLocalStorageAsIOneStorageData();
 
@@ -118,7 +118,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
       }
     }
 
-    toReturn.sort((a: IDataStateOfLiveHindSite, b: IDataStateOfLiveHindSite) =>
+    toReturn.sort((a: IStateOfScUiProxy, b: IStateOfScUiProxy) =>
       +b.Meta.TimeStamp - +a.Meta.TimeStamp
     );
 
@@ -127,7 +127,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return toReturn;
   }
 
-  private CleanOneStorageItem(candidate: IDataStateOfLiveHindSite, autoCount: number): number {
+  private CleanOneStorageItem(candidate: IStateOfScUiProxy, autoCount: number): number {
     var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
     var deleteFlag: boolean = false;
     var now: Date = new Date();
@@ -157,7 +157,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     return autoCount;
   }
 
-  CleanFoundStorage(currentWindowStorage: IDataStateOfStorageSnapShots): void {
+  CleanFoundStorage(currentWindowStorage: IStateOfStorageSnapShots): void {
     try {
       if (currentWindowStorage) {
         var cacheLength = currentWindowStorage.SnapShots.length;
@@ -180,7 +180,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
         this.SettingAutoSnapshotRetainDays = ContentConst.Const.DefaultMaxAutoSaveAgeDays;
       }
 
-      let currentWindowStorage: IDataStateOfStorageSnapShots = this.GetStateOfStorageSnapShots();
+      let currentWindowStorage: IStateOfStorageSnapShots = this.GetStateOfStorageSnapShots();
 
       this.CleanFoundStorage(currentWindowStorage);
     } catch (err) {
@@ -190,12 +190,15 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.Logger.FuncEnd(this.CleanOutOldAutoSavedData.name);
   }
 
-  GetStateOfStorageSnapShots(): IDataStateOfStorageSnapShots {
-    let stateOfSnapshotStorage: IDataStateOfStorageSnapShots = new DefaultStateOfSnapshotStorage();
-    let result: IDataStateOfLiveHindSite[] = this.GetAllStorage();
+  GetStateOfStorageSnapShots(): IStateOfStorageSnapShots {
+    this.Logger.FuncStart(this.GetStateOfStorageSnapShots.name);
+
+    let stateOfSnapshotStorage: IStateOfStorageSnapShots = new DefaultStateOfStorageSnapshots();
+    let result: IStateOfScUiProxy[] = this.GetAllStorage();
     stateOfSnapshotStorage.SnapShots = result;
     stateOfSnapshotStorage.CreationDate = new Date();
     this.UpdateCounts(stateOfSnapshotStorage);
+    this.Logger.FuncEnd(this.GetStateOfStorageSnapShots.name);
     return stateOfSnapshotStorage;
   }
 
@@ -219,7 +222,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
   //  return toReturn;
   //}
 
-  UpdateCounts(storageAllSnapshots: IDataStateOfStorageSnapShots) {
+  UpdateCounts(storageAllSnapshots: IStateOfStorageSnapShots) {
     storageAllSnapshots.FavoriteCount = 0;
     storageAllSnapshots.SnapShotsAutoCount = 0;
     storageAllSnapshots.PlainCount = 0;
@@ -236,13 +239,13 @@ export class ContentAtticAgent implements IContentAtticAgent {
     }
   }
 
-  FilterOutOldData(data: IDataStateOfLiveHindSite[]): IDataStateOfLiveHindSite[] {
-    var toReturn: IDataStateOfLiveHindSite[] = data;
+  FilterOutOldData(data: IStateOfScUiProxy[]): IStateOfScUiProxy[] {
+    var toReturn: IStateOfScUiProxy[] = data;
 
     return toReturn;
   }
 
-  RemoveAndConfirmRemoval(storageMatch: IDataStateOfLiveHindSite): void {
+  RemoveAndConfirmRemoval(storageMatch: IStateOfScUiProxy): void {
     this.Logger.LogVal('Key to Delete', storageMatch.Meta.SnapshotId);
 
     let storageKey = storageMatch.Meta.StorageKey;
@@ -260,7 +263,7 @@ export class ContentAtticAgent implements IContentAtticAgent {
     this.Logger.FuncStart(this.RemoveSnapshotFromStorageById.name);
     try {
       if (targetId) {
-        var storageMatch: IDataStateOfLiveHindSite = this.GetFromStorageBySnapShotId(targetId)
+        var storageMatch: IStateOfScUiProxy = this.GetFromStorageBySnapShotId(targetId)
         if (storageMatch) {
           this.RemoveAndConfirmRemoval(storageMatch)
         } else {

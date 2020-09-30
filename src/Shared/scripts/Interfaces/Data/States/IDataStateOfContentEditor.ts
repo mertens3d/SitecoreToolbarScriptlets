@@ -1,6 +1,5 @@
-﻿import { IDataStateOfTree } from './IDataStateOfTree';
+﻿import { IStateOfContentEditorTreeProxy } from './IDataStateOfTree';
 
-export interface IDataStateOfContentEditor {
-  StateOfTree: IDataStateOfTree,
-  IsAlive: boolean
+export interface IStateOfContentEditorProxy {
+  StateOfContentEditorTreeProxy: IStateOfContentEditorTreeProxy,
 }

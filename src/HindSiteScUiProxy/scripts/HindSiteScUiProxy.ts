@@ -5,7 +5,7 @@ import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgen
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IScWindowProxy } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IDataOneDoc } from "../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IDataStateOfLiveHindSite } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUiProxy } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
 import { LoggableBase } from "../../Shared/scripts/LoggableBase";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
@@ -27,31 +27,24 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProx
     this.ScUiMan = scUiMan;
     this.TopLevelDoc = TopDoc;
     this.ToastAgent = toastAgent;
-    this.InitscWinProxy();
 
     this.Logger.CTOREnd(HindSiteScUiProxy.name);
   }
-  public async OnReady_InitScWindowManager() {
-    this.Logger.FuncStart(this.OnReady_InitScWindowManager.name);
+  public async OnReady_InstantiateHindSiteScUiProxy() {
+    this.Logger.FuncStart(this.OnReady_InstantiateHindSiteScUiProxy.name);
     try {
-    await this.ScWindowProxy.Instantiate_ScWindowProxy();
 
+      this.ScWindowProxy = new ScWindowProxy(this.Logger, this.ScUrlAgent);
+      await this.ScWindowProxy.Instantiate_ScWindowProxy();
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.OnReady_InitScWindowManager.name, err);
+      this.Logger.ErrorAndThrow(this.OnReady_InstantiateHindSiteScUiProxy.name, err);
     }
 
-
-
-
-    this.Logger.FuncEnd(this.OnReady_InitScWindowManager.name);
+    this.Logger.FuncEnd(this.OnReady_InstantiateHindSiteScUiProxy.name);
   }
 
-  private InitscWinProxy() {
-    this.ScWindowProxy = new ScWindowProxy(this.Logger, this.ScUrlAgent);
-  }
-
-  GetStateOfSitecoreWindow(snapshotFlavor: SnapShotFlavor): Promise<IDataStateOfLiveHindSite> {
-    return this.ScWindowProxy.GetStateOfSitecoreWindow(snapshotFlavor);
+  GetStateOfScUiProxyWindow(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUiProxy> {
+    return this.ScWindowProxy.GetStateOfScUiProxy(snapshotFlavor);
   }
 
   RaiseToastNotification(arg0: string) {
@@ -66,13 +59,13 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProx
   //  })
   //}
 
-  GetStateOfScWindow(): Promise<IDataStateOfLiveHindSite> {
+  GetStateOfScUiProxy(): Promise<IStateOfScUiProxy> {
     return new Promise(async (resolve, reject) => {
-      let reply: IDataStateOfLiveHindSite = null;
+      let reply: IStateOfScUiProxy = null;
 
-      await this.ScWindowProxy.GetStateOfSitecoreWindow(SnapShotFlavor.Live)
-        .then((result: IDataStateOfLiveHindSite) => reply = result)
-        .then(() => reply.ErrorStack = this.Logger.ErrorStack)
+      await this.ScWindowProxy.GetStateOfScUiProxy(SnapShotFlavor.Live)
+        .then((result: IStateOfScUiProxy) => reply = result)
+        .then(() => reply.ErrorStackScUiProxy = this.Logger.ErrorStack)
         .then(() => resolve(reply))
         .catch((err) => reject(err))
     });
@@ -108,7 +101,7 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProx
     });
   }
 
-  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IDataStateOfLiveHindSite): Promise<void> {
+  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IStateOfScUiProxy): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.ScWindowProxy.SetStateOfScWin(dataOneWindowStorage)
         .then(() => resolve())

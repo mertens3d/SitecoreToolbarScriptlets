@@ -14,7 +14,7 @@ export class SharedConst {
         OverridePublishing: 15,
       },
       Timeouts: {
-        Max: 10000,
+        Max: 3000,
         Default: 100,
       },
     },

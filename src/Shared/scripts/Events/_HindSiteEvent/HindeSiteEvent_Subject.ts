@@ -18,11 +18,11 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
 
   DisableNotifications() {
     this.IsMuted = true;
-    this.Logger.LogVal('Is Muted', this.IsMuted.toString());
+    //this.Logger.LogVal('Is Muted', this.IsMuted.toString());
   }
   EnableNotifications() {
     this.IsMuted = false;
-    this.Logger.LogVal('Is Muted', this.IsMuted.toString());
+    //this.Logger.LogVal('Is Muted', this.IsMuted.toString());
   }
 
   protected HasObservers(): boolean {
@@ -31,10 +31,10 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
 
   RegisterObserver(observer: IHindSiteEvent_Observer<T>): void {
     if (observer) {
-      //this.Logger.Log(this.RegisterObserver.name + ' ' + observer.Friendly + ' to ' + this.Friendly_Subject);
 
       if (this.ObserverCollection.indexOf(observer) < 0) {
         this.ObserverCollection.push(observer);
+        this.Logger.Log(this.RegisterObserver.name + ' ' + observer.Friendly + ' to ' + this.Friendly_Subject + ' - count after: ' + this.ObserverCollection.length.toString());
       } else {
         this.Logger.WarningAndContinue(this.RegisterObserver.name, 'Observer already registered');
       }

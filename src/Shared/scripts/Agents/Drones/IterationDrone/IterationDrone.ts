@@ -37,7 +37,7 @@ export class IterationDrone {
       }
 
       if (this.LogThisDroneInstance) {
-        this.Logger.Log('DecrementAndKeepGoing: ' + this.NickName + ' ' + this.CurrentIteration + ':' + this.MaxIterations + ' | timeout: ' + this.Timeout);
+        this.Logger.Log(this.DecrementAndKeepGoing.name + ' ' + this.NickName + ' ' + this.CurrentIteration + ':' + this.MaxIterations + ' | cur. timeout: ' + this.Timeout);
       }
 
       toReturn = true;

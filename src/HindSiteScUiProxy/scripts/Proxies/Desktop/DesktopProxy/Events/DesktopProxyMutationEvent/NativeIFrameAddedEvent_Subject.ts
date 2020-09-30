@@ -19,11 +19,14 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
     this.Logger.CTOREnd(NativeIFrameAddedEvent_Subject.name);
   }
 
-  private HandleNativeMutationEvent(mutations: MutationRecord[]) {
-    this.Logger.FuncStart(this.HandleNativeMutationEvent.name);
+  private CallBackOnNativeMutation(mutations: MutationRecord[]) {
+    this.Logger.FuncStart(this.CallBackOnNativeMutation.name);
     if (this.HasObservers()) {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
+      mutations.forEach((mutation, index) => {
+        this.Logger.Log('processing mutation ' + (index + 1) + ':' + mutations.length);
+        this.Logger.LogVal('mutation.addedNodes.length ', mutation.addedNodes.length);
+
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
           let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
           let addedDTFrameProxies: DTFrameProxy[] = [];
 
@@ -34,19 +37,25 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
             }
           })
 
-          let desktopMutatedEvent_Payload: INativeIFrameAddedEvent_Payload = {
-            MutatedElement: mutatedElement,
-            AddedDTFrameProxies: addedDTFrameProxies,
-            DTFrameProxyMutationEvent_Payload: null
-          }
+          if (addedDTFrameProxies.length > 0) {
+            this.Logger.LogVal('addedDTFrameProxies.length', addedDTFrameProxies.length);
 
-          this.NotifyObservers(desktopMutatedEvent_Payload);
+            let desktopMutatedEvent_Payload: INativeIFrameAddedEvent_Payload = {
+              MutatedElement: mutatedElement,
+              AddedDTFrameProxies: addedDTFrameProxies,
+              DTFrameProxyMutationEvent_Payload: null
+            }
+
+            this.NotifyObservers(desktopMutatedEvent_Payload);
+          } else {
+            this.Logger.Log('no notification, no DTFrameProxy added');
+          }
         }
       });
     } else {
       this.Logger.Log('No observers');
     }
-    this.Logger.FuncEnd(this.HandleNativeMutationEvent.name);
+    this.Logger.FuncEnd(this.CallBackOnNativeMutation.name);
   }
 
   private InitMutationObserver() {
@@ -56,7 +65,7 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
       if (this.AssociatedDoc) {
         let self = this;
 
-        let mutationObserver = new MutationObserver((mutations: MutationRecord[]) => { self.HandleNativeMutationEvent(mutations); });
+        let mutationObserver = new MutationObserver((mutations: MutationRecord[]) => { self.CallBackOnNativeMutation(mutations); });
 
         let desktop: HTMLElement = this.AssociatedDoc.ContentDoc.getElementById('Desktop');
         if (desktop) {

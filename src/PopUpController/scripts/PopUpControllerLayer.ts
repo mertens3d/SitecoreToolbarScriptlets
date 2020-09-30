@@ -15,7 +15,7 @@ import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettings
 import { ICommandDefinitionBucket, IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { CommandManager } from "./Managers/CommandManager";
-import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
+import { MessageBroker_PopUp } from "./Agents/PopUpMessagesBrokerAgent";
 import { PopUpBrowserProxy } from "./Proxies/BrowserProxy";
 import { CommandType } from "../../Shared/scripts/Enums/CommandType";
 import { HandlersForInternal } from "./Classes/HandlersForInternal";
@@ -24,12 +24,12 @@ import { IUiCommandFlagRaisedEvent_Payload } from "../../Shared/scripts/Events/U
 import { CommandDefintionFactory } from "./Classes/PopUpCommands";
 import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
 import { ContentReplyReceivedEvent_Observer } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
-import { IDataContentReplyReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
 class PopUpControllerLayer {
   private RepoAgent: IRepositoryAgent;
   private SettingsAgent: ISettingsAgent;
-  private PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
+  private PopUpMessageBrokerAgent: MessageBroker_PopUp;
   private Logger: LoggerAgent;
   private commandMan: CommandManager;
   private UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
@@ -66,7 +66,7 @@ class PopUpControllerLayer {
   private InstantiateAgents_Controller() {
     this.ScUrlAgent = new ScUrlAgent(this.Logger, this.BrowserProxy);
     this.ScUrlAgent.Init_ScUrlAgent();
-    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger, this.BrowserProxy, this.SettingsAgent);
+    this.PopUpMessageBrokerAgent = new MessageBroker_PopUp(this.Logger, this.BrowserProxy, this.SettingsAgent);
   }
 
   private async InstantiateManagers_Controller() {
@@ -113,7 +113,7 @@ class PopUpControllerLayer {
     this.Logger.FuncEnd(this.WireEvents_Controller.name);
   }
 
-  OnContentReplyReceivedEventCallBack(dataContentReplyReceivedEvent_Payload: IDataContentReplyReceivedEvent_Payload) {
+  OnContentReplyReceivedEventCallBack(dataContentReplyReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
     this.Logger.FuncStart(this.OnContentReplyReceivedEventCallBack.name);
     if (this.UiLayer) {
       this.UiLayer.OnContentReplyReceived(dataContentReplyReceivedEvent_Payload);

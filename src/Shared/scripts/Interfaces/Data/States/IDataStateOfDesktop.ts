@@ -1,7 +1,7 @@
-﻿import { IDataStateOfDesktopArea } from "./IDataStateOfDesktopArea";
+﻿import { IStateOfDTAreaProxy } from "./IStateOfDTProxy";
 
-export interface IDataStateOfDesktop {
+export interface IDataStateOfDesktopProxy {
   
-  StateOfDTArea: IDataStateOfDesktopArea;
+  StateOfDTAreaProxy: IStateOfDTAreaProxy;
 
 }

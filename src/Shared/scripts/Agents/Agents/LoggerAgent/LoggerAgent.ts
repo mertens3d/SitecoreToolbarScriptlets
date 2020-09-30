@@ -20,6 +20,7 @@ export class LoggerAgent implements ILoggerAgent {
   private HasWriters: boolean;
   Timer: LoggerTimer;
   UseTimeStamp: boolean = true;
+  private MaxDepthBeforeThrow: number = 200;
 
   constructor() {
     this.Timer = new LoggerTimer;
@@ -68,28 +69,21 @@ export class LoggerAgent implements ILoggerAgent {
   //  }
   //}
 
-  IfNullOrUndefinedThrow(title: string, testSubject: any, ): boolean
-  IfNullOrUndefinedThrow(title: string, testSubject: any[] ): boolean
-  IfNullOrUndefinedThrow(title: string, testSubject: any | any[]): boolean {
-    let toReturn: boolean = false;
+  ThrowIfNullOrUndefined(title: string, testSubject: any,): void
+  ThrowIfNullOrUndefined(title: string, testSubject: any[]): void
+  ThrowIfNullOrUndefined(title: string, testSubject: any | any[]): void {
     try {
       if (testSubject instanceof Array) {
-        (<any[]>testSubject).forEach((testSubject: any) => toReturn = toReturn || this.IfNullOrUndefinedThrow(testSubject, title));
+        (<any[]>testSubject).forEach((testSubject: any) => this.ThrowIfNullOrUndefined(title, testSubject));
       } else {
-        toReturn = (typeof testSubject === 'undefined' || testSubject === null);
+        if (typeof testSubject === 'undefined' || testSubject === null) {
+          this.ErrorAndThrow(title, 'Failed Null check');
+        }
       }
     } catch (err) {
       console.log(err)
     }
-
-    if (toReturn) {
-      this.ErrorAndThrow(title, 'Failed Null check');
-    }
-
-    return toReturn;
   }
-
-
 
   IsNotNullOrUndefinedBool(title, subject): boolean {
     var toReturn: boolean = false;
@@ -252,6 +246,9 @@ export class LoggerAgent implements ILoggerAgent {
     }
     this.Log(textOrFunc, '', true);
     this.__callDepth++;
+    if (this.__callDepth > this.MaxDepthBeforeThrow) {
+      throw ('Logger - Max Depth Exceeded: ' + this.__callDepth);
+    }
   }
 
   CTORStart(text: string): void {
@@ -307,11 +304,11 @@ export class LoggerAgent implements ILoggerAgent {
     });
 
     this.Log('');
-    this.Log('\t\t** ERROR ** ' + container);
+    this.Log('\t\ts) ** ERROR ** container: ' + container);
     this.Log('');
-    this.Log('\t\t  ' + text);
+    this.Log('\t\t error message: ' + text);
     this.Log('');
-    this.Log('\t\t** ERROR ** ' + container);
+    this.Log('\t\te)** ERROR container: ** ' + container);
     this.Log('');
   }
 
@@ -340,8 +337,6 @@ export class LoggerAgent implements ILoggerAgent {
       this.LogVal(title, 'Is Not Null');
     }
   }
-
- 
 
   IsNullOrUndefined(subject): string {
     var toReturn = '{unknown}';

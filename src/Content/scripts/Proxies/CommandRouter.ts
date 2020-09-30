@@ -1,6 +1,6 @@
 ﻿import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { ApiCommandPayload, CommandPayloadForInternal } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandHandlerDataForContent";
-import { MsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
@@ -147,14 +147,14 @@ export class CommandRouter extends LoggableBase {
     });
   }
 
-  private ExecuteApiCommand(functionToExecute: Function, msgFlag: MsgFlag): Promise<MsgContentToController> {
+  private ExecuteApiCommand(functionToExecute: Function, msgFlag: MsgFlag): Promise<DefaultMsgContentToController> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteApiCommand.name);
       if (functionToExecute) {
         let commandData = this.BuildScProxyPayload();
 
         await functionToExecute.bind(this)(commandData)
-          .then((response: MsgContentToController) => resolve(response))
+          .then((response: DefaultMsgContentToController) => resolve(response))
           .catch((err) => reject(err));
       } else {
         reject(this.ExecuteApiCommand.name + ' | no functionToExecute');

@@ -1,11 +1,11 @@
-﻿import { IDataStateOfDesktop } from "../../Interfaces/Data/States/IDataStateOfDesktop";
-import { IDataStateOfDesktopArea } from "../../Interfaces/Data/States/IDataStateOfDesktopArea";
+﻿import { IDataStateOfDesktopProxy } from "../../Interfaces/Data/States/IDataStateOfDesktop";
+import { IStateOfDTAreaProxy } from "../../Interfaces/Data/States/IStateOfDTProxy";
 
-export class DefaultStateOfDesktopArea implements IDataStateOfDesktopArea {
-  StateOfDTFrames = [];
-  IndexOfActiveFrame = -1
+export class DefaultStateOfDTAreaProxy implements IStateOfDTAreaProxy {
+  StateOfDTFrameProxies = [];
+  IndexOfActiveDTFrameProxy = -1
 }
 
-export class DefaultStateOfDesktop implements IDataStateOfDesktop {
-  StateOfDTArea: IDataStateOfDesktopArea = new DefaultStateOfDesktopArea();
+export class DefaultStateOfDesktop implements IDataStateOfDesktopProxy {
+  StateOfDTAreaProxy: IStateOfDTAreaProxy = new DefaultStateOfDTAreaProxy();
 }

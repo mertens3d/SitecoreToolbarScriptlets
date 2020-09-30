@@ -2,8 +2,8 @@
 import { SnapShotFlavor } from "../../Enums/SnapShotFlavor";
 import { IDataFriendly } from "../../Interfaces/Data/States/IDataFriendly";
 import { IDataMetaData } from "../../Interfaces/Data/States/IDataMetaData";
-import { IDataStateOfLiveHindSite } from "../../Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IDataStateOfSitecoreWindow } from "../../Interfaces/Data/States/IDataStates";
+import { IStateOfScUiProxy } from "../../Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScWindowProxy } from "../../Interfaces/Data/States/IDataStates";
 import { StaticHelpers } from "../StaticHelpers";
 import { DefaultStateOfDesktop } from "./DefaultStateOfDesktop";
 import { Guid } from "../../Helpers/Guid";
@@ -26,15 +26,15 @@ export class DefaultMetaData implements IDataMetaData {
   WindowType = ScWindowType.Unknown;
 }
 
-export class DefaultScWindowStates implements IDataStateOfSitecoreWindow {
+export class DefaultStateOfScWindowProxy implements IStateOfScWindowProxy {
   StateOfContentEditor = new DefaultStateOfContentEditor;
-  StateOfDesktop = new DefaultStateOfDesktop();
+  StateOfDesktopProxy = new DefaultStateOfDesktop();
 }
-export class DefaultStateOfLiveHindSite implements IDataStateOfLiveHindSite {
+export class DefaultStateOfScUiProxy implements IStateOfScUiProxy {
   Friendly = new DefaultFriendly();
   Meta = new DefaultMetaData();
-  ErrorStack: IError[] = [];
-  StateOfSitecoreWindow: IDataStateOfSitecoreWindow = new DefaultScWindowStates();
+  ErrorStackScUiProxy: IError[] = [];
+  StateOfScWindowProxy: IStateOfScWindowProxy = new DefaultStateOfScWindowProxy();
 
   constructor() {
     this.Meta.TimeStamp = new Date();

@@ -1,12 +1,12 @@
 ﻿import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
-import { IContentMessageBroker } from '../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
+import { IMessageBroker_Content } from '../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 
 export class ContentMessageManager extends LoggableBase {
-  private ContentMessageBroker: IContentMessageBroker;
+  private ContentMessageBroker: IMessageBroker_Content;
   OperationCancelled: any;
 
-  constructor(logger: ILoggerAgent, contentMessageBroker: IContentMessageBroker) {
+  constructor(logger: ILoggerAgent, contentMessageBroker: IMessageBroker_Content) {
     super(logger);
     this.Logger.FuncStart(ContentMessageManager.name);
 

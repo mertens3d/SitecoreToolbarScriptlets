@@ -87,7 +87,8 @@ export class ContentConst {
     Selector: {
       SC: {
         ContentEditor: {
-          ContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
+          ScContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
+          ScContentTreeNode: '.scContentTreeNode',
           RootAnchorNode: '[id=Tree_Node_11111111111111111111111111111111]',
           ScContentTreeContainer: '.scContentTreeContainer',
           scContentTreeNodeIcon: '.scContentTreeNodeIcon',

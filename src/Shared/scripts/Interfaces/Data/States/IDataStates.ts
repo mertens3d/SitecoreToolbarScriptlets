@@ -1,6 +1,6 @@
-﻿import { IDataStateOfDesktop } from './IDataStateOfDesktop';
-import { IDataStateOfContentEditor } from './IDataStateOfContentEditor';
-export interface IDataStateOfSitecoreWindow {
-    StateOfContentEditor: IDataStateOfContentEditor;
-    StateOfDesktop: IDataStateOfDesktop;
+﻿import { IDataStateOfDesktopProxy } from './IDataStateOfDesktop';
+import { IStateOfContentEditorProxy } from './IDataStateOfContentEditor';
+export interface IStateOfScWindowProxy {
+    StateOfContentEditor: IStateOfContentEditorProxy;
+    StateOfDesktopProxy: IDataStateOfDesktopProxy;
 }

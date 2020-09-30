@@ -1,7 +1,7 @@
 ﻿import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataStateOfLiveHindSite } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
@@ -30,7 +30,7 @@ export class RecipeChangeNickName extends _ContentRecipeBase implements ICommand
 
       if (this.CommandParams.TargetSnapShotId) {
         if (this.CommandParams.NewNickname) {
-          var storageMatch: IDataStateOfLiveHindSite;
+          var storageMatch: IStateOfScUiProxy;
 
           storageMatch = this.Dependancies.AtticAgent.GetFromStorageBySnapShotId(this.CommandParams.TargetSnapShotId)
 

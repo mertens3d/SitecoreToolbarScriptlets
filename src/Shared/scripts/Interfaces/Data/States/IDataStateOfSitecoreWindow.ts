@@ -1,10 +1,10 @@
-﻿import { IDataStateOfSitecoreWindow } from './IDataStates';
+﻿import { IStateOfScWindowProxy } from './IDataStates';
 import { IDataFriendly } from "./IDataFriendly";
 import { IDataMetaData } from "./IDataMetaData";
 import { IError } from '../../IError';
-export interface IDataStateOfLiveHindSite {
-    ErrorStack: IError[];
+export interface IStateOfScUiProxy {
+    ErrorStackScUiProxy: IError[];
     Friendly: IDataFriendly;
     Meta: IDataMetaData;
-    StateOfSitecoreWindow: IDataStateOfSitecoreWindow;
+    StateOfScWindowProxy: IStateOfScWindowProxy;
 }

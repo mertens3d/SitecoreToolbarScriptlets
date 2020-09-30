@@ -1,15 +1,16 @@
-﻿import { DefaultStateOfFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfFrame";
+﻿import { DefaultStateOfDTFrameProxy } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfFrame";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
+import { DocumentReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { ReportResultsInitDTFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
+import { IStateOfDTFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
 import { ContentEditorProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ContentEditorProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
 import { IContentEditorProxyMutationEvent_Payload } from "../Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
-import { _BaseFrameProxy } from "./_BaseFrameProxy";
-import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
-import { IDataStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
-import { ReportResultsInitDTFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
-import { InitReportContentEditorProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy";
+import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
+import { _BaseFrameProxy } from "./_BaseFrameProxy";
+import { IStateOfContentEditorProxy } from "../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor";
 
 export class DTFrameProxy extends _BaseFrameProxy {
   public ContentEditorProxy: ContentEditorProxy;
@@ -19,17 +20,28 @@ export class DTFrameProxy extends _BaseFrameProxy {
 
   constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement) {
     super(logger, iframeElem);
+    if (iframeElem) {
+      this.Friendly = 'DTFrameProxy_' + iframeElem.id;
+
+    } else {
+      this.Logger.ErrorAndThrow(DTFrameProxy.name, ' null check');
+    }
   }
 
   async Instantiate_DTFrameProxy(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.Instantiate_DTFrameProxy.name);
+      this.Logger.FuncStart(this.Instantiate_DTFrameProxy.name, this.Friendly);
 
       let recipeBasic = new RecipeBasics(this.Logger);
       this.initReportFrameProxy = new ReportResultsInitDTFrameProxy();
 
-      await recipeBasic.WaitForReadyNABHtmlIframeElement(this.HTMLIframeElement)
-        .then(() => this.ContentEditorProxy = new ContentEditorProxy(this.Logger, this.GetContentDoc()))
+      await recipeBasic.WaitForCompleteNABHtmlIframeElement(this.HTMLIframeElement, this.Friendly)
+        .then((result: ReadyStateNAB) => {
+          if (!result.IsCompleteNAB()) {
+            reject(result.DocumentReadtStateFriendly())
+          }
+        })
+        .then(() => this.ContentEditorProxy = new ContentEditorProxy(this.Logger, this.GetContentDoc(), this.Friendly))
         .then(() => this.ContentEditorProxy.Instantiate_ContentEditorProxy())
         .then(() => {
           this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.Logger);
@@ -40,7 +52,7 @@ export class DTFrameProxy extends _BaseFrameProxy {
         .then(() => resolve())
         .catch((err) => reject(this.Instantiate_DTFrameProxy.name + ' | ' + err));
 
-      this.Logger.FuncEnd(this.Instantiate_DTFrameProxy.name);
+      this.Logger.FuncEnd(this.Instantiate_DTFrameProxy.name, this.Friendly);
     });
   }
 
@@ -51,28 +63,41 @@ export class DTFrameProxy extends _BaseFrameProxy {
     this.Logger.FuncEnd(this.WireEvents_DTFrameProxy.name);
   }
 
-  GetStateOfDTFrame(): IDataStateOfDTFrame {
-    let toReturn: IDataStateOfDTFrame = new DefaultStateOfFrame();
+  GetStateOfDTFrameProxy(): Promise<IStateOfDTFrameProxy>{
 
-    let sourceStyle = this.HTMLIframeElement.style;
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetStateOfDTFrameProxy.name);
 
-    toReturn.Styling = {
-      height: sourceStyle.height,
-      left: sourceStyle.left,
-      position: sourceStyle.position,
-      top: sourceStyle.top,
-      width: sourceStyle.width,
-      zIndex: sourceStyle.zIndex
-    }
+      let stateOfDTFrameProxy: IStateOfDTFrameProxy = new DefaultStateOfDTFrameProxy();
 
-    if (this.ContentEditorProxy) {
-      toReturn.StateOfContentEditor = this.ContentEditorProxy.GetStateOfContentEditor();
-    }
+      let sourceStyle = this.HTMLIframeElement.style;
 
-    return toReturn;
+      stateOfDTFrameProxy.Styling = {
+        height: sourceStyle.height,
+        left: sourceStyle.left,
+        position: sourceStyle.position,
+        top: sourceStyle.top,
+        width: sourceStyle.width,
+        zIndex: sourceStyle.zIndex
+      }
+
+      stateOfDTFrameProxy.ZIndex = this.GetZindexAsInt();
+
+      if (this.ContentEditorProxy) {
+
+        await this.ContentEditorProxy.GetStateOfContentEditorProxy()
+          .then((stateOfContentEditorProxy: IStateOfContentEditorProxy) => stateOfDTFrameProxy.StateOfContentEditorProxy = stateOfContentEditorProxy)
+          .catch((err) => this.GetStateOfDTFrameProxy.name + ' | ' + err);
+        
+      }
+
+      resolve(stateOfDTFrameProxy);
+
+      this.Logger.FuncEnd(this.GetStateOfDTFrameProxy.name);
+    });
   }
 
-  private SetFrameStyling(stateOfDTFrame: IDataStateOfDTFrame) {
+  private SetFrameStyling(stateOfDTFrame: IStateOfDTFrameProxy) {
     this.Logger.FuncStart(this.SetFrameStyling.name);
 
     this.HTMLIframeElement.style.height = stateOfDTFrame.Styling.height;
@@ -85,12 +110,12 @@ export class DTFrameProxy extends _BaseFrameProxy {
     this.Logger.FuncEnd(this.SetFrameStyling.name);
   }
 
-  async SetStateOfDTFrame(stateOfDTFrame: IDataStateOfDTFrame): Promise<void> {
+  async SetStateOfDTFrame(stateOfDTFrame: IStateOfDTFrameProxy): Promise<void> {
     try {
       this.Logger.FuncStart(this.SetStateOfDTFrame.name);
       this.DTFrameProxyMutationEvent_Subject.DisableNotifications();
 
-      await this.ContentEditorProxy.SetStateOfContentEditorAsync(stateOfDTFrame.StateOfContentEditor)
+      await this.ContentEditorProxy.SetStateOfContentEditorAsync(stateOfDTFrame.StateOfContentEditorProxy)
         .then(() => {
           this.SetFrameStyling(stateOfDTFrame)
           this.DTFrameProxyMutationEvent_Subject.EnableNotifications();

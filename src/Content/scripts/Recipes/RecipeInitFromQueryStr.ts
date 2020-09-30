@@ -6,8 +6,8 @@ import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/IComman
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
-import { IDataStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { IDataStateOfLiveHindSite } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 
 export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements ICommandRecipes {
   constructor(logger: ILoggerAgent, commandData: ICommandParams, dependancies: ICommandDependancies) {
@@ -17,12 +17,12 @@ export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements 
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(RecipeSetStateFromMostRecent.name);
-      let dataStorage: IDataStateOfStorageSnapShots = this.Dependancies.AtticAgent.GetStateOfStorageSnapShots();
+      let dataStorage: IStateOfStorageSnapShots = this.Dependancies.AtticAgent.GetStateOfStorageSnapShots();
 
       if (dataStorage) {
         let mostRecentDate: Date = new Date(1970, 1, 1);
 
-        let mostRecent: IDataStateOfLiveHindSite = null;
+        let mostRecent: IStateOfScUiProxy = null;
         dataStorage.SnapShots.forEach((snapShot) => {
           if (snapShot.Meta.TimeStamp > mostRecentDate) {
             mostRecentDate = snapShot.Meta.TimeStamp;

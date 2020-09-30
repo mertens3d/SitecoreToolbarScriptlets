@@ -1,6 +1,6 @@
-﻿import { InitReport_DTAreaProxy } from "./InitResults_DesktopAreaProxy";
+﻿import { InitReport_DTAreaProxy } from "./InitReport_DTAreaProxy";
 
 
 export class InitReport_DesktopProxy {
-  InitReportDesktopAreaProxy: InitReport_DTAreaProxy;
+  InitReport_DTAreaProxy: InitReport_DTAreaProxy;
 }

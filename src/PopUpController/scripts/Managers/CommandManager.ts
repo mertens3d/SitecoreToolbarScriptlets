@@ -4,7 +4,7 @@ import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
 import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket, IHindSiteUiLayer } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
-import { PopUpMessagesBrokerAgent } from '../Agents/PopUpMessagesBrokerAgent';
+import { MessageBroker_PopUp } from '../Agents/PopUpMessagesBrokerAgent';
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { HandlersForInternal } from '../Classes/HandlersForInternal';
 import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
@@ -12,11 +12,11 @@ import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Event
 
 export class CommandManager extends LoggableBase {
   public CommandDefinitionBucket: ICommandDefinitionBucket;
-  private PopUpMsgBroker: PopUpMessagesBrokerAgent;
+  private PopUpMsgBroker: MessageBroker_PopUp;
   private UiLayer: IHindSiteUiLayer;
   HandlersForInternal: HandlersForInternal;
 
-  constructor(logger: ILoggerAgent, popUpMessageBroker: PopUpMessagesBrokerAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiLayer: IHindSiteUiLayer, handlerInternal: HandlersForInternal) {
+  constructor(logger: ILoggerAgent, popUpMessageBroker: MessageBroker_PopUp, commandDefinitionBucket: ICommandDefinitionBucket, uiLayer: IHindSiteUiLayer, handlerInternal: HandlersForInternal) {
     super(logger);
 
     this.CommandDefinitionBucket = commandDefinitionBucket;

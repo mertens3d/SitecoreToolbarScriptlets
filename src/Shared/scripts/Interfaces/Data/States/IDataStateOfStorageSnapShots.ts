@@ -1,8 +1,8 @@
-﻿import { IDataStateOfLiveHindSite } from "./IDataStateOfSitecoreWindow";
+﻿import { IStateOfScUiProxy } from "./IDataStateOfSitecoreWindow";
 
-export interface IDataStateOfStorageSnapShots {
+export interface IStateOfStorageSnapShots {
   CreationDate: Date;
-  SnapShots: IDataStateOfLiveHindSite[];
+  SnapShots: IStateOfScUiProxy[];
   FavoriteCount: number;
   PlainCount: number,
   SnapShotsAutoCount: number;

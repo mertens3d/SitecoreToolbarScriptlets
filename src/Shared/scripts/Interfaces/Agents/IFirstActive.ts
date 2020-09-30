@@ -1,7 +1,7 @@
-﻿import { IDataStateOfScContentTreeNode } from "../Data/States/IDataStateOfScContentTreeNode";
-import { IDataStateOfContentEditor } from "../Data/States/IDataStateOfContentEditor";
+﻿import { IStateOfScContentTreeNodeProxy } from "../Data/States/IDataStateOfScContentTreeNode";
+import { IStateOfContentEditorProxy } from "../Data/States/IDataStateOfContentEditor";
 
 export interface IFirstActive {
-  StateOfContentEditor: IDataStateOfContentEditor,
-  activeTreeNode: IDataStateOfScContentTreeNode
+  StateOfContentEditorProxy: IStateOfContentEditorProxy,
+  activeTreeNode: IStateOfScContentTreeNodeProxy
 }

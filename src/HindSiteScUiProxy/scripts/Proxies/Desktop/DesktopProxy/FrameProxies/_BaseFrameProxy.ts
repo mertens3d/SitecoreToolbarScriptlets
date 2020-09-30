@@ -1,10 +1,13 @@
-import { LoggableBase } from "../../../../../../Shared/scripts/LoggableBase";
-import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
+import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
+import { DocumentReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { FactoryHelper } from "../../../../../../Shared/scripts/Helpers/FactoryHelper";
 import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { LoggableBase } from "../../../../../../Shared/scripts/LoggableBase";
+import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
+import { CommandToExecuteData } from "../../../../../../Content/scripts/Proxies/CommandToExecuteData";
 
 export class _BaseFrameProxy extends LoggableBase {
   Index: number = -1;
@@ -12,14 +15,19 @@ export class _BaseFrameProxy extends LoggableBase {
   Id: GuidData = null;
   DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   Discriminator: string = _BaseFrameProxy.name;
+  RecipeBasics: RecipeBasics;
+  Friendly: string = '{unknown friendly}';
 
   constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement) {
     super(logger);
+    this.Logger.ThrowIfNullOrUndefined(_BaseFrameProxy.name,[iframeElem]);
+
     this.HTMLIframeElement = iframeElem;
     this.Id = Guid.NewRandomGuid();
+    this.RecipeBasics = new RecipeBasics(this.Logger);
   }
 
-  GetZindex(): number {
+  GetZindexAsInt(): number {
     let toReturn: number = -99;
 
     if (this.HTMLIframeElement && this.HTMLIframeElement.style && this.HTMLIframeElement.style.zIndex) {
@@ -28,6 +36,25 @@ export class _BaseFrameProxy extends LoggableBase {
     }
 
     return toReturn;
+  }
+
+  async WaitForCompleteNABFrameProxyOrReject(): Promise<DocumentReadyState> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForCompleteNABFrameProxyOrReject.name, this.Friendly);
+
+      await this.RecipeBasics.WaitForCompleteNABHtmlIframeElement(this.HTMLIframeElement, this.Friendly)
+        .then((result: ReadyStateNAB) => {
+          result.LogDebugValues();
+          if (result.IsCompleteNAB()) {
+            resolve(result.DocumentReadyState());
+          } else {
+            reject(result.DocumentReadtStateFriendly);
+          }
+        })
+        .catch((err) => reject(this.WaitForCompleteNABFrameProxyOrReject.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.WaitForCompleteNABFrameProxyOrReject.name, this.Friendly);
+    });
   }
 
   GetContentDoc(): IDataOneDoc {

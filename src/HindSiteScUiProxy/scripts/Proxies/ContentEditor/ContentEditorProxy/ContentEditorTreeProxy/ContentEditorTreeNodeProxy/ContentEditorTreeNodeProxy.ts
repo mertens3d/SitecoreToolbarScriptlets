@@ -1,20 +1,48 @@
 ﻿import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IDataStateOfScContentTreeNode } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
+import { IStateOfScContentTreeNodeProxy } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
 import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
 import { LoggableBase } from "../../../../../../../Shared/scripts/LoggableBase";
+import { RecipeBasics } from "../../../../../../../Shared/scripts/Classes/RecipeBasics";
+import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
+import { ITreeProxyMutationEvent_Payload } from "../../../../Desktop/DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload";
 
 export class ScContentTreeNodeProxy extends LoggableBase {
   private ScContentTreeNodeDivElem: HTMLDivElement;
+  private RecipeBasics: RecipeBasics;
 
-  constructor(logger: ILoggerAgent, sourceElement: HTMLDivElement)
-  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement)
-  constructor(logger: ILoggerAgent, sourceElement: HTMLAnchorElement)
-  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement) {
+  private LinkNodeElem: HTMLAnchorElement;
+  private glyphElem: HTMLImageElement;
+  private Children: ScContentTreeNodeProxy[];
+  private StateOfScContentTreeNodeProxy: IStateOfScContentTreeNodeProxy = {
+    IsExpanded: false,
+    IsActive: false,
+    FriendlyTreeNode: '',
+    ItemId: null,
+    IconSrc: '',
+    MainIconSrc: '',
+    Children: [],
+    Coord: {
+      LevelIndex: -1,
+      LevelWidth: -1,
+      SiblingIndex: -1
+    }
+  }
+  private HasBeenHarvested: boolean = false;
+  private: number;
+
+  constructor(logger: ILoggerAgent, sourceElement: HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement, level: number, siblingIndex: number, totalSiblings: number)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLAnchorElement, level: number, siblingIndex: number, totalSiblings: number)
+  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number) {
     super(logger);
 
     if (sourceElement) {
+      this.StateOfScContentTreeNodeProxy.Coord.LevelWidth = totalSiblings;
+      this.StateOfScContentTreeNodeProxy.Coord.SiblingIndex = siblingIndex;
+      this.StateOfScContentTreeNodeProxy.Coord.LevelIndex = level;
+
       if (sourceElement.hasAttribute('src')) {
         this.InferFromImageElement(<HTMLImageElement>sourceElement);
       } else if (sourceElement.hasAttribute('href')) {
@@ -26,6 +54,14 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       }
     } else {
       this.Logger.ErrorAndThrow(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
+    }
+
+    this.RecipeBasics = new RecipeBasics(this.Logger);
+  }
+
+  async Instantiate(): Promise<void> {
+    try {
+    } catch (e) {
     }
   }
 
@@ -46,38 +82,108 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       this.ScContentTreeNodeDivElem = <HTMLDivElement>imageElement.parentElement
     }
   }
-  private GetGlyphNodeElem(): HTMLImageElement {
-    return <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector(":scope > img");
+
+  private async GetGlyphNodeElem(): Promise<HTMLImageElement> {
+    return new Promise(async (resolve, reject) => {
+      await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.ScContentTreeNodeDivElem, ":scope > img", this.GetGlyphNodeElem.name)
+        .then((htmlElement: HTMLImageElement) => {
+          resolve(htmlElement)
+        })
+        .catch((err) => {
+          reject(this.GetGlyphNodeElem.name + ' | ' + err)
+        });
+    })
   }
-  private GetLinkNodeElem(): HTMLElement {
 
-    let toReturn: HTMLElement = this.ScContentTreeNodeDivElem.querySelector(":scope > a");
-
-    if (!toReturn) {
-      this.Logger.ErrorAndContinue(this.GetGlyphNodeElem.name, 'Did not get the elem');
-    }
-
+  private Friendly(): string {
+    let toReturn = 'lvl: ' + this.StateOfScContentTreeNodeProxy.Coord.LevelIndex + ' Sib idx: ' + this.StateOfScContentTreeNodeProxy.Coord.SiblingIndex + ' tot sib: ' + this.StateOfScContentTreeNodeProxy.Coord.LevelWidth;
     return toReturn;
   }
 
-  GetStateOfScContentTreeNode(): IDataStateOfScContentTreeNode {
-    var newData: IDataStateOfScContentTreeNode = {
-      IsExpanded: this.QueryIsExpanded(),
-      IsActive: this.QueryIsActive(),
-      FriendlyTreeNode: this.GetNodeLinkText(),
-      ItemId: this.GetApparentItemId(),
-    };
-
-    return newData;
+  private async GetLinkNodeElem(): Promise<HTMLAnchorElement> {
+    return new Promise(async (resolve, reject) => {
+      await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.ScContentTreeNodeDivElem, ":scope > a", this.Friendly())
+        .then((htmlAnchorElement: HTMLAnchorElement) => {
+          resolve(htmlAnchorElement)
+        })
+        .catch((err) => {
+          reject(this.GetGlyphNodeElem.name + ' | ' + err)
+        });
+    });
   }
 
-  GetApparentItemId(): GuidData {
-    let glyphNodeIdSuffix = this.GetGlyphNodeElem().id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
+  async GetStateOfScContentTreeNode(): Promise<IStateOfScContentTreeNodeProxy> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetStateOfScContentTreeNode.name);
+      let promiseAr: Promise<IStateOfScContentTreeNodeProxy>[] = [];
+      await this.HarvestNodeState()
+        .then(() => {
+          this.Children.forEach((child: ScContentTreeNodeProxy) => promiseAr.push(child.GetStateOfScContentTreeNode()));
+          this.Logger.LogVal('children promiseAr length ', promiseAr.length);
+        })
+        .then(() => Promise.all(promiseAr))
+        .then((result: IStateOfScContentTreeNodeProxy[]) => this.StateOfScContentTreeNodeProxy.Children = result)
+        .then(() => resolve(this.StateOfScContentTreeNodeProxy))
+        .catch((err) => reject(this.GetStateOfScContentTreeNode.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.GetStateOfScContentTreeNode.name);
+    });
+  }
+
+  private async HarvestNodeState(forceRefreshData: boolean = false): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.HarvestNodeState.name, this.Friendly());
+
+      if (!this.HasBeenHarvested || forceRefreshData) {
+        this.glyphElem = null;
+        this.LinkNodeElem = null;
+        this.Children = [],
+
+          await this.GetLinkNodeElem()
+            .then((htmlAnchorElement: HTMLAnchorElement) => {
+              this.Logger.Log('link found');
+              this.LinkNodeElem = htmlAnchorElement
+            })
+            .then(() => this.GetGlyphNodeElem())
+            .then((htmlImageElement: HTMLImageElement) => {
+              this.Logger.Log('glyph found');
+              this.glyphElem = htmlImageElement
+            })
+            .then(() => {
+              this.Logger.ThrowIfNullOrUndefined(this.HarvestNodeState.name, [this.LinkNodeElem, this.glyphElem]);
+
+              this.StateOfScContentTreeNodeProxy.IsActive = this.QueryIsActive(this.LinkNodeElem);
+              this.StateOfScContentTreeNodeProxy.IsExpanded = this.QueryIsExpanded(this.glyphElem);
+              this.StateOfScContentTreeNodeProxy.FriendlyTreeNode = this.GetNodeLinkText(this.LinkNodeElem);
+              this.StateOfScContentTreeNodeProxy.ItemId = this.GetApparentItemId(this.glyphElem);
+              this.StateOfScContentTreeNodeProxy.IconSrc = this.GetIconSrc();
+              this.StateOfScContentTreeNodeProxy.MainIconSrc = this.GetMainIconSrc();
+            })
+            .then(() => this.GetChildren())
+            .then((children: ScContentTreeNodeProxy[]) => {
+              this.Logger.LogVal('received child count', children.length);
+
+              this.Children = children;
+            })
+            //.then(() => this.Logger.LogAsJsonPretty('StateOfScContentTreeNodeProxy', this.StateOfScContentTreeNodeProxy))
+            .then(() => resolve())
+            .catch((err) => {
+              this.Logger.ErrorAndThrow(this.HarvestNodeState.name, err)
+            });
+
+        this.HasBeenHarvested = true;
+        this.Logger.FuncStart(this.HarvestNodeState.name, this.Friendly());
+      };
+    });
+  }
+
+  private GetApparentItemId(htmlImageElement: HTMLImageElement): GuidData {
+    let glyphNodeIdSuffix = htmlImageElement.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
     let toReturnGuidData: GuidData = Guid.ParseGuid(glyphNodeIdSuffix, true);
     return toReturnGuidData;
   }
 
-  GetIconSrc(): string {
+  private GetIconSrc(): string {
     let toReturn: string
     //((document.getElementById('Tree_Node_709C05C504394E1A9D4711E824C87B39')).parentElement).querySelector('.scContentTreeNodeIcon').src
     //((document.getElementById('Tree_Node_EB443C0BF923409E85F3E7893C8C30C2')).parentElement).querySelector('.scContentTreeNodeIcon').outerHTML
@@ -97,33 +203,55 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
     if (candidate) {
       this.Logger.Log('found a candidate');
-      toReturn = new ScContentTreeNodeProxy(this.Logger, candidate);
+      toReturn = new ScContentTreeNodeProxy(this.Logger, candidate, 0, 0, 1);
     } else {
       this.Logger.Log('no candidate found');
     }
     return toReturn;
   }
 
-  IsSitecoreRootNode(): boolean {
-    let toReturn: boolean = false;
+  //IsSitecoreRootNode(): boolean {
+  //  let toReturn: boolean = false;
 
-    let apparentId = this.GetApparentItemId();
-    if (apparentId) {
-      toReturn = apparentId.Raw === ContentConst.Const.ElemId.sc.SitecoreRootApparentIdRaw;
-    }
-    return toReturn;
+  //  let apparentId = this.GetApparentItemId();
+  //  if (apparentId) {
+  //    toReturn = apparentId.Raw === ContentConst.Const.ElemId.sc.SitecoreRootApparentIdRaw;
+  //  }
+  //  return toReturn;
+  //}
+
+  private GetChildren(): Promise<ScContentTreeNodeProxy[]> {
+    return new Promise((resolve, reject) => {
+      try {
+        let toReturn: ScContentTreeNodeProxy[] = [];
+
+        let childNodes = this.ScContentTreeNodeDivElem.querySelectorAll(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
+        childNodes.forEach((childNode: HTMLDivElement, index: number) => {
+          toReturn.push(new ScContentTreeNodeProxy(this.Logger, childNode, this.StateOfScContentTreeNodeProxy.Coord.LevelIndex + 1, index, childNodes.length))
+        });
+
+        this.Logger.LogVal(this.GetChildren.name, toReturn.length.toString());
+        resolve(toReturn);
+      } catch (err) {
+        reject(this.GetChildren.name + ' | ' + err);
+      }
+
+      //let promiseAr: Promise<IStateOfScContentTreeNodeProxy>[];
+
+      //toReturn.forEach((nodeJacket: ScContentTreeNodeProxy) => promiseAr.push(nodeJacket.GetStateOfScContentTreeNode()))
+
+      //Promise.all(promiseAr);
+      //.then((results: IScContentTreeNodeJacket))
+      //let children: HTMLDivElement = this.ScContentTreeNodeDivElem.querySelector(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
+    });
   }
-
-  GetMainIconSrc(): string {
+  private GetMainIconSrc(): string {
     let toReturn: string
-
-    let maxIter: number = 100;
     let penultimateNode: ScContentTreeNodeProxy = this;
-    let parentNode: ScContentTreeNodeProxy = this;
 
     let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
     if (penultimateElem) {
-      penultimateNode = new ScContentTreeNodeProxy(this.Logger, penultimateElem);
+      penultimateNode = new ScContentTreeNodeProxy(this.Logger, penultimateElem, 0, 0, 1);
     }
 
     if (penultimateNode !== null) {
@@ -133,11 +261,10 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     return toReturn;
   }
 
-  SetStateOfTreeNode(newData: IDataStateOfScContentTreeNode) {
+  SetStateOfTreeNode(newData: IStateOfScContentTreeNodeProxy) {
     if (newData.IsExpanded) {
       this.ExpandNode();
     }
-
 
     if (newData.IsActive) {
       var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.ItemId);
@@ -145,7 +272,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector('[id=' + hotTreeNodeId + ']');
 
       if (hotTreeNode) {
-        let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, hotTreeNode);
+        let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, hotTreeNode, 0, 0, 1);
 
         if (hotTreeNodeProxy) {
           hotTreeNodeProxy.ActivateNode()
@@ -158,37 +285,34 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     }
   }
 
-  QueryIsActive(): boolean {
-    var toReturn: boolean = false;
+  private QueryIsActive(linkNodeElem: HTMLElement): boolean {
+    let classList = linkNodeElem.classList;
+    this.Logger.LogAsJsonPretty('htmlElement.classList', linkNodeElem.classList);
 
-    if (this.GetLinkNodeElem()) {
-      var classList = this.GetLinkNodeElem().classList;
-      if (classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive)) {
-        toReturn = true;
-      }
-    }
-
+    let toReturn: boolean = classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive);
     return toReturn;
   }
 
-  ActivateNode(): void {
-    this.Logger.FuncStart(this.ActivateNode.name);
+  async ActivateNode(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.ActivateNode.name);
 
-    if (this.GetLinkNodeElem()) {
-      this.Logger.Log('activating node');
+      await this.HarvestNodeState()
+        .then(() => {
+          this.Logger.Log('activating node');
+          this.LinkNodeElem.click();
+        })
+        // check and reset the data
+        .then(() => this.HarvestNodeState(true))
+        .then(() => {
+          if (!this.StateOfScContentTreeNodeProxy.IsActive) {
+            this.Logger.WarningAndContinue(this.ActivateNode.name, 'Did not work. Trying to activate: ');
+          }
+        })
+        .catch((err) => reject(this.ActivateNode.name + ' | ' + err));
 
-      this.GetLinkNodeElem().click();
-
-      // check
-      if (!this.QueryIsActive()) {
-        // todo - we may need to put a time delay in this
-        this.Logger.WarningAndContinue(this.ActivateNode.name, 'Did not work. Trying to activate: ' + this.GetNodeLinkText());
-      }
-    } else {
-      this.Logger.ErrorAndContinue(this.ActivateNode.name, 'No associated Elem');
-    }
-
-    this.Logger.FuncEnd(this.ActivateNode.name);
+      this.Logger.FuncEnd(this.ActivateNode.name);
+    });
   }
 
   private __collapseNode(element: HTMLElement): void {
@@ -200,21 +324,23 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     }
   }
 
-  ExpandNode(): void {
-    if (!this.QueryIsExpanded()) {
-      this.Logger.Log('clicking it to expand');
-      this.GetGlyphNodeElem().click();
+  async ExpandNode(): Promise<void> {
+    try {
+      await this.HarvestNodeState(true)
+        .then(() => {
+          if (!this.StateOfScContentTreeNodeProxy.IsExpanded) {
+            this.glyphElem.click();
+          }
+        })
+        .catch((err) => this.Logger.ErrorAndThrow(this.ExpandNode.name, err));
+    }
+    catch (err) {
+      this.Logger.ErrorAndThrow(this.ExpandNode.name, err);
     }
   }
 
-  GetNodeLinkText() {
-    var toReturn = 'unknown';
-
-    if (this.GetLinkNodeElem()) {
-      toReturn = this.GetLinkNodeElem().innerText;
-    }
-
-    return toReturn;
+  private GetNodeLinkText(htmlElement: HTMLElement): string {
+    return htmlElement.innerText;
   }
 
   IsContentTreeNode() {
@@ -224,19 +350,14 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     return toReturn;
   }
 
-  QueryIsExpanded() {
+  private QueryIsExpanded(glyphHtmlImageElement: HTMLImageElement): boolean {
     var toReturn: boolean = false;
-    let candidate: HTMLImageElement = this.GetGlyphNodeElem();
-    if (candidate) {
-      var srcAttr = candidate.getAttribute('src');
-      if (srcAttr !== null) {
-        if (srcAttr.indexOf(ContentConst.Const.Names.SC.TreeExpandedPng.sc920) > -1) {
-          toReturn = true;
-        }
-      } else {
-        this.Logger.ErrorAndThrow(this.QueryIsExpanded.name, 'Bad Glyph/ node data');
+    var srcAttr = glyphHtmlImageElement.getAttribute('src');
+    if (srcAttr !== null) {
+      if (srcAttr.indexOf(ContentConst.Const.Names.SC.TreeExpandedPng.sc920) > -1) {
+        toReturn = true;
       }
-      return toReturn;
     }
+    return toReturn;
   }
 }

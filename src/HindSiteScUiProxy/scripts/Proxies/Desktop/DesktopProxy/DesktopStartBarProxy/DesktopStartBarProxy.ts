@@ -6,7 +6,7 @@ import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { DTFrameProxy } from '../FrameProxies/DTFrameProxy';
 import { DesktopProxy } from '../DesktopProxy';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
-import { ITreeMutationEvent_Payload } from '../Events/TreeMutationEvent/ITreeMutationEvent_Payload';
+import { ITreeProxyMutationEvent_Payload } from '../Events/TreeMutationEvent/ITreeMutationEvent_Payload';
 import { TreeMutationEvent_Observer } from '../Events/TreeMutationEvent/TreeMutationEvent_Observer';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { _ApiRecipeBase } from '../../../../ContentApi/Recipes/__RecipeBase/_ApiRecipeBase';
@@ -59,13 +59,13 @@ export class DTStartBarProxy extends LoggableBase {
 
     if (dtframeProxyMutationEvent_Payload) {
       if (dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload && dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload) {
-        let treeMutationEvent_Payload: ITreeMutationEvent_Payload = dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload;
+        let treeMutationEvent_Payload: ITreeProxyMutationEvent_Payload = dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload;
         let dtframeProxy: DTFrameProxy = dtframeProxyMutationEvent_Payload.DTFrameProxy;
 
-        if (treeMutationEvent_Payload.ActiveNode) {
+        if (treeMutationEvent_Payload.StateOfContentEditorTreeProxy.ActiveNodeCoord.SiblingIndex > -1) {
           let desktopStartBarButtonProxy: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(dtframeProxy.HTMLIframeElement.id);
 
-          desktopStartBarButtonProxy.Update(desktopStartBarButtonProxy, treeMutationEvent_Payload.ActiveNode);
+          desktopStartBarButtonProxy.Update(desktopStartBarButtonProxy, treeMutationEvent_Payload.StateOfContentEditorTreeProxy);
         }
         //let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(treeMutationEvent_Payload.AssociatedIframeElemId);
 

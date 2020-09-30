@@ -39,7 +39,12 @@ export class Guid {
     var toReturn: string = '{error}';
 
     if (guidData) {
-      toReturn = guidData.Raw.substr(0, Guid.ShortGuidLength);
+      if (this.IsValidGuidStr(guidData.Raw)) {
+        toReturn = guidData.Raw.substr(0, Guid.ShortGuidLength);
+
+      } else {
+        toReturn = '{error - invalid guid string: ' + guidData.Raw + '}';
+      }
     }
 
     return toReturn;

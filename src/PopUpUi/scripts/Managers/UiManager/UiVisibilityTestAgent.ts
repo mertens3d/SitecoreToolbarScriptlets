@@ -7,8 +7,8 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { VisiblityTestResult } from "../../../../Shared/scripts/Interfaces/Agents/VisiblityTestResult";
-import { IDataStateOfLiveHindSite } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 
@@ -21,7 +21,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
     super(logger);
   }
 
-  Hydrate(stateOfSitecoreWindow: IDataStateOfLiveHindSite, stateOfStorageSnapShots: IDataStateOfStorageSnapShots, windowType: ScWindowType, selectSnapShotId: GuidData) {
+  Hydrate(stateOfSitecoreWindow: IStateOfScUiProxy, stateOfStorageSnapShots: IStateOfStorageSnapShots, windowType: ScWindowType, selectSnapShotId: GuidData) {
     this.Logger.FuncStart(this.Hydrate.name);
     this.StateOfSitecoreWindow = stateOfSitecoreWindow;
     this.SelectedSnapshot = selectSnapShotId;
@@ -53,18 +53,18 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
     return OneResult;
   }
 
-  VisibilityTestSnapShotable(stateOfSitecoreWindow: IDataStateOfLiveHindSite): VisiblityTestResult {
+  VisibilityTestSnapShotable(stateOfSitecoreWindow: IStateOfScUiProxy): VisiblityTestResult {
     //todo may want to be able take snap shots of other window types
 
     return this.VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow) && this.VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfSitecoreWindow);
   }
 
-  VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfLiveHindSite: IDataStateOfLiveHindSite): VisiblityTestResult {
+  VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfLiveHindSite: IStateOfScUiProxy): VisiblityTestResult {
     this.Logger.FuncStart(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
 
     visiblityTestResult.DidItPass = (
-      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && stateOfLiveHindSite.StateOfSitecoreWindow.StateOfDesktop.StateOfDTArea.IndexOfActiveFrame > -1)
+      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && stateOfLiveHindSite.StateOfScWindowProxy.StateOfDesktopProxy.StateOfDTAreaProxy.IndexOfActiveDTFrameProxy > -1)
       ||
       (stateOfLiveHindSite.Meta.WindowType === ScWindowType.ContentEditor));
 
@@ -76,7 +76,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
     return visiblityTestResult;
   }
 
-  VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow: IDataStateOfLiveHindSite): VisiblityTestResult {
+  VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow: IStateOfScUiProxy): VisiblityTestResult {
     this.Logger.FuncStart(this.VisibilityTestDesktopOrContentEditor.name);
 
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestDesktopOrContentEditor.name);
