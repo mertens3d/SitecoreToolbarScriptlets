@@ -5,7 +5,7 @@ import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILogg
 import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { IStateOfScContentTreeNode } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
+import { IStateOfScContentTreeNodeDeep } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
 import { IStateOfContentTree } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
@@ -38,7 +38,7 @@ export class RecipeAutoSaveState extends LoggableBase {
     });
   }
 
-  AreStateOfContentTreeNodesEqual(stateOfScContentTreeNodeA: IStateOfScContentTreeNode, stateOfContentTreeNodeB: IStateOfScContentTreeNode): boolean {
+  AreStateOfContentTreeNodesEqual(stateOfScContentTreeNodeA: IStateOfScContentTreeNodeDeep, stateOfContentTreeNodeB: IStateOfScContentTreeNodeDeep): boolean {
     let toReturn: boolean = true;
     toReturn = toReturn && (((stateOfScContentTreeNodeA === null) === (stateOfContentTreeNodeB === null)));
     if (stateOfScContentTreeNodeA !== null) {

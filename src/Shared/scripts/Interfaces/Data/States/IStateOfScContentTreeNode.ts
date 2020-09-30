@@ -1,13 +1,7 @@
-﻿import { GuidData } from "../../../Helpers/GuidData";
-import { IScContentTreeNodeCoord } from "./IScContentTreeNodeCoord";
+﻿import { IScContentTreeNodeCoord } from "./IScContentTreeNodeCoord";
+import { IStateOfScContentTreeNodeFlat } from "./IStateOfScContentTreeNodeFlat";
 
-export interface IStateOfScContentTreeNode {
-  Children: IStateOfScContentTreeNode[];
+export interface IStateOfScContentTreeNodeDeep extends IStateOfScContentTreeNodeFlat {
   Coord: IScContentTreeNodeCoord;
-  FriendlyTreeNode: string;
-  IconSrc: string;
-  IsActive: Boolean;
-  IsExpanded: Boolean;
-  ItemId: GuidData;
-  MainIconSrc: string;
+  TreeNodeChildren: IStateOfScContentTreeNodeDeep[];
 }

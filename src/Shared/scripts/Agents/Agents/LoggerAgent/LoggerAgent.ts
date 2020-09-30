@@ -144,7 +144,7 @@ export class LoggerAgent implements ILoggerAgent {
 
   LogAsJsonPretty(texValName: string, jsonObj: any) {
     try {
-      this.LogVal(texValName, JSON.stringify(jsonObj, null, 1));
+      this.LogVal(texValName, JSON.stringify(jsonObj, null, 2));
     } catch (err) {
       this.Log('Unable to stringify obj');
     }

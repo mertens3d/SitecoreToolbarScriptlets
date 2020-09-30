@@ -7,7 +7,7 @@ import { InitReportContentEditorProxy } from '../../../../../Shared/scripts/Inte
 import { IContentTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IContentTreeProxy';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
-import { IStateOfScContentTreeNode } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
+import { IStateOfScContentTreeNodeDeep } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../../../Shared/scripts/LoggableBase';
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
@@ -170,12 +170,12 @@ export class ContentEditorProxy extends LoggableBase {
     });
   }
 
-  GetActiveNode(allTreeNodeAr: IStateOfScContentTreeNode[]) {
+  GetActiveNode(allTreeNodeAr: IStateOfScContentTreeNodeDeep[]) {
     this.Logger.FuncStart(this.GetActiveNode.name);
-    let toReturn: IStateOfScContentTreeNode = null;
+    let toReturn: IStateOfScContentTreeNodeDeep = null;
     if (allTreeNodeAr) {
       for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
-        let candidate: IStateOfScContentTreeNode = allTreeNodeAr[idx];
+        let candidate: IStateOfScContentTreeNodeDeep = allTreeNodeAr[idx];
         if (candidate.IsActive) {
           toReturn = candidate;
           break;

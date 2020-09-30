@@ -3,7 +3,7 @@ import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
 import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IStateOfScContentTreeNode } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
+import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
 import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
@@ -51,7 +51,7 @@ export class DesktopStartBarButtonProxy extends LoggableBase {
     this.Logger.FuncStart(this.Update.name);
 
     if (stateOfContentTree.ActiveNodeCoord.SiblingIndex > -1) {
-      let activeNode: IStateOfScContentTreeNode = stateOfContentTree.StateOfScContentTreeNodeProxy[stateOfContentTree.ActiveNodeCoord.SiblingIndex];
+      let activeNode: IStateOfScContentTreeNodeDeep = stateOfContentTree.StateOfScContentTreeNode[stateOfContentTree.ActiveNodeCoord.SiblingIndex];
 
       let itemIconSource: string = activeNode.IconSrc;//    .GetIconSrc();
       let mainIconSrc: string = activeNode.MainIconSrc;//.GetMainIconSrc();

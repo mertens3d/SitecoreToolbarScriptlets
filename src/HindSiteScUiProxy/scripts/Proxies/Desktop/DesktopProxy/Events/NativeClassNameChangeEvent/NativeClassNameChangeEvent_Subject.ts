@@ -1,6 +1,6 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IStateOfScContentTreeNode } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
+import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ScContentTreeNodeProxy";
 import { INativeClassNameChangeEvent_Payload } from "./INativeClassNameChangeEvent_Payload";
 
@@ -45,11 +45,11 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
               MutatedElement: null,
               OwnerContentEditorProxy: null,
               StateOfContentEditorTreeProxy: null,
-              MutatedNodeStateOfScContentTreeNodeProxy: null
+              MutatedNodeStateOfScContentTreeNode: null
             }
 
-            await scContentTreeNodeProxy.GetStateOfScContentTreeNode()
-              .then((stateOfContentTreeNode: IStateOfScContentTreeNode) => {
+            await scContentTreeNodeProxy.GetStateOfScContentTreeNodeDeep()
+              .then((stateOfContentTreeNode: IStateOfScContentTreeNodeDeep) => {
                 this.Logger.LogVal(this.OnNativeMutationEvent.name, stateOfContentTreeNode.FriendlyTreeNode);
 
                 if (stateOfContentTreeNode.IsActive) {
@@ -58,7 +58,7 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
                   //};
                   this.Logger.Log('node is active ' + stateOfContentTreeNode.FriendlyTreeNode)
 
-                  payload.MutatedNodeStateOfScContentTreeNodeProxy = stateOfContentTreeNode
+                  payload.MutatedNodeStateOfScContentTreeNode = stateOfContentTreeNode
 
                   this.NotifyObservers(payload);
                 } else {
