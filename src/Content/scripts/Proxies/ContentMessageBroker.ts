@@ -2,7 +2,6 @@
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { IControllerMessageReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
@@ -10,13 +9,14 @@ import { IMessageBroker_Content } from "../../../Shared/scripts/Interfaces/Agent
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScUrlAgent } from "../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { ICommandRouterParams, IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
+import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
+import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
+import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
+import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
-import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMsgPayload";
 
 export class MessageBroker_Content extends LoggableBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
@@ -138,7 +138,6 @@ export class MessageBroker_Content extends LoggableBase implements IMessageBroke
       await this.CommandRouter.RouteCommand(commandRouterParams)
         .then(() => this.ConstructResponse(messageFromController.MsgFlag))
         .then((response: DefaultMsgContentToController) => {
-          
           resolve(response)
         })
         .catch((err) => reject(this.ReqMsgRouter.name + ' | ' + err));

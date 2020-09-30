@@ -1,6 +1,6 @@
 ﻿import { ScWindowType } from "../../Enums/scWindowType";
 import { IStateOfScUiProxy } from "../Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfStorageSnapShots } from "../Data/States/IDataStateOfStorageSnapShots";
+import { IStateOfStorageSnapShots } from "../Data/States/IStateOfStorageSnapShots";
 import { IMenuCommandDefinition } from "../IMenuCommandDefinition";
 import { VisiblityTestResultsBucket } from "./IUiVisiblityTestResult";
 import { GuidData } from "../../Helpers/GuidData";

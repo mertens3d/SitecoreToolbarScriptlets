@@ -1,17 +1,19 @@
-﻿import { DefaultControllerMessageReceivedEvent_Payload, DefaultMessageContentToController_Payload } from "./Defaults/DefaultScWindowState";
+﻿import { IControllerMessageReceivedEvent_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IMessageContentToController_Payload } from "../Events/ContentReplyReceivedEvent/IMessageContentToController_Payload";
+import { IStateOfScUiProxy } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfContentEditor } from "../Interfaces/Data/States/IStateOfContentEditor";
+import { IStateOfDesktop } from "../Interfaces/Data/States/IStateOfDesktop";
+import { IStateOfDTArea } from "../Interfaces/Data/States/IStateOfDTProxy";
+import { IStateOfScWindow } from "../Interfaces/Data/States/IStateOfScWindow";
+import { LoggableBase } from "../LoggableBase";
+import { DefaultControllerMessageReceivedEvent_Payload } from "./Defaults/DefaultControllerMessageReceivedEvent_Payload";
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
 import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
-import { DefaultStateOfScUiProxy, DefaultStateOfScWindowProxy } from "./Defaults/DefaultStateOfSitecoreWindow";
+import { DefaultStateOfScUiProxy } from "./Defaults/DefaultStateOfScUiProxy";
+import { DefaultStateOfScWindowProxy } from "./Defaults/DefaultStateOfScWindowProxy";
 import { DefaultStateOfStorageSnapshots } from "./Defaults/DefaultStateOfSnapshots";
-import { DefaultStateOfContentEditorTreeProxy } from "./Defaults/DefaultStateOfTree";
-import { IStateOfContentEditorProxy } from "../Interfaces/Data/States/IDataStateOfContentEditor";
-import { IDataStateOfDesktopProxy } from "../Interfaces/Data/States/IDataStateOfDesktop";
-import { IStateOfScUiProxy } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfStorageSnapShots } from "../Interfaces/Data/States/IDataStateOfStorageSnapShots";
-import { IStateOfScWindowProxy } from "../Interfaces/Data/States/IDataStates";
-import { LoggableBase } from "../LoggableBase";
-import { IControllerMessageReceivedEvent_Payload, IMessageContentToController_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { IStateOfDTAreaProxy } from "../Interfaces/Data/States/IStateOfDTProxy";
+import { DefaultStateOfContentTree } from "./Defaults/DefaultStateOfContentTree";
+import { IStateOfStorageSnapShots } from "../Interfaces/Data/States/IStateOfStorageSnapShots";
 
 export class ControllerMessageReceivedEventValidator extends LoggableBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {
@@ -48,40 +50,40 @@ export class ControllerMessageReceivedEventValidator extends LoggableBase {
     return stateOfScUiProxy;
   }
 
-  private ValidateStateOfScWindowProxy(stateOfScWindowProxy: IStateOfScWindowProxy): IStateOfScWindowProxy {
+  private ValidateStateOfScWindowProxy(stateOfScWindowProxy: IStateOfScWindow): IStateOfScWindow {
     if (!stateOfScWindowProxy) {
       stateOfScWindowProxy = new DefaultStateOfScWindowProxy();
     }
-    stateOfScWindowProxy.StateOfDesktopProxy = this.ValidateStateOfDesktopProxy(stateOfScWindowProxy.StateOfDesktopProxy);
+    stateOfScWindowProxy.StateOfDesktop = this.ValidateStateOfDesktopProxy(stateOfScWindowProxy.StateOfDesktop);
     stateOfScWindowProxy.StateOfContentEditor = this.ValidateStateOfContentEditorProxy(stateOfScWindowProxy.StateOfContentEditor);
     return stateOfScWindowProxy;
   }
 
-  private ValidateStateOfContentEditorProxy(StateOfContentEditor: IStateOfContentEditorProxy): IStateOfContentEditorProxy {
+  private ValidateStateOfContentEditorProxy(StateOfContentEditor: IStateOfContentEditor): IStateOfContentEditor {
     if (!StateOfContentEditor) {
       StateOfContentEditor = new DefaultStateOfContentEditor();
     }
-    if (!StateOfContentEditor.StateOfContentEditorTreeProxy) {
-      StateOfContentEditor.StateOfContentEditorTreeProxy = new DefaultStateOfContentEditorTreeProxy();
+    if (!StateOfContentEditor.StateOfContentTree) {
+      StateOfContentEditor.StateOfContentTree = new DefaultStateOfContentTree();
     }
     return StateOfContentEditor;
   }
 
-  private ValidateStateOfDTAreaProxy(stateOfDTAreaProxy: IStateOfDTAreaProxy): IStateOfDTAreaProxy {
+  private ValidateStateOfDTAreaProxy(stateOfDTAreaProxy: IStateOfDTArea): IStateOfDTArea {
     if (stateOfDTAreaProxy.IndexOfActiveDTFrameProxy === null) {
       stateOfDTAreaProxy.IndexOfActiveDTFrameProxy = -1;
     }
-    if (!stateOfDTAreaProxy.StateOfDTFrameProxies) {
-      stateOfDTAreaProxy.StateOfDTFrameProxies = [];
+    if (!stateOfDTAreaProxy.StateOfDTFrames) {
+      stateOfDTAreaProxy.StateOfDTFrames = [];
     }
     return stateOfDTAreaProxy;
   }
 
-  private ValidateStateOfDesktopProxy(StateOfDesktop: IDataStateOfDesktopProxy): IDataStateOfDesktopProxy {
+  private ValidateStateOfDesktopProxy(StateOfDesktop: IStateOfDesktop): IStateOfDesktop {
     if (!StateOfDesktop) {
       StateOfDesktop = new DefaultStateOfDesktop();
     }
-    StateOfDesktop.StateOfDTAreaProxy = this.ValidateStateOfDTAreaProxy(StateOfDesktop.StateOfDTAreaProxy);
+    StateOfDesktop.StateOfDTArea = this.ValidateStateOfDTAreaProxy(StateOfDesktop.StateOfDTArea);
 
     return StateOfDesktop;
   }

@@ -5,12 +5,13 @@ import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
-import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../Shared/scripts/Interfaces/IOneStorageData";
 import { DefaultStateOfStorageSnapshots } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
-import { DefaultFriendly, DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow";
+import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";
+import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
+import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 
 export class ContentAtticAgent implements IContentAtticAgent {
   private RepoAgent: IRepositoryAgent;

@@ -5,11 +5,10 @@ import { SettingFlavor } from "../../Enums/SettingFlavor";
 import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";
 import { IHindSiteSetting } from "./IGenericSetting";
 
-
 export interface ISettingsAgent {
-  GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[];
-  GetByKey(EnableLogging: SettingKey): IHindSiteSetting;
   BooleanSettingChanged(SettingKey: SettingKey, checked: boolean);
+  GetByKey(EnableLogging: SettingKey): IHindSiteSetting;
+  GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[];
   HindSiteSettingsBucket: HindSiteSettingsBucket;
   Init_SettingsAgent(): void;
   NumberSettingChanged(SettingKey: SettingKey, value: number);

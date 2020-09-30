@@ -17,8 +17,4 @@ export class GuidData {
       }
     }
   }
-
-  //FormatJustNumbers(str: string): string {
-  //  return str.replace(SharedConst.Const.Regex.CleanGuid, '');
-  //}
 }

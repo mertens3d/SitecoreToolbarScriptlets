@@ -5,9 +5,7 @@ import { HindsiteEventHandler_Type } from "../../../../Shared/scripts/Events/_Hi
 import { IHindSiteEvent_Observer } from "../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer";
 
 export class ContentReplyReceivedEvent_Observer extends HindSiteEvent_Observer<IControllerMessageReceivedEvent_Payload> implements IHindSiteEvent_Observer<IControllerMessageReceivedEvent_Payload> {
-
   constructor(logger: ILoggerAgent, callback: HindsiteEventHandler_Type) {
     super(logger, ContentReplyReceivedEvent_Observer.name, callback);
   }
-
 }

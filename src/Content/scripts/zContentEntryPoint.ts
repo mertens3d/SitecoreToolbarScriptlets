@@ -28,7 +28,8 @@ import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
 import { MessageBroker_Content } from './Proxies/ContentMessageBroker';
 import { InternalCommandRunner } from "./Proxies/InternalCommandRunner";
 import { MsgFlag } from '../../Shared/scripts/Enums/1xxx-MessageFlag';
-import { IMessageControllerToContent, ICommandRouterParams } from '../../Shared/scripts/Interfaces/IStateOfController';
+import { IMessageControllerToContent } from "../../Shared/scripts/Interfaces/IMessageControllerToContent";
+import { ICommandRouterParams } from "../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
 
 class ContentEntry {

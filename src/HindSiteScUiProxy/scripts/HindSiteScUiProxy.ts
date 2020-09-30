@@ -6,7 +6,7 @@ import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/
 import { IScWindowProxy } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IDataOneDoc } from "../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IStateOfScUiProxy } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IApiCallPayload } from "../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
+import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { LoggableBase } from "../../Shared/scripts/LoggableBase";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
 import { ScWindowProxy } from "./Proxies/ScWindowProxy";

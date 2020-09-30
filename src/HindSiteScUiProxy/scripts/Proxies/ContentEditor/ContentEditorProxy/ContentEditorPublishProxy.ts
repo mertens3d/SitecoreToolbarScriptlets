@@ -1,6 +1,6 @@
 ﻿import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
-import { IApiCallPayload } from "../../../../../Shared/scripts/Interfaces/ICommandHandlerDataForContent";
+import { IApiCallPayload } from "../../../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { _BaseFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";

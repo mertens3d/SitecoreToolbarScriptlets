@@ -1,6 +1,6 @@
 ﻿import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
-import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
-import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMsgPayload";
+import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
+import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 
 export class PopUpBrowserProxy extends LoggableBase implements IPopUpBrowserProxy {

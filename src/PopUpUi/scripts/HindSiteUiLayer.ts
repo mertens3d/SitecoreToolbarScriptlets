@@ -3,7 +3,8 @@ import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgen
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
-import { ICommandDefinitionBucket, IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { ICommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IHindSiteUiLayer";
 import { IStateOfPopUp } from "../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { PopConst } from "../../Shared/scripts/Const/PopConst";
 import { UiCommandsManager } from "./Managers/UiCommandsManager";
@@ -42,6 +43,8 @@ export namespace HindSiteUiLayer {
         if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.ScUrlAgent, this.CommandDefinitionBucket])) {
           this.Logger.ErrorAndThrow(HindSiteUiLayer.name, 'null at constructor');
         }
+
+        //there's something that is not finishing before the htmlbutton is needed
 
         this.Instantiate_Ui();
         this.Init_Ui();

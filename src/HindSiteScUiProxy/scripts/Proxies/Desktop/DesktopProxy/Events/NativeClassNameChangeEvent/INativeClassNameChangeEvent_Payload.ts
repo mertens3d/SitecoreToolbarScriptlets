@@ -1,12 +1,12 @@
-﻿import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentEditorTreeProxy/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
-import { IStateOfContentEditorTreeProxy } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree";
+﻿import { IStateOfContentTree } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
 import { ContentEditorProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { IStateOfScContentTreeNodeProxy } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
+import { IStateOfScContentTreeNode } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
+import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ScContentTreeNodeProxy";
 
 export interface INativeClassNameChangeEvent_Payload {
-  MutatedNodeStateOfScContentTreeNodeProxy: IStateOfScContentTreeNodeProxy;
+  MutatedNodeStateOfScContentTreeNodeProxy: IStateOfScContentTreeNode;
   OwnerContentEditorProxy: ContentEditorProxy;
   ActiveNode: ScContentTreeNodeProxy;
   MutatedElement: HTMLElement;
-  StateOfContentEditorTreeProxy: IStateOfContentEditorTreeProxy;
+  StateOfContentEditorTreeProxy: IStateOfContentTree;
 }

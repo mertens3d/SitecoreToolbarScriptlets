@@ -1,16 +1,12 @@
-﻿import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+﻿import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
+import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { FrameHelper } from '../../../../Helpers/FrameHelper';
 import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
-import { DTFrameProxy } from '../FrameProxies/DTFrameProxy';
-import { DesktopProxy } from '../DesktopProxy';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
-import { ITreeProxyMutationEvent_Payload } from '../Events/TreeMutationEvent/ITreeMutationEvent_Payload';
-import { TreeMutationEvent_Observer } from '../Events/TreeMutationEvent/TreeMutationEvent_Observer';
+import { IContentTreeProxyMutationEvent_Payload } from '../Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
+import { DTFrameProxy } from '../FrameProxies/DTFrameProxy';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
-import { _ApiRecipeBase } from '../../../../ContentApi/Recipes/__RecipeBase/_ApiRecipeBase';
-import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
 
 export class DTStartBarProxy extends LoggableBase {
   private __statBarElem: HTMLElement;
@@ -59,13 +55,13 @@ export class DTStartBarProxy extends LoggableBase {
 
     if (dtframeProxyMutationEvent_Payload) {
       if (dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload && dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload) {
-        let treeMutationEvent_Payload: ITreeProxyMutationEvent_Payload = dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload;
+        let treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = dtframeProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload;
         let dtframeProxy: DTFrameProxy = dtframeProxyMutationEvent_Payload.DTFrameProxy;
 
-        if (treeMutationEvent_Payload.StateOfContentEditorTreeProxy.ActiveNodeCoord.SiblingIndex > -1) {
+        if (treeMutationEvent_Payload.StateOfContentTree.ActiveNodeCoord.SiblingIndex > -1) {
           let desktopStartBarButtonProxy: DesktopStartBarButtonProxy = this.GetAssociatedStartBarButton(dtframeProxy.HTMLIframeElement.id);
 
-          desktopStartBarButtonProxy.Update(desktopStartBarButtonProxy, treeMutationEvent_Payload.StateOfContentEditorTreeProxy);
+          desktopStartBarButtonProxy.Update(desktopStartBarButtonProxy, treeMutationEvent_Payload.StateOfContentTree);
         }
         //let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(treeMutationEvent_Payload.AssociatedIframeElemId);
 

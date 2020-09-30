@@ -1,6 +1,6 @@
 ﻿import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { IStateOfScUiProxy } from "../../Data/States/IDataStateOfSitecoreWindow";
-import { IApiCallPayload } from "../../ICommandHandlerDataForContent";
+import { IApiCallPayload } from "../../IApiCallPayload";
 
 export interface IHindSiteScUiProxy {
   GetStateOfScUiProxyWindow(Manual: SnapShotFlavor);

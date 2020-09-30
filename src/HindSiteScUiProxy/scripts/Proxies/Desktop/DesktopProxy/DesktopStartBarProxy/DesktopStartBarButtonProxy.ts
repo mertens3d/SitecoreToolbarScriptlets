@@ -1,14 +1,12 @@
-﻿import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
-import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { DTStartBarProxy } from './DesktopStartBarProxy';
-import { ScContentTreeNodeProxy } from '../../../ContentEditor/ContentEditorProxy/ContentEditorTreeProxy/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy';
-import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
+﻿import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
+import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IStateOfScContentTreeNodeProxy } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode';
-import { IStateOfContentEditorTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree';
+import { IStateOfScContentTreeNode } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
+import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
+import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
+import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 
 export class DesktopStartBarButtonProxy extends LoggableBase {
   private StartBarButtonElemId: string;
@@ -49,11 +47,11 @@ export class DesktopStartBarButtonProxy extends LoggableBase {
     return newItemIconNode;
   }
 
-  Update(targetButton: DesktopStartBarButtonProxy, stateOfContentEditorTreeProxy: IStateOfContentEditorTreeProxy) {
+  Update(targetButton: DesktopStartBarButtonProxy, stateOfContentTree: IStateOfContentTree) {
     this.Logger.FuncStart(this.Update.name);
 
-    if (stateOfContentEditorTreeProxy.ActiveNodeCoord.SiblingIndex > -1) {
-      let activeNode: IStateOfScContentTreeNodeProxy = stateOfContentEditorTreeProxy.StateOfTreeNodes[stateOfContentEditorTreeProxy.ActiveNodeCoord.SiblingIndex];
+    if (stateOfContentTree.ActiveNodeCoord.SiblingIndex > -1) {
+      let activeNode: IStateOfScContentTreeNode = stateOfContentTree.StateOfScContentTreeNodeProxy[stateOfContentTree.ActiveNodeCoord.SiblingIndex];
 
       let itemIconSource: string = activeNode.IconSrc;//    .GetIconSrc();
       let mainIconSrc: string = activeNode.MainIconSrc;//.GetMainIconSrc();

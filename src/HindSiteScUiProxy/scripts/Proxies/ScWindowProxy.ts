@@ -1,4 +1,7 @@
-﻿import { DefaultFriendly, DefaultMetaData, DefaultStateOfScUiProxy, DefaultStateOfScWindowProxy } from '../../../Shared/scripts/Classes/Defaults/DefaultStateOfSitecoreWindow';
+﻿import { DefaultStateOfScUiProxy } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScUiProxy";
+import { DefaultStateOfScWindowProxy } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScWindowProxy";
+import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";
+import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
 import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
@@ -13,10 +16,10 @@ import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISetti
 import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IDataFriendly } from '../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
 import { IDataMetaData } from '../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
-import { IStateOfContentEditorProxy } from '../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor';
-import { IDataStateOfDesktopProxy } from '../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop';
+import { IStateOfContentEditor } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
+import { IStateOfDesktop } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop';
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfScWindowProxy } from '../../../Shared/scripts/Interfaces/Data/States/IDataStates';
+import { IStateOfScWindow } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
 import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
@@ -151,20 +154,20 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
     await this.ContentEditorProxy.SetCompactCss();
   }
 
-  private GetStates(): Promise<IStateOfScWindowProxy> {
+  private GetStates(): Promise<IStateOfScWindow> {
     return new Promise(async (resolve, reject) => {
-      let toReturn: IStateOfScWindowProxy = new DefaultStateOfScWindowProxy();
+      let toReturn: IStateOfScWindow = new DefaultStateOfScWindowProxy();
 
       if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
         await this.DesktopProxy.GetStateOfDesktop()
-          .then((result: IDataStateOfDesktopProxy) => toReturn.StateOfDesktopProxy = result)
+          .then((result: IStateOfDesktop) => toReturn.StateOfDesktop = result)
           .then(() => resolve(toReturn))
           .catch((err) => reject(this.GetStates.name + ' | ' + err));
       }
 
       if (this.ScUrlAgent.GetScWindowType() === ScWindowType.ContentEditor) {
         await this.ContentEditorProxy.GetStateOfContentEditorProxy()
-          .then((stateOfContentEditorProxy: IStateOfContentEditorProxy) => toReturn.StateOfContentEditor = stateOfContentEditorProxy)
+          .then((stateOfContentEditorProxy: IStateOfContentEditor) => toReturn.StateOfContentEditor = stateOfContentEditorProxy)
           .then(() => resolve(toReturn))
           .catch((err) => reject(this.GetStates.name + ' | ' + err));
       }
@@ -178,7 +181,7 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
       let toReturnStateOfSitecoreWindow: IStateOfScUiProxy = new DefaultStateOfScUiProxy();
 
       await this.GetStates()
-        .then((dataSitecoreWindowStates: IStateOfScWindowProxy) => toReturnStateOfSitecoreWindow.StateOfScWindowProxy = dataSitecoreWindowStates)
+        .then((dataSitecoreWindowStates: IStateOfScWindow) => toReturnStateOfSitecoreWindow.StateOfScWindowProxy = dataSitecoreWindowStates)
         .then(() => {
           toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor);
           toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(toReturnStateOfSitecoreWindow.Meta)
@@ -195,8 +198,8 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
 
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
-          if (dataToRestore.StateOfScWindowProxy.StateOfDesktopProxy) {
-            await this.DesktopProxy.SetStateOfDesktop(dataToRestore.StateOfScWindowProxy.StateOfDesktopProxy)
+          if (dataToRestore.StateOfScWindowProxy.StateOfDesktop) {
+            await this.DesktopProxy.SetStateOfDesktop(dataToRestore.StateOfScWindowProxy.StateOfDesktop)
               .then(() => resolve())
               .catch((err) => reject(this.SetStateOfScWin.name + ' | ' + err));
           } else {

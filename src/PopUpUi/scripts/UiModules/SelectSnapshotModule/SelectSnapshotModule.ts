@@ -9,7 +9,7 @@ import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IStateOfDTFrameProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
+import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
@@ -210,15 +210,15 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     }
 
     if (data.Meta.WindowType === ScWindowType.Desktop) {
-      if (data.StateOfScWindowProxy && data.StateOfScWindowProxy.StateOfDesktopProxy && (data.StateOfScWindowProxy.StateOfDesktopProxy.StateOfDTAreaProxy.IndexOfActiveDTFrameProxy > -1) && data.StateOfScWindowProxy.StateOfDesktopProxy.StateOfDTAreaProxy.StateOfDTFrameProxies) {
-        let activeFrame: IStateOfDTFrameProxy = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.StateOfScWindowProxy.StateOfDesktopProxy);
-        toReturn.StateOfContentEditorProxy = activeFrame.StateOfContentEditorProxy;
-        toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditorProxy);
+      if (data.StateOfScWindowProxy && data.StateOfScWindowProxy.StateOfDesktop && (data.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.IndexOfActiveDTFrameProxy > -1) && data.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
+        let activeFrame: IStateOfDTFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.StateOfScWindowProxy.StateOfDesktop);
+        toReturn.StateOfContentEditorProxy = activeFrame.StateOfContentEditor;
+        toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);
       } else {
         //this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
       }
     }
-    else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.StateOfScWindowProxy.StateOfContentEditor && data.StateOfScWindowProxy.StateOfContentEditor.StateOfContentEditorTreeProxy) {
+    else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.StateOfScWindowProxy.StateOfContentEditor && data.StateOfScWindowProxy.StateOfContentEditor.StateOfContentTree) {
       toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(toReturn.StateOfContentEditorProxy);
     } else {
       this.Logger.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(data.Meta.WindowType));
@@ -262,8 +262,8 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
 
     let count: string = "";
 
-    if (data.StateOfScWindowProxy.StateOfDesktopProxy.StateOfDTAreaProxy.StateOfDTFrameProxies) {
-      count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.StateOfScWindowProxy.StateOfDesktopProxy.StateOfDTAreaProxy.StateOfDTFrameProxies.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+    if (data.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
+      count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.StateOfDTFrames.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
     }
     toReturn = toReturn + count;
 

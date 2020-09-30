@@ -11,7 +11,7 @@ import { SingleClickEvent_Subject } from "../../Events/SingleClickEvent/SingleCl
 
 export abstract class _base_ButtonModule extends _UiModuleBase {
   abstract ModuleKey: ModuleKey = ModuleKey.Unknown;
-  protected HTMLButtonElement: HTMLButtonElement;
+  HTMLButtonElement: HTMLButtonElement = null;
   protected MenuCommandDefinition: IMenuCommandDefinition;
   protected RefreshData: UiHydrationData;
   public Friendly = this.MenuCommandDefinition ? MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey] : this.ContainerSelector;

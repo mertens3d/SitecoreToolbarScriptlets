@@ -2,14 +2,14 @@
 import { IHindSiteScUiProxy } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IStateOfContentEditorProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor";
-import { IDataStateOfDesktopProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
-import { IStateOfDTFrameProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
-import { IStateOfScContentTreeNodeProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
+import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
+import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
+import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
+import { IStateOfScContentTreeNode } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfContentEditorTreeProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree";
-import { IStateOfScWindowProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStates";
 import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
+import { IStateOfContentTree } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
+import { IStateOfScWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow";
 
 export class RecipeAutoSaveState extends LoggableBase {
   private ScUiProxy: IHindSiteScUiProxy;
@@ -38,25 +38,25 @@ export class RecipeAutoSaveState extends LoggableBase {
     });
   }
 
-  AreStateOfContentTreeNodesEqual(stateOfTreeNodeA: IStateOfScContentTreeNodeProxy, stateOfTreeNodeB: IStateOfScContentTreeNodeProxy): boolean {
+  AreStateOfContentTreeNodesEqual(stateOfScContentTreeNodeA: IStateOfScContentTreeNode, stateOfContentTreeNodeB: IStateOfScContentTreeNode): boolean {
     let toReturn: boolean = true;
-    toReturn = toReturn && (((stateOfTreeNodeA === null) === (stateOfTreeNodeB === null)));
-    if (stateOfTreeNodeA !== null) {
-      toReturn = toReturn && (stateOfTreeNodeA.ItemId.Raw === stateOfTreeNodeB.ItemId.Raw);
-      toReturn = toReturn && (stateOfTreeNodeA.IsActive === stateOfTreeNodeB.IsActive);
-      toReturn = toReturn && (stateOfTreeNodeA.IsExpanded === stateOfTreeNodeB.IsExpanded);
+    toReturn = toReturn && (((stateOfScContentTreeNodeA === null) === (stateOfContentTreeNodeB === null)));
+    if (stateOfScContentTreeNodeA !== null) {
+      toReturn = toReturn && (stateOfScContentTreeNodeA.ItemId.Raw === stateOfContentTreeNodeB.ItemId.Raw);
+      toReturn = toReturn && (stateOfScContentTreeNodeA.IsActive === stateOfContentTreeNodeB.IsActive);
+      toReturn = toReturn && (stateOfScContentTreeNodeA.IsExpanded === stateOfContentTreeNodeB.IsExpanded);
     }
     this.Logger.LogVal(this.AreStateOfContentTreeNodesEqual.name, toReturn);
     return toReturn;
   }
 
-  AreStatesOfTreeEqual(stateOfTreeA: IStateOfContentEditorTreeProxy, stateOfTreeB: IStateOfContentEditorTreeProxy): boolean {
+  AreStatesOfTreeEqual(StateOfContentTreeProxyA: IStateOfContentTree, StateOfContentTreeProxyB: IStateOfContentTree): boolean {
     let toReturn: boolean = true;
 
-    toReturn = toReturn && (((stateOfTreeA === null) === (stateOfTreeB === null)));
+    toReturn = toReturn && (((StateOfContentTreeProxyA === null) === (StateOfContentTreeProxyB === null)));
 
-    if (stateOfTreeA) {
-      toReturn = toReturn && (stateOfTreeA.ActiveNodeCoord.SiblingIndex === stateOfTreeB.ActiveNodeCoord.SiblingIndex);
+    if (StateOfContentTreeProxyA) {
+      toReturn = toReturn && (StateOfContentTreeProxyA.ActiveNodeCoord.SiblingIndex === StateOfContentTreeProxyB.ActiveNodeCoord.SiblingIndex);
 
       //todo - put back
       //for (var idx = 0; idx < stateOfTreeA.StateOfTreeNodes.length; idx++) {
@@ -68,13 +68,13 @@ export class RecipeAutoSaveState extends LoggableBase {
     return toReturn;
   }
 
-  AreStatesOfContentEditorEqual(stateOfContentEditorA: IStateOfContentEditorProxy, stateOfContentEditorB: IStateOfContentEditorProxy): boolean {
+  AreStatesOfContentEditorEqual(stateOfContentEditorA: IStateOfContentEditor, stateOfContentEditorB: IStateOfContentEditor): boolean {
     let toReturn: boolean = true;
 
     toReturn = toReturn && (((stateOfContentEditorA === null) === (stateOfContentEditorB === null)));
 
     if (stateOfContentEditorA) {
-      toReturn = toReturn && this.AreStatesOfTreeEqual(stateOfContentEditorA.StateOfContentEditorTreeProxy, stateOfContentEditorB.StateOfContentEditorTreeProxy);
+      toReturn = toReturn && this.AreStatesOfTreeEqual(stateOfContentEditorA.StateOfContentTree, stateOfContentEditorB.StateOfContentTree);
     }
 
     this.Logger.LogVal(this.AreStatesOfContentEditorEqual.name, toReturn);
@@ -82,14 +82,14 @@ export class RecipeAutoSaveState extends LoggableBase {
     return toReturn;
   }
 
-  AreStatesOfFrameEqual(stateOfFrameA: IStateOfDTFrameProxy, stateOfFrameB: IStateOfDTFrameProxy): boolean {
+  AreStatesOfFrameEqual(stateOfFrameA: IStateOfDTFrame, stateOfFrameB: IStateOfDTFrame): boolean {
     let toReturn: boolean = true;
 
     toReturn = toReturn && (((stateOfFrameA === null) === (stateOfFrameB === null)));
 
     if (stateOfFrameA) {
       toReturn = toReturn && (stateOfFrameA.ZIndex === stateOfFrameB.ZIndex);
-      toReturn = toReturn && this.AreStatesOfContentEditorEqual(stateOfFrameA.StateOfContentEditorProxy, stateOfFrameB.StateOfContentEditorProxy)
+      toReturn = toReturn && this.AreStatesOfContentEditorEqual(stateOfFrameA.StateOfContentEditor, stateOfFrameB.StateOfContentEditor)
     }
     this.Logger.LogVal(this.AreStatesOfFrameEqual.name, toReturn);
     return toReturn;
@@ -109,13 +109,13 @@ export class RecipeAutoSaveState extends LoggableBase {
     return toReturn;
   }
 
-  AreDataSitecoreWindowStatesEqual(stateOfSitecoreWindowA: IStateOfScWindowProxy, stateOfSitecoreWindowB: IStateOfScWindowProxy): boolean {
+  AreDataSitecoreWindowStatesEqual(stateOfSitecoreWindowA: IStateOfScWindow, stateOfSitecoreWindowB: IStateOfScWindow): boolean {
     let toReturn: boolean = true;
 
     toReturn = toReturn && (((stateOfSitecoreWindowA === null) === (stateOfSitecoreWindowB === null)));
 
     if (stateOfSitecoreWindowA !== null) {
-      toReturn = toReturn && this.AreStateOfDesktopTheSame(stateOfSitecoreWindowA.StateOfDesktopProxy, stateOfSitecoreWindowB.StateOfDesktopProxy);
+      toReturn = toReturn && this.AreStateOfDesktopTheSame(stateOfSitecoreWindowA.StateOfDesktop, stateOfSitecoreWindowB.StateOfDesktop);
       toReturn = toReturn && this.AreStatesOfContentEditorEqual(stateOfSitecoreWindowA.StateOfContentEditor, stateOfSitecoreWindowB.StateOfContentEditor);
     }
 
@@ -123,17 +123,17 @@ export class RecipeAutoSaveState extends LoggableBase {
     return toReturn;
   }
 
-  AreStateOfDesktopTheSame(stateOfDesktopA: IDataStateOfDesktopProxy, stateOfDesktopB: IDataStateOfDesktopProxy): boolean {
+  AreStateOfDesktopTheSame(stateOfDesktopA: IStateOfDesktop, stateOfDesktopB: IStateOfDesktop): boolean {
     let toReturn: boolean = true;
 
     //todo - this is a crude comparison and will not cover cases of different order
-    toReturn = stateOfDesktopA.StateOfDTAreaProxy.IndexOfActiveDTFrameProxy === stateOfDesktopB.StateOfDTAreaProxy.IndexOfActiveDTFrameProxy
+    toReturn = stateOfDesktopA.StateOfDTArea.IndexOfActiveDTFrameProxy === stateOfDesktopB.StateOfDTArea.IndexOfActiveDTFrameProxy
 
-    toReturn = toReturn && (stateOfDesktopA.StateOfDTAreaProxy.StateOfDTFrameProxies.length === stateOfDesktopB.StateOfDTAreaProxy.StateOfDTFrameProxies.length);
+    toReturn = toReturn && (stateOfDesktopA.StateOfDTArea.StateOfDTFrames.length === stateOfDesktopB.StateOfDTArea.StateOfDTFrames.length);
 
-    if (toReturn && stateOfDesktopA.StateOfDTAreaProxy.StateOfDTFrameProxies.length > 0) {
+    if (toReturn && stateOfDesktopA.StateOfDTArea.StateOfDTFrames.length > 0) {
       for (var idx = 0; idx < length; idx++) {
-        toReturn = toReturn && this.AreStatesOfFrameEqual(stateOfDesktopA.StateOfDTAreaProxy.StateOfDTFrameProxies[idx], stateOfDesktopB.StateOfDTAreaProxy.StateOfDTFrameProxies[idx]);
+        toReturn = toReturn && this.AreStatesOfFrameEqual(stateOfDesktopA.StateOfDTArea.StateOfDTFrames[idx], stateOfDesktopB.StateOfDTArea.StateOfDTFrames[idx]);
       }
     }
 

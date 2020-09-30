@@ -8,9 +8,9 @@ import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Ag
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { VisiblityTestResult } from "../../../../Shared/scripts/Interfaces/Agents/VisiblityTestResult";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 
 export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibilityTestAgent {
   private StateOfSitecoreWindow: any;
@@ -64,7 +64,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
 
     visiblityTestResult.DidItPass = (
-      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && stateOfLiveHindSite.StateOfScWindowProxy.StateOfDesktopProxy.StateOfDTAreaProxy.IndexOfActiveDTFrameProxy > -1)
+      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && stateOfLiveHindSite.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.IndexOfActiveDTFrameProxy > -1)
       ||
       (stateOfLiveHindSite.Meta.WindowType === ScWindowType.ContentEditor));
 

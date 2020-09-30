@@ -1,10 +1,9 @@
-﻿
-export interface IGenericUrlParts {
-  OriginalRaw: string,
-  FilePath: string,
-  HostAndPort: string;
-  Protocol: string,
+﻿export interface IGenericUrlParts {
   Anchor: string,
-  Parameters: URLSearchParams;
+  FilePath: string,
   HasError: boolean,
+  HostAndPort: string;
+  OriginalRaw: string,
+  Parameters: URLSearchParams;
+  Protocol: string,
 }

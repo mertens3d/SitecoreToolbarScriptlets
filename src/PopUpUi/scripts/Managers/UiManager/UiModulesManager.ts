@@ -14,7 +14,7 @@ import { IUiModule } from '../../../../Shared/scripts/Interfaces/Agents/IUiModul
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots';
+import { IStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots';
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IStateOfUiModules } from "../../../../Shared/scripts/Interfaces/IStateOfUiModules";

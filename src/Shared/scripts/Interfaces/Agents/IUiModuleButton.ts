@@ -2,6 +2,6 @@
 import { IUiModule } from "./IUiModule";
 
 export interface IUiModuleButton extends IUiModule {
-    SingleButtonClickEvent_Subject: SingleClickEvent_Subject;
-
+  HTMLButtonElement: HTMLButtonElement;
+  SingleButtonClickEvent_Subject: SingleClickEvent_Subject;
 }

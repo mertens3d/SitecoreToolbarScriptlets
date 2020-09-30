@@ -6,8 +6,8 @@ import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/IComman
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
-import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 
 export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements ICommandRecipes {
   constructor(logger: ILoggerAgent, commandData: ICommandParams, dependancies: ICommandDependancies) {

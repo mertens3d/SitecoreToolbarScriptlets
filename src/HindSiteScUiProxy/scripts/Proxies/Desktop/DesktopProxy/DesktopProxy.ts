@@ -3,7 +3,7 @@ import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpe
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { InitReport_DesktopProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IDataStateOfDesktopProxy } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
+import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
 import { DTPopUpMenuProxy } from "./DesktopPopUpMenuProxy";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
@@ -11,7 +11,7 @@ import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationE
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { DTAreaProxy } from "./DTAreaProxy";
-import { IStateOfDTAreaProxy } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
+import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 
 export class DesktopProxy extends LoggableBase {
   private DTStartBarProxy: DTStartBarProxy;
@@ -98,14 +98,14 @@ export class DesktopProxy extends LoggableBase {
     return this.AssociatedDoc;
   }
 
-  async GetStateOfDesktop(): Promise<IDataStateOfDesktopProxy> {
+  async GetStateOfDesktop(): Promise<IStateOfDesktop> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetStateOfDesktop.name);
 
-      let toReturnDesktopState: IDataStateOfDesktopProxy = new DefaultStateOfDesktop();
+      let toReturnDesktopState: IStateOfDesktop = new DefaultStateOfDesktop();
 
       await this.DTAreaProxy.GetStateOfDTAreaProxy()
-        .then((stateOfDTAreaProxy: IStateOfDTAreaProxy) => toReturnDesktopState.StateOfDTAreaProxy = stateOfDTAreaProxy)
+        .then((stateOfDTAreaProxy: IStateOfDTArea) => toReturnDesktopState.StateOfDTArea = stateOfDTAreaProxy)
         .then(() => resolve(toReturnDesktopState))
         .catch((err) => reject(this.GetStateOfDesktop.name + ' | ' + err));
 
@@ -113,17 +113,17 @@ export class DesktopProxy extends LoggableBase {
     });
   }
 
-  async SetStateOfDesktop(stateOfDesktop: IDataStateOfDesktopProxy): Promise<void> {
+  async SetStateOfDesktop(stateOfDesktop: IStateOfDesktop): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetStateOfDesktop.name);;
 
       //let promAr: Promise<void>[] = [];
 
-      if (stateOfDesktop && stateOfDesktop.StateOfDTAreaProxy) {
+      if (stateOfDesktop && stateOfDesktop.StateOfDTArea) {
         if (!StaticHelpers.IsNullOrUndefined([this.AssociatedDoc])) {
-          this.DTAreaProxy.AddToIncomingSetStateList(stateOfDesktop.StateOfDTAreaProxy);
+          this.DTAreaProxy.AddToIncomingSetStateList(stateOfDesktop.StateOfDTArea);
 
-          for (var idx = 0; idx < stateOfDesktop.StateOfDTAreaProxy.StateOfDTFrameProxies.length; idx++) {
+          for (var idx = 0; idx < stateOfDesktop.StateOfDTArea.StateOfDTFrames.length; idx++) {
             await this.AddContentEditorAsync()
               .then(() => resolve())
               .catch((err) => reject(err));

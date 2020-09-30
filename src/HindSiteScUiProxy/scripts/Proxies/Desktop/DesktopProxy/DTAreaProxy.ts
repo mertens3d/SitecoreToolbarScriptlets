@@ -1,10 +1,10 @@
-﻿import { DefaultStateOfDTAreaProxy } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
+﻿import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { InitReport_DTAreaProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitReport_DTAreaProxy";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { IStateOfDTAreaProxy } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
-import { IStateOfDTFrameProxy } from "../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
+import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
+import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
 import { FrameHelper } from "../../../Helpers/FrameHelper";
 import { NativeIFrameAddedEvent_Observer } from "./Events/DesktopProxyMutationEvent/NativeIFrameAddedEvent_Observer";
@@ -20,7 +20,7 @@ import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 export class DTAreaProxy extends LoggableBase {
   private FramesBucket: DTFrameProxy[] = [];
   private DTFrameProxyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
-  private IncomingSetStateList: IStateOfDTFrameProxy[] = [];
+  private IncomingSetStateList: IStateOfDTFrame[] = [];
   private AssociatedDoc: IDataOneDoc;
   private NativeIFrameAddedEvent_Subject: NativeIFrameAddedEvent_Subject;
 
@@ -112,7 +112,7 @@ export class DTAreaProxy extends LoggableBase {
 
   private NewFrameStep2_SetStateIfQueued(dtFrameProxy: DTFrameProxy) {
     this.Logger.FuncStart(this.NewFrameStep2_SetStateIfQueued.name);
-    let queuedState: IStateOfDTFrameProxy = this.IncomingSetStateList.shift();
+    let queuedState: IStateOfDTFrame = this.IncomingSetStateList.shift();
     if (queuedState) {
       dtFrameProxy.SetStateOfDTFrame(queuedState)
     } else {
@@ -163,9 +163,9 @@ export class DTAreaProxy extends LoggableBase {
   OnDTFProxyMutationEvent(payload: IDTFrameProxyMutationEvent_Payload) {
   }
 
-  AddToIncomingSetStateList(stateOfFrame: IStateOfDTAreaProxy): void {
+  AddToIncomingSetStateList(stateOfFrame: IStateOfDTArea): void {
     this.Logger.FuncStart(this.AddToIncomingSetStateList.name);
-    stateOfFrame.StateOfDTFrameProxies.forEach((stateOfDTFrame) => this.IncomingSetStateList.push(stateOfDTFrame));
+    stateOfFrame.StateOfDTFrames.forEach((stateOfDTFrame) => this.IncomingSetStateList.push(stateOfDTFrame));
     this.Logger.FuncEnd(this.AddToIncomingSetStateList.name);
   }
 
@@ -187,30 +187,27 @@ export class DTAreaProxy extends LoggableBase {
     return toReturn;
   }
 
-  GetStateOfDTAreaProxy(): Promise<IStateOfDTAreaProxy> {
+  GetStateOfDTAreaProxy(): Promise<IStateOfDTArea> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetStateOfDTAreaProxy.name, this.FramesBucket.length.toString());
-      let toReturn: IStateOfDTAreaProxy = new DefaultStateOfDTAreaProxy();
-
-      let promiseAr: Promise<IStateOfDTFrameProxy>[] = [];
+      let stateOfDTArea: IStateOfDTArea = new DefaultStateOfDTArea();
+      let promiseAr: Promise<IStateOfDTFrame>[] = [];
 
       for (var idx = 0; idx < this.FramesBucket.length; idx++) {
         let dtframeProxy: DTFrameProxy = this.FramesBucket[idx];
-
-        promiseAr.push(dtframeProxy.GetStateOfDTFrameProxy());
-        //.then((stateOfDTFrameProxy: IStateOfDTFrameProxy) => toReturn.StateOfDTFrameProxies.push(stateOfDTFrameProxy))
+        promiseAr.push(dtframeProxy.GetStateOfDTFrame());
       };
 
       await Promise.all(promiseAr)
-        .then((results: IStateOfDTFrameProxy[]) => {
-          results.forEach((stateOfDTFrameProxy: IStateOfDTFrameProxy, index: number) => {
-            toReturn.StateOfDTFrameProxies.push(stateOfDTFrameProxy);
-            if (stateOfDTFrameProxy.ZIndex === 1) {
-              toReturn.IndexOfActiveDTFrameProxy = index;
+        .then((stateOfDTFrames: IStateOfDTFrame[]) => {
+          stateOfDTFrames.forEach((stateOfDTFrame: IStateOfDTFrame, index: number) => {
+            stateOfDTArea.StateOfDTFrames.push(stateOfDTFrame);
+            if (stateOfDTFrame.ZIndex === 1) {
+              stateOfDTArea.IndexOfActiveDTFrameProxy = index;
             }
           })
         })
-        .then(() => resolve(toReturn))
+        .then(() => resolve(stateOfDTArea))
         .catch((err) => reject(this.GetStateOfDTAreaProxy.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.GetStateOfDTAreaProxy.name);

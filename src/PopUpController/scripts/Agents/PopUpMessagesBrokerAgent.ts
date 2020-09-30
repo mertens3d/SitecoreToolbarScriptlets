@@ -4,16 +4,17 @@ import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 import { ContentReplyReceivedEvent_Subject } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
-import { IControllerMessageReceivedEvent_Payload, IMessageContentToController_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IControllerMessageReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IMessageContentToController_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IMessageContentToController_Payload";
 import { IHindSiteSetting } from "../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMsgPayload";
-import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
+import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
+import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
 import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
-import { ControllerMessageReceivedEventValidator } from "../../../Shared/scripts/Classes/MessageControllerMessageReceivedValidator";
+import { ControllerMessageReceivedEventValidator } from "../../../Shared/scripts/Classes/ControllerMessageReceivedEventValidator";
 
 export class MessageBroker_PopUp extends LoggableBase {
   LastKnownContentState: IControllerMessageReceivedEvent_Payload;

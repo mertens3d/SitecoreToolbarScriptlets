@@ -1,6 +1,6 @@
 ﻿import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
-import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
+import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
 
 export class ContentBrowserProxy extends LoggableBase implements IContentBrowserProxy {

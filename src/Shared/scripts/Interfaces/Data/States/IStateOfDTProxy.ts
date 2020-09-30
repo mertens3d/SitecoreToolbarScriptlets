@@ -1,6 +1,6 @@
-﻿import { IStateOfDTFrameProxy } from "./IDataStateOfDTFrame";
+﻿import { IStateOfDTFrame } from "./IStateOfDTFrame";
 
-export interface IStateOfDTAreaProxy {
+export interface IStateOfDTArea {
   IndexOfActiveDTFrameProxy: number;
-  StateOfDTFrameProxies: IStateOfDTFrameProxy[];
+  StateOfDTFrames: IStateOfDTFrame[];
 }

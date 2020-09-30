@@ -1,4 +1,4 @@
-﻿import { IStateOfStorageSnapShots } from "../../Interfaces/Data/States/IDataStateOfStorageSnapShots";
+﻿import { IStateOfStorageSnapShots } from "../../Interfaces/Data/States/IStateOfStorageSnapShots";
 
 export class DefaultStateOfStorageSnapshots implements IStateOfStorageSnapShots {
     CreationDate = new Date(1970);

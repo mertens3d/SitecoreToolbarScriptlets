@@ -19,7 +19,7 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
   Init_Module(): void {
     this.Logger.FuncStart(this.Init_Module.name, TypCommandButtonModule.name)
     this.Init_BaseButtonModule();
-    
+
     this.Logger.FuncEnd(this.Init_Module.name, TypCommandButtonModule.name)
   }
 
@@ -80,7 +80,7 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
       let allresults: VisiblityTestResultsBucket = this.RefreshData.UiVisibilityTestAgent.TestAgainstAllSetControllers(this.MenuCommandDefinition);
 
       this.Logger.LogVal('test count', allresults.TestResults.length);
-      this.SetCommandButtonVisibilityBaseOnResults(allresults);
+      this.SetCommandButtonVisibilityBasedOnResults(allresults);
     } else {
       this.Logger.Log('no placeholder ' + this.Friendly)
     }
@@ -88,35 +88,33 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
     this.Logger.FuncEnd(this.RefreshUi_Module.name, this.Friendly);
   }
 
-  private SetCommandButtonVisibilityBaseOnResults(allresults: VisiblityTestResultsBucket) {
-    this.Logger.FuncStart(this.SetCommandButtonVisibilityBaseOnResults.name, this.Friendly);
+  private SetCommandButtonVisibilityBasedOnResults(allresults: VisiblityTestResultsBucket) {
+    this.Logger.FuncStart(this.SetCommandButtonVisibilityBasedOnResults.name, this.Friendly);
 
     this.Logger.LogAsJsonPretty(this.Friendly, allresults.TestResults);
 
-    if (allresults && this.HTMLButtonElement) {
-      if (!allresults.HasFailures()) {
-        this.HTMLButtonElement.classList.remove('disabled');
-        this.HTMLButtonElement.removeAttribute('disabled');
+    this.Logger.ThrowIfNullOrUndefined(this.SetCommandButtonVisibilityBasedOnResults.name,[allresults, this.HTMLButtonElement]);
 
-        if (this.ElemDivBtnOverlay) {
-          this.ElemDivBtnOverlay.style.display = 'none';
-        }
-      } else {
-        this.HTMLButtonElement.classList.add('disabled');
-        this.HTMLButtonElement.setAttribute('disabled', 'disabled');
+    if (!allresults.HasFailures()) {
+      this.HTMLButtonElement.classList.remove('disabled');
+      this.HTMLButtonElement.removeAttribute('disabled');
 
-        if (this.ElemDivBtnOverlay) {
-          this.ElemDivBtnOverlay.style.display = 'block';
-        }
-
-        if (this.ElemButtonBackText) {
-          this.ElemButtonBackText.innerText = allresults.GetFriendlyFails();
-        }
+      if (this.ElemDivBtnOverlay) {
+        this.ElemDivBtnOverlay.style.display = 'none';
       }
     } else {
-      this.Logger.ErrorAndContinue(this.SetCommandButtonVisibilityBaseOnResults.name, 'targetButton is NULL: ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+      this.HTMLButtonElement.classList.add('disabled');
+      this.HTMLButtonElement.setAttribute('disabled', 'disabled');
+
+      if (this.ElemDivBtnOverlay) {
+        this.ElemDivBtnOverlay.style.display = 'block';
+      }
+
+      if (this.ElemButtonBackText) {
+        this.ElemButtonBackText.innerText = allresults.GetFriendlyFails();
+      }
     }
 
-    this.Logger.FuncEnd(this.SetCommandButtonVisibilityBaseOnResults.name, this.Friendly);
+    this.Logger.FuncEnd(this.SetCommandButtonVisibilityBasedOnResults.name, this.Friendly);
   }
 }

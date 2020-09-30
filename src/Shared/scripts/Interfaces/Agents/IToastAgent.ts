@@ -1,5 +1,4 @@
-﻿import { IDataOneDoc } from "../Data/IDataOneDoc";
-
+﻿
 export interface IToastAgent {
   LowerPerpetualToast(arg0: string);
   OnRaiseToastReq();

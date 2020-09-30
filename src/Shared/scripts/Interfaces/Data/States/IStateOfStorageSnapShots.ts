@@ -2,8 +2,8 @@
 
 export interface IStateOfStorageSnapShots {
   CreationDate: Date;
-  SnapShots: IStateOfScUiProxy[];
   FavoriteCount: number;
   PlainCount: number,
+  SnapShots: IStateOfScUiProxy[];
   SnapShotsAutoCount: number;
 }

@@ -1,10 +1,10 @@
 ﻿import { _BaseFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
 import { IDataOneDoc } from "./IDataOneDoc";
-import { IStateOfContentEditorProxy } from "./States/IDataStateOfContentEditor";
+import { IStateOfContentEditor } from "./States/IStateOfContentEditor";
 
 export interface IDataBucketRestoreDesktop {
   LastChainLinkSuccessful: boolean,
   IFramesbefore: _BaseFrameProxy[],
-  oneTreeState: IStateOfContentEditorProxy,
+  oneTreeState: IStateOfContentEditor,
   targetDoc: IDataOneDoc,
 }

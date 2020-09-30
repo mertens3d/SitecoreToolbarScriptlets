@@ -1,13 +1,14 @@
 ﻿import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IStateOfScContentTreeNodeProxy } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
+import { IStateOfScContentTreeNode } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
 import { LoggableBase } from "../../../../../../../Shared/scripts/LoggableBase";
 import { RecipeBasics } from "../../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
-import { ITreeProxyMutationEvent_Payload } from "../../../../Desktop/DesktopProxy/Events/TreeMutationEvent/ITreeMutationEvent_Payload";
+import { IContentTreeProxyMutationEvent_Payload } from "../../../../Desktop/DesktopProxy/Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload";
 
+//scContentTreeNode is the name sitecore uses
 export class ScContentTreeNodeProxy extends LoggableBase {
   private ScContentTreeNodeDivElem: HTMLDivElement;
   private RecipeBasics: RecipeBasics;
@@ -15,7 +16,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   private LinkNodeElem: HTMLAnchorElement;
   private glyphElem: HTMLImageElement;
   private Children: ScContentTreeNodeProxy[];
-  private StateOfScContentTreeNodeProxy: IStateOfScContentTreeNodeProxy = {
+  private StateOfScContentTreeNodeProxy: IStateOfScContentTreeNode = {
     IsExpanded: false,
     IsActive: false,
     FriendlyTreeNode: '',
@@ -112,17 +113,17 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     });
   }
 
-  async GetStateOfScContentTreeNode(): Promise<IStateOfScContentTreeNodeProxy> {
+  async GetStateOfScContentTreeNode(): Promise<IStateOfScContentTreeNode> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetStateOfScContentTreeNode.name);
-      let promiseAr: Promise<IStateOfScContentTreeNodeProxy>[] = [];
+      let promiseAr: Promise<IStateOfScContentTreeNode>[] = [];
       await this.HarvestNodeState()
         .then(() => {
           this.Children.forEach((child: ScContentTreeNodeProxy) => promiseAr.push(child.GetStateOfScContentTreeNode()));
           this.Logger.LogVal('children promiseAr length ', promiseAr.length);
         })
         .then(() => Promise.all(promiseAr))
-        .then((result: IStateOfScContentTreeNodeProxy[]) => this.StateOfScContentTreeNodeProxy.Children = result)
+        .then((result: IStateOfScContentTreeNode[]) => this.StateOfScContentTreeNodeProxy.Children = result)
         .then(() => resolve(this.StateOfScContentTreeNodeProxy))
         .catch((err) => reject(this.GetStateOfScContentTreeNode.name + ' | ' + err));
 
@@ -261,7 +262,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     return toReturn;
   }
 
-  SetStateOfTreeNode(newData: IStateOfScContentTreeNodeProxy) {
+  SetStateOfTreeNode(newData: IStateOfScContentTreeNode) {
     if (newData.IsExpanded) {
       this.ExpandNode();
     }

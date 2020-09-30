@@ -1,5 +1,5 @@
-﻿import { IMessageControllerToContent } from "../IStateOfController";
-import { IMessageContentToController } from "../IMsgPayload";
+﻿import { IMessageControllerToContent } from "../IMessageControllerToContent";
+import { IMessageContentToController } from "../IMessageContentToController";
 
 export interface IPopUpBrowserProxy {
   SendMessageAsync_BrowserProxy(messageFromController: IMessageControllerToContent): Promise<IMessageContentToController>;

@@ -1,9 +1,7 @@
-﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentEditorTreeProxy/ContentEditorTreeNodeProxy/ContentEditorTreeNodeProxy";
-import { ITreeProxyMutationEvent_Payload } from "../TreeMutationEvent/ITreeMutationEvent_Payload";
-import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
-import { IStateOfScContentTreeNodeProxy } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
-import { TreeMutationEvent_Subject } from "../TreeMutationEvent/TreeMutationEvent_Subject";
+﻿import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
+import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IStateOfScContentTreeNode } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
+import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ScContentTreeNodeProxy";
 import { INativeClassNameChangeEvent_Payload } from "./INativeClassNameChangeEvent_Payload";
 
 export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<INativeClassNameChangeEvent_Payload> {
@@ -31,7 +29,7 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
   private MakeScContentTreeNodeProxy(mutation: MutationRecord): ScContentTreeNodeProxy {
     let candidateNode: ScContentTreeNodeProxy = null;
     let mutatedAnchorElement: HTMLAnchorElement = <HTMLAnchorElement>(mutation.target);
-    candidateNode = new ScContentTreeNodeProxy(this.Logger, mutatedAnchorElement, 0,0,1);
+    candidateNode = new ScContentTreeNodeProxy(this.Logger, mutatedAnchorElement, 0, 0, 1);
     return candidateNode;
   }
 
@@ -51,25 +49,20 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
             }
 
             await scContentTreeNodeProxy.GetStateOfScContentTreeNode()
-              .then((stateOfScContentTreeNodeProxy: IStateOfScContentTreeNodeProxy) => {
-                this.Logger.LogVal(this.OnNativeMutationEvent.name, stateOfScContentTreeNodeProxy.FriendlyTreeNode);
+              .then((stateOfContentTreeNode: IStateOfScContentTreeNode) => {
+                this.Logger.LogVal(this.OnNativeMutationEvent.name, stateOfContentTreeNode.FriendlyTreeNode);
 
-                if (stateOfScContentTreeNodeProxy.IsActive) {
-                  let treeMutationEvent_Payload: ITreeProxyMutationEvent_Payload = {
-                    //OwnerContentEditorProxy: null,
-                    StateOfContentEditorTreeProxy: null,
-                    //MutatedElement: <HTMLElement>(mutationRecord.target),
-                    //ActiveNode: scContentTreeNodeProxy,
-                    //StateOfScContentTreeNodeProxy: stateOfScContentTreeNodeProxy
-                  };
-                  this.Logger.Log('node is active ' + stateOfScContentTreeNodeProxy.FriendlyTreeNode)
+                if (stateOfContentTreeNode.IsActive) {
+                  //let treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = {
+                  //  StateOfContentTree: null,
+                  //};
+                  this.Logger.Log('node is active ' + stateOfContentTreeNode.FriendlyTreeNode)
 
-                  payload.MutatedNodeStateOfScContentTreeNodeProxy = stateOfScContentTreeNodeProxy
+                  payload.MutatedNodeStateOfScContentTreeNodeProxy = stateOfContentTreeNode
 
                   this.NotifyObservers(payload);
-
                 } else {
-                  this.Logger.Log('node not active ' + stateOfScContentTreeNodeProxy.FriendlyTreeNode)
+                  this.Logger.Log('node not active ' + stateOfContentTreeNode.FriendlyTreeNode)
                 }
               });
           }
