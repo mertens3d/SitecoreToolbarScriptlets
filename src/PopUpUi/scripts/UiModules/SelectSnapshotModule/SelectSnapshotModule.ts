@@ -206,20 +206,20 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   GetFirstDataWithActiveNode(data: IStateOfScUiProxy): IFirstActive {
     let toReturn: IFirstActive = {
       StateOfContentEditorProxy: null,
-      activeTreeNode: null
+      activeTreeNodeFlat: null
     }
 
     if (data.Meta.WindowType === ScWindowType.Desktop) {
-      if (data.StateOfScWindowProxy && data.StateOfScWindowProxy.StateOfDesktop && (data.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.IndexOfActiveDTFrameProxy > -1) && data.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
-        let activeFrame: IStateOfDTFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.StateOfScWindowProxy.StateOfDesktop);
+      if (data.StateOfScWindow && data.StateOfScWindow.StateOfDesktop && (data.StateOfScWindow.StateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1) && data.StateOfScWindow.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
+        let activeFrame: IStateOfDTFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(data.StateOfScWindow.StateOfDesktop);
         toReturn.StateOfContentEditorProxy = activeFrame.StateOfContentEditor;
-        toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);
+        toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);
       } else {
         //this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
       }
     }
-    else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.StateOfScWindowProxy.StateOfContentEditor && data.StateOfScWindowProxy.StateOfContentEditor.StateOfContentTree) {
-      toReturn.activeTreeNode = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(toReturn.StateOfContentEditorProxy);
+    else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.StateOfScWindow.StateOfContentEditor && data.StateOfScWindow.StateOfContentEditor.StateOfContentTree) {
+      toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(toReturn.StateOfContentEditorProxy);
     } else {
       this.Logger.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(data.Meta.WindowType));
     }
@@ -241,8 +241,8 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
 
     let candidateCe: IFirstActive = this.GetFirstDataWithActiveNode(data);
 
-    if (candidateCe && candidateCe.activeTreeNode && candidateCe.activeTreeNode.FriendlyTreeNode) {
-      activeCeNode = candidateCe.activeTreeNode.FriendlyTreeNode.trim();
+    if (candidateCe && candidateCe.activeTreeNodeFlat && candidateCe.activeTreeNodeFlat.Friendly) {
+      activeCeNode = candidateCe.activeTreeNodeFlat.Friendly.trim();
       //todo - put back if (candidateCe.StateOfContentEditorProxy.StateOfContentEditorTreeProxy.StateOfTreeNodes.length >= 2) {
       //  MainSectionNode = candidateCe.StateOfContentEditorProxy.StateOfContentEditorTreeProxy.StateOfTreeNodes[1].FriendlyTreeNode.trim();
       //}
@@ -262,9 +262,18 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
 
     let count: string = "";
 
-    if (data.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
-      count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.StateOfDTFrames.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
-    }
+    if (
+      data
+      &&
+      data.StateOfScWindow
+      &&
+      data.StateOfScWindow.StateOfDesktop
+      &&
+      data.StateOfScWindow.StateOfDesktop.StateOfDTArea
+      &&
+      data.StateOfScWindow.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
+      count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(data.StateOfScWindow.StateOfDesktop.StateOfDTArea.StateOfDTFrames.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+    } 
     toReturn = toReturn + count;
 
     return toReturn;

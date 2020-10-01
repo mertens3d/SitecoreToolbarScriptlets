@@ -181,7 +181,7 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
       let toReturnStateOfSitecoreWindow: IStateOfScUiProxy = new DefaultStateOfScUiProxy();
 
       await this.GetStates()
-        .then((dataSitecoreWindowStates: IStateOfScWindow) => toReturnStateOfSitecoreWindow.StateOfScWindowProxy = dataSitecoreWindowStates)
+        .then((dataSitecoreWindowStates: IStateOfScWindow) => toReturnStateOfSitecoreWindow.StateOfScWindow = dataSitecoreWindowStates)
         .then(() => {
           toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor);
           toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(toReturnStateOfSitecoreWindow.Meta)
@@ -198,8 +198,8 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
 
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
-          if (dataToRestore.StateOfScWindowProxy.StateOfDesktop) {
-            await this.DesktopProxy.SetStateOfDesktop(dataToRestore.StateOfScWindowProxy.StateOfDesktop)
+          if (dataToRestore.StateOfScWindow.StateOfDesktop) {
+            await this.DesktopProxy.SetStateOfDesktop(dataToRestore.StateOfScWindow.StateOfDesktop)
               .then(() => resolve())
               .catch((err) => reject(this.SetStateOfScWin.name + ' | ' + err));
           } else {
@@ -207,7 +207,7 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
           }
         }
         else if (dataToRestore.Meta.WindowType === ScWindowType.ContentEditor) {
-          await this.ContentEditorProxy.SetStateOfContentEditorAsync(dataToRestore.StateOfScWindowProxy.StateOfContentEditor)
+          await this.ContentEditorProxy.SetStateOfContentEditorAsync(dataToRestore.StateOfScWindow.StateOfContentEditor)
             .then(() => resolve())
             .catch((err) => reject(err));
         }

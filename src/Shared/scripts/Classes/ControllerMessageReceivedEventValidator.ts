@@ -46,7 +46,7 @@ export class ControllerMessageReceivedEventValidator extends LoggableBase {
     if (!stateOfScUiProxy) {
       stateOfScUiProxy = new DefaultStateOfScUiProxy();
     }
-    stateOfScUiProxy.StateOfScWindowProxy = this.ValidateStateOfScWindowProxy(stateOfScUiProxy.StateOfScWindowProxy);
+    stateOfScUiProxy.StateOfScWindow = this.ValidateStateOfScWindowProxy(stateOfScUiProxy.StateOfScWindow);
     return stateOfScUiProxy;
   }
 
@@ -70,8 +70,8 @@ export class ControllerMessageReceivedEventValidator extends LoggableBase {
   }
 
   private ValidateStateOfDTAreaProxy(stateOfDTAreaProxy: IStateOfDTArea): IStateOfDTArea {
-    if (stateOfDTAreaProxy.IndexOfActiveDTFrameProxy === null) {
-      stateOfDTAreaProxy.IndexOfActiveDTFrameProxy = -1;
+    if (stateOfDTAreaProxy.ActiveDTFrameIndex === null) {
+      stateOfDTAreaProxy.ActiveDTFrameIndex = -1;
     }
     if (!stateOfDTAreaProxy.StateOfDTFrames) {
       stateOfDTAreaProxy.StateOfDTFrames = [];

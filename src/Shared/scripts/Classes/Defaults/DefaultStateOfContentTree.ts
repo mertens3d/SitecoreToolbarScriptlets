@@ -4,12 +4,12 @@ import { IStateOfContentTree } from "../../Interfaces/Data/States/IStateOfConten
 import { IStateOfScContentTreeNodeFlat } from "../../Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 
 export class DefaultStateOfContentTree implements IStateOfContentTree {
-  StateOfScContentTreeNodeFlat: IStateOfScContentTreeNodeFlat = null;
+  ActiveNodeFlat: IStateOfScContentTreeNodeFlat = null;
 
-  ActiveNodeCoord: IScContentTreeNodeCoord = {
-    LevelIndex: -1,
-    LevelWidth: -1,
-    SiblingIndex: -1
-  }
+  //ActiveNodeCoord: IScContentTreeNodeCoord = {
+  //  LevelIndex: -1,
+  //  LevelWidth: -1,
+  //  SiblingIndex: -1
+  //}
   StateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep = null;
 }

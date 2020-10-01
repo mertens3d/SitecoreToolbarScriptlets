@@ -2,5 +2,5 @@
 
 export interface IStateOfScContentTreeNodeDeep extends IStateOfScContentTreeNodeFlat {
 
-  TreeNodeChildren: IStateOfScContentTreeNodeDeep[];
+  NodeChildren: IStateOfScContentTreeNodeDeep[];
 }

@@ -5,11 +5,11 @@ import { IScContentTreeNodeCoord } from "../../Interfaces/Data/States/IScContent
 export class DefaultStateOfScContentTreeNode implements IStateOfScContentTreeNodeDeep {
     IsActive = false;
     IsExpanded = false;
-    FriendlyTreeNode = '';
+    Friendly = '';
     ItemId = new GuidData();
     IconSrc = '';
     MainIconSrc = '';
-    TreeNodeChildren = [];
+    NodeChildren = [];
     Coord: IScContentTreeNodeCoord = {
         LevelWidth: -1,
         SiblingIndex: -1,

@@ -10,7 +10,7 @@ export class DefaultStateOfScUiProxy implements IStateOfScUiProxy {
     Friendly = new DefaultFriendly();
     Meta = new DefaultMetaData();
     ErrorStackScUiProxy: IError[] = [];
-    StateOfScWindowProxy: IStateOfScWindow = new DefaultStateOfScWindowProxy();
+    StateOfScWindow: IStateOfScWindow = new DefaultStateOfScWindowProxy();
 
     constructor() {
         this.Meta.TimeStamp = new Date();

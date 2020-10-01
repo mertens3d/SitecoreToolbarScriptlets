@@ -38,6 +38,7 @@ export class ButtonBasedModulesBucket extends LoggableBase {
 
   public PopulateMenuButtons() {
     this.Logger.FuncStart(this.PopulateMenuButtons.name);
+    this.Logger.ThrowIfNullOrUndefined(this.PopulateMenuButtons.name, [this.CommandDefinitionBucket])
 
     if (this.CommandDefinitionBucket && this.CommandDefinitionBucket.MenuCommandParamsAr) {
       this.CommandDefinitionBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {

@@ -6,5 +6,5 @@ export interface IStateOfScUiProxy {
     ErrorStackScUiProxy: IError[];
     Friendly: IDataFriendly;
     Meta: IDataMetaData;
-    StateOfScWindowProxy: IStateOfScWindow;
+    StateOfScWindow: IStateOfScWindow;
 }

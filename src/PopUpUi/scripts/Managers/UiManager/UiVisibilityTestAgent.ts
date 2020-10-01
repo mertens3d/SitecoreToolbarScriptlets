@@ -64,7 +64,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
 
     visiblityTestResult.DidItPass = (
-      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && stateOfLiveHindSite.StateOfScWindowProxy.StateOfDesktop.StateOfDTArea.IndexOfActiveDTFrameProxy > -1)
+      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && stateOfLiveHindSite.StateOfScWindow.StateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1)
       ||
       (stateOfLiveHindSite.Meta.WindowType === ScWindowType.ContentEditor));
 

@@ -18,44 +18,44 @@ export class UiCommandsManager extends LoggableBase {
   constructor(logger: ILoggerAgent, menuCommandParamsBucket: ICommandDefinitionBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
     super(logger);
 
-    this.Logger.CTORStart(UiCommandsManager.name);
-    this.UiVisibilityTestAgent = uiVisibilityTestAgent;
-    this.MenuCommandParamsBucket = menuCommandParamsBucket;
+    //this.Logger.CTORStart(UiCommandsManager.name);
+    //this.UiVisibilityTestAgent = uiVisibilityTestAgent;
+    //this.MenuCommandParamsBucket = menuCommandParamsBucket;
 
     this.Logger.CTOREnd(UiCommandsManager.name);
   }
 
   Init_ButtonStateManager() {
-    this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
+    //this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
 
-    this.BuildCommandButtons();
+    //this.BuildCommandButtons();
   }
 
   private BuildCommandButtons() {
-    if (this.MenuCommandParamsBucket) {
+    //if (this.MenuCommandParamsBucket) {
 
-      this.MenuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
-        if (menuCommandParams.ModuleKey === ModuleKey.ButtonTypical) {
-          let typeButtonModule = new TypCommandButtonModule(this.Logger, menuCommandParams);
-          this.UiModules.push(typeButtonModule);
-        } else if (menuCommandParams.ModuleKey === ModuleKey.ButtonClose) {
-        }
-      });
-    } else {
-      this.Logger.ErrorAndThrow(this.BuildCommandButtons.name, 'no bucket');
-    }
+    //  this.MenuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
+    //    if (menuCommandParams.ModuleKey === ModuleKey.ButtonTypical) {
+    //      let typeButtonModule = new TypCommandButtonModule(this.Logger, menuCommandParams);
+    //      this.UiModules.push(typeButtonModule);
+    //    } else if (menuCommandParams.ModuleKey === ModuleKey.ButtonClose) {
+    //    }
+    //  });
+    //} else {
+    //  this.Logger.ErrorAndThrow(this.BuildCommandButtons.name, 'no bucket');
+    //}
     
   }
 
   HydrateUi_UICommandManager(refreshData: UiHydrationData): void {
-    this.UiModules.forEach((uiModule) => uiModule.Hydrate(refreshData));
+    //this.UiModules.forEach((uiModule) => uiModule.Hydrate(refreshData));
   }
 
   RefreshUiModuleVisibilityStatus(): void {
-    this.Logger.FuncStart(this.RefreshUiModuleVisibilityStatus.name, this.MenuCommandParamsBucket.MenuCommandParamsAr.length);
+    //this.Logger.FuncStart(this.RefreshUiModuleVisibilityStatus.name, this.MenuCommandParamsBucket.MenuCommandParamsAr.length);
 
-    this.UiModules.forEach((oneButtonModule) => oneButtonModule.RefreshUi_Module());
+    ////this.UiModules.forEach((oneButtonModule) => oneButtonModule.RefreshUi_Module());
 
-    this.Logger.FuncEnd(this.RefreshUiModuleVisibilityStatus.name);
+    //this.Logger.FuncEnd(this.RefreshUiModuleVisibilityStatus.name);
   }
 }

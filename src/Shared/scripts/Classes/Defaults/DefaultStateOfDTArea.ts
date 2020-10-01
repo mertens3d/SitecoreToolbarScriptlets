@@ -2,5 +2,5 @@
 
 export class DefaultStateOfDTArea implements IStateOfDTArea {
     StateOfDTFrames = [];
-    IndexOfActiveDTFrameProxy = -1;
+    ActiveDTFrameIndex = -1;
 }

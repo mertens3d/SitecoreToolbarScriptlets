@@ -189,7 +189,7 @@ export class ContentEditorProxy extends LoggableBase {
       this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
     }
 
-    this.Logger.FuncEnd(this.GetActiveNode.name, toReturn.FriendlyTreeNode);
+    this.Logger.FuncEnd(this.GetActiveNode.name, toReturn.Friendly);
     return toReturn;
   }
 }

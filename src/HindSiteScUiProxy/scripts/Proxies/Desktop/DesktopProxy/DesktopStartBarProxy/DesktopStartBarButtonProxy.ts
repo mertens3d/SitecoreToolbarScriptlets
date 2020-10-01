@@ -67,10 +67,10 @@ export class DesktopStartBarButtonProxy extends LoggableBase {
 
     this.Logger.ThrowIfNullOrUndefined(this.SetStateOfDesktopStartBarButtonAsync.name, [stateOfContentTree]);
 
-    let itemIconSource: string = stateOfContentTree.StateOfScContentTreeNodeFlat.IconSrc;
-    let mainIconSrc: string = stateOfContentTree.StateOfScContentTreeNodeFlat.MainIconSrc;
+    let itemIconSource: string = stateOfContentTree.ActiveNodeFlat.IconSrc;
+    let mainIconSrc: string = stateOfContentTree.ActiveNodeFlat.MainIconSrc;
 
-    let text: string = StaticHelpers.BufferString(stateOfContentTree.StateOfScContentTreeNodeFlat.FriendlyTreeNode, ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
+    let text: string = StaticHelpers.BufferString(stateOfContentTree.ActiveNodeFlat.Friendly, ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
 
     this.Logger.LogVal('iconSrc', itemIconSource);
     this.Logger.LogVal('mainIconSrc', mainIconSrc);

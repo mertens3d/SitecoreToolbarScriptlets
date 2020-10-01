@@ -19,7 +19,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   private Children: ScContentTreeNodeProxy[];
   private StateOfScContentTreeNode: IStateOfScContentTreeNodeDeep = {
     // leave in this order to make it easier to debug when looking at the data in devtools. This is the order it will log out (and maybe store)
-    FriendlyTreeNode: '',
+    Friendly: '',
     IsExpanded: false,
     IsActive: false,
     Coord: {
@@ -30,7 +30,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     ItemId: null,
     IconSrc: '',
     MainIconSrc: '',
-    TreeNodeChildren: [],
+    NodeChildren: [],
   }
   private HasBeenHarvested: boolean = false;
   private: number;
@@ -129,10 +129,10 @@ export class ScContentTreeNodeProxy extends LoggableBase {
         })
         .then(() => Promise.all(stateOfChildrenAr))
         .then((result: IStateOfScContentTreeNodeDeep[]) => {
-          this.StateOfScContentTreeNode.TreeNodeChildren = [];
+          this.StateOfScContentTreeNode.NodeChildren = [];
           result.forEach((stateoOfScContentTreeNodeChild: IStateOfScContentTreeNodeDeep) => {
             if (stateoOfScContentTreeNodeChild.IsActive || stateoOfScContentTreeNodeChild.IsExpanded) {
-              this.StateOfScContentTreeNode.TreeNodeChildren.push(stateoOfScContentTreeNodeChild);
+              this.StateOfScContentTreeNode.NodeChildren.push(stateoOfScContentTreeNodeChild);
             }
           })
         })
@@ -186,7 +186,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
               this.StateOfScContentTreeNode.IsActive = this.QueryIsActive(this.LinkNodeElem);
               this.StateOfScContentTreeNode.IsExpanded = this.QueryIsExpanded(this.glyphElem);
-              this.StateOfScContentTreeNode.FriendlyTreeNode = this.GetNodeLinkText(this.LinkNodeElem);
+              this.StateOfScContentTreeNode.Friendly = this.GetNodeLinkText(this.LinkNodeElem);
               this.StateOfScContentTreeNode.ItemId = this.GetApparentItemId(this.glyphElem);
               this.StateOfScContentTreeNode.IconSrc = this.GetIconSrc();
               this.StateOfScContentTreeNode.MainIconSrc = this.GetMainIconSrc();

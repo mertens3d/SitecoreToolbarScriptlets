@@ -56,7 +56,7 @@ export class RecipeAutoSaveState extends LoggableBase {
     toReturn = toReturn && (((StateOfContentTreeProxyA === null) === (StateOfContentTreeProxyB === null)));
 
     if (StateOfContentTreeProxyA) {
-      toReturn = toReturn && (StateOfContentTreeProxyA.ActiveNodeCoord.SiblingIndex === StateOfContentTreeProxyB.ActiveNodeCoord.SiblingIndex);
+      toReturn = toReturn && (StateOfContentTreeProxyA.ActiveNodeFlat === StateOfContentTreeProxyB.ActiveNodeFlat);
 
       //todo - put back
       //for (var idx = 0; idx < stateOfTreeA.StateOfTreeNodes.length; idx++) {
@@ -102,7 +102,7 @@ export class RecipeAutoSaveState extends LoggableBase {
 
     toReturn = toReturn && (((stateOfSitecoreWindowA === null) === (stateOfSitecoreWindowB === null)));
 
-    toReturn = toReturn && this.AreDataSitecoreWindowStatesEqual(stateOfSitecoreWindowA.StateOfScWindowProxy, stateOfSitecoreWindowB.StateOfScWindowProxy);
+    toReturn = toReturn && this.AreDataSitecoreWindowStatesEqual(stateOfSitecoreWindowA.StateOfScWindow, stateOfSitecoreWindowB.StateOfScWindow);
 
     this.Logger.LogVal(this.AreStateOfSitecoreWindowsEqual.name, toReturn);
     this.Logger.FuncEnd(this.AreDataSitecoreWindowStatesEqual.name);
@@ -127,7 +127,7 @@ export class RecipeAutoSaveState extends LoggableBase {
     let toReturn: boolean = true;
 
     //todo - this is a crude comparison and will not cover cases of different order
-    toReturn = stateOfDesktopA.StateOfDTArea.IndexOfActiveDTFrameProxy === stateOfDesktopB.StateOfDTArea.IndexOfActiveDTFrameProxy
+    toReturn = stateOfDesktopA.StateOfDTArea.ActiveDTFrameIndex === stateOfDesktopB.StateOfDTArea.ActiveDTFrameIndex
 
     toReturn = toReturn && (stateOfDesktopA.StateOfDTArea.StateOfDTFrames.length === stateOfDesktopB.StateOfDTArea.StateOfDTFrames.length);
 

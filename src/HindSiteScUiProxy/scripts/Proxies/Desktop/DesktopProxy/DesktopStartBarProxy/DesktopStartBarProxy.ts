@@ -88,13 +88,13 @@ export class DTStartBarProxy extends LoggableBase {
         &&
         dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.StateOfContentTree
         &&
-        dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.StateOfContentTree.StateOfScContentTreeNodeFlat
+        dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.StateOfContentTree.ActiveNodeFlat
       ) {
         let contentTreeProxyMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload;
 
         //let dtframeProxy: DTFrameProxy = dTAreaProxyMutationEvent_Payload.DTFrameProxy;
 
-        if (contentTreeProxyMutationEvent_Payload.StateOfContentTree.StateOfScContentTreeNodeFlat) {
+        if (contentTreeProxyMutationEvent_Payload.StateOfContentTree.ActiveNodeFlat) {
           this.GetAssociatedStartBarButton(dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload)
             .then((startBarButtonProxy: DesktopStartBarButtonProxy) => startBarButtonProxy.SetStateOfDesktopStartBarButtonAsync(contentTreeProxyMutationEvent_Payload.StateOfContentTree))
             .catch((err) => this.Logger.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, err));

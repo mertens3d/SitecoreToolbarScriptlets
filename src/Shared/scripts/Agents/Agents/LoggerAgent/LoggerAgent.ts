@@ -72,7 +72,7 @@ export class LoggerAgent implements ILoggerAgent {
   ThrowIfNullOrUndefined(title: string, testSubject: any,): void
   ThrowIfNullOrUndefined(title: string, testSubject: any[]): void
   ThrowIfNullOrUndefined(title: string, testSubject: any | any[]): void {
-    try {
+    //try {
       if (testSubject instanceof Array) {
         (<any[]>testSubject).forEach((testSubject: any) => this.ThrowIfNullOrUndefined(title, testSubject));
       } else {
@@ -80,9 +80,9 @@ export class LoggerAgent implements ILoggerAgent {
           this.ErrorAndThrow(title, 'Failed Null check');
         }
       }
-    } catch (err) {
-      console.log(err)
-    }
+    //} catch (err) {
+    //  throw 
+    //}
   }
 
   IsNotNullOrUndefinedBool(title, subject): boolean {

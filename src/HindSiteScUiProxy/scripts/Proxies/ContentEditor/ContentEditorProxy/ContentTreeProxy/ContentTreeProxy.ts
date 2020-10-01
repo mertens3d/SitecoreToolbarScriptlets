@@ -127,7 +127,7 @@ export class ContentTreeProxy extends LoggableBase implements IContentTreeProxy 
   }
 
   async SetStateOfTreeNode_TreeProxy(dataStateOfTreeNode: IStateOfScContentTreeNodeDeep): Promise<void> {
-    this.Logger.FuncStart(this.SetStateOfTreeNode_TreeProxy.name, dataStateOfTreeNode.FriendlyTreeNode);
+    this.Logger.FuncStart(this.SetStateOfTreeNode_TreeProxy.name, dataStateOfTreeNode.Friendly);
 
     try {
       var iterHelper = new IterationDrone(this.Logger, this.SetStateOfTreeNode_TreeProxy.name, true);
@@ -151,7 +151,7 @@ export class ContentTreeProxy extends LoggableBase implements IContentTreeProxy 
 
     this.TreeMutationEvent_Subject.EnableNotifications();
 
-    this.Logger.FuncEnd(this.SetStateOfTreeNode_TreeProxy.name, dataStateOfTreeNode.FriendlyTreeNode);
+    this.Logger.FuncEnd(this.SetStateOfTreeNode_TreeProxy.name, dataStateOfTreeNode.Friendly);
   }
 
   //WalkNodeRecursive(targetNode: HTMLElement, depth: number, itemIndex: number, siblingCount: number): Promise<IStateOfScContentTreeNodeDeep[]> {
@@ -207,7 +207,7 @@ export class ContentTreeProxy extends LoggableBase implements IContentTreeProxy 
     if (stateOfScContentTreeNodeDeep.IsActive) {
       foundNode = stateOfScContentTreeNodeDeep;
     } else {
-      stateOfScContentTreeNodeDeep.TreeNodeChildren.forEach((child: IStateOfScContentTreeNodeDeep) => {
+      stateOfScContentTreeNodeDeep.NodeChildren.forEach((child: IStateOfScContentTreeNodeDeep) => {
         let candidate = this.GetActiveTreeNodeFromAncestorNode(child);
         if (candidate !== null) {
           foundNode = candidate;
@@ -229,8 +229,8 @@ export class ContentTreeProxy extends LoggableBase implements IContentTreeProxy 
         .then(() => {
           let activeNodeFlat: IStateOfScContentTreeNodeFlat = <IStateOfScContentTreeNodeFlat>this.GetActiveTreeNodeFromAncestorNode(stateOfContentTree.StateOfScContentTreeNodeDeep);
           if (activeNodeFlat) {
-            stateOfContentTree.ActiveNodeCoord = activeNodeFlat.Coord;
-            stateOfContentTree.StateOfScContentTreeNodeFlat = activeNodeFlat;
+            //stateOfContentTree.ActiveNodeCoord = activeNodeFlat.Coord;
+            stateOfContentTree.ActiveNodeFlat = activeNodeFlat;
           }
           this.Logger.LogAsJsonPretty('stateOfTreeProxy', stateOfContentTree);
         })

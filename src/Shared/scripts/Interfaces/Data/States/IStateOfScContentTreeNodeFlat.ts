@@ -2,7 +2,7 @@
 import { IScContentTreeNodeCoord } from "./IScContentTreeNodeCoord";
 
 export interface IStateOfScContentTreeNodeFlat {
-  FriendlyTreeNode: string;
+  Friendly: string;
   IconSrc: string;
   IsActive: Boolean;
   IsExpanded: Boolean;

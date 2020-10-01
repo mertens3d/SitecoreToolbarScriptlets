@@ -234,7 +234,7 @@ export class DTAreaProxy extends LoggableBase {
           stateOfDTFrames.forEach((stateOfDTFrame: IStateOfDTFrame, index: number) => {
             stateOfDTArea.StateOfDTFrames.push(stateOfDTFrame);
             if (stateOfDTFrame.ZIndex === 1) {
-              stateOfDTArea.IndexOfActiveDTFrameProxy = index;
+              stateOfDTArea.ActiveDTFrameIndex = index;
             }
           })
         })

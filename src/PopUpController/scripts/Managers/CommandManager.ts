@@ -34,6 +34,7 @@ export class CommandManager extends LoggableBase {
   }
 
   GetMenuCommandParamsByKey(needleCommand: MenuCommandKey): IMenuCommandDefinition {
+    this.Logger.ThrowIfNullOrUndefined(this.GetMenuCommandParamsByKey.name, needleCommand);
     let toReturn: IMenuCommandDefinition = null;
     for (var idx = 0; idx < this.CommandDefinitionBucket.MenuCommandParamsAr.length; idx++) {
       let candidate: IMenuCommandDefinition = this.CommandDefinitionBucket.MenuCommandParamsAr[idx];
