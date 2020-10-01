@@ -5,7 +5,7 @@ import { IStateOfFrameStyling } from "./IStateOfFrameStyling";
 
 export interface IStateOfDTFrame {
   StateOfContentEditor: IStateOfContentEditor;
-  StorageId: GuidData;
+
   StateOfFrameStyling: IStateOfFrameStyling;
   WindowType: ScWindowType;
   ZIndex: number

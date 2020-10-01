@@ -6,7 +6,7 @@ import { Guid } from "../../Helpers/Guid";
 export class DefaultStateOfDTFrame implements IStateOfDTFrame {
     StateOfContentEditor = new DefaultStateOfContentEditor();
     StateOfFrameStyling = null;
-    StorageId = Guid.NewRandomGuid();
+ 
     WindowType: ScWindowType;
     ZIndex: number;
 }

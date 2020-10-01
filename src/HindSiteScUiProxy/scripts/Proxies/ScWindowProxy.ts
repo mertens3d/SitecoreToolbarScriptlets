@@ -183,7 +183,7 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
       await this.GetStates()
         .then((dataSitecoreWindowStates: IStateOfScWindow) => toReturnStateOfSitecoreWindow.StateOfScWindow = dataSitecoreWindowStates)
         .then(() => {
-          toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor);
+          toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor, toReturnStateOfSitecoreWindow.StateOfScWindow);
           toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(toReturnStateOfSitecoreWindow.Meta)
         })
         .then(() => resolve(toReturnStateOfSitecoreWindow))
@@ -234,12 +234,30 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
     return toReturn;
   }
 
-  PopulateMetaData(snapshotFlavor: SnapShotFlavor): IDataMetaData {
+  private Hash(input: string):number {
+    //https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+    let hash:number = 0;
+    let strLen = input.length;
+    let charCode: number;
+
+    if (strLen !== 0) {
+      for (var idx = 0; idx < strLen; idx++) {
+        charCode = input.charCodeAt(idx);
+        hash = ((hash << 5) - hash) + charCode;
+        hash = hash & hash;
+      }
+    }
+
+    return hash;
+  }
+
+  PopulateMetaData(snapshotFlavor: SnapShotFlavor, stateOfScWindow: IStateOfScWindow): IDataMetaData {
     let toReturn: IDataMetaData = new DefaultMetaData();
     toReturn.WindowType = this.ScUrlAgent.GetScWindowType();
     toReturn.TimeStamp = new Date();
     toReturn.SessionId = this.TabSessionId;
     toReturn.Flavor = snapshotFlavor;
+    toReturn.Hash = this.Hash(JSON.stringify(stateOfScWindow));
     return toReturn;
   }
 }
