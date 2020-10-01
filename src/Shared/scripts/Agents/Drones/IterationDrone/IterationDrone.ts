@@ -32,6 +32,11 @@ export class IterationDrone {
     if (this.CurrentIteration > 0) {
       this.CurrentIteration -= 1;
       this.Timeout += this.Timeout * SharedConst.Const.IterHelper.GrowthPerIteration;
+
+      if (this.Logger.CancelRequestedFlag === true) {
+        this.Logger.ErrorAndThrow('CANCEL REQUESTED', '-----------------------------------');
+      }
+
       if (this.Timeout > SharedConst.Const.IterHelper.Timeouts.Max) {
         this.Timeout = SharedConst.Const.IterHelper.Timeouts.Max;
       }

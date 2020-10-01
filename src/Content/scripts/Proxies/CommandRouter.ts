@@ -69,7 +69,7 @@ export class CommandRouter extends LoggableBase {
       await this.ToastAgent.RaisePerpetualToast('Starting to do something')
     } else if (payload.CommandState == CommandState_State.CommandCompletedSuccessfully) {
       //self.ToastAgent.OnRaiseToastReq().bind(self.ToastAgent))
-      await this.ToastAgent.LowerPerpetualToast('Command completed successfully');
+      //await this.ToastAgent.LowerPerpetualToast('Command completed successfully');
     }
 
     this.Logger.FuncEnd(this.OnCommandStartEndCancelEvent.name);
@@ -91,14 +91,14 @@ export class CommandRouter extends LoggableBase {
           CommandState: CommandState_State.CommandStarted
         }
         let self = this;
-
+        this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payload);
         await commandToExecute.bind(self.InternalCommandRunner)(commandParams, this.Dependancies)
           .then(() => this.Logger.MarkerC())
           .then(() => {
             let payloadComplete: ICommandStartEndCancelEvent_Payload = {
               CommandState: CommandState_State.CommandCompletedSuccessfully
             }
-            //this.CommandTriggeredEvent_Subject.NotifyObservers(payloadComplete);
+            //this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payloadComplete);
           })
           .then(() => this.Logger.MarkerD())
           .then(() => resolve())

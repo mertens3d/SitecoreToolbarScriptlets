@@ -344,45 +344,34 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
   async WaitAndReturnFoundFromContainer(haystackElem: HTMLElement, selector: string, friendly: string): Promise<HTMLElement> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitAndReturnFoundFromContainer.name, friendly);
-
       this.Logger.ThrowIfNullOrUndefined(this.WaitAndReturnFoundFromContainer.name, [haystackElem, selector]);
-
-      this.Logger.LogVal('selector', selector);
-
       var toReturnFoundElem: HTMLElement = null;
-
-      var iterationJr = new IterationDrone(this.Logger, this.WaitAndReturnFoundFromContainer.name + ' : ' + selector + ' ' + friendly, true, 6);
+      var iterationJr = new IterationDrone(this.Logger, this.WaitAndReturnFoundFromContainer.name + ' : ' + selector + ' ' + friendly, true);
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
         toReturnFoundElem = haystackElem.querySelector(selector);
         if (toReturnFoundElem) {
-          this.Logger.Log('found it');
           resolve(toReturnFoundElem)
         } else {
           await iterationJr.Wait();
         }
       }
+
       if (iterationJr.IsExhausted) {
         reject(iterationJr.IsExhaustedMsg);
       }
-      this.Logger.FuncEnd(this.WaitAndReturnFoundFromContainer.name, friendly);
     });
   }
 
   async WaitForAndReturnFoundElem(haystackDoc: IDataOneDoc, selector: string, overrideIterCount = 8): Promise<HTMLElement> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForAndReturnFoundElem.name);
-      this.Logger.LogVal('selector', selector);
-      this.Logger.LogVal('doc nickname', haystackDoc.Nickname);
 
       var toReturnFoundElem: HTMLElement = null;
-
-      var iterationJr = new IterationDrone(this.Logger, this.WaitForAndReturnFoundElem.name, true, overrideIterCount);
+      var iterationJr = new IterationDrone(this.Logger, this.WaitForAndReturnFoundElem.name + ' - ' + selector + ' - ' + haystackDoc.Nickname, true, overrideIterCount);
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
         toReturnFoundElem = haystackDoc.ContentDoc.querySelector(selector);
-
         if (toReturnFoundElem) {
           resolve(toReturnFoundElem)
         } else {

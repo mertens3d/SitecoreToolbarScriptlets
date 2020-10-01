@@ -2,8 +2,11 @@
 import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
 import { SingleClickEvent_Subject } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Subject";
 import { ISingleClickEvent_Payload } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/ISingleClickEvent_Payload";
+import { SingleClickEvent_Observer } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Observer";
+import { IHindSiteScUiProxy } from "../../../Interfaces/Agents/IContentApi/IContentApi";
 
 export class ToastAgent implements IToastAgent {
+
   private Logger: ILoggerAgent;
   private classSlideUp: string = 'slide-up';
   private classSlideDown: string = 'slide-down';
@@ -14,6 +17,7 @@ export class ToastAgent implements IToastAgent {
   private TargetDoc: Document;
   private ButtonElem: HTMLInputElement;
   OnButtonClick_Subject: SingleClickEvent_Subject;
+  OnButtonClick_ObserverTest: SingleClickEvent_Observer;
   FlagTextDiv: HTMLDivElement;
 
   constructor(loggerAgent: ILoggerAgent, targetDoc: Document) {
@@ -121,12 +125,19 @@ export class ToastAgent implements IToastAgent {
     }
   }
 
+  TestCancelCallback() {
+    this.Logger.CancelRequested(); 
+    
+  }
+
   private CreateCancelButton(): void {
     this.ButtonElem = this.TargetDoc.createElement('input');
     this.ButtonElem.type = "button";
     this.ButtonElem.value = "Cancel";
 
     this.OnButtonClick_Subject = new SingleClickEvent_Subject(this.Logger, this.CreateCancelButton.name);
+    this.OnButtonClick_ObserverTest = new SingleClickEvent_Observer(this.Logger, this.TestCancelCallback.bind(this));
+    this.OnButtonClick_Subject.RegisterObserver(this.OnButtonClick_ObserverTest);
     this.ButtonElem.addEventListener('click', (() => {
       let payload: ISingleClickEvent_Payload = {
         HandlerData: null

@@ -18,7 +18,7 @@ import { DefaultStateOfContentTree } from '../../../../../../Shared/scripts/Clas
 import { IStateOfScContentTreeNodeFlat } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat';
 //implements ContentTreeProxy
 //ContentTree is the name Sitecore uses
-export class ContentTreeProxy extends LoggableBase  {
+export class ContentTreeProxy extends LoggableBase {
   private _treeNodeProxy: ScContentTreeNodeProxy;
   private AssociatedDoc: IDataOneDoc;
   private initReportTreeProxy: InitReportTreeProxy;
@@ -248,7 +248,6 @@ export class ContentTreeProxy extends LoggableBase  {
   }
 
   private GetActiveTreeNodeFromAncestorNode(stateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep): IStateOfScContentTreeNodeDeep {
-    this.Logger.FuncStart(this.GetActiveTreeNodeFromAncestorNode.name,)
     let foundNode: IStateOfScContentTreeNodeDeep = null;
     if (stateOfScContentTreeNodeDeep.IsActive) {
       foundNode = stateOfScContentTreeNodeDeep;
@@ -260,7 +259,6 @@ export class ContentTreeProxy extends LoggableBase  {
         }
       })
     }
-    this.Logger.FuncEnd(this.GetActiveTreeNodeFromAncestorNode.name, (foundNode !== null).toString())
     return foundNode;
   }
 
@@ -287,49 +285,26 @@ export class ContentTreeProxy extends LoggableBase  {
     });
   }
 
-  //GetActiveNode(allTreeNodeAr: IStateOfScContentTreeNodeDeep[]) {
-  //  let toReturn: number = -1;
-  //  if (allTreeNodeAr) {
-  //    for (var idx = 0; idx < allTreeNodeAr.length; idx++) {
-  //      let candidate: IStateOfScContentTreeNodeDeep = allTreeNodeAr[idx];
-  //      if (candidate.IsActive) {
-  //        toReturn = idx;
-  //        break;
-  //      }
-  //    }
-  //  } else {
-  //    this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
-  //  }
-
-  //  return toReturn;
-  //}
-
   private GetTreeNodeProxy(): Promise<ScContentTreeNodeProxy> {
     return new Promise(async (resolve, reject) => {
-      //if (!this._treeNodeProxy) {
-        //var  rootTreeNodeHtmlElement: HTMLElement = this.GetRootNodeForFrameType();
-        if (this.AssociatedDoc) {
-          if (this.rootTreeNodeHtmlElement) {
-            var rootParent = this.rootTreeNodeHtmlElement.parentElement;
+      if (this.AssociatedDoc) {
+        if (this.rootTreeNodeHtmlElement) {
+          var rootParent = this.rootTreeNodeHtmlElement.parentElement;
 
-            await this.RecipeBasics.WaitAndReturnFoundFromContainer(rootParent, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
-              .then(async (firstChildGlyphNode: HTMLImageElement) => {
-                this._treeNodeProxy = new ScContentTreeNodeProxy(this.Logger, firstChildGlyphNode, 0, 0, 1)
-                await this._treeNodeProxy.Instantiate();
-
-                if (this._treeNodeProxy) {
-                  this.Logger.Log('root found');
-                }
-              })
-          }
-          else {
-            this.Logger.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no root node');
-          }
+          await this.RecipeBasics.WaitAndReturnFoundFromContainer(rootParent, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
+            .then(async (firstChildGlyphNode: HTMLImageElement) => {
+              this._treeNodeProxy = new ScContentTreeNodeProxy(this.Logger, firstChildGlyphNode, 0, 0, 1)
+              await this._treeNodeProxy.Instantiate();
+            })
+            .catch((err) => reject(this.GetTreeNodeProxy.name + ' | ' + err));
         }
         else {
-          this.Logger.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no targetDoc');
+          this.Logger.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no root node');
         }
-      //}
+      }
+      else {
+        this.Logger.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no targetDoc');
+      }
       resolve(this._treeNodeProxy);
     });
   }

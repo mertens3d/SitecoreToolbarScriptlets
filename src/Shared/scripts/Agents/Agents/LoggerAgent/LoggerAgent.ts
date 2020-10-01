@@ -20,7 +20,9 @@ export class LoggerAgent implements ILoggerAgent {
   private HasWriters: boolean;
   Timer: LoggerTimer;
   UseTimeStamp: boolean = true;
-  private MaxDepthBeforeThrow: number = 200;
+  
+  CancelRequestedFlag: boolean = false;
+  private MaxDepthBeforeThrow: number = 2000; //this is to avoid extreme runaway code
 
   constructor() {
     this.Timer = new LoggerTimer;
@@ -40,6 +42,10 @@ export class LoggerAgent implements ILoggerAgent {
     for (var idx = 0; idx < bufferAr.length; idx++) {
       this.Log(bufferAr[idx]);
     }
+  }
+
+  CancelRequested() {
+    this.CancelRequestedFlag = true;
   }
 
   RemoveWriter(BufferWriter: LogWriterBuffer) {

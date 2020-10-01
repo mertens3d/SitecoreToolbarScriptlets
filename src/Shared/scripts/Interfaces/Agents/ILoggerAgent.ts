@@ -3,6 +3,8 @@ import { GuidData } from "../../Helpers/GuidData";
 import { IError } from "../IError";
 
 export interface ILoggerAgent {
+  CancelRequestedFlag: boolean;
+  CancelRequested();
   FlushBuffer();
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   AddWriter(arg0: LoggerConsoleWriter);
