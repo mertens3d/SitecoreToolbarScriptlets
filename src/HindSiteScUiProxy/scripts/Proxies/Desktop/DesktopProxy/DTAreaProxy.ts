@@ -7,15 +7,16 @@ import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/St
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
 import { FrameHelper } from "../../../Helpers/FrameHelper";
-import { NativeIFrameAddedEvent_Observer } from "./Events/DesktopProxyMutationEvent/NativeIFrameAddedEvent_Observer";
-import { INativeIFrameAddedEvent_Payload } from "./Events/DesktopProxyMutationEvent/INativeIFrameAddedEvent_Payload";
-import { NativeIFrameAddedEvent_Subject } from "./Events/DesktopProxyMutationEvent/NativeIFrameAddedEvent_Subject";
+import { NativeIFrameAddedEvent_Observer } from "./Events/NativeIFrameAddedEvent/NativeIFrameAddedEvent_Observer";
+import { INativeIFrameAddedEvent_Payload } from "./Events/NativeIFrameAddedEvent/INativeIFrameAddedEvent_Payload";
+import { NativeIFrameAddedEvent_Subject } from "./Events/NativeIFrameAddedEvent/NativeIFrameAddedEvent_Subject";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { DTAreaProxyMutationEvent_Subject } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Subject";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
+import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 
 export class DTAreaProxy extends LoggableBase {
   private FramesBucket: DTFrameProxy[] = [];
@@ -28,11 +29,13 @@ export class DTAreaProxy extends LoggableBase {
 
   public DTAreaProxyMutationEvent_Subject: DTAreaProxyMutationEvent_Subject;
   InitReportForDTAreaProxy: InitReport_DTAreaProxy;
+  private RecipeBasics: RecipeBasics;
 
   constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc) {
     super(logger);
 
     this.AssociatedDoc = associatedDoc;
+    this.RecipeBasics = new RecipeBasics(this.Logger);
   }
 
   async Instantiate_DTAreaProxy(): Promise<void> {
@@ -62,7 +65,16 @@ export class DTAreaProxy extends LoggableBase {
     try {
       if (payload && payload.AddedDTFrameProxies.length > 0) {
         payload.AddedDTFrameProxies.forEach(async (dtFrameProxy: DTFrameProxy) => {
-          await this.ProcessNewFrameProxy(dtFrameProxy);
+          await dtFrameProxy.WaitForCompleteNABFrameProxyOrReject()
+            .then(() => {
+              let indexOf: number = dtFrameProxy.HTMLIframeElement.contentDocument.URL.indexOf(SharedConst.Const.UrlSuffix.SitecoreShellApplicationsContentEditor);
+              this.Logger.LogVal('indexof', indexOf);
+              if (indexOf > -1) {
+                this.ProcessNewFrameProxy(dtFrameProxy);
+              }
+            })
+            .then(() => this.Logger.Log(this.CallBackOnNativeIFrameAddedEvent.name + ' Complete'))
+            .catch((err) => this.Logger.ErrorAndThrow(this.CallBackOnNativeIFrameAddedEvent.name, err));
         })
       } else {
         this.Logger.WarningAndContinue(this.CallBackOnNativeIFrameAddedEvent.name, 'Something in the payload did not match');
@@ -84,6 +96,7 @@ export class DTAreaProxy extends LoggableBase {
         .then(() => this.NewFrameStep3_WireEvents(dtFrameProxy))
         .then(() => this.NewFrameStep4_NotifyObservers(dtFrameProxy))
         .then(() => this.NewFrameStep5_AddToDTFrameProxyBucket(dtFrameProxy))
+        .then(() => this.NewFrameStep6_TriggerEvents(dtFrameProxy))
         .catch((err) => this.Logger.ErrorAndThrow(this.ProcessNewFrameProxy.name, err));
     } catch (err) {
       this.Logger.ErrorAndThrow(this.ProcessNewFrameProxy.name, err);
@@ -128,7 +141,8 @@ export class DTAreaProxy extends LoggableBase {
       MutatedElement: null,
       DTFrameProxyMutationEvent_Payload: null
     }
-    this.DTAreaProxyMutationEvent_Subject.NotifyObservers(payload);
+
+    this.DTAreaProxyMutationEvent_Subject.NotifyObserversAsync(payload);
     this.Logger.FuncEnd(this.NewFrameStep4_NotifyObservers.name);
   }
 
@@ -141,6 +155,11 @@ export class DTAreaProxy extends LoggableBase {
     }
     this.Logger.FuncEnd(this.NewFrameStep5_AddToDTFrameProxyBucket.name);
     return (toReturn);
+  }
+  private NewFrameStep6_TriggerEvents(dtframeProxy: DTFrameProxy): void {
+    this.Logger.FuncStart(this.NewFrameStep6_TriggerEvents.name);
+    dtframeProxy.ContentEditorProxy.TriggerActiveNodeChangeEvent();
+    this.Logger.FuncEnd(this.NewFrameStep6_TriggerEvents.name);
   }
 
   ////async PopulateFrameBucketWithExistingFrames(): Promise<void> {
@@ -157,10 +176,22 @@ export class DTAreaProxy extends LoggableBase {
   ////  }
   ////}
 
-  OnDTAreaProxyMutationEvent(payload: IDTAreaProxyMutationEvent_Payload) {
-  }
+  //OnDTAreaProxyMutationEvent(payload: IDTAreaProxyMutationEvent_Payload) {
+  //  this.Logger.FuncStart(this.OnDTAreaProxyMutationEvent.name);
 
-  OnDTFProxyMutationEvent(payload: IDTFrameProxyMutationEvent_Payload) {
+  //  let
+
+  //  this.Logger.FuncEnd(this.OnDTAreaProxyMutationEvent.name);
+  //}
+
+  OnDTFProxyMutationEvent(dTFrameProxyMutationEvent_Payload: IDTFrameProxyMutationEvent_Payload) {
+    this.Logger.FuncStart(this.OnDTFProxyMutationEvent.name);
+    let dTAreaProxyMutationEvent: IDTAreaProxyMutationEvent_Payload = {
+      DTFrameProxyMutationEvent_Payload: dTFrameProxyMutationEvent_Payload,
+    }
+    this.DTAreaProxyMutationEvent_Subject.NotifyObserversAsync(dTAreaProxyMutationEvent)
+
+    this.Logger.FuncEnd(this.OnDTFProxyMutationEvent.name);
   }
 
   AddToIncomingSetStateList(stateOfFrame: IStateOfDTArea): void {

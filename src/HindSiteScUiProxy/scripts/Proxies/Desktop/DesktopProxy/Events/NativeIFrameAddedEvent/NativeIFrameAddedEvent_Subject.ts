@@ -32,6 +32,8 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
 
           mutation.addedNodes.forEach((addedNode) => {
             if (addedNode instanceof HTMLIFrameElement) {
+
+
               let dtFrameProxy = new DTFrameProxy(this.Logger, addedNode);
               addedDTFrameProxies.push(dtFrameProxy);
             }
@@ -46,7 +48,7 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
               DTFrameProxyMutationEvent_Payload: null
             }
 
-            this.NotifyObservers(desktopMutatedEvent_Payload);
+            this.NotifyObserversAsync(desktopMutatedEvent_Payload);
           } else {
             this.Logger.Log('no notification, no DTFrameProxy added');
           }

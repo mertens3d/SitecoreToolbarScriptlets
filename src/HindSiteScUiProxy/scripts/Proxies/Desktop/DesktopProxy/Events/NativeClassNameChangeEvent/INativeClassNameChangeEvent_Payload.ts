@@ -1,10 +1,10 @@
 ﻿import { IStateOfContentTree } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
+import { IStateOfScContentTreeNodeFlat } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 import { ContentEditorProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ScContentTreeNodeProxy";
 
 export interface INativeClassNameChangeEvent_Payload {
-  MutatedNodeStateOfScContentTreeNode: IStateOfScContentTreeNodeDeep;
+  MutatedNodeStateOfScContentTreeNodeFlat: IStateOfScContentTreeNodeFlat;
   OwnerContentEditorProxy: ContentEditorProxy;
   ActiveNode: ScContentTreeNodeProxy;
   MutatedElement: HTMLElement;

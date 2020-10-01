@@ -118,8 +118,9 @@ export class DTFrameProxy extends _BaseFrameProxy {
   OnContentEditorProxyMutation(payload: IContentEditorProxyMutationEvent_Payload) {
     let dtFrameProxyMutationEvent_Payload: IDTFrameProxyMutationEvent_Payload = {
       ContentEditorProxyMutationPayload: payload,
-      DTFrameProxy: this
+      FrameId: this.HTMLIframeElement.id
+      //DTFrameProxy: this
     }
-    this.DTFrameProxyMutationEvent_Subject.NotifyObservers(dtFrameProxyMutationEvent_Payload);
+    this.DTFrameProxyMutationEvent_Subject.NotifyObserversAsync(dtFrameProxyMutationEvent_Payload);
   }
 }

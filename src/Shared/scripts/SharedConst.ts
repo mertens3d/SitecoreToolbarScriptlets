@@ -70,6 +70,7 @@ export class SharedConst {
       Login: '/sitecore/login',
       LaunchPad: '/client/applications/launchpad',
       CE: '/sitecore/shell/Applications/Content Editor.aspx?sc_bw=1',
+      SitecoreShellApplicationsContentEditor: 'sitecore/shell/Applications/Content-Editor',
       None: '/',
       AboutBlank: 'about:blank',
     },

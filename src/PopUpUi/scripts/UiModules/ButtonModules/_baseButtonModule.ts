@@ -76,7 +76,7 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
           HandlerData: this.MenuCommandDefinition.EventHandlerData
         };
 
-        this.SingleButtonClickEvent_Subject.NotifyObservers(singleClickEvent_payload);
+        this.SingleButtonClickEvent_Subject.NotifyObserversAsync(singleClickEvent_payload);
       });
     } else {
       this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No button element: ' + this.MenuCommandDefinition.PlaceHolderSelector);

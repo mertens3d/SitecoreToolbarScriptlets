@@ -54,7 +54,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
         let payload: ISelectSnapUiMutationEvent_Payload = {
           SelectSnapshotId: this.GetSelectSnapshotId()
         }
-        this.SelectSnapshotModule_Subject.NotifyObservers(payload);
+        this.SelectSnapshotModule_Subject.NotifyObserversAsync(payload);
       });
     }
     this.Logger.FuncEnd(this.WireEvents_Module.name, this.ContainerSelector);

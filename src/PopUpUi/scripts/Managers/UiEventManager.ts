@@ -52,7 +52,7 @@ export class UiEventManager extends LoggableBase {
       StateOfPopUp: this.GetStateOfPopUp()
     };
 
-    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject.NotifyObservers(payload);
+    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject.NotifyObserversAsync(payload);
   };
 
   WireEvents_UiEventMan(): void {

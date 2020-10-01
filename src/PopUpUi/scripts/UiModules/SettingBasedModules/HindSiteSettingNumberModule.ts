@@ -59,7 +59,7 @@ export class HindSiteSettingNumberModule extends _SettingsBasedModulesBase imple
     }
     this.SettingJacket.HindSiteSetting.ValueAsObj = numberValue;
 
-    this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
+    this.UiSettingBasedModuleMutationEvent_Subject.NotifyObserversAsync(iUiElementChangeEvent_Payload);
   }
 
   RefreshUi_Module() {

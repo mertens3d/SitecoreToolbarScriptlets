@@ -55,9 +55,9 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
     this.Logger.FuncEnd(this.UnregisterObserver.name);
   }
 
-  NotifyObservers(payload: T): void {
+  NotifyObserversAsync(payload: T): void {
     let bufferedFriendly = StaticHelpers.BufferString(this.Friendly_Subject, 20, BufferChar.Period, BufferDirection.right);
-    this.Logger.FuncStart(this.NotifyObservers.name + ' of: ' + bufferedFriendly, ' obs. count: ' + this.ObserverCollection.length);
+    this.Logger.FuncStart(this.NotifyObserversAsync.name + ' of: ' + bufferedFriendly, ' obs. count: ' + this.ObserverCollection.length);
 
     if (!this.IsMuted) {
       this.ObserverCollection.forEach((observer) => {
@@ -66,6 +66,6 @@ export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSit
     } else {
       this.Logger.Log('not Notifying...Subject is muted');
     }
-    this.Logger.FuncEnd(this.NotifyObservers.name + ' of: ' + bufferedFriendly, ' obs. count: ' + this.ObserverCollection.length);
+    this.Logger.FuncEnd(this.NotifyObserversAsync.name + ' of: ' + bufferedFriendly, ' obs. count: ' + this.ObserverCollection.length);
   }
 }

@@ -46,8 +46,10 @@ export class _BaseFrameProxy extends LoggableBase {
         .then((result: ReadyStateNAB) => {
           result.LogDebugValues();
           if (result.IsCompleteNAB()) {
+            this.Logger.Log('it says it is complete')
             resolve(result.DocumentReadyState());
           } else {
+            this.Logger.Log('rejecting')
             reject(result.DocumentReadtStateFriendly);
           }
         })

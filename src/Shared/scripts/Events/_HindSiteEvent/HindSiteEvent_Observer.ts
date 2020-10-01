@@ -5,20 +5,20 @@ import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
 
 export class HindSiteEvent_Observer<T> extends LoggableBase implements IHindSiteEvent_Observer<T> {
   readonly Friendly: string;
-  Callback: HindsiteEventHandler_Type = null;
+  CallbackAsync: HindsiteEventHandler_Type = null;
 
   UpdateAsync(payload: T): void {
     try {
-      if (this.Callback) {
-        this.Callback(payload);
+      if (this.CallbackAsync) {
+        this.CallbackAsync(payload);
       }
     } catch (err) {
       this.Logger.ErrorAndContinue(HindSiteEvent_Observer.name, err);
     }
   }
-  constructor(logger: ILoggerAgent, friendly: string, callback: HindsiteEventHandler_Type = null) {
+  constructor(logger: ILoggerAgent, friendly: string, callbackAsync: HindsiteEventHandler_Type = null) {
     super(logger);
-    this.Callback = callback;
+    this.CallbackAsync = callbackAsync;
     this.Friendly = friendly;
   }
 }

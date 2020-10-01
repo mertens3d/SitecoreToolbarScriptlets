@@ -1,8 +1,9 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
+import { IStateOfScContentTreeNodeFlat } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ScContentTreeNodeProxy";
 import { INativeClassNameChangeEvent_Payload } from "./INativeClassNameChangeEvent_Payload";
+import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
 
 export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<INativeClassNameChangeEvent_Payload> {
   private TreeElement: any;
@@ -27,9 +28,11 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
   }
 
   private MakeScContentTreeNodeProxy(mutation: MutationRecord): ScContentTreeNodeProxy {
+    this.Logger.FuncStart(this.MakeScContentTreeNodeProxy.name);
     let candidateNode: ScContentTreeNodeProxy = null;
     let mutatedAnchorElement: HTMLAnchorElement = <HTMLAnchorElement>(mutation.target);
     candidateNode = new ScContentTreeNodeProxy(this.Logger, mutatedAnchorElement, 0, 0, 1);
+    this.Logger.FuncEnd(this.MakeScContentTreeNodeProxy.name);
     return candidateNode;
   }
 
@@ -38,34 +41,37 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
       if (mutationRecord.attributeName === 'class') {
         let anchorTest: HTMLAnchorElement = <HTMLAnchorElement>(mutationRecord.target);
         if (anchorTest) {
-          let scContentTreeNodeProxy: ScContentTreeNodeProxy = this.MakeScContentTreeNodeProxy(mutationRecord);
-          if (scContentTreeNodeProxy) {
-            let payload: INativeClassNameChangeEvent_Payload = {
-              ActiveNode: null,
-              MutatedElement: null,
-              OwnerContentEditorProxy: null,
-              StateOfContentEditorTreeProxy: null,
-              MutatedNodeStateOfScContentTreeNode: null
-            }
-
-            await scContentTreeNodeProxy.GetStateOfScContentTreeNodeDeep()
-              .then((stateOfContentTreeNode: IStateOfScContentTreeNodeDeep) => {
-                this.Logger.LogVal(this.OnNativeMutationEvent.name, stateOfContentTreeNode.FriendlyTreeNode);
-
-                if (stateOfContentTreeNode.IsActive) {
-                  //let treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = {
-                  //  StateOfContentTree: null,
-                  //};
-                  this.Logger.Log('node is active ' + stateOfContentTreeNode.FriendlyTreeNode)
-
-                  payload.MutatedNodeStateOfScContentTreeNode = stateOfContentTreeNode
-
-                  this.NotifyObservers(payload);
-                } else {
-                  this.Logger.Log('node not active ' + stateOfContentTreeNode.FriendlyTreeNode)
-                }
-              });
+          if (anchorTest.classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive)) {
+            this.NotifyObserversAsync(null);
           }
+          //let scContentTreeNodeProxy: ScContentTreeNodeProxy = this.MakeScContentTreeNodeProxy(mutationRecord);
+          //          if (scContentTreeNodeProxy) {
+          //  let payload: INativeClassNameChangeEvent_Payload = {
+          //    ActiveNode: null,
+          //    MutatedElement: null,
+          //    OwnerContentEditorProxy: null,
+          //    StateOfContentEditorTreeProxy: null,
+          //    MutatedNodeStateOfScContentTreeNodeFlat: null
+          //  }
+
+          //  await scContentTreeNodeProxy.GetStateOfScContentTreeNodeFlat()
+          //    .then((stateOfContentTreeNodeFlat: IStateOfScContentTreeNodeFlat) => {
+          //      this.Logger.LogVal(this.OnNativeMutationEvent.name, stateOfContentTreeNodeFlat.FriendlyTreeNode);
+
+          //      if (stateOfContentTreeNodeFlat.IsActive) {
+          //        //let treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = {
+          //        //  StateOfContentTree: null,
+          //        //};
+          //        this.Logger.Log('node is active ' + stateOfContentTreeNodeFlat.FriendlyTreeNode)
+
+          //        payload.MutatedNodeStateOfScContentTreeNodeFlat = stateOfContentTreeNodeFlat
+
+          //        this.NotifyObserversAsync(payload);
+          //      } else {
+          //        this.Logger.Log('node not active ' + stateOfContentTreeNodeFlat.FriendlyTreeNode)
+          //      }
+          //    });
+          //}
         }
       }
     });

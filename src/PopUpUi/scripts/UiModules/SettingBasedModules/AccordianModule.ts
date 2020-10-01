@@ -94,7 +94,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
         }
         this.SettingJacket.HindSiteSetting.ValueAsObj = newVal;
         this.SetAccordionClass();
-        this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
+        this.UiSettingBasedModuleMutationEvent_Subject.NotifyObserversAsync(iUiElementChangeEvent_Payload);
       }
     }
     else {

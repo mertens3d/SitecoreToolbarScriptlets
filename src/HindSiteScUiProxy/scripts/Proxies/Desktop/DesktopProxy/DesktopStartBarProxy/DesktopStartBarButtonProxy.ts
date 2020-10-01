@@ -1,25 +1,40 @@
-﻿import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
+﻿import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
+import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
 import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
-import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
-import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
-import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
+import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
+import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
 
 export class DesktopStartBarButtonProxy extends LoggableBase {
-  private StartBarButtonElemId: string;
   private AssociatedDoc: IDataOneDoc;
-  FoundStartBarButton: HTMLElement;
+  private ContainerSpanElement: HTMLElement;
+  private FoundStartBarButton: HTMLElement;
+  private RecipeBasics: RecipeBasics;
+  private StartBarButtonElemId: string;
+
+  public FrameId: string;
 
   constructor(logger: ILoggerAgent, iframeElemId: string, associatedDoc: IDataOneDoc) {
     super(logger);
     this.AssociatedDoc = associatedDoc;
+    this.FrameId = iframeElemId;
 
-    this.StartBarButtonElemId = ContentConst.Const.Names.Desktop.StartBarApplicationPrefix + iframeElemId;
-    let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
-    this.FoundStartBarButton = this.AssociatedDoc.ContentDoc.querySelector(querySelectBtn);
+    this.RecipeBasics = new RecipeBasics(this.Logger);
+  }
+
+  async Instantiate_DestopStartBarButtonProxy(): Promise<void> {
+    try {
+      this.StartBarButtonElemId = ContentConst.Const.Names.Desktop.StartBarApplicationPrefix + this.FrameId;
+      let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
+      this.FoundStartBarButton = this.AssociatedDoc.ContentDoc.querySelector(querySelectBtn);
+
+      await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.FoundStartBarButton, ':scope > div > span', this.SetStateOfDesktopStartBarButtonAsync.name)
+        .then((containerSpanElement: HTMLElement) => this.ContainerSpanElement = containerSpanElement);
+    } catch (err) {
+    }
   }
 
   private DesignMainIconNode(mainIconSrc: string): HTMLImageElement {
@@ -47,28 +62,32 @@ export class DesktopStartBarButtonProxy extends LoggableBase {
     return newItemIconNode;
   }
 
-  Update(targetButton: DesktopStartBarButtonProxy, stateOfContentTree: IStateOfContentTree) {
-    this.Logger.FuncStart(this.Update.name);
+  SetStateOfDesktopStartBarButtonAsync(stateOfContentTree: IStateOfContentTree): void {
+    this.Logger.FuncStart(this.SetStateOfDesktopStartBarButtonAsync.name);
 
-    if (stateOfContentTree.ActiveNodeCoord.SiblingIndex > -1) {
-      let activeNode: IStateOfScContentTreeNodeDeep = stateOfContentTree.StateOfScContentTreeNode[stateOfContentTree.ActiveNodeCoord.SiblingIndex];
+    this.Logger.ThrowIfNullOrUndefined(this.SetStateOfDesktopStartBarButtonAsync.name, [stateOfContentTree]);
 
-      let itemIconSource: string = activeNode.IconSrc;//    .GetIconSrc();
-      let mainIconSrc: string = activeNode.MainIconSrc;//.GetMainIconSrc();
+    let itemIconSource: string = stateOfContentTree.StateOfScContentTreeNodeFlat.IconSrc;
+    let mainIconSrc: string = stateOfContentTree.StateOfScContentTreeNodeFlat.MainIconSrc;
 
-      let text: string = StaticHelpers.BufferString(activeNode.FriendlyTreeNode, ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
+    let text: string = StaticHelpers.BufferString(stateOfContentTree.StateOfScContentTreeNodeFlat.FriendlyTreeNode, ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
 
-      this.Logger.LogVal('iconSrc', itemIconSource);
-      this.Logger.LogVal('mainIconSrc', mainIconSrc);
-      if (targetButton && itemIconSource.length > 0) {
-        let containerSpanElement: HTMLElement = targetButton.FoundStartBarButton.querySelector('div').querySelector('span');
+    this.Logger.LogVal('iconSrc', itemIconSource);
+    this.Logger.LogVal('mainIconSrc', mainIconSrc);
 
-        let newItemIconNode: HTMLImageElement = this.DesignItemIconNode(itemIconSource)
-        let newMainIconNode: HTMLImageElement = this.DesignMainIconNode(mainIconSrc);
+    if (itemIconSource.length > 0) {
+      let newItemIconNode: HTMLImageElement = this.DesignItemIconNode(itemIconSource)
+      let newMainIconNode: HTMLImageElement = this.DesignMainIconNode(mainIconSrc);
 
-        containerSpanElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
+      if (this.ContainerSpanElement) {
+        this.ContainerSpanElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
+      } else {
+        this.Logger.ErrorAndThrow(this.SetStateOfDesktopStartBarButtonAsync.name, 'no container span element');
       }
+    } else {
+      this.Logger.WarningAndContinue(this.SetStateOfDesktopStartBarButtonAsync.name, 'no icon source');
     }
-    this.Logger.FuncEnd(this.Update.name);
+
+    this.Logger.FuncEnd(this.SetStateOfDesktopStartBarButtonAsync.name);
   }
 }

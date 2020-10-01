@@ -37,9 +37,9 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
         let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.Logger, targetIframe.contentDocument);
 
         while (iterationJr.DecrementAndKeepGoing() && readyStateNAB.DocIsAboutBlank()) {
-          readyStateNAB.LogDebugValues();
           await iterationJr.Wait();
           readyStateNAB.SetDocument(targetIframe.contentDocument);
+          readyStateNAB.LogDebugValues();
         }
 
         if (iterationJr.IsExhausted) {
@@ -376,32 +376,31 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
   WaitForThenClick(selectorAr: string[], targetDoc: IDataOneDoc): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      if (targetDoc) {
-        var found: HTMLElement = null;
-        var iterationJr = new IterationDrone(this.Logger, this.WaitForThenClick.name, true);
+      this.Logger.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr, targetDoc]);
 
-        while (!found && iterationJr.DecrementAndKeepGoing()) {// todo put back && !this.MsgMan().OperationCancelled) {
-          for (var idx = 0; idx < selectorAr.length; idx++) {
-            found = targetDoc.ContentDoc.querySelector(selectorAr[idx]);
-            if (found) {
-              break;
-            }
+      var found: HTMLElement = null;
+      var iterationJr = new IterationDrone(this.Logger, this.WaitForThenClick.name, true);
+
+      while (!found && iterationJr.DecrementAndKeepGoing()) {// todo put back && !this.MsgMan().OperationCancelled) {
+        for (var idx = 0; idx < selectorAr.length; idx++) {
+          found = targetDoc.ContentDoc.querySelector(selectorAr[idx]);
+          if (found) {
+            break;
           }
         }
+      }
 
-        if (found) {
-          try {
-            this.Logger.Log('clicking');
-            found.click();
-            resolve();
-          } catch (err) {
-            reject(this.WaitForThenClick.name + ' | ' + err);
-          }
-        } else {
-          await iterationJr.Wait()
+      if (found) {
+        try {
+          this.Logger.Log('clicking');
+          found.click();
+          resolve();
+        } catch (err) {
+          reject(this.WaitForThenClick.name + ' | ' + err);
         }
       } else {
-        reject('no target doc');
+        await iterationJr.Wait()
+          .catch((err) => reject(this.WaitForThenClick.name + ' | ' + err));
       }
 
       if (!found && iterationJr.IsExhausted) {

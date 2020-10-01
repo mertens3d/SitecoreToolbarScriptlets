@@ -76,6 +76,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
   private InferFromAnchorElement(anchorElement: HTMLAnchorElement) {
     if (anchorElement) {
+      this.Logger.Log(this.InferFromAnchorElement.name);
       this.ScContentTreeNodeDivElem = <HTMLDivElement>anchorElement.parentElement
     }
   }
@@ -119,7 +120,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetStateOfScContentTreeNode.name);
       let stateOfChildrenAr: Promise<IStateOfScContentTreeNodeDeep>[] = [];
-      await this.HarvestNodeState()
+      await this.HarvestNodeState(true)
         .then(() => {
           if (includeChildren) {
             this.Children.forEach((child: ScContentTreeNodeProxy) => stateOfChildrenAr.push(child.GetStateOfScContentTreeNodeDeep()));
@@ -141,6 +142,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       this.Logger.FuncEnd(this.GetStateOfScContentTreeNode.name);
     });
   }
+
   async GetStateOfScContentTreeNodeDeep(): Promise<IStateOfScContentTreeNodeDeep> {
     return new Promise(async (resolve, reject) => {
       await this.GetStateOfScContentTreeNode(true)
@@ -148,13 +150,19 @@ export class ScContentTreeNodeProxy extends LoggableBase {
         .catch((err) => reject(this.GetStateOfScContentTreeNodeDeep.name + ' | ' + err));
     });
   }
+
   async GetStateOfScContentTreeNodeFlat(): Promise<IStateOfScContentTreeNodeFlat> {
     return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetStateOfScContentTreeNodeFlat.name);
+
       await this.GetStateOfScContentTreeNode(false)
-        .then((stateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeFlat) => resolve(stateOfScContentTreeNodeDeep))
+        .then((stateOfContentTreeNodeFlat: IStateOfScContentTreeNodeFlat) => resolve(stateOfContentTreeNodeFlat))
         .catch((err) => reject(this.GetStateOfScContentTreeNodeDeep.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.GetStateOfScContentTreeNodeFlat.name);
     });
   }
+
   private async HarvestNodeState(forceRefreshData: boolean = false): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.HarvestNodeState.name, this.Friendly());
@@ -171,7 +179,6 @@ export class ScContentTreeNodeProxy extends LoggableBase {
             })
             .then(() => this.GetGlyphNodeElem())
             .then((htmlImageElement: HTMLImageElement) => {
-              this.Logger.Log('glyph found');
               this.glyphElem = htmlImageElement
             })
             .then(() => {
@@ -197,8 +204,10 @@ export class ScContentTreeNodeProxy extends LoggableBase {
             });
 
         this.HasBeenHarvested = true;
-        this.Logger.FuncStart(this.HarvestNodeState.name, this.Friendly());
-      };
+      } else {
+        resolve();
+      }
+      this.Logger.FuncEnd(this.HarvestNodeState.name, this.Friendly());
     });
   }
 
@@ -250,7 +259,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       try {
         let toReturn: ScContentTreeNodeProxy[] = [];
 
-        let childNodes = this.ScContentTreeNodeDivElem.querySelectorAll( ':scope > div > ' + ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
+        let childNodes = this.ScContentTreeNodeDivElem.querySelectorAll(':scope > div > ' + ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
         childNodes.forEach((childNode: HTMLDivElement, index: number) => {
           toReturn.push(new ScContentTreeNodeProxy(this.Logger, childNode, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length))
         });
@@ -312,8 +321,6 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
   private QueryIsActive(linkNodeElem: HTMLElement): boolean {
     let classList = linkNodeElem.classList;
-    this.Logger.LogAsJsonPretty('htmlElement.classList', linkNodeElem.classList);
-
     let toReturn: boolean = classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive);
     return toReturn;
   }

@@ -64,6 +64,7 @@
     Login: string,
     LaunchPad: string,
     CE: string,
+    SitecoreShellApplicationsContentEditor: string,
     None: string,
     AboutBlank: string,
   },

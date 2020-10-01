@@ -51,7 +51,7 @@ import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
         AccordianModule: null,
       }
       this.SettingJacket.HindSiteSetting.ValueAsObj = newValue;
-      this.UiSettingBasedModuleMutationEvent_Subject.NotifyObservers(iUiElementChangeEvent_Payload);
+      this.UiSettingBasedModuleMutationEvent_Subject.NotifyObserversAsync(iUiElementChangeEvent_Payload);
     }
 
     BuildHtmlForModule() {

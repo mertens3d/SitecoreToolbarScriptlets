@@ -131,7 +131,7 @@ export class ToastAgent implements IToastAgent {
       let payload: ISingleClickEvent_Payload = {
         HandlerData: null
       }
-      this.OnButtonClick_Subject.NotifyObservers(payload)
+      this.OnButtonClick_Subject.NotifyObserversAsync(payload)
     }))
   }
 

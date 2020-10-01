@@ -12,7 +12,7 @@ export class StateHelpers extends LoggableBase {
     if (stateOfTree && stateOfTree.ActiveNodeCoord.SiblingIndex > -1 && stateOfTree.ActiveNodeCoord.LevelIndex > -1) {
       try {
         if (stateOfTree.ActiveNodeCoord.LevelIndex > -1) {
-          let activeLevelNodes: IStateOfScContentTreeNodeDeep[] = stateOfTree.StateOfScContentTreeNode[stateOfTree.ActiveNodeCoord.LevelIndex];
+          let activeLevelNodes: IStateOfScContentTreeNodeDeep[] = stateOfTree.StateOfScContentTreeNodeDeep[stateOfTree.ActiveNodeCoord.LevelIndex];
           activeLevelNodes.forEach((stateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep) => {
             if (stateOfScContentTreeNodeDeep.IsActive) {
               toReturn = stateOfScContentTreeNodeDeep;

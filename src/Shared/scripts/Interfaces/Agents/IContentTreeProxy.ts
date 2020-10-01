@@ -2,6 +2,7 @@
 import { IStateOfContentTree } from "../Data/States/IStateOfContentTree";
 
 export interface IContentTreeProxy {
+  TriggerActiveNodeChangeEvent();
   WireEvents_TreeProxy();
   Instantiate_TreeProxy();
   GetStateOfContentTree(): Promise<IStateOfContentTree>;

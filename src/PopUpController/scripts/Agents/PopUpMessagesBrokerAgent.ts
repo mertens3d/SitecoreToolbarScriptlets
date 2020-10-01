@@ -69,7 +69,7 @@ export class MessageBroker_PopUp extends LoggableBase {
 
   private HandleReply(replyMessagePayload: IControllerMessageReceivedEvent_Payload) {
     if (!StaticHelpers.IsNullOrUndefined(replyMessagePayload)) {
-      this.ContentReplyReceivedEvent_Subject.NotifyObservers(replyMessagePayload);
+      this.ContentReplyReceivedEvent_Subject.NotifyObserversAsync(replyMessagePayload);
     } else {
       this.Logger.WarningAndContinue(this.HandleReply.name, 'null payload. Not notifying ')
     }
