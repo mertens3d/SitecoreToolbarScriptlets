@@ -27,14 +27,14 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
     }
   }
 
-  private MakeScContentTreeNodeProxy(mutation: MutationRecord): ScContentTreeNodeProxy {
-    this.Logger.FuncStart(this.MakeScContentTreeNodeProxy.name);
-    let candidateNode: ScContentTreeNodeProxy = null;
-    let mutatedAnchorElement: HTMLAnchorElement = <HTMLAnchorElement>(mutation.target);
-    candidateNode = new ScContentTreeNodeProxy(this.Logger, mutatedAnchorElement, 0, 0, 1);
-    this.Logger.FuncEnd(this.MakeScContentTreeNodeProxy.name);
-    return candidateNode;
-  }
+  //private MakeScContentTreeNodeProxy(mutation: MutationRecord): ScContentTreeNodeProxy {
+  //  this.Logger.FuncStart(this.MakeScContentTreeNodeProxy.name);
+  //  let candidateNode: ScContentTreeNodeProxy = null;
+  //  let mutatedAnchorElement: HTMLAnchorElement = <HTMLAnchorElement>(mutation.target);
+  //  candidateNode = new ScContentTreeNodeProxy(this.Logger, mutatedAnchorElement, 0, 0, 1);
+  //  this.Logger.FuncEnd(this.MakeScContentTreeNodeProxy.name);
+  //  return candidateNode;
+  //}
 
   private OnNativeMutationEvent(mutationRecords: MutationRecord[]) {
     mutationRecords.forEach(async (mutationRecord: MutationRecord, index: number) => {
@@ -59,7 +59,7 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
           //      this.Logger.LogVal(this.OnNativeMutationEvent.name, stateOfContentTreeNodeFlat.FriendlyTreeNode);
 
           //      if (stateOfContentTreeNodeFlat.IsActive) {
-          //        //let treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = {
+          //        //let treeMutationEvent_Payload: ContentTreeProxyMutationEvent_Payload = {
           //        //  StateOfContentTree: null,
           //        //};
           //        this.Logger.Log('node is active ' + stateOfContentTreeNodeFlat.FriendlyTreeNode)

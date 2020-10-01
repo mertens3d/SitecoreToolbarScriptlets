@@ -13,11 +13,15 @@ import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationE
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { DesktopProxyMutationEvent_Observer } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer";
 import { DesktopProxyMutationEvent_Subject } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject";
+import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
+import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
+import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 
 export class DesktopProxy extends LoggableBase {
-  private DTStartBarProxy: DTStartBarProxy;
   private AssociatedDoc: IDataOneDoc;
   private DTAreaProxy: DTAreaProxy;
+  private DTStartBarProxy: DTStartBarProxy;
+  private RecipeBasics: RecipeBasics;
   DTPopUpMenuProxy: DTPopUpMenuProxy;
   DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
   DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
@@ -43,13 +47,16 @@ export class DesktopProxy extends LoggableBase {
       let initReportDesktopProxy = new InitReport_DesktopProxy();
 
       this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.Logger, this.OnAreaProxyMutationEvent.bind(this));
-      this.DTAreaProxy = new DTAreaProxy(this.Logger, this.AssociatedDoc);
+      this.DTAreaProxy = new DTAreaProxy(this.Logger, this.AssociatedDoc, this);
 
       this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject(this.Logger);
 
       await this.DTAreaProxy.Instantiate_DTAreaProxy();
 
       this.DTStartBarProxy = new DTStartBarProxy(this.Logger, this.AssociatedDoc);
+
+      this.RecipeBasics = new RecipeBasics(this.Logger);
+
       await this.DTStartBarProxy.Instantiate_DTStartBarProxy();
     } catch (err) {
       this.Logger.ErrorAndThrow(this.Instantiate_DesktopProxy.name, err);
@@ -75,6 +82,10 @@ export class DesktopProxy extends LoggableBase {
 
       await this.DTStartBarProxy.TriggerRedButton()
         .then(() => this.DTPopUpMenuProxy.RecipeAddNewContentEditorToDesktop(this.AssociatedDoc))
+        // sitecore briefly pops up a div inside of iframe jqueryModalDialogsFrame with a class of ui-widget-overlay ui-front that appears to block mouse clicks
+        // this pause is intended to allow time for it to finish its work and be removed.
+        // at some point this could be modified to wait for a shorter amount of time, and then look to make sure the div is not present
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddContentEditorAsync.name)) //ui-widget-overlay ui-front
         .catch((err) => this.Logger.ErrorAndThrow(this.AddContentEditorAsync.name, err));
     } catch (err) {
       this.Logger.ErrorAndThrow(this.AddContentEditorAsync.name, err);
@@ -121,33 +132,25 @@ export class DesktopProxy extends LoggableBase {
     });
   }
 
-  async SetStateOfDesktop(stateOfDesktop: IStateOfDesktop): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetStateOfDesktop.name);;
+  async SetStateOfDesktopAsync(stateOfDesktop: IStateOfDesktop): Promise<void> {
+    this.Logger.FuncStart(this.SetStateOfDesktopAsync.name);
 
-      //let promAr: Promise<void>[] = [];
+    try {
+      let promAr: Promise<void>[] = [];
 
-      if (stateOfDesktop && stateOfDesktop.StateOfDTArea) {
-        if (!StaticHelpers.IsNullOrUndefined([this.AssociatedDoc])) {
-          this.DTAreaProxy.AddToIncomingSetStateList(stateOfDesktop.StateOfDTArea);
-
-          for (var idx = 0; idx < stateOfDesktop.StateOfDTArea.StateOfDTFrames.length; idx++) {
-            await this.AddContentEditorAsync()
-              .then(() => resolve())
-              .catch((err) => reject(err));
+      this.DTAreaProxy.SetStateOfDTArea(stateOfDesktop.StateOfDTArea)
+        .then((requestedNewFrameCount: number) => {
+          this.Logger.LogVal('StateOfDTFrame count', requestedNewFrameCount.toString());
+          for (var idx = 0; idx < requestedNewFrameCount; idx++) {
+            promAr.push(this.AddContentEditorAsync());
           }
-        } else {
-          reject(this.SetStateOfDesktop.name + ' bad data');
-        }
-      } else {
-        reject(this.SetStateOfDesktop.name + '  No desktop state provided');
-      }
+        }).
+        then(() => Promise.all(promAr))
+        .catch((err) => this.Logger.ErrorAndThrow(this.SetStateOfDesktopAsync.name, err));
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.SetStateOfDesktopAsync.name, err);
+    }
 
-      //await  Promise.all(promAr)
-      //    .then(() => resolve())
-      //    .catch((err) => reject(this.SetStateOfDesktop.name + ' | ' + err));
-
-      this.Logger.FuncEnd(this.SetStateOfDesktop.name);
-    });
+    this.Logger.FuncEnd(this.SetStateOfDesktopAsync.name);
   }
 }

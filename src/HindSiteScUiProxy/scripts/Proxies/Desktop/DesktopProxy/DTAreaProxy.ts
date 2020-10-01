@@ -17,6 +17,8 @@ import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutatio
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
+import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
+import { DesktopProxy } from "./DesktopProxy";
 
 export class DTAreaProxy extends LoggableBase {
   private FramesBucket: DTFrameProxy[] = [];
@@ -30,11 +32,13 @@ export class DTAreaProxy extends LoggableBase {
   public DTAreaProxyMutationEvent_Subject: DTAreaProxyMutationEvent_Subject;
   InitReportForDTAreaProxy: InitReport_DTAreaProxy;
   private RecipeBasics: RecipeBasics;
+  private ParentDesktopProxy: DesktopProxy;
 
-  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc) {
+  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, parentDesktopProxy: DesktopProxy) {
     super(logger);
 
     this.AssociatedDoc = associatedDoc;
+    this.ParentDesktopProxy = parentDesktopProxy;
     this.RecipeBasics = new RecipeBasics(this.Logger);
   }
 
@@ -92,9 +96,9 @@ export class DTAreaProxy extends LoggableBase {
     try {
       await dtFrameProxy.WaitForCompleteNABFrameProxyOrReject()
         .then(() => this.newFrameStep1_Instantiate(dtFrameProxy))
-        .then(() => this.NewFrameStep2_SetStateIfQueued(dtFrameProxy))
+        .then(() => this.NewFrameStep2_SetStateOfDTFrameIfQueued(dtFrameProxy))
         .then(() => this.NewFrameStep3_WireEvents(dtFrameProxy))
-        .then(() => this.NewFrameStep4_NotifyObservers(dtFrameProxy))
+        .then(() => this.NewFrameStep4_NotifyObserversOfAreaProxyMutation(dtFrameProxy))
         .then(() => this.NewFrameStep5_AddToDTFrameProxyBucket(dtFrameProxy))
         .then(() => this.NewFrameStep6_TriggerEvents(dtFrameProxy))
         .catch((err) => this.Logger.ErrorAndThrow(this.ProcessNewFrameProxy.name, err));
@@ -123,19 +127,20 @@ export class DTAreaProxy extends LoggableBase {
     this.Logger.FuncEnd(this.NewFrameStep3_WireEvents.name);
   }
 
-  private NewFrameStep2_SetStateIfQueued(dtFrameProxy: DTFrameProxy) {
-    this.Logger.FuncStart(this.NewFrameStep2_SetStateIfQueued.name);
+  private async NewFrameStep2_SetStateOfDTFrameIfQueued(dtFrameProxy: DTFrameProxy): Promise<void> {
+    this.Logger.FuncStart(this.NewFrameStep2_SetStateOfDTFrameIfQueued.name);
     let queuedState: IStateOfDTFrame = this.IncomingSetStateList.shift();
     if (queuedState) {
-      dtFrameProxy.SetStateOfDTFrame(queuedState)
+      await dtFrameProxy.SetStateOfDTFrame(queuedState);
+      
     } else {
       this.Logger.Log('no queued states');
     }
-    this.Logger.FuncEnd(this.NewFrameStep2_SetStateIfQueued.name);
+    this.Logger.FuncEnd(this.NewFrameStep2_SetStateOfDTFrameIfQueued.name);
   }
 
-  private NewFrameStep4_NotifyObservers(dtFrameProxy: DTFrameProxy) {
-    this.Logger.FuncStart(this.NewFrameStep4_NotifyObservers.name);
+  private NewFrameStep4_NotifyObserversOfAreaProxyMutation(dtFrameProxy: DTFrameProxy) {
+    this.Logger.FuncStart(this.NewFrameStep4_NotifyObserversOfAreaProxyMutation.name);
     let payload: INativeIFrameAddedEvent_Payload = {
       AddedDTFrameProxies: [dtFrameProxy],
       MutatedElement: null,
@@ -143,7 +148,39 @@ export class DTAreaProxy extends LoggableBase {
     }
 
     this.DTAreaProxyMutationEvent_Subject.NotifyObserversAsync(payload);
-    this.Logger.FuncEnd(this.NewFrameStep4_NotifyObservers.name);
+    this.Logger.FuncEnd(this.NewFrameStep4_NotifyObserversOfAreaProxyMutation.name);
+  }
+
+  SetStateOfDTArea(StateOfDTArea: IStateOfDTArea): Promise<number> {
+    return new Promise(async (resolve, reject) => {
+
+      this.Logger.FuncStart(this.SetStateOfDTArea.name);
+      let contentEditorCountNeeded: number = 0;
+
+     
+
+      if (StateOfDTArea) {
+        if (!StaticHelpers.IsNullOrUndefined([this.AssociatedDoc])) {
+
+          this.AddToIncomingSetStateList(StateOfDTArea);
+          contentEditorCountNeeded = StateOfDTArea.StateOfDTFrames.length;
+
+          
+
+       
+        } else {
+          reject(this.SetStateOfDTArea.name + ' bad data');
+        }
+      } else {
+        reject(this.SetStateOfDTArea.name + '  No state provided');
+      }
+
+      resolve(contentEditorCountNeeded);
+
+
+
+      this.Logger.FuncEnd(this.SetStateOfDTArea.name);
+    });
   }
 
   private NewFrameStep5_AddToDTFrameProxyBucket(dtframeProxy: DTFrameProxy): boolean {

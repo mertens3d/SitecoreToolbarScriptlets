@@ -82,6 +82,7 @@ export class ContentConst {
       SC: {
         ContentTreeNode: 'scContentTreeNode',
         scContentTreeNodeActive: 'scContentTreeNodeActive',
+        scContentTreeNodeNormal: 'scContentTreeNodeNormal',
       }
     },
     Selector: {
@@ -146,7 +147,8 @@ export class ContentConst {
     },
     Numbers: {
       Desktop: {
-        MaxToolBarNameChars: 13
+        MaxToolBarNameChars: 13,
+        TimeNewCEWaitForScOverlayToClearMs: 1500, //500, 300 - not long enough
       }
     },
     MaxIter: 100,

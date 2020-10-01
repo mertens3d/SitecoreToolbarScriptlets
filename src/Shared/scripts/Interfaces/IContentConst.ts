@@ -33,6 +33,7 @@ export interface IContentConst {
     SC: {
       ContentTreeNode: string,
       scContentTreeNodeActive: string,
+      scContentTreeNodeNormal: string,
     }
   },
 
@@ -87,6 +88,7 @@ export interface IContentConst {
   Numbers: {
     Desktop: {
       MaxToolBarNameChars: number,
+      TimeNewCEWaitForScOverlayToClearMs: number,
     }
   },
   MaxIter: number,

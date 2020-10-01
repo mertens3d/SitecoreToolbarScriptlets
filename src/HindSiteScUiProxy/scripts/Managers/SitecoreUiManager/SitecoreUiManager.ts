@@ -57,7 +57,7 @@ export class ScUiManager extends LoggableBase implements iSitecoreUiManager {
       var loginButton: HTMLElement = this.GetLoginButton(targetDoc);
 
       if (this.Logger.IsNotNullOrUndefinedBool('loginButton', loginButton)) {
-        this.Logger.Log('clicking');
+        this.Logger.Log('clicking loginbutton');
         loginButton.click();
 
         if (callbackOnComplete) {

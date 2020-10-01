@@ -4,7 +4,6 @@ import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { InitReportContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy';
-import { IContentTreeProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IContentTreeProxy';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
@@ -20,8 +19,7 @@ import { ContentTreeProxyMutationEvent_Observer } from '../../Desktop/DesktopPro
 import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 
 export class ContentEditorProxy extends LoggableBase {
-
-  private ContentTreeProxy: IContentTreeProxy;
+  private ContentTreeProxy: ContentTreeProxy;
   private TreeMutationEvent_Observer: ContentTreeProxyMutationEvent_Observer;
   public ContentEditorProxyMutationEvent_Subject: ContentEditorProxyMutationEvent_Subject;
   readonly AssociatedDoc: IDataOneDoc;
@@ -95,7 +93,7 @@ export class ContentEditorProxy extends LoggableBase {
       let toReturnStateOfContentEditor: IStateOfContentEditor = new DefaultStateOfContentEditor();
 
       await this.ContentTreeProxy.GetStateOfContentTree()
-        .then((stateOfContentTree: IStateOfContentTree )=> toReturnStateOfContentEditor.StateOfContentTree = stateOfContentTree)
+        .then((stateOfContentTree: IStateOfContentTree) => toReturnStateOfContentEditor.StateOfContentTree = stateOfContentTree)
         .then(() => resolve(toReturnStateOfContentEditor))
         .catch((err) => reject(this.GetStateOfContentEditorProxy.name + ' | ' + err));
       this.Logger.FuncEnd(this.GetStateOfContentEditorProxy.name);
@@ -160,7 +158,9 @@ export class ContentEditorProxy extends LoggableBase {
 
       //this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfContentEditorTreeProxy.StateOfTreeNodes.length);
 
-      await this.ContentTreeProxy.SetStateOfContentTree(dataToRestore.StateOfContentTree)
+      await this.RecipeBasic.WaitForTimePeriod(1000, this.SetStateOfContentEditorAsync.name)
+        .then(() => this.RecipeBasic.WaitForNoUiFrontOverlay(this.SetStateOfContentEditorAsync.name))
+        .then(() => this.ContentTreeProxy.SetStateOfContentTree(dataToRestore.StateOfContentTree.StateOfScContentTreeNodeDeep))
         .then(() => {
           this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
           resolve(true);

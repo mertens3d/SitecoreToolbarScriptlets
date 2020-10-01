@@ -16,7 +16,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
   private LinkNodeElem: HTMLAnchorElement;
   private glyphElem: HTMLImageElement;
-  private Children: ScContentTreeNodeProxy[];
+  private Children: ScContentTreeNodeProxy[] = [];
   private StateOfScContentTreeNode: IStateOfScContentTreeNodeDeep = {
     // leave in this order to make it easier to debug when looking at the data in devtools. This is the order it will log out (and maybe store)
     Friendly: '',
@@ -64,7 +64,9 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
   async Instantiate(): Promise<void> {
     try {
-    } catch (e) {
+      await this.HarvestNodeState();
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.Instantiate.name, err);
     }
   }
 
@@ -116,18 +118,16 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     });
   }
 
-  private async GetStateOfScContentTreeNode(includeChildren: boolean): Promise<IStateOfScContentTreeNodeDeep> {
+  private async GetStateOfScContentTreeNodeGeneric(includeChildren: boolean): Promise<IStateOfScContentTreeNodeDeep> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetStateOfScContentTreeNode.name);
+      this.Logger.FuncStart(this.GetStateOfScContentTreeNodeGeneric.name);
       let stateOfChildrenAr: Promise<IStateOfScContentTreeNodeDeep>[] = [];
-      await this.HarvestNodeState(true)
-        .then(() => {
-          if (includeChildren) {
-            this.Children.forEach((child: ScContentTreeNodeProxy) => stateOfChildrenAr.push(child.GetStateOfScContentTreeNodeDeep()));
-            this.Logger.LogVal('children promiseAr length ', stateOfChildrenAr.length);
-          }
-        })
-        .then(() => Promise.all(stateOfChildrenAr))
+      if (includeChildren) {
+        this.Children.forEach((child: ScContentTreeNodeProxy) => stateOfChildrenAr.push(child.GetStateOfScContentTreeNodeDeep()));
+        this.Logger.LogVal('children promiseAr length ', stateOfChildrenAr.length);
+      }
+
+      await Promise.all(stateOfChildrenAr)
         .then((result: IStateOfScContentTreeNodeDeep[]) => {
           this.StateOfScContentTreeNode.NodeChildren = [];
           result.forEach((stateoOfScContentTreeNodeChild: IStateOfScContentTreeNodeDeep) => {
@@ -137,15 +137,15 @@ export class ScContentTreeNodeProxy extends LoggableBase {
           })
         })
         .then(() => resolve(this.StateOfScContentTreeNode))
-        .catch((err) => reject(this.GetStateOfScContentTreeNode.name + ' | ' + err));
+        .catch((err) => reject(this.GetStateOfScContentTreeNodeGeneric.name + ' | ' + err));
 
-      this.Logger.FuncEnd(this.GetStateOfScContentTreeNode.name);
+      this.Logger.FuncEnd(this.GetStateOfScContentTreeNodeGeneric.name);
     });
   }
 
   async GetStateOfScContentTreeNodeDeep(): Promise<IStateOfScContentTreeNodeDeep> {
     return new Promise(async (resolve, reject) => {
-      await this.GetStateOfScContentTreeNode(true)
+      await this.GetStateOfScContentTreeNodeGeneric(true)
         .then((stateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep) => resolve(stateOfScContentTreeNodeDeep))
         .catch((err) => reject(this.GetStateOfScContentTreeNodeDeep.name + ' | ' + err));
     });
@@ -155,7 +155,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetStateOfScContentTreeNodeFlat.name);
 
-      await this.GetStateOfScContentTreeNode(false)
+      await this.GetStateOfScContentTreeNodeGeneric(false)
         .then((stateOfContentTreeNodeFlat: IStateOfScContentTreeNodeFlat) => resolve(stateOfContentTreeNodeFlat))
         .catch((err) => reject(this.GetStateOfScContentTreeNodeDeep.name + ' | ' + err));
 
@@ -174,7 +174,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
           await this.GetLinkNodeElem()
             .then((htmlAnchorElement: HTMLAnchorElement) => {
-              this.Logger.Log('link found');
+              this.Logger.Log('link node found');
               this.LinkNodeElem = htmlAnchorElement
             })
             .then(() => this.GetGlyphNodeElem())
@@ -184,8 +184,8 @@ export class ScContentTreeNodeProxy extends LoggableBase {
             .then(() => {
               this.Logger.ThrowIfNullOrUndefined(this.HarvestNodeState.name, [this.LinkNodeElem, this.glyphElem]);
 
-              this.StateOfScContentTreeNode.IsActive = this.QueryIsActive(this.LinkNodeElem);
-              this.StateOfScContentTreeNode.IsExpanded = this.QueryIsExpanded(this.glyphElem);
+              this.StateOfScContentTreeNode.IsActive = this.QueryIsActive();
+              this.StateOfScContentTreeNode.IsExpanded = this.QueryIsExpanded();
               this.StateOfScContentTreeNode.Friendly = this.GetNodeLinkText(this.LinkNodeElem);
               this.StateOfScContentTreeNode.ItemId = this.GetApparentItemId(this.glyphElem);
               this.StateOfScContentTreeNode.IconSrc = this.GetIconSrc();
@@ -230,19 +230,19 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     return toReturn;
   }
 
-  GetParentTreeNode(): ScContentTreeNodeProxy {
-    let toReturn: ScContentTreeNodeProxy = null;
+  //GetParentTreeNode(): ScContentTreeNodeProxy {
+  //  let toReturn: ScContentTreeNodeProxy = null;
 
-    let candidate: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
+  //  let candidate: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
 
-    if (candidate) {
-      this.Logger.Log('found a candidate');
-      toReturn = new ScContentTreeNodeProxy(this.Logger, candidate, 0, 0, 1);
-    } else {
-      this.Logger.Log('no candidate found');
-    }
-    return toReturn;
-  }
+  //  if (candidate) {
+  //    this.Logger.Log('found a candidate');
+  //    toReturn = new ScContentTreeNodeProxy(this.Logger, candidate, 0, 0, 1);
+  //  } else {
+  //    this.Logger.Log('no candidate found');
+  //  }
+  //  return toReturn;
+  //}
 
   //IsSitecoreRootNode(): boolean {
   //  let toReturn: boolean = false;
@@ -255,7 +255,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   //}
 
   private GetChildren(): Promise<ScContentTreeNodeProxy[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         let toReturn: ScContentTreeNodeProxy[] = [];
 
@@ -263,6 +263,12 @@ export class ScContentTreeNodeProxy extends LoggableBase {
         childNodes.forEach((childNode: HTMLDivElement, index: number) => {
           toReturn.push(new ScContentTreeNodeProxy(this.Logger, childNode, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length))
         });
+
+        let PromiseAr: Promise<void>[] = [];
+        toReturn.forEach((newScContentTreeNodeProxy: ScContentTreeNodeProxy) => PromiseAr.push(newScContentTreeNodeProxy.Instantiate()));
+
+        await Promise.all(PromiseAr);
+
 
         this.Logger.LogVal(this.GetChildren.name, toReturn.length.toString());
         resolve(toReturn);
@@ -295,52 +301,71 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     return toReturn;
   }
 
-  SetStateOfTreeNode(newData: IStateOfScContentTreeNodeDeep) {
-    if (newData.IsExpanded) {
-      this.ExpandNode();
-    }
-
-    if (newData.IsActive) {
-      var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.ItemId);
-
-      let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector('[id=' + hotTreeNodeId + ']');
-
-      if (hotTreeNode) {
-        let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, hotTreeNode, 0, 0, 1);
-
-        if (hotTreeNodeProxy) {
-          hotTreeNodeProxy.ActivateNode()
-        } else {
-          this.Logger.ErrorAndContinue(this.SetStateOfTreeNode.name, 'hot tree node not found')
-        }
-      } else {
-        this.Logger.WarningAndContinue(this.SetStateOfTreeNode.name, 'No hotTreeNode');
+  async SetStateOfTreeNode(newData: IStateOfScContentTreeNodeDeep, depth: number): Promise<void> {
+    try {
+      if (newData.IsExpanded) {
+        await this.ExpandNode();
       }
+
+      if (newData.IsActive) {
+        await this.ActivateNode();
+        //var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.ItemId);
+
+        //let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector('[id=' + hotTreeNodeId + ']');
+
+        //if (hotTreeNode) {
+        //  let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, hotTreeNode, 0, 0, 1);
+
+        //  if (hotTreeNodeProxy) {
+        //    hotTreeNodeProxy.ActivateNode()
+        //  } else {
+        //    this.Logger.ErrorAndContinue(this.SetStateOfTreeNode.name, 'hot tree node not found')
+        //  }
+        //} else {
+        //  this.Logger.WarningAndContinue(this.SetStateOfTreeNode.name, 'No hotTreeNode');
+        //}
+      }
+
+      //if (newData.NodeChildren.length > 0) {
+      //  let promises: Promise<void>[] = []
+      //  //stateOfContentEditor.StateOfScContentTreeNodeDeep
+
+      //  newData.NodeChildren.forEach((treeNode: IStateOfScContentTreeNodeDeep, index) => {
+      //    promises.push(this.SetStateOfTreeNode(treeNode, depth + 1))
+      //    //newData.NodeChildren.map(async treeNode  => {
+      //    //let newNode: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, treeNode.ItemId, 0, 0, 1);
+      //    //const numFruit = await this.SetStateOfTreeNode_TreeProxy(treeNode);
+      //    //return numFruit;
+      //  });
+
+      //await Promise.all(promises);
+      //}
+    } catch (err) {
+      this.Logger.ErrorAndThrow(this.SetStateOfTreeNode.name, err);
     }
   }
 
-  private QueryIsActive(linkNodeElem: HTMLElement): boolean {
-    let classList = linkNodeElem.classList;
+  private QueryIsActive(): boolean {
+    let classList = this.LinkNodeElem.classList;
     let toReturn: boolean = classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive);
     return toReturn;
   }
 
-  async ActivateNode(): Promise<void> {
+  private async ActivateNode(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ActivateNode.name);
 
-      await this.HarvestNodeState()
-        .then(() => {
-          this.Logger.Log('activating node');
-          this.LinkNodeElem.click();
-        })
-        // check and reset the data
-        .then(() => this.HarvestNodeState(true))
-        .then(() => {
-          if (!this.StateOfScContentTreeNode.IsActive) {
-            this.Logger.WarningAndContinue(this.ActivateNode.name, 'Did not work. Trying to activate: ');
-          }
-        })
+      this.Logger.Log('activating node: ' + this.StateOfScContentTreeNode.Friendly);
+
+      await this.RecipeBasics.WaitForElemToHaveClassOrReject(this.LinkNodeElem,
+        [ContentConst.Const.ClassNames.SC.scContentTreeNodeActive, ContentConst.Const.ClassNames.SC.scContentTreeNodeNormal],
+        this.StateOfScContentTreeNode.Friendly)
+      this.LinkNodeElem.click();
+
+      await this.RecipeBasics.WaitForElemToHaveClassOrReject(this.LinkNodeElem,
+        [ContentConst.Const.ClassNames.SC.scContentTreeNodeActive],
+        this.StateOfScContentTreeNode.Friendly)
+        .then(() => resolve())
         .catch((err) => reject(this.ActivateNode.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.ActivateNode.name);
@@ -358,13 +383,10 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
   async ExpandNode(): Promise<void> {
     try {
-      await this.HarvestNodeState(true)
-        .then(() => {
-          if (!this.StateOfScContentTreeNode.IsExpanded) {
-            this.glyphElem.click();
-          }
-        })
-        .catch((err) => this.Logger.ErrorAndThrow(this.ExpandNode.name, err));
+      if (!this.QueryIsExpanded()) {
+        this.glyphElem.click();
+      }
+      //.catch((err) => this.Logger.ErrorAndThrow(this.ExpandNode.name, err));
     }
     catch (err) {
       this.Logger.ErrorAndThrow(this.ExpandNode.name, err);
@@ -382,9 +404,9 @@ export class ScContentTreeNodeProxy extends LoggableBase {
     return toReturn;
   }
 
-  private QueryIsExpanded(glyphHtmlImageElement: HTMLImageElement): boolean {
+  private QueryIsExpanded(): boolean {
     var toReturn: boolean = false;
-    var srcAttr = glyphHtmlImageElement.getAttribute('src');
+    var srcAttr = this.glyphElem.getAttribute('src');
     if (srcAttr !== null) {
       if (srcAttr.indexOf(ContentConst.Const.Names.SC.TreeExpandedPng.sc920) > -1) {
         toReturn = true;

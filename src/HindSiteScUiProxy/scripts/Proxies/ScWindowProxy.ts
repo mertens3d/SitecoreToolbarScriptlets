@@ -199,7 +199,7 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
           if (dataToRestore.StateOfScWindow.StateOfDesktop) {
-            await this.DesktopProxy.SetStateOfDesktop(dataToRestore.StateOfScWindow.StateOfDesktop)
+            await this.DesktopProxy.SetStateOfDesktopAsync(dataToRestore.StateOfScWindow.StateOfDesktop)
               .then(() => resolve())
               .catch((err) => reject(this.SetStateOfScWin.name + ' | ' + err));
           } else {

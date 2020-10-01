@@ -108,6 +108,57 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     });
   }
 
+  WaitForNoUiFrontOverlay(friendly: string): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForNoUiFrontOverlay.name, friendly);
+      var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForNoUiFrontOverlay.name, true);
+
+      let overLayExists: boolean = true;
+
+      let iframeElem: HTMLIFrameElement = <HTMLIFrameElement> document.getElementById('jqueryModalDialogsFrame');
+      let iframeContentDoc: Document = iframeElem.contentDocument;
+      let iframeContentDocBody: HTMLBodyElement = <HTMLBodyElement> iframeContentDoc.body;
+
+      while (iterationJr.DecrementAndKeepGoing() && overLayExists) {
+        await iterationJr.Wait();
+
+        let foundElem: HTMLElement = iframeContentDocBody.querySelector(':scope > .ui-widget-overlay.ui-front');
+        overLayExists = foundElem !== null;
+      }
+
+      if (iterationJr.IsExhausted) {
+        this.Logger.Log(iterationJr.IsExhaustedMsg);
+        reject(iterationJr.IsExhaustedMsg);
+      } else {
+        resolve();
+      }
+      this.Logger.FuncEnd(this.WaitForNoUiFrontOverlay.name, friendly);
+    });
+  }
+
+  WaitForTimePeriod(timeToWaitMs: number, friendly: string): any {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForTimePeriod.name, friendly);
+      var iterationJr: IterationDrone = new IterationDrone(this.Logger, this.WaitForTimePeriod.name, true);
+
+      let startTimeStamp: number = new Date().getTime();
+      let timeElapsed: number = 0;
+
+      while (iterationJr.DecrementAndKeepGoing() && timeElapsed < timeToWaitMs) {
+        timeElapsed = new Date().getTime() - startTimeStamp;
+        await iterationJr.Wait();
+      }
+
+      if (iterationJr.IsExhausted) {
+        this.Logger.Log(iterationJr.IsExhaustedMsg);
+        reject(iterationJr.IsExhaustedMsg);
+      } else {
+        resolve();
+      }
+      this.Logger.FuncEnd(this.WaitForTimePeriod.name, friendly);
+    });
+  }
+
   async WaitForCompleteNABDataOneDoc(targetDoc: IDataOneDoc, friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNABDataOneDoc.name, friendly);
@@ -255,6 +306,42 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
     });
   }
 
+  async WaitForElemToHaveClassOrReject(htmlElement: HTMLElement, classNames: string[], friendly: string): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForElemToHaveClassOrReject.name, friendly + ' - ' + classNames);
+
+      this.Logger.ThrowIfNullOrUndefined(this.WaitForElemToHaveClassOrReject.name, [htmlElement, classNames]);
+
+      this.Logger.LogAsJsonPretty('classNames', classNames);
+
+      var elemHasClassName: boolean = false;
+
+      var iterationJr = new IterationDrone(this.Logger, this.WaitForElemToHaveClassOrReject.name + ' : ' + classNames + ' ' + friendly, true);
+
+      while (!elemHasClassName && iterationJr.DecrementAndKeepGoing()) {
+        let classList = htmlElement.classList;
+
+        classNames.forEach((className: string) => {
+          if (classList.contains(className)) {
+            elemHasClassName = true;
+          }
+        })
+
+        this.Logger.LogAsJsonPretty('classList', classList);
+        if (elemHasClassName) {
+          this.Logger.Log('has it');
+          resolve()
+        } else {
+          await iterationJr.Wait();
+        }
+      }
+      if (iterationJr.IsExhausted) {
+        reject(iterationJr.IsExhaustedMsg);
+      }
+      this.Logger.FuncEnd(this.WaitForElemToHaveClassOrReject.name, friendly);
+    });
+  }
+
   async WaitAndReturnFoundFromContainer(haystackElem: HTMLElement, selector: string, friendly: string): Promise<HTMLElement> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitAndReturnFoundFromContainer.name, friendly);
@@ -392,7 +479,7 @@ export class RecipeBasics extends LoggableBase implements IRecipeBasics {
 
       if (found) {
         try {
-          this.Logger.Log('clicking');
+          this.Logger.LogAsJsonPretty(this.WaitForThenClick.name + ' clicking', selectorAr);
           found.click();
           resolve();
         } catch (err) {
