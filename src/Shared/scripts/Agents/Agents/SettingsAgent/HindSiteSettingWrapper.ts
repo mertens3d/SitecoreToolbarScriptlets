@@ -1,6 +1,6 @@
 ﻿import { _HindeCoreBase } from "../../../LoggableBase";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { HindSiteSetting } from "./HindSiteSetting";
 
 export class HindSiteSettingWrapper extends _HindeCoreBase {

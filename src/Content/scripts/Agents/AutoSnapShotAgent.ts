@@ -5,7 +5,7 @@ import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";

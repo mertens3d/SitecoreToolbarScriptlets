@@ -1,6 +1,6 @@
 ﻿import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";

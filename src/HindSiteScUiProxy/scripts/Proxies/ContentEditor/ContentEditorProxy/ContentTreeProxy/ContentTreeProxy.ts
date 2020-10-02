@@ -1,7 +1,7 @@
 ﻿import { IterationDrone } from '../../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
-import { IHindeCore } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReportTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';

@@ -1,5 +1,5 @@
 ﻿import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
-import { IHindeCore } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
@@ -55,16 +55,13 @@ export class DTStartBarProxy extends _HindeCoreBase {
       this.StartBarButtonProxyBucket.forEach((startBarButtonProxy: DesktopStartBarButtonProxy) => {
         if (startBarButtonProxy.FrameId === dTFrameProxyMutationEventPayload.FrameId) {
           foundStartBarButtonProxy = startBarButtonProxy
-          this.Logger.Log('found a match');
         }
       });
 
       if (!foundStartBarButtonProxy) {
-        this.Logger.Log('no match found, making it');
-
         foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.HindeCore, dTFrameProxyMutationEventPayload.FrameId, this.AssociatedDoc);
         await foundStartBarButtonProxy.Instantiate_DestopStartBarButtonProxy()
-          .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetAssociatedStartBarButton.name, err));
+          .catch((err) => reject(this.GetAssociatedStartBarButton.name + ' | ' + err));
 
         this.StartBarButtonProxyBucket.push(foundStartBarButtonProxy);
       }

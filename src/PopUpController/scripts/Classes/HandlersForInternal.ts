@@ -1,5 +1,5 @@
 ﻿import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { BrowserTabAgent } from "../Agents/BrowserTabAgent";

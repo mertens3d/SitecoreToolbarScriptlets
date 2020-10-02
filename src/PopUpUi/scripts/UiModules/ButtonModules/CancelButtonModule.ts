@@ -1,5 +1,5 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { _base_ButtonModule } from "./_baseButtonModule";

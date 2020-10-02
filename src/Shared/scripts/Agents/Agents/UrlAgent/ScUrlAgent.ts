@@ -2,7 +2,7 @@
 import { scMode } from "../../../Enums/scMode";
 import { ScWindowType } from "../../../Enums/scWindowType";
 import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
-import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";

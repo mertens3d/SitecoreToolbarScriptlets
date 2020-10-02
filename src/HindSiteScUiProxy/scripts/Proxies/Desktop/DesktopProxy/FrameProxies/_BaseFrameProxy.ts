@@ -3,7 +3,7 @@ import { DocumentReadyState, ReadyStateNAB } from "../../../../../../Shared/scri
 import { FactoryHelper } from "../../../../../../Shared/scripts/Helpers/FactoryHelper";
 import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
-import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IDataOneDoc } from "../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/LoggableBase";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
@@ -44,12 +44,10 @@ export class _BaseFrameProxy extends _HindeCoreBase {
 
       await this.RecipeBasics.WaitForCompleteNABHtmlIframeElement(this.HTMLIframeElement, this.Friendly)
         .then((result: ReadyStateNAB) => {
-          result.LogDebugValues();
+          //result.LogDebugValues();
           if (result.IsCompleteNAB()) {
-            this.Logger.Log('it says it is complete')
             resolve(result.DocumentReadyState());
           } else {
-            this.Logger.Log('rejecting')
             reject(result.DocumentReadtStateFriendly);
           }
         })

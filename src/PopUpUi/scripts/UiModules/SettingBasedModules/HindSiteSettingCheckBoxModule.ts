@@ -4,7 +4,7 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { UiEnableState } from "../../../../Shared/scripts/Enums/Enabled";
 import { IUiSettingBasedModuleMutationEven_Payload } from "../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
 

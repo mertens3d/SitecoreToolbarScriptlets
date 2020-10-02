@@ -2,80 +2,14 @@
 import { BufferChar } from "../../../Enums/BufferChar";
 import { BufferDirection } from "../../../Enums/BufferDirection";
 import { GuidData } from "../../../Helpers/GuidData";
-import { IHindeCore, ILoggerAgent, IErrorHandlerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 import { IDataDebugCallback } from "../../../Interfaces/IDataDebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
-import { IError } from "../../../Interfaces/IError";
 import { LogWriterBuffer } from "./LogWriterBuffer";
 import { LoggerTimer } from "./LoggerTimer";
-
-export class ErrorHandlerAgent implements IErrorHandlerAgent {
-  ErrorStack: IError[] = [];
-
-  ThrowIfNullOrUndefined(title: string, testSubject: any,): void
-  ThrowIfNullOrUndefined(title: string, testSubject: any[]): void
-  ThrowIfNullOrUndefined(title: string, testSubject: any | any[]): void {
-    //try {
-    if (testSubject instanceof Array) {
-      (<any[]>testSubject).forEach((testSubject: any) => this.ThrowIfNullOrUndefined(title, testSubject));
-    } else {
-      if (typeof testSubject === 'undefined' || testSubject === null) {
-        this.ErrorAndThrow(title, 'Failed Null check');
-      }
-    }
-    //} catch (err) {
-    //  throw
-    //}
-  }
-
-  WarningAndContinue(container: string, text: any): void {
-    if (!container) {
-      container = 'unknown';
-    }
-
-    if (!text) {
-      text = 'unknown';
-    }
-
-    this.ErrorLogger('');
-    this.ErrorLogger('\t\t** WARNING ** ' + container + ' ' + text);
-    this.ErrorLogger('');
-  }
-
-
-  ErrorAndContinue(container: string, text: any): void {
-    if (!container) {
-      container = 'unknown';
-    }
-
-    if (!text) {
-      text = 'unknown';
-    }
-
-    this.ErrorStack.push({
-      ContainerFunc: container,
-      ErrorString: text
-    });
-
-    this.ErrorLogger('');
-    this.ErrorLogger('\t\ts) ** ERROR ** container: ' + container);
-    this.ErrorLogger('');
-    this.ErrorLogger('\t\t error message: ' + text);
-    this.ErrorLogger('');
-    this.ErrorLogger('\t\te)** ERROR container: ** ' + container);
-    this.ErrorLogger('');
-  }
-
-  async ErrorLogger(text) {
-    console.log('**********' + text + '**********');
-  }
-
-  ErrorAndThrow(container: string, text: any): void {
-    this.ErrorAndContinue(container, text);
-    throw container + " " + text
-  }
-}
 
 export class LoggerAgent implements ILoggerAgent {
   private MaxIndent: number = 20;
@@ -86,8 +20,16 @@ export class LoggerAgent implements ILoggerAgent {
   private HasWriters: boolean;
   Timer: LoggerTimer;
   UseTimeStamp: boolean = true;
+  private styleEsc: string = "\x1b";
+  private styleFgRed: string = "[31m";
+  private styleReset: string = "[0m";
+  private styleGreen: string = "[32m";
+  private styleFgMagenta: string = "[35m";
+  private styleFgBlue: string = "[34m";
+  private AltColor: string;
+  readonly Discriminator = Discriminator.ILoggerAgent;
 
-  CancelRequestedFlag: boolean = false;
+  
   private MaxDepthBeforeThrow: number = 2000; //this is to avoid extreme runaway code
 
   constructor() {
@@ -110,9 +52,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
 
-  CancelRequested() {
-    this.CancelRequestedFlag = true;
-  }
+
 
   RemoveWriter(BufferWriter: LogWriterBuffer) {
     for (var idx = 0; idx < this.AllLogWriters.length; idx++) {
@@ -224,9 +164,18 @@ export class LoggerAgent implements ILoggerAgent {
       }
     }
     textVal = textVal.toString();
-    textValName = StaticHelpers.BufferString(textValName.toString(), 50, BufferChar.space, BufferDirection.right);
-    const debugPrefix = '  ~~~  ';
-    this.Log(debugPrefix + textValName + ' : ' + textVal);
+    textValName = StaticHelpers.BufferString(textValName.toString(), 26, BufferChar.space, BufferDirection.right);
+    const debugPrefix = '~~ ';
+
+    let rawText: string = debugPrefix + textValName + ' : ' + textVal;
+
+    if (this.AltColor === this.styleFgBlue) {
+      this.AltColor = this.styleFgMagenta;
+    } else {
+      this.AltColor = this.styleFgBlue; 
+    }
+    let formattedText: string = this.StyleFormat(this.AltColor, rawText);
+    this.Log(formattedText);
   }
 
   async Log(text, optionalValue: string = '', hasPrefix = false) {
@@ -265,7 +214,7 @@ export class LoggerAgent implements ILoggerAgent {
           try {
             oneWriter.WriteText(text)
           } catch (err) {
-            console.log(this.WriteToAllWriters.name + ' ' + oneWriter.FriendlyName + ' | ' + err);
+            console.log(  this.WriteToAllWriters.name + ' ' + oneWriter.FriendlyName + ' | ' + err);
           }
         } else {
           console.log('Null writer');
@@ -279,6 +228,11 @@ export class LoggerAgent implements ILoggerAgent {
       var oneCallback: IDataDebugCallback = this.__debugTextChangedCallbacks[idx];
       oneCallback.Func(oneCallback.Caller, data);
     }
+  }
+
+
+  StyleFormat(color: string, text: string) {
+    return this.styleEsc + color + text + this.styleEsc + this.styleReset;
   }
 
   CtorName(ctorName: string) {
@@ -300,7 +254,10 @@ export class LoggerAgent implements ILoggerAgent {
     if (optionalValue.length > 0) {
       textOrFunc = textOrFunc + ' : ' + optionalValue;
     }
-    this.Log(textOrFunc, '', true);
+
+    let formatted = this.StyleFormat(this.styleGreen, textOrFunc);
+
+    this.Log(formatted, '', true);
     this.__callDepth++;
     if (this.__callDepth > this.MaxDepthBeforeThrow) {
       throw ('Logger - Max Depth Exceeded: ' + this.__callDepth);
@@ -336,8 +293,9 @@ export class LoggerAgent implements ILoggerAgent {
     if (optionalValue.length > 0) {
       text = text + ' : ' + optionalValue;
     }
-
-    this.Log(text, optionalValue, true);
+    let formatted = this.StyleFormat(this.styleFgRed, text);
+    this.Log(formatted, '', true);
+    this.Log(formatted, optionalValue, true);
   }
 
 

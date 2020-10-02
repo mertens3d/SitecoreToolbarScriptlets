@@ -4,7 +4,7 @@ import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";

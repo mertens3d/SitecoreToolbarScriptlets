@@ -1,4 +1,4 @@
-﻿import { IHindeCore } from "../Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { _HindeCoreBase } from "../LoggableBase";
 
 export class PromiseResult extends _HindeCoreBase {

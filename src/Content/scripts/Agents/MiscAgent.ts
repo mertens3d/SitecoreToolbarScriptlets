@@ -1,4 +1,4 @@
-﻿import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 

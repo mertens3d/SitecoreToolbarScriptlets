@@ -1,7 +1,7 @@
 ﻿import { ToastAgent } from "../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent";
 import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
 import { IHindSiteScUiProxy } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
-import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IScWindowProxy } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IDataOneDoc } from "../../Shared/scripts/Interfaces/Data/IDataOneDoc";

@@ -5,7 +5,7 @@ import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IRepositoryAgent } from "../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
@@ -213,7 +213,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
   //        //candidate.Meta.SnapshotId = new GuidData(candidate.Meta.SnapshotId.Raw);
   //        toReturn.push(candidate);
   //      } else {
-  //        this.Logger.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.Meta.SnapshotId.Raw)
+  //        this.ErrorHand.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.Meta.SnapshotId.Raw)
   //      }
   //    } catch (err) {
   //    }

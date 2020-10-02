@@ -1,7 +1,7 @@
 ﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
 import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";

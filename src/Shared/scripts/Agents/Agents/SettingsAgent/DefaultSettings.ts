@@ -9,7 +9,7 @@ import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ContentConst } from "../../../Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../LoggableBase";
 import { SharedConst } from "../../../SharedConst";
-import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { HindSiteSetting } from "./HindSiteSetting";
 import { HindSiteSettingForNumbers } from "./HindSiteSettingForNumbers";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";

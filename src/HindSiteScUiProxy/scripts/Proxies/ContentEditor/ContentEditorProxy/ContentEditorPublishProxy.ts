@@ -10,7 +10,7 @@ import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { _ApiRecipeBase } from "../../../ContentApi/Recipes/__RecipeBase/_ApiRecipeBase";
 import { IFactoryHelper } from "../../../../../Shared/scripts/Interfaces/IFactoryHelper";
 import { IScWindowProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
 import { ContentEditorProxy } from "./ContentEditorProxy";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";

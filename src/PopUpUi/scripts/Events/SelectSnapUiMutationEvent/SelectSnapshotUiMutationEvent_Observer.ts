@@ -1,6 +1,6 @@
 ﻿import { HindSiteEvent_Observer } from '../../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer';
 import { IHindSiteEvent_Observer } from '../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer';
-import { IHindeCore } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { UiModulesManager } from '../../Managers/UiManager/UiModulesManager';
 import { ISelectSnapUiMutationEvent_Payload } from './ISelectSnapUiMutationEvent_Payload';
 

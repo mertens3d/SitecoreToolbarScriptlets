@@ -1,6 +1,8 @@
 import { HindSiteScUiProxy } from '../../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
 import { ScUiManager } from '../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager';
-import { LoggerAgent, ErrorHandlerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
+import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
+import { InterruptAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/InterruptAgent";
+import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/ErrorHandlerAgent";
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
 import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent';
@@ -32,7 +34,8 @@ import { IMessageControllerToContent } from "../../Shared/scripts/Interfaces/IMe
 import { ICommandRouterParams } from "../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
 import { _HindeCoreBase } from '../../Shared/scripts/LoggableBase';
-import { IHindeCore } from '../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -49,6 +52,7 @@ class ContentEntry {
   CommandRouter: CommandRouter;
   HindeCore: IHindeCore;
     ErrorHand: ErrorHandlerAgent;
+    TaskMonitor: InterruptAgent;
 
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
@@ -69,6 +73,7 @@ class ContentEntry {
       this.AtticAgent = new ContentAtticAgent(this.RepoAgent, this.HindeCore);
       this.MiscAgent = new MiscAgent(this.HindeCore);
       this.ToastAgent = new ToastAgent(this.HindeCore, document);
+      this.ToastAgent.Instantiate();
 
       this.ScUrlAgent = new ScUrlAgent(this.HindeCore, null);
       this.ScUrlAgent.Init_ScUrlAgent()
@@ -112,6 +117,7 @@ class ContentEntry {
         .then((result: InitReportScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
         .then(() => {
           this.AutoSnapShotAgent.ScheduleIntervalTasks();
+          
         })
         .then(() => this.StartUp())
         .then(() => this.Logger.Log('Init success'))
@@ -169,10 +175,15 @@ class ContentEntry {
   private InstantiateAndInit_LoggerAndSettings(): void {
     this.Logger = new LoggerAgent();
     this.ErrorHand = new ErrorHandlerAgent();
+    this.TaskMonitor = new InterruptAgent(this.Logger, this.ErrorHand);
+
     this.HindeCore = {
       Logger: this.Logger,
       ErrorHand: this.ErrorHand,
+      TaskMonitor: this.TaskMonitor,
+      Discriminator: Discriminator.IHindeCore,
     }
+
 
     this.RepoAgent = new RepositoryAgent(this.HindeCore);
 

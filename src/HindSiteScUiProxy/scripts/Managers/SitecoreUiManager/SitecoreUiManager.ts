@@ -1,5 +1,5 @@
 ﻿import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";

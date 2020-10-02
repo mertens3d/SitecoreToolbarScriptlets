@@ -2,7 +2,7 @@
 import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
 import { UiPresence } from "../../../../Shared/scripts/Enums/UiPresence";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { AccordianModule } from "./AccordianModule";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";

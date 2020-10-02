@@ -3,7 +3,7 @@ import { _HindeCoreBase } from "../../../LoggableBase";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
-import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { DefaultSettings } from "./DefaultSettings";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 

@@ -1,7 +1,7 @@
 ﻿import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";

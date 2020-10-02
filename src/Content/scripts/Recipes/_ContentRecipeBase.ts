@@ -1,5 +1,5 @@
 ﻿import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";

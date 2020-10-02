@@ -8,7 +8,7 @@ import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
-import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReportScWindowManager } from "../../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { IScWindowProxy } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';

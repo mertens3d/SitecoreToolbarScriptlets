@@ -1,12 +1,14 @@
 ﻿import { ISingleClickEvent_Payload } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/ISingleClickEvent_Payload";
 import { SingleClickEvent_Observer } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Observer";
 import { SingleClickEvent_Subject } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Subject";
-import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
 import { _HindeCoreBase } from "../../../LoggableBase";
+import { TaskListMutationEvent_Observer } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/TaskListMutationEvent_Observer";
+import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/ITaskListMutationEvent_Payload";
+import { TaskMutationType } from "../LoggerAgent/InterruptAgent";
 
-export class ToastAgent  extends _HindeCoreBase implements IToastAgent {
-
+export class ToastAgent extends _HindeCoreBase implements IToastAgent {
   private classSlideUp: string = 'slide-up';
   private classSlideDown: string = 'slide-down';
   private ToastContainer: HTMLElement;
@@ -17,12 +19,22 @@ export class ToastAgent  extends _HindeCoreBase implements IToastAgent {
   private ButtonElem: HTMLInputElement;
   OnButtonClick_Subject: SingleClickEvent_Subject;
   OnButtonClick_ObserverTest: SingleClickEvent_Observer;
-  FlagTextDiv: HTMLDivElement;
+  private FlagTextDiv: HTMLDivElement;
+  private TaskMutationEvent_Observer: TaskListMutationEvent_Observer;
 
   constructor(hindeCore: IHindeCore, targetDoc: Document) {
     super(hindeCore);
     this.TargetDoc = targetDoc;
     this.DivineElements();
+  }
+
+  Instantiate() {
+    this.TaskMutationEvent_Observer = new TaskListMutationEvent_Observer(this.HindeCore, this.CallBackOnTaskListMutationEvent.bind(this))
+    this.TaskMonitor.TaskMutationEvent_Subject.RegisterObserver(this.TaskMutationEvent_Observer);
+  }
+
+  CallBackOnTaskListMutationEvent(payload: ITaskListMutationEvent_Payload) {
+    alert(TaskMutationType[payload.MutationType]);
   }
 
   async LowerPerpetualToast(message: string): Promise<void> {
@@ -125,8 +137,7 @@ export class ToastAgent  extends _HindeCoreBase implements IToastAgent {
   }
 
   TestCancelCallback() {
-    this.Logger.CancelRequested(); 
-    
+    this.TaskMonitor.CancelRequested();
   }
 
   private CreateCancelButton(): void {

@@ -2,7 +2,7 @@ import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
 import { UiCommandFlagRaisedEvent_Subject } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject';
-import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IStateOfUiModules } from "../../../Shared/scripts/Interfaces/IStateOfUiModules";

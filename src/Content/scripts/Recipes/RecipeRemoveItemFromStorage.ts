@@ -1,4 +1,4 @@
-﻿import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";

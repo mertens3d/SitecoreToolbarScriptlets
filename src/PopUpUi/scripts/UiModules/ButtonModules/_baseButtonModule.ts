@@ -1,7 +1,7 @@
 ﻿import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { CommandButtonEvents } from "../../../../Shared/scripts/Enums/CommandButtonEvents";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ICommandHandlerDataForPopUp } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/UiHydrationData";

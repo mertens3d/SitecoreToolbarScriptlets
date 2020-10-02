@@ -1,7 +1,7 @@
 ﻿import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IHindSiteScUiProxy } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";

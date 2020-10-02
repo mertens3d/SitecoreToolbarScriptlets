@@ -1,6 +1,6 @@
 ﻿import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
-import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReport_DTAreaProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitReport_DTAreaProxy";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";

@@ -1,5 +1,5 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
-import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfScContentTreeNodeFlat } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ScContentTreeNodeProxy";
 import { INativeClassNameChangeEvent_Payload } from "./INativeClassNameChangeEvent_Payload";

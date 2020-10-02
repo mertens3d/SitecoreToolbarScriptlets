@@ -1,6 +1,6 @@
 ﻿import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { _BaseFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";

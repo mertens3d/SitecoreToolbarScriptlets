@@ -7,7 +7,7 @@ import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor"
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";

@@ -1,4 +1,4 @@
-﻿import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { DTFrameProxy } from "../../FrameProxies/DTFrameProxy";
 import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
@@ -6,9 +6,11 @@ import { INativeIFrameAddedEvent_Payload } from "./INativeIFrameAddedEvent_Paylo
 
 export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INativeIFrameAddedEvent_Payload>  {
   private AssociatedDoc: IDataOneDoc;
+    HindeCore: IHindeCore;
 
   constructor(hindeCore: IHindeCore, targetDoc: IDataOneDoc) {
     super(hindeCore, NativeIFrameAddedEvent_Subject.name);
+    this.HindeCore = hindeCore;
 
     this.Logger.CTORStart(NativeIFrameAddedEvent_Subject.name);
     if (!targetDoc) {

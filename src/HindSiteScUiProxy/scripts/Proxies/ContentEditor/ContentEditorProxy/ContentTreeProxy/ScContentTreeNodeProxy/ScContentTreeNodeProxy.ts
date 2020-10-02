@@ -1,6 +1,6 @@
 ﻿import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
-import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../../../../../Shared/scripts/LoggableBase";

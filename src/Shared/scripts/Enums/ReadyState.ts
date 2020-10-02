@@ -1,6 +1,6 @@
 ﻿import { SharedConst } from "../SharedConst";
 import { _HindeCoreBase } from "../LoggableBase";
-import { IHindeCore } from "../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 
 export class ReadyStateNAB extends _HindeCoreBase {
   private Document: Document;

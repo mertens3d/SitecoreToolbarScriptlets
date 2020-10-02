@@ -1,6 +1,6 @@
 ﻿import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";

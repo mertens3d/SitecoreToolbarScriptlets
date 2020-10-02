@@ -1,5 +1,5 @@
 ﻿import { SharedConst } from '../../../SharedConst';
-import { IHindeCore } from '../../../Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { _HindeCoreBase } from '../../../LoggableBase';
 
 export class IterationDrone extends _HindeCoreBase {
@@ -10,7 +10,6 @@ export class IterationDrone extends _HindeCoreBase {
   private MaxIterations: number;
   private NickName: string;
   private Timeout: number;
-  private hindeCore: IHindeCore;
   private LogThisDroneInstance: boolean;
 
   constructor(hindeCore: IHindeCore, nickname: string, logThisDroneInstance: boolean, maxIterations: number = null) {
@@ -34,7 +33,7 @@ export class IterationDrone extends _HindeCoreBase {
       this.CurrentIteration -= 1;
       this.Timeout += this.Timeout * SharedConst.Const.IterHelper.GrowthPerIteration;
 
-      if (this.Logger.CancelRequestedFlag === true) {
+      if (this.TaskMonitor.IsCancelRequested()) {
         this.ErrorHand.ErrorAndThrow('CANCEL REQUESTED', '-----------------------------------');
       }
 

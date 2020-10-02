@@ -1,6 +1,6 @@
 ﻿import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { IMessageBroker_Content } from '../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
-import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 
 export class ContentMessageManager extends _HindeCoreBase {
   private ContentMessageBroker: IMessageBroker_Content;

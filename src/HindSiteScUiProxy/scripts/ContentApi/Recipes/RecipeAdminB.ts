@@ -1,4 +1,4 @@
-﻿import { IHindeCore } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+﻿import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScWindowProxy } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IApiCallPayload } from "../../../../Shared/scripts/Interfaces/IApiCallPayload";

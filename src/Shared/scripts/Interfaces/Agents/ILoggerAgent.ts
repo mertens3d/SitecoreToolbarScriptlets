@@ -1,24 +1,9 @@
 ﻿import { LoggerConsoleWriter } from "../../Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { GuidData } from "../../Helpers/GuidData";
-import { IError } from "../IError";
+import { IHindeCore } from "./IHindeCore";
+import { IDiscriminator } from "./IDiscriminator";
 
-export interface IHindeCore {
-  Logger: ILoggerAgent;
-  ErrorHand: IErrorHandlerAgent;
-}
-
-export interface IErrorHandlerAgent {
-  ErrorAndThrow(container: string, text: any): void
-  ErrorAndContinue(container: string, text: any): void
-  WarningAndContinue(container: string, text: any): void
-  ErrorStack: IError[];
-  ThrowIfNullOrUndefined(title: string, objectsToCheck: any | any[]): void;
-
-}
-
-export interface ILoggerAgent {
-  CancelRequestedFlag: boolean;
-  CancelRequested();
+export interface ILoggerAgent extends IDiscriminator {
   FlushBuffer();
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   AddWriter(arg0: LoggerConsoleWriter);
@@ -47,5 +32,4 @@ export interface ILoggerAgent {
   MarkerC();
   MarkerD();
   SectionMarker(arg0: string);
-  
 }

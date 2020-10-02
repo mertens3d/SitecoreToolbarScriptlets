@@ -1,5 +1,5 @@
 ﻿import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
-import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";

@@ -6,7 +6,7 @@ import { DesktopProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desk
 import { GuidData } from "../../Helpers/GuidData";
 import { IHindSiteScUiProxy } from "../../Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IHindeCore } from "../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../Interfaces/Data/IDataOneDoc";

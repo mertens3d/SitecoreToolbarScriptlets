@@ -1,6 +1,6 @@
 ﻿import { _HindeCoreBase } from "../../../LoggableBase";
 import { QueryStrKey } from "../../../Enums/QueryStrKey";
-import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/IUrlParts";

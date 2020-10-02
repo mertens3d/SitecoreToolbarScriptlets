@@ -1,4 +1,4 @@
-﻿import { IHindeCore } from "../Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";

@@ -1,7 +1,7 @@
 ﻿import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
-import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IHindSiteUiLayer } from "../../../Shared/scripts/Interfaces/IHindSiteUiLayer";

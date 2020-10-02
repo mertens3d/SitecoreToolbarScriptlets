@@ -1,5 +1,5 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _UiModuleBase } from "../_UiModuleBase";
 

@@ -7,7 +7,7 @@ import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { SettingFlavor } from '../../../../Shared/scripts/Enums/SettingFlavor';
 import { IHindSiteSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
-import { IHindeCore } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IUiModule } from '../../../../Shared/scripts/Interfaces/Agents/IUiModule';

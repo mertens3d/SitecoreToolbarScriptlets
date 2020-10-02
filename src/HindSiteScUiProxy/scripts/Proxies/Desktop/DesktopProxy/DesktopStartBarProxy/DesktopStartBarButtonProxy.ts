@@ -2,7 +2,7 @@
 import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
-import { IHindeCore } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
@@ -31,9 +31,10 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
       let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
       this.FoundStartBarButton = this.AssociatedDoc.ContentDoc.querySelector(querySelectBtn);
 
-      await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.FoundStartBarButton, ':scope > div > span', this.SetStateOfDesktopStartBarButtonAsync.name)
+      await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.FoundStartBarButton, ':scope > div > span', this.Instantiate_DestopStartBarButtonProxy.name)
         .then((containerSpanElement: HTMLElement) => this.ContainerSpanElement = containerSpanElement);
     } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.Instantiate_DestopStartBarButtonProxy.name, err);
     }
   }
 
@@ -64,6 +65,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
 
   SetStateOfDesktopStartBarButtonAsync(stateOfContentTree: IStateOfContentTree): void {
     this.Logger.FuncStart(this.SetStateOfDesktopStartBarButtonAsync.name);
+    this.TaskMonitor.AsyncTaskStarted(this.SetStateOfDesktopStartBarButtonAsync.name);
 
     this.ErrorHand.ThrowIfNullOrUndefined(this.SetStateOfDesktopStartBarButtonAsync.name, [stateOfContentTree]);
 
@@ -88,6 +90,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
       this.ErrorHand.WarningAndContinue(this.SetStateOfDesktopStartBarButtonAsync.name, 'no icon source');
     }
 
+    this.TaskMonitor.AsyncTaskCompleted(this.SetStateOfDesktopStartBarButtonAsync.name);
     this.Logger.FuncEnd(this.SetStateOfDesktopStartBarButtonAsync.name);
   }
 }

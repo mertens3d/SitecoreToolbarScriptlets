@@ -1,4 +1,4 @@
-﻿import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
 import { _HindeCoreBase } from "../../../LoggableBase";

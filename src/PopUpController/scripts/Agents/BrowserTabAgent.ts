@@ -2,7 +2,7 @@
 import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';

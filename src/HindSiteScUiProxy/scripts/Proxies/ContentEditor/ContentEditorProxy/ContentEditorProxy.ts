@@ -2,7 +2,7 @@
 import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
-import { IHindeCore } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReportContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';

@@ -1,4 +1,4 @@
-﻿import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { DTFrameProxy } from "../../FrameProxies/DTFrameProxy";
 import { IContentEditorProxyMutationEvent_Payload } from "./IContentEditorProxyMutationEvent_Payload";
 import { HindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer";

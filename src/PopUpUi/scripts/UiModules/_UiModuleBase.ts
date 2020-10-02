@@ -1,5 +1,5 @@
 ﻿import { ModuleKey } from "../../../Shared/scripts/Enums/ModuleKey";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { UiHydrationData } from "../../../Shared/scripts/Interfaces/UiHydrationData";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";

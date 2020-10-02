@@ -7,7 +7,7 @@ import { ContentReplyReceivedEvent_Subject } from "../../../Shared/scripts/Event
 import { IControllerMessageReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IMessageContentToController_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IMessageContentToController_Payload";
 import { IHindSiteSetting } from "../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";

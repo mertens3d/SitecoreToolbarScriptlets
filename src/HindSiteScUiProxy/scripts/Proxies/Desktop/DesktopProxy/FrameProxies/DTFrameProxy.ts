@@ -1,6 +1,6 @@
 ﻿import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
-import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ReportResultsInitDTFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
 import { IStateOfContentEditor } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";

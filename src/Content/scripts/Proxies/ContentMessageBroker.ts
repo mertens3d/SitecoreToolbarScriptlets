@@ -6,7 +6,7 @@ import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IC
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 import { IMessageBroker_Content } from "../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScUrlAgent } from "../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";

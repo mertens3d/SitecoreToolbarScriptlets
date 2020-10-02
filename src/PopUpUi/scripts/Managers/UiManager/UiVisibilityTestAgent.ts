@@ -3,7 +3,7 @@ import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers"
 import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { VisiblityTestResult } from "../../../../Shared/scripts/Interfaces/Agents/VisiblityTestResult";

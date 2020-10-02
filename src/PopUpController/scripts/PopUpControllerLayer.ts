@@ -1,5 +1,7 @@
 ﻿import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
-import { LoggerAgent, ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
+import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
+import { InterruptAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/InterruptAgent";
+import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/ErrorHandlerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
@@ -26,7 +28,8 @@ import { CommandDefintionFactory } from "./Classes/PopUpCommands";
 import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
 import { ContentReplyReceivedEvent_Observer } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
 import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
 
 class PopUpControllerLayer {
   BrowserTabAgent: BrowserTabAgent;
@@ -43,6 +46,7 @@ class PopUpControllerLayer {
   private SettingsAgent: ISettingsAgent;
   private UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
   private UiLayer: IHindSiteUiLayer;
+  private  Interrupter: InterruptAgent;
 
   public async Startup() {
     try {
@@ -63,9 +67,13 @@ class PopUpControllerLayer {
   private Preamble_SettingsAndLogger() {
     this.Logger = new LoggerAgent();
     this.ErrorHand = new ErrorHandlerAgent();
+    this.Interrupter = new InterruptAgent(this.Logger, this.ErrorHand);
+
     this.HindeCore = {
       Logger: this.Logger,
       ErrorHand: this.ErrorHand,
+      TaskMonitor: this.Interrupter,
+      Discriminator: Discriminator.IHindeCore
     };
 
     this.RepoAgent = new RepositoryAgent(this.HindeCore);

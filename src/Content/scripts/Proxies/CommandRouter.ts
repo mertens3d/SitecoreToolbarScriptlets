@@ -7,7 +7,7 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { ISnapShotsAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/ISnapShotsAgent";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
@@ -136,7 +136,10 @@ export class CommandRouter extends _HindeCoreBase {
       else if (commandData.CommandType = CommandType.ContentInternal) {
         await this.ExecuteInternalCommand(commandData.commandToExecute, routingParams)
           //.then(() => this.ScUiProxy.RaiseToastNotification('Completed'))
-          .then(() => resolve())
+          .then(() => {
+            this.Logger.Log('Completed the internal command');
+            resolve();
+          })
           .catch((err) => reject(err));
       }
 
@@ -156,7 +159,10 @@ export class CommandRouter extends _HindeCoreBase {
         let commandData = this.BuildScProxyPayload();
 
         await functionToExecute.bind(this)(commandData)
-          .then((response: DefaultMsgContentToController) => resolve(response))
+          .then((response: DefaultMsgContentToController) => {
+            this.Logger.Log('Completed the API command');
+            resolve(response)
+          })
           .catch((err) => reject(err));
       } else {
         reject(this.ExecuteApiCommand.name + ' | no functionToExecute');

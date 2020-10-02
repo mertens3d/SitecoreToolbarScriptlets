@@ -4,7 +4,7 @@ import { _BaseFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desk
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { ReadyStateNAB } from '../Enums/ReadyState';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
-import { IHindeCore } from '../Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
 import { IAbsoluteUrl } from '../Interfaces/IAbsoluteUrl';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
@@ -311,11 +311,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
       this.Logger.FuncStart(this.WaitForElemToHaveClassOrReject.name, friendly + ' - ' + classNames);
 
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForElemToHaveClassOrReject.name, [htmlElement, classNames]);
-
-      this.Logger.LogAsJsonPretty('classNames', classNames);
-
       var elemHasClassName: boolean = false;
-
       var iterationJr = new IterationDrone(this.HindeCore, this.WaitForElemToHaveClassOrReject.name + ' : ' + classNames + ' ' + friendly, true);
 
       while (!elemHasClassName && iterationJr.DecrementAndKeepGoing()) {
@@ -327,9 +323,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
           }
         })
 
-        this.Logger.LogAsJsonPretty('classList', classList);
         if (elemHasClassName) {
-          this.Logger.Log('has it');
           resolve()
         } else {
           await iterationJr.Wait();
@@ -346,7 +340,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     return new Promise(async (resolve, reject) => {
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitAndReturnFoundFromContainer.name, [haystackElem, selector]);
       var toReturnFoundElem: HTMLElement = null;
-      var iterationJr = new IterationDrone(this.HindeCore, this.WaitAndReturnFoundFromContainer.name + ' : ' + selector + ' ' + friendly, true);
+      var iterationJr = new IterationDrone(this.HindeCore, this.WaitAndReturnFoundFromContainer.name + ' : ' + selector + ' ' + friendly, false);
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
         toReturnFoundElem = haystackElem.querySelector(selector);
