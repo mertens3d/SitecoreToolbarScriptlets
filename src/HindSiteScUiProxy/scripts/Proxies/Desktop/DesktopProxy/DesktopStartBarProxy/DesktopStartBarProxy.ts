@@ -41,14 +41,14 @@ export class DTStartBarProxy extends _HindeCoreBase {
     try {
       await this.RecipeBasics.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.AssociatedDoc)
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.TriggerRedButton.name, err);
+      this.ErrorHand.ErrorAndThrow(this.TriggerRedButton.name, err);
     }
   }
 
   private async GetAssociatedStartBarButton(dTFrameProxyMutationEventPayload: IDTFrameProxyMutationEvent_Payload): Promise<DesktopStartBarButtonProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetAssociatedStartBarButton.name);
-      this.Logger.ThrowIfNullOrUndefined(this.GetAssociatedStartBarButton.name, [dTFrameProxyMutationEventPayload])
+      this.ErrorHand.ThrowIfNullOrUndefined(this.GetAssociatedStartBarButton.name, [dTFrameProxyMutationEventPayload])
 
       let foundStartBarButtonProxy: DesktopStartBarButtonProxy = null;
 
@@ -64,7 +64,7 @@ export class DTStartBarProxy extends _HindeCoreBase {
 
         foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.HindeCore, dTFrameProxyMutationEventPayload.FrameId, this.AssociatedDoc);
         await foundStartBarButtonProxy.Instantiate_DestopStartBarButtonProxy()
-          .catch((err) => this.Logger.ErrorAndThrow(this.GetAssociatedStartBarButton.name, err));
+          .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetAssociatedStartBarButton.name, err));
 
         this.StartBarButtonProxyBucket.push(foundStartBarButtonProxy);
       }
@@ -97,7 +97,7 @@ export class DTStartBarProxy extends _HindeCoreBase {
         if (contentTreeProxyMutationEvent_Payload.StateOfContentTree.ActiveNodeFlat) {
           this.GetAssociatedStartBarButton(dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload)
             .then((startBarButtonProxy: DesktopStartBarButtonProxy) => startBarButtonProxy.SetStateOfDesktopStartBarButtonAsync(contentTreeProxyMutationEvent_Payload.StateOfContentTree))
-            .catch((err) => this.Logger.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, err));
+            .catch((err) => this.ErrorHand.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, err));
         }
         else {
           this.Logger.Log('null activeNodeFlat provided');
@@ -110,14 +110,14 @@ export class DTStartBarProxy extends _HindeCoreBase {
         //we need to know what the associated button is
         //we can get that by knowing the id of the CE
         //} else {
-        //  this.Logger.ErrorAndContinue(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Did not find Frame');
+        //  this.ErrorHand.ErrorAndContinue(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Did not find Frame');
         //}
       }
       else {
         this.Logger.LogAsJsonPretty('dTAreaProxyMutationEvent_Payload', dTAreaProxyMutationEvent_Payload)
       }
     } else {
-      this.Logger.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Null payload');
+      this.ErrorHand.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Null payload');
     }
 
     this.Logger.FuncEnd(this.OnTreeMutationEvent_DesktopStartBarProxy.name);

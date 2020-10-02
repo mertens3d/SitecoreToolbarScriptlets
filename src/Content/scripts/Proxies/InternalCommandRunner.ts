@@ -83,7 +83,7 @@ export class InternalCommandRunner extends _HindeCoreBase {
       let recipe = new RecipeSetStateFromMostRecent(this.HindeCore, commandParams, this.Dependancies);
       await recipe.Execute();
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.SetStateFromQueryString.name, err);
+      this.ErrorHand.ErrorAndThrow(this.SetStateFromQueryString.name, err);
     }
     this.Logger.FuncEnd(this.SetStateFromMostRecent.name);
   }
@@ -93,7 +93,7 @@ export class InternalCommandRunner extends _HindeCoreBase {
       let recipe = new RecipeInitFromQueryStr(this.HindeCore, commandParams, this.Dependancies);
       recipe.Execute()
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.SetStateFromQueryString.name, err);
+      this.ErrorHand.ErrorAndThrow(this.SetStateFromQueryString.name, err);
     }
   }
 

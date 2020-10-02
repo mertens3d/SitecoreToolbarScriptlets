@@ -4,6 +4,15 @@ import { IError } from "../IError";
 
 export interface IHindeCore {
   Logger: ILoggerAgent;
+  ErrorHand: IErrorHandlerAgent;
+}
+
+export interface IErrorHandlerAgent {
+  ErrorAndThrow(container: string, text: any): void
+  ErrorAndContinue(container: string, text: any): void
+  WarningAndContinue(container: string, text: any): void
+  ErrorStack: IError[];
+  ThrowIfNullOrUndefined(title: string, objectsToCheck: any | any[]): void;
 
 }
 
@@ -14,10 +23,6 @@ export interface ILoggerAgent {
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   AddWriter(arg0: LoggerConsoleWriter);
   CtorName(name: string);
-  ErrorAndContinue(container: string, text: any): void
-  WarningAndContinue(container: string, text: any): void
-  ErrorAndThrow(container: string, text: any): void
-  ErrorStack: IError[];
   FuncEnd(text, optionalValueInput: string | number);
   FuncEnd(text, optionalValueInput?: boolean);
   FuncEnd(text, optionalValueInput?: number);
@@ -42,5 +47,5 @@ export interface ILoggerAgent {
   MarkerC();
   MarkerD();
   SectionMarker(arg0: string);
-  ThrowIfNullOrUndefined(title: string, objectsToCheck: any| any[]): void ;
+  
 }

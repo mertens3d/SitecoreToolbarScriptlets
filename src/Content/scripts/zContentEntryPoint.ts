@@ -1,6 +1,6 @@
 import { HindSiteScUiProxy } from '../../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
 import { ScUiManager } from '../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager';
-import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
+import { LoggerAgent, ErrorHandlerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter';
 import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent';
@@ -48,6 +48,7 @@ class ContentEntry {
 
   CommandRouter: CommandRouter;
   HindeCore: IHindeCore;
+    ErrorHand: ErrorHandlerAgent;
 
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
@@ -73,7 +74,7 @@ class ContentEntry {
       this.ScUrlAgent.Init_ScUrlAgent()
       this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.InstantiateAndInitAgents_Content.name, err)
+      this.ErrorHand.ErrorAndThrow(this.InstantiateAndInitAgents_Content.name, err)
     }
   }
 
@@ -114,11 +115,11 @@ class ContentEntry {
         })
         .then(() => this.StartUp())
         .then(() => this.Logger.Log('Init success'))
-        .catch((err) => this.Logger.ErrorAndThrow('Content Entry Point', err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow('Content Entry Point', err));
 
       this.Logger.SectionMarker('e) Instantiate and Initialize Managers');
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.InstantiateAndInit_Managers.name, err);
+      this.ErrorHand.ErrorAndThrow(this.InstantiateAndInit_Managers.name, err);
     }
   }
 
@@ -167,8 +168,10 @@ class ContentEntry {
 
   private InstantiateAndInit_LoggerAndSettings(): void {
     this.Logger = new LoggerAgent();
+    this.ErrorHand = new ErrorHandlerAgent();
     this.HindeCore = {
-      Logger: this.Logger
+      Logger: this.Logger,
+      ErrorHand: this.ErrorHand,
     }
 
     this.RepoAgent = new RepositoryAgent(this.HindeCore);

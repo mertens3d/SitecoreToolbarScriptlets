@@ -57,9 +57,9 @@ export class MessageBroker_PopUp extends _HindeCoreBase {
 
         this.SendMessageToContentAsync(messageControllerToContent)
           .then((replyMessagePayload: IControllerMessageReceivedEvent_Payload) => this.HandleReply(replyMessagePayload))
-          .catch((err) => this.Logger.ErrorAndThrow(this.SendCommandToContentAsync.name, err));
+          .catch((err) => this.ErrorHand.ErrorAndThrow(this.SendCommandToContentAsync.name, err));
       } else {
-        this.Logger.ErrorAndThrow(this.SendCommandToContentAsync.name, 'null check');
+        this.ErrorHand.ErrorAndThrow(this.SendCommandToContentAsync.name, 'null check');
       }
     } catch (err) {
       throw (this.SendCommandToContentAsync.name + ' | ' + err);
@@ -71,7 +71,7 @@ export class MessageBroker_PopUp extends _HindeCoreBase {
     if (!StaticHelpers.IsNullOrUndefined(replyMessagePayload)) {
       this.ContentReplyReceivedEvent_Subject.NotifyObserversAsync(replyMessagePayload);
     } else {
-      this.Logger.WarningAndContinue(this.HandleReply.name, 'null payload. Not notifying ')
+      this.ErrorHand.WarningAndContinue(this.HandleReply.name, 'null payload. Not notifying ')
     }
 
   }
@@ -85,7 +85,7 @@ export class MessageBroker_PopUp extends _HindeCoreBase {
           .then((result: IControllerMessageReceivedEvent_Payload) => resolve(result))
           .catch((err) => reject(err));
       } else {
-        this.Logger.ErrorAndThrow(this.SendMessageToContentAsync.name, 'null stateOfPopUp');
+        this.ErrorHand.ErrorAndThrow(this.SendMessageToContentAsync.name, 'null stateOfPopUp');
       }
 
       this.Logger.FuncEnd(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(messageFromController.MsgFlag));
@@ -106,7 +106,7 @@ export class MessageBroker_PopUp extends _HindeCoreBase {
         })
 
         .catch((ex) => {
-          this.Logger.WarningAndContinue(this.SendMessageToSingleTabAsync.name, ex);
+          this.ErrorHand.WarningAndContinue(this.SendMessageToSingleTabAsync.name, ex);
           resolve(null);
         });
 

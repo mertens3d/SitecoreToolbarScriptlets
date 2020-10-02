@@ -38,7 +38,7 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
     if (this.ContainerUiDivElem) {
       this.ContainerUiDivElem.appendChild(flexContainer);
     } else {
-      this.Logger.ErrorAndContinue(this.BuildHtmlForModule.name, this.Friendly);
+      this.ErrorHand.ErrorAndContinue(this.BuildHtmlForModule.name, this.Friendly);
     }
   }
 
@@ -47,7 +47,7 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
       this.FeedbackTextContainer.insertAdjacentHTML(SharedConst.Const.KeyWords.Html.beforeend, htmlText);
     }
     else {
-      this.Logger.ErrorAndThrow(this.AddHtmlString.name, 'htmlText');
+      this.ErrorHand.ErrorAndThrow(this.AddHtmlString.name, 'htmlText');
     }
   }
 
@@ -58,7 +58,7 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
       }
     }
     else {
-      this.Logger.ErrorAndThrow(this.WriteManyLines.name, 'No strAr');
+      this.ErrorHand.ErrorAndThrow(this.WriteManyLines.name, 'No strAr');
     }
   }
 
@@ -67,7 +67,7 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
       this.FeedbackTextContainer.innerHTML = '';
     }
     else {
-      this.Logger.ErrorAndThrow(this.ClearFeedbackElem.name, 'No feedback elem found');
+      this.ErrorHand.ErrorAndThrow(this.ClearFeedbackElem.name, 'No feedback elem found');
     }
   }
 

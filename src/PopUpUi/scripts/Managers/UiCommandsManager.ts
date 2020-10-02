@@ -42,7 +42,7 @@ export class UiCommandsManager extends _HindeCoreBase {
     //    }
     //  });
     //} else {
-    //  this.Logger.ErrorAndThrow(this.BuildCommandButtons.name, 'no bucket');
+    //  this.ErrorHand.ErrorAndThrow(this.BuildCommandButtons.name, 'no bucket');
     //}
     
   }

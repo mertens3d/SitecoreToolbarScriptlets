@@ -71,7 +71,7 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
         }
       }
       else {
-        this.Logger.WarningAndContinue(this.DrawCorrectNicknameInUI.name, 'null storage values');
+        this.ErrorHand.WarningAndContinue(this.DrawCorrectNicknameInUI.name, 'null storage values');
       }
     } else {
       this.Logger.Log('No targetId');

@@ -34,7 +34,7 @@ export class DesktopProxy extends _HindeCoreBase {
     if (associatedDoc) {
       this.AssociatedDoc = associatedDoc;
     } else {
-      this.Logger.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
+      this.ErrorHand.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
     }
 
     this.Logger.CTOREnd(DesktopProxy.name);
@@ -59,7 +59,7 @@ export class DesktopProxy extends _HindeCoreBase {
 
       await this.DTStartBarProxy.Instantiate_DTStartBarProxy();
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.Instantiate_DesktopProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Instantiate_DesktopProxy.name, err);
     }
 
     this.Logger.FuncEnd(this.Instantiate_DesktopProxy.name);
@@ -86,9 +86,9 @@ export class DesktopProxy extends _HindeCoreBase {
         // this pause is intended to allow time for it to finish its work and be removed.
         // at some point this could be modified to wait for a shorter amount of time, and then look to make sure the div is not present
         .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddContentEditorAsync.name)) //ui-widget-overlay ui-front
-        .catch((err) => this.Logger.ErrorAndThrow(this.AddContentEditorAsync.name, err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err));
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.AddContentEditorAsync.name, err);
+      this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err);
     }
   }
 
@@ -146,9 +146,9 @@ export class DesktopProxy extends _HindeCoreBase {
           }
         }).
         then(() => Promise.all(promAr))
-        .catch((err) => this.Logger.ErrorAndThrow(this.SetStateOfDesktopAsync.name, err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.SetStateOfDesktopAsync.name, err));
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.SetStateOfDesktopAsync.name, err);
+      this.ErrorHand.ErrorAndThrow(this.SetStateOfDesktopAsync.name, err);
     }
 
     this.Logger.FuncEnd(this.SetStateOfDesktopAsync.name);

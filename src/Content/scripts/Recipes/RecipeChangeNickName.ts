@@ -12,7 +12,7 @@ export class RecipeChangeNickName extends _ContentRecipeBase implements ICommand
     super(hindeCore, commandParams, dependancies, RecipeChangeNickName.name);
 
     if (StaticHelpers.IsNullOrUndefined([this.CommandParams.NewNickname, this.CommandParams.TargetSnapShotId, this.Dependancies.AtticAgent])) {
-      this.Logger.ErrorAndThrow(RecipeChangeNickName.name, 'Null check');
+      this.ErrorHand.ErrorAndThrow(RecipeChangeNickName.name, 'Null check');
     }
   }
 

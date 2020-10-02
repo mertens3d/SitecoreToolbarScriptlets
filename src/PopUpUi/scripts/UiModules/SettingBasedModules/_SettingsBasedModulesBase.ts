@@ -21,7 +21,7 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
         this.Friendly = _SettingsBasedModulesBase.name + '-' + SettingKey[hindSiteSetting.HindSiteSetting.SettingKey];
       }
       else {
-        this.Logger.ErrorAndThrow(_SettingsBasedModulesBase.name, 'Null settingsAgent or null hindSiteSetting');
+        this.ErrorHand.ErrorAndThrow(_SettingsBasedModulesBase.name, 'Null settingsAgent or null hindSiteSetting');
       }
       this.Logger.CTOREnd(_SettingsBasedModulesBase.name);
     }

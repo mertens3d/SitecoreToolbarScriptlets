@@ -36,10 +36,10 @@ export class HindeSiteEvent_Subject<T> extends _HindeCoreBase implements IHindeS
         this.ObserverCollection.push(observer);
         this.Logger.Log(this.RegisterObserver.name + ' ' + observer.Friendly + ' to ' + this.Friendly_Subject + ' - count after: ' + this.ObserverCollection.length.toString());
       } else {
-        this.Logger.WarningAndContinue(this.RegisterObserver.name, 'Observer already registered');
+        this.ErrorHand.WarningAndContinue(this.RegisterObserver.name, 'Observer already registered');
       }
     } else {
-      this.Logger.ErrorAndThrow(this.RegisterObserver.name, 'Observer is null');
+      this.ErrorHand.ErrorAndThrow(this.RegisterObserver.name, 'Observer is null');
     }
   }
 

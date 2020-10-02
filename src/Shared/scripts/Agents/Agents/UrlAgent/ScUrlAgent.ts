@@ -59,7 +59,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
         toReturn = ScWindowType.Unknown;
       }
     } else {
-      this.Logger.ErrorAndThrow(this.GetScWindowType.name, 'null url');
+      this.ErrorHand.ErrorAndThrow(this.GetScWindowType.name, 'null url');
     }
 
     return toReturn;
@@ -107,7 +107,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
         break;
       default:
         this.SetFilePath('');
-        this.Logger.ErrorAndThrow(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
+        this.ErrorHand.ErrorAndThrow(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
         break;
     }
   }

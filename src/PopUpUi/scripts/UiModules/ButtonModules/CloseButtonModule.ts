@@ -33,7 +33,7 @@ export class CloseButtonModule extends _base_ButtonModule implements IUiModuleBu
     if (!StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
       this.ContainerUiDivElem.appendChild(this.HTMLButtonElement);
     } else {
-      this.Logger.ErrorAndContinue(CloseButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.ErrorHand.ErrorAndContinue(CloseButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
     this.Logger.FuncEnd(this.BuildElements.name);
   }

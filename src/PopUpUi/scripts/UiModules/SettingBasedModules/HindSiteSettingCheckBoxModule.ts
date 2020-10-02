@@ -31,7 +31,7 @@ import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
       if (!StaticHelpers.IsNullOrUndefined(this.UiInputElement)) {
         this.UiInputElement.addEventListener('change', (evt: Event) => this.OnCheckboxChanged(evt))
       } else {
-        this.Logger.WarningAndContinue(this.WireEvents_Module.name, 'null input element');
+        this.ErrorHand.WarningAndContinue(this.WireEvents_Module.name, 'null input element');
       }
       this.Logger.FuncEnd(this.WireEvents_Module.name, this.Friendly);
     }

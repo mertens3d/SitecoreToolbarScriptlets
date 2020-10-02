@@ -93,14 +93,14 @@ export class SettingsAgent extends _HindeCoreBase implements ISettingsAgent {
           if (matchingSetting) {
             matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
           } else {
-            this.Logger.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+            this.ErrorHand.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
           }
         } else {
-          this.Logger.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, 'null matching setting');
+          this.ErrorHand.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, 'null matching setting');
         }
       }
     } catch (err) {
-      this.Logger.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, err);
+      this.ErrorHand.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, err);
     }
 
     this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);
@@ -123,7 +123,7 @@ export class SettingsAgent extends _HindeCoreBase implements ISettingsAgent {
       foundSetting.HindSiteSetting.ValueAsObj = value;
       this.WriteAllSettingValuesToStorage();
     } else {
-      this.Logger.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
+      this.ErrorHand.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
     }
   }
 

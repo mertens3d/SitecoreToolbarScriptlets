@@ -13,7 +13,7 @@ export class RepositoryAgent extends _HindeCoreBase implements IRepositoryAgent 
     try {
       window.localStorage.removeItem(key);
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.RemoveByKey.name, err);
+      this.ErrorHand.ErrorAndThrow(this.RemoveByKey.name, err);
     }
   }
 
@@ -45,7 +45,7 @@ export class RepositoryAgent extends _HindeCoreBase implements IRepositoryAgent 
       }
     }
     catch (err) {
-      this.Logger.ErrorAndThrow(this.GetBulkLocalStorageByKeyPrefix.name, err);
+      this.ErrorHand.ErrorAndThrow(this.GetBulkLocalStorageByKeyPrefix.name, err);
     }
     return toReturn;
   }

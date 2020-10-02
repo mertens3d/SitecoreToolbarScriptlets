@@ -21,7 +21,7 @@ export class FrameHelper extends _HindeCoreBase {
   GetIFramesFromDataOneDoc(targetDoc: IDataOneDoc): HTMLIFrameElement[] {
     let toReturnIframeAr: HTMLIFrameElement[] = [];
 
-    this.Logger.ThrowIfNullOrUndefined(this.GetIFramesFromDataOneDoc.name, [targetDoc]);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.GetIFramesFromDataOneDoc.name, [targetDoc]);
 
     var queryResults = targetDoc.ContentDoc.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 

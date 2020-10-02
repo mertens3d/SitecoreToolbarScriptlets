@@ -55,7 +55,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
         }
       }
       else {
-        this.Logger.ErrorAndThrow(this.WaitForCompleteNABHtmlIframeElement.name, 'No target doc: ' + friendly);
+        this.ErrorHand.ErrorAndThrow(this.WaitForCompleteNABHtmlIframeElement.name, 'No target doc: ' + friendly);
       }
       this.Logger.FuncEnd(this.WaitForCompleteNABHtmlIframeElement.name, friendly);;
     });
@@ -77,7 +77,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
   //      }
   //    }
   //  } else {
-  //    this.Logger.ErrorAndThrow(this.GetReadyStateNAB.name, 'null doc');
+  //    this.ErrorHand.ErrorAndThrow(this.GetReadyStateNAB.name, 'null doc');
   //  }
   //  return toReturn;
   //}
@@ -231,7 +231,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
   async WaitForNewIframeNative(allIframesBefore: HTMLIFrameElement[], dateOneDoc: IDataOneDoc): Promise<HTMLIFrameElement> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframeNative.name);
-      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, dateOneDoc]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, dateOneDoc]);
 
       var toReturn: HTMLIFrameElement = null;
 
@@ -268,7 +268,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
       this.Logger.FuncStart(this.WaitForNewIframe.name);
       this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);
 
-      this.Logger.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, targetDoc]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, targetDoc]);
 
       var toReturn: _BaseFrameProxy = null;
 
@@ -310,7 +310,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForElemToHaveClassOrReject.name, friendly + ' - ' + classNames);
 
-      this.Logger.ThrowIfNullOrUndefined(this.WaitForElemToHaveClassOrReject.name, [htmlElement, classNames]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForElemToHaveClassOrReject.name, [htmlElement, classNames]);
 
       this.Logger.LogAsJsonPretty('classNames', classNames);
 
@@ -344,7 +344,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
 
   async WaitAndReturnFoundFromContainer(haystackElem: HTMLElement, selector: string, friendly: string): Promise<HTMLElement> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.ThrowIfNullOrUndefined(this.WaitAndReturnFoundFromContainer.name, [haystackElem, selector]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitAndReturnFoundFromContainer.name, [haystackElem, selector]);
       var toReturnFoundElem: HTMLElement = null;
       var iterationJr = new IterationDrone(this.HindeCore, this.WaitAndReturnFoundFromContainer.name + ' : ' + selector + ' ' + friendly, true);
 
@@ -391,7 +391,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
       await this.WaitForThenClick([selector], targetDoc)
         .then(() => resolve(payload))
         .catch(ex => {
-          this.Logger.ErrorAndThrow(this.WaitForAndClickWithPayload.name, ex);
+          this.ErrorHand.ErrorAndThrow(this.WaitForAndClickWithPayload.name, ex);
           reject(ex);
         });
     });
@@ -452,7 +452,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
 
   WaitForThenClick(selectorAr: string[], targetDoc: IDataOneDoc): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr, targetDoc]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr, targetDoc]);
 
       var found: HTMLElement = null;
       var iterationJr = new IterationDrone(this.HindeCore, this.WaitForThenClick.name, true);

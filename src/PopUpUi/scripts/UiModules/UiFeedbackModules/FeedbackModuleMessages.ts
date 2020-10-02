@@ -7,7 +7,7 @@ export class DebuggingFeedbackModuleMessages_Observer extends _UiFeedbackModuleB
   Friendly: string;
 
   UpdateAsync(payload: IControllerMessageReceivedEvent_Payload) {
-    this.Logger.WarningAndContinue(this.UpdateAsync + ' ' + DebuggingFeedbackModuleMessages_Observer.name, 'not implemented yet');
+    this.ErrorHand.WarningAndContinue(this.UpdateAsync + ' ' + DebuggingFeedbackModuleMessages_Observer.name, 'not implemented yet');
   }
   RefreshUi_Module() {
 

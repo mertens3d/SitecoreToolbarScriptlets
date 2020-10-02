@@ -31,14 +31,14 @@ export class ButtonBasedModulesBucket extends _HindeCoreBase {
 
     try {
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.InstantiateButtonBasedModules.name, err);
+      this.ErrorHand.ErrorAndThrow(this.InstantiateButtonBasedModules.name, err);
     }
     this.Logger.FuncEnd(this.InstantiateButtonBasedModules.name);
   }
 
   public PopulateMenuButtons() {
     this.Logger.FuncStart(this.PopulateMenuButtons.name);
-    this.Logger.ThrowIfNullOrUndefined(this.PopulateMenuButtons.name, [this.CommandDefinitionBucket])
+    this.ErrorHand.ThrowIfNullOrUndefined(this.PopulateMenuButtons.name, [this.CommandDefinitionBucket])
 
     if (this.CommandDefinitionBucket && this.CommandDefinitionBucket.MenuCommandParamsAr) {
       this.CommandDefinitionBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
@@ -57,7 +57,7 @@ export class ButtonBasedModulesBucket extends _HindeCoreBase {
         }
       })
     } else {
-      this.Logger.ErrorAndThrow(this.PopulateMenuButtons.name, 'no bucket or no array inside');
+      this.ErrorHand.ErrorAndThrow(this.PopulateMenuButtons.name, 'no bucket or no array inside');
     }
 
     this.Logger.FuncEnd(this.PopulateMenuButtons.name);

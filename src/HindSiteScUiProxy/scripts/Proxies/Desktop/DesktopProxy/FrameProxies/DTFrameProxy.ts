@@ -23,7 +23,7 @@ export class DTFrameProxy extends _BaseFrameProxy {
     if (iframeElem) {
       this.Friendly = 'DTFrameProxy_' + iframeElem.id;
     } else {
-      this.Logger.ErrorAndThrow(DTFrameProxy.name, ' null check');
+      this.ErrorHand.ErrorAndThrow(DTFrameProxy.name, ' null check');
     }
   }
 
@@ -110,7 +110,7 @@ export class DTFrameProxy extends _BaseFrameProxy {
           this.DTFrameProxyMutationEvent_Subject.EnableNotifications();
         });
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.SetStateOfDTFrame.name, err);
+      this.ErrorHand.ErrorAndThrow(this.SetStateOfDTFrame.name, err);
     }
     this.Logger.FuncEnd(this.SetStateOfDTFrame.name);
   }

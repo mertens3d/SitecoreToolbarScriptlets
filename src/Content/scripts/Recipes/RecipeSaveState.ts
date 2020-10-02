@@ -15,7 +15,7 @@ export class RecipeSaveStateManual extends _ContentRecipeBase implements IComman
       await this.Dependancies.ScUiProxy.GetStateOfScUiProxyWindow(SnapShotFlavor.Manual)
         .then((windowState: IStateOfScUiProxy) => {
           this.Dependancies.AtticAgent.WriteStateOfSitecoreToStorage(windowState);
-          //todo - put back this.Logger.WarningAndContinue(this.Execute.name, 'empty ce ar - not writing to storage');
+          //todo - put back this.ErrorHand.WarningAndContinue(this.Execute.name, 'empty ce ar - not writing to storage');
         })
         .then(() => resolve())
         .catch((err) => reject(err));

@@ -69,11 +69,11 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
         }
       }
       else {
-        this.Logger.ErrorAndThrow(this.AdminB.name, 'No loginButton');
+        this.ErrorHand.ErrorAndThrow(this.AdminB.name, 'No loginButton');
       }
     }
     else {
-      this.Logger.ErrorAndThrow(this.AdminB.name, 'No Username or password field');
+      this.ErrorHand.ErrorAndThrow(this.AdminB.name, 'No Username or password field');
     }
     this.Logger.FuncEnd(this.AdminB.name);
   }

@@ -26,9 +26,9 @@ export class MiscAgent extends _HindeCoreBase {
       }
 
       if (subjectAnyOrAr === 'undefined') {
-        this.Logger.ErrorAndThrow(label, 'Is undefined');
+        this.ErrorHand.ErrorAndThrow(label, 'Is undefined');
       } else if (!subjectAnyOrAr) {
-        this.Logger.ErrorAndThrow(label, 'Is Null');
+        this.ErrorHand.ErrorAndThrow(label, 'Is Null');
       } else {
         this.Logger.LogVal(label, 'Passed');
         toReturn = true;
@@ -40,7 +40,7 @@ export class MiscAgent extends _HindeCoreBase {
         }
       }
     } else {
-      this.Logger.ErrorAndThrow(this.NotNullOrUndefined.name, 'max iteration hit');
+      this.ErrorHand.ErrorAndThrow(this.NotNullOrUndefined.name, 'max iteration hit');
     }
 
     this.Logger.LogVal('toReturn', toReturn);

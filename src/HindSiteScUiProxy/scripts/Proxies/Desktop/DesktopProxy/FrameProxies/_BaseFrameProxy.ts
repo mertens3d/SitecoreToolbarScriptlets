@@ -20,7 +20,7 @@ export class _BaseFrameProxy extends _HindeCoreBase {
 
   constructor(hindeCore: IHindeCore, iframeElem: HTMLIFrameElement) {
     super(hindeCore);
-    this.Logger.ThrowIfNullOrUndefined(_BaseFrameProxy.name,[iframeElem]);
+    this.ErrorHand.ThrowIfNullOrUndefined(_BaseFrameProxy.name,[iframeElem]);
 
     this.HTMLIframeElement = iframeElem;
     this.Id = Guid.NewRandomGuid();

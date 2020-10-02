@@ -18,7 +18,7 @@ export class DTPopUpMenuProxy extends _HindeCoreBase {
     //}
 
       //Execute(): Promise<DTFrameProxy> {
-      this.Logger.ThrowIfNullOrUndefined(this.RecipeAddNewContentEditorToDesktop.name, AssociatedDoc);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewContentEditorToDesktop.name, AssociatedDoc);
 
       let allIframeDataAtBeginning: HTMLIFrameElement[];
       let dtframeProxy: DTFrameProxy;

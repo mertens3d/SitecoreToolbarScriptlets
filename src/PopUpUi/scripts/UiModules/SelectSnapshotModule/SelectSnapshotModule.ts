@@ -47,7 +47,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     this.Logger.FuncStart(this.WireEvents_Module.name, this.ContainerSelector);
 
     if (!this.SelectElement) {
-      this.Logger.ErrorAndThrow(this.WireEvents_Module.name, 'No Id: ' + this.ContainerSelector);
+      this.ErrorHand.ErrorAndThrow(this.WireEvents_Module.name, 'No Id: ' + this.ContainerSelector);
     } else {
       this.SelectElement.onchange = (() => {
         let self = this;
@@ -109,7 +109,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
         }
       }
     } else {
-      this.Logger.WarningAndContinue(this.GetSelectSnapshotNickname.name, 'no match');
+      this.ErrorHand.WarningAndContinue(this.GetSelectSnapshotNickname.name, 'no match');
     }
 
     this.Logger.FuncEnd(this.GetSelectSnapshotId.name);
@@ -221,7 +221,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     else if ((data.Meta.WindowType === ScWindowType.ContentEditor) && data.StateOfScWindow.StateOfContentEditor && data.StateOfScWindow.StateOfContentEditor.StateOfContentTree) {
       toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(toReturn.StateOfContentEditorProxy);
     } else {
-      this.Logger.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(data.Meta.WindowType));
+      this.ErrorHand.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(data.Meta.WindowType));
     }
 
     return toReturn
@@ -315,7 +315,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
         headers.Manual.appendChild(el);
       }
     } else {
-      this.Logger.WarningAndContinue(this.AppendSnapShotToCorrectGroup.name, 'null in parameters');
+      this.ErrorHand.WarningAndContinue(this.AppendSnapShotToCorrectGroup.name, 'null in parameters');
     }
   }
 

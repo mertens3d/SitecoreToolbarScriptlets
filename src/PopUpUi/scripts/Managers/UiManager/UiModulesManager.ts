@@ -123,7 +123,7 @@ export class UiModulesManager extends _HindeCoreBase {
           uiModule.Init_Module();
           uiModule.BuildHtmlForModule();
         } else {
-          this.Logger.ErrorAndThrow(this.Init_UiMan.name, 'null module');
+          this.ErrorHand.ErrorAndThrow(this.Init_UiMan.name, 'null module');
         }
       }
 
@@ -190,7 +190,7 @@ export class UiModulesManager extends _HindeCoreBase {
 
       this.WireEventsOnCheckBoxes();
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.WireEvents_ModulesManager.name, err);
+      this.ErrorHand.ErrorAndThrow(this.WireEvents_ModulesManager.name, err);
     }
 
     this.Logger.FuncEnd(this.WireEvents_ModulesManager.name);
@@ -324,7 +324,7 @@ export class UiModulesManager extends _HindeCoreBase {
     if (targetTag) {
       targetTag.innerText = 'build stamp: ' + StaticHelpers.MakeFriendlyDate(new Date(BuiltDateStamp));
     } else {
-      this.Logger.ErrorAndThrow(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
+      this.ErrorHand.ErrorAndThrow(this.WriteBuildNumToUi.name, 'No Build Stamp Element Found');
     }
   }
 
@@ -344,7 +344,7 @@ export class UiModulesManager extends _HindeCoreBase {
 
         this.UiCommandsMan.HydrateUi_UICommandManager(uiHydrationData);
       } else {
-        this.Logger.ErrorAndThrow(this.HydrateUi_UiModulesManager.name, 'null state');
+        this.ErrorHand.ErrorAndThrow(this.HydrateUi_UiModulesManager.name, 'null state');
       }
     }
 
@@ -398,7 +398,7 @@ export class UiModulesManager extends _HindeCoreBase {
       this.HydrateUi_UiModulesManager(refreshData);
       this.RefreshModuleUis()
     } else {
-      this.Logger.ErrorAndThrow(this.UpdateUiFromContentReply.name, 'null state or meta');
+      this.ErrorHand.ErrorAndThrow(this.UpdateUiFromContentReply.name, 'null state or meta');
     }
   }
 }

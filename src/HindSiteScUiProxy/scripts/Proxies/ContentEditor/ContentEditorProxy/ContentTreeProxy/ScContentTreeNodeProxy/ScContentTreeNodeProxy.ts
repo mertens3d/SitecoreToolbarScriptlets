@@ -53,10 +53,10 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
       } else if (sourceElement.classList.contains('scContentTreeNode')) {
         this.InferFromDivElement(<HTMLDivElement>sourceElement)
       } else {
-        this.Logger.ErrorAndThrow(ScContentTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElement));
+        this.ErrorHand.ErrorAndThrow(ScContentTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElement));
       }
     } else {
-      this.Logger.ErrorAndThrow(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
+      this.ErrorHand.ErrorAndThrow(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
     }
 
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
@@ -66,7 +66,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     try {
       await this.HarvestNodeState();
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.Instantiate.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Instantiate.name, err);
     }
   }
 
@@ -174,7 +174,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
               this.glyphElem = htmlImageElement
             })
             .then(() => {
-              this.Logger.ThrowIfNullOrUndefined(this.HarvestNodeState.name, [this.LinkNodeElem, this.glyphElem]);
+              this.ErrorHand.ThrowIfNullOrUndefined(this.HarvestNodeState.name, [this.LinkNodeElem, this.glyphElem]);
 
               this.StateOfScContentTreeNode.IsActive = this.QueryIsActive();
               this.StateOfScContentTreeNode.IsExpanded = this.QueryIsExpanded();
@@ -272,10 +272,10 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
         //  if (hotTreeNodeProxy) {
         //    hotTreeNodeProxy.ActivateNode()
         //  } else {
-        //    this.Logger.ErrorAndContinue(this.SetStateOfTreeNode.name, 'hot tree node not found')
+        //    this.ErrorHand.ErrorAndContinue(this.SetStateOfTreeNode.name, 'hot tree node not found')
         //  }
         //} else {
-        //  this.Logger.WarningAndContinue(this.SetStateOfTreeNode.name, 'No hotTreeNode');
+        //  this.ErrorHand.WarningAndContinue(this.SetStateOfTreeNode.name, 'No hotTreeNode');
         //}
       }
 
@@ -294,7 +294,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
       //await Promise.all(promises);
       //}
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.SetStateOfTreeNode.name, err);
+      this.ErrorHand.ErrorAndThrow(this.SetStateOfTreeNode.name, err);
     }
   }
 
@@ -339,10 +339,10 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
       if (!this.QueryIsExpanded()) {
         this.glyphElem.click();
       }
-      //.catch((err) => this.Logger.ErrorAndThrow(this.ExpandNode.name, err));
+      //.catch((err) => this.ErrorHand.ErrorAndThrow(this.ExpandNode.name, err));
     }
     catch (err) {
-      this.Logger.ErrorAndThrow(this.ExpandNode.name, err);
+      this.ErrorHand.ErrorAndThrow(this.ExpandNode.name, err);
     }
   }
 

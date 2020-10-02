@@ -27,7 +27,7 @@ export class HindSiteSettingsBucket extends _HindeCoreBase {
     }
 
     if (!toReturn) {
-      this.Logger.ErrorAndContinue(this.GetByKey.name, 'Setting not found ' + StaticHelpers.SettingKeyAsString(needleSettingKey));
+      this.ErrorHand.ErrorAndContinue(this.GetByKey.name, 'Setting not found ' + StaticHelpers.SettingKeyAsString(needleSettingKey));
     }
 
     return toReturn;

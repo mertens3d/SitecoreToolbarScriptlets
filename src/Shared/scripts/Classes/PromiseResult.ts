@@ -34,7 +34,7 @@ export class PromiseResult extends _HindeCoreBase {
     this.RejectReasons += ', ' + ex;
     this.Success = false;
     if (this.Logger) {
-      this.Logger.ErrorAndThrow(this.prefix + this.NickName, this.Success + '  err: ' + ex);
+      this.ErrorHand.ErrorAndThrow(this.prefix + this.NickName, this.Success + '  err: ' + ex);
     } else {
       console.log('no logger fail ' + ex);
     }

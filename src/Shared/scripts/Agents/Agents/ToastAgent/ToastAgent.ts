@@ -41,7 +41,7 @@ export class ToastAgent  extends _HindeCoreBase implements IToastAgent {
 
       this.Logger.FuncEnd(this.RaisePerpetualToast.name);
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.RaisePerpetualToast.name, err);
+      this.ErrorHand.ErrorAndThrow(this.RaisePerpetualToast.name, err);
     }
   }
 
@@ -79,7 +79,7 @@ export class ToastAgent  extends _HindeCoreBase implements IToastAgent {
         self.FlagSlider.classList.add(self.classSlideUp);
       }, 1000);
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.RaiseToastA.name, err);
+      this.ErrorHand.ErrorAndThrow(this.RaiseToastA.name, err);
     }
   }
 
@@ -91,7 +91,7 @@ export class ToastAgent  extends _HindeCoreBase implements IToastAgent {
         self.FlagSlider.classList.add(self.classSlideDown);
       }, 3000);
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.LowerToastA.name, err);
+      this.ErrorHand.ErrorAndThrow(this.LowerToastA.name, err);
     }
   }
 

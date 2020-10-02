@@ -29,7 +29,7 @@ export abstract class _UiModuleBase extends _HindeCoreBase implements IUiModule 
     this.ContainerUiDivElem = <HTMLDivElement>this.GetUiElement(this.ContainerSelector);
 
     if (StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
-      this.Logger.ErrorAndThrow(this.Init_UiModuleBase.name, 'Null: ' + this.ContainerSelector);
+      this.ErrorHand.ErrorAndThrow(this.Init_UiModuleBase.name, 'Null: ' + this.ContainerSelector);
     }
 
     this.Logger.FuncEnd(this.Init_UiModuleBase.name, this.Friendly);

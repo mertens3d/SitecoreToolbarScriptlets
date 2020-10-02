@@ -16,7 +16,7 @@ export class RecipeRemoveItemFromStorage extends _ContentRecipeBase implements I
 
       //this.ToastAgent.RaiseToastNotification(this.scWinProxy.GetTopLevelDoc(), "Success");
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.Execute.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Execute.name, err);
     }
   }
 }

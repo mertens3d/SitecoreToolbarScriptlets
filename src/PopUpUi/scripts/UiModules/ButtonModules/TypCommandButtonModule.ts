@@ -69,7 +69,7 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
       this.ContainerUiDivElem.appendChild(this.ElemDivBtnOverlay);
       this.ContainerUiDivElem.appendChild(this.HTMLButtonElement);
     } else {
-      this.Logger.ErrorAndContinue(TypCommandButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.ErrorHand.ErrorAndContinue(TypCommandButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
     this.Logger.FuncEnd(this.BuildElements.name);
   }
@@ -93,7 +93,7 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
 
     this.Logger.LogAsJsonPretty(this.Friendly, allresults.TestResults);
 
-    this.Logger.ThrowIfNullOrUndefined(this.SetCommandButtonVisibilityBasedOnResults.name,[allresults, this.HTMLButtonElement]);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.SetCommandButtonVisibilityBasedOnResults.name,[allresults, this.HTMLButtonElement]);
 
     if (!allresults.HasFailures()) {
       this.HTMLButtonElement.classList.remove('disabled');

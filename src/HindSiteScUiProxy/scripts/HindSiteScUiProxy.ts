@@ -37,7 +37,7 @@ export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiPr
       this.ScWindowProxy = new ScWindowProxy(this.HindeCore, this.ScUrlAgent);
       await this.ScWindowProxy.Instantiate_ScWindowProxy();
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.OnReady_InstantiateHindSiteScUiProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.OnReady_InstantiateHindSiteScUiProxy.name, err);
     }
 
     this.Logger.FuncEnd(this.OnReady_InstantiateHindSiteScUiProxy.name);
@@ -65,7 +65,7 @@ export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiPr
 
       await this.ScWindowProxy.GetStateOfScUiProxy(SnapShotFlavor.Live)
         .then((result: IStateOfScUiProxy) => reply = result)
-        .then(() => reply.ErrorStackScUiProxy = this.Logger.ErrorStack)
+        .then(() => reply.ErrorStackScUiProxy = this.ErrorHand.ErrorStack)
         .then(() => resolve(reply))
         .catch((err) => reject(err))
     });

@@ -66,7 +66,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     }
 
     if (!DateOneWinStoreMatch) {
-      this.Logger.WarningAndContinue(this.GetFromStorageBySnapShotId.name, 'No match found for: ' + needleId.Raw);
+      this.ErrorHand.WarningAndContinue(this.GetFromStorageBySnapShotId.name, 'No match found for: ' + needleId.Raw);
     }
     this.Logger.FuncEnd(this.GetFromStorageBySnapShotId.name);
 
@@ -96,7 +96,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
         candidate.Friendly.NickName = '';
       }
     } else {
-      this.Logger.ErrorAndThrow(this.ValidateStorageData.name, 'Saved data did not import correctly')
+      this.ErrorHand.ErrorAndThrow(this.ValidateStorageData.name, 'Saved data did not import correctly')
     }
     return candidate
   }
@@ -150,7 +150,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
         this.Logger.LogVal('Cleaning old autosave', candidate.Meta.SnapshotId);
         window.localStorage.removeItem(candidate.Meta.StorageKey)
       } catch (e) {
-        this.Logger.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.Meta.SnapshotId)
+        this.ErrorHand.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.Meta.SnapshotId)
       }
     }
 
@@ -255,7 +255,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     let result = this.RepoAgent.ReadDataOfKey(storageKey);
 
     if (result) {
-      this.Logger.ErrorAndThrow(this.RemoveAndConfirmRemoval.name, 'Snapshot still exists after deleting');
+      this.ErrorHand.ErrorAndThrow(this.RemoveAndConfirmRemoval.name, 'Snapshot still exists after deleting');
     }
   }
 
@@ -267,13 +267,13 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
         if (storageMatch) {
           this.RemoveAndConfirmRemoval(storageMatch)
         } else {
-          this.Logger.WarningAndContinue(this.RemoveSnapshotFromStorageById.name, 'no storage match');
+          this.ErrorHand.WarningAndContinue(this.RemoveSnapshotFromStorageById.name, 'no storage match');
         }
       } else {
-        this.Logger.WarningAndContinue(this.RemoveSnapshotFromStorageById.name, 'no target id');
+        this.ErrorHand.WarningAndContinue(this.RemoveSnapshotFromStorageById.name, 'no target id');
       }
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.RemoveSnapshotFromStorageById.name, err);
+      this.ErrorHand.ErrorAndThrow(this.RemoveSnapshotFromStorageById.name, err);
     }
 
     this.Logger.FuncEnd(this.RemoveSnapshotFromStorageById.name);

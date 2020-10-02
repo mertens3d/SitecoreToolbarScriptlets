@@ -23,7 +23,7 @@ export class StateHelpers extends _HindeCoreBase {
     //    }
     //    //toReturn = stateOfTree.StateOfScContentTreeNodeProxy[stateOfTree.ActiveNodeCoord.LevelIndex][stateOfTree.ActiveNodeCoord.SiblingIndex];
     //  } catch (err) {
-    //    this.Logger.WarningAndContinue(this.GetActiveTreeNodeFromStateOfTree.name, 'Invalid indices');
+    //    this.ErrorHand.WarningAndContinue(this.GetActiveTreeNodeFromStateOfTree.name, 'Invalid indices');
     //  }
     //}
     //return toReturn;

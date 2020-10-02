@@ -48,7 +48,7 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
     if (this.UrlParts) {
       this.UrlParts.Parameters.set(QueryStrKey[key], newValue);
     } else {
-      this.Logger.ErrorAndThrow(this.SetParameterValueByKey.name, 'No URLParts ' + QueryStrKey[key] + ' ' + newValue);
+      this.ErrorHand.ErrorAndThrow(this.SetParameterValueByKey.name, 'No URLParts ' + QueryStrKey[key] + ' ' + newValue);
     }
   }
 
@@ -128,7 +128,7 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
         }
       }
     } else {
-      this.Logger.ErrorAndThrow(this.BuildFullUrlFromParts.name, 'Null UrlParts');
+      this.ErrorHand.ErrorAndThrow(this.BuildFullUrlFromParts.name, 'Null UrlParts');
     }
 
     return toReturn;

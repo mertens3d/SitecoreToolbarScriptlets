@@ -19,7 +19,7 @@ export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {
     this.Logger.FuncStart(this.TranslateAndValidatePayload.name);
 
-    this.Logger.ThrowIfNullOrUndefined(this.TranslateAndValidatePayload.name, [messageContentToController_Payload]);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.TranslateAndValidatePayload.name, [messageContentToController_Payload]);
 
     var controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload = new DefaultControllerMessageReceivedEvent_Payload();
 

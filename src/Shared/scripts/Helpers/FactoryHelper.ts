@@ -25,7 +25,7 @@ export class FactoryHelper extends _HindeCoreBase implements IFactoryHelper {
         Nickname: ' - content doc'
       }
     } else {
-      this.Logger.ErrorAndThrow(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
+      this.ErrorHand.ErrorAndThrow(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
     }
     return toReturn;
   }
@@ -37,7 +37,7 @@ export class FactoryHelper extends _HindeCoreBase implements IFactoryHelper {
     if (iframeElem && nickname) {
       var toReturn: _BaseFrameProxy = new _BaseFrameProxy(this.HindeCore, iframeElem);
     } else {
-      this.Logger.ErrorAndThrow(this.BaseFramePromiseFactory.name, 'one of these is null');
+      this.ErrorHand.ErrorAndThrow(this.BaseFramePromiseFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
       this.Logger.LogAsJsonPretty('nickname', nickname);
     }
@@ -52,7 +52,7 @@ export class FactoryHelper extends _HindeCoreBase implements IFactoryHelper {
       var toReturn = new DTFrameProxy(this.HindeCore, iframeElem);
       await toReturn.Instantiate_DTFrameProxy();
     } else {
-      this.Logger.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');
+      this.ErrorHand.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
     }
     return toReturn;

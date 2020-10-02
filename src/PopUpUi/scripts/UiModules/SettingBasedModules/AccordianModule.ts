@@ -24,7 +24,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
     if (!StaticHelpers.IsNullOrUndefined(this.AccordionTriggerElem)) {
       this.AccordionTriggerElem.addEventListener('click', (evt) => this.OnToggleAccordion(evt));
     } else {
-      this.Logger.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'trigger not found ' + this.SettingJacket.HindSiteSetting.FriendlySetting);
+      this.ErrorHand.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'trigger not found ' + this.SettingJacket.HindSiteSetting.FriendlySetting);
     }
   }
   DisableSelf() {
@@ -45,12 +45,12 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
       if (!StaticHelpers.IsNullOrUndefined([this.AccordionTriggerElem, this.AccordionContentElem])) {
         this.AccordionTriggerElem.innerHTML = this.SettingJacket.HindSiteSetting.FriendlySetting;
       } else {
-        this.Logger.ErrorAndThrow(this.BuildHtmlForModule.name, 'null trigger: ' + this.ContainerSelector);
+        this.ErrorHand.ErrorAndThrow(this.BuildHtmlForModule.name, 'null trigger: ' + this.ContainerSelector);
       }
     }
 
     if (StaticHelpers.IsNullOrUndefined([this.AccordionTriggerElem, this.AccordionContentElem])) {
-      this.Logger.ErrorAndThrow(this.BuildHtmlForModule.name, AccordianModule.name + '  missing elem')
+      this.ErrorHand.ErrorAndThrow(this.BuildHtmlForModule.name, AccordianModule.name + '  missing elem')
     }
 
 
@@ -98,7 +98,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
       }
     }
     else {
-      this.Logger.ErrorAndThrow(this.OnToggleAccordion.name, 'did not find sib');
+      this.ErrorHand.ErrorAndThrow(this.OnToggleAccordion.name, 'did not find sib');
     }
     this.Logger.FuncEnd(this.OnToggleAccordion.name);
   }
@@ -113,7 +113,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
         this.AccordionTriggerElem.classList.add(PopConst.Const.ClassNames.HS.Down);
       }
     } else {
-      this.Logger.ErrorAndContinue(this.SetAccordionClass.name, 'null elems');
+      this.ErrorHand.ErrorAndContinue(this.SetAccordionClass.name, 'null elems');
     }
   }
 }

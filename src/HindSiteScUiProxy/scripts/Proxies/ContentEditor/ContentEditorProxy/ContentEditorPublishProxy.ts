@@ -116,7 +116,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
         .then((dataPublishChain: IDataPublishChain) => this.__waitForAndClickClose(dataPublishChain))
 
         .catch(ex => {
-          this.Logger.ErrorAndThrow(this.PublishCE.name, ex);
+          this.ErrorHand.ErrorAndThrow(this.PublishCE.name, ex);
         });
     } catch (err) {
       throw (this.PublishCE.name + ' ' + err);
@@ -189,7 +189,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
 
     await this.RecipeBasics.WaitForIframeElemAndReturnWhenReady(dataPublishChain.JqIframe.GetContentDoc(), ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
       .then((result) => toReturnPublishChain.MessageDialogIframeRed = result)
-      .catch((err) => this.Logger.ErrorAndThrow(this.GetMessageDialog.name, err));
+      .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetMessageDialog.name, err));
 
     return toReturnPublishChain;
   }

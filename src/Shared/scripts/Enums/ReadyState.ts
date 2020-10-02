@@ -8,7 +8,7 @@ export class ReadyStateNAB extends _HindeCoreBase {
 
   constructor(hindeCore: IHindeCore, document: Document) {
     super(hindeCore);
-    this.Logger.ThrowIfNullOrUndefined(ReadyStateNAB.name, document);
+    this.ErrorHand.ThrowIfNullOrUndefined(ReadyStateNAB.name, document);
     this.Document = document;
   }
 
@@ -29,7 +29,7 @@ export class ReadyStateNAB extends _HindeCoreBase {
   }
 
   SetDocument(document: Document) {
-    this.Logger.ThrowIfNullOrUndefined(this.SetDocument.name, document);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.SetDocument.name, document);
     this.Document = document;
   }
 

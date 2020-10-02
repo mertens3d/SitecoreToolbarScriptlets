@@ -42,7 +42,7 @@ export class HandlersForInternal extends _HindeCoreBase {
 
     await this.CreateNewWindow(newUrl)
       .catch((ex) => {
-        this.Logger.ErrorAndThrow(this.HandlerForSnapShotRestoreNewTab.name, ex.toString());
+        this.ErrorHand.ErrorAndThrow(this.HandlerForSnapShotRestoreNewTab.name, ex.toString());
       });
 
     this.Logger.FuncEnd(this.HandlerForSnapShotRestoreNewTab.name);

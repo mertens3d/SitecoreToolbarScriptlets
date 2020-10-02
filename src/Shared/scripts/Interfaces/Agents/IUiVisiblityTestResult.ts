@@ -10,7 +10,7 @@ export class VisiblityTestResultsBucket extends _HindeCoreBase {
     if (this.TestResults) {
       this.TestResults.forEach((oneTest) => oneFailed = oneFailed || !oneTest || !oneTest.DidItPass);
     } else {
-      this.Logger.ErrorAndThrow(this.HasFailures.name, 'null test results');
+      this.ErrorHand.ErrorAndThrow(this.HasFailures.name, 'null test results');
     }
     return oneFailed;
   }
@@ -28,11 +28,11 @@ export class VisiblityTestResultsBucket extends _HindeCoreBase {
           }
         } else {
           this.Logger.LogAsJsonPretty('this.TestResults', this.TestResults);
-          this.Logger.ErrorAndThrow(this.GetFriendlyFails.name, 'null single test result');
+          this.ErrorHand.ErrorAndThrow(this.GetFriendlyFails.name, 'null single test result');
         }
       });
     } else {
-      this.Logger.ErrorAndThrow(this.GetFriendlyFails.name, 'null testResults');
+      this.ErrorHand.ErrorAndThrow(this.GetFriendlyFails.name, 'null testResults');
     }
 
     return toReturn;

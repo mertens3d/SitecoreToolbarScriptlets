@@ -41,7 +41,7 @@ export namespace HindSiteUiLayer {
         this.ScUrlAgent = scUrlAgent;
 
         if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.ScUrlAgent, this.CommandDefinitionBucket])) {
-          this.Logger.ErrorAndThrow(HindSiteUiLayer.name, 'null at constructor');
+          this.ErrorHand.ErrorAndThrow(HindSiteUiLayer.name, 'null at constructor');
         }
 
         //there's something that is not finishing before the htmlbutton is needed
@@ -50,7 +50,7 @@ export namespace HindSiteUiLayer {
         this.Init_Ui();
         this.WireEvents_Ui();
       } catch (err) {
-        this.Logger.ErrorAndThrow(HindSiteUiLayer.name, err);
+        this.ErrorHand.ErrorAndThrow(HindSiteUiLayer.name, err);
       }
 
       this.Logger.CTOREnd(HindSiteUiLayer.name);

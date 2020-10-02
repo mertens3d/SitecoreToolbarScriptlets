@@ -22,7 +22,7 @@ export class PopUpBrowserProxy extends _HindeCoreBase implements IPopUpBrowserPr
     }
 
     catch (err) {
-      this.Logger.ErrorAndThrow(this.Init_BrowserProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Init_BrowserProxy.name, err);
     }
     this.Logger.FuncEnd(this.Init_BrowserProxy.name);
   }

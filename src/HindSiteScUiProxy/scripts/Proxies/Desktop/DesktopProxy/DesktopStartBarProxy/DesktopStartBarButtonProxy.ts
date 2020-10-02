@@ -65,7 +65,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   SetStateOfDesktopStartBarButtonAsync(stateOfContentTree: IStateOfContentTree): void {
     this.Logger.FuncStart(this.SetStateOfDesktopStartBarButtonAsync.name);
 
-    this.Logger.ThrowIfNullOrUndefined(this.SetStateOfDesktopStartBarButtonAsync.name, [stateOfContentTree]);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.SetStateOfDesktopStartBarButtonAsync.name, [stateOfContentTree]);
 
     let itemIconSource: string = stateOfContentTree.ActiveNodeFlat.IconSrc;
     let mainIconSrc: string = stateOfContentTree.ActiveNodeFlat.MainIconSrc;
@@ -82,10 +82,10 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
       if (this.ContainerSpanElement) {
         this.ContainerSpanElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
       } else {
-        this.Logger.ErrorAndThrow(this.SetStateOfDesktopStartBarButtonAsync.name, 'no container span element');
+        this.ErrorHand.ErrorAndThrow(this.SetStateOfDesktopStartBarButtonAsync.name, 'no container span element');
       }
     } else {
-      this.Logger.WarningAndContinue(this.SetStateOfDesktopStartBarButtonAsync.name, 'no icon source');
+      this.ErrorHand.WarningAndContinue(this.SetStateOfDesktopStartBarButtonAsync.name, 'no icon source');
     }
 
     this.Logger.FuncEnd(this.SetStateOfDesktopStartBarButtonAsync.name);

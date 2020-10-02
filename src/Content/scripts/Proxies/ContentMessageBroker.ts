@@ -64,12 +64,12 @@ export class MessageBroker_Content extends _HindeCoreBase implements IMessageBro
     if (messageFromController) {
       if (messageFromController.CurrentContentPrefs) {
       } else {
-        this.Logger.WarningAndContinue(this.ValidateRequest.name, 'No CurrentContentPrefs')
+        this.ErrorHand.WarningAndContinue(this.ValidateRequest.name, 'No CurrentContentPrefs')
         messageFromController.IsValid = false;
         isValid = false;
       }
     } else {
-      this.Logger.WarningAndContinue(this.ValidateRequest.name, 'messageFromController is null')
+      this.ErrorHand.WarningAndContinue(this.ValidateRequest.name, 'messageFromController is null')
       isValid = false;
     }
 
@@ -79,7 +79,7 @@ export class MessageBroker_Content extends _HindeCoreBase implements IMessageBro
   }
 
   private NotifyFail(failrReason: string) {
-    this.Logger.ErrorAndContinue(this.NotifyFail.name, 'Fail ' + failrReason);
+    this.ErrorHand.ErrorAndContinue(this.NotifyFail.name, 'Fail ' + failrReason);
   }
 
   async ContentReceiveRequest(messageFromController: IMessageControllerToContent): Promise<IMessageContentToController> {

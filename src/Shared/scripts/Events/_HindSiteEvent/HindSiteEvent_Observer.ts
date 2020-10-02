@@ -13,7 +13,7 @@ export class HindSiteEvent_Observer<T> extends _HindeCoreBase implements IHindSi
         this.CallbackAsync(payload);
       }
     } catch (err) {
-      this.Logger.ErrorAndContinue(HindSiteEvent_Observer.name, err);
+      this.ErrorHand.ErrorAndContinue(HindSiteEvent_Observer.name, err);
     }
   }
   constructor(hindeCore: IHindeCore, friendly: string, callbackAsync: HindsiteEventHandler_Type = null) {

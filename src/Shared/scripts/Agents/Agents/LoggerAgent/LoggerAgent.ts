@@ -2,7 +2,7 @@
 import { BufferChar } from "../../../Enums/BufferChar";
 import { BufferDirection } from "../../../Enums/BufferDirection";
 import { GuidData } from "../../../Helpers/GuidData";
-import { IHindeCore, ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore, ILoggerAgent, IErrorHandlerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 import { IDataDebugCallback } from "../../../Interfaces/IDataDebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
@@ -10,9 +10,75 @@ import { IError } from "../../../Interfaces/IError";
 import { LogWriterBuffer } from "./LogWriterBuffer";
 import { LoggerTimer } from "./LoggerTimer";
 
+export class ErrorHandlerAgent implements IErrorHandlerAgent {
+  ErrorStack: IError[] = [];
+
+  ThrowIfNullOrUndefined(title: string, testSubject: any,): void
+  ThrowIfNullOrUndefined(title: string, testSubject: any[]): void
+  ThrowIfNullOrUndefined(title: string, testSubject: any | any[]): void {
+    //try {
+    if (testSubject instanceof Array) {
+      (<any[]>testSubject).forEach((testSubject: any) => this.ThrowIfNullOrUndefined(title, testSubject));
+    } else {
+      if (typeof testSubject === 'undefined' || testSubject === null) {
+        this.ErrorAndThrow(title, 'Failed Null check');
+      }
+    }
+    //} catch (err) {
+    //  throw
+    //}
+  }
+
+  WarningAndContinue(container: string, text: any): void {
+    if (!container) {
+      container = 'unknown';
+    }
+
+    if (!text) {
+      text = 'unknown';
+    }
+
+    this.ErrorLogger('');
+    this.ErrorLogger('\t\t** WARNING ** ' + container + ' ' + text);
+    this.ErrorLogger('');
+  }
+
+
+  ErrorAndContinue(container: string, text: any): void {
+    if (!container) {
+      container = 'unknown';
+    }
+
+    if (!text) {
+      text = 'unknown';
+    }
+
+    this.ErrorStack.push({
+      ContainerFunc: container,
+      ErrorString: text
+    });
+
+    this.ErrorLogger('');
+    this.ErrorLogger('\t\ts) ** ERROR ** container: ' + container);
+    this.ErrorLogger('');
+    this.ErrorLogger('\t\t error message: ' + text);
+    this.ErrorLogger('');
+    this.ErrorLogger('\t\te)** ERROR container: ** ' + container);
+    this.ErrorLogger('');
+  }
+
+  async ErrorLogger(text) {
+    console.log('**********' + text + '**********');
+  }
+
+  ErrorAndThrow(container: string, text: any): void {
+    this.ErrorAndContinue(container, text);
+    throw container + " " + text
+  }
+}
+
 export class LoggerAgent implements ILoggerAgent {
   private MaxIndent: number = 20;
-  ErrorStack: IError[] = [];
   private AllLogWriters: ILoggerWriter[] = [];
   private __callDepth: number;
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
@@ -20,7 +86,7 @@ export class LoggerAgent implements ILoggerAgent {
   private HasWriters: boolean;
   Timer: LoggerTimer;
   UseTimeStamp: boolean = true;
-  
+
   CancelRequestedFlag: boolean = false;
   private MaxDepthBeforeThrow: number = 2000; //this is to avoid extreme runaway code
 
@@ -74,22 +140,6 @@ export class LoggerAgent implements ILoggerAgent {
   //    throw 'Failed';
   //  }
   //}
-
-  ThrowIfNullOrUndefined(title: string, testSubject: any,): void
-  ThrowIfNullOrUndefined(title: string, testSubject: any[]): void
-  ThrowIfNullOrUndefined(title: string, testSubject: any | any[]): void {
-    //try {
-      if (testSubject instanceof Array) {
-        (<any[]>testSubject).forEach((testSubject: any) => this.ThrowIfNullOrUndefined(title, testSubject));
-      } else {
-        if (typeof testSubject === 'undefined' || testSubject === null) {
-          this.ErrorAndThrow(title, 'Failed Null check');
-        }
-      }
-    //} catch (err) {
-    //  throw 
-    //}
-  }
 
   IsNotNullOrUndefinedBool(title, subject): boolean {
     var toReturn: boolean = false;
@@ -290,47 +340,6 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log(text, optionalValue, true);
   }
 
-  ErrorAndThrow(container: string, text: any): void {
-    this.ErrorAndContinue(container, text);
-    throw container + " " + text
-  }
-
-  ErrorAndContinue(container: string, text: any): void {
-    if (!container) {
-      container = 'unknown';
-    }
-
-    if (!text) {
-      text = 'unknown';
-    }
-
-    this.ErrorStack.push({
-      ContainerFunc: container,
-      ErrorString: text
-    });
-
-    this.Log('');
-    this.Log('\t\ts) ** ERROR ** container: ' + container);
-    this.Log('');
-    this.Log('\t\t error message: ' + text);
-    this.Log('');
-    this.Log('\t\te)** ERROR container: ** ' + container);
-    this.Log('');
-  }
-
-  WarningAndContinue(container: string, text: any): void {
-    if (!container) {
-      container = 'unknown';
-    }
-
-    if (!text) {
-      text = 'unknown';
-    }
-
-    this.Log('');
-    this.Log('\t\t** WARNING ** ' + container + ' ' + text);
-    this.Log('');
-  }
 
   NotNullCheck(title: string, value: any): void {
     if (typeof value === 'undefined') {

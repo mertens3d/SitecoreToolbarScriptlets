@@ -51,7 +51,7 @@ export class DTAreaProxy extends _HindeCoreBase {
       this.DTFrameProxyMutationEvent_Observer = new DTFrameProxyMutationEvent_Observer(this.HindeCore, this.OnDTFProxyMutationEvent.bind(this));
       this.NativeIframeAddedEvent_Observer = new NativeIFrameAddedEvent_Observer(this.HindeCore, this.CallBackOnNativeIFrameAddedEvent.bind(this));
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.Instantiate_DTAreaProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Instantiate_DTAreaProxy.name, err);
     }
     this.Logger.FuncEnd(this.Instantiate_DTAreaProxy.name);
   }
@@ -78,13 +78,13 @@ export class DTAreaProxy extends _HindeCoreBase {
               }
             })
             .then(() => this.Logger.Log(this.CallBackOnNativeIFrameAddedEvent.name + ' Complete'))
-            .catch((err) => this.Logger.ErrorAndThrow(this.CallBackOnNativeIFrameAddedEvent.name, err));
+            .catch((err) => this.ErrorHand.ErrorAndThrow(this.CallBackOnNativeIFrameAddedEvent.name, err));
         })
       } else {
-        this.Logger.WarningAndContinue(this.CallBackOnNativeIFrameAddedEvent.name, 'Something in the payload did not match');
+        this.ErrorHand.WarningAndContinue(this.CallBackOnNativeIFrameAddedEvent.name, 'Something in the payload did not match');
       }
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.CallBackOnNativeIFrameAddedEvent.name, err);
+      this.ErrorHand.ErrorAndThrow(this.CallBackOnNativeIFrameAddedEvent.name, err);
     }
 
     this.Logger.FuncEnd(this.CallBackOnNativeIFrameAddedEvent.name);
@@ -101,9 +101,9 @@ export class DTAreaProxy extends _HindeCoreBase {
         .then(() => this.NewFrameStep4_NotifyObserversOfAreaProxyMutation(dtFrameProxy))
         .then(() => this.NewFrameStep5_AddToDTFrameProxyBucket(dtFrameProxy))
         .then(() => this.NewFrameStep6_TriggerEvents(dtFrameProxy))
-        .catch((err) => this.Logger.ErrorAndThrow(this.ProcessNewFrameProxy.name, err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.ProcessNewFrameProxy.name, err));
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.ProcessNewFrameProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.ProcessNewFrameProxy.name, err);
     }
     this.Logger.FuncEnd(this.ProcessNewFrameProxy.name, dtFrameProxy.Friendly);
   }
@@ -113,9 +113,9 @@ export class DTAreaProxy extends _HindeCoreBase {
     try {
       await dtFrameProxy.Instantiate_DTFrameProxy()
         .then(() => { })
-        .catch((err) => this.Logger.ErrorAndThrow(this.newFrameStep1_Instantiate.name, err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.newFrameStep1_Instantiate.name, err));
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.newFrameStep1_Instantiate.name, err);
+      this.ErrorHand.ErrorAndThrow(this.newFrameStep1_Instantiate.name, err);
     }
     this.Logger.FuncEnd(this.newFrameStep1_Instantiate.name);
   }
@@ -209,7 +209,7 @@ export class DTAreaProxy extends _HindeCoreBase {
   ////      });
   ////  }
   ////  catch (err) {
-  ////    this.Logger.ErrorAndThrow(this.PopulateFrameBucketWithExistingFrames.name, err);
+  ////    this.ErrorHand.ErrorAndThrow(this.PopulateFrameBucketWithExistingFrames.name, err);
   ////  }
   ////}
 
@@ -290,7 +290,7 @@ export class DTAreaProxy extends _HindeCoreBase {
       toReturn = false;
     } else {
       toReturn = true;
-      this.Logger.WarningAndContinue(this.BucketHasSameItem.name, 'Proxy already exists in bucket');
+      this.ErrorHand.WarningAndContinue(this.BucketHasSameItem.name, 'Proxy already exists in bucket');
     }
 
     return toReturn;

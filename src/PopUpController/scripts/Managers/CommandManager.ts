@@ -34,7 +34,7 @@ export class CommandManager extends _HindeCoreBase {
   }
 
   GetMenuCommandParamsByKey(needleCommand: MenuCommandKey): IMenuCommandDefinition {
-    this.Logger.ThrowIfNullOrUndefined(this.GetMenuCommandParamsByKey.name, needleCommand);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.GetMenuCommandParamsByKey.name, needleCommand);
     let toReturn: IMenuCommandDefinition = null;
     for (var idx = 0; idx < this.CommandDefinitionBucket.MenuCommandParamsAr.length; idx++) {
       let candidate: IMenuCommandDefinition = this.CommandDefinitionBucket.MenuCommandParamsAr[idx];
@@ -65,7 +65,7 @@ export class CommandManager extends _HindeCoreBase {
         break;
 
       default:
-        this.Logger.WarningAndContinue(this.HandleCommandTypePopUp.name, 'Unhandled command');
+        this.ErrorHand.WarningAndContinue(this.HandleCommandTypePopUp.name, 'Unhandled command');
         break
     }
   }

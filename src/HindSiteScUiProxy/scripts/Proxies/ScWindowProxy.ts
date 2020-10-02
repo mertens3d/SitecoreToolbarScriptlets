@@ -88,9 +88,9 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
           }
         })
 
-        .catch((err) => this.Logger.ErrorAndThrow(this.Instantiate_ScWindowProxy.name, err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.Instantiate_ScWindowProxy.name, err));
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.Instantiate_ScWindowProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Instantiate_ScWindowProxy.name, err);
     }
 
     this.Logger.FuncEnd(this.Instantiate_ScWindowProxy.name);
@@ -113,13 +113,13 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
   //            }
   //          })
   //          .then(() => resolve(toReturn))
-  //          .catch((err) => this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, err));
+  //          .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetCurrentStateByPageType.name, err));
   //      }
 
   //      else if (scWindowType === ScWindowType.ContentEditor) {
   //        await this.ContentEditorProxy.GetStateOfContentEditorProxy()
   //          .then((stateOfContentEditorProxy: IStateOfContentEditorProxy) => toReturn = stateOfContentEditorProxy)
-  //          .catch((err) => this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, err));
+  //          .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetCurrentStateByPageType.name, err));
   //      }
   //      else if (scWindowType === ScWindowType.LoginPage
   //        || scWindowType === ScWindowType.Launchpad
@@ -128,7 +128,7 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
   //        || scWindowType === ScWindowType.Normal) {
   //      }
   //      else {
-  //        this.Logger.ErrorAndThrow(this.GetCurrentStateByPageType.name, 'unknown page type ' + StaticHelpers.ScWindowTypeFriendly(scWindowType));
+  //        this.ErrorHand.ErrorAndThrow(this.GetCurrentStateByPageType.name, 'unknown page type ' + StaticHelpers.ScWindowTypeFriendly(scWindowType));
   //    }
 
   //    this.Logger.FuncEnd(this.GetCurrentStateByPageType.name);
@@ -203,7 +203,7 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
               .then(() => resolve())
               .catch((err) => reject(this.SetStateOfScWin.name + ' | ' + err));
           } else {
-            this.Logger.ErrorAndThrow(this.SetStateOfScWin.name, 'no states in dataToRestore');
+            this.ErrorHand.ErrorAndThrow(this.SetStateOfScWin.name, 'no states in dataToRestore');
           }
         }
         else if (dataToRestore.Meta.WindowType === ScWindowType.ContentEditor) {
@@ -216,7 +216,7 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
         }
       }
       else {
-        this.Logger.WarningAndContinue(this.SetStateOfScWin.name, " No data found to restore");
+        this.ErrorHand.WarningAndContinue(this.SetStateOfScWin.name, " No data found to restore");
         resolve();
       }
 

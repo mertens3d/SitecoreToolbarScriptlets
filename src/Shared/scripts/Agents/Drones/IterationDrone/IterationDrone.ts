@@ -35,7 +35,7 @@ export class IterationDrone extends _HindeCoreBase {
       this.Timeout += this.Timeout * SharedConst.Const.IterHelper.GrowthPerIteration;
 
       if (this.Logger.CancelRequestedFlag === true) {
-        this.Logger.ErrorAndThrow('CANCEL REQUESTED', '-----------------------------------');
+        this.ErrorHand.ErrorAndThrow('CANCEL REQUESTED', '-----------------------------------');
       }
 
       if (this.Timeout > SharedConst.Const.IterHelper.Timeouts.Max) {

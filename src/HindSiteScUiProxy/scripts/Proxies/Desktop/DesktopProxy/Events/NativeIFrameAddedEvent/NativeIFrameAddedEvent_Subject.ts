@@ -12,7 +12,7 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
 
     this.Logger.CTORStart(NativeIFrameAddedEvent_Subject.name);
     if (!targetDoc) {
-      this.Logger.ErrorAndThrow(NativeIFrameAddedEvent_Subject.name, 'No target doc');
+      this.ErrorHand.ErrorAndThrow(NativeIFrameAddedEvent_Subject.name, 'No target doc');
     }
     this.AssociatedDoc = targetDoc;
     this.InitMutationObserver();
@@ -75,7 +75,7 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
         }
       }
       else {
-        this.Logger.ErrorAndThrow(this.InitMutationObserver.name, 'no AssociatedDoc');
+        this.ErrorHand.ErrorAndThrow(this.InitMutationObserver.name, 'no AssociatedDoc');
       }
     }
     catch (err) {

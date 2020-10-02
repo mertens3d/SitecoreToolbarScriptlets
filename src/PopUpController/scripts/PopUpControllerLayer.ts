@@ -1,5 +1,5 @@
 ﻿import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
-import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
+import { LoggerAgent, ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
@@ -29,19 +29,20 @@ import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Ev
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 
 class PopUpControllerLayer {
-  private RepoAgent: IRepositoryAgent;
-  private SettingsAgent: ISettingsAgent;
-  private PopUpMessageBrokerAgent: MessageBroker_PopUp;
-  private Logger: LoggerAgent;
+  BrowserTabAgent: BrowserTabAgent;
+  HandlersForInternal: HandlersForInternal;
+  private BrowserProxy: PopUpBrowserProxy;
+  private CommandDefintionBucket: ICommandDefinitionBucket;
   private commandMan: CommandManager;
+  private ErrorHand: ErrorHandlerAgent;
+  private HindeCore: IHindeCore;
+  private Logger: LoggerAgent;
+  private PopUpMessageBrokerAgent: MessageBroker_PopUp;
+  private RepoAgent: IRepositoryAgent;
+  private ScUrlAgent: IScUrlAgent;
+  private SettingsAgent: ISettingsAgent;
   private UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
   private UiLayer: IHindSiteUiLayer;
-  private CommandDefintionBucket: ICommandDefinitionBucket;
-  private ScUrlAgent: IScUrlAgent;
-  private BrowserProxy: PopUpBrowserProxy;
-  HandlersForInternal: HandlersForInternal;
-  BrowserTabAgent: BrowserTabAgent;
-  HindeCore: IHindeCore;
 
   public async Startup() {
     try {
@@ -61,8 +62,10 @@ class PopUpControllerLayer {
 
   private Preamble_SettingsAndLogger() {
     this.Logger = new LoggerAgent();
+    this.ErrorHand = new ErrorHandlerAgent();
     this.HindeCore = {
-      Logger: this.Logger
+      Logger: this.Logger,
+      ErrorHand: this.ErrorHand,
     };
 
     this.RepoAgent = new RepositoryAgent(this.HindeCore);
@@ -108,7 +111,7 @@ class PopUpControllerLayer {
     this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.HindeCore, this.OnUiCommandRaisedEvent.bind(this))
 
     if (StaticHelpers.IsNullOrUndefined([this.UiLayer.UiCommandRaisedFlag_Subject, this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject])) {
-      this.Logger.ErrorAndThrow(this.WireEvents_Controller.name, 'Null check');
+      this.ErrorHand.ErrorAndThrow(this.WireEvents_Controller.name, 'Null check');
     } else {
       this.UiLayer.UiCommandRaisedFlag_Subject.RegisterObserver(this.UiCommandRaisedFlag_Observer);
       let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.HindeCore, this.OnContentReplyReceivedEventCallBack.bind(this));

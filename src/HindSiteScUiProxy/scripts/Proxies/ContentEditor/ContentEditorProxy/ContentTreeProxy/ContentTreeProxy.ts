@@ -33,7 +33,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
   constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc, treeContainerElement: HTMLElement) {
     super(hindeCore);
 
-    this.Logger.ThrowIfNullOrUndefined(ContentTreeProxy.name, [associatedDoc, treeContainerElement]);
+    this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeProxy.name, [associatedDoc, treeContainerElement]);
     this.AssociatedDoc = associatedDoc;
     this.TreeContainerElement = treeContainerElement;
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
@@ -56,7 +56,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.HindeCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.Instantiate_TreeProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Instantiate_TreeProxy.name, err);
     }
 
     this.Logger.FuncEnd(this.Instantiate_TreeProxy.name);
@@ -85,7 +85,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
           this.TreeMutationEvent_Subject.NotifyObserversAsync(TreeMutationEvent_Payload)
         })
         .then(() => this.Logger.Log(this.CallBackOnNativeClassNameChangeEventAsync.name + ' completed'))
-        .catch((err) => this.Logger.ErrorAndThrow(this.CallBackOnNativeClassNameChangeEventAsync.name, err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.CallBackOnNativeClassNameChangeEventAsync.name, err));
     }
     this.Logger.FuncEnd(this.CallBackOnNativeClassNameChangeEventAsync.name);
   }
@@ -121,7 +121,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
       let promisesAr: Promise<void>[] = [];
 
       if (depth > maxIterDepth) {
-        this.Logger.ErrorAndThrow(this.SetStateOfNodeRecursive.name, 'Iteration check - max depth exceed. Something is probably wrong');
+        this.ErrorHand.ErrorAndThrow(this.SetStateOfNodeRecursive.name, 'Iteration check - max depth exceed. Something is probably wrong');
       }
 
       if (depth < maxIterDepth && currentNodeData) {
@@ -141,7 +141,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
           .then(() => Promise.all(promisesAr));
       }
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.SetStateOfNodeRecursive.name, err);
+      this.ErrorHand.ErrorAndThrow(this.SetStateOfNodeRecursive.name, err);
     }
     this.Logger.FuncEnd(this.SetStateOfNodeRecursive.name, currentNodeData.Friendly);
   }
@@ -158,7 +158,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
       //await this.GetTreeNodeProxy()
       //  .then((treeNodeProxy: ScContentTreeNodeProxy) => treeNodeProxy.SetStateOfTreeNode(stateOfContentEditor.StateOfScContentTreeNodeDeep, 0))
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.SetStateOfContentTree.name, err);
+      this.ErrorHand.ErrorAndThrow(this.SetStateOfContentTree.name, err);
     }
 
     this.TreeMutationEvent_Subject.EnableNotifications();
@@ -240,7 +240,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
       await this.RecipeBasics.WaitForAndReturnFoundElem(this.AssociatedDoc, ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode)
         .then((htmlElement: HTMLElement) => this.rootTreeNodeHtmlElement = htmlElement);
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.GetRootNodeForFrameType.name, err);
+      this.ErrorHand.ErrorAndThrow(this.GetRootNodeForFrameType.name, err);
     }
 
     let toReturn: HTMLElement = this.TreeContainerElement.querySelector(ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode);
@@ -299,11 +299,11 @@ export class ContentTreeProxy extends _HindeCoreBase {
             .catch((err) => reject(this.GetTreeNodeProxy.name + ' | ' + err));
         }
         else {
-          this.Logger.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no root node');
+          this.ErrorHand.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no root node');
         }
       }
       else {
-        this.Logger.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no targetDoc');
+        this.ErrorHand.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no targetDoc');
       }
       resolve(this._treeNodeProxy);
     });

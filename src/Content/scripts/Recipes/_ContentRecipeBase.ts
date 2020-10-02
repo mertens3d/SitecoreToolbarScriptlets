@@ -17,7 +17,7 @@ export abstract class _ContentRecipeBase extends _HindeCoreBase {
       this.CommandParams = commandParams;
       this.Dependancies = dependancies;
     } else {
-      this.Logger.ErrorAndThrow(_ContentRecipeBase.name, 'null check: ' + this.Friendly);
+      this.ErrorHand.ErrorAndThrow(_ContentRecipeBase.name, 'null check: ' + this.Friendly);
     }
   }
 }

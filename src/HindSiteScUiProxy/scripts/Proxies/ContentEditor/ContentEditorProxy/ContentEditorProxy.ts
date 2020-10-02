@@ -57,9 +57,9 @@ export class ContentEditorProxy extends _HindeCoreBase {
         .then((treeContainer: HTMLElement) => this.ContentTreeProxy = new ContentTreeProxy(this.HindeCore, this.AssociatedDoc, treeContainer))
         .then(() => this.ContentTreeProxy.Instantiate_TreeProxy())
         .then(() => this.initResultContentEditorProxy.ContentEditorProxyInitialized = true)
-        .catch((err) => this.Logger.ErrorAndThrow(this.Instantiate_ContentEditorProxy.name, err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.Instantiate_ContentEditorProxy.name, err));
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.Instantiate_ContentEditorProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Instantiate_ContentEditorProxy.name, err);
     }
     this.Logger.FuncEnd(this.Instantiate_ContentEditorProxy.name);
   }
@@ -83,7 +83,7 @@ export class ContentEditorProxy extends _HindeCoreBase {
     this.Logger.FuncEnd(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
   }
   TriggerActiveNodeChangeEvent() {
-    this.Logger.ThrowIfNullOrUndefined(this.TriggerActiveNodeChangeEvent.name, this.ContentTreeProxy);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.TriggerActiveNodeChangeEvent.name, this.ContentTreeProxy);
     this.ContentTreeProxy.TriggerActiveNodeChangeEvent();
   }
   GetStateOfContentEditorProxy(): Promise<IStateOfContentEditor> {
@@ -102,18 +102,18 @@ export class ContentEditorProxy extends _HindeCoreBase {
 
   ValidateAssociatedDocContentEditor() {
     if (!this.AssociatedDoc) {
-      this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No doc provided');
+      this.ErrorHand.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No doc provided');
     }
 
     else if (!this.AssociatedDoc.ContentDoc) {
-      this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No content doc');
+      this.ErrorHand.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No content doc');
     }
 
     else if (!this.AssociatedDoc.ContentDoc.URL) {
-      this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No URL');
+      this.ErrorHand.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No URL');
     }
     else if (this.AssociatedDoc.ContentDoc.URL === SharedConst.Const.UrlSuffix.AboutBlank) {
-      this.Logger.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
+      this.ErrorHand.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
     }
   }
 
@@ -124,7 +124,7 @@ export class ContentEditorProxy extends _HindeCoreBase {
 
       await recipeBasics.WaitForCompleteNABDataOneDoc(this.AssociatedDoc, this.Friendly)
 
-        .catch((err) => this.Logger.ErrorAndThrow(this.WaitForCompleteNABContentEditor.name, err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.WaitForCompleteNABContentEditor.name, err));
     } catch (e) {
     }
 
@@ -137,7 +137,7 @@ export class ContentEditorProxy extends _HindeCoreBase {
   //    treeMutationEvent_Observer.SetAssociatedContentEditorProxy(this);
   //    this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(treeMutationEvent_Observer);
   //  } else {
-  //    this.Logger.WarningAndContinue(this.RegisterObserverForTreeMutation.name, 'no associated tree proxy');
+  //    this.ErrorHand.WarningAndContinue(this.RegisterObserverForTreeMutation.name, 'no associated tree proxy');
   //  }
   //  this.Logger.FuncEnd(this.RegisterObserverForTreeMutation.name);
   //}
@@ -186,7 +186,7 @@ export class ContentEditorProxy extends _HindeCoreBase {
         }
       }
     } else {
-      this.Logger.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
+      this.ErrorHand.ErrorAndThrow(this.GetActiveNode.name, 'No tree data provided');
     }
 
     this.Logger.FuncEnd(this.GetActiveNode.name, toReturn.Friendly);

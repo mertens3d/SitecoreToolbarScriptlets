@@ -90,7 +90,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
         visiblityTestResult.FriendlyFailReason = 'Requires Content Editor or Desktop';
       }
     } else {
-      this.Logger.ErrorAndThrow(this.VisibilityTestDesktopOrContentEditor.name, 'null state');
+      this.ErrorHand.ErrorAndThrow(this.VisibilityTestDesktopOrContentEditor.name, 'null state');
     }
 
     this.Logger.FuncEnd(this.VisibilityTestDesktopOrContentEditor.name);
@@ -166,19 +166,19 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
         break;
 
       case VisibilityType.Unknown:
-        this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+        this.ErrorHand.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
         break;
 
 
 
 
       default:
-        this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+        this.ErrorHand.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
         break;
     }
 
     if (!toReturn) {
-      this.Logger.ErrorAndThrow(this.TestAgainstOneControl.name, 'null test result');
+      this.ErrorHand.ErrorAndThrow(this.TestAgainstOneControl.name, 'null test result');
     }
 
     this.Logger.FuncEnd(this.TestAgainstOneControl.name, toReturn.DidItPass.toString());
@@ -202,7 +202,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
         }
       }
     } else {
-      this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'null stateOfSitecoreWindow');
+      this.ErrorHand.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'null stateOfSitecoreWindow');
     }
 
     this.Logger.FuncEnd(this.TestAgainstAllSetControllers.name, allResults.HasFailures().toString());

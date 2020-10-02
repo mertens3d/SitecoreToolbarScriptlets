@@ -102,7 +102,7 @@ export class CommandRouter extends _HindeCoreBase {
           })
           .then(() => this.Logger.MarkerD())
           .then(() => resolve())
-          .catch((err) => this.Logger.ErrorAndThrow(this.ExecuteInternalCommand.name, err));
+          .catch((err) => this.ErrorHand.ErrorAndThrow(this.ExecuteInternalCommand.name, err));
         //}, 1000)
       }
       this.Logger.FuncEnd(this.ExecuteInternalCommand.name);
@@ -143,7 +143,7 @@ export class CommandRouter extends _HindeCoreBase {
       if (commandData) {
       }
       else {
-        this.Logger.ErrorAndThrow(this.RouteCommand.name, 'did not find command');
+        this.ErrorHand.ErrorAndThrow(this.RouteCommand.name, 'did not find command');
       }
       this.Logger.FuncEnd(this.RouteCommand.name);
     });
