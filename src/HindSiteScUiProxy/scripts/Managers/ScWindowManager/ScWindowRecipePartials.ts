@@ -3,13 +3,13 @@ import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToast
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
-import { LoggableBase } from '../../../../Shared/scripts/LoggableBase';
-import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { _HindeCoreBase } from '../../../../Shared/scripts/LoggableBase';
+import { IHindeCore } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { DesktopProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopProxy';
 
-export class ScWindowRecipePartials extends LoggableBase {
-  constructor(logger: ILoggerAgent) {
-    super(logger);
+export class ScWindowRecipePartials extends _HindeCoreBase {
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
   }
 
  

@@ -1,6 +1,6 @@
 ﻿import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
@@ -8,8 +8,8 @@ import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandReci
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
 
 export class RecipeChangeNickName extends _ContentRecipeBase implements ICommandRecipes {
-  constructor(logger: ILoggerAgent, commandParams: ICommandParams, dependancies: ICommandDependancies) {
-    super(logger, commandParams, dependancies, RecipeChangeNickName.name);
+  constructor(hindeCore: IHindeCore, commandParams: ICommandParams, dependancies: ICommandDependancies) {
+    super(hindeCore, commandParams, dependancies, RecipeChangeNickName.name);
 
     if (StaticHelpers.IsNullOrUndefined([this.CommandParams.NewNickname, this.CommandParams.TargetSnapShotId, this.Dependancies.AtticAgent])) {
       this.Logger.ErrorAndThrow(RecipeChangeNickName.name, 'Null check');

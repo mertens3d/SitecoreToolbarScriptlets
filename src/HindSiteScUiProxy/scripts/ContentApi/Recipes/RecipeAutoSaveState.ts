@@ -1,22 +1,22 @@
 ﻿import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IHindSiteScUiProxy } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfScContentTreeNodeDeep } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
 import { IStateOfContentTree } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
 import { IStateOfScWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow";
 
-export class RecipeAutoSaveState extends LoggableBase {
+export class RecipeAutoSaveState extends _HindeCoreBase {
   private ScUiProxy: IHindSiteScUiProxy;
   private AtticAgent: IContentAtticAgent;
 
-  constructor(logger: ILoggerAgent, scUiProxy: IHindSiteScUiProxy, atticAgent: IContentAtticAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiProxy, atticAgent: IContentAtticAgent) {
+    super(hindeCore);
     this.ScUiProxy = scUiProxy;
     this.AtticAgent = atticAgent;
   }

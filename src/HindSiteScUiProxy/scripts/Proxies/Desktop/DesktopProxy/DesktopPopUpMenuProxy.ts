@@ -1,5 +1,5 @@
 ﻿import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { FrameHelper } from "../../../Helpers/FrameHelper";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
@@ -7,11 +7,11 @@ import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectCon
 import { ReportResultsInitDTFrameProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
 //import { RecipeAddNewContentEditorToDesktop } from "../../../ContentApi/Recipes/RecipeAddContentEditorToDesktop";
 
-export class DTPopUpMenuProxy extends LoggableBase {
+export class DTPopUpMenuProxy extends _HindeCoreBase {
 
   RecipeAddNewContentEditorToDesktop(AssociatedDoc: IDataOneDoc): Promise<void> {
     return new Promise(async (resolve, reject) => {
-    //let recipe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.OwnerScWinProxy, this.AssociatedDoc);
+    //let recipe = new RecipeAddNewContentEditorToDesktop(this.HindeCore, this.OwnerScWinProxy, this.AssociatedDoc);
 
     //await recipe.Execute()
     //  .catch((err) =>
@@ -22,8 +22,8 @@ export class DTPopUpMenuProxy extends LoggableBase {
 
       let allIframeDataAtBeginning: HTMLIFrameElement[];
       let dtframeProxy: DTFrameProxy;
-      let frameHelper = new FrameHelper(this.Logger);
-      let recipeBasics = new RecipeBasics(this.Logger);
+      let frameHelper = new FrameHelper(this.HindeCore);
+      let recipeBasics = new RecipeBasics(this.HindeCore);
 
       allIframeDataAtBeginning = frameHelper.GetIFramesFromDataOneDoc(AssociatedDoc)
 

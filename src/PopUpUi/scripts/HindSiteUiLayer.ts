@@ -1,5 +1,5 @@
 ﻿import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
-import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
@@ -12,13 +12,13 @@ import { UiEventManager } from "./Managers/UiEventManager";
 import { UiModulesManager } from "./Managers/UiManager/UiModulesManager";
 import { UiVisibilityTestAgent } from "./Managers/UiManager/UiVisibilityTestAgent";
 import { DebuggingFeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
-import { LoggableBase } from "../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
 import { UiCommandFlagRaisedEvent_Subject } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject";
 import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
 import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
 export namespace HindSiteUiLayer {
-  export class HindSiteUiLayer extends LoggableBase implements IHindSiteUiLayer {
+  export class HindSiteUiLayer extends _HindeCoreBase implements IHindSiteUiLayer {
     readonly CommandDefinitionBucket: ICommandDefinitionBucket;
     private UiEventMan: UiEventManager;
     FeedbackModuleMsg_Observer: DebuggingFeedbackModuleMessages_Observer;
@@ -31,8 +31,8 @@ export namespace HindSiteUiLayer {
     UiVisibilityTestAgent: IUiVisibilityTestAgent;
     UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
 
-    constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, scUrlAgent: IScUrlAgent) {
-      super(logger);
+    constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, scUrlAgent: IScUrlAgent) {
+      super(hindeCore);
       this.Logger.CTORStart(HindSiteUiLayer.name);
 
       try {
@@ -77,11 +77,11 @@ export namespace HindSiteUiLayer {
       this.Logger.FuncStart(this.Instantiate_Ui.name);
 
       try {
-        this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
+        this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.HindeCore);
 
-        this.UiCommandsMan = new UiCommandsManager(this.Logger, this.CommandDefinitionBucket, this.UiVisibilityTestAgent);
-        this.UiModulesMan = new UiModulesManager(this.Logger, this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScUrlAgent); //after tabman, after HelperAgent
-        this.UiEventMan = new UiEventManager(this.Logger, this.UiModulesMan); // after uiman
+        this.UiCommandsMan = new UiCommandsManager(this.HindeCore, this.CommandDefinitionBucket, this.UiVisibilityTestAgent);
+        this.UiModulesMan = new UiModulesManager(this.HindeCore, this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScUrlAgent); //after tabman, after HelperAgent
+        this.UiEventMan = new UiEventManager(this.HindeCore, this.UiModulesMan); // after uiman
       } catch (err) {
         console.log(err);
       }
@@ -105,10 +105,10 @@ export namespace HindSiteUiLayer {
       this.UiModulesMan.WireEvents_ModulesManager();
       this.UiEventMan.WireEvents_UiEventMan();
 
-      this.FeedbackModuleMsg_Observer = new DebuggingFeedbackModuleMessages_Observer(this.Logger, PopConst.Const.Selector.HS.FeedbackMessages);
+      this.FeedbackModuleMsg_Observer = new DebuggingFeedbackModuleMessages_Observer(this.HindeCore, PopConst.Const.Selector.HS.FeedbackMessages);
       this.UiCommandRaisedFlag_Subject = this.UiEventMan.UiCommandRaisedFlag_UiEventManagerRelay_Subject;
 
-      //this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.Logger, this.OnUiCommandEvent_UiEventManagerRelay.bind(this));
+      //this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.HindeCore, this.OnUiCommandEvent_UiEventManagerRelay.bind(this));
 
       this.Logger.FuncEnd(this.WireEvents_Ui.name);
     }

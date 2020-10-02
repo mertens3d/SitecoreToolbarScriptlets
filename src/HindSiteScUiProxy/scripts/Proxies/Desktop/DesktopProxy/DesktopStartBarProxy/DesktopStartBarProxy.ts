@@ -1,28 +1,28 @@
 ﻿import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
-import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
 import { IContentTreeProxyMutationEvent_Payload } from '../Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
 
-export class DTStartBarProxy extends LoggableBase {
+export class DTStartBarProxy extends _HindeCoreBase {
   private __statBarElem: HTMLElement;
   private RecipeBasics: RecipeBasics;
   private AssociatedDoc: IDataOneDoc;
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
 
-  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc) {
+    super(hindeCore);
     this.Logger.CTORStart(DTStartBarProxy.name);
     this.AssociatedDoc = associatedDoc;
     this.Logger.CTOREnd(DTStartBarProxy.name);
   }
 
   public Instantiate_DTStartBarProxy() {
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
   GetStartBarButtonById(targetId: string) {
@@ -62,7 +62,7 @@ export class DTStartBarProxy extends LoggableBase {
       if (!foundStartBarButtonProxy) {
         this.Logger.Log('no match found, making it');
 
-        foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.Logger, dTFrameProxyMutationEventPayload.FrameId, this.AssociatedDoc);
+        foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.HindeCore, dTFrameProxyMutationEventPayload.FrameId, this.AssociatedDoc);
         await foundStartBarButtonProxy.Instantiate_DestopStartBarButtonProxy()
           .catch((err) => this.Logger.ErrorAndThrow(this.GetAssociatedStartBarButton.name, err));
 

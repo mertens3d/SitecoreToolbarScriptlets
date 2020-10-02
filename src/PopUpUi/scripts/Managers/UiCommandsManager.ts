@@ -1,5 +1,5 @@
 ﻿import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
@@ -8,15 +8,15 @@ import { UiHydrationData } from '../../../Shared/scripts/Interfaces/UiHydrationD
 import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
 import { UiVisibilityTestAgent } from './UiManager/UiVisibilityTestAgent';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
-import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 
-export class UiCommandsManager extends LoggableBase {
+export class UiCommandsManager extends _HindeCoreBase {
   private UiModules: IUiModule[] = [];
   private UiVisibilityTestAgent: IUiVisibilityTestAgent;
   private MenuCommandParamsBucket: ICommandDefinitionBucket;
 
-  constructor(logger: ILoggerAgent, menuCommandParamsBucket: ICommandDefinitionBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, menuCommandParamsBucket: ICommandDefinitionBucket, uiVisibilityTestAgent: IUiVisibilityTestAgent) {
+    super(hindeCore);
 
     //this.Logger.CTORStart(UiCommandsManager.name);
     //this.UiVisibilityTestAgent = uiVisibilityTestAgent;
@@ -26,7 +26,7 @@ export class UiCommandsManager extends LoggableBase {
   }
 
   Init_ButtonStateManager() {
-    //this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.Logger);
+    //this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.HindeCore);
 
     //this.BuildCommandButtons();
   }
@@ -36,7 +36,7 @@ export class UiCommandsManager extends LoggableBase {
 
     //  this.MenuCommandParamsBucket.MenuCommandParamsAr.forEach((menuCommandParams: IMenuCommandDefinition) => {
     //    if (menuCommandParams.ModuleKey === ModuleKey.ButtonTypical) {
-    //      let typeButtonModule = new TypCommandButtonModule(this.Logger, menuCommandParams);
+    //      let typeButtonModule = new TypCommandButtonModule(this.HindeCore, menuCommandParams);
     //      this.UiModules.push(typeButtonModule);
     //    } else if (menuCommandParams.ModuleKey === ModuleKey.ButtonClose) {
     //    }

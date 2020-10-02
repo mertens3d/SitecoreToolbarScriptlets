@@ -1,7 +1,7 @@
 ﻿import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
@@ -10,8 +10,8 @@ import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/State
 import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 
 export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements ICommandRecipes {
-  constructor(logger: ILoggerAgent, commandData: ICommandParams, dependancies: ICommandDependancies) {
-    super(logger, commandData, dependancies, RecipeInitFromQueryStr.name);
+  constructor(hindeCore: IHindeCore, commandData: ICommandParams, dependancies: ICommandDependancies) {
+    super(hindeCore, commandData, dependancies, RecipeInitFromQueryStr.name);
   }
 
   Execute(): Promise<void> {
@@ -40,8 +40,8 @@ export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements 
 }
 
 export class RecipeInitFromQueryStr extends _ContentRecipeBase implements ICommandRecipes {
-  constructor(logger: ILoggerAgent, commandData: ICommandParams, dependancies: ICommandDependancies) {
-    super(logger, commandData, dependancies, RecipeInitFromQueryStr.name);
+  constructor(hindeCore: IHindeCore, commandData: ICommandParams, dependancies: ICommandDependancies) {
+    super(hindeCore, commandData, dependancies, RecipeInitFromQueryStr.name);
   }
 
   Execute(): Promise<void> {

@@ -1,6 +1,6 @@
 ﻿import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
-import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ReportResultsInitDTFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
 import { IStateOfContentEditor } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
@@ -18,8 +18,8 @@ export class DTFrameProxy extends _BaseFrameProxy {
   Discriminator = DTFrameProxy.name;
   public initReportFrameProxy: ReportResultsInitDTFrameProxy;
 
-  constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement) {
-    super(logger, iframeElem);
+  constructor(hindeCore: IHindeCore, iframeElem: HTMLIFrameElement) {
+    super(hindeCore, iframeElem);
     if (iframeElem) {
       this.Friendly = 'DTFrameProxy_' + iframeElem.id;
     } else {
@@ -31,7 +31,7 @@ export class DTFrameProxy extends _BaseFrameProxy {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.Instantiate_DTFrameProxy.name, this.Friendly);
 
-      let recipeBasic = new RecipeBasics(this.Logger);
+      let recipeBasic = new RecipeBasics(this.HindeCore);
       this.initReportFrameProxy = new ReportResultsInitDTFrameProxy();
 
       await recipeBasic.WaitForCompleteNABHtmlIframeElement(this.HTMLIframeElement, this.Friendly)
@@ -40,11 +40,11 @@ export class DTFrameProxy extends _BaseFrameProxy {
             reject(result.DocumentReadtStateFriendly())
           }
         })
-        .then(() => this.ContentEditorProxy = new ContentEditorProxy(this.Logger, this.GetContentDoc(), this.Friendly))
+        .then(() => this.ContentEditorProxy = new ContentEditorProxy(this.HindeCore, this.GetContentDoc(), this.Friendly))
         .then(() => this.ContentEditorProxy.Instantiate_ContentEditorProxy())
         .then(() => {
-          this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.Logger);
-          this.ContentEditorProxyMutationEvent_Observer = new ContentEditorProxyMutationEvent_Observer(this.Logger, this);
+          this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.HindeCore);
+          this.ContentEditorProxyMutationEvent_Observer = new ContentEditorProxyMutationEvent_Observer(this.HindeCore, this);
           this.initReportFrameProxy.DTFrameProxyInitialized = true;
         })
 

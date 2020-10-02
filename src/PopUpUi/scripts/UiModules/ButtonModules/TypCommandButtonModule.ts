@@ -1,7 +1,7 @@
 ﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
@@ -12,8 +12,8 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
   private ElemButtonBackText: HTMLDivElement;
   private ElemDivBtnOverlay: HTMLDivElement;
 
-  constructor(loggerAgent: ILoggerAgent, menuCommandParameters: IMenuCommandDefinition) {
-    super(loggerAgent, menuCommandParameters);
+  constructor(hindeCore: IHindeCore, menuCommandParameters: IMenuCommandDefinition) {
+    super(hindeCore, menuCommandParameters);
   }
 
   Init_Module(): void {

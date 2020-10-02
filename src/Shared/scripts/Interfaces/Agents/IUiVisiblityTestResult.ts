@@ -1,7 +1,7 @@
 ﻿import { VisiblityTestResult } from "./VisiblityTestResult";
-import { LoggableBase } from "../../LoggableBase";
+import { _HindeCoreBase } from "../../LoggableBase";
 
-export class VisiblityTestResultsBucket extends LoggableBase {
+export class VisiblityTestResultsBucket extends _HindeCoreBase {
   TestResults: VisiblityTestResult[] = [];
 
   HasFailures(): boolean {

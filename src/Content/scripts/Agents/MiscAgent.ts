@@ -1,10 +1,10 @@
-﻿import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
-import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 
-export class MiscAgent extends LoggableBase {
-  constructor(logger: ILoggerAgent) {
-    super(logger);
+export class MiscAgent extends _HindeCoreBase {
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
     this.Logger.FuncStart(MiscAgent.name);
     this.Logger.FuncEnd(MiscAgent.name);
   }

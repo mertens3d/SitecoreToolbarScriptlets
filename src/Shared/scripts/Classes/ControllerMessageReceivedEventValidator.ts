@@ -5,7 +5,7 @@ import { IStateOfContentEditor } from "../Interfaces/Data/States/IStateOfContent
 import { IStateOfDesktop } from "../Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../Interfaces/Data/States/IStateOfDTProxy";
 import { IStateOfScWindow } from "../Interfaces/Data/States/IStateOfScWindow";
-import { LoggableBase } from "../LoggableBase";
+import { _HindeCoreBase } from "../LoggableBase";
 import { DefaultControllerMessageReceivedEvent_Payload } from "./Defaults/DefaultControllerMessageReceivedEvent_Payload";
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
 import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
@@ -15,7 +15,7 @@ import { DefaultStateOfStorageSnapshots } from "./Defaults/DefaultStateOfSnapsho
 import { DefaultStateOfContentTree } from "./Defaults/DefaultStateOfContentTree";
 import { IStateOfStorageSnapShots } from "../Interfaces/Data/States/IStateOfStorageSnapShots";
 
-export class ControllerMessageReceivedEventValidator extends LoggableBase {
+export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {
     this.Logger.FuncStart(this.TranslateAndValidatePayload.name);
 

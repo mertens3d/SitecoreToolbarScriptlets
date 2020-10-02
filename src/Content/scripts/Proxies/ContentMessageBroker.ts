@@ -6,7 +6,7 @@ import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IC
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 import { IMessageBroker_Content } from "../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScUrlAgent } from "../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
@@ -14,11 +14,11 @@ import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Dat
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
-import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
 
-export class MessageBroker_Content extends LoggableBase implements IMessageBroker_Content {
+export class MessageBroker_Content extends _HindeCoreBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
   private HindSiteScUiProxy: IHindSiteScUiProxy;
 
@@ -29,11 +29,10 @@ export class MessageBroker_Content extends LoggableBase implements IMessageBroke
   CommandRouter: CommandRouter;
   ScUrlAgent: IScUrlAgent;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter, scUrlAgent: IScUrlAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter, scUrlAgent: IScUrlAgent) {
+    super(hindeCore);
     this.Logger.CTORStart(MessageBroker_Content.name);
 
-    this.Logger = logger;
     this.SettingsAgent = settingsAgent;
     this.HindSiteScUiProxy = apiManager;
     this.AtticAgent = atticMan;

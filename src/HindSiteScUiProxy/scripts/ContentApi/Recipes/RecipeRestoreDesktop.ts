@@ -17,10 +17,10 @@
 //  private  ScWinProxy: IScWindowProxy;
 
 //  constructor(logger: ILoggerAgent, targetDoc: IDataOneDoc, dataStateOfFrame: IDataStateOfDTFrame, ceButtonTabAgent: DesktopStartBarProxy, scWinProxy: IScWindowProxy) {
-//    super(logger);
+//    super(hindeCore);
 //    this.Logger.InstantiateStart(RecipeRestoreFrameOnDesktop.name);
 
-//    this.MiscAgent = new MiscAgent(this.Logger);
+//    this.MiscAgent = new MiscAgent(this.HindeCore);
 //    this.ScWinProxy = scWinProxy;
 //    this.TargetDoc = targetDoc;
 //    this.DataStateOfFrame = dataStateOfFrame;
@@ -45,7 +45,7 @@
 //        //guaranteed to be on the correct page
 //        var dtFrameProxy: DTFrameProxy;
 
-//        //let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.Logger, this.ScWinProxy, this.TargetDoc); //todo - fix the null
+//        //let recipeAddCe = new RecipeAddNewContentEditorToDesktop(this.HindeCore, this.ScWinProxy, this.TargetDoc); //todo - fix the null
 
 //        await recipeAddCe.Execute()
 //          .then((result: DTFrameProxy) => dtFrameProxy = result)

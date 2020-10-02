@@ -2,22 +2,22 @@ import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
 import { UiCommandFlagRaisedEvent_Subject } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IStateOfUiModules } from "../../../Shared/scripts/Interfaces/IStateOfUiModules";
-import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { ISingleClickEvent_Payload } from '../Events/SingleClickEvent/ISingleClickEvent_Payload';
 import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
 import { UiModulesManager } from './UiManager/UiModulesManager';
 
-export class UiEventManager extends LoggableBase {
+export class UiEventManager extends _HindeCoreBase {
   UiModulesMan: UiModulesManager;
   CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
   UiCommandRaisedFlag_UiEventManagerRelay_Subject: UiCommandFlagRaisedEvent_Subject;
 
-  constructor(logger: ILoggerAgent, uimodulesMan: UiModulesManager) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, uimodulesMan: UiModulesManager) {
+    super(hindeCore);
     this.UiModulesMan = uimodulesMan;
 
     if (StaticHelpers.IsNullOrUndefined([uimodulesMan])) {
@@ -27,8 +27,8 @@ export class UiEventManager extends LoggableBase {
 
   Init_UiEventManager() {
     this.Logger.FuncStart(this.Init_UiEventManager.name);
-    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject = new UiCommandFlagRaisedEvent_Subject(this.Logger);
-    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent.bind(this));
+    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject = new UiCommandFlagRaisedEvent_Subject(this.HindeCore);
+    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.HindeCore, this.OnSingleClickEvent.bind(this));
     this.Logger.FuncEnd(this.Init_UiEventManager.name);
   }
 

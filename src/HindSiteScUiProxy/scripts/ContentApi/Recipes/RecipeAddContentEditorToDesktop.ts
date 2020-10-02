@@ -11,7 +11,7 @@
 
 //export class RecipeAddNewContentEditorToDesktop extends _ApiRecipeBase implements ICommandRecipes {
 //  constructor(logger: ILoggerAgent, scWinProxy: IScWindowProxy, targetDoc: IDataOneDoc) {
-//    super(logger);
+//    super(hindeCore);
 
 //    this.Logger.InstantiateStart(RecipeAddNewContentEditorToDesktop.name);
 //    this.TargetDoc = targetDoc;

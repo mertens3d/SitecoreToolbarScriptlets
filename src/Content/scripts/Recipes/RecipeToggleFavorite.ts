@@ -1,5 +1,5 @@
 ﻿import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
@@ -7,8 +7,8 @@ import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandReci
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
 
 export class RecipeToggleFavorite extends _ContentRecipeBase implements ICommandRecipes {
-  constructor(logger: ILoggerAgent, commandData: ICommandParams, dependancies: ICommandDependancies) {
-    super(logger, commandData, dependancies, RecipeToggleFavorite.name);
+  constructor(hindeCore: IHindeCore, commandData: ICommandParams, dependancies: ICommandDependancies) {
+    super(hindeCore, commandData, dependancies, RecipeToggleFavorite.name);
   }
 
   Execute(): Promise<void> {

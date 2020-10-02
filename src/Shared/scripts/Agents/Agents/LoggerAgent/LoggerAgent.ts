@@ -2,7 +2,7 @@
 import { BufferChar } from "../../../Enums/BufferChar";
 import { BufferDirection } from "../../../Enums/BufferDirection";
 import { GuidData } from "../../../Helpers/GuidData";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore, ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 import { IDataDebugCallback } from "../../../Interfaces/IDataDebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
@@ -108,7 +108,7 @@ export class LoggerAgent implements ILoggerAgent {
     return toReturn;
   }
 
-  HandlerClearDebugText(self: ILoggerAgent, verify: boolean = false): void {
+  HandlerClearDebugText(self: IHindeCore, verify: boolean = false): void {
     this.FuncStart(this.HandlerClearDebugText.name);
     var proceed: boolean = true;
     if (verify) {
@@ -116,10 +116,10 @@ export class LoggerAgent implements ILoggerAgent {
     }
     if (proceed) {
       var newText = '--- Debug Text Reset ---';
-      self.__triggerAllDebugTextChangedCallbacks({
-        NewText: newText,
-        Append: false
-      });
+      //todo - put back? self.__triggerAllDebugTextChangedCallbacks({
+      //  NewText: newText,
+      //  Append: false
+      //});
     }
     this.FuncEnd(this.HandlerClearDebugText.name);
   }

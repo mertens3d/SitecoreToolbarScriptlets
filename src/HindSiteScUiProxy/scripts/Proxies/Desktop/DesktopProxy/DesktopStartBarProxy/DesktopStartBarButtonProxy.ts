@@ -2,13 +2,13 @@
 import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
-import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 
-export class DesktopStartBarButtonProxy extends LoggableBase {
+export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   private AssociatedDoc: IDataOneDoc;
   private ContainerSpanElement: HTMLElement;
   private FoundStartBarButton: HTMLElement;
@@ -17,12 +17,12 @@ export class DesktopStartBarButtonProxy extends LoggableBase {
 
   public FrameId: string;
 
-  constructor(logger: ILoggerAgent, iframeElemId: string, associatedDoc: IDataOneDoc) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, iframeElemId: string, associatedDoc: IDataOneDoc) {
+    super(hindeCore);
     this.AssociatedDoc = associatedDoc;
     this.FrameId = iframeElemId;
 
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
   async Instantiate_DestopStartBarButtonProxy(): Promise<void> {

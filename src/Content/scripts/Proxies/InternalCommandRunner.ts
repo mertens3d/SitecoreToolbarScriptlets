@@ -1,10 +1,10 @@
 ﻿import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
-import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { RecipeForceAutoSnapShot } from "../Recipes/RecipeForceAutoSnapShot";
 import { RecipeInitFromQueryStr, RecipeSetStateFromMostRecent } from "../Recipes/RecipeInitFromQueryStr";
@@ -15,17 +15,17 @@ import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 
-export class InternalCommandRunner extends LoggableBase {
+export class InternalCommandRunner extends _HindeCoreBase {
   Dependancies: ICommandDependancies;
 
-  constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy, scUrlAgent: ScUrlAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy, scUrlAgent: ScUrlAgent) {
+    super(hindeCore);
 
     this.Dependancies = {
       AtticAgent: atticAgent,
       AutoSnapShotAgent: autoSnapShotAgent,
       ScUiProxy: scUiProxy,
-      Logger: this.Logger,
+      HindeCore: this.HindeCore,
       ScUrlAgent: scUrlAgent
     }
   }
@@ -34,7 +34,7 @@ export class InternalCommandRunner extends LoggableBase {
     return new Promise(async (resolve, reject) => {
       //let recipe = new RecipeForceAutoSnapShot(this.Logger, commandParams, this.Dependancies);
 
-      let recipe = new RecipeChangeNickName(this.Logger, commandParams, this.Dependancies);
+      let recipe = new RecipeChangeNickName(this.HindeCore, commandParams, this.Dependancies);
 
       recipe.Execute()
         .then(() => resolve())
@@ -50,7 +50,7 @@ export class InternalCommandRunner extends LoggableBase {
 
   async DebugForceAutoSnapShot(commandParams: ICommandParams): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeForceAutoSnapShot(this.Logger, commandParams, this.Dependancies);
+      let recipe = new RecipeForceAutoSnapShot(this.HindeCore, commandParams, this.Dependancies);
 
       recipe.Execute()
         .then(() => resolve())
@@ -60,7 +60,7 @@ export class InternalCommandRunner extends LoggableBase {
 
   async SaveWindowState(commandParams: ICommandParams): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeSaveStateManual(this.Logger, commandParams, this.Dependancies);
+      let recipe = new RecipeSaveStateManual(this.HindeCore, commandParams, this.Dependancies);
       await recipe.Execute()
         .then(resolve)
         .catch((err) => reject(err));
@@ -69,7 +69,7 @@ export class InternalCommandRunner extends LoggableBase {
 
   ToggleFavorite(commandParams: ICommandParams) {
     return new Promise(async (resolve, reject) => {
-      await new RecipeToggleFavorite(this.Logger, commandParams, this.Dependancies).Execute()
+      await new RecipeToggleFavorite(this.HindeCore, commandParams, this.Dependancies).Execute()
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -80,7 +80,7 @@ export class InternalCommandRunner extends LoggableBase {
   async SetStateFromMostRecent(commandParams: ICommandParams): Promise<void> {
     try {
       this.Logger.FuncStart(this.SetStateFromMostRecent.name);
-      let recipe = new RecipeSetStateFromMostRecent(this.Logger, commandParams, this.Dependancies);
+      let recipe = new RecipeSetStateFromMostRecent(this.HindeCore, commandParams, this.Dependancies);
       await recipe.Execute();
     } catch (err) {
       this.Logger.ErrorAndThrow(this.SetStateFromQueryString.name, err);
@@ -90,7 +90,7 @@ export class InternalCommandRunner extends LoggableBase {
 
   async SetStateFromQueryString(commandParams: ICommandParams): Promise<void> {
     try {
-      let recipe = new RecipeInitFromQueryStr(this.Logger, commandParams, this.Dependancies);
+      let recipe = new RecipeInitFromQueryStr(this.HindeCore, commandParams, this.Dependancies);
       recipe.Execute()
     } catch (err) {
       this.Logger.ErrorAndThrow(this.SetStateFromQueryString.name, err);
@@ -99,7 +99,7 @@ export class InternalCommandRunner extends LoggableBase {
 
   async RemoveSnapShot(commandParams: ICommandParams): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let recipe = new RecipeRemoveItemFromStorage(this.Logger, commandParams, this.Dependancies);
+      let recipe = new RecipeRemoveItemFromStorage(this.HindeCore, commandParams, this.Dependancies);
       await recipe.Execute()
         .then(resolve)
         .catch((err) => reject(err));
@@ -108,7 +108,7 @@ export class InternalCommandRunner extends LoggableBase {
 
   SetStateOfSitecoreWindow(commandParams: ICommandParams, dependancies: ICommandDependancies): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      dependancies.Logger.LogAsJsonPretty("IdOfSelect", commandParams.TargetSnapShotId);
+      dependancies.HindeCore.Logger.LogAsJsonPretty("IdOfSelect", commandParams.TargetSnapShotId);
       let dataOneWindowStorage: IStateOfScUiProxy = dependancies.AtticAgent.GetFromStorageBySnapShotId(commandParams.TargetSnapShotId);
 
       if (dataOneWindowStorage) {

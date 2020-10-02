@@ -3,13 +3,13 @@ import { DocumentReadyState, ReadyStateNAB } from "../../../../../../Shared/scri
 import { FactoryHelper } from "../../../../../../Shared/scripts/Helpers/FactoryHelper";
 import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { LoggableBase } from "../../../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../../../Shared/scripts/LoggableBase";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { CommandToExecuteData } from "../../../../../../Content/scripts/Proxies/CommandToExecuteData";
 
-export class _BaseFrameProxy extends LoggableBase {
+export class _BaseFrameProxy extends _HindeCoreBase {
   Index: number = -1;
   HTMLIframeElement: HTMLIFrameElement = null;
   Id: GuidData = null;
@@ -18,13 +18,13 @@ export class _BaseFrameProxy extends LoggableBase {
   RecipeBasics: RecipeBasics;
   Friendly: string = '{unknown friendly}';
 
-  constructor(logger: ILoggerAgent, iframeElem: HTMLIFrameElement) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, iframeElem: HTMLIFrameElement) {
+    super(hindeCore);
     this.Logger.ThrowIfNullOrUndefined(_BaseFrameProxy.name,[iframeElem]);
 
     this.HTMLIframeElement = iframeElem;
     this.Id = Guid.NewRandomGuid();
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
   GetZindexAsInt(): number {
@@ -60,6 +60,6 @@ export class _BaseFrameProxy extends LoggableBase {
   }
 
   GetContentDoc(): IDataOneDoc {
-    return new FactoryHelper(this.Logger).DataOneContentDocFactoryFromIframe(this);
+    return new FactoryHelper(this.HindeCore).DataOneContentDocFactoryFromIframe(this);
   }
 }

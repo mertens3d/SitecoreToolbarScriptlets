@@ -26,6 +26,7 @@ import { CommandDefintionFactory } from "./Classes/PopUpCommands";
 import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
 import { ContentReplyReceivedEvent_Observer } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
 import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 
 class PopUpControllerLayer {
   private RepoAgent: IRepositoryAgent;
@@ -40,11 +41,13 @@ class PopUpControllerLayer {
   private BrowserProxy: PopUpBrowserProxy;
   HandlersForInternal: HandlersForInternal;
   BrowserTabAgent: BrowserTabAgent;
+  HindeCore: IHindeCore;
+
   public async Startup() {
     try {
       this.Preamble_SettingsAndLogger();
 
-      this.BrowserProxy = new PopUpBrowserProxy(this.Logger);
+      this.BrowserProxy = new PopUpBrowserProxy(this.HindeCore);
       await this.BrowserProxy.Init_BrowserProxy()
         .then(() => {
           this.InstantiateAgents_Controller();
@@ -58,27 +61,31 @@ class PopUpControllerLayer {
 
   private Preamble_SettingsAndLogger() {
     this.Logger = new LoggerAgent();
-    this.RepoAgent = new RepositoryAgent(this.Logger);
-    this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
+    this.HindeCore = {
+      Logger: this.Logger
+    };
+
+    this.RepoAgent = new RepositoryAgent(this.HindeCore);
+    this.SettingsAgent = new SettingsAgent(this.HindeCore, this.RepoAgent);
     this.SettingsAgent.Init_SettingsAgent();
     this.Init_Logger();
   }
 
   private InstantiateAgents_Controller() {
-    this.ScUrlAgent = new ScUrlAgent(this.Logger, this.BrowserProxy);
+    this.ScUrlAgent = new ScUrlAgent(this.HindeCore, this.BrowserProxy);
     this.ScUrlAgent.Init_ScUrlAgent();
-    this.PopUpMessageBrokerAgent = new MessageBroker_PopUp(this.Logger, this.BrowserProxy, this.SettingsAgent);
+    this.PopUpMessageBrokerAgent = new MessageBroker_PopUp(this.HindeCore, this.BrowserProxy, this.SettingsAgent);
   }
 
   private async InstantiateManagers_Controller() {
     this.Logger.FuncStart(this.InstantiateManagers_Controller.name);
 
-    this.CommandDefintionBucket = new CommandDefintionFactory(this.Logger).BuildMenuCommandParamsBucket();
-    this.UiLayer = new HindSiteUiLayer.HindSiteUiLayer(this.Logger, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
+    this.CommandDefintionBucket = new CommandDefintionFactory(this.HindeCore).BuildMenuCommandParamsBucket();
+    this.UiLayer = new HindSiteUiLayer.HindSiteUiLayer(this.HindeCore, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
 
-    this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.ScUrlAgent, this.SettingsAgent);
-    this.HandlersForInternal = new HandlersForInternal(this.Logger, this.BrowserTabAgent);
-    this.commandMan = new CommandManager(this.Logger, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket, this.UiLayer, this.HandlersForInternal);
+    this.BrowserTabAgent = new BrowserTabAgent(this.HindeCore, this.ScUrlAgent, this.SettingsAgent);
+    this.HandlersForInternal = new HandlersForInternal(this.HindeCore, this.BrowserTabAgent);
+    this.commandMan = new CommandManager(this.HindeCore, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket, this.UiLayer, this.HandlersForInternal);
 
     this.Logger.FuncEnd(this.InstantiateManagers_Controller.name);
   }
@@ -98,13 +105,13 @@ class PopUpControllerLayer {
   private WireEvents_Controller() {
     this.Logger.FuncStart(this.WireEvents_Controller.name);
 
-    this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.Logger, this.OnUiCommandRaisedEvent.bind(this))
+    this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.HindeCore, this.OnUiCommandRaisedEvent.bind(this))
 
     if (StaticHelpers.IsNullOrUndefined([this.UiLayer.UiCommandRaisedFlag_Subject, this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject])) {
       this.Logger.ErrorAndThrow(this.WireEvents_Controller.name, 'Null check');
     } else {
       this.UiLayer.UiCommandRaisedFlag_Subject.RegisterObserver(this.UiCommandRaisedFlag_Observer);
-      let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, this.OnContentReplyReceivedEventCallBack.bind(this));
+      let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.HindeCore, this.OnContentReplyReceivedEventCallBack.bind(this));
 
       this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(contentReplyReceivedEvent_Observer);
 
@@ -144,7 +151,7 @@ class PopUpControllerLayer {
     let enableLoggingSetting: HindSiteSettingWrapper = this.SettingsAgent.HindSiteSettingsBucket.GetByKey(SettingKey.EnableDebugging);
 
     if (SharedConst.Const.Debug.ForceLoggingEnabled || enableLoggingSetting.HindSiteSetting.ValueAsBool()) {
-      var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.Logger);
+      var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.HindeCore);
       var nextLogId = RollingLogId.GetNextLogId();
 
       let storageLogWriter = new LoggerStorageWriter();

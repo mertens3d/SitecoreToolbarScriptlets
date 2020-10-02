@@ -1,13 +1,13 @@
 ﻿import { SharedConst } from "../SharedConst";
-import { LoggableBase } from "../LoggableBase";
-import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
+import { _HindeCoreBase } from "../LoggableBase";
+import { IHindeCore } from "../Interfaces/Agents/ILoggerAgent";
 
-export class ReadyStateNAB extends LoggableBase {
+export class ReadyStateNAB extends _HindeCoreBase {
   private Document: Document;
   IsExausted: string = '';
 
-  constructor(logger: ILoggerAgent, document: Document) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, document: Document) {
+    super(hindeCore);
     this.Logger.ThrowIfNullOrUndefined(ReadyStateNAB.name, document);
     this.Document = document;
   }

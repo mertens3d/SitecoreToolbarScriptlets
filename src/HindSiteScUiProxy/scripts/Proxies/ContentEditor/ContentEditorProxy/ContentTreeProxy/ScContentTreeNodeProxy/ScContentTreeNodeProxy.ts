@@ -1,16 +1,16 @@
 ﻿import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
-import { LoggableBase } from "../../../../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../../../../Shared/scripts/LoggableBase";
 import { RecipeBasics } from "../../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
 import { IContentTreeProxyMutationEvent_Payload } from "../../../../Desktop/DesktopProxy/Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload";
 import { IStateOfScContentTreeNodeFlat } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 
 //scContentTreeNode is the name sitecore uses
-export class ScContentTreeNodeProxy extends LoggableBase {
+export class ScContentTreeNodeProxy extends _HindeCoreBase {
   private ScContentTreeNodeDivElem: HTMLDivElement;
   private RecipeBasics: RecipeBasics;
 
@@ -35,11 +35,11 @@ export class ScContentTreeNodeProxy extends LoggableBase {
   private HasBeenHarvested: boolean = false;
   private: number;
 
-  constructor(logger: ILoggerAgent, sourceElement: HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number)
-  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement, level: number, siblingIndex: number, totalSiblings: number)
-  constructor(logger: ILoggerAgent, sourceElement: HTMLAnchorElement, level: number, siblingIndex: number, totalSiblings: number)
-  constructor(logger: ILoggerAgent, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, sourceElement: HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number)
+  constructor(hindeCore: IHindeCore, sourceElement: HTMLImageElement, level: number, siblingIndex: number, totalSiblings: number)
+  constructor(hindeCore: IHindeCore, sourceElement: HTMLAnchorElement, level: number, siblingIndex: number, totalSiblings: number)
+  constructor(hindeCore: IHindeCore, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number) {
+    super(hindeCore);
 
     if (sourceElement) {
       this.StateOfScContentTreeNode.Coord.LevelWidth = totalSiblings;
@@ -59,7 +59,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       this.Logger.ErrorAndThrow(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
     }
 
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
   async Instantiate(): Promise<void> {
@@ -224,7 +224,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
         let childNodes = this.ScContentTreeNodeDivElem.querySelectorAll(':scope > div > ' + ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
         childNodes.forEach((childNode: HTMLDivElement, index: number) => {
-          toReturn.push(new ScContentTreeNodeProxy(this.Logger, childNode, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length))
+          toReturn.push(new ScContentTreeNodeProxy(this.HindeCore, childNode, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length))
         });
 
         let PromiseAr: Promise<void>[] = [];
@@ -244,7 +244,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
 
     let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
     if (penultimateElem) {
-      penultimateNode = new ScContentTreeNodeProxy(this.Logger, penultimateElem, 0, 0, 1);
+      penultimateNode = new ScContentTreeNodeProxy(this.HindeCore, penultimateElem, 0, 0, 1);
     }
 
     if (penultimateNode !== null) {
@@ -267,7 +267,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
         //let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector('[id=' + hotTreeNodeId + ']');
 
         //if (hotTreeNode) {
-        //  let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, hotTreeNode, 0, 0, 1);
+        //  let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, hotTreeNode, 0, 0, 1);
 
         //  if (hotTreeNodeProxy) {
         //    hotTreeNodeProxy.ActivateNode()
@@ -286,7 +286,7 @@ export class ScContentTreeNodeProxy extends LoggableBase {
       //  newData.NodeChildren.forEach((treeNode: IStateOfScContentTreeNodeDeep, index) => {
       //    promises.push(this.SetStateOfTreeNode(treeNode, depth + 1))
       //    //newData.NodeChildren.map(async treeNode  => {
-      //    //let newNode: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, treeNode.ItemId, 0, 0, 1);
+      //    //let newNode: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, treeNode.ItemId, 0, 0, 1);
       //    //const numFruit = await this.SetStateOfTreeNode_TreeProxy(treeNode);
       //    //return numFruit;
       //  });

@@ -1,12 +1,12 @@
-﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
+import { _HindeCoreBase } from "../../../LoggableBase";
 
-export class RepositoryAgent implements IRepositoryAgent {
-  private Logger: ILoggerAgent;
+export class RepositoryAgent extends _HindeCoreBase implements IRepositoryAgent {
 
-  constructor(loggerAgent: ILoggerAgent) {
-    this.Logger = loggerAgent;
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
   }
 
   RemoveByKey(key: string) {

@@ -1,17 +1,17 @@
-﻿import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
 import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
 import { Guid } from "./Guid";
 import { _BaseFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
 import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { LoggableBase } from "../LoggableBase";
+import { _HindeCoreBase } from "../LoggableBase";
 
-export class FactoryHelper extends LoggableBase implements IFactoryHelper {
+export class FactoryHelper extends _HindeCoreBase implements IFactoryHelper {
   SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
   }
 
   DataOneContentDocFactoryFromIframe(dataOneIframe: _BaseFrameProxy): IDataOneDoc {
@@ -35,7 +35,7 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     var toReturn: _BaseFrameProxy = null;
 
     if (iframeElem && nickname) {
-      var toReturn: _BaseFrameProxy = new _BaseFrameProxy(this.Logger, iframeElem);
+      var toReturn: _BaseFrameProxy = new _BaseFrameProxy(this.HindeCore, iframeElem);
     } else {
       this.Logger.ErrorAndThrow(this.BaseFramePromiseFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
@@ -49,7 +49,7 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
   async DTFrameProxyFactory(iframeElem: HTMLIFrameElement): Promise<DTFrameProxy> {
     var toReturn: DTFrameProxy = null;
     if (iframeElem) {
-      var toReturn = new DTFrameProxy(this.Logger, iframeElem);
+      var toReturn = new DTFrameProxy(this.HindeCore, iframeElem);
       await toReturn.Instantiate_DTFrameProxy();
     } else {
       this.Logger.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');

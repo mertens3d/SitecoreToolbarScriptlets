@@ -1,5 +1,5 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
-import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IStateOfScContentTreeNodeFlat } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 import { ScContentTreeNodeProxy } from "../../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ScContentTreeNodeProxy";
 import { INativeClassNameChangeEvent_Payload } from "./INativeClassNameChangeEvent_Payload";
@@ -7,8 +7,8 @@ import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/Inj
 
 export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<INativeClassNameChangeEvent_Payload> {
   private TreeElement: any;
-  constructor(logger: ILoggerAgent, treeElement: HTMLElement) {
-    super(logger, NativeClassNameChangeEvent_Subject.name);
+  constructor(hindeCore: IHindeCore, treeElement: HTMLElement) {
+    super(hindeCore, NativeClassNameChangeEvent_Subject.name);
     this.TreeElement = treeElement;
     this.InitTreeMutationEvent_Observer();
   }
@@ -31,7 +31,7 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
   //  this.Logger.FuncStart(this.MakeScContentTreeNodeProxy.name);
   //  let candidateNode: ScContentTreeNodeProxy = null;
   //  let mutatedAnchorElement: HTMLAnchorElement = <HTMLAnchorElement>(mutation.target);
-  //  candidateNode = new ScContentTreeNodeProxy(this.Logger, mutatedAnchorElement, 0, 0, 1);
+  //  candidateNode = new ScContentTreeNodeProxy(this.HindeCore, mutatedAnchorElement, 0, 0, 1);
   //  this.Logger.FuncEnd(this.MakeScContentTreeNodeProxy.name);
   //  return candidateNode;
   //}

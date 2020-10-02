@@ -1,7 +1,8 @@
 ﻿import { SharedConst } from '../../../SharedConst';
-import { ILoggerAgent } from '../../../Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../Interfaces/Agents/ILoggerAgent';
+import { _HindeCoreBase } from '../../../LoggableBase';
 
-export class IterationDrone {
+export class IterationDrone extends _HindeCoreBase {
   IsExhausted: boolean;
   IsExhaustedMsg: string = 'Iteration helper exhausted';
   OperationCancelled: any;
@@ -9,11 +10,11 @@ export class IterationDrone {
   private MaxIterations: number;
   private NickName: string;
   private Timeout: number;
-  private Logger: ILoggerAgent;
+  private hindeCore: IHindeCore;
   private LogThisDroneInstance: boolean;
 
-  constructor(logger: ILoggerAgent, nickname: string, logThisDroneInstance: boolean , maxIterations: number = null) {
-    this.Logger = logger;
+  constructor(hindeCore: IHindeCore, nickname: string, logThisDroneInstance: boolean, maxIterations: number = null) {
+    super(hindeCore);
     this.LogThisDroneInstance = logThisDroneInstance;
     if (!maxIterations) {
       maxIterations = SharedConst.Const.IterHelper.MaxCount.Default;

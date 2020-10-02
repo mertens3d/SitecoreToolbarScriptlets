@@ -1,18 +1,18 @@
 ﻿import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
 import { IHindeSite_Observable } from "./IHindeSite_Observable";
-import { LoggableBase } from "../../LoggableBase";
-import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
+import { _HindeCoreBase } from "../../LoggableBase";
+import { IHindeCore } from "../../Interfaces/Agents/ILoggerAgent";
 import { StaticHelpers } from "../../Classes/StaticHelpers";
 import { BufferChar } from "../../Enums/BufferChar";
 import { BufferDirection } from "../../Enums/BufferDirection";
 
-export class HindeSiteEvent_Subject<T> extends LoggableBase implements IHindeSite_Observable<T> {
+export class HindeSiteEvent_Subject<T> extends _HindeCoreBase implements IHindeSite_Observable<T> {
   protected ObserverCollection: IHindSiteEvent_Observer<T>[] = [];
   readonly Friendly_Subject: string;
   private IsMuted: boolean;
 
-  constructor(logger: ILoggerAgent, friendly: string) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, friendly: string) {
+    super(hindeCore);
     this.Friendly_Subject = friendly;
   }
 

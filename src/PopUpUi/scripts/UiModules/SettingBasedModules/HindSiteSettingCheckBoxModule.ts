@@ -4,7 +4,7 @@ import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModul
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { UiEnableState } from "../../../../Shared/scripts/Enums/Enabled";
 import { IUiSettingBasedModuleMutationEven_Payload } from "../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
 
@@ -14,8 +14,8 @@ import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
     private LabelElement: HTMLLabelElement;
     Friendly = HindSiteSettingCheckBoxModule.name;
 
-    constructor(logger: ILoggerAgent, hindSiteSetting: HindSiteSettingWrapper) {
-      super(logger, hindSiteSetting);
+    constructor(hindeCore: IHindeCore, hindSiteSetting: HindSiteSettingWrapper) {
+      super(hindeCore, hindSiteSetting);
     }
 
 

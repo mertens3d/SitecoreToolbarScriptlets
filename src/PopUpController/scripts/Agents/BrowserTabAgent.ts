@@ -2,24 +2,24 @@
 import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
 import { IAbsoluteUrl } from '../../../Shared/scripts/Interfaces/IAbsoluteUrl';
+import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 
-export class BrowserTabAgent {
+export class BrowserTabAgent extends _HindeCoreBase{
   private ScUrlAgent: IScUrlAgent;
-  private Logger: ILoggerAgent;
   private RecipeBasics: RecipeBasics;
   SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
-    this.Logger = logger;
+  constructor(hindeCore: IHindeCore, scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
+    super(hindeCore);
     this.Logger.CTORStart(BrowserTabAgent.name);
     this.ScUrlAgent = scUrlAgent;
     this.SettingsAgent = settingsAgent;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
     this.Logger.CTOREnd(BrowserTabAgent.name);
   }
 
@@ -54,7 +54,7 @@ export class BrowserTabAgent {
   ChangeLocationSwitchBoard(desiredPageType: ScWindowType) {
     this.Logger.FuncStart(this.ChangeLocationSwitchBoard.name, 'desired = ' + ScWindowType[desiredPageType]);
 
-    var iteration: IterationDrone = new IterationDrone(this.Logger, this.ChangeLocationSwitchBoard.name, true);
+    var iteration: IterationDrone = new IterationDrone(this.HindeCore, this.ChangeLocationSwitchBoard.name, true);
 
     if (iteration.DecrementAndKeepGoing()) {
       var currentScWindowType: ScWindowType = this.ScUrlAgent.GetScWindowType();//.ScWindowType;
@@ -91,7 +91,7 @@ export class BrowserTabAgent {
   //    this.Logger.FuncStart(this.SetScModeFromCeDt.name, scMode[newMode]);
   //    this.Logger.LogVal('WindowType', StaticHelpers.WindowTypeAsString(currentPageType));
 
-  //    let result: PromiseResult = new PromiseResult(this.SetScModeFromCeDt.name, this.Logger);
+  //    let result: PromiseResult = new PromiseResult(this.SetScModeFromCeDt.name, this.HindeCore);
 
   //    this.Logger.MarkerA();
 
@@ -133,7 +133,7 @@ export class BrowserTabAgent {
   //  return new Promise(async (resolve, reject) => {
   //    this.Logger.FuncStart(this.SetScMode.name, scMode[newMode]);
 
-  //    let result: PromiseResult = new PromiseResult(this.SetScMode.name, this.Logger);
+  //    let result: PromiseResult = new PromiseResult(this.SetScMode.name, this.HindeCore);
 
   //    var currentPageType: scWindowType = this.ScUrlAgent.GetScWindowType();
 

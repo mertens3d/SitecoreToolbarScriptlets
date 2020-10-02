@@ -1,11 +1,11 @@
 ﻿import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
-import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { InitReport_DTAreaProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitReport_DTAreaProxy";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
 import { FrameHelper } from "../../../Helpers/FrameHelper";
 import { NativeIFrameAddedEvent_Observer } from "./Events/NativeIFrameAddedEvent/NativeIFrameAddedEvent_Observer";
 import { INativeIFrameAddedEvent_Payload } from "./Events/NativeIFrameAddedEvent/INativeIFrameAddedEvent_Payload";
@@ -20,7 +20,7 @@ import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
 import { DesktopProxy } from "./DesktopProxy";
 
-export class DTAreaProxy extends LoggableBase {
+export class DTAreaProxy extends _HindeCoreBase {
   private FramesBucket: DTFrameProxy[] = [];
   private DTFrameProxyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
   private IncomingSetStateList: IStateOfDTFrame[] = [];
@@ -34,22 +34,22 @@ export class DTAreaProxy extends LoggableBase {
   private RecipeBasics: RecipeBasics;
   private ParentDesktopProxy: DesktopProxy;
 
-  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, parentDesktopProxy: DesktopProxy) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc, parentDesktopProxy: DesktopProxy) {
+    super(hindeCore);
 
     this.AssociatedDoc = associatedDoc;
     this.ParentDesktopProxy = parentDesktopProxy;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
   async Instantiate_DTAreaProxy(): Promise<void> {
     this.Logger.FuncStart(this.Instantiate_DTAreaProxy.name);
     try {
       this.InitReportForDTAreaProxy = new InitReport_DTAreaProxy();
-      this.NativeIFrameAddedEvent_Subject = new NativeIFrameAddedEvent_Subject(this.Logger, this.AssociatedDoc);
-      this.DTAreaProxyMutationEvent_Subject = new DTAreaProxyMutationEvent_Subject(this.Logger);//, this.OnDTAreaProxyMutationEvent.bind(this));
-      this.DTFrameProxyMutationEvent_Observer = new DTFrameProxyMutationEvent_Observer(this.Logger, this.OnDTFProxyMutationEvent.bind(this));
-      this.NativeIframeAddedEvent_Observer = new NativeIFrameAddedEvent_Observer(this.Logger, this.CallBackOnNativeIFrameAddedEvent.bind(this));
+      this.NativeIFrameAddedEvent_Subject = new NativeIFrameAddedEvent_Subject(this.HindeCore, this.AssociatedDoc);
+      this.DTAreaProxyMutationEvent_Subject = new DTAreaProxyMutationEvent_Subject(this.HindeCore);//, this.OnDTAreaProxyMutationEvent.bind(this));
+      this.DTFrameProxyMutationEvent_Observer = new DTFrameProxyMutationEvent_Observer(this.HindeCore, this.OnDTFProxyMutationEvent.bind(this));
+      this.NativeIframeAddedEvent_Observer = new NativeIFrameAddedEvent_Observer(this.HindeCore, this.CallBackOnNativeIFrameAddedEvent.bind(this));
     } catch (err) {
       this.Logger.ErrorAndThrow(this.Instantiate_DTAreaProxy.name, err);
     }

@@ -1,9 +1,9 @@
 ﻿import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
 import { HindsiteEventHandler_Type } from "./HindsiteEventHandler_Type";
-import { LoggableBase } from "../../LoggableBase";
-import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
+import { _HindeCoreBase } from "../../LoggableBase";
+import { IHindeCore } from "../../Interfaces/Agents/ILoggerAgent";
 
-export class HindSiteEvent_Observer<T> extends LoggableBase implements IHindSiteEvent_Observer<T> {
+export class HindSiteEvent_Observer<T> extends _HindeCoreBase implements IHindSiteEvent_Observer<T> {
   readonly Friendly: string;
   CallbackAsync: HindsiteEventHandler_Type = null;
 
@@ -16,8 +16,8 @@ export class HindSiteEvent_Observer<T> extends LoggableBase implements IHindSite
       this.Logger.ErrorAndContinue(HindSiteEvent_Observer.name, err);
     }
   }
-  constructor(logger: ILoggerAgent, friendly: string, callbackAsync: HindsiteEventHandler_Type = null) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, friendly: string, callbackAsync: HindsiteEventHandler_Type = null) {
+    super(hindeCore);
     this.CallbackAsync = callbackAsync;
     this.Friendly = friendly;
   }

@@ -1,4 +1,4 @@
-﻿import { ILoggerAgent } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+﻿import { IHindeCore } from '../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IScWindowProxy } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IApiCallPayload } from "../../../../Shared/scripts/Interfaces/IApiCallPayload";
@@ -8,8 +8,8 @@ import { _ApiRecipeBase } from './__RecipeBase/_ApiRecipeBase';
 import { DTStartBarProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopStartBarProxy/DesktopStartBarProxy';
 
 export class RecipeAdminB extends _ApiRecipeBase implements ICommandRecipes {
-    constructor(logger: ILoggerAgent, apiCallPayload: IApiCallPayload, targetDoc: IDataOneDoc, ceButtonTabAgent: DTStartBarProxy, scWinProxy: IScWindowProxy) {
-        super(logger);
+    constructor(hindeCore: IHindeCore, apiCallPayload: IApiCallPayload, targetDoc: IDataOneDoc, ceButtonTabAgent: DTStartBarProxy, scWinProxy: IScWindowProxy) {
+        super(hindeCore);
 
         this.Logger.CTORStart(RecipeAdminB.name);
 

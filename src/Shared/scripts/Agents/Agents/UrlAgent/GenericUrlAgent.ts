@@ -1,17 +1,17 @@
-﻿import { LoggableBase } from "../../../LoggableBase";
+﻿import { _HindeCoreBase } from "../../../LoggableBase";
 import { QueryStrKey } from "../../../Enums/QueryStrKey";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/IUrlParts";
 import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
 
-export class GenericUrlAgent extends LoggableBase implements IUrlAgent {
+export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
   protected UrlParts: IGenericUrlParts;
   private BrowserProxy: IPopUpBrowserProxy;
 
-  constructor(logger: ILoggerAgent, browserProxy: IPopUpBrowserProxy) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, browserProxy: IPopUpBrowserProxy) {
+    super(hindeCore);
     this.BrowserProxy = browserProxy;
   }
 

@@ -1,9 +1,9 @@
-﻿import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
+﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { VisiblityTestResult } from "../../../../Shared/scripts/Interfaces/Agents/VisiblityTestResult";
@@ -12,13 +12,13 @@ import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IM
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 
-export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibilityTestAgent {
+export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibilityTestAgent {
   private StateOfSitecoreWindow: any;
   private SelectedSnapshot: GuidData = null;
   WindowType: ScWindowType;
 
-  constructor(logger: ILoggerAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
   }
 
   Hydrate(stateOfSitecoreWindow: IStateOfScUiProxy, stateOfStorageSnapShots: IStateOfStorageSnapShots, windowType: ScWindowType, selectSnapShotId: GuidData) {
@@ -188,7 +188,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
   TestAgainstAllSetControllers(Command: IMenuCommandDefinition): VisiblityTestResultsBucket {
     this.Logger.FuncStart(this.TestAgainstAllSetControllers.name, Command.VisibilityControllers.length);
 
-    let allResults: VisiblityTestResultsBucket = new VisiblityTestResultsBucket(this.Logger);
+    let allResults: VisiblityTestResultsBucket = new VisiblityTestResultsBucket(this.HindeCore);
 
     if (this.StateOfSitecoreWindow) {
       if (Command.VisibilityControllers.length > 0) {

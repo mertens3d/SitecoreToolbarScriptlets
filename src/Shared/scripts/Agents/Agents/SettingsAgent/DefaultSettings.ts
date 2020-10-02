@@ -7,17 +7,17 @@ import { SettingType } from "../../../Enums/SettingType";
 import { UiPresence } from "../../../Enums/UiPresence";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ContentConst } from "../../../Interfaces/InjectConst";
-import { LoggableBase } from "../../../LoggableBase";
+import { _HindeCoreBase } from "../../../LoggableBase";
 import { SharedConst } from "../../../SharedConst";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
 import { HindSiteSetting } from "./HindSiteSetting";
 import { HindSiteSettingForNumbers } from "./HindSiteSettingForNumbers";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
 
-export class DefaultSettings extends LoggableBase {
+export class DefaultSettings extends _HindeCoreBase {
 
-  constructor(logger: ILoggerAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
   }
 
   GetDefaultSettingsWrapper(): HindSiteSettingWrapper[] {
@@ -306,7 +306,7 @@ export class DefaultSettings extends LoggableBase {
     let toReturn: HindSiteSettingWrapper[] = [];
 
     rawData.forEach((settingValue: HindSiteSetting) => {
-      toReturn.push(new HindSiteSettingWrapper(this.Logger,  settingValue));
+      toReturn.push(new HindSiteSettingWrapper(this.HindeCore,  settingValue));
     })
 
     return toReturn;

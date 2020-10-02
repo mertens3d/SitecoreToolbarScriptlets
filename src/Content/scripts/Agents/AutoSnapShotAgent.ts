@@ -1,16 +1,16 @@
 ﻿import { RecipeAutoSaveState } from "../../../HindSiteScUiProxy/scripts/ContentApi/Recipes/RecipeAutoSaveState";
-import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
 
-export class AutoSnapShotAgent extends LoggableBase {
+export class AutoSnapShotAgent extends _HindeCoreBase {
   private AtticAgent: IContentAtticAgent;
   private AutoSaveHasBeenScheduled: boolean = false;
   private LastKnownSavedState: IStateOfScUiProxy = null;
@@ -18,8 +18,8 @@ export class AutoSnapShotAgent extends LoggableBase {
   private RecipeAutoSaveState: RecipeAutoSaveState;
   ScUiProxy: IHindSiteScUiProxy;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent, atticAgent: IContentAtticAgent, scUiProxy: IHindSiteScUiProxy) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, atticAgent: IContentAtticAgent, scUiProxy: IHindSiteScUiProxy) {
+    super(hindeCore);
     this.SettingsAgent = settingsAgent;
     this.AtticAgent = atticAgent;
     this.ScUiProxy = scUiProxy;
@@ -29,7 +29,7 @@ export class AutoSnapShotAgent extends LoggableBase {
     this.Logger.FuncStart(this.AutoSaveSnapShot.name);
 
     if (!this.RecipeAutoSaveState) {
-      this.RecipeAutoSaveState = new RecipeAutoSaveState(this.Logger, this.ScUiProxy, this.AtticAgent);
+      this.RecipeAutoSaveState = new RecipeAutoSaveState(this.HindeCore, this.ScUiProxy, this.AtticAgent);
     }
 
     this.RecipeAutoSaveState.ExecuteAsync(this.LastKnownSavedState)

@@ -31,6 +31,8 @@ import { MsgFlag } from '../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { IMessageControllerToContent } from "../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { ICommandRouterParams } from "../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
+import { _HindeCoreBase } from '../../Shared/scripts/LoggableBase';
+import { IHindeCore } from '../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -45,6 +47,7 @@ class ContentEntry {
   AutoSnapShotAgent: AutoSnapShotAgent;
 
   CommandRouter: CommandRouter;
+  HindeCore: IHindeCore;
 
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
@@ -62,11 +65,11 @@ class ContentEntry {
     try {
       this.Logger.SectionMarker('Instantiate Agents');
 
-      this.AtticAgent = new ContentAtticAgent(this.RepoAgent, this.Logger);
-      this.MiscAgent = new MiscAgent(this.Logger);
-      this.ToastAgent = new ToastAgent(this.Logger, document);
+      this.AtticAgent = new ContentAtticAgent(this.RepoAgent, this.HindeCore);
+      this.MiscAgent = new MiscAgent(this.HindeCore);
+      this.ToastAgent = new ToastAgent(this.HindeCore, document);
 
-      this.ScUrlAgent = new ScUrlAgent(this.Logger, null);
+      this.ScUrlAgent = new ScUrlAgent(this.HindeCore, null);
       this.ScUrlAgent.Init_ScUrlAgent()
       this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
     } catch (err) {
@@ -81,7 +84,7 @@ class ContentEntry {
       let scUiMan: ScUiManager;
       let contentMessageMan: ContentMessageManager;
 
-      scUiMan = new ScUiManager(this.Logger);
+      scUiMan = new ScUiManager(this.HindeCore);
 
       let topLevelDoc: IDataOneDoc = {
         ContentDoc: document,
@@ -89,18 +92,18 @@ class ContentEntry {
         Nickname: 'TopLevelDoc'
       };
 
-      this.ScUiProxy = new HindSiteScUiProxy(this.Logger, scUiMan, this.ScUrlAgent, topLevelDoc, this.ToastAgent);
+      this.ScUiProxy = new HindSiteScUiProxy(this.HindeCore, scUiMan, this.ScUrlAgent, topLevelDoc, this.ToastAgent);
 
-      this.AutoSnapShotAgent = new AutoSnapShotAgent(this.Logger, this.SettingsAgent, this.AtticAgent, this.ScUiProxy);
+      this.AutoSnapShotAgent = new AutoSnapShotAgent(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiProxy);
 
-      this.ContentBrowserProxy = new ContentBrowserProxy(this.Logger)
+      this.ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore)
 
-      this.CommandRouter = new CommandRouter(this.Logger, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.ScUrlAgent);
+      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.ScUrlAgent);
 
-      let contentMessageBroker: IMessageBroker_Content = new MessageBroker_Content(this.Logger, this.SettingsAgent,
+      let contentMessageBroker: IMessageBroker_Content = new MessageBroker_Content(this.HindeCore, this.SettingsAgent,
         this.ScUiProxy, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter, this.ScUrlAgent);
 
-      contentMessageMan = new ContentMessageManager(this.Logger, contentMessageBroker);
+      contentMessageMan = new ContentMessageManager(this.HindeCore, contentMessageBroker);
 
       await scUiMan.InitSitecoreUiManager()
         .then(() => contentMessageMan.InitContentMessageManager())
@@ -149,7 +152,7 @@ class ContentEntry {
     if (enableLogger.ValueAsBool() || SharedConst.Const.Debug.ForceLoggingEnabled) {
       let consoleLogWrite = new LoggerConsoleWriter();
 
-      var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.Logger);
+      var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.HindeCore);
       let storageLogWriter = new LoggerStorageWriter();
       var nextLogId = RollingLogId.GetNextLogId();
       storageLogWriter.SetLogToStorageKey(nextLogId);
@@ -164,10 +167,13 @@ class ContentEntry {
 
   private InstantiateAndInit_LoggerAndSettings(): void {
     this.Logger = new LoggerAgent();
+    this.HindeCore = {
+      Logger: this.Logger
+    }
 
-    this.RepoAgent = new RepositoryAgent(this.Logger);
+    this.RepoAgent = new RepositoryAgent(this.HindeCore);
 
-    this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
+    this.SettingsAgent = new SettingsAgent(this.HindeCore, this.RepoAgent);
 
     this.SettingsAgent.Init_SettingsAgent();
 

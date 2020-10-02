@@ -1,17 +1,17 @@
 ﻿import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
-import { LoggableBase } from "../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
 
-export class ScUiManager extends LoggableBase implements iSitecoreUiManager {
+export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IStateOfScUiProxy;
     TopLevelDoc: IDataOneDoc;
 
-  constructor(logger: ILoggerAgent) {
-    super(logger)
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore)
   }
 
   async InitSitecoreUiManager() {

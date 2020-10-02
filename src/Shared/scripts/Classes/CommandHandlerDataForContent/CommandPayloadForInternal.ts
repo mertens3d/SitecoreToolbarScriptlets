@@ -6,20 +6,21 @@ import { DesktopProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desk
 import { GuidData } from "../../Helpers/GuidData";
 import { IHindSiteScUiProxy } from "../../Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../Interfaces/Agents/ILoggerAgent";
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { IDataOneDoc } from "../../Interfaces/Data/IDataOneDoc";
 import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
 import { ICommandParams } from "../../Interfaces/ICommandParams";
+import { _HindeCoreBase } from "../../LoggableBase";
 
-export class CommandPayloadForInternal implements ICommandParams {
+export class CommandPayloadForInternal extends _HindeCoreBase implements ICommandParams {
     NewNickname: string;
     TargetSnapShotId: GuidData;
     AtticAgent: IContentAtticAgent;
     ContentMessageBroker: MessageBroker_Content = null;
     DesktopProxy: DesktopProxy = null;
-    Logger: ILoggerAgent = null;
+    hindeCore: IHindeCore = null;
     ScUiMan: ScUiManager = null;
     TargetCeProxy: ContentEditorProxy;
     TargetDoc: IDataOneDoc = null;
@@ -31,8 +32,8 @@ export class CommandPayloadForInternal implements ICommandParams {
     ApiPayload: IApiCallPayload;
     ScUiProxy: IHindSiteScUiProxy;
 
-    constructor(logger: ILoggerAgent, atticAgent: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, apiPayload: IApiCallPayload) {
-        this.Logger = logger;
+  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, apiPayload: IApiCallPayload) {
+    super(hindeCore);
         this.AtticAgent = atticAgent;
         this.ToastAgent = toastAgent;
         this.ScUiMan = scUiMan;

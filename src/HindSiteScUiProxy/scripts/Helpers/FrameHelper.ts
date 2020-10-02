@@ -1,21 +1,21 @@
 ﻿import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IDataOneDoc } from "../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { _BaseFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
-import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 import { DocumentReadyState, ReadyStateNAB } from "../../../Shared/scripts/Enums/ReadyState";
 
-export class FrameHelper extends LoggableBase {
+export class FrameHelper extends _HindeCoreBase {
   private factoryHelper: FactoryHelper;
   private RecipeBasics: RecipeBasics;
 
-  constructor(logger: ILoggerAgent) {
-    super(logger);
-    this.RecipeBasics = new RecipeBasics(this.Logger);
-    this.factoryHelper = new FactoryHelper(this.Logger);
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
+    this.factoryHelper = new FactoryHelper(this.HindeCore);
   }
 
   GetIFramesFromDataOneDoc(targetDoc: IDataOneDoc): HTMLIFrameElement[] {

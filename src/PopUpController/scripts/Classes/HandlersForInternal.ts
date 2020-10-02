@@ -1,16 +1,16 @@
-﻿import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { BrowserTabAgent } from "../Agents/BrowserTabAgent";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { IUiCommandFlagRaisedEvent_Payload } from "../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
 
-export class HandlersForInternal extends LoggableBase {
+export class HandlersForInternal extends _HindeCoreBase {
   private BrowserTabAgent: BrowserTabAgent;
 
-  constructor(logger: ILoggerAgent, browserTabAgent: BrowserTabAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, browserTabAgent: BrowserTabAgent) {
+    super(hindeCore);
     this.BrowserTabAgent = browserTabAgent;
   }
 

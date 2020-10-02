@@ -8,7 +8,7 @@ import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { InitReportScWindowManager } from "../../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { IScWindowProxy } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
@@ -21,11 +21,11 @@ import { IStateOfDesktop } from '../../../Shared/scripts/Interfaces/Data/States/
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfScWindow } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
 
-export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
+export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
   private ScUrlAgent: IScUrlAgent;
   private TopDoc: IDataOneDoc;
   SettingsAgent: ISettingsAgent;
@@ -34,8 +34,8 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
   DesktopProxy: DesktopProxy;
   InitReportScWindowManager: InitReportScWindowManager;
 
-  constructor(logger: ILoggerAgent, scUrlAgent: IScUrlAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, scUrlAgent: IScUrlAgent) {
+    super(hindeCore);
     this.Logger.CTORStart(ScWindowProxy.name);
     this.ScUrlAgent = scUrlAgent;
     this.Logger.CTOREnd(ScWindowProxy.name);
@@ -68,21 +68,21 @@ export class ScWindowProxy extends LoggableBase implements IScWindowProxy {
   async Instantiate_ScWindowProxy(): Promise<void> {
     try {
       this.Logger.FuncStart(this.Instantiate_ScWindowProxy.name);
-      let recipesBasic = new RecipeBasics(this.Logger);
+      let recipesBasic = new RecipeBasics(this.HindeCore);
       this.InitReportScWindowManager = new InitReportScWindowManager();
 
       await recipesBasic.WaitForCompleteNABDataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
 
         .then((result: ReadyStateNAB) => {
           if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
-            this.DesktopProxy = new DesktopProxy(this.Logger, this.GetTopLevelDoc());
+            this.DesktopProxy = new DesktopProxy(this.HindeCore, this.GetTopLevelDoc());
             this.DesktopProxy.Instantiate_DesktopProxy()
               .then(() => this.DesktopProxy.WireEvents_DesktopProxy())
           }
         })
         .then(() => {
           if (this.ScUrlAgent.GetScWindowType() === ScWindowType.ContentEditor) {
-            this.ContentEditorProxy = new ContentEditorProxy(this.Logger, this.GetTopLevelDoc(), 'Solo Content Editor doc');
+            this.ContentEditorProxy = new ContentEditorProxy(this.HindeCore, this.GetTopLevelDoc(), 'Solo Content Editor doc');
             this.ContentEditorProxy.Instantiate_ContentEditorProxy()
               .then(() => this.ContentEditorProxy.WireEvents_ContentEditorProxy())
           }

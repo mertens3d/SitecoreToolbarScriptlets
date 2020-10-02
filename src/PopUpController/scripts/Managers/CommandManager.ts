@@ -1,24 +1,24 @@
 ﻿import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IHindSiteUiLayer } from "../../../Shared/scripts/Interfaces/IHindSiteUiLayer";
 import { MessageBroker_PopUp } from '../Agents/PopUpMessagesBrokerAgent';
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { HandlersForInternal } from '../Classes/HandlersForInternal';
-import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
 
-export class CommandManager extends LoggableBase {
+export class CommandManager extends _HindeCoreBase {
   public CommandDefinitionBucket: ICommandDefinitionBucket;
   private PopUpMsgBroker: MessageBroker_PopUp;
   private UiLayer: IHindSiteUiLayer;
   HandlersForInternal: HandlersForInternal;
 
-  constructor(logger: ILoggerAgent, popUpMessageBroker: MessageBroker_PopUp, commandDefinitionBucket: ICommandDefinitionBucket, uiLayer: IHindSiteUiLayer, handlerInternal: HandlersForInternal) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, popUpMessageBroker: MessageBroker_PopUp, commandDefinitionBucket: ICommandDefinitionBucket, uiLayer: IHindSiteUiLayer, handlerInternal: HandlersForInternal) {
+    super(hindeCore);
 
     this.CommandDefinitionBucket = commandDefinitionBucket;
     this.PopUpMsgBroker = popUpMessageBroker;

@@ -1,4 +1,4 @@
-﻿import { ILoggerAgent } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { DTFrameProxy } from "../../FrameProxies/DTFrameProxy";
 import { IContentEditorProxyMutationEvent_Payload } from "./IContentEditorProxyMutationEvent_Payload";
 import { HindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer";
@@ -8,8 +8,8 @@ export class ContentEditorProxyMutationEvent_Observer extends HindSiteEvent_Obse
   private OwnerDTFrameProxy: DTFrameProxy;
   Friendly: string;
 
-  constructor(logger: ILoggerAgent, ownerFrameProxy: DTFrameProxy) {
-    super(logger, ContentEditorProxyMutationEvent_Observer.name);
+  constructor(hindeCore: IHindeCore, ownerFrameProxy: DTFrameProxy) {
+    super(hindeCore, ContentEditorProxyMutationEvent_Observer.name);
     this.OwnerDTFrameProxy = ownerFrameProxy;
   }
 

@@ -10,25 +10,25 @@ import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { _ApiRecipeBase } from "../../../ContentApi/Recipes/__RecipeBase/_ApiRecipeBase";
 import { IFactoryHelper } from "../../../../../Shared/scripts/Interfaces/IFactoryHelper";
 import { IScWindowProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
+import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
 import { ContentEditorProxy } from "./ContentEditorProxy";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../../../Shared/scripts/Helpers/FactoryHelper";
 
-export class ContentEditorPublishProxy extends LoggableBase  {
+export class ContentEditorPublishProxy extends _HindeCoreBase  {
   ContentEditorProxy: ContentEditorProxy;
     RecipeBasics: RecipeBasics;
     AssociatedDoc: IDataOneDoc;
     FactoryHelp: FactoryHelper;
 
-  constructor(logger: ILoggerAgent, contentEditorProxy: ContentEditorProxy, associatedDoc: IDataOneDoc) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, contentEditorProxy: ContentEditorProxy, associatedDoc: IDataOneDoc) {
+    super(hindeCore);
 
     this.ContentEditorProxy = contentEditorProxy;
     this.AssociatedDoc = associatedDoc;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
-    this.FactoryHelp = new FactoryHelper(this.Logger);
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
+    this.FactoryHelp = new FactoryHelper(this.HindeCore);
 
   }
 
@@ -198,7 +198,7 @@ export class ContentEditorPublishProxy extends LoggableBase  {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetDialogIframe0Blue.name);
 
-      let promiseResult: PromiseResult = new PromiseResult(this.GetDialogIframe0Blue.name, this.Logger);
+      let promiseResult: PromiseResult = new PromiseResult(this.GetDialogIframe0Blue.name, this.HindeCore);
 
       this.Logger.LogAsJsonPretty('dataPublishChain', dataPublishChain);
 

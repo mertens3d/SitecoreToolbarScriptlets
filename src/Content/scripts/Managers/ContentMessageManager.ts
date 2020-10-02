@@ -1,13 +1,13 @@
-﻿import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
+﻿import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { IMessageBroker_Content } from '../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 
-export class ContentMessageManager extends LoggableBase {
+export class ContentMessageManager extends _HindeCoreBase {
   private ContentMessageBroker: IMessageBroker_Content;
   OperationCancelled: any;
 
-  constructor(logger: ILoggerAgent, contentMessageBroker: IMessageBroker_Content) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, contentMessageBroker: IMessageBroker_Content) {
+    super(hindeCore);
     this.Logger.FuncStart(ContentMessageManager.name);
 
 

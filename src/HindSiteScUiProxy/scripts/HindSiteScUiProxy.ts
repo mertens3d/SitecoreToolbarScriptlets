@@ -1,25 +1,25 @@
 ﻿import { ToastAgent } from "../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent";
 import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
 import { IHindSiteScUiProxy } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
-import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IScWindowProxy } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IDataOneDoc } from "../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IStateOfScUiProxy } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
-import { LoggableBase } from "../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
 import { ScWindowProxy } from "./Proxies/ScWindowProxy";
 
-export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProxy {
+export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiProxy {
   private ScUiMan: ScUiManager;
   private ScWindowProxy: IScWindowProxy;
   private ScUrlAgent: IScUrlAgent;
   private TopLevelDoc: IDataOneDoc;
   ToastAgent: ToastAgent;
 
-  constructor(logger: ILoggerAgent, scUiMan: ScUiManager, scUrlAgent: IScUrlAgent, TopDoc: IDataOneDoc, toastAgent: ToastAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, scUiMan: ScUiManager, scUrlAgent: IScUrlAgent, TopDoc: IDataOneDoc, toastAgent: ToastAgent) {
+    super(hindeCore);
 
     this.Logger.CTORStart(HindSiteScUiProxy.name);
 
@@ -34,7 +34,7 @@ export class HindSiteScUiProxy extends LoggableBase implements IHindSiteScUiProx
     this.Logger.FuncStart(this.OnReady_InstantiateHindSiteScUiProxy.name);
     try {
 
-      this.ScWindowProxy = new ScWindowProxy(this.Logger, this.ScUrlAgent);
+      this.ScWindowProxy = new ScWindowProxy(this.HindeCore, this.ScUrlAgent);
       await this.ScWindowProxy.Instantiate_ScWindowProxy();
     } catch (err) {
       this.Logger.ErrorAndThrow(this.OnReady_InstantiateHindSiteScUiProxy.name, err);

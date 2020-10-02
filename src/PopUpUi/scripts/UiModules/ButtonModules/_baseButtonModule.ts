@@ -1,7 +1,7 @@
 ﻿import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { CommandButtonEvents } from "../../../../Shared/scripts/Enums/CommandButtonEvents";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { ICommandHandlerDataForPopUp } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/UiHydrationData";
@@ -17,8 +17,8 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
   public Friendly = this.MenuCommandDefinition ? MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey] : this.ContainerSelector;
   public SingleButtonClickEvent_Subject: SingleClickEvent_Subject;
 
-  constructor(loggerAgent: ILoggerAgent, menuCommandDefinition: IMenuCommandDefinition) {
-    super(loggerAgent, menuCommandDefinition ? menuCommandDefinition.PlaceHolderSelector : null);
+  constructor(hindeCore: IHindeCore, menuCommandDefinition: IMenuCommandDefinition) {
+    super(hindeCore, menuCommandDefinition ? menuCommandDefinition.PlaceHolderSelector : null);
     this.MenuCommandDefinition = menuCommandDefinition;
   }
 
@@ -43,7 +43,7 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
   }
 
   WireClickEvents(): void {
-    this.SingleButtonClickEvent_Subject = new SingleClickEvent_Subject(this.Logger, MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+    this.SingleButtonClickEvent_Subject = new SingleClickEvent_Subject(this.HindeCore, MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
 
     if (this.MenuCommandDefinition && this.MenuCommandDefinition.PlaceHolderSelector) {
       var targetElem: HTMLElement = document.querySelector(this.MenuCommandDefinition.PlaceHolderSelector);

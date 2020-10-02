@@ -1,11 +1,11 @@
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
-import { ILoggerAgent } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { InitReport_DesktopProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy";
 import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
-import { LoggableBase } from "../../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
 import { DTPopUpMenuProxy } from "./DesktopPopUpMenuProxy";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
@@ -17,7 +17,7 @@ import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 
-export class DesktopProxy extends LoggableBase {
+export class DesktopProxy extends _HindeCoreBase {
   private AssociatedDoc: IDataOneDoc;
   private DTAreaProxy: DTAreaProxy;
   private DTStartBarProxy: DTStartBarProxy;
@@ -27,8 +27,8 @@ export class DesktopProxy extends LoggableBase {
   DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
   DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
 
-  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc) {
+    super(hindeCore);
     this.Logger.CTORStart(DesktopProxy.name);
 
     if (associatedDoc) {
@@ -46,16 +46,16 @@ export class DesktopProxy extends LoggableBase {
 
       let initReportDesktopProxy = new InitReport_DesktopProxy();
 
-      this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.Logger, this.OnAreaProxyMutationEvent.bind(this));
-      this.DTAreaProxy = new DTAreaProxy(this.Logger, this.AssociatedDoc, this);
+      this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
+      this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.AssociatedDoc, this);
 
-      this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject(this.Logger);
+      this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject(this.HindeCore);
 
       await this.DTAreaProxy.Instantiate_DTAreaProxy();
 
-      this.DTStartBarProxy = new DTStartBarProxy(this.Logger, this.AssociatedDoc);
+      this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.AssociatedDoc);
 
-      this.RecipeBasics = new RecipeBasics(this.Logger);
+      this.RecipeBasics = new RecipeBasics(this.HindeCore);
 
       await this.DTStartBarProxy.Instantiate_DTStartBarProxy();
     } catch (err) {
@@ -78,7 +78,7 @@ export class DesktopProxy extends LoggableBase {
 
   async AddContentEditorAsync(): Promise<void> {
     try {
-      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.Logger);
+      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
 
       await this.DTStartBarProxy.TriggerRedButton()
         .then(() => this.DTPopUpMenuProxy.RecipeAddNewContentEditorToDesktop(this.AssociatedDoc))

@@ -2,7 +2,7 @@
 import { scMode } from "../../../Enums/scMode";
 import { ScWindowType } from "../../../Enums/scWindowType";
 import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
@@ -10,8 +10,8 @@ import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
 import { IControllerMessageReceivedEvent_Payload } from "../../../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
 export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
-  constructor(logger: ILoggerAgent, browserProxy: IPopUpBrowserProxy) {
-    super(logger, browserProxy);
+  constructor(hindeCore: IHindeCore, browserProxy: IPopUpBrowserProxy) {
+    super(hindeCore, browserProxy);
   }
 
   private __urlTestAgainstRegex(regexPattern: RegExp, url: string) {

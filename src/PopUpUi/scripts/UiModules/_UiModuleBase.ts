@@ -1,11 +1,11 @@
 ﻿import { ModuleKey } from "../../../Shared/scripts/Enums/ModuleKey";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { UiHydrationData } from "../../../Shared/scripts/Interfaces/UiHydrationData";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { IUiModule } from "../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
-export abstract class _UiModuleBase extends LoggableBase implements IUiModule {
+export abstract class _UiModuleBase extends _HindeCoreBase implements IUiModule {
   ContainerSelector: string;
   ContainerUiDivElem: HTMLDivElement;
   protected UiElement: HTMLElement;
@@ -13,8 +13,8 @@ export abstract class _UiModuleBase extends LoggableBase implements IUiModule {
   Friendly: string = 'Not Set';
   ModuleKey: ModuleKey = ModuleKey.Unknown;
 
-  constructor(logger: ILoggerAgent, containerSelector: string) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, containerSelector: string) {
+    super(hindeCore);
     this.ContainerSelector = containerSelector;
   }
 

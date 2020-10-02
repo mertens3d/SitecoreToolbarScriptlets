@@ -1,9 +1,11 @@
-﻿import { ILoggerAgent } from './Interfaces/Agents/ILoggerAgent';
+﻿import { IHindeCore, ILoggerAgent } from './Interfaces/Agents/ILoggerAgent';
 
-export abstract class LoggableBase {
+export abstract class _HindeCoreBase {
   protected Logger: ILoggerAgent;
+  protected HindeCore: IHindeCore;
 
-  constructor(logger: ILoggerAgent) {
-    this.Logger = logger;
+  constructor(hindeCore: IHindeCore) {
+    this.Logger = hindeCore.Logger;
+    this.HindeCore = hindeCore;
   }
 }

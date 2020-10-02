@@ -1,25 +1,24 @@
-﻿import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../Interfaces/Agents/ILoggerAgent";
+import { _HindeCoreBase } from "../LoggableBase";
 
-export class PromiseResult {
+export class PromiseResult extends _HindeCoreBase {
   private Success: boolean;
   privaILoggerAgentBaseggerBase;
   NickName: string;
   private prefix: string = 'Promise Successful? -> ';
   RejectReasons: string
-    Log: ILoggerAgent;
 
-  constructor(nickname: string, logger: ILoggerAgent) {
-    this.Success = false;
+  constructor(nickname: string, hindeCore: IHindeCore) {
+    super(hindeCore);
     this.NickName = nickname;
-    this.Log = logger;
   }
   WasSuccessful() {
     return this.Success;
   }
   MarkSuccessful() {
     this.Success = true;
-    if (this.Log) {
-      this.Log.LogVal(this.prefix + this.NickName, this.Success);
+    if (this.Logger) {
+      this.Logger.LogVal(this.prefix + this.NickName, this.Success);
     } else {
       console.log('no logger success');
     }
@@ -34,8 +33,8 @@ export class PromiseResult {
     }
     this.RejectReasons += ', ' + ex;
     this.Success = false;
-    if (this.Log) {
-      this.Log.ErrorAndThrow(this.prefix + this.NickName, this.Success + '  err: ' + ex);
+    if (this.Logger) {
+      this.Logger.ErrorAndThrow(this.prefix + this.NickName, this.Success + '  err: ' + ex);
     } else {
       console.log('no logger fail ' + ex);
     }

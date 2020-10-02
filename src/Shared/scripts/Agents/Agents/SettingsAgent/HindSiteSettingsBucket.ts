@@ -1,18 +1,18 @@
 ﻿import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
-import { LoggableBase } from "../../../LoggableBase";
+import { _HindeCoreBase } from "../../../LoggableBase";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
 import { DefaultSettings } from "./DefaultSettings";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 
-export class HindSiteSettingsBucket extends LoggableBase {
+export class HindSiteSettingsBucket extends _HindeCoreBase {
   SettingWrappers: HindSiteSettingWrapper[] = [];
 
-  constructor(logger: ILoggerAgent) {
-    super(logger);
-    this.SettingWrappers = (new DefaultSettings(this.Logger)).GetDefaultSettingsWrapper();
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
+    this.SettingWrappers = (new DefaultSettings(this.HindeCore)).GetDefaultSettingsWrapper();
   }
 
   GetByKey(needleSettingKey: SettingKey): HindSiteSettingWrapper {

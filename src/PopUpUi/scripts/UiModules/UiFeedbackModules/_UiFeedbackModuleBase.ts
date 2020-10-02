@@ -1,5 +1,5 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _UiModuleBase } from "../_UiModuleBase";
 
@@ -9,8 +9,8 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
   ModuleKey: ModuleKey = ModuleKey.Unknown;
   FeedbackTextContainer: HTMLDivElement;
 
-  constructor(logger: ILoggerAgent, selector: string) {
-    super(logger, selector);
+  constructor(hindeCore: IHindeCore, selector: string) {
+    super(hindeCore, selector);
     this.ContainerSelector = selector;
   }
 

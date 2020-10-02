@@ -1,11 +1,11 @@
 ﻿import { IterationDrone } from '../../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
-import { ILoggerAgent } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { InitReportTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
 import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
-import { LoggableBase } from '../../../../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { INativeClassNameChangeEvent_Payload } from '../../../Desktop/DesktopProxy/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
 import { NativeClassNameChangeEvent_Subject } from "../../../Desktop/DesktopProxy/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";
 import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
@@ -18,7 +18,7 @@ import { DefaultStateOfContentTree } from '../../../../../../Shared/scripts/Clas
 import { IStateOfScContentTreeNodeFlat } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat';
 //implements ContentTreeProxy
 //ContentTree is the name Sitecore uses
-export class ContentTreeProxy extends LoggableBase {
+export class ContentTreeProxy extends _HindeCoreBase {
   private _treeNodeProxy: ScContentTreeNodeProxy;
   private AssociatedDoc: IDataOneDoc;
   private initReportTreeProxy: InitReportTreeProxy;
@@ -30,13 +30,13 @@ export class ContentTreeProxy extends LoggableBase {
 
   public TreeMutationEvent_Subject: TreeMutationEvent_Subject;
 
-  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, treeContainerElement: HTMLElement) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc, treeContainerElement: HTMLElement) {
+    super(hindeCore);
 
     this.Logger.ThrowIfNullOrUndefined(ContentTreeProxy.name, [associatedDoc, treeContainerElement]);
     this.AssociatedDoc = associatedDoc;
     this.TreeContainerElement = treeContainerElement;
-    this.RecipeBasics = new RecipeBasics(this.Logger);
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
   async Instantiate_TreeProxy(): Promise<void> {
@@ -50,10 +50,10 @@ export class ContentTreeProxy extends LoggableBase {
           this.initReportTreeProxy = new InitReportTreeProxy();
           this.initReportTreeProxy.TreeInstantiated = true;
 
-          this.TreeMutationEvent_Subject = new TreeMutationEvent_Subject(this.Logger, this.TreeContainerElement);
+          this.TreeMutationEvent_Subject = new TreeMutationEvent_Subject(this.HindeCore, this.TreeContainerElement);
 
-          this.NativeClassNameChangeEvent_Subject = new NativeClassNameChangeEvent_Subject(this.Logger, this.TreeContainerElement);
-          this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.Logger, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
+          this.NativeClassNameChangeEvent_Subject = new NativeClassNameChangeEvent_Subject(this.HindeCore, this.TreeContainerElement);
+          this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.HindeCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
     } catch (err) {
       this.Logger.ErrorAndThrow(this.Instantiate_TreeProxy.name, err);
@@ -104,7 +104,7 @@ export class ContentTreeProxy extends LoggableBase {
         var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.ItemId);
 
         await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.TreeContainerElement, '[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
-          .then((htmlElement: HTMLDivElement) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.Logger, htmlElement, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth))
+          .then((htmlElement: HTMLDivElement) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, htmlElement, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth))
           .then(() => scContentTreeNodeProxy.Instantiate())
           .then(() => resolve(scContentTreeNodeProxy))
           .catch((err) => reject(this.GetTreeNodeByGlyph.name + ' | ' + err));
@@ -151,7 +151,7 @@ export class ContentTreeProxy extends LoggableBase {
     try {
       this.TreeMutationEvent_Subject.DisableNotifications();
 
-      let iterHelper: IterationDrone = new IterationDrone(this.Logger, this.SetStateOfContentTree.name, true);
+      let iterHelper: IterationDrone = new IterationDrone(this.HindeCore, this.SetStateOfContentTree.name, true);
 
       await this.SetStateOfNodeRecursive(currentNodeData, 0);
 
@@ -169,7 +169,7 @@ export class ContentTreeProxy extends LoggableBase {
   //  this.Logger.FuncStart(this.SetStateOfTreeNode_TreeProxy.name, dataStateOfTreeNode.Friendly);
 
   //  try {
-  //    var iterHelper = new IterationDrone(this.Logger, this.SetStateOfTreeNode_TreeProxy.name, true);
+  //    var iterHelper = new IterationDrone(this.HindeCore, this.SetStateOfTreeNode_TreeProxy.name, true);
 
   //    let treeNodeProxy: ScContentTreeNodeProxy = null;
 
@@ -210,7 +210,7 @@ export class ContentTreeProxy extends LoggableBase {
 
   //    if (targetNode) {
   //      await this.RecipeBasics.WaitAndReturnFoundFromContainer(targetNode, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.WalkNodeRecursive.name)
-  //        .then(async (firstChildGlyphNode: HTMLImageElement) => treeNodeProxy = new ScContentTreeNodeProxy(this.Logger, firstChildGlyphNode, depth, itemIndex, siblingCount))
+  //        .then(async (firstChildGlyphNode: HTMLImageElement) => treeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, firstChildGlyphNode, depth, itemIndex, siblingCount))
   //        .then(() => treeNodeProxy.GetStateOfScContentTreeNodeDeep())
   //        .then((stateOfContentTreeNodeProxy: IStateOfScContentTreeNodeDeep) => stateOftreeNodeProxy = stateOfContentTreeNodeProxy)
   //        .then(() => {
@@ -293,7 +293,7 @@ export class ContentTreeProxy extends LoggableBase {
 
           await this.RecipeBasics.WaitAndReturnFoundFromContainer(rootParent, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
             .then(async (firstChildGlyphNode: HTMLImageElement) => {
-              this._treeNodeProxy = new ScContentTreeNodeProxy(this.Logger, firstChildGlyphNode, 0, 0, 1)
+              this._treeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, firstChildGlyphNode, 0, 0, 1)
               await this._treeNodeProxy.Instantiate();
             })
             .catch((err) => reject(this.GetTreeNodeProxy.name + ' | ' + err));

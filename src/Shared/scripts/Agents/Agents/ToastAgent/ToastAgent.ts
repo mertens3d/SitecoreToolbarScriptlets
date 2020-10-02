@@ -1,13 +1,12 @@
-﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
-import { SingleClickEvent_Subject } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Subject";
-import { ISingleClickEvent_Payload } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/ISingleClickEvent_Payload";
+﻿import { ISingleClickEvent_Payload } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/ISingleClickEvent_Payload";
 import { SingleClickEvent_Observer } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Observer";
-import { IHindSiteScUiProxy } from "../../../Interfaces/Agents/IContentApi/IContentApi";
+import { SingleClickEvent_Subject } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Subject";
+import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
+import { _HindeCoreBase } from "../../../LoggableBase";
 
-export class ToastAgent implements IToastAgent {
+export class ToastAgent  extends _HindeCoreBase implements IToastAgent {
 
-  private Logger: ILoggerAgent;
   private classSlideUp: string = 'slide-up';
   private classSlideDown: string = 'slide-down';
   private ToastContainer: HTMLElement;
@@ -20,8 +19,8 @@ export class ToastAgent implements IToastAgent {
   OnButtonClick_ObserverTest: SingleClickEvent_Observer;
   FlagTextDiv: HTMLDivElement;
 
-  constructor(loggerAgent: ILoggerAgent, targetDoc: Document) {
-    this.Logger = loggerAgent;
+  constructor(hindeCore: IHindeCore, targetDoc: Document) {
+    super(hindeCore);
     this.TargetDoc = targetDoc;
     this.DivineElements();
   }
@@ -135,8 +134,8 @@ export class ToastAgent implements IToastAgent {
     this.ButtonElem.type = "button";
     this.ButtonElem.value = "Cancel";
 
-    this.OnButtonClick_Subject = new SingleClickEvent_Subject(this.Logger, this.CreateCancelButton.name);
-    this.OnButtonClick_ObserverTest = new SingleClickEvent_Observer(this.Logger, this.TestCancelCallback.bind(this));
+    this.OnButtonClick_Subject = new SingleClickEvent_Subject(this.HindeCore, this.CreateCancelButton.name);
+    this.OnButtonClick_ObserverTest = new SingleClickEvent_Observer(this.HindeCore, this.TestCancelCallback.bind(this));
     this.OnButtonClick_Subject.RegisterObserver(this.OnButtonClick_ObserverTest);
     this.ButtonElem.addEventListener('click', (() => {
       let payload: ISingleClickEvent_Payload = {

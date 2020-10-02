@@ -1,13 +1,13 @@
-﻿import { LoggableBase } from "../../../LoggableBase";
+﻿import { _HindeCoreBase } from "../../../LoggableBase";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/ILoggerAgent";
 import { HindSiteSetting } from "./HindSiteSetting";
 
-export class HindSiteSettingWrapper extends LoggableBase {
+export class HindSiteSettingWrapper extends _HindeCoreBase {
   HindSiteSetting: IHindSiteSetting;
 
-  constructor(logger: ILoggerAgent,  hindSiteSetting: HindSiteSetting) {
-    super(logger);
+  constructor(hindeCore: IHindeCore,  hindSiteSetting: HindSiteSetting) {
+    super(hindeCore);
 
     this.HindSiteSetting = hindSiteSetting;
 

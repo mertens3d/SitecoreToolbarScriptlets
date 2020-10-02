@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from "../../../Shared/scripts/LoggableBase";
+﻿import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { ApiCommandPayload } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/ApiCommandPayload";
 import { CommandPayloadForInternal } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandPayloadForInternal";
 import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
@@ -7,7 +7,7 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { ISnapShotsAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/ISnapShotsAgent";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
@@ -25,7 +25,7 @@ import { CommandStartEndCancelEvent_Observer } from "../Events/CommandStartEndCa
 import { ICommandStartEndCancelEvent_Payload, CommandState_State } from "../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
 import { CommandStartEndCancelEvent_Subject } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Subject";
 
-export class CommandRouter extends LoggableBase {
+export class CommandRouter extends _HindeCoreBase {
   private InternalCommandRunner: InternalCommandRunner;
   private ScUiProxy: IHindSiteScUiProxy;
   private ToastAgent: IToastAgent;
@@ -38,8 +38,8 @@ export class CommandRouter extends LoggableBase {
   CommandTriggeredEvent_Subject: CommandStartEndCancelEvent_Subject;
   private Dependancies: ICommandDependancies;
 
-  constructor(logger: ILoggerAgent, scUiProxy: IHindSiteScUiProxy, toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, scUrlAgent: ScUrlAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiProxy, toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, scUrlAgent: ScUrlAgent) {
+    super(hindeCore);
     this.ToastAgent = toastAgent;
     this.ScUiMan = scUiMan;
     this.ScUiProxy = scUiProxy;
@@ -48,18 +48,18 @@ export class CommandRouter extends LoggableBase {
     this.AutoSnapShotAgent = autoSnapShotAgent;
     this.ScUrlAgent = scUrlAgent;
 
-    this.InternalCommandRunner = new InternalCommandRunner(this.Logger, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.ScUrlAgent);
+    this.InternalCommandRunner = new InternalCommandRunner(this.HindeCore, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.ScUrlAgent);
 
-    this.CommandTriggeredEvent_Subject = new CommandStartEndCancelEvent_Subject(this.Logger, CommandRouter.name);
-    this.CommandTriggeredEvent_Observer = new CommandStartEndCancelEvent_Observer(this.Logger, this.OnCommandStartEndCancelEvent.bind(this));
+    this.CommandTriggeredEvent_Subject = new CommandStartEndCancelEvent_Subject(this.HindeCore, CommandRouter.name);
+    this.CommandTriggeredEvent_Observer = new CommandStartEndCancelEvent_Observer(this.HindeCore, this.OnCommandStartEndCancelEvent.bind(this));
     this.CommandTriggeredEvent_Subject.RegisterObserver(this.CommandTriggeredEvent_Observer);
 
     this.Dependancies = {
       AtticAgent: this.AtticAgent,
       AutoSnapShotAgent: this.AutoSnapShotAgent,
-      Logger: this.Logger,
       ScUiProxy: this.ScUiProxy,
-      ScUrlAgent: this.ScUrlAgent
+      ScUrlAgent: this.ScUrlAgent,
+      HindeCore: this.HindeCore
     }
   }
 
@@ -111,7 +111,7 @@ export class CommandRouter extends LoggableBase {
 
   BuildCommandPayloadForInternal(): ICommandParams {
     let scProxyPayload = this.BuildScProxyPayload();
-    let commandParams: ICommandParams = new CommandPayloadForInternal(this.Logger, this.AtticAgent, this.ToastAgent, this.ScUiMan, this.SettingsAgent, this.AutoSnapShotAgent, scProxyPayload);
+    let commandParams: ICommandParams = new CommandPayloadForInternal(this.HindeCore, this.AtticAgent, this.ToastAgent, this.ScUiMan, this.SettingsAgent, this.AutoSnapShotAgent, scProxyPayload);
 
     return commandParams;
   }
@@ -167,7 +167,7 @@ export class CommandRouter extends LoggableBase {
   }
 
   private CalculateCommandToExec(msgFlag: MsgFlag): CommandToExecuteData {
-    let commandData = new CommandToExecuteData(this.Logger);
+    let commandData = new CommandToExecuteData(this.HindeCore);
     commandData.commandToExecute = null;
     commandData.CommandType = CommandType.Unknown;
 

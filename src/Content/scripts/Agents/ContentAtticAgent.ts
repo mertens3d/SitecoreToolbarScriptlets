@@ -1,25 +1,24 @@
-﻿import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
+﻿import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
+import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";
+import { DefaultStateOfStorageSnapshots } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
+import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
-import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IRepositoryAgent } from "../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
 import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../Shared/scripts/Interfaces/IOneStorageData";
-import { DefaultStateOfStorageSnapshots } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
-import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";
-import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
-import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 
-export class ContentAtticAgent implements IContentAtticAgent {
+export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAgent {
   private RepoAgent: IRepositoryAgent;
   private SettingAutoSnapshotRetainDays: number;
-  private Logger: ILoggerAgent;
 
-  constructor(repoAgent: IRepositoryAgent, logger: ILoggerAgent) {
-    this.Logger = logger;
+  constructor(repoAgent: IRepositoryAgent, hindeCore: IHindeCore) {
+    super(hindeCore);
 
     this.Logger.FuncStart(ContentAtticAgent.name);
 

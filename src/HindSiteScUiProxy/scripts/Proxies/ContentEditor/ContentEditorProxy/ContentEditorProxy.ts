@@ -2,13 +2,13 @@
 import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from '../../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { InitReportContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy';
 import { IDataOneDoc } from '../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { LoggableBase } from '../../../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from '../../../../../Shared/scripts/LoggableBase';
 import { SharedConst } from '../../../../../Shared/scripts/SharedConst';
 import { ContentEditorProxyMutationEvent_Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
 import { IContentEditorProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
@@ -18,7 +18,7 @@ import { ContentTreeProxy } from "./ContentTreeProxy/ContentTreeProxy";
 import { ContentTreeProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/ContentTreeProxyMutationEvent_Observer';
 import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 
-export class ContentEditorProxy extends LoggableBase {
+export class ContentEditorProxy extends _HindeCoreBase {
   private ContentTreeProxy: ContentTreeProxy;
   private TreeMutationEvent_Observer: ContentTreeProxyMutationEvent_Observer;
   public ContentEditorProxyMutationEvent_Subject: ContentEditorProxyMutationEvent_Subject;
@@ -28,8 +28,8 @@ export class ContentEditorProxy extends LoggableBase {
   Friendly: string;
   private RecipeBasic: RecipeBasics;
 
-  constructor(logger: ILoggerAgent, associatedDoc: IDataOneDoc, friendly: string) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc, friendly: string) {
+    super(hindeCore);
     this.Logger.CTORStart(ContentEditorProxy.name);
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.AssociatedDoc = associatedDoc;
@@ -39,7 +39,7 @@ export class ContentEditorProxy extends LoggableBase {
   }
 
   async PublishItem(): Promise<void> {
-    let publishProxy = new ContentEditorPublishProxy(this.Logger, this, this.AssociatedDoc);
+    let publishProxy = new ContentEditorPublishProxy(this.HindeCore, this, this.AssociatedDoc);
     await publishProxy.Execute();
   }
 
@@ -47,14 +47,14 @@ export class ContentEditorProxy extends LoggableBase {
     this.Logger.FuncStart(this.Instantiate_ContentEditorProxy.name);
     try {
       this.initResultContentEditorProxy = new InitReportContentEditorProxy();
-      this.RecipeBasic = new RecipeBasics(this.Logger);
+      this.RecipeBasic = new RecipeBasics(this.HindeCore);
       await this.RecipeBasic.WaitForCompleteNABDataOneDoc(this.AssociatedDoc, this.Friendly)
         .then(() => {
-          this.ContentEditorProxyMutationEvent_Subject = new ContentEditorProxyMutationEvent_Subject(this.Logger);
-          this.TreeMutationEvent_Observer = new ContentTreeProxyMutationEvent_Observer(this.Logger, this.CallBackOnContentEditorProxyTreeMutationEventAsync.bind(this));
+          this.ContentEditorProxyMutationEvent_Subject = new ContentEditorProxyMutationEvent_Subject(this.HindeCore);
+          this.TreeMutationEvent_Observer = new ContentTreeProxyMutationEvent_Observer(this.HindeCore, this.CallBackOnContentEditorProxyTreeMutationEventAsync.bind(this));
         })
         .then(() => this.RecipeBasic.WaitForAndReturnFoundElem(this.AssociatedDoc, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
-        .then((treeContainer: HTMLElement) => this.ContentTreeProxy = new ContentTreeProxy(this.Logger, this.AssociatedDoc, treeContainer))
+        .then((treeContainer: HTMLElement) => this.ContentTreeProxy = new ContentTreeProxy(this.HindeCore, this.AssociatedDoc, treeContainer))
         .then(() => this.ContentTreeProxy.Instantiate_TreeProxy())
         .then(() => this.initResultContentEditorProxy.ContentEditorProxyInitialized = true)
         .catch((err) => this.Logger.ErrorAndThrow(this.Instantiate_ContentEditorProxy.name, err));
@@ -120,7 +120,7 @@ export class ContentEditorProxy extends LoggableBase {
   async WaitForCompleteNABContentEditor(): Promise<void> {
     this.Logger.FuncStart(this.WaitForCompleteNABContentEditor.name);
     try {
-      let recipeBasics = new RecipeBasics(this.Logger);
+      let recipeBasics = new RecipeBasics(this.HindeCore);
 
       await recipeBasics.WaitForCompleteNABDataOneDoc(this.AssociatedDoc, this.Friendly)
 

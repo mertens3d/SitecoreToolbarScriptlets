@@ -1,9 +1,9 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiSettingBasedModuleMutationEven_Payload } from "./IUiSettingBasedModuleMutationEvent_Payload";
 
 export class UiSettingBasedModuleMutationEvent_Subject extends HindeSiteEvent_Subject<IUiSettingBasedModuleMutationEven_Payload> {
-  constructor(logger: ILoggerAgent) {
-    super(logger, UiSettingBasedModuleMutationEvent_Subject.name);
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore, UiSettingBasedModuleMutationEvent_Subject.name);
   }
 }

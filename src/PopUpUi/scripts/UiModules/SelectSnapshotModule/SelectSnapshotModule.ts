@@ -7,7 +7,7 @@ import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor"
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
@@ -27,11 +27,11 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   private SelectElement: HTMLSelectElement;
   Friendly = SelectSnapshotModule.name;
 
-  constructor(logger: ILoggerAgent, containerSelector: string) {
-    super(logger, containerSelector);
-    this.SelectSnapshotModule_Subject = new SelectSnapUiMutationEvent_Subject(this.Logger);
+  constructor(hindeCore: IHindeCore, containerSelector: string) {
+    super(hindeCore, containerSelector);
+    this.SelectSnapshotModule_Subject = new SelectSnapUiMutationEvent_Subject(this.HindeCore);
 
-    this.StateHelpers = new StateHelpers(this.Logger);
+    this.StateHelpers = new StateHelpers(this.HindeCore);
   }
 
   Init_Module(): void {

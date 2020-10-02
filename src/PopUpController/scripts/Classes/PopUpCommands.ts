@@ -1,4 +1,4 @@
-﻿import { LoggableBase } from '../../../Shared/scripts/LoggableBase';
+﻿import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
@@ -8,7 +8,7 @@ import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { ICommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { PopConst } from '../../../Shared/scripts/Const/PopConst';
 
-export class CommandDefintionFactory extends LoggableBase {
+export class CommandDefintionFactory extends _HindeCoreBase {
   public BuildMenuCommandParamsBucket(): ICommandDefinitionBucket {
     let toReturn: ICommandDefinitionBucket = {
       MenuCommandParamsAr: [

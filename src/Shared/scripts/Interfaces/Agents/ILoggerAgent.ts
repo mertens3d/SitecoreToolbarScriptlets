@@ -2,6 +2,11 @@
 import { GuidData } from "../../Helpers/GuidData";
 import { IError } from "../IError";
 
+export interface IHindeCore {
+  Logger: ILoggerAgent;
+
+}
+
 export interface ILoggerAgent {
   CancelRequestedFlag: boolean;
   CancelRequested();
@@ -21,8 +26,8 @@ export interface ILoggerAgent {
   FuncStart(textOrFunc: string, optionalValue?: boolean): void;
   FuncStart(textOrFunc: string, optionalValue?: number): void;
   FuncStart(textOrFunc: string, optionalValue?: string): void;
-  HandlerClearDebugText(self: ILoggerAgent): void
-  HandlerClearDebugText(self: ILoggerAgent, verify: boolean): void
+  HandlerClearDebugText(self: IHindeCore): void
+  HandlerClearDebugText(self: IHindeCore, verify: boolean): void
   CTOREnd(text: string): void;
   CTORStart(text: string): void;
   IsNotNullOrUndefinedBool(title: string, dataToCheck: any);

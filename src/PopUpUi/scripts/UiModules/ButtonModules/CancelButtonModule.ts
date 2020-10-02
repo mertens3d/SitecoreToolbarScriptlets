@@ -1,5 +1,5 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { _base_ButtonModule } from "./_baseButtonModule";
@@ -7,9 +7,8 @@ import { _base_ButtonModule } from "./_baseButtonModule";
 export class CancelButtonModule extends _base_ButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonCancel;
 
-  constructor(loggerAgent: ILoggerAgent, menuCommandParameters: IMenuCommandDefinition) {
-    super(loggerAgent, menuCommandParameters);
-    this.Logger = loggerAgent;
+  constructor(hindeCore: IHindeCore, menuCommandParameters: IMenuCommandDefinition) {
+    super(hindeCore, menuCommandParameters);
   }
 
   WireEvents_Module(): void {
