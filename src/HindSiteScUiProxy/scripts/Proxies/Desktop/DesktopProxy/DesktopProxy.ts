@@ -2,7 +2,7 @@ import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Def
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReport_DesktopProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy";
-import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { ScDocumentProxy } from "../../ScDocumentProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
@@ -16,7 +16,7 @@ import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationE
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 
 export class DesktopProxy extends _HindeCoreBase {
-  private AssociatedDoc: IDataOneDoc;
+  private AssociatedDoc: ScDocumentProxy;
   private DTAreaProxy: DTAreaProxy;
   private DTStartBarProxy: DTStartBarProxy;
   private RecipeBasics: RecipeBasics;
@@ -25,7 +25,7 @@ export class DesktopProxy extends _HindeCoreBase {
   DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
   DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
 
-  constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc) {
+  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentProxy) {
     super(hindeCore);
     this.Logger.CTORStart(DesktopProxy.name);
 
@@ -113,7 +113,7 @@ export class DesktopProxy extends _HindeCoreBase {
   //  //}
   //}
 
-  GetAssociatedDoc(): IDataOneDoc {
+  GetAssociatedDoc(): ScDocumentProxy {
     return this.AssociatedDoc;
   }
 

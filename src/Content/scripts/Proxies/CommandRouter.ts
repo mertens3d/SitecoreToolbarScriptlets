@@ -24,6 +24,7 @@ import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrl
 import { CommandStartEndCancelEvent_Observer } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Observer";
 import { ICommandStartEndCancelEvent_Payload, CommandState_State } from "../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
 import { CommandStartEndCancelEvent_Subject } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Subject";
+import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 
 export class CommandRouter extends _HindeCoreBase {
   private InternalCommandRunner: InternalCommandRunner;
@@ -33,12 +34,12 @@ export class CommandRouter extends _HindeCoreBase {
   private AtticAgent: IContentAtticAgent;
   private SettingsAgent: ISettingsAgent;
   private AutoSnapShotAgent: AutoSnapShotAgent;
-  private ScUrlAgent: ScUrlAgent;
+  private ScDocProxy: ScDocumentProxy;
   CommandTriggeredEvent_Observer: CommandStartEndCancelEvent_Observer;
   CommandTriggeredEvent_Subject: CommandStartEndCancelEvent_Subject;
   private Dependancies: ICommandDependancies;
 
-  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiProxy, toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, scUrlAgent: ScUrlAgent) {
+  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiProxy, toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, scDocProxy: ScDocumentProxy) {
     super(hindeCore);
     this.ToastAgent = toastAgent;
     this.ScUiMan = scUiMan;
@@ -46,9 +47,9 @@ export class CommandRouter extends _HindeCoreBase {
     this.AtticAgent = atticAgent;
     this.SettingsAgent = settingsAgent;
     this.AutoSnapShotAgent = autoSnapShotAgent;
-    this.ScUrlAgent = scUrlAgent;
+    this.ScDocProxy = scDocProxy;
 
-    this.InternalCommandRunner = new InternalCommandRunner(this.HindeCore, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.ScUrlAgent);
+    this.InternalCommandRunner = new InternalCommandRunner(this.HindeCore, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.ScDocProxy);
 
     this.CommandTriggeredEvent_Subject = new CommandStartEndCancelEvent_Subject(this.HindeCore, CommandRouter.name);
     this.CommandTriggeredEvent_Observer = new CommandStartEndCancelEvent_Observer(this.HindeCore, this.OnCommandStartEndCancelEvent.bind(this));
@@ -58,7 +59,7 @@ export class CommandRouter extends _HindeCoreBase {
       AtticAgent: this.AtticAgent,
       AutoSnapShotAgent: this.AutoSnapShotAgent,
       ScUiProxy: this.ScUiProxy,
-      ScUrlAgent: this.ScUrlAgent,
+      ScDocProxy: this.ScDocProxy,
       HindeCore: this.HindeCore
     }
   }

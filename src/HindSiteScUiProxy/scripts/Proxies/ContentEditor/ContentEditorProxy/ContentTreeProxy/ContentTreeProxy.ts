@@ -3,7 +3,7 @@ import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBas
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReportTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
-import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { ScDocumentProxy } from "../../../ScDocumentProxy";
 import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { INativeClassNameChangeEvent_Payload } from '../../../Desktop/DesktopProxy/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
@@ -20,7 +20,7 @@ import { IStateOfScContentTreeNodeFlat } from '../../../../../../Shared/scripts/
 //ContentTree is the name Sitecore uses
 export class ContentTreeProxy extends _HindeCoreBase {
   private _treeNodeProxy: ScContentTreeNodeProxy;
-  private AssociatedDoc: IDataOneDoc;
+  private AssociatedDoc: ScDocumentProxy;
   private initReportTreeProxy: InitReportTreeProxy;
   private NativeClassNameChangeEvent_Observer: NativeClassNameChangeEvent_Observer;
   private NativeClassNameChangeEvent_Subject: NativeClassNameChangeEvent_Subject;
@@ -30,7 +30,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   public TreeMutationEvent_Subject: TreeMutationEvent_Subject;
 
-  constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc, treeContainerElement: HTMLElement) {
+  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentProxy, treeContainerElement: HTMLElement) {
     super(hindeCore);
 
     this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeProxy.name, [associatedDoc, treeContainerElement]);

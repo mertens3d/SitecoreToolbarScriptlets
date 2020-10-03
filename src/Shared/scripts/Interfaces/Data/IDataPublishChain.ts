@@ -1,10 +1,10 @@
-﻿import { IDataOneDoc } from "./IDataOneDoc";
-import { _BaseFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
+﻿import { ScDocumentProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
+import { DTFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
 export interface IDataPublishChain {
-  TopLevelDoc: IDataOneDoc,
-  Iframe0Blue: _BaseFrameProxy;
-  DocToPublish: IDataOneDoc
-  JqIframe: _BaseFrameProxy;
-  MessageDialogIframeRed: _BaseFrameProxy;
+  TopLevelDoc: ScDocumentProxy,
+  Iframe0Blue: DTFrameProxy;
+  DocToPublish: ScDocumentProxy
+  JqIframe: DTFrameProxy;
+  MessageDialogIframeRed: DTFrameProxy;
 }

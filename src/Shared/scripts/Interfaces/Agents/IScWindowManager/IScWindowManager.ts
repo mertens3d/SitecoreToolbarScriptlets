@@ -2,7 +2,7 @@
 import { DesktopProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ScWindowType } from "../../../Enums/scWindowType";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
-import { IDataOneDoc } from "../../Data/IDataOneDoc";
+import { ScDocumentProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 import { IStateOfScUiProxy } from "../../Data/States/IDataStateOfSitecoreWindow";
 
 export interface IScWindowProxy {
@@ -10,9 +10,9 @@ export interface IScWindowProxy {
   DesktopProxy: DesktopProxy;
   GetCurrentPageType(): ScWindowType;
   GetStateOfScUiProxy(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUiProxy>;
-  GetTopLevelDoc(): IDataOneDoc;
+  GetTopLevelDoc(): ScDocumentProxy;
   Instantiate_ScWindowProxy(): Promise<void>;
   PublishActiveCE();
-  SetCompactCss(targetDoc: IDataOneDoc);
+  SetCompactCss(targetDoc: ScDocumentProxy);
   SetStateOfScWin(dataToRestore: IStateOfScUiProxy): Promise<void>
 }

@@ -1,19 +1,16 @@
-﻿import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
-import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
+﻿import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
+import { ScDocumentProxy } from "../../ScDocumentProxy";
 //import { RecipeAddNewContentEditorToDesktop } from "../../../ContentApi/Recipes/RecipeAddContentEditorToDesktop";
 
 export class DTPopUpMenuProxy extends _HindeCoreBase {
 
-  RecipeAddNewContentEditorToDesktop(AssociatedDoc: IDataOneDoc): Promise<void> {
+  RecipeAddNewContentEditorToDesktop(AssociatedDoc: ScDocumentProxy): Promise<void> {
     return new Promise(async (resolve, reject) => {
 
       this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewContentEditorToDesktop.name, AssociatedDoc);
-      let recipeBasics = new RecipeBasics(this.HindeCore);
 
-
-      await recipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption], AssociatedDoc)
+      await AssociatedDoc.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption])
         .then(() => resolve())
         .catch((err) => reject(this.RecipeAddNewContentEditorToDesktop.name + ' ' + err));
     });

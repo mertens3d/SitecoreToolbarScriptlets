@@ -1,6 +1,6 @@
 ﻿import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IDataOneDoc } from "../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { ScDocumentProxy } from "../../Proxies/ScDocumentProxy";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
@@ -8,7 +8,7 @@ import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
 
 export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IStateOfScUiProxy;
-    TopLevelDoc: IDataOneDoc;
+    TopLevelDoc: ScDocumentProxy;
 
   constructor(hindeCore: IHindeCore) {
     super(hindeCore)
@@ -40,13 +40,13 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
     document.getElementsByTagName("head")[0].appendChild(style);
   }
 
-  AdminB(targetDoc: IDataOneDoc, callbackOnComplete: Function) {
+  AdminB(targetDoc: ScDocumentProxy, callbackOnComplete: Function) {
     //callbackOnComplete();
     this.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(targetDoc.DocId));
     this.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
-    var userNameElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);
-    var passwordElem = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginPassword);
+    var userNameElem = targetDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);
+    var passwordElem = targetDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginPassword);
 
     if (this.Logger.IsNotNullOrUndefinedBool('userNameElem', userNameElem)
       &&
@@ -78,13 +78,13 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
     this.Logger.FuncEnd(this.AdminB.name);
   }
 
-  GetLoginButton(targetDoc: IDataOneDoc): HTMLElement {
+  GetLoginButton(targetDoc: ScDocumentProxy): HTMLElement {
     this.Logger.FuncStart(this.GetLoginButton.name);
 
-    var toReturn: HTMLElement = targetDoc.ContentDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginBtn.sc920);
+    var toReturn: HTMLElement = targetDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginBtn.sc920);
 
     if (!toReturn) {
-      toReturn = targetDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.LoginBtn.sc820);
+      toReturn = targetDoc.querySelector(ContentConst.Const.Selector.SC.LoginBtn.sc820);
     }
 
     this.Logger.Log('toReturn: ' + toReturn);

@@ -1,8 +1,8 @@
-﻿import { IDataOneDoc } from "./Data/IDataOneDoc";
-import { _BaseFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
+﻿import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
+import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
 export interface IFactoryHelper {
   BaseFramePromiseFactory(arg0: HTMLIFrameElement, arg1: string);
-  DataOneContentDocFactoryFromIframe(toReturnIframeData: _BaseFrameProxy): IDataOneDoc;
-  DTFrameProxyFactory(arg0: HTMLIFrameElement):  Promise<_BaseFrameProxy>;
+  //DataOneContentDocFactoryFromIframe(toReturnIframeData: DTFrameProxy): ScDocumentProxy;
+  DTFrameProxyFactory(arg0: HTMLIFrameElement):  Promise<DTFrameProxy>;
 }

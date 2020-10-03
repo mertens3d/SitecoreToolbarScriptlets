@@ -9,7 +9,6 @@ import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAg
 import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
 import { ScUrlAgent } from '../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
-import { DocumentProxy } from "../../Shared/scripts/Agents/Agents/UrlAgent/DocumentProxy";
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
 import { IHindSiteScUiProxy } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
@@ -20,7 +19,7 @@ import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGeneri
 import { InitReportScWindowManager } from "../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { IDataOneDoc } from '../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { ScDocumentProxy } from "../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 import { SharedConst } from '../../Shared/scripts/SharedConst';
 import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent';
 import { ContentAtticAgent } from './Agents/ContentAtticAgent';
@@ -46,15 +45,15 @@ class ContentEntry {
   private MiscAgent: MiscAgent;
   private SettingsAgent: ISettingsAgent;
   private AtticAgent: IContentAtticAgent;
-  ScUrlAgent: ScUrlAgent;
+  //ScUrlAgent: ScUrlAgent;
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
 
   CommandRouter: CommandRouter;
   HindeCore: IHindeCore;
-    ErrorHand: ErrorHandlerAgent;
-    TaskMonitor: InterruptAgent;
-    DocumentProxy: DocumentProxy;
+  ErrorHand: ErrorHandlerAgent;
+  TaskMonitor: InterruptAgent;
+  TopScDocProxy: ScDocumentProxy;
 
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
@@ -77,9 +76,8 @@ class ContentEntry {
       this.ToastAgent = new ToastAgent(this.HindeCore, document);
       this.ToastAgent.Instantiate();
 
-      this.DocumentProxy = new DocumentProxy(this.HindeCore, document);
-      this.ScUrlAgent = new ScUrlAgent(this.HindeCore, document.URL); // todo - move references to documentProxy
-      this.ScUrlAgent.Init_ScUrlAgent();
+      this.TopScDocProxy = new ScDocumentProxy(this.HindeCore, document);
+      this.TopScDocProxy.Instantiate();
       this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAndInitAgents_Content.name, err)
@@ -95,22 +93,18 @@ class ContentEntry {
 
       scUiMan = new ScUiManager(this.HindeCore);
 
-      let topLevelDoc: IDataOneDoc = {
-        ContentDoc: document,
-        DocId: null,
-        Nickname: 'TopLevelDoc'
-      };
 
-      this.ScUiProxy = new HindSiteScUiProxy(this.HindeCore, scUiMan, this.ScUrlAgent, topLevelDoc, this.ToastAgent);
+
+      this.ScUiProxy = new HindSiteScUiProxy(this.HindeCore, scUiMan, this.TopScDocProxy, this.ToastAgent);
 
       this.AutoSnapShotAgent = new AutoSnapShotAgent(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiProxy);
 
       this.ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore)
 
-      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.ScUrlAgent);
+      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.TopScDocProxy);
 
       let contentMessageBroker: IMessageBroker_Content = new MessageBroker_Content(this.HindeCore, this.SettingsAgent,
-        this.ScUiProxy, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter, this.ScUrlAgent);
+        this.ScUiProxy, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
 
       contentMessageMan = new ContentMessageManager(this.HindeCore, contentMessageBroker);
 
@@ -120,7 +114,6 @@ class ContentEntry {
         .then((result: InitReportScWindowManager) => this.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
         .then(() => {
           this.AutoSnapShotAgent.ScheduleIntervalTasks();
-          
         })
         .then(() => this.StartUp())
         .then(() => this.Logger.Log('Init success'))
@@ -143,7 +136,7 @@ class ContentEntry {
       SelectSnapShotId: null,
     }
 
-    if (this.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
+    if (this.TopScDocProxy.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
       setStateFromX.MsgFlag = MsgFlag.SetStateFromQueryString,
         this.CommandRouter.RouteCommand(setStateFromX);
     } else if ((this.SettingsAgent.GetByKey(SettingKey.AutoRestoreState)).ValueAsBool()) {
@@ -186,7 +179,6 @@ class ContentEntry {
       TaskMonitor: this.TaskMonitor,
       Discriminator: Discriminator.IHindeCore,
     }
-
 
     this.RepoAgent = new RepositoryAgent(this.HindeCore);
 

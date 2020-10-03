@@ -3,13 +3,13 @@ import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHe
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { ScDocumentProxy } from "../../../ScDocumentProxy";
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 
 export class DesktopStartBarButtonProxy extends _HindeCoreBase {
-  private AssociatedDoc: IDataOneDoc;
+  private AssociatedDoc: ScDocumentProxy;
   private ContainerSpanElement: HTMLElement;
   private FoundStartBarButton: HTMLElement;
   private RecipeBasics: RecipeBasics;
@@ -17,7 +17,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
 
   public FrameId: string;
 
-  constructor(hindeCore: IHindeCore, iframeElemId: string, associatedDoc: IDataOneDoc) {
+  constructor(hindeCore: IHindeCore, iframeElemId: string, associatedDoc: ScDocumentProxy) {
     super(hindeCore);
     this.AssociatedDoc = associatedDoc;
     this.FrameId = iframeElemId;
@@ -29,7 +29,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
     try {
       this.StartBarButtonElemId = ContentConst.Const.Names.Desktop.StartBarApplicationPrefix + this.FrameId;
       let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
-      this.FoundStartBarButton = this.AssociatedDoc.ContentDoc.querySelector(querySelectBtn);
+      this.FoundStartBarButton = this.AssociatedDoc.querySelector(querySelectBtn);
 
       await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.FoundStartBarButton, ':scope > div > span', this.Instantiate_DestopStartBarButtonProxy.name)
         .then((containerSpanElement: HTMLElement) => this.ContainerSpanElement = containerSpanElement);

@@ -1,14 +1,14 @@
 ﻿import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IDataOneDoc } from "../../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { ScDocumentProxy } from "../../../../ScDocumentProxy";
 import { DTFrameProxy } from "../../FrameProxies/DTFrameProxy";
 import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { INativeIFrameAddedEvent_Payload } from "./INativeIFrameAddedEvent_Payload";
 
 export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INativeIFrameAddedEvent_Payload>  {
-  private AssociatedDoc: IDataOneDoc;
+  private AssociatedDoc: ScDocumentProxy;
     HindeCore: IHindeCore;
 
-  constructor(hindeCore: IHindeCore, targetDoc: IDataOneDoc) {
+  constructor(hindeCore: IHindeCore, targetDoc: ScDocumentProxy) {
     super(hindeCore, NativeIFrameAddedEvent_Subject.name);
     this.HindeCore = hindeCore;
 
@@ -36,7 +36,7 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
           mutation.addedNodes.forEach((addedNode) => {
             if (addedNode instanceof HTMLIFrameElement) {
 
-
+              //todo - this is backwards...i think. We should be returning a nativeIframeProxy
               let dtFrameProxy = new DTFrameProxy(this.HindeCore, addedNode);
               addedDTFrameProxies.push(dtFrameProxy);
             }
@@ -72,7 +72,7 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
 
         let mutationObserver = new MutationObserver((mutations: MutationRecord[]) => { self.CallBackOnNativeMutation(mutations); });
 
-        let desktop: HTMLElement = this.AssociatedDoc.ContentDoc.getElementById('Desktop');
+        let desktop: HTMLElement = this.AssociatedDoc.getElementById('Desktop');
         if (desktop) {
           mutationObserver.observe(desktop, { attributes: false, subtree: false, childList: true });
         }

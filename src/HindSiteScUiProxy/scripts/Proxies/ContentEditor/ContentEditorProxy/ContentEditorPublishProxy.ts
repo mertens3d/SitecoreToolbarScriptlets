@@ -2,8 +2,7 @@
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
 import { IApiCallPayload } from "../../../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ICommandRecipes } from "../../../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { _BaseFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
+import { ScDocumentProxy } from "../../ScDocumentProxy";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
@@ -15,14 +14,15 @@ import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
 import { ContentEditorProxy } from "./ContentEditorProxy";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../../../Shared/scripts/Helpers/FactoryHelper";
+import { DTFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
 export class ContentEditorPublishProxy extends _HindeCoreBase  {
   ContentEditorProxy: ContentEditorProxy;
     RecipeBasics: RecipeBasics;
-    AssociatedDoc: IDataOneDoc;
+    AssociatedDoc: ScDocumentProxy;
     FactoryHelp: FactoryHelper;
 
-  constructor(hindeCore: IHindeCore, contentEditorProxy: ContentEditorProxy, associatedDoc: IDataOneDoc) {
+  constructor(hindeCore: IHindeCore, contentEditorProxy: ContentEditorProxy, associatedDoc: ScDocumentProxy) {
     super(hindeCore);
 
     this.ContentEditorProxy = contentEditorProxy;
@@ -40,14 +40,14 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
     });
   }
 
-  private async GetDocToPublish(scWindowType: ScWindowType, targetDoc: IDataOneDoc): Promise<IDataOneDoc> {
+  private async GetDocToPublish(scWindowType: ScWindowType, targetDoc: ScDocumentProxy): Promise<ScDocumentProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetDocToPublish.name);
 
       try {
         if (scWindowType === ScWindowType.Desktop) {
           await this.RecipeBasics.GetTopLevelIframe(targetDoc)
-            .then((topIframe: _BaseFrameProxy) => {
+            .then((topIframe: DTFrameProxy) => {
               resolve(topIframe.GetContentDoc());
             })
             .catch((err) => reject(this.GetDocToPublish.name + ' ' + err));
@@ -79,16 +79,16 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
     this.Logger.FuncStart(this.__debugDataPublishChain.name, nickname);
 
     this.Logger.LogVal('docToPublish', this.Logger.IsNullOrUndefined(dataPublishChain.DocToPublish));
-    this.Logger.LogVal('jqIframe', this.Logger.IsNullOrUndefined(dataPublishChain.JqIframe) + ' ' + (dataPublishChain.JqIframe ? dataPublishChain.JqIframe.HTMLIframeElement.src : ''));
-    this.Logger.LogVal('Iframe0blueIframe', this.Logger.IsNullOrUndefined(dataPublishChain.Iframe0Blue) + ' ' + (dataPublishChain.Iframe0Blue ? dataPublishChain.Iframe0Blue.HTMLIframeElement.src : ''));
-    this.Logger.LogVal('messageDialogIframeRed', this.Logger.IsNullOrUndefined(dataPublishChain.MessageDialogIframeRed) + ' ' + (dataPublishChain.MessageDialogIframeRed ? dataPublishChain.MessageDialogIframeRed.HTMLIframeElement.src : ''));
+    this.Logger.LogVal('jqIframe', this.Logger.IsNullOrUndefined(dataPublishChain.JqIframe) + ' ' + (dataPublishChain.JqIframe ? dataPublishChain.JqIframe.NativeIFrameProxy.src() : ''));
+    this.Logger.LogVal('Iframe0blueIframe', this.Logger.IsNullOrUndefined(dataPublishChain.Iframe0Blue) + ' ' + (dataPublishChain.Iframe0Blue ? dataPublishChain.Iframe0Blue.NativeIFrameProxy.src() : ''));
+    this.Logger.LogVal('messageDialogIframeRed', this.Logger.IsNullOrUndefined(dataPublishChain.MessageDialogIframeRed) + ' ' + (dataPublishChain.MessageDialogIframeRed ? dataPublishChain.MessageDialogIframeRed.NativeIFrameProxy.src() : ''));
 
     this.Logger.FuncEnd(this.__debugDataPublishChain.name);
 
     return dataPublishChain;
   }
 
-  async PublishCE(docToPublish: IDataOneDoc): Promise<void> {
+  async PublishCE(docToPublish: ScDocumentProxy): Promise<void> {
     this.Logger.FuncStart(this.PublishCE.name);
 
     try {
@@ -127,8 +127,8 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
   private async ClickPublishOnNav(payload: IDataPublishChain): Promise<IDataPublishChain> {
     this.Logger.FuncStart(this.ClickPublishOnNav.name);
     try {
-      await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.NavPublishStrip], payload.DocToPublish)
-      await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.NavPublishStrip], payload.DocToPublish)
+      await payload.DocToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.NavPublishStrip])
+      await payload.DocToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.NavPublishStrip] )
     } catch (err) {
       throw (this.ClickPublishOnNav.name + ' ' + err);
     }
@@ -142,38 +142,38 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
         await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.GetContentDoc(), ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
-        await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.Cancel], dataPublishChain.Iframe0Blue.GetContentDoc());
+        await dataPublishChain.Iframe0Blue.GetContentDoc().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel] );
       });
 
     return dataPublishChain;
   }
 
   private async __waitForAndClickOk(dataPublishChain: IDataPublishChain) {
-    await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.Ok], dataPublishChain.MessageDialogIframeRed.GetContentDoc());
+    await dataPublishChain.MessageDialogIframeRed.GetContentDoc().WaitForThenClick([ContentConst.Const.Selector.SC.Ok], );
 
     return dataPublishChain;
   }
 
   async __WaitForAndClickPublishNextButton(dataPublishChain: IDataPublishChain) {
-    await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.NextButton], dataPublishChain.Iframe0Blue.GetContentDoc());
+    await dataPublishChain.Iframe0Blue.GetContentDoc().WaitForThenClick([ContentConst.Const.Selector.SC.NextButton], );
 
     return dataPublishChain;
   }
 
   async ClickMenuButtonPublishDropDown(payload: IDataPublishChain = null) {
-    await this.RecipeBasics.WaitForThenClick([ContentConst.Const.Selector.SC.MenuButtonPublish], payload.DocToPublish);
+    await payload.DocToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.MenuButtonPublish], );
     return payload;
   }
 
   async ClickMenuDropDownPublishItem(payload: IDataPublishChain = null) {
-    return await this.RecipeBasics.WaitForAndClickWithPayload(ContentConst.Const.Selector.SC.MenuDropDownPublishItem, payload.DocToPublish, payload)
+    return await payload.DocToPublish.WaitForAndClickWithPayload(ContentConst.Const.Selector.SC.MenuDropDownPublishItem,  payload)
   }
 
   async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null): Promise<IDataPublishChain> {
     try {
       await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.TopLevelDoc, ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
         .then((found: HTMLElement) => this.FactoryHelp.BaseFramePromiseFactory(<HTMLIFrameElement>found, 'jqIframe'))
-        .then((result: _BaseFrameProxy) => dataPublishChain.JqIframe = result)
+        .then((result: DTFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
         .then(() => dataPublishChain.JqIframe.WaitForCompleteNABFrameProxyOrReject())
         .catch((err) => { throw (this.GetThePublishItemDialog.name + ' ' + err) });
@@ -222,7 +222,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
     });
   }
 
-  private __waitForThenFunc(selector: string, targetDoc: IDataOneDoc, dataPublishChain: IDataPublishChain, optionFunc: Function) {
+  private __waitForThenFunc(selector: string, targetDoc: ScDocumentProxy, dataPublishChain: IDataPublishChain, optionFunc: Function) {
     return new Promise<IDataPublishChain>(async (resolve, reject) => {
       this.Logger.FuncStart(this.__waitForThenFunc.name, selector);
       this.Logger.LogAsJsonPretty(this.__waitForThenFunc.name, targetDoc);

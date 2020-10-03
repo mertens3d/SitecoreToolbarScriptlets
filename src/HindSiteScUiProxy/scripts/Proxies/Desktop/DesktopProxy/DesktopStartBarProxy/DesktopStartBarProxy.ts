@@ -1,6 +1,6 @@
 ﻿import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IDataOneDoc } from '../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { ScDocumentProxy } from "../../../ScDocumentProxy";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
@@ -11,10 +11,10 @@ import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutati
 export class DTStartBarProxy extends _HindeCoreBase {
   private __statBarElem: HTMLElement;
   private RecipeBasics: RecipeBasics;
-  private AssociatedDoc: IDataOneDoc;
+  private AssociatedDoc: ScDocumentProxy;
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
 
-  constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc) {
+  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentProxy) {
     super(hindeCore);
     this.Logger.CTORStart(DTStartBarProxy.name);
     this.AssociatedDoc = associatedDoc;
@@ -26,12 +26,12 @@ export class DTStartBarProxy extends _HindeCoreBase {
   }
 
   GetStartBarButtonById(targetId: string) {
-    return this.AssociatedDoc.ContentDoc.querySelector('[id=' + targetId + ']');
+    return this.AssociatedDoc.querySelector('[id=' + targetId + ']');
   }
 
   GetStartBarElement(): HTMLElement {
     if (!this.__statBarElem) {
-      this.__statBarElem = this.AssociatedDoc.ContentDoc.querySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
+      this.__statBarElem = this.AssociatedDoc.querySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
     }
 
     return this.__statBarElem;
@@ -39,7 +39,7 @@ export class DTStartBarProxy extends _HindeCoreBase {
 
   async TriggerRedButton(): Promise<void> {
     try {
-      await this.RecipeBasics.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.AssociatedDoc)
+      await this.AssociatedDoc.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, )
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.TriggerRedButton.name, err));
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.TriggerRedButton.name, err);

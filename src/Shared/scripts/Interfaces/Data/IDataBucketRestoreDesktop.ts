@@ -1,10 +1,10 @@
-﻿import { _BaseFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
-import { IDataOneDoc } from "./IDataOneDoc";
+﻿import { ScDocumentProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 import { IStateOfContentEditor } from "./States/IStateOfContentEditor";
+import { DTFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
 export interface IDataBucketRestoreDesktop {
   LastChainLinkSuccessful: boolean,
-  IFramesbefore: _BaseFrameProxy[],
+  IFramesbefore: DTFrameProxy[],
   oneTreeState: IStateOfContentEditor,
-  targetDoc: IDataOneDoc,
+  targetDoc: ScDocumentProxy,
 }

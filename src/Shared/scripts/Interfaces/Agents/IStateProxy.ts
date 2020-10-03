@@ -1,4 +1,4 @@
-﻿
-export interface IStateFullProxy {
-    Instantiate();
+﻿export interface IScStateFullProxy {
+  Instantiate();
+  WireEvents();
 }

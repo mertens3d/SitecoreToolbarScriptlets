@@ -1,6 +1,6 @@
 ﻿import { ScWindowType } from '../../../../Shared/scripts/Enums/scWindowType';
 import { IToastAgent } from '../../../../Shared/scripts/Interfaces/Agents/IToastAgent';
-import { IDataOneDoc } from '../../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { ScDocumentProxy } from "../../Proxies/ScDocumentProxy";
 import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentEditorProxy } from '../../Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { _HindeCoreBase } from '../../../../Shared/scripts/LoggableBase';

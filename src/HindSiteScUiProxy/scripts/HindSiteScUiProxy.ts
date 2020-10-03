@@ -4,7 +4,7 @@ import { IHindSiteScUiProxy } from "../../Shared/scripts/Interfaces/Agents/ICont
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IScWindowProxy } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { IDataOneDoc } from "../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { ScDocumentProxy } from "./Proxies/ScDocumentProxy";
 import { IStateOfScUiProxy } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
@@ -14,18 +14,18 @@ import { ScWindowProxy } from "./Proxies/ScWindowProxy";
 export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiProxy {
   private ScUiMan: ScUiManager;
   private ScWindowProxy: IScWindowProxy;
-  private ScUrlAgent: IScUrlAgent;
-  private TopLevelDoc: IDataOneDoc;
+  //private ScUrlAgent: IScUrlAgent;
+  private TopDocumentProxy: ScDocumentProxy;
   ToastAgent: ToastAgent;
 
-  constructor(hindeCore: IHindeCore, scUiMan: ScUiManager, scUrlAgent: IScUrlAgent, TopDoc: IDataOneDoc, toastAgent: ToastAgent) {
+  constructor(hindeCore: IHindeCore, scUiMan: ScUiManager,  documentProxy: ScDocumentProxy, toastAgent: ToastAgent) {
     super(hindeCore);
 
     this.Logger.CTORStart(HindSiteScUiProxy.name);
 
-    this.ScUrlAgent = scUrlAgent;
+    //this.ScUrlAgent = scUrlAgent;
     this.ScUiMan = scUiMan;
-    this.TopLevelDoc = TopDoc;
+    this.TopDocumentProxy = documentProxy;
     this.ToastAgent = toastAgent;
 
     this.Logger.CTOREnd(HindSiteScUiProxy.name);
@@ -34,7 +34,7 @@ export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiPr
     this.Logger.FuncStart(this.OnReady_InstantiateHindSiteScUiProxy.name);
     try {
 
-      this.ScWindowProxy = new ScWindowProxy(this.HindeCore, this.ScUrlAgent);
+      this.ScWindowProxy = new ScWindowProxy(this.HindeCore, this.TopDocumentProxy);
       await this.ScWindowProxy.Instantiate_ScWindowProxy();
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.OnReady_InstantiateHindSiteScUiProxy.name, err);
@@ -114,6 +114,6 @@ export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiPr
   }
 
   AdminB(commandData: IApiCallPayload) {
-    this.ScUiMan.AdminB(this.TopLevelDoc, null);
+    this.ScUiMan.AdminB(this.TopDocumentProxy, null);
   }
 }

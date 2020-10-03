@@ -21,7 +21,7 @@ export class ReadyStateNAB extends _HindeCoreBase {
   }
 
   DocumentReadtStateFriendly(): string {
-    return 'DocumentReadyState :' + DocumentReadyState[this.DocumentReadyState()];
+    return 'DocumentReadyState :' + DocReadyState[this.DocumentReadyState()];
   }
 
   DocIsAboutBlank(): boolean {
@@ -34,19 +34,19 @@ export class ReadyStateNAB extends _HindeCoreBase {
   }
 
   IsCompleteNAB(): boolean {
-    return this.DocumentReadyState() === DocumentReadyState.Complete && !(this.DocIsAboutBlank());
+    return this.DocumentReadyState() === DocReadyState.Complete && !(this.DocIsAboutBlank());
   }
 
-  DocumentReadyState(): DocumentReadyState {
-    let toReturn: DocumentReadyState = DocumentReadyState.ReadyStateUnknown;
+  DocumentReadyState(): DocReadyState {
+    let toReturn: DocReadyState = DocReadyState.ReadyStateUnknown;
 
     let currentReadyState = document.readyState.toString();
     if (currentReadyState === 'complete') {
-      toReturn = DocumentReadyState.Complete;
+      toReturn = DocReadyState.Complete;
     } else if (currentReadyState === 'interactive') {
-      toReturn = DocumentReadyState.Interactive
+      toReturn = DocReadyState.Interactive
     } else if (currentReadyState === 'loading') {
-      toReturn = DocumentReadyState.Loading;
+      toReturn = DocReadyState.Loading;
     }
 
     return toReturn;
@@ -57,7 +57,7 @@ export class ReadyStateNAB extends _HindeCoreBase {
   }
 }
 
-export enum DocumentReadyState {
+export enum DocReadyState {
   ReadyStateUnknown = 0,
   Complete,
   Interactive,

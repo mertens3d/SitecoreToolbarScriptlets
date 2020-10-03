@@ -80,7 +80,7 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
 
   protected  Init_GenericUrlAgent(): void {
     try {
-      this.Logger.FuncStart(this.Init_GenericUrlAgent.name);
+      this.Logger.FuncStart(this.Init_GenericUrlAgent.name, GenericUrlAgent.name);
 
       this.SetFromHref(this.Url);
       //if (this.BrowserProxy) {
@@ -93,7 +93,7 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
       throw (this.Init_GenericUrlAgent.name + ' | ' + err);
     }
 
-    this.Logger.FuncEnd(this.Init_GenericUrlAgent.name);
+    this.Logger.FuncEnd(this.Init_GenericUrlAgent.name, GenericUrlAgent.name);
   }
 
   private SetFromHref(href: string) {

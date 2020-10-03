@@ -74,7 +74,8 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
   }
 
   ErrorAndThrow(container: string, text: any): void {
-    this.ErrorAndContinue(container, text);
+    let stack = new Error().stack;
+    this.ErrorAndContinue(container, text + '   ' + stack);
     throw container + " " + text;
   }
 }

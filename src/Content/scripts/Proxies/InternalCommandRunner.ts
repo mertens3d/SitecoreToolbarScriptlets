@@ -14,11 +14,12 @@ import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
 import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 
 export class InternalCommandRunner extends _HindeCoreBase {
   Dependancies: ICommandDependancies;
 
-  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy, scUrlAgent: ScUrlAgent) {
+  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy, scDocProxy: ScDocumentProxy) {
     super(hindeCore);
 
     this.Dependancies = {
@@ -26,7 +27,7 @@ export class InternalCommandRunner extends _HindeCoreBase {
       AutoSnapShotAgent: autoSnapShotAgent,
       ScUiProxy: scUiProxy,
       HindeCore: this.HindeCore,
-      ScUrlAgent: scUrlAgent
+      ScDocProxy: scDocProxy
     }
   }
 

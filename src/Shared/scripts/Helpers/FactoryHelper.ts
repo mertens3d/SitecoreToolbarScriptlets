@@ -1,14 +1,8 @@
-﻿import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
+﻿import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
-import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
 import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
-import { Guid } from "./Guid";
-import { _BaseFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
-import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 import { _HindeCoreBase } from "../LoggableBase";
-import { JQFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/PackageDesignerProxy";
-import { DocumentProxy } from "../Agents/Agents/UrlAgent/DocumentProxy";
-import { ScWindowType } from "../Enums/scWindowType";
 
 export class FactoryHelper extends _HindeCoreBase implements IFactoryHelper {
   SettingsAgent: ISettingsAgent;
@@ -17,34 +11,17 @@ export class FactoryHelper extends _HindeCoreBase implements IFactoryHelper {
     super(hindeCore);
   }
 
-  DataOneContentDocFactoryFromIframe(dataOneIframe: _BaseFrameProxy): IDataOneDoc {
-    var toReturn: IDataOneDoc = null;
-
-    if (dataOneIframe) {
-      toReturn =
-      {
-        ContentDoc: dataOneIframe.HTMLIframeElement.contentDocument,
-        DocId: Guid.NewRandomGuid(),
-        Nickname: ' - content doc'
-      }
-    } else {
-      this.ErrorHand.ErrorAndThrow(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
-    }
-    return toReturn;
-  }
-
-  BaseFramePromiseFactory(iframeElem: HTMLIFrameElement, nickname: string): _BaseFrameProxy {
+  BaseFramePromiseFactory(iframeElem: HTMLIFrameElement, nickname: string): DTFrameProxy {
     this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
-    var toReturn: _BaseFrameProxy = null;
+    var toReturn: DTFrameProxy = null;
 
     //let documentProxy = new DocumentProxy(this.HindeCore, iframeElem.contentDocument);
     //let scWindowType = documentProxy.GetScwindowType();
 
     //toReturn = new _BaseFrameProxy<scWindowType>(this.HindeCore, iframeElem);
 
-
     if (iframeElem && nickname) {
-      var toReturn: _BaseFrameProxy = new _BaseFrameProxy(this.HindeCore, iframeElem);
+      var toReturn: DTFrameProxy = new DTFrameProxy(this.HindeCore, iframeElem);
     } else {
       this.ErrorHand.ErrorAndThrow(this.BaseFramePromiseFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);

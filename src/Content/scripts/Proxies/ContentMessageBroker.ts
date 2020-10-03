@@ -17,6 +17,7 @@ import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/IComman
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
+import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 
 export class MessageBroker_Content extends _HindeCoreBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
@@ -27,9 +28,8 @@ export class MessageBroker_Content extends _HindeCoreBase implements IMessageBro
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
   CommandRouter: CommandRouter;
-  ScUrlAgent: IScUrlAgent;
 
-  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter, scUrlAgent: IScUrlAgent) {
+  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter) {
     super(hindeCore);
     this.Logger.CTORStart(MessageBroker_Content.name);
 
@@ -40,7 +40,6 @@ export class MessageBroker_Content extends _HindeCoreBase implements IMessageBro
     this.ContentBrowserProxy = contentBrowserProxy;
     this.AutoSnapShotAgent = autoSnapShotAgent;
     this.CommandRouter = commandRouter;
-    this.ScUrlAgent = scUrlAgent;
 
     this.Logger.CTOREnd(MessageBroker_Content.name);
   }

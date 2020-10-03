@@ -1,16 +1,16 @@
 ﻿import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
 import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
-import { _BaseFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { ReadyStateNAB } from '../Enums/ReadyState';
 import { FactoryHelper } from '../Helpers/FactoryHelper';
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
-import { IDataOneDoc } from '../Interfaces/Data/IDataOneDoc';
+import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 import { IAbsoluteUrl } from '../Interfaces/IAbsoluteUrl';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { _HindeCoreBase } from '../LoggableBase';
 import { PromiseResult } from "./PromiseResult";
+import { NativeScIframeProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/NativeScIframeProxy";
 
 export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
   constructor(hindeCore: IHindeCore) {
@@ -27,39 +27,6 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
   //    this.Logger.FuncEnd(this.WaitForReadyNABFrameProxy.name, Guid.AsShort(baseframeProxy.Id));
   //  });
   //}
-
-  async WaitForCompleteNABHtmlIframeElement(targetIframe: HTMLIFrameElement, friendly: string): Promise<ReadyStateNAB> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForCompleteNABHtmlIframeElement.name, friendly);
-
-      if (targetIframe) {
-        var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForCompleteNABHtmlIframeElement.name, false);
-        let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, targetIframe.contentDocument);
-
-        while (iterationJr.DecrementAndKeepGoing() && readyStateNAB.DocIsAboutBlank()) {
-          await iterationJr.Wait();
-          readyStateNAB.SetDocument(targetIframe.contentDocument);
-          readyStateNAB.LogDebugValues();
-        }
-
-        if (iterationJr.IsExhausted) {
-          this.Logger.Log(iterationJr.IsExhaustedMsg);
-          resolve(readyStateNAB);
-        } else {
-          await this.WaitForCompleteNABDocumentNative(targetIframe.contentDocument, friendly)
-            .then((result: ReadyStateNAB) => {
-              this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, result.DocumentReadtStateFriendly());
-              resolve(result);
-            })
-            .catch((err) => reject(this.WaitForCompleteNABHtmlIframeElement + ' | ' + err));
-        }
-      }
-      else {
-        this.ErrorHand.ErrorAndThrow(this.WaitForCompleteNABHtmlIframeElement.name, 'No target doc: ' + friendly);
-      }
-      this.Logger.FuncEnd(this.WaitForCompleteNABHtmlIframeElement.name, friendly);;
-    });
-  }
 
   //public GetReadyStateNAB(document: Document): ReadyStateNAB {
   //  // Ready and not About:Blank
@@ -82,32 +49,6 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
   //  return toReturn;
   //}
 
-  async WaitForCompleteNABDocumentNative(document: Document, friendly: string): Promise<ReadyStateNAB> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForCompleteNABDocumentNative.name, friendly);
-      if (document) {
-        var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForCompleteNABDocumentNative.name, false);
-        let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, document);
-
-        while (iterationJr.DecrementAndKeepGoing() && !readyStateNAB.IsCompleteNAB()) {
-          readyStateNAB.LogDebugValues();
-          await iterationJr.Wait();
-        }
-
-        if (iterationJr.IsExhausted) {
-          this.Logger.Log(iterationJr.IsExhaustedMsg);
-          reject(iterationJr.IsExhaustedMsg);
-        } else {
-          resolve(readyStateNAB);
-        }
-      }
-      else {
-        reject(this.WaitForCompleteNABDocumentNative.name + ' |  ' + 'No target doc');
-      }
-      this.Logger.FuncEnd(this.WaitForCompleteNABDocumentNative.name, friendly);
-    });
-  }
-
   WaitForNoUiFrontOverlay(friendly: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNoUiFrontOverlay.name, friendly);
@@ -115,9 +56,9 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
 
       let overLayExists: boolean = true;
 
-      let iframeElem: HTMLIFrameElement = <HTMLIFrameElement> document.getElementById('jqueryModalDialogsFrame');
+      let iframeElem: HTMLIFrameElement = <HTMLIFrameElement>document.getElementById('jqueryModalDialogsFrame');
       let iframeContentDoc: Document = iframeElem.contentDocument;
-      let iframeContentDocBody: HTMLBodyElement = <HTMLBodyElement> iframeContentDoc.body;
+      let iframeContentDocBody: HTMLBodyElement = <HTMLBodyElement>iframeContentDoc.body;
 
       while (iterationJr.DecrementAndKeepGoing() && overLayExists) {
         await iterationJr.Wait();
@@ -159,31 +100,28 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     });
   }
 
-  async WaitForCompleteNABDataOneDoc(targetDoc: IDataOneDoc, friendly: string): Promise<ReadyStateNAB> {
+  async WaitForCompleteNAB_DataOneDoc(scDocumentProxy: ScDocumentProxy, friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForCompleteNABDataOneDoc.name, friendly);
+      this.Logger.FuncStart(this.WaitForCompleteNAB_DataOneDoc.name, friendly);
 
-      if (targetDoc) {
-        await this.WaitForCompleteNABDocumentNative(targetDoc.ContentDoc, friendly)
-          .then((result: ReadyStateNAB) => {
-            result.LogDebugValues();
-            resolve(result);
-          })
-          .catch((err) => reject(this.WaitForCompleteNABDataOneDoc.name + ' | ' + err));
-      }
-      else {
-        reject(this.WaitForCompleteNABDataOneDoc.name + ' No target doc');
-      }
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_DataOneDoc.name,[scDocumentProxy, friendly]);
 
-      this.Logger.FuncEnd(this.WaitForCompleteNABDataOneDoc.name, friendly);
+      await scDocumentProxy.WaitForCompleteNAB_ScDocumentProxy(friendly)// this.WaitForCompleteNABDocumentNative(targetDoc.ContentDoc, friendly)
+        .then((result: ReadyStateNAB) => {
+          result.LogDebugValues();
+          resolve(result);
+        })
+        .catch((err) => reject(this.WaitForCompleteNAB_DataOneDoc.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.WaitForCompleteNAB_DataOneDoc.name, friendly);
     });
   }
 
-  async GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<_BaseFrameProxy> {
-    var toReturn: _BaseFrameProxy = null;
+  async GetTopLevelIframe(targetDoc: ScDocumentProxy): Promise<DTFrameProxy> {
+    var toReturn: DTFrameProxy = null;
     let frameHelper = new FrameHelper(this.HindeCore);
     await frameHelper.GetIFramesAsBaseFrameProxies(targetDoc)
-      .then((allIframe: _BaseFrameProxy[]) => {
+      .then((allIframe: DTFrameProxy[]) => {
         var maxZVal = -1;
         if (allIframe && allIframe.length > 0) {
           for (var idx = 0; idx < allIframe.length; idx++) {
@@ -198,7 +136,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     return toReturn;
   }
 
-  async WaitForIframeElemAndReturnWhenReady(haystackDoc: IDataOneDoc, selector: string, iframeNickName: string): Promise<_BaseFrameProxy> {
+  async WaitForIframeElemAndReturnWhenReady(haystackDoc: ScDocumentProxy, selector: string, iframeNickName: string): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
 
@@ -212,71 +150,71 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
       this.Logger.FuncEnd(this.WaitForIframeElemAndReturnWhenReady.name);
     });
   }
-  async WaitForNewIframeContentEditor(allIframesBefore: HTMLIFrameElement[], targetDoc: IDataOneDoc): Promise<DTFrameProxy> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForNewIframe.name);
-      let toReturn: DTFrameProxy = null;
+  //async WaitForNewIframeContentEditor(allIframesBefore: HTMLIFrameElement[], targetDoc: ScDocumentProxy): Promise<DTFrameProxy> {
+  //  return new Promise(async (resolve, reject) => {
+  //    this.Logger.FuncStart(this.WaitForNewIframe.name);
+  //    let toReturn: DTFrameProxy = null;
 
-      await this.WaitForNewIframeNative(allIframesBefore, targetDoc)
-        .then((result: HTMLIFrameElement) => {
-          toReturn = new DTFrameProxy(this.HindeCore, result);
-        })
-        .then(() => resolve(toReturn))
-        .catch((err) => reject(this.WaitForNewIframeContentEditor.name + ' | ' + err));
+  //    await this.WaitForNewIframeNative(allIframesBefore, targetDoc)
+  //      .then((result: HTMLIFrameElement) => {
+  //        toReturn = new DTFrameProxy(this.HindeCore, result);
+  //      })
+  //      .then(() => resolve(toReturn))
+  //      .catch((err) => reject(this.WaitForNewIframeContentEditor.name + ' | ' + err));
 
-      this.Logger.FuncEnd(this.WaitForNewIframe.name);
-    });
-  }
+  //    this.Logger.FuncEnd(this.WaitForNewIframe.name);
+  //  });
+  //}
 
-  async WaitForNewIframeNative(allIframesBefore: HTMLIFrameElement[], dateOneDoc: IDataOneDoc): Promise<HTMLIFrameElement> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForNewIframeNative.name);
-      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, dateOneDoc]);
+  //async WaitForNewIframeNative(allIframesBefore: HTMLIFrameElement[], dateOneDoc: ScDocumentProxy): Promise<HTMLIFrameElement> {
+  //  return new Promise(async (resolve, reject) => {
+  //    this.Logger.FuncStart(this.WaitForNewIframeNative.name);
+  //    this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, dateOneDoc]);
 
-      var toReturn: HTMLIFrameElement = null;
+  //    var toReturn: HTMLIFrameElement = null;
 
-      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForNewIframeNative.name, true)
-      let beforeCount: number = allIframesBefore.length;
+  //    var iterationJr = new IterationDrone(this.HindeCore, this.WaitForNewIframeNative.name, true)
+  //    let beforeCount: number = allIframesBefore.length;
 
-      while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
-        var allIframesAfter: HTMLIFrameElement[];
+  //    while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
+  //      var allIframesAfter: NativeScIframeProxy[];
 
-        let frameHelper = new FrameHelper(this.HindeCore);
+  //      let frameHelper = new FrameHelper(this.HindeCore);
 
-        allIframesAfter = frameHelper.GetIFramesFromDataOneDoc(dateOneDoc);
+  //      allIframesAfter = dateOneDoc.GetIFramesFromDataOneDoc();
 
-        var count: number = allIframesAfter.length;
+  //      var count: number = allIframesAfter.length;
 
-        if (count > beforeCount) {
-          var newIframes: HTMLIFrameElement[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
+  //      if (count > beforeCount) {
+  //        var newIframes: HTMLIFrameElement[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
 
-          toReturn = newIframes[0];
-          resolve(toReturn);
-        } else {
-          await iterationJr.Wait();
-        }
-      }
+  //        toReturn = newIframes[0];
+  //        resolve(toReturn);
+  //      } else {
+  //        await iterationJr.Wait();
+  //      }
+  //    }
 
-      reject('probably ' + iterationJr.IsExhaustedMsg);
+  //    reject('probably ' + iterationJr.IsExhaustedMsg);
 
-      this.Logger.FuncEnd(this.WaitForNewIframeNative.name);
-    });
-  }
+  //    this.Logger.FuncEnd(this.WaitForNewIframeNative.name);
+  //  });
+  //}
 
-  async WaitForNewIframe(allIframesBefore: _BaseFrameProxy[], targetDoc: IDataOneDoc): Promise<_BaseFrameProxy> {
-    return new Promise<_BaseFrameProxy>(async (resolve, reject) => {
+  async WaitForNewIframe(allIframesBefore: DTFrameProxy[], targetDoc: ScDocumentProxy): Promise<DTFrameProxy> {
+    return new Promise<DTFrameProxy>(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframe.name);
       this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);
 
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, targetDoc]);
 
-      var toReturn: _BaseFrameProxy = null;
+      var toReturn: DTFrameProxy = null;
 
       var iterationJr = new IterationDrone(this.HindeCore, this.WaitForNewIframe.name, true)
       let beforeCount: number = allIframesBefore.length;
 
       while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
-        var allIframesAfter: _BaseFrameProxy[];
+        var allIframesAfter: DTFrameProxy[];
 
         let frameHelper = new FrameHelper(this.HindeCore);
 
@@ -289,7 +227,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
         this.Logger.Log('iFrame count after: ' + allIframesAfter.length);
 
         if (count > beforeCount) {
-          var newIframes: _BaseFrameProxy[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
+          var newIframes: DTFrameProxy[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
 
           toReturn = newIframes[0];
         } else {
@@ -357,7 +295,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     });
   }
 
-  async WaitForAndReturnFoundElem(haystackDoc: IDataOneDoc, selector: string, overrideIterCount = 8): Promise<HTMLElement> {
+  async WaitForAndReturnFoundElem(haystackDoc: ScDocumentProxy, selector: string, overrideIterCount = 8): Promise<HTMLElement> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForAndReturnFoundElem.name);
 
@@ -365,7 +303,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
       var iterationJr = new IterationDrone(this.HindeCore, this.WaitForAndReturnFoundElem.name + ' - ' + selector + ' - ' + haystackDoc.Nickname, true, overrideIterCount);
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
-        toReturnFoundElem = haystackDoc.ContentDoc.querySelector(selector);
+        toReturnFoundElem = haystackDoc.GetContentDoc().querySelector(selector);
         if (toReturnFoundElem) {
           resolve(toReturnFoundElem)
         } else {
@@ -375,19 +313,6 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
 
       reject(iterationJr.IsExhaustedMsg);
       this.Logger.FuncEnd(this.WaitForAndReturnFoundElem.name);
-    });
-  }
-
-  WaitForAndClickWithPayload(selector: string, targetDoc: IDataOneDoc, payload: any) {
-    return new Promise<any>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForAndClickWithPayload.name, selector);
-
-      await this.WaitForThenClick([selector], targetDoc)
-        .then(() => resolve(payload))
-        .catch(ex => {
-          this.ErrorHand.ErrorAndThrow(this.WaitForAndClickWithPayload.name, ex);
-          reject(ex);
-        });
     });
   }
 
@@ -433,49 +358,6 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
         .catch((ex) => reject(ex));
 
       this.Logger.FuncEnd(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
-    });
-  }
-
-  async RaceWaitAndClick(selector: IScVerSpec, targetDoc: IDataOneDoc): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      await this.WaitForThenClick([selector.sc920, selector.sc820], targetDoc)
-        .then(() => resolve())
-        .catch((err) => reject(this.RaceWaitAndClick.name + ' | ' + err));
-    });
-  }
-
-  WaitForThenClick(selectorAr: string[], targetDoc: IDataOneDoc): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr, targetDoc]);
-
-      var found: HTMLElement = null;
-      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForThenClick.name, true);
-
-      while (!found && iterationJr.DecrementAndKeepGoing()) {// todo put back && !this.MsgMan().OperationCancelled) {
-        for (var idx = 0; idx < selectorAr.length; idx++) {
-          found = targetDoc.ContentDoc.querySelector(selectorAr[idx]);
-          if (found) {
-            break;
-          }
-        }
-      }
-
-      if (found) {
-        try {
-          this.Logger.LogAsJsonPretty(this.WaitForThenClick.name + ' clicking', selectorAr);
-          found.click();
-          resolve();
-        } catch (err) {
-          reject(this.WaitForThenClick.name + ' | ' + err);
-        }
-      } else {
-        await iterationJr.Wait()
-          .catch((err) => reject(this.WaitForThenClick.name + ' | ' + err));
-      }
-
-      if (!found && iterationJr.IsExhausted) {
-        reject(iterationJr.IsExhaustedMsg);
-      }
     });
   }
 }

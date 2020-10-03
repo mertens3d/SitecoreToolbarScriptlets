@@ -2,7 +2,7 @@
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReport_DTAreaProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitReport_DTAreaProxy";
-import { IDataOneDoc } from "../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
+import { ScDocumentProxy } from "../../ScDocumentProxy";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
@@ -19,12 +19,13 @@ import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
 import { DesktopProxy } from "./DesktopProxy";
+import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
 
 export class DTAreaProxy extends _HindeCoreBase {
   private FramesBucket: DTFrameProxy[] = [];
   private DTFrameProxyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
   private IncomingSetStateList: IStateOfDTFrame[] = [];
-  private AssociatedDoc: IDataOneDoc;
+  private AssociatedDoc: ScDocumentProxy;
   private NativeIFrameAddedEvent_Subject: NativeIFrameAddedEvent_Subject;
 
   NativeIframeAddedEvent_Observer: DTAreaProxyMutationEvent_Observer;
@@ -34,7 +35,7 @@ export class DTAreaProxy extends _HindeCoreBase {
   private RecipeBasics: RecipeBasics;
   private ParentDesktopProxy: DesktopProxy;
 
-  constructor(hindeCore: IHindeCore, associatedDoc: IDataOneDoc, parentDesktopProxy: DesktopProxy) {
+  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentProxy, parentDesktopProxy: DesktopProxy) {
     super(hindeCore);
 
     this.AssociatedDoc = associatedDoc;
@@ -71,9 +72,8 @@ export class DTAreaProxy extends _HindeCoreBase {
         payload.AddedDTFrameProxies.forEach(async (dtFrameProxy: DTFrameProxy) => {
           await dtFrameProxy.WaitForCompleteNABFrameProxyOrReject()
             .then(() => {
-              let indexOf: number = dtFrameProxy.HTMLIframeElement.contentDocument.URL.indexOf(SharedConst.Const.UrlSuffix.SitecoreShellApplicationsContentEditor);
-              this.Logger.LogVal('indexof', indexOf);
-              if (indexOf > -1) {
+              let currentWindowType = dtFrameProxy.GetScWindowType();
+              if (currentWindowType === ScWindowType.ContentEditor) {
                 this.ProcessNewFrameProxy(dtFrameProxy);
               }
             })
@@ -92,7 +92,7 @@ export class DTAreaProxy extends _HindeCoreBase {
 
   private async ProcessNewFrameProxy(dtFrameProxy: DTFrameProxy): Promise<void> {
     this.Logger.FuncStart(this.ProcessNewFrameProxy.name, dtFrameProxy.Friendly);
-    this.Logger.LogVal('iframe id', dtFrameProxy.HTMLIframeElement.id);
+    this.Logger.LogVal('iframe id', dtFrameProxy.Id );
     try {
       await dtFrameProxy.WaitForCompleteNABFrameProxyOrReject()
         .then(() => this.newFrameStep1_Instantiate(dtFrameProxy))
@@ -111,7 +111,7 @@ export class DTAreaProxy extends _HindeCoreBase {
   private async newFrameStep1_Instantiate(dtFrameProxy: DTFrameProxy): Promise<void> {
     this.Logger.FuncStart(this.newFrameStep1_Instantiate.name);
     try {
-      await dtFrameProxy.Instantiate_DTFrameProxy()
+      await dtFrameProxy.Instantiate()
         .then(() => { })
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.newFrameStep1_Instantiate.name, err));
     } catch (err) {
@@ -120,12 +120,7 @@ export class DTAreaProxy extends _HindeCoreBase {
     this.Logger.FuncEnd(this.newFrameStep1_Instantiate.name);
   }
 
-  private NewFrameStep3_WireEvents(dtFrameProxy: DTFrameProxy) {
-    this.Logger.FuncStart(this.NewFrameStep3_WireEvents.name);
-    dtFrameProxy.DTFrameProxyMutationEvent_Subject.RegisterObserver(this.DTFrameProxyMutationEvent_Observer);
-    dtFrameProxy.WireEvents_DTFrameProxy();
-    this.Logger.FuncEnd(this.NewFrameStep3_WireEvents.name);
-  }
+
 
   private async NewFrameStep2_SetStateOfDTFrameIfQueued(dtFrameProxy: DTFrameProxy): Promise<void> {
     this.Logger.FuncStart(this.NewFrameStep2_SetStateOfDTFrameIfQueued.name);
@@ -137,6 +132,14 @@ export class DTAreaProxy extends _HindeCoreBase {
     }
     this.Logger.FuncEnd(this.NewFrameStep2_SetStateOfDTFrameIfQueued.name);
   }
+
+  private NewFrameStep3_WireEvents(dtFrameProxy: DTFrameProxy) {
+    this.Logger.FuncStart(this.NewFrameStep3_WireEvents.name);
+    dtFrameProxy.DTFrameProxyMutationEvent_Subject.RegisterObserver(this.DTFrameProxyMutationEvent_Observer);
+    dtFrameProxy.WireEvents();
+    this.Logger.FuncEnd(this.NewFrameStep3_WireEvents.name);
+  }
+
 
   private NewFrameStep4_NotifyObserversOfAreaProxyMutation(dtFrameProxy: DTFrameProxy) {
     this.Logger.FuncStart(this.NewFrameStep4_NotifyObserversOfAreaProxyMutation.name);

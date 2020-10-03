@@ -9,7 +9,7 @@ import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/I
 import { IHindeCore } from "../../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
-import { IDataOneDoc } from "../../Interfaces/Data/IDataOneDoc";
+import { ScDocumentProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
 import { ICommandParams } from "../../Interfaces/ICommandParams";
 import { _HindeCoreBase } from "../../LoggableBase";
@@ -23,10 +23,10 @@ export class CommandPayloadForInternal extends _HindeCoreBase implements IComman
     hindeCore: IHindeCore = null;
     ScUiMan: ScUiManager = null;
     TargetCeProxy: ContentEditorProxy;
-    TargetDoc: IDataOneDoc = null;
+    TargetDoc: ScDocumentProxy = null;
     TargetNickName: string = '';
     ToastAgent: IToastAgent = null;
-    TopLevelDoc: IDataOneDoc = null;
+    TopLevelDoc: ScDocumentProxy = null;
     SettingsAgent: ISettingsAgent;
     AutoSnapShotAgent: AutoSnapShotAgent;
     ApiPayload: IApiCallPayload;

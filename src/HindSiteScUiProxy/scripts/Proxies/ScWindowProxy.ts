@@ -13,7 +13,7 @@ import { InitReportScWindowManager } from "../../../Shared/scripts/Interfaces/Ag
 import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
 import { IScWindowProxy } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { IDataOneDoc } from '../../../Shared/scripts/Interfaces/Data/IDataOneDoc';
+import { ScDocumentProxy } from "./ScDocumentProxy";
 import { IDataFriendly } from '../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
 import { IDataMetaData } from '../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
 import { IStateOfContentEditor } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
@@ -26,18 +26,17 @@ import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEd
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
 
 export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
-  private ScUrlAgent: IScUrlAgent;
-  private TopDoc: IDataOneDoc;
+  private ScDocumentProxy: ScDocumentProxy;
   SettingsAgent: ISettingsAgent;
   TabSessionId: string;
   ContentEditorProxy: ContentEditorProxy;
   DesktopProxy: DesktopProxy;
   InitReportScWindowManager: InitReportScWindowManager;
 
-  constructor(hindeCore: IHindeCore, scUrlAgent: IScUrlAgent) {
+  constructor(hindeCore: IHindeCore, scDocumentProxy: ScDocumentProxy) {
     super(hindeCore);
     this.Logger.CTORStart(ScWindowProxy.name);
-    this.ScUrlAgent = scUrlAgent;
+    this.ScDocumentProxy = scDocumentProxy;
     this.Logger.CTOREnd(ScWindowProxy.name);
   }
 
@@ -71,20 +70,19 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
       let recipesBasic = new RecipeBasics(this.HindeCore);
       this.InitReportScWindowManager = new InitReportScWindowManager();
 
-      await recipesBasic.WaitForCompleteNABDataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
-
+      await this.GetTopLevelDoc().WaitForCompleteNAB_ScDocumentProxy('Window.Document')// recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
         .then((result: ReadyStateNAB) => {
-          if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
+          if (this.ScDocumentProxy.GetScWindowType() === ScWindowType.Desktop) {
             this.DesktopProxy = new DesktopProxy(this.HindeCore, this.GetTopLevelDoc());
             this.DesktopProxy.Instantiate_DesktopProxy()
               .then(() => this.DesktopProxy.WireEvents_DesktopProxy())
           }
         })
         .then(() => {
-          if (this.ScUrlAgent.GetScWindowType() === ScWindowType.ContentEditor) {
+          if (this.ScDocumentProxy.GetScWindowType() === ScWindowType.ContentEditor) {
             this.ContentEditorProxy = new ContentEditorProxy(this.HindeCore, this.GetTopLevelDoc(), 'Solo Content Editor doc');
-            this.ContentEditorProxy.Instantiate_ContentEditorProxy()
-              .then(() => this.ContentEditorProxy.WireEvents_ContentEditorProxy())
+            this.ContentEditorProxy.Instantiate()
+              .then(() => this.ContentEditorProxy.WireEvents())
           }
         })
 
@@ -96,61 +94,20 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
     this.Logger.FuncEnd(this.Instantiate_ScWindowProxy.name);
   }
 
-  //async GetCurrentStateByPageType(scWindowType: ScWindowType): Promise<IStateOfContentEditorProxy> {
-  //  return new Promise(async (resolve, reject) => {
-  //    this.Logger.FuncStart(this.GetCurrentStateByPageType.name, StaticHelpers.ScWindowTypeFriendly(scWindowType));
-  //    let toReturn: IStateOfContentEditorProxy = null;
-
-  //      if (scWindowType === ScWindowType.Desktop) {
-  //        let dtResult;
-
-  //        await this.DesktopProxy.GetStateOfDesktop()
-  //          .then((result) => {
-  //            dtResult = result;
-
-  //            if (dtResult.ActiveCEAgent) {
-  //              toReturn = dtResult.ActiveCEAgent.GetStateTree();
-  //            }
-  //          })
-  //          .then(() => resolve(toReturn))
-  //          .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetCurrentStateByPageType.name, err));
-  //      }
-
-  //      else if (scWindowType === ScWindowType.ContentEditor) {
-  //        await this.ContentEditorProxy.GetStateOfContentEditorProxy()
-  //          .then((stateOfContentEditorProxy: IStateOfContentEditorProxy) => toReturn = stateOfContentEditorProxy)
-  //          .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetCurrentStateByPageType.name, err));
-  //      }
-  //      else if (scWindowType === ScWindowType.LoginPage
-  //        || scWindowType === ScWindowType.Launchpad
-  //        || scWindowType === ScWindowType.Edit
-  //        || scWindowType === ScWindowType.Preview
-  //        || scWindowType === ScWindowType.Normal) {
-  //      }
-  //      else {
-  //        this.ErrorHand.ErrorAndThrow(this.GetCurrentStateByPageType.name, 'unknown page type ' + StaticHelpers.ScWindowTypeFriendly(scWindowType));
-  //    }
-
-  //    this.Logger.FuncEnd(this.GetCurrentStateByPageType.name);
-  //  });
-  //}
-
   GetCurrentPageType(): ScWindowType {
-    return this.ScUrlAgent.GetScWindowType()
+    return this.ScDocumentProxy.GetScWindowType()
   }
 
-  GetTopLevelDoc(): IDataOneDoc {
-    if (!this.TopDoc) {
-      this.TopDoc = {
-        ContentDoc: window.document,
-        DocId: Guid.NewRandomGuid(),
-        Nickname: 'top doc'
-      }
+  GetTopLevelDoc(): ScDocumentProxy {
+    if (!this.ScDocumentProxy) {
+      this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, window.document);
+      this.ScDocumentProxy.Instantiate();
+      this.ScDocumentProxy.Nickname = 'top doc';
     }
-    return this.TopDoc;
+    return this.ScDocumentProxy;
   }
 
-  async SetCompactCss(targetDoc: IDataOneDoc) {
+  async SetCompactCss(targetDoc: ScDocumentProxy) {
     await this.ContentEditorProxy.SetCompactCss();
   }
 
@@ -158,14 +115,14 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
     return new Promise(async (resolve, reject) => {
       let toReturn: IStateOfScWindow = new DefaultStateOfScWindowProxy();
 
-      if (this.ScUrlAgent.GetScWindowType() === ScWindowType.Desktop) {
+      if (this.ScDocumentProxy.GetScWindowType() === ScWindowType.Desktop) {
         await this.DesktopProxy.GetStateOfDesktop()
           .then((result: IStateOfDesktop) => toReturn.StateOfDesktop = result)
           .then(() => resolve(toReturn))
           .catch((err) => reject(this.GetStates.name + ' | ' + err));
       }
 
-      if (this.ScUrlAgent.GetScWindowType() === ScWindowType.ContentEditor) {
+      if (this.ScDocumentProxy.GetScWindowType() === ScWindowType.ContentEditor) {
         await this.ContentEditorProxy.GetStateOfContentEditorProxy()
           .then((stateOfContentEditorProxy: IStateOfContentEditor) => toReturn.StateOfContentEditor = stateOfContentEditorProxy)
           .then(() => resolve(toReturn))
@@ -234,9 +191,9 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
     return toReturn;
   }
 
-  private Hash(input: string):number {
+  private Hash(input: string): number {
     //https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
-    let hash:number = 0;
+    let hash: number = 0;
     let strLen = input.length;
     let charCode: number;
 
@@ -253,7 +210,7 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
 
   PopulateMetaData(snapshotFlavor: SnapShotFlavor, stateOfScWindow: IStateOfScWindow): IDataMetaData {
     let toReturn: IDataMetaData = new DefaultMetaData();
-    toReturn.WindowType = this.ScUrlAgent.GetScWindowType();
+    toReturn.WindowType = this.ScDocumentProxy.GetScWindowType();
     toReturn.TimeStamp = new Date();
     toReturn.SessionId = this.TabSessionId;
     toReturn.Flavor = snapshotFlavor;
