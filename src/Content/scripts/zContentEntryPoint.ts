@@ -9,6 +9,7 @@ import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAg
 import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
 import { ScUrlAgent } from '../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent';
+import { DocumentProxy } from "../../Shared/scripts/Agents/Agents/UrlAgent/DocumentProxy";
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
 import { IHindSiteScUiProxy } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
@@ -53,6 +54,7 @@ class ContentEntry {
   HindeCore: IHindeCore;
     ErrorHand: ErrorHandlerAgent;
     TaskMonitor: InterruptAgent;
+    DocumentProxy: DocumentProxy;
 
   async Main() {
     this.InstantiateAndInit_LoggerAndSettings();
@@ -75,8 +77,9 @@ class ContentEntry {
       this.ToastAgent = new ToastAgent(this.HindeCore, document);
       this.ToastAgent.Instantiate();
 
-      this.ScUrlAgent = new ScUrlAgent(this.HindeCore, null);
-      this.ScUrlAgent.Init_ScUrlAgent()
+      this.DocumentProxy = new DocumentProxy(this.HindeCore, document);
+      this.ScUrlAgent = new ScUrlAgent(this.HindeCore, document.URL); // todo - move references to documentProxy
+      this.ScUrlAgent.Init_ScUrlAgent();
       this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAndInitAgents_Content.name, err)

@@ -1,18 +1,21 @@
-﻿import { _HindeCoreBase } from "../../../LoggableBase";
-import { QueryStrKey } from "../../../Enums/QueryStrKey";
+﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/IUrlParts";
-import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
+import { _HindeCoreBase } from "../../../LoggableBase";
 
 export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
   protected UrlParts: IGenericUrlParts;
-  private BrowserProxy: IPopUpBrowserProxy;
+  private  Url: string;
+  //private BrowserProxy: IPopUpBrowserProxy;
 
-  constructor(hindeCore: IHindeCore, browserProxy: IPopUpBrowserProxy) {
+  constructor(hindeCore: IHindeCore,  url:string) { // browserProxy: IPopUpBrowserProxy
     super(hindeCore);
-    this.BrowserProxy = browserProxy;
+    this.Url = url;
+
+    this.ErrorHand.ThrowIfNullOrUndefined(GenericUrlAgent.name, url);
+    //this.BrowserProxy = browserProxy;
   }
 
   GetUrlParts(): IGenericUrlParts {
@@ -56,35 +59,36 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
     this.UrlParts.FilePath = newFilePath;
   }
 
-  private async Init_FromBrowserProxy(): Promise<void> {
-    this.Logger.Log(this.Init_FromBrowserProxy.name)
+  //private async Init_FromBrowserProxy(): Promise<void> {
+  //  this.Logger.Log(this.Init_FromBrowserProxy.name)
 
-    if (this.BrowserProxy) {
-      this.SetFromHref(this.BrowserProxy.Url);
-    } else {
-      throw (this.Init_FromBrowserProxy.name + '| no proxy');
-    }
-  }
-  private InitFromWindowLocation() {
-    try {
-      this.Logger.Log('Init from window.location.href')
-      let urlToUse = window.location.href;
-      this.SetFromHref(urlToUse);
-    } catch (err) {
-      throw (this.InitFromWindowLocation.name + err);
-    }
-  }
+  //  if (this.BrowserProxy) {
+  //    this.SetFromHref(this.BrowserProxy.Url);
+  //  } else {
+  //    throw (this.Init_FromBrowserProxy.name + '| no proxy');
+  //  }
+  //}
+  //private InitFromWindowLocation() {
+  //  try {
+  //    this.Logger.Log('Init from window.location.href')
+  //    let urlToUse = window.location.href;
+  //    this.SetFromHref(urlToUse);
+  //  } catch (err) {
+  //    throw (this.InitFromWindowLocation.name + err);
+  //  }
+  //}
 
   protected  Init_GenericUrlAgent(): void {
     try {
       this.Logger.FuncStart(this.Init_GenericUrlAgent.name);
 
-      if (this.BrowserProxy) {
-        this.Init_FromBrowserProxy();
-      }
-      else {
-         this.InitFromWindowLocation();
-      }
+      this.SetFromHref(this.Url);
+      //if (this.BrowserProxy) {
+      //  this.Init_FromBrowserProxy();
+      //}
+      //else {
+      //   this.InitFromWindowLocation();
+      //}
     } catch (err) {
       throw (this.Init_GenericUrlAgent.name + ' | ' + err);
     }

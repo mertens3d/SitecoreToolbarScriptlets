@@ -58,10 +58,15 @@ export class SharedConst {
       QueryStrSeparatorQuest: /\?/gi,
       PageType: {
         //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
-        Desktop: /.*default.aspx/ig,
+        Default: /.*default.aspx/ig,
         Edit: /sc_itemid=.*sc_mode=edit/ig,
         Normal: /sc_itemid=.*sc_mode=normal/ig,
         Preview: /sc_itemid=.*sc_mode=preview/ig,
+        XmlControl: /.*xmlcontrol=Application/ig,
+        PackageDesigner: /.*xmlcontrol=Application&.*Package+Designer/ig,
+
+        ///sitecore/shell/default.aspx?xmlcontrol=Application&hdl=53D315776143455784479FFB65509FF4&he=Package+Designer&ic=apps%2f32x32%2fpackager.png
+
       },
     },
 

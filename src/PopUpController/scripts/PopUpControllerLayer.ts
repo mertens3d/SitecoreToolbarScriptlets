@@ -83,7 +83,7 @@ class PopUpControllerLayer {
   }
 
   private InstantiateAgents_Controller() {
-    this.ScUrlAgent = new ScUrlAgent(this.HindeCore, this.BrowserProxy);
+    this.ScUrlAgent = new ScUrlAgent(this.HindeCore, this.BrowserProxy.Url);
     this.ScUrlAgent.Init_ScUrlAgent();
     this.PopUpMessageBrokerAgent = new MessageBroker_PopUp(this.HindeCore, this.BrowserProxy, this.SettingsAgent);
   }

@@ -1,21 +1,27 @@
-﻿import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
+﻿import { DocumentProxy } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/DocumentProxy";
+import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
+import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
+import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ReportResultsInitDTFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
 import { IStateOfContentEditor } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { ContentEditorProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { PackageDesignerProxy } from "../../../ContentEditor/ContentEditorProxy/PackageDesignerProxy";
 import { ContentEditorProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
 import { IContentEditorProxyMutationEvent_Payload } from "../Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { _BaseFrameProxy } from "./_BaseFrameProxy";
-import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
+import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 
-export class DTFrameProxy extends _BaseFrameProxy {
+export class DTFrameProxy extends _BaseFrameProxy implements IStateFullProxy {
   public ContentEditorProxy: ContentEditorProxy;
+  public PackageDesignerProxy: PackageDesignerProxy;
+
   ContentEditorProxyMutationEvent_Observer: ContentEditorProxyMutationEvent_Observer;
-  Discriminator = DTFrameProxy.name;
+  FrameTypeDiscriminator = DTFrameProxy.name;
   public initReportFrameProxy: ReportResultsInitDTFrameProxy;
 
   constructor(hindeCore: IHindeCore, iframeElem: HTMLIFrameElement) {
@@ -40,7 +46,21 @@ export class DTFrameProxy extends _BaseFrameProxy {
             reject(result.DocumentReadtStateFriendly())
           }
         })
-        .then(() => this.ContentEditorProxy = new ContentEditorProxy(this.HindeCore, this.GetContentDoc(), this.Friendly))
+        .then(() => {
+          let documentProxy = new DocumentProxy(this.HindeCore, this.GetContentDoc().ContentDoc);
+          documentProxy.Instantiate();
+
+          let scWindowType: ScWindowType = documentProxy.GetScwindowType();
+          switch (scWindowType) {
+            case ScWindowType.ContentEditor:
+              this.ContentEditorProxy = new ContentEditorProxy(this.HindeCore, this.GetContentDoc(), this.Friendly)
+              break;
+            case ScWindowType.XmlControlPackageDesigner:
+              this.PackageDesignerProxy = new PackageDesignerProxy(this.HindeCore, documentProxy, this.Friendly)
+            default:
+              this.ErrorHand.WarningAndContinue(this.Instantiate.name, 'un handled DTFrame type ' + ScWindowType[scWindowType]);
+          }
+        })
         .then(() => this.ContentEditorProxy.Instantiate_ContentEditorProxy())
         .then(() => {
           this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.HindeCore);

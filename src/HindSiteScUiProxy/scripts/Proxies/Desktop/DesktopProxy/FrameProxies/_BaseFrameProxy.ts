@@ -4,19 +4,23 @@ import { FactoryHelper } from "../../../../../../Shared/scripts/Helpers/FactoryH
 import { Guid } from "../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../Shared/scripts/Helpers/GuidData";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IDataOneDoc } from "../../../../../../Shared/scripts/Interfaces/Data/IDataOneDoc";
-import { _HindeCoreBase } from "../../../../../../Shared/scripts/LoggableBase";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { CommandToExecuteData } from "../../../../../../Content/scripts/Proxies/CommandToExecuteData";
+import { _BaseScStateProxy } from "./_StateProxy";
+import { _HindeCoreBase } from "../../../../../../Shared/scripts/LoggableBase";
 
-export class _BaseFrameProxy extends _HindeCoreBase {
+export class _BaseFrameProxy extends _BaseScStateProxy {
+  Instantiate() {
+      throw new Error("Method not implemented.");
+  }
   Index: number = -1;
   HTMLIframeElement: HTMLIFrameElement = null;
   Id: GuidData = null;
   DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
-  Discriminator: string = _BaseFrameProxy.name;
-  RecipeBasics: RecipeBasics;
-  Friendly: string = '{unknown friendly}';
+  FrameTypeDiscriminator: string = _BaseFrameProxy.name;
+  
 
   constructor(hindeCore: IHindeCore, iframeElem: HTMLIFrameElement) {
     super(hindeCore);

@@ -53,10 +53,12 @@
     NbSp: RegExp,
     QueryStrSeparatorQuest: RegExp,
     PageType: {
-      Desktop: RegExp
+      Default: RegExp
       Edit: RegExp
       Normal: RegExp
       Preview: RegExp
+      XmlControl: RegExp
+      PackageDesigner: RegExp
     },
   },
   UrlSuffix: {

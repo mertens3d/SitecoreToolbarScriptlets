@@ -32,3 +32,5 @@ node_modules
 /src/Content/scripts/**/*.js.map
 /archives/archive*/**/*
 /archives/AutoBuildArchive*
+/src/HindSiteScUiProxy/scripts/*.js
+/src/HindSiteScUiProxy/scripts/**/*.js

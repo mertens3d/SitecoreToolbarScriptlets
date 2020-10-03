@@ -6,6 +6,9 @@ import { Guid } from "./Guid";
 import { _BaseFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/_BaseFrameProxy";
 import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 import { _HindeCoreBase } from "../LoggableBase";
+import { JQFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/PackageDesignerProxy";
+import { DocumentProxy } from "../Agents/Agents/UrlAgent/DocumentProxy";
+import { ScWindowType } from "../Enums/scWindowType";
 
 export class FactoryHelper extends _HindeCoreBase implements IFactoryHelper {
   SettingsAgent: ISettingsAgent;
@@ -34,6 +37,12 @@ export class FactoryHelper extends _HindeCoreBase implements IFactoryHelper {
     this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
     var toReturn: _BaseFrameProxy = null;
 
+    //let documentProxy = new DocumentProxy(this.HindeCore, iframeElem.contentDocument);
+    //let scWindowType = documentProxy.GetScwindowType();
+
+    //toReturn = new _BaseFrameProxy<scWindowType>(this.HindeCore, iframeElem);
+
+
     if (iframeElem && nickname) {
       var toReturn: _BaseFrameProxy = new _BaseFrameProxy(this.HindeCore, iframeElem);
     } else {
@@ -50,7 +59,7 @@ export class FactoryHelper extends _HindeCoreBase implements IFactoryHelper {
     var toReturn: DTFrameProxy = null;
     if (iframeElem) {
       var toReturn = new DTFrameProxy(this.HindeCore, iframeElem);
-      await toReturn.Instantiate_DTFrameProxy();
+      await toReturn.Instantiate();
     } else {
       this.ErrorHand.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', iframeElem);

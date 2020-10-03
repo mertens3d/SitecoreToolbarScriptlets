@@ -1,17 +1,16 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
 import { scMode } from "../../../Enums/scMode";
 import { ScWindowType } from "../../../Enums/scWindowType";
-import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
+import { IControllerMessageReceivedEvent_Payload } from "../../../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
+import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
 import { SharedConst } from "../../../SharedConst";
 import { GenericUrlAgent } from "./GenericUrlAgent";
-import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
-import { IPopUpBrowserProxy } from "../../../Interfaces/Proxies/IBrowserProxy";
-import { IControllerMessageReceivedEvent_Payload } from "../../../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
 export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
-  constructor(hindeCore: IHindeCore, browserProxy: IPopUpBrowserProxy) {
-    super(hindeCore, browserProxy);
+  constructor(hindeCore: IHindeCore, url: string) {
+    super(hindeCore, url);
   }
 
   private __urlTestAgainstRegex(regexPattern: RegExp, url: string) {
@@ -29,6 +28,17 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
     return this.BuildFullUrlFromParts();
   }
 
+  private GetScWindowtypeXmlControl(testPath: IAbsoluteUrl): ScWindowType {
+    var toReturn: ScWindowType = ScWindowType.Unknown;
+    if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.PackageDesigner, testPath.AbsUrl)
+    ) {
+      toReturn = ScWindowType.PackageDesigner;
+    } else {
+      this.ErrorHand.WarningAndContinue(this.GetScWindowtypeXmlControl.name, 'unhandled XmlControl type');
+    }
+    return toReturn;
+  }
+
   GetScWindowType(): ScWindowType {  //absUrl: AbsoluteUrl
     var toReturn: ScWindowType = ScWindowType.Unknown;
 
@@ -43,8 +53,14 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
       else if (testPath.AbsUrl.toLowerCase().indexOf(SharedConst.Const.UrlSuffix.LaunchPad.toLowerCase()) > -1) {
         toReturn = ScWindowType.Launchpad;
       }
-      else if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.Desktop, testPath.AbsUrl)) {
-        toReturn = ScWindowType.Desktop;
+      else if (
+        this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.Default, testPath.AbsUrl)
+      ) {
+        if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.XmlControl, testPath.AbsUrl)) {
+          toReturn = this.GetScWindowtypeXmlControl(testPath)
+        } else {
+          toReturn = ScWindowType.Desktop;
+        }
       }
       else if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.Preview, testPath.AbsUrl)) {
         toReturn = ScWindowType.Preview;
@@ -55,6 +71,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
       else if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.Normal, testPath.AbsUrl)) {
         toReturn = ScWindowType.Normal;
       }
+
       else {
         toReturn = ScWindowType.Unknown;
       }
