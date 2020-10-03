@@ -14,6 +14,7 @@ import { DefaultStateOfScWindowProxy } from "./Defaults/DefaultStateOfScWindowPr
 import { DefaultStateOfStorageSnapshots } from "./Defaults/DefaultStateOfSnapshots";
 import { DefaultStateOfContentTree } from "./Defaults/DefaultStateOfContentTree";
 import { IStateOfStorageSnapShots } from "../Interfaces/Data/States/IStateOfStorageSnapShots";
+import { StaticHelpers } from "./StaticHelpers";
 
 export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {
@@ -39,6 +40,19 @@ export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
     if (!stateOfStorageSnapShots) {
       stateOfStorageSnapShots = new DefaultStateOfStorageSnapshots();
     }
+
+    let validatedSnapShots: DefaultStateOfScUiProxy[] = [];
+
+    stateOfStorageSnapShots.SnapShots.forEach((snapShot: DefaultStateOfScUiProxy) => {
+      if (!StaticHelpers.IsNullOrUndefined(snapShot)) {
+        validatedSnapShots.push(this.ValidateStateOfScUiProxy(snapShot));
+      } else {
+        this.ErrorHand.WarningAndContinue(this.ValidateStateOfStorageSnapShots.name, 'null snapshot passed in');
+      }
+    });
+
+    stateOfStorageSnapShots.SnapShots = validatedSnapShots;
+
     return stateOfStorageSnapShots;
   }
 

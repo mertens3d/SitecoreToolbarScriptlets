@@ -19,7 +19,7 @@ export class InterruptAgent implements IInterruptAgent {
   private CancelRequestedFlag: boolean = false;
   private IdleNotificationSent: boolean = false;
   private LastActivityTime: number;
-  private MinElapsedBeforeIsIdleMs: number = 5000;
+  private MinElapsedBeforeIsIdleMs: number = 3000;
   constructor(logger: LoggerAgent, errorHand: IErrorHandlerAgent) {
     this.Logger = logger;
     this.ErrorHand = errorHand;

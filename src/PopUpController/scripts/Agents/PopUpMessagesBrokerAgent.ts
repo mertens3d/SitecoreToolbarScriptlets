@@ -56,7 +56,7 @@ export class MessageBroker_PopUp extends _HindeCoreBase {
         let messageControllerToContent: IMessageControllerToContent = this.BuildMessageToContent(msgFlag, stateOfPopUp);
 
         this.SendMessageToContentAsync(messageControllerToContent)
-          .then((replyMessagePayload: IControllerMessageReceivedEvent_Payload) => this.HandleReply(replyMessagePayload))
+          .then((controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) => this.HandleReply(controllerMessageReceivedEvent_Payload))
           .catch((err) => this.ErrorHand.ErrorAndThrow(this.SendCommandToContentAsync.name, err));
       } else {
         this.ErrorHand.ErrorAndThrow(this.SendCommandToContentAsync.name, 'null check');
@@ -67,14 +67,23 @@ export class MessageBroker_PopUp extends _HindeCoreBase {
     this.Logger.FuncEnd(this.SendCommandToContentAsync.name);
   }
 
-  private HandleReply(replyMessagePayload: IControllerMessageReceivedEvent_Payload) {
-    if (!StaticHelpers.IsNullOrUndefined(replyMessagePayload)) {
-      this.ContentReplyReceivedEvent_Subject.NotifyObserversAsync(replyMessagePayload);
+  private HandleReply(controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
+
+    if (!StaticHelpers.IsNullOrUndefined(controllerMessageReceivedEvent_Payload)) {
+      this.ContentReplyReceivedEvent_Subject.NotifyObserversAsync(controllerMessageReceivedEvent_Payload);
     } else {
       this.ErrorHand.WarningAndContinue(this.HandleReply.name, 'null payload. Not notifying ')
     }
 
   }
+    //ValidateControllerMessageReceivedEvent_Payload(controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
+    //  let toReturn: IControllerMessageReceivedEvent_Payload = {
+    //    ErrorStack: null,
+    //    LastReq: null,
+    //  }
+
+
+    //}
 
   async SendMessageToContentAsync(messageFromController: IMessageControllerToContent): Promise<IControllerMessageReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {

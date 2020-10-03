@@ -373,7 +373,7 @@ export class UiModulesManager extends _HindeCoreBase {
     this.Logger.FuncEnd(this.OnRefreshUiUIManagerFromSnapShotSelect.name);
   }
 
-  async UpdateUiFromContentReply(stateOfLiveHindSite: IStateOfScUiProxy, stateOfStorageSnapShots: IStateOfStorageSnapShots) {
+  async UpdateUiFromContentReply(stateOfScUiProxy: IStateOfScUiProxy, stateOfStorageSnapShots: IStateOfStorageSnapShots) {
     this.Logger.FuncStart(this.UpdateUiFromContentReply.name);
 
     //if (StaticHelpers.IsNullOrUndefined(this.LastKnownSelectSnapshotId)) {
@@ -381,7 +381,7 @@ export class UiModulesManager extends _HindeCoreBase {
     this.LastKnownSelectSnapshotNickname = this.FacetModuleSelectSnapShots.GetSelectSnapshotNickname();
     //}
 
-    this.LastKnownStateOfLiveHindSite = stateOfLiveHindSite;
+    this.LastKnownStateOfLiveHindSite = stateOfScUiProxy;
     this.LastKnownStateOfStorageSnapShots = stateOfStorageSnapShots;
 
     this.UpdateUiCommon();

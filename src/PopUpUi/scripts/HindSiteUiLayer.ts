@@ -60,13 +60,13 @@ export namespace HindSiteUiLayer {
       return this.UiEventMan.GetStateOfPopUp();
     }
 
-    OnContentReplyReceived(dataContentReplyReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
+    OnContentReplyReceived(controllerMsgReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
       this.Logger.FuncStart(this.OnContentReplyReceived.name);
 
       //calling twice as a workaround to make sure snapshot select is populated before visibility tests are run
       //todo - fix
-      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfScUiProxy_Live, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
-      this.UiModulesMan.UpdateUiFromContentReply(dataContentReplyReceivedEvent_Payload.StateOfScUiProxy_Live, dataContentReplyReceivedEvent_Payload.StateOfStorageSnapShots);
+      this.UiModulesMan.UpdateUiFromContentReply(controllerMsgReceivedEvent_Payload.StateOfScUiProxy_Live, controllerMsgReceivedEvent_Payload.StateOfStorageSnapShots);
+      this.UiModulesMan.UpdateUiFromContentReply(controllerMsgReceivedEvent_Payload.StateOfScUiProxy_Live, controllerMsgReceivedEvent_Payload.StateOfStorageSnapShots);
       this.Logger.FuncEnd(this.OnContentReplyReceived.name);
 
 
