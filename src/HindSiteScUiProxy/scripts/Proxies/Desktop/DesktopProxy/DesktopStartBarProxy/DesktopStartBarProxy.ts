@@ -40,6 +40,7 @@ export class DTStartBarProxy extends _HindeCoreBase {
   async TriggerRedButton(): Promise<void> {
     try {
       await this.RecipeBasics.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, this.AssociatedDoc)
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.TriggerRedButton.name, err));
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.TriggerRedButton.name, err);
     }
@@ -74,6 +75,7 @@ export class DTStartBarProxy extends _HindeCoreBase {
 
   OnTreeMutationEvent_DesktopStartBarProxy(dTAreaProxyMutationEvent_Payload: IDTAreaProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.OnTreeMutationEvent_DesktopStartBarProxy.name);
+    this.TaskMonitor.AsyncTaskStarted(this.OnTreeMutationEvent_DesktopStartBarProxy.name);
     // at this point we have a new active node (or some other change event)
 
     if (dTAreaProxyMutationEvent_Payload) {
@@ -117,6 +119,7 @@ export class DTStartBarProxy extends _HindeCoreBase {
       this.ErrorHand.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Null payload');
     }
 
+    this.TaskMonitor.AsyncTaskCompleted(this.OnTreeMutationEvent_DesktopStartBarProxy.name);
     this.Logger.FuncEnd(this.OnTreeMutationEvent_DesktopStartBarProxy.name);
   }
 }

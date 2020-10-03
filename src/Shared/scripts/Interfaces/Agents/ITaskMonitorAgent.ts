@@ -5,6 +5,7 @@ export interface ITaskMonitorAgent {
 }
 
 export interface IInterruptAgent {
+  IsTaskListEmpty(): boolean;
   AsyncTaskCompleted(name: string);
   AsyncTaskStarted(name: string);
   CancelRequested();

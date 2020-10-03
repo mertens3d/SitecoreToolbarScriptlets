@@ -69,6 +69,9 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopPopUpMenuProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\ITaskListMutationEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\TaskListMutationEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\TaskListMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DTAreaProxyMutationEvent\DTAreaProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DTAreaProxyMutationEvent\DTAreaProxyMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\IDesktopProxyMutationEvent_Payload.ts" />
@@ -77,6 +80,9 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\NativeClassNameChangeEvent\INativeClassNameChangeEvent_Payload.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\NativeClassNameChangeEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\TreeMutationEvent\TreeMutationEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\ErrorHandlerAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\InterruptAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\TaskMutationType.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\CommandHandlerDataForContent\ApiCommandPayload.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\CommandHandlerDataForContent\CommandPayloadForInternal.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultFriendly.ts" />
@@ -120,8 +126,13 @@
     <TypeScriptCompile Include="src\Content\scripts\Recipes\RecipeSaveState.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Recipes\RecipeToggleFavorite.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Helpers\FrameHelper.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\Discriminator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\ISnapShotsAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IDiscriminator.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IErrorHandlerAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHindeCore.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\InitReport_DTAreaProxy.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ITaskMonitorAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IScContentTreeNodeCoord.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IStateOfDTProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IStateOfScContentTreeNodeFlat.ts" />
@@ -299,6 +310,9 @@
     <None Include="src\Content\css\vars.scss" />
     <None Include="src\Content\css\_contentTree.scss" />
     <None Include="src\Content\css\_header.scss" />
+    <None Include="src\HindSiteScUiProxy\scripts\Managers\SitecoreUiManager\SitecoreUiManager.ts.vsspell">
+      <DependentUpon>SitecoreUiManager.ts</DependentUpon>
+    </None>
     <None Include="src\PopUpUi\css\_partials\ContentLevel.scss" />
     <None Include="src\PopUpUi\css\_partials\global.scss" />
     <None Include="src\PopUpUi\css\_partials\header.scss" />

@@ -11,6 +11,12 @@ import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackData
 import { LogWriterBuffer } from "./LogWriterBuffer";
 import { LoggerTimer } from "./LoggerTimer";
 
+
+export enum StyleMode {
+  Default = 0,
+  Highlight =1
+}
+
 export class LoggerAgent implements ILoggerAgent {
   private MaxIndent: number = 20;
   private AllLogWriters: ILoggerWriter[] = [];
@@ -20,12 +26,13 @@ export class LoggerAgent implements ILoggerAgent {
   private HasWriters: boolean;
   Timer: LoggerTimer;
   UseTimeStamp: boolean = true;
+  private styleBgYellow: string = "[43m";
   private styleEsc: string = "\x1b";
+  private styleFgBlue: string = "[34m";
+  private styleFgGreen: string = "[32m";
+  private styleFgMagenta: string = "[35m";
   private styleFgRed: string = "[31m";
   private styleReset: string = "[0m";
-  private styleGreen: string = "[32m";
-  private styleFgMagenta: string = "[35m";
-  private styleFgBlue: string = "[34m";
   private AltColor: string;
   readonly Discriminator = Discriminator.ILoggerAgent;
 
@@ -178,8 +185,15 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log(formattedText);
   }
 
+  LogImportant(text) {
+    text = this.StyleFormat(this.styleBgYellow, text);
+    this.Log(text);
+  }
   async Log(text, optionalValue: string = '', hasPrefix = false) {
     if (this.HasWriters) {
+
+    
+
       var indent = '  ';
 
       let indentDepth = this.__callDepth % this.MaxIndent;
@@ -255,7 +269,7 @@ export class LoggerAgent implements ILoggerAgent {
       textOrFunc = textOrFunc + ' : ' + optionalValue;
     }
 
-    let formatted = this.StyleFormat(this.styleGreen, textOrFunc);
+    let formatted = this.StyleFormat(this.styleFgGreen, textOrFunc);
 
     this.Log(formatted, '', true);
     this.__callDepth++;

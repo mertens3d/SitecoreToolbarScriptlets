@@ -136,7 +136,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     });
   }
 
-  WaitForTimePeriod(timeToWaitMs: number, friendly: string): any {
+  WaitForTimePeriod(timeToWaitMs: number, friendly: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForTimePeriod.name, friendly);
       var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForTimePeriod.name, true);

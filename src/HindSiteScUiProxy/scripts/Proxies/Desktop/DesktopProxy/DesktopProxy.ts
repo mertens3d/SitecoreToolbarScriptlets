@@ -81,11 +81,13 @@ export class DesktopProxy extends _HindeCoreBase {
       this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
 
       await this.DTStartBarProxy.TriggerRedButton()
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddContentEditorAsync.name))
         .then(() => this.DTPopUpMenuProxy.RecipeAddNewContentEditorToDesktop(this.AssociatedDoc))
         // sitecore briefly pops up a div inside of iframe jqueryModalDialogsFrame with a class of ui-widget-overlay ui-front that appears to block mouse clicks
         // this pause is intended to allow time for it to finish its work and be removed.
         // at some point this could be modified to wait for a shorter amount of time, and then look to make sure the div is not present
-        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddContentEditorAsync.name)) //ui-widget-overlay ui-front
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddContentEditorAsync.name))//ui-widget-overlay ui-front
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddContentEditorAsync.name))
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err));
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err);
@@ -134,6 +136,7 @@ export class DesktopProxy extends _HindeCoreBase {
 
   async SetStateOfDesktopAsync(stateOfDesktop: IStateOfDesktop): Promise<void> {
     this.Logger.FuncStart(this.SetStateOfDesktopAsync.name);
+    this.TaskMonitor.AsyncTaskStarted(this.SetStateOfDesktopAsync.name);
 
     try {
       let promAr: Promise<void>[] = [];
@@ -151,6 +154,7 @@ export class DesktopProxy extends _HindeCoreBase {
       this.ErrorHand.ErrorAndThrow(this.SetStateOfDesktopAsync.name, err);
     }
 
+    this.TaskMonitor.AsyncTaskCompleted(this.SetStateOfDesktopAsync.name);
     this.Logger.FuncEnd(this.SetStateOfDesktopAsync.name);
   }
 }

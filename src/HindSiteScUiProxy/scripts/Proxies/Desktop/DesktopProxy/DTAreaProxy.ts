@@ -132,7 +132,6 @@ export class DTAreaProxy extends _HindeCoreBase {
     let queuedState: IStateOfDTFrame = this.IncomingSetStateList.shift();
     if (queuedState) {
       await dtFrameProxy.SetStateOfDTFrame(queuedState);
-      
     } else {
       this.Logger.Log('no queued states');
     }
@@ -153,21 +152,13 @@ export class DTAreaProxy extends _HindeCoreBase {
 
   SetStateOfDTArea(StateOfDTArea: IStateOfDTArea): Promise<number> {
     return new Promise(async (resolve, reject) => {
-
       this.Logger.FuncStart(this.SetStateOfDTArea.name);
       let contentEditorCountNeeded: number = 0;
 
-     
-
       if (StateOfDTArea) {
         if (!StaticHelpers.IsNullOrUndefined([this.AssociatedDoc])) {
-
           this.AddToIncomingSetStateList(StateOfDTArea);
           contentEditorCountNeeded = StateOfDTArea.StateOfDTFrames.length;
-
-          
-
-       
         } else {
           reject(this.SetStateOfDTArea.name + ' bad data');
         }
@@ -176,8 +167,6 @@ export class DTAreaProxy extends _HindeCoreBase {
       }
 
       resolve(contentEditorCountNeeded);
-
-
 
       this.Logger.FuncEnd(this.SetStateOfDTArea.name);
     });

@@ -74,9 +74,6 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
 
     let text: string = StaticHelpers.BufferString(stateOfContentTree.ActiveNodeFlat.Friendly, ContentConst.Const.Numbers.Desktop.MaxToolBarNameChars, BufferChar.space, BufferDirection.right);
 
-    this.Logger.LogVal('iconSrc', itemIconSource);
-    this.Logger.LogVal('mainIconSrc', mainIconSrc);
-
     if (itemIconSource.length > 0) {
       let newItemIconNode: HTMLImageElement = this.DesignItemIconNode(itemIconSource)
       let newMainIconNode: HTMLImageElement = this.DesignMainIconNode(mainIconSrc);

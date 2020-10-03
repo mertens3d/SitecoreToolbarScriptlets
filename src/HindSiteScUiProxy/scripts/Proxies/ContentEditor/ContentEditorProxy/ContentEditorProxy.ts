@@ -73,6 +73,7 @@ export class ContentEditorProxy extends _HindeCoreBase {
 
   CallBackOnContentEditorProxyTreeMutationEventAsync(treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
+    this.TaskMonitor.AsyncTaskStarted(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
     let contentEditorProxyMutationEvent_Payload: IContentEditorProxyMutationEvent_Payload = {
       TreeMutationEvent_Payload: treeMutationEvent_Payload,
     }
@@ -80,6 +81,7 @@ export class ContentEditorProxy extends _HindeCoreBase {
     if (this.ContentEditorProxyMutationEvent_Subject) {
       this.ContentEditorProxyMutationEvent_Subject.NotifyObserversAsync(contentEditorProxyMutationEvent_Payload);
     }
+    this.TaskMonitor.AsyncTaskCompleted(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
     this.Logger.FuncEnd(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
   }
   TriggerActiveNodeChangeEvent() {

@@ -6,7 +6,7 @@ import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
 import { _HindeCoreBase } from "../../../LoggableBase";
 import { TaskListMutationEvent_Observer } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/TaskListMutationEvent_Observer";
 import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/ITaskListMutationEvent_Payload";
-import { TaskMutationType } from "../LoggerAgent/InterruptAgent";
+import { TaskMutationType } from "../LoggerAgent/TaskMutationType";
 
 export class ToastAgent extends _HindeCoreBase implements IToastAgent {
   private classSlideUp: string = 'slide-up';
@@ -22,6 +22,8 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
   private FlagTextDiv: HTMLDivElement;
   private TaskMutationEvent_Observer: TaskListMutationEvent_Observer;
 
+  private TimeStampOfLastCompletedAllTask: number = -1;
+
   constructor(hindeCore: IHindeCore, targetDoc: Document) {
     super(hindeCore);
     this.TargetDoc = targetDoc;
@@ -34,7 +36,26 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
   }
 
   CallBackOnTaskListMutationEvent(payload: ITaskListMutationEvent_Payload) {
-    alert(TaskMutationType[payload.MutationType]);
+    if (payload.MutationType === TaskMutationType.TasksHaveGoneIdle) {
+      //alert('Task appears to be complete ' + payload.flagCount + ' : ' + payload.TotalTaskCount);
+
+      this.LowerPerpetualToast('');
+
+      //let nowTimeStamp: number = new Date().getTime();
+      //if (this.TimeStampOfLastCompletedAllTask > -1 ) {
+      //  if (this.TaskMonitor.IsTaskListEmpty() ) {
+      //    let timeSinceLast = nowTimeStamp - this.TimeStampOfLastCompletedAllTask;
+      //    if (timeSinceLast > 5000) {
+
+
+      //    }
+      //  }
+      //}
+
+      //this.TimeStampOfLastCompletedAllTask = nowTimeStamp;
+    } else {
+      this.SetSliderDivText(payload.CompletedCount + ':' + payload.TotalTaskCount);//+ '  ' + Math.ceil((payload.CompletedCount / payload.TotalTaskCount) * 100) +  '% ')
+    }
   }
 
   async LowerPerpetualToast(message: string): Promise<void> {
@@ -101,7 +122,7 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
       await setTimeout(async function () {
         self.FlagSlider.classList.remove(self.classSlideUp);
         self.FlagSlider.classList.add(self.classSlideDown);
-      }, 3000);
+      }, 1000);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.LowerToastA.name, err);
     }

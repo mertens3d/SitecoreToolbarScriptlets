@@ -2,6 +2,7 @@
 import { GuidData } from "../../Helpers/GuidData";
 import { IHindeCore } from "./IHindeCore";
 import { IDiscriminator } from "./IDiscriminator";
+import { StyleMode } from "../../Agents/Agents/LoggerAgent/LoggerAgent";
 
 export interface ILoggerAgent extends IDiscriminator {
   FlushBuffer();
@@ -22,9 +23,13 @@ export interface ILoggerAgent extends IDiscriminator {
   CTORStart(text: string): void;
   IsNotNullOrUndefinedBool(title: string, dataToCheck: any);
   IsNullOrUndefined(dataToCheck: any): string;
+
+  LogImportant(text);
   Log(text);
   Log(text, optionalValue: string);
   Log(text, optionalValue: string, hasPrefix: boolean);
+
+
   LogAsJsonPretty(texValName: string, jsonObj: any);
   LogVal(textValName: string, textVal: string | boolean | Boolean | number | GuidData): any;
   MarkerA();

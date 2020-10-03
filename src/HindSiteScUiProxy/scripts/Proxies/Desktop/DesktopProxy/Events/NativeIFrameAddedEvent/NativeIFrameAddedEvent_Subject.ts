@@ -23,6 +23,7 @@ export class NativeIFrameAddedEvent_Subject extends HindeSiteEvent_Subject<INati
 
   private CallBackOnNativeMutation(mutations: MutationRecord[]) {
     this.Logger.FuncStart(this.CallBackOnNativeMutation.name);
+  
     if (this.HasObservers()) {
       mutations.forEach((mutation, index) => {
         this.Logger.Log('processing mutation ' + (index + 1) + ':' + mutations.length);

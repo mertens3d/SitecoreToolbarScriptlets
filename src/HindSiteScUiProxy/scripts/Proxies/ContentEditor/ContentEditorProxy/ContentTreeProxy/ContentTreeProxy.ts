@@ -73,6 +73,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   private CallBackOnNativeClassNameChangeEventAsync(notUsed: INativeClassNameChangeEvent_Payload) {
     this.Logger.FuncStart(this.CallBackOnNativeClassNameChangeEventAsync.name);
+    this.TaskMonitor.AsyncTaskStarted(this.CallBackOnNativeClassNameChangeEventAsync.name);
     if (this.TreeMutationEvent_Subject) {
       //let stateOfContentTreeNodeDeep: IStateOfScContentTreeNodeDeep = this.GetStateOfContentTreeNodeDeep();
 
@@ -87,6 +88,8 @@ export class ContentTreeProxy extends _HindeCoreBase {
         .then(() => this.Logger.Log(this.CallBackOnNativeClassNameChangeEventAsync.name + ' completed'))
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.CallBackOnNativeClassNameChangeEventAsync.name, err));
     }
+
+    this.TaskMonitor.AsyncTaskCompleted(this.CallBackOnNativeClassNameChangeEventAsync.name);
     this.Logger.FuncEnd(this.CallBackOnNativeClassNameChangeEventAsync.name);
   }
 
@@ -148,6 +151,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   async SetStateOfContentTree(currentNodeData: IStateOfScContentTreeNodeDeep): Promise<void> {
     this.Logger.FuncStart(this.SetStateOfContentTree.name);
+    this.TaskMonitor.AsyncTaskStarted(this.SetStateOfContentTree.name);
     try {
       this.TreeMutationEvent_Subject.DisableNotifications();
 
@@ -162,6 +166,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
     }
 
     this.TreeMutationEvent_Subject.EnableNotifications();
+    this.TaskMonitor.AsyncTaskCompleted(this.SetStateOfContentTree.name);
     this.Logger.FuncEnd(this.SetStateOfContentTree.name);
   }
 
