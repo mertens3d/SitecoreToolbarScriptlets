@@ -9,8 +9,8 @@ import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
 
 export class DTStartBarProxy extends _HindeCoreBase {
+
   private __statBarElem: HTMLElement;
-  private RecipeBasics: RecipeBasics;
   private AssociatedDoc: ScDocumentProxy;
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
 
@@ -22,8 +22,15 @@ export class DTStartBarProxy extends _HindeCoreBase {
   }
 
   public Instantiate_DTStartBarProxy() {
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
+    this.Logger.FuncStart(this.Instantiate_DTStartBarProxy.name, DTStartBarProxy.name);
+    this.Logger.FuncEnd(this.Instantiate_DTStartBarProxy.name, DTStartBarProxy.name);
   }
+
+  WireEvent() {
+    this.Logger.FuncStart(this.WireEvent.name, DTStartBarProxy.name);
+    this.Logger.FuncEnd(this.WireEvent.name, DTStartBarProxy.name);
+  }
+
 
   GetStartBarButtonById(targetId: string) {
     return this.AssociatedDoc.querySelector('[id=' + targetId + ']');

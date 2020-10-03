@@ -2,28 +2,27 @@ import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Def
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReport_DesktopProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy";
-import { ScDocumentProxy } from "../../ScDocumentProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
+import { ScDocumentProxy } from "../../ScDocumentProxy";
 import { DTPopUpMenuProxy } from "./DesktopPopUpMenuProxy";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
-import { DesktopProxyMutationEvent_Observer } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Observer";
 import { DesktopProxyMutationEvent_Subject } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 
 export class DesktopProxy extends _HindeCoreBase {
+  //DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
   private AssociatedDoc: ScDocumentProxy;
+  private DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
   private DTAreaProxy: DTAreaProxy;
+  private DTPopUpMenuProxy: DTPopUpMenuProxy;
   private DTStartBarProxy: DTStartBarProxy;
   private RecipeBasics: RecipeBasics;
-  DTPopUpMenuProxy: DTPopUpMenuProxy;
-  DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
-  DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
-  DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
+  public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
 
   constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentProxy) {
     super(hindeCore);
@@ -44,18 +43,16 @@ export class DesktopProxy extends _HindeCoreBase {
 
       let initReportDesktopProxy = new InitReport_DesktopProxy();
 
-      this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
-      this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.AssociatedDoc, this);
-
-      this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject(this.HindeCore);
-
-      await this.DTAreaProxy.Instantiate_DTAreaProxy();
+      this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.AssociatedDoc);
+      this.DTAreaProxy.Instantiate();
 
       this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.AssociatedDoc);
+      this.DTStartBarProxy.Instantiate_DTStartBarProxy();
+
+      this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
+      this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject(this.HindeCore);
 
       this.RecipeBasics = new RecipeBasics(this.HindeCore);
-
-      await this.DTStartBarProxy.Instantiate_DTStartBarProxy();
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.Instantiate_DesktopProxy.name, err);
     }
@@ -65,8 +62,12 @@ export class DesktopProxy extends _HindeCoreBase {
 
   WireEvents_DesktopProxy() {
     this.Logger.FuncStart(this.WireEvents_DesktopProxy.name);
-    this.DTAreaProxy.WireEvents_DTAreaProxy();
+
+    this.DTAreaProxy.WireEvents();
+    this.DTStartBarProxy.WireEvent();
+
     this.DTAreaProxy.DTAreaProxyMutationEvent_Subject.RegisterObserver(this.DTAreaProxyMutationEvent_Observer);
+
     this.Logger.FuncEnd(this.WireEvents_DesktopProxy.name);
   }
 
@@ -123,7 +124,7 @@ export class DesktopProxy extends _HindeCoreBase {
 
       let toReturnDesktopState: IStateOfDesktop = new DefaultStateOfDesktop();
 
-      await this.DTAreaProxy.GetStateOfDTAreaProxy()
+      await this.DTAreaProxy.GetState()
         .then((stateOfDTAreaProxy: IStateOfDTArea) => toReturnDesktopState.StateOfDTArea = stateOfDTAreaProxy)
         .then(() => resolve(toReturnDesktopState))
         .catch((err) => reject(this.GetStateOfDesktop.name + ' | ' + err));

@@ -1,10 +1,10 @@
 ﻿import { LoggerConsoleWriter } from "../../Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { GuidData } from "../../Helpers/GuidData";
-import { IHindeCore } from "./IHindeCore";
 import { IDiscriminator } from "./IDiscriminator";
-import { StyleMode } from "../../Agents/Agents/LoggerAgent/LoggerAgent";
+import { IHindeCore } from "./IHindeCore";
 
 export interface ILoggerAgent extends IDiscriminator {
+  Instantiate();
   FlushBuffer();
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   AddWriter(arg0: LoggerConsoleWriter);

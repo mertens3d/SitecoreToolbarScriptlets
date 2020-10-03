@@ -5,51 +5,55 @@ import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
 import { ReadyStateNAB } from "../../../Shared/scripts/Enums/ReadyState";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
-import { NativeScIframeProxy } from "./NativeScIframeProxy";
+import { NativeIframeProxy } from "./NativeScIframeProxy";
 import { IScVerSpec } from "../../../Shared/scripts/Interfaces/IScVerSpec";
+import { NativeIFrameAddRemoveEvent_Subject } from "./Desktop/DesktopProxy/Events/NativeIFrameAddedEvent/NativeIFrameAddedEvent_Subject";
 
 export class NativeDocumentProxy extends _HindeCoreBase {
   readonly DocId: GuidData;
-  protected Document: Document;
+  protected NativeDocument: Document;
   protected NativeDoc: Document;
+  private NativeIFrameAddedEvent_Subject: NativeIFrameAddRemoveEvent_Subject;
 
   constructor(hindeCore: IHindeCore, document: Document) {
     super(hindeCore);
-    this.Document = document;
+    this.NativeDocument = document;
     this.NativeDoc = document;
     this.DocId = Guid.NewRandomGuid();
   }
 
   protected Instantiate_BaseNativeDocumentProxy() {
     this.Logger.FuncStart(this.Instantiate_BaseNativeDocumentProxy.name, NativeDocumentProxy.name);
-    this.Logger.FuncEnd(this.Instantiate_BaseNativeDocumentProxy.name, NativeDocumentProxy.name);
 
+    this.NativeIFrameAddedEvent_Subject = new NativeIFrameAddRemoveEvent_Subject(this.HindeCore, this.NativeDocument);
+
+    this.Logger.FuncEnd(this.Instantiate_BaseNativeDocumentProxy.name, NativeDocumentProxy.name);
   }
 
   getElementById(idStr: string): HTMLElement {
-    return this.Document.getElementById(idStr);
+    return this.NativeDocument.getElementById(idStr);
   }
   querySelector(selector: string): HTMLElement {
-    return this.Document.querySelector(selector);
+    return this.NativeDocument.querySelector(selector);
   }
   GetContentDoc(): Document {
-    return this.Document;
+    return this.NativeDocument;
   }
 
-  GetIFramesFromDataOneDoc(): NativeScIframeProxy[] {
-    let toReturnIframeAr: NativeScIframeProxy[] = [];
+  GetIFramesFromDataOneDoc(): NativeIframeProxy[] {
+    let toReturnIframeAr: NativeIframeProxy[] = [];
 
-    this.ErrorHand.ThrowIfNullOrUndefined(this.GetIFramesFromDataOneDoc.name, [this.Document]);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.GetIFramesFromDataOneDoc.name, [this.NativeDocument]);
 
-    var queryResults = this.Document.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
+    var queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
     if (!queryResults) {
-      queryResults = this.Document.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
+      queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
     }
 
     if (queryResults) {
       for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
-        var iframeElem: NativeScIframeProxy = new NativeScIframeProxy(this.HindeCore, <HTMLIFrameElement>queryResults[ifrIdx]);
+        var iframeElem: NativeIframeProxy = new NativeIframeProxy(this.HindeCore, <HTMLIFrameElement>queryResults[ifrIdx]);
         if (iframeElem) {
           toReturnIframeAr.push(iframeElem);
         }
@@ -123,10 +127,10 @@ export class NativeDocumentProxy extends _HindeCoreBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNAB_NativeDocument.name, friendly);
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_NativeDocument.name, this.Document);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_NativeDocument.name, this.NativeDocument);
 
       var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForCompleteNAB_NativeDocument.name, false);
-      let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, this.Document);
+      let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, this.NativeDocument);
 
       while (iterationJr.DecrementAndKeepGoing() && !readyStateNAB.IsCompleteNAB()) {
         readyStateNAB.LogDebugValues();

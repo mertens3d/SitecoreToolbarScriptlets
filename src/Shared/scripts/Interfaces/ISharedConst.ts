@@ -16,6 +16,9 @@
   },
   KeyWords: {
     Html: {
+      Tags: {
+        Body: string,
+      }
       beforeend: InsertPosition,
       optgroup: string,
       Checkbox: string,

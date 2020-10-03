@@ -5,7 +5,7 @@ import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 import { ScDocumentProxy } from "../Proxies/ScDocumentProxy";
-import { NativeScIframeProxy } from "../Proxies/NativeScIframeProxy";
+import { NativeIframeProxy } from "../Proxies/NativeScIframeProxy";
 
 export class FrameHelper extends _HindeCoreBase {
   private factoryHelper: FactoryHelper;
@@ -21,7 +21,7 @@ export class FrameHelper extends _HindeCoreBase {
     return new Promise(async (resolve, reject) => {
       let friendly = 'desktop Iframe_' + ifrIdx;
 
-      let dTFrameProxy = new NativeScIframeProxy(this.HindeCore, iframeElem);
+      let dTFrameProxy = new NativeIframeProxy(this.HindeCore, iframeElem);
       dTFrameProxy.Instantiate();
 
       await dTFrameProxy.WaitForCompleteNABHtmlIframeElement( friendly)
@@ -36,7 +36,7 @@ export class FrameHelper extends _HindeCoreBase {
     });
   }
 
-  async GetIFrameAsDTFrameProxy(nativeIframeProxy: NativeScIframeProxy): Promise<DTFrameProxy> {
+  async GetIFrameAsDTFrameProxy(nativeIframeProxy: NativeIframeProxy): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
 
       let dTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
@@ -55,7 +55,7 @@ export class FrameHelper extends _HindeCoreBase {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let nativeIframeProxies: NativeScIframeProxy[] = dataOneDoc.GetIFramesFromDataOneDoc();
+      let nativeIframeProxies: NativeIframeProxy[] = dataOneDoc.GetIFramesFromDataOneDoc();
 
       let promiseAr: Promise<DTFrameProxy>[] = [];
 
@@ -82,7 +82,7 @@ export class FrameHelper extends _HindeCoreBase {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let NativeScIframeProxyAr: NativeScIframeProxy[]= targetDoc.GetIFramesFromDataOneDoc();
+      let NativeScIframeProxyAr: NativeIframeProxy[]= targetDoc.GetIFramesFromDataOneDoc();
 
       //if (iframeAr) {
       //  iframeAr.forEach(async (iframeElem: HTMLIFrameElement, ifrIdx) => {

@@ -158,7 +158,7 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
   }
 
   TestCancelCallback() {
-    this.TaskMonitor.CancelRequested();
+    this.TaskMonitor.RequestCancel();
   }
 
   private CreateCancelButton(): void {

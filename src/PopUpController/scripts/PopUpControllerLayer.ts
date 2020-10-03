@@ -1,6 +1,6 @@
 ﻿import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
 import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
-import { InterruptAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/InterruptAgent";
+import { TaskMonitor } from "../../Shared/scripts/Agents/Agents/LoggerAgent/TaskMonitor";
 import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/ErrorHandlerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
@@ -46,7 +46,7 @@ class PopUpControllerLayer {
   private SettingsAgent: ISettingsAgent;
   private UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
   private UiLayer: IHindSiteUiLayer;
-  private  Interrupter: InterruptAgent;
+  private  TaskMonitor: TaskMonitor;
 
   public async Startup() {
     try {
@@ -66,13 +66,14 @@ class PopUpControllerLayer {
 
   private Preamble_SettingsAndLogger() {
     this.Logger = new LoggerAgent();
-    this.ErrorHand = new ErrorHandlerAgent();
-    this.Interrupter = new InterruptAgent(this.Logger, this.ErrorHand);
+    this.TaskMonitor = new TaskMonitor(this.Logger);
+    this.ErrorHand = new ErrorHandlerAgent(this.TaskMonitor);
+    this.TaskMonitor.IntroduceErrorHand(this.ErrorHand);
 
     this.HindeCore = {
       Logger: this.Logger,
       ErrorHand: this.ErrorHand,
-      TaskMonitor: this.Interrupter,
+      TaskMonitor: this.TaskMonitor,
       Discriminator: Discriminator.IHindeCore
     };
 

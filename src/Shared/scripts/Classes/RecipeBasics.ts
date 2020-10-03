@@ -10,7 +10,7 @@ import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { _HindeCoreBase } from '../LoggableBase';
 import { PromiseResult } from "./PromiseResult";
-import { NativeScIframeProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/NativeScIframeProxy";
+import { NativeIframeProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/NativeScIframeProxy";
 
 export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
   constructor(hindeCore: IHindeCore) {

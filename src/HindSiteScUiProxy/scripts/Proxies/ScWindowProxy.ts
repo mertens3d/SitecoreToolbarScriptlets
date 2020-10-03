@@ -123,7 +123,7 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
       }
 
       if (this.ScDocumentProxy.GetScWindowType() === ScWindowType.ContentEditor) {
-        await this.ContentEditorProxy.GetStateOfContentEditorProxy()
+        await this.ContentEditorProxy.GetState()
           .then((stateOfContentEditorProxy: IStateOfContentEditor) => toReturn.StateOfContentEditor = stateOfContentEditorProxy)
           .then(() => resolve(toReturn))
           .catch((err) => reject(this.GetStates.name + ' | ' + err));
@@ -164,7 +164,7 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
           }
         }
         else if (dataToRestore.Meta.WindowType === ScWindowType.ContentEditor) {
-          await this.ContentEditorProxy.SetStateOfContentEditorAsync(dataToRestore.StateOfScWindow.StateOfContentEditor)
+          await this.ContentEditorProxy.SetState(dataToRestore.StateOfScWindow.StateOfContentEditor)
             .then(() => resolve())
             .catch((err) => reject(err));
         }

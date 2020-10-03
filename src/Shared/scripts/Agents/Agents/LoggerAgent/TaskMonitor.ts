@@ -1,15 +1,13 @@
-﻿import { IInterruptAgent, ITaskMonitorAgent } from "../../../Interfaces/Agents/ITaskMonitorAgent";
+﻿import { IInterruptAgent } from "../../../Interfaces/Agents/ITaskMonitorAgent";
 import { TaskListMutationEvent_Subject } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/TaskListMutationEvent_Subject";
 import { LoggerAgent } from "./LoggerAgent";
 import { IErrorHandlerAgent } from "../../../Interfaces/Agents/IErrorHandlerAgent";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/ITaskListMutationEvent_Payload";
 import { TaskMutationType } from "./TaskMutationType";
+import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
 
-export class TaskMonitor implements ITaskMonitorAgent {
-}
-
-export class InterruptAgent implements IInterruptAgent {
+export class TaskMonitor implements IInterruptAgent {
   private TaskBucketStarted: string[] = [];
   private TaskBucketCompleted: string[] = [];
   private Logger: ILoggerAgent;
@@ -20,11 +18,23 @@ export class InterruptAgent implements IInterruptAgent {
   private IdleNotificationSent: boolean = false;
   private LastActivityTime: number;
   private MinElapsedBeforeIsIdleMs: number = 3000;
-  constructor(logger: LoggerAgent, errorHand: IErrorHandlerAgent) {
-    this.Logger = logger;
-    this.ErrorHand = errorHand;
+  Discriminator = Discriminator.TaskMonitor;
 
-    this.TaskMutationEvent_Subject = new TaskListMutationEvent_Subject(this.Logger, this.ErrorHand, InterruptAgent.name);
+  constructor(logger: ILoggerAgent) {
+    this.Logger = logger;
+  }
+
+  IntroduceErrorHand(errorHand: IErrorHandlerAgent) {
+
+    this.ErrorHand = errorHand;
+  }
+  Instantiate() {
+    if (this.ErrorHand) {
+      this.TaskMutationEvent_Subject = new TaskListMutationEvent_Subject(this.Logger, this.ErrorHand, TaskMonitor.name);
+
+    } else {
+      throw ('no error handler attached');
+    }
   }
 
   AsyncTaskStarted(name: string) {
@@ -55,17 +65,18 @@ export class InterruptAgent implements IInterruptAgent {
     this.MarkActivity();
     let foundIndex: number = this.TaskBucketStarted.indexOf(name);
     if (foundIndex > -1) {
-      let toRemove = this.TaskBucketStarted.splice(foundIndex, 1)
+      let toRemove = this.TaskBucketStarted.splice(foundIndex, 1);
       this.TaskBucketCompleted.push(toRemove[0]);
 
       this.SendIfEmpty();
-    } else {
+    }
+    else {
       console.log('Error - mismatch on tasks ' + name);
       console.log(JSON.stringify(this.TaskBucketStarted, null, 2));
     }
 
     this.BuildAndSendPayload(TaskMutationType.TaskCompleted);
-    this.LogValues()
+    this.LogValues();
     this.Logger.FuncEnd(this.AsyncTaskCompleted.name, name);
   }
 
@@ -91,7 +102,7 @@ export class InterruptAgent implements IInterruptAgent {
       RemainingTaskCount: this.TaskBucketStarted.length,
       TotalTaskCount: this.totalTaskCount(),
       CompletedCount: this.TaskBucketCompleted.length,
-    }
+    };
 
     this.TaskMutationEvent_Subject.NotifyObserversAsync(payload);
   }
@@ -126,7 +137,8 @@ export class InterruptAgent implements IInterruptAgent {
     if (!this.IdleNotificationSent) {
       if (this.IsEmptyAndIdle()) {
         this.SendTaskHaveGoneIdle();
-      } else {
+      }
+      else {
         setTimeout(() => {
           this.DelaySend();
         }, this.DelaySendMs);
@@ -134,7 +146,7 @@ export class InterruptAgent implements IInterruptAgent {
     }
   }
 
-  CancelRequested(): void {
+  RequestCancel(): void {
     this.CancelRequestedFlag = true;
   }
 

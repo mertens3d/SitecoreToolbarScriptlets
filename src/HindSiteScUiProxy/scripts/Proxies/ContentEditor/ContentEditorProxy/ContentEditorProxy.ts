@@ -18,7 +18,7 @@ import { ScDocumentProxy } from "../../ScDocumentProxy";
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
 import { ContentTreeProxy } from "./ContentTreeProxy/ContentTreeProxy";
 
-export class ContentEditorProxy extends _BaseScStateFullProxy implements IScStateFullProxy {
+export class ContentEditorProxy extends _BaseScStateFullProxy<IStateOfContentEditor> implements IScStateFullProxy {
   private ContentTreeProxy: ContentTreeProxy;
   private TreeMutationEvent_Observer: ContentTreeProxyMutationEvent_Observer;
   public ContentEditorProxyMutationEvent_Subject: ContentEditorProxyMutationEvent_Subject;
@@ -46,7 +46,7 @@ export class ContentEditorProxy extends _BaseScStateFullProxy implements IScStat
   }
 
   async Instantiate(): Promise<void> {
-    this.Logger.FuncStart(this.Instantiate.name);
+    this.Logger.FuncStart(this.Instantiate.name, ContentEditorProxy.name);
     try {
       this.initResultContentEditorProxy = new InitReportContentEditorProxy();
       this.RecipeBasic = new RecipeBasics(this.HindeCore);
@@ -63,15 +63,55 @@ export class ContentEditorProxy extends _BaseScStateFullProxy implements IScStat
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.Instantiate.name, err);
     }
-    this.Logger.FuncEnd(this.Instantiate.name);
+    this.Logger.FuncEnd(this.Instantiate.name, ContentEditorProxy.name);
   }
 
   WireEvents() {
-    this.Logger.FuncStart(this.WireEvents.name, this.Friendly);
+    this.Logger.FuncStart(this.WireEvents.name, ContentEditorProxy.name);
     this.ContentTreeProxy.WireEvents_TreeProxy()
     this.ContentTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
-    this.Logger.FuncEnd(this.WireEvents.name, this.Friendly);
+    this.Logger.FuncEnd(this.WireEvents.name, ContentEditorProxy.name);
   }
+
+  GetState(): Promise<IStateOfContentEditor> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetState.name, ContentEditorProxy.name);
+
+      let toReturnStateOfContentEditor: IStateOfContentEditor = new DefaultStateOfContentEditor();
+
+      await this.ContentTreeProxy.GetStateOfContentTree()
+        .then((stateOfContentTree: IStateOfContentTree) => toReturnStateOfContentEditor.StateOfContentTree = stateOfContentTree)
+        .then(() => resolve(toReturnStateOfContentEditor))
+        .catch((err) => reject(this.GetState.name + ' | ' + err));
+      this.Logger.FuncEnd(this.GetState.name, ContentEditorProxy.name);
+    });
+  }
+
+  async SetState(dataToRestore: IStateOfContentEditor): Promise<Boolean> {
+    return new Promise<boolean>(async (resolve, reject) => {
+      this.Logger.FuncStart(this.SetState.name, ContentEditorProxy.name + ' ' + Guid.AsShort(this.AssociatedScDocumentProxy.DocId));
+
+      this.ContentEditorProxyMutationEvent_Subject.DisableNotifications();
+
+      //this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfContentEditorTreeProxy.StateOfTreeNodes.length);
+
+      await this.RecipeBasic.WaitForTimePeriod(1000, this.SetState.name)
+        .then(() => this.RecipeBasic.WaitForNoUiFrontOverlay(this.SetState.name))
+        .then(() => this.ContentTreeProxy.SetStateOfContentTree(dataToRestore.StateOfContentTree.StateOfScContentTreeNodeDeep))
+        .then(() => {
+          this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
+          resolve(true);
+        })
+        .catch((err) => {
+          this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
+          reject(this.SetState.name + " " + err);
+        });
+
+      this.Logger.FuncEnd(this.SetState.name, ContentEditorProxy.name);
+    });
+  }
+
+  //----------------------------------------------------------------------
 
   CallBackOnContentEditorProxyTreeMutationEventAsync(treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
@@ -89,19 +129,6 @@ export class ContentEditorProxy extends _BaseScStateFullProxy implements IScStat
   TriggerActiveNodeChangeEvent() {
     this.ErrorHand.ThrowIfNullOrUndefined(this.TriggerActiveNodeChangeEvent.name, this.ContentTreeProxy);
     this.ContentTreeProxy.TriggerActiveNodeChangeEvent();
-  }
-  GetStateOfContentEditorProxy(): Promise<IStateOfContentEditor> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetStateOfContentEditorProxy.name);
-
-      let toReturnStateOfContentEditor: IStateOfContentEditor = new DefaultStateOfContentEditor();
-
-      await this.ContentTreeProxy.GetStateOfContentTree()
-        .then((stateOfContentTree: IStateOfContentTree) => toReturnStateOfContentEditor.StateOfContentTree = stateOfContentTree)
-        .then(() => resolve(toReturnStateOfContentEditor))
-        .catch((err) => reject(this.GetStateOfContentEditorProxy.name + ' | ' + err));
-      this.Logger.FuncEnd(this.GetStateOfContentEditorProxy.name);
-    });
   }
 
   ValidateAssociatedDocContentEditor() {
@@ -143,30 +170,6 @@ export class ContentEditorProxy extends _BaseScStateFullProxy implements IScStat
     //  browser.tabs.insertCSS(ass integer tabId, object details, function callback);
 
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.AssociatedScDocumentProxy.DocId));
-  }
-
-  async SetStateOfContentEditorAsync(dataToRestore: IStateOfContentEditor): Promise<Boolean> {
-    return new Promise<boolean>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetStateOfContentEditorAsync.name, Guid.AsShort(this.AssociatedScDocumentProxy.DocId));
-
-      this.ContentEditorProxyMutationEvent_Subject.DisableNotifications();
-
-      //this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfContentEditorTreeProxy.StateOfTreeNodes.length);
-
-      await this.RecipeBasic.WaitForTimePeriod(1000, this.SetStateOfContentEditorAsync.name)
-        .then(() => this.RecipeBasic.WaitForNoUiFrontOverlay(this.SetStateOfContentEditorAsync.name))
-        .then(() => this.ContentTreeProxy.SetStateOfContentTree(dataToRestore.StateOfContentTree.StateOfScContentTreeNodeDeep))
-        .then(() => {
-          this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
-          resolve(true);
-        })
-        .catch((err) => {
-          this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
-          reject(this.SetStateOfContentEditorAsync.name + " " + err);
-        });
-
-      this.Logger.FuncEnd(this.SetStateOfContentEditorAsync.name);
-    });
   }
 
   GetActiveNode(allTreeNodeAr: IStateOfScContentTreeNodeDeep[]) {

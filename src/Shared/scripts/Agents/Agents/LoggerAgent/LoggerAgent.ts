@@ -47,6 +47,10 @@ export class LoggerAgent implements ILoggerAgent {
     this.LogVal('TimeStamp', this.Timer.LogTimeStamp());
   }
 
+  Instantiate() {
+
+  }
+
   FlushBuffer() {
     this.RemoveWriter(this.BufferWriter);
 

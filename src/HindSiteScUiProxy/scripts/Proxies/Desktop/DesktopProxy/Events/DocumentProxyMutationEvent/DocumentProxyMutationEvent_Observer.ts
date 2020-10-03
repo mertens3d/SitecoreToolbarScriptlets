@@ -2,11 +2,11 @@
 import { HindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer";
 import { IHindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer";
 import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { INativeIFrameAddRemoveEvent_Payload } from "./INativeIFrameAddedEvent_Payload";
+import { IDocumentProxyMutationEvent_Payload } from "./IDocumentProxyMutationEvent_Payload";
 
-export class NativeIFrameAddRemoveEvent_Observer extends HindSiteEvent_Observer<INativeIFrameAddRemoveEvent_Payload> implements IHindSiteEvent_Observer<INativeIFrameAddRemoveEvent_Payload>  {
+export class DocumentProxyMutationEvent_Observer extends HindSiteEvent_Observer<IDocumentProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<IDocumentProxyMutationEvent_Payload> {
 
-  constructor(hindeCore: IHindeCore, callback: HindsiteEventHandler_Type) {
-    super(hindeCore, NativeIFrameAddRemoveEvent_Observer.name, callback);
-  }
+    constructor(hindeCore: IHindeCore, callback: HindsiteEventHandler_Type) {
+        super(hindeCore, DocumentProxyMutationEvent_Observer.name, callback);
+    }
 }

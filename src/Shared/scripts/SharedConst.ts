@@ -20,6 +20,9 @@ export class SharedConst {
     },
     KeyWords: {
       Html: {
+        Tags: {
+          Body: 'body',
+        },
         beforeend: 'beforeend',
         optgroup: 'optgroup',
         Checkbox: 'checkbox',

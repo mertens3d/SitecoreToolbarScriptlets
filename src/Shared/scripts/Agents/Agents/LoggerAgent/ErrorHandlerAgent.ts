@@ -1,10 +1,22 @@
 ﻿import { IErrorHandlerAgent } from "../../../Interfaces/Agents/IErrorHandlerAgent";
 import { IError } from "../../../Interfaces/IError";
 import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
+import { TaskMonitor } from "./TaskMonitor";
 
 export class ErrorHandlerAgent implements IErrorHandlerAgent {
+
   Discriminator = Discriminator.IErrorHandler;
   ErrorStack: IError[] = [];
+  private TaskMonitor: TaskMonitor;
+
+  constructor(taskMonitor: TaskMonitor) {
+    this.TaskMonitor = taskMonitor;
+  }
+
+  Instantiate() {
+   
+  }
+
 
   ThrowIfNullOrUndefined(title: string, testSubject: any): void;
   ThrowIfNullOrUndefined(title: string, testSubject: any[]): void;
@@ -14,6 +26,14 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     }
     else {
       if (typeof testSubject === 'undefined' || testSubject === null) {
+        try {
+          if (this.TaskMonitor) {
+            this.TaskMonitor.RequestCancel();
+          }
+        } catch (err) {
+          console.log(err);
+        }
+
         this.ErrorAndThrow(title, 'Failed Null check');
       }
     }
@@ -27,7 +47,7 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     }
     else {
       if (typeof testSubject === 'undefined' || testSubject === null) {
-        throw(title +  ' Failed Null check');
+        throw (title + ' Failed Null check');
       }
     }
   }

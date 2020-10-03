@@ -1,31 +1,32 @@
 ﻿import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { NativeScIframeProxy } from "../../../NativeScIframeProxy";
+import { NativeIframeProxy } from "../../../NativeScIframeProxy";
 import { ScDocumentProxy } from "../../../ScDocumentProxy";
 import { _BaseScStateFullProxy } from "./_StateProxy";
 
-export abstract class _BaseScFrameProxy extends _BaseScStateFullProxy implements IScStateFullProxy {
-  NativeIFrameProxy: NativeScIframeProxy = null; //todo - work towards making this private
+export abstract class _BaseScFrameProxy<T> extends _BaseScStateFullProxy<T> implements IScStateFullProxy {
+  NativeIFrameProxy: NativeIframeProxy = null; //todo - work towards making this private
   Id: string = null;
 
   constructor(hindeCore: IHindeCore, iframeElem: HTMLIFrameElement)
-  constructor(hindeCore: IHindeCore, iframeElem: NativeScIframeProxy)
+  constructor(hindeCore: IHindeCore, iframeElem: NativeIframeProxy)
   constructor(hindeCore: IHindeCore, iframeElem: any)
-  constructor(hindeCore: IHindeCore, argIframe: HTMLIFrameElement | NativeScIframeProxy) {
+  constructor(hindeCore: IHindeCore, argIframe: HTMLIFrameElement | NativeIframeProxy) {
     super(hindeCore);
-    if (typeof argIframe === typeof NativeScIframeProxy) {
-      this.NativeIFrameProxy = <NativeScIframeProxy>argIframe;
+    if (typeof argIframe === typeof NativeIframeProxy) {
+      this.NativeIFrameProxy = <NativeIframeProxy>argIframe;
     } else {
-      this.NativeIFrameProxy = new NativeScIframeProxy(this.HindeCore, <HTMLIFrameElement>argIframe);
+      this.NativeIFrameProxy = new NativeIframeProxy(this.HindeCore, <HTMLIFrameElement>argIframe);
     }
 
     this.ErrorHand.ThrowIfNullOrUndefined(_BaseScFrameProxy.name, this.NativeIFrameProxy)
-    this.Id = 'base_' + this.NativeIFrameProxy.GetId();// Guid.NewRandomGuid().Raw;
+    this.Id = 'base_' + this.NativeIFrameProxy.GetNativeIframeId();// Guid.NewRandomGuid().Raw;
   }
 
   Instantiate_BaseScFrameProxy() {
     //this.DataOneContentDocFactoryFromIframe();
+    this.NativeIFrameProxy.Instantiate();
   }
 
   GetZindexAsInt(): number {

@@ -6,10 +6,10 @@ import { ScDocumentProxy } from "./ScDocumentProxy";
 import { IStateOfFrameStyling } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
 
-export class NativeScIframeProxy extends _HindeCoreBase {
-  
+export class NativeIframeProxy extends _HindeCoreBase {
   private HtmlIFrameElement: HTMLIFrameElement;
   ScDocumentProxy: ScDocumentProxy;
+  private NativeIframeId: string;
 
   constructor(hindeCore: IHindeCore, htmlIframeElement: HTMLIFrameElement) {
     super(hindeCore);
@@ -25,12 +25,13 @@ export class NativeScIframeProxy extends _HindeCoreBase {
   }
 
   Instantiate() {
-    this.Logger.FuncStart(this.Instantiate.name, NativeScIframeProxy.name);
+    this.Logger.FuncStart(this.Instantiate.name, NativeIframeProxy.name);
 
     this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, this.HtmlIFrameElement.contentDocument);
     this.ScDocumentProxy.Instantiate();
+    this.NativeIframeId = this.HtmlIFrameElement.id;
 
-    this.Logger.FuncEnd(this.Instantiate.name, NativeScIframeProxy.name);
+    this.Logger.FuncEnd(this.Instantiate.name, NativeIframeProxy.name);
   }
 
   GetScWindowType(): ScWindowType {
@@ -51,8 +52,8 @@ export class NativeScIframeProxy extends _HindeCoreBase {
     return toReturn;
   }
 
-  GetId(): string {
-    return this.HtmlIFrameElement.id;
+  GetNativeIframeId(): string {
+    return this.NativeIframeId;
   }
 
   SetState(StateOfFrameStyling: IStateOfFrameStyling) {
