@@ -28,12 +28,21 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
     return this.BuildFullUrlFromParts();
   }
 
-  private GetScWindowtypeXmlControl(testPath: IAbsoluteUrl): ScWindowType {
+  private GetScWindowtypeXmlControl(): ScWindowType {
     var toReturn: ScWindowType = ScWindowType.Unknown;
-    if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.PackageDesigner, testPath.AbsUrl)
-    ) {
-      toReturn = ScWindowType.PackageDesigner;
-    } else {
+
+    if (this.QueryStringHasKey(QueryStrKey.he)) {
+      let heValue: string = this.GetQueryStringValueByKey(QueryStrKey.he);
+      switch (heValue) {
+        case ('Package Designer'):
+          toReturn = ScWindowType.PackageDesigner;
+          break;
+
+        default:
+      }
+    }
+
+    if (toReturn === ScWindowType.Unknown) {
       this.ErrorHand.WarningAndContinue(this.GetScWindowtypeXmlControl.name, 'unhandled XmlControl type');
     }
     return toReturn;
@@ -56,8 +65,8 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
       else if (
         this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.Default, testPath.AbsUrl)
       ) {
-        if (this.__urlTestAgainstRegex(SharedConst.Const.Regex.PageType.XmlControl, testPath.AbsUrl)) {
-          toReturn = this.GetScWindowtypeXmlControl(testPath)
+        if (this.QueryStringHasKey(QueryStrKey.xmlcontrol)) {
+          toReturn = this.GetScWindowtypeXmlControl();
         } else {
           toReturn = ScWindowType.Desktop;
         }
@@ -79,6 +88,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
       this.ErrorHand.ErrorAndThrow(this.GetScWindowType.name, 'null url');
     }
 
+    this.Logger.LogImportant(ScWindowType[toReturn])
     return toReturn;
   }
 

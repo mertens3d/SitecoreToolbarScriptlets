@@ -49,12 +49,17 @@
       UseCompactCss: boolean,
     }
   },
+  QueryStringKey: {
+    XmlControl: string,
+
+  },
   Regex: {
     ContentEditor: RegExp,
     CleanGuid: RegExp,
 
     NbSp: RegExp,
     QueryStrSeparatorQuest: RegExp,
+
     PageType: {
       Default: RegExp
       Edit: RegExp

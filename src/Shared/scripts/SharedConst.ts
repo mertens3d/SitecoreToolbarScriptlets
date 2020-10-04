@@ -53,12 +53,15 @@ export class SharedConst {
         LastUsedLogToStorageKey: 0
       }
     },
-
+    QueryStringKey: {
+      XmlControl: 'xmlcontrol',
+    },
     Regex: {
       ContentEditor: /Content.*?Editor/ig,
       CleanGuid: /{|-|}/ig,
       NbSp: /&nbsp;/ig,
       QueryStrSeparatorQuest: /\?/gi,
+
       PageType: {
         //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
         Default: /.*default.aspx/ig,

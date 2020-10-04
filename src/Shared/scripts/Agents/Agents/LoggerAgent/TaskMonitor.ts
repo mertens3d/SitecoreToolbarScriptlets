@@ -40,11 +40,8 @@ export class TaskMonitor implements IInterruptAgent {
   AsyncTaskStarted(name: string) {
     this.MarkActivity();
     this.TaskBucketStarted.push(name);
-    this.Logger.LogImportant('Task remaining : total - ' + this.TaskBucketStarted.length + ' : ' + this.totalTaskCount());
-
     this.BuildAndSendPayload(TaskMutationType.TaskAdded);
-
-    this.LogValues();
+    //this.LogValues();
   }
 
   private MarkActivity() {

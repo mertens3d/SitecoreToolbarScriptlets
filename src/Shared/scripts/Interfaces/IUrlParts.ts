@@ -1,9 +1,11 @@
-﻿export interface IGenericUrlParts {
+﻿import { IOneParamPair } from "./IOneParamPair";
+
+export interface IGenericUrlParts {
   Anchor: string,
   FilePath: string,
   HasError: boolean,
   HostAndPort: string;
   OriginalRaw: string,
-  Parameters: URLSearchParams;
+  UrlSearchParameters: URLSearchParams;
   Protocol: string,
 }

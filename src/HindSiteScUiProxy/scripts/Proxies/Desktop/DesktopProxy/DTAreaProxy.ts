@@ -119,30 +119,9 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     this.Logger.FuncEnd(this.CallBackOnDocumentProxyMutationEvent.name);
   }
 
-  //private async ProcessNewScFrameProxy(scFrameProxy: NativeScIframeProxy): Promise<void> {
-  //  this.Logger.FuncStart(this.ProcessNewScFrameProxy.name, scFrameProxy.GetNativeIframeId());
-  //  try {
-  //    let dtFrameProxy: DTFrameProxy = null;
-
-  //    await scFrameProxy.WaitForCompleteNABHtmlIframeElement(this.ProcessNewScFrameProxy.name)
-  //      .then(() => dtFrameProxy = new DTFrameProxy(this.HindeCore, scFrameProxy))
-  //      .then(() => this.newFrameStep1_Instantiate(dtFrameProxy))
-  //      .then(() => this.NewFrameStep2_SetStateOfDTFrameIfQueued(dtFrameProxy))
-  //      .then(() => this.NewFrameStep3_WireEvents(dtFrameProxy))
-  //      .then(() => this.NewFrameStep4_NotifyObserversOfAreaProxyMutation(dtFrameProxy))
-  //      .then(() => this.NewFrameStep5_AddToDTFrameProxyBucket(dtFrameProxy))
-  //      .then(() => this.NewFrameStep6_TriggerEvents(dtFrameProxy))
-  //      .catch((err) => this.ErrorHand.ErrorAndThrow(this.ProcessNewScFrameProxy.name, err));
-  //  } catch (err) {
-  //    this.ErrorHand.ErrorAndThrow(this.ProcessNewScFrameProxy.name, err);
-  //  }
-  //  this.Logger.FuncEnd(this.ProcessNewScFrameProxy.name, scFrameProxy.GetNativeIframeId());
-  //}
-
   private async HandleAddedIframes(addedNativeIFrameProxies: NativeIframeProxy[]) {
     this.Logger.FuncStart(this.HandleAddedIframes.name);
     if (addedNativeIFrameProxies.length > 0) {
-
       let promiseAr: Promise<ReadyStateNAB>[] = [];
 
       addedNativeIFrameProxies.forEach(async (scIframeProxy: NativeIframeProxy) => promiseAr.push(scIframeProxy.WaitForCompleteNABHtmlIframeElement(this.HandleAddedIframes.name)));
@@ -150,9 +129,10 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
       await Promise.all(promiseAr);
 
       addedNativeIFrameProxies.forEach(async (scIframeProxy: NativeIframeProxy) => {
-
-
         let currentWindowType = scIframeProxy.GetScWindowType();
+
+        this.Logger.LogVal('scWindowType', ScWindowType[currentWindowType]);
+
         if (currentWindowType === ScWindowType.ContentEditor) {
           //todo - this probably needs to be a Promise.all but we are only going to get one at a time
 
@@ -164,23 +144,6 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     }
     this.Logger.FuncEnd(this.HandleAddedIframes.name);
   }
-  //private HandleAddedIframes(addedNativeIFrameProxies: NativeScIframeProxy[]) {
-  //  this.Logger.FuncStart(this.HandleAddedIframes.name);
-  //  if (addedNativeIFrameProxies.length > 0) {
-  //    addedNativeIFrameProxies.forEach(async (scIframeProxy: NativeScIframeProxy) => {
-  //      let currentWindowType = scIframeProxy.GetScWindowType();
-  //      if (currentWindowType === ScWindowType.ContentEditor) {
-  //        //todo - this probably needs to be a Promise.all but we are only going to get one at a time
-
-  //        await this.ProcessNewScFrameProxy(scIframeProxy)
-  //          .then(() => this.Logger.Log(this.CallBackOnNativeIFrameAddRemoveEventAsync.name + ' Complete'))
-  //          .catch((err) => this.ErrorHand.ErrorAndThrow(this.CallBackOnNativeIFrameAddRemoveEventAsync.name, err));
-  //      }
-  //    })
-  //  }
-  //  this.Logger.FuncEnd(this.HandleAddedIframes.name);
-
-  //}
 
   private async HandleRemovedIframes(removedIframeIds: string[]) {
     removedIframeIds.forEach((needleIframeId: string) => {

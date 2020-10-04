@@ -4,6 +4,8 @@ import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
 import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/IUrlParts";
 import { _HindeCoreBase } from "../../../LoggableBase";
+import { IOneParamPair } from "../../../Interfaces/IOneParamPair";
+import { SharedConst } from "../../../SharedConst";
 
 export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
   protected UrlParts: IGenericUrlParts;
@@ -23,33 +25,37 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
   }
 
   QueryStringHasKey(key: QueryStrKey): boolean {
+    this.Logger.FuncStart(this.QueryStringHasKey.name, QueryStrKey[key]);
     let toReturn: boolean = false;
 
     if (key !== null) {
       let keyAsStr: string = QueryStrKey[key];
 
       if (keyAsStr) {
-        toReturn = this.UrlParts && this.UrlParts.Parameters && this.UrlParts.Parameters.has(keyAsStr)
+        toReturn = this.UrlParts && this.UrlParts.UrlSearchParameters && this.UrlParts.UrlSearchParameters.has(keyAsStr)
       }
     }
 
+    this.Logger.FuncEnd(this.QueryStringHasKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
     return toReturn;
   }
 
   GetQueryStringValueByKey(key: QueryStrKey): string {
+    this.Logger.FuncStart(this.GetQueryStringValueByKey.name, QueryStrKey[key]);
     let toReturn: string = '';
 
     if (this.QueryStringHasKey(key)) {
       let keyAsStr: string = QueryStrKey[key];
-      toReturn = this.UrlParts.Parameters.get(keyAsStr);
+      toReturn = this.UrlParts.UrlSearchParameters.get(keyAsStr);
     }
 
+    this.Logger.FuncEnd(this.GetQueryStringValueByKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
     return toReturn;
   }
 
   SetParameterValueByKey(key: QueryStrKey, newValue: string): void {
     if (this.UrlParts) {
-      this.UrlParts.Parameters.set(QueryStrKey[key], newValue);
+      this.UrlParts.UrlSearchParameters.set(QueryStrKey[key], newValue);
     } else {
       this.ErrorHand.ErrorAndThrow(this.SetParameterValueByKey.name, 'No URLParts ' + QueryStrKey[key] + ' ' + newValue);
     }
@@ -104,11 +110,18 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
       OriginalRaw: href,
       Protocol: parser.protocol,// this.ExtractProtocol(url),
       HostAndPort: parser.host, //this.ExtractHostName(url),
-      Parameters: new URLSearchParams(window.location.search),// this.ExtractParameters(parser.search),
+      UrlSearchParameters: new URLSearchParams(parser.search),//  this.ExtractParameters(parser.search), //new URLSearchParams(window.location.search),//
       FilePath: parser.pathname,// this.ExtractFilePath(url, parser),
       Anchor: parser.hash,
       HasError: false,
     }
+
+
+    this.Logger.LogImportant('parser.search ' + parser.search);
+    this.Logger.LogImportant('this.UrlParts ' + this.UrlParts);
+    this.Logger.LogImportant('this.UrlParts.UrlSearchParameters ' + this.UrlParts.UrlSearchParameters);
+    this.Logger.LogAsJsonPretty('params', this.UrlParts.UrlSearchParameters.toString());
+
   }
 
   BuildFullUrlFromParts(): IAbsoluteUrl {
@@ -124,8 +137,8 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
           toReturn.AbsUrl += this.UrlParts.FilePath;
         }
 
-        if (this.UrlParts.Parameters) {
-          toReturn.AbsUrl += '?' + this.UrlParts.Parameters.toString();
+        if (this.UrlParts.UrlSearchParameters) {
+          toReturn.AbsUrl += '?' + this.UrlParts.UrlSearchParameters.toString();
         }
         if (this.UrlParts.Anchor.length > 0) {
           toReturn.AbsUrl += '#' + this.UrlParts.Anchor
@@ -138,34 +151,35 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
     return toReturn;
   }
 
-  //ExtractParameters(url: string): OneParamPair[] {
-  //  let toReturn: OneParamPair[] = [];
-  //  if (url) {
-  //    let splitStr = url.split('?');
-  //    if (splitStr.length > 1) {
-  //      let paramString = splitStr[1].replace(SharedConst.Const.Regex.QueryStrSeparatorQuest, '');
-  //      let pairStr = paramString.split('&');
-  //      if (pairStr && pairStr.length > 0) {
-  //        for (var idx = 0; idx < pairStr.length; idx++) {
-  //          let oneParamAr: string[] = pairStr[idx].split('=');
-  //          let paramPair: OneParamPair = {
-  //            Key: '',
-  //            value: ''
-  //          };
+  ExtractParameters(url: string): IOneParamPair[] {
+    let toReturn: IOneParamPair[] = [];
+    if (url) {
+      let splitStr = url.split('?');
+      if (splitStr.length > 1) {
+        let paramString = splitStr[1].replace(SharedConst.Const.Regex.QueryStrSeparatorQuest, '');
+        let pairStr = paramString.split('&');
+        if (pairStr && pairStr.length > 0) {
+          for (var idx = 0; idx < pairStr.length; idx++) {
+            let oneParamAr: string[] = pairStr[idx].split('=');
+            let paramPair: IOneParamPair = {
+              Key: '',
+              value: ''
+            };
 
-  //          if (oneParamAr) {
-  //            paramPair.Key = oneParamAr[0];
-  //            if (oneParamAr.length > 1) {
-  //              paramPair.value = oneParamAr[1];
-  //            }
-  //            toReturn.push(paramPair);
-  //          }
-  //        }
-  //      }
-  //    }
-  //  }
-  //  return toReturn;
-  //}
+            if (oneParamAr) {
+              paramPair.Key = oneParamAr[0];
+              if (oneParamAr.length > 1) {
+                paramPair.value = oneParamAr[1];
+              }
+              toReturn.push(paramPair);
+            }
+          }
+        }
+      }
+    }
+
+    return toReturn;
+  }
 
   //ExtractFilePath(url: string, parser: HTMLAnchorElement): string {
   //  let toReturn: string = '';
