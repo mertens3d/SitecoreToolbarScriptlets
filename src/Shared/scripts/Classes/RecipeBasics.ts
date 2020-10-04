@@ -1,16 +1,13 @@
 ﻿import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
 import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
+import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { ReadyStateNAB } from '../Enums/ReadyState';
-import { FactoryHelper } from '../Helpers/FactoryHelper';
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
-import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
 import { IAbsoluteUrl } from '../Interfaces/IAbsoluteUrl';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
-import { IScVerSpec } from '../Interfaces/IScVerSpec';
 import { _HindeCoreBase } from '../LoggableBase';
 import { PromiseResult } from "./PromiseResult";
-import { NativeIframeProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/NativeScIframeProxy";
 
 export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
   constructor(hindeCore: IHindeCore) {
@@ -136,20 +133,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     return toReturn;
   }
 
-  async WaitForIframeElemAndReturnWhenReady(haystackDoc: ScDocumentProxy, selector: string, iframeNickName: string): Promise<DTFrameProxy> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForIframeElemAndReturnWhenReady.name);
 
-      let factoryHelp = new FactoryHelper(this.HindeCore);
-
-      await this.WaitForAndReturnFoundElem(haystackDoc, selector)
-        .then(async (foundElem: HTMLIFrameElement) => await factoryHelp.BaseFramePromiseFactory(<HTMLIFrameElement>foundElem, iframeNickName))
-        .then((result) => resolve(result))
-        .catch((err) => reject(err));
-
-      this.Logger.FuncEnd(this.WaitForIframeElemAndReturnWhenReady.name);
-    });
-  }
   //async WaitForNewIframeContentEditor(allIframesBefore: HTMLIFrameElement[], targetDoc: ScDocumentProxy): Promise<DTFrameProxy> {
   //  return new Promise(async (resolve, reject) => {
   //    this.Logger.FuncStart(this.WaitForNewIframe.name);
@@ -295,26 +279,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     });
   }
 
-  async WaitForAndReturnFoundElem(haystackDoc: ScDocumentProxy, selector: string, overrideIterCount = 8): Promise<HTMLElement> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForAndReturnFoundElem.name);
 
-      var toReturnFoundElem: HTMLElement = null;
-      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForAndReturnFoundElem.name + ' - ' + selector + ' - ' + haystackDoc.Nickname, true, overrideIterCount);
-
-      while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
-        toReturnFoundElem = haystackDoc.GetContentDoc().querySelector(selector);
-        if (toReturnFoundElem) {
-          resolve(toReturnFoundElem)
-        } else {
-          await iterationJr.Wait();
-        }
-      }
-
-      reject(iterationJr.IsExhaustedMsg);
-      this.Logger.FuncEnd(this.WaitForAndReturnFoundElem.name);
-    });
-  }
 
   TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void> {
     return new Promise(async (resolve, reject) => {

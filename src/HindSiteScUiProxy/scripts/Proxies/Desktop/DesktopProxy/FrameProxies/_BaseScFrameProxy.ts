@@ -9,16 +9,13 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
   NativeIFrameProxy: NativeIframeProxy = null; //todo - work towards making this private
   Id: string = null;
 
-  constructor(hindeCore: IHindeCore, iframeElem: HTMLIFrameElement)
+  //constructor(hindeCore: IHindeCore, iframeElem: HTMLIFrameElement)
   constructor(hindeCore: IHindeCore, iframeElem: NativeIframeProxy)
-  constructor(hindeCore: IHindeCore, iframeElem: any)
-  constructor(hindeCore: IHindeCore, argIframe: HTMLIFrameElement | NativeIframeProxy) {
+  //constructor(hindeCore: IHindeCore, iframeElem: any)
+  constructor(hindeCore: IHindeCore, argIframe: NativeIframeProxy) {
     super(hindeCore);
-    if (typeof argIframe === typeof NativeIframeProxy) {
-      this.NativeIFrameProxy = <NativeIframeProxy>argIframe;
-    } else {
-      this.NativeIFrameProxy = new NativeIframeProxy(this.HindeCore, <HTMLIFrameElement>argIframe);
-    }
+
+    this.NativeIFrameProxy = <NativeIframeProxy>argIframe;
 
     this.ErrorHand.ThrowIfNullOrUndefined(_BaseScFrameProxy.name, this.NativeIFrameProxy)
     this.Id = 'base_' + this.NativeIFrameProxy.GetNativeIframeId();// Guid.NewRandomGuid().Raw;

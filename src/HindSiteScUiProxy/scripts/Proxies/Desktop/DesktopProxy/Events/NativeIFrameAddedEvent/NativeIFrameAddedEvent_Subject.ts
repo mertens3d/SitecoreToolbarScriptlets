@@ -1,6 +1,5 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { SharedConst } from "../../../../../../../Shared/scripts/SharedConst";
 import { NativeIframeProxy } from "../../../../NativeScIframeProxy";
 import { INativeIFrameAddRemoveEvent_Payload } from "./INativeIFrameAddedEvent_Payload";
 
@@ -30,7 +29,8 @@ export class NativeIFrameAddRemoveEvent_Subject extends HindeSiteEvent_Subject<I
     return removedIframeIds;
   }
 
-  private HandleAddedNodes(addedNodes: NodeList) {
+  private HandleAddedNodes(addedNodes: NodeList): NativeIframeProxy[] {
+    this.Logger.FuncStart(this.HandleAddedNodes.name);
     let addedNativeFrameProxies: NativeIframeProxy[] = [];
     addedNodes.forEach((addedNode) => {
       if (addedNode instanceof HTMLIFrameElement) {
@@ -38,6 +38,7 @@ export class NativeIFrameAddRemoveEvent_Subject extends HindeSiteEvent_Subject<I
         addedNativeFrameProxies.push(nativeIframeProxy);
       }
     });
+    this.Logger.FuncEnd(this.HandleAddedNodes.name, addedNativeFrameProxies.length);
     return addedNativeFrameProxies;
   }
 
@@ -81,7 +82,8 @@ export class NativeIFrameAddRemoveEvent_Subject extends HindeSiteEvent_Subject<I
       if (this.NativeDocument) {
         let self = this;
         let mutationObserver = new MutationObserver((mutations: MutationRecord[]) => { self.CallBackOnNativeMutation(mutations); });
-        let desktop: HTMLElement = <HTMLElement> this.NativeDocument.getElementsByTagName(SharedConst.Const.KeyWords.Html.Tags.Body)[0];
+        //let desktop: HTMLElement = <HTMLElement> this.NativeDocument.getElementsByTagName(SharedConst.Const.KeyWords.Html.Tags.Body)[0];
+        let desktop: HTMLElement = <HTMLElement>this.NativeDocument.getElementById('Desktop');
         if (desktop) {
           mutationObserver.observe(desktop, { attributes: false, subtree: false, childList: true });
         }

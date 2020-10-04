@@ -17,21 +17,23 @@ export class FrameHelper extends _HindeCoreBase {
     this.factoryHelper = new FactoryHelper(this.HindeCore);
   }
 
-  async GetIFrameAsBaseFrameProxy(iframeElem: HTMLIFrameElement, ifrIdx: number): Promise<DTFrameProxy> {
+  async GetIFrameAsBaseFrameProxy(nativeIframeProxy: NativeIframeProxy, ifrIdx: number): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       let friendly = 'desktop Iframe_' + ifrIdx;
 
-      let dTFrameProxy = new NativeIframeProxy(this.HindeCore, iframeElem);
+      let dTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
       dTFrameProxy.Instantiate();
+      dTFrameProxy.WireEvents();
 
-      await dTFrameProxy.WaitForCompleteNABHtmlIframeElement( friendly)
-        .then((result: ReadyStateNAB) => {
-          if (!result.IsCompleteNAB()) {
-            reject(result.DocumentReadtStateFriendly())
-          }
-        })
-        .then(() => this.factoryHelper.BaseFramePromiseFactory(iframeElem, friendly))
-        .then((result: DTFrameProxy) => resolve(result))
+      await dTFrameProxy.WaitForCompleteNABFrameProxyOrReject()
+        .then(() => resolve(dTFrameProxy))
+        //.then((result: ReadyStateNAB) => {
+        //  if (!result.IsCompleteNAB()) {
+        //    reject(result.DocumentReadtStateFriendly())
+        //  }
+        //})
+        //.then(() => this.factoryHelper.BaseFramePromiseFactory(nativeIframeProxy, friendly))
+        //.then((result: DTFrameProxy) => resolve(result))
         .catch((err) => reject(this.GetIFramesAsBaseFrameProxies.name + ' | ' + err));
     });
   }
@@ -95,8 +97,8 @@ export class FrameHelper extends _HindeCoreBase {
 
       let promAr: Promise<DTFrameProxy>[] = [];
 
-      NativeScIframeProxyAr.forEach((nativeScIframeProxy, index) => {
-        promAr.push(this.GetIFrameAsBaseFrameProxy(nativeScIframeProxy.GetIframeHtmlElem(), index));
+      NativeScIframeProxyAr.forEach((nativeScIframeProxy: NativeIframeProxy, index) => {
+        promAr.push(this.GetIFrameAsBaseFrameProxy(nativeScIframeProxy, index));
       });
 
       Promise.all(promAr)

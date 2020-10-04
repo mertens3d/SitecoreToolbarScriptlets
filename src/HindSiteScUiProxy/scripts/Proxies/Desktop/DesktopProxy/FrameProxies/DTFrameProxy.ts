@@ -27,9 +27,9 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   public initReportFrameProxy: ReportResultsInitDTFrameProxy;
 
-  constructor(hindeCore: IHindeCore, argIframe: HTMLIFrameElement)
-  constructor(hindeCore: IHindeCore, argIframe: NativeIframeProxy)
-  constructor(hindeCore: IHindeCore, argIframe: HTMLIFrameElement | NativeIframeProxy) {
+  //constructor(hindeCore: IHindeCore, argIframe: HTMLIFrameElement)
+  //constructor(hindeCore: IHindeCore, argIframe: NativeIframeProxy)
+  constructor(hindeCore: IHindeCore, argIframe: NativeIframeProxy) { //HTMLIFrameElement |
     super(hindeCore, argIframe);
 
     this.ErrorHand.ThrowIfNullOrUndefined(DTFrameProxy.name, [argIframe]);

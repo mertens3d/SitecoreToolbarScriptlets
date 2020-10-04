@@ -10,9 +10,9 @@ export interface IRecipeBasics {
   TabChainSetHrefWaitForComplete(newHref: IAbsoluteUrl);
   TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void>;
   //WaitForAndClickWithPayload(MenuDropDownPublishItem: string, docToPublish: ScDocumentProxy, payload: IDataPublishChain);
-  WaitForAndReturnFoundElem(ContentDoc: ScDocumentProxy, SettingsHidden: string);
-  WaitForAndReturnFoundElem(ContentDoc: ScDocumentProxy, SettingsHidden: string, maxIteration: number);
-  WaitForIframeElemAndReturnWhenReady(ContentDoc: ScDocumentProxy, ContentIFrame1: string, arg2: string): Promise<DTFrameProxy>;
+  //WaitForAndReturnFoundElem(ContentDoc: ScDocumentProxy, SettingsHidden: string);
+  //WaitForAndReturnFoundElem(ContentDoc: ScDocumentProxy, SettingsHidden: string, maxIteration: number);
+  //WaitForIframeElemAndReturnWhenReady(ContentDoc: ScDocumentProxy, ContentIFrame1: string, arg2: string): Promise<DTFrameProxy>;
   WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: ScDocumentProxy): Promise<DTFrameProxy>;
   WaitForCompleteNAB_DataOneDoc(targetDoc: ScDocumentProxy, friendly: string): Promise<ReadyStateNAB>;
   //WaitForThenClick(arg0: string[], arg1: ScDocumentProxy);

@@ -23,7 +23,7 @@ export class NativeIframeProxy extends _BaseStateFullProxy<IStateOfFrameStyling>
 
     this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, this.HtmlIFrameElement.contentDocument);
     this.ScDocumentProxy.Instantiate();
-    
+
     this.NativeIframeId = this.HtmlIFrameElement.id;
 
     this.Logger.FuncEnd(this.Instantiate.name, NativeIframeProxy.name);
@@ -33,7 +33,7 @@ export class NativeIframeProxy extends _BaseStateFullProxy<IStateOfFrameStyling>
     this.ScDocumentProxy.WireEvents();
   }
 
-  SetState(StateOfFrameStyling: IStateOfFrameStyling) {
+  async SetState(StateOfFrameStyling: IStateOfFrameStyling): Promise<void> {
     this.Logger.FuncStart(this.SetState.name, NativeIframeProxy.name);
     this.HtmlIFrameElement.style.height = StateOfFrameStyling.Height;
     this.HtmlIFrameElement.style.left = StateOfFrameStyling.Left;
@@ -71,7 +71,9 @@ export class NativeIframeProxy extends _BaseStateFullProxy<IStateOfFrameStyling>
   GetNativeContentDoc(): ScDocumentProxy {
     return this.ScDocumentProxy;
   }
+
   GetScWindowType(): ScWindowType {
+    this.ErrorHand.ThrowIfNullOrUndefined(this.GetScWindowType.name, this.ScDocumentProxy);
     return this.ScDocumentProxy.GetScWindowType();
   }
 

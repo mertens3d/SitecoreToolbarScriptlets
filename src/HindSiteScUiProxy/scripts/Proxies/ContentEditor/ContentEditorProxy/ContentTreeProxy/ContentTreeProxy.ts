@@ -242,7 +242,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   async GetRootNodeForFrameType(): Promise<HTMLElement> {
     try {
-      await this.RecipeBasics.WaitForAndReturnFoundElem(this.AssociatedDoc, ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode)
+      await this.AssociatedDoc.WaitForAndReturnFoundElem( ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode)
         .then((htmlElement: HTMLElement) => this.rootTreeNodeHtmlElement = htmlElement);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.GetRootNodeForFrameType.name, err);

@@ -5,135 +5,172 @@ import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { IScVerSpec } from "../../../Shared/scripts/Interfaces/IScVerSpec";
 import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
 import { NativeIframeProxy } from "./NativeScIframeProxy";
+import { CEFrameProxy } from "./Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
+import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 
 export abstract class _BaseNativeDocumentProxy<T> extends _BaseStateFullProxy<T> {
-    protected NativeDocument: Document;
+  protected NativeDocument: Document;
 
-    constructor(hindeCore: IHindeCore, nativeDocument: Document) {
-        super(hindeCore);
-        this.NativeDocument = nativeDocument;
+  constructor(hindeCore: IHindeCore, nativeDocument: Document) {
+    super(hindeCore);
+    this.NativeDocument = nativeDocument;
+  }
+
+  //------------------------------------------
+  getElementById(idStr: string): HTMLElement {
+    return this.NativeDocument.getElementById(idStr);
+  }
+  querySelector(selector: string): HTMLElement {
+    return this.NativeDocument.querySelector(selector);
+  }
+  GetContentDoc(): Document {
+    return this.NativeDocument;
+  }
+
+  GetIFramesFromDataOneDoc(): NativeIframeProxy[] {
+    let toReturnIframeAr: NativeIframeProxy[] = [];
+
+    this.ErrorHand.ThrowIfNullOrUndefined(this.GetIFramesFromDataOneDoc.name, [this.NativeDocument]);
+
+    var queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
+
+    if (!queryResults) {
+      queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
     }
 
-    //------------------------------------------
-    getElementById(idStr: string): HTMLElement {
-        return this.NativeDocument.getElementById(idStr);
-    }
-    querySelector(selector: string): HTMLElement {
-        return this.NativeDocument.querySelector(selector);
-    }
-    GetContentDoc(): Document {
-        return this.NativeDocument;
-    }
-
-    GetIFramesFromDataOneDoc(): NativeIframeProxy[] {
-        let toReturnIframeAr: NativeIframeProxy[] = [];
-
-        this.ErrorHand.ThrowIfNullOrUndefined(this.GetIFramesFromDataOneDoc.name, [this.NativeDocument]);
-
-        var queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
-
-        if (!queryResults) {
-            queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
+    if (queryResults) {
+      for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
+        var iframeElem: NativeIframeProxy = new NativeIframeProxy(this.HindeCore, <HTMLIFrameElement>queryResults[ifrIdx]);
+        if (iframeElem) {
+          toReturnIframeAr.push(iframeElem);
         }
+      }
+    }
 
-        if (queryResults) {
-            for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
-                var iframeElem: NativeIframeProxy = new NativeIframeProxy(this.HindeCore, <HTMLIFrameElement>queryResults[ifrIdx]);
-                if (iframeElem) {
-                    toReturnIframeAr.push(iframeElem);
-                }
-            }
+    this.Logger.LogVal('found iframes count', toReturnIframeAr.length);
+
+    return toReturnIframeAr;
+  }
+
+  async WaitForIframeElemAndReturnCEFrameProxyWhenReady( selector: string, iframeNickName: string): Promise<CEFrameProxy> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForIframeElemAndReturnCEFrameProxyWhenReady.name);
+
+      let factoryHelp = new FactoryHelper(this.HindeCore);
+
+      let nativeIframeProxy: NativeIframeProxy = null;
+
+      await this.WaitForAndReturnFoundElem(selector)
+        .then(async (foundElem: HTMLIFrameElement) => nativeIframeProxy = new NativeIframeProxy(this.HindeCore, foundElem))
+        .then(() => factoryHelp.CEFrameFactory(nativeIframeProxy, iframeNickName))
+        .then((result: CEFrameProxy) => resolve(result))
+        .catch((err) => reject(err));
+
+      this.Logger.FuncEnd(this.WaitForIframeElemAndReturnCEFrameProxyWhenReady.name);
+    });
+  }
+
+  public async WaitForAndReturnFoundElem(selector: string, overrideIterCount = 8): Promise<HTMLElement> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForAndReturnFoundElem.name);
+
+      var toReturnFoundElem: HTMLElement = null;
+      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForAndReturnFoundElem.name + ' - ' + selector, true, overrideIterCount);
+
+      while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
+        toReturnFoundElem = this.NativeDocument.querySelector(selector);
+        if (toReturnFoundElem) {
+          resolve(toReturnFoundElem)
+        } else {
+          await iterationJr.Wait();
         }
+      }
 
-        this.Logger.LogVal('found iframes count', toReturnIframeAr.length);
+      reject(iterationJr.IsExhaustedMsg);
+      this.Logger.FuncEnd(this.WaitForAndReturnFoundElem.name);
+    });
+  }
+  public WaitForThenClick(selectorAr: string[]): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr, this.NativeDocument]);
 
-        return toReturnIframeAr;
-    }
+      var found: HTMLElement = null;
+      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForThenClick.name, true);
 
+      while (!found && iterationJr.DecrementAndKeepGoing()) { // todo put back && !this.MsgMan().OperationCancelled) {
+        for (var idx = 0; idx < selectorAr.length; idx++) {
+          found = this.NativeDocument.querySelector(selectorAr[idx]);
+          if (found) {
+            break;
+          }
+        }
+      }
 
-    public WaitForThenClick(selectorAr: string[]): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr, this.NativeDocument]);
+      if (found) {
+        try {
+          this.Logger.LogAsJsonPretty(this.WaitForThenClick.name + ' clicking', selectorAr);
+          found.click();
+          resolve();
+        }
+        catch (err) {
+          reject(this.WaitForThenClick.name + ' | ' + err);
+        }
+      }
+      else {
+        await iterationJr.Wait()
+          .catch((err) => reject(this.WaitForThenClick.name + ' | ' + err));
+      }
 
-            var found: HTMLElement = null;
-            var iterationJr = new IterationDrone(this.HindeCore, this.WaitForThenClick.name, true);
+      if (!found && iterationJr.IsExhausted) {
+        reject(iterationJr.IsExhaustedMsg);
+      }
+    });
+  }
 
-            while (!found && iterationJr.DecrementAndKeepGoing()) { // todo put back && !this.MsgMan().OperationCancelled) {
-                for (var idx = 0; idx < selectorAr.length; idx++) {
-                    found = this.NativeDocument.querySelector(selectorAr[idx]);
-                    if (found) {
-                        break;
-                    }
-                }
-            }
+  async RaceWaitAndClick(selector: IScVerSpec): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      await this.WaitForThenClick([selector.sc920, selector.sc820])
+        .then(() => resolve())
+        .catch((err) => reject(this.RaceWaitAndClick.name + ' | ' + err));
+    });
+  }
 
-            if (found) {
-                try {
-                    this.Logger.LogAsJsonPretty(this.WaitForThenClick.name + ' clicking', selectorAr);
-                    found.click();
-                    resolve();
-                }
-                catch (err) {
-                    reject(this.WaitForThenClick.name + ' | ' + err);
-                }
-            }
-            else {
-                await iterationJr.Wait()
-                    .catch((err) => reject(this.WaitForThenClick.name + ' | ' + err));
-            }
+  WaitForAndClickWithPayload(selector: string, payload: any) {
+    return new Promise<any>(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForAndClickWithPayload.name, selector);
 
-            if (!found && iterationJr.IsExhausted) {
-                reject(iterationJr.IsExhaustedMsg);
-            }
+      await this.WaitForThenClick([selector])
+        .then(() => resolve(payload))
+        .catch(ex => {
+          this.ErrorHand.ErrorAndThrow(this.WaitForAndClickWithPayload.name, ex);
+          reject(ex);
         });
-    }
+    });
+  }
 
+  protected async WaitForCompleteNAB_NativeDocument(friendly: string): Promise<ReadyStateNAB> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForCompleteNAB_NativeDocument.name, friendly);
 
-    async RaceWaitAndClick(selector: IScVerSpec): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            await this.WaitForThenClick([selector.sc920, selector.sc820])
-                .then(() => resolve())
-                .catch((err) => reject(this.RaceWaitAndClick.name + ' | ' + err));
-        });
-    }
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_NativeDocument.name, this.NativeDocument);
 
-    WaitForAndClickWithPayload(selector: string, payload: any) {
-        return new Promise<any>(async (resolve, reject) => {
-            this.Logger.FuncStart(this.WaitForAndClickWithPayload.name, selector);
+      var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForCompleteNAB_NativeDocument.name, false);
+      let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, this.NativeDocument);
 
-            await this.WaitForThenClick([selector])
-                .then(() => resolve(payload))
-                .catch(ex => {
-                    this.ErrorHand.ErrorAndThrow(this.WaitForAndClickWithPayload.name, ex);
-                    reject(ex);
-                });
-        });
-    }
+      while (iterationJr.DecrementAndKeepGoing() && !readyStateNAB.IsCompleteNAB()) {
+        readyStateNAB.LogDebugValues();
+        await iterationJr.Wait();
+      }
 
+      if (iterationJr.IsExhausted) {
+        this.Logger.Log(iterationJr.IsExhaustedMsg);
+        reject(iterationJr.IsExhaustedMsg);
+      }
+      else {
+        resolve(readyStateNAB);
+      }
 
-    protected async WaitForCompleteNAB_NativeDocument(friendly: string): Promise<ReadyStateNAB> {
-        return new Promise(async (resolve, reject) => {
-            this.Logger.FuncStart(this.WaitForCompleteNAB_NativeDocument.name, friendly);
-
-            this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_NativeDocument.name, this.NativeDocument);
-
-            var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForCompleteNAB_NativeDocument.name, false);
-            let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, this.NativeDocument);
-
-            while (iterationJr.DecrementAndKeepGoing() && !readyStateNAB.IsCompleteNAB()) {
-                readyStateNAB.LogDebugValues();
-                await iterationJr.Wait();
-            }
-
-            if (iterationJr.IsExhausted) {
-                this.Logger.Log(iterationJr.IsExhaustedMsg);
-                reject(iterationJr.IsExhaustedMsg);
-            }
-            else {
-                resolve(readyStateNAB);
-            }
-
-            this.Logger.FuncEnd(this.WaitForCompleteNAB_NativeDocument.name, friendly);
-        });
-    }
+      this.Logger.FuncEnd(this.WaitForCompleteNAB_NativeDocument.name, friendly);
+    });
+  }
 }

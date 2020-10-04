@@ -2,5 +2,5 @@
   Instantiate();
   WireEvents();
   GetState(): Promise<T>;
-  SetState(state: T): Promise<void>;
+  SetState(state: T): Promise<any>;
 }

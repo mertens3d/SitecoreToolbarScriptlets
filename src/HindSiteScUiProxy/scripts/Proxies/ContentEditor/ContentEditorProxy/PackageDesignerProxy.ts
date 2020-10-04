@@ -6,9 +6,7 @@ import { ScDocumentProxy } from "../../ScDocumentProxy";
 import { IStateOfPackageDesigner } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfPackageDesigner";
 import { _BaseStateFullProxy } from "../../Desktop/DesktopProxy/FrameProxies/_StateProxy";
 
-
-export class PackageDesignerProxy extends _BaseStateFullProxy< IStateOfPackageDesigner  > implements IStateFullProxy<IStateOfPackageDesigner> {
-
+export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy<IStateOfPackageDesigner> {
   private DocumentProxy: ScDocumentProxy;
   Friendly: string;
 
@@ -19,21 +17,22 @@ export class PackageDesignerProxy extends _BaseStateFullProxy< IStateOfPackageDe
     this.Friendly = friendly;
     this.Logger.CTOREnd(ContentEditorProxy.name);
   }
- 
+
   Instantiate() {
     this.Logger.FuncStart(this.Instantiate.name, this.Friendly)
-    this.Logger.FuncEnd(this.Instantiate.name, this.Friendly) 
+    this.Logger.FuncEnd(this.Instantiate.name, this.Friendly)
   }
 
   WireEvents() {
-    this.Logger.FuncStart(this.WireEvents.name, this.Friendly) 
-    this.Logger.FuncEnd(this.WireEvents.name, this.Friendly) 
+    this.Logger.FuncStart(this.WireEvents.name, this.Friendly)
+    this.Logger.FuncEnd(this.WireEvents.name, this.Friendly)
   }
 
   GetState(): Promise<IStateOfPackageDesigner> {
     throw new Error("Method not implemented.");
   }
-  SetState(state: IStateOfPackageDesigner) {
+
+  async SetState(state: IStateOfPackageDesigner): Promise<void> {
     throw new Error("Method not implemented.");
   }
 }

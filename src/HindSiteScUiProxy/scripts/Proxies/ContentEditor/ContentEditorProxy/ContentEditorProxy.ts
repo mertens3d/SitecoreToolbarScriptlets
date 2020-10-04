@@ -55,7 +55,7 @@ export class ContentEditorProxy extends _BaseStateFullProxy<IStateOfContentEdito
           this.ContentEditorProxyMutationEvent_Subject = new ContentEditorProxyMutationEvent_Subject(this.HindeCore);
           this.TreeMutationEvent_Observer = new ContentTreeProxyMutationEvent_Observer(this.HindeCore, this.CallBackOnContentEditorProxyTreeMutationEventAsync.bind(this));
         })
-        .then(() => this.RecipeBasic.WaitForAndReturnFoundElem(this.AssociatedScDocumentProxy, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
+        .then(() => this.AssociatedScDocumentProxy.WaitForAndReturnFoundElem( ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
         .then((treeContainer: HTMLElement) => this.ContentTreeProxy = new ContentTreeProxy(this.HindeCore, this.AssociatedScDocumentProxy, treeContainer))
         .then(() => this.ContentTreeProxy.Instantiate_TreeProxy())
         .then(() => this.initResultContentEditorProxy.ContentEditorProxyInitialized = true)

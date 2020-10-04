@@ -34,3 +34,4 @@ node_modules
 /archives/AutoBuildArchive*
 /src/HindSiteScUiProxy/scripts/*.js
 /src/HindSiteScUiProxy/scripts/**/*.js
+/src/PopUpController/scripts/**/*.js

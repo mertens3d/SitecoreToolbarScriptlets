@@ -54,7 +54,7 @@ export class ScDocumentProxy extends _BaseNativeDocumentProxy<null> implements I
     this.Logger.FuncEnd(this.WireEvents.name, ScDocumentProxy.name);
   }
 
-  SetState() {
+  async SetState(): Promise<void> {
   }
 
   GetState(): Promise<null> {

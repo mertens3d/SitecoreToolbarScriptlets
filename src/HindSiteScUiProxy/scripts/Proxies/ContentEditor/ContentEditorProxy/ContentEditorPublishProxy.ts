@@ -15,6 +15,8 @@ import { ContentEditorProxy } from "./ContentEditorProxy";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../../../Shared/scripts/Helpers/FactoryHelper";
 import { DTFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+import { NativeIframeProxy } from "../../NativeScIframeProxy";
+import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 
 export class ContentEditorPublishProxy extends _HindeCoreBase  {
   ContentEditorProxy: ContentEditorProxy;
@@ -94,7 +96,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
     try {
       var dataPublishChain: IDataPublishChain = {
         DocToPublish: docToPublish,
-        TopLevelDoc: this.AssociatedDoc,// this.scWinProxy.GetTopLevelDoc(),
+        TopScDocumentProxy: this.AssociatedDoc,// this.scWinProxy.GetTopLevelDoc(),
         Iframe0Blue: null,
         JqIframe: null,
         MessageDialogIframeRed: null
@@ -137,9 +139,9 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
   }
 
   private async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.GetContentDoc(), ContentConst.Const.Selector.SC.Publish.SettingsHidden)
+    await dataPublishChain.Iframe0Blue.GetContentDoc().WaitForAndReturnFoundElem(ContentConst.Const.Selector.SC.Publish.SettingsHidden)
       .then(async () => {
-        await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.Iframe0Blue.GetContentDoc(), ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
+        await dataPublishChain.Iframe0Blue.GetContentDoc().WaitForAndReturnFoundElem(ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
         await dataPublishChain.Iframe0Blue.GetContentDoc().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel] );
@@ -171,9 +173,13 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
 
   async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null): Promise<IDataPublishChain> {
     try {
-      await this.RecipeBasics.WaitForAndReturnFoundElem(dataPublishChain.TopLevelDoc, ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
-        .then((found: HTMLElement) => this.FactoryHelp.BaseFramePromiseFactory(<HTMLIFrameElement>found, 'jqIframe'))
-        .then((result: DTFrameProxy) => dataPublishChain.JqIframe = result)
+
+      let iframeProxy: NativeIframeProxy = null;
+
+      await dataPublishChain.TopScDocumentProxy.WaitForAndReturnFoundElem( ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
+        .then((htmlIFrameElement: HTMLIFrameElement) => iframeProxy = new NativeIframeProxy(this.HindeCore, htmlIFrameElement))
+        .then(() => this.FactoryHelp.CEFrameFactory(iframeProxy, 'jqIframe'))
+        .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
         .then(() => dataPublishChain.JqIframe.WaitForCompleteNABFrameProxyOrReject())
         .catch((err) => { throw (this.GetThePublishItemDialog.name + ' ' + err) });
@@ -187,12 +193,15 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
   async GetMessageDialog(dataPublishChain: IDataPublishChain) {
     let toReturnPublishChain: IDataPublishChain = dataPublishChain;
 
-    await this.RecipeBasics.WaitForIframeElemAndReturnWhenReady(dataPublishChain.JqIframe.GetContentDoc(), ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
-      .then((result) => toReturnPublishChain.MessageDialogIframeRed = result)
+    await dataPublishChain.JqIframe.GetContentDoc().WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
+      .then((result: CEFrameProxy) => toReturnPublishChain.MessageDialogIframeRed = result)
       .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetMessageDialog.name, err));
 
     return toReturnPublishChain;
   }
+
+
+
 
   async GetDialogIframe0Blue(dataPublishChain: IDataPublishChain = null) {
     return new Promise(async (resolve, reject) => {
@@ -202,8 +211,8 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
 
       this.Logger.LogAsJsonPretty('dataPublishChain', dataPublishChain);
 
-      await this.RecipeBasics.WaitForIframeElemAndReturnWhenReady(dataPublishChain.JqIframe.GetContentDoc(), ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
-        .then((result) => {
+      await dataPublishChain.JqIframe.GetContentDoc().WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
+        .then((result: CEFrameProxy) => {
           this.Logger.MarkerC();
           dataPublishChain.Iframe0Blue = result;
           promiseResult.MarkSuccessful();
@@ -228,7 +237,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase  {
       this.Logger.LogAsJsonPretty(this.__waitForThenFunc.name, targetDoc);
 
       var found: HTMLElement = null;
-      await this.RecipeBasics.WaitForAndReturnFoundElem(targetDoc, selector)
+      await targetDoc.WaitForAndReturnFoundElem( selector)
         .then((result) => found = result);
 
       if (found) {
