@@ -1,11 +1,11 @@
 ﻿import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { NativeIframeProxy } from "../../../NativeScIframeProxy";
 import { ScDocumentProxy } from "../../../ScDocumentProxy";
-import { _BaseScStateFullProxy } from "./_StateProxy";
+import { _BaseStateFullProxy } from "./_StateProxy";
 
-export abstract class _BaseScFrameProxy<T> extends _BaseScStateFullProxy<T> implements IScStateFullProxy {
+export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implements IStateFullProxy<T> {
   NativeIFrameProxy: NativeIframeProxy = null; //todo - work towards making this private
   Id: string = null;
 

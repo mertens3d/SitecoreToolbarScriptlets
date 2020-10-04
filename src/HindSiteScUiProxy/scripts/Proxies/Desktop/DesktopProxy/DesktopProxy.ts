@@ -13,15 +13,16 @@ import { DTAreaProxy } from "./DTAreaProxy";
 import { DesktopProxyMutationEvent_Subject } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
+import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
+import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 
-export class DesktopProxy extends _HindeCoreBase {
+export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy<IStateOfDesktop> {
   //DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
   private AssociatedDoc: ScDocumentProxy;
   private DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
   private DTAreaProxy: DTAreaProxy;
   private DTPopUpMenuProxy: DTPopUpMenuProxy;
   private DTStartBarProxy: DTStartBarProxy;
-  private RecipeBasics: RecipeBasics;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
 
   constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentProxy) {
@@ -37,9 +38,9 @@ export class DesktopProxy extends _HindeCoreBase {
     this.Logger.CTOREnd(DesktopProxy.name);
   }
 
-  async Instantiate_DesktopProxy(): Promise<void> {
+  async Instantiate(): Promise<void> {
     try {
-      this.Logger.FuncStart(this.Instantiate_DesktopProxy.name);
+      this.Logger.FuncStart(this.Instantiate.name, DesktopProxy.name);
 
       let initReportDesktopProxy = new InitReport_DesktopProxy();
 
@@ -54,22 +55,66 @@ export class DesktopProxy extends _HindeCoreBase {
 
       this.RecipeBasics = new RecipeBasics(this.HindeCore);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Instantiate_DesktopProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Instantiate.name, err);
     }
 
-    this.Logger.FuncEnd(this.Instantiate_DesktopProxy.name);
+    this.Logger.FuncEnd(this.Instantiate.name, DesktopProxy.name);
   }
 
-  WireEvents_DesktopProxy() {
-    this.Logger.FuncStart(this.WireEvents_DesktopProxy.name);
+  WireEvents() {
+    this.Logger.FuncStart(this.WireEvents.name, DesktopProxy.name);
 
     this.DTAreaProxy.WireEvents();
     this.DTStartBarProxy.WireEvent();
 
     this.DTAreaProxy.DTAreaProxyMutationEvent_Subject.RegisterObserver(this.DTAreaProxyMutationEvent_Observer);
 
-    this.Logger.FuncEnd(this.WireEvents_DesktopProxy.name);
+    this.Logger.FuncEnd(this.WireEvents.name, DesktopProxy.name);
   }
+
+  async GetState(): Promise<IStateOfDesktop> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetState.name, DesktopProxy.name);
+
+      let toReturnDesktopState: IStateOfDesktop = new DefaultStateOfDesktop();
+
+      await this.DTAreaProxy.GetState()
+        .then((stateOfDTAreaProxy: IStateOfDTArea) => toReturnDesktopState.StateOfDTArea = stateOfDTAreaProxy)
+        .then(() => resolve(toReturnDesktopState))
+        .catch((err) => reject(this.GetState.name + ' | ' + err));
+
+      this.Logger.FuncEnd(this.GetState.name, DesktopProxy.name);
+    });
+  }
+
+  async SetState(stateOfDesktop: IStateOfDesktop): Promise<void> {
+    this.Logger.FuncStart(this.SetState.name, DesktopProxy.name);
+    this.TaskMonitor.AsyncTaskStarted(this.SetState.name);
+
+    try {
+      let promAr: Promise<void>[] = [];
+
+      this.DTAreaProxy.SetState(stateOfDesktop.StateOfDTArea)
+        .then((requestedNewFrameCount: number) => {
+          this.Logger.LogVal('StateOfDTFrame count', requestedNewFrameCount.toString());
+          for (var idx = 0; idx < requestedNewFrameCount; idx++) {
+            promAr.push(this.AddContentEditorAsync());
+          }
+        }).
+        then(() => Promise.all(promAr))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.SetState.name, err));
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.SetState.name, err);
+    }
+
+    this.TaskMonitor.AsyncTaskCompleted(this.SetState.name);
+    this.Logger.FuncEnd(this.SetState.name, DesktopProxy.name);
+  }
+
+
+  //-----------------------------------------------------------------------
+
+
 
   async PublishItem(): Promise<void> {
     await this.DTAreaProxy.PublishTopFrame();
@@ -118,42 +163,7 @@ export class DesktopProxy extends _HindeCoreBase {
     return this.AssociatedDoc;
   }
 
-  async GetStateOfDesktop(): Promise<IStateOfDesktop> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetStateOfDesktop.name);
+  
 
-      let toReturnDesktopState: IStateOfDesktop = new DefaultStateOfDesktop();
 
-      await this.DTAreaProxy.GetState()
-        .then((stateOfDTAreaProxy: IStateOfDTArea) => toReturnDesktopState.StateOfDTArea = stateOfDTAreaProxy)
-        .then(() => resolve(toReturnDesktopState))
-        .catch((err) => reject(this.GetStateOfDesktop.name + ' | ' + err));
-
-      this.Logger.FuncEnd(this.GetStateOfDesktop.name);
-    });
-  }
-
-  async SetStateOfDesktopAsync(stateOfDesktop: IStateOfDesktop): Promise<void> {
-    this.Logger.FuncStart(this.SetStateOfDesktopAsync.name);
-    this.TaskMonitor.AsyncTaskStarted(this.SetStateOfDesktopAsync.name);
-
-    try {
-      let promAr: Promise<void>[] = [];
-
-      this.DTAreaProxy.SetStateOfDTArea(stateOfDesktop.StateOfDTArea)
-        .then((requestedNewFrameCount: number) => {
-          this.Logger.LogVal('StateOfDTFrame count', requestedNewFrameCount.toString());
-          for (var idx = 0; idx < requestedNewFrameCount; idx++) {
-            promAr.push(this.AddContentEditorAsync());
-          }
-        }).
-        then(() => Promise.all(promAr))
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.SetStateOfDesktopAsync.name, err));
-    } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.SetStateOfDesktopAsync.name, err);
-    }
-
-    this.TaskMonitor.AsyncTaskCompleted(this.SetStateOfDesktopAsync.name);
-    this.Logger.FuncEnd(this.SetStateOfDesktopAsync.name);
-  }
 }

@@ -80,6 +80,8 @@ class ContentEntry {
 
       this.TopScDocProxy = new ScDocumentProxy(this.HindeCore, document);
       this.TopScDocProxy.Instantiate();
+      this.TopScDocProxy.WireEvents();
+
       this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAgents_Content.name, err)

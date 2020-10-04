@@ -5,8 +5,10 @@ import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationD
 import { ScDocumentProxy } from "./ScDocumentProxy";
 import { IStateOfFrameStyling } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
+import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
+import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 
-export class NativeIframeProxy extends _HindeCoreBase {
+export class NativeIframeProxy extends _BaseStateFullProxy<IStateOfFrameStyling> implements IStateFullProxy<IStateOfFrameStyling> {
   private HtmlIFrameElement: HTMLIFrameElement;
   ScDocumentProxy: ScDocumentProxy;
   private NativeIframeId: string;
@@ -16,6 +18,52 @@ export class NativeIframeProxy extends _HindeCoreBase {
     this.HtmlIFrameElement = htmlIframeElement;
   }
 
+  Instantiate() {
+    this.Logger.FuncStart(this.Instantiate.name, NativeIframeProxy.name);
+
+    this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, this.HtmlIFrameElement.contentDocument);
+    this.ScDocumentProxy.Instantiate();
+    
+    this.NativeIframeId = this.HtmlIFrameElement.id;
+
+    this.Logger.FuncEnd(this.Instantiate.name, NativeIframeProxy.name);
+  }
+
+  WireEvents() {
+    this.ScDocumentProxy.WireEvents();
+  }
+
+  SetState(StateOfFrameStyling: IStateOfFrameStyling) {
+    this.Logger.FuncStart(this.SetState.name, NativeIframeProxy.name);
+    this.HtmlIFrameElement.style.height = StateOfFrameStyling.Height;
+    this.HtmlIFrameElement.style.left = StateOfFrameStyling.Left;
+    this.HtmlIFrameElement.style.position = StateOfFrameStyling.Position;
+    this.HtmlIFrameElement.style.top = StateOfFrameStyling.Top;
+    this.HtmlIFrameElement.style.width = StateOfFrameStyling.Width;
+    this.HtmlIFrameElement.style.zIndex = StateOfFrameStyling.ZIndex;
+    this.Logger.FuncEnd(this.SetState.name, NativeIframeProxy.name);
+  }
+
+  async GetState(): Promise<IStateOfFrameStyling> {
+    let toReturn: IStateOfFrameStyling = null;
+    try {
+      let sourceStyle = this.HtmlIFrameElement.style;
+      toReturn = {
+        Height: sourceStyle.height,
+        Left: sourceStyle.left,
+        Position: sourceStyle.position,
+        Top: sourceStyle.top,
+        Width: sourceStyle.width,
+        ZIndex: sourceStyle.zIndex
+      };
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.GetState.name, err);
+    }
+    return toReturn;
+  }
+
+  //-----------------------------------------------------------------------------------
+
   GetIframeHtmlElem(): HTMLIFrameElement {  //todo - get rid of this. is a temp workaround
     return this.HtmlIFrameElement;
   }
@@ -23,17 +71,6 @@ export class NativeIframeProxy extends _HindeCoreBase {
   GetNativeContentDoc(): ScDocumentProxy {
     return this.ScDocumentProxy;
   }
-
-  Instantiate() {
-    this.Logger.FuncStart(this.Instantiate.name, NativeIframeProxy.name);
-
-    this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, this.HtmlIFrameElement.contentDocument);
-    this.ScDocumentProxy.Instantiate();
-    this.NativeIframeId = this.HtmlIFrameElement.id;
-
-    this.Logger.FuncEnd(this.Instantiate.name, NativeIframeProxy.name);
-  }
-
   GetScWindowType(): ScWindowType {
     return this.ScDocumentProxy.GetScWindowType();
   }
@@ -54,27 +91,6 @@ export class NativeIframeProxy extends _HindeCoreBase {
 
   GetNativeIframeId(): string {
     return this.NativeIframeId;
-  }
-
-  SetState(StateOfFrameStyling: IStateOfFrameStyling) {
-    this.HtmlIFrameElement.style.height = StateOfFrameStyling.Height;
-    this.HtmlIFrameElement.style.left = StateOfFrameStyling.Left;
-    this.HtmlIFrameElement.style.position = StateOfFrameStyling.Position;
-    this.HtmlIFrameElement.style.top = StateOfFrameStyling.Top;
-    this.HtmlIFrameElement.style.width = StateOfFrameStyling.Width;
-    this.HtmlIFrameElement.style.zIndex = StateOfFrameStyling.ZIndex;
-  }
-  GetStateOfStyling(): IStateOfFrameStyling {
-    let sourceStyle = this.HtmlIFrameElement.style;
-    let toReturn: IStateOfFrameStyling = {
-      Height: sourceStyle.height,
-      Left: sourceStyle.left,
-      Position: sourceStyle.position,
-      Top: sourceStyle.top,
-      Width: sourceStyle.width,
-      ZIndex: sourceStyle.zIndex
-    };
-    return toReturn;
   }
 
   async WaitForCompleteNABHtmlIframeElement(friendly: string): Promise<ReadyStateNAB> {
@@ -98,6 +114,7 @@ export class NativeIframeProxy extends _HindeCoreBase {
         else {
           this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, this.HtmlIFrameElement.contentDocument);
           this.ScDocumentProxy.Instantiate();
+          this.ScDocumentProxy.WireEvents();
 
           await this.ScDocumentProxy.WaitForCompleteNAB_ScDocumentProxy(friendly)
             .then((result: ReadyStateNAB) => {

@@ -312,7 +312,7 @@ export class LoggerAgent implements ILoggerAgent {
       text = text + ' : ' + optionalValue;
     }
     let formatted = this.StyleFormat(this.styleFgRed, text);
-    this.Log(formatted, '', true);
+    //this.Log(formatted, '', true);
     this.Log(formatted, optionalValue, true);
   }
 

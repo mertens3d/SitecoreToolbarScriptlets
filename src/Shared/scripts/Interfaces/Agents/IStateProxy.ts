@@ -1,4 +1,6 @@
-﻿export interface IScStateFullProxy {
+﻿export interface IStateFullProxy<T> {
   Instantiate();
   WireEvents();
+  GetState(): Promise<T>;
+  SetState(state: T): Promise<void>;
 }

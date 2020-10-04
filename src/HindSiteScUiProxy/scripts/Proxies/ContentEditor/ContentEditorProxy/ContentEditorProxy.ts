@@ -4,7 +4,7 @@ import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReportContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy';
-import { IScStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateProxy';
+import { IStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateProxy';
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
 import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
@@ -13,12 +13,12 @@ import { ContentEditorProxyMutationEvent_Subject } from '../../Desktop/DesktopPr
 import { IContentEditorProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
 import { ContentTreeProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/ContentTreeProxyMutationEvent_Observer';
 import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
-import { _BaseScStateFullProxy } from '../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
+import { _BaseStateFullProxy } from '../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
 import { ScDocumentProxy } from "../../ScDocumentProxy";
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
 import { ContentTreeProxy } from "./ContentTreeProxy/ContentTreeProxy";
 
-export class ContentEditorProxy extends _BaseScStateFullProxy<IStateOfContentEditor> implements IScStateFullProxy {
+export class ContentEditorProxy extends _BaseStateFullProxy<IStateOfContentEditor> implements IStateFullProxy<IStateOfContentEditor> {
   private ContentTreeProxy: ContentTreeProxy;
   private TreeMutationEvent_Observer: ContentTreeProxyMutationEvent_Observer;
   public ContentEditorProxyMutationEvent_Subject: ContentEditorProxyMutationEvent_Subject;

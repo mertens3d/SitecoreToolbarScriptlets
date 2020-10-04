@@ -10,7 +10,6 @@ export interface IScWindowProxy {
   DesktopProxy: DesktopProxy;
   GetCurrentPageType(): ScWindowType;
   GetStateOfScUiProxy(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUiProxy>;
-  GetTopLevelDoc(): ScDocumentProxy;
   Instantiate_ScWindowProxy(): Promise<void>;
   PublishActiveCE();
   SetCompactCss(targetDoc: ScDocumentProxy);

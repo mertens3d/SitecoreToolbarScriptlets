@@ -4,7 +4,7 @@ import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ReportResultsInitDTFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
-import { IScStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfContentEditor } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { ContentEditorProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
@@ -16,8 +16,9 @@ import { IContentEditorProxyMutationEvent_Payload } from "../Events/ContentEdito
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
+import { IStateOfFrameStyling } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 
-export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IScStateFullProxy {
+export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy<IStateOfDTFrame> {
   ContentEditorProxyMutationEvent_Observer: ContentEditorProxyMutationEvent_Observer;
   FrameTypeDiscriminator = DTFrameProxy.name;
   Index: number = -1;
@@ -93,13 +94,15 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       this.Logger.FuncStart(this.GetState.name, DTFrameProxy.name);
       let stateOfDTFrame: IStateOfDTFrame = new DefaultStateOfDTFrame();
 
-      stateOfDTFrame.StateOfFrameStyling = this.NativeIFrameProxy.GetStateOfStyling();
+      this.NativeIFrameProxy.GetState()
+        .then((stateOfFrameStyling: IStateOfFrameStyling) => stateOfDTFrame.StateOfFrameStyling = stateOfFrameStyling)
+        .catch((err) => reject(this.GetState.name + ' | ' + err));
 
       stateOfDTFrame.ZIndex = this.GetZindexAsInt();
       if (this.ContentEditorProxy) {
         await this.ContentEditorProxy.GetState()
           .then((stateOfContentEditorProxy: IStateOfContentEditor) => stateOfDTFrame.StateOfContentEditor = stateOfContentEditorProxy)
-          .catch((err) => this.GetState.name + ' | ' + err);
+          .catch((err) => reject(this.GetState.name + ' | ' + err));
       }
       resolve(stateOfDTFrame);
       this.Logger.FuncEnd(this.GetState.name, DTFrameProxy.name);

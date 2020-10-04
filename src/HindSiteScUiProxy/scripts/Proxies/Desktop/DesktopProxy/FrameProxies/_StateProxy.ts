@@ -1,9 +1,9 @@
 ﻿import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/LoggableBase";
 
-export abstract class _BaseScStateFullProxy<T> extends _HindeCoreBase implements IScStateFullProxy {
+export abstract class _BaseStateFullProxy<T> extends _HindeCoreBase implements IStateFullProxy<T> {
   RecipeBasics: RecipeBasics;
   Friendly: string = '{unknown friendly}';
 
@@ -11,6 +11,7 @@ export abstract class _BaseScStateFullProxy<T> extends _HindeCoreBase implements
     super(hindeCore);
   }
   abstract GetState(): Promise<T>;
+  abstract SetState(state: T);
   abstract WireEvents();
   abstract Instantiate();
 }

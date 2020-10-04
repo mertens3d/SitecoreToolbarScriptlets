@@ -7,10 +7,10 @@ import { _HindeCoreBase } from "../../../LoggableBase";
 
 export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
   protected UrlParts: IGenericUrlParts;
-  private  Url: string;
+  private Url: string;
   //private BrowserProxy: IPopUpBrowserProxy;
 
-  constructor(hindeCore: IHindeCore,  url:string) { // browserProxy: IPopUpBrowserProxy
+  constructor(hindeCore: IHindeCore, url: string) { // browserProxy: IPopUpBrowserProxy
     super(hindeCore);
     this.Url = url;
 
@@ -78,7 +78,7 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
   //  }
   //}
 
-  protected  Init_GenericUrlAgent(): void {
+  protected Init_GenericUrlAgent(): void {
     try {
       this.Logger.FuncStart(this.Init_GenericUrlAgent.name, GenericUrlAgent.name);
 

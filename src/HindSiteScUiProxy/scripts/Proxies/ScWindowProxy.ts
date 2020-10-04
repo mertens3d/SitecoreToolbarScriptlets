@@ -67,20 +67,19 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
   async Instantiate_ScWindowProxy(): Promise<void> {
     try {
       this.Logger.FuncStart(this.Instantiate_ScWindowProxy.name);
-      let recipesBasic = new RecipeBasics(this.HindeCore);
       this.InitReportScWindowManager = new InitReportScWindowManager();
 
-      await this.GetTopLevelDoc().WaitForCompleteNAB_ScDocumentProxy('Window.Document')// recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
+      await this.ScDocumentProxy.WaitForCompleteNAB_ScDocumentProxy('Window.Document')// recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
         .then((result: ReadyStateNAB) => {
           if (this.ScDocumentProxy.GetScWindowType() === ScWindowType.Desktop) {
-            this.DesktopProxy = new DesktopProxy(this.HindeCore, this.GetTopLevelDoc());
-            this.DesktopProxy.Instantiate_DesktopProxy()
-              .then(() => this.DesktopProxy.WireEvents_DesktopProxy())
+            this.DesktopProxy = new DesktopProxy(this.HindeCore, this.ScDocumentProxy);
+            this.DesktopProxy.Instantiate()
+              .then(() => this.DesktopProxy.WireEvents())
           }
         })
         .then(() => {
           if (this.ScDocumentProxy.GetScWindowType() === ScWindowType.ContentEditor) {
-            this.ContentEditorProxy = new ContentEditorProxy(this.HindeCore, this.GetTopLevelDoc(), 'Solo Content Editor doc');
+            this.ContentEditorProxy = new ContentEditorProxy(this.HindeCore, this.ScDocumentProxy, 'Solo Content Editor doc');
             this.ContentEditorProxy.Instantiate()
               .then(() => this.ContentEditorProxy.WireEvents())
           }
@@ -98,14 +97,14 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
     return this.ScDocumentProxy.GetScWindowType()
   }
 
-  GetTopLevelDoc(): ScDocumentProxy {
-    if (!this.ScDocumentProxy) {
-      this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, window.document);
-      this.ScDocumentProxy.Instantiate();
-      this.ScDocumentProxy.Nickname = 'top doc';
-    }
-    return this.ScDocumentProxy;
-  }
+  //GetTopLevelDoc(): ScDocumentProxy {
+  //  if (!this.ScDocumentProxy) {
+  //    this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, window.document);
+  //    this.ScDocumentProxy.Instantiate();
+  //    this.ScDocumentProxy.Nickname = 'top doc';
+  //  }
+  //  return this.ScDocumentProxy;
+  //}
 
   async SetCompactCss(targetDoc: ScDocumentProxy) {
     await this.ContentEditorProxy.SetCompactCss();
@@ -116,7 +115,7 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
       let toReturn: IStateOfScWindow = new DefaultStateOfScWindowProxy();
 
       if (this.ScDocumentProxy.GetScWindowType() === ScWindowType.Desktop) {
-        await this.DesktopProxy.GetStateOfDesktop()
+        await this.DesktopProxy.GetState()
           .then((result: IStateOfDesktop) => toReturn.StateOfDesktop = result)
           .then(() => resolve(toReturn))
           .catch((err) => reject(this.GetStates.name + ' | ' + err));
@@ -156,7 +155,7 @@ export class ScWindowProxy extends _HindeCoreBase implements IScWindowProxy {
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
           if (dataToRestore.StateOfScWindow.StateOfDesktop) {
-            await this.DesktopProxy.SetStateOfDesktopAsync(dataToRestore.StateOfScWindow.StateOfDesktop)
+            await this.DesktopProxy.SetState(dataToRestore.StateOfScWindow.StateOfDesktop)
               .then(() => resolve())
               .catch((err) => reject(this.SetStateOfScWin.name + ' | ' + err));
           } else {
