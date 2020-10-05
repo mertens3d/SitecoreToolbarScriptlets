@@ -2,7 +2,7 @@
 import { DesktopSFProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ScWindowType } from "../../../Enums/scWindowType";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
-import { ScDocumentFacade } from "../../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IStateFullProxy } from "../IStateProxy";
 

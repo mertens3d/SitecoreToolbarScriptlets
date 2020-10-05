@@ -1,19 +1,20 @@
-﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
-import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { ReadyStateNAB } from "../../../Shared/scripts/Enums/ReadyState";
-import { Guid } from "../../../Shared/scripts/Helpers/Guid";
-import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScVerSpec } from "../../../Shared/scripts/Interfaces/IScVerSpec";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
-import { DocumentProxyMutationEvent_Subject } from "./Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Subject";
-import { IDocumentProxyMutationEvent_Payload } from "./Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
-import { IFrameJacketAddRemoveEvent_Payload } from "../../../DOMJacket/Events/NativeIFrameAddedEvent/INativeIFrameAddedEvent_Payload";
-import { NativeIFrameAddRemoveEvent_Observer } from "../../../DOMJacket/Events/NativeIFrameAddedEvent/NativeIFrameAddedEvent_Observer";
-import { FrameJacketAddRemoveEvent_Subject } from "../../../DOMJacket/Events/NativeIFrameAddedEvent/NativeIFrameAddedEvent_Subject";
+﻿import { DocumentJacket } from "../../DOMJacket/DocumentJacket";
+import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { StateFullProxyDisciminator } from "../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { ReadyStateNAB } from "../../Shared/scripts/Enums/ReadyState";
+import { Guid } from "../../Shared/scripts/Helpers/Guid";
+import { GuidData } from "../../Shared/scripts/Helpers/GuidData";
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IScVerSpec } from "../../Shared/scripts/Interfaces/IScVerSpec";
+import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
+import { DocumentProxyMutationEvent_Subject } from "../scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Subject";
+import { IDocumentProxyMutationEvent_Payload } from "../scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
+import { IFrameJacketAddRemoveEvent_Payload } from "../../DOMJacket/Events/NativeIFrameAddedEvent/INativeIFrameAddedEvent_Payload";
+import { NativeIFrameAddRemoveEvent_Observer } from "../../DOMJacket/Events/NativeIFrameAddedEvent/NativeIFrameAddedEvent_Observer";
+import { FrameJacketAddRemoveEvent_Subject } from "../../DOMJacket/Events/NativeIFrameAddedEvent/NativeIFrameAddedEvent_Subject";
 
 export class ScDocumentFacade extends _HindeCoreBase {
+  
   Nickname: string;
   private NativeIframeAddRemoveEvent_Observer: NativeIFrameAddRemoveEvent_Observer;
   private FrameJacketAddRemoveEvent_Subject: FrameJacketAddRemoveEvent_Subject;
@@ -81,7 +82,7 @@ export class ScDocumentFacade extends _HindeCoreBase {
     this.Logger.FuncEnd(this.CallBackOnNativeIFrameAddRemoveEventAsync.name);
   }
 
-  getElementById(elementId: string) {
+  GetElementById(elementId: string) {
     return this.DocumentJacket.getElementById(elementId);
   }
 
@@ -89,13 +90,18 @@ export class ScDocumentFacade extends _HindeCoreBase {
   //  this.ErrorHand.ThrowIfNullOrUndefined(this.GetScWindowType.name, this.DocumentJacket);
   //  return this.DocumentJacket.GetScWindowType();
   //}
-  querySelector(arg0: string) {
-    return this.DocumentJacket.querySelector(arg0);
+  querySelector(selector: string) {
+    return this.DocumentJacket.querySelector(selector);
   }
 
   async RaceWaitAndClick(scVerSpec: IScVerSpec): Promise<void> {
     return this.DocumentJacket.RaceWaitAndClick(scVerSpec);
   }
+
+  WaitForThenClick(selectorAr: string[]): Promise<void>{
+    return this.DocumentJacket.WaitForThenClick(selectorAr)
+  }
+
 
   Validate() {
     if (!this.DocumentJacket) {

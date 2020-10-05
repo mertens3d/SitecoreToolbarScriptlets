@@ -64,7 +64,10 @@ export class ContentConst {
     },
 
     ElemId: {
-      sc: {
+      SC: {
+        PackageDesigner: {
+          StatusText: 'StatusText',
+        },
         scLoginPassword: 'Password',
         scLoginUserName: 'UserName',
         SitecoreRootAnchorNodeId: 'Tree_Node_11111111111111111111111111111111',
@@ -94,6 +97,13 @@ export class ContentConst {
           ScContentTreeContainer: '.scContentTreeContainer',
           scContentTreeNodeIcon: '.scContentTreeNodeIcon',
         },
+        PackageDesigner: {
+          Ribbon: {
+            InstallerRibbon_Nav_Package: '[id=InstallerRibbon_Nav_Package]',
+            InstallerRibbon_Toolbar: '[id=InstallerRibbon_Toolbar]',
+            Open: '[title="Open an existing project"]',
+          },
+        },
         Level2Nodes: {
           MediaLibraryAnchorRootNode: '[id=Tree_Node_3D6658D8A0BF4E75B3E2D050FABCF4E1]',
           TemplatesAnchorRootNode: '[id=Tree_Node_3C1715FE6A134FCF845FDE308BA9741D]',
@@ -118,6 +128,10 @@ export class ContentConst {
         MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',
         NavPublishStrip: '[id*=_Nav_PublishStrip]',
         StartMenuLeftOption: '.scStartMenuLeftOption',
+        StartMenu: {
+          DevelopmentTools: '[src="/temp/iconcache/apps/24x24/magic-cube.png"]',
+          PackageDesigner: '[id=MenuItem211048689]',
+        },
         Publish: {
           TheItemHasBeenPublished: '[id=LastPage]:not([style*=\'display:none\'])',
           SettingsHidden: '[id=Settings][style*=\'display: none\']',

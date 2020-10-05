@@ -57,7 +57,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
   VisibilityTestSnapShotable(stateOfSitecoreWindow: IStateOfScUi): VisiblityTestResult {
     //todo may want to be able take snap shots of other window types
 
-    return this.VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow) && this.VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfSitecoreWindow);
+    return this.VisibilityTestDesktopOrContentEditorOrPackageDesigner(stateOfSitecoreWindow) && this.VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfSitecoreWindow);
   }
 
   VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfLiveHindSite: IStateOfScUi): VisiblityTestResult {
@@ -77,24 +77,26 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
     return visiblityTestResult;
   }
 
-  VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow: IStateOfScUi): VisiblityTestResult {
-    this.Logger.FuncStart(this.VisibilityTestDesktopOrContentEditor.name);
+  VisibilityTestDesktopOrContentEditorOrPackageDesigner(stateOfSitecoreWindow: IStateOfScUi): VisiblityTestResult {
+    this.Logger.FuncStart(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name);
 
-    let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestDesktopOrContentEditor.name);
+    let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name);
 
     if (this.StateOfSitecoreWindow) {
-      visiblityTestResult.DidItPass = (stateOfSitecoreWindow.Meta.WindowType === ScWindowType.ContentEditor
-        ||
-        stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop);
+      visiblityTestResult.DidItPass = (
+        stateOfSitecoreWindow.Meta.WindowType === ScWindowType.ContentEditor
+        || stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop
+        || stateOfSitecoreWindow.Meta.WindowType === ScWindowType.PackageDesigner
+      );
 
       if (!visiblityTestResult.DidItPass) {
         visiblityTestResult.FriendlyFailReason = 'Requires Content Editor or Desktop';
       }
     } else {
-      this.ErrorHand.ErrorAndThrow(this.VisibilityTestDesktopOrContentEditor.name, 'null state');
+      this.ErrorHand.ErrorAndThrow(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name, 'null state');
     }
 
-    this.Logger.FuncEnd(this.VisibilityTestDesktopOrContentEditor.name);
+    this.Logger.FuncEnd(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name);
     return visiblityTestResult;
   }
 
@@ -109,7 +111,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
         break;
 
       case VisibilityType.DesktopOrContentEditor:
-        toReturn = this.VisibilityTestDesktopOrContentEditor(this.StateOfSitecoreWindow);
+        toReturn = this.VisibilityTestDesktopOrContentEditorOrPackageDesigner(this.StateOfSitecoreWindow);
         break;
 
       case VisibilityType.IfDesktopMin1ContentEditor:

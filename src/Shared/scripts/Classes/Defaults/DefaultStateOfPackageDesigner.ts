@@ -4,4 +4,5 @@ import { IStateOfPackageDesigner } from "../../Interfaces/Data/States/IStateOfPa
 export class DefaultStateOfPackageDesigner implements IStateOfPackageDesigner {
   StatefullDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.PackageDesigner];
   StatefullDisciminator = StateFullProxyDisciminator.PackageDesigner;
+  StatusText: '';
 }

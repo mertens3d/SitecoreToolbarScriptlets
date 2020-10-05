@@ -3,7 +3,7 @@ import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHe
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ScDocumentFacade } from "../../../ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../../Facades/ScDocumentFacade";
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';

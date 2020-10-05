@@ -1,6 +1,6 @@
 import { HindSiteScUiAPI } from '../../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
 import { ScUiManager } from '../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager';
-import { ScDocumentFacade } from "../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/ErrorHandlerAgent";
 import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';

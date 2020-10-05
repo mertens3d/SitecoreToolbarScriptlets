@@ -24,7 +24,7 @@ import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrl
 import { CommandStartEndCancelEvent_Observer } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Observer";
 import { ICommandStartEndCancelEvent_Payload, CommandState_State } from "../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
 import { CommandStartEndCancelEvent_Subject } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Subject";
-import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 
 export class CommandRouter extends _HindeCoreBase {
   private InternalCommandRunner: InternalCommandRunner;

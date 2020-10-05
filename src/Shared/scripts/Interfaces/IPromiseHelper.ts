@@ -1,5 +1,5 @@
 ﻿import { ReadyStateNAB } from "../Enums/ReadyState";
-import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 import { IDataPublishChain } from "./Data/IDataPublishChain";
 import { IAbsoluteUrl } from "./IAbsoluteUrl";
 import { IScVerSpec } from "./IScVerSpec";

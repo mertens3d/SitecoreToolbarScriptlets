@@ -4,7 +4,7 @@ import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { ScDocumentFacade } from "../Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../Facades/ScDocumentFacade";
 import { FrameJacket } from "../../../DOMJacket/FrameJacket";
 
 export class FrameHelper extends _HindeCoreBase {

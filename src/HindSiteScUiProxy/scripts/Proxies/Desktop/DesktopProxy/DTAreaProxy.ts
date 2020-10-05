@@ -6,7 +6,7 @@ import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { FrameJacket } from "../../../../../DOMJacket/FrameJacket";
-import { ScDocumentFacade } from "../../ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../Facades/ScDocumentFacade";
 import { DocumentProxyMutationEvent_Observer } from "./Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Observer";
 import { DTAreaProxyMutationEvent_Subject } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Subject";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
@@ -19,6 +19,7 @@ import { ReadyStateNAB } from "../../../../../Shared/scripts/Enums/ReadyState";
 import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { ContentEditorSFProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { IDocumentProxyMutationEvent_Payload } from "./Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
+import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 
 export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.DTArea;
@@ -86,15 +87,18 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     });
   }
 
-  async SetState(StateOfDTArea: IStateOfDTArea): Promise<number> {
+  async SetState(StateOfDTArea: IStateOfDTArea): Promise<IDTFramesNeeded> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.SetState.name, DTAreaProxy.name);
-      let contentEditorCountNeeded: number = 0;
+      let dtFramesNeeded: IDTFramesNeeded = {
+        DiscriminatorAr: []
+      }
 
       if (StateOfDTArea) {
         if (!StaticHelpers.IsNullOrUndefined([this.AssociatedScDocumentProxy])) {
           this.AddToIncomingSetStateList(StateOfDTArea);
-          contentEditorCountNeeded = StateOfDTArea.StateOfDTFrames.length;
+
+          StateOfDTArea.StateOfDTFrames.forEach((dtFrame: IStateOfDTFrame) => dtFramesNeeded.DiscriminatorAr.push(dtFrame.StateOfHosted.StatefullDisciminator));
         } else {
           reject(this.SetState.name + ' bad data');
         }
@@ -102,7 +106,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
         reject(this.SetState.name + '  No state provided');
       }
 
-      resolve(contentEditorCountNeeded);
+      resolve(dtFramesNeeded);
 
       this.Logger.FuncEnd(this.SetState.name, DTAreaProxy.name);
     });
@@ -128,7 +132,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     this.Logger.FuncEnd(this.CallBackOnDocumentProxyMutationEvent.name);
   }
 
-  private async HandleAddedFrameJacket(frameJacket: FrameJacket) : Promise<void>{
+  private async HandleAddedFrameJacket(frameJacket: FrameJacket): Promise<void> {
     this.Logger.FuncStart(this.HandleAddedFrameJacket.name);
 
     if (frameJacket) {

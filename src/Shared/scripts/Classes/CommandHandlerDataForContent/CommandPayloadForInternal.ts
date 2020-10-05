@@ -9,7 +9,7 @@ import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/I
 import { IHindeCore } from "../../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
-import { ScDocumentFacade } from "../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
 import { ICommandParams } from "../../Interfaces/ICommandParams";
 import { _HindeCoreBase } from "../../LoggableBase";

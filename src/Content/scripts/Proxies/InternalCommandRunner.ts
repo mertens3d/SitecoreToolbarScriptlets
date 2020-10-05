@@ -14,7 +14,7 @@ import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
 import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
-import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 
 export class InternalCommandRunner extends _HindeCoreBase {
   Dependancies: ICommandDependancies;

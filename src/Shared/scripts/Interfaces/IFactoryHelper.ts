@@ -1,4 +1,4 @@
-﻿import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+﻿import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
 export interface IFactoryHelper {

@@ -88,7 +88,7 @@ export class DocumentJacket extends _HindeCoreBase {
 
   public async WaitForAndReturnFoundElem(selector: string, overrideIterCount = 8): Promise<HTMLElement> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForAndReturnFoundElem.name);
+      this.Logger.FuncStart(this.WaitForAndReturnFoundElem.name, selector);
 
       var toReturnFoundElem: HTMLElement = null;
       var iterationJr = new IterationDrone(this.HindeCore, this.WaitForAndReturnFoundElem.name + ' - ' + selector, true, overrideIterCount);
@@ -96,6 +96,7 @@ export class DocumentJacket extends _HindeCoreBase {
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
         toReturnFoundElem = this.NativeDocument.querySelector(selector);
         if (toReturnFoundElem) {
+          this.Logger.Log('found it');
           resolve(toReturnFoundElem);
         }
         else {
@@ -104,7 +105,7 @@ export class DocumentJacket extends _HindeCoreBase {
       }
 
       reject(iterationJr.IsExhaustedMsg);
-      this.Logger.FuncEnd(this.WaitForAndReturnFoundElem.name);
+      this.Logger.FuncEnd(this.WaitForAndReturnFoundElem.name, selector);
     });
   }
   public WaitForThenClick(selectorAr: string[]): Promise<void> {

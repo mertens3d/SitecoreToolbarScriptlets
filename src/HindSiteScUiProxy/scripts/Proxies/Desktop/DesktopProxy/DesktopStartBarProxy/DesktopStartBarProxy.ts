@@ -1,6 +1,6 @@
 ﻿import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ScDocumentFacade } from "../../../ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../../Facades/ScDocumentFacade";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';

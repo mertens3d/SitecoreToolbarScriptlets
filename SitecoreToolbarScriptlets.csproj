@@ -67,7 +67,7 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\ContentApi\Recipes\RecipeAutoSaveState.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Recipes\RecipeForceAutoSnapShot.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentBrowserProxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\PackageDesignerProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\PackageDesignerProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopPopUpMenuProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Subject.ts" />
@@ -89,7 +89,7 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\CEFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseScFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_StateProxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ScDocumentFacade.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\Facades\ScDocumentFacade.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\ErrorHandlerAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\TaskMonitor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\TaskMutationType.ts" />
@@ -141,6 +141,7 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Helpers\FrameHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\Discriminator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\ISnapShotsAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentEditorCountsNeeded.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IDiscriminator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IErrorHandlerAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHindeCore.ts" />

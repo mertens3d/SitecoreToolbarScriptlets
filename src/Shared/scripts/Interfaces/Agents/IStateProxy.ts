@@ -1,5 +1,4 @@
-﻿import { ScWindowType } from "../../Enums/scWindowType";
-import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
+﻿import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
 
 export interface IStateFullProxy {
   StateFullProxyDisciminator: StateFullProxyDisciminator;

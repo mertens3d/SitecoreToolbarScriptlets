@@ -10,4 +10,5 @@ export interface IDataMetaData {
   TimeStamp: Date;
   StorageId: GuidData;
   WindowType: ScWindowType;
+  
 }

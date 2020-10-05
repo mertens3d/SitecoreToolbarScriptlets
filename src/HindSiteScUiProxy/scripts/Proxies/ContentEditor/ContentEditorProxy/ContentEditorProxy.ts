@@ -15,7 +15,7 @@ import { IContentEditorProxyMutationEvent_Payload } from '../../Desktop/DesktopP
 import { ContentTreeProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/ContentTreeProxyMutationEvent_Observer';
 import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { _BaseStateFullProxy } from '../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
-import { ScDocumentFacade } from "../../ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../Facades/ScDocumentFacade";
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
 import { ContentTreeProxy } from "./ContentTreeProxy/ContentTreeProxy";
 

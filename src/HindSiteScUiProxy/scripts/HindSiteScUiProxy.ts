@@ -6,7 +6,7 @@ import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataS
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
-import { ScDocumentFacade } from "./Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../Facades/ScDocumentFacade";
 import { ScWindowFacade } from "./Proxies/ScWindowProxy";
 import { ContentEditorSFProxy } from "./Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DesktopSFProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";

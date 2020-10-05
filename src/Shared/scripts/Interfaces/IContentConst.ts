@@ -7,7 +7,10 @@ export interface IContentConst {
   DefaultShowDebuggingModules: boolean;
 
   ElemId: {
-    sc: {
+    SC: {
+      PackageDesigner: {
+        StatusText: string,
+      }
       scLoginPassword: string,
       scLoginUserName: string,
       SitecoreRootAnchorNodeId: string,
@@ -46,6 +49,13 @@ export interface IContentConst {
         ScContentTreeContainer: string,
         scContentTreeNodeIcon: string,
       },
+      PackageDesigner: {
+        Ribbon: {
+          InstallerRibbon_Nav_Package: string,
+          InstallerRibbon_Toolbar: string,
+          Open: string,
+        }
+      },
       Level2Nodes: {
         MediaLibraryAnchorRootNode: string,
         TemplatesAnchorRootNode: string,
@@ -65,6 +75,10 @@ export interface IContentConst {
       NavPublishStrip: string,
       NextButton: string,
       Ok: string,
+      StartMenu: {
+        DevelopmentTools: string,
+        PackageDesigner: string,
+      },
       StartMenuLeftOption: string,
       scStartButton: IScVerSpec,
       Desktop: {

@@ -11,8 +11,8 @@ import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/Stat
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfFrameStyling } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 import { ContentEditorSFProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { PackageDesignerProxy } from "../../../ContentEditor/ContentEditorProxy/PackageDesignerProxy";
-import { ScDocumentFacade } from "../../../ScDocumentFacade";
+import { PackageDesignerSFProxy } from "../../../PackageDesignerProxy";
+import { ScDocumentFacade } from "../../../../../Facades/ScDocumentFacade";
 import { ContentEditorProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
 import { IContentEditorProxyMutationEvent_Payload } from "../Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
@@ -25,7 +25,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   ContentEditorProxyMutationEvent_Observer: ContentEditorProxyMutationEvent_Observer;
   FrameTypeDiscriminator = DTFrameProxy.name;
   Index: number = -1;
-  private PackageDesignerProxy: PackageDesignerProxy;
+  private PackageDesignerProxy: PackageDesignerSFProxy;
   //public ContentEditorProxy: ContentEditorProxy;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   public HostedStateFullProxy: IStateFullProxy;
@@ -67,7 +67,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
               this.HostedStateFullProxy = contentEditorProxy;
               break;
             case ScWindowType.PackageDesigner:
-              this.PackageDesignerProxy = new PackageDesignerProxy(this.HindeCore, this.ScDocumentProxy, this.Friendly)
+              this.PackageDesignerProxy = new PackageDesignerSFProxy(this.HindeCore, this.ScDocumentProxy, this.Friendly)
               this.HostedStateFullProxy = this.PackageDesignerProxy;
               break;
             default:

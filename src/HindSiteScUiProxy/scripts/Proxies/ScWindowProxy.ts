@@ -21,7 +21,7 @@ import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
-import { ScDocumentFacade } from "./ScDocumentFacade";
+import { ScDocumentFacade } from "../../Facades/ScDocumentFacade";
 import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 

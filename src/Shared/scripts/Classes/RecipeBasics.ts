@@ -1,6 +1,6 @@
 ﻿import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
 import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
-import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { ReadyStateNAB } from '../Enums/ReadyState';
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
@@ -260,9 +260,10 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
 
   async WaitAndReturnFoundFromContainer(haystackElem: HTMLElement, selector: string, friendly: string): Promise<HTMLElement> {
     return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitAndReturnFoundFromContainer.name, selector);
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitAndReturnFoundFromContainer.name, [haystackElem, selector]);
       var toReturnFoundElem: HTMLElement = null;
-      var iterationJr = new IterationDrone(this.HindeCore, this.WaitAndReturnFoundFromContainer.name + ' : ' + selector + ' ' + friendly, false);
+      var iterationJr = new IterationDrone(this.HindeCore, this.WaitAndReturnFoundFromContainer.name + ' : ' + selector + ' ' + friendly, true);
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
         toReturnFoundElem = haystackElem.querySelector(selector);
@@ -276,6 +277,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
       if (iterationJr.IsExhausted) {
         reject(iterationJr.IsExhaustedMsg);
       }
+      this.Logger.FuncEnd(this.WaitAndReturnFoundFromContainer.name, selector);
     });
   }
 

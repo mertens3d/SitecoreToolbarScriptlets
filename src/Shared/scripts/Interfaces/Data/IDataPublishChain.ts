@@ -1,5 +1,5 @@
 ﻿import { CEFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
-import { ScDocumentFacade } from "../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 
 export interface IDataPublishChain {
   TopScDocumentProxy: ScDocumentFacade,

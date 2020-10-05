@@ -1,6 +1,6 @@
 ﻿import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScWindowFacade } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { ScDocumentFacade } from "../../Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../../Facades/ScDocumentFacade";
 import { IApiCallPayload } from "../../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ICommandRecipes } from '../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { DTFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';

@@ -2,7 +2,7 @@
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
-import { ScDocumentFacade } from "../../../ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../../Facades/ScDocumentFacade";
 import { _BaseStateFullProxy } from "./_StateProxy";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";

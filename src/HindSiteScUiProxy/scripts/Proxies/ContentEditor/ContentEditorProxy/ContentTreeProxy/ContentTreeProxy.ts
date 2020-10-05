@@ -3,7 +3,7 @@ import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBas
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReportTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
-import { ScDocumentFacade } from "../../../ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../../Facades/ScDocumentFacade";
 import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { INativeClassNameChangeEvent_Payload } from '../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';

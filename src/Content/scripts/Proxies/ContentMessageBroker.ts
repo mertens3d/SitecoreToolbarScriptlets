@@ -17,7 +17,7 @@ import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/IComman
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
-import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 
 export class MessageBroker_Content extends _HindeCoreBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;

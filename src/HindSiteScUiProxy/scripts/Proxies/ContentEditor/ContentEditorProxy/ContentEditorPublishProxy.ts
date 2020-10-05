@@ -10,7 +10,7 @@ import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { DTFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { ScDocumentFacade } from "../../ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../Facades/ScDocumentFacade";
 import { ContentEditorSFProxy } from "./ContentEditorProxy";
 
 export class ContentEditorPublishProxy extends _HindeCoreBase  {

@@ -42,9 +42,9 @@ export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
       stateOfStorageSnapShots = new DefaultStateOfStorageSnapshots();
     }
 
-    let validatedSnapShots: DefaultStateOfScUiProxy[] = [];
+    let validatedSnapShots: IStateOfScUi[] = [];
 
-    stateOfStorageSnapShots.SnapShots.forEach((snapShot: DefaultStateOfScUiProxy) => {
+    stateOfStorageSnapShots.SnapShots.forEach((snapShot: IStateOfScUi) => {
       if (!StaticHelpers.IsNullOrUndefined(snapShot)) {
         validatedSnapShots.push(this.ValidateStateOfScUiProxy(snapShot));
       } else {

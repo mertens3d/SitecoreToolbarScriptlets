@@ -6,7 +6,7 @@ import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/S
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
-import { ScDocumentFacade } from "../../ScDocumentFacade";
+import { ScDocumentFacade } from "../../../../Facades/ScDocumentFacade";
 import { DTPopUpMenuProxy } from "./DesktopPopUpMenuProxy";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
@@ -16,8 +16,10 @@ import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationE
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
+import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 
-export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy{
+export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.Desktop;
   //DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
   private AssociatedDoc: ScDocumentFacade;
@@ -97,13 +99,20 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
       let promAr: Promise<void>[] = [];
 
       this.DTAreaProxy.SetState(stateOfDesktop.StateOfDTArea)
-        .then((requestedNewFrameCount: number) => {
-          this.Logger.LogVal('StateOfDTFrame count', requestedNewFrameCount.toString());
-          for (var idx = 0; idx < requestedNewFrameCount; idx++) {
-            promAr.push(this.AddContentEditorAsync());
-          }
-        }).
-        then(() => Promise.all(promAr))
+        .then((dtFramesNeeded: IDTFramesNeeded) => {
+          this.Logger.LogAsJsonPretty('dtFramesNeeded', dtFramesNeeded);
+
+          dtFramesNeeded.DiscriminatorAr.forEach((disciminator: StateFullProxyDisciminator) => {
+            if (disciminator === StateFullProxyDisciminator.ContentEditor) {
+              promAr.push(this.AddContentEditorAsync());
+            } else if (disciminator === StateFullProxyDisciminator.PackageDesigner) {
+              promAr.push(this.AddPackageDesignerAsync())
+            } else {
+              this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled disciminator ')
+            }
+          })
+        })
+        .then(() => Promise.all(promAr))
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.SetState.name, err));
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.SetState.name, err);
@@ -119,12 +128,26 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
 
   //-----------------------------------------------------------------------
 
-
-
   async PublishItem(): Promise<void> {
     await this.DTAreaProxy.PublishTopFrame();
   }
 
+  async AddPackageDesignerAsync(): Promise<void> {
+
+    try {
+      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
+
+      await this.DTStartBarProxy.TriggerRedButton()
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddContentEditorAsync.name))
+        .then(() => this.DTPopUpMenuProxy.RecipeAddNewPackageDesignerToDesktop(this.AssociatedDoc))
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddContentEditorAsync.name))//ui-widget-overlay ui-front
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddContentEditorAsync.name))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err));
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err);
+    }
+
+  }
   async AddContentEditorAsync(): Promise<void> {
     try {
       this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
@@ -167,8 +190,4 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   GetAssociatedDoc(): ScDocumentFacade {
     return this.AssociatedDoc;
   }
-
-  
-
-
 }
