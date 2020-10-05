@@ -1,6 +1,11 @@
-﻿export interface IStateFullProxy<T> {
-  Instantiate();
+﻿import { ScWindowType } from "../../Enums/scWindowType";
+import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
+
+export interface IStateFullProxy {
+  StateFullProxyDisciminator: StateFullProxyDisciminator;
+  TriggerInboundEventsAsync();
+  InstantiateAsyncMembers();
   WireEvents();
-  GetState(): Promise<T>;
-  SetState(state: T): Promise<any>;
+  GetState(): Promise<any>;
+  SetState(state: any): Promise<any>;
 }

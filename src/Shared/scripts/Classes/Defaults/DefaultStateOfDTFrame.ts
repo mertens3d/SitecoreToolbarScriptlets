@@ -1,12 +1,14 @@
-﻿import { IStateOfDTFrame } from "../../Interfaces/Data/States/IStateOfDTFrame";
-import { DefaultStateOfContentEditor } from "./DefaultStateOfContentEditor";
+﻿import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../Enums/scWindowType";
-import { Guid } from "../../Helpers/Guid";
+import { IStateOf_ } from "../../Interfaces/Data/States/IStateofX";
+import { IStateOfDTFrame } from "../../Interfaces/Data/States/IStateOfDTFrame";
 
 export class DefaultStateOfDTFrame implements IStateOfDTFrame {
-    StateOfContentEditor = new DefaultStateOfContentEditor();
-    StateOfFrameStyling = null;
- 
-    WindowType: ScWindowType;
-    ZIndex: number;
+  StateOfHosted: IStateOf_ = {
+    StatefullDisciminator: StateFullProxyDisciminator.Unknown,
+    StatefullDisciminatorFriendly : StateFullProxyDisciminator[StateFullProxyDisciminator.Unknown]
+  };
+  StateOfFrameStyling = null;
+  WindowType: ScWindowType;
+  ZIndex: number;
 }

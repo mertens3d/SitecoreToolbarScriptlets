@@ -2,14 +2,14 @@
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
+import { IContentBrowserFacade } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 import { IMessageBroker_Content } from "../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScUrlAgent } from "../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
+import { IScUrlAgent } from "../../../Shared/scripts/Interfaces/Jackets/IScUrlAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
@@ -17,19 +17,19 @@ import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/IComman
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
-import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
+import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
 
 export class MessageBroker_Content extends _HindeCoreBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
-  private HindSiteScUiProxy: IHindSiteScUiProxy;
+  private HindSiteScUiProxy: IHindSiteScUiAPI;
 
   private AtticAgent: IContentAtticAgent;
 
-  ContentBrowserProxy: IContentBrowserProxy;
+  ContentBrowserProxy: IContentBrowserFacade;
   AutoSnapShotAgent: AutoSnapShotAgent;
   CommandRouter: CommandRouter;
 
-  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter) {
+  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiAPI, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserFacade, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter) {
     super(hindeCore);
     this.Logger.CTORStart(MessageBroker_Content.name);
 
@@ -150,7 +150,7 @@ export class MessageBroker_Content extends _HindeCoreBase implements IMessageBro
       let responseContentToController = new DefaultMsgContentToController(MsgFlag.Unknown);
 
       await this.HindSiteScUiProxy.GetStateOfScUiProxy()
-        .then((stateOfScUiProxy: IStateOfScUiProxy) => {
+        .then((stateOfScUiProxy: IStateOfScUi) => {
           responseContentToController.Payload.StateOfScUiProxy_Live = stateOfScUiProxy;
           responseContentToController.Payload.LastReq = msgFlag;
           responseContentToController.MsgFlag = MsgFlag.RespTaskSuccessful;

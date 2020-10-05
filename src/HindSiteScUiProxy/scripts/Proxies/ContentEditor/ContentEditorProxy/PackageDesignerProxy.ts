@@ -1,26 +1,28 @@
 ﻿import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _HindeCoreBase } from '../../../../../Shared/scripts/LoggableBase';
-import { ContentEditorProxy } from './ContentEditorProxy';
-import { ScDocumentProxy } from "../../ScDocumentProxy";
+import { ContentEditorSFProxy } from './ContentEditorProxy';
+import { ScDocumentFacade } from "../../ScDocumentFacade";
 import { IStateOfPackageDesigner } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfPackageDesigner";
 import { _BaseStateFullProxy } from "../../Desktop/DesktopProxy/FrameProxies/_StateProxy";
+import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 
-export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy<IStateOfPackageDesigner> {
-  private DocumentProxy: ScDocumentProxy;
+export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
+  StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
+  private DocumentProxy: ScDocumentFacade;
   Friendly: string;
 
-  constructor(hindeCore: IHindeCore, documentProxy: ScDocumentProxy, friendly: string) {
+  constructor(hindeCore: IHindeCore, documentProxy: ScDocumentFacade, friendly: string) {
     super(hindeCore);
-    this.Logger.CTORStart(ContentEditorProxy.name);
+    this.Logger.CTORStart(ContentEditorSFProxy.name);
     this.DocumentProxy = documentProxy;
     this.Friendly = friendly;
-    this.Logger.CTOREnd(ContentEditorProxy.name);
+    this.Logger.CTOREnd(ContentEditorSFProxy.name);
   }
 
-  Instantiate() {
-    this.Logger.FuncStart(this.Instantiate.name, this.Friendly)
-    this.Logger.FuncEnd(this.Instantiate.name, this.Friendly)
+  InstantiateAsyncMembers() {
+    this.Logger.FuncStart(this.InstantiateAsyncMembers.name, this.Friendly)
+    this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, this.Friendly)
   }
 
   WireEvents() {
@@ -28,11 +30,17 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
     this.Logger.FuncEnd(this.WireEvents.name, this.Friendly)
   }
 
-  GetState(): Promise<IStateOfPackageDesigner> {
-    throw new Error("Method not implemented.");
+  async GetState(): Promise<IStateOfPackageDesigner> {
+    this.Logger.Log('todo ' + PackageDesignerProxy.name);
+    return null;
   }
 
   async SetState(state: IStateOfPackageDesigner): Promise<void> {
-    throw new Error("Method not implemented.");
+    this.Logger.Log('todo ' + PackageDesignerProxy.name);
+    return null;
+  }
+
+  TriggerInboundEventsAsync(): void {
+    this.Logger.Log('todo ' + PackageDesignerProxy.name);
   }
 }

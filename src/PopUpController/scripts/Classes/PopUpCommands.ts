@@ -293,7 +293,7 @@ export class CommandDefintionFactory extends _HindeCoreBase {
         {
           MenuCommandKey: MenuCommandKey.DebugForceAutoSnapShot,
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnDebugForceAutoSnapShot,
-          VisibilityControllers: [VisibilityType.SnapShotable],
+          VisibilityControllers: [VisibilityType.Always],
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.TakeSnapShot,
           InnerText: "Force Auto Snapshot",
           ModuleKey: ModuleKey.ButtonTypical,
@@ -306,7 +306,7 @@ export class CommandDefintionFactory extends _HindeCoreBase {
         {
           MenuCommandKey: MenuCommandKey.DebugClearPopUpConsole,
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnDebugClearPopUpConsole,
-          VisibilityControllers: [],
+          VisibilityControllers: [VisibilityType.Always],
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.RemoveFromStorage,
           InnerText: "Clear PopUp Console",
           ModuleKey: ModuleKey.ButtonTypical,
@@ -319,7 +319,7 @@ export class CommandDefintionFactory extends _HindeCoreBase {
         {
           MenuCommandKey: MenuCommandKey.DebugTriggerPopUpReload,
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnDebugTriggerPopUpReload,
-          VisibilityControllers: [],
+          VisibilityControllers: [VisibilityType.Always],
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.RemoveFromStorage,
           InnerText: "location .reload(true)",
           ModuleKey: ModuleKey.ButtonTypical,

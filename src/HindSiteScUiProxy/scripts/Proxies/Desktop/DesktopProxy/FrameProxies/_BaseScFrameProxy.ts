@@ -1,33 +1,37 @@
 ﻿import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { NativeIframeProxy } from "../../../NativeScIframeProxy";
-import { ScDocumentProxy } from "../../../ScDocumentProxy";
+import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
+import { ScDocumentFacade } from "../../../ScDocumentFacade";
 import { _BaseStateFullProxy } from "./_StateProxy";
+import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 
-export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implements IStateFullProxy<T> {
-  NativeIFrameProxy: NativeIframeProxy = null; //todo - work towards making this private
+export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implements IStateFullProxy {
+  protected readonly FrameJacket: FrameJacket = null;
   Id: string = null;
+  abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
+  ScDocumentProxy: ScDocumentFacade;
+  abstract Friendly: string;
+  RecipeBasics: RecipeBasics;
 
-  //constructor(hindeCore: IHindeCore, iframeElem: HTMLIFrameElement)
-  constructor(hindeCore: IHindeCore, iframeElem: NativeIframeProxy)
-  //constructor(hindeCore: IHindeCore, iframeElem: any)
-  constructor(hindeCore: IHindeCore, argIframe: NativeIframeProxy) {
-    super(hindeCore);
 
-    this.NativeIFrameProxy = <NativeIframeProxy>argIframe;
+  constructor(hindeCore: IHindeCore, frameJacket: FrameJacket) {
+    super(hindeCore); 
 
-    this.ErrorHand.ThrowIfNullOrUndefined(_BaseScFrameProxy.name, this.NativeIFrameProxy)
-    this.Id = 'base_' + this.NativeIFrameProxy.GetNativeIframeId();// Guid.NewRandomGuid().Raw;
+    this.ErrorHand.ThrowIfNullOrUndefined(_BaseScFrameProxy.name, [frameJacket]);
+    this.FrameJacket = frameJacket;
+    this.ScDocumentProxy = new ScDocumentFacade(this.HindeCore, this.FrameJacket.DocumentJacket);
+    this.Id = 'base_' + this.FrameJacket.GetNativeIframeId();// Guid.NewRandomGuid().Raw;
   }
 
-  Instantiate_BaseScFrameProxy() {
-    //this.DataOneContentDocFactoryFromIframe();
-    this.NativeIFrameProxy.Instantiate();
-  }
+  abstract InstantiateAsyncMembers();
+
+  abstract WireEvents();
+
 
   GetZindexAsInt(): number {
-    return this.NativeIFrameProxy.ZindexAsInt();
+    return this.FrameJacket.ZindexAsInt();
   }
 
   //DataOneContentDocFactoryFromIframe(): ScDocumentProxy {
@@ -42,8 +46,8 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
   //  return toReturn;
   //}
 
-  GetContentDoc(): ScDocumentProxy {
-    return this.NativeIFrameProxy.GetNativeContentDoc();
+  GetContentDoc(): ScDocumentFacade {
+    return this.ScDocumentProxy;//  NativeIFrameProxy.GetNativeContentDoc();
     //return  this.DataOneContentDocFactoryFromIframe(this.DocumentProxy);
   }
 
@@ -51,7 +55,7 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNABFrameProxyOrReject.name, this.Friendly);
 
-      await this.NativeIFrameProxy.WaitForCompleteNABHtmlIframeElement(this.Friendly)
+      await this.FrameJacket.WaitForCompleteNABHtmlIframeElement(this.Friendly)
         .then((result: ReadyStateNAB) => {
           //result.LogDebugValues();
           if (result.IsCompleteNAB()) {

@@ -3,13 +3,13 @@ import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHe
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ScDocumentProxy } from "../../../ScDocumentProxy";
+import { ScDocumentFacade } from "../../../ScDocumentFacade";
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 
 export class DesktopStartBarButtonProxy extends _HindeCoreBase {
-  private AssociatedDoc: ScDocumentProxy;
+  private AssociatedDoc: ScDocumentFacade;
   private ContainerSpanElement: HTMLElement;
   private FoundStartBarButton: HTMLElement;
   private RecipeBasics: RecipeBasics;
@@ -17,7 +17,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
 
   public FrameId: string;
 
-  constructor(hindeCore: IHindeCore, iframeElemId: string, associatedDoc: ScDocumentProxy) {
+  constructor(hindeCore: IHindeCore, iframeElemId: string, associatedDoc: ScDocumentFacade) {
     super(hindeCore);
     this.AssociatedDoc = associatedDoc;
     this.FrameId = iframeElemId;

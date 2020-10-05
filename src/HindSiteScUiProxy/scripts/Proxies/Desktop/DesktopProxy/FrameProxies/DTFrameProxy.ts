@@ -1,109 +1,120 @@
-﻿import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
+﻿import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
+import { ScUrlAgent } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
+import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ReportResultsInitDTFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/InitResultsDTFrameProxy";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { IStateOfContentEditor } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
+import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateofX";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { ContentEditorProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { IStateOfFrameStyling } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
+import { ContentEditorSFProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { PackageDesignerProxy } from "../../../ContentEditor/ContentEditorProxy/PackageDesignerProxy";
-import { NativeIframeProxy } from "../../../NativeScIframeProxy";
-import { ScDocumentProxy } from "../../../ScDocumentProxy";
+import { ScDocumentFacade } from "../../../ScDocumentFacade";
 import { ContentEditorProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
 import { IContentEditorProxyMutationEvent_Payload } from "../Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
-import { IStateOfFrameStyling } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 
-export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy<IStateOfDTFrame> {
+export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
+  Friendly: string = DTFrameProxy.name;
+  StateFullProxyDisciminator = StateFullProxyDisciminator.DTFrameProxy;
   ContentEditorProxyMutationEvent_Observer: ContentEditorProxyMutationEvent_Observer;
   FrameTypeDiscriminator = DTFrameProxy.name;
   Index: number = -1;
   private PackageDesignerProxy: PackageDesignerProxy;
-  public ContentEditorProxy: ContentEditorProxy;
+  //public ContentEditorProxy: ContentEditorProxy;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
-  public initReportFrameProxy: ReportResultsInitDTFrameProxy;
+  public HostedStateFullProxy: IStateFullProxy;
+  ScUrlAgent: ScUrlAgent;
 
-  //constructor(hindeCore: IHindeCore, argIframe: HTMLIFrameElement)
-  //constructor(hindeCore: IHindeCore, argIframe: NativeIframeProxy)
-  constructor(hindeCore: IHindeCore, argIframe: NativeIframeProxy) { //HTMLIFrameElement |
-    super(hindeCore, argIframe);
+  constructor(hindeCore: IHindeCore, frameJacket: FrameJacket) { //HTMLIFrameElement |
+    super(hindeCore, frameJacket);
 
-    this.ErrorHand.ThrowIfNullOrUndefined(DTFrameProxy.name, [argIframe]);
+    this.ErrorHand.ThrowIfNullOrUndefined(DTFrameProxy.name, [frameJacket]);
 
-    if (argIframe) {
-      this.Friendly = 'DTFrameProxy_' + this.NativeIFrameProxy.GetNativeIframeId();
-    } else {
-      this.ErrorHand.ErrorAndThrow(DTFrameProxy.name, ' null check');
-    }
+    this.Friendly = 'DTFrameProxy_' + this.FrameJacket.GetNativeIframeId();
+
+    this.InstantiateInstance();
+  }
+
+  InstantiateInstance(): void {
 
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
-  async Instantiate(): Promise<void> {
+  async InstantiateAsyncMembers(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.Instantiate.name, DTFrameProxy.name);
-      this.Instantiate_BaseScFrameProxy();
+      this.Logger.FuncStart(this.InstantiateAsyncMembers.name, DTFrameProxy.name);
 
-      this.initReportFrameProxy = new ReportResultsInitDTFrameProxy();
+      this.ErrorHand.ThrowIfNullOrUndefined(this.InstantiateAsyncMembers.name, [this.FrameJacket]);
 
-      await this.NativeIFrameProxy.WaitForCompleteNABHtmlIframeElement(this.Friendly)
+      await this.FrameJacket.WaitForCompleteNABHtmlIframeElement(this.Friendly)
         .then((result: ReadyStateNAB) => {
           if (!result.IsCompleteNAB()) {
             reject(result.DocumentReadtStateFriendly())
           }
         })
         .then(() => {
-          let scWindowType: ScWindowType = this.NativeIFrameProxy.GetScWindowType();
+          let scWindowType: ScWindowType = this.ScDocumentProxy.ScUrlAgent.GetScWindowType();
+          this.ScUrlAgent = new ScUrlAgent(this.HindeCore, this.FrameJacket.DocumentJacket.UrlJacket)
           switch (scWindowType) {
             case ScWindowType.ContentEditor:
-              this.ContentEditorProxy = new ContentEditorProxy(this.HindeCore, this.NativeIFrameProxy.ScDocumentProxy, this.Friendly)
+              let contentEditorProxy = new ContentEditorSFProxy(this.HindeCore, this.ScDocumentProxy, this.Friendly);
+              this.HostedStateFullProxy = contentEditorProxy;
               break;
-            case ScWindowType.XmlControlPackageDesigner:
-              this.PackageDesignerProxy = new PackageDesignerProxy(this.HindeCore, this.NativeIFrameProxy.ScDocumentProxy, this.Friendly)
+            case ScWindowType.PackageDesigner:
+              this.PackageDesignerProxy = new PackageDesignerProxy(this.HindeCore, this.ScDocumentProxy, this.Friendly)
+              this.HostedStateFullProxy = this.PackageDesignerProxy;
+              break;
             default:
-              this.ErrorHand.WarningAndContinue(this.Instantiate.name, 'un handled DTFrame type ' + ScWindowType[scWindowType]);
+              this.ErrorHand.WarningAndContinue(this.InstantiateAsyncMembers.name, 'un handled DTFrame type ' + ScWindowType[scWindowType]);
           }
         })
-        .then(() => this.ContentEditorProxy.Instantiate())
+        .then(() => this.HostedStateFullProxy.InstantiateAsyncMembers())
         .then(() => {
           this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.HindeCore);
           this.ContentEditorProxyMutationEvent_Observer = new ContentEditorProxyMutationEvent_Observer(this.HindeCore, this);
-          this.initReportFrameProxy.DTFrameProxyInitialized = true;
         })
 
         .then(() => resolve())
-        .catch((err) => reject(this.Instantiate.name + ' | ' + err));
+        .catch((err) => reject(this.InstantiateAsyncMembers.name + ' | ' + err));
 
-      this.Logger.FuncEnd(this.Instantiate.name, DTFrameProxy.name);
+      this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, DTFrameProxy.name);
     });
   }
 
   async WireEvents() {
-    this.Logger.FuncStart(this.WireEvents.name);
-    this.ContentEditorProxy.ContentEditorProxyMutationEvent_Subject.RegisterObserver(this.ContentEditorProxyMutationEvent_Observer);
-    this.ContentEditorProxy.WireEvents();
-    this.Logger.FuncEnd(this.WireEvents.name);
+    this.Logger.FuncStart(this.WireEvents.name, DTFrameProxy.name);
+
+    if (this.HostedStateFullProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.ContentEditor) {
+      (<ContentEditorSFProxy>this.HostedStateFullProxy).ContentEditorProxyMutationEvent_Subject.RegisterObserver(this.ContentEditorProxyMutationEvent_Observer);
+    }
+
+    this.HostedStateFullProxy.WireEvents();
+    this.Logger.FuncEnd(this.WireEvents.name, DTFrameProxy.name);
   }
 
-  GetState(): Promise<IStateOfDTFrame> {
+  async GetState(): Promise<IStateOfDTFrame> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetState.name, DTFrameProxy.name);
       let stateOfDTFrame: IStateOfDTFrame = new DefaultStateOfDTFrame();
 
-      this.NativeIFrameProxy.GetState()
+      this.FrameJacket.GetState()
         .then((stateOfFrameStyling: IStateOfFrameStyling) => stateOfDTFrame.StateOfFrameStyling = stateOfFrameStyling)
         .catch((err) => reject(this.GetState.name + ' | ' + err));
 
       stateOfDTFrame.ZIndex = this.GetZindexAsInt();
-      if (this.ContentEditorProxy) {
-        await this.ContentEditorProxy.GetState()
-          .then((stateOfContentEditorProxy: IStateOfContentEditor) => stateOfDTFrame.StateOfContentEditor = stateOfContentEditorProxy)
+
+      if (this.HostedStateFullProxy) {
+        await this.HostedStateFullProxy.GetState()
+          .then((statefullProxyState: IStateOf_) => stateOfDTFrame.StateOfHosted = statefullProxyState)
           .catch((err) => reject(this.GetState.name + ' | ' + err));
       }
+
       resolve(stateOfDTFrame);
       this.Logger.FuncEnd(this.GetState.name, DTFrameProxy.name);
     });
@@ -114,7 +125,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       this.Logger.FuncStart(this.SetState.name, DTFrameProxy.name);
       this.DTFrameProxyMutationEvent_Subject.DisableNotifications();
 
-      await this.ContentEditorProxy.SetState(stateOfDTFrame.StateOfContentEditor)
+      await this.HostedStateFullProxy.SetState(stateOfDTFrame.StateOfHosted)
         .then(() => {
           this.SetFrameStyling(stateOfDTFrame)
           this.DTFrameProxyMutationEvent_Subject.EnableNotifications();
@@ -124,21 +135,35 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
     }
     this.Logger.FuncEnd(this.SetState.name, DTFrameProxy.name);
   }
-  //----------------------------------------------------------------------
 
-  GetScWindowType(): ScWindowType {
-    return (this.NativeIFrameProxy.GetScWindowType());
+  TriggerEventsForInbound() {
+    if (this.HostedStateFullProxy) {
+      this.HostedStateFullProxy.TriggerInboundEventsAsync();
+    }
   }
 
-  GetContentDoc(): ScDocumentProxy {
-    return this.NativeIFrameProxy.ScDocumentProxy;
+  TriggerInboundEventsAsync(): void {
+  }
+
+  //----------------------------------------------------------------------
+
+  GetContentDoc(): ScDocumentFacade {
+    return this.ScDocumentProxy;
     //return new FactoryHelper(this.HindeCore).DataOneContentDocFactoryFromIframe(this);
+  }
+
+  GetNativeFrameId(): string {
+    return this.FrameJacket.GetNativeIframeId()
+  }
+
+  GetScWindowType(): ScWindowType {
+    return (this.ScUrlAgent.GetScWindowType());
   }
 
   private SetFrameStyling(stateOfDTFrame: IStateOfDTFrame) {
     this.Logger.FuncStart(this.SetFrameStyling.name);
 
-    this.NativeIFrameProxy.SetState(stateOfDTFrame.StateOfFrameStyling);
+    this.FrameJacket.SetState(stateOfDTFrame.StateOfFrameStyling);
 
     this.Logger.FuncEnd(this.SetFrameStyling.name);
   }
@@ -146,7 +171,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   OnContentEditorProxyMutation(payload: IContentEditorProxyMutationEvent_Payload) {
     let dtFrameProxyMutationEvent_Payload: IDTFrameProxyMutationEvent_Payload = {
       ContentEditorProxyMutationPayload: payload,
-      FrameId: this.NativeIFrameProxy.GetNativeIframeId()
+      FrameId: this.FrameJacket.GetNativeIframeId()
       //DTFrameProxy: this
     }
     this.DTFrameProxyMutationEvent_Subject.NotifyObserversAsync(dtFrameProxyMutationEvent_Payload);

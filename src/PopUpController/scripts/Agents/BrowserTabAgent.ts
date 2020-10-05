@@ -3,7 +3,7 @@ import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
+import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Jackets/IScUrlAgent';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
 import { IAbsoluteUrl } from '../../../Shared/scripts/Interfaces/IAbsoluteUrl';
@@ -24,7 +24,7 @@ export class BrowserTabAgent extends _HindeCoreBase{
   }
 
   GetFullUrl(): IAbsoluteUrl {
-    return this.ScUrlAgent.BuildFullUrlFromParts();
+    return this.ScUrlAgent.UrlJacket.BuildFullUrlFromParts();
   }
 
   SetQueryStringKeyValue(qsKey: QueryStrKey, qsValue: string) {
@@ -68,7 +68,7 @@ export class BrowserTabAgent extends _HindeCoreBase{
 
         this.ScUrlAgent.SetFilePathFromWindowType(desiredPageType);
 
-        var absUrl: IAbsoluteUrl = this.ScUrlAgent.BuildFullUrlFromParts();
+        var absUrl: IAbsoluteUrl = this.ScUrlAgent.UrlJacket.BuildFullUrlFromParts();
 
         var callBackOnSuccessfulHrefChange: Function = function () {
           self.Logger.Log('Callback triggered');

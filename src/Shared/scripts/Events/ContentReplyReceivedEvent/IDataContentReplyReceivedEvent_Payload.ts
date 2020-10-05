@@ -1,6 +1,6 @@
 ﻿import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { IError } from "../../../../Shared/scripts/Interfaces/IError";
-import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 
 export interface IControllerMessageReceivedEvent_Payload {
@@ -8,6 +8,6 @@ export interface IControllerMessageReceivedEvent_Payload {
   LastReq: MsgFlag;
   LastReqFriendly: string;
   LastReqSuccessful: boolean;
-  StateOfScUiProxy_Live: IStateOfScUiProxy;
+  StateOfScUiProxy_Live: IStateOfScUi;
   StateOfStorageSnapShots: IStateOfStorageSnapShots;
 }

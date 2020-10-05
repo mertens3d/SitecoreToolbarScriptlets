@@ -7,10 +7,11 @@ import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeC
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { VisiblityTestResult } from "../../../../Shared/scripts/Interfaces/Agents/VisiblityTestResult";
-import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
+import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 
 export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibilityTestAgent {
   private StateOfSitecoreWindow: any;
@@ -21,7 +22,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
     super(hindeCore);
   }
 
-  Hydrate(stateOfSitecoreWindow: IStateOfScUiProxy, stateOfStorageSnapShots: IStateOfStorageSnapShots, windowType: ScWindowType, selectSnapShotId: GuidData) {
+  Hydrate(stateOfSitecoreWindow: IStateOfScUi, stateOfStorageSnapShots: IStateOfStorageSnapShots, windowType: ScWindowType, selectSnapShotId: GuidData) {
     this.Logger.FuncStart(this.Hydrate.name);
     this.StateOfSitecoreWindow = stateOfSitecoreWindow;
     this.SelectedSnapshot = selectSnapShotId;
@@ -53,18 +54,18 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
     return OneResult;
   }
 
-  VisibilityTestSnapShotable(stateOfSitecoreWindow: IStateOfScUiProxy): VisiblityTestResult {
+  VisibilityTestSnapShotable(stateOfSitecoreWindow: IStateOfScUi): VisiblityTestResult {
     //todo may want to be able take snap shots of other window types
 
     return this.VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow) && this.VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfSitecoreWindow);
   }
 
-  VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfLiveHindSite: IStateOfScUiProxy): VisiblityTestResult {
+  VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfLiveHindSite: IStateOfScUi): VisiblityTestResult {
     this.Logger.FuncStart(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
 
     visiblityTestResult.DidItPass = (
-      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && stateOfLiveHindSite.StateOfScWindow.StateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1)
+      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && (<IStateOfDesktop>stateOfLiveHindSite.StateOfScWindow.StateOf_).StateOfDTArea.ActiveDTFrameIndex > -1)
       ||
       (stateOfLiveHindSite.Meta.WindowType === ScWindowType.ContentEditor));
 
@@ -76,7 +77,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
     return visiblityTestResult;
   }
 
-  VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow: IStateOfScUiProxy): VisiblityTestResult {
+  VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow: IStateOfScUi): VisiblityTestResult {
     this.Logger.FuncStart(this.VisibilityTestDesktopOrContentEditor.name);
 
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestDesktopOrContentEditor.name);
@@ -149,6 +150,11 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
 
       case VisibilityType.NotLogin:
         toReturn = this.VisibilityTestWindowType(ScWindowType.LoginPage, this.WindowType);
+        break;
+
+      case VisibilityType.Always:
+        toReturn = new VisiblityTestResult('Always visible');
+        toReturn.DidItPass = true; 
         break;
 
       case VisibilityType.CommandIsRunning:

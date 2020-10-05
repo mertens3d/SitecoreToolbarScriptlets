@@ -1,14 +1,14 @@
 ﻿import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ScDocumentProxy } from "../../Proxies/ScDocumentProxy";
-import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { ScDocumentFacade } from "../../Proxies/ScDocumentFacade";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
 
 export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
-  __activeWindowSnapShot: IStateOfScUiProxy;
-    TopLevelDoc: ScDocumentProxy;
+  __activeWindowSnapShot: IStateOfScUi;
+    TopLevelDoc: ScDocumentFacade;
 
   constructor(hindeCore: IHindeCore) {
     super(hindeCore)
@@ -40,13 +40,13 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
     document.getElementsByTagName("head")[0].appendChild(style);
   }
 
-  AdminB(targetDoc: ScDocumentProxy, callbackOnComplete: Function) {
+  AdminB(scDocumentProxy: ScDocumentFacade, callbackOnComplete: Function) {
     //callbackOnComplete();
-    this.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(targetDoc.DocId));
+    this.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(scDocumentProxy.DocId));
     this.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
-    var userNameElem = targetDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);
-    var passwordElem = targetDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginPassword);
+    var userNameElem = scDocumentProxy.getElementById(ContentConst.Const.ElemId.sc.scLoginUserName);
+    var passwordElem = scDocumentProxy.getElementById(ContentConst.Const.ElemId.sc.scLoginPassword);
 
     if (this.Logger.IsNotNullOrUndefinedBool('userNameElem', userNameElem)
       &&
@@ -54,7 +54,7 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
       userNameElem.setAttribute('value', ContentConst.Const.Names.scDefaultAdminUserName);
       passwordElem.setAttribute('value', ContentConst.Const.Names.scDefaultAdminPassword);
 
-      var loginButton: HTMLElement = this.GetLoginButton(targetDoc);
+      var loginButton: HTMLElement = this.GetLoginButton(scDocumentProxy);
 
       if (this.Logger.IsNotNullOrUndefinedBool('loginButton', loginButton)) {
         this.Logger.Log('clicking loginbutton');
@@ -78,7 +78,7 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
     this.Logger.FuncEnd(this.AdminB.name);
   }
 
-  GetLoginButton(targetDoc: ScDocumentProxy): HTMLElement {
+  GetLoginButton(targetDoc: ScDocumentFacade): HTMLElement {
     this.Logger.FuncStart(this.GetLoginButton.name);
 
     var toReturn: HTMLElement = targetDoc.getElementById(ContentConst.Const.ElemId.sc.scLoginBtn.sc920);

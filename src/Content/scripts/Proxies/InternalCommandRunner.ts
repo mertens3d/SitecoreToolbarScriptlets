@@ -1,7 +1,7 @@
-﻿import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+﻿import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
@@ -14,12 +14,12 @@ import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
 import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
-import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
+import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
 
 export class InternalCommandRunner extends _HindeCoreBase {
   Dependancies: ICommandDependancies;
 
-  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy, scDocProxy: ScDocumentProxy) {
+  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiAPI, scDocProxy: ScDocumentFacade) {
     super(hindeCore);
 
     this.Dependancies = {
@@ -110,7 +110,7 @@ export class InternalCommandRunner extends _HindeCoreBase {
   SetStateOfSitecoreWindow(commandParams: ICommandParams, dependancies: ICommandDependancies): Promise<void> {
     return new Promise(async (resolve, reject) => {
       dependancies.HindeCore.Logger.LogAsJsonPretty("IdOfSelect", commandParams.TargetSnapShotId);
-      let dataOneWindowStorage: IStateOfScUiProxy = dependancies.AtticAgent.GetFromStorageBySnapShotId(commandParams.TargetSnapShotId);
+      let dataOneWindowStorage: IStateOfScUi = dependancies.AtticAgent.GetFromStorageBySnapShotId(commandParams.TargetSnapShotId);
 
       if (dataOneWindowStorage) {
         dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(commandParams.ApiPayload, dataOneWindowStorage)

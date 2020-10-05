@@ -115,7 +115,7 @@ export class MessageBroker_PopUp extends _HindeCoreBase {
         })
 
         .catch((ex) => {
-          this.ErrorHand.WarningAndContinue(this.SendMessageToSingleTabAsync.name, ex);
+          this.ErrorHand.ErrorAndThrow(this.SendMessageToSingleTabAsync.name, ex);
           resolve(null);
         });
 

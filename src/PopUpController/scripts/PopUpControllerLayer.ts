@@ -12,7 +12,7 @@ import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLog
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IRepositoryAgent } from "../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
-import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
+import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Jackets/IScUrlAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { ICommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IHindSiteUiLayer";
@@ -30,6 +30,7 @@ import { ContentReplyReceivedEvent_Observer } from "../../Shared/scripts/Events/
 import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
+import { UrlJacket } from "../../DOMJacket/GenericUrlAgent";
 
 class PopUpControllerLayer {
   BrowserTabAgent: BrowserTabAgent;
@@ -84,8 +85,8 @@ class PopUpControllerLayer {
   }
 
   private InstantiateAgents_Controller() {
-    this.ScUrlAgent = new ScUrlAgent(this.HindeCore, this.BrowserProxy.Url);
-    this.ScUrlAgent.Init_ScUrlAgent();
+    let genericUrlAgent = new UrlJacket(this.HindeCore, this.BrowserProxy.Url)
+    this.ScUrlAgent = new ScUrlAgent(this.HindeCore, genericUrlAgent);
     this.PopUpMessageBrokerAgent = new MessageBroker_PopUp(this.HindeCore, this.BrowserProxy, this.SettingsAgent);
   }
 

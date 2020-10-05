@@ -4,8 +4,8 @@ import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { ScDocumentProxy } from "../Proxies/ScDocumentProxy";
-import { NativeIframeProxy } from "../Proxies/NativeScIframeProxy";
+import { ScDocumentFacade } from "../Proxies/ScDocumentFacade";
+import { FrameJacket } from "../../../DOMJacket/FrameJacket";
 
 export class FrameHelper extends _HindeCoreBase {
   private factoryHelper: FactoryHelper;
@@ -17,12 +17,12 @@ export class FrameHelper extends _HindeCoreBase {
     this.factoryHelper = new FactoryHelper(this.HindeCore);
   }
 
-  async GetIFrameAsBaseFrameProxy(nativeIframeProxy: NativeIframeProxy, ifrIdx: number): Promise<DTFrameProxy> {
+  async GetIFrameAsBaseFrameProxy(nativeIframeProxy: FrameJacket, ifrIdx: number): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       let friendly = 'desktop Iframe_' + ifrIdx;
 
       let dTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
-      dTFrameProxy.Instantiate();
+      dTFrameProxy.InstantiateAsyncMembers();
       dTFrameProxy.WireEvents();
 
       await dTFrameProxy.WaitForCompleteNABFrameProxyOrReject()
@@ -38,10 +38,10 @@ export class FrameHelper extends _HindeCoreBase {
     });
   }
 
-  async GetIFrameAsDTFrameProxy(nativeIframeProxy: NativeIframeProxy): Promise<DTFrameProxy> {
+  async GetIFrameAsDTFrameProxy(frameJacket: FrameJacket): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
 
-      let dTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
+      let dTFrameProxy = new DTFrameProxy(this.HindeCore, frameJacket);
 
       await dTFrameProxy.WaitForCompleteNABFrameProxyOrReject()
 
@@ -52,16 +52,16 @@ export class FrameHelper extends _HindeCoreBase {
     });
   }
 
-  async GetIFramesAsDTFrameProxies(dataOneDoc: ScDocumentProxy): Promise<DTFrameProxy[]> {
+  async GetIFramesAsDTFrameProxies(dataOneDoc: ScDocumentFacade): Promise<DTFrameProxy[]> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let nativeIframeProxies: NativeIframeProxy[] = dataOneDoc.GetIFramesFromDataOneDoc();
+      let frameJackets: FrameJacket[] = dataOneDoc.DocumentJacket.GetHostedFrameJackets();
 
       let promiseAr: Promise<DTFrameProxy>[] = [];
 
-      nativeIframeProxies.forEach((iframeElem) => {
+      frameJackets.forEach((iframeElem) => {
         promiseAr.push(this.GetIFrameAsDTFrameProxy(iframeElem));
       });
 
@@ -79,12 +79,12 @@ export class FrameHelper extends _HindeCoreBase {
     });
   }
 
-  async GetIFramesAsBaseFrameProxies(targetDoc: ScDocumentProxy): Promise<DTFrameProxy[]> {
+  async GetIFramesAsBaseFrameProxies(targetDoc: ScDocumentFacade): Promise<DTFrameProxy[]> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let NativeScIframeProxyAr: NativeIframeProxy[]= targetDoc.GetIFramesFromDataOneDoc();
+      let NativeScIframeProxyAr: FrameJacket[] = targetDoc.DocumentJacket.GetHostedFrameJackets();
 
       //if (iframeAr) {
       //  iframeAr.forEach(async (iframeElem: HTMLIFrameElement, ifrIdx) => {
@@ -97,7 +97,7 @@ export class FrameHelper extends _HindeCoreBase {
 
       let promAr: Promise<DTFrameProxy>[] = [];
 
-      NativeScIframeProxyAr.forEach((nativeScIframeProxy: NativeIframeProxy, index) => {
+      NativeScIframeProxyAr.forEach((nativeScIframeProxy: FrameJacket, index) => {
         promAr.push(this.GetIFrameAsBaseFrameProxy(nativeScIframeProxy, index));
       });
 

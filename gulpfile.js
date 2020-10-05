@@ -36,8 +36,6 @@ gulp.task('PutToFinal', (cb) => putTasks.PutToFinal(cb, varsObj));
 gulp.task('CopyFromFinalToAddon', (cb) => putTasks.CopyFromFinalToAddon(cb, varsObj));
 
 gulp.task('WebpackContent', (cb) => WebPackTasks.WebPackOne(cb, varsObj.ContentJs, '/' + varsObj.HindSiteApiJs.Name + '|' + varsObj.PopUpUiJs.Name + '|' + varsObj.PopUpControllerJs.Name + '/'));
-gulp.task('WebpackHindSiteApi', (cb) => cb());//WebPackTasks.WebPackOne(cb, varsObj.HindSiteApiJs));
-gulp.task('WebpackPopUpUi', (cb) => cb());// WebPackTasks.WebPackOne(cb, varsObj.PopUpUiJs));
 
 //var controllerNoParseRegex =  varsObj.ContentJs.SourceDirFilter() + '|' + varsObj.PopUpUiJs.SourceDirFilter() + '|' + varsObj.HindSiteApiJs.SourceDirFilter() ;
 var controllerNoParseRegex = './src/' + varsObj.PopUpUiJs.Name;
@@ -50,10 +48,10 @@ gulp.task('CleanBuildStamp', (cb) => tsTasks.CleanBuildStamp(cb, varsObj));
 gulp.task('PopulateBuildTimeStamp', (cb) => tsTasks.BuildBuildNumber(cb, varsObj));
 
 gulp.task('PreClean', gulp.series(['ArchiveAutoBuildFolder', 'CleanAutoBuildFolder']));
-gulp.task('WebpackAll', gulp.series(['WebpackContent', 'WebpackHindSiteApi', 'WebpackPopUpUi', 'WebpackPopUpController']));
-gulp.task('TimeStampAll', gulp.series(['CleanBuildStamp', 'PopulateBuildTimeStamp']));
+gulp.task('WebpackAll', gulp.parallel(['WebpackContent', 'WebpackPopUpController']));
+gulp.task('TimeStampAll', gulp.parallel(['CleanBuildStamp', 'PopulateBuildTimeStamp']));
 
-gulp.task('builders', gulp.series(['BuildPopUpStyles', 'BuildContentStyles', 'TimeStampAll', 'BuildTypescriptAll', 'WebpackAll', 'BuildPopUpHtml', 'PutToFinal']), function (resolve) {
+gulp.task('builders', gulp.series([gulp.parallel('BuildPopUpStyles', 'BuildContentStyles', 'TimeStampAll', 'BuildPopUpHtml'), 'BuildTypescriptAll', 'WebpackAll',  'PutToFinal']), function (resolve) {
   resolve();
 });
 

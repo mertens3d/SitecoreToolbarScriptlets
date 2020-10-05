@@ -1,16 +1,15 @@
 ﻿import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
-import { IStateOfScUiProxy } from "../../Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../IApiCallPayload";
 
-export interface IHindSiteScUiProxy {
-  GetStateOfScUiProxyWindow(Manual: SnapShotFlavor);
-  OnReady_InstantiateHindSiteScUiProxy(): any;
-  RaiseToastNotification(arg0: string): any;
+export interface IHindSiteScUiAPI {
   AddContentEditorToDesktopAsync(commandData: IApiCallPayload): Promise<void>
   AdminB(commandData: IApiCallPayload);
-  GetStateOfScUiProxy(): Promise<IStateOfScUiProxy> ;
+  GetStateOfScUiProxy(): Promise<IStateOfScUi>;
+  GetStateOfScUiProxyWindow(Manual: SnapShotFlavor);
+  InstantiateHindSiteScUiProxy(): Promise<void>;
   OpenContentEditor();
   PublischActiveCE(commandData: IApiCallPayload): Promise<void>;
-  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IStateOfScUiProxy): Promise<void>;
+  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IStateOfScUi): Promise<void>;
   ToggleCompactCss(commandData: IApiCallPayload);
 }

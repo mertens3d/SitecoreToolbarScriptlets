@@ -10,5 +10,4 @@
     MediaLibrary = 8,
     PackageDesigner = 9,
     InstallationWizard = 10,
-    XmlControlPackageDesigner = 11
 }

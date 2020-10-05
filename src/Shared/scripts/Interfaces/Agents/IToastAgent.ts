@@ -1,7 +1,5 @@
 ﻿
 export interface IToastAgent {
-  LowerPerpetualToast(arg0: string);
-  OnRaiseToastReq();
-  RaisePerpetualToast(arg0: string);
-  RaiseToastNotification( ScreenMessage: string);
+  LiftToast(arg0: string);
+  DropToast(arg0: string);
 }

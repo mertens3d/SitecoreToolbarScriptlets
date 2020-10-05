@@ -5,21 +5,24 @@ import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHin
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
-import { NativeIframeProxy } from "../../NativeScIframeProxy";
-import { ScDocumentProxy } from "../../ScDocumentProxy";
+import { FrameJacket } from "../../../../../DOMJacket/FrameJacket";
+import { ScDocumentFacade } from "../../ScDocumentFacade";
 import { DocumentProxyMutationEvent_Observer } from "./Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Observer";
 import { DTAreaProxyMutationEvent_Subject } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Subject";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
-import { INativeIFrameAddRemoveEvent_Payload } from "./Events/NativeIFrameAddedEvent/INativeIFrameAddedEvent_Payload";
+import { IFrameJacketAddRemoveEvent_Payload } from "../../../../../DOMJacket/Events/NativeIFrameAddedEvent/INativeIFrameAddedEvent_Payload";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
 import { ReadyStateNAB } from "../../../../../Shared/scripts/Enums/ReadyState";
+import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { ContentEditorSFProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { IDocumentProxyMutationEvent_Payload } from "./Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
 
-export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements IStateFullProxy<IStateOfDTArea>
-{
-  private AssociatedScDocumentProxy: ScDocumentProxy;
+export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements IStateFullProxy {
+  StateFullProxyDisciminator = StateFullProxyDisciminator.DTArea;
+  private AssociatedScDocumentProxy: ScDocumentFacade;
   private DTFrameProxyManyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
   private FramesBucket: DTFrameProxy[] = [];
   private IncomingSetStateList: IStateOfDTFrame[] = [];
@@ -27,23 +30,23 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
 
   public DTAreaProxyMutationEvent_Subject: DTAreaProxyMutationEvent_Subject;
 
-  constructor(hindeCore: IHindeCore, scDocumentProxy: ScDocumentProxy) {
+  constructor(hindeCore: IHindeCore, scDocumentProxy: ScDocumentFacade) {
     super(hindeCore);
     this.AssociatedScDocumentProxy = scDocumentProxy;
     this.ErrorHand.ThrowIfNullOrUndefined(DTAreaProxy.name, scDocumentProxy);
   }
 
-  Instantiate(): void {
-    this.Logger.FuncStart(this.Instantiate.name, DTAreaProxy.name);
+  InstantiateAsyncMembers(): void {
+    this.Logger.FuncStart(this.InstantiateAsyncMembers.name, DTAreaProxy.name);
 
     try {
       this.DTAreaProxyMutationEvent_Subject = new DTAreaProxyMutationEvent_Subject(this.HindeCore);//, this.OnDTAreaProxyMutationEvent.bind(this));
       this.DTFrameProxyManyMutationEvent_Observer = new DTFrameProxyMutationEvent_Observer(this.HindeCore, this.OnDTFProxyMutationEvent.bind(this));
       this.DocumentProxyMutationEvent_Observer = new DocumentProxyMutationEvent_Observer(this.HindeCore, this.CallBackOnDocumentProxyMutationEvent.bind(this));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Instantiate.name, err);
+      this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err);
     }
-    this.Logger.FuncEnd(this.Instantiate.name, DTAreaProxy.name);
+    this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, DTAreaProxy.name);
   }
 
   public WireEvents() {
@@ -65,6 +68,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
         promiseAr.push(dtframeProxy.GetState());
       }
 
+      this.Logger.LogImportant('Count ' + promiseAr.length);
       await Promise.all(promiseAr)
         .then((stateOfDTFrames: IStateOfDTFrame[]) => {
           stateOfDTFrames.forEach((stateOfDTFrame: IStateOfDTFrame, index: number) => {
@@ -74,6 +78,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
             }
           });
         })
+        .then(() => this.Logger.LogAsJsonPretty('DTAreaState', stateOfDTArea))
         .then(() => resolve(stateOfDTArea))
         .catch((err) => reject(this.GetState.name + ' | ' + err));
 
@@ -103,13 +108,17 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     });
   }
 
+  TriggerInboundEventsAsync(): void {
+  }
+
   //---------------------------------------------------------------------------------------------
 
-  private async CallBackOnDocumentProxyMutationEvent(payload: INativeIFrameAddRemoveEvent_Payload): Promise<void> {
+  private async CallBackOnDocumentProxyMutationEvent(payload: IDocumentProxyMutationEvent_Payload): Promise<void> {
     this.Logger.FuncStart(this.CallBackOnDocumentProxyMutationEvent.name);
+
     try {
-      await this.HandleAddedIframes(payload.AddedNativeIFrameProxies)
-        .then(() => this.HandleRemovedIframes(payload.RemovedIFrameIds))
+      await this.HandleAddedFrameJacket(payload.AddedFrameJacket)
+        .then(() => this.HandleRemovedIframe(payload.RemovedIFrameId))
         .then(() => {
         });
     } catch (err) {
@@ -119,48 +128,60 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     this.Logger.FuncEnd(this.CallBackOnDocumentProxyMutationEvent.name);
   }
 
-  private async HandleAddedIframes(addedNativeIFrameProxies: NativeIframeProxy[]) {
-    this.Logger.FuncStart(this.HandleAddedIframes.name);
-    if (addedNativeIFrameProxies.length > 0) {
-      let promiseAr: Promise<ReadyStateNAB>[] = [];
+  private async HandleAddedFrameJacket(frameJacket: FrameJacket) : Promise<void>{
+    this.Logger.FuncStart(this.HandleAddedFrameJacket.name);
 
-      addedNativeIFrameProxies.forEach(async (scIframeProxy: NativeIframeProxy) => promiseAr.push(scIframeProxy.WaitForCompleteNABHtmlIframeElement(this.HandleAddedIframes.name)));
+    if (frameJacket) {
+      let dtFrameProxy: DTFrameProxy = null;
 
-      await Promise.all(promiseAr);
+      await frameJacket.WaitForCompleteNABHtmlIframeElement(this.HandleAddedFrameJacket.name)
+        .then(() => dtFrameProxy = new DTFrameProxy(this.HindeCore, frameJacket))
+        .then(() => dtFrameProxy.InstantiateAsyncMembers())
+        .then(() => dtFrameProxy.WireEvents())
+        .then(() => {
+          let currentWindowType = dtFrameProxy.GetScWindowType();
+          this.Logger.LogVal('scWindowType', ScWindowType[currentWindowType]);
 
-      addedNativeIFrameProxies.forEach(async (scIframeProxy: NativeIframeProxy) => {
-        let currentWindowType = scIframeProxy.GetScWindowType();
+          if (currentWindowType === ScWindowType.ContentEditor || currentWindowType === ScWindowType.PackageDesigner) {
+            //todo - this probably needs to be a Promise.all but we are only going to get one at a time
 
-        this.Logger.LogVal('scWindowType', ScWindowType[currentWindowType]);
-
-        if (currentWindowType === ScWindowType.ContentEditor) {
-          //todo - this probably needs to be a Promise.all but we are only going to get one at a time
-
-          await this.ProcessInboundNativeIFrameProxy(scIframeProxy)
-            .then(() => this.Logger.Log(this.HandleAddedIframes.name + ' Complete'))
-            .catch((err) => this.ErrorHand.ErrorAndThrow(this.HandleAddedIframes.name, err));
-        }
-      });
+            this.ProcessInboundNativeIFrameProxy(frameJacket);
+          }
+        })
+        .then(() => this.Logger.Log(this.HandleAddedFrameJacket.name + ' Complete'))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.HandleAddedFrameJacket.name, err));
+    } else {
+      this.Logger.Log('No FrameJacket - no action');
     }
-    this.Logger.FuncEnd(this.HandleAddedIframes.name);
+
+    this.Logger.FuncEnd(this.HandleAddedFrameJacket.name);
   }
 
-  private async HandleRemovedIframes(removedIframeIds: string[]) {
-    removedIframeIds.forEach((needleIframeId: string) => {
-      let foundMatch: number = -1;
-      this.FramesBucket.forEach((dtFrameProxy: DTFrameProxy, index: number) => {
-        if (dtFrameProxy.NativeIFrameProxy.GetNativeIframeId() === needleIframeId) {
-          foundMatch = index;
+  private async HandleRemovedIframe(needleIframeId: string): Promise<void> {
+    this.Logger.FuncStart(this.HandleRemovedIframe.name);
+    try {
+      if (needleIframeId && needleIframeId.length > 0) {
+        let foundMatch: number = -1;
+
+        this.FramesBucket.forEach((dtFrameProxy: DTFrameProxy, index: number) => {
+          if (dtFrameProxy.GetNativeFrameId() === needleIframeId) {
+            foundMatch = index;
+          }
+        });
+
+        if (foundMatch > -1) {
+          this.FramesBucket.splice(foundMatch, 1);
         }
-      });
-
-      if (foundMatch > -1) {
-        this.FramesBucket.splice(foundMatch, 1);
+      } else {
+        this.Logger.Log("No needle id, no action");
       }
-    });
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.HandleRemovedIframe.name, err);
+    }
+    this.Logger.FuncEnd(this.HandleRemovedIframe.name);
   }
 
-  private async ProcessInboundNativeIFrameProxy(nativeIframeProxy: NativeIframeProxy): Promise<void> {
+  private async ProcessInboundNativeIFrameProxy(nativeIframeProxy: FrameJacket): Promise<void> {
     this.Logger.FuncStart(this.ProcessInboundNativeIFrameProxy.name, nativeIframeProxy.GetNativeIframeId());
     try {
       let dtFrameProxy: DTFrameProxy = null;
@@ -183,7 +204,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
   private async newFrameStep1_Instantiate(dtFrameProxy: DTFrameProxy): Promise<void> {
     this.Logger.FuncStart(this.newFrameStep1_Instantiate.name);
     try {
-      await dtFrameProxy.Instantiate()
+      await dtFrameProxy.InstantiateAsyncMembers()
         .then(() => { })
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.newFrameStep1_Instantiate.name, err));
     } catch (err) {
@@ -234,7 +255,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
   }
   private NewFrameStep6_TriggerEvents(dtframeProxy: DTFrameProxy): void {
     this.Logger.FuncStart(this.NewFrameStep6_TriggerEvents.name);
-    dtframeProxy.ContentEditorProxy.TriggerActiveNodeChangeEvent();
+    dtframeProxy.TriggerEventsForInbound();
     this.Logger.FuncEnd(this.NewFrameStep6_TriggerEvents.name);
   }
 
@@ -281,7 +302,9 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
   async PublishTopFrame() {
     let dtFrameProxy: DTFrameProxy = this.GetTopFrame();
     if (dtFrameProxy) {
-      await dtFrameProxy.ContentEditorProxy.PublishItem();
+      if (dtFrameProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.ContentEditor) {
+        await (<ContentEditorSFProxy>dtFrameProxy.HostedStateFullProxy).PublishItem();
+      }
     }
   }
 

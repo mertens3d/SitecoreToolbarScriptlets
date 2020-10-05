@@ -1,17 +1,17 @@
-﻿import { ContentEditorProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { DesktopProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
+﻿import { ContentEditorSFProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { DesktopSFProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ScWindowType } from "../../../Enums/scWindowType";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
-import { ScDocumentProxy } from "../../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
-import { IStateOfScUiProxy } from "../../Data/States/IDataStateOfSitecoreWindow";
+import { ScDocumentFacade } from "../../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
+import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
+import { IStateFullProxy } from "../IStateProxy";
 
-export interface IScWindowProxy {
-  ContentEditorProxy: ContentEditorProxy;
-  DesktopProxy: DesktopProxy;
+export interface IScWindowFacade {
   GetCurrentPageType(): ScWindowType;
-  GetStateOfScUiProxy(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUiProxy>;
-  Instantiate_ScWindowProxy(): Promise<void>;
+  GetStateOfScUiProxy(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUi>;
+  Instantiate_ScWindowFacade();
   PublishActiveCE();
-  SetCompactCss(targetDoc: ScDocumentProxy);
-  SetStateOfScWin(dataToRestore: IStateOfScUiProxy): Promise<void>
+  SetCompactCss(targetDoc: ScDocumentFacade);
+  SetStateOfScWin(dataToRestore: IStateOfScUi): Promise<void>
+  StateFullProxy: IStateFullProxy;
 }

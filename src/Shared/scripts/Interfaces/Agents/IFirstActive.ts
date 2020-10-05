@@ -1,7 +1,7 @@
-﻿import { IStateOfContentEditor } from "../Data/States/IStateOfContentEditor";
+﻿import { IStateOf_ } from "../Data/States/IStateofX";
 import { IStateOfScContentTreeNodeFlat } from "../Data/States/IStateOfScContentTreeNodeFlat";
 
 export interface IFirstActive {
-  StateOfContentEditorProxy: IStateOfContentEditor,
+  StateOfHostedFrame: IStateOf_,
   activeTreeNodeFlat: IStateOfScContentTreeNodeFlat
 }

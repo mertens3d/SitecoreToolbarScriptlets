@@ -1,5 +1,5 @@
 ﻿import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { NativeIframeProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/NativeScIframeProxy";
+import { FrameJacket } from "../../../DOMJacket/FrameJacket";
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
 import { _HindeCoreBase } from "../LoggableBase";
@@ -12,16 +12,19 @@ export class FactoryHelper extends _HindeCoreBase {
     super(hindeCore);
   }
 
-  CEFrameFactory(nativeIframeProxy: NativeIframeProxy, nickname: string): CEFrameProxy {
+  CEFrameFactory(frameJacket: FrameJacket, nickname: string): CEFrameProxy {
     this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
-    let toReturn = new CEFrameProxy(this.HindeCore, nativeIframeProxy);
-    toReturn.Instantiate();
+
+
+    this.ErrorHand.ThrowIfNullOrUndefined(this.CEFrameFactory.name, [frameJacket]);
+    let toReturn = new CEFrameProxy(this.HindeCore, frameJacket);
+    toReturn.InstantiateAsyncMembers();
     toReturn.WireEvents();
     this.Logger.FuncEnd(this.BaseFramePromiseFactory.name);
     return toReturn;
   }
 
-  BaseFramePromiseFactory(nativeIframeProxy: NativeIframeProxy, nickname: string): DTFrameProxy {
+  BaseFramePromiseFactory(nativeIframeProxy: FrameJacket, nickname: string): DTFrameProxy {
     this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
     var toReturn: DTFrameProxy = null;
 
@@ -32,6 +35,7 @@ export class FactoryHelper extends _HindeCoreBase {
 
     if (nativeIframeProxy && nickname) {
       var toReturn: DTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
+      toReturn.InstantiateAsyncMembers();
     } else {
       this.ErrorHand.ErrorAndThrow(this.BaseFramePromiseFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', nativeIframeProxy);
@@ -42,11 +46,11 @@ export class FactoryHelper extends _HindeCoreBase {
     return toReturn;
   }
 
-  async DTFrameProxyFactory(nativeIframeProxy: NativeIframeProxy): Promise<DTFrameProxy> {
+  async DTFrameProxyFactory(nativeIframeProxy: FrameJacket): Promise<DTFrameProxy> {
     var toReturn: DTFrameProxy = null;
     if (nativeIframeProxy) {
       var toReturn = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
-      await toReturn.Instantiate();
+      await toReturn.InstantiateAsyncMembers();
     } else {
       this.ErrorHand.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');
       this.Logger.LogAsJsonPretty('iframeElem', nativeIframeProxy);

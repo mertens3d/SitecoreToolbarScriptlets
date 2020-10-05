@@ -1,9 +1,9 @@
-﻿import { IStateOfScUiProxy } from "./IDataStateOfSitecoreWindow";
+﻿import { IStateOfScUi } from "./IDataStateOfSitecoreWindow";
 
 export interface IStateOfStorageSnapShots {
   CreationDate: Date;
   FavoriteCount: number;
   PlainCount: number,
-  SnapShots: IStateOfScUiProxy[];
+  SnapShots: IStateOfScUi[];
   SnapShotsAutoCount: number;
 }

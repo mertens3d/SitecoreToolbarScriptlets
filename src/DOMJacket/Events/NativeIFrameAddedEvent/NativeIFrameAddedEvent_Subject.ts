@@ -1,23 +1,24 @@
-﻿import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
-import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { NativeIframeProxy } from "../../../../NativeScIframeProxy";
-import { INativeIFrameAddRemoveEvent_Payload } from "./INativeIFrameAddedEvent_Payload";
+﻿import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { FrameJacket } from "../../FrameJacket";
+import { IFrameJacketAddRemoveEvent_Payload } from "./INativeIFrameAddedEvent_Payload";
+import { DocumentJacket } from "../../DocumentJacket";
 
-export class NativeIFrameAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INativeIFrameAddRemoveEvent_Payload>  {
-  private NativeDocument: Document;
+export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IFrameJacketAddRemoveEvent_Payload>  {
+  private DocumentJacket: DocumentJacket;
   private HindeCore: IHindeCore;
 
-  constructor(hindeCore: IHindeCore, document: Document) {
-    super(hindeCore, NativeIFrameAddRemoveEvent_Subject.name);
+  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
+    super(hindeCore, FrameJacketAddRemoveEvent_Subject.name);
     this.HindeCore = hindeCore;
 
-    this.Logger.CTORStart(NativeIFrameAddRemoveEvent_Subject.name);
-    if (!document) {
-      this.ErrorHand.ErrorAndThrow(NativeIFrameAddRemoveEvent_Subject.name, 'No target doc');
+    this.Logger.CTORStart(FrameJacketAddRemoveEvent_Subject.name);
+    if (!documentJacket) {
+      this.ErrorHand.ErrorAndThrow(FrameJacketAddRemoveEvent_Subject.name, 'No target doc');
     }
-    this.NativeDocument = document;
+    this.DocumentJacket = documentJacket;
     this.InitMutationObserver();
-    this.Logger.CTOREnd(NativeIFrameAddRemoveEvent_Subject.name);
+    this.Logger.CTOREnd(FrameJacketAddRemoveEvent_Subject.name);
   }
 
   private HandleRemovedNodes(removedNodes: NodeList): string[] {
@@ -29,12 +30,12 @@ export class NativeIFrameAddRemoveEvent_Subject extends HindeSiteEvent_Subject<I
     return removedIframeIds;
   }
 
-  private HandleAddedNodes(addedNodes: NodeList): NativeIframeProxy[] {
+  private HandleAddedNodes(addedNodes: NodeList): FrameJacket[] {
     this.Logger.FuncStart(this.HandleAddedNodes.name);
-    let addedNativeFrameProxies: NativeIframeProxy[] = [];
+    let addedNativeFrameProxies: FrameJacket[] = [];
     addedNodes.forEach((addedNode) => {
       if (addedNode instanceof HTMLIFrameElement) {
-        let nativeIframeProxy = new NativeIframeProxy(this.HindeCore, addedNode);
+        let nativeIframeProxy = new FrameJacket(this.HindeCore, addedNode);
         addedNativeFrameProxies.push(nativeIframeProxy);
       }
     });
@@ -53,21 +54,25 @@ export class NativeIFrameAddRemoveEvent_Subject extends HindeSiteEvent_Subject<I
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
           let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
 
-          let desktopMutatedEvent_Payload: INativeIFrameAddRemoveEvent_Payload = {
-            AddedNativeIFrameProxies: [],
-            RemovedIFrameIds: [],
+          let desktopMutatedEvent_Payload: IFrameJacketAddRemoveEvent_Payload = {
+            AddedFrameJacket: null,
+            RemovedIFrameId: null,
           }
 
-          desktopMutatedEvent_Payload.AddedNativeIFrameProxies = this.HandleAddedNodes(mutation.addedNodes);
-          desktopMutatedEvent_Payload.RemovedIFrameIds = this.HandleRemovedNodes(mutation.removedNodes);
+          let addedNodes: FrameJacket[] = this.HandleAddedNodes(mutation.addedNodes);
+          let removedNodeIds: string[] = this.HandleRemovedNodes(mutation.removedNodes);
 
-          if (desktopMutatedEvent_Payload.AddedNativeIFrameProxies.length > 0) {
-            this.Logger.LogVal('addedDTFrameProxies.length', desktopMutatedEvent_Payload.AddedNativeIFrameProxies.length);
-
+          addedNodes.forEach((addedNode: FrameJacket) => {
+            desktopMutatedEvent_Payload.AddedFrameJacket = addedNode;
+            desktopMutatedEvent_Payload.RemovedIFrameId = null;
             this.NotifyObserversAsync(desktopMutatedEvent_Payload);
-          } else {
-            this.Logger.Log('no notification, no DTFrameProxy added');
-          }
+          })
+
+          removedNodeIds.forEach((removedNodeId: string) => {
+            desktopMutatedEvent_Payload.AddedFrameJacket = null;
+            desktopMutatedEvent_Payload.RemovedIFrameId = removedNodeId;
+            this.NotifyObserversAsync(desktopMutatedEvent_Payload);
+          })
         }
       });
     } else {
@@ -79,11 +84,11 @@ export class NativeIFrameAddRemoveEvent_Subject extends HindeSiteEvent_Subject<I
   private InitMutationObserver() {
     this.Logger.FuncStart(this.InitMutationObserver.name);
     try {
-      if (this.NativeDocument) {
+      if (this.DocumentJacket) {
         let self = this;
         let mutationObserver = new MutationObserver((mutations: MutationRecord[]) => { self.CallBackOnNativeMutation(mutations); });
         //let desktop: HTMLElement = <HTMLElement> this.NativeDocument.getElementsByTagName(SharedConst.Const.KeyWords.Html.Tags.Body)[0];
-        let desktop: HTMLElement = <HTMLElement>this.NativeDocument.getElementById('Desktop');
+        let desktop: HTMLElement = <HTMLElement>this.DocumentJacket.getElementById('Desktop');
         if (desktop) {
           mutationObserver.observe(desktop, { attributes: false, subtree: false, childList: true });
         }

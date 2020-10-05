@@ -1,36 +1,42 @@
-﻿import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { ReadyStateNAB } from "../../../Shared/scripts/Enums/ReadyState";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
-import { IScVerSpec } from "../../../Shared/scripts/Interfaces/IScVerSpec";
-import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
-import { NativeIframeProxy } from "./NativeScIframeProxy";
-import { CEFrameProxy } from "./Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
-import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
+﻿import { IterationDrone } from "../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
+import { ReadyStateNAB } from "../Shared/scripts/Enums/ReadyState";
+import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ContentConst } from "../Shared/scripts/Interfaces/InjectConst";
+import { IScVerSpec } from "../Shared/scripts/Interfaces/IScVerSpec";
+import { FrameJacket } from "./FrameJacket";
+import { CEFrameProxy } from "../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
+import { FactoryHelper } from "../Shared/scripts/Helpers/FactoryHelper";
+import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
+import { UrlJacket } from "./GenericUrlAgent";
+import { SharedConst } from "../Shared/scripts/SharedConst";
+import { IAbsoluteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
 
-export abstract class _BaseNativeDocumentProxy<T> extends _BaseStateFullProxy<T> {
-  protected NativeDocument: Document;
+export class DocumentJacket extends _HindeCoreBase {
+  private NativeDocument: Document;
+  public readonly UrlJacket: UrlJacket;
 
   constructor(hindeCore: IHindeCore, nativeDocument: Document) {
     super(hindeCore);
     this.NativeDocument = nativeDocument;
+    this.UrlJacket = new UrlJacket(this.HindeCore, nativeDocument.URL);
   }
 
-  //------------------------------------------
   getElementById(idStr: string): HTMLElement {
     return this.NativeDocument.getElementById(idStr);
   }
+
   querySelector(selector: string): HTMLElement {
     return this.NativeDocument.querySelector(selector);
   }
+
   GetContentDoc(): Document {
     return this.NativeDocument;
   }
 
-  GetIFramesFromDataOneDoc(): NativeIframeProxy[] {
-    let toReturnIframeAr: NativeIframeProxy[] = [];
+  GetHostedFrameJackets(): FrameJacket[] {
+    let frameJackets: FrameJacket[] = [];
 
-    this.ErrorHand.ThrowIfNullOrUndefined(this.GetIFramesFromDataOneDoc.name, [this.NativeDocument]);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFrameJackets.name, [this.NativeDocument]);
 
     var queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
 
@@ -40,29 +46,39 @@ export abstract class _BaseNativeDocumentProxy<T> extends _BaseStateFullProxy<T>
 
     if (queryResults) {
       for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
-        var iframeElem: NativeIframeProxy = new NativeIframeProxy(this.HindeCore, <HTMLIFrameElement>queryResults[ifrIdx]);
-        if (iframeElem) {
-          toReturnIframeAr.push(iframeElem);
+        var frameJacket: FrameJacket = new FrameJacket(this.HindeCore, <HTMLIFrameElement>queryResults[ifrIdx]);
+        if (frameJacket) {
+          frameJackets.push(frameJacket);
         }
       }
     }
 
-    this.Logger.LogVal('found iframes count', toReturnIframeAr.length);
+    this.Logger.LogVal('found iframes count', frameJackets.length);
 
-    return toReturnIframeAr;
+    return frameJackets;
   }
 
-  async WaitForIframeElemAndReturnCEFrameProxyWhenReady( selector: string, iframeNickName: string): Promise<CEFrameProxy> {
+  Validate() {
+    let url: IAbsoluteUrl = this.UrlJacket.BuildFullUrlFromParts();
+
+    if (!url) {
+      this.ErrorHand.ErrorAndThrow(this.Validate.name, 'No URL');
+    }
+    else if (url.AbsUrl === SharedConst.Const.UrlSuffix.AboutBlank) {
+      this.ErrorHand.ErrorAndThrow(this.Validate.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
+    }
+  }
+  async WaitForIframeElemAndReturnCEFrameProxyWhenReady(selector: string, iframeNickName: string): Promise<CEFrameProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForIframeElemAndReturnCEFrameProxyWhenReady.name);
 
       let factoryHelp = new FactoryHelper(this.HindeCore);
 
-      let nativeIframeProxy: NativeIframeProxy = null;
+      let frameJacket: FrameJacket = null;
 
       await this.WaitForAndReturnFoundElem(selector)
-        .then(async (foundElem: HTMLIFrameElement) => nativeIframeProxy = new NativeIframeProxy(this.HindeCore, foundElem))
-        .then(() => factoryHelp.CEFrameFactory(nativeIframeProxy, iframeNickName))
+        .then(async (foundElem: HTMLIFrameElement) => frameJacket = new FrameJacket(this.HindeCore, foundElem))
+        .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
         .then((result: CEFrameProxy) => resolve(result))
         .catch((err) => reject(err));
 
@@ -80,8 +96,9 @@ export abstract class _BaseNativeDocumentProxy<T> extends _BaseStateFullProxy<T>
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
         toReturnFoundElem = this.NativeDocument.querySelector(selector);
         if (toReturnFoundElem) {
-          resolve(toReturnFoundElem)
-        } else {
+          resolve(toReturnFoundElem);
+        }
+        else {
           await iterationJr.Wait();
         }
       }
@@ -148,7 +165,7 @@ export abstract class _BaseNativeDocumentProxy<T> extends _BaseStateFullProxy<T>
     });
   }
 
-  protected async WaitForCompleteNAB_NativeDocument(friendly: string): Promise<ReadyStateNAB> {
+  public async WaitForCompleteNAB_NativeDocument(friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNAB_NativeDocument.name, friendly);
 

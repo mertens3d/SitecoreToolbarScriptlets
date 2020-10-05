@@ -6,7 +6,7 @@ import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/S
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
-import { ScDocumentProxy } from "../../ScDocumentProxy";
+import { ScDocumentFacade } from "../../ScDocumentFacade";
 import { DTPopUpMenuProxy } from "./DesktopPopUpMenuProxy";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
@@ -15,37 +15,39 @@ import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationE
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 
-export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy<IStateOfDesktop> {
+export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy{
+  StateFullProxyDisciminator = StateFullProxyDisciminator.Desktop;
   //DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
-  private AssociatedDoc: ScDocumentProxy;
+  private AssociatedDoc: ScDocumentFacade;
   private DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
   private DTAreaProxy: DTAreaProxy;
   private DTPopUpMenuProxy: DTPopUpMenuProxy;
   private DTStartBarProxy: DTStartBarProxy;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
 
-  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentProxy) {
+  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentFacade) {
     super(hindeCore);
-    this.Logger.CTORStart(DesktopProxy.name);
+    this.Logger.CTORStart(DesktopSFProxy.name);
 
     if (associatedDoc) {
       this.AssociatedDoc = associatedDoc;
     } else {
-      this.ErrorHand.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
+      this.ErrorHand.ErrorAndThrow(DesktopSFProxy.name, 'No associated doc');
     }
 
-    this.Logger.CTOREnd(DesktopProxy.name);
+    this.Logger.CTOREnd(DesktopSFProxy.name);
   }
 
-  async Instantiate(): Promise<void> {
+  async InstantiateAsyncMembers(): Promise<void> {
     try {
-      this.Logger.FuncStart(this.Instantiate.name, DesktopProxy.name);
+      this.Logger.FuncStart(this.InstantiateAsyncMembers.name, DesktopSFProxy.name);
 
       let initReportDesktopProxy = new InitReport_DesktopProxy();
 
       this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.AssociatedDoc);
-      this.DTAreaProxy.Instantiate();
+      this.DTAreaProxy.InstantiateAsyncMembers();
 
       this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.AssociatedDoc);
       this.DTStartBarProxy.Instantiate_DTStartBarProxy();
@@ -55,26 +57,26 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
 
       this.RecipeBasics = new RecipeBasics(this.HindeCore);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Instantiate.name, err);
+      this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err);
     }
 
-    this.Logger.FuncEnd(this.Instantiate.name, DesktopProxy.name);
+    this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, DesktopSFProxy.name);
   }
 
   WireEvents() {
-    this.Logger.FuncStart(this.WireEvents.name, DesktopProxy.name);
+    this.Logger.FuncStart(this.WireEvents.name, DesktopSFProxy.name);
 
     this.DTAreaProxy.WireEvents();
     this.DTStartBarProxy.WireEvent();
 
     this.DTAreaProxy.DTAreaProxyMutationEvent_Subject.RegisterObserver(this.DTAreaProxyMutationEvent_Observer);
 
-    this.Logger.FuncEnd(this.WireEvents.name, DesktopProxy.name);
+    this.Logger.FuncEnd(this.WireEvents.name, DesktopSFProxy.name);
   }
 
   async GetState(): Promise<IStateOfDesktop> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetState.name, DesktopProxy.name);
+      this.Logger.FuncStart(this.GetState.name, DesktopSFProxy.name);
 
       let toReturnDesktopState: IStateOfDesktop = new DefaultStateOfDesktop();
 
@@ -83,12 +85,12 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
         .then(() => resolve(toReturnDesktopState))
         .catch((err) => reject(this.GetState.name + ' | ' + err));
 
-      this.Logger.FuncEnd(this.GetState.name, DesktopProxy.name);
+      this.Logger.FuncEnd(this.GetState.name, DesktopSFProxy.name);
     });
   }
 
   async SetState(stateOfDesktop: IStateOfDesktop): Promise<void> {
-    this.Logger.FuncStart(this.SetState.name, DesktopProxy.name);
+    this.Logger.FuncStart(this.SetState.name, DesktopSFProxy.name);
     this.TaskMonitor.AsyncTaskStarted(this.SetState.name);
 
     try {
@@ -108,9 +110,12 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
     }
 
     this.TaskMonitor.AsyncTaskCompleted(this.SetState.name);
-    this.Logger.FuncEnd(this.SetState.name, DesktopProxy.name);
+    this.Logger.FuncEnd(this.SetState.name, DesktopSFProxy.name);
   }
 
+  TriggerInboundEventsAsync() {
+    // n/a
+  }
 
   //-----------------------------------------------------------------------
 
@@ -159,7 +164,7 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
   //  //}
   //}
 
-  GetAssociatedDoc(): ScDocumentProxy {
+  GetAssociatedDoc(): ScDocumentFacade {
     return this.AssociatedDoc;
   }
 

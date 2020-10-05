@@ -2,7 +2,7 @@
 import { PopConst } from "../../../../Shared/scripts/Const/PopConst";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IGenericUrlParts } from "../../../../Shared/scripts/Interfaces/IUrlParts";
+import { IGenericUrlParts } from "../../../../Shared/scripts/Interfaces/Jackets/IUrlParts";
 import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements IUiModule {
@@ -22,7 +22,7 @@ export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements
 
     allStateText += this.indentedLineBreak + '<strong>Page Type:</strong> ' + StaticHelpers.ScWindowTypeFriendly(this.RefreshData.ScUrlAgent.GetScWindowType());
 
-    let UrlParts: IGenericUrlParts = this.RefreshData.ScUrlAgent.GetUrlParts();
+    let UrlParts: IGenericUrlParts = this.RefreshData.ScUrlAgent.UrlJacket.GetUrlParts();
 
     allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + UrlParts.OriginalRaw;
 

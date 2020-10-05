@@ -1,11 +1,10 @@
-﻿import { ScDocumentProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
-import { DTFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { CEFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
+﻿import { CEFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
+import { ScDocumentFacade } from "../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
 
 export interface IDataPublishChain {
-  TopScDocumentProxy: ScDocumentProxy,
+  TopScDocumentProxy: ScDocumentFacade,
   Iframe0Blue: CEFrameProxy;
-  DocToPublish: ScDocumentProxy
+  ScDocumentProxyToPublish: ScDocumentFacade
   JqIframe: CEFrameProxy;
-  MessageDialogIframeRed: CEFrameProxy;
+  CEFrameRed: CEFrameProxy;
 }

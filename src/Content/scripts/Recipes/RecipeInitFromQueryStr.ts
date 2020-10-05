@@ -6,7 +6,7 @@ import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/IComman
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
-import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 
 export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements ICommandRecipes {
@@ -22,7 +22,7 @@ export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements 
       if (dataStorage) {
         let mostRecentDate: Date = new Date(1970, 1, 1);
 
-        let mostRecent: IStateOfScUiProxy = null;
+        let mostRecent: IStateOfScUi = null;
         dataStorage.SnapShots.forEach((snapShot) => {
           if (snapShot.Meta.TimeStamp > mostRecentDate) {
             mostRecentDate = snapShot.Meta.TimeStamp;

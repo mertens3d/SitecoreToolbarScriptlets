@@ -1,6 +1,6 @@
 ﻿import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
 import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
-import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
+import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { ReadyStateNAB } from '../Enums/ReadyState';
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
@@ -97,7 +97,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     });
   }
 
-  async WaitForCompleteNAB_DataOneDoc(scDocumentProxy: ScDocumentProxy, friendly: string): Promise<ReadyStateNAB> {
+  async WaitForCompleteNAB_DataOneDoc(scDocumentProxy: ScDocumentFacade, friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNAB_DataOneDoc.name, friendly);
 
@@ -114,7 +114,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     });
   }
 
-  async GetTopLevelIframe(targetDoc: ScDocumentProxy): Promise<DTFrameProxy> {
+  async GetTopLevelIframe(targetDoc: ScDocumentFacade): Promise<DTFrameProxy> {
     var toReturn: DTFrameProxy = null;
     let frameHelper = new FrameHelper(this.HindeCore);
     await frameHelper.GetIFramesAsBaseFrameProxies(targetDoc)
@@ -122,7 +122,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
         var maxZVal = -1;
         if (allIframe && allIframe.length > 0) {
           for (var idx = 0; idx < allIframe.length; idx++) {
-            var candidateIframe = allIframe[idx];
+            var candidateIframe: DTFrameProxy = allIframe[idx];
             if (candidateIframe && candidateIframe.GetZindexAsInt() > maxZVal) {
               toReturn = candidateIframe;
               maxZVal = candidateIframe.GetZindexAsInt();
@@ -185,7 +185,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
   //  });
   //}
 
-  async WaitForNewIframe(allIframesBefore: DTFrameProxy[], targetDoc: ScDocumentProxy): Promise<DTFrameProxy> {
+  async WaitForNewIframe(allIframesBefore: DTFrameProxy[], targetDoc: ScDocumentFacade): Promise<DTFrameProxy> {
     return new Promise<DTFrameProxy>(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframe.name);
       this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);

@@ -1,15 +1,15 @@
 ﻿import { AutoSnapShotAgent } from "../../../../Content/scripts/Agents/AutoSnapShotAgent";
 import { MessageBroker_Content } from "../../../../Content/scripts/Proxies/ContentMessageBroker";
 import { ScUiManager } from "../../../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
-import { ContentEditorProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { DesktopProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { ContentEditorSFProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { DesktopSFProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { GuidData } from "../../Helpers/GuidData";
-import { IHindSiteScUiProxy } from "../../Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiAPI } from "../../Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
-import { ScDocumentProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
+import { ScDocumentFacade } from "../../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
 import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
 import { ICommandParams } from "../../Interfaces/ICommandParams";
 import { _HindeCoreBase } from "../../LoggableBase";
@@ -19,18 +19,18 @@ export class CommandPayloadForInternal extends _HindeCoreBase implements IComman
     TargetSnapShotId: GuidData;
     AtticAgent: IContentAtticAgent;
     ContentMessageBroker: MessageBroker_Content = null;
-    DesktopProxy: DesktopProxy = null;
+    DesktopProxy: DesktopSFProxy = null;
     hindeCore: IHindeCore = null;
     ScUiMan: ScUiManager = null;
-    TargetCeProxy: ContentEditorProxy;
-    TargetDoc: ScDocumentProxy = null;
+    TargetCeProxy: ContentEditorSFProxy;
+    TargetDoc: ScDocumentFacade = null;
     TargetNickName: string = '';
     ToastAgent: IToastAgent = null;
-    TopLevelDoc: ScDocumentProxy = null;
+    TopLevelDoc: ScDocumentFacade = null;
     SettingsAgent: ISettingsAgent;
     AutoSnapShotAgent: AutoSnapShotAgent;
     ApiPayload: IApiCallPayload;
-    ScUiProxy: IHindSiteScUiProxy;
+    ScUiProxy: IHindSiteScUiAPI;
 
   constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, apiPayload: IApiCallPayload) {
     super(hindeCore);

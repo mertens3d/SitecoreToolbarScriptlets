@@ -1,8 +1,6 @@
 ﻿import { IStateOfScWindow } from "../../Interfaces/Data/States/IStateOfScWindow";
-import { DefaultStateOfDesktop } from "./DefaultStateOfDesktop";
-import { DefaultStateOfContentEditor } from "./DefaultStateOfContentEditor";
+import { DefaultStateOfStateFullProxy } from "./DefaultStateOfStateFullProxy";
 
-export class DefaultStateOfScWindowProxy implements IStateOfScWindow {
-    StateOfContentEditor = new DefaultStateOfContentEditor;
-    StateOfDesktop = new DefaultStateOfDesktop();
+export class DefaultStateOfScWindow implements IStateOfScWindow {
+  StateOf_ = new DefaultStateOfStateFullProxy();
 }

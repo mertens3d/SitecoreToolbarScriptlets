@@ -1,6 +1,6 @@
 ﻿import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
@@ -13,7 +13,7 @@ export class RecipeSaveStateManual extends _ContentRecipeBase implements IComman
   Execute(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       await this.Dependancies.ScUiProxy.GetStateOfScUiProxyWindow(SnapShotFlavor.Manual)
-        .then((windowState: IStateOfScUiProxy) => {
+        .then((windowState: IStateOfScUi) => {
           this.Dependancies.AtticAgent.WriteStateOfSitecoreToStorage(windowState);
           //todo - put back this.ErrorHand.WarningAndContinue(this.Execute.name, 'empty ce ar - not writing to storage');
         })

@@ -1,6 +1,6 @@
-import { HindSiteScUiProxy } from '../../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
+import { HindSiteScUiAPI } from '../../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
 import { ScUiManager } from '../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager';
-import { ScDocumentProxy } from "../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
+import { ScDocumentFacade } from "../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
 import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/ErrorHandlerAgent";
 import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
@@ -14,9 +14,9 @@ import { MsgFlag } from '../../Shared/scripts/Enums/1xxx-MessageFlag';
 import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
 import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
 import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
-import { IHindSiteScUiProxy } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
+import { IHindSiteScUiAPI } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
-import { IContentBrowserProxy } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
+import { IContentBrowserFacade } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
 import { IMessageBroker_Content } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -29,29 +29,31 @@ import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent';
 import { ContentAtticAgent } from './Agents/ContentAtticAgent';
 import { ContentMessageManager } from './Managers/ContentMessageManager';
 import { CommandRouter } from "./Proxies/CommandRouter";
-import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
+import { ContentBrowserFacade } from './Proxies/ContentBrowserProxy';
 import { MessageBroker_Content } from './Proxies/ContentMessageBroker';
 import { ILoggerAgent } from '../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { DocumentJacket } from '../../DOMJacket/DocumentJacket';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
-  private ScUiProxy: IHindSiteScUiProxy;
+  private ScUiAPI: IHindSiteScUiAPI;
   private ToastAgent: ToastAgent;
   private SettingsAgent: ISettingsAgent;
   private AtticAgent: IContentAtticAgent;
   //ScUrlAgent: ScUrlAgent;
-  ContentBrowserProxy: IContentBrowserProxy;
+  ContentBrowserProxy: IContentBrowserFacade;
   AutoSnapShotAgent: AutoSnapShotAgent;
 
   CommandRouter: CommandRouter;
   HindeCore: IHindeCore;
   ErrorHand: ErrorHandlerAgent;
   TaskMonitor: TaskMonitor;
-  TopScDocProxy: ScDocumentProxy;
+  TopScDocumentStateLessproxy: ScDocumentFacade;
 
   async StartUpContent() {
     this.Instantiate_HindeCore();
     this.InstantiateAgents_Content();
+    await this.InstantiateDocumentJacket()
     await this.InstantiateAndInit_Managers()
       .then(() => {
         this.AtticAgent.CleanOutOldAutoSavedData();
@@ -65,27 +67,29 @@ class ContentEntry {
     try {
       this.HindeCore.Logger.SectionMarker('Instantiate Agents');
 
-
       this.RepoAgent = new RepositoryAgent(this.HindeCore);
-
       this.SettingsAgent = new SettingsAgent(this.HindeCore, this.RepoAgent);
-
       this.SettingsAgent.Init_SettingsAgent();
-
       this.InitLogger();
-
       this.AtticAgent = new ContentAtticAgent(this.RepoAgent, this.HindeCore);
       this.ToastAgent = new ToastAgent(this.HindeCore, document);
       this.ToastAgent.Instantiate();
-
-      this.TopScDocProxy = new ScDocumentProxy(this.HindeCore, document);
-      this.TopScDocProxy.Instantiate();
-      this.TopScDocProxy.WireEvents();
 
       this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAgents_Content.name, err)
     }
+  }
+
+  private async InstantiateDocumentJacket(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      let documentJacket = new DocumentJacket(this.HindeCore, document);
+
+      await documentJacket.WaitForCompleteNAB_NativeDocument(this.InstantiateDocumentJacket.name)
+        .then(() => this.TopScDocumentStateLessproxy = new ScDocumentFacade(this.HindeCore, documentJacket))
+        .then(() => resolve())
+        .catch((err) => reject(this.InstantiateDocumentJacket.name + ' | ' + err));
+    })
   }
 
   private async InstantiateAndInit_Managers(): Promise<void> {
@@ -97,25 +101,22 @@ class ContentEntry {
 
       scUiMan = new ScUiManager(this.HindeCore);
 
+      this.ScUiAPI = new HindSiteScUiAPI(this.HindeCore, scUiMan, this.TopScDocumentStateLessproxy);
 
+      this.AutoSnapShotAgent = new AutoSnapShotAgent(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiAPI);
 
-      this.ScUiProxy = new HindSiteScUiProxy(this.HindeCore, scUiMan, this.TopScDocProxy, this.ToastAgent);
+      this.ContentBrowserProxy = new ContentBrowserFacade(this.HindeCore)
 
-      this.AutoSnapShotAgent = new AutoSnapShotAgent(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiProxy);
-
-      this.ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore)
-
-      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiProxy, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.TopScDocProxy);
+      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiAPI, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.TopScDocumentStateLessproxy);
 
       let contentMessageBroker: IMessageBroker_Content = new MessageBroker_Content(this.HindeCore, this.SettingsAgent,
-        this.ScUiProxy, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
+        this.ScUiAPI, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
 
       contentMessageMan = new ContentMessageManager(this.HindeCore, contentMessageBroker);
 
       await scUiMan.InitSitecoreUiManager()
         .then(() => contentMessageMan.InitContentMessageManager())
-        .then(() => this.ScUiProxy.OnReady_InstantiateHindSiteScUiProxy())
-        .then((result: InitReportScWindowManager) => this.HindeCore.Logger.LogAsJsonPretty('InitResultsScWindowManager', result))
+        .then(() => this.ScUiAPI.InstantiateHindSiteScUiProxy())
         .then(() => {
           this.AutoSnapShotAgent.ScheduleIntervalTasks();
         })
@@ -129,18 +130,15 @@ class ContentEntry {
     }
   }
 
-  private StartUp() {
-    this.HindeCore.Logger.FuncStart(this.StartUp.name);
-    //priorities are (first highest)
-    // query string
-    // settings
+
+  private TriggerStartupCommands() {
     let setStateFromX: ICommandRouterParams = {
       MsgFlag: MsgFlag.SetStateFromQueryString,
       NewNickName: null,
       SelectSnapShotId: null,
     }
 
-    if (this.TopScDocProxy.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
+    if (this.TopScDocumentStateLessproxy.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
       setStateFromX.MsgFlag = MsgFlag.SetStateFromQueryString,
         this.CommandRouter.RouteCommand(setStateFromX);
     } else if ((this.SettingsAgent.GetByKey(SettingKey.AutoRestoreState)).ValueAsBool()) {
@@ -148,6 +146,13 @@ class ContentEntry {
       setStateFromX.MsgFlag = MsgFlag.SetStateFromMostRecent;
       this.CommandRouter.RouteCommand(setStateFromX);
     }
+  }
+
+  private StartUp() {
+    this.HindeCore.Logger.FuncStart(this.StartUp.name);
+
+    this.TriggerStartupCommands();
+    
     this.HindeCore.Logger.FuncEnd(this.StartUp.name);
   }
 
@@ -187,7 +192,6 @@ class ContentEntry {
       TaskMonitor: this.TaskMonitor,
       Discriminator: Discriminator.IHindeCore,
     }
-
   }
 }
 

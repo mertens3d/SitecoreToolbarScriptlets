@@ -1,7 +1,7 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
-import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _base_ButtonModule } from "./_baseButtonModule";
 
@@ -46,7 +46,7 @@ export class InputWithButtonModule extends _base_ButtonModule implements IUiModu
   DrawCorrectNicknameInUI() {
     this.Logger.FuncStart(this.DrawCorrectNicknameInUI.name);
 
-    let snapShots: IStateOfScUiProxy[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
+    let snapShots: IStateOfScUi[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
 
     var targetId: GuidData = this.RefreshData.SelectSnapShotId;
 

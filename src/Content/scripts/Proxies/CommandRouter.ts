@@ -5,7 +5,7 @@ import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/M
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
-import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { ISnapShotsAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/ISnapShotsAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
@@ -24,22 +24,22 @@ import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrl
 import { CommandStartEndCancelEvent_Observer } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Observer";
 import { ICommandStartEndCancelEvent_Payload, CommandState_State } from "../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
 import { CommandStartEndCancelEvent_Subject } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Subject";
-import { ScDocumentProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentProxy";
+import { ScDocumentFacade } from "../../../HindSiteScUiProxy/scripts/Proxies/ScDocumentFacade";
 
 export class CommandRouter extends _HindeCoreBase {
   private InternalCommandRunner: InternalCommandRunner;
-  private ScUiProxy: IHindSiteScUiProxy;
+  private ScUiProxy: IHindSiteScUiAPI;
   private ToastAgent: IToastAgent;
   private ScUiMan: ScUiManager;
   private AtticAgent: IContentAtticAgent;
   private SettingsAgent: ISettingsAgent;
   private AutoSnapShotAgent: AutoSnapShotAgent;
-  private ScDocProxy: ScDocumentProxy;
+  private ScDocProxy: ScDocumentFacade;
   CommandTriggeredEvent_Observer: CommandStartEndCancelEvent_Observer;
   CommandTriggeredEvent_Subject: CommandStartEndCancelEvent_Subject;
   private Dependancies: ICommandDependancies;
 
-  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiProxy, toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, scDocProxy: ScDocumentProxy) {
+  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiAPI, toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, scDocProxy: ScDocumentFacade) {
     super(hindeCore);
     this.ToastAgent = toastAgent;
     this.ScUiMan = scUiMan;
@@ -67,10 +67,8 @@ export class CommandRouter extends _HindeCoreBase {
   async OnCommandStartEndCancelEvent(payload: ICommandStartEndCancelEvent_Payload): Promise<void> {
     this.Logger.FuncStart(this.OnCommandStartEndCancelEvent.name);
     if (payload.CommandState == CommandState_State.CommandStarted) {
-      await this.ToastAgent.RaisePerpetualToast('Starting to do something')
+      await this.ToastAgent.DropToast('Starting to do something')
     } else if (payload.CommandState == CommandState_State.CommandCompletedSuccessfully) {
-      //self.ToastAgent.OnRaiseToastReq().bind(self.ToastAgent))
-      //await this.ToastAgent.LowerPerpetualToast('Command completed successfully');
     }
 
     this.Logger.FuncEnd(this.OnCommandStartEndCancelEvent.name);
@@ -130,7 +128,6 @@ export class CommandRouter extends _HindeCoreBase {
 
       if (commandData.CommandType == CommandType.Api) {
         await this.ExecuteApiCommand(commandData.commandToExecute, routingParams.MsgFlag)
-          .then(() => this.ScUiProxy.RaiseToastNotification('Completed'))
           .then(() => resolve())
           .catch((err) => reject(err));
       }

@@ -8,7 +8,6 @@ module.exports = {
     ], cb);
   },
 
-
   GetFolderName: function (prefix) {
     //https://stackoverflow.com/questions/3552461/how-to-format-a-javascript-date
     const o_date = new Intl.DateTimeFormat;
@@ -29,8 +28,6 @@ module.exports = {
     return gulp.src(target, { base: './' })
       .pipe(gulp.dest(this.GetFolderName('./archives/AutoBuildArchive-')));
   },
-
-
 
   cleanAddons: function (cb, vars) {
     return del([

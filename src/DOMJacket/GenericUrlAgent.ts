@@ -1,13 +1,13 @@
-﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
-import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
-import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
-import { IUrlAgent } from "../../../Interfaces/IUrlAgent";
-import { IGenericUrlParts } from "../../../Interfaces/IUrlParts";
-import { _HindeCoreBase } from "../../../LoggableBase";
-import { IOneParamPair } from "../../../Interfaces/IOneParamPair";
-import { SharedConst } from "../../../SharedConst";
+﻿import { QueryStrKey } from "../Shared/scripts/Enums/QueryStrKey";
+import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAbsoluteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
+import { IUrlJacket } from "../Shared/scripts/Interfaces/IUrlAgent";
+import { IGenericUrlParts } from "../Shared/scripts/Interfaces/Jackets/IUrlParts";
+import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
+import { IOneParamPair } from "../Shared/scripts/Interfaces/IOneParamPair";
+import { SharedConst } from "../Shared/scripts/SharedConst";
 
-export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
+export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
   protected UrlParts: IGenericUrlParts;
   private Url: string;
   //private BrowserProxy: IPopUpBrowserProxy;
@@ -16,8 +16,27 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
     super(hindeCore);
     this.Url = url;
 
-    this.ErrorHand.ThrowIfNullOrUndefined(GenericUrlAgent.name, url);
-    //this.BrowserProxy = browserProxy;
+    this.ErrorHand.ThrowIfNullOrUndefined(UrlJacket.name, url);
+    this.Init_GenericUrlAgent();
+  }
+
+
+  protected Init_GenericUrlAgent(): void {
+    try {
+      this.Logger.FuncStart(this.Init_GenericUrlAgent.name, UrlJacket.name);
+
+      this.SetFromHref(this.Url);
+      //if (this.BrowserProxy) {
+      //  this.Init_FromBrowserProxy();
+      //}
+      //else {
+      //   this.InitFromWindowLocation();
+      //}
+    } catch (err) {
+      throw (this.Init_GenericUrlAgent.name + ' | ' + err);
+    }
+
+    this.Logger.FuncEnd(this.Init_GenericUrlAgent.name, UrlJacket.name);
   }
 
   GetUrlParts(): IGenericUrlParts {
@@ -84,23 +103,7 @@ export class GenericUrlAgent extends _HindeCoreBase implements IUrlAgent {
   //  }
   //}
 
-  protected Init_GenericUrlAgent(): void {
-    try {
-      this.Logger.FuncStart(this.Init_GenericUrlAgent.name, GenericUrlAgent.name);
 
-      this.SetFromHref(this.Url);
-      //if (this.BrowserProxy) {
-      //  this.Init_FromBrowserProxy();
-      //}
-      //else {
-      //   this.InitFromWindowLocation();
-      //}
-    } catch (err) {
-      throw (this.Init_GenericUrlAgent.name + ' | ' + err);
-    }
-
-    this.Logger.FuncEnd(this.Init_GenericUrlAgent.name, GenericUrlAgent.name);
-  }
 
   private SetFromHref(href: string) {
     var parser = document.createElement('a');

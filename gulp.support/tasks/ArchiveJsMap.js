@@ -24,6 +24,8 @@ var filesToArchive = [
   './src/PopUpController/**/*.map',
   './src/Shared/**/*.js',
   './src/Shared/**/*.map',
+  './src/DOMJacket/**/*.js',
+  './src/DOMJacket/**/*.map',
 ];
 
 module.exports = {

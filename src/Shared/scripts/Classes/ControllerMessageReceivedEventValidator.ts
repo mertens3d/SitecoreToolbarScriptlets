@@ -1,6 +1,6 @@
 ﻿import { IControllerMessageReceivedEvent_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IMessageContentToController_Payload } from "../Events/ContentReplyReceivedEvent/IMessageContentToController_Payload";
-import { IStateOfScUiProxy } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfContentEditor } from "../Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDesktop } from "../Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../Interfaces/Data/States/IStateOfDTProxy";
@@ -10,11 +10,12 @@ import { DefaultControllerMessageReceivedEvent_Payload } from "./Defaults/Defaul
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
 import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
 import { DefaultStateOfScUiProxy } from "./Defaults/DefaultStateOfScUiProxy";
-import { DefaultStateOfScWindowProxy } from "./Defaults/DefaultStateOfScWindowProxy";
+import { DefaultStateOfScWindow } from "./Defaults/DefaultStateOfScWindowProxy";
 import { DefaultStateOfStorageSnapshots } from "./Defaults/DefaultStateOfSnapshots";
 import { DefaultStateOfContentTree } from "./Defaults/DefaultStateOfContentTree";
 import { IStateOfStorageSnapShots } from "../Interfaces/Data/States/IStateOfStorageSnapShots";
 import { StaticHelpers } from "./StaticHelpers";
+import { StateFullProxyDisciminator } from "../Enums/4000 - StateFullProxyDisciminator";
 
 export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {
@@ -56,7 +57,7 @@ export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
     return stateOfStorageSnapShots;
   }
 
-  private ValidateStateOfScUiProxy(stateOfScUiProxy: IStateOfScUiProxy): IStateOfScUiProxy {
+  private ValidateStateOfScUiProxy(stateOfScUiProxy: IStateOfScUi): IStateOfScUi {
     if (!stateOfScUiProxy) {
       stateOfScUiProxy = new DefaultStateOfScUiProxy();
     }
@@ -65,11 +66,17 @@ export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
   }
 
   private ValidateStateOfScWindowProxy(stateOfScWindowProxy: IStateOfScWindow): IStateOfScWindow {
-    if (!stateOfScWindowProxy) {
-      stateOfScWindowProxy = new DefaultStateOfScWindowProxy();
+    if (!stateOfScWindowProxy || ! stateOfScWindowProxy.StateOf_) {
+      stateOfScWindowProxy = new DefaultStateOfScWindow();
     }
-    stateOfScWindowProxy.StateOfDesktop = this.ValidateStateOfDesktopProxy(stateOfScWindowProxy.StateOfDesktop);
-    stateOfScWindowProxy.StateOfContentEditor = this.ValidateStateOfContentEditorProxy(stateOfScWindowProxy.StateOfContentEditor);
+
+    let discriminator: StateFullProxyDisciminator = stateOfScWindowProxy.StateOf_.StatefullDisciminator;
+
+    if (discriminator === StateFullProxyDisciminator.ContentEditor) {
+      stateOfScWindowProxy.StateOf_ = this.ValidateStateOfContentEditorProxy(<IStateOfContentEditor>stateOfScWindowProxy.StateOf_);
+    } else if (discriminator === StateFullProxyDisciminator.Desktop) {
+      stateOfScWindowProxy.StateOf_ = this.ValidateStateOfDesktopProxy(<IStateOfDesktop>stateOfScWindowProxy.StateOf_);
+    }
     return stateOfScWindowProxy;
   }
 

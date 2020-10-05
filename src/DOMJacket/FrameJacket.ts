@@ -1,47 +1,50 @@
-﻿import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
-import { ReadyStateNAB } from "../../../Shared/scripts/Enums/ReadyState";
-import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { ScDocumentProxy } from "./ScDocumentProxy";
-import { IStateOfFrameStyling } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
-import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
-import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+﻿import { IterationDrone } from "../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
+import { ReadyStateNAB } from "../Shared/scripts/Enums/ReadyState";
+import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IStateOfFrameStyling } from "../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
+import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
+import { DocumentJacket } from "./DocumentJacket";
+import { UrlJacket } from "./GenericUrlAgent";
 
-export class NativeIframeProxy extends _BaseStateFullProxy<IStateOfFrameStyling> implements IStateFullProxy<IStateOfFrameStyling> {
+export class FrameJacket extends _HindeCoreBase {
   private HtmlIFrameElement: HTMLIFrameElement;
-  ScDocumentProxy: ScDocumentProxy;
+  public DocumentJacket: DocumentJacket;
   private NativeIframeId: string;
 
   constructor(hindeCore: IHindeCore, htmlIframeElement: HTMLIFrameElement) {
     super(hindeCore);
     this.HtmlIFrameElement = htmlIframeElement;
+    this.BuildInstance();
+    this.WireInstanceEvents();
   }
 
-  Instantiate() {
-    this.Logger.FuncStart(this.Instantiate.name, NativeIframeProxy.name);
+  private BuildInstance() {
+    this.Logger.FuncStart(this.BuildInstance.name, FrameJacket.name);
 
-    this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, this.HtmlIFrameElement.contentDocument);
-    this.ScDocumentProxy.Instantiate();
+    this.DocumentJacket = new DocumentJacket(this.HindeCore, this.HtmlIFrameElement.contentDocument);
 
     this.NativeIframeId = this.HtmlIFrameElement.id;
 
-    this.Logger.FuncEnd(this.Instantiate.name, NativeIframeProxy.name);
+    this.Logger.FuncEnd(this.BuildInstance.name, FrameJacket.name);
   }
 
-  WireEvents() {
-    this.ScDocumentProxy.WireEvents();
+  private WireInstanceEvents() {
+    // empty
+  }
+
+  GetUrlJacket(): UrlJacket {
+    return this.DocumentJacket.UrlJacket;
   }
 
   async SetState(StateOfFrameStyling: IStateOfFrameStyling): Promise<void> {
-    this.Logger.FuncStart(this.SetState.name, NativeIframeProxy.name);
+    this.Logger.FuncStart(this.SetState.name, FrameJacket.name);
     this.HtmlIFrameElement.style.height = StateOfFrameStyling.Height;
     this.HtmlIFrameElement.style.left = StateOfFrameStyling.Left;
     this.HtmlIFrameElement.style.position = StateOfFrameStyling.Position;
     this.HtmlIFrameElement.style.top = StateOfFrameStyling.Top;
     this.HtmlIFrameElement.style.width = StateOfFrameStyling.Width;
     this.HtmlIFrameElement.style.zIndex = StateOfFrameStyling.ZIndex;
-    this.Logger.FuncEnd(this.SetState.name, NativeIframeProxy.name);
+    this.Logger.FuncEnd(this.SetState.name, FrameJacket.name);
   }
 
   async GetState(): Promise<IStateOfFrameStyling> {
@@ -56,25 +59,23 @@ export class NativeIframeProxy extends _BaseStateFullProxy<IStateOfFrameStyling>
         Width: sourceStyle.width,
         ZIndex: sourceStyle.zIndex
       };
-    } catch (err) {
+    }
+    catch (err) {
       this.ErrorHand.ErrorAndThrow(this.GetState.name, err);
     }
     return toReturn;
   }
 
-  //-----------------------------------------------------------------------------------
+  TriggerInboundEventsAsync(): void {
+  }
 
-  GetIframeHtmlElem(): HTMLIFrameElement {  //todo - get rid of this. is a temp workaround
+  //-----------------------------------------------------------------------------------
+  GetIframeHtmlElem(): HTMLIFrameElement {
     return this.HtmlIFrameElement;
   }
 
-  GetNativeContentDoc(): ScDocumentProxy {
-    return this.ScDocumentProxy;
-  }
-
-  GetScWindowType(): ScWindowType {
-    this.ErrorHand.ThrowIfNullOrUndefined(this.GetScWindowType.name, this.ScDocumentProxy);
-    return this.ScDocumentProxy.GetScWindowType();
+  GetNativeContentDoc(): DocumentJacket {
+    return this.DocumentJacket;
   }
 
   src(): string {
@@ -114,11 +115,9 @@ export class NativeIframeProxy extends _BaseStateFullProxy<IStateOfFrameStyling>
           resolve(readyStateNAB);
         }
         else {
-          this.ScDocumentProxy = new ScDocumentProxy(this.HindeCore, this.HtmlIFrameElement.contentDocument);
-          this.ScDocumentProxy.Instantiate();
-          this.ScDocumentProxy.WireEvents();
+          this.DocumentJacket = new DocumentJacket(this.HindeCore, this.HtmlIFrameElement.contentDocument);
 
-          await this.ScDocumentProxy.WaitForCompleteNAB_ScDocumentProxy(friendly)
+          await this.DocumentJacket.WaitForCompleteNAB_NativeDocument(friendly)
             .then((result: ReadyStateNAB) => {
               this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, result.DocumentReadtStateFriendly());
               resolve(result);

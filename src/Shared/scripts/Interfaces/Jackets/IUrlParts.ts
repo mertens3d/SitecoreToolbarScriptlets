@@ -1,5 +1,4 @@
-﻿import { IOneParamPair } from "./IOneParamPair";
-
+﻿
 export interface IGenericUrlParts {
   Anchor: string,
   FilePath: string,

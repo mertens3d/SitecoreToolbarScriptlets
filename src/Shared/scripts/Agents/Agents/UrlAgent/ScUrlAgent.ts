@@ -3,29 +3,41 @@ import { scMode } from "../../../Enums/scMode";
 import { ScWindowType } from "../../../Enums/scWindowType";
 import { IControllerMessageReceivedEvent_Payload } from "../../../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
-import { IScUrlAgent } from "../../../Interfaces/Agents/IScUrlAgent/IScUrlAgent";
 import { IAbsoluteUrl } from "../../../Interfaces/IAbsoluteUrl";
+import { IUrlJacket } from "../../../Interfaces/IUrlAgent";
+import { IGenericUrlParts } from "../../../Interfaces/Jackets/IUrlParts";
+import { IScUrlAgent } from "../../../Interfaces/Jackets/IScUrlAgent";
+import { _HindeCoreBase } from "../../../LoggableBase";
 import { SharedConst } from "../../../SharedConst";
-import { GenericUrlAgent } from "./GenericUrlAgent";
 
-export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
-  constructor(hindeCore: IHindeCore, url: string) {
-    super(hindeCore, url);
+export class ScUrlAgent extends _HindeCoreBase implements IScUrlAgent {
+  public UrlJacket: IUrlJacket;
+
+  constructor(hindeCore: IHindeCore, urlJacket: IUrlJacket) {
+    super(hindeCore);
+    this.ErrorHand.ThrowIfNullOrUndefined(ScUrlAgent.name, [urlJacket]);
+    this.UrlJacket = urlJacket;
+  }
+
+  SetParameterValueByKey(qsKey: QueryStrKey, qsValue: string) {
+    return this.UrlJacket.SetParameterValueByKey(qsKey, qsValue);
+  }
+  GetUrlParts(): IGenericUrlParts {
+    return this.UrlJacket.GetUrlParts();
+  }
+  GetQueryStringValueByKey(hsTargetSs: QueryStrKey): string {
+    return this.UrlJacket.GetQueryStringValueByKey(hsTargetSs);
+  }
+  QueryStringHasKey(hsTargetSs: QueryStrKey) {
+    return this.UrlJacket.QueryStringHasKey(hsTargetSs);
+  }
+  BuildFullUrlFromParts_ScUrlAgent() {
+    this.ErrorHand.ThrowIfNullOrUndefined(this.BuildFullUrlFromParts_ScUrlAgent.name, [this.UrlJacket]);
+    return this.UrlJacket.BuildFullUrlFromParts();
   }
 
   private __urlTestAgainstRegex(regexPattern: RegExp, url: string) {
     return new RegExp(regexPattern).test(url);
-  }
-
-  Init_ScUrlAgent(): void {
-    this.Logger.FuncStart(this.Init_ScUrlAgent.name);
-
-    this.Init_GenericUrlAgent();
-    this.Logger.FuncEnd(this.Init_ScUrlAgent.name);
-  }
-
-  GetFullUrl() {
-    return this.BuildFullUrlFromParts();
   }
 
   private GetScWindowtypeXmlControl(): ScWindowType {
@@ -51,7 +63,7 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
   GetScWindowType(): ScWindowType {  //absUrl: AbsoluteUrl
     var toReturn: ScWindowType = ScWindowType.Unknown;
 
-    let testPath: IAbsoluteUrl = this.BuildFullUrlFromParts();
+    let testPath: IAbsoluteUrl = this.BuildFullUrlFromParts_ScUrlAgent();
     if (testPath) {
       if (testPath.AbsUrl.indexOf(SharedConst.Const.UrlSuffix.Login) > -1) {
         toReturn = ScWindowType.LoginPage;
@@ -93,8 +105,10 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
   }
 
   BuildEditPrevNormUrl(newMode: scMode, contState: IControllerMessageReceivedEvent_Payload): void {
-    this.UrlParts.Anchor = '';
-    this.UrlParts.FilePath = '';
+
+    let urlParts = this.GetUrlParts();
+    urlParts.Anchor = '';
+    urlParts.FilePath = '';
 
     //todo - put back once this method returns to use this.SetParameterValueByKey(QueryStrKey.sc_itemid, contState.ActiveCe.StateOfTree.ActiveNode.NodeId.AsBracedGuid());
     this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[newMode]);
@@ -103,10 +117,11 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
   }
 
   SetScMode(newMode: scMode): void {
-    if (this.UrlParts && newMode) {
+    let urlParts = this.GetUrlParts();
+    if (urlParts && newMode) {
       //this.SetFilePathFromWindowType(newMode);
 
-      if (this.UrlParts && this.UrlParts)
+      if (urlParts )
         this.SetParameterValueByKey(QueryStrKey.sc_mode, scMode[newMode])
     }
   }
@@ -118,22 +133,22 @@ export class ScUrlAgent extends GenericUrlAgent implements IScUrlAgent {
 
     switch (windowType) {
       case ScWindowType.ContentEditor:
-        this.SetFilePath(SharedConst.Const.UrlSuffix.CE);
+        this.UrlJacket.SetFilePath(SharedConst.Const.UrlSuffix.CE);
         break;
       case ScWindowType.Desktop:
-        this.SetFilePath(SharedConst.Const.UrlSuffix.Desktop);
+        this.UrlJacket.SetFilePath(SharedConst.Const.UrlSuffix.Desktop);
         break;
       case ScWindowType.Edit:
-        this.SetFilePath(SharedConst.Const.UrlSuffix.None);
+        this.UrlJacket.SetFilePath(SharedConst.Const.UrlSuffix.None);
         break;
       case ScWindowType.Preview:
-        this.SetFilePath(SharedConst.Const.UrlSuffix.None);
+        this.UrlJacket.SetFilePath(SharedConst.Const.UrlSuffix.None);
         break;
       case ScWindowType.Normal:
-        this.SetFilePath(SharedConst.Const.UrlSuffix.None);
+        this.UrlJacket.SetFilePath(SharedConst.Const.UrlSuffix.None);
         break;
       default:
-        this.SetFilePath('');
+        this.UrlJacket.SetFilePath('');
         this.ErrorHand.ErrorAndThrow(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
         break;
     }

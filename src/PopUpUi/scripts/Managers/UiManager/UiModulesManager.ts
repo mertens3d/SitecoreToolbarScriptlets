@@ -8,12 +8,12 @@ import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { SettingFlavor } from '../../../../Shared/scripts/Enums/SettingFlavor';
 import { IHindSiteSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent';
+import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Jackets/IScUrlAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IUiModule } from '../../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
-import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots';
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
@@ -42,7 +42,7 @@ import { _UiModuleBase } from '../../UiModules/_UiModuleBase';
 export class UiModulesManager extends _HindeCoreBase {
   MenuCommandParameters: IMenuCommandDefinition[];
   UiCommandsMan: UiCommandsManager;
-  CurrScWindowState: IStateOfScUiProxy;
+  CurrScWindowState: IStateOfScUi;
   DebuggingFeedbackModuleMessages: DebuggingFeedbackModuleMessages_Observer;
   private CommandDefinitionBucket: ICommandDefinitionBucket;
   private SettingsAgent: ISettingsAgent;
@@ -50,7 +50,7 @@ export class UiModulesManager extends _HindeCoreBase {
   private UiVisibilityTestAgent: IUiVisibilityTestAgent;
   UiSettingBasedModuleMutationEvent_Observer: UiSettingBasedModuleMutationEvent_Observer;
   SelectSnapshotModule_Observer: SelectSnapUiMutationEvent_ObserverWithCallback;
-  private LastKnownStateOfLiveHindSite: IStateOfScUiProxy;
+  private LastKnownStateOfLiveHindSite: IStateOfScUi;
   private LastKnownStateOfStorageSnapShots: IStateOfStorageSnapShots;
   LastKnownSelectSnapshotId: any;
   FacetModuleSelectSnapShots: SelectSnapshotModule;
@@ -373,7 +373,7 @@ export class UiModulesManager extends _HindeCoreBase {
     this.Logger.FuncEnd(this.OnRefreshUiUIManagerFromSnapShotSelect.name);
   }
 
-  async UpdateUiFromContentReply(stateOfScUiProxy: IStateOfScUiProxy, stateOfStorageSnapShots: IStateOfStorageSnapShots) {
+  async UpdateUiFromContentReply(stateOfScUiProxy: IStateOfScUi, stateOfStorageSnapShots: IStateOfStorageSnapShots) {
     this.Logger.FuncStart(this.UpdateUiFromContentReply.name);
 
     //if (StaticHelpers.IsNullOrUndefined(this.LastKnownSelectSnapshotId)) {

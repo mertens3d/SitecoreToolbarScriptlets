@@ -13,5 +13,6 @@
     DesktopOrContentEditor = 11,
     SnapShotable = 12,
     IfDesktopMin1ContentEditor = 13,
-    DISABLED
+    DISABLED,
+    Always = 14
 }

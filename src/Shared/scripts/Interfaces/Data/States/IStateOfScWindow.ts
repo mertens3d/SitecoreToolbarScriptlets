@@ -1,6 +1,4 @@
-﻿import { IStateOfDesktop } from './IStateOfDesktop';
-import { IStateOfContentEditor } from './IStateOfContentEditor';
+﻿import { IStateOf_ } from "./IStateofX";
 export interface IStateOfScWindow {
-    StateOfContentEditor: IStateOfContentEditor;
-    StateOfDesktop: IStateOfDesktop;
+  StateOf_: IStateOf_
 }

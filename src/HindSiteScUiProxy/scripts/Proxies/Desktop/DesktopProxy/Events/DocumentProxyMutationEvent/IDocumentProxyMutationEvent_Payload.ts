@@ -1,6 +1,6 @@
-﻿import { NativeIframeProxy } from "../../../../NativeScIframeProxy";
+﻿import { FrameJacket } from "../../../../../../../DOMJacket/FrameJacket";
 
 export interface IDocumentProxyMutationEvent_Payload {
-  RemovedIFrameIds: string[];
-  AddedNativeIFrameProxies: NativeIframeProxy[];
+  RemovedIFrameId: string;
+  AddedFrameJacket: FrameJacket;
 }

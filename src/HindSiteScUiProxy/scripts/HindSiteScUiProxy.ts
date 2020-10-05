@@ -1,85 +1,63 @@
-﻿import { ToastAgent } from "../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent";
-import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
-import { IHindSiteScUiProxy } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+﻿import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
+import { IHindSiteScUiAPI } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
-import { IScWindowProxy } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { ScDocumentProxy } from "./Proxies/ScDocumentProxy";
-import { IStateOfScUiProxy } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
-import { ScWindowProxy } from "./Proxies/ScWindowProxy";
+import { ScDocumentFacade } from "./Proxies/ScDocumentFacade";
+import { ScWindowFacade } from "./Proxies/ScWindowProxy";
+import { ContentEditorSFProxy } from "./Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { DesktopSFProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
 
-export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiProxy {
+export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI {
   private ScUiMan: ScUiManager;
-  private ScWindowProxy: IScWindowProxy;
-  //private ScUrlAgent: IScUrlAgent;
-  private TopDocumentProxy: ScDocumentProxy;
-  ToastAgent: ToastAgent;
+  private ScWindowFacade: IScWindowFacade;
+  private TopDocumentFacade: ScDocumentFacade;
 
-  constructor(hindeCore: IHindeCore, scUiMan: ScUiManager,  documentProxy: ScDocumentProxy, toastAgent: ToastAgent) {
+  constructor(hindeCore: IHindeCore, scUiMan: ScUiManager, documentFacade: ScDocumentFacade) {
     super(hindeCore);
 
-    this.Logger.CTORStart(HindSiteScUiProxy.name);
+    this.Logger.CTORStart(HindSiteScUiAPI.name);
 
-    //this.ScUrlAgent = scUrlAgent;
     this.ScUiMan = scUiMan;
-    this.TopDocumentProxy = documentProxy;
-    this.ToastAgent = toastAgent;
+    this.TopDocumentFacade = documentFacade;
 
-    this.Logger.CTOREnd(HindSiteScUiProxy.name);
+    this.Logger.CTOREnd(HindSiteScUiAPI.name);
   }
-  public async OnReady_InstantiateHindSiteScUiProxy() {
-    this.Logger.FuncStart(this.OnReady_InstantiateHindSiteScUiProxy.name);
-    try {
 
-      this.ScWindowProxy = new ScWindowProxy(this.HindeCore, this.TopDocumentProxy);
-      await this.ScWindowProxy.Instantiate_ScWindowProxy();
+  public async InstantiateHindSiteScUiProxy() {
+    this.Logger.FuncStart(this.InstantiateHindSiteScUiProxy.name);
+    try {
+      this.ScWindowFacade = new ScWindowFacade(this.HindeCore, this.TopDocumentFacade);
+      await this.ScWindowFacade.Instantiate_ScWindowFacade();
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.OnReady_InstantiateHindSiteScUiProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.InstantiateHindSiteScUiProxy.name, err);
     }
 
-    this.Logger.FuncEnd(this.OnReady_InstantiateHindSiteScUiProxy.name);
+    this.Logger.FuncEnd(this.InstantiateHindSiteScUiProxy.name);
   }
 
-  GetStateOfScUiProxyWindow(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUiProxy> {
-    return this.ScWindowProxy.GetStateOfScUiProxy(snapshotFlavor);
+  GetStateOfScUiProxyWindow(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUi> {
+    return this.ScWindowFacade.GetStateOfScUiProxy(snapshotFlavor);
   }
 
-  RaiseToastNotification(arg0: string) {
-    this.ToastAgent.RaiseToastNotification(arg0);
-  }
-
-  //async UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void> {
-  //  return new Promise(async (resolve, reject) => {
-  //    await new RecipeChangeNickName(commandData).Execute()
-  //      .then(() => resolve())
-  //      .catch((err) => reject(err));
-  //  })
-  //}
-
-  GetStateOfScUiProxy(): Promise<IStateOfScUiProxy> {
+  GetStateOfScUiProxy(): Promise<IStateOfScUi> {
     return new Promise(async (resolve, reject) => {
-      let reply: IStateOfScUiProxy = null;
+      let reply: IStateOfScUi = null;
 
-      await this.ScWindowProxy.GetStateOfScUiProxy(SnapShotFlavor.Live)
-        .then((result: IStateOfScUiProxy) => reply = result)
+      await this.ScWindowFacade.GetStateOfScUiProxy(SnapShotFlavor.Live)
+        .then((result: IStateOfScUi) => reply = result)
         .then(() => reply.ErrorStackScUiProxy = this.ErrorHand.ErrorStack)
         .then(() => resolve(reply))
         .catch((err) => reject(err))
     });
   }
 
-  //Notify(payloadData: PayloadDataFromPopUp): Promise<void> {
-  //  return new Promise(async (resolve, reject) => {
-  //    this.ToastAgent.PopUpToastNotification(this.scWinProxy.GetTopLevelDoc(), payloadData.ToastMessage);
-  //  });
-  //}
-
   AddContentEditorToDesktopAsync(apiCallPayload: IApiCallPayload): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.ScWindowProxy.DesktopProxy.AddContentEditorAsync()
+      (<DesktopSFProxy>this.ScWindowFacade.StateFullProxy).AddContentEditorAsync()
         .then(() => resolve())
         .catch((err) => reject())
     });
@@ -87,7 +65,7 @@ export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiPr
 
   PublischActiveCE(commandData: IApiCallPayload): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.ScWindowProxy.PublishActiveCE()
+      this.ScWindowFacade.PublishActiveCE()
         .then(() => resolve())
         .ca
     });
@@ -101,9 +79,9 @@ export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiPr
     });
   }
 
-  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IStateOfScUiProxy): Promise<void> {
+  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IStateOfScUi): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.ScWindowProxy.SetStateOfScWin(dataOneWindowStorage)
+      this.ScWindowFacade.SetStateOfScWin(dataOneWindowStorage)
         .then(() => resolve())
         .catch((err) => reject(err));
     });
@@ -114,6 +92,6 @@ export class HindSiteScUiProxy extends _HindeCoreBase implements IHindSiteScUiPr
   }
 
   AdminB(commandData: IApiCallPayload) {
-    this.ScUiMan.AdminB(this.TopDocumentProxy, null);
+    this.ScUiMan.AdminB(this.TopDocumentFacade, null);
   }
 }

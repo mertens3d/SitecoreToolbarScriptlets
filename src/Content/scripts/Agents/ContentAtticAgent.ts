@@ -7,7 +7,7 @@ import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IRepositoryAgent } from "../../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
-import { IStateOfScUiProxy } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../Shared/scripts/Interfaces/IOneStorageData";
@@ -31,7 +31,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     this.SettingAutoSnapshotRetainDays = settingAutoSnapshotRetainDays;
   }
 
-  async WriteStateOfSitecoreToStorage(stateOfSitecoreWindow: IStateOfScUiProxy): Promise<void> {
+  async WriteStateOfSitecoreToStorage(stateOfSitecoreWindow: IStateOfScUi): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WriteStateOfSitecoreToStorage.name);
 
@@ -50,10 +50,10 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     });
   }
 
-  GetFromStorageBySnapShotId(needleId: GuidData): IStateOfScUiProxy {
+  GetFromStorageBySnapShotId(needleId: GuidData): IStateOfScUi {
     this.Logger.FuncStart(this.GetFromStorageBySnapShotId.name, needleId.Raw);
 
-    var DateOneWinStoreMatch: IStateOfScUiProxy = null;
+    var DateOneWinStoreMatch: IStateOfScUi = null;
 
     let foundStorage: IStateOfStorageSnapShots = this.GetStateOfStorageSnapShots();
 
@@ -73,8 +73,8 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     return DateOneWinStoreMatch;
   }
 
-  private ValidateStorageData(oneRaw: IOneStorageData): IStateOfScUiProxy {
-    var candidate: IStateOfScUiProxy = <IStateOfScUiProxy>JSON.parse(oneRaw.data);
+  private ValidateStorageData(oneRaw: IOneStorageData): IStateOfScUi {
+    var candidate: IStateOfScUi = <IStateOfScUi>JSON.parse(oneRaw.data);
 
     if (candidate) {
       if (!candidate.Meta) {
@@ -107,8 +107,8 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     return result;
   }
 
-  private GetAllStorage(): IStateOfScUiProxy[] {
-    var toReturn: IStateOfScUiProxy[] = [];
+  private GetAllStorage(): IStateOfScUi[] {
+    var toReturn: IStateOfScUi[] = [];
 
     let rawStorageData: IOneStorageData[] = this.GetAllLocalStorageAsIOneStorageData();
 
@@ -118,7 +118,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
       }
     }
 
-    toReturn.sort((a: IStateOfScUiProxy, b: IStateOfScUiProxy) =>
+    toReturn.sort((a: IStateOfScUi, b: IStateOfScUi) =>
       +b.Meta.TimeStamp - +a.Meta.TimeStamp
     );
 
@@ -127,7 +127,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     return toReturn;
   }
 
-  private CleanOneStorageItem(candidate: IStateOfScUiProxy, autoCount: number): number {
+  private CleanOneStorageItem(candidate: IStateOfScUi, autoCount: number): number {
     var maxAutoSaveDiff: number = this.SettingAutoSnapshotRetainDays * 24 * 60 * 60 * 1000;
     var deleteFlag: boolean = false;
     var now: Date = new Date();
@@ -194,7 +194,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     this.Logger.FuncStart(this.GetStateOfStorageSnapShots.name);
 
     let stateOfSnapshotStorage: IStateOfStorageSnapShots = new DefaultStateOfStorageSnapshots();
-    let result: IStateOfScUiProxy[] = this.GetAllStorage();
+    let result: IStateOfScUi[] = this.GetAllStorage();
     stateOfSnapshotStorage.SnapShots = result;
     stateOfSnapshotStorage.CreationDate = new Date();
     this.UpdateCounts(stateOfSnapshotStorage);
@@ -239,13 +239,13 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     }
   }
 
-  FilterOutOldData(data: IStateOfScUiProxy[]): IStateOfScUiProxy[] {
-    var toReturn: IStateOfScUiProxy[] = data;
+  FilterOutOldData(data: IStateOfScUi[]): IStateOfScUi[] {
+    var toReturn: IStateOfScUi[] = data;
 
     return toReturn;
   }
 
-  RemoveAndConfirmRemoval(storageMatch: IStateOfScUiProxy): void {
+  RemoveAndConfirmRemoval(storageMatch: IStateOfScUi): void {
     this.Logger.LogVal('Key to Delete', storageMatch.Meta.SnapshotId);
 
     let storageKey = storageMatch.Meta.StorageKey;
@@ -263,7 +263,7 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     this.Logger.FuncStart(this.RemoveSnapshotFromStorageById.name);
     try {
       if (targetId) {
-        var storageMatch: IStateOfScUiProxy = this.GetFromStorageBySnapShotId(targetId)
+        var storageMatch: IStateOfScUi = this.GetFromStorageBySnapShotId(targetId)
         if (storageMatch) {
           this.RemoveAndConfirmRemoval(storageMatch)
         } else {

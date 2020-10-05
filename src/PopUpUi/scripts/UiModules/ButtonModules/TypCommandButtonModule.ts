@@ -6,6 +6,7 @@ import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IU
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { _base_ButtonModule } from "./_baseButtonModule";
+import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";
 
 export class TypCommandButtonModule extends _base_ButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonTypical;
@@ -40,10 +41,13 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
     this.ElemDivBtnOverlay = document.createElement("div");
     this.ElemDivBtnOverlay.classList.add("btn-overlay");
 
-    let backFill = this.BuildButtonOverlayBackFill();
-    this.BuildButtonTextContainer();
-    this.ElemDivBtnOverlay.appendChild(backFill);
-    this.ElemDivBtnOverlay.appendChild(this.ElemButtonBackText);
+    //todo - this needs a more elagent solution
+    if (this.MenuCommandDefinition.VisibilityControllers.indexOf(VisibilityType.Always) < 0) {
+      let backFill = this.BuildButtonOverlayBackFill();
+      this.BuildButtonTextContainer();
+      this.ElemDivBtnOverlay.appendChild(backFill);
+      this.ElemDivBtnOverlay.appendChild(this.ElemButtonBackText);
+    }
   }
 
   private BuildButtonOverlayBackFill() {
@@ -62,7 +66,10 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
   BuildElements(): void {
     this.Logger.FuncStart(this.BuildElements.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
     if (!StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
-      this.BuildButtonOverlay();
+
+      
+        this.BuildButtonOverlay();
+
 
       this.ContainerUiDivElem.classList.add('btn-container');
 
@@ -93,7 +100,7 @@ export class TypCommandButtonModule extends _base_ButtonModule implements IUiMod
 
     this.Logger.LogAsJsonPretty(this.Friendly, allresults.TestResults);
 
-    this.ErrorHand.ThrowIfNullOrUndefined(this.SetCommandButtonVisibilityBasedOnResults.name,[allresults, this.HTMLButtonElement]);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.SetCommandButtonVisibilityBasedOnResults.name, [allresults, this.HTMLButtonElement]);
 
     if (!allresults.HasFailures()) {
       this.HTMLButtonElement.classList.remove('disabled');

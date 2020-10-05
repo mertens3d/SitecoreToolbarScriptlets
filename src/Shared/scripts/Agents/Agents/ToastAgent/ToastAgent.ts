@@ -22,8 +22,6 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
   private FlagTextDiv: HTMLDivElement;
   private TaskMutationEvent_Observer: TaskListMutationEvent_Observer;
 
-  private TimeStampOfLastCompletedAllTask: number = -1;
-
   constructor(hindeCore: IHindeCore, targetDoc: Document) {
     super(hindeCore);
     this.TargetDoc = targetDoc;
@@ -37,57 +35,30 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
 
   CallBackOnTaskListMutationEvent(payload: ITaskListMutationEvent_Payload) {
     if (payload.MutationType === TaskMutationType.TasksHaveGoneIdle) {
-      //alert('Task appears to be complete ' + payload.flagCount + ' : ' + payload.TotalTaskCount);
-
-      this.LowerPerpetualToast('');
-
-      //let nowTimeStamp: number = new Date().getTime();
-      //if (this.TimeStampOfLastCompletedAllTask > -1 ) {
-      //  if (this.TaskMonitor.IsTaskListEmpty() ) {
-      //    let timeSinceLast = nowTimeStamp - this.TimeStampOfLastCompletedAllTask;
-      //    if (timeSinceLast > 5000) {
-
-
-      //    }
-      //  }
-      //}
-
-      //this.TimeStampOfLastCompletedAllTask = nowTimeStamp;
+      this.LiftToast('');
     } else {
       this.SetSliderDivText(payload.CompletedCount + ':' + payload.TotalTaskCount);//+ '  ' + Math.ceil((payload.CompletedCount / payload.TotalTaskCount) * 100) +  '% ')
     }
   }
 
-  async LowerPerpetualToast(message: string): Promise<void> {
-    this.Logger.FuncStart(this.RaisePerpetualToast.name);
+  async LiftToast(message: string): Promise<void> {
+    this.Logger.FuncStart(this.DropToast.name);
     this.SetSliderDivText(message);
     await this.LowerToastA();
-    this.Logger.FuncEnd(this.RaisePerpetualToast.name);
+    this.Logger.FuncEnd(this.DropToast.name);
   }
 
-  async RaisePerpetualToast(message: string): Promise<void> {
+  async DropToast(message: string): Promise<void> {
     try {
-      this.Logger.FuncStart(this.RaisePerpetualToast.name);
+      this.Logger.FuncStart(this.DropToast.name);
       this.SetSliderDivText(message);
 
       await this.RaiseToastA();
 
-      this.Logger.FuncEnd(this.RaisePerpetualToast.name);
+      this.Logger.FuncEnd(this.DropToast.name);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.RaisePerpetualToast.name, err);
+      this.ErrorHand.ErrorAndThrow(this.DropToast.name, err);
     }
-  }
-
-  async OnRaiseToastReq() {
-    var self = this;
-    //setTimeout(async function () {
-    this.FlagSlider.classList.remove(self.classSlideUp);
-    this.FlagSlider.classList.add(self.classSlideDown);
-
-    //setTimeout(function () {
-    //  this.ToastContainer.remove();
-    //}, 3000)
-    //}, 0);
   }
 
   private DivineElements() {
@@ -126,29 +97,6 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.LowerToastA.name, err);
     }
-  }
-
-  RaiseToastNotification(message: string) {
-    this.Logger.FuncStart(this.RaiseToastNotification.name);
-
-    this.SetSliderDivText(message);
-
-    this.RaiseToastA();
-
-    var self = this;
-
-    //setTimeout(async function () {
-    //  setTimeout(async function () {
-    //    this.FlagSlider.classList.remove(self.classSlideUp);
-    //    this.FlagSlider.classList.add(self.classSlideDown);
-
-    //    setTimeout(function () {
-    //      //this.ToastContainer.remove();
-    //    }, 3000)
-    //  }, 3000);//ContentConst.Const.Timeouts.WaitBeforeRemovingCompleteFlagOnContent);
-    //}, 3000)
-
-    this.Logger.FuncEnd(this.RaiseToastNotification.name);
   }
 
   private SetSliderDivText(sliderDivText: string) {

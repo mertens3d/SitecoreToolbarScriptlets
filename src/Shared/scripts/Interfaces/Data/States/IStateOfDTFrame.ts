@@ -1,12 +1,10 @@
 ﻿import { ScWindowType } from "../../../Enums/scWindowType";
-import { GuidData } from "../../../Helpers/GuidData";
-import { IStateOfContentEditor } from "./IStateOfContentEditor";
+import { IStateOf_ } from "./IStateofX";
 import { IStateOfFrameStyling } from "./IStateOfFrameStyling";
 
 export interface IStateOfDTFrame {
-  StateOfContentEditor: IStateOfContentEditor;
-
   StateOfFrameStyling: IStateOfFrameStyling;
+  StateOfHosted: IStateOf_;
   WindowType: ScWindowType;
   ZIndex: number
 }

@@ -1,6 +1,6 @@
 ﻿import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
+import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Jackets/IScUrlAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { ICommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";

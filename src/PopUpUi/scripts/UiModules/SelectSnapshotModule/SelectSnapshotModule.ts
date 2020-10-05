@@ -10,7 +10,7 @@ import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirs
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { IStateOfScUiProxy } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { PopConst } from "../../../../Shared/scripts/Const/PopConst";
@@ -19,6 +19,10 @@ import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMut
 import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject";
 import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 import { _UiModuleBase } from "../_UiModuleBase";
+import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { ContentEditorSFProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
+import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 
 export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   private StateHelpers: StateHelpers;
@@ -101,9 +105,9 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     let toReturn: string;
 
     if (selectedIndex && this.RefreshData && this.RefreshData.StateOfStorageSnapShots) {
-      let snapShots: IStateOfScUiProxy[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
+      let snapShots: IStateOfScUi[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
       if (snapShots) {
-        let selected: IStateOfScUiProxy = snapShots[selectedIndex];
+        let selected: IStateOfScUi = snapShots[selectedIndex];
         if (selected) {
           toReturn = selected.Friendly.NickName;
         }
@@ -173,7 +177,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     let priorValue: GuidData = this.GetSelectSnapshotId();
 
     if (this.RefreshData.StateOfStorageSnapShots && this.RefreshData.StateOfStorageSnapShots.SnapShots) {
-      let stateOfScUiProxies: IStateOfScUiProxy[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
+      let stateOfScUiProxies: IStateOfScUi[] = this.RefreshData.StateOfStorageSnapShots.SnapShots;
 
       if (this.SelectElement) {
         this.CleanExistingSelection(this.SelectElement);
@@ -206,31 +210,37 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     this.Logger.FuncEnd(this.PopulateStateOfSnapShotSelectElement.name);
   }
 
-  GetFirstDataWithActiveNode(stateOfScUiProxy: IStateOfScUiProxy): IFirstActive {
+  GetFirstDataWithActiveNode(stateOfScUiProxy: IStateOfScUi): IFirstActive {
     let toReturn: IFirstActive = {
-      StateOfContentEditorProxy: null,
+      StateOfHostedFrame: null,
       activeTreeNodeFlat: null
     }
 
-    if (stateOfScUiProxy.Meta.WindowType === ScWindowType.Desktop) {
-      if (stateOfScUiProxy.StateOfScWindow && stateOfScUiProxy.StateOfScWindow.StateOfDesktop && (stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1) && stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
-        let activeFrame: IStateOfDTFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(stateOfScUiProxy.StateOfScWindow.StateOfDesktop);
-        toReturn.StateOfContentEditorProxy = activeFrame.StateOfContentEditor;
-        toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(activeFrame.StateOfContentEditor);
-      } else {
-        //this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
-      }
-    }
-    else if ((stateOfScUiProxy.Meta.WindowType === ScWindowType.ContentEditor) && stateOfScUiProxy.StateOfScWindow.StateOfContentEditor && stateOfScUiProxy.StateOfScWindow.StateOfContentEditor.StateOfContentTree) {
-      toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(toReturn.StateOfContentEditorProxy);
-    } else {
-      this.ErrorHand.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(stateOfScUiProxy.Meta.WindowType));
-    }
+
+    // todo - put back
+    //if (stateOfScUiProxy.Meta.WindowType === ScWindowType.Desktop) {
+    //  if (stateOfScUiProxy.StateOfScWindow && stateOfScUiProxy.StateOfScWindow.StateOfDesktop && (stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1) && stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
+    //    let activeFrame: IStateOfDTFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(stateOfScUiProxy.StateOfScWindow.StateOfDesktop);
+    //    toReturn.StateOfHostedProxy = activeFrame.StateOfHostedProxy;
+    //    if (toReturn.StateOfHostedProxy.StatefullDisciminator === StateFullProxyDisciminator.ContentEditor) {
+    //      toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(<IStateOfContentEditor>activeFrame.StateOfHostedProxy);
+    //    } else {
+    //      toReturn.activeTreeNodeFlat = null;
+    //    }
+    //  } else {
+    //    //this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
+    //  }
+    //}
+    //else if ((stateOfScUiProxy.Meta.WindowType === ScWindowType.ContentEditor) && stateOfScUiProxy.StateOfScWindow.StateOfContentEditor && stateOfScUiProxy.StateOfScWindow.StateOfContentEditor.StateOfContentTree) {
+    //  toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(<IStateOfContentEditor>(toReturn.StateOfHostedProxy));
+    //} else {
+    //  this.ErrorHand.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(stateOfScUiProxy.Meta.WindowType));
+    //}
 
     return toReturn
   }
 
-  TimeNicknameFavStr(stateOfScUiProxy: IStateOfScUiProxy): string {
+  TimeNicknameFavStr(stateOfScUiProxy: IStateOfScUi): string {
     var typeStr: string = '';
     if (stateOfScUiProxy.Meta.WindowType === ScWindowType.ContentEditor) {
       typeStr = 'Cont Ed';
@@ -238,6 +248,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     else if (stateOfScUiProxy.Meta.WindowType === ScWindowType.Desktop) {
       typeStr = 'Desktop';
     }
+
     //= (data.Meta.WindowType === scWindowType.Unknown) ? '?' : scWindowType[data.Meta.WindowType];
     var activeCeNode: string = '';
     let MainSectionNode: string = '';
@@ -253,6 +264,34 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
       MainSectionNode = 'todo ' + this.TimeNicknameFavStr.name;
     }
 
+    let toReturn = this.FormatDisplayString(stateOfScUiProxy, typeStr, MainSectionNode, activeCeNode);
+
+    let count: string = "";
+
+    if (stateOfScUiProxy.Meta.WindowType === ScWindowType.Desktop) {
+      if (
+        stateOfScUiProxy
+        &&
+        stateOfScUiProxy.StateOfScWindow
+        &&
+        stateOfScUiProxy.StateOfScWindow.StateOf_) {
+        let stateOfDesktop: IStateOfDesktop = <IStateOfDesktop>stateOfScUiProxy.StateOfScWindow.StateOf_;
+
+        if (stateOfDesktop
+          &&
+          stateOfDesktop.StateOfDTArea
+          &&
+          stateOfDesktop.StateOfDTArea.StateOfDTFrames) {
+          count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfDesktop.StateOfDTArea.StateOfDTFrames.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+          toReturn = toReturn + count;
+        }
+      }
+    }
+
+    return toReturn;
+  }
+
+  private FormatDisplayString(stateOfScUiProxy: IStateOfScUi, typeStr: string, MainSectionNode: string, activeCeNode: string) {
     let toReturn = StaticHelpers.BufferString(stateOfScUiProxy.Friendly.TimeStamp, PopConst.Const.SnapShotFormat.lenTimestamp, BufferChar.space, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(typeStr, PopConst.Const.SnapShotFormat.lenPageType, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfScUiProxy.Friendly.NickName, PopConst.Const.SnapShotFormat.lenNickname, BufferChar.Nbsp, BufferDirection.right)
@@ -263,26 +302,10 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
       //+ PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString((data.Flavor === SnapShotFlavor.Autosave ? 'A' : ' '), 1, BufferChar.Nbsp, BufferDirection.right)
       + PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(Guid.AsShort(stateOfScUiProxy.Meta.SnapshotId), PopConst.Const.SnapShotFormat.lenShortId, BufferChar.Nbsp, BufferDirection.right);
 
-    let count: string = "";
-
-    if (
-      stateOfScUiProxy
-      &&
-      stateOfScUiProxy.StateOfScWindow
-      &&
-      stateOfScUiProxy.StateOfScWindow.StateOfDesktop
-      &&
-      stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea
-      &&
-      stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
-      count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.StateOfDTFrames.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
-    } 
-    toReturn = toReturn + count;
-
     return toReturn;
   }
 
-  private BuildOneSnapshot(stateOfScUiProxy: IStateOfScUiProxy, prior: GuidData, idx: number): HTMLOptionElement {
+  private BuildOneSnapshot(stateOfScUiProxy: IStateOfScUi, prior: GuidData, idx: number): HTMLOptionElement {
     let el: HTMLOptionElement = <HTMLOptionElement>window.document.createElement('option');
 
     let timeNicknameFavStr = this.TimeNicknameFavStr(stateOfScUiProxy);
@@ -296,7 +319,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     el.value = stateOfScUiProxy.Meta.SnapshotId.Raw;
 
     //data.Meta.SessionId &&
-    if (( prior && stateOfScUiProxy.Meta.SnapshotId.Raw === prior.Raw) ||
+    if ((prior && stateOfScUiProxy.Meta.SnapshotId.Raw === prior.Raw) ||
       (idx === 0 && !prior)
       ||
       (idx === 0 && prior.Raw === Guid.GetEmptyGuid().Raw)
@@ -308,7 +331,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     return el;
   }
 
-  private AppendSnapShotToCorrectGroup(data: IStateOfScUiProxy, el: HTMLOptionElement, headers: ISelectionHeaders) {
+  private AppendSnapShotToCorrectGroup(data: IStateOfScUi, el: HTMLOptionElement, headers: ISelectionHeaders) {
     if (!StaticHelpers.IsNullOrUndefined([data, el, headers])) {
       if (data.Meta.Flavor === SnapShotFlavor.Autosave) {
         headers.Auto.appendChild(el);

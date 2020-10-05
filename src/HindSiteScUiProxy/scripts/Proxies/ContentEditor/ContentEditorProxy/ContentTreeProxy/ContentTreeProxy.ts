@@ -3,11 +3,11 @@ import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBas
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReportTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
-import { ScDocumentProxy } from "../../../ScDocumentProxy";
+import { ScDocumentFacade } from "../../../ScDocumentFacade";
 import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
-import { INativeClassNameChangeEvent_Payload } from '../../../Desktop/DesktopProxy/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
-import { NativeClassNameChangeEvent_Subject } from "../../../Desktop/DesktopProxy/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";
+import { INativeClassNameChangeEvent_Payload } from '../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
+import { NativeClassNameChangeEvent_Subject } from "../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";
 import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { NativeClassNameChangeEvent_Observer } from "../../../Desktop/DesktopProxy/Events/TreeMutationEvent/NativeClassNameChangeEvent_Observer";
 import { TreeMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject";
@@ -20,7 +20,7 @@ import { IStateOfScContentTreeNodeFlat } from '../../../../../../Shared/scripts/
 //ContentTree is the name Sitecore uses
 export class ContentTreeProxy extends _HindeCoreBase {
   private _treeNodeProxy: ScContentTreeNodeProxy;
-  private AssociatedDoc: ScDocumentProxy;
+  private AssociatedDoc: ScDocumentFacade;
   private initReportTreeProxy: InitReportTreeProxy;
   private NativeClassNameChangeEvent_Observer: NativeClassNameChangeEvent_Observer;
   private NativeClassNameChangeEvent_Subject: NativeClassNameChangeEvent_Subject;
@@ -30,7 +30,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   public TreeMutationEvent_Subject: TreeMutationEvent_Subject;
 
-  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentProxy, treeContainerElement: HTMLElement) {
+  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentFacade, treeContainerElement: HTMLElement) {
     super(hindeCore);
 
     this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeProxy.name, [associatedDoc, treeContainerElement]);
@@ -242,7 +242,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   async GetRootNodeForFrameType(): Promise<HTMLElement> {
     try {
-      await this.AssociatedDoc.WaitForAndReturnFoundElem( ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode)
+      await this.AssociatedDoc.DocumentJacket.WaitForAndReturnFoundElem(ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode)
         .then((htmlElement: HTMLElement) => this.rootTreeNodeHtmlElement = htmlElement);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.GetRootNodeForFrameType.name, err);

@@ -37,11 +37,11 @@ export class StateHelpers extends _HindeCoreBase {
     return stateOfDesktop.StateOfDTArea.StateOfDTFrames[stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex];
   }
 
-  GetActiveContentEditFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfContentEditor {
-    let toReturn: IStateOfContentEditor = null;
-    if (stateOfDesktop && stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1) {
-      return stateOfDesktop.StateOfDTArea.StateOfDTFrames[stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex].StateOfContentEditor;
-    }
-    return toReturn;
-  }
+  //GetActiveContentEditFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfContentEditor {
+  //  let toReturn: IStateOfContentEditor = null;
+  //  if (stateOfDesktop && stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1) {
+  //    return stateOfDesktop.StateOfDTArea.StateOfDTFrames[stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex].StateOfHostedProxy;
+  //  }
+  //  return toReturn;
+  //}
 }

@@ -1,16 +1,16 @@
 ﻿import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
-import { ScDocumentProxy } from "../../ScDocumentProxy";
+import { ScDocumentFacade } from "../../ScDocumentFacade";
 //import { RecipeAddNewContentEditorToDesktop } from "../../../ContentApi/Recipes/RecipeAddContentEditorToDesktop";
 
 export class DTPopUpMenuProxy extends _HindeCoreBase {
 
-  RecipeAddNewContentEditorToDesktop(AssociatedDoc: ScDocumentProxy): Promise<void> {
+  RecipeAddNewContentEditorToDesktop(scDocumentProxy: ScDocumentFacade): Promise<void> {
     return new Promise(async (resolve, reject) => {
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewContentEditorToDesktop.name, AssociatedDoc);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewContentEditorToDesktop.name, scDocumentProxy);
 
-      await AssociatedDoc.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption])
+      await scDocumentProxy.DocumentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption])
         .then(() => resolve())
         .catch((err) => reject(this.RecipeAddNewContentEditorToDesktop.name + ' ' + err));
     });
