@@ -1,6 +1,6 @@
-﻿import { MsgContentToController } from "../../Classes/MsgPayloadResponseFromContent";
-import { IMessageControllerToContent } from "../IStateOfController";
+﻿import { DefaultMsgContentToController } from "../../Classes/MsgPayloadResponseFromContent";
+import { IMessageControllerToContent } from "../IMessageControllerToContent";
 
-export interface IContentBrowserProxy {
-  AddListener(callback: (request: IMessageControllerToContent) => Promise<MsgContentToController>);
+export interface IContentBrowserFacade {
+  AddListener(callback: (request: IMessageControllerToContent) => Promise<DefaultMsgContentToController>);
 }

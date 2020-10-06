@@ -1,10 +1,10 @@
-﻿import { HindSiteEvent_Observer } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/HindSiteEvent_Observer";
-import { HindsiteEventHandler_Type } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/HindsiteEventHandler_Type";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { HindSiteEvent_Observer } from "../../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ISelectSnapUiMutationEvent_Payload } from "./ISelectSnapUiMutationEvent_Payload";
+import { HindsiteEventHandler_Type } from "../../../../Shared/scripts/Events/_HindSiteEvent/HindsiteEventHandler_Type";
 
 export class SelectSnapUiMutationEvent_ObserverWithCallback extends HindSiteEvent_Observer<ISelectSnapUiMutationEvent_Payload> {
-  constructor(logger: ILoggerAgent, callback: HindsiteEventHandler_Type = null) {
-    super(logger, SelectSnapUiMutationEvent_ObserverWithCallback.name, callback);
+  constructor(hindeCore: IHindeCore, callback: HindsiteEventHandler_Type = null) {
+    super(hindeCore, SelectSnapUiMutationEvent_ObserverWithCallback.name, callback);
   }
 }

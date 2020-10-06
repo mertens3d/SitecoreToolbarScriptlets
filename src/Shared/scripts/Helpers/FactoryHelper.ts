@@ -1,44 +1,44 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { ILoggerAgent } from "../Interfaces/Agents/ILoggerAgent";
+﻿import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+import { FrameJacket } from "../../../DOMJacket/FrameJacket";
+import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
-import { IDataOneDoc } from "../Interfaces/Data/IDataOneDoc";
-import { IFactoryHelper } from "../Interfaces/IFactoryHelper";
-import { Guid } from "./Guid";
-import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProxy";
-import { DTFrameProxy } from "../../../Content/scripts/Proxies/DTFrameProxy";
+import { _HindeCoreBase } from "../LoggableBase";
+import { CEFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 
-export class FactoryHelper extends LoggableBase implements IFactoryHelper {
+export class FactoryHelper extends _HindeCoreBase {
   SettingsAgent: ISettingsAgent;
 
-  constructor(logger: ILoggerAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
   }
 
-  DataOneContentDocFactoryFromIframe(dataOneIframe: _BaseFrameProxy): IDataOneDoc {
-    var toReturn: IDataOneDoc = null;
+  CEFrameFactory(frameJacket: FrameJacket, nickname: string): CEFrameProxy {
+    this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
 
-    if (dataOneIframe) {
-      toReturn =
-      {
-        ContentDoc: dataOneIframe.HTMLIframeElement.contentDocument,
-        DocId: Guid.NewRandomGuid(),
-        Nickname: ' - content doc'
-      }
-    } else {
-      this.Logger.ErrorAndThrow(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
-    }
+
+    this.ErrorHand.ThrowIfNullOrUndefined(this.CEFrameFactory.name, [frameJacket]);
+    let toReturn = new CEFrameProxy(this.HindeCore, frameJacket);
+    toReturn.InstantiateAsyncMembers();
+    toReturn.WireEvents();
+    this.Logger.FuncEnd(this.BaseFramePromiseFactory.name);
     return toReturn;
   }
 
-  BaseFramePromiseFactory(iframeElem: HTMLIFrameElement, nickname: string): _BaseFrameProxy {
+  BaseFramePromiseFactory(nativeIframeProxy: FrameJacket, nickname: string): DTFrameProxy {
     this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
-    var toReturn: _BaseFrameProxy = null;
+    var toReturn: DTFrameProxy = null;
 
-    if (iframeElem && nickname) {
-      var toReturn: _BaseFrameProxy = new _BaseFrameProxy(this.Logger, iframeElem);
+    //let documentProxy = new DocumentProxy(this.HindeCore, iframeElem.contentDocument);
+    //let scWindowType = documentProxy.GetScwindowType();
+
+    //toReturn = new _BaseFrameProxy<scWindowType>(this.HindeCore, iframeElem);
+
+    if (nativeIframeProxy && nickname) {
+      var toReturn: DTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
+      toReturn.InstantiateAsyncMembers();
     } else {
-      this.Logger.ErrorAndThrow(this.BaseFramePromiseFactory.name, 'one of these is null');
-      this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
+      this.ErrorHand.ErrorAndThrow(this.BaseFramePromiseFactory.name, 'one of these is null');
+      this.Logger.LogAsJsonPretty('iframeElem', nativeIframeProxy);
       this.Logger.LogAsJsonPretty('nickname', nickname);
     }
 
@@ -46,14 +46,14 @@ export class FactoryHelper extends LoggableBase implements IFactoryHelper {
     return toReturn;
   }
 
-  async DTFrameProxyFactory(iframeElem: HTMLIFrameElement): Promise<DTFrameProxy> {
+  async DTFrameProxyFactory(nativeIframeProxy: FrameJacket): Promise<DTFrameProxy> {
     var toReturn: DTFrameProxy = null;
-    if (iframeElem) {
-      var toReturn = new DTFrameProxy(this.Logger, iframeElem);
-      await toReturn.OnReadyInitDTFrameProxy();
+    if (nativeIframeProxy) {
+      var toReturn = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
+      await toReturn.InstantiateAsyncMembers();
     } else {
-      this.Logger.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');
-      this.Logger.LogAsJsonPretty('iframeElem', iframeElem);
+      this.ErrorHand.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');
+      this.Logger.LogAsJsonPretty('iframeElem', nativeIframeProxy);
     }
     return toReturn;
   }

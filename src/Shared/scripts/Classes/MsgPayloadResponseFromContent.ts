@@ -1,13 +1,14 @@
 ﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { IMessageContentToController } from "../Interfaces/IMsgPayload";
-import { MsgFromXBase } from "./MsgFromXBase";
-import { DefaultContentReplyPayload } from "./Defaults/DefaultScWindowState";
+import { IMessageContentToController_Payload } from "../Events/ContentReplyReceivedEvent/IMessageContentToController_Payload";
+import { IMessageContentToController } from "../Interfaces/IMessageContentToController";
+import { DefaultMessageContentToController_Payload } from "./Defaults/DefaultMessageContentToController_Payload";
 
-export class MsgContentToController extends MsgFromXBase implements IMessageContentToController {
-  Payload: IDataContentReplyReceivedEvent_Payload = new DefaultContentReplyPayload()
+export class DefaultMsgContentToController implements IMessageContentToController {
+  Payload: IMessageContentToController_Payload = new DefaultMessageContentToController_Payload()
+
+  MsgFlag: MsgFlag = MsgFlag.Unknown;
 
   constructor(msgFlag: MsgFlag) {
-    super(msgFlag);
+    this.MsgFlag = msgFlag;
   }
 }

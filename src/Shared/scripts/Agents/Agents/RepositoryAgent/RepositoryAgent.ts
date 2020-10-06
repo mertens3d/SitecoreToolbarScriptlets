@@ -1,19 +1,19 @@
-﻿import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+﻿import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
+import { _HindeCoreBase } from "../../../LoggableBase";
 
-export class RepositoryAgent implements IRepositoryAgent {
-  private Logger: ILoggerAgent;
+export class RepositoryAgent extends _HindeCoreBase implements IRepositoryAgent {
 
-  constructor(loggerAgent: ILoggerAgent) {
-    this.Logger = loggerAgent;
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
   }
 
   RemoveByKey(key: string) {
     try {
       window.localStorage.removeItem(key);
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.RemoveByKey.name, err);
+      this.ErrorHand.ErrorAndThrow(this.RemoveByKey.name, err);
     }
   }
 
@@ -45,7 +45,7 @@ export class RepositoryAgent implements IRepositoryAgent {
       }
     }
     catch (err) {
-      this.Logger.ErrorAndThrow(this.GetBulkLocalStorageByKeyPrefix.name, err);
+      this.ErrorHand.ErrorAndThrow(this.GetBulkLocalStorageByKeyPrefix.name, err);
     }
     return toReturn;
   }

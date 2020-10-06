@@ -1,35 +1,28 @@
 ﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
+import { PopConst } from "../../../../Shared/scripts/Const/PopConst";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IGenericUrlParts } from "../../../../Shared/scripts/Interfaces/IUrlParts";
-import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/UiHydrationData";
-import { PopConst } from "../../Classes/PopConst";
+import { IGenericUrlParts } from "../../../../Shared/scripts/Interfaces/Jackets/IUrlParts";
 import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
 
 export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements IUiModule {
 
   Friendly = FeedbackModuleBrowserState.name;
+  ModuleKey = ModuleKey.BroswerState;
 
   WireEvents_Module(): void {
   }
 
-  ModuleKey = ModuleKey.BroswerState;
 
-  Init(): void {
-  }
-
-  RefreshUi(): void {
-  }
-
-  Hydrate(refreshData: UiHydrationData) {
+  RefreshUi_Module(): void {
     var targetCurrStateDiv: HTMLDivElement = <HTMLDivElement>window.document.querySelector(PopConst.Const.Selector.HS.FeedbackBrowserState);
 
     var allStateText: string = 'Browser State' + this.lineBreak;
     allStateText += this.lineBreak + 'URL Parts';
 
-    allStateText += this.indentedLineBreak + '<strong>Page Type:</strong> ' + StaticHelpers.ScWindowTypeFriendly(refreshData.ScUrlAgent.GetScWindowType());
+    allStateText += this.indentedLineBreak + '<strong>Page Type:</strong> ' + StaticHelpers.ScWindowTypeFriendly(this.RefreshData.ScUrlAgent.GetScWindowType());
 
-    let UrlParts: IGenericUrlParts = refreshData.ScUrlAgent.GetUrlParts();
+    let UrlParts: IGenericUrlParts = this.RefreshData.ScUrlAgent.UrlJacket.GetUrlParts();
 
     allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + UrlParts.OriginalRaw;
 
@@ -41,4 +34,5 @@ export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements
 
     targetCurrStateDiv.innerHTML = allStateText;
   }
+
 }

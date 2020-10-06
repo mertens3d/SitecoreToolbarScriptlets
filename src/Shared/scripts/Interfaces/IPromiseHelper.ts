@@ -1,20 +1,18 @@
-﻿import { IAbsoluteUrl } from "./IAbsoluteUrl";
-import { IDataPublishChain } from "./Data/IDataPublishChain";
-import { IScVerSpec } from "./IScVerSpec";
-import { IDataOneDoc } from "./data/IDataOneDoc";
-import { _BaseFrameProxy } from "../../../Content/scripts/Proxies/_BaseFrameProxy";
+﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
+import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+import { ReadyStateNAB } from "../Enums/ReadyState";
+import { IAbsoluteUrl } from "./IAbsoluteUrl";
 
 export interface IRecipeBasics {
-  RaceWaitAndClick(scStartButton: IScVerSpec, arg1: IDataOneDoc);
+  //RaceWaitAndClick(scStartButton: IScVerSpec, arg1: ScDocumentProxy);
   TabChainSetHrefWaitForComplete(newHref: IAbsoluteUrl);
   TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void>;
-  WaitForAndClickWithPayload(MenuDropDownPublishItem: string, docToPublish: IDataOneDoc, payload: IDataPublishChain);
-  WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string);
-  WaitForAndReturnFoundElem(ContentDoc: IDataOneDoc, SettingsHidden: string, maxIteration: number);
-  WaitForIframeElemAndReturnWhenReady(ContentDoc: IDataOneDoc, ContentIFrame1: string, arg2: string);
-  WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: IDataOneDoc): Promise<_BaseFrameProxy>;
-  WaitForReadyNABDocument(targetDoc: IDataOneDoc);
-  WaitForReadyNABFrameProxy(jqIframe: _BaseFrameProxy): Promise<_BaseFrameProxy>;
-  WaitForThenClick(arg0: string[], arg1: IDataOneDoc);
-  GetTopLevelIframe(targetDoc: IDataOneDoc): Promise<_BaseFrameProxy>
+  //WaitForAndClickWithPayload(MenuDropDownPublishItem: string, docToPublish: ScDocumentProxy, payload: IDataPublishChain);
+  //WaitForAndReturnFoundElem(ContentDoc: ScDocumentProxy, SettingsHidden: string);
+  //WaitForAndReturnFoundElem(ContentDoc: ScDocumentProxy, SettingsHidden: string, maxIteration: number);
+  //WaitForIframeElemAndReturnWhenReady(ContentDoc: ScDocumentProxy, ContentIFrame1: string, arg2: string): Promise<DTFrameProxy>;
+  WaitForNewIframe(allIframeDataAtBeginning: any, documentJacket: DocumentJacket): Promise<DTFrameProxy>;
+  WaitForCompleteNAB_DataOneDoc(targetDoc: DocumentJacket, friendly: string): Promise<ReadyStateNAB>;
+  //WaitForThenClick(arg0: string[], arg1: ScDocumentProxy);
+  GetTopLevelIframe(targetDoc: DocumentJacket): Promise<DTFrameProxy>
 }

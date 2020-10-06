@@ -1,36 +1,34 @@
-import { LoggableBase } from '../../../Content/scripts/Managers/LoggableBase';
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
-import { ILoggerAgent } from '../../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
+import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
+import { UiCommandFlagRaisedEvent_Subject } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject';
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IStateOfUiModules } from "../../../Shared/scripts/Interfaces/IStateOfUiModules";
-import { HandlersForInternal } from '../Classes/HandlersForInternal';
+import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { ISingleClickEvent_Payload } from '../Events/SingleClickEvent/ISingleClickEvent_Payload';
 import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
-import { IUiCommandFlagRaisedEvent_Payload } from '../Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
-import { UiCommandFlagRaisedEvent_Subject } from '../Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject';
 import { UiModulesManager } from './UiManager/UiModulesManager';
 
-export class UiEventManager extends LoggableBase {
-
+export class UiEventManager extends _HindeCoreBase {
   UiModulesMan: UiModulesManager;
   CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
   UiCommandRaisedFlag_UiEventManagerRelay_Subject: UiCommandFlagRaisedEvent_Subject;
 
-  constructor(logger: ILoggerAgent,  uimodulesMan: UiModulesManager) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, uimodulesMan: UiModulesManager) {
+    super(hindeCore);
     this.UiModulesMan = uimodulesMan;
 
-    if (StaticHelpers.IsNullOrUndefined([ uimodulesMan])) {
+    if (StaticHelpers.IsNullOrUndefined([uimodulesMan])) {
       throw (UiModulesManager.name + ' null at constructor');
     }
   }
 
   Init_UiEventManager() {
     this.Logger.FuncStart(this.Init_UiEventManager.name);
-    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject = new UiCommandFlagRaisedEvent_Subject(this.Logger);
-    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.Logger, this.OnSingleClickEvent.bind(this));
+    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject = new UiCommandFlagRaisedEvent_Subject(this.HindeCore);
+    this.CommandButtonSingleClickEvent_Observer = new SingleClickEvent_Observer(this.HindeCore, this.OnSingleClickEvent.bind(this));
     this.Logger.FuncEnd(this.Init_UiEventManager.name);
   }
 
@@ -48,15 +46,13 @@ export class UiEventManager extends LoggableBase {
   OnSingleClickEvent(singleClickEventPayload: ISingleClickEvent_Payload) {
     this.Logger.Log('single click');
 
-    
-
     let payload: IUiCommandFlagRaisedEvent_Payload = {
       MsgFlag: singleClickEventPayload.HandlerData.MsgFlag,
       CommandType: singleClickEventPayload.HandlerData.CommandType,
       StateOfPopUp: this.GetStateOfPopUp()
     };
 
-    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject.NotifyObservers(payload);
+    this.UiCommandRaisedFlag_UiEventManagerRelay_Subject.NotifyObserversAsync(payload);
   };
 
   WireEvents_UiEventMan(): void {
@@ -76,11 +72,9 @@ export class UiEventManager extends LoggableBase {
     if (baseButtonModules) {
       baseButtonModules.forEach((baseButtonModule: IUiModuleButton) => {
         if (!StaticHelpers.IsNullOrUndefined(baseButtonModule.SingleButtonClickEvent_Subject)) {
-
-          this.Logger.LogVal('baseButtonModule.Friendly', baseButtonModule.Friendly);
           baseButtonModule.SingleButtonClickEvent_Subject.RegisterObserver(this.CommandButtonSingleClickEvent_Observer);
         } else {
-          this.Logger.WarningAndContinue(this.ListenForCommandEvents.name, 'null SingleButtonClickEvent_Subject ' + ModuleKey[baseButtonModule.ModuleKey]);
+          this.ErrorHand.WarningAndContinue(this.ListenForCommandEvents.name, 'null SingleButtonClickEvent_Subject ' + ModuleKey[baseButtonModule.ModuleKey]);
         }
       });
     }

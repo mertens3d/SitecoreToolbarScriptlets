@@ -1,3 +1,3 @@
-﻿export interface IContentMessageBroker {
+﻿export interface IMessageBroker_Content {
   BeginListening();
 }

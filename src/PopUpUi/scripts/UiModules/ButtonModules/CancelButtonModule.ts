@@ -1,5 +1,5 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { _base_ButtonModule } from "./_baseButtonModule";
@@ -7,20 +7,23 @@ import { _base_ButtonModule } from "./_baseButtonModule";
 export class CancelButtonModule extends _base_ButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonCancel;
 
-  constructor(loggerAgent: ILoggerAgent, menuCommandParameters: IMenuCommandDefinition) {
-    super(loggerAgent, menuCommandParameters);
-    this.Logger = loggerAgent;
+  constructor(hindeCore: IHindeCore, menuCommandParameters: IMenuCommandDefinition) {
+    super(hindeCore, menuCommandParameters);
   }
 
   WireEvents_Module(): void {
     this.WireEvents_Base();
   }
 
-  Init(): void {
+  Init_Module(): void {
     this.Init_BaseButtonModule();
   }
 
-  RefreshUi(): void {
+  BuildHtmlForModule() {
+    this.BuildHtmlForModule_base_ButtonModule();
+  }
+
+  RefreshUi_Module(): void {
   }
 
   private __GetCancelButton(): HTMLElement {

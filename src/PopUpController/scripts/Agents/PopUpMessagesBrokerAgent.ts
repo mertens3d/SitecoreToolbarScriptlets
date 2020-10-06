@@ -1,35 +1,36 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { ContentReplyReceivedEvent_Subject } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
-import { IDataContentReplyReceivedEvent_Payload } from "../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { MsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
-import { ScWindowStateValidator } from "../../../Shared/scripts/Classes/ScWindowStateValidator";
+﻿import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
+import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
-import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
-import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
-import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMsgPayload";
-import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
+import { ContentReplyReceivedEvent_Subject } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
+import { IControllerMessageReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IMessageContentToController_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IMessageContentToController_Payload";
 import { IHindSiteSetting } from "../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
+import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
+import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
+import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { ControllerMessageReceivedEventValidator } from "../../../Shared/scripts/Classes/ControllerMessageReceivedEventValidator";
 
-export class PopUpMessagesBrokerAgent extends LoggableBase {
-  LastKnownContentState: IDataContentReplyReceivedEvent_Payload;
+export class MessageBroker_PopUp extends _HindeCoreBase {
+  LastKnownContentState: IControllerMessageReceivedEvent_Payload;
   public ContentReplyReceivedEvent_Subject: ContentReplyReceivedEvent_Subject;
   BrowserProxy: IPopUpBrowserProxy;
   SettingsAgent: ISettingsAgent;
 
-  constructor(loggerAgent: ILoggerAgent, browserProxy: IPopUpBrowserProxy, settingsAgent: ISettingsAgent) {
-    super(loggerAgent);
+  constructor(hindeCore: IHindeCore, browserProxy: IPopUpBrowserProxy, settingsAgent: ISettingsAgent) {
+    super(hindeCore);
     this.BrowserProxy = browserProxy;
     this.SettingsAgent = settingsAgent;
-    this.ContentReplyReceivedEvent_Subject = new ContentReplyReceivedEvent_Subject(this.Logger);
+    this.ContentReplyReceivedEvent_Subject = new ContentReplyReceivedEvent_Subject(this.HindeCore);
   }
 
   private __cleardebugText() {
-    this.Logger.HandlerClearDebugText(this.Logger);
+    this.Logger.HandlerClearDebugText(this.HindeCore);
   }
 
   BuildMessageToContent(msgFlag: MsgFlag, stateOfPopUp: IStateOfPopUp): IMessageControllerToContent {
@@ -41,14 +42,13 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
       CurrentContentPrefs: settingsToSend,
       IsValid: false,
       MsgFlag: msgFlag,
-      SelectSnapshotId: stateOfPopUp.SelectSnapShotId,
-      SnapShotNewNickname: stateOfPopUp.NewNickName
+      StateOfPopUI: stateOfPopUp,
     }
     return messageControllerToContent;
   }
 
-  async SendCommandToContentImprovedAsync(msgFlag: MsgFlag, stateOfPopUp: IStateOfPopUp): Promise<void> {
-    this.Logger.FuncStart(this.SendCommandToContentImprovedAsync.name);
+  async SendCommandToContentAsync(msgFlag: MsgFlag, stateOfPopUp: IStateOfPopUp): Promise<void> {
+    this.Logger.FuncStart(this.SendCommandToContentAsync.name);
     try {
       if (!StaticHelpers.IsNullOrUndefined([stateOfPopUp])) {
         this.__cleardebugText();
@@ -56,64 +56,73 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
         let messageControllerToContent: IMessageControllerToContent = this.BuildMessageToContent(msgFlag, stateOfPopUp);
 
         this.SendMessageToContentAsync(messageControllerToContent)
-          .then((replyMessagePayload: IDataContentReplyReceivedEvent_Payload) => this.HandleReply(replyMessagePayload))
-          .catch((err) => this.Logger.ErrorAndThrow(this.SendCommandToContentImprovedAsync.name, err));
+          .then((controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) => this.HandleReply(controllerMessageReceivedEvent_Payload))
+          .catch((err) => this.ErrorHand.ErrorAndThrow(this.SendCommandToContentAsync.name, err));
       } else {
-        this.Logger.ErrorAndThrow(this.SendCommandToContentImprovedAsync.name, 'null check');
+        this.ErrorHand.ErrorAndThrow(this.SendCommandToContentAsync.name, 'null check');
       }
     } catch (err) {
-      throw (this.SendCommandToContentImprovedAsync.name + ' | ' + err);
+      throw (this.SendCommandToContentAsync.name + ' | ' + err);
     }
-    this.Logger.FuncEnd(this.SendCommandToContentImprovedAsync.name);
+    this.Logger.FuncEnd(this.SendCommandToContentAsync.name);
   }
 
-  private HandleReply(replyMessagePayload: IDataContentReplyReceivedEvent_Payload) {
-    if (!StaticHelpers.IsNullOrUndefined(replyMessagePayload)) {
-      this.ContentReplyReceivedEvent_Subject.NotifyObservers(replyMessagePayload);
+  private HandleReply(controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
+
+    if (!StaticHelpers.IsNullOrUndefined(controllerMessageReceivedEvent_Payload)) {
+      this.ContentReplyReceivedEvent_Subject.NotifyObserversAsync(controllerMessageReceivedEvent_Payload);
     } else {
-      this.Logger.WarningAndContinue(this.HandleReply.name, 'null payload. Not notifying ')
+      this.ErrorHand.WarningAndContinue(this.HandleReply.name, 'null payload. Not notifying ')
     }
 
   }
+    //ValidateControllerMessageReceivedEvent_Payload(controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
+    //  let toReturn: IControllerMessageReceivedEvent_Payload = {
+    //    ErrorStack: null,
+    //    LastReq: null,
+    //  }
 
-  async SendMessageToContentAsync(messageFromController: IMessageControllerToContent): Promise<IDataContentReplyReceivedEvent_Payload> {
+
+    //}
+
+  async SendMessageToContentAsync(messageFromController: IMessageControllerToContent): Promise<IControllerMessageReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToContentAsync.name);
 
       if (!StaticHelpers.IsNullOrUndefined(messageFromController)) {
         this.SendMessageToSingleTabAsync(messageFromController)
-          .then((result: IDataContentReplyReceivedEvent_Payload) => resolve(result))
+          .then((result: IControllerMessageReceivedEvent_Payload) => resolve(result))
           .catch((err) => reject(err));
       } else {
-        this.Logger.ErrorAndThrow(this.SendMessageToContentAsync.name, 'null stateOfPopUp');
+        this.ErrorHand.ErrorAndThrow(this.SendMessageToContentAsync.name, 'null stateOfPopUp');
       }
 
       this.Logger.FuncEnd(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(messageFromController.MsgFlag));
     });
   }
-  private SendMessageToSingleTabAsync(messageControllerToContent: IMessageControllerToContent): Promise<IDataContentReplyReceivedEvent_Payload> {
+  private SendMessageToSingleTabAsync(messageControllerToContent: IMessageControllerToContent): Promise<IControllerMessageReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SendMessageToSingleTabAsync.name, StaticHelpers.MsgFlagAsString(messageControllerToContent.MsgFlag));
 
       this.BrowserProxy.SendMessageAsync_BrowserProxy(messageControllerToContent)
         .then((response: IMessageContentToController) => this.ReceiveResponseHandler(response))
-        .then((scWindowState: IDataContentReplyReceivedEvent_Payload) => {
-          let validator = new ScWindowStateValidator(this.Logger);
+        .then((messageContentToController_Payload: IMessageContentToController_Payload) => {
+          let ContollerMessageReceivedEventValidator = new ControllerMessageReceivedEventValidator(this.HindeCore);
 
-          let validatedPayload: IDataContentReplyReceivedEvent_Payload = validator.ValidatePayload(scWindowState);
+          let validatedPayload: IControllerMessageReceivedEvent_Payload = ContollerMessageReceivedEventValidator.TranslateAndValidatePayload(messageContentToController_Payload);
 
           resolve(validatedPayload);
         })
 
         .catch((ex) => {
-          this.Logger.WarningAndContinue(this.SendMessageToSingleTabAsync.name, ex);
+          this.ErrorHand.ErrorAndThrow(this.SendMessageToSingleTabAsync.name, ex);
           resolve(null);
         });
 
       this.Logger.FuncEnd(this.SendMessageToSingleTabAsync.name, StaticHelpers.MsgFlagAsString(messageControllerToContent.MsgFlag));
     });
   }
-  ReceiveResponseHandler(response: IMessageContentToController): Promise<IDataContentReplyReceivedEvent_Payload> {
+  ReceiveResponseHandler(response: IMessageContentToController): Promise<IMessageContentToController_Payload> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.ReceiveResponseHandler.name);
 
@@ -142,7 +151,7 @@ export class PopUpMessagesBrokerAgent extends LoggableBase {
             }
           }
           else {
-            reject(this.ReceiveResponseHandler.name + ' response is not class: ' + MsgContentToController.name);
+            reject(this.ReceiveResponseHandler.name + ' response is not class: ' + DefaultMsgContentToController.name);
           }
         }
       } else {

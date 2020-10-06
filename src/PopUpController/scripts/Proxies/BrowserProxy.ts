@@ -1,9 +1,9 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
-import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IStateOfController";
-import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMsgPayload";
+﻿import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
+import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
+import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 
-export class PopUpBrowserProxy extends LoggableBase implements IPopUpBrowserProxy {
+export class PopUpBrowserProxy extends _HindeCoreBase implements IPopUpBrowserProxy {
   Url: string;
   private resultTab: browser.tabs.Tab;
   private BrowserTabId: number;
@@ -22,7 +22,7 @@ export class PopUpBrowserProxy extends LoggableBase implements IPopUpBrowserProx
     }
 
     catch (err) {
-      this.Logger.ErrorAndThrow(this.Init_BrowserProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Init_BrowserProxy.name, err);
     }
     this.Logger.FuncEnd(this.Init_BrowserProxy.name);
   }

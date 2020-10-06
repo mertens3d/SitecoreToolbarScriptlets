@@ -1,26 +1,31 @@
-﻿import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
+﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
+import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
-import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { UiPresence } from "../../../../Shared/scripts/Enums/UiPresence";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
+import { AccordianModule } from "./AccordianModule";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
-import { AccordianModule } from "./AccordianModule";
-import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
-import { UiPresence } from "../../../../Shared/scripts/Enums/UiPresence";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
+import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 
-export class SettingsBasedModules extends LoggableBase {
+export class SettingsBasedModules extends _HindeCoreBase {
   private SettingsAgent: ISettingsAgent;
   CheckBoxModules: _SettingsBasedModulesBase[];
   AccordianModules: _SettingsBasedModulesBase[];
   NumberModules: _SettingsBasedModulesBase[];
+  private DebuggingEnabled: boolean;
 
-  constructor(logger: ILoggerAgent, settingsAgent: ISettingsAgent) {
-    super(logger)
+  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent) {
+    super(hindeCore)
+    this.Logger.CTORStart(SettingsBasedModules.name);
     this.SettingsAgent = settingsAgent;
+    this.DebuggingEnabled = this.SettingsAgent.GetByKey(SettingKey.EnableDebugging).ValueAsBool();
     this.Instantiate_SettingsBasedModules();
+
+    this.Logger.CTOREnd(SettingsBasedModules.name);
   }
 
   Instantiate_SettingsBasedModules() {
@@ -28,18 +33,26 @@ export class SettingsBasedModules extends LoggableBase {
 
     this.CheckBoxModules = this.BuildCheckBoxSettingModules();
     this.NumberModules = this.BuildNumberSettingModules();
-    this.AccordianModules = <_SettingsBasedModulesBase[]> this.BuildAccordianModules();
+    this.AccordianModules = <_SettingsBasedModulesBase[]>this.BuildAccordianModules();
 
     this.Logger.FuncEnd(this.Instantiate_SettingsBasedModules.name);
   }
 
   BuildAccordianModules(): AccordianModule[] { //oneSetting: IHindSiteSetting, uiElem: HTMLElement
     let toReturn: AccordianModule[] = [];
-    this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((hindSiteSetting: HindSiteSettingWrapper) => {
-      if (hindSiteSetting.HindSiteSetting.DataType === SettingType.Accordion) {
-        let newAccordianDrone = new AccordianModule(this.Logger, hindSiteSetting);
 
-        toReturn.push(newAccordianDrone);
+    this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((settingWrapper: HindSiteSettingWrapper) => {
+      let isNormalAccordian: boolean = settingWrapper.HindSiteSetting.ModuleType === ModuleKey.AccordionTypical;
+      let isDebuggingAccordian: boolean = settingWrapper.HindSiteSetting.ModuleType === ModuleKey.AccordionDebugging;
+
+      if (isNormalAccordian || isDebuggingAccordian) {
+        let accordianModule = new AccordianModule(this.HindeCore, settingWrapper);
+        toReturn.push(accordianModule);
+
+        if (isNormalAccordian || (isDebuggingAccordian && this.DebuggingEnabled)) {
+        } else {
+          accordianModule.DisableSelf();
+        }
       }
     });
 
@@ -51,7 +64,7 @@ export class SettingsBasedModules extends LoggableBase {
 
     this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((settingWrapper: HindSiteSettingWrapper) => {
       if (settingWrapper.HindSiteSetting.DataType === SettingType.BoolCheckBox && settingWrapper.HindSiteSetting.HasUi === UiPresence.HasUi) {
-        let hindSiteCheckboxSetting: HindSiteSettingCheckBoxModule = new HindSiteSettingCheckBoxModule(this.Logger, settingWrapper)
+        let hindSiteCheckboxSetting: HindSiteSettingCheckBoxModule = new HindSiteSettingCheckBoxModule(this.HindeCore, settingWrapper)
 
         toReturn.push(hindSiteCheckboxSetting);
       }
@@ -65,7 +78,7 @@ export class SettingsBasedModules extends LoggableBase {
 
     this.SettingsAgent.HindSiteSettingsBucket.SettingWrappers.forEach((settingWrapper: HindSiteSettingWrapper) => {
       if (settingWrapper.HindSiteSetting.DataType === SettingType.Number && settingWrapper.HindSiteSetting.HasUi === UiPresence.HasUi) {
-        let hindSiteCheckboxSetting: HindSiteSettingNumberModule = new HindSiteSettingNumberModule(this.Logger, settingWrapper)
+        let hindSiteCheckboxSetting: HindSiteSettingNumberModule = new HindSiteSettingNumberModule(this.HindeCore, settingWrapper)
 
         toReturn.push(hindSiteCheckboxSetting);
       }

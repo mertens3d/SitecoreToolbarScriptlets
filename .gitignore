@@ -31,3 +31,7 @@ node_modules
 /src/Shared/scripts/**/*.js
 /src/Content/scripts/**/*.js.map
 /archives/archive*/**/*
+/archives/AutoBuildArchive*
+/src/HindSiteScUiProxy/scripts/*.js
+/src/HindSiteScUiProxy/scripts/**/*.js
+/src/PopUpController/scripts/**/*.js

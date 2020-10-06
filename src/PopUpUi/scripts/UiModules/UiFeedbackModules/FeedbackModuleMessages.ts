@@ -1,16 +1,19 @@
-﻿import { IDataContentReplyReceivedEvent_Payload } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { IHindSiteEvent_Observer } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/IHindSiteEvent_Observer";
+﻿import { IHindSiteEvent_Observer } from "../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer";
 import { IMessageBrokerFeedback } from "../../../../Shared/scripts/Interfaces/Agents/IMessageBrokerFeedback/IMessageBrokerFeedback";
 import { _UiFeedbackModuleBase } from "./_UiFeedbackModuleBase";
+import { IControllerMessageReceivedEvent_Payload } from "../../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 
-export class FeedbackModuleMessages_Observer extends _UiFeedbackModuleBase implements IMessageBrokerFeedback, IHindSiteEvent_Observer<IDataContentReplyReceivedEvent_Payload> {
+export class DebuggingFeedbackModuleMessages_Observer extends _UiFeedbackModuleBase implements IMessageBrokerFeedback, IHindSiteEvent_Observer<IControllerMessageReceivedEvent_Payload> {
   Friendly: string;
 
-  UpdateAsync(payload: IDataContentReplyReceivedEvent_Payload) {
-    this.Logger.WarningAndContinue(this.UpdateAsync + ' ' + FeedbackModuleMessages_Observer.name, 'not implemented yet');
+  UpdateAsync(payload: IControllerMessageReceivedEvent_Payload) {
+    this.ErrorHand.WarningAndContinue(this.UpdateAsync + ' ' + DebuggingFeedbackModuleMessages_Observer.name, 'not implemented yet');
   }
+  RefreshUi_Module() {
 
-  Init() {
+  }
+  WireEvents_Module() {
+
   }
 
   UpdateMsgStatusStack(textToShow: string) {

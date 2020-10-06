@@ -18,6 +18,7 @@ export class HindSiteSetting implements IHindSiteSetting {
   HasUi: UiPresence;
   ModuleType: ModuleKey;
 
+
   constructor(settingKey: SettingKey, dataType: SettingType, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enableState: UiEnableState, hasUi: UiPresence, moduleType: ModuleKey) {
     this.SettingKey = settingKey;
     this.DataType = dataType;

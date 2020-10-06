@@ -1,7 +1,10 @@
-﻿import { IDataStateOfDesktop } from "../../Interfaces/Data/States/IDataStateOfDesktop";
-import { IDataStateOfDTFrame } from "../../Interfaces/Data/States/IDataStateOfDTFrame";
+﻿import { IStateOfDesktop } from "../../Interfaces/Data/States/IStateOfDesktop";
+import { IStateOfDTArea } from "../../Interfaces/Data/States/IStateOfDTProxy";
+import { DefaultStateOfDTArea } from "./DefaultStateOfDTArea";
+import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
 
-export class DefaultStateOfDesktop implements IDataStateOfDesktop {
-    IndexOfActiveFrame = -1;
-    StateOfDTFrames: IDataStateOfDTFrame[] = [];
+export class DefaultStateOfDesktop implements IStateOfDesktop {
+  StatefullDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.Desktop];
+  StatefullDisciminator = StateFullProxyDisciminator.Desktop;
+  StateOfDTArea: IStateOfDTArea = new DefaultStateOfDTArea();
 }

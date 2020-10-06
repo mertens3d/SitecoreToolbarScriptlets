@@ -1,9 +1,10 @@
-﻿import { HindeSiteEvent_Subject } from "../../../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/_HindSiteEvent/HindeSiteEvent_Subject";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { HindeSiteEvent_Subject } from "../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiSettingBasedModuleMutationEven_Payload } from "./IUiSettingBasedModuleMutationEvent_Payload";
 
 export class UiSettingBasedModuleMutationEvent_Subject extends HindeSiteEvent_Subject<IUiSettingBasedModuleMutationEven_Payload> {
-  constructor(logger: ILoggerAgent) {
-    super(logger, UiSettingBasedModuleMutationEvent_Subject.name);
+  ShowLogActions: boolean = true;
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore, UiSettingBasedModuleMutationEvent_Subject.name);
   }
 }

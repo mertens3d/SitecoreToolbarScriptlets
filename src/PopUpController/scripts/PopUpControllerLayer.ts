@@ -1,49 +1,59 @@
-﻿import { ContentReplyReceivedEvent_Observer } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
-import { CommandDefintionFactory } from "../../PopUpUi/scripts/Classes/PopUpCommands";
-import { IUiCommandFlagRaisedEvent_Payload } from "../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
-import { UiCommandFlagRaisedEvent_Observer } from "../../PopUpUi/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
-import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
+﻿import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
 import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
+import { TaskMonitor } from "../../Shared/scripts/Agents/Agents/LoggerAgent/TaskMonitor";
+import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/ErrorHandlerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
 import { HindSiteSettingWrapper } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
-import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { ScPageTypeResolver } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IRepositoryAgent } from "../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
-import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Agents/IScUrlAgent/IScUrlAgent";
+import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Jackets/IScUrlAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { ICommandDefinitionBucket, IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { ICommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
+import { IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IHindSiteUiLayer";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
-import { CommandManager } from "../Managers/CommandManager";
-import { PopUpMessagesBrokerAgent } from "./Agents/PopUpMessagesBrokerAgent";
+import { CommandManager } from "./Managers/CommandManager";
+import { MessageBroker_PopUp } from "./Agents/PopUpMessagesBrokerAgent";
 import { PopUpBrowserProxy } from "./Proxies/BrowserProxy";
-import { IDataContentReplyReceivedEvent_Payload } from "../../Content/scripts/Proxies/Desktop/DesktopProxy/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { CommandType } from "../../Shared/scripts/Enums/CommandType";
-import { HandlersForInternal } from "../../PopUpUi/scripts/Classes/HandlersForInternal";
-import { BrowserTabAgent } from "../../PopUpUi/scripts/Managers/BrowserTabAgent";
+import { HandlersForInternal } from "./Classes/HandlersForInternal";
+import { BrowserTabAgent } from "./Agents/BrowserTabAgent";
+import { IUiCommandFlagRaisedEvent_Payload } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
+import { CommandDefintionFactory } from "./Classes/PopUpCommands";
+import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
+import { ContentReplyReceivedEvent_Observer } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
+import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
+import { UrlJacket } from "../../DOMJacket/UrlJacket";
 
 class PopUpControllerLayer {
-  private RepoAgent: IRepositoryAgent;
-  private SettingsAgent: ISettingsAgent;
-  private PopUpMessageBrokerAgent: PopUpMessagesBrokerAgent;
-  private Logger: LoggerAgent;
+  BrowserTabAgent: BrowserTabAgent;
+  HandlersForInternal: HandlersForInternal;
+  private BrowserProxy: PopUpBrowserProxy;
+  private CommandDefintionBucket: ICommandDefinitionBucket;
   private commandMan: CommandManager;
+  private ErrorHand: ErrorHandlerAgent;
+  private HindeCore: IHindeCore;
+  private Logger: LoggerAgent;
+  private PopUpMessageBrokerAgent: MessageBroker_PopUp;
+  private RepoAgent: IRepositoryAgent;
+  private ScUrlAgent: IScUrlAgent;
+  private SettingsAgent: ISettingsAgent;
   private UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
   private UiLayer: IHindSiteUiLayer;
-  private CommandDefintionBucket: ICommandDefinitionBucket;
-  private ScUrlAgent: IScUrlAgent;
-  private BrowserProxy: PopUpBrowserProxy;
-  HandlersForInternal: HandlersForInternal;
-  BrowserTabAgent: BrowserTabAgent;
+  private  TaskMonitor: TaskMonitor;
+
   public async Startup() {
     try {
       this.Preamble_SettingsAndLogger();
 
-      this.BrowserProxy = new PopUpBrowserProxy(this.Logger);
+      this.BrowserProxy = new PopUpBrowserProxy(this.HindeCore);
       await this.BrowserProxy.Init_BrowserProxy()
         .then(() => {
           this.InstantiateAgents_Controller();
@@ -57,27 +67,38 @@ class PopUpControllerLayer {
 
   private Preamble_SettingsAndLogger() {
     this.Logger = new LoggerAgent();
-    this.RepoAgent = new RepositoryAgent(this.Logger);
-    this.SettingsAgent = new SettingsAgent(this.Logger, this.RepoAgent);
+    this.TaskMonitor = new TaskMonitor(this.Logger);
+    this.ErrorHand = new ErrorHandlerAgent(this.TaskMonitor);
+    this.TaskMonitor.IntroduceErrorHand(this.ErrorHand);
+
+    this.HindeCore = {
+      Logger: this.Logger,
+      ErrorHand: this.ErrorHand,
+      TaskMonitor: this.TaskMonitor,
+      Discriminator: Discriminator.IHindeCore
+    };
+
+    this.RepoAgent = new RepositoryAgent(this.HindeCore);
+    this.SettingsAgent = new SettingsAgent(this.HindeCore, this.RepoAgent);
     this.SettingsAgent.Init_SettingsAgent();
     this.Init_Logger();
   }
 
   private InstantiateAgents_Controller() {
-    this.ScUrlAgent = new ScUrlAgent(this.Logger, this.BrowserProxy);
-    this.ScUrlAgent.Init_ScUrlAgent();
-    this.PopUpMessageBrokerAgent = new PopUpMessagesBrokerAgent(this.Logger, this.BrowserProxy, this.SettingsAgent);
+    let genericUrlAgent = new UrlJacket(this.HindeCore, this.BrowserProxy.Url)
+    this.ScUrlAgent = new ScPageTypeResolver(this.HindeCore, genericUrlAgent);
+    this.PopUpMessageBrokerAgent = new MessageBroker_PopUp(this.HindeCore, this.BrowserProxy, this.SettingsAgent);
   }
 
   private async InstantiateManagers_Controller() {
     this.Logger.FuncStart(this.InstantiateManagers_Controller.name);
 
-    this.CommandDefintionBucket = new CommandDefintionFactory(this.Logger).BuildMenuCommandParamsBucket();
-    this.UiLayer = new HindSiteUiLayer(this.Logger, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
+    this.CommandDefintionBucket = new CommandDefintionFactory(this.HindeCore).BuildMenuCommandParamsBucket();
+    this.UiLayer = new HindSiteUiLayer.HindSiteUiLayer(this.HindeCore, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
 
-    this.BrowserTabAgent = new BrowserTabAgent(this.Logger, this.ScUrlAgent, this.SettingsAgent);
-    this.HandlersForInternal = new HandlersForInternal(this.Logger, this.BrowserTabAgent);
-    this.commandMan = new CommandManager(this.Logger, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket, this.UiLayer, this.HandlersForInternal);
+    this.BrowserTabAgent = new BrowserTabAgent(this.HindeCore, this.ScUrlAgent, this.SettingsAgent);
+    this.HandlersForInternal = new HandlersForInternal(this.HindeCore, this.BrowserTabAgent);
+    this.commandMan = new CommandManager(this.HindeCore, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket, this.UiLayer, this.HandlersForInternal);
 
     this.Logger.FuncEnd(this.InstantiateManagers_Controller.name);
   }
@@ -97,13 +118,13 @@ class PopUpControllerLayer {
   private WireEvents_Controller() {
     this.Logger.FuncStart(this.WireEvents_Controller.name);
 
-    this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.Logger, this.OnUiCommandRaisedEvent.bind(this))
+    this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.HindeCore, this.OnUiCommandRaisedEvent.bind(this))
 
     if (StaticHelpers.IsNullOrUndefined([this.UiLayer.UiCommandRaisedFlag_Subject, this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject])) {
-      this.Logger.ErrorAndThrow(this.WireEvents_Controller.name, 'Null check');
+      this.ErrorHand.ErrorAndThrow(this.WireEvents_Controller.name, 'Null check');
     } else {
       this.UiLayer.UiCommandRaisedFlag_Subject.RegisterObserver(this.UiCommandRaisedFlag_Observer);
-      let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.Logger, this.OnContentReplyReceivedEventCallBack.bind(this));
+      let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.HindeCore, this.OnContentReplyReceivedEventCallBack.bind(this));
 
       this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject.RegisterObserver(contentReplyReceivedEvent_Observer);
 
@@ -113,7 +134,7 @@ class PopUpControllerLayer {
     this.Logger.FuncEnd(this.WireEvents_Controller.name);
   }
 
-  OnContentReplyReceivedEventCallBack(dataContentReplyReceivedEvent_Payload: IDataContentReplyReceivedEvent_Payload) {
+  OnContentReplyReceivedEventCallBack(dataContentReplyReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
     this.Logger.FuncStart(this.OnContentReplyReceivedEventCallBack.name);
     if (this.UiLayer) {
       this.UiLayer.OnContentReplyReceived(dataContentReplyReceivedEvent_Payload);
@@ -127,7 +148,7 @@ class PopUpControllerLayer {
     this.Logger.Log('Controller got command message');
 
     if (uiCommandFlagRaisedEvent_Payload.CommandType === CommandType.Content) {
-      this.PopUpMessageBrokerAgent.SendCommandToContentImprovedAsync(uiCommandFlagRaisedEvent_Payload.MsgFlag, uiCommandFlagRaisedEvent_Payload.StateOfPopUp)
+      this.PopUpMessageBrokerAgent.SendCommandToContentAsync(uiCommandFlagRaisedEvent_Payload.MsgFlag, uiCommandFlagRaisedEvent_Payload.StateOfPopUp)
     } else {
       this.commandMan.HandleCommandTypePopUp(uiCommandFlagRaisedEvent_Payload);
     }
@@ -140,10 +161,10 @@ class PopUpControllerLayer {
   private Init_Logger() {
     this.Logger.FuncStart(this.Init_Logger.name);
 
-    let enableLoggingSetting: HindSiteSettingWrapper = this.SettingsAgent.HindSiteSettingsBucket.GetByKey(SettingKey.EnableLogging);
+    let enableLoggingSetting: HindSiteSettingWrapper = this.SettingsAgent.HindSiteSettingsBucket.GetByKey(SettingKey.EnableDebugging);
 
     if (SharedConst.Const.Debug.ForceLoggingEnabled || enableLoggingSetting.HindSiteSetting.ValueAsBool()) {
-      var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.Logger);
+      var RollingLogId = new RollingLogIdDrone(this.SettingsAgent, this.HindeCore);
       var nextLogId = RollingLogId.GetNextLogId();
 
       let storageLogWriter = new LoggerStorageWriter();

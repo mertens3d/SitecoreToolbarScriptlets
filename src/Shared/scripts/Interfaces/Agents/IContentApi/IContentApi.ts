@@ -1,18 +1,15 @@
-﻿import { ICommandHandlerDataForContent } from "../../ICommandHandlerDataForContent";
+﻿import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
+import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
+import { IApiCallPayload } from "../../IApiCallPayload";
 
-export interface IHindSiteScWindowApi {
-  GetStateOfContent();
-  AddCETab(commandData: ICommandHandlerDataForContent): Promise<void>
-  AdminB();
-  ToggleFavorite(commandData: ICommandHandlerDataForContent);
+export interface IHindSiteScUiAPI {
+  AddContentEditorToDesktopAsync(commandData: IApiCallPayload): Promise<void>
+  AdminB(commandData: IApiCallPayload);
+  GetStateOfScUiProxy(): Promise<IStateOfScUi>;
+  GetStateOfScUiProxyWindow(Manual: SnapShotFlavor);
+  InstantiateHindSiteScUiProxy(): Promise<void>;
   OpenContentEditor();
-  Ping();
-  SetNickName(commandData: ICommandHandlerDataForContent): Promise<void>;
-  SetStateOfSitecoreWindow(commandData: ICommandHandlerDataForContent): Promise<void>;
-  ToggleCompactCss(commandData: ICommandHandlerDataForContent);
-  SaveWindowState(commandData: ICommandHandlerDataForContent): Promise<void>;
-  RemoveSnapShot(commandData: ICommandHandlerDataForContent): Promise<void>;
-  PublischActiveCE(commandData: ICommandHandlerDataForContent): Promise<void>;
-  DebugForceAutoSnapShot(commandData: ICommandHandlerDataForContent): Promise<void>;
-  //UpdateNickname(commandData: ICommandHndlrDataForContent): Promise<void>;
+  PublischActiveCE(commandData: IApiCallPayload): Promise<void>;
+  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IStateOfScUi): Promise<void>;
+  ToggleCompactCss(commandData: IApiCallPayload);
 }

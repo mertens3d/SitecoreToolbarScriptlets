@@ -37,5 +37,8 @@
     RespFailedDidNotValidate,
     ReqDebugAutoSnapShot,
     ReqDebugTriggerReload,
-    ReqDebugClearConsole
+    ReqDebugClearConsole,
+    SetStateFromQueryString,
+    SetStateFromMostRecent,
+    SetStateFromStorage
 }

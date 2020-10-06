@@ -1,24 +1,23 @@
-﻿import { HindSiteSetting } from "./HindSiteSetting";
+﻿import { PopConst } from "../../../Const/PopConst";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
-import { SettingType } from "../../../Enums/SettingType";
-import { SettingFlavor } from "../../../Enums/SettingFlavor";
-import { PopConst } from "../../../../../PopUpUi/scripts/Classes/PopConst";
-import { SharedConst } from "../../../SharedConst";
-import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { UiEnableState } from "../../../Enums/Enabled";
-import { UiPresence } from "../../../Enums/UiPresence";
-import { ContentConst } from "../../../Interfaces/InjectConst";
 import { ModuleKey } from "../../../Enums/ModuleKey";
-import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { LoggableBase } from "../../../../../Content/scripts/Managers/LoggableBase";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
+import { SettingFlavor } from "../../../Enums/SettingFlavor";
+import { SettingType } from "../../../Enums/SettingType";
+import { UiPresence } from "../../../Enums/UiPresence";
+import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
+import { ContentConst } from "../../../Interfaces/InjectConst";
+import { _HindeCoreBase } from "../../../LoggableBase";
+import { SharedConst } from "../../../SharedConst";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+import { HindSiteSetting } from "./HindSiteSetting";
 import { HindSiteSettingForNumbers } from "./HindSiteSettingForNumbers";
+import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
 
-export class DefaultSettings extends LoggableBase {
+export class DefaultSettings extends _HindeCoreBase {
 
-  constructor(logger: ILoggerAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
   }
 
   GetDefaultSettingsWrapper(): HindSiteSettingWrapper[] {
@@ -29,7 +28,7 @@ export class DefaultSettings extends LoggableBase {
         SettingKey.LastUsedLogToStorageKey,
         SettingType.Number,
         null,
-        SharedConst.Const.Settings.Defaults.EnableLogging,
+        SharedConst.Const.Settings.Defaults.EnableDebugging,
         SettingFlavor.ContentAndPopUpStoredInEach,
         'Rolling Prefix key for log to storage',
         UiEnableState.Enabled,
@@ -39,12 +38,12 @@ export class DefaultSettings extends LoggableBase {
       ),
       new HindSiteSetting(
 
-        SettingKey.EnableLogging,
+        SettingKey.EnableDebugging,
         SettingType.BoolCheckBox,
-        PopConst.Const.Selector.HS.ModuleContainers.CbEnableLogging,
-        SharedConst.Const.Settings.Defaults.EnableLogging,
+        PopConst.Const.Selector.HS.ModuleContainers.SettingEnableDebugging,
+        SharedConst.Const.Settings.Defaults.EnableDebugging,
         SettingFlavor.ContentAndPopUpStoredInPopUp,
-        'Enable Logging',
+        'Enable Debugging',
         UiEnableState.Enabled,
         UiPresence.HasUi,
         ModuleKey.CheckBox,
@@ -92,117 +91,117 @@ export class DefaultSettings extends LoggableBase {
       new HindSiteSetting(
 
         SettingKey.LgndPopUpLog,
-        SettingType.Accordion,
+        SettingType.AccordionDebugging,
         PopConst.Const.Selector.HS.ModuleContainers.LgndPopUpLog,
         PopConst.Const.Settings.Defaults.LgndPopUpLog,
         SettingFlavor.PopUp,
-        'Pop Up Log',
+        'Debugging - Pop Up Log',
         UiEnableState.Enabled,
         UiPresence.HasUi,
-        ModuleKey.Accordion,
+        ModuleKey.AccordionDebugging,
 
       ),
       new HindSiteSetting(
 
         SettingKey.LgndForeSite,
-        SettingType.Accordion,
+        SettingType.AccordionTypical,
         PopConst.Const.Selector.HS.ModuleContainers.LgndForeSite,
         PopConst.Const.Settings.Defaults.LgndForeSite,
         SettingFlavor.PopUp,
         'Fore&bull;Site',
         UiEnableState.Enabled,
         UiPresence.HasUi,
-        ModuleKey.Accordion,
+        ModuleKey.AccordionTypical,
 
       ),
       new HindSiteSetting(
 
         SettingKey.LgndHindSite,
-        SettingType.Accordion,
+        SettingType.AccordionTypical,
         PopConst.Const.Selector.HS.ModuleContainers.LgndHindSite,
         PopConst.Const.Settings.Defaults.LgndHindSite,
         SettingFlavor.PopUp,
         'Hind&bull;Site',
         UiEnableState.Enabled,
         UiPresence.HasUi,
-        ModuleKey.Accordion,
+        ModuleKey.AccordionTypical,
 
       ),
       new HindSiteSetting(
 
         SettingKey.LgndSettings,
-        SettingType.Accordion,
+        SettingType.AccordionTypical,
         PopConst.Const.Selector.HS.ModuleContainers.LgndSettings,
         PopConst.Const.Settings.Defaults.LgndSettings,
         SettingFlavor.PopUp,
         'Settings',
         UiEnableState.Enabled,
         UiPresence.HasUi,
-        ModuleKey.Accordion,
+        ModuleKey.AccordionTypical,
 
       ),
       new HindSiteSetting(
 
         SettingKey.LgndMessages,
-        SettingType.Accordion,
+        SettingType.AccordionDebugging,
         PopConst.Const.Selector.HS.ModuleContainers.LgndMessages,
         PopConst.Const.Settings.Defaults.LgndMessages,
         SettingFlavor.PopUp,
-        'Messages',
+        'Debugging - Messages',
         UiEnableState.Enabled,
         UiPresence.HasUi,
-        ModuleKey.Accordion,
+        ModuleKey.AccordionDebugging,
 
       ),
       new HindSiteSetting(
 
         SettingKey.LgndPopUpState,
-        SettingType.Accordion,
+        SettingType.AccordionDebugging,
         PopConst.Const.Selector.HS.ModuleContainers.LgndPopUpState,
         PopConst.Const.Settings.Defaults.LgndPopUpState,
         SettingFlavor.PopUp,
-        'Pop Up State',
+        'Debugging - State of Pop-Up',
         UiEnableState.Enabled,
         UiPresence.HasUi,
-        ModuleKey.Accordion,
+        ModuleKey.AccordionDebugging,
 
       ),
       new HindSiteSetting(
         SettingKey.LgndPopUpDebug,
-        SettingType.Accordion,
+        SettingType.AccordionDebugging,
         PopConst.Const.Selector.HS.ModuleContainers.LgndPopUpDebug,
         PopConst.Const.Settings.Defaults.LgndPopUpState,
         SettingFlavor.PopUp,
         'Debugging',
         UiEnableState.Enabled,
         UiPresence.HasUi,
-        ModuleKey.Accordion,
+        ModuleKey.AccordionDebugging,
       ),
       new HindSiteSetting(
 
         SettingKey.LgndContentState,
-        SettingType.Accordion,
+        SettingType.AccordionDebugging,
         PopConst.Const.Selector.HS.ModuleContainers.LgndContentState,
         PopConst.Const.Settings.Defaults.LgndContentState,
         SettingFlavor.PopUp,
-        'Content State',
+        'Debugging - Content State',
         UiEnableState.Enabled,
         UiPresence.HasUi,
-        ModuleKey.Accordion,
+        ModuleKey.AccordionDebugging,
 
       ),
 
       new HindSiteSetting(
 
         SettingKey.LgndBrowserState,
-        SettingType.Accordion,
+        SettingType.AccordionDebugging,
         PopConst.Const.Selector.HS.ModuleContainers.LgndBrowserState,
         PopConst.Const.Settings.Defaults.LgndBrowserState,
         SettingFlavor.PopUp,
-        'Browser State',
+        'Debugging - Browser State',
         UiEnableState.Enabled,
         UiPresence.HasUi,
-        ModuleKey.Accordion,
+        ModuleKey.AccordionDebugging,
 
       ),
 
@@ -250,6 +249,19 @@ export class DefaultSettings extends LoggableBase {
         ModuleKey.CheckBox,
 
       ),
+      new HindSiteSetting(
+
+        SettingKey.AutoRestoreState,
+        SettingType.BoolCheckBox,
+        PopConst.Const.Selector.HS.ModuleContainers.SettingAutoRestoreState,
+        PopConst.Const.Settings.Defaults.AutoRestoreState,
+        SettingFlavor.ContentAndPopUpStoredInPopUp,
+        'Auto-Restore State',
+        UiEnableState.Enabled,
+        UiPresence.HasUi,
+        ModuleKey.CheckBox,
+
+      ),
       new HindSiteSettingForNumbers(
 
         SettingKey.AutoSaveRetainDays,
@@ -277,12 +289,24 @@ export class DefaultSettings extends LoggableBase {
         ModuleKey.CheckBox,
 
       ),
+      //new HindSiteSetting(
+
+      //  SettingKey._not_used,
+      //  SettingType.BoolCheckBox,
+      //  PopConst.Const.Selector.HS.ModuleContainers.SettingShowDebuggingModules,
+      //  ContentConst.Const.DefaultShowDebuggingModules,
+      //  SettingFlavor.PopUp,
+      //  'Show Debugging Modules',
+      //  UiEnableState.Enabled,
+      //  UiPresence.HasUi,
+      //  ModuleKey.CheckBox,
+      //),
     ];
 
     let toReturn: HindSiteSettingWrapper[] = [];
 
     rawData.forEach((settingValue: HindSiteSetting) => {
-      toReturn.push(new HindSiteSettingWrapper(this.Logger,  settingValue));
+      toReturn.push(new HindSiteSettingWrapper(this.HindeCore,  settingValue));
     })
 
     return toReturn;

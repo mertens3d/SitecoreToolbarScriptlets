@@ -1,21 +1,27 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { ModuleKey } from "../../../Shared/scripts/Enums/ModuleKey";
-import { ILoggerAgent } from "../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+﻿import { ModuleKey } from "../../../Shared/scripts/Enums/ModuleKey";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { UiHydrationData } from "../../../Shared/scripts/Interfaces/UiHydrationData";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { IUiModule } from "../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
-export class _UiModuleBase extends LoggableBase {
-  protected ContainerSelector: string;
-  protected ContainerUiDivElem: HTMLDivElement;
+export abstract class _UiModuleBase extends _HindeCoreBase implements IUiModule {
+  ContainerSelector: string;
+  ContainerUiDivElem: HTMLDivElement;
   protected UiElement: HTMLElement;
-  protected RefreshData: any;
+  protected RefreshData: UiHydrationData;
   Friendly: string = 'Not Set';
   ModuleKey: ModuleKey = ModuleKey.Unknown;
 
-  constructor(logger: ILoggerAgent, containerSelector: string) {
-    super(logger);
+  constructor(hindeCore: IHindeCore, containerSelector: string) {
+    super(hindeCore);
     this.ContainerSelector = containerSelector;
   }
+
+  abstract Init_Module();
+  abstract BuildHtmlForModule();
+  abstract RefreshUi_Module();
+  abstract WireEvents_Module();
 
   protected Init_UiModuleBase() {
     this.Logger.FuncStart(this.Init_UiModuleBase.name, this.Friendly);
@@ -23,7 +29,7 @@ export class _UiModuleBase extends LoggableBase {
     this.ContainerUiDivElem = <HTMLDivElement>this.GetUiElement(this.ContainerSelector);
 
     if (StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
-      this.Logger.ErrorAndThrow(this.Init_UiModuleBase.name, 'Null: ' + this.ContainerSelector);
+      this.ErrorHand.ErrorAndThrow(this.Init_UiModuleBase.name, 'Null: ' + this.ContainerSelector);
     }
 
     this.Logger.FuncEnd(this.Init_UiModuleBase.name, this.Friendly);
@@ -37,8 +43,16 @@ export class _UiModuleBase extends LoggableBase {
     return toReturn;
   }
 
+  Hydrate(refreshData: UiHydrationData): void {
+    this.Logger.FuncStart(this.Hydrate.name, this.Friendly);
+    this.Logger.LogVal("container exists: ", this.DoesContainerExist().toString());
+    this.RefreshData = refreshData;
+    this.Logger.FuncEnd(this.Hydrate.name, this.Friendly);
+  }
 
-  Hydrate(refreshdata: UiHydrationData): void {
-    this.RefreshData = refreshdata;
+  DoesContainerExist(): boolean {
+    let result = this.ContainerUiDivElem !== null;
+    this.Logger.LogVal('does it exist ', result.toString());
+    return result;
   }
 }

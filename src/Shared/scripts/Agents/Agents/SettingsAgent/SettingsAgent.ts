@@ -1,26 +1,26 @@
-﻿import { PopConst } from "../../../../../PopUpUi/scripts/Classes/PopConst";
+﻿import { PopConst } from "../../../Const/PopConst";
 import { UiModuleManagerPassThroughEvent_Observer } from "../../../../../PopUpUi/scripts/Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Observer";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
 import { HindSiteSettingsBucket } from "./HindSiteSettingsBucket";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
+import { _HindeCoreBase } from "../../../LoggableBase";
 
-export class SettingsAgent implements ISettingsAgent {
+export class SettingsAgent extends _HindeCoreBase implements ISettingsAgent {
   HindSiteSettingsBucket: HindSiteSettingsBucket;
-  private Logger: ILoggerAgent;
   private RepoAgent: IRepositoryAgent;
   private UiElementChangeEvent_Observer: UiModuleManagerPassThroughEvent_Observer;
 
-  constructor(logger: ILoggerAgent, repoAgent: IRepositoryAgent) {
-    this.Logger = logger;
+  constructor(hindeCore: IHindeCore, repoAgent: IRepositoryAgent) {
+    super(hindeCore);
     this.RepoAgent = repoAgent;
-    this.HindSiteSettingsBucket = new HindSiteSettingsBucket(this.Logger);
+    this.HindSiteSettingsBucket = new HindSiteSettingsBucket(this.HindeCore);
   }
 
   GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[] {
@@ -45,7 +45,7 @@ export class SettingsAgent implements ISettingsAgent {
   }
 
   WireEvents() {
-    this.UiElementChangeEvent_Observer = new UiModuleManagerPassThroughEvent_Observer(this.Logger, this.OnUiModuleManagerPassThroughEvent);
+    this.UiElementChangeEvent_Observer = new UiModuleManagerPassThroughEvent_Observer(this.HindeCore, this.OnUiModuleManagerPassThroughEvent);
   }
 
   OnUiModuleManagerPassThroughEvent<IUiModuleManagerPassThroughEvent_Payload>(payload: IUiModuleManagerPassThroughEvent_Payload) {
@@ -93,14 +93,14 @@ export class SettingsAgent implements ISettingsAgent {
           if (matchingSetting) {
             matchingSetting.ValueAsObj = storageSetting.ValueAsObj;
           } else {
-            this.Logger.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
+            this.ErrorHand.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
           }
         } else {
-          this.Logger.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, 'null matching setting');
+          this.ErrorHand.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, 'null matching setting');
         }
       }
     } catch (err) {
-      this.Logger.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, err);
+      this.ErrorHand.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, err);
     }
 
     this.Logger.FuncEnd(this.UpdateSettingValuesFromStorage.name);
@@ -123,7 +123,7 @@ export class SettingsAgent implements ISettingsAgent {
       foundSetting.HindSiteSetting.ValueAsObj = value;
       this.WriteAllSettingValuesToStorage();
     } else {
-      this.Logger.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
+      this.ErrorHand.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
     }
   }
 

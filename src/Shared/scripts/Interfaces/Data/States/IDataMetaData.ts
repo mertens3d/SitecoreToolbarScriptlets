@@ -2,10 +2,13 @@
 import { SnapShotFlavor } from '../../../Enums/SnapShotFlavor';
 import { GuidData } from '../../../Helpers/GuidData';
 export interface IDataMetaData {
-    Flavor: SnapShotFlavor;
-    readonly SnapshotId: GuidData;
-    SessionId: string;
-    StorageKey: string;
-    TimeStamp: Date;
-    WindowType: ScWindowType;
+  Hash: number;
+  Flavor: SnapShotFlavor;
+  readonly SnapshotId: GuidData;
+  SessionId: string;
+  StorageKey: string;
+  TimeStamp: Date;
+  StorageId: GuidData;
+  WindowType: ScWindowType;
+  
 }

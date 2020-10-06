@@ -1,3 +1,4 @@
-﻿export class InitResultTreeProxy {
-    TreeInitialized: boolean = false;
+﻿export class InitReportTreeProxy {
+    TreeInstantiated: boolean = false;
+    EventsWired: boolean;
 }

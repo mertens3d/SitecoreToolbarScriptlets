@@ -1,7 +1,7 @@
 ﻿import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { CommandButtonEvents } from "../../../../Shared/scripts/Enums/CommandButtonEvents";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ICommandHandlerDataForPopUp } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/UiHydrationData";
@@ -11,40 +11,39 @@ import { SingleClickEvent_Subject } from "../../Events/SingleClickEvent/SingleCl
 
 export abstract class _base_ButtonModule extends _UiModuleBase {
   abstract ModuleKey: ModuleKey = ModuleKey.Unknown;
-  protected HTMLButtonElement: HTMLButtonElement;
+  HTMLButtonElement: HTMLButtonElement = null;
   protected MenuCommandDefinition: IMenuCommandDefinition;
   protected RefreshData: UiHydrationData;
   public Friendly = this.MenuCommandDefinition ? MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey] : this.ContainerSelector;
   public SingleButtonClickEvent_Subject: SingleClickEvent_Subject;
 
-  constructor(loggerAgent: ILoggerAgent, menuCommandDefinition: IMenuCommandDefinition) {
-    super(loggerAgent, menuCommandDefinition ? menuCommandDefinition.PlaceHolderSelector : null);
+  constructor(hindeCore: IHindeCore, menuCommandDefinition: IMenuCommandDefinition) {
+    super(hindeCore, menuCommandDefinition ? menuCommandDefinition.PlaceHolderSelector : null);
     this.MenuCommandDefinition = menuCommandDefinition;
   }
 
   protected Init_BaseButtonModule(): void {
     this.Init_UiModuleBase();
-    this.BuildElements_Base();
   }
 
   protected WireEvents_Base(): void {
     this.WireClickEvents();
   }
 
-  private BuildElements_Base(): void {
-    this.Logger.FuncStart(this.BuildElements_Base.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+  BuildHtmlForModule_base_ButtonModule(): void {
+    this.Logger.FuncStart(this.BuildHtmlForModule_base_ButtonModule.name, this.MenuCommandDefinition.InnerText + ' ' + MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
     if (this.ContainerUiDivElem) {
       this.BuildButtonElem();
       this.ContainerUiDivElem.classList.add('btn-container');
       this.ContainerUiDivElem.appendChild(this.HTMLButtonElement);
     } else {
-      this.Logger.ErrorAndContinue(this.BuildElements_Base.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.ErrorHand.ErrorAndContinue(this.BuildHtmlForModule_base_ButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
-    this.Logger.FuncEnd(this.BuildElements_Base.name);
+    this.Logger.FuncEnd(this.BuildHtmlForModule_base_ButtonModule.name);
   }
 
   WireClickEvents(): void {
-    this.SingleButtonClickEvent_Subject = new SingleClickEvent_Subject(this.Logger, MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+    this.SingleButtonClickEvent_Subject = new SingleClickEvent_Subject(this.HindeCore, MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
 
     if (this.MenuCommandDefinition && this.MenuCommandDefinition.PlaceHolderSelector) {
       var targetElem: HTMLElement = document.querySelector(this.MenuCommandDefinition.PlaceHolderSelector);
@@ -55,10 +54,10 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
           this.WireDoubleClickEvent()
         }
       } else {
-        this.Logger.ErrorAndThrow(this.WireClickEvents.name, 'did not find placeholder: ' + this.MenuCommandDefinition.PlaceHolderSelector);
+        this.ErrorHand.ErrorAndThrow(this.WireClickEvents.name, 'did not find placeholder: ' + this.MenuCommandDefinition.PlaceHolderSelector);
       }
     } else {
-      this.Logger.ErrorAndThrow(this.WireClickEvents.name, 'no command or no command placeholder');
+      this.ErrorHand.ErrorAndThrow(this.WireClickEvents.name, 'no command or no command placeholder');
     }
   }
 
@@ -77,10 +76,10 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
           HandlerData: this.MenuCommandDefinition.EventHandlerData
         };
 
-        this.SingleButtonClickEvent_Subject.NotifyObservers(singleClickEvent_payload);
+        this.SingleButtonClickEvent_Subject.NotifyObserversAsync(singleClickEvent_payload);
       });
     } else {
-      this.Logger.ErrorAndThrow(this.WireSingleClickEvent.name, 'No button element: ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.ErrorHand.ErrorAndThrow(this.WireSingleClickEvent.name, 'No button element: ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
   }
 
@@ -90,14 +89,14 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
 
     if (this.HTMLButtonElement) {
       this.HTMLButtonElement.ondblclick = (evt) => {
-        let data: ICommandHandlerDataForPopUp = this.BuildCommandData();
+        let data: ICommandHandlerDataForPopUp = this.BuildCommandDataForPopUp();
         data.Evt = evt;
         //data.EventMan.RouteAllCommandEvents(data);
       };
     }
   }
 
-  private BuildCommandData(): ICommandHandlerDataForPopUp {
+  private BuildCommandDataForPopUp(): ICommandHandlerDataForPopUp {
     let data: ICommandHandlerDataForPopUp = {
       EventMan: null,
       MenuCommandDefinition: this.MenuCommandDefinition,
@@ -106,11 +105,5 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
     }
 
     return data;
-  }
-
-  Hydrate(refreshData: UiHydrationData): void {
-    this.Logger.FuncStart(this.Hydrate.name, this.Friendly);
-    this.RefreshData = refreshData;
-    this.Logger.FuncEnd(this.Hydrate.name, this.Friendly);
   }
 }

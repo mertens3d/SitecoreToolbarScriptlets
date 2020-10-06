@@ -79,9 +79,12 @@
               <div id='id-ph-settings-use-compact'></div>
               <br>
               <div id='id-settings-auto-rename-ce-tab-button'></div>
+              <br>
+              <div id='id-ph-settings-enable-debugging'></div>
             </fieldset>
             <fieldset>
               <legend>Auto Snapshot</legend>
+              <div id='id-settings-auto-restore-state'></div>
               <div id='id-settings-auto-snapshot-on-window-change'></div>
               <div id='id-settings-auto-save-interval'></div>
               <div id='id-settings-auto-save-max-count'></div>
@@ -104,7 +107,6 @@
                 <fieldset>
                   <legend>Debug</legend>
                   <div id='id-ph-settings-debug-keep-dialog-open'></div>
-                  <div id='id-ph-settings-show-log-data'></div>
                   <div class='button-wrapper row flex-container'>
                     <div id='id-container-btn-debug-force-auto-snapshot'></div>
                     <div id='id-container-btn-debug-clear-console'></div>
@@ -121,13 +123,7 @@
         <fieldset class='top'>
           <legend data-setting='lgnd-pop-up-state' class='button-wrapper section accordion-trigger'>{error}</legend>
           <div class='accordion-content'>
-            <div class='flex-container'>
-              <div class='col-full'>
-                <div class='scroller'>
-                  <div id='feedback-div-pop-up-state'></div>
-                </div>
-              </div>
-            </div>
+            <div id='feedback-div-pop-up-state'></div>
           </div>
         </fieldset>
       </div>
@@ -136,13 +132,7 @@
         <fieldset class='top'>
           <legend data-setting='lgnd-content-state' class='button-wrapper section accordion-trigger'>{error}</legend>
           <div class='accordion-content'>
-            <div class='flex-container'>
-              <div class='col-full'>
-                <div class='scroller'>
-                  <div id='feedback-div-state-content'></div>
-                </div>
-              </div>
-            </div>
+            <div id='feedback-div-state-content'></div>
           </div>
         </fieldset>
       </div>
@@ -151,13 +141,7 @@
         <fieldset class='top'>
           <legend data-setting='lgnd-browser-state' class='button-wrapper section accordion-trigger'>{error}</legend>
           <div class='accordion-content'>
-            <div class='flex-container'>
-              <div class='col-full'>
-                <div class='scroller'>
-                  <div id='feedback-div-browser-state'></div>
-                </div>
-              </div>
-            </div>
+            <div id='feedback-div-browser-state'></div>
           </div>
         </fieldset>
       </div>
@@ -167,11 +151,7 @@
           <legend data-setting='lgnd-pop-up-log' class='button-wrapper section accordion-trigger'>{error}</legend>
           <span id='spanParentInfo'></span>
           <div class='accordion-content'>
-            <div class='col-full'>
-              <div class='scroller'>
-                <div id='feedback-pop-up-log'></div>
-              </div>
-            </div>
+            <div id='feedback-pop-up-log'></div>
           </div>
         </fieldset>
       </div>
@@ -180,15 +160,7 @@
         <fieldset class='top'>
           <legend data-setting='lgnd-messages' class='button-wrapper section accordion-trigger'>{error}</legend>
           <div class='accordion-content'>
-            <div class='flex-container'>
-              <div class='col-full'>
-                <div class='scroller'>
-                  <div class='button-wrapper feedback-messages' id='feedback-messages'></div>
-                  <div class='button-wrapper scroller-msg-stat'>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div id='feedback-messages'></div>
           </div>
         </fieldset>
       </div>
@@ -203,7 +175,6 @@
     </div>
   </div>
   <script type='application/javascript' src='browser-polyfill.js'></script>
-  <script src='popupui.min.js'></script>
   <script src='popupcontroller.min.js'></script>
 </body>
 </html>

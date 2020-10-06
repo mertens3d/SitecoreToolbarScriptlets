@@ -8,11 +8,15 @@ import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 export class CloseButtonModule extends _base_ButtonModule implements IUiModuleButton {
   ModuleKey = ModuleKey.ButtonClose;
 
-  RefreshUi(): void {
+  RefreshUi_Module(): void {
   }
 
-  Init(): void {
+  Init_Module(): void {
     this.Init_BaseButtonModule();
+  }
+
+  BuildHtmlForModule() {
+    this.BuildHtmlForModule_base_ButtonModule();
     this.BuildElements();
   }
 
@@ -29,7 +33,7 @@ export class CloseButtonModule extends _base_ButtonModule implements IUiModuleBu
     if (!StaticHelpers.IsNullOrUndefined(this.ContainerUiDivElem)) {
       this.ContainerUiDivElem.appendChild(this.HTMLButtonElement);
     } else {
-      this.Logger.ErrorAndContinue(CloseButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.ErrorHand.ErrorAndContinue(CloseButtonModule.name, 'Could not find ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
     this.Logger.FuncEnd(this.BuildElements.name);
   }

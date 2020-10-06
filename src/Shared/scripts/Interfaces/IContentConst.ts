@@ -4,9 +4,13 @@ export interface IContentConst {
   DefaultMaxAutoSaveAgeDays: number;
   MaxAutoToSaveCount: number;
   DefaultAutoRenameCeTabButton: boolean;
+  DefaultShowDebuggingModules: boolean;
 
   ElemId: {
-    sc: {
+    SC: {
+      PackageDesigner: {
+        StatusText: string,
+      }
       scLoginPassword: string,
       scLoginUserName: string,
       SitecoreRootAnchorNodeId: string,
@@ -32,16 +36,25 @@ export interface IContentConst {
     SC: {
       ContentTreeNode: string,
       scContentTreeNodeActive: string,
+      scContentTreeNodeNormal: string,
     }
   },
 
   Selector: {
     SC: {
       ContentEditor: {
-        ContentTreeNodeGlyph: string,
+        ScContentTreeNodeGlyph: string,
+        ScContentTreeNode: string,
         RootAnchorNode: string,
         ScContentTreeContainer: string,
         scContentTreeNodeIcon: string,
+      },
+      PackageDesigner: {
+        Ribbon: {
+          InstallerRibbon_Nav_Package: string,
+          InstallerRibbon_Toolbar: string,
+          Open: string,
+        }
       },
       Level2Nodes: {
         MediaLibraryAnchorRootNode: string,
@@ -62,6 +75,10 @@ export interface IContentConst {
       NavPublishStrip: string,
       NextButton: string,
       Ok: string,
+      StartMenu: {
+        DevelopmentTools: string,
+        PackageDesigner: string,
+      },
       StartMenuLeftOption: string,
       scStartButton: IScVerSpec,
       Desktop: {
@@ -85,6 +102,7 @@ export interface IContentConst {
   Numbers: {
     Desktop: {
       MaxToolBarNameChars: number,
+      TimeNewCEWaitForScOverlayToClearMs: number,
     }
   },
   MaxIter: number,

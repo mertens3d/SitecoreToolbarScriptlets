@@ -1,26 +1,28 @@
-﻿import { LoggableBase } from "../../../../Content/scripts/Managers/LoggableBase";
+﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { ILoggerAgent } from "../../../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { VisiblityTestResult } from "../../../../Shared/scripts/Interfaces/Agents/VisiblityTestResult";
-import { IDataStateOfSitecoreWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IDataStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfStorageSnapShots";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
+import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
+import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
+import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 
-export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibilityTestAgent {
+export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibilityTestAgent {
   private StateOfSitecoreWindow: any;
   private SelectedSnapshot: GuidData = null;
   WindowType: ScWindowType;
 
-  constructor(logger: ILoggerAgent) {
-    super(logger);
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore);
   }
 
-  Hydrate(stateOfSitecoreWindow: IDataStateOfSitecoreWindow, stateOfStorageSnapShots: IDataStateOfStorageSnapShots, windowType: ScWindowType, selectSnapShotId: GuidData) {
+  Hydrate(stateOfSitecoreWindow: IStateOfScUi, stateOfStorageSnapShots: IStateOfStorageSnapShots, windowType: ScWindowType, selectSnapShotId: GuidData) {
     this.Logger.FuncStart(this.Hydrate.name);
     this.StateOfSitecoreWindow = stateOfSitecoreWindow;
     this.SelectedSnapshot = selectSnapShotId;
@@ -43,7 +45,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
   VisibilityTestSnapShotSelected(currSelSnapshot: GuidData): VisiblityTestResult {
     let OneResult = new VisiblityTestResult(this.VisibilityTestSnapShotSelected.name);
 
-    OneResult.DidItPass = !StaticHelpers.IsNullOrUndefined(currSelSnapshot) && (currSelSnapshot.AsBracedGuid() !== GuidData.GetEmptyGuid().AsBracedGuid());
+    OneResult.DidItPass = !StaticHelpers.IsNullOrUndefined(currSelSnapshot) && (Guid.AsBracedGuid(currSelSnapshot) !== Guid.AsBracedGuid(  Guid.GetEmptyGuid()));
 
     if (!OneResult.DidItPass) {
       OneResult.FriendlyFailReason = "No snapshot selected";
@@ -52,45 +54,49 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
     return OneResult;
   }
 
-  VisibilityTestSnapShotable(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): VisiblityTestResult {
+  VisibilityTestSnapShotable(stateOfSitecoreWindow: IStateOfScUi): VisiblityTestResult {
     //todo may want to be able take snap shots of other window types
 
-    return this.VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow) && this.VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfSitecoreWindow);
+    return this.VisibilityTestDesktopOrContentEditorOrPackageDesigner(stateOfSitecoreWindow) && this.VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfSitecoreWindow);
   }
 
-  VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): VisiblityTestResult {
+  VisibilityTestIfDesktopMinOneConentEditorOpen(stateOfLiveHindSite: IStateOfScUi): VisiblityTestResult {
+    this.Logger.FuncStart(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
 
     visiblityTestResult.DidItPass = (
-      (stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop && stateOfSitecoreWindow.ScWindowStates.StateOfDesktop.IndexOfActiveFrame > -1)
+      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && (<IStateOfDesktop>stateOfLiveHindSite.StateOfScWindow.StateOf_).StateOfDTArea.ActiveDTFrameIndex > -1)
       ||
-      (stateOfSitecoreWindow.Meta.WindowType !== ScWindowType.Desktop));
+      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.ContentEditor));
 
     if (!visiblityTestResult.DidItPass) {
       visiblityTestResult.FriendlyFailReason = 'Requires an open Content Editor';
     }
 
+    this.Logger.FuncEnd(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name, visiblityTestResult.DidItPass.toString());
     return visiblityTestResult;
   }
 
-  VisibilityTestDesktopOrContentEditor(stateOfSitecoreWindow: IDataStateOfSitecoreWindow): VisiblityTestResult {
-    this.Logger.FuncStart(this.VisibilityTestDesktopOrContentEditor.name);
+  VisibilityTestDesktopOrContentEditorOrPackageDesigner(stateOfSitecoreWindow: IStateOfScUi): VisiblityTestResult {
+    this.Logger.FuncStart(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name);
 
-    let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestDesktopOrContentEditor.name);
+    let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name);
 
     if (this.StateOfSitecoreWindow) {
-      visiblityTestResult.DidItPass = (stateOfSitecoreWindow.Meta.WindowType === ScWindowType.ContentEditor
-        ||
-        stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop);
+      visiblityTestResult.DidItPass = (
+        stateOfSitecoreWindow.Meta.WindowType === ScWindowType.ContentEditor
+        || stateOfSitecoreWindow.Meta.WindowType === ScWindowType.Desktop
+        || stateOfSitecoreWindow.Meta.WindowType === ScWindowType.PackageDesigner
+      );
 
       if (!visiblityTestResult.DidItPass) {
         visiblityTestResult.FriendlyFailReason = 'Requires Content Editor or Desktop';
       }
     } else {
-      this.Logger.ErrorAndThrow(this.VisibilityTestDesktopOrContentEditor.name, 'null state');
+      this.ErrorHand.ErrorAndThrow(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name, 'null state');
     }
 
-    this.Logger.FuncEnd(this.VisibilityTestDesktopOrContentEditor.name);
+    this.Logger.FuncEnd(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name);
     return visiblityTestResult;
   }
 
@@ -105,7 +111,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
         break;
 
       case VisibilityType.DesktopOrContentEditor:
-        toReturn = this.VisibilityTestDesktopOrContentEditor(this.StateOfSitecoreWindow);
+        toReturn = this.VisibilityTestDesktopOrContentEditorOrPackageDesigner(this.StateOfSitecoreWindow);
         break;
 
       case VisibilityType.IfDesktopMin1ContentEditor:
@@ -148,6 +154,11 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
         toReturn = this.VisibilityTestWindowType(ScWindowType.LoginPage, this.WindowType);
         break;
 
+      case VisibilityType.Always:
+        toReturn = new VisiblityTestResult('Always visible');
+        toReturn.DidItPass = true; 
+        break;
+
       case VisibilityType.CommandIsRunning:
         //todo toReturnAgraget.TestResults.push( false; //todo
         break;
@@ -163,19 +174,19 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
         break;
 
       case VisibilityType.Unknown:
-        this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+        this.ErrorHand.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
         break;
 
 
 
 
       default:
-        this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+        this.ErrorHand.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
         break;
     }
 
     if (!toReturn) {
-      this.Logger.ErrorAndThrow(this.TestAgainstOneControl.name, 'null test result');
+      this.ErrorHand.ErrorAndThrow(this.TestAgainstOneControl.name, 'null test result');
     }
 
     this.Logger.FuncEnd(this.TestAgainstOneControl.name, toReturn.DidItPass.toString());
@@ -185,7 +196,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
   TestAgainstAllSetControllers(Command: IMenuCommandDefinition): VisiblityTestResultsBucket {
     this.Logger.FuncStart(this.TestAgainstAllSetControllers.name, Command.VisibilityControllers.length);
 
-    let allResults: VisiblityTestResultsBucket = new VisiblityTestResultsBucket(this.Logger);
+    let allResults: VisiblityTestResultsBucket = new VisiblityTestResultsBucket(this.HindeCore);
 
     if (this.StateOfSitecoreWindow) {
       if (Command.VisibilityControllers.length > 0) {
@@ -199,7 +210,7 @@ export class UiVisibilityTestAgent extends LoggableBase implements IUiVisibility
         }
       }
     } else {
-      this.Logger.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'null stateOfSitecoreWindow');
+      this.ErrorHand.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'null stateOfSitecoreWindow');
     }
 
     this.Logger.FuncEnd(this.TestAgainstAllSetControllers.name, allResults.HasFailures().toString());

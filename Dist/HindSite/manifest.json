@@ -15,6 +15,7 @@
       "js": [
         "AutoBuild/final/browser-polyfill.js",
         "AutoBuild/final/content.min.js"
+
       ],
 
       "all_frames": false

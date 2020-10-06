@@ -1,7 +1,8 @@
 ﻿import { SharedConst } from '../../../SharedConst';
-import { ILoggerAgent } from '../../../Interfaces/Agents/ILoggerAgent';
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+import { _HindeCoreBase } from '../../../LoggableBase';
 
-export class IterationDrone {
+export class IterationDrone extends _HindeCoreBase {
   IsExhausted: boolean;
   IsExhaustedMsg: string = 'Iteration helper exhausted';
   OperationCancelled: any;
@@ -9,11 +10,10 @@ export class IterationDrone {
   private MaxIterations: number;
   private NickName: string;
   private Timeout: number;
-  private Logger: ILoggerAgent;
   private LogThisDroneInstance: boolean;
 
-  constructor(logger: ILoggerAgent, nickname: string, logThisDroneInstance: boolean , maxIterations: number = null) {
-    this.Logger = logger;
+  constructor(hindeCore: IHindeCore, nickname: string, logThisDroneInstance: boolean, maxIterations: number = null) {
+    super(hindeCore);
     this.LogThisDroneInstance = logThisDroneInstance;
     if (!maxIterations) {
       maxIterations = SharedConst.Const.IterHelper.MaxCount.Default;
@@ -32,12 +32,17 @@ export class IterationDrone {
     if (this.CurrentIteration > 0) {
       this.CurrentIteration -= 1;
       this.Timeout += this.Timeout * SharedConst.Const.IterHelper.GrowthPerIteration;
+
+      if (this.TaskMonitor.IsCancelRequested()) {
+        this.ErrorHand.ErrorAndThrow('CANCEL REQUESTED', '-----------------------------------');
+      }
+
       if (this.Timeout > SharedConst.Const.IterHelper.Timeouts.Max) {
         this.Timeout = SharedConst.Const.IterHelper.Timeouts.Max;
       }
 
       if (this.LogThisDroneInstance) {
-        this.Logger.Log('DecrementAndKeepGoing: ' + this.NickName + ' ' + this.CurrentIteration + ':' + this.MaxIterations + ' | timeout: ' + this.Timeout);
+        this.Logger.Log(this.DecrementAndKeepGoing.name + ' ' + this.NickName + ' ' + this.CurrentIteration + ':' + this.MaxIterations + ' | cur. timeout: ' + this.Timeout);
       }
 
       toReturn = true;

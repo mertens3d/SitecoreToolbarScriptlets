@@ -16,6 +16,9 @@
   },
   KeyWords: {
     Html: {
+      Tags: {
+        Body: string,
+      }
       beforeend: InsertPosition,
       optgroup: string,
       Checkbox: string,
@@ -40,11 +43,15 @@
   },
   Settings: {
     Defaults: {
-      EnableLogging: boolean,
+      EnableDebugging: boolean,
       LastUsedLogToStorageKey: number,
       LogToStorage: boolean,
       UseCompactCss: boolean,
     }
+  },
+  QueryStringKey: {
+    XmlControl: string,
+
   },
   Regex: {
     ContentEditor: RegExp,
@@ -52,11 +59,14 @@
 
     NbSp: RegExp,
     QueryStrSeparatorQuest: RegExp,
+
     PageType: {
-      Desktop: RegExp
+      Default: RegExp
       Edit: RegExp
       Normal: RegExp
       Preview: RegExp
+      XmlControl: RegExp
+      PackageDesigner: RegExp
     },
   },
   UrlSuffix: {
@@ -64,6 +74,7 @@
     Login: string,
     LaunchPad: string,
     CE: string,
+    SitecoreShellApplicationsContentEditor: string,
     None: string,
     AboutBlank: string,
   },

@@ -1,6 +1,6 @@
-﻿import { InitResultContentEditorProxy } from "./InitResultContentEditorProxy";
+﻿import { InitReportContentEditorProxy } from "./InitResultContentEditorProxy";
 
-export class InitResultsDTFrameProxy {
-    InitResultContentEditorProxy: InitResultContentEditorProxy;
+export class ReportResultsInitDTFrameProxy {
+    InitResultContentEditorProxy: InitReportContentEditorProxy;
     DTFrameProxyInitialized: boolean = false;
 }

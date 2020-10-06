@@ -1,10 +1,10 @@
-﻿import { IDataOneDoc } from "./IDataOneDoc";
-import { _BaseFrameProxy } from "../../../../Content/scripts/Proxies/_BaseFrameProxy";
+﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
+import { CEFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 
 export interface IDataPublishChain {
-  TopLevelDoc: IDataOneDoc,
-  Iframe0Blue: _BaseFrameProxy;
-  DocToPublish: IDataOneDoc
-  JqIframe: _BaseFrameProxy;
-  MessageDialogIframeRed: _BaseFrameProxy;
+  TopScDocumentProxy: DocumentJacket,
+  Iframe0Blue: CEFrameProxy;
+  ScDocumentProxyToPublish: DocumentJacket
+  JqIframe: CEFrameProxy;
+  CEFrameRed: CEFrameProxy;
 }

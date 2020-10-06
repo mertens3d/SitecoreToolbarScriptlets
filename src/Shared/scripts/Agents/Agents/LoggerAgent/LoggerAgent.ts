@@ -3,16 +3,22 @@ import { BufferChar } from "../../../Enums/BufferChar";
 import { BufferDirection } from "../../../Enums/BufferDirection";
 import { GuidData } from "../../../Helpers/GuidData";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
+import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
+import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 import { IDataDebugCallback } from "../../../Interfaces/IDataDebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
-import { IError } from "../../../Interfaces/IError";
 import { LogWriterBuffer } from "./LogWriterBuffer";
 import { LoggerTimer } from "./LoggerTimer";
 
+
+export enum StyleMode {
+  Default = 0,
+  Highlight =1
+}
+
 export class LoggerAgent implements ILoggerAgent {
-  private MaxIndent: number = 10;
-  ErrorStack: IError[] = [];
+  private MaxIndent: number = 20;
   private AllLogWriters: ILoggerWriter[] = [];
   private __callDepth: number;
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
@@ -20,6 +26,18 @@ export class LoggerAgent implements ILoggerAgent {
   private HasWriters: boolean;
   Timer: LoggerTimer;
   UseTimeStamp: boolean = true;
+  private styleBgYellow: string = "[43m";
+  private styleEsc: string = "\x1b";
+  private styleFgBlue: string = "[34m";
+  private styleFgGreen: string = "[32m";
+  private styleFgMagenta: string = "[35m";
+  private styleFgRed: string = "[31m";
+  private styleReset: string = "[0m";
+  private AltColor: string;
+  readonly Discriminator = Discriminator.ILoggerAgent;
+
+  
+  private MaxDepthBeforeThrow: number = 2000; //this is to avoid extreme runaway code
 
   constructor() {
     this.Timer = new LoggerTimer;
@@ -27,6 +45,10 @@ export class LoggerAgent implements ILoggerAgent {
     this.AddWriter(this.BufferWriter);
     this.__callDepth = -1;
     this.LogVal('TimeStamp', this.Timer.LogTimeStamp());
+  }
+
+  Instantiate() {
+
   }
 
   FlushBuffer() {
@@ -40,6 +62,8 @@ export class LoggerAgent implements ILoggerAgent {
       this.Log(bufferAr[idx]);
     }
   }
+
+
 
   RemoveWriter(BufferWriter: LogWriterBuffer) {
     for (var idx = 0; idx < this.AllLogWriters.length; idx++) {
@@ -62,11 +86,11 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log("");
   }
 
-  ThrowIfNullOrUndefined(title: string, subject: any): void {
-    if (!this.IsNotNullOrUndefinedBool(title, subject)) {
-      throw 'Failed';
-    }
-  }
+  //IsNullOrUndefinedThrow(title: string, subject: any): void {
+  //  if (!this.IsNotNullOrUndefinedBool(title, subject)) {
+  //    throw 'Failed';
+  //  }
+  //}
 
   IsNotNullOrUndefinedBool(title, subject): boolean {
     var toReturn: boolean = false;
@@ -85,7 +109,7 @@ export class LoggerAgent implements ILoggerAgent {
     return toReturn;
   }
 
-  HandlerClearDebugText(self: ILoggerAgent, verify: boolean = false): void {
+  HandlerClearDebugText(self: IHindeCore, verify: boolean = false): void {
     this.FuncStart(this.HandlerClearDebugText.name);
     var proceed: boolean = true;
     if (verify) {
@@ -93,10 +117,10 @@ export class LoggerAgent implements ILoggerAgent {
     }
     if (proceed) {
       var newText = '--- Debug Text Reset ---';
-      self.__triggerAllDebugTextChangedCallbacks({
-        NewText: newText,
-        Append: false
-      });
+      //todo - put back? self.__triggerAllDebugTextChangedCallbacks({
+      //  NewText: newText,
+      //  Append: false
+      //});
     }
     this.FuncEnd(this.HandlerClearDebugText.name);
   }
@@ -127,7 +151,7 @@ export class LoggerAgent implements ILoggerAgent {
 
   LogAsJsonPretty(texValName: string, jsonObj: any) {
     try {
-      this.LogVal(texValName, JSON.stringify(jsonObj, null, 1));
+      this.LogVal(texValName, JSON.stringify(jsonObj, null, 2));
     } catch (err) {
       this.Log('Unable to stringify obj');
     }
@@ -151,15 +175,30 @@ export class LoggerAgent implements ILoggerAgent {
       }
     }
     textVal = textVal.toString();
-    textValName = StaticHelpers.BufferString(textValName.toString(), 50, BufferChar.space, BufferDirection.right);
-    const debugPrefix = '  ~~~  ';
-    this.Log(debugPrefix + textValName + ' : ' + textVal);
+    textValName = StaticHelpers.BufferString(textValName.toString(), 26, BufferChar.space, BufferDirection.right);
+    const debugPrefix = '~~ ';
+
+    let rawText: string = debugPrefix + textValName + ' : ' + textVal;
+
+    if (this.AltColor === this.styleFgBlue) {
+      this.AltColor = this.styleFgMagenta;
+    } else {
+      this.AltColor = this.styleFgBlue; 
+    }
+    let formattedText: string = this.StyleFormat(this.AltColor, rawText);
+    this.Log(formattedText);
   }
 
+  LogImportant(text) {
+    text = this.StyleFormat(this.styleBgYellow, text);
+    this.Log(text);
+  }
   async Log(text, optionalValue: string = '', hasPrefix = false) {
-    if (this.HasWriters) { 
+    if (this.HasWriters) {
+
+    
+
       var indent = '  ';
-      this.MaxIndent = 10;
 
       let indentDepth = this.__callDepth % this.MaxIndent;
       for (var idx = 0; idx < indentDepth; idx++) {
@@ -193,7 +232,7 @@ export class LoggerAgent implements ILoggerAgent {
           try {
             oneWriter.WriteText(text)
           } catch (err) {
-            console.log(this.WriteToAllWriters.name + ' ' + oneWriter.FriendlyName + ' | ' + err);
+            console.log(  this.WriteToAllWriters.name + ' ' + oneWriter.FriendlyName + ' | ' + err);
           }
         } else {
           console.log('Null writer');
@@ -207,6 +246,11 @@ export class LoggerAgent implements ILoggerAgent {
       var oneCallback: IDataDebugCallback = this.__debugTextChangedCallbacks[idx];
       oneCallback.Func(oneCallback.Caller, data);
     }
+  }
+
+
+  StyleFormat(color: string, text: string) {
+    return this.styleEsc + color + text + this.styleEsc + this.styleReset;
   }
 
   CtorName(ctorName: string) {
@@ -228,16 +272,22 @@ export class LoggerAgent implements ILoggerAgent {
     if (optionalValue.length > 0) {
       textOrFunc = textOrFunc + ' : ' + optionalValue;
     }
-    this.Log(textOrFunc, '', true);
+
+    let formatted = this.StyleFormat(this.styleFgGreen, textOrFunc);
+
+    this.Log(formatted, '', true);
     this.__callDepth++;
+    if (this.__callDepth > this.MaxDepthBeforeThrow) {
+      throw ('Logger - Max Depth Exceeded: ' + this.__callDepth);
+    }
   }
 
-  InstantiateStart(text: string): void {
-    this.FuncStart("[Instantiate] " + text);
+  CTORStart(text: string): void {
+    this.FuncStart("[CTOR] " + text);
   }
 
-  InstantiateEnd(text: string): void {
-    this.FuncEnd("[Instantiate] " + text);
+  CTOREnd(text: string): void {
+    this.FuncEnd("[CTOR] " + text);
   }
 
   FuncEnd(text, optionalValueInput?: number);
@@ -261,51 +311,11 @@ export class LoggerAgent implements ILoggerAgent {
     if (optionalValue.length > 0) {
       text = text + ' : ' + optionalValue;
     }
-
-    this.Log(text, optionalValue, true);
+    let formatted = this.StyleFormat(this.styleFgRed, text);
+    //this.Log(formatted, '', true);
+    this.Log(formatted, optionalValue, true);
   }
 
-  ErrorAndThrow(container: string, text: any): void {
-    this.ErrorAndContinue(container, text);
-    throw container + " " + text
-  }
-
-  ErrorAndContinue(container: string, text: any): void {
-    if (!container) {
-      container = 'unknown';
-    }
-
-    if (!text) {
-      text = 'unknown';
-    }
-
-    this.ErrorStack.push({
-      ContainerFunc: container,
-      ErrorString: text
-    });
-
-    this.Log('');
-    this.Log('\t\t** ERROR ** ' + container);
-    this.Log('');
-    this.Log('\t\t  ' + text);
-    this.Log('');
-    this.Log('\t\t** ERROR ** ' + container);
-    this.Log('');
-  }
-
-  WarningAndContinue(container: string, text: any): void {
-    if (!container) {
-      container = 'unknown';
-    }
-
-    if (!text) {
-      text = 'unknown';
-    }
-
-    this.Log('');
-    this.Log('\t\t** WARNING ** ' + container + ' ' + text);
-    this.Log('');
-  }
 
   NotNullCheck(title: string, value: any): void {
     if (typeof value === 'undefined') {

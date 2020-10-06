@@ -1,29 +1,47 @@
-﻿import { LoggableBase } from "../../../Content/scripts/Managers/LoggableBase";
-import { IDataStateOfDesktop } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDesktop";
-import { IDataStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfDTFrame";
-import { IDataStateOfTree } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfTree";
-import { IDataStateOfScContentTreeNode } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfScContentTreeNode";
-import { IDataStateOfContentEditor } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfContentEditor";
+﻿import { IStateOfContentEditor } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
+import { IStateOfDesktop } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
+import { IStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
+import { IStateOfScContentTreeNodeDeep } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
+import { IStateOfContentTree } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
+import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { IStateOfScContentTreeNodeFlat } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 
-export class StateHelpers extends LoggableBase {
+export class StateHelpers extends _HindeCoreBase {
+  GetActiveTreeNodeFromStateOfTreeFlat(stateOfTree: IStateOfContentTree): IStateOfScContentTreeNodeFlat {
+    let toReturn: IStateOfScContentTreeNodeDeep = null;
 
-  GetActiveTreeNodeFromStateOfTree(stateOfTree: IDataStateOfTree): IDataStateOfScContentTreeNode {
-    return stateOfTree.StateOfTreeNodes[stateOfTree.ActiveTreeNodeIndex];
+    return stateOfTree.ActiveNodeFlat;
+    //if (stateOfTree && stateOfTree.ActiveNodeCoord.SiblingIndex > -1 && stateOfTree.ActiveNodeCoord.LevelIndex > -1) {
+    //  try {
+    //    if (stateOfTree.ActiveNodeCoord.LevelIndex > -1) {
+    //      let activeLevelNodes: IStateOfScContentTreeNodeDeep[] = stateOfTree.StateOfScContentTreeNodeDeep[stateOfTree.ActiveNodeCoord.LevelIndex];
+    //      activeLevelNodes.forEach((stateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep) => {
+    //        if (stateOfScContentTreeNodeDeep.IsActive) {
+    //          toReturn = stateOfScContentTreeNodeDeep;
+    //        }
+    //      })
+    //    }
+    //    //toReturn = stateOfTree.StateOfScContentTreeNodeProxy[stateOfTree.ActiveNodeCoord.LevelIndex][stateOfTree.ActiveNodeCoord.SiblingIndex];
+    //  } catch (err) {
+    //    this.ErrorHand.WarningAndContinue(this.GetActiveTreeNodeFromStateOfTree.name, 'Invalid indices');
+    //  }
+    //}
+    //return toReturn;
   }
 
-  GetActiveTreeNodeFromStateOfContentEditor(stateOfContentEditor: IDataStateOfContentEditor): IDataStateOfScContentTreeNode {
-    return this.GetActiveTreeNodeFromStateOfTree(stateOfContentEditor.StateOfTree);
+  GetActiveTreeNodeFromStateOfContentEditor(stateOfContentEditor: IStateOfContentEditor): IStateOfScContentTreeNodeFlat {
+    return this.GetActiveTreeNodeFromStateOfTreeFlat(stateOfContentEditor.StateOfContentTree);
   }
 
-  GetActiveFrameFromStateOfDesktop(stateOfDesktop: IDataStateOfDesktop): IDataStateOfDTFrame {
-    return stateOfDesktop.StateOfDTFrames[stateOfDesktop.IndexOfActiveFrame];
+  GetActiveFrameFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfDTFrame {
+    return stateOfDesktop.StateOfDTArea.StateOfDTFrames[stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex];
   }
 
-  GetActiveContentEditFromStateOfDesktop(stateOfDesktop: IDataStateOfDesktop): IDataStateOfContentEditor {
-    let toReturn: IDataStateOfContentEditor = null;
-    if (stateOfDesktop && stateOfDesktop.IndexOfActiveFrame > -1) {
-      return stateOfDesktop.StateOfDTFrames[stateOfDesktop.IndexOfActiveFrame].StateOfContentEditor;
-    }
-    return toReturn;
-  }
+  //GetActiveContentEditFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfContentEditor {
+  //  let toReturn: IStateOfContentEditor = null;
+  //  if (stateOfDesktop && stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1) {
+  //    return stateOfDesktop.StateOfDTArea.StateOfDTFrames[stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex].StateOfHostedProxy;
+  //  }
+  //  return toReturn;
+  //}
 }
