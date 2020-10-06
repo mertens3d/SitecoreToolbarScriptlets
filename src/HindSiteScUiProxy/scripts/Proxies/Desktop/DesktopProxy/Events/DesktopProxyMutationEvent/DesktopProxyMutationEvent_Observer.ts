@@ -5,6 +5,7 @@ import { HindsiteEventHandler_Type } from "../../../../../../../Shared/scripts/E
 import { IDesktopProxyMutationEvent_Payload } from "./IDesktopProxyMutationEvent_Payload";
 
 export class DesktopProxyMutationEvent_Observer extends HindSiteEvent_Observer<IDesktopProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<IDesktopProxyMutationEvent_Payload> {
+  ShowLogActions: boolean = true;
   constructor(hindeCore: IHindeCore, callback: HindsiteEventHandler_Type) {
     super(hindeCore, DesktopProxyMutationEvent_Observer.name, callback);
   }

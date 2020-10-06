@@ -1,4 +1,6 @@
-﻿import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
+import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
+import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
@@ -6,20 +8,17 @@ import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/IComman
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
+import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
 import { RecipeForceAutoSnapShot } from "../Recipes/RecipeForceAutoSnapShot";
 import { RecipeInitFromQueryStr, RecipeSetStateFromMostRecent } from "../Recipes/RecipeInitFromQueryStr";
 import { RecipeRemoveItemFromStorage } from "../Recipes/RecipeRemoveItemFromStorage";
 import { RecipeSaveStateManual } from "../Recipes/RecipeSaveState";
 import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
-import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
-import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { ScUrlAgent } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
-import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 
 export class InternalCommandRunner extends _HindeCoreBase {
   Dependancies: ICommandDependancies;
 
-  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiAPI, scDocProxy: ScDocumentFacade) {
+  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiAPI, documentJacket: DocumentJacket) {
     super(hindeCore);
 
     this.Dependancies = {
@@ -27,7 +26,7 @@ export class InternalCommandRunner extends _HindeCoreBase {
       AutoSnapShotAgent: autoSnapShotAgent,
       ScUiProxy: scUiProxy,
       HindeCore: this.HindeCore,
-      ScDocProxy: scDocProxy
+      DocumentJacket: documentJacket
     }
   }
 

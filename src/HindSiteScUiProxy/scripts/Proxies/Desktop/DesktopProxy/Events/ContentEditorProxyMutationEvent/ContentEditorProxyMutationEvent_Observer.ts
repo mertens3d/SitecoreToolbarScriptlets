@@ -5,6 +5,7 @@ import { HindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Even
 import { IHindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer";
 
 export class ContentEditorProxyMutationEvent_Observer extends HindSiteEvent_Observer<IContentEditorProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<IContentEditorProxyMutationEvent_Payload>  {
+  ShowLogActions: boolean = true;
   private OwnerDTFrameProxy: DTFrameProxy;
   Friendly: string;
 

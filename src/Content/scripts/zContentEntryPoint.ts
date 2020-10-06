@@ -1,6 +1,6 @@
-import { HindSiteScUiAPI } from '../../HindSiteScUiProxy/scripts/HindSiteScUiProxy';
+import { DocumentJacket } from '../../DOMJacket/DocumentJacket';
+import { HindSiteScUiAPI } from "../../HindSiteScUiProxy/scripts/HindSiteScUiAPI";
 import { ScUiManager } from '../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager';
-import { ScDocumentFacade } from "../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/ErrorHandlerAgent";
 import { LoggerAgent } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent';
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter';
@@ -20,7 +20,7 @@ import { IContentBrowserFacade } from '../../Shared/scripts/Interfaces/Agents/IC
 import { IMessageBroker_Content } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { InitReportScWindowManager } from "../../Shared/scripts/Interfaces/Agents/InitResultsScWindowManager";
+import { ILoggerAgent } from '../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { ICommandRouterParams } from "../../Shared/scripts/Interfaces/ICommandRouterParams";
@@ -31,8 +31,6 @@ import { ContentMessageManager } from './Managers/ContentMessageManager';
 import { CommandRouter } from "./Proxies/CommandRouter";
 import { ContentBrowserFacade } from './Proxies/ContentBrowserProxy';
 import { MessageBroker_Content } from './Proxies/ContentMessageBroker';
-import { ILoggerAgent } from '../../Shared/scripts/Interfaces/Agents/ILoggerAgent';
-import { DocumentJacket } from '../../DOMJacket/DocumentJacket';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -48,7 +46,7 @@ class ContentEntry {
   HindeCore: IHindeCore;
   ErrorHand: ErrorHandlerAgent;
   TaskMonitor: TaskMonitor;
-  TopScDocumentStateLessproxy: ScDocumentFacade;
+  TopDocumentJacket: DocumentJacket;
 
   async StartUpContent() {
     this.Instantiate_HindeCore();
@@ -83,10 +81,9 @@ class ContentEntry {
 
   private async InstantiateDocumentJacket(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let documentJacket = new DocumentJacket(this.HindeCore, document);
+      this.TopDocumentJacket = new DocumentJacket(this.HindeCore, document);
 
-      await documentJacket.WaitForCompleteNAB_NativeDocument(this.InstantiateDocumentJacket.name)
-        .then(() => this.TopScDocumentStateLessproxy = new ScDocumentFacade(this.HindeCore, documentJacket))
+      await this.TopDocumentJacket.WaitForCompleteNAB_NativeDocument(this.InstantiateDocumentJacket.name)
         .then(() => resolve())
         .catch((err) => reject(this.InstantiateDocumentJacket.name + ' | ' + err));
     })
@@ -101,13 +98,13 @@ class ContentEntry {
 
       scUiMan = new ScUiManager(this.HindeCore);
 
-      this.ScUiAPI = new HindSiteScUiAPI(this.HindeCore, scUiMan, this.TopScDocumentStateLessproxy);
+      this.ScUiAPI = new HindSiteScUiAPI(this.HindeCore, scUiMan, this.TopDocumentJacket);
 
       this.AutoSnapShotAgent = new AutoSnapShotAgent(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiAPI);
 
       this.ContentBrowserProxy = new ContentBrowserFacade(this.HindeCore)
 
-      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiAPI, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.TopScDocumentStateLessproxy);
+      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiAPI, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.TopDocumentJacket);
 
       let contentMessageBroker: IMessageBroker_Content = new MessageBroker_Content(this.HindeCore, this.SettingsAgent,
         this.ScUiAPI, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
@@ -138,7 +135,7 @@ class ContentEntry {
       SelectSnapShotId: null,
     }
 
-    if (this.TopScDocumentStateLessproxy.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
+    if (this.TopDocumentJacket.UrlJacket.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
       setStateFromX.MsgFlag = MsgFlag.SetStateFromQueryString,
         this.CommandRouter.RouteCommand(setStateFromX);
     } else if ((this.SettingsAgent.GetByKey(SettingKey.AutoRestoreState)).ValueAsBool()) {
@@ -180,9 +177,13 @@ class ContentEntry {
   private Instantiate_HindeCore(): void {
     let logger: ILoggerAgent = new LoggerAgent();
     logger.Instantiate();
+    
+    this.TaskMonitor = new TaskMonitor(logger);
+
     this.ErrorHand = new ErrorHandlerAgent(this.TaskMonitor);
     this.ErrorHand.Instantiate();
-    this.TaskMonitor = new TaskMonitor(logger);
+
+
     this.TaskMonitor.IntroduceErrorHand(this.ErrorHand);
     this.TaskMonitor.Instantiate();
 

@@ -1,5 +1,5 @@
-﻿import { ScUrlAgent } from "../../Agents/Agents/UrlAgent/ScUrlAgent";
+﻿import { ScPageTypeResolver } from "../../Agents/Agents/UrlAgent/ScUrlAgent";
 
 export interface IDataBrowserTab {
-  ScUrlAgent: ScUrlAgent;
+  ScUrlAgent: ScPageTypeResolver;
 }

@@ -7,7 +7,7 @@ import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAg
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
 import { HindSiteSettingWrapper } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
-import { ScUrlAgent } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { ScPageTypeResolver } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
@@ -86,7 +86,7 @@ class PopUpControllerLayer {
 
   private InstantiateAgents_Controller() {
     let genericUrlAgent = new UrlJacket(this.HindeCore, this.BrowserProxy.Url)
-    this.ScUrlAgent = new ScUrlAgent(this.HindeCore, genericUrlAgent);
+    this.ScUrlAgent = new ScPageTypeResolver(this.HindeCore, genericUrlAgent);
     this.PopUpMessageBrokerAgent = new MessageBroker_PopUp(this.HindeCore, this.BrowserProxy, this.SettingsAgent);
   }
 

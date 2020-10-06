@@ -3,6 +3,8 @@ import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Even
 import { IDesktopProxyMutationEvent_Payload } from "./IDesktopProxyMutationEvent_Payload";
 
 export class DesktopProxyMutationEvent_Subject extends HindeSiteEvent_Subject<IDesktopProxyMutationEvent_Payload> {
+  ShowLogActions: boolean = true;
+
     constructor(hindeCore: IHindeCore) {
         super(hindeCore, DesktopProxyMutationEvent_Subject.name);
     }

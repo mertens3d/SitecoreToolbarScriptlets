@@ -2,14 +2,8 @@
 import { IHindSiteScUiAPI } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
-import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
-import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { IStateOfScContentTreeNodeDeep } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
-import { IStateOfContentTree } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
-import { IStateOfScWindow } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow";
 
 export class RecipeAutoSaveState extends _HindeCoreBase {
   private ScUiProxy: IHindSiteScUiAPI;

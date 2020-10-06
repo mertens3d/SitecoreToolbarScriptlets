@@ -2,4 +2,5 @@
 import { IDocumentProxyMutationEvent_Payload } from "./IDocumentProxyMutationEvent_Payload";
 
 export class DocumentProxyMutationEvent_Subject extends HindeSiteEvent_Subject<IDocumentProxyMutationEvent_Payload> {
+  ShowLogActions: boolean = true;
 }

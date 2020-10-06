@@ -3,6 +3,7 @@ import { HindeSiteEvent_Subject } from "../../../../../../../Shared/scripts/Even
 import { IDTAreaProxyMutationEvent_Payload } from "./IDTAreaProxyMutationEvent_Payload";
 
 export class DTAreaProxyMutationEvent_Subject extends HindeSiteEvent_Subject<IDTAreaProxyMutationEvent_Payload> {
+  ShowLogActions: boolean = true;
   constructor(hindeCore: IHindeCore) {
     super(hindeCore, DTAreaProxyMutationEvent_Subject.name);
   }

@@ -9,23 +9,22 @@ import { SharedConst } from "../Shared/scripts/SharedConst";
 
 export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
   protected UrlParts: IGenericUrlParts;
-  private Url: string;
+  private OriginalURL: string;
   //private BrowserProxy: IPopUpBrowserProxy;
 
   constructor(hindeCore: IHindeCore, url: string) { // browserProxy: IPopUpBrowserProxy
     super(hindeCore);
-    this.Url = url;
+    this.OriginalURL = url;
 
     this.ErrorHand.ThrowIfNullOrUndefined(UrlJacket.name, url);
     this.Init_GenericUrlAgent();
   }
 
-
   protected Init_GenericUrlAgent(): void {
     try {
       this.Logger.FuncStart(this.Init_GenericUrlAgent.name, UrlJacket.name);
 
-      this.SetFromHref(this.Url);
+      this.SetFromHref(this.OriginalURL);
       //if (this.BrowserProxy) {
       //  this.Init_FromBrowserProxy();
       //}
@@ -41,6 +40,10 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
 
   GetUrlParts(): IGenericUrlParts {
     return this.UrlParts;
+  }
+
+  GetOriginalURL(): string {
+    return this.OriginalURL;
   }
 
   QueryStringHasKey(key: QueryStrKey): boolean {
@@ -103,8 +106,6 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
   //  }
   //}
 
-
-
   private SetFromHref(href: string) {
     var parser = document.createElement('a');
     parser.href = href;// resultTab.url;
@@ -118,13 +119,7 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
       Anchor: parser.hash,
       HasError: false,
     }
-
-
-    this.Logger.LogImportant('parser.search ' + parser.search);
-    this.Logger.LogImportant('this.UrlParts ' + this.UrlParts);
-    this.Logger.LogImportant('this.UrlParts.UrlSearchParameters ' + this.UrlParts.UrlSearchParameters);
     this.Logger.LogAsJsonPretty('params', this.UrlParts.UrlSearchParameters.toString());
-
   }
 
   BuildFullUrlFromParts(): IAbsoluteUrl {

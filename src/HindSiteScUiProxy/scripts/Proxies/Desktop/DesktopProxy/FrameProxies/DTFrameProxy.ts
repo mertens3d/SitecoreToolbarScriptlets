@@ -1,5 +1,6 @@
-﻿import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
-import { ScUrlAgent } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
+import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
+import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
@@ -7,12 +8,11 @@ import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateofX";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfFrameStyling } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
+import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateofX";
 import { ContentEditorSFProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { PackageDesignerSFProxy } from "../../../PackageDesignerProxy";
-import { ScDocumentFacade } from "../../../../../Facades/ScDocumentFacade";
+import { PackageDesignerSFProxy } from "../../../PackageDesignerSFProxy";
 import { ContentEditorProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
 import { IContentEditorProxyMutationEvent_Payload } from "../Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
@@ -29,7 +29,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   //public ContentEditorProxy: ContentEditorProxy;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   public HostedStateFullProxy: IStateFullProxy;
-  ScUrlAgent: ScUrlAgent;
+  ScUrlAgent: ScPageTypeResolver;
 
   constructor(hindeCore: IHindeCore, frameJacket: FrameJacket) { //HTMLIFrameElement |
     super(hindeCore, frameJacket);
@@ -59,15 +59,18 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
           }
         })
         .then(() => {
-          let scWindowType: ScWindowType = this.ScDocumentProxy.ScUrlAgent.GetScWindowType();
-          this.ScUrlAgent = new ScUrlAgent(this.HindeCore, this.FrameJacket.DocumentJacket.UrlJacket)
+
+          let pageResolver = new ScPageTypeResolver(this.HindeCore, this.FrameJacket.GetUrlJacket())
+
+          let scWindowType: ScWindowType = pageResolver.GetScWindowType();
+          this.ScUrlAgent = new ScPageTypeResolver(this.HindeCore, this.FrameJacket.DocumentJacket.UrlJacket)
           switch (scWindowType) {
             case ScWindowType.ContentEditor:
-              let contentEditorProxy = new ContentEditorSFProxy(this.HindeCore, this.ScDocumentProxy, this.Friendly);
+              let contentEditorProxy = new ContentEditorSFProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly);
               this.HostedStateFullProxy = contentEditorProxy;
               break;
             case ScWindowType.PackageDesigner:
-              this.PackageDesignerProxy = new PackageDesignerSFProxy(this.HindeCore, this.ScDocumentProxy, this.Friendly)
+              this.PackageDesignerProxy = new PackageDesignerSFProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly)
               this.HostedStateFullProxy = this.PackageDesignerProxy;
               break;
             default:
@@ -147,8 +150,8 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
 
   //----------------------------------------------------------------------
 
-  GetContentDoc(): ScDocumentFacade {
-    return this.ScDocumentProxy;
+  GetDocumentJacket(): DocumentJacket {
+    return this.FrameJacket. DocumentJacket;
     //return new FactoryHelper(this.HindeCore).DataOneContentDocFactoryFromIframe(this);
   }
 

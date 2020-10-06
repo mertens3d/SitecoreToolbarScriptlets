@@ -1,23 +1,22 @@
-﻿import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
+﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ScDocumentFacade } from "../../../../../Facades/ScDocumentFacade";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
+import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
 import { IContentTreeProxyMutationEvent_Payload } from '../Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
-import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
 
 export class DTStartBarProxy extends _HindeCoreBase {
 
   private __statBarElem: HTMLElement;
-  private AssociatedScDocumentProxy: ScDocumentFacade;
+  private DocumentJacket: DocumentJacket;
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
 
-  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentFacade) {
+  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
     super(hindeCore);
     this.Logger.CTORStart(DTStartBarProxy.name);
-    this.AssociatedScDocumentProxy = associatedDoc;
+    this.DocumentJacket = documentJacket;
     this.Logger.CTOREnd(DTStartBarProxy.name);
   }
 
@@ -33,24 +32,26 @@ export class DTStartBarProxy extends _HindeCoreBase {
 
 
   GetStartBarButtonById(targetId: string) {
-    return this.AssociatedScDocumentProxy.querySelector('[id=' + targetId + ']');
+    return this.DocumentJacket.QuerySelector('[id=' + targetId + ']');
   }
 
   GetStartBarElement(): HTMLElement {
     if (!this.__statBarElem) {
-      this.__statBarElem = this.AssociatedScDocumentProxy.querySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
+      this.__statBarElem = this.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
     }
 
     return this.__statBarElem;
   }
 
   async TriggerRedButton(): Promise<void> {
+    this.Logger.FuncStart(this.TriggerRedButton.name);
     try {
-      await this.AssociatedScDocumentProxy.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, )
+      await this.DocumentJacket.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, )
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.TriggerRedButton.name, err));
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.TriggerRedButton.name, err);
     }
+    this.Logger.FuncEnd(this.TriggerRedButton.name);
   }
 
   private async GetAssociatedStartBarButton(dTFrameProxyMutationEventPayload: IDTFrameProxyMutationEvent_Payload): Promise<DesktopStartBarButtonProxy> {
@@ -67,7 +68,7 @@ export class DTStartBarProxy extends _HindeCoreBase {
       });
 
       if (!foundStartBarButtonProxy) {
-        foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.HindeCore, dTFrameProxyMutationEventPayload.FrameId, this.AssociatedScDocumentProxy);
+        foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.HindeCore, dTFrameProxyMutationEventPayload.FrameId, this.DocumentJacket);
         await foundStartBarButtonProxy.Instantiate_DestopStartBarButtonProxy()
           .catch((err) => reject(this.GetAssociatedStartBarButton.name + ' | ' + err));
 

@@ -1,17 +1,16 @@
-﻿import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
+﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
+import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
+import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
+import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
-import { ScDocumentFacade } from "../../../../../Facades/ScDocumentFacade";
 import { _BaseStateFullProxy } from "./_StateProxy";
-import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 
 export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implements IStateFullProxy {
-  protected readonly FrameJacket: FrameJacket = null;
+  public readonly FrameJacket: FrameJacket = null;
   Id: string = null;
   abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
-  ScDocumentProxy: ScDocumentFacade;
   abstract Friendly: string;
   RecipeBasics: RecipeBasics;
 
@@ -21,7 +20,6 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
 
     this.ErrorHand.ThrowIfNullOrUndefined(_BaseScFrameProxy.name, [frameJacket]);
     this.FrameJacket = frameJacket;
-    this.ScDocumentProxy = new ScDocumentFacade(this.HindeCore, this.FrameJacket.DocumentJacket);
     this.Id = 'base_' + this.FrameJacket.GetNativeIframeId();// Guid.NewRandomGuid().Raw;
   }
 
@@ -46,8 +44,8 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
   //  return toReturn;
   //}
 
-  GetContentDoc(): ScDocumentFacade {
-    return this.ScDocumentProxy;//  NativeIFrameProxy.GetNativeContentDoc();
+  GetDocumentJacket(): DocumentJacket {
+    return this.FrameJacket. DocumentJacket;//  NativeIFrameProxy.GetNativeContentDoc();
     //return  this.DataOneContentDocFactoryFromIframe(this.DocumentProxy);
   }
 

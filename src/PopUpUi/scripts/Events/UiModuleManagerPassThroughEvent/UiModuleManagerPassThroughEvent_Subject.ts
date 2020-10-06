@@ -3,6 +3,7 @@ import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeC
 import { IUiModuleManagerPassThroughEvent_Payload } from "./IUiModuleManagerPassThroughEvent_Payload";
 
 export class UiModuleManagerPassThroughEvent_Subject extends HindeSiteEvent_Subject<IUiModuleManagerPassThroughEvent_Payload> {
+  ShowLogActions: boolean = true;
   constructor(hindeCore: IHindeCore) {
     super(hindeCore, UiModuleManagerPassThroughEvent_Subject.name);
   }

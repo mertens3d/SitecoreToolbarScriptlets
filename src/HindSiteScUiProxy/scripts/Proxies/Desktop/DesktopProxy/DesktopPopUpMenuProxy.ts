@@ -1,9 +1,9 @@
-﻿import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
-import { ScDocumentFacade } from "../../../../Facades/ScDocumentFacade";
-import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+﻿import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
-//import { RecipeAddNewContentEditorToDesktop } from "../../../ContentApi/Recipes/RecipeAddContentEditorToDesktop";
+import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
+import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
+import { ElementJacket } from "../../../../../DOMJacket/ElementJacket";
 
 export class DTPopUpMenuProxy extends _HindeCoreBase {
   RecipeBasics: RecipeBasics;
@@ -13,39 +13,42 @@ export class DTPopUpMenuProxy extends _HindeCoreBase {
 
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
-  RecipeAddNewPackageDesignerToDesktop(scDocumentProxy: ScDocumentFacade): Promise<void> {
+
+  RecipeAddNewPackageDesignerToDesktop(documentJacket: DocumentJacket): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RecipeAddNewPackageDesignerToDesktop.name);
-      this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewPackageDesignerToDesktop.name, scDocumentProxy);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewPackageDesignerToDesktop.name, documentJacket);
 
-      let popUp: HTMLElement;
+      let popUp: ElementJacket;
 
-      await scDocumentProxy.DocumentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenu.DevelopmentTools])
-        .then(() => this.RecipeBasics.WaitForTimePeriod(1000, 'waiting 1 sec'))
-        .then(() => scDocumentProxy.DocumentJacket.WaitForAndReturnFoundElem('.scPopup'))
-        .then((htmlElement: HTMLElement) => {
-          popUp = htmlElement
-        }        )
-        .then(() => this.RecipeBasics.WaitForTimePeriod(2000, 'waiting 2 sec'))
-        //.then((htmlElement: HTMLElement) => this.RecipeBasics.WaitAndReturnFoundFromContainer(htmlElement, ':scope > tr', DTPopUpMenuProxy.name))
-        .then(() => this.RecipeBasics.WaitAndReturnFoundFromContainer(popUp, 'tr', DTPopUpMenuProxy.name))
-        .then((htmlElement: HTMLElement) => {
-          this.Logger.LogImportant('found the TR');
-          htmlElement.click();
-        })
-        //.then((htmlElement: HTMLElement) => scDocumentProxy.DocumentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenu.PackageDesigner]))
-        .then(() => resolve())
-        .catch((err) => reject(this.RecipeAddNewPackageDesignerToDesktop.name + ' ' + err));
+      await
+        this.RecipeBasics.WaitForTimePeriod(1, 'waiting ') // it seems to need this wait when mixed in with content editor frames
+          .then(() => documentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenu.DevelopmentTools]))
+          .then(() => this.RecipeBasics.WaitForTimePeriod(1000, 'waiting 1 sec'))
+          .then(() => documentJacket.WaitForAndReturnFoundElemJacketFromDoc('.scPopup'))
+          .then((htmlElement: ElementJacket) => {
+            popUp = htmlElement
+          })
+          .then(() => this.RecipeBasics.WaitForTimePeriod(1000, 'waiting 2 sec'))
+          //.then((htmlElement: HTMLElement) => this.RecipeBasics.WaitAndReturnFoundFromContainer(htmlElement, ':scope > tr', DTPopUpMenuProxy.name))
+          .then(() => popUp.WaitAndReturnFoundElemJacketFromElemJacket('tr', DTPopUpMenuProxy.name))
+          .then((htmlElement: ElementJacket) => {
+            this.Logger.LogImportant('found the TR');
+            htmlElement.NativeElement.click();
+          })
+          //.then((htmlElement: HTMLElement) => scDocumentProxy.DocumentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenu.PackageDesigner]))
+          .then(() => resolve())
+          .catch((err) => reject(this.RecipeAddNewPackageDesignerToDesktop.name + ' ' + err));
 
       this.Logger.FuncEnd(this.RecipeAddNewPackageDesignerToDesktop.name);
     });
   }
 
-  RecipeAddNewContentEditorToDesktop(scDocumentProxy: ScDocumentFacade): Promise<void> {
+  RecipeAddNewContentEditorToDesktop(documentJacket: DocumentJacket): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewContentEditorToDesktop.name, scDocumentProxy);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewContentEditorToDesktop.name, documentJacket);
 
-      await scDocumentProxy.DocumentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption])
+      await documentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenuLeftOption])
         .then(() => resolve())
         .catch((err) => reject(this.RecipeAddNewContentEditorToDesktop.name + ' ' + err));
     });

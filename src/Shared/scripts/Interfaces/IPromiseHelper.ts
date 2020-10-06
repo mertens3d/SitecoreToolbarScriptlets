@@ -1,9 +1,7 @@
-﻿import { ReadyStateNAB } from "../Enums/ReadyState";
-import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
-import { IDataPublishChain } from "./Data/IDataPublishChain";
-import { IAbsoluteUrl } from "./IAbsoluteUrl";
-import { IScVerSpec } from "./IScVerSpec";
+﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
 import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+import { ReadyStateNAB } from "../Enums/ReadyState";
+import { IAbsoluteUrl } from "./IAbsoluteUrl";
 
 export interface IRecipeBasics {
   //RaceWaitAndClick(scStartButton: IScVerSpec, arg1: ScDocumentProxy);
@@ -13,8 +11,8 @@ export interface IRecipeBasics {
   //WaitForAndReturnFoundElem(ContentDoc: ScDocumentProxy, SettingsHidden: string);
   //WaitForAndReturnFoundElem(ContentDoc: ScDocumentProxy, SettingsHidden: string, maxIteration: number);
   //WaitForIframeElemAndReturnWhenReady(ContentDoc: ScDocumentProxy, ContentIFrame1: string, arg2: string): Promise<DTFrameProxy>;
-  WaitForNewIframe(allIframeDataAtBeginning: any, targetDoc: ScDocumentFacade): Promise<DTFrameProxy>;
-  WaitForCompleteNAB_DataOneDoc(targetDoc: ScDocumentFacade, friendly: string): Promise<ReadyStateNAB>;
+  WaitForNewIframe(allIframeDataAtBeginning: any, documentJacket: DocumentJacket): Promise<DTFrameProxy>;
+  WaitForCompleteNAB_DataOneDoc(targetDoc: DocumentJacket, friendly: string): Promise<ReadyStateNAB>;
   //WaitForThenClick(arg0: string[], arg1: ScDocumentProxy);
-  GetTopLevelIframe(targetDoc: ScDocumentFacade): Promise<DTFrameProxy>
+  GetTopLevelIframe(targetDoc: DocumentJacket): Promise<DTFrameProxy>
 }

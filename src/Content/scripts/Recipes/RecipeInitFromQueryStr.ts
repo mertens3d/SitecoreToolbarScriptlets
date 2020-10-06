@@ -55,8 +55,8 @@ export class RecipeInitFromQueryStr extends _ContentRecipeBase implements IComma
   private async PvtInitFromQueryString(): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.PvtInitFromQueryString.name);
-      if (this.Dependancies.ScDocProxy.ScUrlAgent.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
-        let qsValue: string = (this.Dependancies.ScDocProxy.ScUrlAgent. GetQueryStringValueByKey(QueryStrKey.hsTargetSs));
+      if (this.Dependancies.DocumentJacket.UrlJacket.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
+        let qsValue: string = (this.Dependancies.DocumentJacket.UrlJacket.GetQueryStringValueByKey(QueryStrKey.hsTargetSs));
 
         if (Guid.IsValidGuidStr(qsValue)) {
           let targetGuid: GuidData = Guid.ParseGuid(qsValue, false);

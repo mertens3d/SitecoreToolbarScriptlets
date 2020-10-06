@@ -1,6 +1,6 @@
-﻿import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
+﻿import { DocumentJacket } from '../../../DOMJacket/DocumentJacket';
+import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
 import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
-import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { ReadyStateNAB } from '../Enums/ReadyState';
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
@@ -86,24 +86,19 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
         timeElapsed = new Date().getTime() - startTimeStamp;
         await iterationJr.Wait();
       }
+            resolve();
 
-      if (iterationJr.IsExhausted) {
-        this.Logger.Log(iterationJr.IsExhaustedMsg);
-        reject(iterationJr.IsExhaustedMsg);
-      } else {
-        resolve();
-      }
       this.Logger.FuncEnd(this.WaitForTimePeriod.name, friendly);
     });
   }
 
-  async WaitForCompleteNAB_DataOneDoc(scDocumentProxy: ScDocumentFacade, friendly: string): Promise<ReadyStateNAB> {
+  async WaitForCompleteNAB_DataOneDoc(documentJacket: DocumentJacket, friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNAB_DataOneDoc.name, friendly);
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_DataOneDoc.name,[scDocumentProxy, friendly]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_DataOneDoc.name,[documentJacket, friendly]);
 
-      await scDocumentProxy.WaitForCompleteNAB_ScDocumentProxy(friendly)// this.WaitForCompleteNABDocumentNative(targetDoc.ContentDoc, friendly)
+      await documentJacket.WaitForCompleteNAB_NativeDocument(friendly)// this.WaitForCompleteNABDocumentNative(targetDoc.ContentDoc, friendly)
         .then((result: ReadyStateNAB) => {
           result.LogDebugValues();
           resolve(result);
@@ -114,10 +109,10 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     });
   }
 
-  async GetTopLevelIframe(targetDoc: ScDocumentFacade): Promise<DTFrameProxy> {
+  async GetTopLevelIframe(documentJacket: DocumentJacket): Promise<DTFrameProxy> {
     var toReturn: DTFrameProxy = null;
     let frameHelper = new FrameHelper(this.HindeCore);
-    await frameHelper.GetIFramesAsBaseFrameProxies(targetDoc)
+    await frameHelper.GetIFramesAsBaseFrameProxies(documentJacket)
       .then((allIframe: DTFrameProxy[]) => {
         var maxZVal = -1;
         if (allIframe && allIframe.length > 0) {
@@ -185,12 +180,12 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
   //  });
   //}
 
-  async WaitForNewIframe(allIframesBefore: DTFrameProxy[], targetDoc: ScDocumentFacade): Promise<DTFrameProxy> {
+  async WaitForNewIframe(allIframesBefore: DTFrameProxy[], documentJacket: DocumentJacket): Promise<DTFrameProxy> {
     return new Promise<DTFrameProxy>(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForNewIframe.name);
       this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, targetDoc]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, documentJacket]);
 
       var toReturn: DTFrameProxy = null;
 
@@ -202,7 +197,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
 
         let frameHelper = new FrameHelper(this.HindeCore);
 
-        await frameHelper.GetIFramesAsBaseFrameProxies(targetDoc)
+        await frameHelper.GetIFramesAsBaseFrameProxies(documentJacket)
           .then((result) => allIframesAfter = result)
           .catch((err) => reject(this.WaitForNewIframe.name + ' ' + err));
 

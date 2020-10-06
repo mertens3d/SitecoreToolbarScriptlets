@@ -29,12 +29,16 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
         try {
           if (this.TaskMonitor) {
             this.TaskMonitor.RequestCancel();
+          } else {
+            console.log('No Task Monitor found');
           }
         } catch (err) {
-          console.log(err);
+          console.log('Error in: ' + this.ThrowIfNullOrUndefined.name + '  ' + err);
         }
 
-        this.ErrorAndThrow(title, 'Failed Null check');
+        this.ErrorAndThrow(title, 'Failed Null check A');
+      } else {
+        //passed
       }
     }
   }
@@ -47,7 +51,7 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     }
     else {
       if (typeof testSubject === 'undefined' || testSubject === null) {
-        throw (title + ' Failed Null check');
+        throw (title + ' Failed Null check B');
       }
     }
   }

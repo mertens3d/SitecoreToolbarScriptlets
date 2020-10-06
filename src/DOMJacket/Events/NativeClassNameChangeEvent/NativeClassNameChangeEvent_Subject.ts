@@ -1,15 +1,15 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IStateOfScContentTreeNodeFlat } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
-import { ScContentTreeNodeProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ScContentTreeNodeProxy";
-import { INativeClassNameChangeEvent_Payload } from "./INativeClassNameChangeEvent_Payload";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
+import { ElementJacket } from "../../ElementJacket";
+import { INativeClassNameChangeEvent_Payload } from "./INativeClassNameChangeEvent_Payload";
 
 export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<INativeClassNameChangeEvent_Payload> {
-  private TreeElement: any;
-  constructor(hindeCore: IHindeCore, treeElement: HTMLElement) {
+  ShowLogActions: boolean = true;
+  private TreeElement: HTMLElement;
+  constructor(hindeCore: IHindeCore, treeElementJacket: ElementJacket) {
     super(hindeCore, NativeClassNameChangeEvent_Subject.name);
-    this.TreeElement = treeElement;
+    this.TreeElement = treeElementJacket.NativeElement;
     this.InitTreeMutationEvent_Observer();
   }
 

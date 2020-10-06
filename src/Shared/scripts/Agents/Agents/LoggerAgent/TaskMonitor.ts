@@ -25,13 +25,11 @@ export class TaskMonitor implements IInterruptAgent {
   }
 
   IntroduceErrorHand(errorHand: IErrorHandlerAgent) {
-
     this.ErrorHand = errorHand;
   }
   Instantiate() {
     if (this.ErrorHand) {
       this.TaskMutationEvent_Subject = new TaskListMutationEvent_Subject(this.Logger, this.ErrorHand, TaskMonitor.name);
-
     } else {
       throw ('no error handler attached');
     }
@@ -58,7 +56,6 @@ export class TaskMonitor implements IInterruptAgent {
   }
 
   AsyncTaskCompleted(name: string) {
-    this.Logger.FuncStart(this.AsyncTaskCompleted.name, name);
     this.MarkActivity();
     let foundIndex: number = this.TaskBucketStarted.indexOf(name);
     if (foundIndex > -1) {
@@ -73,8 +70,6 @@ export class TaskMonitor implements IInterruptAgent {
     }
 
     this.BuildAndSendPayload(TaskMutationType.TaskCompleted);
-    this.LogValues();
-    this.Logger.FuncEnd(this.AsyncTaskCompleted.name, name);
   }
 
   private LogValues() {
@@ -91,8 +86,6 @@ export class TaskMonitor implements IInterruptAgent {
   }
 
   private BuildAndSendPayload(mutationType: TaskMutationType) {
-    console.log('Sending payload');
-
     let payload: ITaskListMutationEvent_Payload = {
       MutationType: mutationType,
       IsTaskEmpty: this.IsTaskListEmpty(),
@@ -144,6 +137,7 @@ export class TaskMonitor implements IInterruptAgent {
   }
 
   RequestCancel(): void {
+    console.log("Cancel Requested");
     this.CancelRequestedFlag = true;
   }
 

@@ -1,21 +1,23 @@
-﻿import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
+﻿import { ElementJacket } from "../../../../../../../DOMJacket/ElementJacket";
+import { ElementDivJacket } from "../../../../../../../DOMJacket/ElementDivJacket";
+import { ElementImgJacket } from "../../../../../../../DOMJacket/ElementImgJacket";
+import { ElementAnchorJacket } from "../../../../../../../DOMJacket/ElementAnchorJacket";
+import { RecipeBasics } from "../../../../../../../Shared/scripts/Classes/RecipeBasics";
+import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
 import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
+import { IStateOfScContentTreeNodeFlat } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../../../../../Shared/scripts/LoggableBase";
-import { RecipeBasics } from "../../../../../../../Shared/scripts/Classes/RecipeBasics";
-import { StaticHelpers } from "../../../../../../../Shared/scripts/Classes/StaticHelpers";
-import { IContentTreeProxyMutationEvent_Payload } from "../../../../Desktop/DesktopProxy/Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload";
-import { IStateOfScContentTreeNodeFlat } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 
 //scContentTreeNode is the name sitecore uses
 export class ScContentTreeNodeProxy extends _HindeCoreBase {
-  private ScContentTreeNodeDivElem: HTMLDivElement;
+  private ScContentTreeNodeDivElem: ElementDivJacket;
   private RecipeBasics: RecipeBasics;
 
-  private LinkNodeElem: HTMLAnchorElement;
-  private glyphElem: HTMLImageElement;
+  private LinkNodeElem: ElementAnchorJacket;
+  private glyphElem: ElementImgJacket;
   private Children: ScContentTreeNodeProxy[] = [];
   private StateOfScContentTreeNode: IStateOfScContentTreeNodeDeep = {
     // leave in this order to make it easier to debug when looking at the data in devtools. This is the order it will log out (and maybe store)
@@ -35,10 +37,10 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
   private HasBeenHarvested: boolean = false;
   private: number;
 
-  constructor(hindeCore: IHindeCore, sourceElement: HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number)
-  constructor(hindeCore: IHindeCore, sourceElement: HTMLImageElement, level: number, siblingIndex: number, totalSiblings: number)
-  constructor(hindeCore: IHindeCore, sourceElement: HTMLAnchorElement, level: number, siblingIndex: number, totalSiblings: number)
-  constructor(hindeCore: IHindeCore, sourceElement: HTMLImageElement | HTMLAnchorElement | HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number) {
+  //constructor(hindeCore: IHindeCore, sourceElement: HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number)
+  //constructor(hindeCore: IHindeCore, sourceElement: HTMLImageElement, level: number, siblingIndex: number, totalSiblings: number)
+  //constructor(hindeCore: IHindeCore, sourceElement: HTMLAnchorElement, level: number, siblingIndex: number, totalSiblings: number)
+  constructor(hindeCore: IHindeCore, sourceElement: ElementJacket, level: number, siblingIndex: number, totalSiblings: number) {
     super(hindeCore);
 
     if (sourceElement) {
@@ -46,12 +48,12 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
       this.StateOfScContentTreeNode.Coord.SiblingIndex = siblingIndex;
       this.StateOfScContentTreeNode.Coord.LevelIndex = level;
 
-      if (sourceElement.hasAttribute('src')) {
-        this.InferFromImageElement(<HTMLImageElement>sourceElement);
-      } else if (sourceElement.hasAttribute('href')) {
-        this.InferFromAnchorElement(<HTMLAnchorElement>sourceElement);
-      } else if (sourceElement.classList.contains('scContentTreeNode')) {
-        this.InferFromDivElement(<HTMLDivElement>sourceElement)
+      if (sourceElement.NativeElement.hasAttribute('src')) {
+        this.InferFromImageElement(<HTMLImageElement>sourceElement.NativeElement);
+      } else if (sourceElement.NativeElement.hasAttribute('href')) {
+        this.InferFromAnchorElement(<HTMLAnchorElement>sourceElement.NativeElement);
+      } else if (sourceElement.NativeElement.classList.contains('scContentTreeNode')) {
+        this.InferFromDivElement(<HTMLDivElement>sourceElement.NativeElement)
       } else {
         this.ErrorHand.ErrorAndThrow(ScContentTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElement));
       }
@@ -72,28 +74,28 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
   private InferFromDivElement(divElement: HTMLDivElement) {
     if (divElement) {
-      this.ScContentTreeNodeDivElem = divElement;
+      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.HindeCore, divElement);
     }
   }
 
   private InferFromAnchorElement(anchorElement: HTMLAnchorElement) {
     if (anchorElement) {
       this.Logger.Log(this.InferFromAnchorElement.name);
-      this.ScContentTreeNodeDivElem = <HTMLDivElement>anchorElement.parentElement
+      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.HindeCore, <HTMLDivElement>anchorElement.parentElement)
     }
   }
 
   private InferFromImageElement(imageElement: HTMLImageElement) {
     if (imageElement) {
-      this.ScContentTreeNodeDivElem = <HTMLDivElement>imageElement.parentElement
+      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.HindeCore, < HTMLDivElement > imageElement.parentElement)
     }
   }
 
-  private async GetGlyphNodeElem(): Promise<HTMLImageElement> {
+  private async GetGlyphNodeElem(): Promise<ElementImgJacket> {
     return new Promise(async (resolve, reject) => {
-      await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.ScContentTreeNodeDivElem, ":scope > img", this.GetGlyphNodeElem.name)
-        .then((htmlElement: HTMLImageElement) => {
-          resolve(htmlElement)
+      await this.ScContentTreeNodeDivElem.WaitAndReturnFoundElemJacketFromElemJacket(":scope > img", this.GetGlyphNodeElem.name)
+        .then((elemImgJacket: ElementImgJacket) => {
+          resolve(elemImgJacket)
         })
         .catch((err) => {
           reject(this.GetGlyphNodeElem.name + ' | ' + err)
@@ -106,10 +108,10 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     return toReturn;
   }
 
-  private async GetLinkNodeElem(): Promise<HTMLAnchorElement> {
+  private async GetLinkNodeElem(): Promise<ElementAnchorJacket> {
     return new Promise(async (resolve, reject) => {
-      await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.ScContentTreeNodeDivElem, ":scope > a", this.Friendly())
-        .then((htmlAnchorElement: HTMLAnchorElement) => {
+      await this.ScContentTreeNodeDivElem.WaitAndReturnFoundElemJacketFromElemJacket(":scope > a", this.Friendly())
+        .then((htmlAnchorElement: ElementAnchorJacket) => {
           resolve(htmlAnchorElement)
         })
         .catch((err) => {
@@ -166,11 +168,11 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
         this.Children = [],
 
           await this.GetLinkNodeElem()
-            .then((htmlAnchorElement: HTMLAnchorElement) => {
+          .then((htmlAnchorElement: ElementAnchorJacket) => {
               this.LinkNodeElem = htmlAnchorElement
             })
             .then(() => this.GetGlyphNodeElem())
-            .then((htmlImageElement: HTMLImageElement) => {
+          .then((htmlImageElement: ElementImgJacket) => {
               this.glyphElem = htmlImageElement
             })
             .then(() => {
@@ -178,7 +180,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
               this.StateOfScContentTreeNode.IsActive = this.QueryIsActive();
               this.StateOfScContentTreeNode.IsExpanded = this.QueryIsExpanded();
-              this.StateOfScContentTreeNode.Friendly = this.GetNodeLinkText(this.LinkNodeElem);
+              this.StateOfScContentTreeNode.Friendly = this.LinkNodeElem.NativeElement.innerText;
               this.StateOfScContentTreeNode.ItemId = this.GetApparentItemId(this.glyphElem);
               this.StateOfScContentTreeNode.IconSrc = this.GetIconSrc();
               this.StateOfScContentTreeNode.MainIconSrc = this.GetMainIconSrc();
@@ -198,8 +200,8 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     });
   }
 
-  private GetApparentItemId(htmlImageElement: HTMLImageElement): GuidData {
-    let glyphNodeIdSuffix = htmlImageElement.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
+  private GetApparentItemId(htmlImageElement: ElementImgJacket): GuidData {
+    let glyphNodeIdSuffix = htmlImageElement.NativeElement.id.replace(ContentConst.Const.Names.SC.TreeGlyphPrefix, '');
     let toReturnGuidData: GuidData = Guid.ParseGuid(glyphNodeIdSuffix, true);
     return toReturnGuidData;
   }
@@ -208,10 +210,10 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     let toReturn: string
     //((document.getElementById('Tree_Node_709C05C504394E1A9D4711E824C87B39')).parentElement).querySelector('.scContentTreeNodeIcon').src
     //((document.getElementById('Tree_Node_EB443C0BF923409E85F3E7893C8C30C2')).parentElement).querySelector('.scContentTreeNodeIcon').outerHTML
-    let foundElement: HTMLImageElement = <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
+    let foundElement: ElementImgJacket = <ElementImgJacket>this.ScContentTreeNodeDivElem.querySelector(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
 
     if (foundElement) {
-      toReturn = foundElement.src;
+      toReturn = foundElement.NativeElement.src;
     }
 
     return toReturn;
@@ -222,9 +224,10 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
       try {
         let toReturn: ScContentTreeNodeProxy[] = [];
 
-        let childNodes = this.ScContentTreeNodeDivElem.querySelectorAll(':scope > div > ' + ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
+        let childNodes = this.ScContentTreeNodeDivElem.NativeElement.querySelectorAll(':scope > div > ' + ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
         childNodes.forEach((childNode: HTMLDivElement, index: number) => {
-          toReturn.push(new ScContentTreeNodeProxy(this.HindeCore, childNode, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length))
+          let childJacket = new ElementDivJacket(this.HindeCore, childNode);
+          toReturn.push(new ScContentTreeNodeProxy(this.HindeCore, childJacket, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length))
         });
 
         let PromiseAr: Promise<void>[] = [];
@@ -242,9 +245,10 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     let toReturn: string
     let penultimateNode: ScContentTreeNodeProxy = this;
 
-    let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
+    let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.NativeElement.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
     if (penultimateElem) {
-      penultimateNode = new ScContentTreeNodeProxy(this.HindeCore, penultimateElem, 0, 0, 1);
+      let penElemJacket: ElementDivJacket = new ElementDivJacket(this.HindeCore, penultimateElem);
+      penultimateNode = new ScContentTreeNodeProxy(this.HindeCore, penElemJacket, 0, 0, 1);
     }
 
     if (penultimateNode !== null) {
@@ -299,7 +303,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
   }
 
   private QueryIsActive(): boolean {
-    let classList = this.LinkNodeElem.classList;
+    let classList = this.LinkNodeElem.NativeElement.classList;
     let toReturn: boolean = classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive);
     return toReturn;
   }
@@ -310,12 +314,12 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
       this.Logger.Log('activating node: ' + this.StateOfScContentTreeNode.Friendly);
 
-      await this.RecipeBasics.WaitForElemToHaveClassOrReject(this.LinkNodeElem,
+      await this.RecipeBasics.WaitForElemToHaveClassOrReject(this.LinkNodeElem.NativeElement,
         [ContentConst.Const.ClassNames.SC.scContentTreeNodeActive, ContentConst.Const.ClassNames.SC.scContentTreeNodeNormal],
         this.StateOfScContentTreeNode.Friendly)
-      this.LinkNodeElem.click();
+      this.LinkNodeElem.NativeElement.click();
 
-      await this.RecipeBasics.WaitForElemToHaveClassOrReject(this.LinkNodeElem,
+      await this.RecipeBasics.WaitForElemToHaveClassOrReject(this.LinkNodeElem.NativeElement,
         [ContentConst.Const.ClassNames.SC.scContentTreeNodeActive],
         this.StateOfScContentTreeNode.Friendly)
         .then(() => resolve())
@@ -337,7 +341,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
   async ExpandNode(): Promise<void> {
     try {
       if (!this.QueryIsExpanded()) {
-        this.glyphElem.click();
+        this.glyphElem.NativeElement.click();
       }
       //.catch((err) => this.ErrorHand.ErrorAndThrow(this.ExpandNode.name, err));
     }
@@ -352,14 +356,14 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
   IsContentTreeNode() {
     var toReturn: boolean = false;
-    var className = this.ScContentTreeNodeDivElem.className;
+    var className = this.ScContentTreeNodeDivElem.NativeElement.className;
     toReturn = className === ContentConst.Const.ClassNames.SC.ContentTreeNode;
     return toReturn;
   }
 
   private QueryIsExpanded(): boolean {
     var toReturn: boolean = false;
-    var srcAttr = this.glyphElem.getAttribute('src');
+    var srcAttr = this.glyphElem.NativeElement.getAttribute('src');
     if (srcAttr !== null) {
       if (srcAttr.indexOf(ContentConst.Const.Names.SC.TreeExpandedPng.sc920) > -1) {
         toReturn = true;

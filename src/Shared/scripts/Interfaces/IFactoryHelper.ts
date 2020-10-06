@@ -1,5 +1,4 @@
-﻿import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
-import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+﻿import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
 export interface IFactoryHelper {
   BaseFramePromiseFactory(arg0: HTMLIFrameElement, arg1: string);

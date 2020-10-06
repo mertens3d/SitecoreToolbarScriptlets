@@ -10,12 +10,12 @@ import { IScUrlAgent } from "../../../Interfaces/Jackets/IScUrlAgent";
 import { _HindeCoreBase } from "../../../LoggableBase";
 import { SharedConst } from "../../../SharedConst";
 
-export class ScUrlAgent extends _HindeCoreBase implements IScUrlAgent {
+export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
   public UrlJacket: IUrlJacket;
 
   constructor(hindeCore: IHindeCore, urlJacket: IUrlJacket) {
     super(hindeCore);
-    this.ErrorHand.ThrowIfNullOrUndefined(ScUrlAgent.name, [urlJacket]);
+    this.ErrorHand.ThrowIfNullOrUndefined(ScPageTypeResolver.name, [urlJacket]);
     this.UrlJacket = urlJacket;
   }
 

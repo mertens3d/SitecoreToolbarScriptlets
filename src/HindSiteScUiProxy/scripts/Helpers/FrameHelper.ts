@@ -1,11 +1,10 @@
-﻿import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
-import { ReadyStateNAB } from "../../../Shared/scripts/Enums/ReadyState";
+﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
+import { FrameJacket } from "../../../DOMJacket/FrameJacket";
+import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { ScDocumentFacade } from "../../Facades/ScDocumentFacade";
-import { FrameJacket } from "../../../DOMJacket/FrameJacket";
 
 export class FrameHelper extends _HindeCoreBase {
   private factoryHelper: FactoryHelper;
@@ -52,12 +51,12 @@ export class FrameHelper extends _HindeCoreBase {
     });
   }
 
-  async GetIFramesAsDTFrameProxies(dataOneDoc: ScDocumentFacade): Promise<DTFrameProxy[]> {
+  async GetIFramesAsDTFrameProxies(documentJacket: DocumentJacket): Promise<DTFrameProxy[]> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let frameJackets: FrameJacket[] = dataOneDoc.DocumentJacket.GetHostedFrameJackets();
+      let frameJackets: FrameJacket[] = documentJacket.GetHostedFrameJackets();
 
       let promiseAr: Promise<DTFrameProxy>[] = [];
 
@@ -79,12 +78,12 @@ export class FrameHelper extends _HindeCoreBase {
     });
   }
 
-  async GetIFramesAsBaseFrameProxies(targetDoc: ScDocumentFacade): Promise<DTFrameProxy[]> {
+  async GetIFramesAsBaseFrameProxies(targetDocumentJacket: DocumentJacket): Promise<DTFrameProxy[]> {
     return new Promise((resolve, reject) => {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let NativeScIframeProxyAr: FrameJacket[] = targetDoc.DocumentJacket.GetHostedFrameJackets();
+      let NativeScIframeProxyAr: FrameJacket[] = targetDocumentJacket.GetHostedFrameJackets();
 
       //if (iframeAr) {
       //  iframeAr.forEach(async (iframeElem: HTMLIFrameElement, ifrIdx) => {

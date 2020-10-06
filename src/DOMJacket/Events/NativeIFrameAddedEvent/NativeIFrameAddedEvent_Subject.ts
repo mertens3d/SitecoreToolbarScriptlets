@@ -5,6 +5,7 @@ import { IFrameJacketAddRemoveEvent_Payload } from "./INativeIFrameAddedEvent_Pa
 import { DocumentJacket } from "../../DocumentJacket";
 
 export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IFrameJacketAddRemoveEvent_Payload>  {
+  ShowLogActions: boolean = true;
   private DocumentJacket: DocumentJacket;
   private HindeCore: IHindeCore;
 
@@ -88,7 +89,7 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
         let self = this;
         let mutationObserver = new MutationObserver((mutations: MutationRecord[]) => { self.CallBackOnNativeMutation(mutations); });
         //let desktop: HTMLElement = <HTMLElement> this.NativeDocument.getElementsByTagName(SharedConst.Const.KeyWords.Html.Tags.Body)[0];
-        let desktop: HTMLElement = <HTMLElement>this.DocumentJacket.getElementById('Desktop');
+        let desktop: HTMLElement = <HTMLElement>this.DocumentJacket.GetElementById('Desktop');
         if (desktop) {
           mutationObserver.observe(desktop, { attributes: false, subtree: false, childList: true });
         }

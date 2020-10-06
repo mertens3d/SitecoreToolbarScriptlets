@@ -1,15 +1,15 @@
-﻿import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
+﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
+import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
 import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ScDocumentFacade } from "../../../../../Facades/ScDocumentFacade";
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 
 export class DesktopStartBarButtonProxy extends _HindeCoreBase {
-  private AssociatedDoc: ScDocumentFacade;
+  private DocumentJacket: DocumentJacket;
   private ContainerSpanElement: HTMLElement;
   private FoundStartBarButton: HTMLElement;
   private RecipeBasics: RecipeBasics;
@@ -17,9 +17,9 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
 
   public FrameId: string;
 
-  constructor(hindeCore: IHindeCore, iframeElemId: string, associatedDoc: ScDocumentFacade) {
+  constructor(hindeCore: IHindeCore, iframeElemId: string, documentJacket: DocumentJacket) {
     super(hindeCore);
-    this.AssociatedDoc = associatedDoc;
+    this.DocumentJacket = documentJacket;
     this.FrameId = iframeElemId;
 
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
@@ -29,7 +29,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
     try {
       this.StartBarButtonElemId = ContentConst.Const.Names.Desktop.StartBarApplicationPrefix + this.FrameId;
       let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
-      this.FoundStartBarButton = this.AssociatedDoc.querySelector(querySelectBtn);
+      this.FoundStartBarButton = this.DocumentJacket.QuerySelector(querySelectBtn);
 
       await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.FoundStartBarButton, ':scope > div > span', this.Instantiate_DestopStartBarButtonProxy.name)
         .then((containerSpanElement: HTMLElement) => this.ContainerSpanElement = containerSpanElement);

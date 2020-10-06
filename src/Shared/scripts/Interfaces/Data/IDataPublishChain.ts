@@ -1,10 +1,10 @@
-﻿import { CEFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
-import { ScDocumentFacade } from "../../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
+﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
+import { CEFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 
 export interface IDataPublishChain {
-  TopScDocumentProxy: ScDocumentFacade,
+  TopScDocumentProxy: DocumentJacket,
   Iframe0Blue: CEFrameProxy;
-  ScDocumentProxyToPublish: ScDocumentFacade
+  ScDocumentProxyToPublish: DocumentJacket
   JqIframe: CEFrameProxy;
   CEFrameRed: CEFrameProxy;
 }

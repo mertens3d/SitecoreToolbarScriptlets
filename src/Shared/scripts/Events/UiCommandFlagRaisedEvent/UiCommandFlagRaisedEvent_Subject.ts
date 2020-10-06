@@ -3,6 +3,7 @@ import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeC
 import { IUiCommandFlagRaisedEvent_Payload } from "./IUiCommandFlagRaisedEvent_Payload";
 
 export class UiCommandFlagRaisedEvent_Subject extends HindeSiteEvent_Subject<IUiCommandFlagRaisedEvent_Payload> {
+  ShowLogActions: boolean = true;
   constructor(hindeCore: IHindeCore) {
     super(hindeCore, UiCommandFlagRaisedEvent_Subject.name);
   }

@@ -1,8 +1,11 @@
-﻿import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
+﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
+import { ScPageTypeResolver } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
 import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";
 import { DefaultStateOfScUiProxy } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScUiProxy";
 import { DefaultStateOfScWindow } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScWindowProxy";
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
+import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
 import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
@@ -10,37 +13,39 @@ import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScWindowFacade } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
+import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IDataFriendly } from '../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
 import { IDataMetaData } from '../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfContentEditor } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
-import { IStateOf_ } from "../../../Shared/scripts/Interfaces/Data/States/IStateofX";
-import { IStateOfDesktop } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop';
 import { IStateOfScWindow } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow';
+import { IStateOf_ } from "../../../Shared/scripts/Interfaces/Data/States/IStateofX";
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
-import { ScDocumentFacade } from "../../Facades/ScDocumentFacade";
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 
 export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
-  private ScDocumentFacade: ScDocumentFacade;
   SettingsAgent: ISettingsAgent;
   TabSessionId: string;
   StateFullProxy: IStateFullProxy;
+  private DocumentJacket: DocumentJacket;
+  private ScPageTypeResolver: ScPageTypeResolver;
 
-  constructor(hindeCore: IHindeCore, scDocumentFacade: ScDocumentFacade) {
+  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
     super(hindeCore);
     this.Logger.CTORStart(ScWindowFacade.name);
-    this.ScDocumentFacade = scDocumentFacade;
+    this.DocumentJacket = documentJacket;
+    this.Instantiate();
     this.Logger.CTOREnd(ScWindowFacade.name);
   }
 
-  async Instantiate_ScWindowFacade(): Promise<void> {
+  private Instantiate() {
+    this.ScPageTypeResolver = new ScPageTypeResolver(this.HindeCore, this.DocumentJacket.UrlJacket);
+  }
+
+  async InstantiateAsyncMembers_ScWindowFacade(): Promise<void> {
     try {
-      this.Logger.FuncStart(this.Instantiate_ScWindowFacade.name);
+      this.Logger.FuncStart(this.InstantiateAsyncMembers_ScWindowFacade.name);
 
       this.TabSessionId = sessionStorage.getItem(ContentConst.Const.Storage.SessionKey);
 
@@ -49,28 +54,28 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
         sessionStorage.setItem(ContentConst.Const.Storage.SessionKey, this.TabSessionId);
       }
 
-      await this.ScDocumentFacade.WaitForCompleteNAB_ScDocumentProxy('Window.Document')// recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
+      await this.DocumentJacket.WaitForCompleteNAB_NativeDocument('Window.Document')// recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
         .then((result: ReadyStateNAB) => {
-          let windowType: ScWindowType = this.ScDocumentFacade.ScUrlAgent.GetScWindowType();
+          let windowType: ScWindowType = this.ScPageTypeResolver.GetScWindowType();
 
           if (windowType === ScWindowType.Desktop) {
-            this.StateFullProxy = new DesktopSFProxy(this.HindeCore, this.ScDocumentFacade);
+            this.StateFullProxy = new DesktopSFProxy(this.HindeCore, this.DocumentJacket);
           } else if (windowType === ScWindowType.ContentEditor) {
-            this.StateFullProxy = new ContentEditorSFProxy(this.HindeCore, this.ScDocumentFacade, 'Solo Content Editor doc');
+            this.StateFullProxy = new ContentEditorSFProxy(this.HindeCore, this.DocumentJacket, 'Solo Content Editor doc');
           };
         })
         .then(() => this.StateFullProxy.InstantiateAsyncMembers())
         .then(() => this.StateFullProxy.WireEvents())
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.Instantiate_ScWindowFacade.name, err));
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers_ScWindowFacade.name, err));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Instantiate_ScWindowFacade.name, err);
+      this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers_ScWindowFacade.name, err);
     }
 
-    this.Logger.FuncEnd(this.Instantiate_ScWindowFacade.name);
+    this.Logger.FuncEnd(this.InstantiateAsyncMembers_ScWindowFacade.name);
   }
 
   GetCurrentPageType(): ScWindowType {
-    return this.ScDocumentFacade.ScUrlAgent.GetScWindowType()
+    return this.ScPageTypeResolver.GetScWindowType()
   }
 
   //GetTopLevelDoc(): ScDocumentProxy {
@@ -82,7 +87,7 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
   //  return this.ScDocumentProxy;
   //}
 
-  async SetCompactCss(targetDoc: ScDocumentFacade) {
+  async SetCompactCss(documentJacket: DocumentJacket) {
     //await this.ContentEditorProxy.SetCompactCss();
   }
 
@@ -90,11 +95,15 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
     return new Promise(async (resolve, reject) => {
       let toReturn: IStateOfScWindow = new DefaultStateOfScWindow();
 
-      await this.StateFullProxy.GetState()
-        .then((stateOf_: IStateOf_) => toReturn.StateOf_ = stateOf_)
-        .then(() => toReturn.StateOf_.StatefullDisciminatorFriendly = StateFullProxyDisciminator[toReturn.StateOf_.StatefullDisciminator])
-        .then(() => resolve(toReturn))
-        .catch((err) => reject(this.GetState.name + ' | ' + err));
+      if (this.StateFullProxy) {
+        await this.StateFullProxy.GetState()
+          .then((stateOf_: IStateOf_) => toReturn.StateOf_ = stateOf_)
+          .then(() => toReturn.StateOf_.StatefullDisciminatorFriendly = StateFullProxyDisciminator[toReturn.StateOf_.StatefullDisciminator])
+          .then(() => resolve(toReturn))
+          .catch((err) => reject(this.GetState.name + ' | ' + err));
+      } else {
+        resolve(toReturn)
+      }
     });
   }
 
@@ -119,10 +128,10 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
   PublishActiveCE() {
     return new Promise(async (resolve, reject) => {
       if (this.GetCurrentPageType() == ScWindowType.ContentEditor) {
-        await (<ContentEditorSFProxy> this.StateFullProxy).PublishItem()
+        await (<ContentEditorSFProxy>this.StateFullProxy).PublishItem()
           .then(() => resolve());
       } else if (this.GetCurrentPageType() == ScWindowType.Desktop) {
-        (<DesktopSFProxy> this.StateFullProxy).PublishItem()
+        (<DesktopSFProxy>this.StateFullProxy).PublishItem()
           .then(() => resolve())
           .catch((err) => reject(this.PublishActiveCE.name + ' | ' + err));
       } else {
@@ -187,7 +196,7 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
 
   PopulateMetaData(snapshotFlavor: SnapShotFlavor, stateOfScWindow: IStateOfScWindow): IDataMetaData {
     let toReturn: IDataMetaData = new DefaultMetaData();
-    toReturn.WindowType = this.ScDocumentFacade.ScUrlAgent.GetScWindowType();
+    toReturn.WindowType = this.ScPageTypeResolver.GetScWindowType();
     toReturn.TimeStamp = new Date();
     toReturn.SessionId = this.TabSessionId;
     toReturn.Flavor = snapshotFlavor;

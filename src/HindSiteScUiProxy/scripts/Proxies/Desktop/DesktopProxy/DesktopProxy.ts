@@ -1,12 +1,14 @@
+import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
+import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReport_DesktopProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy";
+import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
-import { ScDocumentFacade } from "../../../../Facades/ScDocumentFacade";
 import { DTPopUpMenuProxy } from "./DesktopPopUpMenuProxy";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
@@ -14,27 +16,23 @@ import { DesktopProxyMutationEvent_Subject } from "./Events/DesktopProxyMutation
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
-import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 
 export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.Desktop;
   //DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
-  private AssociatedDoc: ScDocumentFacade;
+  private DocumentJacket: DocumentJacket;
   private DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
   private DTAreaProxy: DTAreaProxy;
   private DTPopUpMenuProxy: DTPopUpMenuProxy;
   private DTStartBarProxy: DTStartBarProxy;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
 
-  constructor(hindeCore: IHindeCore, associatedDoc: ScDocumentFacade) {
+  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
     super(hindeCore);
     this.Logger.CTORStart(DesktopSFProxy.name);
 
-    if (associatedDoc) {
-      this.AssociatedDoc = associatedDoc;
+    if (documentJacket) {
+      this.DocumentJacket = documentJacket;
     } else {
       this.ErrorHand.ErrorAndThrow(DesktopSFProxy.name, 'No associated doc');
     }
@@ -48,10 +46,10 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
 
       let initReportDesktopProxy = new InitReport_DesktopProxy();
 
-      this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.AssociatedDoc);
+      this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.DocumentJacket);
       this.DTAreaProxy.InstantiateAsyncMembers();
 
-      this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.AssociatedDoc);
+      this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.DocumentJacket);
       this.DTStartBarProxy.Instantiate_DTStartBarProxy();
 
       this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
@@ -98,24 +96,24 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     try {
       let promAr: Promise<void>[] = [];
 
-      this.DTAreaProxy.SetState(stateOfDesktop.StateOfDTArea)
+      await this.DTAreaProxy.SetState(stateOfDesktop.StateOfDTArea)
         .then((dtFramesNeeded: IDTFramesNeeded) => {
-          this.Logger.LogAsJsonPretty('dtFramesNeeded', dtFramesNeeded);
-
           dtFramesNeeded.DiscriminatorAr.forEach((disciminator: StateFullProxyDisciminator) => {
             if (disciminator === StateFullProxyDisciminator.ContentEditor) {
-              promAr.push(this.AddContentEditorAsync());
+              promAr.push(this.AddContentEditorFrameAsync());
             } else if (disciminator === StateFullProxyDisciminator.PackageDesigner) {
-              promAr.push(this.AddPackageDesignerAsync())
+              promAr.push(this.AddPackageDesignerFrame())
             } else {
-              this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled disciminator ')
+              this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled discriminator ')
             }
           })
         })
-        .then(() => Promise.all(promAr))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.SetState.name, err));
+
+      await Promise.all(promAr)
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.SetState.name, err));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.SetState.name, err);
+      this.ErrorHand.ErrorAndThrow(this.SetState.name + ' ' + DesktopSFProxy.name, err);
     }
 
     this.TaskMonitor.AsyncTaskCompleted(this.SetState.name);
@@ -132,38 +130,42 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     await this.DTAreaProxy.PublishTopFrame();
   }
 
-  async AddPackageDesignerAsync(): Promise<void> {
-
+  async AddPackageDesignerFrame(): Promise<void> {
+    this.Logger.FuncStart(this.AddPackageDesignerFrame.name);
     try {
       this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
 
-      await this.DTStartBarProxy.TriggerRedButton()
-        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddContentEditorAsync.name))
-        .then(() => this.DTPopUpMenuProxy.RecipeAddNewPackageDesignerToDesktop(this.AssociatedDoc))
-        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddContentEditorAsync.name))//ui-widget-overlay ui-front
-        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddContentEditorAsync.name))
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err));
+      await
+        //this.RecipeBasics.WaitForTimePeriod(10000, '10 sec')
+        this.DTStartBarProxy.TriggerRedButton()
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddPackageDesignerFrame.name))
+        .then(() => this.DTPopUpMenuProxy.RecipeAddNewPackageDesignerToDesktop(this.DocumentJacket))
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddPackageDesignerFrame.name))//ui-widget-overlay ui-front
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddPackageDesignerFrame.name))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddPackageDesignerFrame.name, err));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err);
+      this.ErrorHand.ErrorAndThrow(this.AddPackageDesignerFrame.name, err);
     }
-
+    this.Logger.FuncEnd(this.AddPackageDesignerFrame.name);
   }
-  async AddContentEditorAsync(): Promise<void> {
+  async AddContentEditorFrameAsync(): Promise<void> {
+    this.Logger.FuncStart(this.AddContentEditorFrameAsync.name);
     try {
       this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
 
       await this.DTStartBarProxy.TriggerRedButton()
-        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddContentEditorAsync.name))
-        .then(() => this.DTPopUpMenuProxy.RecipeAddNewContentEditorToDesktop(this.AssociatedDoc))
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddContentEditorFrameAsync.name))
+        .then(() => this.DTPopUpMenuProxy.RecipeAddNewContentEditorToDesktop(this.DocumentJacket))
         // sitecore briefly pops up a div inside of iframe jqueryModalDialogsFrame with a class of ui-widget-overlay ui-front that appears to block mouse clicks
         // this pause is intended to allow time for it to finish its work and be removed.
         // at some point this could be modified to wait for a shorter amount of time, and then look to make sure the div is not present
-        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddContentEditorAsync.name))//ui-widget-overlay ui-front
-        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddContentEditorAsync.name))
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err));
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddContentEditorFrameAsync.name))//ui-widget-overlay ui-front
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddContentEditorFrameAsync.name))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorFrameAsync.name, err));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.AddContentEditorAsync.name, err);
+      this.ErrorHand.ErrorAndThrow(this.AddContentEditorFrameAsync.name, err);
     }
+    this.Logger.FuncEnd(this.AddContentEditorFrameAsync.name);
   }
 
   OnAreaProxyMutationEvent(dTAreaProxyMutationEvent_Payload: IDTAreaProxyMutationEvent_Payload) {
@@ -187,7 +189,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   //  //}
   //}
 
-  GetAssociatedDoc(): ScDocumentFacade {
-    return this.AssociatedDoc;
+  GetAssociatedDoc(): DocumentJacket {
+    return this.DocumentJacket;
   }
 }

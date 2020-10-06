@@ -99,6 +99,7 @@ export class FrameJacket extends _HindeCoreBase {
   async WaitForCompleteNABHtmlIframeElement(friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNABHtmlIframeElement.name, friendly);
+      this.Logger.Log(this.DocumentJacket.UrlJacket.GetOriginalURL());
 
       if (this.HtmlIFrameElement) {
         var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForCompleteNABHtmlIframeElement.name, false);

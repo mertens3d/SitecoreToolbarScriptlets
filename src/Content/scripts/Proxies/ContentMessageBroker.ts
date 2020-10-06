@@ -7,17 +7,15 @@ import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IC
 import { IContentBrowserFacade } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 import { IMessageBroker_Content } from "../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScUrlAgent } from "../../../Shared/scripts/Interfaces/Jackets/IScUrlAgent";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
+import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
-import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
-import { ScDocumentFacade } from "../../../HindSiteScUiProxy/Facades/ScDocumentFacade";
 
 export class MessageBroker_Content extends _HindeCoreBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
