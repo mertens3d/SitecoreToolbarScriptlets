@@ -64,7 +64,7 @@ export class SharedConst {
 
       PageType: {
         //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
-        Default: /.*default.aspx/ig,
+        Default: /\/sitecore\/shell/ig, // don't do default.aspx, some servers don't deliver that...actually don't server default.aspx...i think i'll need to test against 'shell;
         Edit: /sc_itemid=.*sc_mode=edit/ig,
         Normal: /sc_itemid=.*sc_mode=normal/ig,
         Preview: /sc_itemid=.*sc_mode=preview/ig,

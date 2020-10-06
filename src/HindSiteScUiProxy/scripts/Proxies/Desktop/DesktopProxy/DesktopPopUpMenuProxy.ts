@@ -24,13 +24,13 @@ export class DTPopUpMenuProxy extends _HindeCoreBase {
       await
         this.RecipeBasics.WaitForTimePeriod(1, 'waiting ') // it seems to need this wait when mixed in with content editor frames
           .then(() => documentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenu.DevelopmentTools]))
-          .then(() => this.RecipeBasics.WaitForTimePeriod(1000, 'waiting 1 sec'))
+          .then(() => this.RecipeBasics.WaitForTimePeriod(10, 'waiting for sitecore to catch up'))
           .then(() => documentJacket.WaitForAndReturnFoundElemJacketFromDoc('.scPopup'))
           .then((htmlElement: ElementJacket) => {
             popUp = htmlElement
           })
-          .then(() => this.RecipeBasics.WaitForTimePeriod(1000, 'waiting 2 sec'))
-          .then(() => popUp.WaitAndReturnFoundElemJacketFromElemJacket('tr', DTPopUpMenuProxy.name))
+          .then(() => this.RecipeBasics.WaitForTimePeriod(10, 'waiting'))
+          .then(() => popUp.WaitAndReturnFoundElemJacketFromElemJacket('img[src$="packager.png"]', DTPopUpMenuProxy.name))  /// can't use TR....it's not guaranteed to be the first one. If powershell tools are installed it will be
           .then((htmlElement: ElementJacket) => {
             this.Logger.LogImportant('found the TR');
             htmlElement.NativeElement.click();
