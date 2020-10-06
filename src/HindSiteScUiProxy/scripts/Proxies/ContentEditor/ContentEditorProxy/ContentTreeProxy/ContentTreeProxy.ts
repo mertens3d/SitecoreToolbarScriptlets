@@ -19,6 +19,13 @@ import { ContentTreeProxyMutationEvent_Subject } from "../../../Desktop/DesktopP
 import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNodeProxy';
 
 //ContentTree is the name Sitecore uses
+export class BuiltInContentTreeNodeResolver extends _HindeCoreBase {
+
+  GetBuiltInNode() {
+
+  }
+}
+
 export class ContentTreeProxy extends _HindeCoreBase {
   private _treeNodeProxy: ScContentTreeNodeProxy;
   private DocumentJacket: DocumentJacket;
@@ -104,7 +111,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
         var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.ItemId);
 
         await this.TreeContainerElemJacket.WaitAndReturnFoundElemJacketFromElemJacket('[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
-          .then((elemJacket: ElementJacket) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth))
+          .then((elemJacket: ElementJacket) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth, null))
           .then(() => scContentTreeNodeProxy.Instantiate())
           .then(() => resolve(scContentTreeNodeProxy))
           .catch((err) => reject(this.GetTreeNodeByGlyph.name + ' | ' + err));
@@ -218,7 +225,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
           await rootParent.WaitAndReturnFoundElemJacketFromElemJacket(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
             .then(async (firstChildGlyphNode: ElementImgJacket) => {
-              this._treeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, firstChildGlyphNode, 0, 0, 1)
+              this._treeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, firstChildGlyphNode, 0, 0, 1, null)
               await this._treeNodeProxy.Instantiate();
             })
             .catch((err) => reject(this.GetTreeNodeProxy.name + ' | ' + err));

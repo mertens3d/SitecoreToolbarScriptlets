@@ -19,22 +19,17 @@ export class DTPopUpMenuProxy extends _HindeCoreBase {
       this.Logger.FuncStart(this.RecipeAddNewPackageDesignerToDesktop.name);
       this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewPackageDesignerToDesktop.name, documentJacket);
 
-      let popUp: ElementJacket;
+      let popUpElementJacket: ElementJacket;
 
       await
         this.RecipeBasics.WaitForTimePeriod(1, 'waiting ') // it seems to need this wait when mixed in with content editor frames
           .then(() => documentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenu.DevelopmentTools]))
-          .then(() => this.RecipeBasics.WaitForTimePeriod(10, 'waiting for sitecore to catch up'))
+          .then(() => this.RecipeBasics.WaitForTimePeriod(1, 'waiting for sitecore to catch up'))
           .then(() => documentJacket.WaitForAndReturnFoundElemJacketFromDoc('.scPopup'))
-          .then((htmlElement: ElementJacket) => {
-            popUp = htmlElement
-          })
-          .then(() => this.RecipeBasics.WaitForTimePeriod(10, 'waiting'))
-          .then(() => popUp.WaitAndReturnFoundElemJacketFromElemJacket('img[src$="packager.png"]', DTPopUpMenuProxy.name))  /// can't use TR....it's not guaranteed to be the first one. If powershell tools are installed it will be
-          .then((htmlElement: ElementJacket) => {
-            this.Logger.LogImportant('found the TR');
-            htmlElement.NativeElement.click();
-          })
+          .then((elementJacket: ElementJacket) => popUpElementJacket = elementJacket)
+          .then(() => this.RecipeBasics.WaitForTimePeriod(1, 'waiting'))
+          .then(() => popUpElementJacket.WaitAndReturnFoundElemJacketFromElemJacket('img[src$="packager.png"]', DTPopUpMenuProxy.name))  /// can't use TR....it's not guaranteed to be the first one. If powershell tools are installed it won't be
+          .then((elementJacket: ElementJacket) => elementJacket.Click())
           .then(() => resolve())
           .catch((err) => reject(this.RecipeAddNewPackageDesignerToDesktop.name + ' ' + err));
 

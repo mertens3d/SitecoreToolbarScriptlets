@@ -36,8 +36,9 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
   }
   private HasBeenHarvested: boolean = false;
   private: number;
+    ParentTreeNode: ScContentTreeNodeProxy;
 
-  constructor(hindeCore: IHindeCore, sourceElement: ElementJacket, level: number, siblingIndex: number, totalSiblings: number) {
+  constructor(hindeCore: IHindeCore, sourceElement: ElementJacket, level: number, siblingIndex: number, totalSiblings: number, parent:  ScContentTreeNodeProxy) {
     super(hindeCore);
 
     if (sourceElement) {
@@ -58,6 +59,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
       this.ErrorHand.ErrorAndThrow(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
     }
 
+    this.ParentTreeNode = parent;
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
@@ -224,7 +226,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
         let childNodes = this.ScContentTreeNodeDivElem.NativeElement.querySelectorAll(':scope > div > ' + ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
         childNodes.forEach((childNode: HTMLDivElement, index: number) => {
           let childJacket = new ElementDivJacket(this.HindeCore, childNode);
-          toReturn.push(new ScContentTreeNodeProxy(this.HindeCore, childJacket, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length))
+          toReturn.push(new ScContentTreeNodeProxy(this.HindeCore, childJacket, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length, this))
         });
 
         let PromiseAr: Promise<void>[] = [];
@@ -245,7 +247,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.NativeElement.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
     if (penultimateElem) {
       let penElemJacket: ElementDivJacket = new ElementDivJacket(this.HindeCore, penultimateElem);
-      penultimateNode = new ScContentTreeNodeProxy(this.HindeCore, penElemJacket, 0, 0, 1);
+      penultimateNode = new ScContentTreeNodeProxy(this.HindeCore, penElemJacket, 0, 0, 1, this);
     }
 
     if (penultimateNode !== null) {
