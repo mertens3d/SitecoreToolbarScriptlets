@@ -1,11 +1,10 @@
-﻿import { IInterruptAgent } from "../../../Interfaces/Agents/ITaskMonitorAgent";
-import { TaskListMutationEvent_Subject } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/TaskListMutationEvent_Subject";
-import { LoggerAgent } from "./LoggerAgent";
+﻿import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/ITaskListMutationEvent_Payload";
+import { TaskListMutationEvent_Subject } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/TaskListMutationEvent_Subject";
+import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
 import { IErrorHandlerAgent } from "../../../Interfaces/Agents/IErrorHandlerAgent";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/ITaskListMutationEvent_Payload";
+import { IInterruptAgent } from "../../../Interfaces/Agents/ITaskMonitorAgent";
 import { TaskMutationType } from "./TaskMutationType";
-import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
 
 export class TaskMonitor implements IInterruptAgent {
   private TaskBucketStarted: string[] = [];

@@ -7,12 +7,12 @@ import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/I
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
+import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
 
 export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   private DocumentJacket: DocumentJacket;
-  private ContainerSpanElement: HTMLElement;
-  private FoundStartBarButton: HTMLElement;
-  private RecipeBasics: RecipeBasics;
+  private ContainerSpanElement: ElementJacket;
+  private FoundStartBarButton: ElementJacket;
   private StartBarButtonElemId: string;
 
   public FrameId: string;
@@ -22,7 +22,6 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
     this.DocumentJacket = documentJacket;
     this.FrameId = iframeElemId;
 
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
   async Instantiate_DestopStartBarButtonProxy(): Promise<void> {
@@ -31,8 +30,8 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
       let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
       this.FoundStartBarButton = this.DocumentJacket.QuerySelector(querySelectBtn);
 
-      await this.RecipeBasics.WaitAndReturnFoundFromContainer(this.FoundStartBarButton, ':scope > div > span', this.Instantiate_DestopStartBarButtonProxy.name)
-        .then((containerSpanElement: HTMLElement) => this.ContainerSpanElement = containerSpanElement);
+      await this.FoundStartBarButton.WaitAndReturnFoundElemJacketFromElemJacket(':scope > div > span', this.Instantiate_DestopStartBarButtonProxy.name)
+        .then((containerSpanElement: ElementJacket) => this.ContainerSpanElement = containerSpanElement);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.Instantiate_DestopStartBarButtonProxy.name, err);
     }
@@ -79,7 +78,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
       let newMainIconNode: HTMLImageElement = this.DesignMainIconNode(mainIconSrc);
 
       if (this.ContainerSpanElement) {
-        this.ContainerSpanElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
+        this.ContainerSpanElement.NativeElement.innerHTML = newMainIconNode.outerHTML + newItemIconNode.outerHTML + text;
       } else {
         this.ErrorHand.ErrorAndThrow(this.SetStateOfDesktopStartBarButtonAsync.name, 'no container span element');
       }

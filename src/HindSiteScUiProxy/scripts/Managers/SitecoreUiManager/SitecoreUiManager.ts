@@ -5,6 +5,7 @@ import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
+import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
 
 export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IStateOfScUi;
@@ -45,20 +46,20 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
     this.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(documentJacket.DocId));
     this.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
-    var userNameElem = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginUserName);
-    var passwordElem = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginPassword);
+    let userNameElem: ElementJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginUserName);
+    let passwordElem: ElementJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginPassword);
 
     if (this.Logger.IsNotNullOrUndefinedBool('userNameElem', userNameElem)
       &&
       this.Logger.IsNotNullOrUndefinedBool('passwordElem', passwordElem)) {
-      userNameElem.setAttribute('value', ContentConst.Const.Names.scDefaultAdminUserName);
-      passwordElem.setAttribute('value', ContentConst.Const.Names.scDefaultAdminPassword);
+      userNameElem.NativeElement.setAttribute('value', ContentConst.Const.Names.scDefaultAdminUserName);
+      passwordElem.NativeElement.setAttribute('value', ContentConst.Const.Names.scDefaultAdminPassword);
 
-      var loginButton: HTMLElement = this.GetLoginButton(documentJacket);
+      var loginButton: ElementJacket = this.GetLoginButton(documentJacket);
 
       if (this.Logger.IsNotNullOrUndefinedBool('loginButton', loginButton)) {
         this.Logger.Log('clicking loginbutton');
-        loginButton.click();
+        loginButton.NativeElement.click();
 
         if (callbackOnComplete) {
           this.Logger.Log('Triggering callback');
@@ -78,10 +79,10 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
     this.Logger.FuncEnd(this.AdminB.name);
   }
 
-  GetLoginButton(documentJacket: DocumentJacket): HTMLElement {
+  GetLoginButton(documentJacket: DocumentJacket): ElementJacket {
     this.Logger.FuncStart(this.GetLoginButton.name);
 
-    var toReturn: HTMLElement = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginBtn.sc920);
+    var toReturn: ElementJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginBtn.sc920);
 
     if (!toReturn) {
       toReturn = documentJacket.QuerySelector(ContentConst.Const.Selector.SC.LoginBtn.sc820);

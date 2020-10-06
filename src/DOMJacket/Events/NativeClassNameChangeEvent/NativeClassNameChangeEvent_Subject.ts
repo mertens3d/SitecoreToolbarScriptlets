@@ -27,15 +27,6 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
     }
   }
 
-  //private MakeScContentTreeNodeProxy(mutation: MutationRecord): ScContentTreeNodeProxy {
-  //  this.Logger.FuncStart(this.MakeScContentTreeNodeProxy.name);
-  //  let candidateNode: ScContentTreeNodeProxy = null;
-  //  let mutatedAnchorElement: HTMLAnchorElement = <HTMLAnchorElement>(mutation.target);
-  //  candidateNode = new ScContentTreeNodeProxy(this.HindeCore, mutatedAnchorElement, 0, 0, 1);
-  //  this.Logger.FuncEnd(this.MakeScContentTreeNodeProxy.name);
-  //  return candidateNode;
-  //}
-
   private OnNativeMutationEvent(mutationRecords: MutationRecord[]) {
     mutationRecords.forEach(async (mutationRecord: MutationRecord, index: number) => {
       if (mutationRecord.attributeName === 'class') {
@@ -44,34 +35,6 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
           if (anchorTest.classList.contains(ContentConst.Const.ClassNames.SC.scContentTreeNodeActive)) {
             this.NotifyObserversAsync(null);
           }
-          //let scContentTreeNodeProxy: ScContentTreeNodeProxy = this.MakeScContentTreeNodeProxy(mutationRecord);
-          //          if (scContentTreeNodeProxy) {
-          //  let payload: INativeClassNameChangeEvent_Payload = {
-          //    ActiveNode: null,
-          //    MutatedElement: null,
-          //    OwnerContentEditorProxy: null,
-          //    StateOfContentEditorTreeProxy: null,
-          //    MutatedNodeStateOfScContentTreeNodeFlat: null
-          //  }
-
-          //  await scContentTreeNodeProxy.GetStateOfScContentTreeNodeFlat()
-          //    .then((stateOfContentTreeNodeFlat: IStateOfScContentTreeNodeFlat) => {
-          //      this.Logger.LogVal(this.OnNativeMutationEvent.name, stateOfContentTreeNodeFlat.FriendlyTreeNode);
-
-          //      if (stateOfContentTreeNodeFlat.IsActive) {
-          //        //let treeMutationEvent_Payload: ContentTreeProxyMutationEvent_Payload = {
-          //        //  StateOfContentTree: null,
-          //        //};
-          //        this.Logger.Log('node is active ' + stateOfContentTreeNodeFlat.FriendlyTreeNode)
-
-          //        payload.MutatedNodeStateOfScContentTreeNodeFlat = stateOfContentTreeNodeFlat
-
-          //        this.NotifyObserversAsync(payload);
-          //      } else {
-          //        this.Logger.Log('node not active ' + stateOfContentTreeNodeFlat.FriendlyTreeNode)
-          //      }
-          //    });
-          //}
         }
       }
     });

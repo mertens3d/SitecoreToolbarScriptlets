@@ -4,12 +4,13 @@ import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/Inject
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
-import { IContentTreeProxyMutationEvent_Payload } from '../Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
+import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
+import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
 
 export class DTStartBarProxy extends _HindeCoreBase {
 
-  private __statBarElem: HTMLElement;
+  private __startBarElem: ElementJacket;
   private DocumentJacket: DocumentJacket;
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
 
@@ -35,12 +36,12 @@ export class DTStartBarProxy extends _HindeCoreBase {
     return this.DocumentJacket.QuerySelector('[id=' + targetId + ']');
   }
 
-  GetStartBarElement(): HTMLElement {
-    if (!this.__statBarElem) {
-      this.__statBarElem = this.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
+  GetStartBarElement(): ElementJacket {
+    if (!this.__startBarElem) {
+      this.__startBarElem = this.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
     }
 
-    return this.__statBarElem;
+    return this.__startBarElem;
   }
 
   async TriggerRedButton(): Promise<void> {
@@ -109,16 +110,6 @@ export class DTStartBarProxy extends _HindeCoreBase {
         else {
           this.Logger.Log('null activeNodeFlat provided');
         }
-        //let iframeElement: HTMLIFrameElement = <HTMLIFrameElement>this.OwnerDesktopProxy.GetAssociatedDoc().ContentDoc.getElementById(treeMutationEvent_Payload.AssociatedIframeElemId);
-
-        //if (iframeElement) {
-        //  }
-
-        //we need to know what the associated button is
-        //we can get that by knowing the id of the CE
-        //} else {
-        //  this.ErrorHand.ErrorAndContinue(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Did not find Frame');
-        //}
       }
       else {
         this.Logger.LogAsJsonPretty('dTAreaProxyMutationEvent_Payload', dTAreaProxyMutationEvent_Payload)

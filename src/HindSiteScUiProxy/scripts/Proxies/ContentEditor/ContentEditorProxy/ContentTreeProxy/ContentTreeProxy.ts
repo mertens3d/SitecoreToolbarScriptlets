@@ -1,9 +1,11 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
+import { ElementImgJacket } from '../../../../../../DOMJacket/ElementImgJacket';
+import { ElementJacket } from "../../../../../../DOMJacket/ElementJacket";
 import { INativeClassNameChangeEvent_Payload } from '../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
+import { NativeClassNameChangeEvent_Observer } from "../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Observer";
 import { NativeClassNameChangeEvent_Subject } from "../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";
 import { IterationDrone } from '../../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { DefaultStateOfContentTree } from '../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentTree';
-import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { InitReportTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
@@ -12,13 +14,10 @@ import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/
 import { IStateOfScContentTreeNodeFlat } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
-import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
-import { NativeClassNameChangeEvent_Observer } from "../../../Desktop/DesktopProxy/Events/TreeMutationEvent/NativeClassNameChangeEvent_Observer";
-import { TreeMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/TreeMutationEvent/TreeMutationEvent_Subject";
+import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
+import { ContentTreeProxyMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Subject";
 import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNodeProxy';
-import { ElementJacket } from "../../../../../../DOMJacket/ElementJacket";
-import { ElementImgJacket } from '../../../../../../DOMJacket/ElementImgJacket';
-//implements ContentTreeProxy
+
 //ContentTree is the name Sitecore uses
 export class ContentTreeProxy extends _HindeCoreBase {
   private _treeNodeProxy: ScContentTreeNodeProxy;
@@ -26,11 +25,10 @@ export class ContentTreeProxy extends _HindeCoreBase {
   private initReportTreeProxy: InitReportTreeProxy;
   private NativeClassNameChangeEvent_Observer: NativeClassNameChangeEvent_Observer;
   private NativeClassNameChangeEvent_Subject: NativeClassNameChangeEvent_Subject;
-  private RecipeBasics: RecipeBasics;
   private TreeContainerElemJacket: ElementJacket;
   private rootTreeNodeHtmlElement: ElementJacket;
 
-  public TreeMutationEvent_Subject: TreeMutationEvent_Subject;
+  public TreeMutationEvent_Subject: ContentTreeProxyMutationEvent_Subject;
 
   constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, treeContainerJacket: ElementJacket) {
     super(hindeCore);
@@ -38,7 +36,6 @@ export class ContentTreeProxy extends _HindeCoreBase {
     this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeProxy.name, [documentJacket, treeContainerJacket]);
     this.DocumentJacket = documentJacket;
     this.TreeContainerElemJacket = treeContainerJacket;
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
   }
 
   async Instantiate_TreeProxy(): Promise<void> {
@@ -52,7 +49,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
           this.initReportTreeProxy = new InitReportTreeProxy();
           this.initReportTreeProxy.TreeInstantiated = true;
 
-          this.TreeMutationEvent_Subject = new TreeMutationEvent_Subject(this.HindeCore, this.TreeContainerElemJacket);
+          this.TreeMutationEvent_Subject = new ContentTreeProxyMutationEvent_Subject(this.HindeCore);
 
           this.NativeClassNameChangeEvent_Subject = new NativeClassNameChangeEvent_Subject(this.HindeCore, this.TreeContainerElemJacket);
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.HindeCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
@@ -77,8 +74,6 @@ export class ContentTreeProxy extends _HindeCoreBase {
     this.Logger.FuncStart(this.CallBackOnNativeClassNameChangeEventAsync.name);
     this.TaskMonitor.AsyncTaskStarted(this.CallBackOnNativeClassNameChangeEventAsync.name);
     if (this.TreeMutationEvent_Subject) {
-      //let stateOfContentTreeNodeDeep: IStateOfScContentTreeNodeDeep = this.GetStateOfContentTreeNodeDeep();
-
       this.GetStateOfContentTree()
         .then((stateOfContentTree: IStateOfContentTree) => {
           let TreeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = {
@@ -136,7 +131,6 @@ export class ContentTreeProxy extends _HindeCoreBase {
           })
           .then(() => targetScContentTreeNodeProxy.SetStateOfTreeNode(currentNodeData, depth))
           .then(() => {
-            //let treeNodeProxy: ScContentTreeNodeProxy =
             if (currentNodeData.NodeChildren.length > 0) {
               currentNodeData.NodeChildren.forEach((nodeChild: IStateOfScContentTreeNodeDeep) =>
                 promisesAr.push(this.SetStateOfNodeRecursive(nodeChild, depth + 1))
@@ -156,13 +150,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
     this.TaskMonitor.AsyncTaskStarted(this.SetStateOfContentTree.name);
     try {
       this.TreeMutationEvent_Subject.DisableNotifications();
-
-      let iterHelper: IterationDrone = new IterationDrone(this.HindeCore, this.SetStateOfContentTree.name, true);
-
       await this.SetStateOfNodeRecursive(currentNodeData, 0);
-
-      //await this.GetTreeNodeProxy()
-      //  .then((treeNodeProxy: ScContentTreeNodeProxy) => treeNodeProxy.SetStateOfTreeNode(stateOfContentEditor.StateOfScContentTreeNodeDeep, 0))
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.SetStateOfContentTree.name, err);
     }
@@ -171,76 +159,6 @@ export class ContentTreeProxy extends _HindeCoreBase {
     this.TaskMonitor.AsyncTaskCompleted(this.SetStateOfContentTree.name);
     this.Logger.FuncEnd(this.SetStateOfContentTree.name);
   }
-
-  //async SetStateOfTreeNode_TreeProxy(dataStateOfTreeNode: IStateOfScContentTreeNodeDeep): Promise<void> {
-  //  this.Logger.FuncStart(this.SetStateOfTreeNode_TreeProxy.name, dataStateOfTreeNode.Friendly);
-
-  //  try {
-  //    var iterHelper = new IterationDrone(this.HindeCore, this.SetStateOfTreeNode_TreeProxy.name, true);
-
-  //    let treeNodeProxy: ScContentTreeNodeProxy = null;
-
-  //    this.TreeMutationEvent_Subject.DisableNotifications();
-
-  //    while (!treeNodeProxy && iterHelper.DecrementAndKeepGoing()) {
-  //      treeNodeProxy = this.GetTreeNodeByGlyph(dataStateOfTreeNode);
-
-  //      if (treeNodeProxy) {
-  //        treeNodeProxy.SetStateOfTreeNode(dataStateOfTreeNode, 0);
-  //      } else {
-  //        await iterHelper.Wait();
-  //      }
-  //    }
-  //  } catch (err) {
-  //    throw (this.SetStateOfTreeNode_TreeProxy.name + ' | ' + err);
-  //  }
-
-  //  this.TreeMutationEvent_Subject.EnableNotifications();
-
-  //  this.Logger.FuncEnd(this.SetStateOfTreeNode_TreeProxy.name, dataStateOfTreeNode.Friendly);
-  //}
-
-  //WalkNodeRecursive(targetNode: HTMLElement, depth: number, itemIndex: number, siblingCount: number): Promise<IStateOfScContentTreeNodeDeep[]> {
-  //  return new Promise(async (resolve, reject) => {
-  //    let friendly: string = 'depth: ' + depth + ' index: ' + (itemIndex + 1) + ' of: ' + siblingCount + ' total siblings';
-  //    this.Logger.FuncStart(this.WalkNodeRecursive.name, friendly);
-  //    if (targetNode.id) {
-  //      this.Logger.Log('targetNode.id', targetNode.id);
-  //    }
-
-  //    var toReturn: IStateOfScContentTreeNodeDeep[] = [];
-  //    depth = depth - 1;
-
-  //    let treeNodeProxy: ScContentTreeNodeProxy = null;
-  //    let stateOftreeNodeProxy: IStateOfScContentTreeNodeDeep = null;
-  //    let childNodePromisesAr: Promise<IStateOfScContentTreeNodeDeep[]>[] = [];
-
-  //    if (targetNode) {
-  //      await this.RecipeBasics.WaitAndReturnFoundFromContainer(targetNode, ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.WalkNodeRecursive.name)
-  //        .then(async (firstChildGlyphNode: HTMLImageElement) => treeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, firstChildGlyphNode, depth, itemIndex, siblingCount))
-  //        .then(() => treeNodeProxy.GetStateOfScContentTreeNodeDeep())
-  //        .then((stateOfContentTreeNodeProxy: IStateOfScContentTreeNodeDeep) => stateOftreeNodeProxy = stateOfContentTreeNodeProxy)
-  //        .then(() => {
-  //          if (treeNodeProxy.IsContentTreeNode()) {
-  //            if (stateOftreeNodeProxy.IsExpanded || stateOftreeNodeProxy.IsActive) {
-  //              this.Logger.LogVal(this.WalkNodeRecursive.name, stateOftreeNodeProxy.FriendlyTreeNode);
-  //              toReturn.push(stateOftreeNodeProxy);
-  //            }
-  //          }
-  //        })
-  //        .then(() => {
-  //          let childNodes = targetNode.querySelectorAll(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon); //targetNode.children;
-  //          childNodePromisesAr = [];
-  //          childNodes.forEach((oneChild: HTMLElement, index) => childNodePromisesAr.push(this.WalkNodeRecursive(oneChild, depth, index, childNodes.length)));
-  //        })
-  //        .then(() => Promise.all(childNodePromisesAr))
-  //        .then((values: IStateOfScContentTreeNodeDeep[][]) => values.forEach((value: IStateOfScContentTreeNodeDeep[]) => toReturn = toReturn.concat(value)))
-  //        .then(() => resolve(toReturn))
-  //        .catch((err) => reject(this.WalkNodeRecursive.name + ' | ' + err));
-  //    }
-  //    this.Logger.FuncEnd(this.WalkNodeRecursive.name, friendly)
-  //  });
-  //}
 
   async GetRootNodeForFrameType(): Promise<ElementJacket> {
     try {
@@ -282,10 +200,8 @@ export class ContentTreeProxy extends _HindeCoreBase {
         .then(() => {
           let activeNodeFlat: IStateOfScContentTreeNodeFlat = <IStateOfScContentTreeNodeFlat>this.GetActiveTreeNodeFromAncestorNode(stateOfContentTree.StateOfScContentTreeNodeDeep);
           if (activeNodeFlat) {
-            //stateOfContentTree.ActiveNodeCoord = activeNodeFlat.Coord;
             stateOfContentTree.ActiveNodeFlat = activeNodeFlat;
           }
-          //this.Logger.LogAsJsonPretty('stateOfTreeProxy', stateOfContentTree);
         })
         .then(() => resolve(stateOfContentTree))
         .catch((err) => reject(this.GetStateOfContentTree.name + ' | ' + err));

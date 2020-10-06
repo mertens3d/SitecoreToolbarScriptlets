@@ -1,10 +1,11 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { FrameJacket } from "../../FrameJacket";
-import { IFrameJacketAddRemoveEvent_Payload } from "./INativeIFrameAddedEvent_Payload";
+import { IFrameJacketAddRemoveEvent_Payload } from "./IFrameJacketAddRemoveEvent_Payload";
 import { DocumentJacket } from "../../DocumentJacket";
+import { ElementJacket } from "../../ElementJacket";
 
-export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IFrameJacketAddRemoveEvent_Payload>  {
+export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IFrameJacketAddRemoveEvent_Payload> {
   ShowLogActions: boolean = true;
   private DocumentJacket: DocumentJacket;
   private HindeCore: IHindeCore;
@@ -58,7 +59,7 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
           let desktopMutatedEvent_Payload: IFrameJacketAddRemoveEvent_Payload = {
             AddedFrameJacket: null,
             RemovedIFrameId: null,
-          }
+          };
 
           let addedNodes: FrameJacket[] = this.HandleAddedNodes(mutation.addedNodes);
           let removedNodeIds: string[] = this.HandleRemovedNodes(mutation.removedNodes);
@@ -67,16 +68,17 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
             desktopMutatedEvent_Payload.AddedFrameJacket = addedNode;
             desktopMutatedEvent_Payload.RemovedIFrameId = null;
             this.NotifyObserversAsync(desktopMutatedEvent_Payload);
-          })
+          });
 
           removedNodeIds.forEach((removedNodeId: string) => {
             desktopMutatedEvent_Payload.AddedFrameJacket = null;
             desktopMutatedEvent_Payload.RemovedIFrameId = removedNodeId;
             this.NotifyObserversAsync(desktopMutatedEvent_Payload);
-          })
+          });
         }
       });
-    } else {
+    }
+    else {
       this.Logger.Log('No observers');
     }
     this.Logger.FuncEnd(this.CallBackOnNativeMutation.name);
@@ -89,9 +91,9 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
         let self = this;
         let mutationObserver = new MutationObserver((mutations: MutationRecord[]) => { self.CallBackOnNativeMutation(mutations); });
         //let desktop: HTMLElement = <HTMLElement> this.NativeDocument.getElementsByTagName(SharedConst.Const.KeyWords.Html.Tags.Body)[0];
-        let desktop: HTMLElement = <HTMLElement>this.DocumentJacket.GetElementById('Desktop');
-        if (desktop) {
-          mutationObserver.observe(desktop, { attributes: false, subtree: false, childList: true });
+        let desktopElemJacket: ElementJacket = this.DocumentJacket.GetElementById('Desktop');
+        if (desktopElemJacket) {
+          mutationObserver.observe(desktopElemJacket.NativeElement, { attributes: false, subtree: false, childList: true });
         }
       }
       else {

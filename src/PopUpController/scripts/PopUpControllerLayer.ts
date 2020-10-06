@@ -30,7 +30,7 @@ import { ContentReplyReceivedEvent_Observer } from "../../Shared/scripts/Events/
 import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
-import { UrlJacket } from "../../DOMJacket/GenericUrlAgent";
+import { UrlJacket } from "../../DOMJacket/UrlJacket";
 
 class PopUpControllerLayer {
   BrowserTabAgent: BrowserTabAgent;

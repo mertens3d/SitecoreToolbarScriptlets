@@ -19,17 +19,19 @@ export class RecipeAutoSaveState extends _HindeCoreBase {
     return new Promise(async (resolve, reject) => {
       this.ScUiProxy.GetStateOfScUiProxyWindow(SnapShotFlavor.Autosave)
         .then((windowStateNew: IStateOfScUi) => {
-          if (windowStateNew.Meta.Hash !== windowStatePrior.Meta.Hash) {
-            this.Logger.Log('states are different, save snap shot');
+          let hasCorrectData = windowStateNew && windowStateNew.Meta && windowStateNew.Meta.Hash
+            && windowStatePrior && windowStatePrior.Meta && windowStatePrior.Meta.Hash;
 
-            this.AtticAgent.WriteStateOfSitecoreToStorage(windowStateNew);
-          } else {
-            this.Logger.Log('states are same, no save');
-          }
+          if (!hasCorrectData || (windowStateNew.Meta.Hash !== windowStatePrior.Meta.Hash)) {
+              this.Logger.Log('states are different, save snap shot');
+
+              this.AtticAgent.WriteStateOfSitecoreToStorage(windowStateNew);
+            } else {
+              this.Logger.Log('states are same, no save');
+            }
           resolve(windowStateNew);
         })
         .catch((err) => reject(err));
     });
   }
-
 }

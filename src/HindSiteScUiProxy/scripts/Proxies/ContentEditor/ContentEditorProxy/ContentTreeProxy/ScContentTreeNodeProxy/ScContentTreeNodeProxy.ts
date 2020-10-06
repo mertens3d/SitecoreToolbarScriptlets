@@ -37,9 +37,6 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
   private HasBeenHarvested: boolean = false;
   private: number;
 
-  //constructor(hindeCore: IHindeCore, sourceElement: HTMLDivElement, level: number, siblingIndex: number, totalSiblings: number)
-  //constructor(hindeCore: IHindeCore, sourceElement: HTMLImageElement, level: number, siblingIndex: number, totalSiblings: number)
-  //constructor(hindeCore: IHindeCore, sourceElement: HTMLAnchorElement, level: number, siblingIndex: number, totalSiblings: number)
   constructor(hindeCore: IHindeCore, sourceElement: ElementJacket, level: number, siblingIndex: number, totalSiblings: number) {
     super(hindeCore);
 
@@ -87,7 +84,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
   private InferFromImageElement(imageElement: HTMLImageElement) {
     if (imageElement) {
-      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.HindeCore, < HTMLDivElement > imageElement.parentElement)
+      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.HindeCore, <HTMLDivElement>imageElement.parentElement)
     }
   }
 
@@ -168,11 +165,11 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
         this.Children = [],
 
           await this.GetLinkNodeElem()
-          .then((htmlAnchorElement: ElementAnchorJacket) => {
+            .then((htmlAnchorElement: ElementAnchorJacket) => {
               this.LinkNodeElem = htmlAnchorElement
             })
             .then(() => this.GetGlyphNodeElem())
-          .then((htmlImageElement: ElementImgJacket) => {
+            .then((htmlImageElement: ElementImgJacket) => {
               this.glyphElem = htmlImageElement
             })
             .then(() => {
@@ -266,37 +263,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
       if (newData.IsActive) {
         await this.ActivateNode();
-        //var hotTreeNodeId = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(newData.ItemId);
-
-        //let hotTreeNode: HTMLImageElement = <HTMLImageElement>this.ScContentTreeNodeDivElem.querySelector('[id=' + hotTreeNodeId + ']');
-
-        //if (hotTreeNode) {
-        //  let hotTreeNodeProxy: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, hotTreeNode, 0, 0, 1);
-
-        //  if (hotTreeNodeProxy) {
-        //    hotTreeNodeProxy.ActivateNode()
-        //  } else {
-        //    this.ErrorHand.ErrorAndContinue(this.SetStateOfTreeNode.name, 'hot tree node not found')
-        //  }
-        //} else {
-        //  this.ErrorHand.WarningAndContinue(this.SetStateOfTreeNode.name, 'No hotTreeNode');
-        //}
       }
-
-      //if (newData.NodeChildren.length > 0) {
-      //  let promises: Promise<void>[] = []
-      //  //stateOfContentEditor.StateOfScContentTreeNodeDeep
-
-      //  newData.NodeChildren.forEach((treeNode: IStateOfScContentTreeNodeDeep, index) => {
-      //    promises.push(this.SetStateOfTreeNode(treeNode, depth + 1))
-      //    //newData.NodeChildren.map(async treeNode  => {
-      //    //let newNode: ScContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, treeNode.ItemId, 0, 0, 1);
-      //    //const numFruit = await this.SetStateOfTreeNode_TreeProxy(treeNode);
-      //    //return numFruit;
-      //  });
-
-      //await Promise.all(promises);
-      //}
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.SetStateOfTreeNode.name, err);
     }
@@ -343,15 +310,10 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
       if (!this.QueryIsExpanded()) {
         this.glyphElem.NativeElement.click();
       }
-      //.catch((err) => this.ErrorHand.ErrorAndThrow(this.ExpandNode.name, err));
     }
     catch (err) {
       this.ErrorHand.ErrorAndThrow(this.ExpandNode.name, err);
     }
-  }
-
-  private GetNodeLinkText(htmlElement: HTMLElement): string {
-    return htmlElement.innerText;
   }
 
   IsContentTreeNode() {

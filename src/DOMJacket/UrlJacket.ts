@@ -10,9 +10,7 @@ import { SharedConst } from "../Shared/scripts/SharedConst";
 export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
   protected UrlParts: IGenericUrlParts;
   private OriginalURL: string;
-  //private BrowserProxy: IPopUpBrowserProxy;
-
-  constructor(hindeCore: IHindeCore, url: string) { // browserProxy: IPopUpBrowserProxy
+  constructor(hindeCore: IHindeCore, url: string) {
     super(hindeCore);
     this.OriginalURL = url;
 
@@ -25,13 +23,8 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
       this.Logger.FuncStart(this.Init_GenericUrlAgent.name, UrlJacket.name);
 
       this.SetFromHref(this.OriginalURL);
-      //if (this.BrowserProxy) {
-      //  this.Init_FromBrowserProxy();
-      //}
-      //else {
-      //   this.InitFromWindowLocation();
-      //}
-    } catch (err) {
+    }
+    catch (err) {
       throw (this.Init_GenericUrlAgent.name + ' | ' + err);
     }
 
@@ -54,7 +47,7 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
       let keyAsStr: string = QueryStrKey[key];
 
       if (keyAsStr) {
-        toReturn = this.UrlParts && this.UrlParts.UrlSearchParameters && this.UrlParts.UrlSearchParameters.has(keyAsStr)
+        toReturn = this.UrlParts && this.UrlParts.UrlSearchParameters && this.UrlParts.UrlSearchParameters.has(keyAsStr);
       }
     }
 
@@ -78,7 +71,8 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
   SetParameterValueByKey(key: QueryStrKey, newValue: string): void {
     if (this.UrlParts) {
       this.UrlParts.UrlSearchParameters.set(QueryStrKey[key], newValue);
-    } else {
+    }
+    else {
       this.ErrorHand.ErrorAndThrow(this.SetParameterValueByKey.name, 'No URLParts ' + QueryStrKey[key] + ' ' + newValue);
     }
   }
@@ -87,38 +81,19 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
     this.UrlParts.FilePath = newFilePath;
   }
 
-  //private async Init_FromBrowserProxy(): Promise<void> {
-  //  this.Logger.Log(this.Init_FromBrowserProxy.name)
-
-  //  if (this.BrowserProxy) {
-  //    this.SetFromHref(this.BrowserProxy.Url);
-  //  } else {
-  //    throw (this.Init_FromBrowserProxy.name + '| no proxy');
-  //  }
-  //}
-  //private InitFromWindowLocation() {
-  //  try {
-  //    this.Logger.Log('Init from window.location.href')
-  //    let urlToUse = window.location.href;
-  //    this.SetFromHref(urlToUse);
-  //  } catch (err) {
-  //    throw (this.InitFromWindowLocation.name + err);
-  //  }
-  //}
-
   private SetFromHref(href: string) {
     var parser = document.createElement('a');
-    parser.href = href;// resultTab.url;
+    parser.href = href; // resultTab.url;
 
     this.UrlParts = {
       OriginalRaw: href,
-      Protocol: parser.protocol,// this.ExtractProtocol(url),
-      HostAndPort: parser.host, //this.ExtractHostName(url),
-      UrlSearchParameters: new URLSearchParams(parser.search),//  this.ExtractParameters(parser.search), //new URLSearchParams(window.location.search),//
-      FilePath: parser.pathname,// this.ExtractFilePath(url, parser),
+      Protocol: parser.protocol,
+      HostAndPort: parser.host,
+      UrlSearchParameters: new URLSearchParams(parser.search),
+      FilePath: parser.pathname,
       Anchor: parser.hash,
       HasError: false,
-    }
+    };
     this.Logger.LogAsJsonPretty('params', this.UrlParts.UrlSearchParameters.toString());
   }
 
@@ -139,10 +114,11 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
           toReturn.AbsUrl += '?' + this.UrlParts.UrlSearchParameters.toString();
         }
         if (this.UrlParts.Anchor.length > 0) {
-          toReturn.AbsUrl += '#' + this.UrlParts.Anchor
+          toReturn.AbsUrl += '#' + this.UrlParts.Anchor;
         }
       }
-    } else {
+    }
+    else {
       this.ErrorHand.ErrorAndThrow(this.BuildFullUrlFromParts.name, 'Null UrlParts');
     }
 
@@ -178,67 +154,4 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
 
     return toReturn;
   }
-
-  //ExtractFilePath(url: string, parser: HTMLAnchorElement): string {
-  //  let toReturn: string = '';
-
-  //  //https://gist.github.com/jlong/2428561#file-uri-js
-
-  //  parser.protocol; // => "http:"
-  //  parser.hostname; // => "example.com"
-  //  parser.port;     // => "3000"
-  //  parser.pathname; // => "/pathname/"
-  //  parser.search;   // => "?search=test"
-  //  parser.hash;     // => "#hash"
-  //  parser.host;     // => "example.com:3000"
-
-  //  toReturn = parser.pathname;
-
-  //  //toReturn = workString.replace(SharedConst.Const.Regex.UrlPathOnly, split('/');
-
-  //  //if (workString.indexOf('//') > -1) {
-  //  //  workString = workString.split('//')[1];
-  //  //  //toReturn.shift();
-  //  //  //toReturn.shift();
-  //  //}
-
-  //  //workString = workString.split(':')[0];
-  //  //workString = workString.split('?')[0];
-
-  //  //toReturn = workString.split('/');
-
-  //  //if (ar.length > 1) {
-  //  //  toReturn = ar[1];
-  //  //} else {
-  //  //  this.AllHelperAgents.Logger.Error(this.ExtractFilePath.name, 'unable to extract path from ' + url);
-  //  //}
-
-  //  return toReturn;
-  //}
-
-  //ExtractProtocol(url: string): string {
-  //  let toReturn: string = '';
-  //  if (url.startsWith('https')) {
-  //    toReturn = 'https';
-  //  } else {
-  //    toReturn = 'http';
-  //  }
-
-  //  return toReturn;
-  //}
-  //ExtractHostName(url: string): string {
-  //  //https://stackoverflow.com/questions/8498592/extract-hostname-name-from-string/54947757
-  //  let toReturn: string = '';
-
-  //  if (url.indexOf('//') > -1) {
-  //    toReturn = url.split('/')[2];
-  //  } else {
-  //    toReturn = url.split('/')[0];
-  //  }
-
-  //  toReturn = toReturn.split(':')[0];
-  //  toReturn = toReturn.split('?')[0];
-
-  //  return toReturn;
-  //}
 }

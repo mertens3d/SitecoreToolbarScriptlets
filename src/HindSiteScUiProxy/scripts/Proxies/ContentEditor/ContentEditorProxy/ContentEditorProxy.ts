@@ -13,8 +13,8 @@ import { IStateOfScContentTreeNodeDeep } from '../../../../../Shared/scripts/Int
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { ContentEditorProxyMutationEvent_Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
 import { IContentEditorProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
-import { ContentTreeProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/ContentTreeProxyMutationEvent_Observer';
-import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/TreeMutationEvent/IContentTreeProxyMutationEvent_Payload';
+import { ContentTreeProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Observer';
+import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { _BaseStateFullProxy } from '../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
 import { ContentTreeProxy } from "./ContentTreeProxy/ContentTreeProxy";
@@ -97,8 +97,6 @@ export class ContentEditorSFProxy extends _BaseStateFullProxy<IStateOfContentEdi
       this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + ContentEditorSFProxy.name, dataToRestore.StateOfContentTree);
       this.ContentEditorProxyMutationEvent_Subject.DisableNotifications();
 
-      //this.Logger.Log('Node Count in storage data: ' + dataToRestore.StateOfContentEditorTreeProxy.StateOfTreeNodes.length);
-
       await this.RecipeBasic.WaitForTimePeriod(1000, this.SetState.name)
         .then(() => this.RecipeBasic.WaitForNoUiFrontOverlay(this.SetState.name))
         .then(() => this.ContentTreeProxy.SetStateOfContentTree(dataToRestore.StateOfContentTree.StateOfScContentTreeNodeDeep))
@@ -157,17 +155,6 @@ export class ContentEditorSFProxy extends _BaseStateFullProxy<IStateOfContentEdi
 
     this.Logger.FuncEnd(this.WaitForCompleteNABContentEditor.name);
   }
-
-  //RegisterObserverForTreeMutation(treeMutationEvent_Observer: TreeMutationEvent_Observer) {
-  //  this.Logger.FuncStart(this.RegisterObserverForTreeMutation.name);
-  //  if (this.ChildTreeProxy) {
-  //    treeMutationEvent_Observer.SetAssociatedContentEditorProxy(this);
-  //    this.ChildTreeProxy.TreeMutationEvent_Subject.RegisterObserver(treeMutationEvent_Observer);
-  //  } else {
-  //    this.ErrorHand.WarningAndContinue(this.RegisterObserverForTreeMutation.name, 'no associated tree proxy');
-  //  }
-  //  this.Logger.FuncEnd(this.RegisterObserverForTreeMutation.name);
-  //}
 
   SetCompactCss() {
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.DocumentJacket.DocId));

@@ -61,7 +61,7 @@ export class PackageDesignerSFProxy extends _BaseStateFullProxy<IStateOfPackageD
           let installerRibbonToolbar: ElementDivJacket = null;
           let SelectToOpenProjectFrame: CEFrameProxy = null;
           let FileNameInput: ElementJacket = null;
-          let OpenProjectOpenButton: HTMLButtonElement = null;
+          let OpenProjectOpenButton: ElementJacket = null;
           let AppFrame: HTMLIFrameElement = null;
           let AppframeJacket: FrameJacket;
           let jqueryInHOme: HTMLIFrameElement;
@@ -106,22 +106,20 @@ export class PackageDesignerSFProxy extends _BaseStateFullProxy<IStateOfPackageD
                 reject('no matching jacket');
               }
             })
-            //.then((frameJacket: HTMLIFrameElement) => this.DocumentJacket.WaitForIframeElemAndReturnCEFrameProxyWhenReady('[id=scContentIframeId0]', 'select to open project'))
-            //.then((ceFrameProxy: CEFrameProxy) => SelectToOpenProjectFrame = ceFrameProxy)
             .then(() => scContentIframeId0FrameJacket.WaitForCompleteNABHtmlIframeElement('scContentIframeId0'))
             .then(() => scContentIframeId0FrameJacket.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc('[id=Filename]'))
             .then((fileNameElemJacket: ElementJacket) => FileNameInput = fileNameElemJacket)
             .then(() => {
               this.Logger.LogImportant('filename jacket found')
-              OpenProjectOpenButton = <HTMLButtonElement>scContentIframeId0FrameJacket.DocumentJacket.QuerySelector('[id=OK]');
+              OpenProjectOpenButton = scContentIframeId0FrameJacket.DocumentJacket.QuerySelector('[id=OK]');
               if (!FileNameInput || !OpenProjectOpenButton) {
                 reject('missing buttons');
               }
             })
             .then(() => {
               if (FileNameInput && OpenProjectOpenButton) {
-                (<HTMLInputElement>  FileNameInput.NativeElement).value = stateOfPackageDesigner.StatusText;
-                OpenProjectOpenButton.click();
+                (<HTMLInputElement>FileNameInput.NativeElement).value = stateOfPackageDesigner.StatusText;
+                OpenProjectOpenButton.NativeElement.click();
               }
             })
             .then(() => resolve())
@@ -141,7 +139,7 @@ export class PackageDesignerSFProxy extends _BaseStateFullProxy<IStateOfPackageD
 
   private GetLoadedPackageFileName(): string {
     let toReturn: string = '';
-    let appFrame: HTMLIFrameElement = <HTMLIFrameElement>this.DocumentJacket.GetElementById('AppFrame');
+    let appFrame: HTMLIFrameElement = <HTMLIFrameElement>this.DocumentJacket.GetElementById('AppFrame').NativeElement;
     if (appFrame) {
       let contentDoc: Document = appFrame.contentDocument;
       if (contentDoc) {
@@ -151,8 +149,6 @@ export class PackageDesignerSFProxy extends _BaseStateFullProxy<IStateOfPackageD
         }
       }
     }
-
-    //document.getElementById('AppFrame').contentDocument.getElementById('StatusText').innerText
     return toReturn;
   }
 }

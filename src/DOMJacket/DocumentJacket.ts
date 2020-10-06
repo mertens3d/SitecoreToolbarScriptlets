@@ -8,7 +8,7 @@ import { ElementJacket } from "./ElementJacket";
 import { CEFrameProxy } from "../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { FactoryHelper } from "../Shared/scripts/Helpers/FactoryHelper";
 import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
-import { UrlJacket } from "./GenericUrlAgent";
+import { UrlJacket } from "./UrlJacket";
 import { SharedConst } from "../Shared/scripts/SharedConst";
 import { IAbsoluteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { Guid } from "../Shared/scripts/Helpers/Guid";
@@ -26,12 +26,22 @@ export class DocumentJacket extends _HindeCoreBase {
     this.UrlJacket = new UrlJacket(this.HindeCore, nativeDocument.URL);
   }
 
-  GetElementById(idStr: string): HTMLElement {
-    return this.NativeDocument.getElementById(idStr);
+  GetElementById(idStr: string): ElementJacket {
+    let elementJacket: ElementJacket = null;
+    let htmlElement: HTMLElement = this.NativeDocument.getElementById(idStr);
+    if (htmlElement) {
+      elementJacket = new ElementJacket(this.HindeCore, htmlElement);
+    }
+    return elementJacket;
   }
 
-  QuerySelector(selector: string): HTMLElement {
-    return this.NativeDocument.querySelector(selector);
+  QuerySelector(selector: string): ElementJacket {
+    let elementJacket: ElementJacket = null;
+    let htmlElement: HTMLElement = this.NativeDocument.querySelector(selector);
+    if (htmlElement) {
+      elementJacket = new ElementJacket(this.HindeCore, htmlElement);
+    }
+    return elementJacket;
   }
 
   GetContentDoc(): Document {

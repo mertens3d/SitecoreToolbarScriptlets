@@ -1,4 +1,4 @@
-﻿import { TaskListMutationEvent_Subject } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/TaskListMutationEvent_Subject";
+﻿import { TaskListMutationEvent_Subject } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/TaskListMutationEvent_Subject";
 import { IDiscriminator } from "./IDiscriminator";
 
 export interface ITaskMonitorAgent extends IDiscriminator {

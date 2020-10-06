@@ -4,7 +4,7 @@ import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfFrameStyling } from "../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
 import { DocumentJacket } from "./DocumentJacket";
-import { UrlJacket } from "./GenericUrlAgent";
+import { UrlJacket } from "./UrlJacket";
 
 export class FrameJacket extends _HindeCoreBase {
   private HtmlIFrameElement: HTMLIFrameElement;

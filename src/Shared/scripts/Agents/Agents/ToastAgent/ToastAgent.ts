@@ -4,9 +4,9 @@ import { SingleClickEvent_Subject } from "../../../../../PopUpUi/scripts/Events/
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
 import { _HindeCoreBase } from "../../../LoggableBase";
-import { TaskListMutationEvent_Observer } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/TaskListMutationEvent_Observer";
-import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DesktopProxyMutationEvent/ITaskListMutationEvent_Payload";
 import { TaskMutationType } from "../LoggerAgent/TaskMutationType";
+import { TaskListMutationEvent_Observer } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/TaskListMutationEvent_Observer";
+import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/ITaskListMutationEvent_Payload";
 
 export class ToastAgent extends _HindeCoreBase implements IToastAgent {
   private classSlideUp: string = 'slide-up';
