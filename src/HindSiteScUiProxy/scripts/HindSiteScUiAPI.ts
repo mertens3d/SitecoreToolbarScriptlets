@@ -1,14 +1,15 @@
-﻿import { DocumentJacket } from "../../DOMJacket/DocumentJacket";
-import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
-import { IHindSiteScUiAPI } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
-import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
+﻿import { IHindSiteScUiAPI } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
+import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { DocumentJacket } from "../../DOMJacket/DocumentJacket";
+import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ScWindowFacade } from "./Proxies/ScWindowFacade";
+import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
+import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { DesktopSFProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
-import { ScWindowFacade } from "./Proxies/ScWindowProxy";
+
 
 export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI {
   private ScUiMan: ScUiManager;

@@ -60,6 +60,9 @@
     <TypeScriptCompile Include="src\Content\scripts\Events\CommandStartEndCancelEvent\ICommandStartEndCancelEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Events\CommandStartEndCancelEvent\CommandStartEndCancelEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Events\CommandStartEndCancelEvent\CommandStartEndCancelEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\CommandRouter.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\CommandToExecuteData.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\InternalCommandRunner.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Recipes\_ContentRecipeBase.ts" />
     <TypeScriptCompile Include="src\DOMJacket\DocumentJacket.ts" />
     <TypeScriptCompile Include="src\DOMJacket\ElementAnchorJacket.ts" />
@@ -101,6 +104,7 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseScFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_StateProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\PackageDesignerSFProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ScWindowFacade.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\ErrorHandlerAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\TaskMonitor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\TaskMutationType.ts" />
@@ -141,7 +145,6 @@
     <TypeScriptCompile Include="src\Content\scripts\Recipes\RecipeInitFromQueryStr.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentMessageBroker.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Agents\AutoSnapShotAgent.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\HindSiteScUiProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\ContentApi\Recipes\__RecipeBase\_ApiRecipeBase.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Recipes\RecipeChangeNickName.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentEditorPublishProxy.ts" />
@@ -172,7 +175,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMessageContentToController.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMessageControllerToContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\LoggableBase.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ScWindowProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\ContentTreeProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Subject.ts" />
     <TypeScriptCompile Include="src\PopUpController\scripts\Proxies\BrowserProxy.ts" />
@@ -333,9 +335,6 @@
     <None Include="src\Content\css\vars.scss" />
     <None Include="src\Content\css\_contentTree.scss" />
     <None Include="src\Content\css\_header.scss" />
-    <None Include="src\HindSiteScUiProxy\scripts\Managers\SitecoreUiManager\SitecoreUiManager.ts.vsspell">
-      <DependentUpon>SitecoreUiManager.ts</DependentUpon>
-    </None>
     <None Include="src\PopUpUi\css\_partials\ContentLevel.scss" />
     <None Include="src\PopUpUi\css\_partials\global.scss" />
     <None Include="src\PopUpUi\css\_partials\header.scss" />
@@ -399,7 +398,6 @@
     <Folder Include="Dist\HindSite\AutoBuild\final\" />
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
-    <Folder Include="src\Shared\scripts\Interfaces\Agents\IScUrlAgent\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentEditorProxy.ts" />
