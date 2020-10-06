@@ -30,13 +30,11 @@ export class DTPopUpMenuProxy extends _HindeCoreBase {
             popUp = htmlElement
           })
           .then(() => this.RecipeBasics.WaitForTimePeriod(1000, 'waiting 2 sec'))
-          //.then((htmlElement: HTMLElement) => this.RecipeBasics.WaitAndReturnFoundFromContainer(htmlElement, ':scope > tr', DTPopUpMenuProxy.name))
           .then(() => popUp.WaitAndReturnFoundElemJacketFromElemJacket('tr', DTPopUpMenuProxy.name))
           .then((htmlElement: ElementJacket) => {
             this.Logger.LogImportant('found the TR');
             htmlElement.NativeElement.click();
           })
-          //.then((htmlElement: HTMLElement) => scDocumentProxy.DocumentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.StartMenu.PackageDesigner]))
           .then(() => resolve())
           .catch((err) => reject(this.RecipeAddNewPackageDesignerToDesktop.name + ' ' + err));
 

@@ -14,9 +14,8 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
   abstract Friendly: string;
   RecipeBasics: RecipeBasics;
 
-
   constructor(hindeCore: IHindeCore, frameJacket: FrameJacket) {
-    super(hindeCore); 
+    super(hindeCore);
 
     this.ErrorHand.ThrowIfNullOrUndefined(_BaseScFrameProxy.name, [frameJacket]);
     this.FrameJacket = frameJacket;
@@ -27,26 +26,12 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
 
   abstract WireEvents();
 
-
   GetZindexAsInt(): number {
     return this.FrameJacket.ZindexAsInt();
   }
 
-  //DataOneContentDocFactoryFromIframe(): ScDocumentProxy {
-  //  var toReturn: ScDocumentProxy = null;
-
-  //  if (dataOneIframe) {
-  //    toReturn = new ScDocumentProxy(this.HindeCore, this.NativeIFrameProxy.GetNativeContentDoc());
-  //    toReturn.Nickname = ' - content doc'
-  //  } else {
-  //    this.ErrorHand.ErrorAndThrow(this.DataOneContentDocFactoryFromIframe.name, 'no iframe provided');
-  //  }
-  //  return toReturn;
-  //}
-
   GetDocumentJacket(): DocumentJacket {
-    return this.FrameJacket. DocumentJacket;//  NativeIFrameProxy.GetNativeContentDoc();
-    //return  this.DataOneContentDocFactoryFromIframe(this.DocumentProxy);
+    return this.FrameJacket.DocumentJacket;
   }
 
   public async WaitForCompleteNABFrameProxyOrReject(): Promise<DocReadyState> {
@@ -55,7 +40,6 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
 
       await this.FrameJacket.WaitForCompleteNABHtmlIframeElement(this.Friendly)
         .then((result: ReadyStateNAB) => {
-          //result.LogDebugValues();
           if (result.IsCompleteNAB()) {
             resolve(result.DocumentReadyState());
           }

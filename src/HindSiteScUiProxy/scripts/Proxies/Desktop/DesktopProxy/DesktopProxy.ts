@@ -4,7 +4,6 @@ import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics
 import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { InitReport_DesktopProxy } from "../../../../../Shared/scripts/Interfaces/Agents/InitResultsDesktopProxy";
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
@@ -12,16 +11,13 @@ import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectCon
 import { DTPopUpMenuProxy } from "./DesktopPopUpMenuProxy";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
-import { DesktopProxyMutationEvent_Subject } from "./Events/DesktopProxyMutationEvent/DesktopProxyMutationEvent_Subject";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
 
 export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.Desktop;
-  //DesktopProxyMutationEvent_Observer: DesktopProxyMutationEvent_Observer;
   private DocumentJacket: DocumentJacket;
-  private DesktopProxyMutationEvent_Subject: DesktopProxyMutationEvent_Subject;
   private DTAreaProxy: DTAreaProxy;
   private DTPopUpMenuProxy: DTPopUpMenuProxy;
   private DTStartBarProxy: DTStartBarProxy;
@@ -44,8 +40,6 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     try {
       this.Logger.FuncStart(this.InstantiateAsyncMembers.name, DesktopSFProxy.name);
 
-      let initReportDesktopProxy = new InitReport_DesktopProxy();
-
       this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.DocumentJacket);
       this.DTAreaProxy.InstantiateAsyncMembers();
 
@@ -53,7 +47,6 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
       this.DTStartBarProxy.Instantiate_DTStartBarProxy();
 
       this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
-      this.DesktopProxyMutationEvent_Subject = new DesktopProxyMutationEvent_Subject(this.HindeCore);
 
       this.RecipeBasics = new RecipeBasics(this.HindeCore);
     } catch (err) {
@@ -136,13 +129,12 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
       this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
 
       await
-        //this.RecipeBasics.WaitForTimePeriod(10000, '10 sec')
         this.DTStartBarProxy.TriggerRedButton()
-        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddPackageDesignerFrame.name))
-        .then(() => this.DTPopUpMenuProxy.RecipeAddNewPackageDesignerToDesktop(this.DocumentJacket))
-        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddPackageDesignerFrame.name))//ui-widget-overlay ui-front
-        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddPackageDesignerFrame.name))
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddPackageDesignerFrame.name, err));
+          .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddPackageDesignerFrame.name))
+          .then(() => this.DTPopUpMenuProxy.RecipeAddNewPackageDesignerToDesktop(this.DocumentJacket))
+          .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddPackageDesignerFrame.name))//ui-widget-overlay ui-front
+          .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddPackageDesignerFrame.name))
+          .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddPackageDesignerFrame.name, err));
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.AddPackageDesignerFrame.name, err);
     }
@@ -171,23 +163,9 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   OnAreaProxyMutationEvent(dTAreaProxyMutationEvent_Payload: IDTAreaProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.OnAreaProxyMutationEvent.name);
 
-    //this.DesktopProxyMutationEvent.Notify
     this.DTStartBarProxy.OnTreeMutationEvent_DesktopStartBarProxy(dTAreaProxyMutationEvent_Payload);
     this.Logger.FuncEnd(this.OnAreaProxyMutationEvent.name);
   }
-
-  //OnDTFrameProxyMutationEvent(frameProxyMutatationEvent_Payload: IDTFrameProxyMutationEvent_Payload) {
-  //  this.Logger.FuncStart(this.OnDTFrameProxyMutationEvent.name);
-
-  //  this.Logger.FuncEnd(this.OnDTFrameProxyMutationEvent.name);
-  //}
-
-  //OnDTFrameProxyMutation(desktopDTFrameProxyMutatationEvent_Payload: INativeIFrameAddedEvent_Payload) {
-  //  //todo - put back?
-  //  //if (this.DesktopProxyMutationEvent_Subject) {
-  //  //  this.DesktopProxyMutationEvent_Subject.NotifyObservers(desktopDTFrameProxyMutatationEvent_Payload);
-  //  //}
-  //}
 
   GetAssociatedDoc(): DocumentJacket {
     return this.DocumentJacket;

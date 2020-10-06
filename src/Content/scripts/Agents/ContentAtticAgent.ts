@@ -202,26 +202,6 @@ export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAg
     return stateOfSnapshotStorage;
   }
 
-  //ConvertGuidData(candidateSnapShots: IDataStateOfSitecoreWindow[]): IDataStateOfSitecoreWindow[] {
-  //  let toReturn: IDataStateOfSitecoreWindow[] = []
-
-  //  for (var idx = 0; idx < candidateSnapShots.length; idx++) {
-  //    var candidate = candidateSnapShots[idx];
-
-  //    try {
-  //      if (candidate.Meta.SessionId && Guid.IsValidGuidStr(candidate.Meta.SnapshotId.Raw)) {
-  //        //candidate.Meta.SnapshotId = new GuidData(candidate.Meta.SnapshotId.Raw);
-  //        toReturn.push(candidate);
-  //      } else {
-  //        this.ErrorHand.ErrorAndContinue(this.ConvertGuidData.name, 'invalid guid for ID, record is being ignored. Got: ' + candidate.Meta.SnapshotId.Raw)
-  //      }
-  //    } catch (err) {
-  //    }
-  //  }
-
-  //  return toReturn;
-  //}
-
   UpdateCounts(storageAllSnapshots: IStateOfStorageSnapShots) {
     storageAllSnapshots.FavoriteCount = 0;
     storageAllSnapshots.SnapShotsAutoCount = 0;
