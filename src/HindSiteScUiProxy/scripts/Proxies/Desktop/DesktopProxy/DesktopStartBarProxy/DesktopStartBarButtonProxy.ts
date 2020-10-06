@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
-import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
+import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
 import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
@@ -7,7 +7,6 @@ import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/I
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
-import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
 
 export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   private DocumentJacket: DocumentJacket;
