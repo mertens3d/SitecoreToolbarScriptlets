@@ -18,14 +18,12 @@ import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNo
 
 //ContentTree is the name Sitecore uses
 export class BuiltInContentTreeNodeResolver extends _HindeCoreBase {
-
   GetBuiltInNode() {
-
   }
 }
 
 export class ContentTreeProxy extends _HindeCoreBase {
-  private  TreeRootSelector: string;
+  private TreeRootSelector: string;
   private _treeNodeProxy: ScContentTreeNodeProxy;
   private DocumentJacket: DocumentJacket;
   private NativeClassNameChangeEvent_Observer: NativeClassNameChangeEvent_Observer;
@@ -48,11 +46,9 @@ export class ContentTreeProxy extends _HindeCoreBase {
     this.Logger.FuncStart(this.Instantiate_TreeProxy.name);
 
     try {
-      await this.GetRootNodeForFrameType()
-        .then((htmlElement: ElementJacket) => {
-          this.rootTreeNodeJacket = htmlElement;
+      await this.SetRootNodeFromSelector()
+        .then(() => {
           this.TreeMutationEvent_Subject = new ContentTreeProxyMutationEvent_Subject(this.HindeCore);
-
           this.NativeClassNameChangeEvent_Subject = new NativeClassNameChangeEvent_Subject(this.HindeCore, this.TreeContainerJacket);
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.HindeCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
@@ -159,16 +155,16 @@ export class ContentTreeProxy extends _HindeCoreBase {
     this.Logger.FuncEnd(this.SetStateOfContentTree.name);
   }
 
-  async GetRootNodeForFrameType(): Promise<ElementJacket> {
+  async SetRootNodeFromSelector(): Promise<void> {
     try {
       await this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(this.TreeRootSelector)
         .then((elementJacket: ElementJacket) => this.rootTreeNodeJacket = elementJacket);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.GetRootNodeForFrameType.name, err);
+      this.ErrorHand.ErrorAndThrow(this.SetRootNodeFromSelector.name, err);
     }
 
-    let toReturn: ElementJacket = this.TreeContainerJacket.querySelector(ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot);
-    return toReturn;
+    //let toReturn: ElementJacket = this.TreeContainerJacket.querySelector(ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot);
+    //return toReturn;
   }
 
   private GetActiveTreeNodeFromAncestorNode(stateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep): IStateOfScContentTreeNodeDeep {

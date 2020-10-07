@@ -37,6 +37,16 @@ export class DTPopUpMenuProxy extends _HindeCoreBase {
     });
   }
 
+  RecipeAddNewTemplateManagerToDesktop(documentJacket: DocumentJacket): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewTemplateManagerToDesktop.name, documentJacket);
+
+      await documentJacket.WaitForThenClick([ContentConst.Const.Selector.SC.TemplateManager])
+        .then(() => resolve())
+        .catch((err) => reject(this.RecipeAddNewTemplateManagerToDesktop.name + ' ' + err));
+    });
+  }
+
   RecipeAddNewContentEditorToDesktop(documentJacket: DocumentJacket): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.ErrorHand.ThrowIfNullOrUndefined(this.RecipeAddNewContentEditorToDesktop.name, documentJacket);

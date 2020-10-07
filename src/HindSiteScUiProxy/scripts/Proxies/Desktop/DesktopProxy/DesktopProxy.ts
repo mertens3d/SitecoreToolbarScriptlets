@@ -98,8 +98,10 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
               promAr.push(this.AddContentEditorFrameAsync());
             } else if (disciminator === StateFullProxyDisciminator.PackageDesigner) {
               promAr.push(this.AddPackageDesignerFrame())
+            } else if (disciminator === StateFullProxyDisciminator.TemplateManager) {
+              promAr.push(this.AddTemplateFrame())
             } else {
-              this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled discriminator ')
+              this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled discriminator ->  ' + StateFullProxyDisciminator[disciminator]) 
             }
           })
         })
@@ -125,6 +127,30 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     await this.DTAreaProxy.PublishTopFrame();
   }
 
+
+
+  
+  async AddTemplateFrame(): Promise<void> {
+    this.Logger.FuncStart(this.AddTemplateFrame.name);
+    try {
+      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
+
+      await this.DTStartBarProxy.TriggerRedButton()
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddTemplateFrame.name))
+        .then(() => this.DTPopUpMenuProxy.RecipeAddNewTemplateManagerToDesktop(this.DocumentJacket))
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddTemplateFrame.name))//ui-widget-overlay ui-front
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddTemplateFrame.name))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddTemplateFrame.name, err));
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.AddTemplateFrame.name, err);
+    }
+    this.Logger.FuncEnd(this.AddTemplateFrame.name);
+  }
+
+
+
+
+
   async AddPackageDesignerFrame(): Promise<void> {
     this.Logger.FuncStart(this.AddPackageDesignerFrame.name);
     try {
@@ -142,6 +168,9 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     }
     this.Logger.FuncEnd(this.AddPackageDesignerFrame.name);
   }
+
+
+
   async AddContentEditorFrameAsync(): Promise<void> {
     this.Logger.FuncStart(this.AddContentEditorFrameAsync.name);
     try {

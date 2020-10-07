@@ -84,6 +84,7 @@ export interface IContentConst {
         PackageDesigner: string,
       },
       StartMenuLeftOption: string,
+      TemplateManager: string,
       scStartButton: IScVerSpec,
       Desktop: {
         DtStartBar: string,
