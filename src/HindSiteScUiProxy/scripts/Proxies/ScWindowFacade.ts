@@ -23,6 +23,7 @@ import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
+import { TemplateManagerProxy } from "./TemplateManagerProxy";
 
 export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
   SettingsAgent: ISettingsAgent;
@@ -63,7 +64,14 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
           }
           else if (windowType === ScWindowType.ContentEditor) {
             this.StateFullProxy = new ContentEditorSFProxy(this.HindeCore, this.DocumentJacket, 'Solo Content Editor doc');
-          };
+          }
+          else if (windowType === ScWindowType.TemplateManager) {
+            this.StateFullProxy = new TemplateManagerProxy(this.HindeCore, this.DocumentJacket, 'Solo Content Editor doc');
+          }
+          else {
+            this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers_ScWindowFacade.name, 'unhandled windowType ' + ScWindowType[windowType]);
+          }
+          ;
         })
         .then(() => this.StateFullProxy.InstantiateAsyncMembers())
         .then(() => this.StateFullProxy.WireEvents())

@@ -130,7 +130,7 @@ export class ContentConst {
         MenuButtonPublish: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_button]',
         MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',
         NavPublishStrip: '[id*=_Nav_PublishStrip]',
-        StartMenuLeftOption: '.scStartMenuLeftOption',
+        StartMenuLeftOption: 'img[src$="pencil.png"]', 
         TemplateManager: 'img[src$="newspaper.png"]',
         StartMenu: {
           DevelopmentTools: '[src="/temp/iconcache/apps/24x24/magic-cube.png"]',

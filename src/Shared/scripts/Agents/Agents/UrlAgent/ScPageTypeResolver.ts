@@ -32,7 +32,12 @@ export class AllPageDeterminators {
     {
       ConfidenceScore:  0,
       Friendly: "Content Editor",
-      QueryKeyValuePairs: [],
+      QueryKeyValuePairs: [
+        {
+          Key: QueryStrKey.he,
+          ValueMatch: /Content.*Editor/ig,
+        }
+      ],
       RegexPathTest: /sitecore\/shell\/Applications\/Content.*Editor/ig,  //content-editor, content%20editor
       ScWindowType: ScWindowType.ContentEditor,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.ContentEditor],
@@ -130,12 +135,17 @@ export class AllPageDeterminators {
 
     {
       // - /sitecore/shell/Applications/Content%20Manager/default.aspx?he=Template%20Manager&pa=0&mo=templateworkspace&ic=Software%2F16x16%2Fcomponents.png&ro=%7B3C1715FE-6A13-4FCF-845F-DE308BA9741D%7D&fo&il
+      ///en/sitecore/shell/Applications/Templates/Template-Manager?ic=Apps%2F48x48%2FNewspaper.png&he=Template%20Manager
+      // /sitecore/shell/Applications/Content%20Manager/default.aspx?he=Template%20Manager&pa=0&mo=templateworkspace&ic=Software%2F16x16%2Fcomponents.png&ro=%7B3C1715FE-6A13-4FCF-845F-DE308BA9741D%7D&fo&il
       ConfidenceScore:  0,
       Friendly: "Template Manager",
       QueryKeyValuePairs: [
         {
           Key: QueryStrKey.he,
           ValueMatch: /Template.*Manager/ig,
+        }, {
+          Key: QueryStrKey.mo,
+          ValueMatch: /templateworkspace/ig,
         }
       ],
       RegexPathTest: AllPageDeterminators.regexMatchApplicationsContentManager,
@@ -147,19 +157,20 @@ export class AllPageDeterminators {
 
 export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
   public UrlJacket: IUrlJacket;
-  private Determinators: IPageDeterminator[] = [];
   constructor(hindeCore: IHindeCore, urlJacket: IUrlJacket) {
     super(hindeCore);
     this.ErrorHand.ThrowIfNullOrUndefined(ScPageTypeResolver.name, [urlJacket]);
     this.UrlJacket = urlJacket;
-    this.Determinators = AllPageDeterminators.ScPages;
   }
 
   RunJacketAgainstAllDeterminators(): IPageDeterminator {
+  let determinators: IPageDeterminator[] = AllPageDeterminators.ScPages;
     let toReturnPageDeterminator: IPageDeterminator = null;
 
-    this.Determinators.forEach((determinant: IPageDeterminator) => {
+    determinators.forEach((determinant: IPageDeterminator) => {
       let passed: boolean = true;
+      determinant.ConfidenceScore = 0;
+
 
       passed = this.TestJacketAgainstRegex(determinant.RegexPathTest);
       if (passed) {
@@ -217,7 +228,8 @@ export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
     this.Logger.FuncStart(this.__urlTestAgainstRegex.name, regexPattern.toString());
     this.Logger.LogVal('Url', url);
     let testResult: boolean = new RegExp(regexPattern).test(url);
-    this.Logger.FuncEnd(this.__urlTestAgainstRegex.name, testResult.toString());
+
+    this.Logger.FuncEnd(this.__urlTestAgainstRegex.name, regexPattern.toString() + ' | ' + url + ' | ' + testResult.toString());
     return testResult;
   }
 
