@@ -96,35 +96,43 @@ export class FrameJacket extends _HindeCoreBase {
     return this.NativeIframeId;
   }
 
+  private async WaitForNABHostedDoc(): Promise<void> {
+    this.Logger.FuncStart(this.WaitForNABHostedDoc.name);
+    try {
+      var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForNABHostedDoc.name, false);
+      let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, this.HtmlIFrameElement.contentDocument);
+
+      while (iterationJr.DecrementAndKeepGoing() && readyStateNAB.DocIsAboutBlank()) {
+        await iterationJr.Wait();
+        readyStateNAB.SetDocument(this.HtmlIFrameElement.contentDocument);
+        readyStateNAB.LogDebugValues();
+      }
+
+      if (iterationJr.IsExhausted) {
+        this.Logger.Log(iterationJr.IsExhaustedMsg);
+      }
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.WaitForNABHostedDoc.name, err);
+    }
+    this.Logger.FuncEnd(this.WaitForNABHostedDoc.name);
+  }
+
   async WaitForCompleteNABHtmlIframeElement(friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNABHtmlIframeElement.name, friendly);
       this.Logger.Log(this.DocumentJacket.UrlJacket.GetOriginalURL());
 
       if (this.HtmlIFrameElement) {
-        var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForCompleteNABHtmlIframeElement.name, false);
-        let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, this.HtmlIFrameElement.contentDocument);
-
-        while (iterationJr.DecrementAndKeepGoing() && readyStateNAB.DocIsAboutBlank()) {
-          await iterationJr.Wait();
-          readyStateNAB.SetDocument(this.HtmlIFrameElement.contentDocument);
-          readyStateNAB.LogDebugValues();
-        }
-
-        if (iterationJr.IsExhausted) {
-          this.Logger.Log(iterationJr.IsExhaustedMsg);
-          resolve(readyStateNAB);
-        }
-        else {
-          this.DocumentJacket = new DocumentJacket(this.HindeCore, this.HtmlIFrameElement.contentDocument);
-
-          await this.DocumentJacket.WaitForCompleteNAB_NativeDocument(friendly)
-            .then((result: ReadyStateNAB) => {
-              this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, result.DocumentReadtStateFriendly());
-              resolve(result);
-            })
-            .catch((err) => reject(this.WaitForCompleteNABHtmlIframeElement + ' | ' + err));
-        }
+        await this.WaitForNABHostedDoc()
+          .then(() => this.DocumentJacket = new DocumentJacket(this.HindeCore, this.HtmlIFrameElement.contentDocument))
+          .then(() => this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(friendly))
+          .then((result: ReadyStateNAB) => {
+            this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, result.DocumentReadtStateFriendly());
+            this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, this.HtmlIFrameElement.contentDocument.URL);
+            this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, this.HtmlIFrameElement.contentDocument.readyState);
+            resolve(result);
+          })
+          .catch((err) => reject(this.WaitForCompleteNABHtmlIframeElement + ' | ' + err));
       }
       else {
         this.ErrorHand.ErrorAndThrow(this.WaitForCompleteNABHtmlIframeElement.name, 'No target doc: ' + friendly);

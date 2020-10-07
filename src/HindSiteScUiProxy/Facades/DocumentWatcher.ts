@@ -2,7 +2,7 @@
 import { IFrameJacketAddRemoveEvent_Payload } from "../../DOMJacket/Events/NativeIFrameAddedEvent/IFrameJacketAddRemoveEvent_Payload";
 import { FrameJacketAddRemoveEvent_Observer } from "../../DOMJacket/Events/NativeIFrameAddedEvent/FrameJacketAddRemoveEvent_Observer";
 import { FrameJacketAddRemoveEvent_Subject } from "../../DOMJacket/Events/NativeIFrameAddedEvent/FrameJacketAddRemoveEvent_Subject";
-import { ScPageTypeResolver } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { ScPageTypeResolver } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 import { Guid } from "../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../Shared/scripts/Helpers/GuidData";
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -18,7 +18,7 @@ export class DocumentWatcher extends _HindeCoreBase {
   private FrameJacketAddRemoveEvent_Subject: FrameJacketAddRemoveEvent_Subject;
   public DocumentJacket: DocumentJacket; //work towards making this private
   public DocumentProxyMutationEvent_Subject: DocumentProxyMutationEvent_Subject;
-  public readonly ScUrlAgent: ScPageTypeResolver;
+  public readonly ScPageTypeResolver: ScPageTypeResolver;
   readonly DocId: GuidData = Guid.NewRandomGuid();
 
   constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
@@ -27,7 +27,7 @@ export class DocumentWatcher extends _HindeCoreBase {
     this.ErrorHand.ThrowIfNullOrUndefined(DocumentWatcher.name, [documentJacket]);
 
     this.DocumentJacket = documentJacket;
-    this.ScUrlAgent = new ScPageTypeResolver(this.HindeCore, this.DocumentJacket.UrlJacket);
+    this.ScPageTypeResolver = new ScPageTypeResolver(this.HindeCore, this.DocumentJacket.UrlJacket);
 
     this.InstantiateInstance();
   }

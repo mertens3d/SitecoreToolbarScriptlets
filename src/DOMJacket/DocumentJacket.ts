@@ -238,15 +238,15 @@ export class DocumentJacket extends _HindeCoreBase {
     });
   }
 
-  public async WaitForCompleteNAB_NativeDocument(friendly: string): Promise<ReadyStateNAB> {
+  public async WaitForCompleteNAB_DocumentJacket(friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForCompleteNAB_NativeDocument.name, friendly);
+      this.Logger.FuncStart(this.WaitForCompleteNAB_DocumentJacket.name, friendly);
       this.Logger.LogVal('url', this.NativeDocument.URL);
       this.Logger.LogVal('readyState', this.NativeDocument.readyState);
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_NativeDocument.name, this.NativeDocument);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_DocumentJacket.name, this.NativeDocument);
 
-      var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForCompleteNAB_NativeDocument.name, false);
+      var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForCompleteNAB_DocumentJacket.name, false);
       let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, this.NativeDocument);
 
       while (iterationJr.DecrementAndKeepGoing() && !readyStateNAB.IsCompleteNAB()) {
@@ -262,7 +262,7 @@ export class DocumentJacket extends _HindeCoreBase {
         resolve(readyStateNAB);
       }
 
-      this.Logger.FuncEnd(this.WaitForCompleteNAB_NativeDocument.name, friendly);
+      this.Logger.FuncEnd(this.WaitForCompleteNAB_DocumentJacket.name, friendly);
     });
   }
 }

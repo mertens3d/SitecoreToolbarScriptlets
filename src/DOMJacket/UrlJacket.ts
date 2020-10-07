@@ -9,7 +9,7 @@ import { SharedConst } from "../Shared/scripts/SharedConst";
 
 export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
   protected UrlParts: IGenericUrlParts;
-  private OriginalURL: string;
+  public readonly OriginalURL: string;
   constructor(hindeCore: IHindeCore, url: string) {
     super(hindeCore);
     this.OriginalURL = url;

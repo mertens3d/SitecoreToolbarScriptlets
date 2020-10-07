@@ -34,9 +34,11 @@ export class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {
     return toReturn;
   }
 
+
+
   async WaitAndReturnFoundElemJacketFromElemJacket(selector: string, friendly: string): Promise<ElementJacket> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitAndReturnFoundElemJacketFromElemJacket.name, selector);
+      //this.Logger.FuncStart(this.WaitAndReturnFoundElemJacketFromElemJacket.name, selector);
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitAndReturnFoundElemJacketFromElemJacket.name, [selector]);
       var toReturnElemJacket: ElementJacket = null;
       var iterationJr = new IterationDrone(this.HindeCore, this.WaitAndReturnFoundElemJacketFromElemJacket.name + ' : ' + selector + ' ' + friendly, false);
@@ -54,7 +56,7 @@ export class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {
       if (iterationJr.IsExhausted) {
         reject(iterationJr.IsExhaustedMsg);
       }
-      this.Logger.FuncEnd(this.WaitAndReturnFoundElemJacketFromElemJacket.name, selector);
+      //this.Logger.FuncEnd(this.WaitAndReturnFoundElemJacketFromElemJacket.name, selector);
     });
   }
 }

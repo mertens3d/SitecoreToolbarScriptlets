@@ -10,6 +10,13 @@
 
 
 
+
+Sitecore Structure
+/en/sitecore/shell/Applications/Templates/Template-Manager?ic=Apps%2F48x48%2FNewspaper.png&he=Template%20Manager
+    redirects to /sitecore/shell/Applications/Content%20Manager/default.aspx?he=Template%20Manager&pa=0&mo=templateworkspace&ic=Software%2F16x16%2Fcomponents.png&ro=%7B3C1715FE-6A13-4FCF-845F-DE308BA9741D%7D&fo&il
+
+
+
 ## Debugging
 - you can use this on the console in the popup to debug the startup js for the popup
 ```javascript

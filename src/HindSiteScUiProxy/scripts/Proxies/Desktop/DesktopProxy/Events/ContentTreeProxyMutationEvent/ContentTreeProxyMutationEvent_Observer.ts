@@ -4,10 +4,10 @@ import { IHindSiteEvent_Observer } from '../../../../../../../Shared/scripts/Eve
 import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IContentTreeProxyMutationEvent_Payload } from './IContentTreeProxyMutationEvent_Payload';
 
-export class ContentTreeProxyMutationEvent_Observer extends HindSiteEvent_Observer<IContentTreeProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<IContentTreeProxyMutationEvent_Payload> {
+export class __ContentTreeBasedProxyMutationEvent_Observer extends HindSiteEvent_Observer<IContentTreeProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<IContentTreeProxyMutationEvent_Payload> {
 
   constructor(hindeCore: IHindeCore, callback: HindsiteEventHandler_Type) {
-    super(hindeCore, ContentTreeProxyMutationEvent_Observer.name, callback);
+    super(hindeCore, __ContentTreeBasedProxyMutationEvent_Observer.name, callback);
   }
 
 }

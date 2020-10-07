@@ -147,7 +147,11 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
         .then(() => dtFrameProxy.WireEvents())
         .then(() => {
           let currentWindowType = dtFrameProxy.GetScWindowType();
-          if (currentWindowType !== ScWindowType.ContentEditor && currentWindowType !== ScWindowType.PackageDesigner) {
+          if (currentWindowType !== ScWindowType.ContentEditor
+            && currentWindowType !== ScWindowType.MediaLibrary
+            && currentWindowType !== ScWindowType.PackageDesigner
+            && currentWindowType !== ScWindowType.TemplateManager
+          ) {
             //todo - this probably needs to be a Promise.all but we are only going to get one at a time
             this.Logger.LogVal('scWindowType', ScWindowType[currentWindowType]);
             this.ErrorHand.ErrorAndThrow(this.HandleAddedFrameJacket.name, 'unrecognized window type');

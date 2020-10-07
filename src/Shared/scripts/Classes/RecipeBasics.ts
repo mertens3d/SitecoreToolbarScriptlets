@@ -98,7 +98,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
 
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_DataOneDoc.name,[documentJacket, friendly]);
 
-      await documentJacket.WaitForCompleteNAB_NativeDocument(friendly)// this.WaitForCompleteNABDocumentNative(targetDoc.ContentDoc, friendly)
+      await documentJacket.WaitForCompleteNAB_DocumentJacket(friendly)// this.WaitForCompleteNABDocumentNative(targetDoc.ContentDoc, friendly)
         .then((result: ReadyStateNAB) => {
           result.LogDebugValues();
           resolve(result);

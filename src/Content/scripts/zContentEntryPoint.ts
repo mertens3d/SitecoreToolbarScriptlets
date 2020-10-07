@@ -83,7 +83,7 @@ class ContentEntry {
     return new Promise(async (resolve, reject) => {
       this.TopDocumentJacket = new DocumentJacket(this.HindeCore, document);
 
-      await this.TopDocumentJacket.WaitForCompleteNAB_NativeDocument(this.InstantiateDocumentJacket.name)
+      await this.TopDocumentJacket.WaitForCompleteNAB_DocumentJacket(this.InstantiateDocumentJacket.name)
         .then(() => resolve())
         .catch((err) => reject(this.InstantiateDocumentJacket.name + ' | ' + err));
     })

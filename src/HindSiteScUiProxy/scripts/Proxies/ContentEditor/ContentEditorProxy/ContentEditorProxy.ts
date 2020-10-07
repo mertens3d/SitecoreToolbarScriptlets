@@ -1,43 +1,23 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/DocumentJacket';
-import { DefaultStateOfContentEditor } from '../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentEditor';
-import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+import { DefaultStateOfContentEditor } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentEditor.1";
 import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
-import { GuidData } from "../../../../../Shared/scripts/Helpers/GuidData";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { InitReportContentEditorProxy } from '../../../../../Shared/scripts/Interfaces/Agents/InitResultContentEditorProxy';
 import { IStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateProxy';
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
 import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
-import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { ContentEditorProxyMutationEvent_Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
-import { IContentEditorProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
-import { ContentTreeProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Observer';
-import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
-import { _BaseStateFullProxy } from '../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
-import { ContentTreeProxy } from "./ContentTreeProxy/ContentTreeProxy";
-import { ElementJacket } from "../../../../../DOMJacket/ElementJacket";
+import { _ContentTreeBasedProxy } from './_ContentTreeBasedProxy';
+import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 
-export class ContentEditorSFProxy extends _BaseStateFullProxy<IStateOfContentEditor> implements IStateFullProxy {
-  public StateFullProxyDisciminator = StateFullProxyDisciminator.ContentEditor;
-  private ContentTreeProxy: ContentTreeProxy;
-  private TreeMutationEvent_Observer: ContentTreeProxyMutationEvent_Observer;
-  public ContentEditorProxyMutationEvent_Subject: ContentEditorProxyMutationEvent_Subject;
-  readonly AssociatedHindsiteId: GuidData;
-  initResultContentEditorProxy: InitReportContentEditorProxy;
-  Friendly: string;
-  private RecipeBasic: RecipeBasics;
-  private DocumentJacket: DocumentJacket;
+export class ContentEditorSFProxy extends _ContentTreeBasedProxy<IStateOfContentEditor> implements IStateFullProxy {
+  readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
+  public readonly StateFullProxyDisciminator = StateFullProxyDisciminator.ContentEditor;
 
   constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, friendly: string) {
-    super(hindeCore);
+    super(hindeCore, documentJacket, friendly);
     this.Logger.CTORStart(ContentEditorSFProxy.name);
-    this.AssociatedHindsiteId = Guid.NewRandomGuid();
-    this.DocumentJacket = documentJacket;
-    this.ValidateAssociatedDocContentEditor();
-    this.Friendly = friendly
 
     this.Logger.CTOREnd(ContentEditorSFProxy.name);
   }
@@ -50,17 +30,7 @@ export class ContentEditorSFProxy extends _BaseStateFullProxy<IStateOfContentEdi
   async InstantiateAsyncMembers(): Promise<void> {
     this.Logger.FuncStart(this.InstantiateAsyncMembers.name, ContentEditorSFProxy.name);
     try {
-      this.initResultContentEditorProxy = new InitReportContentEditorProxy();
-      this.RecipeBasic = new RecipeBasics(this.HindeCore);
-      await this.DocumentJacket.WaitForCompleteNAB_NativeDocument(this.Friendly)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
-        .then(() => {
-          this.ContentEditorProxyMutationEvent_Subject = new ContentEditorProxyMutationEvent_Subject(this.HindeCore);
-          this.TreeMutationEvent_Observer = new ContentTreeProxyMutationEvent_Observer(this.HindeCore, this.CallBackOnContentEditorProxyTreeMutationEventAsync.bind(this));
-        })
-        .then(() => this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
-        .then((treeContainer: ElementJacket) => this.ContentTreeProxy = new ContentTreeProxy(this.HindeCore, this.DocumentJacket, treeContainer))
-        .then(() => this.ContentTreeProxy.Instantiate_TreeProxy())
-        .then(() => this.initResultContentEditorProxy.ContentEditorProxyInitialized = true)
+      await this.__baseInstantiateAsyncMembers()
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err));
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err);
@@ -70,8 +40,7 @@ export class ContentEditorSFProxy extends _BaseStateFullProxy<IStateOfContentEdi
 
   WireEvents() {
     this.Logger.FuncStart(this.WireEvents.name, ContentEditorSFProxy.name);
-    this.ContentTreeProxy.WireEvents_TreeProxy()
-    this.ContentTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
+    this.__baseWireEvents()
     this.Logger.FuncEnd(this.WireEvents.name, ContentEditorSFProxy.name);
   }
 
@@ -93,19 +62,14 @@ export class ContentEditorSFProxy extends _BaseStateFullProxy<IStateOfContentEdi
     return new Promise<boolean>(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetState.name, ContentEditorSFProxy.name + ' ' + Guid.AsShort(this.DocumentJacket.DocId));
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + ContentEditorSFProxy.name, dataToRestore);
-      this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + ContentEditorSFProxy.name, dataToRestore.StateOfContentTree);
-      this.ContentEditorProxyMutationEvent_Subject.DisableNotifications();
+      let StateResponse: boolean = false;
 
-      await this.RecipeBasic.WaitForTimePeriod(1000, this.SetState.name)
-        .then(() => this.RecipeBasic.WaitForNoUiFrontOverlay(this.SetState.name))
-        .then(() => this.ContentTreeProxy.SetStateOfContentTree(dataToRestore.StateOfContentTree.StateOfScContentTreeNodeDeep))
+      await this.__baseSetState(dataToRestore)
+        .then((response: boolean) => StateResponse = response)
         .then(() => {
-          this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
-          resolve(true);
+          resolve(StateResponse);
         })
         .catch((err) => {
-          this.ContentEditorProxyMutationEvent_Subject.EnableNotifications();
           reject(this.SetState.name + " " + err);
         });
 
@@ -120,35 +84,10 @@ export class ContentEditorSFProxy extends _BaseStateFullProxy<IStateOfContentEdi
 
   //----------------------------------------------------------------------
 
-  CallBackOnContentEditorProxyTreeMutationEventAsync(treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload) {
-    this.Logger.FuncStart(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
-    this.TaskMonitor.AsyncTaskStarted(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
-    let contentEditorProxyMutationEvent_Payload: IContentEditorProxyMutationEvent_Payload = {
-      TreeMutationEvent_Payload: treeMutationEvent_Payload,
-    }
-
-    if (this.ContentEditorProxyMutationEvent_Subject) {
-      this.ContentEditorProxyMutationEvent_Subject.NotifyObserversAsync(contentEditorProxyMutationEvent_Payload);
-    }
-    this.TaskMonitor.AsyncTaskCompleted(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
-    this.Logger.FuncEnd(this.CallBackOnContentEditorProxyTreeMutationEventAsync.name);
-  }
-
-  ValidateAssociatedDocContentEditor() {
-    if (!this.DocumentJacket) {
-      this.ErrorHand.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No doc provided');
-    }
-
-    this.DocumentJacket.Validate();
-  }
-
   async WaitForCompleteNABContentEditor(): Promise<void> {
     this.Logger.FuncStart(this.WaitForCompleteNABContentEditor.name);
     try {
-      let recipeBasics = new RecipeBasics(this.HindeCore);
-
-      // recipeBasics.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
-      await this.DocumentJacket.WaitForCompleteNAB_NativeDocument(this.Friendly)
+      await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.Friendly)
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.WaitForCompleteNABContentEditor.name, err));
     } catch (e) {
     }

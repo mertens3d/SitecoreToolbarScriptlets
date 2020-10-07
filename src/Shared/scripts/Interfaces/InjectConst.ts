@@ -93,9 +93,19 @@ export class ContentConst {
         ContentEditor: {
           ScContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
           ScContentTreeNode: '.scContentTreeNode',
-          RootAnchorNode: '[id=Tree_Node_11111111111111111111111111111111]',
           ScContentTreeContainer: '.scContentTreeContainer',
           scContentTreeNodeIcon: '.scContentTreeNodeIcon',
+        },
+
+        ContentTree: {
+          BuiltIn: {
+            TreeNodeSitecoreRoot: '[id=Tree_Node_11111111111111111111111111111111]',
+            MediaLibraryAnchorRootNode: '[id=Tree_Node_3D6658D8A0BF4E75B3E2D050FABCF4E1]',
+            TemplatesAnchorRootNode: '[id=Tree_Node_3C1715FE6A134FCF845FDE308BA9741D]',
+            LayoutRootAnchorNode: '[id=Tree_Node_EB2E4FFD27614653B05226A64D385227]',
+            SystemRootAnchorNode: '[id=Tree_Node_13D6D6C6C50B4BBDB3312B04F1A58F21]',
+            ContentRootAnchorNode: '[id=Tree_Node_0DE95AE441AB4D019EB067441B7C2450]',
+          }
         },
         PackageDesigner: {
           Ribbon: {
@@ -104,21 +114,17 @@ export class ContentConst {
             Open: '[title="Open an existing project"]',
           },
         },
-        Level2Nodes: {
-          MediaLibraryAnchorRootNode: '[id=Tree_Node_3D6658D8A0BF4E75B3E2D050FABCF4E1]',
-          TemplatesAnchorRootNode: '[id=Tree_Node_3C1715FE6A134FCF845FDE308BA9741D]',
-          LayoutRootAnchorNode: '[id=Tree_Node_EB2E4FFD27614653B05226A64D385227]',
-          SystemRootAnchorNode: '[id=Tree_Node_13D6D6C6C50B4BBDB3312B04F1A58F21]',
-          ContentRootAnchorNode: '[id=Tree_Node_0DE95AE441AB4D019EB067441B7C2450]',
-        },
 
         IdStartsWithTreeNode: '[id^=Tree_Node_]',
         IframeContent: {
           sc820: null,
           sc920: 'iframe[src*=Content], iframe[src*=MediaShop]'
         },
-
-        JqueryModalDialogsFrame: '[id=jqueryModalDialogsFrame]',
+        Frames: {
+          AppFrame: '[id=AppFrame]',
+          ScContentIframeId0: '[id=scContentIframeId0]',
+          JqueryModalDialogsFrame: '[id=jqueryModalDialogsFrame]',
+        },
         ContentIframe0: '[id=scContentIframeId0]',
         NextButton: '[id=NextButton]',
         ContentIFrame1: '[id=scContentIframeId1]',
@@ -127,7 +133,9 @@ export class ContentConst {
         MenuButtonPublish: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_button]',
         MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',
         NavPublishStrip: '[id*=_Nav_PublishStrip]',
-        StartMenuLeftOption: '.scStartMenuLeftOption',
+        StartMenuLeftOption: 'img[src$="pencil.png"]',
+        MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
+        TemplateManager: 'img[src$="newspaper.png"]',
         StartMenu: {
           DevelopmentTools: '[src="/temp/iconcache/apps/24x24/magic-cube.png"]',
           PackageDesigner: '[id=MenuItem211048689]',

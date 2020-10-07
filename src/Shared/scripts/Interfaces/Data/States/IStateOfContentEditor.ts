@@ -1,6 +1,4 @@
-﻿import { IStateOfContentTree } from './IStateOfContentTree';
-import { IStateOf_ } from './IStateofX';
+﻿import { IStateOfContentTreeBasedProxies } from './IStateOfContentTreeBasedProxies';
 
-export interface IStateOfContentEditor extends IStateOf_{
-  StateOfContentTree: IStateOfContentTree,
+export interface IStateOfContentEditor extends IStateOfContentTreeBasedProxies {
 }

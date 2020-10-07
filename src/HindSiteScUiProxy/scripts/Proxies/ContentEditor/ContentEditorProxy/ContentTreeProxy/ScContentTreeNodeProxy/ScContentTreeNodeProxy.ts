@@ -36,24 +36,24 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
   }
   private HasBeenHarvested: boolean = false;
   private: number;
-    ParentTreeNode: ScContentTreeNodeProxy;
+  ParentTreeNode: ScContentTreeNodeProxy;
 
-  constructor(hindeCore: IHindeCore, sourceElement: ElementJacket, level: number, siblingIndex: number, totalSiblings: number, parent:  ScContentTreeNodeProxy) {
+  constructor(hindeCore: IHindeCore, sourceElemJacket: ElementJacket, level: number, siblingIndex: number, totalSiblings: number, parent: ScContentTreeNodeProxy) {
     super(hindeCore);
 
-    if (sourceElement) {
+    if (sourceElemJacket) {
       this.StateOfScContentTreeNode.Coord.LevelWidth = totalSiblings;
       this.StateOfScContentTreeNode.Coord.SiblingIndex = siblingIndex;
       this.StateOfScContentTreeNode.Coord.LevelIndex = level;
 
-      if (sourceElement.NativeElement.hasAttribute('src')) {
-        this.InferFromImageElement(<HTMLImageElement>sourceElement.NativeElement);
-      } else if (sourceElement.NativeElement.hasAttribute('href')) {
-        this.InferFromAnchorElement(<HTMLAnchorElement>sourceElement.NativeElement);
-      } else if (sourceElement.NativeElement.classList.contains('scContentTreeNode')) {
-        this.InferFromDivElement(<HTMLDivElement>sourceElement.NativeElement)
+      if (sourceElemJacket.NativeElement.hasAttribute('src')) {
+        this.InferFromImageElement(<HTMLImageElement>sourceElemJacket.NativeElement);
+      } else if (sourceElemJacket.NativeElement.hasAttribute('href')) {
+        this.InferFromAnchorElement(<HTMLAnchorElement>sourceElemJacket.NativeElement);
+      } else if (sourceElemJacket.NativeElement.classList.contains('scContentTreeNode')) {
+        this.InferFromDivElement(<HTMLDivElement>sourceElemJacket.NativeElement)
       } else {
-        this.ErrorHand.ErrorAndThrow(ScContentTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElement));
+        this.ErrorHand.ErrorAndThrow(ScContentTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElemJacket));
       }
     } else {
       this.ErrorHand.ErrorAndThrow(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
@@ -296,15 +296,6 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
       this.Logger.FuncEnd(this.ActivateNode.name);
     });
-  }
-
-  private __collapseNode(element: HTMLElement): void {
-    var currentSrc = element.getAttribute('src');
-    this.Logger.Log('currentSrc' + currentSrc);
-    if (currentSrc.indexOf(ContentConst.Const.Names.TreeMenuExpandedPng) > -1) {
-      this.Logger.Log('clicking it to collapse');
-      element.click();
-    }
   }
 
   async ExpandNode(): Promise<void> {

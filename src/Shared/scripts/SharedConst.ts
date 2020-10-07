@@ -53,6 +53,9 @@ export class SharedConst {
         LastUsedLogToStorageKey: 0
       }
     },
+    QueryStringHeValues: {
+      heTemplateManager: "template%20manager",
+    },
     QueryStringKey: {
       XmlControl: 'xmlcontrol',
     },
@@ -62,14 +65,22 @@ export class SharedConst {
       NbSp: /&nbsp;/ig,
       QueryStrSeparatorQuest: /\?/gi,
 
+      Path: {
+
+        PackageDesigner: /\/sitecore\/shell/ig,
+      },
+
       PageType: {
         //http://perficient9sc.dev.local/?sc_itemid=%7B9E8CD546-2354-4921-B38C-4A0C864F236B%7D&sc_mode=preview&sc_lang=en&sc_site=website
-        Default: /\/sitecore\/shell/ig, // don't do default.aspx, some servers don't deliver that...actually don't server default.aspx...i think i'll need to test against 'shell;
+        Shell: /\/sitecore\/shell/ig, // don't do default.aspx, some servers don't deliver that...actually don't server default.aspx...i think i'll need to test against 'shell;
         Edit: /sc_itemid=.*sc_mode=edit/ig,
         Normal: /sc_itemid=.*sc_mode=normal/ig,
         Preview: /sc_itemid=.*sc_mode=preview/ig,
         XmlControl: /.*xmlcontrol=Application/ig,
         PackageDesigner: /.*xmlcontrol=Application&.*Package+Designer/ig,
+        //TemplateManager: /sitecore\/shell\/Applications\/Templates\/Template-Manager/ig, //- note this appears to redirect to Content%20Manager/default.aspx
+        //he=Template % 20Manager
+        ContentManager: /\/sitecore\/shell\/Applications\/Content%20Manager/ig,
 
         ///sitecore/shell/default.aspx?xmlcontrol=Application&hdl=53D315776143455784479FFB65509FF4&he=Package+Designer&ic=apps%2f32x32%2fpackager.png
 

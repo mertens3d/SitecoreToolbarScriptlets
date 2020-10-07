@@ -5,5 +5,6 @@
     sc_lang,
     sc_site,
     xmlcontrol,
-    he
+    he,
+    mo,
 }

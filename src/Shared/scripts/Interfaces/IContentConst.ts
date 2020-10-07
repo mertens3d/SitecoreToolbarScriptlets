@@ -45,9 +45,18 @@ export interface IContentConst {
       ContentEditor: {
         ScContentTreeNodeGlyph: string,
         ScContentTreeNode: string,
-        RootAnchorNode: string,
         ScContentTreeContainer: string,
         scContentTreeNodeIcon: string,
+      },
+      ContentTree: {
+        BuiltIn: {
+          TreeNodeSitecoreRoot: string,
+          MediaLibraryAnchorRootNode: string,
+          TemplatesAnchorRootNode: string,
+          LayoutRootAnchorNode: string,
+          SystemRootAnchorNode: string,
+          ContentRootAnchorNode: string,
+        }
       },
       PackageDesigner: {
         Ribbon: {
@@ -56,19 +65,17 @@ export interface IContentConst {
           Open: string,
         }
       },
-      Level2Nodes: {
-        MediaLibraryAnchorRootNode: string,
-        TemplatesAnchorRootNode: string,
-        LayoutRootAnchorNode: string,
-        SystemRootAnchorNode: string,
-        ContentRootAnchorNode: string,
-      },
+
       Cancel: string,
       ContentIframe0: string,
       ContentIFrame1: string,
       IdStartsWithTreeNode: string,
       IframeContent: IScVerSpec,
-      JqueryModalDialogsFrame: string,
+      Frames: {
+        AppFrame: string,
+        ScContentIframeId0: string,
+        JqueryModalDialogsFrame: string,
+      },
       LoginBtn: IScVerSpec,
       MenuButtonPublish: string,
       MenuDropDownPublishItem: string,
@@ -79,8 +86,10 @@ export interface IContentConst {
         DevelopmentTools: string,
         PackageDesigner: string,
       },
-      StartMenuLeftOption: string,
+      MediaLibrary: string,
       scStartButton: IScVerSpec,
+      StartMenuLeftOption: string,
+      TemplateManager: string,
       Desktop: {
         DtStartBar: string,
         ContentTreeHolder: string,

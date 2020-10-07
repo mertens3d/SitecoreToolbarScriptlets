@@ -33,22 +33,24 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
       this.ErrorHand.ErrorAndThrow(DesktopSFProxy.name, 'No associated doc');
     }
 
+    this.Instantiate();
     this.Logger.CTOREnd(DesktopSFProxy.name);
+  }
+
+  private Instantiate() {
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
+    this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.DocumentJacket);
+    this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.DocumentJacket);
+    this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
     try {
       this.Logger.FuncStart(this.InstantiateAsyncMembers.name, DesktopSFProxy.name);
 
-      this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.DocumentJacket);
       this.DTAreaProxy.InstantiateAsyncMembers();
-
-      this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.DocumentJacket);
       this.DTStartBarProxy.Instantiate_DTStartBarProxy();
 
-      this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
-
-      this.RecipeBasics = new RecipeBasics(this.HindeCore);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err);
     }
@@ -94,10 +96,14 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
           dtFramesNeeded.DiscriminatorAr.forEach((disciminator: StateFullProxyDisciminator) => {
             if (disciminator === StateFullProxyDisciminator.ContentEditor) {
               promAr.push(this.AddContentEditorFrameAsync());
+            } else if (disciminator === StateFullProxyDisciminator.MediaLibrary) {
+              promAr.push(this.AddMediaLibraryFrame())
             } else if (disciminator === StateFullProxyDisciminator.PackageDesigner) {
               promAr.push(this.AddPackageDesignerFrame())
+            } else if (disciminator === StateFullProxyDisciminator.TemplateManager) {
+              promAr.push(this.AddTemplateManagerFrame())
             } else {
-              this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled discriminator ')
+              this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled discriminator ->  ' + StateFullProxyDisciminator[disciminator]) 
             }
           })
         })
@@ -122,6 +128,45 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async PublishItem(): Promise<void> {
     await this.DTAreaProxy.PublishTopFrame();
   }
+  
+
+  async AddMediaLibraryFrame(): Promise<void> {
+    this.Logger.FuncStart(this.AddMediaLibraryFrame.name);
+    try {
+      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
+
+      await this.DTStartBarProxy.TriggerRedButton()
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddMediaLibraryFrame.name))
+        .then(() => this.DTPopUpMenuProxy.RecipeAddNewMediaLibraryToDesktop(this.DocumentJacket))
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddMediaLibraryFrame.name))//ui-widget-overlay ui-front
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddMediaLibraryFrame.name))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddMediaLibraryFrame.name, err));
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.AddMediaLibraryFrame.name, err);
+    }
+    this.Logger.FuncEnd(this.AddMediaLibraryFrame.name);
+  }
+  
+  async AddTemplateManagerFrame(): Promise<void> {
+    this.Logger.FuncStart(this.AddTemplateManagerFrame.name);
+    try {
+      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
+
+      await this.DTStartBarProxy.TriggerRedButton()
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddTemplateManagerFrame.name))
+        .then(() => this.DTPopUpMenuProxy.RecipeAddNewTemplateManagerToDesktop(this.DocumentJacket))
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddTemplateManagerFrame.name))//ui-widget-overlay ui-front
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddTemplateManagerFrame.name))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddTemplateManagerFrame.name, err));
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.AddTemplateManagerFrame.name, err);
+    }
+    this.Logger.FuncEnd(this.AddTemplateManagerFrame.name);
+  }
+
+
+
+
 
   async AddPackageDesignerFrame(): Promise<void> {
     this.Logger.FuncStart(this.AddPackageDesignerFrame.name);
@@ -140,6 +185,9 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     }
     this.Logger.FuncEnd(this.AddPackageDesignerFrame.name);
   }
+
+
+
   async AddContentEditorFrameAsync(): Promise<void> {
     this.Logger.FuncStart(this.AddContentEditorFrameAsync.name);
     try {

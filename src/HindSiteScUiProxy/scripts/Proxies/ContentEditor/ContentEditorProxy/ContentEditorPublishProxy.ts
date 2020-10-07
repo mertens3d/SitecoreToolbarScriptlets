@@ -170,7 +170,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
     try {
       let iframeProxy: FrameJacket = null;
 
-      await dataPublishChain.TopScDocumentProxy.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.JqueryModalDialogsFrame)
+      await dataPublishChain.TopScDocumentProxy.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Frames. JqueryModalDialogsFrame)
         .then((elementJacket: ElementJacket) => iframeProxy = new FrameJacket(this.HindeCore, <HTMLIFrameElement> elementJacket.NativeElement))
         .then(() => this.FactoryHelp.CEFrameFactory(iframeProxy, 'jqIframe'))
         .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)

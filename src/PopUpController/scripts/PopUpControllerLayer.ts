@@ -7,7 +7,7 @@ import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAg
 import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
 import { HindSiteSettingWrapper } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
-import { ScPageTypeResolver } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScUrlAgent";
+import { ScPageTypeResolver } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
