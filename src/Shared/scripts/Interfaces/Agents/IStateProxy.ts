@@ -1,7 +1,7 @@
 ﻿import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
 
 export interface IStateFullProxy {
-  StateFullProxyDisciminator: StateFullProxyDisciminator;
+  readonly StateFullProxyDisciminator: StateFullProxyDisciminator;
   TriggerInboundEventsAsync();
   InstantiateAsyncMembers();
   WireEvents();

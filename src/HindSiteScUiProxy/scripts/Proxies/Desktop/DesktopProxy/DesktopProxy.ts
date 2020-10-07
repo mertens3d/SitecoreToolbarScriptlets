@@ -33,22 +33,24 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
       this.ErrorHand.ErrorAndThrow(DesktopSFProxy.name, 'No associated doc');
     }
 
+    this.Instantiate();
     this.Logger.CTOREnd(DesktopSFProxy.name);
+  }
+
+  private Instantiate() {
+    this.RecipeBasics = new RecipeBasics(this.HindeCore);
+    this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.DocumentJacket);
+    this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.DocumentJacket);
+    this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
     try {
       this.Logger.FuncStart(this.InstantiateAsyncMembers.name, DesktopSFProxy.name);
 
-      this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.DocumentJacket);
       this.DTAreaProxy.InstantiateAsyncMembers();
-
-      this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.DocumentJacket);
       this.DTStartBarProxy.Instantiate_DTStartBarProxy();
 
-      this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
-
-      this.RecipeBasics = new RecipeBasics(this.HindeCore);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err);
     }

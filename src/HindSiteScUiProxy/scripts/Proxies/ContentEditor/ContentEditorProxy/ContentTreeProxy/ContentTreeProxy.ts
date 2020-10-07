@@ -4,18 +4,16 @@ import { ElementJacket } from "../../../../../../DOMJacket/ElementJacket";
 import { INativeClassNameChangeEvent_Payload } from '../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
 import { NativeClassNameChangeEvent_Observer } from "../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Observer";
 import { NativeClassNameChangeEvent_Subject } from "../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";
-import { IterationDrone } from '../../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { DefaultStateOfContentTree } from '../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentTree';
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { InitReportTreeProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/InitResultTreeProxy';
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
 import { IStateOfScContentTreeNodeFlat } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
-import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { ContentTreeProxyMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Subject";
+import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNodeProxy';
 
 //ContentTree is the name Sitecore uses
@@ -27,22 +25,23 @@ export class BuiltInContentTreeNodeResolver extends _HindeCoreBase {
 }
 
 export class ContentTreeProxy extends _HindeCoreBase {
+  private  TreeRootSelector: string;
   private _treeNodeProxy: ScContentTreeNodeProxy;
   private DocumentJacket: DocumentJacket;
-  private initReportTreeProxy: InitReportTreeProxy;
   private NativeClassNameChangeEvent_Observer: NativeClassNameChangeEvent_Observer;
   private NativeClassNameChangeEvent_Subject: NativeClassNameChangeEvent_Subject;
-  private TreeContainerElemJacket: ElementJacket;
-  private rootTreeNodeHtmlElement: ElementJacket;
+  private rootTreeNodeJacket: ElementJacket;
+  private TreeContainerJacket: ElementJacket;
 
   public TreeMutationEvent_Subject: ContentTreeProxyMutationEvent_Subject;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, treeContainerJacket: ElementJacket) {
+  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, treeContainerJacket: ElementJacket, TreeRootSelector: string) {
     super(hindeCore);
 
     this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeProxy.name, [documentJacket, treeContainerJacket]);
     this.DocumentJacket = documentJacket;
-    this.TreeContainerElemJacket = treeContainerJacket;
+    this.TreeRootSelector = TreeRootSelector;
+    this.TreeContainerJacket = treeContainerJacket;
   }
 
   async Instantiate_TreeProxy(): Promise<void> {
@@ -51,14 +50,10 @@ export class ContentTreeProxy extends _HindeCoreBase {
     try {
       await this.GetRootNodeForFrameType()
         .then((htmlElement: ElementJacket) => {
-          this.rootTreeNodeHtmlElement = htmlElement;
-
-          this.initReportTreeProxy = new InitReportTreeProxy();
-          this.initReportTreeProxy.TreeInstantiated = true;
-
+          this.rootTreeNodeJacket = htmlElement;
           this.TreeMutationEvent_Subject = new ContentTreeProxyMutationEvent_Subject(this.HindeCore);
 
-          this.NativeClassNameChangeEvent_Subject = new NativeClassNameChangeEvent_Subject(this.HindeCore, this.TreeContainerElemJacket);
+          this.NativeClassNameChangeEvent_Subject = new NativeClassNameChangeEvent_Subject(this.HindeCore, this.TreeContainerJacket);
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.HindeCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
     } catch (err) {
@@ -70,10 +65,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   WireEvents_TreeProxy() {
     this.Logger.FuncStart(this.WireEvents_TreeProxy.name);
-
     this.NativeClassNameChangeEvent_Subject.RegisterObserver(this.NativeClassNameChangeEvent_Observer);
-
-    this.initReportTreeProxy.EventsWired = true;
     this.Logger.FuncEnd(this.WireEvents_TreeProxy.name);
   }
 
@@ -107,10 +99,10 @@ export class ContentTreeProxy extends _HindeCoreBase {
     return new Promise(async (resolve, reject) => {
       let scContentTreeNodeProxy: ScContentTreeNodeProxy = null;
 
-      if (targetNode && this.TreeContainerElemJacket) {
+      if (targetNode && this.TreeContainerJacket) {
         var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.ItemId);
 
-        await this.TreeContainerElemJacket.WaitAndReturnFoundElemJacketFromElemJacket('[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
+        await this.TreeContainerJacket.WaitAndReturnFoundElemJacketFromElemJacket('[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
           .then((elemJacket: ElementJacket) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth, null))
           .then(() => scContentTreeNodeProxy.Instantiate())
           .then(() => resolve(scContentTreeNodeProxy))
@@ -169,13 +161,13 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   async GetRootNodeForFrameType(): Promise<ElementJacket> {
     try {
-      await this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode)
-        .then((htmlElement: ElementJacket) => this.rootTreeNodeHtmlElement = htmlElement);
+      await this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(this.TreeRootSelector)
+        .then((elementJacket: ElementJacket) => this.rootTreeNodeJacket = elementJacket);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.GetRootNodeForFrameType.name, err);
     }
 
-    let toReturn: ElementJacket = this.TreeContainerElemJacket.querySelector(ContentConst.Const.Selector.SC.ContentEditor.RootAnchorNode);
+    let toReturn: ElementJacket = this.TreeContainerJacket.querySelector(ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot);
     return toReturn;
   }
 
@@ -220,8 +212,8 @@ export class ContentTreeProxy extends _HindeCoreBase {
   private GetTreeNodeProxy(): Promise<ScContentTreeNodeProxy> {
     return new Promise(async (resolve, reject) => {
       if (this.DocumentJacket) {
-        if (this.rootTreeNodeHtmlElement) {
-          var rootParent: ElementJacket = this.rootTreeNodeHtmlElement.parentElement();
+        if (this.rootTreeNodeJacket) {
+          var rootParent: ElementJacket = this.rootTreeNodeJacket.parentElement();
 
           await rootParent.WaitAndReturnFoundElemJacketFromElemJacket(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
             .then(async (firstChildGlyphNode: ElementImgJacket) => {

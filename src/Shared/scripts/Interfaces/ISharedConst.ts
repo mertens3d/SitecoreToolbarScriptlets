@@ -49,6 +49,9 @@
       UseCompactCss: boolean,
     }
   },
+  QueryStringHeValues: {
+    heTemplateManager: string,
+  },
   QueryStringKey: {
     XmlControl: string,
 
@@ -60,13 +63,17 @@
     NbSp: RegExp,
     QueryStrSeparatorQuest: RegExp,
 
+    Path: {
+
+    },
     PageType: {
-      Default: RegExp
-      Edit: RegExp
-      Normal: RegExp
-      Preview: RegExp
-      XmlControl: RegExp
-      PackageDesigner: RegExp
+      Shell: RegExp,
+      Edit: RegExp,
+      Normal: RegExp,
+      Preview: RegExp,
+      XmlControl: RegExp,
+      PackageDesigner: RegExp,
+      ContentManager: RegExp,
     },
   },
   UrlSuffix: {

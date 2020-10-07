@@ -93,9 +93,19 @@ export class ContentConst {
         ContentEditor: {
           ScContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
           ScContentTreeNode: '.scContentTreeNode',
-          RootAnchorNode: '[id=Tree_Node_11111111111111111111111111111111]',
           ScContentTreeContainer: '.scContentTreeContainer',
           scContentTreeNodeIcon: '.scContentTreeNodeIcon',
+        },
+
+        ContentTree: {
+          BuiltIn: {
+            TreeNodeSitecoreRoot: '[id=Tree_Node_11111111111111111111111111111111]',
+            MediaLibraryAnchorRootNode: '[id=Tree_Node_3D6658D8A0BF4E75B3E2D050FABCF4E1]',
+            TemplatesAnchorRootNode: '[id=Tree_Node_3C1715FE6A134FCF845FDE308BA9741D]',
+            LayoutRootAnchorNode: '[id=Tree_Node_EB2E4FFD27614653B05226A64D385227]',
+            SystemRootAnchorNode: '[id=Tree_Node_13D6D6C6C50B4BBDB3312B04F1A58F21]',
+            ContentRootAnchorNode: '[id=Tree_Node_0DE95AE441AB4D019EB067441B7C2450]',
+          }
         },
         PackageDesigner: {
           Ribbon: {
@@ -103,13 +113,6 @@ export class ContentConst {
             InstallerRibbon_Toolbar: '[id=InstallerRibbon_Toolbar]',
             Open: '[title="Open an existing project"]',
           },
-        },
-        Level2Nodes: {
-          MediaLibraryAnchorRootNode: '[id=Tree_Node_3D6658D8A0BF4E75B3E2D050FABCF4E1]',
-          TemplatesAnchorRootNode: '[id=Tree_Node_3C1715FE6A134FCF845FDE308BA9741D]',
-          LayoutRootAnchorNode: '[id=Tree_Node_EB2E4FFD27614653B05226A64D385227]',
-          SystemRootAnchorNode: '[id=Tree_Node_13D6D6C6C50B4BBDB3312B04F1A58F21]',
-          ContentRootAnchorNode: '[id=Tree_Node_0DE95AE441AB4D019EB067441B7C2450]',
         },
 
         IdStartsWithTreeNode: '[id^=Tree_Node_]',

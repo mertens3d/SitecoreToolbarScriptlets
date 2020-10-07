@@ -14,7 +14,7 @@ import { PromiseFailAction } from "../../../Shared/scripts/Enums/PromiseFailActi
 import { ElementJacket } from "../../../DOMJacket/ElementJacket";
 import { ElementDivJacket } from "../../../DOMJacket/ElementDivJacket";
 
-export class PackageDesignerSFProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
+export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
   private DocumentJacket: DocumentJacket;
   Friendly: string;
@@ -40,20 +40,20 @@ export class PackageDesignerSFProxy extends _BaseStateFullProxy<IStateOfPackageD
 
   async GetState(): Promise<IStateOfPackageDesigner> {
     return new Promise((resolve, reject) => {
-      this.Logger.FuncStart(this.GetState.name, PackageDesignerSFProxy.name);
+      this.Logger.FuncStart(this.GetState.name, PackageDesignerProxy.name);
 
       let stateOfPackageDesigner: IStateOfPackageDesigner = new DefaultStateOfPackageDesigner();
       stateOfPackageDesigner.StatusText = this.GetLoadedPackageFileName();
 
       resolve(stateOfPackageDesigner);
 
-      this.Logger.FuncEnd(this.GetState.name, PackageDesignerSFProxy.name);
+      this.Logger.FuncEnd(this.GetState.name, PackageDesignerProxy.name);
     });
   }
 
   async SetState(stateOfPackageDesigner: IStateOfPackageDesigner): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetState.name, PackageDesignerSFProxy.name);
+      this.Logger.FuncStart(this.SetState.name, PackageDesignerProxy.name);
 
       //((document.getElementById('AppFrame')).contentDocument).querySelector('[id=InstallerRibbon_Toolbar]').querySelector('[title="Open an existing project"]').click()
       if (stateOfPackageDesigner) {
@@ -67,12 +67,12 @@ export class PackageDesignerSFProxy extends _BaseStateFullProxy<IStateOfPackageD
           let jqueryInHOme: HTMLIFrameElement;
           let parentJacket: DocumentJacket = this.DocumentJacket.GetParentJacket();
           if (!parentJacket) {
-            reject(this.GetState + ' - ' + PackageDesignerSFProxy.name + ' - no parent jacket');
+            reject(this.GetState + ' - ' + PackageDesignerProxy.name + ' - no parent jacket');
           }
           let jqueryFrameJacket: FrameJacket = null;
           let scContentIframeId0FrameJacket: FrameJacket = null;
 
-          await this.DocumentJacket.WaitForCompleteNAB_NativeDocument(this.SetState.name + ' ' + PackageDesignerSFProxy.name)
+          await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.SetState.name + ' ' + PackageDesignerProxy.name)
             .then(() => this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc('[id=AppFrame]'))
             .then((elemJacket: ElementJacket) => this.Logger.LogImportant('found AppFrame'))
             .then(() => {
@@ -123,16 +123,16 @@ export class PackageDesignerSFProxy extends _BaseStateFullProxy<IStateOfPackageD
               }
             })
             .then(() => resolve())
-            .catch((err) => reject(this.SetState.name + ' ' + PackageDesignerSFProxy.name + ' | ' + err));
+            .catch((err) => reject(this.SetState.name + ' ' + PackageDesignerProxy.name + ' | ' + err));
         }
       }
 
-      this.Logger.FuncEnd(this.SetState.name, PackageDesignerSFProxy.name);
+      this.Logger.FuncEnd(this.SetState.name, PackageDesignerProxy.name);
     });
   }
 
   TriggerInboundEventsAsync(): void {
-    this.Logger.Log('todo ' + PackageDesignerSFProxy.name);
+    this.Logger.Log('todo ' + PackageDesignerProxy.name);
   }
 
   //----------------------------------------------------
