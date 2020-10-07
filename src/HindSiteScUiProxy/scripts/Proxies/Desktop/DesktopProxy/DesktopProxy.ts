@@ -96,10 +96,12 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
           dtFramesNeeded.DiscriminatorAr.forEach((disciminator: StateFullProxyDisciminator) => {
             if (disciminator === StateFullProxyDisciminator.ContentEditor) {
               promAr.push(this.AddContentEditorFrameAsync());
+            } else if (disciminator === StateFullProxyDisciminator.MediaLibrary) {
+              promAr.push(this.AddMediaLibraryFrame())
             } else if (disciminator === StateFullProxyDisciminator.PackageDesigner) {
               promAr.push(this.AddPackageDesignerFrame())
             } else if (disciminator === StateFullProxyDisciminator.TemplateManager) {
-              promAr.push(this.AddTemplateFrame())
+              promAr.push(this.AddTemplateManagerFrame())
             } else {
               this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled discriminator ->  ' + StateFullProxyDisciminator[disciminator]) 
             }
@@ -126,25 +128,40 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async PublishItem(): Promise<void> {
     await this.DTAreaProxy.PublishTopFrame();
   }
-
-
-
   
-  async AddTemplateFrame(): Promise<void> {
-    this.Logger.FuncStart(this.AddTemplateFrame.name);
+
+  async AddMediaLibraryFrame(): Promise<void> {
+    this.Logger.FuncStart(this.AddMediaLibraryFrame.name);
     try {
       this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
 
       await this.DTStartBarProxy.TriggerRedButton()
-        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddTemplateFrame.name))
-        .then(() => this.DTPopUpMenuProxy.RecipeAddNewTemplateManagerToDesktop(this.DocumentJacket))
-        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddTemplateFrame.name))//ui-widget-overlay ui-front
-        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddTemplateFrame.name))
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddTemplateFrame.name, err));
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddMediaLibraryFrame.name))
+        .then(() => this.DTPopUpMenuProxy.RecipeAddNewMediaLibraryToDesktop(this.DocumentJacket))
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddMediaLibraryFrame.name))//ui-widget-overlay ui-front
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddMediaLibraryFrame.name))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddMediaLibraryFrame.name, err));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.AddTemplateFrame.name, err);
+      this.ErrorHand.ErrorAndThrow(this.AddMediaLibraryFrame.name, err);
     }
-    this.Logger.FuncEnd(this.AddTemplateFrame.name);
+    this.Logger.FuncEnd(this.AddMediaLibraryFrame.name);
+  }
+  
+  async AddTemplateManagerFrame(): Promise<void> {
+    this.Logger.FuncStart(this.AddTemplateManagerFrame.name);
+    try {
+      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
+
+      await this.DTStartBarProxy.TriggerRedButton()
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddTemplateManagerFrame.name))
+        .then(() => this.DTPopUpMenuProxy.RecipeAddNewTemplateManagerToDesktop(this.DocumentJacket))
+        .then(() => this.RecipeBasics.WaitForTimePeriod(ContentConst.Const.Numbers.Desktop.TimeNewCEWaitForScOverlayToClearMs, this.AddTemplateManagerFrame.name))//ui-widget-overlay ui-front
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.AddTemplateManagerFrame.name))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddTemplateManagerFrame.name, err));
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.AddTemplateManagerFrame.name, err);
+    }
+    this.Logger.FuncEnd(this.AddTemplateManagerFrame.name);
   }
 
 

@@ -8,152 +8,9 @@ import { IScUrlAgent } from "../../../Interfaces/Jackets/IScUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/Jackets/IUrlParts";
 import { _HindeCoreBase } from "../../../LoggableBase";
 import { SharedConst } from "../../../SharedConst";
-
-export interface IQueryKeyValuePair {
-  Key: QueryStrKey,
-  ValueMatch: RegExp
-}
-
-export interface IPageDeterminator {
-  ConfidenceScore: number;
-  Friendly: string;
-  QueryKeyValuePairs: IQueryKeyValuePair[];
-  RegexPathTest: RegExp;
-  ScWindowType: ScWindowType;
-  ScWindowTypeFriendly: string;
-}
-
-export class AllPageDeterminators {
-  static regexPathTestShell: RegExp = /sitecore\/shell/ig;
-  static regexMatchAll: RegExp = /.*/ig;
-  static regexMatchApplicationsContentManager: RegExp = /sitecore\/shell\/Applications\/Content.*Manager/ig;
-
-  static ScPages: IPageDeterminator[] = [
-    {
-      ConfidenceScore:  0,
-      Friendly: "Content Editor",
-      QueryKeyValuePairs: [
-        {
-          Key: QueryStrKey.he,
-          ValueMatch: /Content.*Editor/ig,
-        }
-      ],
-      RegexPathTest: /sitecore\/shell\/Applications\/Content.*Editor/ig,  //content-editor, content%20editor
-      ScWindowType: ScWindowType.ContentEditor,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.ContentEditor],
-    },
-    {
-      // - /sitecore/shell/default.aspx
-      ConfidenceScore:  0,
-      Friendly: "Desktop",
-      QueryKeyValuePairs: [
-        
-      ],
-      RegexPathTest: AllPageDeterminators.regexPathTestShell,
-      ScWindowType: ScWindowType.Desktop,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.Desktop],
-    },
-    {
-      ConfidenceScore:  0,
-      Friendly: "Login",
-      QueryKeyValuePairs: [],
-      RegexPathTest: /sitecore\/login/ig,
-      ScWindowType: ScWindowType.LoginPage,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.LoginPage],
-    },
-    {
-      // - /sitecore/shell/Applications/Content%20Manager/default.aspx?he=Marketing+Control+Panel&pa=0&ic=People%2f16x16%2fmegaphone.png&ro=%7b33CFB9CA-F565-4D5B-B88A-7CDFE29A6D71%7d&mo=templateworkspace
-      ConfidenceScore:  0,
-      Friendly: "Marketing Control Panel",
-      QueryKeyValuePairs: [
-        {
-          Key: QueryStrKey.he,
-          ValueMatch: /Marketing.?Control.?Panel/ig,
-        }
-      ],
-      RegexPathTest: AllPageDeterminators.regexMatchApplicationsContentManager,
-      ScWindowType: ScWindowType.MarketingControlPanel,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.MarketingControlPanel],
-    },
-    {
-      // - /sitecore/shell/Applications/Content%20Manager/default.aspx?he=Media+Library&pa=1&ic=Applications%2f16x16%2fphoto_scenery.png&mo=media&ro=%7b3D6658D8-A0BF-4E75-B3E2-D050FABCF4E1%7d
-      ConfidenceScore:  0,
-      Friendly: "Media Library",
-      QueryKeyValuePairs: [
-        {
-          Key: QueryStrKey.he,
-          ValueMatch: /Media.?Library/ig,
-        }
-      ],
-      RegexPathTest: AllPageDeterminators.regexMatchApplicationsContentManager,
-      ScWindowType: ScWindowType.MediaLibrary,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.MediaLibrary],
-    },
-    {
-      // - /sitecore/shell/default.aspx?xmlcontrol=Application&hdl=477C31C3C2C84771BCA48F151995D37D&he=Package+Designer&ic=apps%2f32x32%2fpackager.png
-      ConfidenceScore:  0,
-      Friendly: "Package Designer",
-      QueryKeyValuePairs: [
-        {
-          Key: QueryStrKey.he,
-          ValueMatch: /Package.?Designer/ig
-        },
-        {
-          Key: QueryStrKey.xmlcontrol,
-          ValueMatch: /Application/ig
-        }
-      ],
-      RegexPathTest: AllPageDeterminators.regexPathTestShell,
-      ScWindowType: ScWindowType.PackageDesigner,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.PackageDesigner],
-    },
-
-    {
-      // /?sc_site=website&sc_mode=preview
-      ConfidenceScore:  0,
-      Friendly: "Preview",
-      RegexPathTest: AllPageDeterminators.regexMatchAll,
-      QueryKeyValuePairs: [
-        {
-          Key: QueryStrKey.sc_mode,
-          ValueMatch: /preview/ig
-        }
-      ],
-      ScWindowType: ScWindowType.Preview,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.Preview],
-    },
-    {
-      // - /sitecore/shell/Applications/Publish.aspx
-      ConfidenceScore:  0,
-      Friendly: "Publish",
-      QueryKeyValuePairs: [
-      ],
-      RegexPathTest: /sitecore\/shell\/Applications\/Publish/ig,
-      ScWindowType: ScWindowType.Publish,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.Publish],
-    },
-
-    {
-      // - /sitecore/shell/Applications/Content%20Manager/default.aspx?he=Template%20Manager&pa=0&mo=templateworkspace&ic=Software%2F16x16%2Fcomponents.png&ro=%7B3C1715FE-6A13-4FCF-845F-DE308BA9741D%7D&fo&il
-      ///en/sitecore/shell/Applications/Templates/Template-Manager?ic=Apps%2F48x48%2FNewspaper.png&he=Template%20Manager
-      // /sitecore/shell/Applications/Content%20Manager/default.aspx?he=Template%20Manager&pa=0&mo=templateworkspace&ic=Software%2F16x16%2Fcomponents.png&ro=%7B3C1715FE-6A13-4FCF-845F-DE308BA9741D%7D&fo&il
-      ConfidenceScore:  0,
-      Friendly: "Template Manager",
-      QueryKeyValuePairs: [
-        {
-          Key: QueryStrKey.he,
-          ValueMatch: /Template.*Manager/ig,
-        }, {
-          Key: QueryStrKey.mo,
-          ValueMatch: /templateworkspace/ig,
-        }
-      ],
-      RegexPathTest: AllPageDeterminators.regexMatchApplicationsContentManager,
-      ScWindowType: ScWindowType.TemplateManager,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.TemplateManager],
-    },
-  ]
-}
+import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
+import { IPageDeterminator } from "./IPageDeterminator";
+import { AllPageDeterminators } from "./AllPageDeterminators";
 
 export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
   public UrlJacket: IUrlJacket;
@@ -174,7 +31,17 @@ export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
 
       passed = this.TestJacketAgainstRegex(determinant.RegexPathTest);
       if (passed) {
-        determinant.ConfidenceScore++;
+        let regExAsStr: string = determinant.RegexPathTest.toString();
+        if (regExAsStr.charAt(0) === "/") {
+          regExAsStr = regExAsStr.substr(1);
+        }
+        if (regExAsStr.charAt(regExAsStr.length - 1) === "/") {
+          regExAsStr = regExAsStr.substr(0, regExAsStr.length - 1);
+        }
+
+        let slashCount = regExAsStr.split('/').length;
+
+        determinant.ConfidenceScore += slashCount;
       }
 
       determinant.QueryKeyValuePairs.forEach((queryKeyvaluePairs: IQueryKeyValuePair) => {

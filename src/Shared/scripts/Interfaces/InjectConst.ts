@@ -120,8 +120,11 @@ export class ContentConst {
           sc820: null,
           sc920: 'iframe[src*=Content], iframe[src*=MediaShop]'
         },
-
-        JqueryModalDialogsFrame: '[id=jqueryModalDialogsFrame]',
+        Frames: {
+          AppFrame: '[id=AppFrame]',
+          ScContentIframeId0: '[id=scContentIframeId0]',
+          JqueryModalDialogsFrame: '[id=jqueryModalDialogsFrame]',
+        },
         ContentIframe0: '[id=scContentIframeId0]',
         NextButton: '[id=NextButton]',
         ContentIFrame1: '[id=scContentIframeId1]',
@@ -130,7 +133,8 @@ export class ContentConst {
         MenuButtonPublish: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_button]',
         MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',
         NavPublishStrip: '[id*=_Nav_PublishStrip]',
-        StartMenuLeftOption: 'img[src$="pencil.png"]', 
+        StartMenuLeftOption: 'img[src$="pencil.png"]',
+        MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
         TemplateManager: 'img[src$="newspaper.png"]',
         StartMenu: {
           DevelopmentTools: '[src="/temp/iconcache/apps/24x24/magic-cube.png"]',

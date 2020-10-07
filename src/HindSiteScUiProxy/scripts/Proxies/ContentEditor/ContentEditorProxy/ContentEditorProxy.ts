@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/DocumentJacket';
-import { DefaultStateOfContentEditor } from '../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentEditor';
+import { DefaultStateOfContentEditor } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentEditor.1";
 import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";

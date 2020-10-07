@@ -13,6 +13,7 @@ import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { PromiseFailAction } from "../../../Shared/scripts/Enums/PromiseFailAction";
 import { ElementJacket } from "../../../DOMJacket/ElementJacket";
 import { ElementDivJacket } from "../../../DOMJacket/ElementDivJacket";
+import { SharedConst } from "../../../Shared/scripts/SharedConst";
 
 export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
@@ -73,19 +74,19 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
           let scContentIframeId0FrameJacket: FrameJacket = null;
 
           await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.SetState.name + ' ' + PackageDesignerProxy.name)
-            .then(() => this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc('[id=AppFrame]'))
+            .then(() => this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Frames.AppFrame))
             .then((elemJacket: ElementJacket) => this.Logger.LogImportant('found AppFrame'))
             .then(() => {
-              AppframeJacket = this.DocumentJacket.GetHostedFramesFilteredBySelectorFirst('[id=AppFrame]');
+              AppframeJacket = this.DocumentJacket.GetHostedFramesFilteredBySelectorFirst(ContentConst.Const.Selector.SC.Frames.AppFrame);
               if (!AppframeJacket) { reject('no app frame jacket'); }
             })
             .then(() => AppframeJacket.WaitForCompleteNABHtmlIframeElement('AppFrameJacket'))
             .then(() => AppframeJacket.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.InstallerRibbon_Toolbar, PromiseFailAction.RejectThrow))
             .then((htmlDivElement: ElementDivJacket) => installerRibbonToolbar = htmlDivElement)
             .then(() => installerRibbonToolbar.WaitAndReturnFoundElemJacketFromElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.SetState.name))
-            .then((htmlElement: ElementJacket) => htmlElement.NativeElement.click())
+            .then((elemJacket: ElementJacket) => elemJacket.NativeElement.click())
             .then(() => {
-              let matchingJackets: FrameJacket[] = parentJacket.GetHostedFramesFilteredBySelector('[id=jqueryModalDialogsFrame]')
+              let matchingJackets: FrameJacket[] = parentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame)
               if (matchingJackets && matchingJackets.length > 0) {
                 jqueryFrameJacket = matchingJackets[0];
                 this.Logger.LogImportant('jquery frame found');
@@ -96,8 +97,8 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
             })
             .then(() => jqueryFrameJacket.WaitForCompleteNABHtmlIframeElement('jquery jacket'))
             .then(() => {
-              let matchingJackets: FrameJacket[] = jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector('[id=scContentIframeId0]')
-
+              let matchingJackets: FrameJacket[] = jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0)
+             
               if (matchingJackets && matchingJackets.length > 0) {
                 scContentIframeId0FrameJacket = matchingJackets[0];
                 this.Logger.LogImportant('scContentIframeId0FrameJacket frame found');

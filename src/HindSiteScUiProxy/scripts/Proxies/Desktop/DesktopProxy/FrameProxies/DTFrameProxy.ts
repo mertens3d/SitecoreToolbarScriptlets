@@ -19,6 +19,7 @@ import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutatio
 import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
 import { TemplateManagerProxy } from "../../../TemplateManagerProxy";
+import { MediaLibraryProxy } from "../../../MediaLibraryProxy";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
   Friendly: string = DTFrameProxy.name;
@@ -26,7 +27,6 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   ContentEditorProxyMutationEvent_Observer: ContentEditorProxyMutationEvent_Observer;
   FrameTypeDiscriminator = DTFrameProxy.name;
   Index: number = -1;
-  private PackageDesignerProxy: PackageDesignerProxy;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   public HostedStateFullProxy: IStateFullProxy;
 
@@ -67,12 +67,13 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
 
           switch (scWindowtypeB) {
             case ScWindowType.ContentEditor:
-              let contentEditorProxy = new ContentEditorSFProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly);
-              this.HostedStateFullProxy = contentEditorProxy;
+              this.HostedStateFullProxy = new ContentEditorSFProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly);
+              break;
+            case ScWindowType.MediaLibrary:
+              this.HostedStateFullProxy = new MediaLibraryProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly)
               break;
             case ScWindowType.PackageDesigner:
-              this.PackageDesignerProxy = new PackageDesignerProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly)
-              this.HostedStateFullProxy = this.PackageDesignerProxy;
+              this.HostedStateFullProxy = new PackageDesignerProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly)
               break;
             case ScWindowType.TemplateManager:
               this.HostedStateFullProxy = new TemplateManagerProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly)

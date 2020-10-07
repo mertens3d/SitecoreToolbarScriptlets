@@ -57,7 +57,6 @@ export interface IContentConst {
           SystemRootAnchorNode: string,
           ContentRootAnchorNode: string,
         }
-        
       },
       PackageDesigner: {
         Ribbon: {
@@ -72,7 +71,11 @@ export interface IContentConst {
       ContentIFrame1: string,
       IdStartsWithTreeNode: string,
       IframeContent: IScVerSpec,
-      JqueryModalDialogsFrame: string,
+      Frames: {
+        AppFrame: string,
+        ScContentIframeId0: string,
+        JqueryModalDialogsFrame: string,
+      },
       LoginBtn: IScVerSpec,
       MenuButtonPublish: string,
       MenuDropDownPublishItem: string,
@@ -83,9 +86,10 @@ export interface IContentConst {
         DevelopmentTools: string,
         PackageDesigner: string,
       },
+      MediaLibrary: string,
+      scStartButton: IScVerSpec,
       StartMenuLeftOption: string,
       TemplateManager: string,
-      scStartButton: IScVerSpec,
       Desktop: {
         DtStartBar: string,
         ContentTreeHolder: string,

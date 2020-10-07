@@ -5,7 +5,10 @@
     Desktop = 4003,
     DTArea = 4004,
     DTFrameProxy = 4005,
+    LaunchPad,
     PackageDesigner = 4006,
+    FallBack,
     ScDocumentProxy = 4007,
     TemplateManager = 4008,
+    MediaLibrary
 }

@@ -148,6 +148,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
         .then(() => {
           let currentWindowType = dtFrameProxy.GetScWindowType();
           if (currentWindowType !== ScWindowType.ContentEditor
+            && currentWindowType !== ScWindowType.MediaLibrary
             && currentWindowType !== ScWindowType.PackageDesigner
             && currentWindowType !== ScWindowType.TemplateManager
           ) {

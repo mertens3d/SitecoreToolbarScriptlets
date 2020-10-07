@@ -4,6 +4,8 @@ import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Age
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/LoggableBase";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
+
 
 export abstract class _BaseStateFullProxy<T> extends _HindeCoreBase implements IStateFullProxy {
   RecipeBasics: RecipeBasics;
@@ -19,3 +21,4 @@ export abstract class _BaseStateFullProxy<T> extends _HindeCoreBase implements I
   abstract InstantiateAsyncMembers();
   abstract TriggerInboundEventsAsync(): void;
 }
+

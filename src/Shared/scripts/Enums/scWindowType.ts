@@ -12,5 +12,6 @@
     PackageDesigner = 10,
     Preview = 11,
     TemplateManager = 12,
-    Publish
+    Publish,
+    FallBack
 }
