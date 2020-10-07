@@ -58,6 +58,7 @@ export abstract class _ContentTreeBasedProxy<T> extends _BaseStateFullProxy<T> i
       .catch((err) => this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err));
   }
   protected __baseWireEvents() {
+    this.ContentTreeProxy.WireEvents_TreeProxy();
     this.ContentTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
   }
 
