@@ -67,13 +67,21 @@ export interface IContentConst {
       },
 
       Cancel: string,
-      ContentIframe0: string,
       ContentIFrame1: string,
       IdStartsWithTreeNode: string,
       IframeContent: IScVerSpec,
       Frames: {
-        AppFrame: string,
-        ScContentIframeId0: string,
+        ScContentIframeId0Proxy: {
+          Cancel: string
+          Filename: string,
+          Id: string,
+          Ok: string,
+        },
+        AppFrame: {
+
+        Id: string,
+        }
+
         JqueryModalDialogsFrame: string,
       },
       LoginBtn: IScVerSpec,

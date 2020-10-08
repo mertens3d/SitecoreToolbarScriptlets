@@ -47,7 +47,7 @@ export abstract class _ContentTreeBasedProxy<T> extends _BaseStateFullProxy<T> i
 
   async __baseInstantiateAsyncMembers(): Promise<void> {
     await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.Friendly)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
-      .then(() => this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
+      .then(() => this.DocumentJacket.WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
       .then((treeContainer: ElementJacket) => this.ContentTreeProxy = new ContentTreeProxy(this.HindeCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
       .then(() => this.ContentTreeProxy.Instantiate_TreeProxy())
       .then(() => {

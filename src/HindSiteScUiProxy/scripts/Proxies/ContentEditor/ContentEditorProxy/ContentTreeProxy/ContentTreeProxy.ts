@@ -157,7 +157,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   async SetRootNodeFromSelector(): Promise<void> {
     try {
-      await this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(this.TreeRootSelector)
+      await this.DocumentJacket.WaitForAndReturnFoundElemJacket(this.TreeRootSelector)
         .then((elementJacket: ElementJacket) => this.rootTreeNodeJacket = elementJacket);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.SetRootNodeFromSelector.name, err);

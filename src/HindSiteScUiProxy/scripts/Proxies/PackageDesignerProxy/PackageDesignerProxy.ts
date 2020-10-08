@@ -14,6 +14,7 @@ import { PromiseFailAction } from "../../../../Shared/scripts/Enums/PromiseFailA
 import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
 import { ElementDivJacket } from "../../../../DOMJacket/ElementDivJacket";
 import { PackageDesignerInstallerRibbonToolbarProxy } from "./PackageDesignerInstallerRibbonToolbarProxy";
+import { AppFrameProxy } from "../SupportProxies/AppFrameProxy";
 
 export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
@@ -63,6 +64,7 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
           let SelectToOpenProjectFrame: CEFrameProxy = null;
 
           let AppFrame: HTMLIFrameElement = null;
+          let appFrameProxy: AppFrameProxy = null;
           let AppframeJacket: FrameJacket;
           let jqueryInHOme: HTMLIFrameElement;
           let parentJacket: DocumentJacket = this.DocumentJacket.GetParentJacket();
@@ -70,19 +72,11 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
             reject(this.GetState + ' - ' + PackageDesignerProxy.name + ' - no parent jacket');
           }
 
-          let toolbarProxy: PackageDesignerInstallerRibbonToolbarProxy = null;
-
           await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.SetState.name + ' ' + PackageDesignerProxy.name)
-            .then(() => this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Frames.AppFrame))
-            .then((elemJacket: ElementJacket) => this.Logger.LogImportant('found AppFrame'))
-            .then(() => {
-              AppframeJacket = this.DocumentJacket.GetHostedFramesFilteredBySelectorFirst(ContentConst.Const.Selector.SC.Frames.AppFrame);
-              if (!AppframeJacket) { reject('no app frame jacket'); }
-            })
-            .then(() => AppframeJacket.WaitForCompleteNABHtmlIframeElement('AppFrameJacket'))
-            .then(() => AppframeJacket.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.InstallerRibbon_Toolbar, PromiseFailAction.RejectThrow))
-            .then((elementDivJacket: ElementDivJacket) => toolbarProxy = new PackageDesignerInstallerRibbonToolbarProxy(this.HindeCore, elementDivJacket, parentJacket))
-            .then(() => toolbarProxy.OpenFile(stateOfPackageDesigner.StatusText))
+
+            .then(() => this.DocumentJacket.WaitForAndGetFirstHostedFrame(ContentConst.Const.Selector.SC.Frames.AppFrame. Id))
+            .then((frameJacket: FrameJacket) => appFrameProxy = new AppFrameProxy(this.HindeCore, frameJacket, parentJacket))
+            .then(() => appFrameProxy.OpenFile(stateOfPackageDesigner.StatusText))
             .then(() => resolve())
             .catch((err) => reject(this.SetState.name + ' ' + PackageDesignerProxy.name + ' | ' + err));
         }

@@ -121,11 +121,18 @@ export class ContentConst {
           sc920: 'iframe[src*=Content], iframe[src*=MediaShop]'
         },
         Frames: {
-          AppFrame: '[id=AppFrame]',
-          ScContentIframeId0: '[id=scContentIframeId0]',
+          ScContentIframeId0Proxy: {
+            Cancel: '[id=Cancel]',
+            Filename: '[id=Filename]',
+            Id: '[id=scContentIframeId0]',
+            Ok: '[id=OK]',
+          },
+          AppFrame: {
+          Id: '[id=AppFrame]',
+
+          },
           JqueryModalDialogsFrame: '[id=jqueryModalDialogsFrame]',
         },
-        ContentIframe0: '[id=scContentIframeId0]',
         NextButton: '[id=NextButton]',
         ContentIFrame1: '[id=scContentIframeId1]',
         Ok: '[id=OK]',

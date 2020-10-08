@@ -61,17 +61,22 @@ export class DocumentJacket extends _HindeCoreBase {
     return toReturn;
   }
 
-  GetHostedFramesFilteredBySelectorFirst(querySelector: string): FrameJacket {
-    this.Logger.FuncStart(this.GetHostedFramesFilteredBySelectorFirst.name, querySelector);
-    let firstFrameJacket: FrameJacket = null;
+  async WaitForAndGetFirstHostedFrame(querySelector: string): Promise<FrameJacket> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForAndGetFirstHostedFrame.name, querySelector);
+      let firstFrameJacket: FrameJacket = null;
 
-    let matchingJackets: FrameJacket[] = this.GetHostedFramesFilteredBySelector(querySelector);
-    if (matchingJackets && matchingJackets.length > 0) {
-      firstFrameJacket = matchingJackets[0];
-    }
+      await this.WaitForAndReturnFoundElemJacket(querySelector)
+        .then((elemJacket: ElementJacket) => resolve(new FrameJacket(this.HindeCore, <HTMLIFrameElement>elemJacket.NativeElement)))
+        .catch((err) => reject(this.ErrorHand.PromiseRejectMessage([this.WaitForAndGetFirstHostedFrame.name], err)));
 
-    this.Logger.FuncEnd(this.GetHostedFramesFilteredBySelectorFirst.name, querySelector);
-    return firstFrameJacket;
+      //  let matchingJackets: FrameJacket[] = this.GetHostedFramesFilteredBySelector(querySelector);
+      //if (matchingJackets && matchingJackets.length > 0) {
+      //  firstFrameJacket = matchingJackets[0];
+      //}
+
+      this.Logger.FuncEnd(this.WaitForAndGetFirstHostedFrame.name, querySelector);
+    })
   }
 
   GetHostedFramesFilteredBySelector(querySelector: string): FrameJacket[] {
@@ -142,7 +147,7 @@ export class DocumentJacket extends _HindeCoreBase {
 
       let frameJacket: FrameJacket = null;
 
-      await this.WaitForAndReturnFoundElemJacketFromDoc(selector)
+      await this.WaitForAndReturnFoundElemJacket(selector)
         .then(async (foundElem: ElementJacket) => frameJacket = new FrameJacket(this.HindeCore, <HTMLIFrameElement>foundElem.NativeElement))
         .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
         .then((result: CEFrameProxy) => resolve(result))
@@ -152,12 +157,12 @@ export class DocumentJacket extends _HindeCoreBase {
     });
   }
 
-  public async WaitForAndReturnFoundElemJacketFromDoc(selector: string, promiseFailAction: PromiseFailAction = PromiseFailAction.Default): Promise<ElementJacket> {
+  public async WaitForAndReturnFoundElemJacket(selector: string, promiseFailAction: PromiseFailAction = PromiseFailAction.Default): Promise<ElementJacket> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForAndReturnFoundElemJacketFromDoc.name, selector);
+      this.Logger.FuncStart(this.WaitForAndReturnFoundElemJacket.name, selector);
 
       var toReturnFoundElem: HTMLElement = null;
-      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForAndReturnFoundElemJacketFromDoc.name + ' - ' + selector, true);
+      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForAndReturnFoundElemJacket.name + ' - selector: "' + selector + '"', true);
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
         toReturnFoundElem = this.NativeDocument.querySelector(selector);
@@ -175,7 +180,7 @@ export class DocumentJacket extends _HindeCoreBase {
       } else if (promiseFailAction === PromiseFailAction.ResolveNull) {
         resolve(null);
       }
-      this.Logger.FuncEnd(this.WaitForAndReturnFoundElemJacketFromDoc.name, selector);
+      this.Logger.FuncEnd(this.WaitForAndReturnFoundElemJacket.name, selector);
     });
   }
   public WaitForThenClick(selectorAr: string[]): Promise<void> {

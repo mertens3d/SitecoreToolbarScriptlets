@@ -104,6 +104,7 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseScFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_StateProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\FallBackProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\AppFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\JqueryFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\LaunchPadProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\MediaLibraryProxy.ts" />
@@ -192,7 +193,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IHindSiteUiLayer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMessageContentToController.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMessageControllerToContent.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\LoggableBase.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\ContentTreeProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Subject.ts" />
     <TypeScriptCompile Include="src\PopUpController\scripts\Proxies\BrowserProxy.ts" />
@@ -373,6 +373,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Managers\ContentMessageManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPopUpConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\SharedConst.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\_HindeCoreBase.ts" />
     <TypeScriptCompile Include="src\Shared\typdefs\browser.d.ts" />
     <TypeScriptCompile Include="src\tests\foo.test.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IDataPublishChain.ts" />

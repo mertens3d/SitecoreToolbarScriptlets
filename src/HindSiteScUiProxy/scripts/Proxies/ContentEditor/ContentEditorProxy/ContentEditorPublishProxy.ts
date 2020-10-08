@@ -134,9 +134,9 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
   }
 
   private async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await dataPublishChain.Iframe0Blue.GetDocumentJacket().WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Publish.SettingsHidden)
+    await dataPublishChain.Iframe0Blue.GetDocumentJacket().WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.Publish.SettingsHidden)
       .then(async () => {
-        await dataPublishChain.Iframe0Blue.GetDocumentJacket().WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
+        await dataPublishChain.Iframe0Blue.GetDocumentJacket().WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
         await dataPublishChain.Iframe0Blue.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel]);
@@ -170,7 +170,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
     try {
       let iframeProxy: FrameJacket = null;
 
-      await dataPublishChain.TopScDocumentProxy.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Frames. JqueryModalDialogsFrame)
+      await dataPublishChain.TopScDocumentProxy.WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.Frames. JqueryModalDialogsFrame)
         .then((elementJacket: ElementJacket) => iframeProxy = new FrameJacket(this.HindeCore, <HTMLIFrameElement> elementJacket.NativeElement))
         .then(() => this.FactoryHelp.CEFrameFactory(iframeProxy, 'jqIframe'))
         .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)
@@ -202,7 +202,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
 
       this.Logger.LogAsJsonPretty('dataPublishChain', dataPublishChain);
 
-      await dataPublishChain.JqIframe.GetDocumentJacket().WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
+      await dataPublishChain.JqIframe.GetDocumentJacket().WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0Proxy.Id, 'Iframe0Blue')
         .then((result: CEFrameProxy) => {
           this.Logger.MarkerC();
           dataPublishChain.Iframe0Blue = result;
@@ -228,7 +228,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
       this.Logger.LogAsJsonPretty(this.__waitForThenFunc.name, targetDoc);
 
       var found: ElementJacket = null;
-      await targetDoc.WaitForAndReturnFoundElemJacketFromDoc(selector)
+      await targetDoc.WaitForAndReturnFoundElemJacket(selector)
         .then((result: ElementJacket) => found = result);
 
       if (found) {

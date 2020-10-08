@@ -18,7 +18,7 @@ export class JqueryFrameProxy extends _HindeCoreBase {
 
       await this.jqueryFrameJacket.WaitForCompleteNABHtmlIframeElement('jquery jacket')
         .then(() => {
-          let matchingJackets: FrameJacket[] = this.jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0);
+          let matchingJackets: FrameJacket[] = this.jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0Proxy.Id);
 
           if (matchingJackets && matchingJackets.length > 0) {
             scContentIframeId0Proxy = new ScContentIframeId0Proxy(this.HindeCore, matchingJackets[0]);
@@ -28,9 +28,7 @@ export class JqueryFrameProxy extends _HindeCoreBase {
             this.ErrorHand.ErrorAndThrow([JqueryFrameProxy.name, this.OpenFile.name], 'no matching jackets');
           }
         })
-
         .then(() => scContentIframeId0Proxy.OpenFile(fileName))
-
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.OpenFile.name, err));
     }
     catch (err) {

@@ -109,6 +109,25 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     console.log('********** ' + text + ' **********');
   }
 
+  PromiseRejectMessage(container: string[], err: string): string {
+    let toReturn: string = '';
+
+    let isFirstInArray = true;
+    container.forEach((subContainer: string) => {
+      if (!isFirstInArray) {
+        toReturn += '.';
+      }
+      isFirstInArray = false;
+      toReturn += subContainer
+    })
+
+    toReturn += ' | ' + err;
+
+    return toReturn;
+  }
+
+  
+
   ErrorAndThrow(container: string | string[], text: string): void {
     let stack = new Error().stack;
 
