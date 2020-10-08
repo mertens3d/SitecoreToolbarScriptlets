@@ -1,5 +1,5 @@
 ﻿import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../LoggableBase";
+import { _HindeCoreBase } from "../_HindeCoreBase";
 
 export class PromiseResult extends _HindeCoreBase {
   private Success: boolean;

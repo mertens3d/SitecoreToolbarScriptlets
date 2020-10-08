@@ -4,7 +4,6 @@ import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
 import { TaskMonitor } from "./TaskMonitor";
 
 export class ErrorHandlerAgent implements IErrorHandlerAgent {
-
   Discriminator = Discriminator.IErrorHandler;
   ErrorStack: IError[] = [];
   private TaskMonitor: TaskMonitor;
@@ -14,9 +13,7 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
   }
 
   Instantiate() {
-   
   }
-
 
   ThrowIfNullOrUndefined(title: string, testSubject: any): void;
   ThrowIfNullOrUndefined(title: string, testSubject: any[]): void;
@@ -69,37 +66,73 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     this.ErrorLogger('\t\t** WARNING ** ' + container + ' ' + text);
     this.ErrorLogger('');
   }
-
-  ErrorAndContinue(container: string, text: any): void {
+  private DrawErrorMessage(container: string, text: string | string[]) {
     if (!container) {
       container = 'unknown';
     }
 
+    let textToRender: string[] = [];
+
     if (!text) {
-      text = 'unknown';
+      text = ['unknown'];
     }
 
-    this.ErrorStack.push({
-      ContainerFunc: container,
-      ErrorString: text
-    });
+    if (!Array.isArray(text)) {
+      textToRender = [text];
+    } else {
+      textToRender = text;
+    }
 
     this.ErrorLogger('');
     this.ErrorLogger('\t\ts) ** ERROR ** container: ' + container);
     this.ErrorLogger('');
-    this.ErrorLogger('\t\t error message: ' + text);
+
+    textToRender.forEach((message: string) => {
+      this.ErrorStack.push({
+        ContainerFunc: container,
+        ErrorString: message
+      });
+
+      this.ErrorLogger('\t\t' + message);
+    })
+
     this.ErrorLogger('');
     this.ErrorLogger('\t\te)** ERROR container: ** ' + container);
     this.ErrorLogger('');
   }
 
-  async ErrorLogger(text) {
-    console.log('**********' + text + '**********');
+  ErrorAndContinue(container: string, text: any): void {
+    this.DrawErrorMessage(container, text);
   }
 
-  ErrorAndThrow(container: string, text: any): void {
+  async ErrorLogger(text) {
+    console.log('********** ' + text + ' **********');
+  }
+
+  ErrorAndThrow(container: string | string[], text: string): void {
     let stack = new Error().stack;
-    this.ErrorAndContinue(container, text + '   ' + stack);
-    throw container + " " + text;
+
+    let containerTextToRender: string = '';
+
+    if (Array.isArray(container)) {
+      let isFirstInArray = true;
+      container.forEach((subContainer: string) => {
+        if (!isFirstInArray) {
+          containerTextToRender += '.';
+        }
+        isFirstInArray = false;
+        containerTextToRender += subContainer
+      })
+    } else {
+      containerTextToRender = container;
+    }
+
+    this.DrawErrorMessage(containerTextToRender, [text,stack]);
+    try {
+      this.TaskMonitor.RequestCancel();
+    } catch (err) {
+      console.log(err);
+    }
+    throw ('----- sigh...sad face ');
   }
 }

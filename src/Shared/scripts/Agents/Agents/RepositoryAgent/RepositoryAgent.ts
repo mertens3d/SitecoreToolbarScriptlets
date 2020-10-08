@@ -1,7 +1,7 @@
 ﻿import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
-import { _HindeCoreBase } from "../../../LoggableBase";
+import { _HindeCoreBase } from "../../../_HindeCoreBase";
 
 export class RepositoryAgent extends _HindeCoreBase implements IRepositoryAgent {
 

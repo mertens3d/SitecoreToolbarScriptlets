@@ -1,6 +1,6 @@
 ﻿import { SharedConst } from '../../../SharedConst';
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from '../../../LoggableBase';
+import { _HindeCoreBase } from "../../../_HindeCoreBase";
 
 export class IterationDrone extends _HindeCoreBase {
   IsExhausted: boolean;

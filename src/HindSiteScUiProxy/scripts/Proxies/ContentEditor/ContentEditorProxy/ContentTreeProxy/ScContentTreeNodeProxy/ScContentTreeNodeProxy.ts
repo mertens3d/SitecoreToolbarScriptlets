@@ -7,9 +7,9 @@ import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
 import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
-import { IStateOfScContentTreeNodeFlat } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
+import { IStateOfScContentTreeNodeShallow } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../../../../Shared/scripts/_HindeCoreBase";
 
 //scContentTreeNode is the name sitecore uses
 export class ScContentTreeNodeProxy extends _HindeCoreBase {
@@ -31,8 +31,13 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     },
     ItemId: null,
     IconSrc: '',
-    MainIconSrc: '',
     NodeChildren: [],
+    Lineage: {
+      L1MainIconSrc: '',
+      L1Text: '',
+      L2Icon: '',
+      L2Text: ''
+    }
   }
   private HasBeenHarvested: boolean = false;
   private: number;
@@ -90,16 +95,14 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     }
   }
 
-  private async GetGlyphNodeElem(): Promise<ElementImgJacket> {
-    return new Promise(async (resolve, reject) => {
-      await this.ScContentTreeNodeDivElem.WaitAndReturnFoundElemJacketFromElemJacket(":scope > img", this.GetGlyphNodeElem.name)
-        .then((elemImgJacket: ElementImgJacket) => {
-          resolve(elemImgJacket)
-        })
-        .catch((err) => {
-          reject(this.GetGlyphNodeElem.name + ' | ' + err)
-        });
-    })
+  private async PolllinateGlyphNodeElem(): Promise<void> {
+    try {
+      await this.ScContentTreeNodeDivElem.WaitAndReturnFoundElemJacketFromElemJacket(":scope > img", this.PolllinateGlyphNodeElem.name)
+        .then((elemImgJacket: ElementImgJacket) => this.glyphElem = elemImgJacket)
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.PolllinateGlyphNodeElem.name, err));
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.PolllinateGlyphNodeElem.name, err)
+    }
   }
 
   private Friendly(): string {
@@ -107,16 +110,15 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     return toReturn;
   }
 
-  private async GetLinkNodeElem(): Promise<ElementAnchorJacket> {
-    return new Promise(async (resolve, reject) => {
+  private async PollinateNodeElem(): Promise<void> {
+    try {
       await this.ScContentTreeNodeDivElem.WaitAndReturnFoundElemJacketFromElemJacket(":scope > a", this.Friendly())
-        .then((htmlAnchorElement: ElementAnchorJacket) => {
-          resolve(htmlAnchorElement)
-        })
+        .then((htmlAnchorElement: ElementAnchorJacket) => this.LinkNodeElem = htmlAnchorElement)
         .catch((err) => {
-          reject(this.GetGlyphNodeElem.name + ' | ' + err)
         });
-    });
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.PollinateNodeElem.name, err);
+    }
   }
 
   private async GetStateOfScContentTreeNodeGeneric(includeChildren: boolean): Promise<IStateOfScContentTreeNodeDeep> {
@@ -147,16 +149,84 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     });
   }
 
-  async GetStateOfScContentTreeNodeFlat(): Promise<IStateOfScContentTreeNodeFlat> {
+  async GetStateOfScContentTreeNodeFlat(): Promise<IStateOfScContentTreeNodeShallow> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetStateOfScContentTreeNodeFlat.name);
 
       await this.GetStateOfScContentTreeNodeGeneric(false)
-        .then((stateOfContentTreeNodeFlat: IStateOfScContentTreeNodeFlat) => resolve(stateOfContentTreeNodeFlat))
+        .then((stateOfContentTreeNodeShallow: IStateOfScContentTreeNodeShallow) => resolve(stateOfContentTreeNodeShallow))
         .catch((err) => reject(this.GetStateOfScContentTreeNodeDeep.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.GetStateOfScContentTreeNodeFlat.name);
     });
+  }
+  private HarvestProperties() {
+    this.ErrorHand.ThrowIfNullOrUndefined(this.HarvestNodeState.name, [this.LinkNodeElem, this.glyphElem]);
+    this.StateOfScContentTreeNode.IsActive = this.QueryIsActive();
+    this.StateOfScContentTreeNode.IsExpanded = this.QueryIsExpanded();
+    this.StateOfScContentTreeNode.Friendly = this.LinkNodeElem.NativeElement.innerText;
+    this.StateOfScContentTreeNode.ItemId = this.GetApparentItemId(this.glyphElem);
+    this.StateOfScContentTreeNode.IconSrc = this.GetIconSrc();
+    this.HarvestLineageProperties();
+  }
+
+  private HarvestLineageProperties() {
+    this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.GetMainIconSrc();
+
+    if (this.StateOfScContentTreeNode.Coord.LevelIndex === 0) {
+
+      this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+      this.StateOfScContentTreeNode.Lineage.L1Text = '';
+      this.StateOfScContentTreeNode.Lineage.L2Icon = '';
+      this.StateOfScContentTreeNode.Lineage.L2Text = '';
+
+    } else if (this.StateOfScContentTreeNode.Coord.LevelIndex === 1) {
+
+      this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.StateOfScContentTreeNode.IconSrc;
+      this.StateOfScContentTreeNode.Lineage.L1Text = this.StateOfScContentTreeNode.Friendly;
+      this.StateOfScContentTreeNode.Lineage.L2Icon = '';
+      this.StateOfScContentTreeNode.Lineage.L2Text = '';
+
+    } else if (this.StateOfScContentTreeNode.Coord.LevelIndex === 2) {
+      if (this.ParentTreeNode) {
+        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1MainIconSrc;
+        this.StateOfScContentTreeNode.Lineage.L1Text = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Text;
+
+      } else {
+        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+        this.StateOfScContentTreeNode.Lineage.L1Text = '';
+      }
+
+      this.StateOfScContentTreeNode.Lineage.L2Icon = this.StateOfScContentTreeNode.IconSrc;
+      this.StateOfScContentTreeNode.Lineage.L2Text = this.StateOfScContentTreeNode.Friendly;
+    }
+    else {
+      if (this.ParentTreeNode) {
+        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1MainIconSrc;
+        this.StateOfScContentTreeNode.Lineage.L1Text = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Text;
+        this.StateOfScContentTreeNode.Lineage.L2Icon = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L2Icon;
+        this.StateOfScContentTreeNode.Lineage.L2Text = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L2Text;
+
+      } else {
+        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+        this.StateOfScContentTreeNode.Lineage.L1Text = '';
+        this.StateOfScContentTreeNode.Lineage.L2Icon = '';
+        this.StateOfScContentTreeNode.Lineage.L2Text = '';
+
+      }
+    }
+
+    if (this.StateOfScContentTreeNode.Coord.LevelIndex == 0) {
+      this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+    } else if (this.StateOfScContentTreeNode.Coord.LevelIndex == 1) {
+      this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.StateOfScContentTreeNode.IconSrc;
+    } else {
+      if (this.ParentTreeNode) {
+        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1MainIconSrc;
+      } else {
+        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+      }
+    }
   }
 
   private async HarvestNodeState(forceRefreshData: boolean = false): Promise<void> {
@@ -166,28 +236,11 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
         this.LinkNodeElem = null;
         this.Children = [],
 
-          await this.GetLinkNodeElem()
-            .then((htmlAnchorElement: ElementAnchorJacket) => {
-              this.LinkNodeElem = htmlAnchorElement
-            })
-            .then(() => this.GetGlyphNodeElem())
-            .then((htmlImageElement: ElementImgJacket) => {
-              this.glyphElem = htmlImageElement
-            })
-            .then(() => {
-              this.ErrorHand.ThrowIfNullOrUndefined(this.HarvestNodeState.name, [this.LinkNodeElem, this.glyphElem]);
-
-              this.StateOfScContentTreeNode.IsActive = this.QueryIsActive();
-              this.StateOfScContentTreeNode.IsExpanded = this.QueryIsExpanded();
-              this.StateOfScContentTreeNode.Friendly = this.LinkNodeElem.NativeElement.innerText;
-              this.StateOfScContentTreeNode.ItemId = this.GetApparentItemId(this.glyphElem);
-              this.StateOfScContentTreeNode.IconSrc = this.GetIconSrc();
-              this.StateOfScContentTreeNode.MainIconSrc = this.GetMainIconSrc();
-            })
+          await this.PollinateNodeElem()
+            .then(() => this.PolllinateGlyphNodeElem())
+            .then(() => this.HarvestProperties())
             .then(() => this.GetChildren())
-            .then((children: ScContentTreeNodeProxy[]) => {
-              this.Children = children;
-            })
+            .then((children: ScContentTreeNodeProxy[]) => this.Children = children)
             .then(() => resolve())
             .catch((err) => {
               reject(this.HarvestNodeState.name + ' | ' + err);

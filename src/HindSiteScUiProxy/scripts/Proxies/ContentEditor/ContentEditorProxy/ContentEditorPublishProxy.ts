@@ -7,7 +7,7 @@ import { FactoryHelper } from "../../../../../Shared/scripts/Helpers/FactoryHelp
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../../Shared/scripts/_HindeCoreBase";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { DTFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/DTFrameProxy";

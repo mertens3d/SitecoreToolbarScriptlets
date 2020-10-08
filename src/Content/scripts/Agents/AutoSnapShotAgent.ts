@@ -1,5 +1,5 @@
 ﻿import { RecipeAutoSaveState } from "../../../HindSiteScUiProxy/scripts/ContentApi/Recipes/RecipeAutoSaveState";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";

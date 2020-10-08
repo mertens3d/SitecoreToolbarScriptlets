@@ -2,7 +2,7 @@
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { _HindeCoreBase } from "../../../LoggableBase";
+import { _HindeCoreBase } from "../../../_HindeCoreBase";
 
 export class RollingLogIdDrone extends _HindeCoreBase{
   private SettingsAgent: ISettingsAgent;

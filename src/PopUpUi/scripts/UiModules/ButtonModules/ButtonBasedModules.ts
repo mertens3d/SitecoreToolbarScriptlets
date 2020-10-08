@@ -1,4 +1,4 @@
-﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
+﻿import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";

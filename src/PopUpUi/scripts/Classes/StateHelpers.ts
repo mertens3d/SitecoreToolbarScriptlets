@@ -3,11 +3,11 @@ import { IStateOfDesktop } from "../../../Shared/scripts/Interfaces/Data/States/
 import { IStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfScContentTreeNodeDeep } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { IStateOfContentTree } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
-import { IStateOfScContentTreeNodeFlat } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { IStateOfScContentTreeNodeShallow } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
 
 export class StateHelpers extends _HindeCoreBase {
-  GetActiveTreeNodeFromStateOfTreeFlat(stateOfTree: IStateOfContentTree): IStateOfScContentTreeNodeFlat {
+  GetActiveTreeNodeFromStateOfTreeFlat(stateOfTree: IStateOfContentTree): IStateOfScContentTreeNodeShallow {
     let toReturn: IStateOfScContentTreeNodeDeep = null;
 
     return stateOfTree.ActiveNodeFlat;
@@ -29,7 +29,7 @@ export class StateHelpers extends _HindeCoreBase {
     //return toReturn;
   }
 
-  GetActiveTreeNodeFromStateOfContentEditor(stateOfContentEditor: IStateOfContentEditor): IStateOfScContentTreeNodeFlat {
+  GetActiveTreeNodeFromStateOfContentEditor(stateOfContentEditor: IStateOfContentEditor): IStateOfScContentTreeNodeShallow {
     return this.GetActiveTreeNodeFromStateOfTreeFlat(stateOfContentEditor.StateOfContentTree);
   }
 

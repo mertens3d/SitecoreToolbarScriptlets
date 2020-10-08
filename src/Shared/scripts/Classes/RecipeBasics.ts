@@ -6,7 +6,7 @@ import { ReadyStateNAB } from '../Enums/ReadyState';
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { IAbsoluteUrl } from '../Interfaces/IAbsoluteUrl';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
-import { _HindeCoreBase } from '../LoggableBase';
+import { _HindeCoreBase } from "../_HindeCoreBase";
 import { PromiseResult } from "./PromiseResult";
 
 export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {

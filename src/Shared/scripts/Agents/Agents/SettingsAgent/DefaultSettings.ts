@@ -7,7 +7,7 @@ import { SettingType } from "../../../Enums/SettingType";
 import { UiPresence } from "../../../Enums/UiPresence";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ContentConst } from "../../../Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../LoggableBase";
+import { _HindeCoreBase } from "../../../_HindeCoreBase";
 import { SharedConst } from "../../../SharedConst";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { HindSiteSetting } from "./HindSiteSetting";

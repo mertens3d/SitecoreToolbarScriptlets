@@ -1,7 +1,7 @@
 ﻿import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { _HindeCoreBase } from "../../../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";

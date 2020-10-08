@@ -6,7 +6,7 @@ import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IUrlJacket } from "../../../Interfaces/IUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Jackets/IScUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/Jackets/IUrlParts";
-import { _HindeCoreBase } from "../../../LoggableBase";
+import { _HindeCoreBase } from "../../../_HindeCoreBase";
 import { SharedConst } from "../../../SharedConst";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
 import { IPageDeterminator } from "./IPageDeterminator";

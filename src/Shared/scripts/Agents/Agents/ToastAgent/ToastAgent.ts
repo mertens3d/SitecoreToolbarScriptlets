@@ -3,7 +3,7 @@ import { SingleClickEvent_Observer } from "../../../../../PopUpUi/scripts/Events
 import { SingleClickEvent_Subject } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Subject";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
-import { _HindeCoreBase } from "../../../LoggableBase";
+import { _HindeCoreBase } from "../../../_HindeCoreBase";
 import { TaskMutationType } from "../LoggerAgent/TaskMutationType";
 import { TaskListMutationEvent_Observer } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/TaskListMutationEvent_Observer";
 import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/ITaskListMutationEvent_Payload";

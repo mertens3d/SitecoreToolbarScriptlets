@@ -2,7 +2,7 @@
 import { IDiscriminator } from "./IDiscriminator";
 
 export interface IErrorHandlerAgent extends IDiscriminator{
-  ErrorAndThrow(container: string, text: any): void;
+  ErrorAndThrow(container: string | string[], text: string): void;
   ErrorAndContinue(container: string, text: any): void;
   WarningAndContinue(container: string, text: any): void;
   ErrorStack: IError[];

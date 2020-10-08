@@ -3,7 +3,7 @@ import { FrameJacket } from "../../../DOMJacket/FrameJacket";
 import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
 export class FrameHelper extends _HindeCoreBase {

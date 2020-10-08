@@ -1,6 +1,6 @@
 ﻿import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
 import { HindsiteEventHandler_Type } from "./HindsiteEventHandler_Type";
-import { _HindeCoreBase } from "../../LoggableBase";
+import { _HindeCoreBase } from "../../_HindeCoreBase";
 import { IHindeCore } from "../../Interfaces/Agents/IHindeCore";
 
 export class HindSiteEvent_Observer<T> extends _HindeCoreBase implements IHindSiteEvent_Observer<T> {

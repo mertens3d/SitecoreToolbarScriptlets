@@ -1,5 +1,5 @@
 ﻿import { IHindSiteScUiAPI } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
-import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../Shared/scripts/_HindeCoreBase";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
 import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { DocumentJacket } from "../../DOMJacket/DocumentJacket";

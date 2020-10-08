@@ -12,7 +12,7 @@ import { UiEventManager } from "./Managers/UiEventManager";
 import { UiModulesManager } from "./Managers/UiManager/UiModulesManager";
 import { UiVisibilityTestAgent } from "./Managers/UiManager/UiVisibilityTestAgent";
 import { DebuggingFeedbackModuleMessages_Observer } from "./UiModules/UiFeedbackModules/FeedbackModuleMessages";
-import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../Shared/scripts/_HindeCoreBase";
 import { UiCommandFlagRaisedEvent_Subject } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject";
 import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
 import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";

@@ -1,7 +1,7 @@
 ﻿import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 
 export class PopUpBrowserProxy extends _HindeCoreBase implements IPopUpBrowserProxy {
   Url: string;

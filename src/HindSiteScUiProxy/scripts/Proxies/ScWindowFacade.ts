@@ -20,7 +20,7 @@ import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDa
 import { IStateOfScWindow } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow';
 import { IStateOf_ } from "../../../Shared/scripts/Interfaces/Data/States/IStateofX";
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
 import { TemplateManagerProxy } from "./TemplateManagerProxy";

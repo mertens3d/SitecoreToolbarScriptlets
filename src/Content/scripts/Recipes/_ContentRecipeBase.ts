@@ -2,7 +2,7 @@
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 
 export abstract class _ContentRecipeBase extends _HindeCoreBase {
   CommandParams: ICommandParams;

@@ -1,4 +1,4 @@
-﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
+﻿import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
 import { UiPresence } from "../../../../Shared/scripts/Enums/UiPresence";

@@ -2,7 +2,7 @@
 import { FrameJacket } from "../../../DOMJacket/FrameJacket";
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
-import { _HindeCoreBase } from "../LoggableBase";
+import { _HindeCoreBase } from "../_HindeCoreBase";
 import { CEFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 
 export class FactoryHelper extends _HindeCoreBase {

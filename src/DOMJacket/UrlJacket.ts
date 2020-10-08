@@ -3,7 +3,7 @@ import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IAbsoluteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { IUrlJacket } from "../Shared/scripts/Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../Shared/scripts/Interfaces/Jackets/IUrlParts";
-import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../Shared/scripts/_HindeCoreBase";
 import { IOneParamPair } from "../Shared/scripts/Interfaces/IOneParamPair";
 import { SharedConst } from "../Shared/scripts/SharedConst";
 

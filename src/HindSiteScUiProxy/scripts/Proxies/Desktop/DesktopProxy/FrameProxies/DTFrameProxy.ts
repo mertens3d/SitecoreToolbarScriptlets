@@ -1,6 +1,5 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
 import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
-import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
@@ -12,7 +11,7 @@ import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Dat
 import { IStateOfFrameStyling } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateofX";
 import { ContentEditorSFProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { PackageDesignerProxy } from "../../../PackageDesignerSFProxy";
+import { PackageDesignerProxy } from "../../../PackageDesignerProxy/PackageDesignerProxy";
 import { ContentEditorProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
 import { IContentEditorProxyMutationEvent_Payload } from "../Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
@@ -20,6 +19,7 @@ import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutati
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
 import { TemplateManagerProxy } from "../../../TemplateManagerProxy";
 import { MediaLibraryProxy } from "../../../MediaLibraryProxy";
+import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
   Friendly: string = DTFrameProxy.name;

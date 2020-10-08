@@ -1,4 +1,4 @@
-﻿import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
+﻿import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { IMessageBroker_Content } from '../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 

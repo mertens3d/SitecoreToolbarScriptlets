@@ -2,7 +2,7 @@
 import { ReadyStateNAB } from "../Shared/scripts/Enums/ReadyState";
 import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfFrameStyling } from "../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
-import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../Shared/scripts/_HindeCoreBase";
 import { DocumentJacket } from "./DocumentJacket";
 import { UrlJacket } from "./UrlJacket";
 
@@ -132,7 +132,7 @@ export class FrameJacket extends _HindeCoreBase {
             this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, this.HtmlIFrameElement.contentDocument.readyState);
             resolve(result);
           })
-          .catch((err) => reject(this.WaitForCompleteNABHtmlIframeElement + ' | ' + err));
+          .catch((err) => reject(  this.WaitForCompleteNABHtmlIframeElement.name + ' | ' + err));
       }
       else {
         this.ErrorHand.ErrorAndThrow(this.WaitForCompleteNABHtmlIframeElement.name, 'No target doc: ' + friendly);

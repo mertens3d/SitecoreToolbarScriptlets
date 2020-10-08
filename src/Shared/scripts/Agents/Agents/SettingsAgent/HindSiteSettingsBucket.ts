@@ -1,5 +1,5 @@
 ﻿import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
-import { _HindeCoreBase } from "../../../LoggableBase";
+import { _HindeCoreBase } from "../../../_HindeCoreBase";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { SettingKey } from "../../../Enums/3xxx-SettingKey";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";

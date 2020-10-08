@@ -7,7 +7,7 @@ import { Guid } from "../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../Shared/scripts/Helpers/GuidData";
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScVerSpec } from "../../Shared/scripts/Interfaces/IScVerSpec";
-import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../Shared/scripts/_HindeCoreBase";
 import { DocumentProxyMutationEvent_Subject } from "../scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Subject";
 import { IDocumentProxyMutationEvent_Payload } from "../scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
 import { ElementJacket } from "../../DOMJacket/ElementJacket";

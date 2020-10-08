@@ -1,5 +1,5 @@
 ﻿import { SharedConst } from "../SharedConst";
-import { _HindeCoreBase } from "../LoggableBase";
+import { _HindeCoreBase } from "../_HindeCoreBase";
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 
 export class ReadyStateNAB extends _HindeCoreBase {

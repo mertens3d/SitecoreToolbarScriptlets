@@ -1,4 +1,11 @@
 ﻿export interface ISharedConst {
+  Colors: {
+    colorContent: string,
+    colorLayout: string,
+    colorMediaLibrary: string,
+    colorSystem: string,
+    colorTemplates: string,
+  },
   Debug: {
     ForceLoggingEnabled: boolean,
     SpeedUpAutoSaveIntervalFactor: number,
@@ -54,7 +61,6 @@
   },
   QueryStringKey: {
     XmlControl: string,
-
   },
   Regex: {
     ContentEditor: RegExp,
@@ -64,7 +70,6 @@
     QueryStrSeparatorQuest: RegExp,
 
     Path: {
-
     },
     PageType: {
       Shell: RegExp,

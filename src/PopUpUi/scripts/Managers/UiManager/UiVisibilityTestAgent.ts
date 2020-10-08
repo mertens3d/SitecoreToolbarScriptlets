@@ -1,4 +1,4 @@
-﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
+﻿import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
 import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";

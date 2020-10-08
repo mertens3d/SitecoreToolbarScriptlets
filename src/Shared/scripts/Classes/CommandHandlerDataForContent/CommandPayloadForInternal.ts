@@ -12,7 +12,7 @@ import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
 import { ICommandParams } from "../../Interfaces/ICommandParams";
-import { _HindeCoreBase } from "../../LoggableBase";
+import { _HindeCoreBase } from "../../_HindeCoreBase";
 
 export class CommandPayloadForInternal extends _HindeCoreBase implements ICommandParams {
   NewNickname: string;

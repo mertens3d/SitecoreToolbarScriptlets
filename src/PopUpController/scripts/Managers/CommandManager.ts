@@ -8,7 +8,7 @@ import { IHindSiteUiLayer } from "../../../Shared/scripts/Interfaces/IHindSiteUi
 import { MessageBroker_PopUp } from '../Agents/PopUpMessagesBrokerAgent';
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { HandlersForInternal } from '../Classes/HandlersForInternal';
-import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
 
 export class CommandManager extends _HindeCoreBase {

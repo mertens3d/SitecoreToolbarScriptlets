@@ -10,7 +10,7 @@ import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
 import { HindSiteSettingsBucket } from "./HindSiteSettingsBucket";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
-import { _HindeCoreBase } from "../../../LoggableBase";
+import { _HindeCoreBase } from "../../../_HindeCoreBase";
 
 export class SettingsAgent extends _HindeCoreBase implements ISettingsAgent {
   HindSiteSettingsBucket: HindSiteSettingsBucket;

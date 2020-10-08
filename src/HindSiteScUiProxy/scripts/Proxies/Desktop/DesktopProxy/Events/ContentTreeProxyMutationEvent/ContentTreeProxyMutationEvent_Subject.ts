@@ -2,9 +2,9 @@
 import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IContentTreeProxyMutationEvent_Payload } from "./IContentTreeProxyMutationEvent_Payload";
 
-export class ContentTreeProxyMutationEvent_Subject extends HindeSiteEvent_Subject<IContentTreeProxyMutationEvent_Payload> {
+export class ContentTreeMutationEvent_Subject extends HindeSiteEvent_Subject<IContentTreeProxyMutationEvent_Payload> {
     ShowLogActions: boolean = true;
     constructor(hindeCore: IHindeCore) {
-        super(hindeCore, ContentTreeProxyMutationEvent_Subject.name);
+        super(hindeCore, ContentTreeMutationEvent_Subject.name);
     }
 }

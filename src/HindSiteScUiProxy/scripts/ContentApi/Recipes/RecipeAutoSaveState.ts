@@ -3,7 +3,7 @@ import { IHindSiteScUiAPI } from "../../../../Shared/scripts/Interfaces/Agents/I
 import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 
 export class RecipeAutoSaveState extends _HindeCoreBase {
   private ScUiProxy: IHindSiteScUiAPI;

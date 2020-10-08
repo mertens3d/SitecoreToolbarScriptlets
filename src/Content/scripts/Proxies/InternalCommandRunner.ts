@@ -6,7 +6,7 @@ import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
 import { RecipeForceAutoSnapShot } from "../Recipes/RecipeForceAutoSnapShot";

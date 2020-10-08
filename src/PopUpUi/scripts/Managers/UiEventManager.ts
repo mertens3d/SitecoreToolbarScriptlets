@@ -6,7 +6,7 @@ import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore
 import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IStateOfUiModules } from "../../../Shared/scripts/Interfaces/IStateOfUiModules";
-import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { ISingleClickEvent_Payload } from '../Events/SingleClickEvent/ISingleClickEvent_Payload';
 import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
 import { UiModulesManager } from './UiManager/UiModulesManager';

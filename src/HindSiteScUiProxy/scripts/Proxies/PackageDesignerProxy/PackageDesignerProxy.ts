@@ -1,19 +1,19 @@
-﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { DefaultStateOfPackageDesigner } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfPackageDesigner";
-import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { IStateOfPackageDesigner } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfPackageDesigner";
-import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
-import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
-import { CEFrameProxy } from "./Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
-import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
-import { FrameJacket } from "../../../DOMJacket/FrameJacket";
-import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
-import { PromiseFailAction } from "../../../Shared/scripts/Enums/PromiseFailAction";
-import { ElementJacket } from "../../../DOMJacket/ElementJacket";
-import { ElementDivJacket } from "../../../DOMJacket/ElementDivJacket";
-import { SharedConst } from "../../../Shared/scripts/SharedConst";
+﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
+import { DefaultStateOfPackageDesigner } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfPackageDesigner";
+import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IStateFullProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfPackageDesigner";
+import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
+import { ContentEditorSFProxy } from '../ContentEditor/ContentEditorProxy/ContentEditorProxy';
+import { CEFrameProxy } from "../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
+import { _BaseStateFullProxy } from "../Desktop/DesktopProxy/FrameProxies/_StateProxy";
+import { FrameJacket } from "../../../../DOMJacket/FrameJacket";
+import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
+import { PromiseFailAction } from "../../../../Shared/scripts/Enums/PromiseFailAction";
+import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
+import { ElementDivJacket } from "../../../../DOMJacket/ElementDivJacket";
+import { PackageDesignerInstallerRibbonToolbarProxy } from "./PackageDesignerInstallerRibbonToolbarProxy";
 
 export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
@@ -61,8 +61,7 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
         if (stateOfPackageDesigner.StatusText.length > 0) {
           let installerRibbonToolbar: ElementDivJacket = null;
           let SelectToOpenProjectFrame: CEFrameProxy = null;
-          let FileNameInput: ElementJacket = null;
-          let OpenProjectOpenButton: ElementJacket = null;
+
           let AppFrame: HTMLIFrameElement = null;
           let AppframeJacket: FrameJacket;
           let jqueryInHOme: HTMLIFrameElement;
@@ -70,8 +69,8 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
           if (!parentJacket) {
             reject(this.GetState + ' - ' + PackageDesignerProxy.name + ' - no parent jacket');
           }
-          let jqueryFrameJacket: FrameJacket = null;
-          let scContentIframeId0FrameJacket: FrameJacket = null;
+
+          let toolbarProxy: PackageDesignerInstallerRibbonToolbarProxy = null;
 
           await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.SetState.name + ' ' + PackageDesignerProxy.name)
             .then(() => this.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Frames.AppFrame))
@@ -82,47 +81,8 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
             })
             .then(() => AppframeJacket.WaitForCompleteNABHtmlIframeElement('AppFrameJacket'))
             .then(() => AppframeJacket.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.InstallerRibbon_Toolbar, PromiseFailAction.RejectThrow))
-            .then((htmlDivElement: ElementDivJacket) => installerRibbonToolbar = htmlDivElement)
-            .then(() => installerRibbonToolbar.WaitAndReturnFoundElemJacketFromElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.SetState.name))
-            .then((elemJacket: ElementJacket) => elemJacket.NativeElement.click())
-            .then(() => {
-              let matchingJackets: FrameJacket[] = parentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame)
-              if (matchingJackets && matchingJackets.length > 0) {
-                jqueryFrameJacket = matchingJackets[0];
-                this.Logger.LogImportant('jquery frame found');
-              }
-              else {
-                reject('no matching jacket');
-              }
-            })
-            .then(() => jqueryFrameJacket.WaitForCompleteNABHtmlIframeElement('jquery jacket'))
-            .then(() => {
-              let matchingJackets: FrameJacket[] = jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0)
-             
-              if (matchingJackets && matchingJackets.length > 0) {
-                scContentIframeId0FrameJacket = matchingJackets[0];
-                this.Logger.LogImportant('scContentIframeId0FrameJacket frame found');
-              }
-              else {
-                reject('no matching jacket');
-              }
-            })
-            .then(() => scContentIframeId0FrameJacket.WaitForCompleteNABHtmlIframeElement('scContentIframeId0'))
-            .then(() => scContentIframeId0FrameJacket.DocumentJacket.WaitForAndReturnFoundElemJacketFromDoc('[id=Filename]'))
-            .then((fileNameElemJacket: ElementJacket) => FileNameInput = fileNameElemJacket)
-            .then(() => {
-              this.Logger.LogImportant('filename jacket found')
-              OpenProjectOpenButton = scContentIframeId0FrameJacket.DocumentJacket.QuerySelector('[id=OK]');
-              if (!FileNameInput || !OpenProjectOpenButton) {
-                reject('missing buttons');
-              }
-            })
-            .then(() => {
-              if (FileNameInput && OpenProjectOpenButton) {
-                (<HTMLInputElement>FileNameInput.NativeElement).value = stateOfPackageDesigner.StatusText;
-                OpenProjectOpenButton.NativeElement.click();
-              }
-            })
+            .then((elementDivJacket: ElementDivJacket) => toolbarProxy = new PackageDesignerInstallerRibbonToolbarProxy(this.HindeCore, elementDivJacket, parentJacket))
+            .then(() => toolbarProxy.OpenFile(stateOfPackageDesigner.StatusText))
             .then(() => resolve())
             .catch((err) => reject(this.SetState.name + ' ' + PackageDesignerProxy.name + ' | ' + err));
         }

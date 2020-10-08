@@ -13,7 +13,7 @@ import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Dat
 import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
 

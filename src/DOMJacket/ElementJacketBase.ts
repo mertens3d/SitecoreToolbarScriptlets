@@ -1,6 +1,6 @@
 ﻿import { IterationDrone } from "../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
 import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../Shared/scripts/_HindeCoreBase";
 import { ElementJacket } from "./ElementJacket";
 
 export class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {

@@ -8,7 +8,7 @@ import { UiHydrationData } from '../../../Shared/scripts/Interfaces/UiHydrationD
 import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
 import { UiVisibilityTestAgent } from './UiManager/UiVisibilityTestAgent';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
-import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 
 export class UiCommandsManager extends _HindeCoreBase {
   private UiModules: IUiModule[] = [];

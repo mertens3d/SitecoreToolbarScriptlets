@@ -9,10 +9,10 @@ import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
-import { IStateOfScContentTreeNodeFlat } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat';
+import { IStateOfScContentTreeNodeShallow } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
-import { ContentTreeProxyMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Subject";
+import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
+import { ContentTreeMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Subject";
 import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNodeProxy';
 
@@ -31,7 +31,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
   private rootTreeNodeJacket: ElementJacket;
   private TreeContainerJacket: ElementJacket;
 
-  public TreeMutationEvent_Subject: ContentTreeProxyMutationEvent_Subject;
+  public ContentTreeMutationEvent_Subject: ContentTreeMutationEvent_Subject;
 
   constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, treeContainerJacket: ElementJacket, TreeRootSelector: string) {
     super(hindeCore);
@@ -48,7 +48,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
     try {
       await this.SetRootNodeFromSelector()
         .then(() => {
-          this.TreeMutationEvent_Subject = new ContentTreeProxyMutationEvent_Subject(this.HindeCore);
+          this.ContentTreeMutationEvent_Subject = new ContentTreeMutationEvent_Subject(this.HindeCore);
           this.NativeClassNameChangeEvent_Subject = new NativeClassNameChangeEvent_Subject(this.HindeCore, this.TreeContainerJacket);
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.HindeCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
@@ -68,14 +68,14 @@ export class ContentTreeProxy extends _HindeCoreBase {
   private CallBackOnNativeClassNameChangeEventAsync(notUsed: INativeClassNameChangeEvent_Payload) {
     this.Logger.FuncStart(this.CallBackOnNativeClassNameChangeEventAsync.name);
     this.TaskMonitor.AsyncTaskStarted(this.CallBackOnNativeClassNameChangeEventAsync.name);
-    if (this.TreeMutationEvent_Subject) {
+    if (this.ContentTreeMutationEvent_Subject) {
       this.GetStateOfContentTree()
         .then((stateOfContentTree: IStateOfContentTree) => {
           let TreeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = {
             StateOfContentTree: stateOfContentTree
           }
 
-          this.TreeMutationEvent_Subject.NotifyObserversAsync(TreeMutationEvent_Payload)
+          this.ContentTreeMutationEvent_Subject.NotifyObserversAsync(TreeMutationEvent_Payload)
         })
         .then(() => this.Logger.Log(this.CallBackOnNativeClassNameChangeEventAsync.name + ' completed'))
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.CallBackOnNativeClassNameChangeEventAsync.name, err));
@@ -144,13 +144,13 @@ export class ContentTreeProxy extends _HindeCoreBase {
     this.Logger.FuncStart(this.SetStateOfContentTree.name);
     this.TaskMonitor.AsyncTaskStarted(this.SetStateOfContentTree.name);
     try {
-      this.TreeMutationEvent_Subject.DisableNotifications();
+      this.ContentTreeMutationEvent_Subject.DisableNotifications();
       await this.SetStateOfNodeRecursive(currentNodeData, 0);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.SetStateOfContentTree.name, err);
     }
 
-    this.TreeMutationEvent_Subject.EnableNotifications();
+    this.ContentTreeMutationEvent_Subject.EnableNotifications();
     this.TaskMonitor.AsyncTaskCompleted(this.SetStateOfContentTree.name);
     this.Logger.FuncEnd(this.SetStateOfContentTree.name);
   }
@@ -193,7 +193,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
       await this.GetStateOfContentTreeNodeDeep()
         .then((result: IStateOfScContentTreeNodeDeep) => stateOfContentTree.StateOfScContentTreeNodeDeep = result)
         .then(() => {
-          let activeNodeFlat: IStateOfScContentTreeNodeFlat = <IStateOfScContentTreeNodeFlat>this.GetActiveTreeNodeFromAncestorNode(stateOfContentTree.StateOfScContentTreeNodeDeep);
+          let activeNodeFlat: IStateOfScContentTreeNodeShallow = <IStateOfScContentTreeNodeShallow>this.GetActiveTreeNodeFromAncestorNode(stateOfContentTree.StateOfScContentTreeNodeDeep);
           if (activeNodeFlat) {
             stateOfContentTree.ActiveNodeFlat = activeNodeFlat;
           }

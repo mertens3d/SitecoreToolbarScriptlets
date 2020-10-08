@@ -7,7 +7,7 @@ import { IScUrlAgent } from '../../../Shared/scripts/Interfaces/Jackets/IScUrlAg
 import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
 import { IAbsoluteUrl } from '../../../Shared/scripts/Interfaces/IAbsoluteUrl';
-import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 
 export class BrowserTabAgent extends _HindeCoreBase{
   private ScUrlAgent: IScUrlAgent;

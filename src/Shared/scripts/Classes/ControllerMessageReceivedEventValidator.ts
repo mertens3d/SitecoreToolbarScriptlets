@@ -5,7 +5,7 @@ import { IStateOfContentEditor } from "../Interfaces/Data/States/IStateOfContent
 import { IStateOfDesktop } from "../Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../Interfaces/Data/States/IStateOfDTProxy";
 import { IStateOfScWindow } from "../Interfaces/Data/States/IStateOfScWindow";
-import { _HindeCoreBase } from "../LoggableBase";
+import { _HindeCoreBase } from "../_HindeCoreBase";
 import { DefaultControllerMessageReceivedEvent_Payload } from "./Defaults/DefaultControllerMessageReceivedEvent_Payload";
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor.1";
 import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";

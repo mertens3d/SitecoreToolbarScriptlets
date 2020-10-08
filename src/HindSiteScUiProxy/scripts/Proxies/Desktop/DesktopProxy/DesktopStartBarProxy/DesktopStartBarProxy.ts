@@ -1,7 +1,7 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
+import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
 import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';

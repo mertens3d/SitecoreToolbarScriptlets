@@ -4,7 +4,7 @@ import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeC
 import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
-import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
 
 export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {

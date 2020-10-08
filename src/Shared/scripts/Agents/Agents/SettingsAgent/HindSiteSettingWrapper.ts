@@ -1,4 +1,4 @@
-﻿import { _HindeCoreBase } from "../../../LoggableBase";
+﻿import { _HindeCoreBase } from "../../../_HindeCoreBase";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { HindSiteSetting } from "./HindSiteSetting";

@@ -1,4 +1,4 @@
-﻿import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+﻿import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";

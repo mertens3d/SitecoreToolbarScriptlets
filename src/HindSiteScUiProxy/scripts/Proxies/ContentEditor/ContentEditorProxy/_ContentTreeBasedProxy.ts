@@ -59,7 +59,7 @@ export abstract class _ContentTreeBasedProxy<T> extends _BaseStateFullProxy<T> i
   }
   protected __baseWireEvents() {
     this.ContentTreeProxy.WireEvents_TreeProxy();
-    this.ContentTreeProxy.TreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
+    this.ContentTreeProxy.ContentTreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
   }
 
   async __baseSetState(stateOfContentTreeBasedProxies: IStateOfContentTreeBasedProxies): Promise<Boolean> {

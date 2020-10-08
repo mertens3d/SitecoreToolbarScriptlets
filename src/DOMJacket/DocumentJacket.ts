@@ -7,7 +7,7 @@ import { FrameJacket } from "./FrameJacket";
 import { ElementJacket } from "./ElementJacket";
 import { CEFrameProxy } from "../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { FactoryHelper } from "../Shared/scripts/Helpers/FactoryHelper";
-import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../Shared/scripts/_HindeCoreBase";
 import { UrlJacket } from "./UrlJacket";
 import { SharedConst } from "../Shared/scripts/SharedConst";
 import { IAbsoluteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";

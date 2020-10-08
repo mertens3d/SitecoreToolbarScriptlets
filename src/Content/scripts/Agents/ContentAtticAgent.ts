@@ -11,7 +11,7 @@ import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDa
 import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../Shared/scripts/Interfaces/IOneStorageData";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 
 export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAgent {
   private RepoAgent: IRepositoryAgent;

@@ -2,7 +2,7 @@
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
+import { _HindeCoreBase } from "../../../../../Shared/scripts/_HindeCoreBase";
 import { ElementJacket } from "../../../../../DOMJacket/ElementJacket";
 
 export class DTPopUpMenuProxy extends _HindeCoreBase {
