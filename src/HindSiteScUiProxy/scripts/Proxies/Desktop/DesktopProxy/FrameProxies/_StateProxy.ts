@@ -1,18 +1,19 @@
 ﻿import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
+import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
-import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
-import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
+import { SupportFrameFactory } from "../../../SupportProxies/BaseFrameFactory";
 
 
 export abstract class _BaseStateFullProxy<T> extends _HindeCoreBase implements IStateFullProxy {
   RecipeBasics: RecipeBasics;
   Friendly: string = '{unknown friendly}';
+  protected readonly SupportFrameFactory: SupportFrameFactory;
 
   constructor(hindeCore: IHindeCore) {
     super(hindeCore);
+    this.SupportFrameFactory = new SupportFrameFactory(this.HindeCore)
   }
   abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
   abstract GetState(): Promise<T>;

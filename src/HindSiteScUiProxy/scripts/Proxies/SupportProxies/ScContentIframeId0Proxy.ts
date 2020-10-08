@@ -22,10 +22,10 @@ export class ScContentIframeId0Proxy extends _HindeCoreBase {
       let trimmedFileName: string = fileName.trim();
 
       await this.ScContentIframeId0FrameJacket.WaitForCompleteNABHtmlIframeElement('scContentIframeId0')
-        .then(() => this.ScContentIframeId0FrameJacket.DocumentJacket.WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0Proxy.Filename))
+        .then(() => this.ScContentIframeId0FrameJacket.DocumentJacket.WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Filename))
         .then((fileNameElemJacket: ElementJacket) => FileNameInput = fileNameElemJacket)
-        .then(() => OpenOkButton = this.ScContentIframeId0FrameJacket.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0Proxy.Ok))
-        .then(() => CancelButton = this.ScContentIframeId0FrameJacket.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0Proxy.Cancel))
+        .then(() => OpenOkButton = this.ScContentIframeId0FrameJacket.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Ok))
+        .then(() => CancelButton = this.ScContentIframeId0FrameJacket.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Cancel))
         .then(() => {
           this.Logger.LogImportant('filename jacket found');
 

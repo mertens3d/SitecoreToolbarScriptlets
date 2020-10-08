@@ -61,21 +61,21 @@ export class DocumentJacket extends _HindeCoreBase {
     return toReturn;
   }
 
-  async WaitForAndGetFirstHostedFrame(querySelector: string): Promise<FrameJacket> {
+  async WaitForFirstHostedFrame(querySelector: string): Promise<FrameJacket> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForAndGetFirstHostedFrame.name, querySelector);
+      this.Logger.FuncStart(this.WaitForFirstHostedFrame.name, querySelector);
       let firstFrameJacket: FrameJacket = null;
 
       await this.WaitForAndReturnFoundElemJacket(querySelector)
         .then((elemJacket: ElementJacket) => resolve(new FrameJacket(this.HindeCore, <HTMLIFrameElement>elemJacket.NativeElement)))
-        .catch((err) => reject(this.ErrorHand.PromiseRejectMessage([this.WaitForAndGetFirstHostedFrame.name], err)));
+        .catch((err) => reject(this.ErrorHand.FormatejectMessage([this.WaitForFirstHostedFrame.name], err)));
 
       //  let matchingJackets: FrameJacket[] = this.GetHostedFramesFilteredBySelector(querySelector);
       //if (matchingJackets && matchingJackets.length > 0) {
       //  firstFrameJacket = matchingJackets[0];
       //}
 
-      this.Logger.FuncEnd(this.WaitForAndGetFirstHostedFrame.name, querySelector);
+      this.Logger.FuncEnd(this.WaitForFirstHostedFrame.name, querySelector);
     })
   }
 

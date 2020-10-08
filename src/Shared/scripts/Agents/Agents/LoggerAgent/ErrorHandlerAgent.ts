@@ -109,7 +109,7 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     console.log('********** ' + text + ' **********');
   }
 
-  PromiseRejectMessage(container: string[], err: string): string {
+  FormatejectMessage(container: string[], err: string): string {
     let toReturn: string = '';
 
     let isFirstInArray = true;

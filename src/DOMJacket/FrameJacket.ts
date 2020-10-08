@@ -132,7 +132,7 @@ export class FrameJacket extends _HindeCoreBase {
             this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, this.HtmlIFrameElement.contentDocument.readyState);
             resolve(result);
           })
-          .catch((err) => reject(this.ErrorHand.PromiseRejectMessage([this.WaitForCompleteNABHtmlIframeElement.name] , err) ));
+          .catch((err) => reject(this.ErrorHand.FormatejectMessage([this.WaitForCompleteNABHtmlIframeElement.name] , err) ));
       }
       else {
         this.ErrorHand.ErrorAndThrow([FrameJacket.name, this.WaitForCompleteNABHtmlIframeElement.name], 'No target doc: ' + friendly);

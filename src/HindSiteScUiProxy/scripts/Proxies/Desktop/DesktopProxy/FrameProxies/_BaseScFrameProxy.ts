@@ -19,7 +19,7 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
 
     this.ErrorHand.ThrowIfNullOrUndefined(_BaseScFrameProxy.name, [frameJacket]);
     this.FrameJacket = frameJacket;
-    this.Id = 'base_' + this.FrameJacket.GetNativeIframeId();// Guid.NewRandomGuid().Raw;
+    this.Id = 'base_' + this.FrameJacket.GetNativeIframeId();
   }
 
   abstract InstantiateAsyncMembers();

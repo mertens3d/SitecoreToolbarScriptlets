@@ -23,9 +23,10 @@ export class PackageDesignerInstallerRibbonToolbarProxy extends _HindeCoreBase {
 
         await this.ElementDivJacket.WaitAndReturnFoundElemJacketFromElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
             .then((elemJacket: ElementJacket) => elemJacket.NativeElement.click())
-            .then(() => {
-                let matchingJackets: FrameJacket[] = this.parentDocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame);
-                if (matchingJackets && matchingJackets.length > 0) {
+          .then(() => {
+            let matchingJackets: FrameJacket[] = this.parentDocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id);
+            if (matchingJackets && matchingJackets.length > 0) {
+
                     jqueryFrameProxy = new JqueryFrameProxy(this.HindeCore, matchingJackets[0]);
                     this.Logger.LogImportant('jquery frame found');
                 }

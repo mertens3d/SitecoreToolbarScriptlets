@@ -67,28 +67,37 @@ export interface IContentConst {
       },
 
       Cancel: string,
-      ContentIFrame1: string,
       IdStartsWithTreeNode: string,
       IframeContent: IScVerSpec,
       Frames: {
-        ScContentIframeId0Proxy: {
+        ScContentIframeId0: {
           Cancel: string
           Filename: string,
           Id: string,
           Ok: string,
         },
         AppFrame: {
-
-        Id: string,
+          Id: string,
+        },
+        JqueryModalDialogsFrame: {
+          Id: string,
+        },
+        scContentIframeId1: {
+          Id: string,
         }
-
-        JqueryModalDialogsFrame: string,
       },
       LoginBtn: IScVerSpec,
       MenuButtonPublish: string,
-      MenuDropDownPublishItem: string,
-      NavPublishStrip: string,
       NextButton: string,
+
+      Publish: {
+        MenuDropDownPublishItem: string,
+        NavPublishStrip: string,
+        TheItemHasBeenPublished: string,
+        SettingsHidden: string,
+        PublishingHidden: string,
+      }
+
       Ok: string,
       StartMenu: {
         DevelopmentTools: string,
@@ -102,11 +111,6 @@ export interface IContentConst {
         DtStartBar: string,
         ContentTreeHolder: string,
       },
-      Publish: {
-        TheItemHasBeenPublished: string,
-        SettingsHidden: string,
-        PublishingHidden: string,
-      }
     }
   },
   Storage: {

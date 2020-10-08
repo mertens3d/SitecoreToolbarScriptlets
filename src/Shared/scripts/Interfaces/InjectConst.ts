@@ -121,25 +121,26 @@ export class ContentConst {
           sc920: 'iframe[src*=Content], iframe[src*=MediaShop]'
         },
         Frames: {
-          ScContentIframeId0Proxy: {
+          ScContentIframeId0: {
             Cancel: '[id=Cancel]',
             Filename: '[id=Filename]',
             Id: '[id=scContentIframeId0]',
             Ok: '[id=OK]',
           },
           AppFrame: {
-          Id: '[id=AppFrame]',
-
+            Id: '[id=AppFrame]',
           },
-          JqueryModalDialogsFrame: '[id=jqueryModalDialogsFrame]',
+          JqueryModalDialogsFrame: {
+            Id: '[id=jqueryModalDialogsFrame]',
+          },
+          scContentIframeId1: {
+            Id: '[id=scContentIframeId1]',
+          }
         },
         NextButton: '[id=NextButton]',
-        ContentIFrame1: '[id=scContentIframeId1]',
         Ok: '[id=OK]',
         Cancel: '[id=CancelButton]',
         MenuButtonPublish: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_button]',
-        MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',
-        NavPublishStrip: '[id*=_Nav_PublishStrip]',
         StartMenuLeftOption: 'img[src$="pencil.png"]',
         MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
         TemplateManager: 'img[src$="newspaper.png"]',
@@ -148,6 +149,8 @@ export class ContentConst {
           PackageDesigner: '[id=MenuItem211048689]',
         },
         Publish: {
+          MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',
+          NavPublishStrip: '[id*=_Nav_PublishStrip]',
           TheItemHasBeenPublished: '[id=LastPage]:not([style*=\'display:none\'])',
           SettingsHidden: '[id=Settings][style*=\'display: none\']',
           PublishingHidden: '[id=Publishing][style*=\'display: none\']',

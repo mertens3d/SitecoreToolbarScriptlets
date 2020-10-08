@@ -81,7 +81,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentBrowserProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\HindSiteScUiAPI.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\_ContentTreeBasedProxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopPopUpMenuProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DTPopUp1Proxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\ContentTreeProxyMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Subject.ts" />

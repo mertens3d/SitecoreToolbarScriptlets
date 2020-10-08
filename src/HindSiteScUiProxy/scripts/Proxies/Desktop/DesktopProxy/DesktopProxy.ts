@@ -8,7 +8,7 @@ import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { DTPopUpMenuProxy } from "./DesktopPopUpMenuProxy";
+import { DTPopUp1Proxy } from "./DTPopUp1Proxy";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
@@ -19,7 +19,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   StateFullProxyDisciminator = StateFullProxyDisciminator.Desktop;
   private DocumentJacket: DocumentJacket;
   private DTAreaProxy: DTAreaProxy;
-  private DTPopUpMenuProxy: DTPopUpMenuProxy;
+  private DTPopUpMenuProxy: DTPopUp1Proxy;
   private DTStartBarProxy: DTStartBarProxy;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
 
@@ -133,7 +133,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async AddMediaLibraryFrame(): Promise<void> {
     this.Logger.FuncStart(this.AddMediaLibraryFrame.name);
     try {
-      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
+      this.DTPopUpMenuProxy = new DTPopUp1Proxy(this.HindeCore);
 
       await this.DTStartBarProxy.TriggerRedButton()
         .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddMediaLibraryFrame.name))
@@ -150,7 +150,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async AddTemplateManagerFrame(): Promise<void> {
     this.Logger.FuncStart(this.AddTemplateManagerFrame.name);
     try {
-      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
+      this.DTPopUpMenuProxy = new DTPopUp1Proxy(this.HindeCore);
 
       await this.DTStartBarProxy.TriggerRedButton()
         .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddTemplateManagerFrame.name))
@@ -171,7 +171,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async AddPackageDesignerFrame(): Promise<void> {
     this.Logger.FuncStart(this.AddPackageDesignerFrame.name);
     try {
-      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
+      this.DTPopUpMenuProxy = new DTPopUp1Proxy(this.HindeCore);
 
       await
         this.DTStartBarProxy.TriggerRedButton()
@@ -191,7 +191,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async AddContentEditorFrameAsync(): Promise<void> {
     this.Logger.FuncStart(this.AddContentEditorFrameAsync.name);
     try {
-      this.DTPopUpMenuProxy = new DTPopUpMenuProxy(this.HindeCore);
+      this.DTPopUpMenuProxy = new DTPopUp1Proxy(this.HindeCore);
 
       await this.DTStartBarProxy.TriggerRedButton()
         .then(() => this.TaskMonitor.AsyncTaskStarted(this.AddContentEditorFrameAsync.name))

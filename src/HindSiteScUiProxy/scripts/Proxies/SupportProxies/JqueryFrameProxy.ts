@@ -18,7 +18,7 @@ export class JqueryFrameProxy extends _HindeCoreBase {
 
       await this.jqueryFrameJacket.WaitForCompleteNABHtmlIframeElement('jquery jacket')
         .then(() => {
-          let matchingJackets: FrameJacket[] = this.jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0Proxy.Id);
+          let matchingJackets: FrameJacket[] = this.jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Id);
 
           if (matchingJackets && matchingJackets.length > 0) {
             scContentIframeId0Proxy = new ScContentIframeId0Proxy(this.HindeCore, matchingJackets[0]);
