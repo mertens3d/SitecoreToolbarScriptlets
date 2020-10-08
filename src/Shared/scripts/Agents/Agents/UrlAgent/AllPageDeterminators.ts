@@ -1,13 +1,32 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
-import { ScWindowType } from "../../../Enums/scWindowType";
+import { ScWindowType } from "../../../Enums/5000 - scWindowType";
 import { IPageDeterminator } from "./IPageDeterminator";
 
 export class AllPageDeterminators {
-  static regexPathTestShell: RegExp = /sitecore\/shell/ig;
+  static regexPathTest_Sitecore_Shell: RegExp = /sitecore\/shell/ig;
   static regexMatchAll: RegExp = /.*/ig;
   static regexMatchApplicationsContentManager: RegExp = /sitecore\/shell\/Applications\/Content.*Manager/ig;
 
   static ScPages: IPageDeterminator[] = [
+
+    {
+      ///sitecore/shell/default.aspx?xmlcontrol=Application&hdl=14FA8CCA18714BCEBA863F19885346B9&he=Access+Viewer&ic=Apps%2f16x16%2fLock.png
+      ConfidenceScore: 0,
+      Friendly: "Access View",
+      QueryKeyValuePairs: [
+        {
+          Key: QueryStrKey.xmlcontrol,
+          ValueMatch: /Application/ig,
+        },
+        {
+          Key: QueryStrKey.he,
+          ValueMatch: /Access.?Viewer/ig,
+        }
+      ],
+      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      ScWindowType: ScWindowType.AccessViewer,
+      ScWindowTypeFriendly: ScWindowType[ScWindowType.AccessViewer],
+    },
     {
       ConfidenceScore: 0,
       Friendly: "Content Editor",
@@ -26,9 +45,28 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Desktop",
       QueryKeyValuePairs: [],
-      RegexPathTest: AllPageDeterminators.regexPathTestShell,
+      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.Desktop,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.Desktop],
+    },
+
+    {
+      //https://sc10learnsc.dev.local/sitecore/shell/default.aspx?xmlcontrol=Application&hdl=034041AE0B5741A0A1C0D7BB0B0E8133&he=Domain+Manager&ic=Apps%2f16x16%2fRoutes.png
+      ConfidenceScore: 0,
+      Friendly: "Domain Manager",
+      QueryKeyValuePairs: [
+        {
+          Key: QueryStrKey.xmlcontrol,
+          ValueMatch: /Application/ig,
+        },
+        {
+          Key: QueryStrKey.he,
+          ValueMatch: /Domain.?Manager/ig,
+        }
+      ],
+      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      ScWindowType: ScWindowType.DomainManager,
+      ScWindowTypeFriendly: ScWindowType[ScWindowType.DomainManager],
     },
     {
       // - /sitecore/shell/default.aspx
@@ -98,7 +136,7 @@ export class AllPageDeterminators {
           ValueMatch: /Application/ig
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTestShell,
+      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.PackageDesigner,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.PackageDesigner],
     },
@@ -128,12 +166,42 @@ export class AllPageDeterminators {
     },
     {
       // - https://sc10learnsc.dev.local/sitecore/shell/Applications/Security/Role%20Manager.aspx?sc_bw=1
+      // https://sc10learnsc.dev.local/sitecore/shell/default.aspx?xmlcontrol=Application&hdl=A6EC12E68B4145489394E7DEEC398C3E&he=Role+Manager&ic=Apps%2f16x16%2fAccount.png
       ConfidenceScore: 0,
       Friendly: "Role Manager",
-      QueryKeyValuePairs: [],
-      RegexPathTest: /sitecore\/shell\/Applications\/Security\/Role.*Manager/ig,
-      ScWindowType: ScWindowType.FallBack,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.FallBack],
+      QueryKeyValuePairs: [
+        {
+          Key: QueryStrKey.xmlcontrol,
+          ValueMatch: /Application/ig,
+        },
+        {
+          Key: QueryStrKey.he,
+          ValueMatch: /Role.?Manager/ig,
+        }
+      ],
+      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      ScWindowType: ScWindowType.RollManager,
+      ScWindowTypeFriendly: ScWindowType[ScWindowType.RollManager],
+    },
+
+    {
+      ///sitecore/shell/default.aspx?xmlcontrol=Application&hdl=0CEB9550DEB043DEBAAB80763369F5E2&he=Security+Editor&ic=Apps%2f48x48%2fShield.png
+      ConfidenceScore: 0,
+      Friendly: "Security Editor",
+      QueryKeyValuePairs: [
+        {
+          Key: QueryStrKey.xmlcontrol,
+          ValueMatch: /Application/ig,
+        },
+        {
+          Key: QueryStrKey.he,
+          ValueMatch: /Security.?Editor/ig,
+        }
+
+      ],
+      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      ScWindowType: ScWindowType.SecurityEditor,
+      ScWindowTypeFriendly: ScWindowType[ScWindowType.SecurityEditor],
     },
     {
       // - /sitecore/shell/Applications/Content%20Manager/default.aspx?he=Template%20Manager&pa=0&mo=templateworkspace&ic=Software%2F16x16%2Fcomponents.png&ro=%7B3C1715FE-6A13-4FCF-845F-DE308BA9741D%7D&fo&il
@@ -163,5 +231,25 @@ export class AllPageDeterminators {
       ScWindowType: ScWindowType.FallBack,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.FallBack],
     },
+    {
+      ////sitecore/shell/default.aspx?xmlcontrol=Application&hdl=64D9EB1972E54974A814440C20DEC57A&he=User+Manager&ic=Apps%2f32x32%2fuser+(1).png
+      ConfidenceScore: 0,
+      Friendly: "User Manager",
+      QueryKeyValuePairs: [
+        {
+          Key: QueryStrKey.xmlcontrol,
+          ValueMatch: /Application/ig,
+        },
+        {
+          Key: QueryStrKey.he,
+          ValueMatch: /User.?Manager/ig,
+        }
+      ],
+      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      ScWindowType: ScWindowType.UserManager,
+      ScWindowTypeFriendly: ScWindowType[ScWindowType.UserManager],
+    },
+    
+
   ];
 }

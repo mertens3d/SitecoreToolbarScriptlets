@@ -7,7 +7,7 @@ import { DefaultStateOfScWindow } from "../../../Shared/scripts/Classes/Defaults
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
-import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+import { ScWindowType } from '../../../Shared/scripts/Enums/5000 - scWindowType';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -27,6 +27,7 @@ import { TemplateManagerProxy } from "./TemplateManagerProxy";
 import { LaunchPadProxy } from "./LaunchPadProxy";
 import { FallBackProxy } from "./FallBackProxy";
 import { MediaLibraryProxy } from "./MediaLibraryProxy";
+import { PackageDesignerProxy } from "./PackageDesignerProxy/PackageDesignerProxy";
 
 export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
   SettingsAgent: ISettingsAgent;
@@ -65,11 +66,17 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
           if (false) {
 
           }
+          else if (windowType === ScWindowType.AccessViewer) {
+            this.StateFullProxy = new FallBackProxy(this.HindeCore);
+          }
           else if (windowType === ScWindowType.ContentEditor) {
             this.StateFullProxy = new ContentEditorSFProxy(this.HindeCore, this.DocumentJacket, 'Solo Content Editor doc');
           }
           else if (windowType === ScWindowType.Desktop) {
             this.StateFullProxy = new DesktopSFProxy(this.HindeCore, this.DocumentJacket);
+          }
+          else if (windowType === ScWindowType.DomainManager) {
+            this.StateFullProxy = new FallBackProxy(this.HindeCore);
           }
           else if (windowType === ScWindowType.FallBack) {
             this.StateFullProxy = new FallBackProxy(this.HindeCore);
@@ -80,9 +87,23 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
           else if (windowType === ScWindowType.MediaLibrary) {
             this.StateFullProxy = new MediaLibraryProxy(this.HindeCore, this.DocumentJacket, 'media library');
           }
+          else if (windowType === ScWindowType.PackageDesigner) {
+            this.StateFullProxy = new PackageDesignerProxy(this.HindeCore, this.DocumentJacket, 'PackageDesigner');
+          }
+          else if (windowType === ScWindowType.RollManager) {
+            this.StateFullProxy = new FallBackProxy(this.HindeCore);
+          }
+          else if (windowType === ScWindowType.SecurityEditor) {
+            this.StateFullProxy = new FallBackProxy(this.HindeCore);
+          }
+    
           else if (windowType === ScWindowType.TemplateManager) {
             this.StateFullProxy = new TemplateManagerProxy(this.HindeCore, this.DocumentJacket, 'templateManager');
           }
+          else if (windowType === ScWindowType.UserManager) {
+            this.StateFullProxy = new FallBackProxy(this.HindeCore);
+          }
+   
           else {
             this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers_ScWindowFacade.name, 'unhandled windowType ' + ScWindowType[windowType]);
           }

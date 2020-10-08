@@ -50,7 +50,6 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
 
       this.DTAreaProxy.InstantiateAsyncMembers();
       this.DTStartBarProxy.Instantiate_DTStartBarProxy();
-
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err);
     }
@@ -102,8 +101,14 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
               promAr.push(this.AddPackageDesignerFrame())
             } else if (disciminator === StateFullProxyDisciminator.TemplateManager) {
               promAr.push(this.AddTemplateManagerFrame())
+            }
+            else if (disciminator === StateFullProxyDisciminator.DTFrameProxy) {
+              // something has gone wrong...do noting (possibly the discriminator enum values changed)
+            }
+            else if (disciminator === StateFullProxyDisciminator.FallBack) {
+              // do nothing
             } else {
-              this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled discriminator ->  ' + StateFullProxyDisciminator[disciminator]) 
+              this.ErrorHand.ErrorAndThrow(this.SetState.name, 'unhandled discriminator ->  ' + StateFullProxyDisciminator[disciminator])
             }
           })
         })
@@ -128,7 +133,6 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async PublishItem(): Promise<void> {
     await this.DTAreaProxy.PublishTopFrame();
   }
-  
 
   async AddMediaLibraryFrame(): Promise<void> {
     this.Logger.FuncStart(this.AddMediaLibraryFrame.name);
@@ -146,7 +150,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     }
     this.Logger.FuncEnd(this.AddMediaLibraryFrame.name);
   }
-  
+
   async AddTemplateManagerFrame(): Promise<void> {
     this.Logger.FuncStart(this.AddTemplateManagerFrame.name);
     try {
@@ -163,10 +167,6 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     }
     this.Logger.FuncEnd(this.AddTemplateManagerFrame.name);
   }
-
-
-
-
 
   async AddPackageDesignerFrame(): Promise<void> {
     this.Logger.FuncStart(this.AddPackageDesignerFrame.name);
@@ -185,8 +185,6 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     }
     this.Logger.FuncEnd(this.AddPackageDesignerFrame.name);
   }
-
-
 
   async AddContentEditorFrameAsync(): Promise<void> {
     this.Logger.FuncStart(this.AddContentEditorFrameAsync.name);

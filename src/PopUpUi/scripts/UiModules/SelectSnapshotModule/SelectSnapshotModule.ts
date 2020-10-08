@@ -2,7 +2,7 @@
 import { BufferChar } from "../../../../Shared/scripts/Enums/BufferChar";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { BufferDirection } from "../../../../Shared/scripts/Enums/BufferDirection";
-import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+import { ScWindowType } from "../../../../Shared/scripts/Enums/5000 - scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";

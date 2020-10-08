@@ -3,7 +3,7 @@ import { FrameJacket } from "../../../../../DOMJacket/FrameJacket";
 import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
 import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
+import { ScWindowType } from "../../../../../Shared/scripts/Enums/5000 - scWindowType";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";

@@ -1,4 +1,4 @@
-﻿import { ScWindowType } from "../../Enums/scWindowType";
+﻿import { ScWindowType } from "../../Enums/5000 - scWindowType";
 import { SnapShotFlavor } from "../../Enums/SnapShotFlavor";
 import { IDataFriendly } from "../../Interfaces/Data/States/IDataFriendly";
 

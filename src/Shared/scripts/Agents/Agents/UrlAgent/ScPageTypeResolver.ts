@@ -1,6 +1,6 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
 import { scMode } from "../../../Enums/scMode";
-import { ScWindowType } from "../../../Enums/scWindowType";
+import { ScWindowType } from "../../../Enums/5000 - scWindowType";
 import { IControllerMessageReceivedEvent_Payload } from "../../../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IUrlJacket } from "../../../Interfaces/IUrlAgent";
@@ -21,13 +21,12 @@ export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
   }
 
   RunJacketAgainstAllDeterminators(): IPageDeterminator {
-  let determinators: IPageDeterminator[] = AllPageDeterminators.ScPages;
+    let determinators: IPageDeterminator[] = AllPageDeterminators.ScPages;
     let toReturnPageDeterminator: IPageDeterminator = null;
 
     determinators.forEach((determinant: IPageDeterminator) => {
       let passed: boolean = true;
       determinant.ConfidenceScore = 0;
-
 
       passed = this.TestJacketAgainstRegex(determinant.RegexPathTest);
       if (passed) {
@@ -62,6 +61,8 @@ export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
         }
       }
     });
+
+    this.Logger.LogAsJsonPretty('Final winner', toReturnPageDeterminator);
 
     return toReturnPageDeterminator;
   }
@@ -169,7 +170,6 @@ export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
     //else {
     //  this.ErrorHand.ErrorAndThrow(this.GetScWindowType.name, 'null url');
     //}
-
 
     let result: IPageDeterminator = this.RunJacketAgainstAllDeterminators();
     if (!result) {

@@ -1,4 +1,4 @@
-﻿import { ScWindowType } from "../../../Enums/scWindowType";
+﻿import { ScWindowType } from "../../../Enums/5000 - scWindowType";
 import { IStateOf_ } from "./IStateOf_";
 import { IStateOfFrameStyling } from "./IStateOfFrameStyling";
 

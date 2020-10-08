@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
-import { ScWindowType } from "../../../Enums/scWindowType";
+import { ScWindowType } from "../../../Enums/5000 - scWindowType";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IStateFullProxy } from "../IStateProxy";

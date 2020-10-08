@@ -1,7 +1,7 @@
 ﻿import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
 import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";
 import { DefaultStateOfStorageSnapshots } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfSnapshots";
-import { ScWindowType } from "../../../Shared/scripts/Enums/scWindowType";
+import { ScWindowType } from "../../../Shared/scripts/Enums/5000 - scWindowType";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { GuidData } from "../../../Shared/scripts/Helpers/GuidData";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";

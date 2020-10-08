@@ -1,5 +1,5 @@
 ﻿import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
-import { ScWindowType } from "../../Enums/scWindowType";
+import { ScWindowType } from "../../Enums/5000 - scWindowType";
 import { IStateOf_ } from "../../Interfaces/Data/States/IStateOf_";
 import { IStateOfDTFrame } from "../../Interfaces/Data/States/IStateOfDTFrame";
 

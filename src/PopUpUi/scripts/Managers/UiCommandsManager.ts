@@ -1,4 +1,4 @@
-﻿import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+﻿import { ScWindowType } from '../../../Shared/scripts/Enums/5000 - scWindowType';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent';

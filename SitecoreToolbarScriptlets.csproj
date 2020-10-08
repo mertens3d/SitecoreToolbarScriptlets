@@ -128,6 +128,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultFriendly.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultMessageContentToController_Payload.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultMetaData.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfContentEditor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfDTArea.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfDTFrame.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfMediaLibrary.ts" />
@@ -137,6 +138,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfScWindowProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfStateFullProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfTemplateManager.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\_baseDefaultStateOfContentTreeBasedProxies.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\PromiseFailAction.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\ReadyState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\4000 - StateFullProxyDisciminator.ts" />
@@ -391,7 +393,7 @@
     <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\UiManager\UiModulesManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\RecipeBasics.ts" />
     <TypeScriptCompile Include="src\PopUpUi\scripts\Managers\UiEventManager.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Enums\scWindowType.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\5000 - scWindowType.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Drones\IterationDrone\IterationDrone.ts" />
     <TypeScriptCompile Include="src\Content\scripts\zContentEntryPoint.ts" />

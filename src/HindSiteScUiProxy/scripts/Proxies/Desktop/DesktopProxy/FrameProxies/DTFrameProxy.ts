@@ -4,7 +4,7 @@ import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
-import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
+import { ScWindowType } from "../../../../../../Shared/scripts/Enums/5000 - scWindowType";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
@@ -20,6 +20,7 @@ import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
 import { TemplateManagerProxy } from "../../../TemplateManagerProxy";
 import { MediaLibraryProxy } from "../../../MediaLibraryProxy";
 import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
+import { FallBackProxy } from "../../../FallBackProxy";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
   Friendly: string = DTFrameProxy.name;
@@ -66,6 +67,9 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
           switch (scWindowtypeB) {
             case ScWindowType.ContentEditor:
               this.HostedStateFullProxy = new ContentEditorSFProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly);
+              break;
+            case ScWindowType.MarketingControlPanel:
+              this.HostedStateFullProxy = new FallBackProxy(this.HindeCore)
               break;
             case ScWindowType.MediaLibrary:
               this.HostedStateFullProxy = new MediaLibraryProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly)
