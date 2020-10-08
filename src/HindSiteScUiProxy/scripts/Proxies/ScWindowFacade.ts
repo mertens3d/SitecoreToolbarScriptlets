@@ -6,13 +6,12 @@ import { DefaultStateOfScUiProxy } from "../../../Shared/scripts/Classes/Default
 import { DefaultStateOfScWindow } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScWindowProxy";
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
 import { ScWindowType } from '../../../Shared/scripts/Enums/5000 - scWindowType';
+import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IScWindowFacade } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IDataFriendly } from '../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
 import { IDataMetaData } from '../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
@@ -23,18 +22,14 @@ import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
-import { TemplateManagerProxy } from "./TemplateManagerProxy";
-import { LaunchPadProxy } from "./LaunchPadProxy";
-import { FallBackProxy } from "./FallBackProxy";
-import { MediaLibraryProxy } from "./MediaLibraryProxy";
-import { PackageDesignerProxy } from "./PackageDesignerProxy/PackageDesignerProxy";
+import { StateFullProxyFactory } from "./ProxyResolver";
 
 export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
-  SettingsAgent: ISettingsAgent;
-  TabSessionId: string;
-  StateFullProxy: IStateFullProxy;
   private DocumentJacket: DocumentJacket;
+  private StateFullProxyFactory: StateFullProxyFactory;
   private ScPageTypeResolver: ScPageTypeResolver;
+  private TabSessionId: string;
+  public StateFullProxy: IStateFullProxy;
 
   constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
     super(hindeCore);
@@ -46,6 +41,7 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
 
   private Instantiate() {
     this.ScPageTypeResolver = new ScPageTypeResolver(this.HindeCore, this.DocumentJacket.UrlJacket);
+    this.StateFullProxyFactory = new StateFullProxyFactory(this.HindeCore);
   }
 
   async InstantiateAsyncMembers_ScWindowFacade(): Promise<void> {
@@ -59,58 +55,12 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
         sessionStorage.setItem(ContentConst.Const.Storage.SessionKey, this.TabSessionId);
       }
 
+      let windowType: ScWindowType = ScWindowType.Unknown;
+
       await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket('Window.Document') // recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
-        .then((result: ReadyStateNAB) => {
-          let windowType: ScWindowType = this.ScPageTypeResolver.GetScWindowType();
-
-          if (false) {
-
-          }
-          else if (windowType === ScWindowType.AccessViewer) {
-            this.StateFullProxy = new FallBackProxy(this.HindeCore);
-          }
-          else if (windowType === ScWindowType.ContentEditor) {
-            this.StateFullProxy = new ContentEditorSFProxy(this.HindeCore, this.DocumentJacket, 'Solo Content Editor doc');
-          }
-          else if (windowType === ScWindowType.Desktop) {
-            this.StateFullProxy = new DesktopSFProxy(this.HindeCore, this.DocumentJacket);
-          }
-          else if (windowType === ScWindowType.DomainManager) {
-            this.StateFullProxy = new FallBackProxy(this.HindeCore);
-          }
-          else if (windowType === ScWindowType.FallBack) {
-            this.StateFullProxy = new FallBackProxy(this.HindeCore);
-          }
-          else if (windowType === ScWindowType.Launchpad) {
-            this.StateFullProxy = new LaunchPadProxy(this.HindeCore);
-          }
-          else if (windowType === ScWindowType.MediaLibrary) {
-            this.StateFullProxy = new MediaLibraryProxy(this.HindeCore, this.DocumentJacket, 'media library');
-          }
-          else if (windowType === ScWindowType.PackageDesigner) {
-            this.StateFullProxy = new PackageDesignerProxy(this.HindeCore, this.DocumentJacket, 'PackageDesigner');
-          }
-          else if (windowType === ScWindowType.RollManager) {
-            this.StateFullProxy = new FallBackProxy(this.HindeCore);
-          }
-          else if (windowType === ScWindowType.SecurityEditor) {
-            this.StateFullProxy = new FallBackProxy(this.HindeCore);
-          }
-    
-          else if (windowType === ScWindowType.TemplateManager) {
-            this.StateFullProxy = new TemplateManagerProxy(this.HindeCore, this.DocumentJacket, 'templateManager');
-          }
-          else if (windowType === ScWindowType.UserManager) {
-            this.StateFullProxy = new FallBackProxy(this.HindeCore);
-          }
-   
-          else {
-            this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers_ScWindowFacade.name, 'unhandled windowType ' + ScWindowType[windowType]);
-          }
-          ;
-        })
-        .then(() => this.StateFullProxy.InstantiateAsyncMembers())
-        .then(() => this.StateFullProxy.WireEvents())
+        .then((result: ReadyStateNAB) => windowType = this.ScPageTypeResolver.GetScWindowType())
+        .then(() => this.StateFullProxyFactory.BuildStateFullProxy(windowType, this.DocumentJacket))
+        .then((stateFullProxy: IStateFullProxy) => this.StateFullProxy = stateFullProxy)
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers_ScWindowFacade.name, err));
     }
     catch (err) {

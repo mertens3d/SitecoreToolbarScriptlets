@@ -1,13 +1,13 @@
 ﻿import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { FrameJacket } from "../../../../DOMJacket/FrameJacket";
+import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
 import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
 import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 
 export class ScContentIframeId0Proxy extends _HindeCoreBase {
-  ScContentIframeId0FrameJacket: FrameJacket;
+  ScContentIframeId0FrameJacket: ElementFrameJacket;
 
-  constructor(hindeCore: IHindeCore, frameJacket: FrameJacket) {
+  constructor(hindeCore: IHindeCore, frameJacket: ElementFrameJacket) {
     super(hindeCore);
     this.ScContentIframeId0FrameJacket = frameJacket;
   }

@@ -1,5 +1,5 @@
 ﻿import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { FrameJacket } from "../../../DOMJacket/FrameJacket";
+import { ElementFrameJacket } from "../../../DOMJacket/ElementFrameJacket";
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
 import { _HindeCoreBase } from "../_HindeCoreBase";
@@ -12,7 +12,7 @@ export class FactoryHelper extends _HindeCoreBase {
     super(hindeCore);
   }
 
-  CEFrameFactory(frameJacket: FrameJacket, nickname: string): CEFrameProxy {
+  CEFrameFactory(frameJacket: ElementFrameJacket, nickname: string): CEFrameProxy {
     this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
 
 
@@ -24,7 +24,7 @@ export class FactoryHelper extends _HindeCoreBase {
     return toReturn;
   }
 
-  BaseFramePromiseFactory(nativeIframeProxy: FrameJacket, nickname: string): DTFrameProxy {
+  BaseFramePromiseFactory(nativeIframeProxy: ElementFrameJacket, nickname: string): DTFrameProxy {
     this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
     var toReturn: DTFrameProxy = null;
 
@@ -46,7 +46,7 @@ export class FactoryHelper extends _HindeCoreBase {
     return toReturn;
   }
 
-  async DTFrameProxyFactory(nativeIframeProxy: FrameJacket): Promise<DTFrameProxy> {
+  async DTFrameProxyFactory(nativeIframeProxy: ElementFrameJacket): Promise<DTFrameProxy> {
     var toReturn: DTFrameProxy = null;
     if (nativeIframeProxy) {
       var toReturn = new DTFrameProxy(this.HindeCore, nativeIframeProxy);

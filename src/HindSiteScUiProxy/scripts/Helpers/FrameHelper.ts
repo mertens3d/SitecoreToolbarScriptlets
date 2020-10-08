@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { FrameJacket } from "../../../DOMJacket/FrameJacket";
+import { ElementFrameJacket } from "../../../DOMJacket/ElementFrameJacket";
 import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
 import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -16,7 +16,7 @@ export class FrameHelper extends _HindeCoreBase {
     this.factoryHelper = new FactoryHelper(this.HindeCore);
   }
 
-  async GetIFrameAsBaseFrameProxy(nativeIframeProxy: FrameJacket, ifrIdx: number): Promise<DTFrameProxy> {
+  async GetIFrameAsBaseFrameProxy(nativeIframeProxy: ElementFrameJacket, ifrIdx: number): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       let friendly = 'desktop Iframe_' + ifrIdx;
 
@@ -37,7 +37,7 @@ export class FrameHelper extends _HindeCoreBase {
     });
   }
 
-  async GetIFrameAsDTFrameProxy(frameJacket: FrameJacket): Promise<DTFrameProxy> {
+  async GetIFrameAsDTFrameProxy(frameJacket: ElementFrameJacket): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
 
       let dTFrameProxy = new DTFrameProxy(this.HindeCore, frameJacket);
@@ -56,7 +56,7 @@ export class FrameHelper extends _HindeCoreBase {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let frameJackets: FrameJacket[] = documentJacket.GetHostedFrameJackets();
+      let frameJackets: ElementFrameJacket[] = documentJacket.GetHostedFrameJackets();
 
       let promiseAr: Promise<DTFrameProxy>[] = [];
 
@@ -83,7 +83,7 @@ export class FrameHelper extends _HindeCoreBase {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let NativeScIframeProxyAr: FrameJacket[] = targetDocumentJacket.GetHostedFrameJackets();
+      let NativeScIframeProxyAr: ElementFrameJacket[] = targetDocumentJacket.GetHostedFrameJackets();
 
       //if (iframeAr) {
       //  iframeAr.forEach(async (iframeElem: HTMLIFrameElement, ifrIdx) => {
@@ -96,7 +96,7 @@ export class FrameHelper extends _HindeCoreBase {
 
       let promAr: Promise<DTFrameProxy>[] = [];
 
-      NativeScIframeProxyAr.forEach((nativeScIframeProxy: FrameJacket, index) => {
+      NativeScIframeProxyAr.forEach((nativeScIframeProxy: ElementFrameJacket, index) => {
         promAr.push(this.GetIFrameAsBaseFrameProxy(nativeScIframeProxy, index));
       });
 

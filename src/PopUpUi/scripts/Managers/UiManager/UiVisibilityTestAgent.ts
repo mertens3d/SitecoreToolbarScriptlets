@@ -123,7 +123,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
         break;
 
       case VisibilityType.Edit:
-        toReturn = this.VisibilityTestWindowType(ScWindowType.Edit, this.WindowType);
+        toReturn = this.VisibilityTestWindowType(ScWindowType.ExperienceEditor_Edit, this.WindowType);
         break;
 
       case VisibilityType.Launchpad:
@@ -135,11 +135,11 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
         break;
 
       case VisibilityType.Normal:
-        toReturn = this.VisibilityTestWindowType(ScWindowType.Normal, this.WindowType);
+        toReturn = this.VisibilityTestWindowType(ScWindowType.ExperienceEditor_Normal, this.WindowType);
         break;
 
       case VisibilityType.Preview:
-        toReturn = this.VisibilityTestWindowType(ScWindowType.Preview, this.WindowType);
+        toReturn = this.VisibilityTestWindowType(ScWindowType.ExperienceEditor_Preview, this.WindowType);
         break;
 
       case VisibilityType.SnapShotable:

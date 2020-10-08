@@ -3,7 +3,7 @@ import { ReadyStateNAB } from "../Shared/scripts/Enums/ReadyState";
 import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ContentConst } from "../Shared/scripts/Interfaces/InjectConst";
 import { IScVerSpec } from "../Shared/scripts/Interfaces/IScVerSpec";
-import { FrameJacket } from "./FrameJacket";
+import { ElementFrameJacket } from "./ElementFrameJacket";
 import { ElementJacket } from "./ElementJacket";
 import { CEFrameProxy } from "../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { FactoryHelper } from "../Shared/scripts/Helpers/FactoryHelper";
@@ -61,13 +61,13 @@ export class DocumentJacket extends _HindeCoreBase {
     return toReturn;
   }
 
-  async WaitForFirstHostedFrame(querySelector: string): Promise<FrameJacket> {
+  async WaitForFirstHostedFrame(querySelector: string): Promise<ElementFrameJacket> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForFirstHostedFrame.name, querySelector);
-      let firstFrameJacket: FrameJacket = null;
+      let firstFrameJacket: ElementFrameJacket = null;
 
       await this.WaitForAndReturnFoundElemJacket(querySelector)
-        .then((elemJacket: ElementJacket) => resolve(new FrameJacket(this.HindeCore, <HTMLIFrameElement>elemJacket.NativeElement)))
+        .then((elemJacket: ElementJacket) => resolve(new ElementFrameJacket(this.HindeCore, <HTMLIFrameElement>elemJacket.NativeElement)))
         .catch((err) => reject(this.ErrorHand.FormatejectMessage([this.WaitForFirstHostedFrame.name], err)));
 
       //  let matchingJackets: FrameJacket[] = this.GetHostedFramesFilteredBySelector(querySelector);
@@ -79,9 +79,9 @@ export class DocumentJacket extends _HindeCoreBase {
     })
   }
 
-  GetHostedFramesFilteredBySelector(querySelector: string): FrameJacket[] {
+  GetHostedFramesFilteredBySelector(querySelector: string): ElementFrameJacket[] {
     this.Logger.FuncStart(this.GetHostedFramesFilteredBySelector.name, querySelector);
-    let frameJackets: FrameJacket[] = [];
+    let frameJackets: ElementFrameJacket[] = [];
 
     this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFramesFilteredBySelector.name, [this.NativeDocument]);
 
@@ -92,7 +92,7 @@ export class DocumentJacket extends _HindeCoreBase {
 
     if (filteredList && filteredList.length > 0) {
       filteredList.forEach((iframeNode: Node) => {
-        let candidate: FrameJacket = new FrameJacket(this.HindeCore, <HTMLIFrameElement>iframeNode);
+        let candidate: ElementFrameJacket = new ElementFrameJacket(this.HindeCore, <HTMLIFrameElement>iframeNode);
         if (candidate) {
           frameJackets.push(candidate);
         } else {
@@ -104,8 +104,8 @@ export class DocumentJacket extends _HindeCoreBase {
     return frameJackets;
   }
 
-  GetHostedFrameJackets(): FrameJacket[] {
-    let frameJackets: FrameJacket[] = [];
+  GetHostedFrameJackets(): ElementFrameJacket[] {
+    let frameJackets: ElementFrameJacket[] = [];
 
     this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFrameJackets.name, [this.NativeDocument]);
 
@@ -117,7 +117,7 @@ export class DocumentJacket extends _HindeCoreBase {
 
     if (queryResults) {
       for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
-        var frameJacket: FrameJacket = new FrameJacket(this.HindeCore, <HTMLIFrameElement>queryResults[ifrIdx]);
+        var frameJacket: ElementFrameJacket = new ElementFrameJacket(this.HindeCore, <HTMLIFrameElement>queryResults[ifrIdx]);
         if (frameJacket) {
           frameJackets.push(frameJacket);
         }
@@ -145,10 +145,10 @@ export class DocumentJacket extends _HindeCoreBase {
 
       let factoryHelp = new FactoryHelper(this.HindeCore);
 
-      let frameJacket: FrameJacket = null;
+      let frameJacket: ElementFrameJacket = null;
 
       await this.WaitForAndReturnFoundElemJacket(selector)
-        .then(async (foundElem: ElementJacket) => frameJacket = new FrameJacket(this.HindeCore, <HTMLIFrameElement>foundElem.NativeElement))
+        .then(async (foundElem: ElementJacket) => frameJacket = new ElementFrameJacket(this.HindeCore, <HTMLIFrameElement>foundElem.NativeElement))
         .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
         .then((result: CEFrameProxy) => resolve(result))
         .catch((err) => reject(err));

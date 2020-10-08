@@ -1,13 +1,13 @@
-﻿import { FrameJacket } from "../../../../DOMJacket/FrameJacket";
+﻿import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { ScContentIframeId0Proxy } from "./ScContentIframeId0Proxy";
 
 export class JqueryFrameProxy extends _HindeCoreBase {
-  private jqueryFrameJacket: FrameJacket = null;
+  private jqueryFrameJacket: ElementFrameJacket = null;
 
-  constructor(hindeCore: IHindeCore, jqueryFrameJacket: FrameJacket) {
+  constructor(hindeCore: IHindeCore, jqueryFrameJacket: ElementFrameJacket) {
     super(hindeCore);
     this.jqueryFrameJacket = jqueryFrameJacket;
   }
@@ -18,7 +18,7 @@ export class JqueryFrameProxy extends _HindeCoreBase {
 
       await this.jqueryFrameJacket.WaitForCompleteNABHtmlIframeElement('jquery jacket')
         .then(() => {
-          let matchingJackets: FrameJacket[] = this.jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Id);
+          let matchingJackets: ElementFrameJacket[] = this.jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Id);
 
           if (matchingJackets && matchingJackets.length > 0) {
             scContentIframeId0Proxy = new ScContentIframeId0Proxy(this.HindeCore, matchingJackets[0]);

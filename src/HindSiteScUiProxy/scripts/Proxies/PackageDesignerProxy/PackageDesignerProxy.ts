@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
-import { FrameJacket } from "../../../../DOMJacket/FrameJacket";
+import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
 import { DefaultStateOfPackageDesigner } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfPackageDesigner";
 import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
@@ -25,7 +25,7 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
     this.Logger.CTOREnd(ContentEditorSFProxy.name);
   }
 
-  InstantiateAsyncMembers() {
+  async InstantiateAsyncMembers(): Promise<void> {
     this.Logger.FuncStart(this.InstantiateAsyncMembers.name, this.Friendly);
     this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, this.Friendly);
   }
@@ -62,7 +62,7 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
 
           await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.SetState.name + ' ' + PackageDesignerProxy.name)
             .then(() => this.DocumentJacket.WaitForFirstHostedFrame(ContentConst.Const.Selector.SC.Frames.AppFrame.Id))
-            .then((frameJacket: FrameJacket) => this.SupportFrameFactory.MakeAppFrameProxy(frameJacket, parentJacket))
+            .then((frameJacket: ElementFrameJacket) => this.SupportFrameFactory.MakeAppFrameProxy(frameJacket, parentJacket))
             .then((returnedAppFrameProxy: AppFrameProxy) => appFrameProxy = returnedAppFrameProxy)
             .then(() => appFrameProxy.OpenFile(stateOfPackageDesigner.StatusText))
             .then(() => resolve())

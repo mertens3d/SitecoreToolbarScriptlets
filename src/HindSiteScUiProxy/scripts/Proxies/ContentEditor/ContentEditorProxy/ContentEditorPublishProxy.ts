@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
-import { FrameJacket } from "../../../../../DOMJacket/FrameJacket";
+import { ElementFrameJacket } from "../../../../../DOMJacket/ElementFrameJacket";
 import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/5000 - scWindowType";
@@ -168,10 +168,10 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
 
   async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null): Promise<IDataPublishChain> {
     try {
-      let iframeProxy: FrameJacket = null;
+      let iframeProxy: ElementFrameJacket = null;
 
       await dataPublishChain.TopScDocumentProxy.WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id)
-        .then((elementJacket: ElementJacket) => iframeProxy = new FrameJacket(this.HindeCore, <HTMLIFrameElement>elementJacket.NativeElement))
+        .then((elementJacket: ElementJacket) => iframeProxy = new ElementFrameJacket(this.HindeCore, <HTMLIFrameElement>elementJacket.NativeElement))
         .then(() => this.FactoryHelp.CEFrameFactory(iframeProxy, 'jqIframe'))
         .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog

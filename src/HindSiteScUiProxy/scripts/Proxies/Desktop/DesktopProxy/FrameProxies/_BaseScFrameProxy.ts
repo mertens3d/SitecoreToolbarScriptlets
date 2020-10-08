@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
-import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
+import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJacket";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
@@ -8,13 +8,13 @@ import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Age
 import { _BaseStateFullProxy } from "./_StateProxy";
 
 export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implements IStateFullProxy {
-  public readonly FrameJacket: FrameJacket = null;
+  public readonly FrameJacket: ElementFrameJacket = null;
   Id: string = null;
   abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
   abstract Friendly: string;
   RecipeBasics: RecipeBasics;
 
-  constructor(hindeCore: IHindeCore, frameJacket: FrameJacket) {
+  constructor(hindeCore: IHindeCore, frameJacket: ElementFrameJacket) {
     super(hindeCore);
 
     this.ErrorHand.ThrowIfNullOrUndefined(_BaseScFrameProxy.name, [frameJacket]);

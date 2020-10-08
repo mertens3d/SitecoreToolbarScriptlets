@@ -214,13 +214,13 @@ export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
       case ScWindowType.Desktop:
         this.UrlJacket.SetFilePath(SharedConst.Const.UrlSuffix.Desktop);
         break;
-      case ScWindowType.Edit:
+      case ScWindowType.ExperienceEditor_Edit:
         this.UrlJacket.SetFilePath(SharedConst.Const.UrlSuffix.None);
         break;
-      case ScWindowType.Preview:
+      case ScWindowType.ExperienceEditor_Preview:
         this.UrlJacket.SetFilePath(SharedConst.Const.UrlSuffix.None);
         break;
-      case ScWindowType.Normal:
+      case ScWindowType.ExperienceEditor_Normal:
         this.UrlJacket.SetFilePath(SharedConst.Const.UrlSuffix.None);
         break;
       default:

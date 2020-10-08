@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
-import { FrameJacket } from "../../../../../../DOMJacket/FrameJacket";
+import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJacket";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
@@ -8,7 +8,7 @@ import { ScWindowType } from "../../../../../../Shared/scripts/Enums/5000 - scWi
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { IStateOfFrameStyling } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
+import { IFrameJacketStyling } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
 import { ContentEditorSFProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { PackageDesignerProxy } from "../../../PackageDesignerProxy/PackageDesignerProxy";
@@ -21,6 +21,7 @@ import { TemplateManagerProxy } from "../../../TemplateManagerProxy";
 import { MediaLibraryProxy } from "../../../MediaLibraryProxy";
 import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 import { FallBackProxy } from "../../../FallBackProxy";
+import { StateFullProxyFactory } from "../../../ProxyResolver";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
   Friendly: string = DTFrameProxy.name;
@@ -30,8 +31,9 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   Index: number = -1;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   public HostedStateFullProxy: IStateFullProxy;
+  private StateFullProxyFactory: StateFullProxyFactory;
 
-  constructor(hindeCore: IHindeCore, frameJacket: FrameJacket) { //HTMLIFrameElement |
+  constructor(hindeCore: IHindeCore, frameJacket: ElementFrameJacket) { //HTMLIFrameElement |
     super(hindeCore, frameJacket);
 
     this.ErrorHand.ThrowIfNullOrUndefined(DTFrameProxy.name, [frameJacket]);
@@ -43,6 +45,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
 
   InstantiateInstance(): void {
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
+    this.StateFullProxyFactory = new StateFullProxyFactory(this.HindeCore);
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
@@ -50,6 +53,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       this.Logger.FuncStart(this.InstantiateAsyncMembers.name, DTFrameProxy.name);
 
       this.ErrorHand.ThrowIfNullOrUndefined(this.InstantiateAsyncMembers.name, [this.FrameJacket]);
+      let scWindowtypeB: ScWindowType = ScWindowType.Unknown;
 
       await this.FrameJacket.WaitForCompleteNABHtmlIframeElement(this.Friendly)
         .then((result: ReadyStateNAB) => {
@@ -58,33 +62,12 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
           }
         })
         .then(() => {
-          let pageResolver = new ScPageTypeResolver(this.HindeCore, this.FrameJacket.GetUrlJacket())
-          let scWindowType: ScWindowType = pageResolver.GetScWindowType();
-
           let scPageTypeResolver = new ScPageTypeResolver(this.HindeCore, this.FrameJacket.DocumentJacket.UrlJacket)
-          let scWindowtypeB = scPageTypeResolver.GetScWindowType();
-
-          switch (scWindowtypeB) {
-            case ScWindowType.ContentEditor:
-              this.HostedStateFullProxy = new ContentEditorSFProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly);
-              break;
-            case ScWindowType.MarketingControlPanel:
-              this.HostedStateFullProxy = new FallBackProxy(this.HindeCore)
-              break;
-            case ScWindowType.MediaLibrary:
-              this.HostedStateFullProxy = new MediaLibraryProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly)
-              break;
-            case ScWindowType.PackageDesigner:
-              this.HostedStateFullProxy = new PackageDesignerProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly)
-              break;
-            case ScWindowType.TemplateManager:
-              this.HostedStateFullProxy = new TemplateManagerProxy(this.HindeCore, this.FrameJacket.DocumentJacket, this.Friendly)
-              break;
-            default:
-              this.ErrorHand.WarningAndContinue(this.InstantiateAsyncMembers.name, 'un handled DTFrame type ' + ScWindowType[scWindowType]);
-          }
+          scWindowtypeB = scPageTypeResolver.GetScWindowType();
         })
-        .then(() => this.HostedStateFullProxy.InstantiateAsyncMembers())
+        .then(() => this.StateFullProxyFactory.BuildStateFullProxy(scWindowtypeB, this.FrameJacket.DocumentJacket))
+        .then((stateFullProxy: IStateFullProxy) => this.HostedStateFullProxy = stateFullProxy)
+        
         .then(() => {
           this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.HindeCore);
           this._ContentTreeBasedProxyMutationEvent_Observer = new _ContentTreeBasedProxyMutationEvent_Observer(this.HindeCore, this);
@@ -117,9 +100,8 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       this.Logger.FuncStart(this.GetState.name, DTFrameProxy.name);
       let stateOfDTFrame: IStateOfDTFrame = new DefaultStateOfDTFrame();
 
-      this.FrameJacket.GetState()
-        .then((stateOfFrameStyling: IStateOfFrameStyling) => stateOfDTFrame.StateOfFrameStyling = stateOfFrameStyling)
-        .catch((err) => reject(this.GetState.name + ' | ' + err));
+
+      stateOfDTFrame.StateOfFrameStyling = stateOfDTFrame.StateOfFrameStyling = this.FrameJacket.GetFrameStyling();
 
       stateOfDTFrame.ZIndex = this.GetZindexAsInt();
 
@@ -178,7 +160,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   private SetFrameStyling(stateOfDTFrame: IStateOfDTFrame) {
     this.Logger.FuncStart(this.SetFrameStyling.name);
 
-    this.FrameJacket.SetState(stateOfDTFrame.StateOfFrameStyling);
+    this.FrameJacket.SetFrameStyling(stateOfDTFrame.StateOfFrameStyling);
 
     this.Logger.FuncEnd(this.SetFrameStyling.name);
   }

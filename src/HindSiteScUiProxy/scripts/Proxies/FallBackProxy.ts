@@ -23,7 +23,7 @@ export class FallBackProxy extends _BaseStateFullProxy<IStateOfFallBack> impleme
   WireEvents() {
     //empty
   }
-  InstantiateAsyncMembers() {
+  async InstantiateAsyncMembers(): Promise<void>{
     //empty
   }
   TriggerInboundEventsAsync(): void {

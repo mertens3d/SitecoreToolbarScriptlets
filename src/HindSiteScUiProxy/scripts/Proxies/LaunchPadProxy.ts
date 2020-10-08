@@ -14,7 +14,7 @@ export class LaunchPadProxy extends _BaseStateFullProxy<IStateOfLaunchPad> imple
     WireEvents() {
         //empty
     }
-    InstantiateAsyncMembers() {
+  async InstantiateAsyncMembers(): Promise<void> {
         //empty
     }
     TriggerInboundEventsAsync(): void {

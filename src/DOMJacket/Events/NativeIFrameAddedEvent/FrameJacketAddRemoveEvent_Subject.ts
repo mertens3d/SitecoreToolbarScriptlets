@@ -1,6 +1,6 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { FrameJacket } from "../../FrameJacket";
+import { ElementFrameJacket } from "../../ElementFrameJacket";
 import { IFrameJacketAddRemoveEvent_Payload } from "./IFrameJacketAddRemoveEvent_Payload";
 import { DocumentJacket } from "../../DocumentJacket";
 import { ElementJacket } from "../../ElementJacket";
@@ -32,12 +32,12 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
     return removedIframeIds;
   }
 
-  private HandleAddedNodes(addedNodes: NodeList): FrameJacket[] {
+  private HandleAddedNodes(addedNodes: NodeList): ElementFrameJacket[] {
     this.Logger.FuncStart(this.HandleAddedNodes.name);
-    let addedNativeFrameProxies: FrameJacket[] = [];
+    let addedNativeFrameProxies: ElementFrameJacket[] = [];
     addedNodes.forEach((addedNode) => {
       if (addedNode instanceof HTMLIFrameElement) {
-        let nativeIframeProxy = new FrameJacket(this.HindeCore, addedNode);
+        let nativeIframeProxy = new ElementFrameJacket(this.HindeCore, addedNode);
         addedNativeFrameProxies.push(nativeIframeProxy);
       }
     });
@@ -61,10 +61,10 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
             RemovedIFrameId: null,
           };
 
-          let addedNodes: FrameJacket[] = this.HandleAddedNodes(mutation.addedNodes);
+          let addedNodes: ElementFrameJacket[] = this.HandleAddedNodes(mutation.addedNodes);
           let removedNodeIds: string[] = this.HandleRemovedNodes(mutation.removedNodes);
 
-          addedNodes.forEach((addedNode: FrameJacket) => {
+          addedNodes.forEach((addedNode: ElementFrameJacket) => {
             desktopMutatedEvent_Payload.AddedFrameJacket = addedNode;
             desktopMutatedEvent_Payload.RemovedIFrameId = null;
             this.NotifyObserversAsync(desktopMutatedEvent_Payload);

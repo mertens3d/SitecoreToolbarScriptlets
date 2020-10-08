@@ -16,7 +16,7 @@ export class CEFrameProxy extends _BaseScFrameProxy<IStateOfCEFrameProxy> implem
     return null;
   }
 
-  InstantiateAsyncMembers() {
+  async InstantiateAsyncMembers(): Promise<void> {
   }
 
   WireEvents() {

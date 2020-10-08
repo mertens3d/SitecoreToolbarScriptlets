@@ -1,4 +1,4 @@
-﻿import { FrameJacket } from "../../../../DOMJacket/FrameJacket";
+﻿import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { PromiseFailAction } from "../../../../Shared/scripts/Enums/PromiseFailAction";
@@ -10,7 +10,7 @@ import { _baseSupportStatelessFrameProxy } from "./_baseSupportFrameProxy";
 export class AppFrameProxy extends _baseSupportStatelessFrameProxy {
   private ParentJacket: DocumentJacket;
 
-  constructor(hindeCore: IHindeCore, frameJacket: FrameJacket, parentJacket: DocumentJacket) {
+  constructor(hindeCore: IHindeCore, frameJacket: ElementFrameJacket, parentJacket: DocumentJacket) {
     super(hindeCore, frameJacket);
     this.ParentJacket = parentJacket;
   }

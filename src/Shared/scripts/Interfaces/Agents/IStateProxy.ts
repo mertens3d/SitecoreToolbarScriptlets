@@ -3,7 +3,7 @@
 export interface IStateFullProxy {
   readonly StateFullProxyDisciminator: StateFullProxyDisciminator;
   TriggerInboundEventsAsync();
-  InstantiateAsyncMembers();
+  InstantiateAsyncMembers(): Promise<void> ;
   WireEvents();
   GetState(): Promise<any>;
   SetState(state: any): Promise<any>;

@@ -1,7 +1,7 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { FrameJacket } from "../../../../DOMJacket/FrameJacket";
+import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
 import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
 import { ElementDivJacket } from "../../../../DOMJacket/ElementDivJacket";
 import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
@@ -24,7 +24,7 @@ export class PackageDesignerInstallerRibbonToolbarProxy extends _HindeCoreBase {
         await this.ElementDivJacket.WaitAndReturnFoundElemJacketFromElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
             .then((elemJacket: ElementJacket) => elemJacket.NativeElement.click())
           .then(() => {
-            let matchingJackets: FrameJacket[] = this.parentDocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id);
+            let matchingJackets: ElementFrameJacket[] = this.parentDocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id);
             if (matchingJackets && matchingJackets.length > 0) {
 
                     jqueryFrameProxy = new JqueryFrameProxy(this.HindeCore, matchingJackets[0]);
