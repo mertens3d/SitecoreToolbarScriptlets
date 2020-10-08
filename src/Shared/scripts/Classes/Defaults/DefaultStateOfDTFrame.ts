@@ -1,6 +1,6 @@
 ﻿import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../Enums/scWindowType";
-import { IStateOf_ } from "../../Interfaces/Data/States/IStateofX";
+import { IStateOf_ } from "../../Interfaces/Data/States/IStateOf_";
 import { IStateOfDTFrame } from "../../Interfaces/Data/States/IStateOfDTFrame";
 
 export class DefaultStateOfDTFrame implements IStateOfDTFrame {

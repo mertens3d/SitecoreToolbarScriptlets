@@ -7,7 +7,6 @@ import { _ContentTreeBasedProxy } from "./ContentEditor/ContentEditorProxy/_Cont
 import { Guid } from "../../../Shared/scripts/Helpers/Guid";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 
-
 export class TemplateManagerProxy extends _ContentTreeBasedProxy<IStateOfTemplateManager> implements IStateFullProxy {
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TemplatesAnchorRootNode;
   readonly StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.TemplateManager;

@@ -1,5 +1,5 @@
 ﻿import { ScWindowType } from "../../../Enums/scWindowType";
-import { IStateOf_ } from "./IStateofX";
+import { IStateOf_ } from "./IStateOf_";
 import { IStateOfFrameStyling } from "./IStateOfFrameStyling";
 
 export interface IStateOfDTFrame {

@@ -9,7 +9,7 @@ import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
-import { IStateOfScContentTreeNodeShallow } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat';
+import { IStateOfScContentTreeNodeShallow } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeShallow";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
 import { ContentTreeMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Subject";
@@ -195,7 +195,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
         .then(() => {
           let activeNodeFlat: IStateOfScContentTreeNodeShallow = <IStateOfScContentTreeNodeShallow>this.GetActiveTreeNodeFromAncestorNode(stateOfContentTree.StateOfScContentTreeNodeDeep);
           if (activeNodeFlat) {
-            stateOfContentTree.ActiveNodeFlat = activeNodeFlat;
+            stateOfContentTree.ActiveNodeShallow = activeNodeFlat;
           }
         })
         .then(() => resolve(stateOfContentTree))

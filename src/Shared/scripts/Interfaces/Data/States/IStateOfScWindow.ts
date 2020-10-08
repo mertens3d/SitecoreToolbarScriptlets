@@ -1,4 +1,4 @@
-﻿import { IStateOf_ } from "./IStateofX";
+﻿import { IStateOf_ } from "./IStateOf_";
 export interface IStateOfScWindow {
   StateOf_: IStateOf_
 }

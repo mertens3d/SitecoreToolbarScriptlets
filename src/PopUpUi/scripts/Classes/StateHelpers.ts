@@ -4,13 +4,13 @@ import { IStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/
 import { IStateOfScContentTreeNodeDeep } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { IStateOfContentTree } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { IStateOfScContentTreeNodeShallow } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
+import { IStateOfScContentTreeNodeShallow } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeShallow";
 
 export class StateHelpers extends _HindeCoreBase {
   GetActiveTreeNodeFromStateOfTreeFlat(stateOfTree: IStateOfContentTree): IStateOfScContentTreeNodeShallow {
     let toReturn: IStateOfScContentTreeNodeDeep = null;
 
-    return stateOfTree.ActiveNodeFlat;
+    return stateOfTree.ActiveNodeShallow;
     //if (stateOfTree && stateOfTree.ActiveNodeCoord.SiblingIndex > -1 && stateOfTree.ActiveNodeCoord.LevelIndex > -1) {
     //  try {
     //    if (stateOfTree.ActiveNodeCoord.LevelIndex > -1) {

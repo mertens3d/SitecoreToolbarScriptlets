@@ -1,5 +1,5 @@
 ﻿import { IStateOfDTArea } from "./IStateOfDTProxy";
-import { IStateOf_ } from "./IStateofX";
+import { IStateOf_ } from "./IStateOf_";
 
 export interface IStateOfDesktop extends IStateOf_{
   StateOfDTArea: IStateOfDTArea;

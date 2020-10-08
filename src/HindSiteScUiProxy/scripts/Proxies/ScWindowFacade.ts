@@ -18,7 +18,7 @@ import { IDataFriendly } from '../../../Shared/scripts/Interfaces/Data/States/ID
 import { IDataMetaData } from '../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfScWindow } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow';
-import { IStateOf_ } from "../../../Shared/scripts/Interfaces/Data/States/IStateofX";
+import { IStateOf_ } from "../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';

@@ -1,4 +1,4 @@
-﻿import { IStateOfScContentTreeNodeShallow } from "./IStateOfScContentTreeNodeFlat";
+﻿import { IStateOfScContentTreeNodeShallow } from "./IStateOfScContentTreeNodeShallow";
 
 export interface IStateOfScContentTreeNodeDeep extends IStateOfScContentTreeNodeShallow {
 

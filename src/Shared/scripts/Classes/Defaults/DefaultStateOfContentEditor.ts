@@ -1,5 +1,8 @@
-﻿import { DefaultStateOfContentTree } from "./DefaultStateOfContentTree";
+﻿import { IStateOfContentEditor } from "../../Interfaces/Data/States/IStateOfContentEditor";
+import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
+import { _baseDefaultStateOfContentTreeBasedProxies } from "./_baseDefaultStateOfContentTreeBasedProxies";
 
-export abstract class _baseDefaultStateOfContentTreeBasedProxies {
-  StateOfContentTree = new DefaultStateOfContentTree();
+export class DefaultStateOfContentEditor extends _baseDefaultStateOfContentTreeBasedProxies implements IStateOfContentEditor {
+    StatefullDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.ContentEditor];
+    StatefullDisciminator = StateFullProxyDisciminator.ContentEditor;
 }

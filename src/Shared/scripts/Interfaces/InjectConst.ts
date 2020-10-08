@@ -144,7 +144,8 @@ export class ContentConst {
         StartMenuLeftOption: 'img[src$="pencil.png"]',
         MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
         TemplateManager: 'img[src$="newspaper.png"]',
-        StartMenu: {
+        PopUp1: {
+          PackageDesignerButton: 'img[src$="packager.png"]',
           DevelopmentTools: '[src="/temp/iconcache/apps/24x24/magic-cube.png"]',
           PackageDesigner: '[id=MenuItem211048689]',
         },

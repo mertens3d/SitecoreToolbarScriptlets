@@ -9,7 +9,7 @@ import { IStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents
 import { IStateOfContentTreeBasedProxies } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTreeBasedProxies";
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { __ContentTreeBasedProxyMutationEvent__Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
-import { IContentEditorProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
+import { I_ContentTreeBasedProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
 import { __ContentTreeBasedProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Observer';
 import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { _BaseStateFullProxy } from '../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
@@ -64,14 +64,11 @@ export abstract class _ContentTreeBasedProxy<T> extends _BaseStateFullProxy<T> i
 
   async __baseSetState(stateOfContentTreeBasedProxies: IStateOfContentTreeBasedProxies): Promise<Boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-
-
       this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedProxy.name, stateOfContentTreeBasedProxies);
       this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedProxy.name, stateOfContentTreeBasedProxies.StateOfContentTree);
       this.__ContentTreeBasedProxyMutationEvent_Subject.DisableNotifications();
 
-
-     await this.RecipeBasic.WaitForTimePeriod(1, this.SetState.name)
+      await this.RecipeBasic.WaitForTimePeriod(1, this.SetState.name)
         .then(() => this.RecipeBasic.WaitForNoUiFrontOverlay(this.SetState.name))
         .then(() => this.ContentTreeProxy.SetStateOfContentTree(stateOfContentTreeBasedProxies.StateOfContentTree.StateOfScContentTreeNodeDeep))
         .then(() => {
@@ -88,12 +85,12 @@ export abstract class _ContentTreeBasedProxy<T> extends _BaseStateFullProxy<T> i
   CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync(treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.name);
     this.TaskMonitor.AsyncTaskStarted(this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.name);
-    let contentEditorProxyMutationEvent_Payload: IContentEditorProxyMutationEvent_Payload = {
+    let _contentEditorProxyMutationEvent_Payload: I_ContentTreeBasedProxyMutationEvent_Payload = {
       TreeMutationEvent_Payload: treeMutationEvent_Payload,
     }
 
     if (this.__ContentTreeBasedProxyMutationEvent_Subject) {
-      this.__ContentTreeBasedProxyMutationEvent_Subject.NotifyObserversAsync(contentEditorProxyMutationEvent_Payload);
+      this.__ContentTreeBasedProxyMutationEvent_Subject.NotifyObserversAsync(_contentEditorProxyMutationEvent_Payload);
     }
     this.TaskMonitor.AsyncTaskCompleted(this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.name);
     this.Logger.FuncEnd(this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.name);

@@ -86,6 +86,11 @@ export interface IContentConst {
           Id: string,
         }
       },
+      PopUp1: {
+        PackageDesignerButton: string,
+        DevelopmentTools: string,
+        PackageDesigner: string,
+      },
       LoginBtn: IScVerSpec,
       MenuButtonPublish: string,
       NextButton: string,
@@ -99,10 +104,6 @@ export interface IContentConst {
       }
 
       Ok: string,
-      StartMenu: {
-        DevelopmentTools: string,
-        PackageDesigner: string,
-      },
       MediaLibrary: string,
       scStartButton: IScVerSpec,
       StartMenuLeftOption: string,

@@ -1,9 +1,7 @@
 ﻿import { IStateOfScContentTreeNodeDeep } from './IStateOfScContentTreeNode';
-import { IScContentTreeNodeCoord } from "./IScContentTreeNodeCoord";
-import { IStateOfScContentTreeNodeShallow } from './IStateOfScContentTreeNodeFlat';
+import { IStateOfScContentTreeNodeShallow } from "./IStateOfScContentTreeNodeShallow";
 
 export interface IStateOfContentTree {
-  //ActiveNodeCoord: IScContentTreeNodeCoord;
-  ActiveNodeFlat: IStateOfScContentTreeNodeShallow;
+  ActiveNodeShallow: IStateOfScContentTreeNodeShallow;
   StateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep;
 }

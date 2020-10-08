@@ -107,7 +107,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
 
   private DrawBorderColor(stateOfContentTree: IStateOfContentTree) {
     let borderColor: string = '';
-    borderColor = this.ProcessColor(stateOfContentTree.ActiveNodeFlat.Lineage.L1MainIconSrc);
+    borderColor = this.ProcessColor(stateOfContentTree.ActiveNodeShallow.Lineage.L1MainIconSrc);
     if (borderColor.length > 0) {
       this.FoundStartBarButton.NativeElement.style.borderBottomColor = borderColor;
     }
@@ -116,8 +116,8 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   private BuildLxSpan(stateOfContentTree: IStateOfContentTree): HTMLSpanElement {
   
 
-    let nodeImage: HTMLImageElement = this.LxNodeImg(stateOfContentTree.ActiveNodeFlat.IconSrc);
-    let nodeSpan: HTMLSpanElement = this.LxNodeSpan(stateOfContentTree.ActiveNodeFlat.Friendly);  
+    let nodeImage: HTMLImageElement = this.LxNodeImg(stateOfContentTree.ActiveNodeShallow.IconSrc);
+    let nodeSpan: HTMLSpanElement = this.LxNodeSpan(stateOfContentTree.ActiveNodeShallow.Friendly);  
 
     let toReturn: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
     toReturn.style.position = 'relative';
@@ -133,8 +133,8 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   }
   private BuildAncestorSpan(stateOfContentTree: IStateOfContentTree): HTMLSpanElement {
 
-    let nodeImage: HTMLImageElement = this.AncestorNodeIcon(stateOfContentTree.ActiveNodeFlat.Lineage.L1MainIconSrc);
-    let nodeSpan: HTMLSpanElement = this.AncestorNodeSpan(stateOfContentTree.ActiveNodeFlat.Lineage);
+    let nodeImage: HTMLImageElement = this.AncestorNodeIcon(stateOfContentTree.ActiveNodeShallow.Lineage.L1MainIconSrc);
+    let nodeSpan: HTMLSpanElement = this.AncestorNodeSpan(stateOfContentTree.ActiveNodeShallow.Lineage);
 
     let toReturn: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
     toReturn.style.position = 'absolute';
@@ -171,7 +171,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
     this.TaskMonitor.AsyncTaskStarted(this.SetStateOfDesktopStartBarButtonAsync.name);
     this.ErrorHand.ThrowIfNullOrUndefined(this.SetStateOfDesktopStartBarButtonAsync.name, [stateOfContentTree]);
 
-    this.Logger.LogAsJsonPretty('stateOfContentTree.ActiveNodeFlat', stateOfContentTree.ActiveNodeFlat);
+    this.Logger.LogAsJsonPretty('stateOfContentTree.ActiveNodeFlat', stateOfContentTree.ActiveNodeShallow);
 
     if (stateOfContentTree) {
       this.DrawTextAndIcons(stateOfContentTree);

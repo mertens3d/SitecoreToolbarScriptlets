@@ -1,7 +1,6 @@
-﻿import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
 import { FrameJacket } from "../../../../DOMJacket/FrameJacket";
-import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
+import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { AppFrameProxy } from "./AppFrameProxy";
 
 export class SupportFrameFactory extends _HindeCoreBase {
