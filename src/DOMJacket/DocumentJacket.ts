@@ -14,6 +14,7 @@ import { IAbsoluteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { Guid } from "../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../Shared/scripts/Helpers/GuidData";
 import { PromiseFailAction } from "../Shared/scripts/Enums/PromiseFailAction";
+import { StaticHelpers } from "../Shared/scripts/Classes/StaticHelpers";
 
 export class DocumentJacket extends _HindeCoreBase {
   private NativeDocument: Document;
@@ -66,7 +67,7 @@ export class DocumentJacket extends _HindeCoreBase {
       this.Logger.FuncStart(this.WaitForFirstHostedFrame.name, querySelector);
       let firstFrameJacket: ElementFrameJacket = null;
 
-      await this.WaitForAndReturnFoundElemJacket(querySelector)
+      await this.WaitForElem(querySelector)
         .then((elemJacket: ElementJacket) => resolve(new ElementFrameJacket(this.HindeCore, <HTMLIFrameElement>elemJacket.NativeElement)))
         .catch((err) => reject(this.ErrorHand.FormatejectMessage([this.WaitForFirstHostedFrame.name], err)));
 
@@ -147,7 +148,7 @@ export class DocumentJacket extends _HindeCoreBase {
 
       let frameJacket: ElementFrameJacket = null;
 
-      await this.WaitForAndReturnFoundElemJacket(selector)
+      await this.WaitForElem(selector)
         .then(async (foundElem: ElementJacket) => frameJacket = new ElementFrameJacket(this.HindeCore, <HTMLIFrameElement>foundElem.NativeElement))
         .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
         .then((result: CEFrameProxy) => resolve(result))
@@ -157,18 +158,27 @@ export class DocumentJacket extends _HindeCoreBase {
     });
   }
 
-  public async WaitForAndReturnFoundElemJacket(selector: string, promiseFailAction: PromiseFailAction = PromiseFailAction.Default): Promise<ElementJacket> {
+  public async WaitForElem(selector: string, promiseFailAction: PromiseFailAction = PromiseFailAction.Default): Promise<ElementJacket> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForAndReturnFoundElemJacket.name, selector);
+      this.Logger.FuncStart(this.WaitForElem.name, selector);
 
       var toReturnFoundElem: HTMLElement = null;
-      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForAndReturnFoundElemJacket.name + ' - selector: "' + selector + '"', true);
+      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForElem.name + ' - selector: "' + selector + '"', true);
+      let firstFind = true;
 
       while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
         toReturnFoundElem = this.NativeDocument.querySelector(selector);
-        if (toReturnFoundElem) {
-          this.Logger.Log('found it');
-          resolve(new ElementJacket(this.HindeCore, toReturnFoundElem));
+
+        if (toReturnFoundElem && !StaticHelpers.IsNullOrUndefined(toReturnFoundElem)) {
+          if (firstFind) {
+            toReturnFoundElem = null;
+            firstFind = false;
+          } else {
+            this.Logger.Log('found it');
+            let elemJacket: ElementJacket = new ElementJacket(this.HindeCore, toReturnFoundElem);
+            this.Logger.LogAsJsonPretty('found', elemJacket);
+            resolve(elemJacket);
+          }
         }
         else {
           await iterationJr.Wait();
@@ -180,16 +190,20 @@ export class DocumentJacket extends _HindeCoreBase {
       } else if (promiseFailAction === PromiseFailAction.ResolveNull) {
         resolve(null);
       }
-      this.Logger.FuncEnd(this.WaitForAndReturnFoundElemJacket.name, selector);
+      this.Logger.FuncEnd(this.WaitForElem.name, selector);
     });
   }
+
   public WaitForThenClick(selectorAr: string[]): Promise<void> {
     return new Promise(async (resolve, reject) => {
+      // todo - maybe just get the body element and then use the elementjacket methods to find the target elem
+
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr, this.NativeDocument]);
 
       var foundHtmlElement: HTMLElement = null;
       var iterationJr = new IterationDrone(this.HindeCore, this.WaitForThenClick.name + ' | ' + JSON.stringify(selectorAr), true);
       let foundSelector: string = '';
+
 
       while (!foundHtmlElement && iterationJr.DecrementAndKeepGoing()) { // todo put back && !this.MsgMan().OperationCancelled) {
         for (var idx = 0; idx < selectorAr.length; idx++) {

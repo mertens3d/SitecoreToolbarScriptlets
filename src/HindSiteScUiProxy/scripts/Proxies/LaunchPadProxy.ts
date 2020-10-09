@@ -4,7 +4,8 @@ import { IStateOfLaunchPad } from "../../../Shared/scripts/Interfaces/Data/State
 import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
 
 export class LaunchPadProxy extends _BaseStateFullProxy<IStateOfLaunchPad> implements IStateFullProxy {
-    StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.LaunchPad;
+  StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.LaunchPad;
+  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.LaunchPad];
     async GetState(): Promise<any> {
         //empty
     }

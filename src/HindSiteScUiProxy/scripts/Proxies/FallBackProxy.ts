@@ -4,7 +4,10 @@ import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateP
 import { IStateOfFallBack } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfFallBack";
 
 export class FallBackProxy extends _BaseStateFullProxy<IStateOfFallBack> implements IStateFullProxy {
+  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.FallBack];
   readonly StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.FallBack;
+
+
   async GetState(): Promise<IStateOfFallBack> {
     let toReturn: IStateOfFallBack = {
       StatefullDisciminator: this.StateFullProxyDisciminator,

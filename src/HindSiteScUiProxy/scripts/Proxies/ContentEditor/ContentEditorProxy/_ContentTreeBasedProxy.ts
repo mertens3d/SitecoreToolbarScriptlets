@@ -1,11 +1,13 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/DocumentJacket';
 import { ElementJacket } from '../../../../../DOMJacket/ElementJacket';
+import { _baseDefaultStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Classes/Defaults/_baseDefaultStateOfContentTreeBasedProxies';
 import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
 import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from '../../../../../Shared/scripts/Helpers/GuidData';
 import { IHindeCore } from '../../../../../Shared/scripts/Interfaces/Agents/IHindeCore';
 import { IStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateProxy';
+import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { IStateOfContentTreeBasedProxies } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTreeBasedProxies";
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { __ContentTreeBasedProxyMutationEvent__Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
@@ -15,23 +17,23 @@ import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopPro
 import { _BaseStateFullProxy } from '../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
 import { ContentTreeProxy } from "./ContentTreeProxy/ContentTreeProxy";
 
-export abstract class _ContentTreeBasedProxy<T> extends _BaseStateFullProxy<T> implements IStateFullProxy {
+export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfContentTreeBasedProxies> extends _BaseStateFullProxy<T> implements IStateFullProxy {
   protected ContentTreeProxy: ContentTreeProxy;
-  public readonly abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
-  protected TreeMutationEvent_Observer: __ContentTreeBasedProxyMutationEvent_Observer;
-  public Friendly: string;
-  protected RecipeBasic: RecipeBasics;
   protected DocumentJacket: DocumentJacket;
-  readonly AssociatedHindsiteId: GuidData;
+  protected RecipeBasic: RecipeBasics;
+  protected TreeMutationEvent_Observer: __ContentTreeBasedProxyMutationEvent_Observer;
   public __ContentTreeBasedProxyMutationEvent_Subject: __ContentTreeBasedProxyMutationEvent__Subject;
+  public abstract readonly  StateFullProxyDisciminator: StateFullProxyDisciminator;
+  public Friendly: string;
+  readonly abstract  StateFullProxyDisciminatorFriendly: string;
   readonly abstract TreeRootSelector: string;
+  readonly AssociatedHindsiteId: GuidData;
 
   constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, friendly: string) {
     super(hindeCore);
     this.Logger.CTORStart(_ContentTreeBasedProxy.name);
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.DocumentJacket = documentJacket;
-
     this.Friendly = friendly
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.ValidateAssociatedDocContentEditor();
@@ -47,7 +49,7 @@ export abstract class _ContentTreeBasedProxy<T> extends _BaseStateFullProxy<T> i
 
   async __baseInstantiateAsyncMembers(): Promise<void> {
     await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.Friendly)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
-      .then(() => this.DocumentJacket.WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
+      .then(() => this.DocumentJacket.WaitForElem(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
       .then((treeContainer: ElementJacket) => this.ContentTreeProxy = new ContentTreeProxy(this.HindeCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
       .then(() => this.ContentTreeProxy.Instantiate_TreeProxy())
       .then(() => {
@@ -62,7 +64,7 @@ export abstract class _ContentTreeBasedProxy<T> extends _BaseStateFullProxy<T> i
     this.ContentTreeProxy.ContentTreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
   }
 
-  async __baseSetState(stateOfContentTreeBasedProxies: IStateOfContentTreeBasedProxies): Promise<Boolean> {
+  async __baseSetState(stateOfContentTreeBasedProxies: IStateOfContentTreeBasedProxies): Promise<boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
       this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedProxy.name, stateOfContentTreeBasedProxies);
       this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedProxy.name, stateOfContentTreeBasedProxies.StateOfContentTree);
@@ -79,6 +81,30 @@ export abstract class _ContentTreeBasedProxy<T> extends _BaseStateFullProxy<T> i
           this.__ContentTreeBasedProxyMutationEvent_Subject.EnableNotifications();
           reject(this.SetState.name + " " + err);
         });
+    });
+  }
+
+  __BaseTriggerInboundEventsAsync(): void {
+    this.ErrorHand.ThrowIfNullOrUndefined(this.TriggerInboundEventsAsync.name + ' ' + _ContentTreeBasedProxy.name, this.ContentTreeProxy);
+    this.ContentTreeProxy.TriggerActiveNodeChangeEvent();
+  }
+
+  __baseGetState(): Promise<IStateOfContentTreeBasedProxies> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(_ContentTreeBasedProxy.name, this.__baseGetState.name);
+
+      let toReturn: IStateOfContentTreeBasedProxies = {
+        StatefullDisciminator : this.StateFullProxyDisciminator,
+        StatefullDisciminatorFriendly : StateFullProxyDisciminator[this.StateFullProxyDisciminator],
+        StateOfContentTree : null
+      }
+
+
+      await this.ContentTreeProxy.GetStateOfContentTree()
+        .then((stateOfContentTree: IStateOfContentTree) => toReturn.StateOfContentTree = stateOfContentTree)
+        .then(() => resolve(toReturn))
+        .catch((err) => reject(this.GetState.name + ' | ' + err));
+      this.Logger.FuncEnd(_ContentTreeBasedProxy.name, this.__baseGetState.name);
     });
   }
 

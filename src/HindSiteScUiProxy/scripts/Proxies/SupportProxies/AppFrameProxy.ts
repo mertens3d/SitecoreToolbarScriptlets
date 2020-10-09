@@ -18,7 +18,7 @@ export class AppFrameProxy extends _baseSupportStatelessFrameProxy {
     try {
       let toolbarProxy: PackageDesignerInstallerRibbonToolbarProxy = null;
 
-      await this.FrameJacket.DocumentJacket.WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.InstallerRibbon_Toolbar, PromiseFailAction.RejectThrow)
+      await this.FrameJacket.DocumentJacket.WaitForElem(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.InstallerRibbon_Toolbar, PromiseFailAction.RejectThrow)
         .then((elementDivJacket: ElementDivJacket) => toolbarProxy = new PackageDesignerInstallerRibbonToolbarProxy(this.HindeCore, elementDivJacket, this.ParentJacket))
         .then(() => toolbarProxy.OpenFile(fileName));
     }

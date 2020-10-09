@@ -7,19 +7,21 @@ import { SupportFrameFactory } from "../../../SupportProxies/BaseFrameFactory";
 
 
 export abstract class _BaseStateFullProxy<T> extends _HindeCoreBase implements IStateFullProxy {
-  RecipeBasics: RecipeBasics;
+  abstract GetState(): Promise<T>;
+  abstract InstantiateAsyncMembers();
+  abstract SetState(state: T);
+  abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
+  abstract StateFullProxyDisciminatorFriendly;
+  abstract TriggerInboundEventsAsync(): void;
+  abstract WireEvents();
   Friendly: string = '{unknown friendly}';
   protected readonly SupportFrameFactory: SupportFrameFactory;
+  RecipeBasics: RecipeBasics;
 
   constructor(hindeCore: IHindeCore) {
     super(hindeCore);
     this.SupportFrameFactory = new SupportFrameFactory(this.HindeCore)
   }
-  abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
-  abstract GetState(): Promise<T>;
-  abstract SetState(state: T);
-  abstract WireEvents();
-  abstract InstantiateAsyncMembers();
-  abstract TriggerInboundEventsAsync(): void;
+
 }
 

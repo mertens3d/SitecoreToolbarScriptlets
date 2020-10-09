@@ -9,6 +9,7 @@ import { _BaseStateFullProxy } from "./_StateProxy";
 
 export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implements IStateFullProxy {
   public readonly FrameJacket: ElementFrameJacket = null;
+  abstract StateFullProxyDisciminatorFriendly;
   Id: string = null;
   abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
   abstract Friendly: string;

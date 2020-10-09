@@ -8,7 +8,7 @@ import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
 import { SharedConst } from '../../../../../../Shared/scripts/SharedConst';
-import { IScContentTreeNodeLineage } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/IScContentTreeNodeLineage';
+import { IScContentTreeNodeLineage } from '../../../../../../Shared/scripts/Interfaces/Data/IScContentTreeNodeLineage';
 
 export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   private DocumentJacket: DocumentJacket;
@@ -30,7 +30,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
       let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
       this.FoundStartBarButton = this.DocumentJacket.QuerySelector(querySelectBtn);
 
-      await this.FoundStartBarButton.WaitAndReturnFoundElemJacketFromElemJacket(':scope > div > span', this.Instantiate_DestopStartBarButtonProxy.name)
+      await this.FoundStartBarButton.WaitForElement(':scope > div > span', this.Instantiate_DestopStartBarButtonProxy.name)
         .then((containerSpanElement: ElementJacket) => this.ContainerSpanElement = containerSpanElement);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.Instantiate_DestopStartBarButtonProxy.name, err);
@@ -107,7 +107,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
 
   private DrawBorderColor(stateOfContentTree: IStateOfContentTree) {
     let borderColor: string = '';
-    borderColor = this.ProcessColor(stateOfContentTree.ActiveNodeShallow.Lineage.L1MainIconSrc);
+    borderColor = this.ProcessColor(stateOfContentTree.ActiveNodeShallow.Lineage.L1Icon);
     if (borderColor.length > 0) {
       this.FoundStartBarButton.NativeElement.style.borderBottomColor = borderColor;
     }
@@ -133,7 +133,7 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   }
   private BuildAncestorSpan(stateOfContentTree: IStateOfContentTree): HTMLSpanElement {
 
-    let nodeImage: HTMLImageElement = this.AncestorNodeIcon(stateOfContentTree.ActiveNodeShallow.Lineage.L1MainIconSrc);
+    let nodeImage: HTMLImageElement = this.AncestorNodeIcon(stateOfContentTree.ActiveNodeShallow.Lineage.L1Icon);
     let nodeSpan: HTMLSpanElement = this.AncestorNodeSpan(stateOfContentTree.ActiveNodeShallow.Lineage);
 
     let toReturn: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');

@@ -3,9 +3,6 @@ import { IStateOfTemplateManager } from "../../Interfaces/Data/States/IStateOfTe
 import { _baseDefaultStateOfContentTreeBasedProxies } from "./_baseDefaultStateOfContentTreeBasedProxies";
 
 export class DefaultStateOfTemplateManager extends _baseDefaultStateOfContentTreeBasedProxies implements IStateOfTemplateManager {
-    StatefullDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.TemplateManager];
-    StatefullDisciminator = StateFullProxyDisciminator.TemplateManager;
-
-
-
+  StatefullDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.TemplateManager];
+  StatefullDisciminator = StateFullProxyDisciminator.TemplateManager;
 }

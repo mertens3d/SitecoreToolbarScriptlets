@@ -7,5 +7,5 @@ export interface IErrorHandlerAgent extends IDiscriminator{
   ErrorAndContinue(container: string, text: any): void;
   WarningAndContinue(container: string, text: any): void;
   ErrorStack: IError[];
-  ThrowIfNullOrUndefined(title: string, objectsToCheck: any | any[]): void;
+  ThrowIfNullOrUndefined(title: string| string[], objectsToCheck: any | any[]): void;
 }

@@ -22,11 +22,11 @@ import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
-import { StateFullProxyFactory } from "./ProxyResolver";
+import { StateFullProxyResolver } from "./ProxyResolver";
 
 export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
   private DocumentJacket: DocumentJacket;
-  private StateFullProxyFactory: StateFullProxyFactory;
+  private StateFullProxyFactory: StateFullProxyResolver;
   private ScPageTypeResolver: ScPageTypeResolver;
   private TabSessionId: string;
   public StateFullProxy: IStateFullProxy;
@@ -41,7 +41,7 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
 
   private Instantiate() {
     this.ScPageTypeResolver = new ScPageTypeResolver(this.HindeCore, this.DocumentJacket.UrlJacket);
-    this.StateFullProxyFactory = new StateFullProxyFactory(this.HindeCore);
+    this.StateFullProxyFactory = new StateFullProxyResolver(this.HindeCore);
   }
 
   async InstantiateAsyncMembers_ScWindowFacade(): Promise<void> {
@@ -59,7 +59,7 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
 
       await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket('Window.Document') // recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
         .then((result: ReadyStateNAB) => windowType = this.ScPageTypeResolver.GetScWindowType())
-        .then(() => this.StateFullProxyFactory.BuildStateFullProxy(windowType, this.DocumentJacket))
+        .then(() => this.StateFullProxyFactory.StateFullProxyFactory(windowType, this.DocumentJacket))
         .then((stateFullProxy: IStateFullProxy) => this.StateFullProxy = stateFullProxy)
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers_ScWindowFacade.name, err));
     }

@@ -80,7 +80,9 @@
     <TypeScriptCompile Include="src\Content\scripts\Recipes\RecipeForceAutoSnapShot.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\ContentBrowserProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\HindSiteScUiAPI.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\ScContentTreeNodeProxy\IScContentTreeNodeLineage.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\IButtonSelectors.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\StartMenuButtonResolver.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IScContentTreeNodeLineage.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\_ContentTreeBasedProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DTPopUp1Proxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\ContentTreeProxyMutationEvent_Subject.ts" />
@@ -415,7 +417,6 @@
     <Folder Include="Dist\HindSite\AutoBuild\final\" />
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
-    <Folder Include="src\HindSiteScUiProxy\Facades\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentEditorProxy.ts" />

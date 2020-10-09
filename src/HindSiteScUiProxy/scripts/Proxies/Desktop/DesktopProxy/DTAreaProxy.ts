@@ -19,10 +19,11 @@ import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutatio
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
-import { StateFullProxyFactory } from "../../ProxyResolver";
+import { StateFullProxyResolver } from "../../ProxyResolver";
 
 export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements IStateFullProxy {
   public readonly StateFullProxyDisciminator = StateFullProxyDisciminator.DTArea;
+  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.DTArea];
   private AssociatedScDocumentJacket: DocumentJacket;
   private DTFrameProxyManyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
   private FramesBucket: DTFrameProxy[] = [];
@@ -148,7 +149,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
         .then(() => {
           let currentWindowType = dtFrameProxy.GetScWindowType();
 
-          let stateFullProxyFactory: StateFullProxyFactory = new StateFullProxyFactory(this.HindeCore);
+          let stateFullProxyFactory: StateFullProxyResolver = new StateFullProxyResolver(this.HindeCore);
           let recognizedWindowtypes: ScWindowType[] = stateFullProxyFactory.RecognizedWindowTypes();
 
           if (recognizedWindowtypes.indexOf(currentWindowType) < 0) {

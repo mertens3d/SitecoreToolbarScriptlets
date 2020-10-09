@@ -2,6 +2,7 @@
 
 export interface IStateFullProxy {
   readonly StateFullProxyDisciminator: StateFullProxyDisciminator;
+  readonly StateFullProxyDisciminatorFriendly: string;
   TriggerInboundEventsAsync();
   InstantiateAsyncMembers(): Promise<void> ;
   WireEvents();

@@ -33,7 +33,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     IconSrc: '',
     NodeChildren: [],
     Lineage: {
-      L1MainIconSrc: '',
+      L1Icon: '',
       L1Text: '',
       L2Icon: '',
       L2Text: ''
@@ -97,7 +97,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
   private async PolllinateGlyphNodeElem(): Promise<void> {
     try {
-      await this.ScContentTreeNodeDivElem.WaitAndReturnFoundElemJacketFromElemJacket(":scope > img", this.PolllinateGlyphNodeElem.name)
+      await this.ScContentTreeNodeDivElem.WaitForElement(":scope > img", this.PolllinateGlyphNodeElem.name)
         .then((elemImgJacket: ElementImgJacket) => this.glyphElem = elemImgJacket)
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.PolllinateGlyphNodeElem.name, err));
     } catch (err) {
@@ -112,7 +112,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
   private async PollinateNodeElem(): Promise<void> {
     try {
-      await this.ScContentTreeNodeDivElem.WaitAndReturnFoundElemJacketFromElemJacket(":scope > a", this.Friendly())
+      await this.ScContentTreeNodeDivElem.WaitForElement(":scope > a", this.Friendly())
         .then((htmlAnchorElement: ElementAnchorJacket) => this.LinkNodeElem = htmlAnchorElement)
         .catch((err) => {
         });
@@ -160,6 +160,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
       this.Logger.FuncEnd(this.GetStateOfScContentTreeNodeFlat.name);
     });
   }
+
   private HarvestProperties() {
     this.ErrorHand.ThrowIfNullOrUndefined(this.HarvestNodeState.name, [this.LinkNodeElem, this.glyphElem]);
     this.StateOfScContentTreeNode.IsActive = this.QueryIsActive();
@@ -171,29 +172,29 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
   }
 
   private HarvestLineageProperties() {
-    this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.GetMainIconSrc();
+    this.StateOfScContentTreeNode.Lineage.L1Icon = this.GetMainIconSrc();
 
     if (this.StateOfScContentTreeNode.Coord.LevelIndex === 0) {
 
-      this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+      this.StateOfScContentTreeNode.Lineage.L1Icon = '';
       this.StateOfScContentTreeNode.Lineage.L1Text = '';
       this.StateOfScContentTreeNode.Lineage.L2Icon = '';
       this.StateOfScContentTreeNode.Lineage.L2Text = '';
 
     } else if (this.StateOfScContentTreeNode.Coord.LevelIndex === 1) {
 
-      this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.StateOfScContentTreeNode.IconSrc;
+      this.StateOfScContentTreeNode.Lineage.L1Icon = this.StateOfScContentTreeNode.IconSrc;
       this.StateOfScContentTreeNode.Lineage.L1Text = this.StateOfScContentTreeNode.Friendly;
       this.StateOfScContentTreeNode.Lineage.L2Icon = '';
       this.StateOfScContentTreeNode.Lineage.L2Text = '';
 
     } else if (this.StateOfScContentTreeNode.Coord.LevelIndex === 2) {
       if (this.ParentTreeNode) {
-        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1MainIconSrc;
+        this.StateOfScContentTreeNode.Lineage.L1Icon = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Icon;
         this.StateOfScContentTreeNode.Lineage.L1Text = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Text;
 
       } else {
-        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+        this.StateOfScContentTreeNode.Lineage.L1Icon = '';
         this.StateOfScContentTreeNode.Lineage.L1Text = '';
       }
 
@@ -202,13 +203,13 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     }
     else {
       if (this.ParentTreeNode) {
-        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1MainIconSrc;
+        this.StateOfScContentTreeNode.Lineage.L1Icon = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Icon;
         this.StateOfScContentTreeNode.Lineage.L1Text = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Text;
         this.StateOfScContentTreeNode.Lineage.L2Icon = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L2Icon;
         this.StateOfScContentTreeNode.Lineage.L2Text = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L2Text;
 
       } else {
-        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+        this.StateOfScContentTreeNode.Lineage.L1Icon = '';
         this.StateOfScContentTreeNode.Lineage.L1Text = '';
         this.StateOfScContentTreeNode.Lineage.L2Icon = '';
         this.StateOfScContentTreeNode.Lineage.L2Text = '';
@@ -217,14 +218,14 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     }
 
     if (this.StateOfScContentTreeNode.Coord.LevelIndex == 0) {
-      this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+      this.StateOfScContentTreeNode.Lineage.L1Icon = '';
     } else if (this.StateOfScContentTreeNode.Coord.LevelIndex == 1) {
-      this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.StateOfScContentTreeNode.IconSrc;
+      this.StateOfScContentTreeNode.Lineage.L1Icon = this.StateOfScContentTreeNode.IconSrc;
     } else {
       if (this.ParentTreeNode) {
-        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1MainIconSrc;
+        this.StateOfScContentTreeNode.Lineage.L1Icon = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Icon;
       } else {
-        this.StateOfScContentTreeNode.Lineage.L1MainIconSrc = '';
+        this.StateOfScContentTreeNode.Lineage.L1Icon = '';
       }
     }
   }

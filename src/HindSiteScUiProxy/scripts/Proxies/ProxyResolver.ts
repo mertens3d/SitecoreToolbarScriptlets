@@ -1,16 +1,17 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
+import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/5000 - scWindowType';
 import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
-import { TemplateManagerProxy } from "./TemplateManagerProxy";
-import { LaunchPadProxy } from "./LaunchPadProxy";
 import { FallBackProxy } from "./FallBackProxy";
+import { LaunchPadProxy } from "./LaunchPadProxy";
 import { MediaLibraryProxy } from "./MediaLibraryProxy";
 import { PackageDesignerProxy } from "./PackageDesignerProxy/PackageDesignerProxy";
+import { TemplateManagerProxy } from "./TemplateManagerProxy";
 
-export class StateFullProxyFactory extends _HindeCoreBase {
+export class StateFullProxyResolver extends _HindeCoreBase {
   RecognizedWindowTypes(): ScWindowType[] {
     return [
       ScWindowType.AccessViewer,
@@ -66,7 +67,7 @@ export class StateFullProxyFactory extends _HindeCoreBase {
     ];
   }
 
-  BuildStateFullProxy(windowType: ScWindowType, documentJacket: DocumentJacket): Promise<IStateFullProxy> {
+  StateFullProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket): Promise<IStateFullProxy> {
     return new Promise(async (resolve, reject) => {
       let StateFullProxy: IStateFullProxy = null;
 
@@ -127,12 +128,25 @@ export class StateFullProxyFactory extends _HindeCoreBase {
 
       else if (windowType === ScWindowType.Workbox) { StateFullProxy = new FallBackProxy(this.HindeCore); }
 
-      else { this.ErrorHand.ErrorAndThrow(this.BuildStateFullProxy.name, 'unhandled windowType ' + ScWindowType[windowType]); }
+      else { this.ErrorHand.ErrorAndThrow(this.StateFullProxyFactory.name, 'unhandled windowType ' + ScWindowType[windowType]); }
 
       await StateFullProxy.InstantiateAsyncMembers()
         .then(() => StateFullProxy.WireEvents())
         .then(() => resolve(StateFullProxy))
-        .catch((err) => reject(this.ErrorHand.FormatejectMessage([StateFullProxyFactory.name, this.BuildStateFullProxy.name], err)))
+        .catch((err) => reject(this.ErrorHand.FormatejectMessage([StateFullProxyResolver.name, this.StateFullProxyFactory.name], err)))
     });
+  }
+
+  ProxyDiscriminatorToScWindowType(proxyDiscriminator: StateFullProxyDisciminator): ScWindowType {
+    let toReturn: ScWindowType = ScWindowType.Unknown;
+
+    if (false) { }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.ContentEditor) { toReturn = ScWindowType.ContentEditor; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.MediaLibrary) { toReturn = ScWindowType.MediaLibrary; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.PackageDesigner) { toReturn = ScWindowType.PackageDesigner; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.TemplateManager) { toReturn = ScWindowType.TemplateManager; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.Desktop) { this.ErrorHand.ErrorAndThrow(this.ProxyDiscriminatorToScWindowType.name, 'Something has gone wrong'); }
+
+    return toReturn;
   }
 }

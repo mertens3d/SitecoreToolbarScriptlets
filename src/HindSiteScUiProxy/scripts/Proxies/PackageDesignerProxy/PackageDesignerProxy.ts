@@ -13,6 +13,7 @@ import { AppFrameProxy } from "../SupportProxies/AppFrameProxy";
 
 export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
+  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.PackageDesigner];
   private DocumentJacket: DocumentJacket;
   Friendly: string;
 

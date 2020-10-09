@@ -15,13 +15,12 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
   Instantiate() {
   }
 
-  ThrowIfNullOrUndefined(title: string, testSubject: any): void;
-  ThrowIfNullOrUndefined(title: string, testSubject: any[]): void;
-  ThrowIfNullOrUndefined(title: string, testSubject: any | any[]): void {
+  ThrowIfNullOrUndefined(title: string | string[], testSubject: any | any[]): void {
     if (testSubject instanceof Array) {
       (<any[]>testSubject).forEach((testSubject: any) => this.ThrowIfNullOrUndefined(title, testSubject));
     }
     else {
+
       if (typeof testSubject === 'undefined' || testSubject === null) {
         try {
           if (this.TaskMonitor) {

@@ -160,7 +160,7 @@ export class ContentConst {
           sc920: null,
           sc820: 'input.btn',
         },
-        scStartButton: {
+        scStartButtonVSpec: {
           sc920: '[id=StartButton]',
           sc820: '[id=startButton]'
         },

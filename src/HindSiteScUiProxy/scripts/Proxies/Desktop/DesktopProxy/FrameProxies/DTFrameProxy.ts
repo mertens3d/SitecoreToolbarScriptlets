@@ -21,9 +21,10 @@ import { TemplateManagerProxy } from "../../../TemplateManagerProxy";
 import { MediaLibraryProxy } from "../../../MediaLibraryProxy";
 import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 import { FallBackProxy } from "../../../FallBackProxy";
-import { StateFullProxyFactory } from "../../../ProxyResolver";
+import { StateFullProxyResolver } from "../../../ProxyResolver";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
+  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.DTFrameProxy];
   Friendly: string = DTFrameProxy.name;
   StateFullProxyDisciminator = StateFullProxyDisciminator.DTFrameProxy;
   private _ContentTreeBasedProxyMutationEvent_Observer: _ContentTreeBasedProxyMutationEvent_Observer;
@@ -31,7 +32,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   Index: number = -1;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   public HostedStateFullProxy: IStateFullProxy;
-  private StateFullProxyFactory: StateFullProxyFactory;
+  private StateFullProxyFactory: StateFullProxyResolver;
 
   constructor(hindeCore: IHindeCore, frameJacket: ElementFrameJacket) { //HTMLIFrameElement |
     super(hindeCore, frameJacket);
@@ -45,7 +46,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
 
   InstantiateInstance(): void {
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
-    this.StateFullProxyFactory = new StateFullProxyFactory(this.HindeCore);
+    this.StateFullProxyFactory = new StateFullProxyResolver(this.HindeCore);
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
@@ -65,7 +66,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
           let scPageTypeResolver = new ScPageTypeResolver(this.HindeCore, this.FrameJacket.DocumentJacket.UrlJacket)
           scWindowtypeB = scPageTypeResolver.GetScWindowType();
         })
-        .then(() => this.StateFullProxyFactory.BuildStateFullProxy(scWindowtypeB, this.FrameJacket.DocumentJacket))
+        .then(() => this.StateFullProxyFactory.StateFullProxyFactory(scWindowtypeB, this.FrameJacket.DocumentJacket))
         .then((stateFullProxy: IStateFullProxy) => this.HostedStateFullProxy = stateFullProxy)
         
         .then(() => {

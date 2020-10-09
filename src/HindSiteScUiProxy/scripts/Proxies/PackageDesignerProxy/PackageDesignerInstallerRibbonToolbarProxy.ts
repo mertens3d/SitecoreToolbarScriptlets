@@ -21,7 +21,7 @@ export class PackageDesignerInstallerRibbonToolbarProxy extends _HindeCoreBase {
     async OpenFile(fileName: string): Promise<void> {
         let jqueryFrameProxy: JqueryFrameProxy = null;
 
-        await this.ElementDivJacket.WaitAndReturnFoundElemJacketFromElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
+        await this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
             .then((elemJacket: ElementJacket) => elemJacket.NativeElement.click())
           .then(() => {
             let matchingJackets: ElementFrameJacket[] = this.parentDocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id);

@@ -134,9 +134,9 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
   }
 
   private async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.Publish.SettingsHidden)
+    await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.Publish.SettingsHidden)
       .then(async () => {
-        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
+        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
         await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel]);
@@ -170,7 +170,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
     try {
       let iframeProxy: ElementFrameJacket = null;
 
-      await dataPublishChain.TopScDocumentProxy.WaitForAndReturnFoundElemJacket(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id)
+      await dataPublishChain.TopScDocumentProxy.WaitForElem(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id)
         .then((elementJacket: ElementJacket) => iframeProxy = new ElementFrameJacket(this.HindeCore, <HTMLIFrameElement>elementJacket.NativeElement))
         .then(() => this.FactoryHelp.CEFrameFactory(iframeProxy, 'jqIframe'))
         .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)
@@ -228,7 +228,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
       this.Logger.LogAsJsonPretty(this.__waitForThenFunc.name, targetDoc);
 
       var found: ElementJacket = null;
-      await targetDoc.WaitForAndReturnFoundElemJacket(selector)
+      await targetDoc.WaitForElem(selector)
         .then((result: ElementJacket) => found = result);
 
       if (found) {

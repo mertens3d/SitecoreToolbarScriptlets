@@ -98,7 +98,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
       if (targetNode && this.TreeContainerJacket) {
         var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.ItemId);
 
-        await this.TreeContainerJacket.WaitAndReturnFoundElemJacketFromElemJacket('[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
+        await this.TreeContainerJacket.WaitForElement('[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
           .then((elemJacket: ElementJacket) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth, null))
           .then(() => scContentTreeNodeProxy.Instantiate())
           .then(() => resolve(scContentTreeNodeProxy))
@@ -157,7 +157,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
   async SetRootNodeFromSelector(): Promise<void> {
     try {
-      await this.DocumentJacket.WaitForAndReturnFoundElemJacket(this.TreeRootSelector)
+      await this.DocumentJacket.WaitForElem(this.TreeRootSelector)
         .then((elementJacket: ElementJacket) => this.rootTreeNodeJacket = elementJacket);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.SetRootNodeFromSelector.name, err);
@@ -211,7 +211,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
         if (this.rootTreeNodeJacket) {
           var rootParent: ElementJacket = this.rootTreeNodeJacket.parentElement();
 
-          await rootParent.WaitAndReturnFoundElemJacketFromElemJacket(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
+          await rootParent.WaitForElement(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
             .then(async (firstChildGlyphNode: ElementImgJacket) => {
               this._treeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, firstChildGlyphNode, 0, 0, 1, null)
               await this._treeNodeProxy.Instantiate();

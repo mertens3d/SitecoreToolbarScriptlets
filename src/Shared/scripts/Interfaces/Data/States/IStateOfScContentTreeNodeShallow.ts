@@ -1,6 +1,6 @@
 ﻿import { GuidData } from "../../../Helpers/GuidData";
 import { IScContentTreeNodeCoord } from "./IScContentTreeNodeCoord";
-import { IScContentTreeNodeLineage } from "../../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/IScContentTreeNodeLineage";
+import { IScContentTreeNodeLineage } from "../IScContentTreeNodeLineage";
 
 export interface IStateOfScContentTreeNodeShallow {
     Friendly: string;
