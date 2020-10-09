@@ -33,7 +33,7 @@
   PathAnalyzer = 5030,
   Publish = 5031,
   RecycleBin = 5032,
-  RollManager = 5033,
+  RoleManager = 5033,
   Run = 5034,
   ScanForBrokenLinks = 5035,
   SecurityEditor = 5036,

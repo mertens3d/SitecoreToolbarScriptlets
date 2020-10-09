@@ -142,14 +142,39 @@ export class ContentConst {
         Ok: '[id=OK]',
         Cancel: '[id=CancelButton]',
         MenuButtonPublish: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_button]',
-        PopUp1: {
-          PackageDesignerButton: 'img[src$="packager.png"]',
-          TemplateManager: 'img[src$="newspaper.png"]',
-          MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
+        Popup1: {
           DevelopmentTools: '[src="/temp/iconcache/apps/24x24/magic-cube.png"]',
-          PackageDesigner: '[id=MenuItem211048689]',
+          MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
+          RecycleBin: 'img[src$="refresh.png"]',
           StartMenuLeftOption: 'img[src$="pencil.png"]',
+          TemplateManager: 'img[src$="newspaper.png"]',
+          SecurityTools: 'img[src$="lock-2.png"]',
+          ReportingTools: 'img[src$="scripts.png"]',
+          
+        },
+        Popup2: {
+          AccessViewer: 'img[src$="lock.png"]',
+          Archive: 'img[src$=".png"]',
+          DomainManager: 'img[src$="routes.png"]',
+          InstallationWizard: 'img[src$="install_wizard.png"]',
+          KeyboardMap: 'img[src$="keyboardmap.png"]',
+          LogViewer: 'img[src$="logviewer.png"]',
           MarketingControlPanel: 'img[src$="object.png"]',
+          PackageDesigner: '[id=MenuItem211048689]',
+          PackageDesignerButton: 'img[src$="packager.png"]',
+          RoleManager: 'img[src$="account.png"]',
+          Run: 'img[src$="run.png"]',
+          ScanForBrokenLinks: 'img[src$="link_broken.png"]',
+          SecurityEditor: 'img[src$="shield.png"]',
+          UserManager: 'img[src$="user (1).png"]',
+          Workbox: 'img[src$="workbox.png"]',
+          System: 'img[src$="blank.gif"]:nth-child(1)', // this is not going to work since there are two
+          Security: 'img[src$="blank.gif"]:nth-child(2)', // second blank this is not going to work since there are two
+        },
+        Popup3: {
+
+          InstalledLicenses: 'img[src$="certificate.png"]',
+          LicenseDetails: 'img[src$="informations.png"]',
         },
         Publish: {
           MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',

@@ -419,8 +419,8 @@ export class AllPageDeterminators {
         }
       ],
       RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
-      ScWindowType: ScWindowType.RollManager,
-      ScWindowTypeFriendly: ScWindowType[ScWindowType.RollManager],
+      ScWindowType: ScWindowType.RoleManager,
+      ScWindowTypeFriendly: ScWindowType[ScWindowType.RoleManager],
     },
 
     {

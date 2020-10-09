@@ -11,6 +11,7 @@ import { MediaLibraryProxy } from "./MediaLibraryProxy";
 import { PackageDesignerProxy } from "./PackageDesignerProxy/PackageDesignerProxy";
 import { TemplateManagerProxy } from "./TemplateManagerProxy";
 import { MarketingControlPanelProxy } from "./MarketingControlPanelProxy";
+import { RecycleBinProxy, AccessViewerProxy, ArchiveProxy, DomainManagerProxy, EmailExpeprienceManagerProxy, InstallationWizardProxy, InstallLicensesProxy, KeyBoardMapProxy, LicenseDetailsProxy, LogViewerProxy, RoleManagerProxy, RunProxy, ScanForBrokenLinksProxy, SecurityEditorProxy, UserManagerProxy, WorkboxProxy } from "./PackageDesignerProxy/RecycleBinProxy";
 
 export class StateFullProxyResolver extends _HindeCoreBase {
   RecognizedWindowTypes(): ScWindowType[] {
@@ -52,7 +53,7 @@ export class StateFullProxyResolver extends _HindeCoreBase {
       ScWindowType.PathAnalyzer,
       ScWindowType.RecycleBin,
 
-      ScWindowType.RollManager,
+      ScWindowType.RoleManager,
       ScWindowType.Run,
 
       ScWindowType.ScanForBrokenLinks,
@@ -74,17 +75,17 @@ export class StateFullProxyResolver extends _HindeCoreBase {
 
       if (false) {
       }
-      else if (windowType === ScWindowType.AccessViewer) { StateFullProxy = new FallBackProxy(this.HindeCore); }
-      else if (windowType === ScWindowType.Archive) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.AccessViewer) { StateFullProxy = new AccessViewerProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.Archive) { StateFullProxy = new ArchiveProxy(this.HindeCore); }
 
       else if (windowType === ScWindowType.ContentEditor) { StateFullProxy = new ContentEditorSFProxy(this.HindeCore, documentJacket, 'Solo Content Editor doc'); }
 
       else if (windowType === ScWindowType.ControlPanel) { StateFullProxy = new FallBackProxy(this.HindeCore); }
       else if (windowType === ScWindowType.Debug) { StateFullProxy = new FallBackProxy(this.HindeCore); }
       else if (windowType === ScWindowType.Desktop) { StateFullProxy = new DesktopSFProxy(this.HindeCore, documentJacket); }
-      else if (windowType === ScWindowType.DomainManager) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.DomainManager) { StateFullProxy = new DomainManagerProxy(this.HindeCore); }
 
-      else if (windowType === ScWindowType.EmailExperienceManager) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.EmailExperienceManager) { StateFullProxy = new EmailExpeprienceManagerProxy(this.HindeCore); }
       else if (windowType === ScWindowType.ExperienceAnalytics) { StateFullProxy = new FallBackProxy(this.HindeCore); }
       else if (windowType === ScWindowType.ExperienceEditor_Edit) { StateFullProxy = new FallBackProxy(this.HindeCore); }
       else if (windowType === ScWindowType.ExperienceEditor_Normal) { StateFullProxy = new FallBackProxy(this.HindeCore); }
@@ -96,16 +97,16 @@ export class StateFullProxyResolver extends _HindeCoreBase {
       else if (windowType === ScWindowType.FederatedExperienceManager) { StateFullProxy = new FallBackProxy(this.HindeCore); }
       else if (windowType === ScWindowType.Forms) { StateFullProxy = new FallBackProxy(this.HindeCore); }
 
-      else if (windowType === ScWindowType.InstallationWizard) { StateFullProxy = new FallBackProxy(this.HindeCore); }
-      else if (windowType === ScWindowType.InstalledLicenses) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.InstallationWizard) { StateFullProxy = new InstallationWizardProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.InstalledLicenses) { StateFullProxy = new InstallLicensesProxy(this.HindeCore); }
 
-      else if (windowType === ScWindowType.KeyboardMap) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.KeyboardMap) { StateFullProxy = new KeyBoardMapProxy(this.HindeCore); }
 
       else if (windowType === ScWindowType.Launchpad) { StateFullProxy = new LaunchPadProxy(this.HindeCore); }
-      else if (windowType === ScWindowType.LicenseDetails) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.LicenseDetails) { StateFullProxy = new LicenseDetailsProxy(this.HindeCore); }
       else if (windowType === ScWindowType.ListManager) { StateFullProxy = new FallBackProxy(this.HindeCore); }
       else if (windowType === ScWindowType.LoginPage) { StateFullProxy = new FallBackProxy(this.HindeCore); }
-      else if (windowType === ScWindowType.LogViewer) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.LogViewer) { StateFullProxy = new LogViewerProxy(this.HindeCore); }
 
       else if (windowType === ScWindowType.MarketingControlPanel) { StateFullProxy = new MarketingControlPanelProxy(this.HindeCore, documentJacket); }
       else if (windowType === ScWindowType.MarketingAutomation) { StateFullProxy = new FallBackProxy(this.HindeCore); }
@@ -115,19 +116,19 @@ export class StateFullProxyResolver extends _HindeCoreBase {
       else if (windowType === ScWindowType.PathAnalyzer) { StateFullProxy = new FallBackProxy(this.HindeCore); }
       else if (windowType === ScWindowType.Publish) { StateFullProxy = new FallBackProxy(this.HindeCore); }
 
-      else if (windowType === ScWindowType.RecycleBin) { StateFullProxy = new FallBackProxy(this.HindeCore); }
-      else if (windowType === ScWindowType.RollManager) { StateFullProxy = new FallBackProxy(this.HindeCore); }
-      else if (windowType === ScWindowType.Run) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.RecycleBin) { StateFullProxy = new RecycleBinProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.RoleManager) { StateFullProxy = new RoleManagerProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.Run) { StateFullProxy = new RunProxy(this.HindeCore); }
 
-      else if (windowType === ScWindowType.ScanForBrokenLinks) { StateFullProxy = new FallBackProxy(this.HindeCore); }
-      else if (windowType === ScWindowType.SecurityEditor) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.ScanForBrokenLinks) { StateFullProxy = new ScanForBrokenLinksProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.SecurityEditor) { StateFullProxy = new SecurityEditorProxy(this.HindeCore); }
 
       else if (windowType === ScWindowType.TemplateManager) { StateFullProxy = new TemplateManagerProxy(this.HindeCore, documentJacket); }
 
       else if (windowType === ScWindowType.UpdateCenter) { StateFullProxy = new FallBackProxy(this.HindeCore); }
-      else if (windowType === ScWindowType.UserManager) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.UserManager) { StateFullProxy = new UserManagerProxy(this.HindeCore); }
 
-      else if (windowType === ScWindowType.Workbox) { StateFullProxy = new FallBackProxy(this.HindeCore); }
+      else if (windowType === ScWindowType.Workbox) { StateFullProxy = new WorkboxProxy(this.HindeCore); }
 
       else { this.ErrorHand.ErrorAndThrow(this.StateFullProxyFactory.name, 'unhandled windowType ' + ScWindowType[windowType]); }
 
@@ -142,12 +143,27 @@ export class StateFullProxyResolver extends _HindeCoreBase {
     let toReturn: ScWindowType = ScWindowType.Unknown;
 
     if (false) { }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.AccessViewer) { toReturn = ScWindowType.AccessViewer; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.Archive) { toReturn = ScWindowType.Archive; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.ContentEditor) { toReturn = ScWindowType.ContentEditor; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.Desktop) { this.ErrorHand.ErrorAndThrow(this.MapProxyDiscriminatorToScWindowType.name, 'Something has gone wrong'); }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.DomainManager) { toReturn = ScWindowType.DomainManager; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.InstallationWizard) { toReturn = ScWindowType.InstallationWizard; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.InstalledLicenses) { toReturn = ScWindowType.InstalledLicenses; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.KeyBoardMap) { toReturn = ScWindowType.KeyboardMap; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.LicenseDetails) { toReturn = ScWindowType.LicenseDetails; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.LogViewer) { toReturn = ScWindowType.LogViewer; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.MarketingControlPanel) { toReturn = ScWindowType.MarketingControlPanel; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.MediaLibrary) { toReturn = ScWindowType.MediaLibrary; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.PackageDesigner) { toReturn = ScWindowType.PackageDesigner; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.RecycleBin) { toReturn = ScWindowType.RecycleBin; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.RoleManager) { toReturn = ScWindowType.RoleManager; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.Run) { toReturn = ScWindowType.Run; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.ScanForBrokenLinks) { toReturn = ScWindowType.ScanForBrokenLinks; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.SecurityEditor) { toReturn = ScWindowType.SecurityEditor; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.TemplateManager) { toReturn = ScWindowType.TemplateManager; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.MarketingControlPanel) { toReturn = ScWindowType.MarketingControlPanel; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.Desktop) { this.ErrorHand.ErrorAndThrow(this.MapProxyDiscriminatorToScWindowType.name, 'Something has gone wrong'); }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.UserManager) { toReturn = ScWindowType.UserManager; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.Workbox) { toReturn = ScWindowType.Workbox; }
     else { this.ErrorHand.ErrorAndThrow(this.MapProxyDiscriminatorToScWindowType.name, 'unhandled mapping') };
 
     return toReturn;

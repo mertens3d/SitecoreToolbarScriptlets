@@ -87,15 +87,40 @@ export interface IContentConst {
           Id: string,
         }
       },
-      PopUp1: {
+      Popup1: {
         DevelopmentTools: string,
-        MarketingControlPanel: string,
         MediaLibrary: string,
+        RecycleBin: string,
+        SecurityTools: string,
+        StartMenuLeftOption: string,
+        TemplateManager: string,
+        ReportingTools: string,
+        
+      },
+      Popup2: {
+        AccessViewer: string,
+        Workbox: string,
+        Run: string,
+        Archive: string,
+        DomainManager: string,
+        InstallationWizard: string,
+        KeyboardMap: string,
+        LogViewer: string,
+        MarketingControlPanel: string,
         PackageDesigner: string,
         PackageDesignerButton: string,
-        StartMenuLeftOption: string,  
-        TemplateManager: string,
+        RoleManager: string,
+        ScanForBrokenLinks: string,
+        SecurityEditor: string,
+        UserManager: string,
+        System: string,
+        Security: string,
       },
+      Popup3: {
+        InstalledLicenses: string,
+
+        LicenseDetails: string,
+      }
       LoginBtn: IScVerSpec,
       MenuButtonPublish: string,
       NextButton: string,
@@ -109,11 +134,9 @@ export interface IContentConst {
       }
 
       Ok: string,
-     
+
       scStartButtonVSpec: IScVerSpec,
-    
-   
-     
+
       Desktop: {
         DtStartBar: string,
         ContentTreeHolder: string,

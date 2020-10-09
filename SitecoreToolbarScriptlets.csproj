@@ -82,10 +82,11 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\HindSiteScUiAPI.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\IButtonSelectors.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\StartMenuButtonResolver.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_justWindowStateFullProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\MarketingControlPanelProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\PackageDesignerProxy\RecycleBinProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IScContentTreeNodeLineage.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\_ContentTreeBasedProxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DTPopUp1Proxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\ContentTreeProxyMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DesktopProxyMutationEvent\DesktopProxyMutationEvent_Subject.ts" />
@@ -189,6 +190,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IStateOfDTProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IStateOfFallBack.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IStateOfLaunchPad.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IStateOfMarketingControlPanel.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IStateOfMediaLibrary.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IStateOfPackageDesigner.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IStateOfScContentTreeNodeShallow.ts" />
