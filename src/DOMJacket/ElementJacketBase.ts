@@ -35,7 +35,7 @@ export  class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {
 
   async WaitForElement(selector: string, friendly: string =''): Promise<ElementJacketBase<HTMLElement>> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForElement.name, selector);
+      //this.Logger.FuncStart(this.WaitForElement.name, selector);
       this.ErrorHand.ThrowIfNullOrUndefined([ElementJacketBase.name, this.WaitForElement.name], [selector]);
       var toReturnElemJacket: ElementJacketBase<HTMLElement> = null;
       var iterationJr = new IterationDrone(this.HindeCore, this.WaitForElement.name + ' : ' + selector + ' ' + friendly, false);
@@ -53,7 +53,7 @@ export  class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {
       if (iterationJr.IsExhausted) {
         reject(iterationJr.IsExhaustedMsg);
       }
-      this.Logger.FuncEnd(this.WaitForElement.name, selector);
+      //this.Logger.FuncEnd(this.WaitForElement.name, selector);
     });
   }
 

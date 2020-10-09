@@ -11,7 +11,6 @@ import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/St
 import { StateFullProxyResolver } from "../../ProxyResolver";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
-import { DTPopUp1Proxy } from "./DTPopUp1Proxy";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
@@ -21,7 +20,6 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.Desktop];
   private DocumentJacket: DocumentJacket;
   private DTAreaProxy: DTAreaProxy;
-  private DTPopUpMenuProxy: DTPopUp1Proxy;
   private DTStartBarProxy: DTStartBarProxy;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
 
@@ -97,7 +95,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
           dtFramesNeeded.DiscriminatorAr.forEach((disciminator: StateFullProxyDisciminator) => {
             if (disciminator !== StateFullProxyDisciminator.FallBack) {
               let proxyResolver: StateFullProxyResolver = new StateFullProxyResolver(this.HindeCore);
-              let windowType: ScWindowType = proxyResolver.ProxyDiscriminatorToScWindowType(disciminator);
+              let windowType: ScWindowType = proxyResolver.MapProxyDiscriminatorToScWindowType(disciminator);
 
               if (windowType !== ScWindowType.Unknown) {
                 promAr.push(this.DTStartBarProxy.TriggerRedButtonAsync(windowType));
@@ -130,7 +128,6 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async AddContentEditorFrameAsync(): Promise<void> {
     this.Logger.FuncStart(this.AddContentEditorFrameAsync.name);
     try {
-      this.DTPopUpMenuProxy = new DTPopUp1Proxy(this.HindeCore);
 
       await this.DTStartBarProxy.TriggerRedButtonAsync(ScWindowType.ContentEditor)
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorFrameAsync.name, err));

@@ -8,8 +8,9 @@
   DTFrameProxy = 4005,
   FallBack = 4006,
   LaunchPad = 4007,
-  MediaLibrary = 4008,
-  PackageDesigner = 4009,
-  ScDocumentProxy = 4010,
-  TemplateManager = 4011,
+  MarketingControlPanel = 4008,
+  MediaLibrary = 4009,
+  PackageDesigner = 4010,
+  ScDocumentProxy = 4011,
+  TemplateManager = 4012,
 }

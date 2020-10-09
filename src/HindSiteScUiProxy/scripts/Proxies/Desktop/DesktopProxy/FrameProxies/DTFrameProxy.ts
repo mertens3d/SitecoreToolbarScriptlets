@@ -1,27 +1,26 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
 import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJacket";
+import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/5000 - scWindowType";
+import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { IFrameJacketStyling } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
 import { ContentEditorSFProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { PackageDesignerProxy } from "../../../PackageDesignerProxy/PackageDesignerProxy";
+import { MediaLibraryProxy } from "../../../MediaLibraryProxy";
+import { StateFullProxyResolver } from "../../../ProxyResolver";
+import { TemplateManagerProxy } from "../../../TemplateManagerProxy";
 import { _ContentTreeBasedProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
 import { I_ContentTreeBasedProxyMutationEvent_Payload } from "../Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
-import { TemplateManagerProxy } from "../../../TemplateManagerProxy";
-import { MediaLibraryProxy } from "../../../MediaLibraryProxy";
-import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
-import { FallBackProxy } from "../../../FallBackProxy";
-import { StateFullProxyResolver } from "../../../ProxyResolver";
+import { _ContentTreeBasedProxy } from "../../../ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
+import { MarketingControlPanelProxy } from "../../../MarketingControlPanelProxy";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
   StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.DTFrameProxy];
@@ -90,7 +89,10 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       (<MediaLibraryProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
     } else if (this.HostedStateFullProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.TemplateManager) {
       (<TemplateManagerProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
+    } else if (this.HostedStateFullProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.MarketingControlPanel) {
+      (<MarketingControlPanelProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
     }
+
 
     this.HostedStateFullProxy.WireEvents();
     this.Logger.FuncEnd(this.WireEvents.name, DTFrameProxy.name);

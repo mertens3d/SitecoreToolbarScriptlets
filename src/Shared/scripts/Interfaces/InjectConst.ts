@@ -101,6 +101,7 @@ export class ContentConst {
           BuiltIn: {
             TreeNodeSitecoreRoot: '[id=Tree_Node_11111111111111111111111111111111]',
             MediaLibraryAnchorRootNode: '[id=Tree_Node_3D6658D8A0BF4E75B3E2D050FABCF4E1]',
+            MarketingControlPanelRoodNode: '[id=Tree_Node_33CFB9CAF5654D5BB88A7CDFE29A6D71]',
             TemplatesAnchorRootNode: '[id=Tree_Node_3C1715FE6A134FCF845FDE308BA9741D]',
             LayoutRootAnchorNode: '[id=Tree_Node_EB2E4FFD27614653B05226A64D385227]',
             SystemRootAnchorNode: '[id=Tree_Node_13D6D6C6C50B4BBDB3312B04F1A58F21]',
@@ -141,13 +142,14 @@ export class ContentConst {
         Ok: '[id=OK]',
         Cancel: '[id=CancelButton]',
         MenuButtonPublish: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_button]',
-        StartMenuLeftOption: 'img[src$="pencil.png"]',
-        MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
-        TemplateManager: 'img[src$="newspaper.png"]',
         PopUp1: {
           PackageDesignerButton: 'img[src$="packager.png"]',
+          TemplateManager: 'img[src$="newspaper.png"]',
+          MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
           DevelopmentTools: '[src="/temp/iconcache/apps/24x24/magic-cube.png"]',
           PackageDesigner: '[id=MenuItem211048689]',
+          StartMenuLeftOption: 'img[src$="pencil.png"]',
+          MarketingControlPanel: 'img[src$="object.png"]',
         },
         Publish: {
           MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',

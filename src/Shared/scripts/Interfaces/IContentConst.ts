@@ -52,6 +52,7 @@ export interface IContentConst {
         BuiltIn: {
           TreeNodeSitecoreRoot: string,
           MediaLibraryAnchorRootNode: string,
+          MarketingControlPanelRoodNode: string,
           TemplatesAnchorRootNode: string,
           LayoutRootAnchorNode: string,
           SystemRootAnchorNode: string,
@@ -87,9 +88,13 @@ export interface IContentConst {
         }
       },
       PopUp1: {
-        PackageDesignerButton: string,
         DevelopmentTools: string,
+        MarketingControlPanel: string,
+        MediaLibrary: string,
         PackageDesigner: string,
+        PackageDesignerButton: string,
+        StartMenuLeftOption: string,  
+        TemplateManager: string,
       },
       LoginBtn: IScVerSpec,
       MenuButtonPublish: string,
@@ -104,10 +109,11 @@ export interface IContentConst {
       }
 
       Ok: string,
-      MediaLibrary: string,
+     
       scStartButtonVSpec: IScVerSpec,
-      StartMenuLeftOption: string,
-      TemplateManager: string,
+    
+   
+     
       Desktop: {
         DtStartBar: string,
         ContentTreeHolder: string,

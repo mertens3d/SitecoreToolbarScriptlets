@@ -24,20 +24,17 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
   protected TreeMutationEvent_Observer: __ContentTreeBasedProxyMutationEvent_Observer;
   public __ContentTreeBasedProxyMutationEvent_Subject: __ContentTreeBasedProxyMutationEvent__Subject;
   public abstract readonly  StateFullProxyDisciminator: StateFullProxyDisciminator;
-  public Friendly: string;
   readonly abstract  StateFullProxyDisciminatorFriendly: string;
   readonly abstract TreeRootSelector: string;
   readonly AssociatedHindsiteId: GuidData;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, friendly: string) {
+  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
     super(hindeCore);
     this.Logger.CTORStart(_ContentTreeBasedProxy.name);
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.DocumentJacket = documentJacket;
-    this.Friendly = friendly
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.ValidateAssociatedDocContentEditor();
-    this.Friendly = friendly
 
     this.Instantiate();
     this.Logger.CTOREnd(_ContentTreeBasedProxy.name);

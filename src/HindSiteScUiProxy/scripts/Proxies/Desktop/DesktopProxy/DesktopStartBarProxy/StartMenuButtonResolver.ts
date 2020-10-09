@@ -3,7 +3,6 @@ import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase"
 import { ScWindowType } from '../../../../../../Shared/scripts/Enums/5000 - scWindowType';
 import { IButtonSelectors } from "./IButtonSelectors";
 export class StartMenuButtonResolver extends _HindeCoreBase {
-
   GetButtonSelectors(scWindowType: ScWindowType): IButtonSelectors {
     let toReturn: IButtonSelectors = {
       L1Selector: null,
@@ -12,17 +11,20 @@ export class StartMenuButtonResolver extends _HindeCoreBase {
     };
     switch (scWindowType) {
       case ScWindowType.ContentEditor:
-        toReturn.L1Selector = ContentConst.Const.Selector.SC.StartMenuLeftOption;
+        toReturn.L1Selector = ContentConst.Const.Selector.SC.PopUp1.StartMenuLeftOption;
+        break;
+      case ScWindowType.MarketingControlPanel:
+        toReturn.L1Selector = ContentConst.Const.Selector.SC.PopUp1.MarketingControlPanel;
         break;
       case ScWindowType.MediaLibrary:
-        toReturn.L1Selector = ContentConst.Const.Selector.SC.MediaLibrary;
+        toReturn.L1Selector = ContentConst.Const.Selector.SC.PopUp1.MediaLibrary;
         break;
       case ScWindowType.PackageDesigner:
         toReturn.L1Selector = ContentConst.Const.Selector.SC.PopUp1.DevelopmentTools;
         toReturn.Pop1Selector = ContentConst.Const.Selector.SC.PopUp1.PackageDesignerButton; /// can't use TR....it's not guaranteed to be the first one. If powershell tools are installed it won't be
         break;
       case ScWindowType.TemplateManager:
-        toReturn.L1Selector = ContentConst.Const.Selector.SC.TemplateManager;
+        toReturn.L1Selector = ContentConst.Const.Selector.SC.PopUp1.TemplateManager;
         break;
       default:
     }

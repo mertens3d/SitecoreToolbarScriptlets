@@ -5,18 +5,12 @@ import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { _ContentTreeBasedProxy } from "./ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
 
 export class TemplateManagerProxy extends _ContentTreeBasedProxy<IStateOfTemplateManager> implements IStateFullProxy {
-  readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TemplatesAnchorRootNode;
   readonly StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.TemplateManager;
-  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.TemplateManager];
+  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.TemplateManager];
+  readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TemplatesAnchorRootNode;
 
   async InstantiateAsyncMembers(): Promise<void> {
-
     return this.__baseInstantiateAsyncMembers();
-    //this.Logger.FuncStart(this.InstantiateAsyncMembers.name, TemplateManagerProxy.name);
-    //await this.__baseInstantiateAsyncMembers()
-    //  .then(() => { })
-    //  .catch((err) => this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err));
-    //this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, TemplateManagerProxy.name);
   }
 
   WireEvents() {
