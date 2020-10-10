@@ -5,7 +5,7 @@ import { IStateOfContentEditor } from "../Interfaces/Data/States/IStateOfContent
 import { IStateOfDesktop } from "../Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../Interfaces/Data/States/IStateOfDTProxy";
 import { IRootState } from "../Interfaces/Data/States/IStateOfScWindow";
-import { _HindeCoreBase } from "../_HindeCoreBase";
+import { _CommonBase } from "../_CommonCoreBase";
 import { DefaultControllerMessageReceivedEvent_Payload } from "./Defaults/DefaultControllerMessageReceivedEvent_Payload";
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
 import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
@@ -17,7 +17,7 @@ import { IStateOfStorageSnapShots } from "../Interfaces/Data/States/IStateOfStor
 import { StaticHelpers } from "./StaticHelpers";
 import { StateFullProxyDisciminator } from "../Enums/40 - StateFullProxyDisciminator";
 
-export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
+export class ControllerMessageReceivedEventValidator extends _CommonBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {
     this.Logger.FuncStart(this.TranslateAndValidatePayload.name);
 

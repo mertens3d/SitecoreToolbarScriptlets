@@ -3,33 +3,39 @@ import { BufferChar } from "../../../Enums/BufferChar";
 import { BufferDirection } from "../../../Enums/BufferDirection";
 import { GuidData } from "../../../Helpers/GuidData";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
-import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+import { TypeDiscriminator } from "../../../Enums/70 - TypeDiscriminator";
+import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
 import { ILoggerWriter } from "../../../Interfaces/Agents/ILoggerWriter";
 import { IDataDebugCallback } from "../../../Interfaces/IDataDebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
 import { LogWriterBuffer } from "./LogWriterBuffer";
 import { LoggerTimer } from "./LoggerTimer";
 import { SharedConst } from "../../../SharedConst";
-
+import { _CommonBase } from "../../../_CommonCoreBase";
+import { TaskMonitor } from "./TaskMonitor";
+import { ErrorHandlerAgent } from "./ErrorHandlerAgent";
 
 export class LoggerAgent implements ILoggerAgent {
-  private MaxIndent: number = 20;
-  private AllLogWriters: ILoggerWriter[] = [];
   private __callDepth: number;
   private __debugTextChangedCallbacks: IDataDebugCallback[] = [];
+  private AllLogWriters: ILoggerWriter[] = [];
+  private AltColor: string;
   private BufferWriter: LogWriterBuffer;
   private HasWriters: boolean;
+  private MaxIndent: number = 20;
+  readonly TypeDiscriminator = TypeDiscriminator.ILoggerAgent;
   Timer: LoggerTimer;
   UseTimeStamp: boolean = true;
 
-  private AltColor: string;
-  readonly Discriminator = Discriminator.ILoggerAgent;
-
-  
   private MaxDepthBeforeThrow: number = 2000; //this is to avoid extreme runaway code
+  private ErrorHand: ErrorHandlerAgent;
+  private TaskMonitor: TaskMonitor;
 
   constructor() {
+    this.Instantiate();
+  }
+
+  private Instantiate() {
     this.Timer = new LoggerTimer;
     this.BufferWriter = new LogWriterBuffer();
     this.AddWriter(this.BufferWriter);
@@ -37,8 +43,9 @@ export class LoggerAgent implements ILoggerAgent {
     this.LogVal('TimeStamp', this.Timer.LogTimeStamp());
   }
 
-  Instantiate() {
-
+  IntroduceSiblings(taskMonitor: TaskMonitor, errorHand: ErrorHandlerAgent) {
+    this.TaskMonitor = taskMonitor;
+    this.ErrorHand = errorHand;
   }
 
   FlushBuffer() {
@@ -52,8 +59,6 @@ export class LoggerAgent implements ILoggerAgent {
       this.Log(bufferAr[idx]);
     }
   }
-
-
 
   RemoveWriter(BufferWriter: LogWriterBuffer) {
     for (var idx = 0; idx < this.AllLogWriters.length; idx++) {
@@ -99,7 +104,7 @@ export class LoggerAgent implements ILoggerAgent {
     return toReturn;
   }
 
-  HandlerClearDebugText(self: IHindeCore, verify: boolean = false): void {
+  HandlerClearDebugText(self: ICommonCore, verify: boolean = false): void {
     this.FuncStart(this.HandlerClearDebugText.name);
     var proceed: boolean = true;
     if (verify) {
@@ -173,7 +178,7 @@ export class LoggerAgent implements ILoggerAgent {
     if (this.AltColor === SharedConst.Const.Colors.ConsoleStyles.StyleFgBlue) {
       this.AltColor = SharedConst.Const.Colors.ConsoleStyles.StyleFgMagenta;
     } else {
-      this.AltColor = SharedConst.Const.Colors.ConsoleStyles.StyleFgBlue; 
+      this.AltColor = SharedConst.Const.Colors.ConsoleStyles.StyleFgBlue;
     }
     let formattedText: string = this.StyleFormat(this.AltColor, rawText);
     this.Log(formattedText);
@@ -185,9 +190,6 @@ export class LoggerAgent implements ILoggerAgent {
   }
   async Log(text, optionalValue: string = '', hasPrefix = false) {
     if (this.HasWriters) {
-
-    
-
       var indent = '  ';
 
       let indentDepth = this.__callDepth % this.MaxIndent;
@@ -222,7 +224,7 @@ export class LoggerAgent implements ILoggerAgent {
           try {
             oneWriter.WriteText(text)
           } catch (err) {
-            console.log(  this.WriteToAllWriters.name + ' ' + oneWriter.FriendlyName + ' | ' + err);
+            console.log(this.WriteToAllWriters.name + ' ' + oneWriter.FriendlyName + ' | ' + err);
           }
         } else {
           console.log('Null writer');
@@ -237,7 +239,6 @@ export class LoggerAgent implements ILoggerAgent {
       oneCallback.Func(oneCallback.Caller, data);
     }
   }
-
 
   StyleFormat(color: string, text: string) {
     return SharedConst.Const.Colors.ConsoleStyles.StyleEsc + color + text + SharedConst.Const.Colors.ConsoleStyles.StyleEsc + SharedConst.Const.Colors.ConsoleStyles.StyleReset;
@@ -305,7 +306,6 @@ export class LoggerAgent implements ILoggerAgent {
     //this.Log(formatted, '', true);
     this.Log(formatted, optionalValue, true);
   }
-
 
   NotNullCheck(title: string, value: any): void {
     if (typeof value === 'undefined') {

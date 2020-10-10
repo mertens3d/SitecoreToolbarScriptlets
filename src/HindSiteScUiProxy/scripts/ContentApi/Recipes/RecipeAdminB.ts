@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IScWindowFacade } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IApiCallPayload } from "../../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ICommandRecipes } from '../../../../Shared/scripts/Interfaces/ICommandRecipes';
@@ -8,8 +8,8 @@ import { DTFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/DT
 import { _ApiRecipeBase } from './__RecipeBase/_ApiRecipeBase';
 
 export class RecipeAdminB extends _ApiRecipeBase implements ICommandRecipes {
-  constructor(hindeCore: IHindeCore, apiCallPayload: IApiCallPayload, targetDoc: DocumentJacket, ceButtonTabAgent: DTStartBarProxy, scWinProxy: IScWindowFacade) {
-        super(hindeCore);
+  constructor(apiCore: IAPICore, apiCallPayload: IApiCallPayload, targetDoc: DocumentJacket, ceButtonTabAgent: DTStartBarProxy, scWinProxy: IScWindowFacade) {
+        super(apiCore);
 
         this.Logger.CTORStart(RecipeAdminB.name);
 

@@ -1,17 +1,18 @@
 ﻿import { QueryStrKey } from "../Shared/scripts/Enums/QueryStrKey";
-import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { ISiteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { IUrlJacket } from "../Shared/scripts/Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../Shared/scripts/Interfaces/Jackets/IUrlParts";
-import { _HindeCoreBase } from "../Shared/scripts/_HindeCoreBase";
+import { _FrontBase } from "../Shared/scripts/_HindeCoreBase";
 import { IOneParamPair } from "../Shared/scripts/Interfaces/IOneParamPair";
 import { SharedConst } from "../Shared/scripts/SharedConst";
+import { _CommonBase } from "../Shared/scripts/_CommonCoreBase";
 
-export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
+export class UrlJacket extends _CommonBase implements IUrlJacket {
   protected UrlParts: IGenericUrlParts;
   public readonly OriginalURL: string;
-  constructor(hindeCore: IHindeCore, url: string) {
-    super(hindeCore);
+  constructor(commonCore: ICommonCore, url: string) {
+    super(commonCore);
     this.OriginalURL = url;
 
     this.ErrorHand.ThrowIfNullOrUndefined(UrlJacket.name, url);

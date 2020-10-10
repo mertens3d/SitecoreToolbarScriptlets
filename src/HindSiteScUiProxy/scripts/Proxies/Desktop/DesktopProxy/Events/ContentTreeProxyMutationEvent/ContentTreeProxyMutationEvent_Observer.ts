@@ -1,13 +1,16 @@
 ﻿import { HindsiteEventHandler_Type } from '../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindsiteEventHandler_Type';
 import { HindSiteEvent_Observer } from '../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer';
 import { IHindSiteEvent_Observer } from '../../../../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer';
-import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IContentTreeProxyMutationEvent_Payload } from './IContentTreeProxyMutationEvent_Payload';
+import { TypeDiscriminator } from '../../../../../../../Shared/scripts/Enums/70 - TypeDiscriminator';
 
-export class __ContentTreeBasedProxyMutationEvent_Observer extends HindSiteEvent_Observer<IContentTreeProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<IContentTreeProxyMutationEvent_Payload> {
+export class ContentTreeBasedProxyMutationEvent_Observer extends HindSiteEvent_Observer<IContentTreeProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<IContentTreeProxyMutationEvent_Payload> {
 
-  constructor(hindeCore: IHindeCore, callback: HindsiteEventHandler_Type) {
-    super(hindeCore, __ContentTreeBasedProxyMutationEvent_Observer.name, callback);
+  readonly TypeDiscriminator = TypeDiscriminator.__ContentTreeBasedProxyMutationEvent_Observer;
+
+  constructor(apiCore: IAPICore, callback: HindsiteEventHandler_Type) {
+    super(apiCore, ContentTreeBasedProxyMutationEvent_Observer.name, callback);
   }
 
 }

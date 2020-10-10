@@ -19,7 +19,7 @@ import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IM
 import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IStateOfUiModules } from "../../../../Shared/scripts/Interfaces/IStateOfUiModules";
 import { UiHydrationData } from '../../../../Shared/scripts/Interfaces/UiHydrationData';
-import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
+import { _FrontBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
 import { SelectSnapUiMutationEvent_ObserverWithCallback } from '../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_ObserverWithCallback';
 import { UiModuleManagerPassThroughEvent_Subject } from '../../Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Subject';
@@ -39,7 +39,7 @@ import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbac
 import { UiCommandsManager } from '../UiCommandsManager';
 import { _UiModuleBase } from '../../UiModules/_UiModuleBase';
 
-export class UiModulesManager extends _HindeCoreBase {
+export class UiModulesManager extends _FrontBase {
   MenuCommandParameters: IMenuCommandDefinition[];
   UiCommandsMan: UiCommandsManager;
   CurrScWindowState: IStateOfScUi;

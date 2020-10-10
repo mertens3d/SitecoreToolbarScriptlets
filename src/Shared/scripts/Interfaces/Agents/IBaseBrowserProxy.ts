@@ -1,4 +1,4 @@
-﻿import { BrowserTabProxy } from "../../../../PopUpController/scripts/Proxies/BrowserTabProxy";
+﻿import { BrowserTabProxy } from "../../Proxies/Browser/BrowserTabProxy";
 
 export interface IBaseBrowserProxy {
   

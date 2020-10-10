@@ -7,16 +7,16 @@ import { SettingType } from "../../../Enums/SettingType";
 import { UiPresence } from "../../../Enums/UiPresence";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ContentConst } from "../../../Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../_HindeCoreBase";
 import { SharedConst } from "../../../SharedConst";
-import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
 import { HindSiteSetting } from "./HindSiteSetting";
 import { HindSiteSettingForNumbers } from "./HindSiteSettingForNumbers";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
+import { _CommonBase } from "../../../_CommonCoreBase";
 
-export class DefaultSettings extends _HindeCoreBase {
+export class DefaultSettings extends _CommonBase {
 
-  constructor(hindeCore: IHindeCore) {
+  constructor(hindeCore: ICommonCore) {
     super(hindeCore);
   }
 
@@ -306,7 +306,7 @@ export class DefaultSettings extends _HindeCoreBase {
     let toReturn: HindSiteSettingWrapper[] = [];
 
     rawData.forEach((settingValue: HindSiteSetting) => {
-      toReturn.push(new HindSiteSettingWrapper(this.HindeCore,  settingValue));
+      toReturn.push(new HindSiteSettingWrapper(this.CommonCore, settingValue));
     })
 
     return toReturn;

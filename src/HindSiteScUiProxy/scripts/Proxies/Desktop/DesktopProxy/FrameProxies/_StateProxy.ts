@@ -1,12 +1,12 @@
-﻿import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
+﻿import { RecipeBasics } from "../../../../RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
-import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { SupportFrameFactory } from "../../../SupportProxies/BaseFrameFactory";
 
 
-export abstract class _BaseStateFullProxy<T> extends _HindeCoreBase implements IStateFullProxy {
+export abstract class _BaseStateFullProxy<T> extends _APICoreBase implements IStateFullProxy {
   abstract GetState(): Promise<T>;
   abstract InstantiateAsyncMembers();
   abstract SetState(state: T);
@@ -18,9 +18,9 @@ export abstract class _BaseStateFullProxy<T> extends _HindeCoreBase implements I
   protected readonly SupportFrameFactory: SupportFrameFactory;
   RecipeBasics: RecipeBasics;
 
-  constructor(hindeCore: IHindeCore) {
-    super(hindeCore);
-    this.SupportFrameFactory = new SupportFrameFactory(this.HindeCore)
+  constructor(apiCore: IAPICore) {
+    super(apiCore);
+    this.SupportFrameFactory = new SupportFrameFactory(this.ApiCore)
   }
 
 }

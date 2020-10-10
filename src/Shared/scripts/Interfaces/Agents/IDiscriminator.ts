@@ -1,5 +1,5 @@
-﻿import { Discriminator } from "./Discriminator";
+﻿import { TypeDiscriminator } from "../../Enums/70 - TypeDiscriminator";
 
-export interface IDiscriminator {
-    readonly Discriminator: Discriminator;
+export interface ITypeDiscriminator {
+  TypeDiscriminator: TypeDiscriminator
 }

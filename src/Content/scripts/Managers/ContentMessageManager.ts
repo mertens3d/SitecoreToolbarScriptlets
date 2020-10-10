@@ -1,8 +1,8 @@
-﻿import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+﻿import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { IMessageBroker_Content } from '../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 
-export class ContentMessageManager extends _HindeCoreBase {
+export class ContentMessageManager extends _FrontBase {
   private ContentMessageBroker: IMessageBroker_Content;
   OperationCancelled: any;
 

@@ -1,29 +1,20 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
 import { ElementFrameJacket } from "../../../DOMJacket/ElementFrameJacket";
-import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
-import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
+import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { IHindSiteScUiAPIOptions } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 
-export class FrameHelper extends _HindeCoreBase {
-  private factoryHelper: FactoryHelper;
-  private RecipeBasics: RecipeBasics;
-  private Options: IHindSiteScUiAPIOptions;
+export class FrameHelper extends _APICoreBase {
 
-  constructor(hindeCore: IHindeCore, options: IHindSiteScUiAPIOptions) {
-    super(hindeCore);
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
-    this.factoryHelper = new FactoryHelper(this.HindeCore);
-    this.Options = options;
+  constructor(apiCore: IAPICore) {
+    super(apiCore);
   }
 
   async GetIFrameAsBaseFrameProxy(nativeIframeProxy: ElementFrameJacket, ifrIdx: number): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       let friendly = 'desktop Iframe_' + ifrIdx;
 
-      let dTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy, this.Options);
+      let dTFrameProxy = new DTFrameProxy(this.ApiCore, nativeIframeProxy);
       dTFrameProxy.InstantiateAsyncMembers();
       dTFrameProxy.WireEvents();
 
@@ -42,7 +33,7 @@ export class FrameHelper extends _HindeCoreBase {
 
   async GetIFrameAsDTFrameProxy(frameJacket: ElementFrameJacket): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
-      let dTFrameProxy = new DTFrameProxy(this.HindeCore, frameJacket);
+      let dTFrameProxy = new DTFrameProxy(this.ApiCore, frameJacket);
 
       await dTFrameProxy.WaitForCompleteNABFrameProxyOrReject()
 

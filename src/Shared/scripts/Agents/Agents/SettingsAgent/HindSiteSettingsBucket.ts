@@ -1,18 +1,17 @@
-﻿import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
-import { _HindeCoreBase } from "../../../_HindeCoreBase";
-import { SettingFlavor } from "../../../Enums/SettingFlavor";
+﻿import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingKey } from "../../../Enums/30 - SettingKey";
-import { StaticHelpers } from "../../../Classes/StaticHelpers";
-import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+import { SettingFlavor } from "../../../Enums/SettingFlavor";
+import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
+import { _CommonBase } from "../../../_CommonCoreBase";
 import { DefaultSettings } from "./DefaultSettings";
-import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
+import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
 
-export class HindSiteSettingsBucket extends _HindeCoreBase {
+export class HindSiteSettingsBucket extends _CommonBase {
   SettingWrappers: HindSiteSettingWrapper[] = [];
 
-  constructor(hindeCore: IHindeCore) {
+  constructor(hindeCore: ICommonCore) {
     super(hindeCore);
-    this.SettingWrappers = (new DefaultSettings(this.HindeCore)).GetDefaultSettingsWrapper();
+    this.SettingWrappers = (new DefaultSettings(this.CommonCore)).GetDefaultSettingsWrapper();
   }
 
   GetByKey(needleSettingKey: SettingKey): HindSiteSettingWrapper {

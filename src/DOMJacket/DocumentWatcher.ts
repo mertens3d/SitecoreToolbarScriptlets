@@ -2,22 +2,23 @@
 import { IDocumentProxyMutationEvent_Payload } from "../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
 import { Guid } from "../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../Shared/scripts/Helpers/GuidData";
-import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../Shared/scripts/_HindeCoreBase";
+import { ICommonCore } from "../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { _FrontBase } from "../Shared/scripts/_HindeCoreBase";
 import { DocumentJacket } from "./DocumentJacket";
 import { FrameJacketAddRemoveEvent_Observer } from "./Events/NativeIFrameAddedEvent/FrameJacketAddRemoveEvent_Observer";
 import { FrameJacketAddRemoveEvent_Subject } from "./Events/NativeIFrameAddedEvent/FrameJacketAddRemoveEvent_Subject";
 import { IFrameJacketAddRemoveEvent_Payload } from "./Events/NativeIFrameAddedEvent/IFrameJacketAddRemoveEvent_Payload";
+import { _CommonBase } from "../Shared/scripts/_CommonCoreBase";
 
-export class DocumentJacketWatcher extends _HindeCoreBase {
+export class DocumentJacketWatcher extends _CommonBase {
   private DocumentJacket: DocumentJacket; //work towards making this private
   private FrameJacketAddRemoveEvent_Subject: FrameJacketAddRemoveEvent_Subject;
   private NativeIframeAddRemoveEvent_Observer: FrameJacketAddRemoveEvent_Observer;
   public DocumentProxyMutationEvent_Subject: DocumentProxyMutationEvent_Subject;
   readonly DocId: GuidData = Guid.NewRandomGuid();
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
-    super(hindeCore);
+  constructor(commonCore: ICommonCore, documentJacket: DocumentJacket) {
+    super(commonCore);
 
     this.ErrorHand.ThrowIfNullOrUndefined(DocumentJacketWatcher.name, [documentJacket]);
 
@@ -29,10 +30,10 @@ export class DocumentJacketWatcher extends _HindeCoreBase {
   private InstantiateInstance() {
     this.Logger.FuncStart(this.InstantiateInstance.name, DocumentJacketWatcher.name);
 
-    this.FrameJacketAddRemoveEvent_Subject = new FrameJacketAddRemoveEvent_Subject(this.HindeCore, this.DocumentJacket);
+    this.FrameJacketAddRemoveEvent_Subject = new FrameJacketAddRemoveEvent_Subject(this.CommonCore, this.DocumentJacket);
 
-    this.NativeIframeAddRemoveEvent_Observer = new FrameJacketAddRemoveEvent_Observer(this.HindeCore, this.CallBackOnNativeIFrameAddRemoveEventAsync.bind(this));
-    this.DocumentProxyMutationEvent_Subject = new DocumentProxyMutationEvent_Subject(this.Logger, this.ErrorHand, DocumentJacketWatcher.name);
+    this.NativeIframeAddRemoveEvent_Observer = new FrameJacketAddRemoveEvent_Observer(this.CommonCore, this.CallBackOnNativeIFrameAddRemoveEventAsync.bind(this));
+    this.DocumentProxyMutationEvent_Subject = new DocumentProxyMutationEvent_Subject(this.CommonCore);
 
     this.WireInstanceEvents();
 

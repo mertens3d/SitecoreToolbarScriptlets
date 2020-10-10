@@ -1,29 +1,40 @@
-﻿import { IHindSiteScUiAPI, IHindSiteScUiAPIOptions } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
-import { _HindeCoreBase } from "../../Shared/scripts/_HindeCoreBase";
-import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
-import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { DocumentJacket } from "../../DOMJacket/DocumentJacket";
-import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ScWindowFacade } from "./Proxies/ScWindowFacade";
-import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+﻿import { DocumentJacket } from "../../DOMJacket/DocumentJacket";
 import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
+import { IAPICore } from "../../Shared/scripts/Interfaces/Agents/IAPICore";
+import { IHindSiteScUiAPI, IHindSiteScUiAPIRunTimeOptions } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { ICoreErrorHandler } from "../../Shared/scripts/Interfaces/Agents/IErrorHandlerAgent";
+import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
+import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
 import { DesktopSFProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { ScWindowFacade } from "./Proxies/ScWindowFacade";
+import { ICoreTaskMonitor } from "../../Shared/scripts/Interfaces/Agents/Core/ITaskMonitorAgent";
 
-export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI {
+export class HindSiteScUiAPI implements IHindSiteScUiAPI {
   private ScUiMan: ScUiManager;
   private ScWindowFacade: IScWindowFacade;
-  DocumentJacket: DocumentJacket;
-  private Options: IHindSiteScUiAPIOptions;
+  private DocumentJacket: DocumentJacket;
+  private ApiCore: IAPICore;
+  private Logger: ILoggerAgent;
+  private ErrorHand: ICoreErrorHandler;
 
-  constructor(hindeCore: IHindeCore, scUiMan: ScUiManager, documentJacket: DocumentJacket, options: IHindSiteScUiAPIOptions) {
-    super(hindeCore);
+  constructor(loggerAgent: ILoggerAgent, errorHand: ICoreErrorHandler, taskMon: ICoreTaskMonitor, documentJacket: DocumentJacket, runTimeOptions: IHindSiteScUiAPIRunTimeOptions) {
+    this.ApiCore = {
+      ErrorHand: errorHand,
+      Logger: loggerAgent,
+      RunTimeOptions: runTimeOptions,
+      TaskMonitor: taskMon,
+      //TypeDiscriminator: TypeDiscriminator.ApiCore,
+    }
+
+    this.Logger = this.ApiCore.Logger;
+    this.ErrorHand = this.ApiCore.ErrorHand;
 
     this.Logger.CTORStart(HindSiteScUiAPI.name);
 
-    this.ScUiMan = scUiMan;
     this.DocumentJacket = documentJacket;
-    this.Options = options;
 
     this.Logger.CTOREnd(HindSiteScUiAPI.name);
   }
@@ -31,7 +42,7 @@ export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI 
   public async InstantiateHindSiteScUiProxy() {
     this.Logger.FuncStart(this.InstantiateHindSiteScUiProxy.name);
     try {
-      this.ScWindowFacade = new ScWindowFacade(this.HindeCore, this.DocumentJacket);
+      this.ScWindowFacade = new ScWindowFacade(this.ApiCore, this.DocumentJacket);
       await this.ScWindowFacade.InstantiateAsyncMembers_ScWindowFacade();
     }
     catch (err) {
@@ -98,6 +109,8 @@ export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI 
   }
 
   AdminB(commandData: IApiCallPayload) {
+    this.ScUiMan = new ScUiManager(this.ApiCore);
+    this.ScUiMan.InitSitecoreUiManager();
     this.ScUiMan.AdminB(this.DocumentJacket, null);
   }
 }

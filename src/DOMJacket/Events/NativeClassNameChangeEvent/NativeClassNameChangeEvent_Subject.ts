@@ -1,14 +1,18 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { ElementJacket } from "../../ElementJacket";
 import { INativeClassNameChangeEvent_Payload } from "./INativeClassNameChangeEvent_Payload";
+import { TypeDiscriminator } from "../../../Shared/scripts/Enums/70 - TypeDiscriminator";
 
 export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<INativeClassNameChangeEvent_Payload> {
+  readonly Friendly_Subject = NativeClassNameChangeEvent_Subject.name;
+  readonly TypeDiscriminator = TypeDiscriminator.NativeClassNameChangeEvent_Subject;
+
   ShowLogActions: boolean = true;
   private TreeElement: HTMLElement;
-  constructor(hindeCore: IHindeCore, treeElementJacket: ElementJacket) {
-    super(hindeCore, NativeClassNameChangeEvent_Subject.name);
+  constructor(commonCore: ICommonCore, treeElementJacket: ElementJacket) {
+    super(commonCore);
     this.TreeElement = treeElementJacket.NativeElement;
     this.InitTreeMutationEvent_Observer();
   }

@@ -1,14 +1,14 @@
 ﻿import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
+import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
+import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { SupportFrameFactory } from "./BaseFrameFactory";
 
-export class _baseSupportStatelessFrameProxy extends _HindeCoreBase {
+export class _baseSupportStatelessFrameProxy extends _APICoreBase {
     public readonly FrameJacket: ElementFrameJacket = null;
     BaseFrameFactory: SupportFrameFactory;
-    constructor(hindeCore: IHindeCore, appFrameJacket: ElementFrameJacket) {
-        super(hindeCore);
+    constructor(apiCore: IAPICore, appFrameJacket: ElementFrameJacket) {
+        super(apiCore);
         this.FrameJacket = appFrameJacket;
-        this.BaseFrameFactory = new SupportFrameFactory(this.HindeCore);
+        this.BaseFrameFactory = new SupportFrameFactory(this.ApiCore);
     }
 }

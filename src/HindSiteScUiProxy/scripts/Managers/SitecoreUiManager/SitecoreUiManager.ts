@@ -1,19 +1,19 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
-import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
 import { ContentBrowserProxy } from "../../../../Content/scripts/Proxies/ContentBrowserProxy";
 
-export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
+export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IStateOfScUi;
   TopLevelDoc: DocumentJacket;
 
-  constructor(hindeCore: IHindeCore) {
-    super(hindeCore)
+  constructor(apiCore: IAPICore) {
+    super(apiCore)
   }
 
   async InitSitecoreUiManager() {
@@ -37,7 +37,7 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
 
 
 
-    let contentBrowserProxy: ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore);
+    let contentBrowserProxy: ContentBrowserProxy = new ContentBrowserProxy(this.ApiCore);
 
     const style = document.createElement('link');
     style.type = 'text/css';

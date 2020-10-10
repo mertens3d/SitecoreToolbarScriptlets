@@ -1,15 +1,15 @@
-﻿import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { ElementFrameJacket } from "../../../DOMJacket/ElementFrameJacket";
-import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
-import { ISettingsAgent } from "../Interfaces/Agents/ISettingsAgent";
-import { _HindeCoreBase } from "../_HindeCoreBase";
-import { CEFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
+﻿import { DTFrameProxy } from "./Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+import { ElementFrameJacket } from "../../DOMJacket/ElementFrameJacket";
+import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
+import { CEFrameProxy } from "./Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
+import { _APICoreBase } from "../../Shared/scripts/_APICoreBase";
+import { IAPICore } from "../../Shared/scripts/Interfaces/Agents/IAPICore";
 
-export class FactoryHelper extends _HindeCoreBase {
+export class FactoryHelper extends _APICoreBase {
   SettingsAgent: ISettingsAgent;
 
-  constructor(hindeCore: IHindeCore) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore) {
+    super(apiCore);
   }
 
   CEFrameFactory(frameJacket: ElementFrameJacket, nickname: string): CEFrameProxy {
@@ -17,7 +17,7 @@ export class FactoryHelper extends _HindeCoreBase {
 
 
     this.ErrorHand.ThrowIfNullOrUndefined(this.CEFrameFactory.name, [frameJacket]);
-    let toReturn = new CEFrameProxy(this.HindeCore, frameJacket);
+    let toReturn = new CEFrameProxy(this.ApiCore, frameJacket);
     toReturn.InstantiateAsyncMembers();
     toReturn.WireEvents();
     this.Logger.FuncEnd(this.BaseFramePromiseFactory.name);
@@ -28,13 +28,13 @@ export class FactoryHelper extends _HindeCoreBase {
     this.Logger.FuncStart(this.BaseFramePromiseFactory.name);
     var toReturn: DTFrameProxy = null;
 
-    //let documentProxy = new DocumentProxy(this.HindeCore, iframeElem.contentDocument);
+    //let documentProxy = new DocumentProxy(this.apiCore, iframeElem.contentDocument);
     //let scWindowType = documentProxy.GetScwindowType();
 
-    //toReturn = new _BaseFrameProxy<scWindowType>(this.HindeCore, iframeElem);
+    //toReturn = new _BaseFrameProxy<scWindowType>(this.apiCore, iframeElem);
 
     if (nativeIframeProxy && nickname) {
-      var toReturn: DTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
+      var toReturn: DTFrameProxy = new DTFrameProxy(this.ApiCore, nativeIframeProxy);
       toReturn.InstantiateAsyncMembers();
     } else {
       this.ErrorHand.ErrorAndThrow(this.BaseFramePromiseFactory.name, 'one of these is null');
@@ -49,7 +49,7 @@ export class FactoryHelper extends _HindeCoreBase {
   async DTFrameProxyFactory(nativeIframeProxy: ElementFrameJacket): Promise<DTFrameProxy> {
     var toReturn: DTFrameProxy = null;
     if (nativeIframeProxy) {
-      var toReturn = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
+      var toReturn = new DTFrameProxy(this.ApiCore, nativeIframeProxy);
       await toReturn.InstantiateAsyncMembers();
     } else {
       this.ErrorHand.ErrorAndThrow(this.DTFrameProxyFactory.name, 'one of these is null');

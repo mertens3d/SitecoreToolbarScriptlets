@@ -13,11 +13,11 @@ import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Dat
 import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
 
-export class MessageBroker_Content extends _HindeCoreBase implements IMessageBroker_Content {
+export class MessageBroker_Content extends _FrontBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
   private HindSiteScUiProxy: IHindSiteScUiAPI;
 

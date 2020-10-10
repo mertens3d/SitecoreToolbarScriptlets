@@ -1,10 +1,7 @@
-﻿import { IInterruptAgent } from "./ITaskMonitorAgent";
-import { ILoggerAgent } from "./ILoggerAgent";
-import { IDiscriminator } from "./IDiscriminator";
-import { IErrorHandlerAgent } from "./IErrorHandlerAgent";
+﻿import { TypeDiscriminator } from "../../Enums/70 - TypeDiscriminator";
+import { ICommonCore } from "./ICommonCore";
 
-export interface IHindeCore extends IDiscriminator {
-    Logger: ILoggerAgent;
-    ErrorHand: IErrorHandlerAgent;
-    TaskMonitor: IInterruptAgent;
+export interface IHindeCore extends ICommonCore {
+  readonly TypeDiscriminator: TypeDiscriminator;
 }
+

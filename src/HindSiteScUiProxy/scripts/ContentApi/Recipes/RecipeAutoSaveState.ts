@@ -1,37 +1,23 @@
-﻿import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
-import { IHindSiteScUiAPI } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
-import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
+﻿//import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
+//import { IHindSiteScUiAPI } from "../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+//import { IContentAtticAgent } from "../../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
+//import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
+//import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+//import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 
-export class RecipeAutoSaveState extends _HindeCoreBase {
-  private ScUiProxy: IHindSiteScUiAPI;
-  private AtticAgent: IContentAtticAgent;
+//export class RecipeAutoSaveState extends _APICoreBase {
+//  private ScUiProxy: IHindSiteScUiAPI;
+//  private AtticAgent: IContentAtticAgent;
 
-  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiAPI, atticAgent: IContentAtticAgent) {
-    super(hindeCore);
-    this.ScUiProxy = scUiProxy;
-    this.AtticAgent = atticAgent;
-  }
+//  constructor(apiCore: IAPICore, scUiProxy: IHindSiteScUiAPI, atticAgent: IContentAtticAgent) {
+//    super(apiCore);
+//    this.ScUiProxy = scUiProxy;
+//    this.AtticAgent = atticAgent;
+//  }
 
-  async ExecuteAsync(windowStatePrior: IStateOfScUi): Promise<IStateOfScUi> {
-    return new Promise(async (resolve, reject) => {
-      this.ScUiProxy.GetStateOfScUiProxyWindow(SnapShotFlavor.Autosave)
-        .then((windowStateNew: IStateOfScUi) => {
-          let hasCorrectData = windowStateNew && windowStateNew.Meta && windowStateNew.Meta.Hash
-            && windowStatePrior && windowStatePrior.Meta && windowStatePrior.Meta.Hash;
-
-          if (!hasCorrectData || (windowStateNew.Meta.Hash !== windowStatePrior.Meta.Hash)) {
-              this.Logger.Log('states are different, save snap shot');
-
-              this.AtticAgent.WriteStateOfSitecoreToStorage(windowStateNew);
-            } else {
-              this.Logger.Log('states are same, no save');
-            }
-          resolve(windowStateNew);
-        })
-        .catch((err) => reject(err));
-    });
-  }
-}
+//  async ExecuteAsync(windowStatePrior: IStateOfScUi): Promise<IStateOfScUi> {
+//    return new Promise(async (resolve, reject) => {
+    
+//    });
+//  }
+//}

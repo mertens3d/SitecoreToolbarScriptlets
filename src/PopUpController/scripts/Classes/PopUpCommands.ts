@@ -1,4 +1,4 @@
-﻿import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+﻿import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { MsgFlag } from '../../../Shared/scripts/Enums/10 - MessageFlag';
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/20 - MenuCommand';
@@ -8,7 +8,7 @@ import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';
 import { ICommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { PopConst } from '../../../Shared/scripts/Const/PopConst';
 
-export class CommandDefintionFactory extends _HindeCoreBase {
+export class CommandDefintionFactory extends _FrontBase {
   public BuildMenuCommandParamsBucket(): ICommandDefinitionBucket {
     let toReturn: ICommandDefinitionBucket = {
       MenuCommandParamsAr: [

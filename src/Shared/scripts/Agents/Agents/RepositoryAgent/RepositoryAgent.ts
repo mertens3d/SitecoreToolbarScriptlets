@@ -1,11 +1,11 @@
-﻿import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+﻿import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { IOneStorageData } from "../../../Interfaces/IOneStorageData";
-import { _HindeCoreBase } from "../../../_HindeCoreBase";
+import { _CommonBase } from "../../../_CommonCoreBase";
 
-export class RepositoryAgent extends _HindeCoreBase implements IRepositoryAgent {
+export class RepositoryAgent extends _CommonBase implements IRepositoryAgent {
 
-  constructor(hindeCore: IHindeCore) {
+  constructor(hindeCore: ICommonCore) {
     super(hindeCore);
   }
 

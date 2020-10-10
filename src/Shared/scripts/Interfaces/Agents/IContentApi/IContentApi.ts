@@ -2,7 +2,7 @@
 import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../IApiCallPayload";
 
-export interface IHindSiteScUiAPIOptions {
+export interface IHindSiteScUiAPIRunTimeOptions {
   EnableDesktopStartBarButtonRename: boolean,
 
 }

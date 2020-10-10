@@ -1,14 +1,14 @@
-﻿import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+﻿import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
 import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
-import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 
-export class ScContentIframeId0Proxy extends _HindeCoreBase {
+export class ScContentIframeId0Proxy extends _APICoreBase {
   ScContentIframeId0FrameJacket: ElementFrameJacket;
 
-  constructor(hindeCore: IHindeCore, frameJacket: ElementFrameJacket) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, frameJacket: ElementFrameJacket) {
+    super(apiCore);
     this.ScContentIframeId0FrameJacket = frameJacket;
   }
 

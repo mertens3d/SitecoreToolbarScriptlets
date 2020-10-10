@@ -1,18 +1,18 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
-import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
+import { RecipeBasics } from "../../../RecipeBasics";
 import { SnapShotFlavor } from "../../../../../Shared/scripts/Enums/SnapShotFlavor";
-import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IRecipeBasics } from "../../../../../Shared/scripts/Interfaces/IPromiseHelper";
-import { _HindeCoreBase } from "../../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
 
-export abstract class _ApiRecipeBase extends _HindeCoreBase{
+export abstract class _ApiRecipeBase extends _APICoreBase{
   protected RecipeBasics: IRecipeBasics;
   protected TargetSnapShotFlavor: SnapShotFlavor;
   protected TargetDocJacket: DocumentJacket;
 
-  constructor(hindeCore: IHindeCore) {
-    super(hindeCore);
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
+  constructor(apiCore: IAPICore) {
+    super(apiCore);
+    this.RecipeBasics = new RecipeBasics(this.ApiCore);
     this.TargetDocJacket = null; //todo
   }
 }

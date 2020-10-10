@@ -1,18 +1,14 @@
 ﻿import { ErrorHandlerAgent } from './Agents/Agents/LoggerAgent/ErrorHandlerAgent';
-import { IErrorHandlerAgent } from "./Interfaces/Agents/IErrorHandlerAgent";
-import { IHindeCore } from "./Interfaces/Agents/IHindeCore";
-import { ILoggerAgent } from './Interfaces/Agents/ILoggerAgent';
-import { IInterruptAgent } from "./Interfaces/Agents/ITaskMonitorAgent";
+import { IHindeCore } from './Interfaces/Agents/IHindeCore';
+import { _CommonBase } from './_CommonCoreBase';
 
-export abstract class _HindeCoreBase {
-    protected Logger: ILoggerAgent;
-    protected HindeCore: IHindeCore;
-    protected ErrorHand: IErrorHandlerAgent;
-    TaskMonitor: IInterruptAgent;
+export abstract class _FrontBase extends _CommonBase {
+  protected HindeCore: IHindeCore;
 
-    constructor(hindeCore: IHindeCore) {
-        ErrorHandlerAgent.ThrowIfNullOrUndefinedStatic(_HindeCoreBase.name, [hindeCore]);
-        ErrorHandlerAgent.ThrowIfNullOrUndefinedStatic(_HindeCoreBase.name, [hindeCore.Discriminator, hindeCore.ErrorHand, hindeCore.Logger, hindeCore.TaskMonitor]);
+  constructor(hindeCore: IHindeCore) {
+    super(hindeCore)
+        ErrorHandlerAgent.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [hindeCore]);
+        ErrorHandlerAgent.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [ hindeCore.ErrorHand, hindeCore.Logger, hindeCore.TaskMonitor]);
 
         this.Logger = hindeCore.Logger;
         this.HindeCore = hindeCore;

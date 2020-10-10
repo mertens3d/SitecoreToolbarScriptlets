@@ -1,21 +1,20 @@
 import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
-import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
+import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
-import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
+import { RecipeBasics } from "../../../RecipeBasics";
 import { StateFullProxyResolver } from "../../ProxyResolver";
-import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { AsyncLock } from "./DesktopStartBarProxy/AsyncLock";
+import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
-import { IHindSiteScUiAPIOptions } from "../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 
 export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.Desktop;
@@ -23,11 +22,10 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   private DocumentJacket: DocumentJacket;
   private DTAreaProxy: DTAreaProxy;
   private DTStartBarProxy: DTStartBarProxy;
-  private Options: IHindSiteScUiAPIOptions;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, options: IHindSiteScUiAPIOptions) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
+    super(apiCore);
     this.Logger.CTORStart(DesktopSFProxy.name);
 
     if (documentJacket) {
@@ -36,17 +34,16 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
       this.ErrorHand.ErrorAndThrow(DesktopSFProxy.name, 'No associated doc');
     }
 
-    this.Options = options;
 
     this.Instantiate();
     this.Logger.CTOREnd(DesktopSFProxy.name);
   }
 
   private Instantiate() {
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
-    this.DTAreaProxy = new DTAreaProxy(this.HindeCore, this.DocumentJacket);
-    this.DTStartBarProxy = new DTStartBarProxy(this.HindeCore, this.DocumentJacket);
-    this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.HindeCore, this.OnAreaProxyMutationEvent.bind(this));
+    this.RecipeBasics = new RecipeBasics(this.ApiCore);
+    this.DTAreaProxy = new DTAreaProxy(this.ApiCore, this.DocumentJacket);
+    this.DTStartBarProxy = new DTStartBarProxy(this.ApiCore, this.DocumentJacket);
+    this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.ApiCore, this.OnAreaProxyMutationEvent.bind(this));
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
@@ -97,10 +94,10 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
 
       await this.DTAreaProxy.SetState(stateOfDesktop.DTArea)
         .then((dtFramesNeeded: IDTFramesNeeded) => {
-          let asyncLock: AsyncLock = new AsyncLock(this.HindeCore);
+          let asyncLock: AsyncLock = new AsyncLock(this.ApiCore);
           dtFramesNeeded.DiscriminatorAr.forEach((disciminator: StateFullProxyDisciminator) => {
             if (disciminator !== StateFullProxyDisciminator.FallBack) {
-              let proxyResolver: StateFullProxyResolver = new StateFullProxyResolver(this.HindeCore);
+              let proxyResolver: StateFullProxyResolver = new StateFullProxyResolver(this.ApiCore);
               let windowType: ScWindowType = proxyResolver.MapProxyDiscriminatorToScWindowType(disciminator);
 
               if (windowType !== ScWindowType.Unknown) {
@@ -134,7 +131,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async AddContentEditorFrameAsync(): Promise<void> {
     this.Logger.FuncStart(this.AddContentEditorFrameAsync.name);
     try {
-      let asyncLock: AsyncLock = new AsyncLock(this.HindeCore);
+      let asyncLock: AsyncLock = new AsyncLock(this.ApiCore);
       await this.DTStartBarProxy.TriggerRedButtonAsync(ScWindowType.ContentEditor, asyncLock)
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorFrameAsync.name, err));
     } catch (err) {
@@ -146,7 +143,7 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   OnAreaProxyMutationEvent(dTAreaProxyMutationEvent_Payload: IDTAreaProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.OnAreaProxyMutationEvent.name);
 
-    if (this.Options.EnableDesktopStartBarButtonRename) {
+    if (this.RunTimeOptions.EnableDesktopStartBarButtonRename) {
       this.DTStartBarProxy.OnTreeMutationEvent_DesktopStartBarProxy(dTAreaProxyMutationEvent_Payload);
     }
 

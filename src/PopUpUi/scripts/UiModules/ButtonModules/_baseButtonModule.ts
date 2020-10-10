@@ -5,9 +5,9 @@ import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeC
 import { ICommandHandlerDataForPopUp } from "../../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { UiHydrationData } from "../../../../Shared/scripts/Interfaces/UiHydrationData";
-import { ISingleClickEvent_Payload } from "../../Events/SingleClickEvent/ISingleClickEvent_Payload";
+import { ISingleClickEvent_Payload } from "../../../../Shared/scripts/Events/SingleClickEvent/ISingleClickEvent_Payload";
 import { _UiModuleBase } from "../_UiModuleBase";
-import { SingleClickEvent_Subject } from "../../Events/SingleClickEvent/SingleClickEvent_Subject";
+import { SingleClickEvent_Subject } from "../../../../Shared/scripts/Events/SingleClickEvent/SingleClickEvent_Subject";
 
 export abstract class _base_ButtonModule extends _UiModuleBase {
   abstract ModuleKey: ModuleKey = ModuleKey.Unknown;
@@ -43,7 +43,7 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
   }
 
   WireClickEvents(): void {
-    this.SingleButtonClickEvent_Subject = new SingleClickEvent_Subject(this.HindeCore, MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
+    this.SingleButtonClickEvent_Subject = new SingleClickEvent_Subject(this.HindeCore);//, MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey]);
 
     if (this.MenuCommandDefinition && this.MenuCommandDefinition.PlaceHolderSelector) {
       var targetElem: HTMLElement = document.querySelector(this.MenuCommandDefinition.PlaceHolderSelector);

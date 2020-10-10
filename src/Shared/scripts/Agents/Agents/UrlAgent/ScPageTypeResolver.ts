@@ -2,20 +2,20 @@
 import { scMode } from "../../../Enums/scMode";
 import { ScWindowType } from "../../../Enums/50 - scWindowType";
 import { IControllerMessageReceivedEvent_Payload } from "../../../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
-import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
 import { IUrlJacket } from "../../../Interfaces/IUrlAgent";
 import { IScUrlAgent } from "../../../Interfaces/Jackets/IScUrlAgent";
 import { IGenericUrlParts } from "../../../Interfaces/Jackets/IUrlParts";
-import { _HindeCoreBase } from "../../../_HindeCoreBase";
 import { SharedConst } from "../../../SharedConst";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
 import { IPageDeterminator } from "./IPageDeterminator";
 import { AllPageDeterminators } from "./AllPageDeterminators";
+import { _CommonBase } from "../../../_CommonCoreBase";
 
-export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
+export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
   public UrlJacket: IUrlJacket;
-  constructor(hindeCore: IHindeCore, urlJacket: IUrlJacket) {
-    super(hindeCore);
+  constructor(commonCore: ICommonCore, urlJacket: IUrlJacket) {
+    super(commonCore);
     this.ErrorHand.ThrowIfNullOrUndefined(ScPageTypeResolver.name, [urlJacket]);
     this.UrlJacket = urlJacket;
   }

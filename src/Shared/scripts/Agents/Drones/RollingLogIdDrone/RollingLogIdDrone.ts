@@ -1,15 +1,15 @@
 ﻿import { SettingKey } from "../../../Enums/30 - SettingKey";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { _HindeCoreBase } from "../../../_HindeCoreBase";
+import { _CommonBase } from "../../../_CommonCoreBase";
 
-export class RollingLogIdDrone extends _HindeCoreBase{
+export class RollingLogIdDrone extends _CommonBase{
   private SettingsAgent: ISettingsAgent;
   private maxKey: number = 5;
   private minKey: number = 1;
 
-  constructor(settingsAgent: ISettingsAgent, hindeCore: IHindeCore) {
+  constructor(settingsAgent: ISettingsAgent, hindeCore: ICommonCore) {
     super(hindeCore);
     this.Logger.CTORStart(RollingLogIdDrone.name);
     this.SettingsAgent = settingsAgent;

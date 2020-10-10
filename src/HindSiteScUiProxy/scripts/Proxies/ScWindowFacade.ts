@@ -10,7 +10,7 @@ import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
 import { ReadyStateNAB } from '../../../Shared/scripts/Classes/ReadyState';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IScWindowFacade } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IDataFriendly } from '../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
@@ -19,20 +19,20 @@ import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDa
 import { IRootState } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow';
 import { IStateOf_ } from "../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
 import { StateFullProxyResolver } from "./ProxyResolver";
 
-export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
+export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
   private DocumentJacket: DocumentJacket;
   private StateFullProxyFactory: StateFullProxyResolver;
   private ScPageTypeResolver: ScPageTypeResolver;
   private TabSessionId: string;
   public StateFullProxy: IStateFullProxy;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
+    super(apiCore);
     this.Logger.CTORStart(ScWindowFacade.name);
     this.DocumentJacket = documentJacket;
     this.Instantiate();
@@ -40,8 +40,8 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
   }
 
   private Instantiate() {
-    this.ScPageTypeResolver = new ScPageTypeResolver(this.HindeCore, this.DocumentJacket.UrlJacket);
-    this.StateFullProxyFactory = new StateFullProxyResolver(this.HindeCore);
+    this.ScPageTypeResolver = new ScPageTypeResolver(this.ApiCore, this.DocumentJacket.UrlJacket);
+    this.StateFullProxyFactory = new StateFullProxyResolver(this.ApiCore);
   }
 
   async InstantiateAsyncMembers_ScWindowFacade(): Promise<void> {

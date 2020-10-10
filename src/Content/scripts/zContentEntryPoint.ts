@@ -13,8 +13,8 @@ import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLog
 import { MsgFlag } from '../../Shared/scripts/Enums/10 - MessageFlag';
 import { SettingKey } from '../../Shared/scripts/Enums/30 - SettingKey';
 import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
-import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
-import { IHindSiteScUiAPI, IHindSiteScUiAPIOptions } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
+import { TypeDiscriminator } from "../../Shared/scripts/Enums/70 - TypeDiscriminator";
+import { IHindSiteScUiAPI, IHindSiteScUiAPIRunTimeOptions } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
 import { IContentBrowserProxy } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
 import { IMessageBroker_Content } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
@@ -31,6 +31,10 @@ import { ContentMessageManager } from './Managers/ContentMessageManager';
 import { CommandRouter } from "./Proxies/CommandRouter";
 import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
 import { MessageBroker_Content } from './Proxies/ContentMessageBroker';
+import { ICommonCore } from '../../Shared/scripts/Interfaces/Agents/ICommonCore';
+import { _CommonBase, CommonCore } from '../../Shared/scripts/_CommonCoreBase';
+import { CoreFactory } from '../../Shared/scripts/Classes/CoreFactory';
+import { HindeCore } from '../../Shared/scripts/HindeCore';
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -93,31 +97,27 @@ class ContentEntry {
     try {
       this.HindeCore.Logger.SectionMarker('Instantiate and Initialize Managers');
 
-      let scUiMan: ScUiManager;
       let contentMessageMan: ContentMessageManager;
 
-      scUiMan = new ScUiManager(this.HindeCore);
-
-  
-      let options: IHindSiteScUiAPIOptions = {
+      let runTimeOptions: IHindSiteScUiAPIRunTimeOptions = {
         EnableDesktopStartBarButtonRename: this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton).ValueAsBool(),
       }
-      this.ScUiAPI = new HindSiteScUiAPI(this.HindeCore, scUiMan, this.TopDocumentJacket, options);
+
+      this.ScUiAPI = new HindSiteScUiAPI(this.HindeCore.Logger, this.HindeCore.ErrorHand, this.HindeCore.TaskMonitor, this.TopDocumentJacket, runTimeOptions);
 
       this.AutoSnapShotAgent = new AutoSnapShotAgent(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiAPI);
 
       this.ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore)
 
-      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiAPI, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.TopDocumentJacket);
+      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiAPI, this.ToastAgent, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.TopDocumentJacket);
 
       let contentMessageBroker: IMessageBroker_Content = new MessageBroker_Content(this.HindeCore, this.SettingsAgent,
         this.ScUiAPI, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
 
       contentMessageMan = new ContentMessageManager(this.HindeCore, contentMessageBroker);
 
-      await scUiMan.InitSitecoreUiManager()
+      await this.ScUiAPI.InstantiateHindSiteScUiProxy()
         .then(() => contentMessageMan.InitContentMessageManager())
-        .then(() => this.ScUiAPI.InstantiateHindSiteScUiProxy())
         .then(() => {
           this.AutoSnapShotAgent.ScheduleIntervalTasks();
         })
@@ -130,7 +130,6 @@ class ContentEntry {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAndInit_Managers.name, err);
     }
   }
-
 
   private TriggerStartupCommands() {
     let setStateFromX: ICommandRouterParams = {
@@ -153,7 +152,7 @@ class ContentEntry {
     this.HindeCore.Logger.FuncStart(this.StartUp.name);
 
     this.TriggerStartupCommands();
-    
+
     this.HindeCore.Logger.FuncEnd(this.StartUp.name);
   }
 
@@ -179,24 +178,15 @@ class ContentEntry {
   }
 
   private Instantiate_HindeCore(): void {
-    let logger: ILoggerAgent = new LoggerAgent();
-    logger.Instantiate();
+
+    let factory: CoreFactory = new CoreFactory();
     
-    this.TaskMonitor = new TaskMonitor(logger);
 
-    this.ErrorHand = new ErrorHandlerAgent(this.TaskMonitor);
-    this.ErrorHand.Instantiate();
+    let commonCore: ICommonCore = factory.BuildCommonCore();
+    this.HindeCore = new HindeCore(commonCore);
 
+    
 
-    this.TaskMonitor.IntroduceErrorHand(this.ErrorHand);
-    this.TaskMonitor.Instantiate();
-
-    this.HindeCore = {
-      Logger: logger,
-      ErrorHand: this.ErrorHand,
-      TaskMonitor: this.TaskMonitor,
-      Discriminator: Discriminator.IHindeCore,
-    }
   }
 }
 

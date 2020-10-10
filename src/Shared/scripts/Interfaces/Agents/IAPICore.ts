@@ -1,6 +1,6 @@
-﻿import { IHindeCore } from "./IHindeCore";
-import { IHindSiteScUiAPIOptions } from "./IContentApi/IContentApi";
+﻿import { ICommonCore } from "./ICommonCore";
+import { IHindSiteScUiAPIRunTimeOptions } from "./IContentApi/IContentApi";
 
-export interface IAPICore extends IHindeCore {
-  Options: IHindSiteScUiAPIOptions,
+export interface IAPICore extends ICommonCore {
+  RunTimeOptions: IHindSiteScUiAPIRunTimeOptions,
 }

@@ -6,7 +6,7 @@ import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
 import { RecipeForceAutoSnapShot } from "../Recipes/RecipeForceAutoSnapShot";
@@ -15,7 +15,7 @@ import { RecipeRemoveItemFromStorage } from "../Recipes/RecipeRemoveItemFromStor
 import { RecipeSaveStateManual } from "../Recipes/RecipeSaveState";
 import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
 
-export class InternalCommandRunner extends _HindeCoreBase {
+export class InternalCommandRunner extends _FrontBase {
   Dependancies: ICommandDependancies;
 
   constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiAPI, documentJacket: DocumentJacket) {

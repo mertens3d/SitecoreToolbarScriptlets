@@ -1,9 +1,9 @@
-﻿import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
+﻿import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
+import { _CommonBase } from "../../_CommonCoreBase";
 import { HindsiteEventHandler_Type } from "./HindsiteEventHandler_Type";
-import { _HindeCoreBase } from "../../_HindeCoreBase";
-import { IHindeCore } from "../../Interfaces/Agents/IHindeCore";
+import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
 
-export class HindSiteEvent_Observer<T> extends _HindeCoreBase implements IHindSiteEvent_Observer<T> {
+export abstract class HindSiteEvent_Observer<T> extends _CommonBase implements IHindSiteEvent_Observer<T> {
   readonly Friendly: string;
   CallbackAsync: HindsiteEventHandler_Type = null;
 
@@ -16,7 +16,7 @@ export class HindSiteEvent_Observer<T> extends _HindeCoreBase implements IHindSi
       this.ErrorHand.ErrorAndContinue(HindSiteEvent_Observer.name, err);
     }
   }
-  constructor(hindeCore: IHindeCore, friendly: string, callbackAsync: HindsiteEventHandler_Type = null) {
+  constructor(hindeCore: ICommonCore, friendly: string, callbackAsync: HindsiteEventHandler_Type = null) {
     super(hindeCore);
     this.CallbackAsync = callbackAsync;
     this.Friendly = friendly;

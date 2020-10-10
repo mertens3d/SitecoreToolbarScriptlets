@@ -3,16 +3,16 @@ import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
 import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
-import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { SharedConst } from '../../../../../../Shared/scripts/SharedConst';
 import { IScContentTreeNodeLineage } from '../../../../../../Shared/scripts/Interfaces/Data/IScContentTreeNodeLineage';
 import { IScIcon } from '../../../../../../Shared/scripts/Interfaces/Data/IScIcon';
 import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
 
-export class DesktopStartBarButtonProxy extends _HindeCoreBase {
+export class DesktopStartBarButtonProxy extends _APICoreBase {
   private DocumentJacket: DocumentJacket;
   private ContainerSpanElement: ElementJacket;
   private FoundStartBarButton: ElementJacket;
@@ -21,8 +21,8 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   public FrameId: string;
   private ConResolver: ConResolver;
 
-  constructor(hindeCore: IHindeCore, iframeElemId: string, documentJacket: DocumentJacket, conResolver: ConResolver) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, iframeElemId: string, documentJacket: DocumentJacket, conResolver: ConResolver) {
+    super(apiCore);
     this.DocumentJacket = documentJacket;
     this.FrameId = iframeElemId;
     this.ConResolver = conResolver;

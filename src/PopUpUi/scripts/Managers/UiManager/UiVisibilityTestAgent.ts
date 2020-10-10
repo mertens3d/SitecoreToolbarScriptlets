@@ -1,4 +1,4 @@
-﻿import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
+﻿import { _FrontBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/50 - scWindowType";
 import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";
@@ -13,7 +13,7 @@ import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 
-export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibilityTestAgent {
+export class UiVisibilityTestAgent extends _FrontBase implements IUiVisibilityTestAgent {
   private StateOfSitecoreWindow: any;
   private SelectedSnapshot: GuidData = null;
   WindowType: ScWindowType;

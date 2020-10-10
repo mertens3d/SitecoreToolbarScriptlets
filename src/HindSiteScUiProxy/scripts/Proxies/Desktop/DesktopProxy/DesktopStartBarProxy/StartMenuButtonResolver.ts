@@ -1,8 +1,8 @@
 ﻿import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
 import { IButtonSelectors } from "./IButtonSelectors";
-export class StartMenuButtonResolver extends _HindeCoreBase {
+export class StartMenuButtonResolver extends _APICoreBase {
   static AllWindowTypes: IButtonSelectors[] = [
 
     {

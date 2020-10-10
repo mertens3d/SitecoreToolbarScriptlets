@@ -6,12 +6,12 @@ import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore
 import { IUiModuleButton } from "../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IStateOfUiModules } from "../../../Shared/scripts/Interfaces/IStateOfUiModules";
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { ISingleClickEvent_Payload } from '../Events/SingleClickEvent/ISingleClickEvent_Payload';
-import { SingleClickEvent_Observer } from "../Events/SingleClickEvent/SingleClickEvent_Observer";
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { ISingleClickEvent_Payload } from '../../../Shared/scripts/Events/SingleClickEvent/ISingleClickEvent_Payload';
+import { SingleClickEvent_Observer } from "../../../Shared/scripts/Events/SingleClickEvent/SingleClickEvent_Observer";
 import { UiModulesManager } from './UiManager/UiModulesManager';
 
-export class UiEventManager extends _HindeCoreBase {
+export class UiEventManager extends _FrontBase {
   UiModulesMan: UiModulesManager;
   CommandButtonSingleClickEvent_Observer: SingleClickEvent_Observer;
   UiCommandRaisedFlag_UiEventManagerRelay_Subject: UiCommandFlagRaisedEvent_Subject;

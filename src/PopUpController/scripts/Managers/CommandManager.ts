@@ -8,10 +8,10 @@ import { IHindSiteUiLayer } from "../../../Shared/scripts/Interfaces/IHindSiteUi
 import { MessageBroker_PopUp } from '../Agents/PopUpMessagesBrokerAgent';
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { HandlersForInternal } from '../Classes/HandlersForInternal';
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
+import { _FrontBase } from '../../../Shared/scripts/_HindeCoreBase';
 
-export class CommandManager extends _HindeCoreBase {
+export class CommandManager extends _FrontBase {
   public CommandDefinitionBucket: ICommandDefinitionBucket;
   private PopUpMsgBroker: MessageBroker_PopUp;
   private UiLayer: IHindSiteUiLayer;

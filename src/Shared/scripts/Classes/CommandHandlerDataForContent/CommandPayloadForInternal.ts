@@ -7,21 +7,20 @@ import { DesktopSFProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/De
 import { GuidData } from "../../Helpers/GuidData";
 import { IHindSiteScUiAPI } from "../../Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IHindeCore } from "../../Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
 import { ICommandParams } from "../../Interfaces/ICommandParams";
-import { _HindeCoreBase } from "../../_HindeCoreBase";
+import { _CommonBase } from "../../_CommonCoreBase";
 
-export class CommandPayloadForInternal extends _HindeCoreBase implements ICommandParams {
+export class CommandPayloadForInternal extends _CommonBase implements ICommandParams {
   NewNickname: string;
   TargetSnapShotId: GuidData;
   AtticAgent: IContentAtticAgent;
   ContentMessageBroker: MessageBroker_Content = null;
   DesktopProxy: DesktopSFProxy = null;
-  hindeCore: IHindeCore = null;
-  ScUiMan: ScUiManager = null;
+  hindeCore: ICommonCore = null;
   TargetCeProxy: ContentEditorSFProxy;
   TargetDoc: DocumentJacket = null;
   TargetNickName: string = '';
@@ -32,11 +31,10 @@ export class CommandPayloadForInternal extends _HindeCoreBase implements IComman
   ApiPayload: IApiCallPayload;
   ScUiProxy: IHindSiteScUiAPI;
 
-  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, toastAgent: IToastAgent, scUiMan: ScUiManager, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, apiPayload: IApiCallPayload) {
+  constructor(hindeCore: ICommonCore, atticAgent: IContentAtticAgent, toastAgent: IToastAgent,  settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, apiPayload: IApiCallPayload) {
     super(hindeCore);
     this.AtticAgent = atticAgent;
     this.ToastAgent = toastAgent;
-    this.ScUiMan = scUiMan;
     this.SettingsAgent = settingsAgent;
     this.AutoSnapShotAgent = autoSnapShotAgent;
     this.ApiPayload = apiPayload;

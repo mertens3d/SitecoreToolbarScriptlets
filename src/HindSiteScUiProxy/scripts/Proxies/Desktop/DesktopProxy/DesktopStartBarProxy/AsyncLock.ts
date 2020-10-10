@@ -1,7 +1,7 @@
-﻿import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
+﻿import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { IterationDrone } from '../../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 
-export class AsyncLock extends _HindeCoreBase {
+export class AsyncLock extends _APICoreBase {
     private IsLocked: boolean = false;
     CreatorFriendly: string = '';
     CurrentOwnerFriendly: string = '';
@@ -19,7 +19,7 @@ export class AsyncLock extends _HindeCoreBase {
         return new Promise(async (resolve, reject) => {
             this.Logger.FuncStart(this.WaitForLockControl.name, this.CurrentOwnerFriendly);
 
-            var iterationJr = new IterationDrone(this.HindeCore, this.WaitForLockControl.name, true, 30);
+            var iterationJr = new IterationDrone(this.ApiCore, this.WaitForLockControl.name, true, 30);
 
             while (this.IsLocked && iterationJr.DecrementAndKeepGoing()) {
                 this.Logger.LogVal('candidate', candidate);

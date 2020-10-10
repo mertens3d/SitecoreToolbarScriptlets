@@ -2,19 +2,19 @@
 import { ElementDivJacket } from "../../../../../../../DOMJacket/ElementDivJacket";
 import { ElementImgJacket } from "../../../../../../../DOMJacket/ElementImgJacket";
 import { ElementAnchorJacket } from "../../../../../../../DOMJacket/ElementAnchorJacket";
-import { RecipeBasics } from "../../../../../../../Shared/scripts/Classes/RecipeBasics";
+import { RecipeBasics } from "../../../../../RecipeBasics";
 import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
-import { IHindeCore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { IStateOfScContentTreeNodeShallow } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeShallow";
 import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../../../../Shared/scripts/_APICoreBase";
 import { ConResolver } from "./ConResolver";
 import { IScIcon } from "../../../../../../../Shared/scripts/Interfaces/Data/IScIcon";
 import { ScIconPath } from "../../../../../../../Shared/scripts/Enums/60 - ScIconPath";
 
-export class ScContentTreeNodeProxy extends _HindeCoreBase {
+export class ScContentTreeNodeProxy extends _APICoreBase {
   private ScContentTreeNodeDivElem: ElementDivJacket;
   private RecipeBasics: RecipeBasics;
 
@@ -55,8 +55,8 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
   ParentTreeNode: ScContentTreeNodeProxy;
   private ConResolver: ConResolver;
 
-  constructor(hindeCore: IHindeCore, sourceElemJacket: ElementJacket, level: number, siblingIndex: number, totalSiblings: number, parent: ScContentTreeNodeProxy, conResolver: ConResolver) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, sourceElemJacket: ElementJacket, level: number, siblingIndex: number, totalSiblings: number, parent: ScContentTreeNodeProxy, conResolver: ConResolver) {
+    super(apiCore);
 
     if (sourceElemJacket) {
       this.StateOfScContentTreeNode.Coord.LevelWidth = totalSiblings;
@@ -78,7 +78,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     }
 
     this.ParentTreeNode = parent;
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
+    this.RecipeBasics = new RecipeBasics(this.ApiCore);
   }
 
   async Instantiate(): Promise<void> {
@@ -91,20 +91,20 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
   private InferFromDivElement(divElement: HTMLDivElement) {
     if (divElement) {
-      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.HindeCore, divElement);
+      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.ApiCore, divElement);
     }
   }
 
   private InferFromAnchorElement(anchorElement: HTMLAnchorElement) {
     if (anchorElement) {
       this.Logger.Log(this.InferFromAnchorElement.name);
-      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.HindeCore, <HTMLDivElement>anchorElement.parentElement)
+      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.ApiCore, <HTMLDivElement>anchorElement.parentElement)
     }
   }
 
   private InferFromImageElement(imageElement: HTMLImageElement) {
     if (imageElement) {
-      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.HindeCore, <HTMLDivElement>imageElement.parentElement)
+      this.ScContentTreeNodeDivElem = new ElementDivJacket(this.ApiCore, <HTMLDivElement>imageElement.parentElement)
     }
   }
 
@@ -286,8 +286,8 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
         let childNodes = this.ScContentTreeNodeDivElem.NativeElement.querySelectorAll(':scope > div > ' + ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
         childNodes.forEach((childNode: HTMLDivElement, index: number) => {
-          let childJacket = new ElementDivJacket(this.HindeCore, childNode);
-          toReturn.push(new ScContentTreeNodeProxy(this.HindeCore, childJacket, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length, this, this.ConResolver))
+          let childJacket = new ElementDivJacket(this.ApiCore, childNode);
+          toReturn.push(new ScContentTreeNodeProxy(this.ApiCore, childJacket, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length, this, this.ConResolver))
         });
 
         let PromiseAr: Promise<void>[] = [];
@@ -307,8 +307,8 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
 
     let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.NativeElement.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
     if (penultimateElem) {
-      let penElemJacket: ElementDivJacket = new ElementDivJacket(this.HindeCore, penultimateElem);
-      penultimateNode = new ScContentTreeNodeProxy(this.HindeCore, penElemJacket, 0, 0, 1, this, this.ConResolver);
+      let penElemJacket: ElementDivJacket = new ElementDivJacket(this.ApiCore, penultimateElem);
+      penultimateNode = new ScContentTreeNodeProxy(this.ApiCore, penElemJacket, 0, 0, 1, this, this.ConResolver);
     }
 
     if (penultimateNode !== null) {

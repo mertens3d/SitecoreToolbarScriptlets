@@ -1,18 +1,18 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { ElementFrameJacket } from "../../ElementFrameJacket";
 import { IFrameJacketAddRemoveEvent_Payload } from "./IFrameJacketAddRemoveEvent_Payload";
 import { DocumentJacket } from "../../DocumentJacket";
 import { ElementJacket } from "../../ElementJacket";
+import { TypeDiscriminator } from "../../../Shared/scripts/Enums/70 - TypeDiscriminator";
 
 export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IFrameJacketAddRemoveEvent_Payload> {
+  readonly TypeDiscriminator = TypeDiscriminator.FrameJacketAddRemoveEvent_Subject;
   ShowLogActions: boolean = true;
   private DocumentJacket: DocumentJacket;
-  private HindeCore: IHindeCore;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
-    super(hindeCore, FrameJacketAddRemoveEvent_Subject.name);
-    this.HindeCore = hindeCore;
+  constructor(commonCore: ICommonCore, documentJacket: DocumentJacket) {
+    super(commonCore);
 
     this.Logger.CTORStart(FrameJacketAddRemoveEvent_Subject.name);
     if (!documentJacket) {
@@ -37,7 +37,7 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
     let addedNativeFrameProxies: ElementFrameJacket[] = [];
     addedNodes.forEach((addedNode) => {
       if (addedNode instanceof HTMLIFrameElement) {
-        let nativeIframeProxy = new ElementFrameJacket(this.HindeCore, addedNode);
+        let nativeIframeProxy = new ElementFrameJacket(this.CommonCore, addedNode);
         addedNativeFrameProxies.push(nativeIframeProxy);
       }
     });

@@ -2,11 +2,11 @@
 import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJacket";
 import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
-import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
+import { RecipeBasics } from "../../../../RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
-import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
@@ -21,12 +21,11 @@ import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutati
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
 import { _ContentTreeBasedProxy } from "../../../ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
 import { MarketingControlPanelProxy } from "../../../MarketingControlPanelProxy";
-import { IHindSiteScUiAPIOptions } from "../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiAPIRunTimeOptions } from "../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
   FrameTypeDiscriminator = DTFrameProxy.name;
   Friendly: string = DTFrameProxy.name;
-  private Options: IHindSiteScUiAPIOptions;
   private _ContentTreeBasedProxyMutationEvent_Observer: _ContentTreeBasedProxyMutationEvent_Observer;
   private StateFullProxyFactory: StateFullProxyResolver;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
@@ -34,20 +33,19 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   readonly StateFullProxyDisciminator = StateFullProxyDisciminator.DTFrameProxy;
   readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.DTFrameProxy];
 
-  constructor(hindeCore: IHindeCore, frameJacket: ElementFrameJacket, options: IHindSiteScUiAPIOptions) { //HTMLIFrameElement |
-    super(hindeCore, frameJacket);
+  constructor(apiCore: IAPICore, frameJacket: ElementFrameJacket) { //HTMLIFrameElement |
+    super(apiCore, frameJacket);
 
     this.ErrorHand.ThrowIfNullOrUndefined(DTFrameProxy.name, [frameJacket]);
 
-    this.Options = options;
     this.Friendly = 'DTFrameProxy_' + this.FrameJacket.GetNativeIframeId();
 
     this.InstantiateInstance();
   }
 
   InstantiateInstance(): void {
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
-    this.StateFullProxyFactory = new StateFullProxyResolver(this.HindeCore, this.Options);
+    this.RecipeBasics = new RecipeBasics(this.ApiCore);
+    this.StateFullProxyFactory = new StateFullProxyResolver(this.ApiCore);
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
@@ -64,15 +62,15 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
           }
         })
         .then(() => {
-          let scPageTypeResolver = new ScPageTypeResolver(this.HindeCore, this.FrameJacket.DocumentJacket.UrlJacket)
+          let scPageTypeResolver = new ScPageTypeResolver(this.ApiCore, this.FrameJacket.DocumentJacket.UrlJacket)
           scWindowtypeB = scPageTypeResolver.GetScWindowType();
         })
         .then(() => this.StateFullProxyFactory.StateFullProxyFactory(scWindowtypeB, this.FrameJacket.DocumentJacket))
         .then((stateFullProxy: IStateFullProxy) => this.HostedStateFullProxy = stateFullProxy)
 
         .then(() => {
-          this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.HindeCore);
-          this._ContentTreeBasedProxyMutationEvent_Observer = new _ContentTreeBasedProxyMutationEvent_Observer(this.HindeCore, this);
+          this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.ApiCore);
+          this._ContentTreeBasedProxyMutationEvent_Observer = new _ContentTreeBasedProxyMutationEvent_Observer(this.ApiCore, this);
         })
 
         .then(() => resolve())
@@ -148,7 +146,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
 
   GetDocumentJacket(): DocumentJacket {
     return this.FrameJacket.DocumentJacket;
-    //return new FactoryHelper(this.HindeCore).DataOneContentDocFactoryFromIframe(this);
+    //return new FactoryHelper(this.apiCore).DataOneContentDocFactoryFromIframe(this);
   }
 
   GetNativeFrameId(): string {
@@ -156,7 +154,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   }
 
   GetScWindowType(): ScWindowType {
-    let scPageTypeResolver = new ScPageTypeResolver(this.HindeCore, this.FrameJacket.DocumentJacket.UrlJacket);
+    let scPageTypeResolver = new ScPageTypeResolver(this.ApiCore, this.FrameJacket.DocumentJacket.UrlJacket);
     return scPageTypeResolver.GetScWindowType();
   }
 

@@ -1,8 +1,8 @@
 ﻿import { SharedConst } from '../../../SharedConst';
-import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../../../_HindeCoreBase";
+import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
+import { _CommonBase } from '../../../_CommonCoreBase';
 
-export class IterationDrone extends _HindeCoreBase {
+export class IterationDrone extends _CommonBase {
   IsExhausted: boolean;
   IsExhaustedMsg: string = 'Iteration helper exhausted';
   OperationCancelled: any;
@@ -12,7 +12,7 @@ export class IterationDrone extends _HindeCoreBase {
   private Timeout: number;
   private LogThisDroneInstance: boolean;
 
-  constructor(hindeCore: IHindeCore, nickname: string, logThisDroneInstance: boolean, maxIterations: number = null) {
+  constructor(hindeCore: ICommonCore, nickname: string, logThisDroneInstance: boolean, maxIterations: number = null) {
     super(hindeCore);
     this.LogThisDroneInstance = logThisDroneInstance;
     if (!maxIterations) {

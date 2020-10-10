@@ -1,12 +1,12 @@
 ﻿import { SharedConst } from "../SharedConst";
-import { _HindeCoreBase } from "../_HindeCoreBase";
-import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
+import { _CommonBase } from "../_CommonCoreBase";
+import { ICommonCore } from "../Interfaces/Agents/ICommonCore";
 
-export class ReadyStateNAB extends _HindeCoreBase {
+export class ReadyStateNAB extends _CommonBase {
   private Document: Document;
   IsExausted: string = '';
 
-  constructor(hindeCore: IHindeCore, document: Document) {
+  constructor(hindeCore: ICommonCore, document: Document) {
     super(hindeCore);
     this.ErrorHand.ThrowIfNullOrUndefined(ReadyStateNAB.name, document);
     this.Document = document;

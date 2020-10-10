@@ -1,4 +1,4 @@
-﻿import { _HindeCoreBase } from "../../../../../../../Shared/scripts/_HindeCoreBase";
+﻿import { _APICoreBase } from "../../../../../../../Shared/scripts/_APICoreBase";
 import { IScIcon } from "../../../../../../../Shared/scripts/Interfaces/Data/IScIcon";
 import { UrlJacket } from "../../../../../../../DOMJacket/UrlJacket";
 import { IUrlJacket } from "../../../../../../../Shared/scripts/Interfaces/IUrlAgent";
@@ -6,12 +6,12 @@ import { SharedConst } from "../../../../../../../Shared/scripts/SharedConst";
 import { ScIconPath } from "../../../../../../../Shared/scripts/Enums/60 - ScIconPath";
 //scContentTreeNode is the name sitecore uses
 
-export class ConResolver extends _HindeCoreBase {
+export class ConResolver extends _APICoreBase {
 
   ResolveIconData(mainIconSrc: string): IScIcon {
     let toReturn: IScIcon = this.DefaultScIcon();
 
-    let urlJacket: IUrlJacket = new UrlJacket(this.HindeCore, mainIconSrc);
+    let urlJacket: IUrlJacket = new UrlJacket(this.ApiCore, mainIconSrc);
     let relativePath = urlJacket.BuildFullUrlFromParts().RelativeUrl;
 
     if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconCache)) {

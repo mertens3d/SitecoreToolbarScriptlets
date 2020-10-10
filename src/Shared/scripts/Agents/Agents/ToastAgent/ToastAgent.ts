@@ -1,14 +1,16 @@
-﻿import { ISingleClickEvent_Payload } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/ISingleClickEvent_Payload";
-import { SingleClickEvent_Observer } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Observer";
-import { SingleClickEvent_Subject } from "../../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Subject";
-import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+﻿import { ISingleClickEvent_Payload } from "../../../Events/SingleClickEvent/ISingleClickEvent_Payload";
+import { SingleClickEvent_Observer } from "../../../Events/SingleClickEvent/SingleClickEvent_Observer";
+import { SingleClickEvent_Subject } from "../../../Events/SingleClickEvent/SingleClickEvent_Subject";
+import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
 import { IToastAgent } from "../../../Interfaces/Agents/IToastAgent";
-import { _HindeCoreBase } from "../../../_HindeCoreBase";
+import { _CommonBase } from "../../../_CommonCoreBase";
 import { TaskMutationType } from "../LoggerAgent/TaskMutationType";
-import { TaskListMutationEvent_Observer } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/TaskListMutationEvent_Observer";
-import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/ITaskListMutationEvent_Payload";
+import { TaskListMutationEvent_Observer } from "../../../Events/TaskListMutationEvent/TaskListMutationEvent_Observer";
+import { ITaskListMutationEvent_Payload } from "../../../Events/TaskListMutationEvent/ITaskListMutationEvent_Payload";
+import { TypeDiscriminator } from "../../../Enums/70 - TypeDiscriminator";
 
-export class ToastAgent extends _HindeCoreBase implements IToastAgent {
+export class ToastAgent extends _CommonBase implements IToastAgent {
+  readonly TypeDiscriminator = TypeDiscriminator.ToastAgent;
   private classSlideUp: string = 'slide-up';
   private classSlideDown: string = 'slide-down';
   private ToastContainer: HTMLElement;
@@ -22,14 +24,14 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
   private FlagTextDiv: HTMLDivElement;
   private TaskMutationEvent_Observer: TaskListMutationEvent_Observer;
 
-  constructor(hindeCore: IHindeCore, targetDoc: Document) {
-    super(hindeCore);
+  constructor(commonCore: ICommonCore, targetDoc: Document) {
+    super(commonCore);
     this.TargetDoc = targetDoc;
     this.DivineElements();
   }
 
   Instantiate() {
-    this.TaskMutationEvent_Observer = new TaskListMutationEvent_Observer(this.HindeCore, this.CallBackOnTaskListMutationEvent.bind(this))
+    this.TaskMutationEvent_Observer = new TaskListMutationEvent_Observer(this.CommonCore, this.CallBackOnTaskListMutationEvent.bind(this))
     this.TaskMonitor.TaskMutationEvent_Subject.RegisterObserver(this.TaskMutationEvent_Observer);
   }
 
@@ -62,6 +64,7 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
   }
 
   private DivineElements() {
+    this.Logger.FuncStart(this.DivineElements.name);
     if (!this.HasBeenInit) {
       this.BodyTag = this.TargetDoc.getElementsByTagName('body')[0];//(treeGlyphTargetId);
       this.ToastContainer = this.CreateToastContainer(this.TargetDoc);
@@ -72,6 +75,7 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
       this.BodyTag.appendChild(this.ToastContainer);
     }
     this.HasBeenInit = true;
+    this.Logger.FuncEnd(this.DivineElements.name);
   }
 
   private async RaiseToastA(): Promise<void> {
@@ -114,8 +118,8 @@ export class ToastAgent extends _HindeCoreBase implements IToastAgent {
     this.ButtonElem.type = "button";
     this.ButtonElem.value = "Cancel";
 
-    this.OnButtonClick_Subject = new SingleClickEvent_Subject(this.HindeCore, this.CreateCancelButton.name);
-    this.OnButtonClick_ObserverTest = new SingleClickEvent_Observer(this.HindeCore, this.TestCancelCallback.bind(this));
+    this.OnButtonClick_Subject = new SingleClickEvent_Subject(this.CommonCore);
+    this.OnButtonClick_ObserverTest = new SingleClickEvent_Observer(this.CommonCore, this.TestCancelCallback.bind(this));
     this.OnButtonClick_Subject.RegisterObserver(this.OnButtonClick_ObserverTest);
     this.ButtonElem.addEventListener('click', (() => {
       let payload: ISingleClickEvent_Payload = {

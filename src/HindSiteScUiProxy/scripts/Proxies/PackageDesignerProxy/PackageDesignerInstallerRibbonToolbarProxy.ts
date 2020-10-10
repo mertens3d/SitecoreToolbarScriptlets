@@ -1,18 +1,18 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
 import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
 import { ElementDivJacket } from "../../../../DOMJacket/ElementDivJacket";
-import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { JqueryFrameProxy } from "../SupportProxies/JqueryFrameProxy";
 
-export class PackageDesignerInstallerRibbonToolbarProxy extends _HindeCoreBase {
+export class PackageDesignerInstallerRibbonToolbarProxy extends _APICoreBase {
     private parentDocumentJacket: DocumentJacket;
     ElementDivJacket: ElementDivJacket;
 
-    constructor(hindeCore: IHindeCore, elementDivJacket: ElementDivJacket, parentDocumentJacket: DocumentJacket) {
-        super(hindeCore);
+    constructor(apiCore: IAPICore, elementDivJacket: ElementDivJacket, parentDocumentJacket: DocumentJacket) {
+        super(apiCore);
         this.parentDocumentJacket = parentDocumentJacket;
         this.ElementDivJacket = elementDivJacket;
     }
@@ -27,7 +27,7 @@ export class PackageDesignerInstallerRibbonToolbarProxy extends _HindeCoreBase {
             let matchingJackets: ElementFrameJacket[] = this.parentDocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id);
             if (matchingJackets && matchingJackets.length > 0) {
 
-                    jqueryFrameProxy = new JqueryFrameProxy(this.HindeCore, matchingJackets[0]);
+                    jqueryFrameProxy = new JqueryFrameProxy(this.ApiCore, matchingJackets[0]);
                     this.Logger.LogImportant('jquery frame found');
                 }
                 else {

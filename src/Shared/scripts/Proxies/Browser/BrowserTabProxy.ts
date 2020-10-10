@@ -1,14 +1,14 @@
-﻿/// <reference path="../../../../node_modules/web-ext-types/global/index.d.ts" />
+﻿/// <reference path="../../../../../node_modules/web-ext-types/global/index.d.ts" />
 
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
+import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
+import { IterationDrone } from "../../Agents/Drones/IterationDrone/IterationDrone";
+import { _CommonBase } from "../../_CommonCoreBase";
 
-export class BrowserTabProxy extends _HindeCoreBase {
+export class BrowserTabProxy extends _CommonBase {
   private NativeBrowserTab: browser.tabs.Tab;
 
-  constructor(hindeCore: IHindeCore, nativeBrowserTab: browser.tabs.Tab) {
-    super(hindeCore);
+  constructor(commonCore: ICommonCore, nativeBrowserTab: browser.tabs.Tab) {
+    super(commonCore);
     this.NativeBrowserTab = nativeBrowserTab;
   }
 
@@ -32,7 +32,7 @@ export class BrowserTabProxy extends _HindeCoreBase {
 
   TabWaitForReadyStateCompleteNative(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      let iterHelper = new IterationDrone(this.HindeCore, this.TabWaitForReadyStateCompleteNative.name, true);
+      let iterHelper = new IterationDrone(this.CommonCore, this.TabWaitForReadyStateCompleteNative.name, true);
 
       while (this.NativeBrowserTab.status !== 'complete' && iterHelper.DecrementAndKeepGoing()) {
         this.Logger.LogVal('tab status', this.NativeBrowserTab.status);

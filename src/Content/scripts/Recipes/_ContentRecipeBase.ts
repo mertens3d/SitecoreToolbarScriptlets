@@ -2,9 +2,9 @@
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 
-export abstract class _ContentRecipeBase extends _HindeCoreBase {
+export abstract class _ContentRecipeBase extends _FrontBase {
   CommandParams: ICommandParams;
 
   Friendly: string;

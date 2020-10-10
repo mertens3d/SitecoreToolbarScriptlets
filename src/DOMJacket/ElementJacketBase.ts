@@ -1,12 +1,12 @@
 ﻿import { IterationDrone } from "../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../Shared/scripts/_HindeCoreBase";
+import { ICommonCore } from "../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { _CommonBase } from "../Shared/scripts/_CommonCoreBase";
 
-export  class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {
+export class ElementJacketBase<T extends HTMLElement> extends _CommonBase {
   public NativeElement: T;
 
-  constructor(hindeCore: IHindeCore, htmlElement: T) {
-    super(hindeCore);
+  constructor(commonCore: ICommonCore, htmlElement: T) {
+    super(commonCore);
     this.NativeElement = htmlElement;
   }
 
@@ -18,7 +18,7 @@ export  class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {
     let toReturn: ElementJacketBase<HTMLElement>
     let candidate = this.NativeElement.parentElement;
     if (candidate) {
-      toReturn = new ElementJacketBase<HTMLElement>(this.HindeCore, candidate);
+      toReturn = new ElementJacketBase<HTMLElement>(this.CommonCore, candidate);
     }
     return toReturn;
   }
@@ -27,7 +27,7 @@ export  class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {
     let toReturn: ElementJacketBase<HTMLElement> = null;
     let candidate: HTMLElement = this.NativeElement.querySelector(selector);
     if (candidate) {
-      toReturn = new ElementJacketBase<HTMLElement>(this.HindeCore, candidate);
+      toReturn = new ElementJacketBase<HTMLElement>(this.CommonCore, candidate);
     }
 
     return toReturn;
@@ -38,12 +38,12 @@ export  class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {
       //this.Logger.FuncStart(this.WaitForElement.name, selector);
       this.ErrorHand.ThrowIfNullOrUndefined([ElementJacketBase.name, this.WaitForElement.name], [selector]);
       var toReturnElemJacket: ElementJacketBase<HTMLElement> = null;
-      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForElement.name + ' : ' + selector + ' ' + friendly, false);
+      var iterationJr = new IterationDrone(this.CommonCore, this.WaitForElement.name + ' : ' + selector + ' ' + friendly, false);
 
       while (!toReturnElemJacket && iterationJr.DecrementAndKeepGoing()) {
         let candidate: HTMLElement = this.NativeElement.querySelector(selector);
         if (candidate) {
-          resolve(new ElementJacketBase<HTMLElement>(this.HindeCore, candidate));
+          resolve(new ElementJacketBase<HTMLElement>(this.CommonCore, candidate));
         }
         else {
           await iterationJr.Wait();
@@ -62,7 +62,7 @@ export  class ElementJacketBase<T extends HTMLElement> extends _HindeCoreBase {
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr]);
 
       var foundHtmlElement: HTMLElement = null;
-      var iterationJr = new IterationDrone(this.HindeCore, this.WaitForThenClick.name + ' | ' + JSON.stringify(selectorAr), true);
+      var iterationJr = new IterationDrone(this.CommonCore, this.WaitForThenClick.name + ' | ' + JSON.stringify(selectorAr), true);
       let foundSelector: string = '';
 
       while (!foundHtmlElement && iterationJr.DecrementAndKeepGoing()) { // todo put back && !this.MsgMan().OperationCancelled) {

@@ -3,10 +3,10 @@ import { IStateOfDesktop } from "../../../Shared/scripts/Interfaces/Data/States/
 import { IStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfScContentTreeNodeDeep } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { IStateOfContentTree } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { IStateOfScContentTreeNodeShallow } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeShallow";
 
-export class StateHelpers extends _HindeCoreBase {
+export class StateHelpers extends _FrontBase {
   GetActiveTreeNodeFromStateOfTreeFlat(stateOfTree: IStateOfContentTree): IStateOfScContentTreeNodeShallow {
     let toReturn: IStateOfScContentTreeNodeDeep = null;
 

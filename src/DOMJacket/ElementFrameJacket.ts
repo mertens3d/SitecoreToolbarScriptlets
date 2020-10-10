@@ -1,6 +1,6 @@
 ﻿import { IterationDrone } from "../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
 import { ReadyStateNAB } from "../Shared/scripts/Classes/ReadyState";
-import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { IFrameJacketStyling } from "../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 import { DocumentJacket } from "./DocumentJacket";
 import { UrlJacket } from "./UrlJacket";
@@ -10,8 +10,8 @@ export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
     public DocumentJacket: DocumentJacket;
     private NativeIframeId: string;
 
-    constructor(hindeCore: IHindeCore, htmlIframeElement: HTMLIFrameElement) {
-        super(hindeCore, htmlIframeElement);
+    constructor(commonCore: ICommonCore, htmlIframeElement: HTMLIFrameElement) {
+        super(commonCore, htmlIframeElement);
         this.BuildInstance();
     }
 
@@ -19,7 +19,7 @@ export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
     private BuildInstance() {
         this.Logger.FuncStart(this.BuildInstance.name, ElementFrameJacket.name);
 
-        this.DocumentJacket = new DocumentJacket(this.HindeCore, this.NativeElement.contentDocument);
+      this.DocumentJacket = new DocumentJacket(this.CommonCore, this.NativeElement.contentDocument);
 
         this.NativeIframeId = this.NativeElement.id;
 
@@ -93,9 +93,9 @@ export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
 
     private async WaitForNABHostedDoc(): Promise<void> {
         this.Logger.FuncStart(this.WaitForNABHostedDoc.name);
-        try {
-            var iterationJr: IterationDrone = new IterationDrone(this.HindeCore, this.WaitForNABHostedDoc.name, false);
-            let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.HindeCore, this.NativeElement.contentDocument);
+      try {
+        var iterationJr: IterationDrone = new IterationDrone(this.CommonCore, this.WaitForNABHostedDoc.name, false);
+        let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.CommonCore, this.NativeElement.contentDocument);
 
             while (iterationJr.DecrementAndKeepGoing() && readyStateNAB.DocIsAboutBlank()) {
                 await iterationJr.Wait();
@@ -121,7 +121,7 @@ export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
 
             if (this.NativeElement) {
                 await this.WaitForNABHostedDoc()
-                    .then(() => this.DocumentJacket = new DocumentJacket(this.HindeCore, this.NativeElement.contentDocument))
+                  .then(() => this.DocumentJacket = new DocumentJacket(this.CommonCore, this.NativeElement.contentDocument))
                     .then(() => this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(friendly))
                     .then((result: ReadyStateNAB) => {
                         this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, result.DocumentReadtStateFriendly());

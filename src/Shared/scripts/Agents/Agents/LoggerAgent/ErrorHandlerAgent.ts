@@ -1,19 +1,22 @@
-﻿import { IErrorHandlerAgent } from "../../../Interfaces/Agents/IErrorHandlerAgent";
+﻿import { TypeDiscriminator } from "../../../Enums/70 - TypeDiscriminator";
+import { ICoreErrorHandler } from "../../../Interfaces/Agents/IErrorHandlerAgent";
+import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
 import { IError } from "../../../Interfaces/IError";
-import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
-import { TaskMonitor } from "./TaskMonitor";
 import { SharedConst } from "../../../SharedConst";
+import { ICoreTaskMonitor } from "../../../Interfaces/Agents/Core/ITaskMonitorAgent";
 
-export class ErrorHandlerAgent implements IErrorHandlerAgent {
-  Discriminator = Discriminator.IErrorHandler;
+export class ErrorHandlerAgent implements ICoreErrorHandler {
+  readonly TypeDiscriminator = TypeDiscriminator.IErrorHandler;
+
   ErrorStack: IError[] = [];
-  private TaskMonitor: TaskMonitor;
+  private TaskMonitor: ICoreTaskMonitor;
+  private Logger: ILoggerAgent;
 
-  constructor(taskMonitor: TaskMonitor) {
-    this.TaskMonitor = taskMonitor;
+  constructor() {
   }
-
-  Instantiate() {
+  IntroduceSiblings(logger: ILoggerAgent, taskMonitor: ICoreTaskMonitor) {
+    this.Logger = logger;
+    this.TaskMonitor = taskMonitor;
   }
 
   ThrowIfNullOrUndefined(title: string | string[], testSubject: any | any[]): void {
@@ -72,7 +75,7 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     toReturn = '';
 
     colorAr.forEach((color) => {
-      toReturn +=  SharedConst.Const.Colors.ConsoleStyles.StyleEsc + color;
+      toReturn += SharedConst.Const.Colors.ConsoleStyles.StyleEsc + color;
     });
 
     toReturn += text + SharedConst.Const.Colors.ConsoleStyles.StyleEsc + SharedConst.Const.Colors.ConsoleStyles.StyleReset;
@@ -101,13 +104,9 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     this.ErrorLogger('\t\ts) '
       + this.StyleFormat([SharedConst.Const.Colors.ConsoleStyles.StyleBgRed], '** ERROR **'));
 
-
     this.ErrorLogger('\t\t  container: ' + container);
 
     this.ErrorLogger('');
-
-
-
 
     textToRender.forEach((message: string) => {
       this.ErrorStack.push({

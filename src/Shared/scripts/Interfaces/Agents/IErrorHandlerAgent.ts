@@ -1,7 +1,9 @@
 ﻿import { IError } from "../IError";
-import { IDiscriminator } from "./IDiscriminator";
+import { ICoreTaskMonitor } from "./Core/ITaskMonitorAgent";
+import { ILoggerAgent } from "./ILoggerAgent";
 
-export interface IErrorHandlerAgent extends IDiscriminator{
+export interface ICoreErrorHandler  {
+  IntroduceSiblings(Logger: ILoggerAgent, TaskMonitor: ICoreTaskMonitor);
   FormatejectMessage(arg0: string[], err: string): string;
   ErrorAndThrow(container: string | string[], text: string): void;
   ErrorAndContinue(container: string, text: any): void;

@@ -1,10 +1,10 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
 import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
-import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
+import { RecipeBasics } from '../../../../RecipeBasics';
 import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
-import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
 import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
@@ -13,17 +13,17 @@ import { AsyncLock } from './AsyncLock';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { IButtonSelectors } from './IButtonSelectors';
 import { StartMenuButtonResolver } from './StartMenuButtonResolver';
-import { IHindSiteScUiAPIOptions } from '../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
+import { IHindSiteScUiAPIRunTimeOptions } from '../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 
-export class DTStartBarProxy extends _HindeCoreBase {
+export class DTStartBarProxy extends _APICoreBase {
   private DocumentJacket: DocumentJacket;
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
   private StartMenuButtonResolver: StartMenuButtonResolver;
   private RecipeBasics: RecipeBasics;
   private ConResolver: ConResolver;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
+    super(apiCore);
     this.Logger.CTORStart(DTStartBarProxy.name);
     this.DocumentJacket = documentJacket;
     this.InstantiateInstance();
@@ -31,8 +31,8 @@ export class DTStartBarProxy extends _HindeCoreBase {
   }
 
   private InstantiateInstance() {
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
-    this.ConResolver = new ConResolver(this.HindeCore);
+    this.RecipeBasics = new RecipeBasics(this.ApiCore);
+    this.ConResolver = new ConResolver(this.ApiCore);
   }
 
   public Instantiate_DTStartBarProxy() {
@@ -49,7 +49,7 @@ export class DTStartBarProxy extends _HindeCoreBase {
     this.Logger.FuncStart(this.TriggerRedButtonAsync.name);
 
     try {
-      this.StartMenuButtonResolver = new StartMenuButtonResolver(this.HindeCore);
+      this.StartMenuButtonResolver = new StartMenuButtonResolver(this.ApiCore);
 
       let buttonSelectors: IButtonSelectors = this.StartMenuButtonResolver.GetButtonSelectors(scWindowType);
 
@@ -114,7 +114,7 @@ export class DTStartBarProxy extends _HindeCoreBase {
       });
 
       if (!foundStartBarButtonProxy) {
-        foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.HindeCore, dTFrameProxyMutationEventPayload.FrameId, this.DocumentJacket, this.ConResolver);
+        foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.ApiCore, dTFrameProxyMutationEventPayload.FrameId, this.DocumentJacket, this.ConResolver);
         await foundStartBarButtonProxy.Instantiate_DestopStartBarButtonProxyAsyncItems()
           .catch((err) => reject(this.GetAssociatedStartBarButton.name + ' | ' + err));
 

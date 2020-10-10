@@ -15,7 +15,7 @@ import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayl
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandStartEndCancelEvent_Observer } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Observer";
 import { CommandStartEndCancelEvent_Subject } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Subject";
@@ -23,11 +23,10 @@ import { CommandState_State, ICommandStartEndCancelEvent_Payload } from "../Even
 import { CommandToExecuteData } from "./CommandToExecuteData";
 import { InternalCommandRunner } from "./InternalCommandRunner";
 
-export class CommandRouter extends _HindeCoreBase {
+export class CommandRouter extends _FrontBase {
   private InternalCommandRunner: InternalCommandRunner;
   private ScUiProxy: IHindSiteScUiAPI;
   private ToastAgent: IToastAgent;
-  private ScUiMan: ScUiManager;
   private AtticAgent: IContentAtticAgent;
   private SettingsAgent: ISettingsAgent;
   private AutoSnapShotAgent: AutoSnapShotAgent;
@@ -36,10 +35,9 @@ export class CommandRouter extends _HindeCoreBase {
   CommandTriggeredEvent_Subject: CommandStartEndCancelEvent_Subject;
   private Dependancies: ICommandDependancies;
 
-  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiAPI, toastAgent: IToastAgent, scUiMan: ScUiManager, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, documentJacket: DocumentJacket) {
+  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiAPI, toastAgent: IToastAgent, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, documentJacket: DocumentJacket) {
     super(hindeCore);
     this.ToastAgent = toastAgent;
-    this.ScUiMan = scUiMan;
     this.ScUiProxy = scUiProxy;
     this.AtticAgent = atticAgent;
     this.SettingsAgent = settingsAgent;
@@ -48,7 +46,7 @@ export class CommandRouter extends _HindeCoreBase {
 
     this.InternalCommandRunner = new InternalCommandRunner(this.HindeCore, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.DocumentJacket);
 
-    this.CommandTriggeredEvent_Subject = new CommandStartEndCancelEvent_Subject(this.HindeCore, CommandRouter.name);
+    this.CommandTriggeredEvent_Subject = new CommandStartEndCancelEvent_Subject(this.HindeCore);
     this.CommandTriggeredEvent_Observer = new CommandStartEndCancelEvent_Observer(this.HindeCore, this.OnCommandStartEndCancelEvent.bind(this));
     this.CommandTriggeredEvent_Subject.RegisterObserver(this.CommandTriggeredEvent_Observer);
 
@@ -107,7 +105,7 @@ export class CommandRouter extends _HindeCoreBase {
 
   BuildCommandPayloadForInternal(): ICommandParams {
     let scProxyPayload = this.BuildScProxyPayload();
-    let commandParams: ICommandParams = new CommandPayloadForInternal(this.HindeCore, this.AtticAgent, this.ToastAgent, this.ScUiMan, this.SettingsAgent, this.AutoSnapShotAgent, scProxyPayload);
+    let commandParams: ICommandParams = new CommandPayloadForInternal(this.HindeCore, this.AtticAgent, this.ToastAgent, this.SettingsAgent, this.AutoSnapShotAgent, scProxyPayload);
 
     return commandParams;
   }

@@ -1,41 +1,48 @@
-﻿import { ITaskListMutationEvent_Payload } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/ITaskListMutationEvent_Payload";
-import { TaskListMutationEvent_Subject } from "../../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/TaskListMutationEvent/TaskListMutationEvent_Subject";
-import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
-import { IErrorHandlerAgent } from "../../../Interfaces/Agents/IErrorHandlerAgent";
+﻿import { TypeDiscriminator } from "../../../Enums/70 - TypeDiscriminator";
+import { ITaskListMutationEvent_Payload } from "../../../Events/TaskListMutationEvent/ITaskListMutationEvent_Payload";
+import { TaskListMutationEvent_Subject } from "../../../Events/TaskListMutationEvent/TaskListMutationEvent_Subject";
+import { ICoreErrorHandler } from "../../../Interfaces/Agents/IErrorHandlerAgent";
 import { ILoggerAgent } from "../../../Interfaces/Agents/ILoggerAgent";
-import { IInterruptAgent } from "../../../Interfaces/Agents/ITaskMonitorAgent";
 import { TaskMutationType } from "./TaskMutationType";
+import { ICoreTaskMonitor } from "../../../Interfaces/Agents/Core/ITaskMonitorAgent";
 
-export class TaskMonitor implements IInterruptAgent {
+export class TaskMonitor implements ICoreTaskMonitor {
   private TaskBucketStarted: string[] = [];
   private TaskBucketCompleted: string[] = [];
-  private Logger: ILoggerAgent;
   public TaskMutationEvent_Subject: TaskListMutationEvent_Subject;
-  private ErrorHand: IErrorHandlerAgent;
   private DelaySendMs: number = 3000;
   private CancelRequestedFlag: boolean = false;
   private IdleNotificationSent: boolean = false;
   private LastActivityTime: number;
   private MinElapsedBeforeIsIdleMs: number = 3000;
-  Discriminator = Discriminator.TaskMonitor;
+  TypeDiscriminator = TypeDiscriminator.TaskMonitor;
+  private ErrorHand: ICoreErrorHandler;
+  private Logger: ILoggerAgent;
 
-  constructor(logger: ILoggerAgent) {
+  constructor() {
+  }
+  IntroduceSiblings(logger: ILoggerAgent, errorHand: ICoreErrorHandler) {
     this.Logger = logger;
+    this.ErrorHand = errorHand;
+  }
+
+  IntroduceCoreSiblings(logger: ILoggerAgent, errorHand: ICoreErrorHandler) {
+    this.Logger = logger;
+    this.ErrorHand = errorHand;
   }
 
   ResetCancel() {
     this.CancelRequestedFlag = false;
   }
 
-  IntroduceErrorHand(errorHand: IErrorHandlerAgent) {
-    this.ErrorHand = errorHand;
-  }
-  Instantiate() {
-    if (this.ErrorHand) {
-      this.TaskMutationEvent_Subject = new TaskListMutationEvent_Subject(this.Logger, this.ErrorHand, TaskMonitor.name);
-    } else {
-      throw ('no error handler attached');
-    }
+  InitAfterErrorHand(taskMutationEvent_Subject: TaskListMutationEvent_Subject) {
+    this.TaskMutationEvent_Subject = taskMutationEvent_Subject;
+
+    //if (this.ErrorHand) {
+    //  this.TaskMutationEvent_Subject = new TaskListMutationEvent_Subject(this.CommonCore);
+    //} else {
+    //  throw ('no error handler attached');
+    //}
   }
 
   AsyncTaskStarted(name: string) {

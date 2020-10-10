@@ -1,12 +1,12 @@
-﻿import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+﻿import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ISiteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
-import { BrowserTabAgent } from "../Agents/BrowserTabAgent";
+import { BrowserTabAgent } from "../../../Shared/scripts/Agents/BrowserTabAgent";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { IUiCommandFlagRaisedEvent_Payload } from "../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
 
-export class HandlersForInternal extends _HindeCoreBase {
+export class HandlersForInternal extends _FrontBase {
   private BrowserTabAgent: BrowserTabAgent;
 
   constructor(hindeCore: IHindeCore, browserTabAgent: BrowserTabAgent) {

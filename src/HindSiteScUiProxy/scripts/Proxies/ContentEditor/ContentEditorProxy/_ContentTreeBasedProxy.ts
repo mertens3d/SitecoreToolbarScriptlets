@@ -1,18 +1,18 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/DocumentJacket';
 import { ElementJacket } from '../../../../../DOMJacket/ElementJacket';
 import { _baseDefaultStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Classes/Defaults/_baseDefaultStateOfContentTreeBasedProxies';
-import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
+import { RecipeBasics } from '../../../RecipeBasics';
 import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from '../../../../../Shared/scripts/Helpers/GuidData';
-import { IHindeCore } from '../../../../../Shared/scripts/Interfaces/Agents/IHindeCore';
+import { IAPICore } from '../../../../../Shared/scripts/Interfaces/Agents/IAPICore';
 import { IStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateProxy';
 import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { IStateOfContentTreeBasedProxies } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTreeBasedProxies";
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { __ContentTreeBasedProxyMutationEvent__Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
 import { I_ContentTreeBasedProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
-import { __ContentTreeBasedProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Observer';
+import { ContentTreeBasedProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Observer';
 import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { _BaseStateFullProxy } from '../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
 import { ContentTreeProxy } from "./ContentTreeProxy/ContentTreeProxy";
@@ -21,15 +21,15 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
   protected ContentTreeProxy: ContentTreeProxy;
   protected DocumentJacket: DocumentJacket;
   protected RecipeBasic: RecipeBasics;
-  protected TreeMutationEvent_Observer: __ContentTreeBasedProxyMutationEvent_Observer;
+  protected TreeMutationEvent_Observer: ContentTreeBasedProxyMutationEvent_Observer;
   public __ContentTreeBasedProxyMutationEvent_Subject: __ContentTreeBasedProxyMutationEvent__Subject;
   public abstract readonly  StateFullProxyDisciminator: StateFullProxyDisciminator;
   readonly abstract  StateFullProxyDisciminatorFriendly: string;
   readonly abstract TreeRootSelector: string;
   readonly AssociatedHindsiteId: GuidData;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
+    super(apiCore);
     this.Logger.CTORStart(_ContentTreeBasedProxy.name);
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.DocumentJacket = documentJacket;
@@ -41,17 +41,17 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
   }
 
   private Instantiate() {
-    this.RecipeBasic = new RecipeBasics(this.HindeCore);
+    this.RecipeBasic = new RecipeBasics(this.ApiCore);
   }
 
   async __baseInstantiateAsyncMembers(): Promise<void> {
     await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.Friendly)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
       .then(() => this.DocumentJacket.WaitForElem(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
-      .then((treeContainer: ElementJacket) => this.ContentTreeProxy = new ContentTreeProxy(this.HindeCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
+      .then((treeContainer: ElementJacket) => this.ContentTreeProxy = new ContentTreeProxy(this.ApiCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
       .then(() => this.ContentTreeProxy.Instantiate_TreeProxyAsyncElem())
       .then(() => {
-        this.__ContentTreeBasedProxyMutationEvent_Subject = new __ContentTreeBasedProxyMutationEvent__Subject(this.HindeCore);
-        this.TreeMutationEvent_Observer = new __ContentTreeBasedProxyMutationEvent_Observer(this.HindeCore, this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.bind(this));
+        this.__ContentTreeBasedProxyMutationEvent_Subject = new __ContentTreeBasedProxyMutationEvent__Subject(this.ApiCore);
+        this.TreeMutationEvent_Observer = new ContentTreeBasedProxyMutationEvent_Observer(this.ApiCore, this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.bind(this));
       })
       .then(() => { })
       .catch((err) => this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err));

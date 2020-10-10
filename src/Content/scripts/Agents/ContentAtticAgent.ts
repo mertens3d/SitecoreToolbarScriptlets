@@ -11,20 +11,20 @@ import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDa
 import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../Shared/scripts/Interfaces/IOneStorageData";
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 
-export class ContentAtticAgent extends _HindeCoreBase implements IContentAtticAgent {
+export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent {
   private RepoAgent: IRepositoryAgent;
   private SettingAutoSnapshotRetainDays: number;
 
   constructor(repoAgent: IRepositoryAgent, hindeCore: IHindeCore) {
     super(hindeCore);
 
-    this.Logger.FuncStart(ContentAtticAgent.name);
+    this.Logger.CTORStart(ContentAtticAgent.name);
 
     this.RepoAgent = repoAgent;
 
-    this.Logger.FuncEnd(ContentAtticAgent.name);
+    this.Logger.CTOREnd(ContentAtticAgent.name);
   }
 
   InitContentAtticManager(settingAutoSnapshotRetainDays: number) {

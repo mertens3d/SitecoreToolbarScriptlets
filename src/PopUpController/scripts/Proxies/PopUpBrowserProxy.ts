@@ -4,9 +4,9 @@ import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/I
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { _BaseBrowserProxy } from "../../../Content/scripts/Proxies/_BaseBrowserProxy";
+import { BaseBrowserProxy } from "../../../Shared/scripts/Proxies/Browser/_BaseBrowserProxy";
 
-export class PopUpBrowserProxy extends _BaseBrowserProxy implements IPopUpBrowserProxy {
+export class PopUpBrowserProxy extends BaseBrowserProxy implements IPopUpBrowserProxy {
   Url: string;
   private BrowserTabId: number;
 

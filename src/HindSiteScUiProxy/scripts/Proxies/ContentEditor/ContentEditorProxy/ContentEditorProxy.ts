@@ -1,7 +1,7 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/DocumentJacket';
 import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
-import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateProxy';
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
@@ -13,15 +13,15 @@ export class ContentEditorSFProxy extends _ContentTreeBasedProxy<IStateOfContent
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
   public readonly StateFullProxyDisciminator = StateFullProxyDisciminator.ContentEditor;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, friendly: string) {
-    super(hindeCore, documentJacket);
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string) {
+    super(apiCore, documentJacket);
     this.Logger.CTORStart(ContentEditorSFProxy.name);
 
     this.Logger.CTOREnd(ContentEditorSFProxy.name);
   }
 
   async PublishItem(): Promise<void> {
-    let publishProxy = new ContentEditorPublishProxy(this.HindeCore, this, this.DocumentJacket);
+    let publishProxy = new ContentEditorPublishProxy(this.ApiCore, this, this.DocumentJacket);
     await publishProxy.Execute();
   }
 

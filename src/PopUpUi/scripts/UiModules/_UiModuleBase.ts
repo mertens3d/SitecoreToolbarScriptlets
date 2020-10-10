@@ -2,10 +2,10 @@
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { UiHydrationData } from "../../../Shared/scripts/Interfaces/UiHydrationData";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { IUiModule } from "../../../Shared/scripts/Interfaces/Agents/IUiModule";
 
-export abstract class _UiModuleBase extends _HindeCoreBase implements IUiModule {
+export abstract class _UiModuleBase extends _FrontBase implements IUiModule {
   ContainerSelector: string;
   ContainerUiDivElem: HTMLDivElement;
   protected UiElement: HTMLElement;

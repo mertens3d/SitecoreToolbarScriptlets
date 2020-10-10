@@ -3,9 +3,9 @@
 import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
-import { _BaseBrowserProxy } from "./_BaseBrowserProxy";
+import { BaseBrowserProxy } from "../../../Shared/scripts/Proxies/Browser/_BaseBrowserProxy";
 
-export class ContentBrowserProxy extends _BaseBrowserProxy implements IContentBrowserProxy {
+export class ContentBrowserProxy extends BaseBrowserProxy implements IContentBrowserProxy {
   ExtensionGetUrl(arg0: string): string {
     return browser.extension.getURL(arg0);
   }

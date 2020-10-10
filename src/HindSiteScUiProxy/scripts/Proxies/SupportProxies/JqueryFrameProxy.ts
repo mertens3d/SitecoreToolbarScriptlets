@@ -1,14 +1,14 @@
 ﻿import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
-import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
+import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { ScContentIframeId0Proxy } from "./ScContentIframeId0Proxy";
 
-export class JqueryFrameProxy extends _HindeCoreBase {
+export class JqueryFrameProxy extends _APICoreBase {
   private jqueryFrameJacket: ElementFrameJacket = null;
 
-  constructor(hindeCore: IHindeCore, jqueryFrameJacket: ElementFrameJacket) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, jqueryFrameJacket: ElementFrameJacket) {
+    super(apiCore);
     this.jqueryFrameJacket = jqueryFrameJacket;
   }
 
@@ -21,7 +21,7 @@ export class JqueryFrameProxy extends _HindeCoreBase {
           let matchingJackets: ElementFrameJacket[] = this.jqueryFrameJacket.DocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Id);
 
           if (matchingJackets && matchingJackets.length > 0) {
-            scContentIframeId0Proxy = new ScContentIframeId0Proxy(this.HindeCore, matchingJackets[0]);
+            scContentIframeId0Proxy = new ScContentIframeId0Proxy(this.ApiCore, matchingJackets[0]);
             this.Logger.LogImportant('scContentIframeId0FrameJacket frame found');
           }
           else {

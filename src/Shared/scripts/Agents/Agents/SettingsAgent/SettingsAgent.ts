@@ -1,26 +1,27 @@
-﻿import { PopConst } from "../../../Const/PopConst";
+﻿
+import { PopConst } from "../../../Const/PopConst";
 import { UiModuleManagerPassThroughEvent_Observer } from "../../../../../PopUpUi/scripts/Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Observer";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { SettingKey } from "../../../Enums/30 - SettingKey";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
-import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
 import { IRepositoryAgent } from "../../../Interfaces/Agents/IRepositoryAgent";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
 import { IOneGenericSettingForStorage } from "../../../Interfaces/IOneGenericSettingForStorage";
 import { HindSiteSettingsBucket } from "./HindSiteSettingsBucket";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
-import { _HindeCoreBase } from "../../../_HindeCoreBase";
+import { _CommonBase } from "../../../_CommonCoreBase";
 
-export class SettingsAgent extends _HindeCoreBase implements ISettingsAgent {
+export class SettingsAgent extends _CommonBase implements ISettingsAgent {
   HindSiteSettingsBucket: HindSiteSettingsBucket;
   private RepoAgent: IRepositoryAgent;
   private UiElementChangeEvent_Observer: UiModuleManagerPassThroughEvent_Observer;
 
-  constructor(hindeCore: IHindeCore, repoAgent: IRepositoryAgent) {
+  constructor(hindeCore: ICommonCore, repoAgent: IRepositoryAgent) {
     super(hindeCore);
     this.RepoAgent = repoAgent;
-    this.HindSiteSettingsBucket = new HindSiteSettingsBucket(this.HindeCore);
+    this.HindSiteSettingsBucket = new HindSiteSettingsBucket(this.CommonCore);
   }
 
   GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[] {
@@ -45,7 +46,7 @@ export class SettingsAgent extends _HindeCoreBase implements ISettingsAgent {
   }
 
   WireEvents() {
-    this.UiElementChangeEvent_Observer = new UiModuleManagerPassThroughEvent_Observer(this.HindeCore, this.OnUiModuleManagerPassThroughEvent);
+    this.UiElementChangeEvent_Observer = new UiModuleManagerPassThroughEvent_Observer(this.CommonCore, this.OnUiModuleManagerPassThroughEvent);
   }
 
   OnUiModuleManagerPassThroughEvent<IUiModuleManagerPassThroughEvent_Payload>(payload: IUiModuleManagerPassThroughEvent_Payload) {
