@@ -10,8 +10,8 @@ export class FallBackProxy extends _BaseStateFullProxy<IStateOfFallBack> impleme
 
   async GetState(): Promise<IStateOfFallBack> {
     let toReturn: IStateOfFallBack = {
-      StatefullDisciminator: this.StateFullProxyDisciminator,
-      StatefullDisciminatorFriendly: StateFullProxyDisciminator[this.StateFullProxyDisciminator]
+      Disciminator: this.StateFullProxyDisciminator,
+      DisciminatorFriendly: StateFullProxyDisciminator[this.StateFullProxyDisciminator]
     }
     try {
     } catch (err) {

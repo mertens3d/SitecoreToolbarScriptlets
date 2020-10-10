@@ -51,7 +51,7 @@ export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI 
       if (this.ScWindowFacade) {
         await this.ScWindowFacade.GetStateOfScUiProxy(SnapShotFlavor.Live)
           .then((result: IStateOfScUi) => reply = result)
-          .then(() => reply.ErrorStackScUiProxy = this.ErrorHand.ErrorStack)
+          .then(() => reply.ErrorStack = this.ErrorHand.ErrorStack)
           .then(() => resolve(reply))
           .catch((err) => reject(err));
       } else {

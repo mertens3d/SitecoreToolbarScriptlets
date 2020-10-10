@@ -3,5 +3,5 @@ import { IStateOfScContentTreeNodeShallow } from "./IStateOfScContentTreeNodeSha
 
 export interface IStateOfContentTree {
   ActiveNodeShallow: IStateOfScContentTreeNodeShallow;
-  StateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep;
+  ContentTreeNodeDeep: IStateOfScContentTreeNodeDeep;
 }

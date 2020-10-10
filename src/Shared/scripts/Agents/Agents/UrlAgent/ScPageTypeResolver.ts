@@ -1,6 +1,6 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
 import { scMode } from "../../../Enums/scMode";
-import { ScWindowType } from "../../../Enums/5000 - scWindowType";
+import { ScWindowType } from "../../../Enums/50 - scWindowType";
 import { IControllerMessageReceivedEvent_Payload } from "../../../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { IUrlJacket } from "../../../Interfaces/IUrlAgent";
@@ -43,11 +43,13 @@ export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
         determinant.ConfidenceScore += slashCount;
       }
 
-      determinant.QueryKeyValuePairs.forEach((queryKeyvaluePairs: IQueryKeyValuePair) => {
-        let queryTest: boolean = this.QueryStringHasKey(queryKeyvaluePairs.Key)
-
-          &&
-          (this.__urlTestAgainstRegex(queryKeyvaluePairs.ValueMatch, this.GetQueryStringValueByKey(queryKeyvaluePairs.Key)));
+      determinant.QueryKeyValuePairs.forEach((queryKeyvaluePair: IQueryKeyValuePair) => {
+        let queryTest: boolean = this.QueryStringHasKey(queryKeyvaluePair.Key);
+        if (queryTest) {
+          this.Logger.LogVal('has key : ', QueryStrKey[queryKeyvaluePair.Key]);
+          this.Logger.LogVal('regex : ', queryKeyvaluePair.ValueMatch.toString());
+          queryTest = this.__urlTestAgainstRegex(queryKeyvaluePair.ValueMatch, this.GetQueryStringValueByKey(queryKeyvaluePair.Key));
+        }
 
         passed = passed && queryTest;
         if (passed) {
@@ -68,7 +70,7 @@ export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
   }
 
   private TestJacketAgainstRegex(regexPattern: RegExp): boolean {
-    return this.__urlTestAgainstRegex(regexPattern, this.UrlJacket.OriginalURL)
+    return this.__urlTestAgainstRegex(regexPattern, this.UrlJacket.BuildFullUrlFromParts().AbsUrl)
   }
 
   SetParameterValueByKey(qsKey: QueryStrKey, qsValue: string) {
@@ -92,12 +94,12 @@ export class ScPageTypeResolver extends _HindeCoreBase implements IScUrlAgent {
     return this.UrlJacket.BuildFullUrlFromParts();
   }
 
-  private __urlTestAgainstRegex(regexPattern: RegExp, url: string): boolean {
-    this.Logger.FuncStart(this.__urlTestAgainstRegex.name, regexPattern.toString());
-    this.Logger.LogVal('Url', url);
-    let testResult: boolean = new RegExp(regexPattern).test(url);
+  private __urlTestAgainstRegex(regexPattern: RegExp, testee: string): boolean {
+    //this.Logger.FuncStart(this.__urlTestAgainstRegex.name, regexPattern.toString());
+    this.Logger.LogVal('Testee', testee);
+    let testResult: boolean = new RegExp(regexPattern).test(testee);
 
-    this.Logger.FuncEnd(this.__urlTestAgainstRegex.name, regexPattern.toString() + ' | ' + url + ' | ' + testResult.toString());
+    //this.Logger.FuncEnd(this.__urlTestAgainstRegex.name, regexPattern.toString() + ' | ' + url + ' | ' + testResult.toString());
     return testResult;
   }
 

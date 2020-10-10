@@ -48,7 +48,7 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
     await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.Friendly)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
       .then(() => this.DocumentJacket.WaitForElem(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
       .then((treeContainer: ElementJacket) => this.ContentTreeProxy = new ContentTreeProxy(this.HindeCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
-      .then(() => this.ContentTreeProxy.Instantiate_TreeProxy())
+      .then(() => this.ContentTreeProxy.Instantiate_TreeProxyAsyncElem())
       .then(() => {
         this.__ContentTreeBasedProxyMutationEvent_Subject = new __ContentTreeBasedProxyMutationEvent__Subject(this.HindeCore);
         this.TreeMutationEvent_Observer = new __ContentTreeBasedProxyMutationEvent_Observer(this.HindeCore, this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.bind(this));
@@ -64,12 +64,12 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
   async __baseSetState(stateOfContentTreeBasedProxies: IStateOfContentTreeBasedProxies): Promise<boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
       this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedProxy.name, stateOfContentTreeBasedProxies);
-      this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedProxy.name, stateOfContentTreeBasedProxies.StateOfContentTree);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedProxy.name, stateOfContentTreeBasedProxies.ContentTree);
       this.__ContentTreeBasedProxyMutationEvent_Subject.DisableNotifications();
 
       await this.RecipeBasic.WaitForTimePeriod(1, this.SetState.name)
         .then(() => this.RecipeBasic.WaitForNoUiFrontOverlay(this.SetState.name))
-        .then(() => this.ContentTreeProxy.SetStateOfContentTree(stateOfContentTreeBasedProxies.StateOfContentTree.StateOfScContentTreeNodeDeep))
+        .then(() => this.ContentTreeProxy.SetStateOfContentTree(stateOfContentTreeBasedProxies.ContentTree.ContentTreeNodeDeep))
         .then(() => {
           this.__ContentTreeBasedProxyMutationEvent_Subject.EnableNotifications();
           resolve(true);
@@ -91,14 +91,14 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
       this.Logger.FuncStart(_ContentTreeBasedProxy.name, this.__baseGetState.name);
 
       let toReturn: IStateOfContentTreeBasedProxies = {
-        StatefullDisciminator : this.StateFullProxyDisciminator,
-        StatefullDisciminatorFriendly : StateFullProxyDisciminator[this.StateFullProxyDisciminator],
-        StateOfContentTree : null
+        Disciminator : this.StateFullProxyDisciminator,
+        DisciminatorFriendly : StateFullProxyDisciminator[this.StateFullProxyDisciminator],
+        ContentTree : null
       }
 
 
       await this.ContentTreeProxy.GetStateOfContentTree()
-        .then((stateOfContentTree: IStateOfContentTree) => toReturn.StateOfContentTree = stateOfContentTree)
+        .then((stateOfContentTree: IStateOfContentTree) => toReturn.ContentTree = stateOfContentTree)
         .then(() => resolve(toReturn))
         .catch((err) => reject(this.GetState.name + ' | ' + err));
       this.Logger.FuncEnd(_ContentTreeBasedProxy.name, this.__baseGetState.name);

@@ -1,140 +1,147 @@
 ﻿import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
-import { ScWindowType } from '../../../../../../Shared/scripts/Enums/5000 - ScWindowType';
+import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
 import { IButtonSelectors } from "./IButtonSelectors";
 export class StartMenuButtonResolver extends _HindeCoreBase {
-
   static AllWindowTypes: IButtonSelectors[] = [
 
     {
       ScWindowTypeX: ScWindowType.AccessViewer,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.SecurityTools,
-      Pop1Selector: '',
-      Pop2Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup1.SecurityTools,
+      Pop2Selector: ContentConst.Const.Selector.SC.Popup2.AccessViewer,
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.Archive,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.Popup2.Archive,
-      Pop1Selector: '',
-      Pop2Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup1.AllApplications,
+
+      Pop2Selector: ContentConst.Const.Selector.SC.Popup2.Archive,
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.ContentEditor,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.StartMenuLeftOption,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup1.StartMenuLeftOption,
+
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.DomainManager,
-      L1Selector: ContentConst.Const.Selector.SC.Popup2.DomainManager,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.DomainManager,
+
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.InstalledLicenses,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.ReportingTools,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup3.InstalledLicenses, //ContentConst.Const.Selector.SC.Popup1.ReportingTools,
+
       Pop2Selector: '',
-      Pop3Selector: ContentConst.Const.Selector.SC.Popup3.InstalledLicenses,
-      
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.InstallationWizard,
-      L1Selector: ContentConst.Const.Selector.SC.Popup2.InstallationWizard,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.InstallationWizard, //ContentConst.Const.Selector.SC.Popup1.DevelopmentTools,
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.KeyboardMap,
-      L1Selector: ContentConst.Const.Selector.SC.Popup2.KeyboardMap,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.KeyboardMap, //ContentConst.Const.Selector.SC.Popup1.DevelopmentTools,
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.LicenseDetails,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.LicenseDetails,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup3.LicenseDetails,
+
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.LogViewer,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.LogViewer,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.LogViewer,
+
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.MarketingControlPanel,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.MarketingControlPanel,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.MarketingControlPanel,
+
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.MediaLibrary,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.MediaLibrary,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup1.MediaLibrary,
+
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.PackageDesigner,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.DevelopmentTools,
-      Pop1Selector: ContentConst.Const.Selector.SC.Popup1.PackageDesignerButton, /// can't use TR....it's not guaranteed to be the first one. If powershell tools are installed it won't be
-      Pop2Selector: '',
+      // note, we don't have to actually hit the developtmentTools button because the target button already exists. It's just display:none or
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.PackageDesignerButton, //ContentConst.Const.Selector.SC.Popup1.DevelopmentTools,
+      Pop2Selector: '', /// can't use TR....it's not guaranteed to be the first one. If powershell tools are installed it won't be
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.Run,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.Run,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.Run,
+
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.RoleManager,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.RoleManager,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.RoleManager,
+
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.RecycleBin,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.RecycleBin,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup1.RecycleBin,
+
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.ScanForBrokenLinks,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.ScanForBrokenLinks,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.ScanForBrokenLinks,
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.SecurityEditor,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.SecurityEditor,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.SecurityEditor,
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.TemplateManager,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.TemplateManager,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup1.TemplateManager,
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.UserManager,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.UserManager,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.UserManager,
       Pop2Selector: '',
+      Pop3Selector: '',
     },
     {
       ScWindowTypeX: ScWindowType.Workbox,
-      L1Selector: ContentConst.Const.Selector.SC.Popup1.Workbox,
-      Pop1Selector: '',
+      Pop1Selector: ContentConst.Const.Selector.SC.Popup2.Workbox,
       Pop2Selector: '',
+      Pop3Selector: '',
     },
   ];
 
-
-
   GetButtonSelectors(scWindowType: ScWindowType): IButtonSelectors {
     //let toReturn: IButtonSelectors = {
-    //  L1Selector: null,
+    //  Pop1Selector: null,
     //  Pop1Selector: null,
     //  Pop2Selector: null
     //};
@@ -143,19 +150,17 @@ export class StartMenuButtonResolver extends _HindeCoreBase {
     let toReturn: IButtonSelectors = null;
 
     allWindowTypes.forEach((selectorSet: IButtonSelectors) => {
-
       if (selectorSet.ScWindowTypeX === scWindowType) {
         toReturn = selectorSet;
       }
     })
 
-
     if (!toReturn) {
       toReturn = {
-        L1Selector: '',
         Pop1Selector: '',
         Pop2Selector: '',
-        ScWindowTypeX: ScWindowType.Unknown
+        Pop3Selector: '',
+        ScWindowTypeX: ScWindowType.Unknown,
       }
     }
 

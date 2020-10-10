@@ -6,7 +6,7 @@ import { DefaultStateOfScUiProxy } from "../../../Shared/scripts/Classes/Default
 import { DefaultStateOfScWindow } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScWindowProxy";
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { ScWindowType } from '../../../Shared/scripts/Enums/5000 - scWindowType';
+import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
 import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
@@ -16,7 +16,7 @@ import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStat
 import { IDataFriendly } from '../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
 import { IDataMetaData } from '../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfScWindow } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow';
+import { IRootState } from '../../../Shared/scripts/Interfaces/Data/States/IStateOfScWindow';
 import { IStateOf_ } from "../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
@@ -78,14 +78,14 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
     //await this.ContentEditorProxy.SetCompactCss();
   }
 
-  private GetState(): Promise<IStateOfScWindow> {
+  private GetState(): Promise<IRootState> {
     return new Promise(async (resolve, reject) => {
-      let toReturn: IStateOfScWindow = new DefaultStateOfScWindow();
+      let toReturn: IRootState = new DefaultStateOfScWindow();
 
       if (this.StateFullProxy) {
         await this.StateFullProxy.GetState()
-          .then((stateOf_: IStateOf_) => toReturn.StateOf_ = stateOf_)
-          .then(() => toReturn.StateOf_.StatefullDisciminatorFriendly = StateFullProxyDisciminator[toReturn.StateOf_.StatefullDisciminator])
+          .then((stateOf_: IStateOf_) => toReturn.ScWindow = stateOf_)
+          .then(() => toReturn.ScWindow.DisciminatorFriendly = StateFullProxyDisciminator[toReturn.ScWindow.Disciminator])
           .then(() => resolve(toReturn))
           .catch((err) => reject(this.GetState.name + ' | ' + err));
       }
@@ -102,9 +102,9 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
       let toReturnStateOfSitecoreWindow: IStateOfScUi = new DefaultStateOfScUiProxy();
 
       await this.GetState()
-        .then((dataSitecoreWindowStates: IStateOfScWindow) => toReturnStateOfSitecoreWindow.StateOfScWindow = dataSitecoreWindowStates)
+        .then((dataSitecoreWindowStates: IRootState) => toReturnStateOfSitecoreWindow.State = dataSitecoreWindowStates)
         .then(() => {
-          toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor, toReturnStateOfSitecoreWindow.StateOfScWindow);
+          toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor, toReturnStateOfSitecoreWindow.State);
           toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(toReturnStateOfSitecoreWindow.Meta);
         })
         .then(() => resolve(toReturnStateOfSitecoreWindow))
@@ -136,8 +136,8 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
 
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
-          if (dataToRestore.StateOfScWindow.StateOf_) {
-            await this.StateFullProxy.SetState(dataToRestore.StateOfScWindow.StateOf_)
+          if (dataToRestore.State.ScWindow) {
+            await this.StateFullProxy.SetState(dataToRestore.State.ScWindow)
               .then(() => resolve())
               .catch((err) => reject(this.SetStateOfScWin.name + ' | ' + err));
           }
@@ -185,7 +185,7 @@ export class ScWindowFacade extends _HindeCoreBase implements IScWindowFacade {
     return hash;
   }
 
-  PopulateMetaData(snapshotFlavor: SnapShotFlavor, stateOfScWindow: IStateOfScWindow): IDataMetaData {
+  PopulateMetaData(snapshotFlavor: SnapShotFlavor, stateOfScWindow: IRootState): IDataMetaData {
     let toReturn: IDataMetaData = new DefaultMetaData();
     toReturn.WindowType = this.ScPageTypeResolver.GetScWindowType();
     toReturn.TimeStamp = new Date();

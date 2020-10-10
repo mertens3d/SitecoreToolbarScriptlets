@@ -3,6 +3,6 @@ import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDis
 import { _baseDefaultStateOfContentTreeBasedProxies } from "./_baseDefaultStateOfContentTreeBasedProxies";
 
 export class DefaultStateOfContentEditor extends _baseDefaultStateOfContentTreeBasedProxies implements IStateOfContentEditor {
-    StatefullDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.ContentEditor];
-    StatefullDisciminator = StateFullProxyDisciminator.ContentEditor;
+    DisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.ContentEditor];
+    Disciminator = StateFullProxyDisciminator.ContentEditor;
 }

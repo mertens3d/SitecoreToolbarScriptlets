@@ -30,11 +30,11 @@ export class StateHelpers extends _HindeCoreBase {
   }
 
   GetActiveTreeNodeFromStateOfContentEditor(stateOfContentEditor: IStateOfContentEditor): IStateOfScContentTreeNodeShallow {
-    return this.GetActiveTreeNodeFromStateOfTreeFlat(stateOfContentEditor.StateOfContentTree);
+    return this.GetActiveTreeNodeFromStateOfTreeFlat(stateOfContentEditor.ContentTree);
   }
 
   GetActiveFrameFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfDTFrame {
-    return stateOfDesktop.StateOfDTArea.StateOfDTFrames[stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex];
+    return stateOfDesktop.DTArea.DTFrames[stateOfDesktop.DTArea.ActiveFrameIndex];
   }
 
   //GetActiveContentEditFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfContentEditor {

@@ -4,12 +4,14 @@ import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { ReadyStateNAB } from '../Enums/ReadyState';
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
-import { IAbsoluteUrl } from '../Interfaces/IAbsoluteUrl';
+import { ISiteUrl } from '../Interfaces/IAbsoluteUrl';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { _HindeCoreBase } from "../_HindeCoreBase";
 import { PromiseResult } from "./PromiseResult";
+import { AsyncLock } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock";
 
 export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
+
   constructor(hindeCore: IHindeCore) {
     super(hindeCore);
   }
@@ -275,7 +277,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
       this.Logger.FuncEnd(this.WaitAndReturnFoundFromContainer.name, selector);
     });
   }
-
+  
 
 
   TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void> {
@@ -306,7 +308,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     });
   }
 
-  TabChainSetHrefWaitForComplete(href: IAbsoluteUrl) {
+  TabChainSetHrefWaitForComplete(href: ISiteUrl) {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
 

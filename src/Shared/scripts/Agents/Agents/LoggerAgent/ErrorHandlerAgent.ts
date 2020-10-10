@@ -2,6 +2,7 @@
 import { IError } from "../../../Interfaces/IError";
 import { Discriminator } from "../../../Interfaces/Agents/Discriminator";
 import { TaskMonitor } from "./TaskMonitor";
+import { SharedConst } from "../../../SharedConst";
 
 export class ErrorHandlerAgent implements IErrorHandlerAgent {
   Discriminator = Discriminator.IErrorHandler;
@@ -20,7 +21,6 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
       (<any[]>testSubject).forEach((testSubject: any) => this.ThrowIfNullOrUndefined(title, testSubject));
     }
     else {
-
       if (typeof testSubject === 'undefined' || testSubject === null) {
         try {
           if (this.TaskMonitor) {
@@ -65,6 +65,21 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     this.ErrorLogger('\t\t** WARNING ** ' + container + ' ' + text);
     this.ErrorLogger('');
   }
+
+  private StyleFormat(colorAr: string[], text: string) {
+    let toReturn: string = '';
+
+    toReturn = '';
+
+    colorAr.forEach((color) => {
+      toReturn +=  SharedConst.Const.Colors.ConsoleStyles.StyleEsc + color;
+    });
+
+    toReturn += text + SharedConst.Const.Colors.ConsoleStyles.StyleEsc + SharedConst.Const.Colors.ConsoleStyles.StyleReset;
+
+    return toReturn;
+  }
+
   private DrawErrorMessage(container: string, text: string | string[]) {
     if (!container) {
       container = 'unknown';
@@ -83,8 +98,16 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     }
 
     this.ErrorLogger('');
-    this.ErrorLogger('\t\ts) ** ERROR ** container: ' + container);
+    this.ErrorLogger('\t\ts) '
+      + this.StyleFormat([SharedConst.Const.Colors.ConsoleStyles.StyleBgRed], '** ERROR **'));
+
+
+    this.ErrorLogger('\t\t  container: ' + container);
+
     this.ErrorLogger('');
+
+
+
 
     textToRender.forEach((message: string) => {
       this.ErrorStack.push({
@@ -125,8 +148,6 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
     return toReturn;
   }
 
-  
-
   ErrorAndThrow(container: string | string[], text: string): void {
     let stack = new Error().stack;
 
@@ -145,7 +166,7 @@ export class ErrorHandlerAgent implements IErrorHandlerAgent {
       containerTextToRender = container;
     }
 
-    this.DrawErrorMessage(containerTextToRender, [text,stack]);
+    this.DrawErrorMessage(containerTextToRender, [text, stack]);
     try {
       this.TaskMonitor.RequestCancel();
     } catch (err) {

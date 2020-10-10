@@ -53,28 +53,30 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
         this.Logger.Log('processing mutation ' + (index + 1) + ':' + mutations.length);
         this.Logger.LogVal('mutation.addedNodes.length ', mutation.addedNodes.length);
 
-        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-          let mutatedElement: HTMLElement = <HTMLElement>(mutation.target);
-
+        if (mutation.type === 'childList' && (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0)) {
           let desktopMutatedEvent_Payload: IFrameJacketAddRemoveEvent_Payload = {
             AddedFrameJacket: null,
             RemovedIFrameId: null,
           };
 
-          let addedNodes: ElementFrameJacket[] = this.HandleAddedNodes(mutation.addedNodes);
-          let removedNodeIds: string[] = this.HandleRemovedNodes(mutation.removedNodes);
+          if (mutation.addedNodes.length > 0) {
+            let addedNodes: ElementFrameJacket[] = this.HandleAddedNodes(mutation.addedNodes);
+            addedNodes.forEach((addedNode: ElementFrameJacket) => {
+              desktopMutatedEvent_Payload.AddedFrameJacket = addedNode;
+              desktopMutatedEvent_Payload.RemovedIFrameId = null;
+              this.NotifyObserversAsync(desktopMutatedEvent_Payload);
+            });
+          }
 
-          addedNodes.forEach((addedNode: ElementFrameJacket) => {
-            desktopMutatedEvent_Payload.AddedFrameJacket = addedNode;
-            desktopMutatedEvent_Payload.RemovedIFrameId = null;
-            this.NotifyObserversAsync(desktopMutatedEvent_Payload);
-          });
-
-          removedNodeIds.forEach((removedNodeId: string) => {
-            desktopMutatedEvent_Payload.AddedFrameJacket = null;
-            desktopMutatedEvent_Payload.RemovedIFrameId = removedNodeId;
-            this.NotifyObserversAsync(desktopMutatedEvent_Payload);
-          });
+          if (mutation.removedNodes.length > 0) {
+            let removedNodeIds: string[] = this.HandleRemovedNodes(mutation.removedNodes);
+            removedNodeIds.forEach((removedNodeId: string) => {
+              desktopMutatedEvent_Payload.AddedFrameJacket = null;
+              desktopMutatedEvent_Payload.RemovedIFrameId = removedNodeId;
+              this.Logger.LogAsJsonPretty('removed', desktopMutatedEvent_Payload);
+              this.NotifyObserversAsync(desktopMutatedEvent_Payload);
+            });
+          }
         }
       });
     }

@@ -2,7 +2,7 @@
 import { ElementFrameJacket } from "../../../../../DOMJacket/ElementFrameJacket";
 import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
-import { ScWindowType } from "../../../../../Shared/scripts/Enums/5000 - scWindowType";
+import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { FactoryHelper } from "../../../../../Shared/scripts/Helpers/FactoryHelper";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";

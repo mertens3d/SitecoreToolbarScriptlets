@@ -23,8 +23,8 @@ export abstract class _justWindowStateFullProxy extends _HindeCoreBase implement
       this.Logger.FuncStart(this.GetState.name, _justWindowStateFullProxy.name);
 
       let stateOf_: IStateOf_ = {
-        StatefullDisciminator: this.StateFullProxyDisciminator,
-        StatefullDisciminatorFriendly: this.StateFullProxyDisciminatorFriendly
+        Disciminator: this.StateFullProxyDisciminator,
+        DisciminatorFriendly: this.StateFullProxyDisciminatorFriendly
       }
       resolve(stateOf_);
 

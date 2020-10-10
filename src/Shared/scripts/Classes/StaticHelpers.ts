@@ -2,7 +2,7 @@
 import { SettingKey } from "../Enums/3xxx-SettingKey";
 import { BufferChar } from "../Enums/BufferChar";
 import { BufferDirection } from "../Enums/BufferDirection";
-import { ScWindowType } from "../Enums/5000 - scWindowType";
+import { ScWindowType } from "../Enums/50 - scWindowType";
 import { SnapShotFlavor } from "../Enums/SnapShotFlavor";
 
 export class StaticHelpers {

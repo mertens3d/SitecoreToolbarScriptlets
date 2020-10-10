@@ -2,7 +2,7 @@
 import { IStateOfPackageDesigner } from "../../Interfaces/Data/States/IStateOfPackageDesigner";
 
 export class DefaultStateOfPackageDesigner implements IStateOfPackageDesigner {
-  StatefullDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.PackageDesigner];
-  StatefullDisciminator = StateFullProxyDisciminator.PackageDesigner;
+  DisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.PackageDesigner];
+  Disciminator = StateFullProxyDisciminator.PackageDesigner;
   StatusText: '';
 }

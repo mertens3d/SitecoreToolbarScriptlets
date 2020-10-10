@@ -150,12 +150,14 @@ export class ContentConst {
           TemplateManager: 'img[src$="newspaper.png"]',
           SecurityTools: 'img[src$="lock-2.png"]',
           ReportingTools: 'img[src$="scripts.png"]',
-          
+          AllApplications: '.scStartMenuProgramsMenuText',
+          Id: '[id=Popup1]',
         },
         Popup2: {
           AccessViewer: 'img[src$="lock.png"]',
           Archive: 'img[src$=".png"]',
           DomainManager: 'img[src$="routes.png"]',
+          Id: '[id=Popup2]',
           InstallationWizard: 'img[src$="install_wizard.png"]',
           KeyboardMap: 'img[src$="keyboardmap.png"]',
           LogViewer: 'img[src$="logviewer.png"]',
@@ -165,14 +167,14 @@ export class ContentConst {
           RoleManager: 'img[src$="account.png"]',
           Run: 'img[src$="run.png"]',
           ScanForBrokenLinks: 'img[src$="link_broken.png"]',
+          Security: 'img[src$="blank.gif"]:nth-child(2)', // second blank this is not going to work since there are two
           SecurityEditor: 'img[src$="shield.png"]',
+          System: 'img[src$="blank.gif"]:nth-child(1)', // this is not going to work since there are two
           UserManager: 'img[src$="user (1).png"]',
           Workbox: 'img[src$="workbox.png"]',
-          System: 'img[src$="blank.gif"]:nth-child(1)', // this is not going to work since there are two
-          Security: 'img[src$="blank.gif"]:nth-child(2)', // second blank this is not going to work since there are two
         },
         Popup3: {
-
+          Id: '[id=Popup3]',
           InstalledLicenses: 'img[src$="certificate.png"]',
           LicenseDetails: 'img[src$="informations.png"]',
         },

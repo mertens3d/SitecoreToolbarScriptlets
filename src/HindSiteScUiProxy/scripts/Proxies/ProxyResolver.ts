@@ -1,6 +1,6 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
 import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { ScWindowType } from '../../../Shared/scripts/Enums/5000 - scWindowType';
+import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
 import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';

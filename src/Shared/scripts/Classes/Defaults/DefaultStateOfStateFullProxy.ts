@@ -2,6 +2,6 @@
 import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
 
 export class DefaultStateOfStateFullProxy implements IStateOf_ {
-  StatefullDisciminatorFriendly: string = StateFullProxyDisciminator[StateFullProxyDisciminator.Unknown];
-  StatefullDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.Unknown;
+  DisciminatorFriendly: string = StateFullProxyDisciminator[StateFullProxyDisciminator.Unknown];
+  Disciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.Unknown;
 }

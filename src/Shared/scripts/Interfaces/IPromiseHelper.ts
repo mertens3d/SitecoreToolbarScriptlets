@@ -1,11 +1,11 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
 import { DTFrameProxy } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 import { ReadyStateNAB } from "../Enums/ReadyState";
-import { IAbsoluteUrl } from "./IAbsoluteUrl";
+import { ISiteUrl } from "./IAbsoluteUrl";
 
 export interface IRecipeBasics {
   //RaceWaitAndClick(scStartButton: IScVerSpec, arg1: ScDocumentProxy);
-  TabChainSetHrefWaitForComplete(newHref: IAbsoluteUrl);
+  TabChainSetHrefWaitForComplete(newHref: ISiteUrl);
   TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void>;
   //WaitForAndClickWithPayload(MenuDropDownPublishItem: string, docToPublish: ScDocumentProxy, payload: IDataPublishChain);
   //WaitForAndReturnFoundElem(ContentDoc: ScDocumentProxy, SettingsHidden: string);

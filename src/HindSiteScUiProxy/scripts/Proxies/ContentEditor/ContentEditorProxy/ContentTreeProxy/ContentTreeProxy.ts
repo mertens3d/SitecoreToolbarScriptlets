@@ -15,6 +15,7 @@ import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase"
 import { ContentTreeMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Subject";
 import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNodeProxy';
+import { ConResolver } from './ScContentTreeNodeProxy/ConResolver';
 
 //ContentTree is the name Sitecore uses
 export class BuiltInContentTreeNodeResolver extends _HindeCoreBase {
@@ -32,6 +33,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
   private TreeContainerJacket: ElementJacket;
 
   public ContentTreeMutationEvent_Subject: ContentTreeMutationEvent_Subject;
+  private  ConResolver: ConResolver;
 
   constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, treeContainerJacket: ElementJacket, TreeRootSelector: string) {
     super(hindeCore);
@@ -40,10 +42,16 @@ export class ContentTreeProxy extends _HindeCoreBase {
     this.DocumentJacket = documentJacket;
     this.TreeRootSelector = TreeRootSelector;
     this.TreeContainerJacket = treeContainerJacket;
+
+    this.InstantiateInstance();
   }
 
-  async Instantiate_TreeProxy(): Promise<void> {
-    this.Logger.FuncStart(this.Instantiate_TreeProxy.name);
+  private InstantiateInstance() {
+    this.ConResolver = new ConResolver(this.HindeCore);
+  }
+
+  async Instantiate_TreeProxyAsyncElem(): Promise<void> {
+    this.Logger.FuncStart(this.Instantiate_TreeProxyAsyncElem.name);
 
     try {
       await this.SetRootNodeFromSelector()
@@ -53,10 +61,10 @@ export class ContentTreeProxy extends _HindeCoreBase {
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.HindeCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Instantiate_TreeProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Instantiate_TreeProxyAsyncElem.name, err);
     }
 
-    this.Logger.FuncEnd(this.Instantiate_TreeProxy.name);
+    this.Logger.FuncEnd(this.Instantiate_TreeProxyAsyncElem.name);
   }
 
   WireEvents_TreeProxy() {
@@ -72,7 +80,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
       this.GetStateOfContentTree()
         .then((stateOfContentTree: IStateOfContentTree) => {
           let TreeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = {
-            StateOfContentTree: stateOfContentTree
+            ContentTree: stateOfContentTree
           }
 
           this.ContentTreeMutationEvent_Subject.NotifyObserversAsync(TreeMutationEvent_Payload)
@@ -99,7 +107,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
         var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.ItemId);
 
         await this.TreeContainerJacket.WaitForElement('[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
-          .then((elemJacket: ElementJacket) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth, null))
+          .then((elemJacket: ElementJacket) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth, null, this.ConResolver))
           .then(() => scContentTreeNodeProxy.Instantiate())
           .then(() => resolve(scContentTreeNodeProxy))
           .catch((err) => reject(this.GetTreeNodeByGlyph.name + ' | ' + err));
@@ -191,9 +199,9 @@ export class ContentTreeProxy extends _HindeCoreBase {
       this.ErrorHand.ThrowIfNullOrUndefined(this.GetStateOfContentTree.name, [stateOfContentTree]);
 
       await this.GetStateOfContentTreeNodeDeep()
-        .then((result: IStateOfScContentTreeNodeDeep) => stateOfContentTree.StateOfScContentTreeNodeDeep = result)
+        .then((result: IStateOfScContentTreeNodeDeep) => stateOfContentTree.ContentTreeNodeDeep = result)
         .then(() => {
-          let activeNodeFlat: IStateOfScContentTreeNodeShallow = <IStateOfScContentTreeNodeShallow>this.GetActiveTreeNodeFromAncestorNode(stateOfContentTree.StateOfScContentTreeNodeDeep);
+          let activeNodeFlat: IStateOfScContentTreeNodeShallow = <IStateOfScContentTreeNodeShallow>this.GetActiveTreeNodeFromAncestorNode(stateOfContentTree.ContentTreeNodeDeep);
           if (activeNodeFlat) {
             stateOfContentTree.ActiveNodeShallow = activeNodeFlat;
           }
@@ -213,7 +221,7 @@ export class ContentTreeProxy extends _HindeCoreBase {
 
           await rootParent.WaitForElement(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
             .then(async (firstChildGlyphNode: ElementImgJacket) => {
-              this._treeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, firstChildGlyphNode, 0, 0, 1, null)
+              this._treeNodeProxy = new ScContentTreeNodeProxy(this.HindeCore, firstChildGlyphNode, 0, 0, 1, null, this.ConResolver)
               await this._treeNodeProxy.Instantiate();
             })
             .catch((err) => reject(this.GetTreeNodeProxy.name + ' | ' + err));

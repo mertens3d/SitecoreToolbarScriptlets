@@ -10,12 +10,8 @@ import { IDataDebugCallback } from "../../../Interfaces/IDataDebugCallback";
 import { ICallbackDataDebugTextChanged } from "../../../Interfaces/ICallbackDataDebugTextChanged";
 import { LogWriterBuffer } from "./LogWriterBuffer";
 import { LoggerTimer } from "./LoggerTimer";
+import { SharedConst } from "../../../SharedConst";
 
-
-export enum StyleMode {
-  Default = 0,
-  Highlight =1
-}
 
 export class LoggerAgent implements ILoggerAgent {
   private MaxIndent: number = 20;
@@ -26,13 +22,7 @@ export class LoggerAgent implements ILoggerAgent {
   private HasWriters: boolean;
   Timer: LoggerTimer;
   UseTimeStamp: boolean = true;
-  private styleBgYellow: string = "[43m";
-  private styleEsc: string = "\x1b";
-  private styleFgBlue: string = "[34m";
-  private styleFgGreen: string = "[32m";
-  private styleFgMagenta: string = "[35m";
-  private styleFgRed: string = "[31m";
-  private styleReset: string = "[0m";
+
   private AltColor: string;
   readonly Discriminator = Discriminator.ILoggerAgent;
 
@@ -180,17 +170,17 @@ export class LoggerAgent implements ILoggerAgent {
 
     let rawText: string = debugPrefix + textValName + ' : ' + textVal;
 
-    if (this.AltColor === this.styleFgBlue) {
-      this.AltColor = this.styleFgMagenta;
+    if (this.AltColor === SharedConst.Const.Colors.ConsoleStyles.StyleFgBlue) {
+      this.AltColor = SharedConst.Const.Colors.ConsoleStyles.StyleFgMagenta;
     } else {
-      this.AltColor = this.styleFgBlue; 
+      this.AltColor = SharedConst.Const.Colors.ConsoleStyles.StyleFgBlue; 
     }
     let formattedText: string = this.StyleFormat(this.AltColor, rawText);
     this.Log(formattedText);
   }
 
   LogImportant(text) {
-    text = this.StyleFormat(this.styleBgYellow, text);
+    text = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleBgYellow, text);
     this.Log(text);
   }
   async Log(text, optionalValue: string = '', hasPrefix = false) {
@@ -250,7 +240,7 @@ export class LoggerAgent implements ILoggerAgent {
 
 
   StyleFormat(color: string, text: string) {
-    return this.styleEsc + color + text + this.styleEsc + this.styleReset;
+    return SharedConst.Const.Colors.ConsoleStyles.StyleEsc + color + text + SharedConst.Const.Colors.ConsoleStyles.StyleEsc + SharedConst.Const.Colors.ConsoleStyles.StyleReset;
   }
 
   CtorName(ctorName: string) {
@@ -273,7 +263,7 @@ export class LoggerAgent implements ILoggerAgent {
       textOrFunc = textOrFunc + ' : ' + optionalValue;
     }
 
-    let formatted = this.StyleFormat(this.styleFgGreen, textOrFunc);
+    let formatted = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleFgGreen, textOrFunc);
 
     this.Log(formatted, '', true);
     this.__callDepth++;
@@ -311,7 +301,7 @@ export class LoggerAgent implements ILoggerAgent {
     if (optionalValue.length > 0) {
       text = text + ' : ' + optionalValue;
     }
-    let formatted = this.StyleFormat(this.styleFgRed, text);
+    let formatted = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleFgRed, text);
     //this.Log(formatted, '', true);
     this.Log(formatted, optionalValue, true);
   }

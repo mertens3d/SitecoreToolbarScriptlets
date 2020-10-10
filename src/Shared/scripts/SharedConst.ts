@@ -8,6 +8,17 @@ export class SharedConst {
       colorMediaLibrary: 'chocolate',
       colorSystem: 'lightgreen',
       colorTemplates: 'white',
+      ConsoleStyles: {
+        StyleBgYellow: "[43m",
+        StyleBgRed: "[41m",
+        StyleEsc: "\x1b",
+        StyleFgBlue: "[34m",
+        StyleFgGreen: "[32m",
+        StyleFgMagenta: "[35m",
+        StyleFgRed: "[31m",
+        StyleFgYellow: "[33m",
+        StyleReset: "[0m",
+      }
     },
     Debug: {
       ForceLoggingEnabled: false,
@@ -92,6 +103,10 @@ export class SharedConst {
       },
     },
 
+    UrlRelativePrefix: {
+      IconCache: '/temp/iconcache/',
+      IconShellStandardMedia: '/sitecore/shell/themes/standard/~/media/',
+    },
     UrlSuffix: {
       Desktop: '/sitecore/shell/default.aspx',
       Login: '/sitecore/login',

@@ -1,5 +1,5 @@
 ﻿import { QueryStrKey } from "../../../Enums/QueryStrKey";
-import { ScWindowType } from "../../../Enums/5000 - scWindowType";
+import { ScWindowType } from "../../../Enums/50 - scWindowType";
 import { IPageDeterminator } from "./IPageDeterminator";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
 
@@ -431,7 +431,8 @@ export class AllPageDeterminators {
         AllPageDeterminators.KVPXMLControlApplication,
         {
           Key: QueryStrKey.he,
-          ValueMatch: /Scan.?for.?Broken+Links/ig,
+          ValueMatch: /Scan.?for.?Broken.?Links/ig,
+                       
         }
 
       ],

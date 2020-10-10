@@ -11,5 +11,5 @@ export class DefaultStateOfContentTree implements IStateOfContentTree {
   //  LevelWidth: -1,
   //  SiblingIndex: -1
   //}
-  StateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep = null;
+  ContentTreeNodeDeep: IStateOfScContentTreeNodeDeep = null;
 }

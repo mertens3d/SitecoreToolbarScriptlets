@@ -72,6 +72,7 @@ export class CommandManager extends _HindeCoreBase {
 
   async TriggerPingEventAsync(): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);
+    this.TaskMonitor.ResetCancel();
 
     try {
       let stateOfPopUp: IStateOfPopUp = this.UiLayer.GetStateOfPopUp();

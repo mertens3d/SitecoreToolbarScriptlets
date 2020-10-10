@@ -10,7 +10,7 @@ import { FactoryHelper } from "../Shared/scripts/Helpers/FactoryHelper";
 import { _HindeCoreBase } from "../Shared/scripts/_HindeCoreBase";
 import { UrlJacket } from "./UrlJacket";
 import { SharedConst } from "../Shared/scripts/SharedConst";
-import { IAbsoluteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
+import { ISiteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { Guid } from "../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../Shared/scripts/Helpers/GuidData";
 import { PromiseFailAction } from "../Shared/scripts/Enums/PromiseFailAction";
@@ -131,7 +131,7 @@ export class DocumentJacket extends _HindeCoreBase {
   }
 
   Validate() {
-    let url: IAbsoluteUrl = this.UrlJacket.BuildFullUrlFromParts();
+    let url: ISiteUrl = this.UrlJacket.BuildFullUrlFromParts();
 
     if (!url) {
       this.ErrorHand.ErrorAndThrow(this.Validate.name, 'No URL');

@@ -4,7 +4,7 @@ import { ElementFrameJacket } from "../../../../../DOMJacket/ElementFrameJacket"
 import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
 import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { ScWindowType } from "../../../../../Shared/scripts/Enums/5000 - scWindowType";
+import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
@@ -76,9 +76,9 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
       await Promise.all(promiseAr)
         .then((stateOfDTFrames: IStateOfDTFrame[]) => {
           stateOfDTFrames.forEach((stateOfDTFrame: IStateOfDTFrame, index: number) => {
-            stateOfDTArea.StateOfDTFrames.push(stateOfDTFrame);
+            stateOfDTArea.DTFrames.push(stateOfDTFrame);
             if (stateOfDTFrame.ZIndex === 1) {
-              stateOfDTArea.ActiveDTFrameIndex = index;
+              stateOfDTArea.ActiveFrameIndex = index;
             }
           });
         })
@@ -101,7 +101,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
         if (!StaticHelpers.IsNullOrUndefined([this.AssociatedScDocumentJacket])) {
           this.AddToIncomingSetStateList(StateOfDTArea);
 
-          StateOfDTArea.StateOfDTFrames.forEach((dtFrame: IStateOfDTFrame) => dtFramesNeeded.DiscriminatorAr.push(dtFrame.StateOfHosted.StatefullDisciminator));
+          StateOfDTArea.DTFrames.forEach((dtFrame: IStateOfDTFrame) => dtFramesNeeded.DiscriminatorAr.push(dtFrame.HostedFrame.Disciminator));
         } else {
           reject(this.SetState.name + ' bad data');
         }
@@ -120,12 +120,12 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
 
   //---------------------------------------------------------------------------------------------
 
-  private async CallBackOnDocumentProxyMutationEvent(payload: IDocumentProxyMutationEvent_Payload): Promise<void> {
+  private async CallBackOnDocumentProxyMutationEvent(documentProxyMutationEvent_Payload: IDocumentProxyMutationEvent_Payload): Promise<void> {
     this.Logger.FuncStart(this.CallBackOnDocumentProxyMutationEvent.name);
-
+    this.Logger.LogAsJsonPretty('payload', documentProxyMutationEvent_Payload);
     try {
-      await this.HandleAddedFrameJacket(payload.AddedFrameJacket)
-        .then(() => this.HandleRemovedIframe(payload.RemovedIFrameId))
+      await this.HandleAddedFrameJacket(documentProxyMutationEvent_Payload.AddedFrameJacket)
+        .then(() => this.HandleRemovedIframe(documentProxyMutationEvent_Payload.RemovedIFrameId))
         .then(() => {
         });
     } catch (err) {
@@ -168,8 +168,11 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
   }
 
   private async HandleRemovedIframe(needleIframeId: string): Promise<void> {
-    this.Logger.FuncStart(this.HandleRemovedIframe.name);
+    this.Logger.FuncStart(this.HandleRemovedIframe.name, 'HandleRemovedIframe: ' + needleIframeId);
     try {
+
+      this.Logger.LogVal('Bucket size before', this.FramesBucket.length);
+
       if (needleIframeId && needleIframeId.length > 0) {
         let foundMatch: number = -1;
 
@@ -180,11 +183,17 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
         });
 
         if (foundMatch > -1) {
+          this.Logger.Log('match found');
           this.FramesBucket.splice(foundMatch, 1);
+        } else {
+          this.ErrorHand.WarningAndContinue(this.HandleRemovedIframe.name, 'No match found for frame to be removed: ' + needleIframeId);
         }
       } else {
         this.Logger.Log("No needle id, no action");
       }
+
+      this.Logger.LogVal('Bucket size after', this.FramesBucket.length);
+
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.HandleRemovedIframe.name, err);
     }
@@ -232,7 +241,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     let foundMatchingIndex: number = -1;
 
     this.IncomingSetStateList.forEach((stateOfDtFrame: IStateOfDTFrame, index: number) => {
-      if (stateOfDtFrame.StateOfHosted.StatefullDisciminator === dtFrameProxy.HostedStateFullProxy.StateFullProxyDisciminator) {
+      if (stateOfDtFrame.HostedFrame.Disciminator === dtFrameProxy.HostedStateFullProxy.StateFullProxyDisciminator) {
         foundMatchingState = stateOfDtFrame;
         foundMatchingIndex = index;
       }
@@ -323,8 +332,8 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
   }
 
   AddToIncomingSetStateList(stateOfFrame: IStateOfDTArea): void {
-    this.Logger.FuncStart(this.AddToIncomingSetStateList.name, stateOfFrame.StateOfDTFrames.length);
-    stateOfFrame.StateOfDTFrames.forEach((stateOfDTFrame) => this.IncomingSetStateList.push(stateOfDTFrame));
+    this.Logger.FuncStart(this.AddToIncomingSetStateList.name, stateOfFrame.DTFrames.length);
+    stateOfFrame.DTFrames.forEach((stateOfDTFrame) => this.IncomingSetStateList.push(stateOfDTFrame));
     this.Logger.FuncEnd(this.AddToIncomingSetStateList.name);
   }
 

@@ -201,7 +201,7 @@ export class CommandDefintionFactory extends _HindeCoreBase {
           PlaceHolderSelector: PopConst.Const.Selector.HS.TakeSnapshot,
           IconClassName: PopConst.Const.ClassNames.HS.Buttons.TakeSnapShot,
           InnerText: "Take Snapshot",
-          VisibilityControllers: [VisibilityType.SnapShotable],
+          VisibilityControllers: [], //VisibilityType.SnapShotable
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,

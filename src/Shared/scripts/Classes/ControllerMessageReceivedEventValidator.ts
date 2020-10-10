@@ -4,7 +4,7 @@ import { IStateOfScUi } from "../Interfaces/Data/States/IDataStateOfSitecoreWind
 import { IStateOfContentEditor } from "../Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDesktop } from "../Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../Interfaces/Data/States/IStateOfDTProxy";
-import { IStateOfScWindow } from "../Interfaces/Data/States/IStateOfScWindow";
+import { IRootState } from "../Interfaces/Data/States/IStateOfScWindow";
 import { _HindeCoreBase } from "../_HindeCoreBase";
 import { DefaultControllerMessageReceivedEvent_Payload } from "./Defaults/DefaultControllerMessageReceivedEvent_Payload";
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
@@ -61,41 +61,41 @@ export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
     if (!stateOfScUiProxy) {
       stateOfScUiProxy = new DefaultStateOfScUiProxy();
     }
-    stateOfScUiProxy.StateOfScWindow = this.ValidateStateOfScWindowProxy(stateOfScUiProxy.StateOfScWindow);
+    stateOfScUiProxy.State = this.ValidateStateOfScWindowProxy(stateOfScUiProxy.State);
     return stateOfScUiProxy;
   }
 
-  private ValidateStateOfScWindowProxy(stateOfScWindowProxy: IStateOfScWindow): IStateOfScWindow {
-    if (!stateOfScWindowProxy || ! stateOfScWindowProxy.StateOf_) {
-      stateOfScWindowProxy = new DefaultStateOfScWindow();
+  private ValidateStateOfScWindowProxy(stateOfScWindow: IRootState): IRootState {
+    if (!stateOfScWindow || ! stateOfScWindow.ScWindow) {
+      stateOfScWindow = new DefaultStateOfScWindow();
     }
 
-    let discriminator: StateFullProxyDisciminator = stateOfScWindowProxy.StateOf_.StatefullDisciminator;
+    let discriminator: StateFullProxyDisciminator = stateOfScWindow.ScWindow.Disciminator;
 
     if (discriminator === StateFullProxyDisciminator.ContentEditor) {
-      stateOfScWindowProxy.StateOf_ = this.ValidateStateOfContentEditorProxy(<IStateOfContentEditor>stateOfScWindowProxy.StateOf_);
+      stateOfScWindow.ScWindow = this.ValidateStateOfContentEditorProxy(<IStateOfContentEditor>stateOfScWindow.ScWindow);
     } else if (discriminator === StateFullProxyDisciminator.Desktop) {
-      stateOfScWindowProxy.StateOf_ = this.ValidateStateOfDesktopProxy(<IStateOfDesktop>stateOfScWindowProxy.StateOf_);
+      stateOfScWindow.ScWindow = this.ValidateStateOfDesktopProxy(<IStateOfDesktop>stateOfScWindow.ScWindow);
     }
-    return stateOfScWindowProxy;
+    return stateOfScWindow;
   }
 
   private ValidateStateOfContentEditorProxy(StateOfContentEditor: IStateOfContentEditor): IStateOfContentEditor {
     if (!StateOfContentEditor) {
       StateOfContentEditor = new DefaultStateOfContentEditor();
     }
-    if (!StateOfContentEditor.StateOfContentTree) {
-      StateOfContentEditor.StateOfContentTree = new DefaultStateOfContentTree();
+    if (!StateOfContentEditor.ContentTree) {
+      StateOfContentEditor.ContentTree = new DefaultStateOfContentTree();
     }
     return StateOfContentEditor;
   }
 
   private ValidateStateOfDTAreaProxy(stateOfDTAreaProxy: IStateOfDTArea): IStateOfDTArea {
-    if (stateOfDTAreaProxy.ActiveDTFrameIndex === null) {
-      stateOfDTAreaProxy.ActiveDTFrameIndex = -1;
+    if (stateOfDTAreaProxy.ActiveFrameIndex === null) {
+      stateOfDTAreaProxy.ActiveFrameIndex = -1;
     }
-    if (!stateOfDTAreaProxy.StateOfDTFrames) {
-      stateOfDTAreaProxy.StateOfDTFrames = [];
+    if (!stateOfDTAreaProxy.DTFrames) {
+      stateOfDTAreaProxy.DTFrames = [];
     }
     return stateOfDTAreaProxy;
   }
@@ -104,7 +104,7 @@ export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
     if (!StateOfDesktop) {
       StateOfDesktop = new DefaultStateOfDesktop();
     }
-    StateOfDesktop.StateOfDTArea = this.ValidateStateOfDTAreaProxy(StateOfDesktop.StateOfDTArea);
+    StateOfDesktop.DTArea = this.ValidateStateOfDTAreaProxy(StateOfDesktop.DTArea);
 
     return StateOfDesktop;
   }

@@ -9,6 +9,8 @@ import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/Inject
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
 import { SharedConst } from '../../../../../../Shared/scripts/SharedConst';
 import { IScContentTreeNodeLineage } from '../../../../../../Shared/scripts/Interfaces/Data/IScContentTreeNodeLineage';
+import { IScIcon } from '../../../../../../Shared/scripts/Interfaces/Data/IScIcon';
+import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
 
 export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   private DocumentJacket: DocumentJacket;
@@ -17,23 +19,28 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   private StartBarButtonElemId: string;
 
   public FrameId: string;
+  private ConResolver: ConResolver;
 
-  constructor(hindeCore: IHindeCore, iframeElemId: string, documentJacket: DocumentJacket) {
+  constructor(hindeCore: IHindeCore, iframeElemId: string, documentJacket: DocumentJacket, conResolver: ConResolver) {
     super(hindeCore);
     this.DocumentJacket = documentJacket;
     this.FrameId = iframeElemId;
+    this.ConResolver = conResolver;
+    this.InstantiateInstance();
   }
 
-  async Instantiate_DestopStartBarButtonProxy(): Promise<void> {
+  private InstantiateInstance() {
+    this.StartBarButtonElemId = ContentConst.Const.Names.Desktop.StartBarApplicationPrefix + this.FrameId;
+  }
+
+  async Instantiate_DestopStartBarButtonProxyAsyncItems(): Promise<void> {
     try {
-      this.StartBarButtonElemId = ContentConst.Const.Names.Desktop.StartBarApplicationPrefix + this.FrameId;
       let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
       this.FoundStartBarButton = this.DocumentJacket.QuerySelector(querySelectBtn);
-
-      await this.FoundStartBarButton.WaitForElement(':scope > div > span', this.Instantiate_DestopStartBarButtonProxy.name)
+      await this.FoundStartBarButton.WaitForElement(':scope > div > span', this.Instantiate_DestopStartBarButtonProxyAsyncItems.name)
         .then((containerSpanElement: ElementJacket) => this.ContainerSpanElement = containerSpanElement);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Instantiate_DestopStartBarButtonProxy.name, err);
+      this.ErrorHand.ErrorAndThrow(this.Instantiate_DestopStartBarButtonProxyAsyncItems.name, err);
     }
   }
 
@@ -74,12 +81,12 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
     return newMainIconNode;
   }
 
-  private AncestorNodeIcon(itemIconSource: string): HTMLImageElement {
+  private AncestorNodeIcon(itemIconSource: IScIcon): HTMLImageElement {
     let newItemIconNode = <HTMLImageElement>document.createElement('img');
     newItemIconNode.border = '0px';
     newItemIconNode.classList.add("scContentTreeNodeIcon");
     newItemIconNode.height = 16;
-    newItemIconNode.src = itemIconSource;
+    newItemIconNode.src = this.ConResolver.ResolveIconPath(itemIconSource);
     newItemIconNode.style.position = "absolute";
     newItemIconNode.style.opacity = "0.9";
     newItemIconNode.width = 16;
@@ -89,16 +96,16 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
   private ProcessColor(icon: string): string {
     let borderColor: string = '';
 
-    if (icon.indexOf('photo_scenery.png') > 0) {
+    if (icon.indexOf('photo_scenery.png') > -1) {
       borderColor = SharedConst.Const.Colors.colorMediaLibrary;
     }
-    else if (icon.indexOf('cubes_blue.png') > 0) {
+    else if (icon.indexOf('cubes_blue.png') > -1) {
       borderColor = SharedConst.Const.Colors.colorContent;
-    } else if (icon.indexOf('windows.png') > 0) {
+    } else if (icon.indexOf('windows.png') > -1) {
       borderColor = SharedConst.Const.Colors.colorLayout;
-    } else if (icon.indexOf('workstation1.png') > 0) {
+    } else if (icon.indexOf('workstation1.png') > -1) {
       borderColor = SharedConst.Const.Colors.colorSystem;
-    } else if (icon.indexOf('form_blue.png') > 0) {
+    } else if (icon.indexOf('form_blue.png') > -1) {
       borderColor = SharedConst.Const.Colors.colorTemplates;
     }
 
@@ -107,17 +114,15 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
 
   private DrawBorderColor(stateOfContentTree: IStateOfContentTree) {
     let borderColor: string = '';
-    borderColor = this.ProcessColor(stateOfContentTree.ActiveNodeShallow.Lineage.L1Icon);
+    borderColor = this.ProcessColor(stateOfContentTree.ActiveNodeShallow.Lineage.L1Icon.IconSuffix);
     if (borderColor.length > 0) {
       this.FoundStartBarButton.NativeElement.style.borderBottomColor = borderColor;
     }
   }
 
   private BuildLxSpan(stateOfContentTree: IStateOfContentTree): HTMLSpanElement {
-  
-
-    let nodeImage: HTMLImageElement = this.LxNodeImg(stateOfContentTree.ActiveNodeShallow.IconSrc);
-    let nodeSpan: HTMLSpanElement = this.LxNodeSpan(stateOfContentTree.ActiveNodeShallow.Friendly);  
+    let nodeImage: HTMLImageElement = this.LxNodeImg(this.ConResolver.ResolveIconPath( stateOfContentTree.ActiveNodeShallow.IconSrc));
+    let nodeSpan: HTMLSpanElement = this.LxNodeSpan(stateOfContentTree.ActiveNodeShallow.Friendly);
 
     let toReturn: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
     toReturn.style.position = 'relative';
@@ -132,7 +137,6 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
     return toReturn;
   }
   private BuildAncestorSpan(stateOfContentTree: IStateOfContentTree): HTMLSpanElement {
-
     let nodeImage: HTMLImageElement = this.AncestorNodeIcon(stateOfContentTree.ActiveNodeShallow.Lineage.L1Icon);
     let nodeSpan: HTMLSpanElement = this.AncestorNodeSpan(stateOfContentTree.ActiveNodeShallow.Lineage);
 
@@ -147,12 +151,9 @@ export class DesktopStartBarButtonProxy extends _HindeCoreBase {
     return toReturn;
   }
 
-  
-
   private DrawTextAndIcons(stateOfContentTree: IStateOfContentTree) {
     let ancestorSpan: HTMLSpanElement = this.BuildAncestorSpan(stateOfContentTree);
     let lxSpan: HTMLSpanElement = this.BuildLxSpan(stateOfContentTree);
-
 
     let bothWrapper: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
     bothWrapper.style.position = "relative";

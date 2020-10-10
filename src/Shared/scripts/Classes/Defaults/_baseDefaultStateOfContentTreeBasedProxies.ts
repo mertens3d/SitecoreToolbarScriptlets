@@ -3,7 +3,7 @@ import { IStateOfContentTreeBasedProxies } from "../../Interfaces/Data/States/IS
 import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
 
 export class _baseDefaultStateOfContentTreeBasedProxies implements IStateOfContentTreeBasedProxies {
-  StatefullDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.Unknown];
-  StatefullDisciminator = StateFullProxyDisciminator.Unknown;
-  StateOfContentTree = new DefaultStateOfContentTree();
+  DisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.Unknown];
+  Disciminator = StateFullProxyDisciminator.Unknown;
+  ContentTree = new DefaultStateOfContentTree();
 }

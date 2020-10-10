@@ -6,6 +6,7 @@ export interface ITaskMonitorAgent extends IDiscriminator {
 }
 
 export interface IInterruptAgent extends IDiscriminator {
+  ResetCancel();
   IsTaskListEmpty(): boolean;
   AsyncTaskCompleted(name: string);
   AsyncTaskStarted(name: string);

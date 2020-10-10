@@ -10,8 +10,10 @@ import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scrip
 import { IStateOfScContentTreeNodeShallow } from "../../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeShallow";
 import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
 import { _HindeCoreBase } from "../../../../../../../Shared/scripts/_HindeCoreBase";
+import { ConResolver } from "./ConResolver";
+import { IScIcon } from "../../../../../../../Shared/scripts/Interfaces/Data/IScIcon";
+import { ScIconPath } from "../../../../../../../Shared/scripts/Enums/60 - ScIconPath";
 
-//scContentTreeNode is the name sitecore uses
 export class ScContentTreeNodeProxy extends _HindeCoreBase {
   private ScContentTreeNodeDivElem: ElementDivJacket;
   private RecipeBasics: RecipeBasics;
@@ -30,26 +32,37 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
       SiblingIndex: -1
     },
     ItemId: null,
-    IconSrc: '',
+    IconSrc: {
+      IconPath: ScIconPath.Unknown,
+      IconSuffix: '',
+    },
     NodeChildren: [],
     Lineage: {
-      L1Icon: '',
+      L1Icon: {
+        IconSuffix: '',
+        IconPath: ScIconPath.Unknown,
+      },
       L1Text: '',
-      L2Icon: '',
+      L2Icon: {
+        IconSuffix: '',
+        IconPath: ScIconPath.Unknown,
+      },
       L2Text: ''
     }
   }
   private HasBeenHarvested: boolean = false;
   private: number;
   ParentTreeNode: ScContentTreeNodeProxy;
+  private ConResolver: ConResolver;
 
-  constructor(hindeCore: IHindeCore, sourceElemJacket: ElementJacket, level: number, siblingIndex: number, totalSiblings: number, parent: ScContentTreeNodeProxy) {
+  constructor(hindeCore: IHindeCore, sourceElemJacket: ElementJacket, level: number, siblingIndex: number, totalSiblings: number, parent: ScContentTreeNodeProxy, conResolver: ConResolver) {
     super(hindeCore);
 
     if (sourceElemJacket) {
       this.StateOfScContentTreeNode.Coord.LevelWidth = totalSiblings;
       this.StateOfScContentTreeNode.Coord.SiblingIndex = siblingIndex;
       this.StateOfScContentTreeNode.Coord.LevelIndex = level;
+      this.ConResolver = conResolver;
 
       if (sourceElemJacket.NativeElement.hasAttribute('src')) {
         this.InferFromImageElement(<HTMLImageElement>sourceElemJacket.NativeElement);
@@ -172,29 +185,25 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
   }
 
   private HarvestLineageProperties() {
-    this.StateOfScContentTreeNode.Lineage.L1Icon = this.GetMainIconSrc();
+    let mainIconSrc: IScIcon = this.GetMainIconSrc();
+    this.StateOfScContentTreeNode.Lineage.L1Icon = mainIconSrc;
 
     if (this.StateOfScContentTreeNode.Coord.LevelIndex === 0) {
-
-      this.StateOfScContentTreeNode.Lineage.L1Icon = '';
+      this.StateOfScContentTreeNode.Lineage.L1Icon = this.ConResolver.DefaultScIcon();
       this.StateOfScContentTreeNode.Lineage.L1Text = '';
-      this.StateOfScContentTreeNode.Lineage.L2Icon = '';
+      this.StateOfScContentTreeNode.Lineage.L2Icon = this.ConResolver.DefaultScIcon();
       this.StateOfScContentTreeNode.Lineage.L2Text = '';
-
     } else if (this.StateOfScContentTreeNode.Coord.LevelIndex === 1) {
-
       this.StateOfScContentTreeNode.Lineage.L1Icon = this.StateOfScContentTreeNode.IconSrc;
       this.StateOfScContentTreeNode.Lineage.L1Text = this.StateOfScContentTreeNode.Friendly;
-      this.StateOfScContentTreeNode.Lineage.L2Icon = '';
+      this.StateOfScContentTreeNode.Lineage.L2Icon = this.ConResolver.ResolveIconData('');
       this.StateOfScContentTreeNode.Lineage.L2Text = '';
-
     } else if (this.StateOfScContentTreeNode.Coord.LevelIndex === 2) {
       if (this.ParentTreeNode) {
         this.StateOfScContentTreeNode.Lineage.L1Icon = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Icon;
         this.StateOfScContentTreeNode.Lineage.L1Text = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Text;
-
       } else {
-        this.StateOfScContentTreeNode.Lineage.L1Icon = '';
+        this.StateOfScContentTreeNode.Lineage.L1Icon = this.ConResolver.ResolveIconData('');
         this.StateOfScContentTreeNode.Lineage.L1Text = '';
       }
 
@@ -207,25 +216,23 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
         this.StateOfScContentTreeNode.Lineage.L1Text = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Text;
         this.StateOfScContentTreeNode.Lineage.L2Icon = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L2Icon;
         this.StateOfScContentTreeNode.Lineage.L2Text = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L2Text;
-
       } else {
-        this.StateOfScContentTreeNode.Lineage.L1Icon = '';
+        this.StateOfScContentTreeNode.Lineage.L1Icon = this.ConResolver.ResolveIconData('');
         this.StateOfScContentTreeNode.Lineage.L1Text = '';
-        this.StateOfScContentTreeNode.Lineage.L2Icon = '';
+        this.StateOfScContentTreeNode.Lineage.L2Icon = this.ConResolver.ResolveIconData('');
         this.StateOfScContentTreeNode.Lineage.L2Text = '';
-
       }
     }
 
     if (this.StateOfScContentTreeNode.Coord.LevelIndex == 0) {
-      this.StateOfScContentTreeNode.Lineage.L1Icon = '';
+      this.StateOfScContentTreeNode.Lineage.L1Icon = this.ConResolver.ResolveIconData('');
     } else if (this.StateOfScContentTreeNode.Coord.LevelIndex == 1) {
       this.StateOfScContentTreeNode.Lineage.L1Icon = this.StateOfScContentTreeNode.IconSrc;
     } else {
       if (this.ParentTreeNode) {
         this.StateOfScContentTreeNode.Lineage.L1Icon = this.ParentTreeNode.StateOfScContentTreeNode.Lineage.L1Icon;
       } else {
-        this.StateOfScContentTreeNode.Lineage.L1Icon = '';
+        this.StateOfScContentTreeNode.Lineage.L1Icon = this.ConResolver.ResolveIconData('');
       }
     }
   }
@@ -259,14 +266,14 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     return toReturnGuidData;
   }
 
-  private GetIconSrc(): string {
-    let toReturn: string
+  private GetIconSrc(): IScIcon {
+    let toReturn: IScIcon = null;
     //((document.getElementById('Tree_Node_709C05C504394E1A9D4711E824C87B39')).parentElement).querySelector('.scContentTreeNodeIcon').src
     //((document.getElementById('Tree_Node_EB443C0BF923409E85F3E7893C8C30C2')).parentElement).querySelector('.scContentTreeNodeIcon').outerHTML
     let foundElement: ElementImgJacket = <ElementImgJacket>this.ScContentTreeNodeDivElem.querySelector(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
 
     if (foundElement) {
-      toReturn = foundElement.NativeElement.src;
+      toReturn = this.ConResolver.ResolveIconData( foundElement.NativeElement.src);
     }
 
     return toReturn;
@@ -280,7 +287,7 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
         let childNodes = this.ScContentTreeNodeDivElem.NativeElement.querySelectorAll(':scope > div > ' + ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
         childNodes.forEach((childNode: HTMLDivElement, index: number) => {
           let childJacket = new ElementDivJacket(this.HindeCore, childNode);
-          toReturn.push(new ScContentTreeNodeProxy(this.HindeCore, childJacket, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length, this))
+          toReturn.push(new ScContentTreeNodeProxy(this.HindeCore, childJacket, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length, this, this.ConResolver))
         });
 
         let PromiseAr: Promise<void>[] = [];
@@ -294,14 +301,14 @@ export class ScContentTreeNodeProxy extends _HindeCoreBase {
     });
   }
 
-  private GetMainIconSrc(): string {
-    let toReturn: string
+  private GetMainIconSrc(): IScIcon {
+    let toReturn: IScIcon = null;
     let penultimateNode: ScContentTreeNodeProxy = this;
 
     let penultimateElem: HTMLDivElement = <HTMLDivElement>this.ScContentTreeNodeDivElem.NativeElement.closest('[id=ContentTreeActualSize] > .scContentTreeNode >  div > .scContentTreeNode')
     if (penultimateElem) {
       let penElemJacket: ElementDivJacket = new ElementDivJacket(this.HindeCore, penultimateElem);
-      penultimateNode = new ScContentTreeNodeProxy(this.HindeCore, penElemJacket, 0, 0, 1, this);
+      penultimateNode = new ScContentTreeNodeProxy(this.HindeCore, penElemJacket, 0, 0, 1, this, this.ConResolver);
     }
 
     if (penultimateNode !== null) {

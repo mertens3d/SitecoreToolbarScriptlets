@@ -1,6 +1,6 @@
 ﻿import { QueryStrKey } from "../Shared/scripts/Enums/QueryStrKey";
 import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IAbsoluteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
+import { ISiteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { IUrlJacket } from "../Shared/scripts/Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../Shared/scripts/Interfaces/Jackets/IUrlParts";
 import { _HindeCoreBase } from "../Shared/scripts/_HindeCoreBase";
@@ -40,7 +40,7 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
   }
 
   QueryStringHasKey(key: QueryStrKey): boolean {
-    this.Logger.FuncStart(this.QueryStringHasKey.name, QueryStrKey[key]);
+    //this.Logger.FuncStart(this.QueryStringHasKey.name, QueryStrKey[key]);
     let toReturn: boolean = false;
 
     if (key !== null) {
@@ -51,12 +51,12 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
       }
     }
 
-    this.Logger.FuncEnd(this.QueryStringHasKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
+    //this.Logger.FuncEnd(this.QueryStringHasKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
     return toReturn;
   }
 
   GetQueryStringValueByKey(key: QueryStrKey): string {
-    this.Logger.FuncStart(this.GetQueryStringValueByKey.name, QueryStrKey[key]);
+    //this.Logger.FuncStart(this.GetQueryStringValueByKey.name, QueryStrKey[key]);
     let toReturn: string = '';
 
     if (this.QueryStringHasKey(key)) {
@@ -64,7 +64,7 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
       toReturn = this.UrlParts.UrlSearchParameters.get(keyAsStr);
     }
 
-    this.Logger.FuncEnd(this.GetQueryStringValueByKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
+    //this.Logger.FuncEnd(this.GetQueryStringValueByKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
     return toReturn;
   }
 
@@ -97,24 +97,29 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
     this.Logger.LogAsJsonPretty('params', this.UrlParts.UrlSearchParameters.toString());
   }
 
-  BuildFullUrlFromParts(): IAbsoluteUrl {
-    let toReturn: IAbsoluteUrl = {
+  BuildFullUrlFromParts(): ISiteUrl {
+    let toReturn: ISiteUrl = {
       AbsUrl: '',
+      RelativeUrl: '',
     };
 
     if (this.UrlParts) {
       if (this.UrlParts && !this.UrlParts.HasError) {
         toReturn.AbsUrl = this.UrlParts.Protocol + '//' + this.UrlParts.HostAndPort;
+        toReturn.RelativeUrl = '';
 
         if (this.UrlParts.FilePath.length > 0) {
           toReturn.AbsUrl += this.UrlParts.FilePath;
+          toReturn.RelativeUrl += this.UrlParts.FilePath;
         }
 
         if (this.UrlParts.UrlSearchParameters) {
           toReturn.AbsUrl += '?' + this.UrlParts.UrlSearchParameters.toString();
+          toReturn.RelativeUrl += '?' + this.UrlParts.UrlSearchParameters.toString();
         }
         if (this.UrlParts.Anchor.length > 0) {
           toReturn.AbsUrl += '#' + this.UrlParts.Anchor;
+          toReturn.RelativeUrl += '#' + this.UrlParts.Anchor;
         }
       }
     }

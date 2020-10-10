@@ -23,6 +23,10 @@ export class TaskMonitor implements IInterruptAgent {
     this.Logger = logger;
   }
 
+  ResetCancel() {
+    this.CancelRequestedFlag = false;
+  }
+
   IntroduceErrorHand(errorHand: IErrorHandlerAgent) {
     this.ErrorHand = errorHand;
   }

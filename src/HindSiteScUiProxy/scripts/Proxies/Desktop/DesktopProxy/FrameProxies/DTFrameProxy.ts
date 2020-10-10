@@ -4,7 +4,7 @@ import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agen
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { ScWindowType } from "../../../../../../Shared/scripts/Enums/5000 - scWindowType";
+import { ScWindowType } from "../../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
@@ -104,13 +104,13 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       let stateOfDTFrame: IStateOfDTFrame = new DefaultStateOfDTFrame();
 
 
-      stateOfDTFrame.StateOfFrameStyling = stateOfDTFrame.StateOfFrameStyling = this.FrameJacket.GetFrameStyling();
+      stateOfDTFrame.FrameStyling = stateOfDTFrame.FrameStyling = this.FrameJacket.GetFrameStyling();
 
       stateOfDTFrame.ZIndex = this.GetZindexAsInt();
 
       if (this.HostedStateFullProxy) {
         await this.HostedStateFullProxy.GetState()
-          .then((statefullProxyState: IStateOf_) => stateOfDTFrame.StateOfHosted = statefullProxyState)
+          .then((statefullProxyState: IStateOf_) => stateOfDTFrame.HostedFrame = statefullProxyState)
           .catch((err) => reject(this.GetState.name + ' | ' + err));
       }
 
@@ -124,7 +124,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       this.Logger.FuncStart(this.SetState.name, DTFrameProxy.name);
       this.DTFrameProxyMutationEvent_Subject.DisableNotifications();
 
-      await this.HostedStateFullProxy.SetState(stateOfDTFrame.StateOfHosted)
+      await this.HostedStateFullProxy.SetState(stateOfDTFrame.HostedFrame)
         .then(() => {
           this.SetFrameStyling(stateOfDTFrame)
           this.DTFrameProxyMutationEvent_Subject.EnableNotifications();
@@ -163,7 +163,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   private SetFrameStyling(stateOfDTFrame: IStateOfDTFrame) {
     this.Logger.FuncStart(this.SetFrameStyling.name);
 
-    this.FrameJacket.SetFrameStyling(stateOfDTFrame.StateOfFrameStyling);
+    this.FrameJacket.SetFrameStyling(stateOfDTFrame.FrameStyling);
 
     this.Logger.FuncEnd(this.SetFrameStyling.name);
   }

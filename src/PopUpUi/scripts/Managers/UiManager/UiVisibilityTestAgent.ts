@@ -1,6 +1,6 @@
 ﻿import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { ScWindowType } from "../../../../Shared/scripts/Enums/5000 - scWindowType";
+import { ScWindowType } from "../../../../Shared/scripts/Enums/50 - scWindowType";
 import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -65,7 +65,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
 
     visiblityTestResult.DidItPass = (
-      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && (<IStateOfDesktop>stateOfLiveHindSite.StateOfScWindow.StateOf_).StateOfDTArea.ActiveDTFrameIndex > -1)
+      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && (<IStateOfDesktop>stateOfLiveHindSite.State.ScWindow).DTArea.ActiveFrameIndex > -1)
       ||
       (stateOfLiveHindSite.Meta.WindowType === ScWindowType.ContentEditor));
 

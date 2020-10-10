@@ -75,7 +75,7 @@ export class DomainManagerProxy extends _justWindowStateFullProxy implements ISt
 
 export class AccessViewerProxy extends _justWindowStateFullProxy implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.AccessViewer;
-  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[this.StateFullProxyDisciminator];
+  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.AccessViewer];
 }
 
 export class RecycleBinProxy extends _justWindowStateFullProxy implements IStateFullProxy {

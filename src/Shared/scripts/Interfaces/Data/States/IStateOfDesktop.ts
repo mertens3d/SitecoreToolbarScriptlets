@@ -2,5 +2,5 @@
 import { IStateOf_ } from "./IStateOf_";
 
 export interface IStateOfDesktop extends IStateOf_{
-  StateOfDTArea: IStateOfDTArea;
+  DTArea: IStateOfDTArea;
 }

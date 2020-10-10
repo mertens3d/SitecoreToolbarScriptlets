@@ -1,4 +1,4 @@
-﻿import { IStateOf_ } from "./IStateOf_";
-export interface IStateOfScWindow {
-  StateOf_: IStateOf_
+﻿import { IStateOfScWindow } from "./IStateOfScWindow.1";
+export interface IRootState {
+  ScWindow: IStateOfScWindow
 }

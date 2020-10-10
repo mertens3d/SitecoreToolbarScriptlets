@@ -88,21 +88,22 @@ export interface IContentConst {
         }
       },
       Popup1: {
+        AllApplications: string,
         DevelopmentTools: string,
+        Id: string,
         MediaLibrary: string,
         RecycleBin: string,
+        ReportingTools: string,
         SecurityTools: string,
         StartMenuLeftOption: string,
         TemplateManager: string,
-        ReportingTools: string,
         
       },
       Popup2: {
         AccessViewer: string,
-        Workbox: string,
-        Run: string,
         Archive: string,
         DomainManager: string,
+        Id: string,
         InstallationWizard: string,
         KeyboardMap: string,
         LogViewer: string,
@@ -110,15 +111,17 @@ export interface IContentConst {
         PackageDesigner: string,
         PackageDesignerButton: string,
         RoleManager: string,
+        Run: string,
         ScanForBrokenLinks: string,
-        SecurityEditor: string,
-        UserManager: string,
-        System: string,
         Security: string,
+        SecurityEditor: string,
+        System: string,
+        UserManager: string,
+        Workbox: string,
       },
       Popup3: {
+        Id: string,
         InstalledLicenses: string,
-
         LicenseDetails: string,
       }
       LoginBtn: IScVerSpec,
