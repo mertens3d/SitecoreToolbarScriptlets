@@ -15,7 +15,7 @@ import { DefaultStateOfStorageSnapshots } from "./Defaults/DefaultStateOfSnapsho
 import { DefaultStateOfContentTree } from "./Defaults/DefaultStateOfContentTree";
 import { IStateOfStorageSnapShots } from "../Interfaces/Data/States/IStateOfStorageSnapShots";
 import { StaticHelpers } from "./StaticHelpers";
-import { StateFullProxyDisciminator } from "../Enums/4000 - StateFullProxyDisciminator";
+import { StateFullProxyDisciminator } from "../Enums/40 - StateFullProxyDisciminator";
 
 export class ControllerMessageReceivedEventValidator extends _HindeCoreBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {

@@ -1,7 +1,7 @@
 ﻿import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
-import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { MsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { SettingKey } from "../../../Shared/scripts/Enums/30 - SettingKey";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";

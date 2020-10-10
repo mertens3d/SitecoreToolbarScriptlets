@@ -1,5 +1,5 @@
 ﻿import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
-import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";

@@ -1,4 +1,4 @@
-﻿import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+﻿import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfLaunchPad } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfLaunchPad";
 import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";

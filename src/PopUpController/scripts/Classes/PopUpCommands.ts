@@ -1,7 +1,7 @@
 ﻿import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
+import { MsgFlag } from '../../../Shared/scripts/Enums/10 - MessageFlag';
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
-import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
+import { MenuCommandKey } from '../../../Shared/scripts/Enums/20 - MenuCommand';
 import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
 import { VisibilityType } from '../../../Shared/scripts/Enums/VisibilityType';

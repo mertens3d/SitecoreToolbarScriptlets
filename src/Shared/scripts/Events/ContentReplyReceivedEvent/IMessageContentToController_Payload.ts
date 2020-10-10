@@ -1,4 +1,4 @@
-﻿import { MsgFlag } from "../../../../Shared/scripts/Enums/1xxx-MessageFlag";
+﻿import { MsgFlag } from "../../../../Shared/scripts/Enums/10 - MessageFlag";
 import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 

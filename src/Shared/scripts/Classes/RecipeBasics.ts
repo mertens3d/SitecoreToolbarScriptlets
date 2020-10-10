@@ -5,7 +5,7 @@ import { DocumentJacket } from '../../../DOMJacket/DocumentJacket';
 import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
 import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
-import { ReadyStateNAB } from '../Enums/ReadyState';
+import { ReadyStateNAB } from '../Classes/ReadyState';
 import { IContentBrowserProxy } from '../Interfaces/Agents/IContentBrowserProxy';
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { ISiteUrl } from '../Interfaces/IAbsoluteUrl';
@@ -82,7 +82,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
 
   async GetTopLevelIframe(documentJacket: DocumentJacket): Promise<DTFrameProxy> {
     var toReturn: DTFrameProxy = null;
-    let frameHelper = new FrameHelper(this.HindeCore);
+    let frameHelper = new FrameHelper(this.HindeCore, this.Options);
     await frameHelper.GetIFramesAsBaseFrameProxies(documentJacket)
       .then((allIframe: DTFrameProxy[]) => {
         var maxZVal = -1;

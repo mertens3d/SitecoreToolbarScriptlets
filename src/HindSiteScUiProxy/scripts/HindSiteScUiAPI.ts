@@ -1,4 +1,4 @@
-﻿import { IHindSiteScUiAPI } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+﻿import { IHindSiteScUiAPI, IHindSiteScUiAPIOptions } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { _HindeCoreBase } from "../../Shared/scripts/_HindeCoreBase";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
 import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
@@ -10,19 +10,20 @@ import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { DesktopSFProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
 
-
 export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI {
   private ScUiMan: ScUiManager;
   private ScWindowFacade: IScWindowFacade;
   DocumentJacket: DocumentJacket;
+  private Options: IHindSiteScUiAPIOptions;
 
-  constructor(hindeCore: IHindeCore, scUiMan: ScUiManager, documentJacket: DocumentJacket) {
+  constructor(hindeCore: IHindeCore, scUiMan: ScUiManager, documentJacket: DocumentJacket, options: IHindSiteScUiAPIOptions) {
     super(hindeCore);
 
     this.Logger.CTORStart(HindSiteScUiAPI.name);
 
     this.ScUiMan = scUiMan;
     this.DocumentJacket = documentJacket;
+    this.Options = options;
 
     this.Logger.CTOREnd(HindSiteScUiAPI.name);
   }

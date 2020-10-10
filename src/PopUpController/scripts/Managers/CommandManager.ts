@@ -1,6 +1,6 @@
 ﻿import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
-import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
-import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
+import { MsgFlag } from '../../../Shared/scripts/Enums/10 - MessageFlag';
+import { MenuCommandKey } from '../../../Shared/scripts/Enums/20 - MenuCommand';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';

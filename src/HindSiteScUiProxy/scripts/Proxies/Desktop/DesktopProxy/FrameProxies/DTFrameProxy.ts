@@ -3,9 +3,9 @@ import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJack
 import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
-import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/50 - scWindowType";
-import { ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
+import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
@@ -21,23 +21,25 @@ import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutati
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
 import { _ContentTreeBasedProxy } from "../../../ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
 import { MarketingControlPanelProxy } from "../../../MarketingControlPanelProxy";
+import { IHindSiteScUiAPIOptions } from "../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
-  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.DTFrameProxy];
-  Friendly: string = DTFrameProxy.name;
-  StateFullProxyDisciminator = StateFullProxyDisciminator.DTFrameProxy;
-  private _ContentTreeBasedProxyMutationEvent_Observer: _ContentTreeBasedProxyMutationEvent_Observer;
   FrameTypeDiscriminator = DTFrameProxy.name;
-  Index: number = -1;
+  Friendly: string = DTFrameProxy.name;
+  private Options: IHindSiteScUiAPIOptions;
+  private _ContentTreeBasedProxyMutationEvent_Observer: _ContentTreeBasedProxyMutationEvent_Observer;
+  private StateFullProxyFactory: StateFullProxyResolver;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   public HostedStateFullProxy: IStateFullProxy;
-  private StateFullProxyFactory: StateFullProxyResolver;
+  readonly StateFullProxyDisciminator = StateFullProxyDisciminator.DTFrameProxy;
+  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.DTFrameProxy];
 
-  constructor(hindeCore: IHindeCore, frameJacket: ElementFrameJacket) { //HTMLIFrameElement |
+  constructor(hindeCore: IHindeCore, frameJacket: ElementFrameJacket, options: IHindSiteScUiAPIOptions) { //HTMLIFrameElement |
     super(hindeCore, frameJacket);
 
     this.ErrorHand.ThrowIfNullOrUndefined(DTFrameProxy.name, [frameJacket]);
 
+    this.Options = options;
     this.Friendly = 'DTFrameProxy_' + this.FrameJacket.GetNativeIframeId();
 
     this.InstantiateInstance();
@@ -45,7 +47,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
 
   InstantiateInstance(): void {
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
-    this.StateFullProxyFactory = new StateFullProxyResolver(this.HindeCore);
+    this.StateFullProxyFactory = new StateFullProxyResolver(this.HindeCore, this.Options);
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
@@ -67,7 +69,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
         })
         .then(() => this.StateFullProxyFactory.StateFullProxyFactory(scWindowtypeB, this.FrameJacket.DocumentJacket))
         .then((stateFullProxy: IStateFullProxy) => this.HostedStateFullProxy = stateFullProxy)
-        
+
         .then(() => {
           this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.HindeCore);
           this._ContentTreeBasedProxyMutationEvent_Observer = new _ContentTreeBasedProxyMutationEvent_Observer(this.HindeCore, this);
@@ -93,7 +95,6 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       (<MarketingControlPanelProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
     }
 
-
     this.HostedStateFullProxy.WireEvents();
     this.Logger.FuncEnd(this.WireEvents.name, DTFrameProxy.name);
   }
@@ -102,7 +103,6 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetState.name, DTFrameProxy.name);
       let stateOfDTFrame: IStateOfDTFrame = new DefaultStateOfDTFrame();
-
 
       stateOfDTFrame.FrameStyling = stateOfDTFrame.FrameStyling = this.FrameJacket.GetFrameStyling();
 

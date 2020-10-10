@@ -2,7 +2,7 @@
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { SettingKey } from "../../../Shared/scripts/Enums/30 - SettingKey";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";

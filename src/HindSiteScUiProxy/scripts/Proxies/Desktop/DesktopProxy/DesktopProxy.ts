@@ -1,7 +1,7 @@
 import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
-import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -15,6 +15,7 @@ import { DTAreaProxy } from "./DTAreaProxy";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
+import { IHindSiteScUiAPIOptions } from "../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 
 export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.Desktop;
@@ -22,9 +23,10 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   private DocumentJacket: DocumentJacket;
   private DTAreaProxy: DTAreaProxy;
   private DTStartBarProxy: DTStartBarProxy;
+  private Options: IHindSiteScUiAPIOptions;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
+  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket, options: IHindSiteScUiAPIOptions) {
     super(hindeCore);
     this.Logger.CTORStart(DesktopSFProxy.name);
 
@@ -33,6 +35,8 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
     } else {
       this.ErrorHand.ErrorAndThrow(DesktopSFProxy.name, 'No associated doc');
     }
+
+    this.Options = options;
 
     this.Instantiate();
     this.Logger.CTOREnd(DesktopSFProxy.name);
@@ -130,7 +134,6 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   async AddContentEditorFrameAsync(): Promise<void> {
     this.Logger.FuncStart(this.AddContentEditorFrameAsync.name);
     try {
-
       let asyncLock: AsyncLock = new AsyncLock(this.HindeCore);
       await this.DTStartBarProxy.TriggerRedButtonAsync(ScWindowType.ContentEditor, asyncLock)
         .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorFrameAsync.name, err));
@@ -143,7 +146,10 @@ export class DesktopSFProxy extends _BaseStateFullProxy<IStateOfDesktop> impleme
   OnAreaProxyMutationEvent(dTAreaProxyMutationEvent_Payload: IDTAreaProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.OnAreaProxyMutationEvent.name);
 
-    this.DTStartBarProxy.OnTreeMutationEvent_DesktopStartBarProxy(dTAreaProxyMutationEvent_Payload);
+    if (this.Options.EnableDesktopStartBarButtonRename) {
+      this.DTStartBarProxy.OnTreeMutationEvent_DesktopStartBarProxy(dTAreaProxyMutationEvent_Payload);
+    }
+
     this.Logger.FuncEnd(this.OnAreaProxyMutationEvent.name);
   }
 

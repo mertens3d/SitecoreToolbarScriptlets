@@ -5,22 +5,25 @@ import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+import { IHindSiteScUiAPIOptions } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 
 export class FrameHelper extends _HindeCoreBase {
   private factoryHelper: FactoryHelper;
   private RecipeBasics: RecipeBasics;
+  private Options: IHindSiteScUiAPIOptions;
 
-  constructor(hindeCore: IHindeCore) {
+  constructor(hindeCore: IHindeCore, options: IHindSiteScUiAPIOptions) {
     super(hindeCore);
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
     this.factoryHelper = new FactoryHelper(this.HindeCore);
+    this.Options = options;
   }
 
   async GetIFrameAsBaseFrameProxy(nativeIframeProxy: ElementFrameJacket, ifrIdx: number): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       let friendly = 'desktop Iframe_' + ifrIdx;
 
-      let dTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
+      let dTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy, this.Options);
       dTFrameProxy.InstantiateAsyncMembers();
       dTFrameProxy.WireEvents();
 
@@ -39,7 +42,6 @@ export class FrameHelper extends _HindeCoreBase {
 
   async GetIFrameAsDTFrameProxy(frameJacket: ElementFrameJacket): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
-
       let dTFrameProxy = new DTFrameProxy(this.HindeCore, frameJacket);
 
       await dTFrameProxy.WaitForCompleteNABFrameProxyOrReject()

@@ -62,6 +62,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\CommandRouter.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\CommandToExecuteData.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\InternalCommandRunner.ts" />
+    <TypeScriptCompile Include="src\Content\scripts\Proxies\_BaseBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Recipes\_ContentRecipeBase.ts" />
     <TypeScriptCompile Include="src\DOMJacket\DocumentJacket.ts" />
     <TypeScriptCompile Include="src\DOMJacket\ElementAnchorJacket.ts" />
@@ -87,7 +88,10 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_justWindowStateFullProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\MarketingControlPanelProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\PackageDesignerProxy\RecycleBinProxy.ts" />
+    <TypeScriptCompile Include="src\PopUpController\scripts\Proxies\BrowserTabProxy.ts" />
+    <TypeScriptCompile Include="src\PopUpController\scripts\Proxies\PopUpBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\LoggerAgent\StyleMode.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IBaseBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IScContentTreeNodeLineage.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\_ContentTreeBasedProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\ContentTreeProxyMutationEvent_Subject.ts" />
@@ -148,8 +152,8 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfTemplateManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\_baseDefaultStateOfContentTreeBasedProxies.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\PromiseFailAction.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Enums\ReadyState.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Enums\4000 - StateFullProxyDisciminator.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\ReadyState.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\40 - StateFullProxyDisciminator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Subject.ts" />
@@ -211,7 +215,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMessageControllerToContent.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\ContentTreeProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\PopUpController\scripts\Proxies\BrowserProxy.ts" />
     <TypeScriptCompile Include="src\PopUpController\scripts\PopUpControllerLayer.ts" />
     <TypeScriptCompile Include="src\PopUpController\scripts\Classes\PopUpCommands.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\UiCommandFlagRaisedEvent\IUiCommandFlagRaisedEvent_Payload.ts" />
@@ -319,8 +322,8 @@
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\SettingsAgent\SettingsAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferChar.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\BufferDirection.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Enums\2xxx-MenuCommand.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Enums\3xxx-SettingKey.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\20 -MenuCommand.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\30 -SettingKey.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SettingType.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\SnapShotFlavor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Helpers\FactoryHelper.ts" />
@@ -347,7 +350,7 @@
     <TypeScriptCompile Include="src\PopUpUi\scripts\HindSiteUiLayer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgPayloadResponseFromContent.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Enums\1xxx-MessageFlag.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\10 - MessageFlag.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Const\PopConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IUiMan.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\Agents\RepositoryAgent\RepositoryAgent.ts" />

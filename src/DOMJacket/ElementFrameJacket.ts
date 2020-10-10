@@ -1,5 +1,5 @@
 ﻿import { IterationDrone } from "../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { ReadyStateNAB } from "../Shared/scripts/Enums/ReadyState";
+import { ReadyStateNAB } from "../Shared/scripts/Classes/ReadyState";
 import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IFrameJacketStyling } from "../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
 import { DocumentJacket } from "./DocumentJacket";

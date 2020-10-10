@@ -8,7 +8,7 @@ import { AccordianModule } from "./AccordianModule";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
-import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { SettingKey } from "../../../../Shared/scripts/Enums/30 - SettingKey";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 
 export class SettingsBasedModules extends _HindeCoreBase {

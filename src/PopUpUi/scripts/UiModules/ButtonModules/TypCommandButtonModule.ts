@@ -1,5 +1,5 @@
 ﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
+import { MenuCommandKey } from "../../../../Shared/scripts/Enums/20 - MenuCommand";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";

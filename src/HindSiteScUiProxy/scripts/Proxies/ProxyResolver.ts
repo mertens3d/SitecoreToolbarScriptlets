@@ -1,19 +1,29 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
+import { IHindSiteScUiAPIOptions } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
 import { FallBackProxy } from "./FallBackProxy";
 import { LaunchPadProxy } from "./LaunchPadProxy";
+import { MarketingControlPanelProxy } from "./MarketingControlPanelProxy";
 import { MediaLibraryProxy } from "./MediaLibraryProxy";
 import { PackageDesignerProxy } from "./PackageDesignerProxy/PackageDesignerProxy";
+import { AccessViewerProxy, ArchiveProxy, DomainManagerProxy, EmailExpeprienceManagerProxy, InstallationWizardProxy, InstallLicensesProxy, KeyBoardMapProxy, LicenseDetailsProxy, LogViewerProxy, RecycleBinProxy, RoleManagerProxy, RunProxy, ScanForBrokenLinksProxy, SecurityEditorProxy, UserManagerProxy, WorkboxProxy } from "./PackageDesignerProxy/RecycleBinProxy";
 import { TemplateManagerProxy } from "./TemplateManagerProxy";
-import { MarketingControlPanelProxy } from "./MarketingControlPanelProxy";
-import { RecycleBinProxy, AccessViewerProxy, ArchiveProxy, DomainManagerProxy, EmailExpeprienceManagerProxy, InstallationWizardProxy, InstallLicensesProxy, KeyBoardMapProxy, LicenseDetailsProxy, LogViewerProxy, RoleManagerProxy, RunProxy, ScanForBrokenLinksProxy, SecurityEditorProxy, UserManagerProxy, WorkboxProxy } from "./PackageDesignerProxy/RecycleBinProxy";
 
 export class StateFullProxyResolver extends _HindeCoreBase {
+  Options: IHindSiteScUiAPIOptions;
+
+  constructor(hindeCore: IHindeCore, options: IHindSiteScUiAPIOptions) {
+    super(hindeCore);
+    this.Options = options;
+  }
+
+
   RecognizedWindowTypes(): ScWindowType[] {
     return [
       ScWindowType.AccessViewer,
@@ -82,7 +92,7 @@ export class StateFullProxyResolver extends _HindeCoreBase {
 
       else if (windowType === ScWindowType.ControlPanel) { StateFullProxy = new FallBackProxy(this.HindeCore); }
       else if (windowType === ScWindowType.Debug) { StateFullProxy = new FallBackProxy(this.HindeCore); }
-      else if (windowType === ScWindowType.Desktop) { StateFullProxy = new DesktopSFProxy(this.HindeCore, documentJacket); }
+      else if (windowType === ScWindowType.Desktop) { StateFullProxy = new DesktopSFProxy(this.HindeCore, documentJacket, this.Options); }
       else if (windowType === ScWindowType.DomainManager) { StateFullProxy = new DomainManagerProxy(this.HindeCore); }
 
       else if (windowType === ScWindowType.EmailExperienceManager) { StateFullProxy = new EmailExpeprienceManagerProxy(this.HindeCore); }

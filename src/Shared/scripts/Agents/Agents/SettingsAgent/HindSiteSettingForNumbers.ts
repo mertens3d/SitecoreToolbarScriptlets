@@ -1,6 +1,6 @@
 ﻿import { IHindSiteSettingForNumbers } from "../../../Interfaces/Agents/IHindSiteSettingForNumbers";
 import { HindSiteSetting } from "./HindSiteSetting";
-import { SettingKey } from "../../../Enums/3xxx-SettingKey";
+import { SettingKey } from "../../../Enums/30 - SettingKey";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { SettingType } from "../../../Enums/SettingType";
 import { UiEnableState } from "../../../Enums/Enabled";

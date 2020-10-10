@@ -1,5 +1,5 @@
 ﻿import { PopConst } from "../../../Const/PopConst";
-import { SettingKey } from "../../../Enums/3xxx-SettingKey";
+import { SettingKey } from "../../../Enums/30 - SettingKey";
 import { UiEnableState } from "../../../Enums/Enabled";
 import { ModuleKey } from "../../../Enums/ModuleKey";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
@@ -225,7 +225,7 @@ export class DefaultSettings extends _HindeCoreBase {
         SettingKey.AutoSaveIntervalMin,
         SettingType.Number,
         PopConst.Const.Selector.HS.SettingAutoSaveInterval,
-        PopConst.Const.Numbers.AutoSaveIntervalMin,
+        PopConst.Const.Numbers.DefaultAutoSaveIntervalMin,
         SettingFlavor.ContentAndPopUpStoredInPopUp,
         'Auto Save Interval (Min) - 0 to disable',
         UiEnableState.Enabled,

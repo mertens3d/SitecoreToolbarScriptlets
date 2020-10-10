@@ -1,7 +1,7 @@
 ﻿import { PopConst } from "../../../Const/PopConst";
 import { UiModuleManagerPassThroughEvent_Observer } from "../../../../../PopUpUi/scripts/Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Observer";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
-import { SettingKey } from "../../../Enums/3xxx-SettingKey";
+import { SettingKey } from "../../../Enums/30 - SettingKey";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";

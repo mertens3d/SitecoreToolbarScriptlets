@@ -5,9 +5,9 @@ import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/Defaul
 import { DefaultStateOfScUiProxy } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScUiProxy";
 import { DefaultStateOfScWindow } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScWindowProxy";
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
-import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
-import { ReadyStateNAB } from '../../../Shared/scripts/Enums/ReadyState';
+import { ReadyStateNAB } from '../../../Shared/scripts/Classes/ReadyState';
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";

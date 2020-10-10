@@ -56,7 +56,8 @@ export class PopConst {
       MinMenuHeight: 600,
       MinMenuWidth: 600,
       MaxAutoSaveCount: 10,
-      AutoSaveIntervalMin: 5,
+      DefaultAutoSaveIntervalMin: 0,
+
     },
     Notify: {
       Default: 'Complete',

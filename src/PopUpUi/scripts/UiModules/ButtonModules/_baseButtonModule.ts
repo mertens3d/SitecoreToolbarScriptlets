@@ -1,4 +1,4 @@
-﻿import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
+﻿import { MenuCommandKey } from "../../../../Shared/scripts/Enums/20 - MenuCommand";
 import { CommandButtonEvents } from "../../../../Shared/scripts/Enums/CommandButtonEvents";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";

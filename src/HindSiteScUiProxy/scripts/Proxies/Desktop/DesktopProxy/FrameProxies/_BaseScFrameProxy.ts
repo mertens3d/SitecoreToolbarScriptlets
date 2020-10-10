@@ -1,8 +1,8 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
 import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJacket";
 import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
-import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Enums/ReadyState";
+import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _BaseStateFullProxy } from "./_StateProxy";

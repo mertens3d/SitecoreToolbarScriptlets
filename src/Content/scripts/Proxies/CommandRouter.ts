@@ -4,7 +4,7 @@ import { ApiCommandPayload } from "../../../Shared/scripts/Classes/CommandHandle
 import { CommandPayloadForInternal } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandPayloadForInternal";
 import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
+import { MsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";

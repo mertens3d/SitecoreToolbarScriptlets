@@ -1,7 +1,7 @@
 ﻿import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
 import { _HindeCoreBase } from "../../../_HindeCoreBase";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
-import { SettingKey } from "../../../Enums/3xxx-SettingKey";
+import { SettingKey } from "../../../Enums/30 - SettingKey";
 import { StaticHelpers } from "../../../Classes/StaticHelpers";
 import { IHindeCore } from "../../../Interfaces/Agents/IHindeCore";
 import { DefaultSettings } from "./DefaultSettings";

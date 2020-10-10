@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/DocumentJacket';
-import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator';
+import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateProxy';

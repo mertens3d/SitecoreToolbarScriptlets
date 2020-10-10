@@ -1,5 +1,5 @@
-﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
-import { SettingKey } from "../Enums/3xxx-SettingKey";
+﻿import { MsgFlag } from "../Enums/10 - MessageFlag";
+import { SettingKey } from "../Enums/30 - SettingKey";
 import { BufferChar } from "../Enums/BufferChar";
 import { BufferDirection } from "../Enums/BufferDirection";
 import { ScWindowType } from "../Enums/50 - scWindowType";

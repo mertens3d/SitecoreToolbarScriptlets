@@ -1,4 +1,4 @@
-﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
+﻿import { MsgFlag } from "../Enums/10 - MessageFlag";
 import { IHindSiteSetting } from "./Agents/IGenericSetting";
 import { IStateOfPopUp } from "./IStateOfPopUp";
 

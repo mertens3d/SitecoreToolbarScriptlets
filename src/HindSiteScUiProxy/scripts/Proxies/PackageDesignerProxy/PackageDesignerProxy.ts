@@ -2,7 +2,7 @@
 import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
 import { DefaultStateOfPackageDesigner } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfPackageDesigner";
 import { RecipeBasics } from "../../../../Shared/scripts/Classes/RecipeBasics";
-import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateFullProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfPackageDesigner";

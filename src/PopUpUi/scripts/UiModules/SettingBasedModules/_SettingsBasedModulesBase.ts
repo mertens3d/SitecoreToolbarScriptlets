@@ -1,6 +1,6 @@
 ﻿import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { SettingKey } from "../../../../Shared/scripts/Enums/30 - SettingKey";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { _UiModuleBase } from "../_UiModuleBase";
 import { UiSettingBasedModuleMutationEvent_Subject } from "../../Events/UiSettingBasedModuleMutationEvent/UiSettingBasedModuleMutationEvent_Subject";

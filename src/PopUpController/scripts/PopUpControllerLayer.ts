@@ -10,7 +10,7 @@ import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/
 import { ScPageTypeResolver } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
-import { SettingKey } from "../../Shared/scripts/Enums/3xxx-SettingKey";
+import { SettingKey } from "../../Shared/scripts/Enums/30 - SettingKey";
 import { IRepositoryAgent } from "../../Shared/scripts/Interfaces/Agents/IRepositoryAgent";
 import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Jackets/IScUrlAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";

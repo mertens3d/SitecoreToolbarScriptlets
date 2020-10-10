@@ -1,7 +1,7 @@
 ﻿import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
+import { MsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 import { ContentReplyReceivedEvent_Subject } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
 import { IControllerMessageReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";

@@ -1,4 +1,4 @@
-﻿import { SettingKey } from "../../../Enums/3xxx-SettingKey";
+﻿import { SettingKey } from "../../../Enums/30 - SettingKey";
 import { SettingType } from "../../../Enums/SettingType";
 import { SettingFlavor } from "../../../Enums/SettingFlavor";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";

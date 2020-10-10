@@ -2,7 +2,7 @@
 import { ElementJacket } from '../../../../../DOMJacket/ElementJacket';
 import { _baseDefaultStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Classes/Defaults/_baseDefaultStateOfContentTreeBasedProxies';
 import { RecipeBasics } from '../../../../../Shared/scripts/Classes/RecipeBasics';
-import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator';
+import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from '../../../../../Shared/scripts/Helpers/GuidData';
 import { IHindeCore } from '../../../../../Shared/scripts/Interfaces/Agents/IHindeCore';

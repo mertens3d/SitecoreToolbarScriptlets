@@ -10,11 +10,11 @@ import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAg
 import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
-import { MsgFlag } from '../../Shared/scripts/Enums/1xxx-MessageFlag';
-import { SettingKey } from '../../Shared/scripts/Enums/3xxx-SettingKey';
+import { MsgFlag } from '../../Shared/scripts/Enums/10 - MessageFlag';
+import { SettingKey } from '../../Shared/scripts/Enums/30 - SettingKey';
 import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
 import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
-import { IHindSiteScUiAPI } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
+import { IHindSiteScUiAPI, IHindSiteScUiAPIOptions } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
 import { IContentBrowserProxy } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
 import { IMessageBroker_Content } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
@@ -98,7 +98,11 @@ class ContentEntry {
 
       scUiMan = new ScUiManager(this.HindeCore);
 
-      this.ScUiAPI = new HindSiteScUiAPI(this.HindeCore, scUiMan, this.TopDocumentJacket);
+  
+      let options: IHindSiteScUiAPIOptions = {
+        EnableDesktopStartBarButtonRename: this.SettingsAgent.GetByKey(SettingKey.AutoRenameCeButton).ValueAsBool(),
+      }
+      this.ScUiAPI = new HindSiteScUiAPI(this.HindeCore, scUiMan, this.TopDocumentJacket, options);
 
       this.AutoSnapShotAgent = new AutoSnapShotAgent(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiAPI);
 

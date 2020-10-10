@@ -1,7 +1,7 @@
 ﻿import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { _base_ButtonModule } from "./_baseButtonModule";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
+import { MenuCommandKey } from "../../../../Shared/scripts/Enums/20 - MenuCommand";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 

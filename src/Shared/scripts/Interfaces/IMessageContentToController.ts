@@ -1,4 +1,4 @@
-﻿import { MsgFlag } from "../Enums/1xxx-MessageFlag";
+﻿import { MsgFlag } from "../Enums/10 - MessageFlag";
 import { IMessageContentToController_Payload } from "../Events/ContentReplyReceivedEvent/IMessageContentToController_Payload";
 
 export interface IMessageContentToController {

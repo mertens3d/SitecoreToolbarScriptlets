@@ -2,8 +2,8 @@
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { PopConst } from '../../../../Shared/scripts/Const/PopConst';
-import { MenuCommandKey } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
-import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
+import { MenuCommandKey } from '../../../../Shared/scripts/Enums/20 - MenuCommand';
+import { SettingKey } from '../../../../Shared/scripts/Enums/30 - SettingKey';
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { SettingFlavor } from '../../../../Shared/scripts/Enums/SettingFlavor';
 import { IHindSiteSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';

@@ -2,6 +2,11 @@
 import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../IApiCallPayload";
 
+export interface IHindSiteScUiAPIOptions {
+  EnableDesktopStartBarButtonRename: boolean,
+
+}
+
 export interface IHindSiteScUiAPI {
   AddContentEditorToDesktopAsync(commandData: IApiCallPayload): Promise<void>
   AdminB(commandData: IApiCallPayload);

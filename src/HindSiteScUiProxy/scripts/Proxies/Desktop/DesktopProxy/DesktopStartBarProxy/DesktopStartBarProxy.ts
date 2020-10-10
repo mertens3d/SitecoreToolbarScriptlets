@@ -1,27 +1,25 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
+import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
+import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
+import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
 import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _HindeCoreBase } from "../../../../../../Shared/scripts/_HindeCoreBase";
+import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
+import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
-import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
-import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
-import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
-import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
-import { RecipeBasics } from '../../../../../../Shared/scripts/Classes/RecipeBasics';
-import { StartMenuButtonResolver } from './StartMenuButtonResolver';
-import { IButtonSelectors } from './IButtonSelectors';
 import { AsyncLock } from './AsyncLock';
-import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
+import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
+import { IButtonSelectors } from './IButtonSelectors';
+import { StartMenuButtonResolver } from './StartMenuButtonResolver';
+import { IHindSiteScUiAPIOptions } from '../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 
 export class DTStartBarProxy extends _HindeCoreBase {
-  private ElementJacket: ElementJacket;
   private DocumentJacket: DocumentJacket;
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
   private StartMenuButtonResolver: StartMenuButtonResolver;
   private RecipeBasics: RecipeBasics;
-  private PopUp1ElementJacket: ElementJacket = null;
-  private PopUp2ElementJacket: ElementJacket;
   private ConResolver: ConResolver;
 
   constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
@@ -33,7 +31,6 @@ export class DTStartBarProxy extends _HindeCoreBase {
   }
 
   private InstantiateInstance() {
-    this.ElementJacket = this.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
     this.ConResolver = new ConResolver(this.HindeCore);
   }
@@ -66,9 +63,6 @@ export class DTStartBarProxy extends _HindeCoreBase {
 
         .then(() => this.DocumentJacket.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButtonVSpec))
         .then(() => this.TaskMonitor.AsyncTaskStarted(this.TriggerRedButtonAsync.name))
-        //.then(() => this.DocumentJacket.WaitForElem(ContentConst.Const.Selector.SC.Popup1.Id))
-        //.then((elemJacket: ElementJacket) => elemJacket.WaitForElement(buttonSelectors.Pop1Selector))
-        //.then((elemJacket: ElementJacket) => elemJacket.Click())
         .then(() => this.TriggerPopXButton(buttonSelectors.Pop1Selector, ContentConst.Const.Selector.SC.Popup1.Id))
         .then(() => this.TriggerPopXButton(buttonSelectors.Pop2Selector, ContentConst.Const.Selector.SC.Popup2.Id))
         .then(() => this.TriggerPopXButton(buttonSelectors.Pop3Selector, ContentConst.Const.Selector.SC.Popup3.Id))
