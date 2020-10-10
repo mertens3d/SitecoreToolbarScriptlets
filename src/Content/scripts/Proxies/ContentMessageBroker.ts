@@ -4,7 +4,7 @@ import { MsgFlag } from "../../../Shared/scripts/Enums/1xxx-MessageFlag";
 import { SettingKey } from "../../../Shared/scripts/Enums/3xxx-SettingKey";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { IContentBrowserFacade } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
+import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
 import { IMessageBroker_Content } from "../../../Shared/scripts/Interfaces/Agents/IContentMessageBroker";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
@@ -23,11 +23,11 @@ export class MessageBroker_Content extends _HindeCoreBase implements IMessageBro
 
   private AtticAgent: IContentAtticAgent;
 
-  ContentBrowserProxy: IContentBrowserFacade;
+  ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
   CommandRouter: CommandRouter;
 
-  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiAPI, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserFacade, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter) {
+  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiAPI, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter) {
     super(hindeCore);
     this.Logger.CTORStart(MessageBroker_Content.name);
 

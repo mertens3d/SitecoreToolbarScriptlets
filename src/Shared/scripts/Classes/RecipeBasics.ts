@@ -1,52 +1,21 @@
-﻿import { DocumentJacket } from '../../../DOMJacket/DocumentJacket';
+﻿/// <reference path="../../../../node_modules/web-ext-types/global/index.d.ts" />
+
+import { ContentBrowserProxy } from '../../../Content/scripts/Proxies/ContentBrowserProxy';
+import { DocumentJacket } from '../../../DOMJacket/DocumentJacket';
 import { FrameHelper } from '../../../HindSiteScUiProxy/scripts/Helpers/FrameHelper';
 import { DTFrameProxy } from '../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
 import { IterationDrone } from '../Agents/Drones/IterationDrone/IterationDrone';
 import { ReadyStateNAB } from '../Enums/ReadyState';
+import { IContentBrowserProxy } from '../Interfaces/Agents/IContentBrowserProxy';
 import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
 import { ISiteUrl } from '../Interfaces/IAbsoluteUrl';
 import { IRecipeBasics } from '../Interfaces/IPromiseHelper';
 import { _HindeCoreBase } from "../_HindeCoreBase";
-import { PromiseResult } from "./PromiseResult";
-import { AsyncLock } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock";
 
 export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
-
   constructor(hindeCore: IHindeCore) {
     super(hindeCore);
   }
-
-  //async WaitForReadyNABFrameProxy(baseframeProxy: _BaseFrameProxy): Promise<_BaseFrameProxy> {
-  //  return new Promise(async (resolve, reject) => {
-  //    this.Logger.FuncStart(this.WaitForReadyNABFrameProxy.name, Guid.AsShort(baseframeProxy.Id));
-  //    await this.WaitForReadyNABHtmlIframeElement(baseframeProxy.HTMLIframeElement)
-  //      .then(() => resolve(baseframeProxy))
-  //      .catch((err) => reject(this.WaitForReadyNABFrameProxy.name + ' | ' + err));
-
-  //    this.Logger.FuncEnd(this.WaitForReadyNABFrameProxy.name, Guid.AsShort(baseframeProxy.Id));
-  //  });
-  //}
-
-  //public GetReadyStateNAB(document: Document): ReadyStateNAB {
-  //  // Ready and not About:Blank
-  //  let toReturn: ReadyStateNAB = new ReadyStateNAB()
-  //  if (document) {
-  //    let currentReadyState = document.readyState.toString();
-  //    toReturn.DocUrl = document.URL;
-
-  //    if (currentReadyState === 'complete') {
-  //      toReturn.EnumReadyState = DocumentReadyState.Complete;
-  //      if (toReturn.DocIsAboutBlank !== SharedConst.Const.UrlSuffix.AboutBlank && url != '') {
-  //        toReturn = DocumentReadyState.CompleteNAB;
-  //      } else {
-  //        toReturn = DocumentReadyState.Complete;
-  //      }
-  //    }
-  //  } else {
-  //    this.ErrorHand.ErrorAndThrow(this.GetReadyStateNAB.name, 'null doc');
-  //  }
-  //  return toReturn;
-  //}
 
   WaitForNoUiFrontOverlay(friendly: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -88,7 +57,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
         timeElapsed = new Date().getTime() - startTimeStamp;
         await iterationJr.Wait();
       }
-            resolve();
+      resolve();
 
       this.Logger.FuncEnd(this.WaitForTimePeriod.name, friendly);
     });
@@ -98,7 +67,7 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNAB_DataOneDoc.name, friendly);
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_DataOneDoc.name,[documentJacket, friendly]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_DataOneDoc.name, [documentJacket, friendly]);
 
       await documentJacket.WaitForCompleteNAB_DocumentJacket(friendly)// this.WaitForCompleteNABDocumentNative(targetDoc.ContentDoc, friendly)
         .then((result: ReadyStateNAB) => {
@@ -129,7 +98,6 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
       })
     return toReturn;
   }
-
 
   //async WaitForNewIframeContentEditor(allIframesBefore: HTMLIFrameElement[], targetDoc: ScDocumentProxy): Promise<DTFrameProxy> {
   //  return new Promise(async (resolve, reject) => {
@@ -277,48 +245,15 @@ export class RecipeBasics extends _HindeCoreBase implements IRecipeBasics {
       this.Logger.FuncEnd(this.WaitAndReturnFoundFromContainer.name, selector);
     });
   }
-  
 
-
-  TabWaitForReadyStateCompleteNative(browserTab: browser.tabs.Tab): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      let iterHelper = new IterationDrone(this.HindeCore, this.TabWaitForReadyStateCompleteNative.name, true);
-
-      let result: PromiseResult = new PromiseResult(this.TabWaitForReadyStateCompleteNative.name, this.HindeCore);
-
-      while (browserTab.status !== 'complete' && iterHelper.DecrementAndKeepGoing()) {
-        this.Logger.LogVal('tab status', browserTab.status);
-        await iterHelper.Wait;
-      }
-
-      if (browserTab.status === 'complete') {
-        result.MarkSuccessful();
-      } else {
-        result.MarkFailed('browser status: ' + browserTab.status)
-        if (iterHelper.IsExhausted) {
-          result.MarkFailed(iterHelper.IsExhaustedMsg);
-        }
-      }
-
-      if (result.WasSuccessful()) {
-        resolve()
-      } else {
-        reject(result.RejectReasons);
-      }
-    });
-  }
-
-  TabChainSetHrefWaitForComplete(href: ISiteUrl) {
+  TabChainSetHrefWaitForComplete(href: ISiteUrl): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);
 
-      await browser.tabs.query({ currentWindow: true, active: true })
-        .then((result: browser.tabs.Tab[]) => {
-          let targetTab: browser.tabs.Tab = result[0];
-          browser.tabs.update(targetTab.id, { url: href.AbsUrl });
-          this.TabWaitForReadyStateCompleteNative(targetTab);
-        })
-        .then(resolve)
+      let browserProxy: IContentBrowserProxy = new ContentBrowserProxy(this.HindeCore);
+      await browserProxy.InitAsyncProperties()
+        .then(() => browserProxy.ActiveBrowserTabProxy.UpdateAndWaitForComplete( href.AbsUrl))
+        .then(() => resolve())
         .catch((ex) => reject(ex));
 
       this.Logger.FuncEnd(this.TabChainSetHrefWaitForComplete.name, href.AbsUrl);

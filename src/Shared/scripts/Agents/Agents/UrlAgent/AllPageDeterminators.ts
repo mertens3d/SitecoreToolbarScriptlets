@@ -77,11 +77,6 @@ export class AllPageDeterminators {
       ScWindowTypeFriendly: ScWindowType[ScWindowType.ContentEditor],
     },
 
-
-
-
-
-
     {
       // /sitecore/shell/Applications/Control%20panel.aspx?sc_bw=1
       ConfidenceScore: 0,
@@ -144,7 +139,6 @@ export class AllPageDeterminators {
       ScWindowTypeFriendly: ScWindowType[ScWindowType.EmailExperienceManager],
     },
 
-
     {
       // /sitecore/client/Applications/ExperienceAnalytics/Dashboard/#segment=all&subsite=all&dateFrom=09-07-2020&dateTo=06-10-2020
       ConfidenceScore: 0,
@@ -164,7 +158,6 @@ export class AllPageDeterminators {
       ScWindowType: ScWindowType.ExperienceProfile,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.ExperienceProfile],
     },
-
 
     {
       // /?sc_mode=edit&sc_site=website
@@ -191,8 +184,6 @@ export class AllPageDeterminators {
       ScWindowTypeFriendly: ScWindowType[ScWindowType.FallBack],
     },
 
-
-
     {
       // - /sitecore/client/Applications/fxm/DomainDashboard
       ConfidenceScore: 0,
@@ -202,8 +193,6 @@ export class AllPageDeterminators {
       ScWindowType: ScWindowType.FederatedExperienceManager,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.FederatedExperienceManager],
     },
-
-
 
     {
       // - /sitecore/shell/default.aspx?xmlcontrol=Application&hdl=5D2A207829494A2BB4F0DB90E3918B10&he=Installation+Wizard&ic=apps%2f32x32%2fInstall_Wizard.png
@@ -432,7 +421,6 @@ export class AllPageDeterminators {
         {
           Key: QueryStrKey.he,
           ValueMatch: /Scan.?for.?Broken.?Links/ig,
-                       
         }
 
       ],

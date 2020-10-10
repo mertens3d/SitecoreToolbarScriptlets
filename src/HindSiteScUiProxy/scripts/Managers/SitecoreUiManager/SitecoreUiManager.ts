@@ -6,6 +6,7 @@ import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst"
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { _HindeCoreBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
+import { ContentBrowserProxy } from "../../../../Content/scripts/Proxies/ContentBrowserProxy";
 
 export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IStateOfScUi;
@@ -34,9 +35,13 @@ export class ScUiManager extends _HindeCoreBase implements iSitecoreUiManager {
     //  file: 'AutoBuild/final/content.min.css'
     //});
 
+
+
+    let contentBrowserProxy: ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore);
+
     const style = document.createElement('link');
     style.type = 'text/css';
-    style.href = browser.extension.getURL('AutoBuild/final/content.min.css');
+    style.href = contentBrowserProxy.ExtensionGetUrl('AutoBuild/final/content.min.css'); 
     style.rel = "stylesheet";
     document.getElementsByTagName("head")[0].appendChild(style);
   }

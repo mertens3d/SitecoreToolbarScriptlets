@@ -1,4 +1,6 @@
-﻿import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
+﻿/// <reference path="../../../../node_modules/web-ext-types/global/index.d.ts" />
+
+import { IterationDrone } from '../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { RecipeBasics } from '../../../Shared/scripts/Classes/RecipeBasics';
 import { QueryStrKey } from '../../../Shared/scripts/Enums/QueryStrKey';
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
@@ -8,17 +10,23 @@ import { ISettingsAgent } from '../../../Shared/scripts/Interfaces/Agents/ISetti
 import { IDataBrowserTab } from '../../../Shared/scripts/Interfaces/Data/IDataBrowserWindow';
 import { ISiteUrl } from '../../../Shared/scripts/Interfaces/IAbsoluteUrl';
 import { _HindeCoreBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { IPopUpBrowserProxy } from '../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy';
 
-export class BrowserTabAgent extends _HindeCoreBase{
+
+export class BrowserTabAgent extends _HindeCoreBase {
   private ScUrlAgent: IScUrlAgent;
   private RecipeBasics: RecipeBasics;
-  SettingsAgent: ISettingsAgent;
+  private SettingsAgent: ISettingsAgent;
+  private PopUpBrowserProxy: IPopUpBrowserProxy;
 
-  constructor(hindeCore: IHindeCore, scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent) {
+  constructor(hindeCore: IHindeCore, scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent, popUpBrowserProxy: IPopUpBrowserProxy) {
     super(hindeCore);
     this.Logger.CTORStart(BrowserTabAgent.name);
     this.ScUrlAgent = scUrlAgent;
     this.SettingsAgent = settingsAgent;
+
+    this.PopUpBrowserProxy = popUpBrowserProxy;
+
     this.RecipeBasics = new RecipeBasics(this.HindeCore);
     this.Logger.CTOREnd(BrowserTabAgent.name);
   }

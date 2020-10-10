@@ -16,7 +16,7 @@ import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
 import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
 import { IHindSiteScUiAPI } from '../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
 import { IContentAtticAgent } from '../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent';
-import { IContentBrowserFacade } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
+import { IContentBrowserProxy } from '../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy';
 import { IMessageBroker_Content } from '../../Shared/scripts/Interfaces/Agents/IContentMessageBroker';
 import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -29,7 +29,7 @@ import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent';
 import { ContentAtticAgent } from './Agents/ContentAtticAgent';
 import { ContentMessageManager } from './Managers/ContentMessageManager';
 import { CommandRouter } from "./Proxies/CommandRouter";
-import { ContentBrowserFacade } from './Proxies/ContentBrowserProxy';
+import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
 import { MessageBroker_Content } from './Proxies/ContentMessageBroker';
 
 class ContentEntry {
@@ -39,7 +39,7 @@ class ContentEntry {
   private SettingsAgent: ISettingsAgent;
   private AtticAgent: IContentAtticAgent;
   //ScUrlAgent: ScUrlAgent;
-  ContentBrowserProxy: IContentBrowserFacade;
+  ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
 
   CommandRouter: CommandRouter;
@@ -102,7 +102,7 @@ class ContentEntry {
 
       this.AutoSnapShotAgent = new AutoSnapShotAgent(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiAPI);
 
-      this.ContentBrowserProxy = new ContentBrowserFacade(this.HindeCore)
+      this.ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore)
 
       this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiAPI, this.ToastAgent, scUiMan, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.TopDocumentJacket);
 

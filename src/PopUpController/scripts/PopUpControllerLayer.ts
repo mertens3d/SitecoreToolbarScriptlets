@@ -19,7 +19,7 @@ import { IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IHindSiteUiLay
 import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { CommandManager } from "./Managers/CommandManager";
 import { MessageBroker_PopUp } from "./Agents/PopUpMessagesBrokerAgent";
-import { PopUpBrowserProxy } from "./Proxies/BrowserProxy";
+import { PopUpBrowserProxy } from "./Proxies/PopUpBrowserProxy";
 import { CommandType } from "../../Shared/scripts/Enums/CommandType";
 import { HandlersForInternal } from "./Classes/HandlersForInternal";
 import { BrowserTabAgent } from "./Agents/BrowserTabAgent";
@@ -31,6 +31,7 @@ import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Ev
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { Discriminator } from "../../Shared/scripts/Interfaces/Agents/Discriminator";
 import { UrlJacket } from "../../DOMJacket/UrlJacket";
+import { IPopUpBrowserProxy } from "../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
 
 class PopUpControllerLayer {
   BrowserTabAgent: BrowserTabAgent;
@@ -54,7 +55,7 @@ class PopUpControllerLayer {
       this.Preamble_SettingsAndLogger();
 
       this.BrowserProxy = new PopUpBrowserProxy(this.HindeCore);
-      await this.BrowserProxy.Init_BrowserProxy()
+      await this.BrowserProxy.Init_BrowserProxyAsyncElements()
         .then(() => {
           this.InstantiateAgents_Controller();
           this.InstantiateManagers_Controller();
@@ -96,7 +97,8 @@ class PopUpControllerLayer {
     this.CommandDefintionBucket = new CommandDefintionFactory(this.HindeCore).BuildMenuCommandParamsBucket();
     this.UiLayer = new HindSiteUiLayer.HindSiteUiLayer(this.HindeCore, this.SettingsAgent, this.CommandDefintionBucket, this.ScUrlAgent);
 
-    this.BrowserTabAgent = new BrowserTabAgent(this.HindeCore, this.ScUrlAgent, this.SettingsAgent);
+    let popUpBrowserProxy: IPopUpBrowserProxy = new PopUpBrowserProxy(this.HindeCore);
+    this.BrowserTabAgent = new BrowserTabAgent(this.HindeCore, this.ScUrlAgent, this.SettingsAgent, popUpBrowserProxy);
     this.HandlersForInternal = new HandlersForInternal(this.HindeCore, this.BrowserTabAgent);
     this.commandMan = new CommandManager(this.HindeCore, this.PopUpMessageBrokerAgent, this.CommandDefintionBucket, this.UiLayer, this.HandlersForInternal);
 
