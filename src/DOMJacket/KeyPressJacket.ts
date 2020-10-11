@@ -8,22 +8,22 @@ import { ReqCommandMsgFlag } from "../Shared/scripts/Enums/10 - MessageFlag";
 
 export class KeyPressJacket extends _CommonBase {
   KeyPressCombos: IUserKeyPressCombo[];
-  KeyBoardComboevent_Subject: KeyBoardComboEvent_Subject;
+  KeyBoardComboEvent_Subject: KeyBoardComboEvent_Subject;
 
-  constructor(commoncore: ICommonCore, keyPressCombos: IUserKeyPressCombo[]) {
+  constructor(commoncore: ICommonCore, keyPressCombosToListenFor: IUserKeyPressCombo[]) {
     super(commoncore);
-    this.KeyPressCombos = keyPressCombos;
+    this.KeyPressCombos = keyPressCombosToListenFor;
     this.Instantiate();
     this.WireEvents();
   }
 
   private Instantiate(): void {
-    this.KeyBoardComboevent_Subject = new KeyBoardComboEvent_Subject(this.CommonCore);
+    this.KeyBoardComboEvent_Subject = new KeyBoardComboEvent_Subject(this.CommonCore);
   }
 
- private  WireEvents() {
+  private WireEvents() {
     //if (window === top) {
-      window.addEventListener('keyup', ((event: KeyboardEvent) => this.CallBackOnNativeKeyPress(event)), false);
+    window.addEventListener('keyup', ((event: KeyboardEvent) => this.CallBackOnNativeKeyPress(event)), false);
     //}
   }
 
@@ -51,12 +51,16 @@ export class KeyPressJacket extends _CommonBase {
       }
     });
 
-    let keyBoardComboEvent_Payload: IKeyBoardComboEvent_Payload = {
-      reqMsgFlags: matchingCombos
-    }
-
     if (matchingCombos.length > 0) {
-      this.KeyBoardComboevent_Subject.NotifyObserversAsync(keyBoardComboEvent_Payload);
+      this.Logger.LogImportant('call back native');
+
+      matchingCombos.forEach((commandFlag: ReqCommandMsgFlag) => {
+        let keyBoardComboEvent_Payload: IKeyBoardComboEvent_Payload = {
+          ReqCommandMsgFlag: commandFlag
+        }
+
+        this.KeyBoardComboEvent_Subject.NotifyObserversAsync(keyBoardComboEvent_Payload);
+      });
     }
   }
 }

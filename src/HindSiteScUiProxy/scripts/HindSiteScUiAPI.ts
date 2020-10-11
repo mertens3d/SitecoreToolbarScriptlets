@@ -1,7 +1,8 @@
 ﻿import { DocumentJacket } from "../../DOMJacket/DocumentJacket";
 import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
 import { IAPICore } from "../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IHindSiteScUiAPI, IHindSiteScUiAPIRunTimeOptions } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiAPI } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiAPIRunTimeOptions } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions";
 import { ICoreErrorHandler } from "../../Shared/scripts/Interfaces/Agents/IErrorHandlerAgent";
 import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";

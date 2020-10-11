@@ -1,13 +1,13 @@
 ﻿import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
-import { LoggerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerAgent";
-import { TaskMonitor } from "../../Shared/scripts/Agents/Agents/LoggerAgent/TaskMonitor";
-import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/Agents/LoggerAgent/ErrorHandlerAgent";
-import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerConsoleWriter";
-import { LoggerStorageWriter } from "../../Shared/scripts/Agents/Agents/LoggerAgent/LoggerStorageWriter";
-import { RepositoryAgent } from "../../Shared/scripts/Agents/Agents/RepositoryAgent/RepositoryAgent";
-import { HindSiteSettingWrapper } from "../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
-import { SettingsAgent } from "../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent";
-import { ScPageTypeResolver } from "../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
+import { LoggerAgent } from "../../Shared/scripts/Agents/LoggerAgent/LoggerAgent";
+import { TaskMonitor } from "../../Shared/scripts/Agents/LoggerAgent/TaskMonitor";
+import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/LoggerAgent/ErrorHandlerAgent";
+import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/LoggerAgent/LoggerConsoleWriter";
+import { LoggerStorageWriter } from "../../Shared/scripts/Agents/LoggerAgent/LoggerStorageWriter";
+import { RepositoryAgent } from "../../Shared/scripts/Agents/RepositoryAgent/RepositoryAgent";
+import { HindSiteSettingWrapper } from "../../Shared/scripts/Agents/SettingsAgent/HindSiteSettingWrapper";
+import { SettingsAgent } from "../../Shared/scripts/Agents/SettingsAgent/SettingsAgent";
+import { ScPageTypeResolver } from "../../Shared/scripts/Agents/UrlAgent/ScPageTypeResolver";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../Shared/scripts/Enums/30 - SettingKey";
@@ -71,8 +71,7 @@ class PopUpControllerLayer {
 
     this.HindeCore = null;
 
-    let factory: CoreFactory = new CoreFactory();
-    let commonCore: ICommonCore = factory.BuildCommonCore();
+    let commonCore: ICommonCore = CoreFactory.BuildCommonCore();
     this.HindeCore = new HindeCore(commonCore);
 
     //this.HindeCore.Logger = new LoggerAgent(this.HindeCore);

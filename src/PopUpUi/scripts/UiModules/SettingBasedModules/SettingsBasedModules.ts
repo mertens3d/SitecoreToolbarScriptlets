@@ -1,4 +1,4 @@
-﻿import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
+﻿import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
 import { UiPresence } from "../../../../Shared/scripts/Enums/UiPresence";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";

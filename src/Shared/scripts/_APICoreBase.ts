@@ -1,10 +1,11 @@
-﻿import { ErrorHandlerAgent } from './Agents/Agents/LoggerAgent/ErrorHandlerAgent';
+﻿import { ErrorHandlerAgent } from './Agents/LoggerAgent/ErrorHandlerAgent';
 import { IAPICore } from './Interfaces/Agents/IAPICore';
 import { _CommonBase } from './_CommonCoreBase';
+import { IHindSiteScUiAPIRunTimeOptions } from './Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions';
 
 export abstract class _APICoreBase  extends _CommonBase{
   protected ApiCore: IAPICore;
-    RunTimeOptions: import("C:/projects/SitecoreToolbarScriptlets/src/Shared/scripts/Interfaces/Agents/IContentApi/IContentApi").IHindSiteScUiAPIRunTimeOptions;
+    RunTimeOptions: IHindSiteScUiAPIRunTimeOptions;
 
   constructor(apiCore: IAPICore)
   {

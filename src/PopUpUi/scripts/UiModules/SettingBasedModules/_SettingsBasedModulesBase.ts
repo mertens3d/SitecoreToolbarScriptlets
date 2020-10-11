@@ -1,4 +1,4 @@
-﻿import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
+﻿import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../../../Shared/scripts/Enums/30 - SettingKey";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";

@@ -54,7 +54,10 @@ export class SharedConst {
       Javascript: {
         ReadyStates: {
           Complete: "complete"
-        }
+        },
+        Events: {
+          Message: "message",
+        },
       }
     },
     Logger: {

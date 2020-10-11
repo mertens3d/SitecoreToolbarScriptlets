@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { ScPageTypeResolver } from "../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
+import { ScPageTypeResolver } from "../../../Shared/scripts/Agents/UrlAgent/ScPageTypeResolver";
 import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
 import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";
 import { DefaultStateOfScUiProxy } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScUiProxy";

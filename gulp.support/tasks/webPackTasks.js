@@ -10,13 +10,13 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   WebPackOne: function (cb, targetVar, regexIgnore) {
-    console.log('s) WebPackOne');
+    console.log('s) WebPackOne ' + targetVar.Ts.MinFileName);
     console.log(typeof targetVar);
 
     console.log('source: ' + targetVar.Ts.TranspiledFolder);
     console.log('regexIgnore: ' + regexIgnore);
 
-    console.log('e) WebPackOne');
+    console.log('e) WebPackOne ' + targetVar.Ts.MinFileName);
 
     return gulp.src(targetVar.Ts.TranspiledFolder)
       .pipe(Webpack_stream(

@@ -1,9 +1,9 @@
-﻿import { LoggerConsoleWriter } from "../../Agents/Agents/LoggerAgent/LoggerConsoleWriter";
+﻿import { LoggerConsoleWriter } from "../../Agents/LoggerAgent/LoggerConsoleWriter";
 import { GuidData } from "../../Helpers/GuidData";
 import { ICommonCore } from "./ICommonCore";
 import { IHindeCore } from "./IHindeCore";
-import { TaskMonitor } from "../../Agents/Agents/LoggerAgent/TaskMonitor";
-import { ErrorHandlerAgent } from "../../Agents/Agents/LoggerAgent/ErrorHandlerAgent";
+import { TaskMonitor } from "../../Agents/LoggerAgent/TaskMonitor";
+import { ErrorHandlerAgent } from "../../Agents/LoggerAgent/ErrorHandlerAgent";
 import { ICoreErrorHandler } from "./IErrorHandlerAgent";
 import { ICoreTaskMonitor } from "./Core/ITaskMonitorAgent";
 

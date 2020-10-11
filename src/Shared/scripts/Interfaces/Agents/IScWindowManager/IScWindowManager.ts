@@ -1,8 +1,8 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
-import { ScWindowType } from "../../../Enums/50 - scWindowType";
-import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IStateFullProxy } from "../IStateProxy";
+import { ScWindowType } from "../../../Enums/50 - scWindowType";
+import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 
 export interface IScWindowFacade {
   GetCurrentPageType(): ScWindowType;

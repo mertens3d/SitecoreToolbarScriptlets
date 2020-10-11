@@ -1,6 +1,7 @@
-﻿import { SharedConst } from '../../../SharedConst';
+﻿import { _CommonBase } from "../../../_CommonCoreBase";
 import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
-import { _CommonBase } from '../../../_CommonCoreBase';
+import { SharedConst } from "../../../SharedConst";
+
 
 export class IterationDrone extends _CommonBase {
   IsExhausted: boolean;

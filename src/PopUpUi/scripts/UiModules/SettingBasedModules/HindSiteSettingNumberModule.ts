@@ -1,4 +1,4 @@
-﻿import { HindSiteSettingForNumbers } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingForNumbers";
+﻿import { HindSiteSettingForNumbers } from "../../../../Shared/scripts/Agents/SettingsAgent/HindSiteSettingForNumbers";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";

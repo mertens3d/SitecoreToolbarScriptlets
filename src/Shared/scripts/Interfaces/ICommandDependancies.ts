@@ -1,4 +1,4 @@
-﻿import { AutoSnapShotAgent } from "../../../Content/scripts/Agents/AutoSnapShotAgent";
+﻿import { AutoSnapShotAgent } from "../../../Content-Top/scripts/Agents/AutoSnapShotAgent";
 import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
 import { IHindSiteScUiAPI } from "./Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "./Agents/IContentAtticAgent/IContentAtticAgent";

@@ -1,6 +1,6 @@
-﻿import { ScWindowType } from "../../../Enums/50 - scWindowType";
-import { IStateOf_ } from "./IStateOf_";
+﻿import { IStateOf_ } from "./IStateOf_";
 import { IFrameJacketStyling } from "./IStateOfFrameStyling";
+import { ScWindowType } from "../../../Enums/50 - scWindowType";
 
 export interface IStateOfDTFrame {
   FrameStyling: IFrameJacketStyling;

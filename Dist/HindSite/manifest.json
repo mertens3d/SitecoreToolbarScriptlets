@@ -12,25 +12,29 @@
   "content_scripts": [
     {
       "matches": [ "http://*/*", "https://*/*" ],
+      "all_frames": false,
       "js": [
         "AutoBuild/final/browser-polyfill.js",
-        "AutoBuild/final/content.min.js"
-
-      ],
-
-      "all_frames": false
-
+        "AutoBuild/final/Content-Top.min.js"
+      ]
     },
     {
-      "matches": [ "http://*/sitecore/shell/default.aspx/*", "https://*/sitecore/shell/default.aspx/*" ],
+      "matches": [ "http://*/*", "https://*/*" ],
       "all_frames": true,
-      "css": [ "AutoBuild/final/content.min.css" ]
+      "js": [
+        "AutoBuild/final/content-all.min.js"
+      ]
+    },
+    {
+      "matches": [ "http://*/sitecore/shell/*", "https://*/sitecore/shell/*" ],
+      "all_frames": true,
+      "css": [ "AutoBuild/final/content-top.min.css" ]
     }
 
   ],
 
 
-  "web_accessible_resources": [ "AutoBuild/final/content.min.css" ],
+  "web_accessible_resources": [ "AutoBuild/final/content-top.min.css" ],
 
   "permissions": [
     "activeTab",
@@ -48,11 +52,7 @@
       "suggested_key": {
         "default": "Ctrl+Shift+Y"
       }
-    },
-    "take-snapshot": {
-      "suggested_key": {
-        "default" :  "Ctrl+Shift+S"
-      }
     }
+
   }
 }

@@ -135,6 +135,8 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     this.Logger.FuncEnd(this.CallBackOnDocumentProxyMutationEvent.name);
   }
 
+
+
   private async HandleAddedFrameJacket(frameJacket: ElementFrameJacket): Promise<void> {
     this.Logger.FuncStart(this.HandleAddedFrameJacket.name);
 
@@ -266,8 +268,10 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     this.Logger.FuncStart(this.NewFrameStep3_WireEvents.name);
     dtFrameProxy.DTFrameProxyMutationEvent_Subject.RegisterObserver(this.DTFrameProxyManyMutationEvent_Observer);
     dtFrameProxy.WireEvents();
+    
     this.Logger.FuncEnd(this.NewFrameStep3_WireEvents.name);
   }
+    
 
   private NewFrameStep4_NotifyObserversOfAreaProxyMutation(AddedDTFrameProxy: DTFrameProxy) {
     this.Logger.FuncStart(this.NewFrameStep4_NotifyObserversOfAreaProxyMutation.name);

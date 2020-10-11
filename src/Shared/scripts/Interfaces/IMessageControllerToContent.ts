@@ -2,7 +2,11 @@
 import { IHindSiteSetting } from "./Agents/IGenericSetting";
 import { IStateOfPopUp } from "./IStateOfPopUp";
 
-export interface IHotKeyCommandPayload {
+export interface IDeepHotKeyData {
+  ReqCommandMsgFlag: ReqCommandMsgFlag;
+}
+export interface ISingleHotKeyPayload {
+    ReqCommandMsgFlag: ReqCommandMsgFlag;
 
 
 }

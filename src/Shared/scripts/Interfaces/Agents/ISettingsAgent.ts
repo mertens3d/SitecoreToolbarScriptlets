@@ -1,5 +1,5 @@
-﻿import { HindSiteSettingsBucket } from "../../Agents/Agents/SettingsAgent/HindSiteSettingsBucket";
-import { HindSiteSettingWrapper } from "../../Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
+﻿import { HindSiteSettingsBucket } from "../../Agents/SettingsAgent/HindSiteSettingsBucket";
+import { HindSiteSettingWrapper } from "../../Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingKey } from "../../Enums/30 - SettingKey";
 import { SettingFlavor } from "../../Enums/SettingFlavor";
 import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";

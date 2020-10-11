@@ -50,7 +50,10 @@
     Javascript: {
       ReadyStates: {
         Complete: DocumentReadyState
-      }
+      },
+      Events: {
+        Message: string
+      },
     }
   },
   Logger: {

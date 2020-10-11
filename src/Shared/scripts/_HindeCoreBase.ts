@@ -1,4 +1,4 @@
-﻿import { ErrorHandlerAgent } from './Agents/Agents/LoggerAgent/ErrorHandlerAgent';
+﻿import { ErrorHandlerAgent } from './Agents/LoggerAgent/ErrorHandlerAgent';
 import { IHindeCore } from './Interfaces/Agents/IHindeCore';
 import { _CommonBase } from './_CommonCoreBase';
 

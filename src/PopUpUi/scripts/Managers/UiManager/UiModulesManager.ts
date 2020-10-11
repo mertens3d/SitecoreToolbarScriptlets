@@ -1,4 +1,4 @@
-﻿import { HindSiteSettingWrapper } from '../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper';
+﻿import { HindSiteSettingWrapper } from '../../../../Shared/scripts/Agents/SettingsAgent/HindSiteSettingWrapper';
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { PopConst } from '../../../../Shared/scripts/Const/PopConst';

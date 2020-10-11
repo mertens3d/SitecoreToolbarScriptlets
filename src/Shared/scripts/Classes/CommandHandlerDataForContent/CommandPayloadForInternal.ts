@@ -1,5 +1,5 @@
-﻿import { AutoSnapShotAgent } from "../../../../Content/scripts/Agents/AutoSnapShotAgent";
-import { MessageBroker_Content } from "../../../../Content/scripts/Proxies/ContentMessageBroker";
+﻿import { AutoSnapShotAgent } from "../../../../Content-Top/scripts/Agents/AutoSnapShotAgent";
+import { BrowserMessageBroker_Content } from "../../../../Content-Top/scripts/Proxies/BrowserMessageBroker_Content";
 import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
 import { ScUiManager } from "../../../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
 import { ContentEditorSFProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
@@ -18,7 +18,7 @@ export class CommandPayloadForInternal extends _CommonBase implements ICommandPa
   NewNickname: string;
   TargetSnapShotId: GuidData;
   AtticAgent: IContentAtticAgent;
-  ContentMessageBroker: MessageBroker_Content = null;
+  ContentMessageBroker: BrowserMessageBroker_Content = null;
   DesktopProxy: DesktopSFProxy = null;
   hindeCore: ICommonCore = null;
   TargetCeProxy: ContentEditorSFProxy;

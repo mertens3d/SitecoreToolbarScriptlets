@@ -1,4 +1,4 @@
-﻿import { TaskMutationType } from "../../Agents/Agents/LoggerAgent/TaskMutationType";
+﻿import { TaskMutationType } from "../../Agents/LoggerAgent/TaskMutationType";
 
 export interface ITaskListMutationEvent_Payload {
   CompletedCount: number;

@@ -43,12 +43,10 @@ export class DocumentJacketWatcher extends _CommonBase {
   private WireInstanceEvents() {
     this.Logger.FuncStart(this.WireInstanceEvents.name, DocumentJacketWatcher.name);
     this.FrameJacketAddRemoveEvent_Subject.RegisterObserver(this.NativeIframeAddRemoveEvent_Observer);
-
     this.Logger.FuncEnd(this.WireInstanceEvents.name, DocumentJacketWatcher.name);
   }
 
   //------------------------------------------------------------
-
   private async CallBackOnNativeIFrameAddRemoveEventAsync(nativeIFrameAddRemoveEvent_Payload: IFrameJacketAddRemoveEvent_Payload): Promise<void> {
     this.Logger.FuncStart(this.CallBackOnNativeIFrameAddRemoveEventAsync.name);
     try {

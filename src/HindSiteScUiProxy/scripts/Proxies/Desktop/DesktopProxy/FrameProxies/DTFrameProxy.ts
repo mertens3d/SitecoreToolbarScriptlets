@@ -1,6 +1,6 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
 import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJacket";
-import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/Agents/UrlAgent/ScPageTypeResolver";
+import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/UrlAgent/ScPageTypeResolver";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { RecipeBasics } from "../../../../RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
@@ -21,7 +21,7 @@ import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutati
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
 import { _ContentTreeBasedProxy } from "../../../ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
 import { MarketingControlPanelProxy } from "../../../MarketingControlPanelProxy";
-import { IHindSiteScUiAPIRunTimeOptions } from "../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiAPIRunTimeOptions } from "../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
   FrameTypeDiscriminator = DTFrameProxy.name;

@@ -13,7 +13,7 @@ import { AsyncLock } from './AsyncLock';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { IButtonSelectors } from './IButtonSelectors';
 import { StartMenuButtonResolver } from './StartMenuButtonResolver';
-import { IHindSiteScUiAPIRunTimeOptions } from '../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi';
+import { IHindSiteScUiAPIRunTimeOptions } from "../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions";
 
 export class DTStartBarProxy extends _APICoreBase {
   private DocumentJacket: DocumentJacket;

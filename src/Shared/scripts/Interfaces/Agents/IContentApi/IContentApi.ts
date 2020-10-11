@@ -1,11 +1,6 @@
-﻿import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
-import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
+﻿import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../IApiCallPayload";
-
-export interface IHindSiteScUiAPIRunTimeOptions {
-  EnableDesktopStartBarButtonRename: boolean,
-
-}
+import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 
 export interface IHindSiteScUiAPI {
   AddContentEditorToDesktopAsync(commandData: IApiCallPayload): Promise<void>

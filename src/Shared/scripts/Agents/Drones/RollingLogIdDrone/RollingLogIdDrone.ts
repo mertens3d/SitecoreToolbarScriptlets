@@ -1,8 +1,9 @@
-﻿import { SettingKey } from "../../../Enums/30 - SettingKey";
+﻿import { _CommonBase } from "../../../_CommonCoreBase";
 import { IHindSiteSetting } from "../../../Interfaces/Agents/IGenericSetting";
 import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
 import { ISettingsAgent } from "../../../Interfaces/Agents/ISettingsAgent";
-import { _CommonBase } from "../../../_CommonCoreBase";
+import { SettingKey } from "../../../Enums/30 - SettingKey";
+
 
 export class RollingLogIdDrone extends _CommonBase{
   private SettingsAgent: ISettingsAgent;
