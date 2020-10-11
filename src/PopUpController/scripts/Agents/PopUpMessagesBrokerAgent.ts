@@ -1,7 +1,7 @@
 ﻿import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
-import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/DefaultMsgContentToController";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { MsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReqCommandMsgFlag, ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 import { ContentReplyReceivedEvent_Subject } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
 import { IControllerMessageReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
@@ -33,7 +33,7 @@ export class MessageBroker_PopUp extends _FrontBase {
     this.Logger.HandlerClearDebugText(this.HindeCore);
   }
 
-  BuildMessageToContent(msgFlag: MsgFlag, stateOfPopUp: IStateOfPopUp): IMessageControllerToContent {
+  BuildMessageToContent(msgFlag: ReqCommandMsgFlag, stateOfPopUp: IStateOfPopUp): IMessageControllerToContent {
     let wrappedSettings: HindSiteSettingWrapper[] = this.SettingsAgent.GetSettingsByFlavor([SettingFlavor.ContentAndPopUpStoredInPopUp, SettingFlavor.ContentOnly]);
     let settingsToSend: IHindSiteSetting[] = [];
     wrappedSettings.forEach((wrappedSetting: HindSiteSettingWrapper) => settingsToSend.push(wrappedSetting.HindSiteSetting));
@@ -47,7 +47,7 @@ export class MessageBroker_PopUp extends _FrontBase {
     return messageControllerToContent;
   }
 
-  async SendCommandToContentAsync(msgFlag: MsgFlag, stateOfPopUp: IStateOfPopUp): Promise<void> {
+  async SendCommandToContentAsync(msgFlag: ReqCommandMsgFlag, stateOfPopUp: IStateOfPopUp): Promise<void> {
     this.Logger.FuncStart(this.SendCommandToContentAsync.name);
     try {
       if (!StaticHelpers.IsNullOrUndefined([stateOfPopUp])) {
@@ -127,26 +127,26 @@ export class MessageBroker_PopUp extends _FrontBase {
       this.Logger.FuncStart(this.ReceiveResponseHandler.name);
 
       if (response) {
-        StaticHelpers.MsgFlagAsString(response.MsgFlag)
+        //StaticHelpers.MsgFlagAsString(response.MsgFlagReply)
 
         if (response) {
           var asMsgFromContent: IMessageContentToController = <IMessageContentToController>response;
 
           if (asMsgFromContent) {
-            switch (response.MsgFlag) {
-              case MsgFlag.RespCurState:
+            switch (response.MsgFlagReply) {
+              case ReplyCommandMsgFlag.RespCurState:
                 break;
-              case MsgFlag.RespTaskSuccessful:
+              case ReplyCommandMsgFlag.RespTaskSuccessful:
                 resolve(asMsgFromContent.Payload);
                 break;
-              case MsgFlag.RespTaskFailed:
-                reject(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
+              case ReplyCommandMsgFlag.RespTaskFailed:
+                reject(ReplyCommandMsgFlag[asMsgFromContent.MsgFlagReply]);
                 break;
-              case MsgFlag.RespFailedDidNotValidate:
-                reject(StaticHelpers.MsgFlagAsString(asMsgFromContent.MsgFlag));
+              case ReplyCommandMsgFlag.RespFailedDidNotValidate:
+                reject(ReplyCommandMsgFlag[asMsgFromContent.MsgFlagReply]);
                 break;
               default:
-                reject('Unrecognized MsgFlag' + StaticHelpers.MsgFlagAsString(response.MsgFlag))
+                reject('Unrecognized MsgFlag' + ReplyCommandMsgFlag[response.MsgFlagReply])
                 break;
             }
           }

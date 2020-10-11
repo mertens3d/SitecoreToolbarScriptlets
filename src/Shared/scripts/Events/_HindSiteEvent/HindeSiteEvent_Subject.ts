@@ -15,9 +15,9 @@ export abstract class HindeSiteEvent_Subject<T> extends _CommonBase implements I
 
   constructor(commonCore: ICommonCore) {
     super(commonCore);
-  //constructor(arg1Logger: ILoggerAgent, arg2ErrorHand: IErrorHandlerAgent, friendly: string)
-  //constructor(arg1CommonCore: ICommonCore, arg2Friendly: string)
-  //constructor(arg1: ILoggerAgent | ICommonCore, arg2: string | IErrorHandlerAgent, arg3: string = '') {
+    //constructor(arg1Logger: ILoggerAgent, arg2ErrorHand: IErrorHandlerAgent, friendly: string)
+    //constructor(arg1CommonCore: ICommonCore, arg2Friendly: string)
+    //constructor(arg1: ILoggerAgent | ICommonCore, arg2: string | IErrorHandlerAgent, arg3: string = '') {
     //let errorHandTest = <IErrorHandlerAgent>arg2;
 
     //if (arg1.TypeDiscriminator === TypeDiscriminator.ILoggerAgent && errorHandTest && errorHandTest.TypeDiscriminator === TypeDiscriminator.IErrorHandler) {

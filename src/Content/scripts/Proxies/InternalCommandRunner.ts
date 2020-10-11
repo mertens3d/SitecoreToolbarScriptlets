@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { MsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReqCommandMsgFlag, ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -44,7 +44,7 @@ export class InternalCommandRunner extends _FrontBase {
 
   Ping() {
     return new Promise(async (resolve, reject) => {
-      resolve(MsgFlag.RespListeningAndReady);
+      resolve(ReplyCommandMsgFlag.RespListeningAndReady);
     });
   }
 
@@ -74,8 +74,6 @@ export class InternalCommandRunner extends _FrontBase {
         .catch((err) => reject(err));
     });
   }
-  
-
 
   async SetStateFromMostRecent(commandParams: ICommandParams): Promise<void> {
     try {

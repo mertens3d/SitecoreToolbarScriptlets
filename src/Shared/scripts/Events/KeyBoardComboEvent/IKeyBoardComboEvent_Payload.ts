@@ -1,5 +1,5 @@
-﻿import { HotKeyCommandFlag } from "../../Enums/KeyPressComboFlag";
+﻿import { ReqCommandMsgFlag } from "../../Enums/10 - MessageFlag";
 
 export interface IKeyBoardComboEvent_Payload {
-  MatchingFlags: HotKeyCommandFlag[]
+  reqMsgFlags: ReqCommandMsgFlag[]
 }

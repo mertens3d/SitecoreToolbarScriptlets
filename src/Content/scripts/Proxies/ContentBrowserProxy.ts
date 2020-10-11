@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../../../node_modules/web-ext-types/global/index.d.ts" />
 
 import { IContentBrowserProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentBrowserProxy";
-import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/DefaultMsgContentToController";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { BaseBrowserProxy } from "../../../Shared/scripts/Proxies/Browser/_BaseBrowserProxy";
 

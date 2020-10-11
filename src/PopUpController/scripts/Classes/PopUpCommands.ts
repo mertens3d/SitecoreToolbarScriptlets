@@ -1,5 +1,5 @@
 ﻿import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { MsgFlag } from '../../../Shared/scripts/Enums/10 - MessageFlag';
+import { ReqCommandMsgFlag } from '../../../Shared/scripts/Enums/10 - MessageFlag';
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/20 - MenuCommand';
 import { CommandButtonEvents } from '../../../Shared/scripts/Enums/CommandButtonEvents';
@@ -21,7 +21,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonClose,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqClosePopUpWindow,
+            MsgFlag: ReqCommandMsgFlag.ReqClosePopUpWindow,
             CommandType: CommandType.PopUp,
           }
         },
@@ -35,7 +35,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqAddCETab,
+            MsgFlag: ReqCommandMsgFlag.ReqAddCETab,
             CommandType: CommandType.Content,
           }
         },
@@ -48,7 +48,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqSetScModeEdit,
+            MsgFlag: ReqCommandMsgFlag.ReqSetScModeEdit,
             CommandType: CommandType.Content,
           }
         },
@@ -61,7 +61,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqSetScModeNormal,
+            MsgFlag: ReqCommandMsgFlag.ReqSetScModeNormal,
             CommandType: CommandType.Content,
           }
         },
@@ -74,7 +74,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqSetScModePreview,
+            MsgFlag: ReqCommandMsgFlag.ReqSetScModePreview,
             CommandType: CommandType.Content,
           }
         },
@@ -98,7 +98,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonWithInput,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqUpdateNickName,
+            MsgFlag: ReqCommandMsgFlag.ReqUpdateNickName,
             CommandType: CommandType.Content,
           }
         },
@@ -111,7 +111,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqOpenPresentationDetails,
+            MsgFlag: ReqCommandMsgFlag.ReqOpenPresentationDetails,
             CommandType: CommandType.Content,
           }
         },
@@ -124,7 +124,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqToggleCompactCss,
+            MsgFlag: ReqCommandMsgFlag.ReqToggleCompactCss,
             CommandType: CommandType.Content,
           }
         },
@@ -137,7 +137,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqAdminB,
+            MsgFlag: ReqCommandMsgFlag.ReqAdminB,
             CommandType: CommandType.Content,
           }
         },
@@ -151,7 +151,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqOpenCE,
+            MsgFlag: ReqCommandMsgFlag.ReqOpenCE,
             CommandType: CommandType.Content,
           }
         },
@@ -165,7 +165,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqQuickPublish,
+            MsgFlag: ReqCommandMsgFlag.ReqQuickPublish,
             CommandType: CommandType.Content,
           }
         },
@@ -178,7 +178,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqGoDesktop,
+            MsgFlag: ReqCommandMsgFlag.ReqGoDesktop,
             CommandType: CommandType.Content,
           }
         },
@@ -191,7 +191,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: null,
-            MsgFlag: MsgFlag.Ping,
+            MsgFlag: ReqCommandMsgFlag.Ping,
             CommandType: CommandType.Content,
           }
         },
@@ -206,7 +206,7 @@ export class CommandDefintionFactory extends _FrontBase {
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
 
-            MsgFlag: MsgFlag.ReqTakeSnapShot,
+            MsgFlag: ReqCommandMsgFlag.ReqTakeSnapShot,
             CommandType: CommandType.Content,
           }
         },
@@ -221,7 +221,7 @@ export class CommandDefintionFactory extends _FrontBase {
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
 
-            MsgFlag: MsgFlag.ReqToggleFavorite,
+            MsgFlag: ReqCommandMsgFlag.ReqToggleFavorite,
             CommandType: CommandType.Content,
           }
         },
@@ -247,7 +247,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqRemoveFromStorage,
+            MsgFlag: ReqCommandMsgFlag.ReqRemoveFromStorage,
             CommandType: CommandType.Content,
           }
         },
@@ -260,7 +260,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.SelectSnapShot,
           EventHandlerData: {
             Event: CommandButtonEvents.OnDoubleClick,
-            MsgFlag: MsgFlag.ReqSetStateOfSitecoreNewWindow,
+            MsgFlag: ReqCommandMsgFlag.ReqSetStateOfSitecoreNewWindow,
             CommandType: CommandType.Content,
           }
         },
@@ -273,7 +273,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqSetStateOfSitecoreSameWindow,
+            MsgFlag: ReqCommandMsgFlag.ReqSetStateOfSitecoreSameWindow,
             CommandType: CommandType.Content,
           }
         },
@@ -286,7 +286,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqSetStateOfSitecoreNewWindow,
+            MsgFlag: ReqCommandMsgFlag.ReqSetStateOfSitecoreNewWindow,
             CommandType: CommandType.PopUp,
           }
         },
@@ -299,7 +299,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqDebugAutoSnapShot,
+            MsgFlag: ReqCommandMsgFlag.ReqDebugAutoSnapShot,
             CommandType: CommandType.Content,
           }
         },
@@ -312,7 +312,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqDebugClearConsole,
+            MsgFlag: ReqCommandMsgFlag.ReqDebugClearConsole,
             CommandType: CommandType.PopUp,
           }
         },
@@ -325,7 +325,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: MsgFlag.ReqDebugTriggerReload,
+            MsgFlag: ReqCommandMsgFlag.ReqDebugTriggerReload,
             CommandType: CommandType.PopUp,
           }
         },

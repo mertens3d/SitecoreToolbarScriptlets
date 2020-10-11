@@ -1,4 +1,4 @@
-﻿import { DefaultMsgContentToController } from "../../Classes/MsgPayloadResponseFromContent";
+﻿import { DefaultMsgContentToController } from "../../Classes/DefaultMsgContentToController";
 import { IMessageControllerToContent } from "../IMessageControllerToContent";
 import { IBaseBrowserProxy } from "./IBaseBrowserProxy";
 import { BrowserTabProxy } from "../../Proxies/Browser/BrowserTabProxy";

@@ -10,7 +10,7 @@ import { RepositoryAgent } from '../../Shared/scripts/Agents/Agents/RepositoryAg
 import { SettingsAgent } from '../../Shared/scripts/Agents/Agents/SettingsAgent/SettingsAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/Agents/ToastAgent/ToastAgent';
 import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
-import { MsgFlag } from '../../Shared/scripts/Enums/10 - MessageFlag';
+import { ReqCommandMsgFlag } from '../../Shared/scripts/Enums/10 - MessageFlag';
 import { SettingKey } from '../../Shared/scripts/Enums/30 - SettingKey';
 import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
 import { TypeDiscriminator } from "../../Shared/scripts/Enums/70 - TypeDiscriminator";
@@ -133,17 +133,17 @@ class ContentEntry {
 
   private TriggerStartupCommands() {
     let setStateFromX: ICommandRouterParams = {
-      MsgFlag: MsgFlag.SetStateFromQueryString,
+      MsgFlag: ReqCommandMsgFlag.SetStateFromQueryString,
       NewNickName: null,
       SelectSnapShotId: null,
     }
 
     if (this.TopDocumentJacket.UrlJacket.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
-      setStateFromX.MsgFlag = MsgFlag.SetStateFromQueryString,
+      setStateFromX.MsgFlag = ReqCommandMsgFlag.SetStateFromQueryString,
         this.CommandRouter.RouteCommand(setStateFromX);
     } else if ((this.SettingsAgent.GetByKey(SettingKey.AutoRestoreState)).ValueAsBool()) {
       this.HindeCore.Logger.Log('yup...has the setting');
-      setStateFromX.MsgFlag = MsgFlag.SetStateFromMostRecent;
+      setStateFromX.MsgFlag = ReqCommandMsgFlag.SetStateFromMostRecent;
       this.CommandRouter.RouteCommand(setStateFromX);
     }
   }

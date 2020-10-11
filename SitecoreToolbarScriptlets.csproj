@@ -64,6 +64,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\InternalCommandRunner.ts" />
     <TypeScriptCompile Include="src\DOMJacket\KeyPressJacket.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\CoreFactory.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\DefaultMsgContentToController.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\KeyPressComboFlag.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\IKeyBoardComboEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\KeyBoardComboEvent_Observer.ts" />

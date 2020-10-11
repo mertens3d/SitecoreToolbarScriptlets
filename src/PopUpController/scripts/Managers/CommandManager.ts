@@ -1,5 +1,5 @@
 ﻿import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
-import { MsgFlag } from '../../../Shared/scripts/Enums/10 - MessageFlag';
+import { ReqCommandMsgFlag } from '../../../Shared/scripts/Enums/10 - MessageFlag';
 import { MenuCommandKey } from '../../../Shared/scripts/Enums/20 - MenuCommand';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
@@ -47,20 +47,20 @@ export class CommandManager extends _FrontBase {
   }
 
   HandleCommandTypePopUp(uiCommandFlagRaisedEvent_Payload: IUiCommandFlagRaisedEvent_Payload) {
-    this.Logger.Log(this.HandleCommandTypePopUp.name + ' should be handling ' + MsgFlag[uiCommandFlagRaisedEvent_Payload.MsgFlag]);
+    this.Logger.Log(this.HandleCommandTypePopUp.name + ' should be handling ' + ReqCommandMsgFlag[uiCommandFlagRaisedEvent_Payload.MsgFlag]);
 
     switch (uiCommandFlagRaisedEvent_Payload.MsgFlag) {
-      case MsgFlag.ReqSetStateOfSitecoreNewWindow:
+      case ReqCommandMsgFlag.ReqSetStateOfSitecoreNewWindow:
         this.HandlersForInternal.HandlerForSnapShotRestoreNewTab(uiCommandFlagRaisedEvent_Payload)
         break;
-      case MsgFlag.ReqDebugClearConsole:
+      case ReqCommandMsgFlag.ReqDebugClearConsole:
         console.clear();
         break;
-      case MsgFlag.ReqDebugTriggerReload:
+      case ReqCommandMsgFlag.ReqDebugTriggerReload:
         location.reload(true);
         break;
 
-      case MsgFlag.ReqClosePopUpWindow:
+      case ReqCommandMsgFlag.ReqClosePopUpWindow:
         window.close();
         break;
 
@@ -77,7 +77,7 @@ export class CommandManager extends _FrontBase {
     try {
       let stateOfPopUp: IStateOfPopUp = this.UiLayer.GetStateOfPopUp();
 
-      this.PopUpMsgBroker.SendCommandToContentAsync(MsgFlag.Ping, stateOfPopUp) //todo put correct value in for null. query the ui?
+      this.PopUpMsgBroker.SendCommandToContentAsync(ReqCommandMsgFlag.Ping, stateOfPopUp) //todo put correct value in for null. query the ui?
     } catch (err) {
       throw (this.TriggerPingEventAsync.name + ' | ' + err);
     }

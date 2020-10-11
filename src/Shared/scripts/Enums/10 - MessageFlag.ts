@@ -1,4 +1,17 @@
-﻿export enum MsgFlag {
+﻿export enum ReplyCommandMsgFlag {
+  Unknown = 0,
+
+  // 200 - response
+  RespCurState = 10499463,
+  RespListeningAndReady = 10781265,
+  RespNotReady = 10058031,
+  RespTaskFailed = 10685617,
+  RespTaskSuccessful = 10030157,
+  RespFailedDidNotValidate = 10922052,
+}
+
+
+export enum ReqCommandMsgFlag {
   Unknown = 0,
 
   GetAllStorageOneWindow = 10003063,
@@ -22,13 +35,7 @@
   ReqToggleFavorite = 10462769,
   ReqUpdateNickName = 10899837,
 
-  // 200 - response
-  RespCurState = 10499463,
-  RespListeningAndReady = 10781265,
-  RespNotReady = 10058031,
-  RespTaskFailed = 10685617,
-  RespTaskSuccessful = 10030157,
-  RespTest = 10414762,
+
 
   CancelCommand = 10125827,
   ReqDebugAutoSnapShot = 10463876,
@@ -37,7 +44,7 @@
   ReqSetScModeEdit = 10533683,
   ReqSetScModeNormal = 10544213,
   ReqSetStateOfSitecoreNewWindow = 10202348,
-  RespFailedDidNotValidate = 10922052,
+
   SetStateFromMostRecent = 10611496,
   SetStateFromQueryString = 10754569,
   SetStateFromStorage = 10984640,

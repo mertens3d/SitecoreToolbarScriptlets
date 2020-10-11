@@ -1,4 +1,4 @@
-﻿import { MsgFlag } from "../../Enums/10 - MessageFlag";
+﻿import { ReqCommandMsgFlag } from "../../Enums/10 - MessageFlag";
 import { IError } from "../../Interfaces/IError";
 import { DefaultStateOfScUiProxy } from "./DefaultStateOfScUiProxy";
 import { DefaultStateOfStorageSnapshots } from "./DefaultStateOfSnapshots";
@@ -6,8 +6,8 @@ import { IControllerMessageReceivedEvent_Payload } from "../../Events/ContentRep
 
 export class DefaultControllerMessageReceivedEvent_Payload implements IControllerMessageReceivedEvent_Payload {
   ErrorStack: IError[] = [];
-  LastReq = MsgFlag.Unknown;
-  LastReqFriendly: string = MsgFlag[MsgFlag.Unknown];
+  LastReq = ReqCommandMsgFlag.Unknown;
+  LastReqFriendly: string = ReqCommandMsgFlag[ReqCommandMsgFlag.Unknown];
   LastReqSuccessful = false;
   StateOfScUiProxy_Live = new DefaultStateOfScUiProxy();
   StateOfStorageSnapShots = new DefaultStateOfStorageSnapshots();

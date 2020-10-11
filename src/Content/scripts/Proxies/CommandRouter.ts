@@ -2,9 +2,9 @@
 import { ScUiManager } from "../../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
 import { ApiCommandPayload } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/ApiCommandPayload";
 import { CommandPayloadForInternal } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandPayloadForInternal";
-import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/DefaultMsgContentToController";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { MsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
@@ -73,7 +73,7 @@ export class CommandRouter extends _FrontBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteInternalCommand.name);
       if (commandToExecute) {
-        this.Logger.LogVal('msgFlag', MsgFlag[routingParams.MsgFlag]);
+        this.Logger.LogVal('msgFlag', ReqCommandMsgFlag[routingParams.MsgFlag]);
         let commandParams = this.BuildCommandPayloadForInternal();
 
         if (routingParams) {
@@ -118,7 +118,7 @@ export class CommandRouter extends _FrontBase {
 
   async RouteCommand(routingParams: ICommandRouterParams): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RouteCommand.name, MsgFlag[routingParams.MsgFlag]);
+      this.Logger.FuncStart(this.RouteCommand.name, ReqCommandMsgFlag[routingParams.MsgFlag]);
       let commandData: CommandToExecuteData = this.CalculateCommandToExec(routingParams.MsgFlag);
 
       if (commandData.CommandType == CommandType.Api) {
@@ -145,7 +145,7 @@ export class CommandRouter extends _FrontBase {
     });
   }
 
-  private ExecuteApiCommand(functionToExecute: Function, msgFlag: MsgFlag): Promise<DefaultMsgContentToController> {
+  private ExecuteApiCommand(functionToExecute: Function, msgFlag: ReqCommandMsgFlag): Promise<DefaultMsgContentToController> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteApiCommand.name);
       if (functionToExecute) {
@@ -165,79 +165,79 @@ export class CommandRouter extends _FrontBase {
     });
   }
 
-  private CalculateCommandToExec(msgFlag: MsgFlag): CommandToExecuteData {
+  private CalculateCommandToExec(msgFlag: ReqCommandMsgFlag): CommandToExecuteData {
     let commandData = new CommandToExecuteData(this.HindeCore);
     commandData.commandToExecute = null;
     commandData.CommandType = CommandType.Unknown;
 
     switch (msgFlag) {
-      case MsgFlag.ReqAddCETab:
+      case ReqCommandMsgFlag.ReqAddCETab:
         commandData.CommandType = CommandType.Api;
         commandData.commandToExecute = this.ScUiProxy.AddContentEditorToDesktopAsync;
         break;
 
-      case MsgFlag.ReqUpdateNickName:
+      case ReqCommandMsgFlag.ReqUpdateNickName:
 
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.SetNickName;
         break;
 
-      case MsgFlag.ReqAdminB:
+      case ReqCommandMsgFlag.ReqAdminB:
         commandData.CommandType = CommandType.Api;
         commandData.commandToExecute = this.ScUiProxy.AdminB;
         break;
 
-      case MsgFlag.Ping:
+      case ReqCommandMsgFlag.Ping:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.Ping;
         break;
 
-      case MsgFlag.ReqOpenCE:
+      case ReqCommandMsgFlag.ReqOpenCE:
         commandData.CommandType = CommandType.Api;
         commandData.commandToExecute = this.ScUiProxy.OpenContentEditor;
         break;
 
-      case MsgFlag.ReqToggleFavorite:
+      case ReqCommandMsgFlag.ReqToggleFavorite:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.ToggleFavorite;
         break;
 
-      case MsgFlag.ReqQuickPublish:
+      case ReqCommandMsgFlag.ReqQuickPublish:
         commandData.CommandType = CommandType.Api;
         commandData.commandToExecute = this.ScUiProxy.PublischActiveCE;
         break;
 
-      case MsgFlag.ReqSetStateOfSitecoreSameWindow:
+      case ReqCommandMsgFlag.ReqSetStateOfSitecoreSameWindow:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.SetStateOfSitecoreWindow;
         break;
 
-      case MsgFlag.ReqToggleCompactCss:
+      case ReqCommandMsgFlag.ReqToggleCompactCss:
         commandData.CommandType = CommandType.Api;
         commandData.commandToExecute = this.ScUiProxy.ToggleCompactCss;
         break;
 
-      case MsgFlag.ReqTakeSnapShot:
+      case ReqCommandMsgFlag.ReqTakeSnapShot:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.SaveWindowState;
         break;
 
-      case MsgFlag.ReqRemoveFromStorage:
+      case ReqCommandMsgFlag.ReqRemoveFromStorage:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.RemoveSnapShot;
         break;
 
-      case MsgFlag.ReqDebugAutoSnapShot:
+      case ReqCommandMsgFlag.ReqDebugAutoSnapShot:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.DebugForceAutoSnapShot;
         break;
 
-      case MsgFlag.SetStateFromQueryString:
+      case ReqCommandMsgFlag.SetStateFromQueryString:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.SetStateFromQueryString;
         break;
 
-      case MsgFlag.SetStateFromMostRecent:
+      case ReqCommandMsgFlag.SetStateFromMostRecent:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.SetStateFromMostRecent;
         break;

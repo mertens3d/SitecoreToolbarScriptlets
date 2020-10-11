@@ -1,7 +1,7 @@
-﻿import { HotKeyCommandFlag } from "../../Enums/KeyPressComboFlag";
+﻿import { ReqCommandMsgFlag } from "../../Enums/10 - MessageFlag";
 
 export interface IUserKeyPressCombo {
-  HotKeyCommandFlag: HotKeyCommandFlag;
+  HotKeyCommandFlag: ReqCommandMsgFlag;
   KeyWhich: number;
   IsCtrlKey: boolean;
   IsAltKey: boolean;

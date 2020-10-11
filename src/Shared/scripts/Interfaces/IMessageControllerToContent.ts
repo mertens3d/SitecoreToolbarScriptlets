@@ -1,4 +1,4 @@
-﻿import { MsgFlag } from "../Enums/10 - MessageFlag";
+﻿import { ReqCommandMsgFlag } from "../Enums/10 - MessageFlag";
 import { IHindSiteSetting } from "./Agents/IGenericSetting";
 import { IStateOfPopUp } from "./IStateOfPopUp";
 
@@ -11,5 +11,5 @@ export interface IMessageControllerToContent {
     StateOfPopUI: IStateOfPopUp;
     IsValid: boolean;
     CurrentContentPrefs: IHindSiteSetting[];
-    MsgFlag: MsgFlag;
+    MsgFlag: ReqCommandMsgFlag;
 }

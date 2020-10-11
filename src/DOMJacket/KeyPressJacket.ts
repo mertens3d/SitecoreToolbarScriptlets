@@ -4,7 +4,7 @@ import { IUserKeyPressCombo } from "../Shared/scripts/Interfaces/Agents/IUserKey
 import { ICommonCore } from "../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { KeyBoardComboEvent_Subject } from "../Shared/scripts/Events/KeyBoardComboEvent/KeyBoardComboEvent_Subject";
 import { IKeyBoardComboEvent_Payload } from "../Shared/scripts/Events/KeyBoardComboEvent/IKeyBoardComboEvent_Payload";
-import { HotKeyCommandFlag } from "../Shared/scripts/Enums/KeyPressComboFlag";
+import { ReqCommandMsgFlag } from "../Shared/scripts/Enums/10 - MessageFlag";
 
 export class KeyPressJacket extends _CommonBase {
   KeyPressCombos: IUserKeyPressCombo[];
@@ -22,9 +22,9 @@ export class KeyPressJacket extends _CommonBase {
   }
 
  private  WireEvents() {
-    if (window === top) {
+    //if (window === top) {
       window.addEventListener('keyup', ((event: KeyboardEvent) => this.CallBackOnNativeKeyPress(event)), false);
-    }
+    //}
   }
 
   private CallBackOnNativeKeyPress(event: KeyboardEvent): void {
@@ -40,7 +40,7 @@ export class KeyPressJacket extends _CommonBase {
     inComing.IsAltKey = event.altKey;
     inComing.Which = event.which;
 
-    let matchingCombos: HotKeyCommandFlag[] = [];
+    let matchingCombos: ReqCommandMsgFlag[] = [];
 
     this.KeyPressCombos.forEach((userKeyPressCombo: IUserKeyPressCombo) => {
       if ((inComing.Which === userKeyPressCombo.KeyWhich)
@@ -52,7 +52,7 @@ export class KeyPressJacket extends _CommonBase {
     });
 
     let keyBoardComboEvent_Payload: IKeyBoardComboEvent_Payload = {
-      MatchingFlags: matchingCombos
+      reqMsgFlags: matchingCombos
     }
 
     if (matchingCombos.length > 0) {

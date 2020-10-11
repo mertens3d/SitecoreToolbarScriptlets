@@ -1,6 +1,6 @@
-﻿import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/MsgPayloadResponseFromContent";
+﻿import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/DefaultMsgContentToController";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { MsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReqCommandMsgFlag, ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
 import { SettingKey } from "../../../Shared/scripts/Enums/30 - SettingKey";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
@@ -19,7 +19,6 @@ import { CommandRouter } from "./CommandRouter";
 import { KeyPressJacket } from "../../../DOMJacket/KeyPressJacket";
 import { KeyBoardComboEvent_Observer } from "../../../Shared/scripts/Events/KeyBoardComboEvent/KeyBoardComboEvent_Observer";
 import { IKeyBoardComboEvent_Payload } from "../../../Shared/scripts/Events/KeyBoardComboEvent/IKeyBoardComboEvent_Payload";
-import { HotKeyCommandFlag } from "../../../Shared/scripts/Enums/KeyPressComboFlag";
 import { IUserKeyPressCombo } from "../../../Shared/scripts/Interfaces/Agents/IUserKeyPressCombo";
 
 export class MessageBroker_Content extends _FrontBase implements IMessageBroker_Content {
@@ -54,7 +53,7 @@ export class MessageBroker_Content extends _FrontBase implements IMessageBroker_
 
 
     let CtrlAltG: IUserKeyPressCombo = {
-      IsAltKey: true, IsCtrlKey: true, IsShiftKey: false, HotKeyCommandFlag: HotKeyCommandFlag.Test, KeyWhich: 71
+      IsAltKey: true, IsCtrlKey: true, IsShiftKey: false, HotKeyCommandFlag: ReqCommandMsgFlag.ReqTakeSnapShot, KeyWhich: 71
     }
 
     this.KeyPressJacket = new KeyPressJacket(this.CommonCore, [CtrlAltG]);
@@ -71,11 +70,20 @@ export class MessageBroker_Content extends _FrontBase implements IMessageBroker_
     this.Logger.FuncEnd(this.BeginListening.name);
   }
 
+
+  private RouteSingleCommandFromHotKey(hotKeyCommandFlag: ReqCommandMsgFlag) {
+
+  }
+
   async CallBackOnKeyboardComboEvent(keyboardComboEvent_Payload: IKeyBoardComboEvent_Payload):Promise<void> {
     this.Logger.FuncStart(this.CallBackOnKeyboardComboEvent.name);
 
-    keyboardComboEvent_Payload.MatchingFlags.forEach((keyboardMatch: HotKeyCommandFlag) => {
-      this.Logger.LogVal('keyBoardComboEvent ', HotKeyCommandFlag[keyboardMatch]);
+    keyboardComboEvent_Payload.reqMsgFlags.forEach((keyboardMatch: ReqCommandMsgFlag) => {
+      this.Logger.LogVal('keyBoardComboEvent ', ReqCommandMsgFlag[keyboardMatch]);
+
+      this.RouteSingleCommandFromHotKey(keyboardMatch);
+
+
     });
 
     this.Logger.FuncEnd(this.CallBackOnKeyboardComboEvent.name);
@@ -110,38 +118,38 @@ export class MessageBroker_Content extends _FrontBase implements IMessageBroker_
     this.ErrorHand.ErrorAndContinue(this.NotifyFail.name, 'Fail ' + failrReason);
   }
 
-  async ContentReceiveRequest(messageFromController: IMessageControllerToContent): Promise<IMessageContentToController> {
+  async ContentReceiveRequest(messageControllerToContent: IMessageControllerToContent): Promise<IMessageContentToController> {
     return new Promise(async (resolve, reject) => {
       this.Logger.Log('');
       this.Logger.Log('');
       this.Logger.Log('');
-      this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(messageFromController.MsgFlag));
+      this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(messageControllerToContent.MsgFlag));
 
       this.Logger.LogVal('ce butt', this.SettingsAgent.GetByKey(SettingKey.AutoLogin).ValueAsBool());
 
-      if (messageFromController) {
-        messageFromController = this.ValidateRequest(messageFromController);
-        if (messageFromController.IsValid) {
-          this.SettingsAgent.UpdateSettingsFromPopUpMsg(messageFromController.CurrentContentPrefs)
+      if (messageControllerToContent) {
+        messageControllerToContent = this.ValidateRequest(messageControllerToContent);
+        if (messageControllerToContent.IsValid) {
+          this.SettingsAgent.UpdateSettingsFromPopUpMsg(messageControllerToContent.CurrentContentPrefs)
 
-          await this.ReqMsgRouter(messageFromController)
+          await this.ReqMsgRouter(messageControllerToContent)
             .then((msgContentToController: IMessageContentToController) => {
-              this.Logger.Log('responding: ' + StaticHelpers.MsgFlagAsString(msgContentToController.MsgFlag))
+              this.Logger.Log('responding: ' + ReplyCommandMsgFlag[msgContentToController.MsgFlagReply])
               resolve(msgContentToController);
             })
             .catch((err) => {
               this.NotifyFail(err);
-              resolve(new DefaultMsgContentToController(MsgFlag.RespTaskFailed));
+              resolve(new DefaultMsgContentToController(ReplyCommandMsgFlag.RespTaskFailed));
             });
         } else {
-          resolve(new DefaultMsgContentToController(MsgFlag.RespFailedDidNotValidate))
+          resolve(new DefaultMsgContentToController(ReplyCommandMsgFlag.RespFailedDidNotValidate))
         }
       }
       else {
         reject('no request')
       }
 
-      this.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(messageFromController.MsgFlag));
+      this.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(messageControllerToContent.MsgFlag));
       this.Logger.Log('');
       this.Logger.Log('');
       this.Logger.Log('');
@@ -173,17 +181,17 @@ export class MessageBroker_Content extends _FrontBase implements IMessageBroker_
     });
   }
 
-  async ConstructResponse(msgFlag: MsgFlag): Promise<DefaultMsgContentToController> {
+  async ConstructResponse(msgFlag: ReqCommandMsgFlag): Promise<DefaultMsgContentToController> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ConstructResponse.name);
-      let responseContentToController = new DefaultMsgContentToController(MsgFlag.Unknown);
+      let responseContentToController = new DefaultMsgContentToController(ReplyCommandMsgFlag.Unknown);
 
       await this.HindSiteScUiProxy.GetStateOfScUiProxy()
         .then((stateOfScUiProxy: IStateOfScUi) => {
           responseContentToController.Payload.StateOfScUiProxy_Live = stateOfScUiProxy;
           responseContentToController.Payload.LastReq = msgFlag;
-          responseContentToController.MsgFlag = MsgFlag.RespTaskSuccessful;
-          responseContentToController.Payload.LastReqFriendly = MsgFlag[msgFlag];
+          responseContentToController.MsgFlagReply = ReplyCommandMsgFlag.RespTaskSuccessful;
+          responseContentToController.Payload.LastReqFriendly = ReqCommandMsgFlag[msgFlag];
           responseContentToController.Payload.ErrorStack = ['todo'];
         })
         .then(() => this.AtticAgent.GetStateOfStorageSnapShots())

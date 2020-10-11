@@ -1,4 +1,4 @@
-﻿import { MsgFlag } from "../Enums/10 - MessageFlag";
+﻿import { ReqCommandMsgFlag } from "../Enums/10 - MessageFlag";
 import { SettingKey } from "../Enums/30 - SettingKey";
 import { BufferChar } from "../Enums/BufferChar";
 import { BufferDirection } from "../Enums/BufferDirection";
@@ -108,11 +108,11 @@ export class StaticHelpers {
     return toReturn;
   }
 
-  static MsgFlagAsString(msg: MsgFlag): string {
+  static MsgFlagAsString(msg: ReqCommandMsgFlag): string {
     var toReturn: string = "{error}";
     if (msg) {
       try {
-        toReturn = 'MsgFlag.' + MsgFlag[msg] + '(' + msg + ')';
+        toReturn = 'MsgFlag.' + ReqCommandMsgFlag[msg] + '(' + msg + ')';
       } catch (err) {
         console.log(this.MsgFlagAsString.name + ' ' + err);
       }
