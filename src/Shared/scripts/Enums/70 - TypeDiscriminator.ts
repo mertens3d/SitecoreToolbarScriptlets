@@ -42,5 +42,6 @@
     UiSettingBasedModuleMutationEvent_Subject = 70935505,
     UiModuleManagerPassThroughEvent_Subject,
     __ContentTreeBasedProxyMutationEvent__Subject,
-    SelectSnapUiMutationEvent_Subject
+    SelectSnapUiMutationEvent_Subject,
+    KeyBoardComboEvent_Subject
 }

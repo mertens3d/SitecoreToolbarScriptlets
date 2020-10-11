@@ -62,6 +62,15 @@
     <TypeScriptCompile Include="src\Content\scripts\Proxies\CommandRouter.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\CommandToExecuteData.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Proxies\InternalCommandRunner.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\KeyPressJacket.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\CoreFactory.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\KeyPressComboFlag.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\IKeyBoardComboEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\KeyBoardComboEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\KeyBoardComboEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\HindeCore.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IKeypressPayload.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUserKeyPressCombo.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Proxies\Browser\_BaseBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Recipes\_ContentRecipeBase.ts" />
     <TypeScriptCompile Include="src\DOMJacket\DocumentJacket.ts" />
@@ -185,7 +194,7 @@
     <TypeScriptCompile Include="src\Content\scripts\Recipes\RecipeSaveState.ts" />
     <TypeScriptCompile Include="src\Content\scripts\Recipes\RecipeToggleFavorite.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Helpers\FrameHelper.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\Discriminator.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\70 - TypeDiscriminator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\ISnapShotsAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentEditorCountsNeeded.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IDiscriminator.ts" />
@@ -193,7 +202,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHindeCore.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IStateOfCEFrameProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IStateProxy.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\ITaskMonitorAgent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\Core\ITaskMonitorAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IScIcon.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\60 - ScIconPath.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\States\IScContentTreeNodeCoord.ts" />
@@ -394,6 +403,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IPopUpConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\SharedConst.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\_APICoreBase.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\_CommonCoreBase.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\_HindeCoreBase.ts" />
     <TypeScriptCompile Include="src\Shared\typdefs\browser.d.ts" />
     <TypeScriptCompile Include="src\tests\foo.test.ts" />

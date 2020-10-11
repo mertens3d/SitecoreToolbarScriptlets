@@ -2,6 +2,11 @@
 import { IHindSiteSetting } from "./Agents/IGenericSetting";
 import { IStateOfPopUp } from "./IStateOfPopUp";
 
+export interface IHotKeyCommandPayload {
+
+
+}
+
 export interface IMessageControllerToContent {
     StateOfPopUI: IStateOfPopUp;
     IsValid: boolean;

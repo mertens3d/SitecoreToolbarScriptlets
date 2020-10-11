@@ -12,10 +12,15 @@ import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDa
 import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
-import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
+import { IMessageControllerToContent, IHotKeyCommandPayload } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
+import { KeyPressJacket } from "../../../DOMJacket/KeyPressJacket";
+import { KeyBoardComboEvent_Observer } from "../../../Shared/scripts/Events/KeyBoardComboEvent/KeyBoardComboEvent_Observer";
+import { IKeyBoardComboEvent_Payload } from "../../../Shared/scripts/Events/KeyBoardComboEvent/IKeyBoardComboEvent_Payload";
+import { HotKeyCommandFlag } from "../../../Shared/scripts/Enums/KeyPressComboFlag";
+import { IUserKeyPressCombo } from "../../../Shared/scripts/Interfaces/Agents/IUserKeyPressCombo";
 
 export class MessageBroker_Content extends _FrontBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
@@ -26,6 +31,8 @@ export class MessageBroker_Content extends _FrontBase implements IMessageBroker_
   ContentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: AutoSnapShotAgent;
   CommandRouter: CommandRouter;
+  KeyPressJacket_Observer: KeyBoardComboEvent_Observer;
+  KeyPressJacket: KeyPressJacket;
 
   constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiAPI, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter) {
     super(hindeCore);
@@ -45,13 +52,37 @@ export class MessageBroker_Content extends _FrontBase implements IMessageBroker_
   BeginListening() {
     this.Logger.FuncStart(this.BeginListening.name);
 
+
+    let CtrlAltG: IUserKeyPressCombo = {
+      IsAltKey: true, IsCtrlKey: true, IsShiftKey: false, HotKeyCommandFlag: HotKeyCommandFlag.Test, KeyWhich: 71
+    }
+
+    this.KeyPressJacket = new KeyPressJacket(this.CommonCore, [CtrlAltG]);
+
+    this.KeyPressJacket_Observer = new KeyBoardComboEvent_Observer(this.HindeCore, this.CallBackOnKeyboardComboEvent.bind(this));
+    this.KeyPressJacket.KeyBoardComboevent_Subject.RegisterObserver(this.KeyPressJacket_Observer);
+
     var self = this;
     if (this.ContentBrowserProxy) {
-      this.ContentBrowserProxy.AddListener((request: IMessageControllerToContent) => this.ContentReceiveRequest(request));
+      this.ContentBrowserProxy.AddListenerForPopUp((request: IMessageControllerToContent) => this.ContentReceiveRequest(request));
     }
 
     this.Logger.Log('Listening for messages');
     this.Logger.FuncEnd(this.BeginListening.name);
+  }
+
+  async CallBackOnKeyboardComboEvent(keyboardComboEvent_Payload: IKeyBoardComboEvent_Payload):Promise<void> {
+    this.Logger.FuncStart(this.CallBackOnKeyboardComboEvent.name);
+
+    keyboardComboEvent_Payload.MatchingFlags.forEach((keyboardMatch: HotKeyCommandFlag) => {
+      this.Logger.LogVal('keyBoardComboEvent ', HotKeyCommandFlag[keyboardMatch]);
+    });
+
+    this.Logger.FuncEnd(this.CallBackOnKeyboardComboEvent.name);
+  }
+
+  HandleHotKeyCommand(command: IHotKeyCommandPayload) {
+    //alert(command.com.name);
   }
 
   ValidateRequest(messageFromController: IMessageControllerToContent): IMessageControllerToContent {

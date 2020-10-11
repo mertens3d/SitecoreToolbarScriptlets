@@ -10,7 +10,7 @@ export class ContentBrowserProxy extends BaseBrowserProxy implements IContentBro
     return browser.extension.getURL(arg0);
   }
 
-  AddListener(callback: (request: IMessageControllerToContent) => Promise<DefaultMsgContentToController>) {
+  AddListenerForPopUp(callback: (request: IMessageControllerToContent) => Promise<DefaultMsgContentToController>) {
     browser.runtime.onMessage.addListener((request: IMessageControllerToContent) => callback(request));
   }
 

@@ -48,6 +48,11 @@
       "suggested_key": {
         "default": "Ctrl+Shift+Y"
       }
+    },
+    "take-snapshot": {
+      "suggested_key": {
+        "default" :  "Ctrl+Shift+S"
+      }
     }
   }
 }
