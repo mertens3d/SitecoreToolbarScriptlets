@@ -13,16 +13,6 @@ class ContentAllEntry {
 }
 
 if (window.top != window.self) {
-  console.log('Content Entry for all iframes');
   let contentAllEntry: ContentAllEntry = new ContentAllEntry();
   contentAllEntry.StartUpContent();
 }
-
-//let toReturn: HTMLSpanElement = <HTMLSpanElement>document.createElement('h1');
-//toReturn.style.position = 'absolute';
-//toReturn.style.left = '100px';
-//toReturn.style.top = '100px';
-//toReturn.style.color = "red";
-//toReturn.innerText = "Gregoryxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-
-//window.document.body.appendChild(toReturn);

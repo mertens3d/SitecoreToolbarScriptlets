@@ -127,6 +127,10 @@ export interface IContentConst {
       },
       LoginBtn: IScVerSpec,
       ScRibbon: {
+        Navigate: {
+          Id: string,
+          Links: string,
+        },
         Presentation: {
           Id: string,
           Details: string,

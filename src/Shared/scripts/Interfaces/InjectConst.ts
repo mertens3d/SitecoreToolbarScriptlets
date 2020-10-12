@@ -142,6 +142,10 @@ export class ContentConst {
         Ok: '[id=OK]',
         Cancel: '[id=CancelButton]',
         ScRibbon: {
+          Navigate: {
+            Id: '[id$="_Nav_NavigateStrip"]',
+            Links: 'img[src$="link.png"]',
+          },
           Presentation: {
             Id: '[id$="Nav_PresentationStrip"]',
             Details: 'img[src$="layout_details.png"]',

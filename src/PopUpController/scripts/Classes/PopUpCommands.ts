@@ -111,7 +111,7 @@ export class CommandDefintionFactory extends _FrontBase {
           ModuleKey: ModuleKey.ButtonTypical,
           EventHandlerData: {
             Event: CommandButtonEvents.OnSingleClick,
-            MsgFlag: ReqCommandMsgFlag.ReqOpenPresentationDetails,
+            MsgFlag: ReqCommandMsgFlag.OpenCERibbonPresentationDetails,
             CommandType: CommandType.Content,
           }
         },

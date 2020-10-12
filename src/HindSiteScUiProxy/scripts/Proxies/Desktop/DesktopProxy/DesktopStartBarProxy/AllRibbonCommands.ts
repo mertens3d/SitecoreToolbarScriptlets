@@ -3,11 +3,16 @@ import { ScRibbonCommand } from '../../../../../../Shared/scripts/Enums/eScRibbo
 import { IRibbonClickSequence } from '../../../../InternalInterfaces/IRibbonClickSequence';
 
 export class AllRibbonCommands {
-    public static Const: IRibbonClickSequence[] = [
-        {
-            ScRibbonCommand: ScRibbonCommand.PresentationDetails,
-            Step1Selector: ContentConst.Const.Selector.SC.ScRibbon.Presentation.Id,
-            Step2Selector: ContentConst.Const.Selector.SC.ScRibbon.Presentation.Details
-        }
-    ];
+  public static Const: IRibbonClickSequence[] = [
+    {
+      ScRibbonCommand: ScRibbonCommand.PresentationDetails,
+      Step1Selector: ContentConst.Const.Selector.SC.ScRibbon.Presentation.Id,
+      Step2Selector: ContentConst.Const.Selector.SC.ScRibbon.Presentation.Details
+    }, {
+      ScRibbonCommand: ScRibbonCommand.NavigateLinks,
+      Step1Selector: ContentConst.Const.Selector.SC.ScRibbon.Navigate.Id,
+      Step2Selector: ContentConst.Const.Selector.SC.ScRibbon.Navigate.Links
+    },
+
+  ];
 }

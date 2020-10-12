@@ -83,7 +83,6 @@ export class CommandRouter extends _FrontBase {
     }
 
     this.RouteCommand(commandParams);
-
   }
 
   private async OnCommandStartEndCancelEvent(payload: ICommandStartEndCancelEvent_Payload): Promise<void> {
@@ -224,9 +223,14 @@ export class CommandRouter extends _FrontBase {
         commandData.commandToExecute = this.ScUiProxy.OpenContentEditor;
         break;
 
-      case ReqCommandMsgFlag.ReqOpenPresentationDetails:
+      case ReqCommandMsgFlag.OpenCERibbonPresentationDetails:
         commandData.CommandType = CommandType.Api;
         commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(ScRibbonCommand.PresentationDetails));
+        break;
+
+      case ReqCommandMsgFlag.OpenCERibbonNavigateLinks:
+        commandData.CommandType = CommandType.Api;
+        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(ScRibbonCommand.NavigateLinks));
         break;
 
       case ReqCommandMsgFlag.ReqToggleFavorite:
@@ -275,7 +279,7 @@ export class CommandRouter extends _FrontBase {
         break;
 
       default:
-        this.Logger.Log('Unhandled MsgFlag', StaticHelpers.MsgFlagAsString(msgFlag));
+        this.Logger.Log('Unhandled MsgFlag', ReqCommandMsgFlag[msgFlag]);
         break;
     }
 

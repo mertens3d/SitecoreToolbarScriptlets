@@ -46,8 +46,8 @@ export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
       determinant.QueryKeyValuePairs.forEach((queryKeyvaluePair: IQueryKeyValuePair) => {
         let queryTest: boolean = this.QueryStringHasKey(queryKeyvaluePair.Key);
         if (queryTest) {
-          this.Logger.LogVal('has key : ', QueryStrKey[queryKeyvaluePair.Key]);
-          this.Logger.LogVal('regex : ', queryKeyvaluePair.ValueMatch.toString());
+          //this.Logger.LogVal('has key : ', QueryStrKey[queryKeyvaluePair.Key]);
+          //this.Logger.LogVal('regex : ', queryKeyvaluePair.ValueMatch.toString());
           queryTest = this.__urlTestAgainstRegex(queryKeyvaluePair.ValueMatch, this.GetQueryStringValueByKey(queryKeyvaluePair.Key));
         }
 
@@ -96,7 +96,7 @@ export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
 
   private __urlTestAgainstRegex(regexPattern: RegExp, testee: string): boolean {
     //this.Logger.FuncStart(this.__urlTestAgainstRegex.name, regexPattern.toString());
-    this.Logger.LogVal('Testee', testee);
+    //this.Logger.LogVal('Testee', testee);
     let testResult: boolean = new RegExp(regexPattern).test(testee);
 
     //this.Logger.FuncEnd(this.__urlTestAgainstRegex.name, regexPattern.toString() + ' | ' + url + ' | ' + testResult.toString());

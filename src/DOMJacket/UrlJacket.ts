@@ -13,12 +13,12 @@ export class UrlJacket extends _CommonBase implements IUrlJacket {
   public readonly OriginalURL: string;
   constructor(commonCore: ICommonCore, url: string) {
     super(commonCore);
-    this.Logger.CTORStart(UrlJacket.name);
+    //this.Logger.CTORStart(UrlJacket.name);
     this.OriginalURL = url;
 
     this.ErrorHand.ThrowIfNullOrUndefined(UrlJacket.name, url);
     this.Init_GenericUrlAgent();
-    this.Logger.CTOREnd(UrlJacket.name);
+    //this.Logger.CTOREnd(UrlJacket.name);
   }
 
   protected Init_GenericUrlAgent(): void {
@@ -59,15 +59,11 @@ export class UrlJacket extends _CommonBase implements IUrlJacket {
   }
 
   GetQueryStringValueByKey(key: QueryStrKey): string {
-    //this.Logger.FuncStart(this.GetQueryStringValueByKey.name, QueryStrKey[key]);
     let toReturn: string = '';
-
     if (this.QueryStringHasKey(key)) {
       let keyAsStr: string = QueryStrKey[key];
       toReturn = this.UrlParts.UrlSearchParameters.get(keyAsStr);
     }
-
-    //this.Logger.FuncEnd(this.GetQueryStringValueByKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
     return toReturn;
   }
 
@@ -86,8 +82,7 @@ export class UrlJacket extends _CommonBase implements IUrlJacket {
 
   private SetFromHref(href: string) {
     var parser = document.createElement('a');
-    parser.href = href; // resultTab.url;
-
+    parser.href = href; 
     this.UrlParts = {
       OriginalRaw: href,
       Protocol: parser.protocol,
@@ -97,7 +92,6 @@ export class UrlJacket extends _CommonBase implements IUrlJacket {
       Anchor: parser.hash,
       HasError: false,
     };
-    this.Logger.LogAsJsonPretty('params', this.UrlParts.UrlSearchParameters.toString());
   }
 
   BuildFullUrlFromParts(): ISiteUrl {
