@@ -9,9 +9,10 @@ import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindo
 import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
-import { DesktopSFProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { DesktopProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ScWindowFacade } from "./Proxies/ScWindowFacade";
 import { ICoreTaskMonitor } from "../../Shared/scripts/Interfaces/Agents/Core/ITaskMonitorAgent";
+import { ScRibbonCommand } from "../../Shared/scripts/Enums/eScRibbonCommand";
 
 export class HindSiteScUiAPI implements IHindSiteScUiAPI {
   private ScUiMan: ScUiManager;
@@ -75,7 +76,7 @@ export class HindSiteScUiAPI implements IHindSiteScUiAPI {
 
   AddContentEditorToDesktopAsync(apiCallPayload: IApiCallPayload): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      (<DesktopSFProxy>this.ScWindowFacade.StateFullProxy).AddContentEditorFrameAsync()
+      (<DesktopProxy>this.ScWindowFacade.StateFullProxy).AddContentEditorFrameAsync()
         .then(() => resolve())
         .catch((err) => reject());
     });
@@ -103,6 +104,22 @@ export class HindSiteScUiAPI implements IHindSiteScUiAPI {
         .then(() => resolve())
         .catch((err) => reject(err));
     });
+  }
+
+  async TriggerCERibbonCommand(scRibbonCommand: ScRibbonCommand): Promise<void> {
+
+    this.Logger.FuncStart([HindSiteScUiAPI.name, this.TriggerCERibbonCommand.name], ScRibbonCommand[scRibbonCommand]);
+    try {
+      if ((typeof scRibbonCommand !== 'undefined' )&& scRibbonCommand !== ScRibbonCommand.Unknown) {
+
+        this.ScWindowFacade.TriggerCERibbonCommand(scRibbonCommand);
+      } else {
+        this.ErrorHand.WarningAndContinue(this.TriggerCERibbonCommand.name, 'Invalid scRibbonCommand');
+      }
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.TriggerCERibbonCommand.name, err);
+    }
+    this.Logger.FuncEnd([HindSiteScUiAPI.name, this.TriggerCERibbonCommand.name]);
   }
 
   OpenContentEditor() {

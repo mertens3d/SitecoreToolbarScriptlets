@@ -20,7 +20,7 @@ import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMuta
 import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 import { _UiModuleBase } from "../_UiModuleBase";
 import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
-import { ContentEditorSFProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { ContentEditorProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 

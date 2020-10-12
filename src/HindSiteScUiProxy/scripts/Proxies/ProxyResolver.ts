@@ -5,8 +5,8 @@ import { IHindSiteScUiAPIRunTimeOptions } from "../../../Shared/scripts/Interfac
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
-import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
-import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
+import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
+import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
 import { FallBackProxy } from "./FallBackProxy";
 import { LaunchPadProxy } from "./LaunchPadProxy";
 import { MarketingControlPanelProxy } from "./MarketingControlPanelProxy";
@@ -84,11 +84,11 @@ export class StateFullProxyResolver extends _APICoreBase {
       else if (windowType === ScWindowType.AccessViewer) { StateFullProxy = new AccessViewerProxy(this.ApiCore); }
       else if (windowType === ScWindowType.Archive) { StateFullProxy = new ArchiveProxy(this.ApiCore); }
 
-      else if (windowType === ScWindowType.ContentEditor) { StateFullProxy = new ContentEditorSFProxy(this.ApiCore, documentJacket, 'Solo Content Editor doc'); }
+      else if (windowType === ScWindowType.ContentEditor) { StateFullProxy = new ContentEditorProxy(this.ApiCore, documentJacket, 'Solo Content Editor doc'); }
 
       else if (windowType === ScWindowType.ControlPanel) { StateFullProxy = new FallBackProxy(this.ApiCore); }
       else if (windowType === ScWindowType.Debug) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.Desktop) { StateFullProxy = new DesktopSFProxy(this.ApiCore, documentJacket); }
+      else if (windowType === ScWindowType.Desktop) { StateFullProxy = new DesktopProxy(this.ApiCore, documentJacket); }
       else if (windowType === ScWindowType.DomainManager) { StateFullProxy = new DomainManagerProxy(this.ApiCore); }
 
       else if (windowType === ScWindowType.EmailExperienceManager) { StateFullProxy = new EmailExpeprienceManagerProxy(this.ApiCore); }

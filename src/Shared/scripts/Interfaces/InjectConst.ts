@@ -141,49 +141,57 @@ export class ContentConst {
         NextButton: '[id=NextButton]',
         Ok: '[id=OK]',
         Cancel: '[id=CancelButton]',
-        MenuButtonPublish: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_button]',
-        Popup1: {
-          DevelopmentTools: '[src="/temp/iconcache/apps/24x24/magic-cube.png"]',
-          MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
-          RecycleBin: 'img[src$="refresh.png"]',
-          StartMenuLeftOption: 'img[src$="pencil.png"]',
-          TemplateManager: 'img[src$="newspaper.png"]',
-          SecurityTools: 'img[src$="lock-2.png"]',
-          ReportingTools: 'img[src$="scripts.png"]',
-          AllApplications: '.scStartMenuProgramsMenuText',
-          Id: '[id=Popup1]',
+        ScRibbon: {
+          Presentation: {
+            Id: '[id$="Nav_PresentationStrip"]',
+            Details: 'img[src$="layout_details.png"]',
+          },
+          Publish: {
+            MenuButtonPublish: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_button]',
+            MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',
+            NavPublishStrip: '[id*=_Nav_PublishStrip]',
+            PublishingHidden: '[id=Publishing][style*=\'display: none\']',
+            SettingsHidden: '[id=Settings][style*=\'display: none\']',
+            TheItemHasBeenPublished: '[id=LastPage]:not([style*=\'display:none\'])',
+          }
         },
-        Popup2: {
-          AccessViewer: 'img[src$="lock.png"]',
-          Archive: 'img[src$=".png"]',
-          DomainManager: 'img[src$="routes.png"]',
-          Id: '[id=Popup2]',
-          InstallationWizard: 'img[src$="install_wizard.png"]',
-          KeyboardMap: 'img[src$="keyboardmap.png"]',
-          LogViewer: 'img[src$="logviewer.png"]',
-          MarketingControlPanel: 'img[src$="object.png"]',
-          PackageDesigner: '[id=MenuItem211048689]',
-          PackageDesignerButton: 'img[src$="packager.png"]',
-          RoleManager: 'img[src$="account.png"]',
-          Run: 'img[src$="run.png"]',
-          ScanForBrokenLinks: 'img[src$="link_broken.png"]',
-          Security: 'img[src$="blank.gif"]:nth-child(2)', // second blank this is not going to work since there are two
-          SecurityEditor: 'img[src$="shield.png"]',
-          System: 'img[src$="blank.gif"]:nth-child(1)', // this is not going to work since there are two
-          UserManager: 'img[src$="user (1).png"]',
-          Workbox: 'img[src$="workbox.png"]',
-        },
-        Popup3: {
-          Id: '[id=Popup3]',
-          InstalledLicenses: 'img[src$="certificate.png"]',
-          LicenseDetails: 'img[src$="informations.png"]',
-        },
-        Publish: {
-          MenuDropDownPublishItem: '[id=B414550BADAF4542C9ADF44BED5FA6CB3E_menu_98719A90225A4802A0625D3967E4DD47]',
-          NavPublishStrip: '[id*=_Nav_PublishStrip]',
-          TheItemHasBeenPublished: '[id=LastPage]:not([style*=\'display:none\'])',
-          SettingsHidden: '[id=Settings][style*=\'display: none\']',
-          PublishingHidden: '[id=Publishing][style*=\'display: none\']',
+        StartMenu: {
+          Popup1: {
+            DevelopmentTools: '[src="/temp/iconcache/apps/24x24/magic-cube.png"]',
+            MediaLibrary: 'img[src$="pictures.png"]', ///temp/iconcache/apps/32x32/pictures.png
+            RecycleBin: 'img[src$="refresh.png"]',
+            StartMenuLeftOption: 'img[src$="pencil.png"]',
+            TemplateManager: 'img[src$="newspaper.png"]',
+            SecurityTools: 'img[src$="lock-2.png"]',
+            ReportingTools: 'img[src$="scripts.png"]',
+            AllApplications: '.scStartMenuProgramsMenuText',
+            Id: '[id=Popup1]',
+          },
+          Popup2: {
+            AccessViewer: 'img[src$="lock.png"]',
+            Archive: 'img[src$=".png"]',
+            DomainManager: 'img[src$="routes.png"]',
+            Id: '[id=Popup2]',
+            InstallationWizard: 'img[src$="install_wizard.png"]',
+            KeyboardMap: 'img[src$="keyboardmap.png"]',
+            LogViewer: 'img[src$="logviewer.png"]',
+            MarketingControlPanel: 'img[src$="object.png"]',
+            PackageDesigner: '[id=MenuItem211048689]',
+            PackageDesignerButton: 'img[src$="packager.png"]',
+            RoleManager: 'img[src$="account.png"]',
+            Run: 'img[src$="run.png"]',
+            ScanForBrokenLinks: 'img[src$="link_broken.png"]',
+            Security: 'img[src$="blank.gif"]:nth-child(2)', // second blank this is not going to work since there are two
+            SecurityEditor: 'img[src$="shield.png"]',
+            System: 'img[src$="blank.gif"]:nth-child(1)', // this is not going to work since there are two
+            UserManager: 'img[src$="user (1).png"]',
+            Workbox: 'img[src$="workbox.png"]',
+          },
+          Popup3: {
+            Id: '[id=Popup3]',
+            InstalledLicenses: 'img[src$="certificate.png"]',
+            LicenseDetails: 'img[src$="informations.png"]',
+          },
         },
         LoginBtn: {
           sc920: null,

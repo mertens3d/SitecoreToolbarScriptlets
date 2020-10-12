@@ -7,7 +7,7 @@ import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore"
 import { IStateFullProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfPackageDesigner";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { ContentEditorSFProxy } from '../ContentEditor/ContentEditorProxy/ContentEditorProxy';
+import { ContentEditorProxy } from '../ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { _BaseStateFullProxy } from "../Desktop/DesktopProxy/FrameProxies/_StateProxy";
 import { AppFrameProxy } from "../SupportProxies/AppFrameProxy";
 
@@ -19,11 +19,11 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string) {
     super(apiCore);
-    this.Logger.CTORStart(ContentEditorSFProxy.name);
+    this.Logger.CTORStart(ContentEditorProxy.name);
     this.DocumentJacket = documentJacket;
     this.Friendly = friendly;
     this.RecipeBasics = new RecipeBasics(this.ApiCore);
-    this.Logger.CTOREnd(ContentEditorSFProxy.name);
+    this.Logger.CTOREnd(ContentEditorProxy.name);
   }
 
   async InstantiateAsyncMembers(): Promise<void> {

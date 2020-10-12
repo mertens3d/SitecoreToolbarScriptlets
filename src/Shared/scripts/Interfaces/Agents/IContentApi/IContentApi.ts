@@ -3,6 +3,7 @@ import { IApiCallPayload } from "../../IApiCallPayload";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 
 export interface IHindSiteScUiAPI {
+  TriggerCERibbonCommand: Function;
   AddContentEditorToDesktopAsync(commandData: IApiCallPayload): Promise<void>
   AdminB(commandData: IApiCallPayload);
   GetStateOfScUiProxy(): Promise<IStateOfScUi>;

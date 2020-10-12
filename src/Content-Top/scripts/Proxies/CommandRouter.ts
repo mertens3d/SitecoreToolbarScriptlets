@@ -25,20 +25,21 @@ import { InternalCommandRunner } from "./InternalCommandRunner";
 import { DeepHotKeyAgent } from "../../../Shared/scripts/Agents/DeepHotKeyAgent";
 import { HotKeyEvent_Observer } from "../../../Shared/scripts/Events/KeyBoardComboEvent/HotKeyEvent_Observer";
 import { IHotKeyEvent_Payload } from "../../../Shared/scripts/Events/KeyBoardComboEvent/IHotKeyEvent_Payload";
+import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
 
 export class CommandRouter extends _FrontBase {
+  private AtticAgent: IContentAtticAgent;
+  private AutoSnapShotAgent: AutoSnapShotAgent;
+  private CommandTriggeredEvent_Observer: CommandStartEndCancelEvent_Observer;
+  private CommandTriggeredEvent_Subject: CommandStartEndCancelEvent_Subject;
+  private DeepHotKeyAgent: DeepHotKeyAgent;
+  private Dependancies: ICommandDependancies;
+  private DocumentJacket: DocumentJacket;
+  private HotKeyEvent_Observer: HotKeyEvent_Observer;
   private InternalCommandRunner: InternalCommandRunner;
   private ScUiProxy: IHindSiteScUiAPI;
-  private ToastAgent: IToastAgent;
-  private AtticAgent: IContentAtticAgent;
   private SettingsAgent: ISettingsAgent;
-  private AutoSnapShotAgent: AutoSnapShotAgent;
-  private DocumentJacket: DocumentJacket;
-  CommandTriggeredEvent_Observer: CommandStartEndCancelEvent_Observer;
-  CommandTriggeredEvent_Subject: CommandStartEndCancelEvent_Subject;
-  private Dependancies: ICommandDependancies;
-  private DeepHotKeyAgent: DeepHotKeyAgent;
-    HotKeyEvent_Observer: HotKeyEvent_Observer;
+  private ToastAgent: IToastAgent;
 
   constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiAPI, toastAgent: IToastAgent, atticAgent: IContentAtticAgent, settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, documentJacket: DocumentJacket, deepHotKeyAgent: DeepHotKeyAgent) {
     super(hindeCore);
@@ -72,12 +73,20 @@ export class CommandRouter extends _FrontBase {
     }
   }
 
-  private CallBackOnHotKeyEvent(hotKeyEvent_Payload :IHotKeyEvent_Payload):void {
-
+  private CallBackOnHotKeyEvent(hotKeyEvent_Payload: IHotKeyEvent_Payload): void {
     this.Logger.LogImportant('Yay received : ' + ReqCommandMsgFlag[hotKeyEvent_Payload.ReqCommandMsgFlag]);
+
+    let commandParams: ICommandRouterParams = {
+      MsgFlag: hotKeyEvent_Payload.ReqCommandMsgFlag,
+      NewNickName: null,
+      SelectSnapShotId: null
+    }
+
+    this.RouteCommand(commandParams);
+
   }
 
-  async OnCommandStartEndCancelEvent(payload: ICommandStartEndCancelEvent_Payload): Promise<void> {
+  private async OnCommandStartEndCancelEvent(payload: ICommandStartEndCancelEvent_Payload): Promise<void> {
     this.Logger.FuncStart(this.OnCommandStartEndCancelEvent.name);
     if (payload.CommandState == CommandState_State.CommandStarted) {
       await this.ToastAgent.DropToast('Starting to do something')
@@ -121,14 +130,14 @@ export class CommandRouter extends _FrontBase {
     });
   }
 
-  BuildCommandPayloadForInternal(): ICommandParams {
+  private BuildCommandPayloadForInternal(): ICommandParams {
     let scProxyPayload = this.BuildScProxyPayload();
     let commandParams: ICommandParams = new CommandPayloadForInternal(this.HindeCore, this.AtticAgent, this.ToastAgent, this.SettingsAgent, this.AutoSnapShotAgent, scProxyPayload);
 
     return commandParams;
   }
 
-  BuildScProxyPayload(): IApiCallPayload {
+  private BuildScProxyPayload(): IApiCallPayload {
     let commandData: IApiCallPayload = new ApiCommandPayload();
 
     return commandData;
@@ -169,7 +178,7 @@ export class CommandRouter extends _FrontBase {
       if (functionToExecute) {
         let commandData = this.BuildScProxyPayload();
 
-        await functionToExecute.bind(this)(commandData)
+        await functionToExecute(commandData)
           .then((response: DefaultMsgContentToController) => {
             this.Logger.Log('Completed the API command');
             resolve(response)
@@ -213,6 +222,11 @@ export class CommandRouter extends _FrontBase {
       case ReqCommandMsgFlag.ReqOpenCE:
         commandData.CommandType = CommandType.Api;
         commandData.commandToExecute = this.ScUiProxy.OpenContentEditor;
+        break;
+
+      case ReqCommandMsgFlag.ReqOpenPresentationDetails:
+        commandData.CommandType = CommandType.Api;
+        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(ScRibbonCommand.PresentationDetails));
         break;
 
       case ReqCommandMsgFlag.ReqToggleFavorite:

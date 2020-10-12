@@ -11,16 +11,16 @@ import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { DTFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { ContentEditorSFProxy } from "./ContentEditorProxy";
+import { ContentEditorProxy } from "./ContentEditorProxy";
 import { ElementJacket } from "../../../../../DOMJacket/ElementJacket";
 
 export class ContentEditorPublishProxy extends _APICoreBase {
-  ContentEditorProxy: ContentEditorSFProxy;
+  ContentEditorProxy: ContentEditorProxy;
   private RecipeBasics: RecipeBasics;
   private DocumentJacket: DocumentJacket;
   private FactoryHelp: FactoryHelper;
 
-  constructor(apiCore: IAPICore, contentEditorProxy: ContentEditorSFProxy, documentJacket: DocumentJacket) {
+  constructor(apiCore: IAPICore, contentEditorProxy: ContentEditorProxy, documentJacket: DocumentJacket) {
     super(apiCore);
 
     this.ContentEditorProxy = contentEditorProxy;
@@ -124,8 +124,8 @@ export class ContentEditorPublishProxy extends _APICoreBase {
   private async ClickPublishOnNav(payload: IDataPublishChain): Promise<IDataPublishChain> {
     this.Logger.FuncStart(this.ClickPublishOnNav.name);
     try {
-      await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.Publish.NavPublishStrip])
-      await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.Publish.NavPublishStrip])
+      await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.NavPublishStrip])
+      await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.NavPublishStrip])
     } catch (err) {
       throw (this.ClickPublishOnNav.name + ' ' + err);
     }
@@ -134,9 +134,9 @@ export class ContentEditorPublishProxy extends _APICoreBase {
   }
 
   private async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.Publish.SettingsHidden)
+    await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.ScRibbon.Publish.SettingsHidden)
       .then(async () => {
-        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
+        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.ScRibbon.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
         await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel]);
@@ -158,12 +158,12 @@ export class ContentEditorPublishProxy extends _APICoreBase {
   }
 
   async ClickMenuButtonPublishDropDown(payload: IDataPublishChain = null) {
-    await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.MenuButtonPublish],);
+    await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.MenuButtonPublish],);
     return payload;
   }
 
   async ClickMenuDropDownPublishItem(payload: IDataPublishChain = null) {
-    return await payload.ScDocumentProxyToPublish.WaitForAndClickWithPayload(ContentConst.Const.Selector.SC.Publish. MenuDropDownPublishItem, payload)
+    return await payload.ScDocumentProxyToPublish.WaitForAndClickWithPayload(ContentConst.Const.Selector.SC.ScRibbon.Publish. MenuDropDownPublishItem, payload)
   }
 
   async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null): Promise<IDataPublishChain> {

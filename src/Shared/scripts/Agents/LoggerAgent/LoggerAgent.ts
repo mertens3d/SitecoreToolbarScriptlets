@@ -248,11 +248,26 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log('Constructor: ' + ctorName);
   }
 
-  FuncStart(textOrFunc: string, optionalValue?: number): void;
-  FuncStart(textOrFunc: string, optionalValue?: string): void;
-  FuncStart(textOrFunc: string, optionalValue?: boolean): void;
-  FuncStart(textOrFunc: string, optionalValue: number | string | boolean): void {
-    textOrFunc = 's' + ' ' + this.__callDepth + ') ' + textOrFunc;
+  private resolveFuncText(text: string | string[]): string {
+    let displayText: string = '';
+
+    if (Array.isArray(text)) {
+      text.forEach((oneText: string) => displayText += '.' + oneText);
+    } else {
+      displayText = text.toString();
+    }
+
+    return displayText;
+  }
+
+  FuncStart(text: string | string[], optionalValue?: number): void;
+  FuncStart(text: string | string[], optionalValue?: string): void;
+  FuncStart(text: string | string[], optionalValue?: boolean): void;
+  FuncStart(text: string | string[], optionalValue: number | string | boolean): void {
+    text = this.resolveFuncText(text);
+
+    text = 's' + ' ' + this.__callDepth + ') ' + text;
+
     if (!optionalValue) {
       optionalValue = '';
     }
@@ -261,10 +276,10 @@ export class LoggerAgent implements ILoggerAgent {
     }
 
     if (optionalValue.length > 0) {
-      textOrFunc = textOrFunc + ' : ' + optionalValue;
+      text = text + ' : ' + optionalValue;
     }
 
-    let formatted = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleFgGreen, textOrFunc);
+    let formatted = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleFgGreen, text);
 
     this.Log(formatted, '', true);
     this.__callDepth++;
@@ -281,10 +296,12 @@ export class LoggerAgent implements ILoggerAgent {
     this.FuncEnd("[CTOR] " + text);
   }
 
-  FuncEnd(text, optionalValueInput?: number);
-  FuncEnd(text, optionalValueInput?: boolean);
-  FuncEnd(text, optionalValueInput?: string);
-  FuncEnd(text, optionalValueInput: string | number | boolean) {
+  FuncEnd(text: string | string[], optionalValueInput?: number);
+  FuncEnd(text: string | string[], optionalValueInput?: boolean);
+  FuncEnd(text: string | string[], optionalValueInput?: string);
+  FuncEnd(text: string | string[], optionalValueInput: string | number | boolean) {
+    text = this.resolveFuncText(text);
+
     this.__callDepth--;
     if (this.__callDepth < 0) {
       this.__callDepth = 0;

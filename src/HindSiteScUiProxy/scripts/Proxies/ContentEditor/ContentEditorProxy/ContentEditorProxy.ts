@@ -7,17 +7,21 @@ import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
 import { _ContentTreeBasedProxy } from './_ContentTreeBasedProxy';
+import { ScRibbonCommand } from '../../../../../Shared/scripts/Enums/eScRibbonCommand';
+import { ScRibbonProxy } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/ScRibbonProxy';
+import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
 
-export class ContentEditorSFProxy extends _ContentTreeBasedProxy<IStateOfContentEditor> implements IStateFullProxy {
+export class ContentEditorProxy extends _ContentTreeBasedProxy<IStateOfContentEditor> implements IStateFullProxy {
+  
   public readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.ContentEditor];
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
   public readonly StateFullProxyDisciminator = StateFullProxyDisciminator.ContentEditor;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string) {
     super(apiCore, documentJacket);
-    this.Logger.CTORStart(ContentEditorSFProxy.name);
+    this.Logger.CTORStart(ContentEditorProxy.name);
 
-    this.Logger.CTOREnd(ContentEditorSFProxy.name);
+    this.Logger.CTOREnd(ContentEditorProxy.name);
   }
 
   async PublishItem(): Promise<void> {
@@ -30,9 +34,9 @@ export class ContentEditorSFProxy extends _ContentTreeBasedProxy<IStateOfContent
   }
 
   WireEvents() {
-    this.Logger.FuncStart(this.WireEvents.name, ContentEditorSFProxy.name);
+    this.Logger.FuncStart(this.WireEvents.name, ContentEditorProxy.name);
     this.__baseWireEvents()
-    this.Logger.FuncEnd(this.WireEvents.name, ContentEditorSFProxy.name);
+    this.Logger.FuncEnd(this.WireEvents.name, ContentEditorProxy.name);
   }
 
   GetState(): Promise<IStateOfContentEditor> {
@@ -50,6 +54,15 @@ export class ContentEditorSFProxy extends _ContentTreeBasedProxy<IStateOfContent
 
   //----------------------------------------------------------------------
 
+  TriggerCERibbonCommand(scRibbonCommand: ScRibbonCommand) {
+    this.Logger.FuncStart([ContentEditorProxy.name, this.TriggerCERibbonCommand.name], ScRibbonCommand[scRibbonCommand]);
+    let scRibbonProxy: ScRibbonProxy = new ScRibbonProxy(this.ApiCore, this.DocumentJacket);
+
+    let asyncLock: AsyncLock = new AsyncLock(this.ApiCore); //todo - this needs to be lower...maybe in core
+
+    scRibbonProxy.TriggerRibbonMenuItem(scRibbonCommand, asyncLock);
+    this.Logger.FuncEnd([ContentEditorProxy.name, this.TriggerCERibbonCommand.name]);
+  }
 
   SetCompactCss() {
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.DocumentJacket.DocId));

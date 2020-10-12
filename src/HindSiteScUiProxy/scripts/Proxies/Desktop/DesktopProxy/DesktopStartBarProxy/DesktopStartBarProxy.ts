@@ -63,9 +63,9 @@ export class DTStartBarProxy extends _APICoreBase {
 
         .then(() => this.DocumentJacket.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButtonVSpec))
         .then(() => this.TaskMonitor.AsyncTaskStarted(this.TriggerRedButtonAsync.name))
-        .then(() => this.TriggerPopXButton(buttonSelectors.Pop1Selector, ContentConst.Const.Selector.SC.Popup1.Id))
-        .then(() => this.TriggerPopXButton(buttonSelectors.Pop2Selector, ContentConst.Const.Selector.SC.Popup2.Id))
-        .then(() => this.TriggerPopXButton(buttonSelectors.Pop3Selector, ContentConst.Const.Selector.SC.Popup3.Id))
+        .then(() => this.TriggerPopXButton(buttonSelectors.Pop1Selector, ContentConst.Const.Selector.SC.StartMenu.Popup1.Id))
+        .then(() => this.TriggerPopXButton(buttonSelectors.Pop2Selector, ContentConst.Const.Selector.SC.StartMenu.Popup2.Id))
+        .then(() => this.TriggerPopXButton(buttonSelectors.Pop3Selector, ContentConst.Const.Selector.SC.StartMenu.Popup3.Id))
         .then(() => methodLock.ReleaseLock())
         .then(() => this.RecipeBasics.WaitForTimePeriod(1, this.TriggerRedButtonAsync.name))
         .then(() => this.TaskMonitor.AsyncTaskCompleted(this.TriggerRedButtonAsync.name))

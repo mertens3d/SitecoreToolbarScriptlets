@@ -10,7 +10,7 @@ import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICo
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
-import { ContentEditorSFProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { ContentEditorProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { DocumentProxyMutationEvent_Observer } from "./Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Observer";
 import { IDocumentProxyMutationEvent_Payload } from "./Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
 import { DTAreaProxyMutationEvent_Subject } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Subject";
@@ -20,6 +20,7 @@ import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutatio
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
 import { StateFullProxyResolver } from "../../ProxyResolver";
+import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
 
 export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements IStateFullProxy {
   public readonly StateFullProxyDisciminator = StateFullProxyDisciminator.DTArea;
@@ -135,8 +136,6 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     this.Logger.FuncEnd(this.CallBackOnDocumentProxyMutationEvent.name);
   }
 
-
-
   private async HandleAddedFrameJacket(frameJacket: ElementFrameJacket): Promise<void> {
     this.Logger.FuncStart(this.HandleAddedFrameJacket.name);
 
@@ -172,7 +171,6 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
   private async HandleRemovedIframe(needleIframeId: string): Promise<void> {
     this.Logger.FuncStart(this.HandleRemovedIframe.name, 'HandleRemovedIframe: ' + needleIframeId);
     try {
-
       this.Logger.LogVal('Bucket size before', this.FramesBucket.length);
 
       if (needleIframeId && needleIframeId.length > 0) {
@@ -195,7 +193,6 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
       }
 
       this.Logger.LogVal('Bucket size after', this.FramesBucket.length);
-
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.HandleRemovedIframe.name, err);
     }
@@ -268,10 +265,9 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     this.Logger.FuncStart(this.NewFrameStep3_WireEvents.name);
     dtFrameProxy.DTFrameProxyMutationEvent_Subject.RegisterObserver(this.DTFrameProxyManyMutationEvent_Observer);
     dtFrameProxy.WireEvents();
-    
+
     this.Logger.FuncEnd(this.NewFrameStep3_WireEvents.name);
   }
-    
 
   private NewFrameStep4_NotifyObserversOfAreaProxyMutation(AddedDTFrameProxy: DTFrameProxy) {
     this.Logger.FuncStart(this.NewFrameStep4_NotifyObserversOfAreaProxyMutation.name);
@@ -345,7 +341,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     let dtFrameProxy: DTFrameProxy = this.GetTopFrame();
     if (dtFrameProxy) {
       //todo - put back? //if (dtFrameProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.ContentEditor) {
-        await (<ContentEditorSFProxy>dtFrameProxy.HostedStateFullProxy).PublishItem();
+      await (<ContentEditorProxy>dtFrameProxy.HostedStateFullProxy).PublishItem();
       //}
     }
   }
@@ -373,5 +369,15 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     }
 
     return toReturn;
+  }
+
+  TriggerCERibbonCommand(ribbonCommand: ScRibbonCommand) {
+    let topFrameProxy: DTFrameProxy = this.GetTopFrame();
+    if (topFrameProxy.HostedStateFullProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.ContentEditor) {
+      let contentEditorProxy: ContentEditorProxy = <ContentEditorProxy>topFrameProxy.HostedStateFullProxy;
+      if (contentEditorProxy) {
+        contentEditorProxy.TriggerCERibbonCommand(ribbonCommand);
+      }
+    }
   }
 }

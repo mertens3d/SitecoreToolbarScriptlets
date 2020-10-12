@@ -2,15 +2,16 @@
 import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJacket";
 import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/UrlAgent/ScPageTypeResolver";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
-import { RecipeBasics } from "../../../../RecipeBasics";
+import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/50 - scWindowType";
-import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
-import { ContentEditorSFProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { RecipeBasics } from "../../../../RecipeBasics";
+import { ContentEditorProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { MarketingControlPanelProxy } from "../../../MarketingControlPanelProxy";
 import { MediaLibraryProxy } from "../../../MediaLibraryProxy";
 import { StateFullProxyResolver } from "../../../ProxyResolver";
 import { TemplateManagerProxy } from "../../../TemplateManagerProxy";
@@ -19,9 +20,6 @@ import { I_ContentTreeBasedProxyMutationEvent_Payload } from "../Events/ContentE
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
-import { _ContentTreeBasedProxy } from "../../../ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
-import { MarketingControlPanelProxy } from "../../../MarketingControlPanelProxy";
-import { IHindSiteScUiAPIRunTimeOptions } from "../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
   FrameTypeDiscriminator = DTFrameProxy.name;
@@ -84,7 +82,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
     this.Logger.FuncStart(this.WireEvents.name, DTFrameProxy.name);
 
     if (this.HostedStateFullProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.ContentEditor) {
-      (<ContentEditorSFProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
+      (<ContentEditorProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
     } else if (this.HostedStateFullProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.MediaLibrary) {
       (<MediaLibraryProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
     } else if (this.HostedStateFullProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.TemplateManager) {

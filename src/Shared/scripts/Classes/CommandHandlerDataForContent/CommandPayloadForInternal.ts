@@ -2,8 +2,8 @@
 import { BrowserMessageBroker_Content } from "../../../../Content-Top/scripts/Proxies/BrowserMessageBroker_Content";
 import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
 import { ScUiManager } from "../../../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
-import { ContentEditorSFProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { DesktopSFProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { ContentEditorProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { DesktopProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { GuidData } from "../../Helpers/GuidData";
 import { IHindSiteScUiAPI } from "../../Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
@@ -19,9 +19,9 @@ export class CommandPayloadForInternal extends _CommonBase implements ICommandPa
   TargetSnapShotId: GuidData;
   AtticAgent: IContentAtticAgent;
   ContentMessageBroker: BrowserMessageBroker_Content = null;
-  DesktopProxy: DesktopSFProxy = null;
+  DesktopProxy: DesktopProxy = null;
   hindeCore: ICommonCore = null;
-  TargetCeProxy: ContentEditorSFProxy;
+  TargetCeProxy: ContentEditorProxy;
   TargetDoc: DocumentJacket = null;
   TargetNickName: string = '';
   ToastAgent: IToastAgent = null;

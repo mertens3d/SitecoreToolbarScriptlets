@@ -87,54 +87,60 @@ export interface IContentConst {
           Id: string,
         }
       },
-      Popup1: {
-        AllApplications: string,
-        DevelopmentTools: string,
-        Id: string,
-        MediaLibrary: string,
-        RecycleBin: string,
-        ReportingTools: string,
-        SecurityTools: string,
-        StartMenuLeftOption: string,
-        TemplateManager: string,
-        
+      StartMenu: {
+        Popup1: {
+          AllApplications: string,
+          DevelopmentTools: string,
+          Id: string,
+          MediaLibrary: string,
+          RecycleBin: string,
+          ReportingTools: string,
+          SecurityTools: string,
+          StartMenuLeftOption: string,
+          TemplateManager: string,
+        },
+        Popup2: {
+          AccessViewer: string,
+          Archive: string,
+          DomainManager: string,
+          Id: string,
+          InstallationWizard: string,
+          KeyboardMap: string,
+          LogViewer: string,
+          MarketingControlPanel: string,
+          PackageDesigner: string,
+          PackageDesignerButton: string,
+          RoleManager: string,
+          Run: string,
+          ScanForBrokenLinks: string,
+          Security: string,
+          SecurityEditor: string,
+          System: string,
+          UserManager: string,
+          Workbox: string,
+        },
+        Popup3: {
+          Id: string,
+          InstalledLicenses: string,
+          LicenseDetails: string,
+        }
       },
-      Popup2: {
-        AccessViewer: string,
-        Archive: string,
-        DomainManager: string,
-        Id: string,
-        InstallationWizard: string,
-        KeyboardMap: string,
-        LogViewer: string,
-        MarketingControlPanel: string,
-        PackageDesigner: string,
-        PackageDesignerButton: string,
-        RoleManager: string,
-        Run: string,
-        ScanForBrokenLinks: string,
-        Security: string,
-        SecurityEditor: string,
-        System: string,
-        UserManager: string,
-        Workbox: string,
-      },
-      Popup3: {
-        Id: string,
-        InstalledLicenses: string,
-        LicenseDetails: string,
-      }
       LoginBtn: IScVerSpec,
-      MenuButtonPublish: string,
+      ScRibbon: {
+        Presentation: {
+          Id: string,
+          Details: string,
+        },
+        Publish: {
+          MenuButtonPublish: string,
+          MenuDropDownPublishItem: string,
+          NavPublishStrip: string,
+          TheItemHasBeenPublished: string,
+          SettingsHidden: string,
+          PublishingHidden: string,
+        }
+      },
       NextButton: string,
-
-      Publish: {
-        MenuDropDownPublishItem: string,
-        NavPublishStrip: string,
-        TheItemHasBeenPublished: string,
-        SettingsHidden: string,
-        PublishingHidden: string,
-      }
 
       Ok: string,
 

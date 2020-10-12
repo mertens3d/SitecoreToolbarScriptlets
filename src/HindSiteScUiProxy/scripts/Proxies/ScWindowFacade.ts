@@ -20,9 +20,10 @@ import { IRootState } from '../../../Shared/scripts/Interfaces/Data/States/IStat
 import { IStateOf_ } from "../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
-import { ContentEditorSFProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
-import { DesktopSFProxy } from './Desktop/DesktopProxy/DesktopProxy';
+import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
+import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
 import { StateFullProxyResolver } from "./ProxyResolver";
+import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
 
 export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
   private DocumentJacket: DocumentJacket;
@@ -74,6 +75,25 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
     return this.ScPageTypeResolver.GetScWindowType();
   }
 
+  TriggerCERibbonCommand(ribbonCommand: ScRibbonCommand): void {
+    this.Logger.FuncStart([ScWindowFacade.name, this.TriggerCERibbonCommand.name]);
+    if (this.StateFullProxy) {
+      if (this.StateFullProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.ContentEditor) {
+        let contentEditorProxy: ContentEditorProxy = <ContentEditorProxy>this.StateFullProxy;
+        if (contentEditorProxy) {
+          contentEditorProxy.TriggerCERibbonCommand(ribbonCommand);
+        }
+      }
+      else if (this.StateFullProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.Desktop) {
+        let desktopProxy: DesktopProxy = <DesktopProxy>this.StateFullProxy;
+        if (desktopProxy) {
+          desktopProxy.TriggerCERibbonCommand(ribbonCommand);
+        }
+      }
+    }
+    this.Logger.FuncEnd([ScWindowFacade.name, this.TriggerCERibbonCommand.name]);
+  }
+
   async SetCompactCss(documentJacket: DocumentJacket) {
     //await this.ContentEditorProxy.SetCompactCss();
   }
@@ -116,11 +136,11 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
   PublishActiveCE() {
     return new Promise(async (resolve, reject) => {
       if (this.GetCurrentPageType() == ScWindowType.ContentEditor) {
-        await (<ContentEditorSFProxy>this.StateFullProxy).PublishItem()
+        await (<ContentEditorProxy>this.StateFullProxy).PublishItem()
           .then(() => resolve());
       }
       else if (this.GetCurrentPageType() == ScWindowType.Desktop) {
-        (<DesktopSFProxy>this.StateFullProxy).PublishItem()
+        (<DesktopProxy>this.StateFullProxy).PublishItem()
           .then(() => resolve())
           .catch((err) => reject(this.PublishActiveCE.name + ' | ' + err));
       }

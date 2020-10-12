@@ -63,6 +63,12 @@
     <TypeScriptCompile Include="src\Content-Top\scripts\Proxies\BrowserMessageBroker_Content.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Proxies\CommandRouter.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Proxies\CommandToExecuteData.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\AllRibbonCommands.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\AllStartMenuButtonSelectos.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\RibbonMenuButtonResolver.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\eScRibbonCommand.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\InternalInterfaces\IRibbonClickSequence.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\ScRibbonProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\DeepHotKeyAgent.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Proxies\InternalCommandRunner.ts" />
     <TypeScriptCompile Include="src\DOMJacket\KeyPressJacket.ts" />
@@ -451,7 +457,7 @@
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
     <Folder Include="src\Content-All\css\" />
-    <Folder Include="src\HindSiteScUiProxy\scripts\Interfaces\" />
+    <Folder Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ScRibbonProxy\" />
     <Folder Include="src\Shared\scripts\Agents\Agents\" />
   </ItemGroup>
   <ItemGroup>
@@ -474,6 +480,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultControllerMessageReceivedEvent_Payload.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\InternalEnums\eLevel1MenuItem.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

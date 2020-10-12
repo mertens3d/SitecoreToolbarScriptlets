@@ -14,14 +14,14 @@ export interface ILoggerAgent  {
   __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
   AddWriter(arg0: LoggerConsoleWriter);
   CtorName(name: string);
-  FuncEnd(text, optionalValueInput: string | number);
-  FuncEnd(text, optionalValueInput?: boolean);
-  FuncEnd(text, optionalValueInput?: number);
-  FuncEnd(text, optionalValueInput?: string);
-  FuncStart(textOrFunc: string, optionalValue: number | string | boolean): void;
-  FuncStart(textOrFunc: string, optionalValue?: boolean): void;
-  FuncStart(textOrFunc: string, optionalValue?: number): void;
-  FuncStart(textOrFunc: string, optionalValue?: string): void;
+  FuncEnd(text: string | string[], optionalValueInput: string | number);
+  FuncEnd(text: string | string[], optionalValueInput?: boolean);
+  FuncEnd(text: string | string[], optionalValueInput?: number);
+  FuncEnd(text: string | string[], optionalValueInput?: string);
+  FuncStart(textOrFunc: string | string[], optionalValue: number | string | boolean): void;
+  FuncStart(textOrFunc: string | string[], optionalValue?: boolean): void;
+  FuncStart(textOrFunc: string | string[], optionalValue?: number): void;
+  FuncStart(textOrFunc: string | string[], optionalValue?: string): void;
   HandlerClearDebugText(self: ICommonCore): void
   HandlerClearDebugText(self: ICommonCore, verify: boolean): void
   CTOREnd(text: string): void;
