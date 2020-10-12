@@ -138,6 +138,7 @@ class ContentEntry {
       MsgFlag: ReqCommandMsgFlag.SetStateFromQueryString,
       NewNickName: null,
       SelectSnapShotId: null,
+      SelectText: null,
     }
 
     if (this.TopDocumentJacket.UrlJacket.QueryStringHasKey(QueryStrKey.hsTargetSs)) {

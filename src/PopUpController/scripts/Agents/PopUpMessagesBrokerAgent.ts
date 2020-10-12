@@ -1,7 +1,8 @@
 ﻿import { HindSiteSettingWrapper } from "../../../Shared/scripts/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/DefaultMsgContentToController";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { ReqCommandMsgFlag, ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/ReplyCommandMsgFlag";
 import { SettingFlavor } from "../../../Shared/scripts/Enums/SettingFlavor";
 import { ContentReplyReceivedEvent_Subject } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Subject";
 import { IControllerMessageReceivedEvent_Payload } from "../../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";

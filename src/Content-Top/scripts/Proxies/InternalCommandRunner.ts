@@ -1,5 +1,6 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { ReqCommandMsgFlag, ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/ReplyCommandMsgFlag";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";

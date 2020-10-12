@@ -76,6 +76,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\CoreFactory.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\DefaultMsgContentToController.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\KeyPressComboFlag.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\ReplyCommandMsgFlag.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\HotKeyEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\HotKeyEvent_Subject.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\IHotKeyEvent_Payload.ts" />

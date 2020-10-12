@@ -131,6 +131,13 @@ export interface IContentConst {
           Id: string,
           Links: string,
         },
+        View: {
+          Id: string,
+          RawValues: string,
+          NavigateBack: string,
+          NavigateForward: string,
+          NavigateUp: string,
+        },
         Presentation: {
           Id: string,
           Details: string,

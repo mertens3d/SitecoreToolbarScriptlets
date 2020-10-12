@@ -1,4 +1,5 @@
-﻿import { ReqCommandMsgFlag, ReplyCommandMsgFlag } from "../Enums/10 - MessageFlag";
+﻿import { ReqCommandMsgFlag } from "../Enums/10 - MessageFlag";
+import { ReplyCommandMsgFlag } from "../Enums/ReplyCommandMsgFlag";
 import { IMessageContentToController_Payload } from "../Events/ContentReplyReceivedEvent/IMessageContentToController_Payload";
 
 export interface IMessageContentToController {

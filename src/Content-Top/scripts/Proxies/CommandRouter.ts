@@ -74,12 +74,13 @@ export class CommandRouter extends _FrontBase {
   }
 
   private CallBackOnHotKeyEvent(hotKeyEvent_Payload: IHotKeyEvent_Payload): void {
-    this.Logger.LogImportant('Yay received : ' + ReqCommandMsgFlag[hotKeyEvent_Payload.ReqCommandMsgFlag]);
+    this.Logger.LogImportant('received : ' + ReqCommandMsgFlag[hotKeyEvent_Payload.ReqCommandMsgFlag]);
 
     let commandParams: ICommandRouterParams = {
       MsgFlag: hotKeyEvent_Payload.ReqCommandMsgFlag,
       NewNickName: null,
-      SelectSnapShotId: null
+      SelectSnapShotId: null,
+      SelectText: hotKeyEvent_Payload.SelectText,
     }
 
     this.RouteCommand(commandParams);
@@ -148,6 +149,7 @@ export class CommandRouter extends _FrontBase {
       let commandData: CommandToExecuteData = this.CalculateCommandToExec(routingParams.MsgFlag);
 
       if (commandData.CommandType == CommandType.Api) {
+
         await this.ExecuteApiCommand(commandData.commandToExecute, routingParams.MsgFlag)
           .then(() => resolve())
           .catch((err) => reject(err));
@@ -223,6 +225,11 @@ export class CommandRouter extends _FrontBase {
         commandData.commandToExecute = this.ScUiProxy.OpenContentEditor;
         break;
 
+      case ReqCommandMsgFlag.ReqToggleRawValues:
+        commandData.CommandType = CommandType.Api;
+        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(ScRibbonCommand.ToggleRawValues));
+        break;
+
       case ReqCommandMsgFlag.OpenCERibbonPresentationDetails:
         commandData.CommandType = CommandType.Api;
         commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(ScRibbonCommand.PresentationDetails));
@@ -233,6 +240,21 @@ export class CommandRouter extends _FrontBase {
         commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(ScRibbonCommand.NavigateLinks));
         break;
 
+      case ReqCommandMsgFlag.ReqNavigateBack:
+        commandData.CommandType = CommandType.Api;
+        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(ScRibbonCommand.NavigateBack));
+        break;
+
+      case ReqCommandMsgFlag.ReqNavigateForward:
+        commandData.CommandType = CommandType.Api;
+        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(ScRibbonCommand.NavigateForward));
+        break;
+
+      case ReqCommandMsgFlag.ReqNavigateUp:
+        commandData.CommandType = CommandType.Api;
+        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(ScRibbonCommand.NavigateUp));
+        break;
+
       case ReqCommandMsgFlag.ReqToggleFavorite:
         commandData.CommandType = CommandType.ContentInternal;
         commandData.commandToExecute = this.InternalCommandRunner.ToggleFavorite;
@@ -241,6 +263,11 @@ export class CommandRouter extends _FrontBase {
       case ReqCommandMsgFlag.ReqQuickPublish:
         commandData.CommandType = CommandType.Api;
         commandData.commandToExecute = this.ScUiProxy.PublischActiveCE;
+        break;
+
+      case ReqCommandMsgFlag.ReqGoToSelected:
+        commandData.CommandType = CommandType.Api;
+        commandData.commandToExecute = ((payload: ICommandParams) => this.ScUiProxy.CEGoSelected(payload));
         break;
 
       case ReqCommandMsgFlag.ReqSetStateOfSitecoreSameWindow:

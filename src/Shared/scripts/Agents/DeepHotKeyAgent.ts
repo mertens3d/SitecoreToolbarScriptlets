@@ -50,7 +50,8 @@ export class DeepHotKeyAgent extends _CommonBase {
         console.log('Frame message received ' + JSON.stringify(deepHotKeydata));
       if (deepHotKeydata) {
         let hotKeyPayload: IHotKeyEvent_Payload = {
-          ReqCommandMsgFlag: deepHotKeydata.ReqCommandMsgFlag
+          ReqCommandMsgFlag: deepHotKeydata.ReqCommandMsgFlag,
+          SelectText: window.getSelection ? window.getSelection().toString() : '',
         };
 
         console.log('Frame message sending ' + JSON.stringify(hotKeyPayload));

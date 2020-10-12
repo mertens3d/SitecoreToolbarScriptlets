@@ -146,6 +146,13 @@ export class ContentConst {
             Id: '[id$="_Nav_NavigateStrip"]',
             Links: 'img[src$="link.png"]',
           },
+          View: {
+            Id: '[id$="_Nav_ViewStrip"]',
+            RawValues: '[id="Check_BBDED3F008D144C82A983B54F0424BBC1"]',
+            NavigateUp: 'img[src$="navigate_up.png"]',
+            NavigateForward: 'img[src$="navigate_right.png"]',
+            NavigateBack: 'img[src$="navigate_left.png"]',
+          },
           Presentation: {
             Id: '[id$="Nav_PresentationStrip"]',
             Details: 'img[src$="layout_details.png"]',

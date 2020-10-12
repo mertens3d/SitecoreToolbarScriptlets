@@ -1,6 +1,7 @@
 ﻿import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/DefaultMsgContentToController";
 import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
-import { ReplyCommandMsgFlag, ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/ReplyCommandMsgFlag";
 import { SettingKey } from "../../../Shared/scripts/Enums/30 - SettingKey";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
@@ -140,7 +141,8 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
       let commandRouterParams: ICommandRouterParams = {
         MsgFlag: messageFromController.MsgFlag,
         NewNickName: messageFromController.StateOfPopUI.NewNickName,
-        SelectSnapShotId: messageFromController.StateOfPopUI.SelectSnapShotId
+        SelectSnapShotId: messageFromController.StateOfPopUI.SelectSnapShotId,
+        SelectText: '',
       };
 
       await this.CommandRouter.RouteCommand(commandRouterParams)

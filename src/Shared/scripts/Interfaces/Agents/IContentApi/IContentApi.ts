@@ -1,9 +1,11 @@
 ﻿import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../IApiCallPayload";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
+import { ScRibbonCommand } from "../../../Enums/eScRibbonCommand";
 
 export interface IHindSiteScUiAPI {
-  TriggerCERibbonCommand: Function;
+  CEGoSelected(commandData: IApiCallPayload): Promise<void>;
+  TriggerCERibbonCommand(scRibbonCommand: ScRibbonCommand): Promise<void>;
   AddContentEditorToDesktopAsync(commandData: IApiCallPayload): Promise<void>
   AdminB(commandData: IApiCallPayload);
   GetStateOfScUiProxy(): Promise<IStateOfScUi>;

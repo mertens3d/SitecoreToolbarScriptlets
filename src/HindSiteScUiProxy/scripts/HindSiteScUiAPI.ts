@@ -13,6 +13,7 @@ import { DesktopProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { ScWindowFacade } from "./Proxies/ScWindowFacade";
 import { ICoreTaskMonitor } from "../../Shared/scripts/Interfaces/Agents/Core/ITaskMonitorAgent";
 import { ScRibbonCommand } from "../../Shared/scripts/Enums/eScRibbonCommand";
+import { ICommandParams } from "../../Shared/scripts/Interfaces/ICommandParams";
 
 export class HindSiteScUiAPI implements IHindSiteScUiAPI {
   private ScUiMan: ScUiManager;
@@ -98,7 +99,7 @@ export class HindSiteScUiAPI implements IHindSiteScUiAPI {
     });
   }
 
-  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IStateOfScUi): Promise<void> {
+  SetStateOfSitecoreWindowAsync(apiCallPayload: IApiCallPayload, dataOneWindowStorage: IStateOfScUi): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.ScWindowFacade.SetStateOfScWin(dataOneWindowStorage)
         .then(() => resolve())
@@ -106,12 +107,19 @@ export class HindSiteScUiAPI implements IHindSiteScUiAPI {
     });
   }
 
-  async TriggerCERibbonCommand(scRibbonCommand: ScRibbonCommand): Promise<void> {
+  async CEGoSelected(apiCallPayload: IApiCallPayload): Promise<void> {
+    let text: string = '';
+    if (window.getSelection()) {
+      text = window.getSelection().toString();
+    }
 
+    alert(text);
+  }
+
+  async TriggerCERibbonCommand(scRibbonCommand: ScRibbonCommand): Promise<void> {
     this.Logger.FuncStart([HindSiteScUiAPI.name, this.TriggerCERibbonCommand.name], ScRibbonCommand[scRibbonCommand]);
     try {
-      if ((typeof scRibbonCommand !== 'undefined' )&& scRibbonCommand !== ScRibbonCommand.Unknown) {
-
+      if ((typeof scRibbonCommand !== 'undefined') && scRibbonCommand !== ScRibbonCommand.Unknown) {
         this.ScWindowFacade.TriggerCERibbonCommand(scRibbonCommand);
       } else {
         this.ErrorHand.WarningAndContinue(this.TriggerCERibbonCommand.name, 'Invalid scRibbonCommand');

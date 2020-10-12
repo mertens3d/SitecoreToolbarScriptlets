@@ -18,7 +18,9 @@ export class ScRibbonProxy extends _APICoreBase {
     this.InstantiateInstance();
     this.Logger.CTOREnd(DTStartBarProxy.name);
   }
+
   private InstantiateInstance() {
+    //empty
   }
 
   async TriggerRibbonMenuItem(scRibbonButtonCommand: ScRibbonCommand, methodLock: AsyncLock): Promise<void> {
