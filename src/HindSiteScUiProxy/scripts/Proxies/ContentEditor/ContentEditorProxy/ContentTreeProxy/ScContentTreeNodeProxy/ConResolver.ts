@@ -4,10 +4,8 @@ import { UrlJacket } from "../../../../../../../DOMJacket/UrlJacket";
 import { IUrlJacket } from "../../../../../../../Shared/scripts/Interfaces/IUrlAgent";
 import { SharedConst } from "../../../../../../../Shared/scripts/SharedConst";
 import { ScIconPath } from "../../../../../../../Shared/scripts/Enums/60 - ScIconPath";
-//scContentTreeNode is the name sitecore uses
 
 export class ConResolver extends _APICoreBase {
-
   ResolveIconData(mainIconSrc: string): IScIcon {
     let toReturn: IScIcon = this.DefaultScIcon();
 
@@ -21,7 +19,7 @@ export class ConResolver extends _APICoreBase {
     else if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconShellStandardMedia)) {
       toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconShellStandardMedia, '');
       toReturn.IconPath = ScIconPath.StandardMedia
-    } 
+    }
     else {
       toReturn.IconSuffix = relativePath;
       toReturn.IconPath = ScIconPath.Unknown;
@@ -30,23 +28,18 @@ export class ConResolver extends _APICoreBase {
     return toReturn;
   }
 
-  
-
   ResolveIconPath(itemIconSource: IScIcon): string {
     let toReturn: string;
     //.BuildFullUrlFromParts().AbsUrl.toString()
 
     if (false) {
-
     }
-    else if (itemIconSource.IconPath === ScIconPath.Unknown) { toReturn = itemIconSource.IconSuffix;}
+    else if (itemIconSource.IconPath === ScIconPath.Unknown) { toReturn = itemIconSource.IconSuffix; }
     else if (itemIconSource.IconPath === ScIconPath.IconCache) { toReturn = SharedConst.Const.UrlRelativePrefix.IconCache + itemIconSource.IconSuffix; }
     else { this.ErrorHand.ErrorAndThrow([ConResolver.name, this.ResolveIconPath.name], 'unaccounted for iconPath type'); }
 
-
     return toReturn;
   }
-
 
   DefaultScIcon(): IScIcon {
     return {

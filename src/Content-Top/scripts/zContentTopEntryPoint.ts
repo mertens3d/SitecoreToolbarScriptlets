@@ -1,10 +1,10 @@
 import { DocumentJacket } from '../../DOMJacket/DocumentJacket';
 import { UrlJacket } from '../../DOMJacket/UrlJacket';
 import { HindSiteScUiAPI } from "../../HindSiteScUiProxy/scripts/HindSiteScUiAPI";
-import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/LoggerAgent/ErrorHandlerAgent";
+import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/ErrorHandler/ErrorHandlerAgent";
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/LoggerAgent/LoggerStorageWriter';
-import { TaskMonitor } from "../../Shared/scripts/Agents/LoggerAgent/TaskMonitor";
+import { TaskMonitor } from "../../Shared/scripts/Agents/TaskMonitor/TaskMonitor";
 import { RepositoryAgent } from '../../Shared/scripts/Agents/RepositoryAgent/RepositoryAgent';
 import { SettingsAgent } from '../../Shared/scripts/Agents/SettingsAgent/SettingsAgent';
 import { ToastAgent } from '../../Shared/scripts/Agents/ToastAgent/ToastAgent';
@@ -33,7 +33,7 @@ import { ContentMessageManager } from './Managers/ContentMessageManager';
 import { BrowserMessageBroker_Content } from "./Proxies/BrowserMessageBroker_Content";
 import { CommandRouter } from "./Proxies/CommandRouter";
 import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
-import { DeepHotKeyAgent } from "../../Shared/scripts/Agents/DeepHotKeyAgent";
+import { DeepHotKeyAgent } from "../../Shared/scripts/Agents/DeepHotKey/DeepHotKeyAgent";
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;

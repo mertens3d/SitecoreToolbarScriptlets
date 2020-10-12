@@ -15,7 +15,7 @@ import { DTAreaProxy } from "./DTAreaProxy";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
-import { ScRibbonProxy } from "./DesktopStartBarProxy/ScRibbonProxy";
+import { ScRibbonProxy } from "../../ContentEditor/ContentEditorProxy/ScRibbonProxy/ScRibbonProxy";
 import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
 
 export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy {

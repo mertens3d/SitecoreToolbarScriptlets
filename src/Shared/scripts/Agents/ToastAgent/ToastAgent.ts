@@ -7,7 +7,7 @@ import { TaskListMutationEvent_Observer } from "../../Events/TaskListMutationEve
 import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { _CommonBase } from "../../_CommonCoreBase";
-import { TaskMutationType } from "../LoggerAgent/TaskMutationType";
+import { TaskMutationType } from "../../Enums/TaskMutationType";
 
 export class ToastAgent extends _CommonBase implements IToastAgent {
   readonly TypeDiscriminator = TypeDiscriminator.ToastAgent;

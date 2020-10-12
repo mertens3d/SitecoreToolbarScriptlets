@@ -19,10 +19,11 @@ import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandStartEndCancelEvent_Observer } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Observer";
 import { CommandStartEndCancelEvent_Subject } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Subject";
-import { CommandState_State, ICommandStartEndCancelEvent_Payload } from "../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
+import { ICommandStartEndCancelEvent_Payload } from "../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
+import { CommandState_State } from "../Events/CommandStartEndCancelEvent/CommandState_State";
 import { CommandToExecuteData } from "./CommandToExecuteData";
-import { InternalCommandRunner } from "./InternalCommandRunner";
-import { DeepHotKeyAgent } from "../../../Shared/scripts/Agents/DeepHotKeyAgent";
+import { CommandRunnerInternal } from "./CommandRunnerInternal";
+import { DeepHotKeyAgent } from "../../../Shared/scripts/Agents/DeepHotKey/DeepHotKeyAgent";
 import { HotKeyEvent_Observer } from "../../../Shared/scripts/Events/KeyBoardComboEvent/HotKeyEvent_Observer";
 import { IHotKeyEvent_Payload } from "../../../Shared/scripts/Events/KeyBoardComboEvent/IHotKeyEvent_Payload";
 import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
@@ -36,7 +37,7 @@ export class CommandRouter extends _FrontBase {
   private Dependancies: ICommandDependancies;
   private DocumentJacket: DocumentJacket;
   private HotKeyEvent_Observer: HotKeyEvent_Observer;
-  private InternalCommandRunner: InternalCommandRunner;
+  private InternalCommandRunner: CommandRunnerInternal;
   private ScUiProxy: IHindSiteScUiAPI;
   private SettingsAgent: ISettingsAgent;
   private ToastAgent: IToastAgent;
@@ -55,7 +56,7 @@ export class CommandRouter extends _FrontBase {
   }
 
   private Instantiate() {
-    this.InternalCommandRunner = new InternalCommandRunner(this.HindeCore, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.DocumentJacket);
+    this.InternalCommandRunner = new CommandRunnerInternal(this.HindeCore, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.DocumentJacket);
 
     this.CommandTriggeredEvent_Subject = new CommandStartEndCancelEvent_Subject(this.HindeCore);
     this.CommandTriggeredEvent_Observer = new CommandStartEndCancelEvent_Observer(this.HindeCore, this.OnCommandStartEndCancelEvent.bind(this));

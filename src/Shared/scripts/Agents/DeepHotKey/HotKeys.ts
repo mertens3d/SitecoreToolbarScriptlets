@@ -1,5 +1,5 @@
-﻿import { ReqCommandMsgFlag } from "../Enums/10 - MessageFlag";
-import { IUserKeyPressCombo } from "../Interfaces/Agents/IUserKeyPressCombo";
+﻿import { ReqCommandMsgFlag } from "../../Enums/10 - MessageFlag";
+import { IUserKeyPressCombo } from "../../Interfaces/Agents/IUserKeyPressCombo";
 
 export class HotKeys {
   public static AllHotKeys: IUserKeyPressCombo[] = [

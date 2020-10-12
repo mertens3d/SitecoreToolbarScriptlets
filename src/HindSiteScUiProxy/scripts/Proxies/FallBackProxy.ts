@@ -7,7 +7,6 @@ export class FallBackProxy extends _BaseStateFullProxy<IStateOfFallBack> impleme
   StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.FallBack];
   readonly StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.FallBack;
 
-
   async GetState(): Promise<IStateOfFallBack> {
     let toReturn: IStateOfFallBack = {
       Disciminator: this.StateFullProxyDisciminator,
@@ -20,15 +19,19 @@ export class FallBackProxy extends _BaseStateFullProxy<IStateOfFallBack> impleme
 
     return toReturn;
   }
+
   async SetState(state: any) {
     //empty
   }
+
   WireEvents() {
     //empty
   }
-  async InstantiateAsyncMembers(): Promise<void>{
+
+  async InstantiateAsyncMembers(): Promise<void> {
     //empty
   }
+
   TriggerInboundEventsAsync(): void {
     //empty
   }

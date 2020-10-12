@@ -6,19 +6,23 @@ import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateP
 export class LaunchPadProxy extends _BaseStateFullProxy<IStateOfLaunchPad> implements IStateFullProxy {
   StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.LaunchPad;
   StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.LaunchPad];
-    async GetState(): Promise<any> {
-        //empty
-    }
-    async SetState(state: any) {
-        //empty
-    }
-    WireEvents() {
-        //empty
-    }
+  async GetState(): Promise<any> {
+    //empty
+  }
+
+  async SetState(state: any) {
+    //empty
+  }
+
+  WireEvents() {
+    //empty
+  }
+
   async InstantiateAsyncMembers(): Promise<void> {
-        //empty
-    }
-    TriggerInboundEventsAsync(): void {
-        //empty
-    }
+    //empty
+  }
+
+  TriggerInboundEventsAsync(): void {
+    //empty
+  }
 }

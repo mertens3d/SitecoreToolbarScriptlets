@@ -8,7 +8,7 @@ import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectCon
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
 import { _ContentTreeBasedProxy } from './_ContentTreeBasedProxy';
 import { ScRibbonCommand } from '../../../../../Shared/scripts/Enums/eScRibbonCommand';
-import { ScRibbonProxy } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/ScRibbonProxy';
+import { ScRibbonProxy } from './ScRibbonProxy/ScRibbonProxy';
 import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
 
 export class ContentEditorProxy extends _ContentTreeBasedProxy<IStateOfContentEditor> implements IStateFullProxy {

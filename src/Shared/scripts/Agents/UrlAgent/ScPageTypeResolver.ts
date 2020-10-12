@@ -8,9 +8,9 @@ import { IScUrlAgent } from "../../Interfaces/Jackets/IScUrlAgent";
 import { IGenericUrlParts } from "../../Interfaces/Jackets/IUrlParts";
 import { SharedConst } from "../../SharedConst";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
-import { IPageDeterminator } from "./IPageDeterminator";
 import { AllPageDeterminators } from "./AllPageDeterminators";
 import { _CommonBase } from "../../_CommonCoreBase";
+import { IPageDeterminator } from "../../Interfaces/IPageDeterminator";
 
 export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
   public UrlJacket: IUrlJacket;

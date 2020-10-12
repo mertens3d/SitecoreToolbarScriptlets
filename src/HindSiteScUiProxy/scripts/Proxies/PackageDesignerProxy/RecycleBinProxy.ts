@@ -2,7 +2,6 @@
 import { IStateFullProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _justWindowStateFullProxy } from "../Desktop/DesktopProxy/FrameProxies/_justWindowStateFullProxy";
 
-
 export class WorkboxProxy extends _justWindowStateFullProxy implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.Workbox;
   StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[this.StateFullProxyDisciminator];
@@ -22,7 +21,6 @@ export class RunProxy extends _justWindowStateFullProxy implements IStateFullPro
   StateFullProxyDisciminator = StateFullProxyDisciminator.Run;
   StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[this.StateFullProxyDisciminator];
 }
-
 
 export class EmailExpeprienceManagerProxy extends _justWindowStateFullProxy implements IStateFullProxy {
   StateFullProxyDisciminator = StateFullProxyDisciminator.EmailExperienceManager;

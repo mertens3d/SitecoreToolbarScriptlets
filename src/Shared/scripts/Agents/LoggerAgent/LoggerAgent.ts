@@ -12,8 +12,8 @@ import { LogWriterBuffer } from "./LogWriterBuffer";
 import { LoggerTimer } from "./LoggerTimer";
 import { SharedConst } from "../../SharedConst";
 import { _CommonBase } from "../../_CommonCoreBase";
-import { TaskMonitor } from "./TaskMonitor";
-import { ErrorHandlerAgent } from "./ErrorHandlerAgent";
+import { TaskMonitor } from "../TaskMonitor/TaskMonitor";
+import { ErrorHandlerAgent } from "../ErrorHandler/ErrorHandlerAgent";
 
 export class LoggerAgent implements ILoggerAgent {
   private __callDepth: number;

@@ -1,5 +1,5 @@
-﻿import { ScWindowType } from "../../Enums/50 - scWindowType";
-import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
+﻿import { IQueryKeyValuePair } from "../Agents/UrlAgent/IQueryKeyValuePair";
+import { ScWindowType } from "../Enums/50 - scWindowType";
 
 export interface IPageDeterminator {
     ConfidenceScore: number;

@@ -1,7 +1,7 @@
 ﻿import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
 import { LoggerAgent } from "../../Shared/scripts/Agents/LoggerAgent/LoggerAgent";
-import { TaskMonitor } from "../../Shared/scripts/Agents/LoggerAgent/TaskMonitor";
-import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/LoggerAgent/ErrorHandlerAgent";
+import { TaskMonitor } from "../../Shared/scripts/Agents/TaskMonitor/TaskMonitor";
+import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/ErrorHandler/ErrorHandlerAgent";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/LoggerAgent/LoggerConsoleWriter";
 import { LoggerStorageWriter } from "../../Shared/scripts/Agents/LoggerAgent/LoggerStorageWriter";
 import { RepositoryAgent } from "../../Shared/scripts/Agents/RepositoryAgent/RepositoryAgent";

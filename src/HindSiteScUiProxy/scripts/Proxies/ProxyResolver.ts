@@ -1,7 +1,6 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
 import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
-import { IHindSiteScUiAPIRunTimeOptions } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions";
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";

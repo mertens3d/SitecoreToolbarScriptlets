@@ -1,4 +1,4 @@
-import { DeepHotKeyAgent } from "../../Shared/scripts/Agents/DeepHotKeyAgent";
+import { DeepHotKeyAgent } from "../../Shared/scripts/Agents/DeepHotKey/DeepHotKeyAgent";
 import { CoreFactory } from "../../Shared/scripts/Classes/CoreFactory";
 import { UrlJacket } from "../../DOMJacket/UrlJacket";
 

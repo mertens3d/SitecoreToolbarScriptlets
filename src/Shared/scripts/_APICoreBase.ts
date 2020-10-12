@@ -1,4 +1,4 @@
-﻿import { ErrorHandlerAgent } from './Agents/LoggerAgent/ErrorHandlerAgent';
+﻿import { ErrorHandlerAgent } from './Agents/ErrorHandler/ErrorHandlerAgent';
 import { IAPICore } from './Interfaces/Agents/IAPICore';
 import { _CommonBase } from './_CommonCoreBase';
 import { IHindSiteScUiAPIRunTimeOptions } from './Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions';

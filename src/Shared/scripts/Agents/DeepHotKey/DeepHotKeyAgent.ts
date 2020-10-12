@@ -1,16 +1,16 @@
-﻿import { KeyPressJacket } from "../../../DOMJacket/KeyPressJacket";
-import { ReqCommandMsgFlag } from "../Enums/10 - MessageFlag";
-import { HotKeyEvent_Subject } from "../Events/KeyBoardComboEvent/HotKeyEvent_Subject";
-import { IKeyBoardComboEvent_Payload } from "../Events/KeyBoardComboEvent/IKeyBoardComboEvent_Payload";
-import { KeyBoardComboEvent_Observer } from "../Events/KeyBoardComboEvent/KeyBoardComboEvent_Observer";
-import { ICommonCore } from "../Interfaces/Agents/ICommonCore";
-import { IUrlJacket } from "../Interfaces/IUrlAgent";
-import { IGenericUrlParts } from "../Interfaces/Jackets/IUrlParts";
-import { _CommonBase } from "../_CommonCoreBase";
+﻿import { KeyPressJacket } from "../../../../DOMJacket/KeyPressJacket";
+import { ReqCommandMsgFlag } from "../../Enums/10 - MessageFlag";
+import { HotKeyEvent_Subject } from "../../Events/KeyBoardComboEvent/HotKeyEvent_Subject";
+import { IKeyBoardComboEvent_Payload } from "../../Events/KeyBoardComboEvent/IKeyBoardComboEvent_Payload";
+import { KeyBoardComboEvent_Observer } from "../../Events/KeyBoardComboEvent/KeyBoardComboEvent_Observer";
+import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
+import { IUrlJacket } from "../../Interfaces/IUrlAgent";
+import { IGenericUrlParts } from "../../Interfaces/Jackets/IUrlParts";
+import { _CommonBase } from "../../_CommonCoreBase";
 import { HotKeys } from "./HotKeys";
-import { IHotKeyEvent_Payload } from "../Events/KeyBoardComboEvent/IHotKeyEvent_Payload";
-import { ISingleHotKeyPayload, IDeepHotKeyData } from "../Interfaces/IMessageControllerToContent";
-import { SharedConst } from "../SharedConst";
+import { IHotKeyEvent_Payload } from "../../Events/KeyBoardComboEvent/IHotKeyEvent_Payload";
+import { ISingleHotKeyPayload, IDeepHotKeyData } from "../../Interfaces/IMessageControllerToContent";
+import { SharedConst } from "../../SharedConst";
 
 export class DeepHotKeyAgent extends _CommonBase {
   private KeyPressJacket_Observer: KeyBoardComboEvent_Observer;

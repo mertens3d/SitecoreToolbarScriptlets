@@ -1,8 +1,8 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
-import { AsyncLock } from './AsyncLock';
-import { DTStartBarProxy } from './DesktopStartBarProxy';
+import { AsyncLock } from '../../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
+import { DTStartBarProxy } from '../../../Desktop/DesktopProxy/DesktopStartBarProxy/DesktopStartBarProxy';
 import { RibbonMenuButtonResolver } from "./RibbonMenuButtonResolver";
 import { ScRibbonCommand } from '../../../../../../Shared/scripts/Enums/eScRibbonCommand';
 import { IRibbonClickSequence } from '../../../../InternalInterfaces/IRibbonClickSequence';

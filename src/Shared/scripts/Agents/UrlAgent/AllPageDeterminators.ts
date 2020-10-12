@@ -1,7 +1,7 @@
 ﻿import { QueryStrKey } from "../../Enums/QueryStrKey";
 import { ScWindowType } from "../../Enums/50 - scWindowType";
-import { IPageDeterminator } from "./IPageDeterminator";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
+import { IPageDeterminator } from "../../Interfaces/IPageDeterminator";
 
 export class AllPageDeterminators {
   static regexPathTest_Sitecore_Shell: RegExp = /sitecore\/shell/ig;

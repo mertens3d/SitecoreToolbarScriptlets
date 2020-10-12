@@ -18,11 +18,6 @@ import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNo
 import { ConResolver } from './ScContentTreeNodeProxy/ConResolver';
 
 //ContentTree is the name Sitecore uses
-export class BuiltInContentTreeNodeResolver extends _APICoreBase {
-  GetBuiltInNode() {
-  }
-}
-
 export class ContentTreeProxy extends _APICoreBase {
   private TreeRootSelector: string;
   private _treeNodeProxy: ScContentTreeNodeProxy;

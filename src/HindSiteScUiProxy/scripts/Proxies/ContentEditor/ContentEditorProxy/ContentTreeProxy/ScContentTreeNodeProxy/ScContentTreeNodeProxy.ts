@@ -14,6 +14,7 @@ import { ConResolver } from "./ConResolver";
 import { IScIcon } from "../../../../../../../Shared/scripts/Interfaces/Data/IScIcon";
 import { ScIconPath } from "../../../../../../../Shared/scripts/Enums/60 - ScIconPath";
 
+//scContentTreeNode is the name sitecore uses
 export class ScContentTreeNodeProxy extends _APICoreBase {
   private ScContentTreeNodeDivElem: ElementDivJacket;
   private RecipeBasics: RecipeBasics;

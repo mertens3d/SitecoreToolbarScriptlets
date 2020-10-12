@@ -1,6 +1,6 @@
-﻿import { ErrorHandlerAgent } from "../Agents/LoggerAgent/ErrorHandlerAgent";
+﻿import { ErrorHandlerAgent } from "../Agents/ErrorHandler/ErrorHandlerAgent";
 import { LoggerAgent } from "../Agents/LoggerAgent/LoggerAgent";
-import { TaskMonitor } from   "../Agents/LoggerAgent/TaskMonitor";
+import { TaskMonitor } from   "../Agents/TaskMonitor/TaskMonitor";
 import { TaskListMutationEvent_Subject } from "../Events/TaskListMutationEvent/TaskListMutationEvent_Subject";
 import { ICommonCore } from "../Interfaces/Agents/ICommonCore";
 import { CommonCore } from "../_CommonCoreBase";

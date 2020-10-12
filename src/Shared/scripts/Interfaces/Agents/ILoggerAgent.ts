@@ -2,8 +2,8 @@
 import { GuidData } from "../../Helpers/GuidData";
 import { ICommonCore } from "./ICommonCore";
 import { IHindeCore } from "./IHindeCore";
-import { TaskMonitor } from "../../Agents/LoggerAgent/TaskMonitor";
-import { ErrorHandlerAgent } from "../../Agents/LoggerAgent/ErrorHandlerAgent";
+import { TaskMonitor } from "../../Agents/TaskMonitor/TaskMonitor";
+import { ErrorHandlerAgent } from "../../Agents/ErrorHandler/ErrorHandlerAgent";
 import { ICoreErrorHandler } from "./IErrorHandlerAgent";
 import { ICoreTaskMonitor } from "./Core/ITaskMonitorAgent";
 

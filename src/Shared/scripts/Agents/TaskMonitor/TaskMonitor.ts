@@ -3,7 +3,7 @@ import { ITaskListMutationEvent_Payload } from "../../Events/TaskListMutationEve
 import { TaskListMutationEvent_Subject } from "../../Events/TaskListMutationEvent/TaskListMutationEvent_Subject";
 import { ICoreErrorHandler } from "../../Interfaces/Agents/IErrorHandlerAgent";
 import { ILoggerAgent } from "../../Interfaces/Agents/ILoggerAgent";
-import { TaskMutationType } from "./TaskMutationType";
+import { TaskMutationType } from "../../Enums/TaskMutationType";
 import { ICoreTaskMonitor } from "../../Interfaces/Agents/Core/ITaskMonitorAgent";
 
 export class TaskMonitor implements ICoreTaskMonitor {
