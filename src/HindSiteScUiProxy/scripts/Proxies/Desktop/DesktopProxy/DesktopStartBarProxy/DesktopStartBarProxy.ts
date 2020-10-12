@@ -1,24 +1,38 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
-import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
+import { RecipeBasics } from '../../../../RecipeBasics';
+import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
+import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { _HindeCoreBase } from '../../../../../../Shared/scripts/LoggableBase';
+import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
+import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
+import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
-import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
+import { AsyncLock } from './AsyncLock';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
-import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
+import { IButtonSelectors } from './IButtonSelectors';
+import { StartMenuButtonResolver } from './StartMenuButtonResolver';
+import { IHindSiteScUiAPIRunTimeOptions } from "../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions";
 
-export class DTStartBarProxy extends _HindeCoreBase {
-
-  private __startBarElem: ElementJacket;
+export class DTStartBarProxy extends _APICoreBase {
   private DocumentJacket: DocumentJacket;
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
+  private StartMenuButtonResolver: StartMenuButtonResolver;
+  private RecipeBasics: RecipeBasics;
+  private ConResolver: ConResolver;
 
-  constructor(hindeCore: IHindeCore, documentJacket: DocumentJacket) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
+    super(apiCore);
     this.Logger.CTORStart(DTStartBarProxy.name);
     this.DocumentJacket = documentJacket;
+    this.InstantiateInstance();
     this.Logger.CTOREnd(DTStartBarProxy.name);
+  }
+
+  private InstantiateInstance() {
+    this.RecipeBasics = new RecipeBasics(this.ApiCore);
+    this.ConResolver = new ConResolver(this.ApiCore);
   }
 
   public Instantiate_DTStartBarProxy() {
@@ -31,28 +45,59 @@ export class DTStartBarProxy extends _HindeCoreBase {
     this.Logger.FuncEnd(this.WireEvent.name, DTStartBarProxy.name);
   }
 
+  async TriggerRedButtonAsync(scWindowType: ScWindowType, methodLock: AsyncLock): Promise<void> {
+    this.Logger.FuncStart(this.TriggerRedButtonAsync.name);
 
-  GetStartBarButtonById(targetId: string) {
-    return this.DocumentJacket.QuerySelector('[id=' + targetId + ']');
-  }
-
-  GetStartBarElement(): ElementJacket {
-    if (!this.__startBarElem) {
-      this.__startBarElem = this.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Desktop.DtStartBar);
-    }
-
-    return this.__startBarElem;
-  }
-
-  async TriggerRedButton(): Promise<void> {
-    this.Logger.FuncStart(this.TriggerRedButton.name);
     try {
-      await this.DocumentJacket.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButton, )
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.TriggerRedButton.name, err));
+      this.StartMenuButtonResolver = new StartMenuButtonResolver(this.ApiCore);
+
+      let buttonSelectors: IButtonSelectors = this.StartMenuButtonResolver.GetButtonSelectors(scWindowType);
+
+      if (!buttonSelectors || !buttonSelectors.Pop1Selector) {
+        this.Logger.LogAsJsonPretty('buttonSelectors', buttonSelectors);
+        this.ErrorHand.ErrorAndThrow([this.TriggerRedButtonAsync.name], 'something is wrong with the button selectors');
+      }
+      //let pop1ElemJacket: ElementJacket
+
+      await methodLock.WaitForLockControl(ScWindowType[scWindowType])
+
+        .then(() => this.DocumentJacket.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButtonVSpec))
+        .then(() => this.TaskMonitor.AsyncTaskStarted(this.TriggerRedButtonAsync.name))
+        .then(() => this.TriggerPopXButton(buttonSelectors.Pop1Selector, ContentConst.Const.Selector.SC.StartMenu.Popup1.Id))
+        .then(() => this.TriggerPopXButton(buttonSelectors.Pop2Selector, ContentConst.Const.Selector.SC.StartMenu.Popup2.Id))
+        .then(() => this.TriggerPopXButton(buttonSelectors.Pop3Selector, ContentConst.Const.Selector.SC.StartMenu.Popup3.Id))
+        .then(() => methodLock.ReleaseLock())
+        .then(() => this.RecipeBasics.WaitForTimePeriod(1, this.TriggerRedButtonAsync.name))
+        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.TriggerRedButtonAsync.name))
+        .catch((err) => this.ErrorHand.ErrorAndThrow(this.TriggerRedButtonAsync.name, err))
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.TriggerRedButton.name, err);
+      this.ErrorHand.ErrorAndThrow(this.TriggerRedButtonAsync.name, err);
     }
-    this.Logger.FuncEnd(this.TriggerRedButton.name);
+    this.Logger.FuncEnd(this.TriggerRedButtonAsync.name);
+  }
+
+  private async TriggerPopXButton(buttonSelector: string, containerSelector: string): Promise<void> {
+    this.Logger.FuncStart(this.TriggerPopXButton.name, buttonSelector + ' | ' + containerSelector);
+    try {
+      if (buttonSelector && buttonSelector.length > 0 && containerSelector && containerSelector.length > 0) {
+        let containerElemJacket: ElementJacket = null;
+        let buttonElemJacket: ElementJacket = null;
+
+        await this.DocumentJacket.WaitForElem(containerSelector)
+          .then((elementJacket: ElementJacket) => containerElemJacket = elementJacket)
+          .then(() => containerElemJacket.WaitForElement(buttonSelector, this.TriggerRedButtonAsync.name))
+          .then((elementJacket: ElementJacket) => buttonElemJacket = elementJacket)
+          .then(() => this.Logger.LogImportant('About to click ' + buttonSelector))
+          .then(() => buttonElemJacket.Click())
+          .then(() => this.RecipeBasics.WaitForTimePeriod(1, this.TriggerPopXButton.name))
+          .catch((err) => this.ErrorHand.ErrorAndThrow(this.TriggerPopXButton.name + ' ' + buttonSelector + ' ' + containerSelector, err));
+      } else {
+        // do nothing
+      }
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.TriggerPopXButton.name, err);
+    }
+    this.Logger.FuncEnd(this.TriggerPopXButton.name, buttonSelector + ' | ' + containerSelector);
   }
 
   private async GetAssociatedStartBarButton(dTFrameProxyMutationEventPayload: IDTFrameProxyMutationEvent_Payload): Promise<DesktopStartBarButtonProxy> {
@@ -69,8 +114,8 @@ export class DTStartBarProxy extends _HindeCoreBase {
       });
 
       if (!foundStartBarButtonProxy) {
-        foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.HindeCore, dTFrameProxyMutationEventPayload.FrameId, this.DocumentJacket);
-        await foundStartBarButtonProxy.Instantiate_DestopStartBarButtonProxy()
+        foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.ApiCore, dTFrameProxyMutationEventPayload.FrameId, this.DocumentJacket, this.ConResolver);
+        await foundStartBarButtonProxy.Instantiate_DestopStartBarButtonProxyAsyncItems()
           .catch((err) => reject(this.GetAssociatedStartBarButton.name + ' | ' + err));
 
         this.StartBarButtonProxyBucket.push(foundStartBarButtonProxy);
@@ -94,15 +139,15 @@ export class DTStartBarProxy extends _HindeCoreBase {
         &&
         dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload
         &&
-        dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.StateOfContentTree
+        dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.ContentTree
         &&
-        dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.StateOfContentTree.ActiveNodeFlat
+        dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.ContentTree.ActiveNodeShallow
       ) {
         let contentTreeProxyMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload;
 
-        if (contentTreeProxyMutationEvent_Payload.StateOfContentTree.ActiveNodeFlat) {
+        if (contentTreeProxyMutationEvent_Payload.ContentTree.ActiveNodeShallow) {
           this.GetAssociatedStartBarButton(dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload)
-            .then((startBarButtonProxy: DesktopStartBarButtonProxy) => startBarButtonProxy.SetStateOfDesktopStartBarButtonAsync(contentTreeProxyMutationEvent_Payload.StateOfContentTree))
+            .then((startBarButtonProxy: DesktopStartBarButtonProxy) => startBarButtonProxy.SetStateOfDesktopStartBarButtonAsync(contentTreeProxyMutationEvent_Payload.ContentTree))
             .catch((err) => this.ErrorHand.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, err));
         }
         else {

@@ -3,14 +3,14 @@ import { IStateOfDesktop } from "../../../Shared/scripts/Interfaces/Data/States/
 import { IStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfScContentTreeNodeDeep } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
 import { IStateOfContentTree } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
-import { IStateOfScContentTreeNodeFlat } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeFlat";
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { IStateOfScContentTreeNodeShallow } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeShallow";
 
-export class StateHelpers extends _HindeCoreBase {
-  GetActiveTreeNodeFromStateOfTreeFlat(stateOfTree: IStateOfContentTree): IStateOfScContentTreeNodeFlat {
+export class StateHelpers extends _FrontBase {
+  GetActiveTreeNodeFromStateOfTreeFlat(stateOfTree: IStateOfContentTree): IStateOfScContentTreeNodeShallow {
     let toReturn: IStateOfScContentTreeNodeDeep = null;
 
-    return stateOfTree.ActiveNodeFlat;
+    return stateOfTree.ActiveNodeShallow;
     //if (stateOfTree && stateOfTree.ActiveNodeCoord.SiblingIndex > -1 && stateOfTree.ActiveNodeCoord.LevelIndex > -1) {
     //  try {
     //    if (stateOfTree.ActiveNodeCoord.LevelIndex > -1) {
@@ -29,12 +29,12 @@ export class StateHelpers extends _HindeCoreBase {
     //return toReturn;
   }
 
-  GetActiveTreeNodeFromStateOfContentEditor(stateOfContentEditor: IStateOfContentEditor): IStateOfScContentTreeNodeFlat {
-    return this.GetActiveTreeNodeFromStateOfTreeFlat(stateOfContentEditor.StateOfContentTree);
+  GetActiveTreeNodeFromStateOfContentEditor(stateOfContentEditor: IStateOfContentEditor): IStateOfScContentTreeNodeShallow {
+    return this.GetActiveTreeNodeFromStateOfTreeFlat(stateOfContentEditor.ContentTree);
   }
 
   GetActiveFrameFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfDTFrame {
-    return stateOfDesktop.StateOfDTArea.StateOfDTFrames[stateOfDesktop.StateOfDTArea.ActiveDTFrameIndex];
+    return stateOfDesktop.DTArea.DTFrames[stateOfDesktop.DTArea.ActiveFrameIndex];
   }
 
   //GetActiveContentEditFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfContentEditor {

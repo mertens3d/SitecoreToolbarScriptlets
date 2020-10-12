@@ -1,4 +1,4 @@
-﻿import { SingleClickEvent_Subject } from "../../../../PopUpUi/scripts/Events/SingleClickEvent/SingleClickEvent_Subject";
+﻿import { SingleClickEvent_Subject } from "../../Events/SingleClickEvent/SingleClickEvent_Subject";
 import { IUiModule } from "./IUiModule";
 
 export interface IUiModuleButton extends IUiModule {

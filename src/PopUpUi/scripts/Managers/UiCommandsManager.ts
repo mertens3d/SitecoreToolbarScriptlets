@@ -1,4 +1,4 @@
-﻿import { ScWindowType } from '../../../Shared/scripts/Enums/scWindowType';
+﻿import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModule } from '../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiVisibilityTestAgent } from '../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent';
@@ -8,9 +8,9 @@ import { UiHydrationData } from '../../../Shared/scripts/Interfaces/UiHydrationD
 import { TypCommandButtonModule } from '../UiModules/ButtonModules/TypCommandButtonModule';
 import { UiVisibilityTestAgent } from './UiManager/UiVisibilityTestAgent';
 import { ModuleKey } from '../../../Shared/scripts/Enums/ModuleKey';
-import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
+import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 
-export class UiCommandsManager extends _HindeCoreBase {
+export class UiCommandsManager extends _FrontBase {
   private UiModules: IUiModule[] = [];
   private UiVisibilityTestAgent: IUiVisibilityTestAgent;
   private MenuCommandParamsBucket: ICommandDefinitionBucket;

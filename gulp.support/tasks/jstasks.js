@@ -9,20 +9,20 @@ const replace = require('gulp-replace');
 module.exports = {
   combineJs: function (cb, vars) {
     console.log('s) combineJs');
-    console.log('source filter: ' + vars.ContentJs.SourceDirFilter());
-    return gulp.src(vars.ContentJs.SourceDirFilter())
+    console.log('source filter: ' + vars.ContentTopJs.SourceDirFilter());
+    return gulp.src(vars.ContentTopJs.SourceDirFilter())
       .pipe(sort())
-      .pipe(concat(vars.ContentJs.NameConcat()))
-      .pipe(gulp.dest(vars.ContentJs.WorkingDest))
+      .pipe(concat(vars.ContentTopJs.NameConcat()))
+      .pipe(gulp.dest(vars.ContentTopJs.WorkingDest))
       .pipe(replace('"', '\''))
-      .pipe(gulp.dest(vars.ContentJs.WorkingDest));
+      .pipe(gulp.dest(vars.ContentTopJs.WorkingDest));
   },
   //buildjsContent : function(cb, vars) {
   //  console.log('s) buildjsContent');
-  //  var sourceFolder = vars.ContentJs.AutoBuildRoot + '/' + vars.ContentJs.NameConcat;
+  //  var sourceFolder = vars.ContentTopJs.AutoBuildRoot + '/' + vars.ContentTopJs.NameConcat;
   //  console.log('source filter: ' + sourceFolder);
-  //  console.log('dest: ' + vars.ContentJs.AutoBuildRoot);
-  //  console.log('rename: ' + vars.ContentJs.MinFileName());
+  //  console.log('dest: ' + vars.ContentTopJs.AutoBuildRoot);
+  //  console.log('rename: ' + vars.ContentTopJs.MinFileName());
   //  console.log('e) buildjsContent');
 
   //  return gulp.src(sourceFolder)
@@ -32,7 +32,7 @@ module.exports = {
   //        quote_style: 1
   //      }
   //    }))
-  //    .pipe(rename(vars.ContentJs.MinFileName()))
-  //    .pipe(gulp.dest(vars.ContentJs.WorkingDest));
+  //    .pipe(rename(vars.ContentTopJs.MinFileName()))
+  //    .pipe(gulp.dest(vars.ContentTopJs.WorkingDest));
   //}
 }

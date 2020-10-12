@@ -9,16 +9,16 @@ module.exports = {
   BuildCompactCEStyles: function (cb, vars) {
 
 
-    console.log('source: ' + vars.ContentStyles.SourceDirFilter());
-    console.log('rename to: ' + vars.ContentStyles.MinFileName());
-    console.log('dest: ' + vars.ContentStyles.AutoBuildRoot);
+    console.log('source: ' + vars.ContentStylesTop.SourceDirFilter());
+    console.log('rename to: ' + vars.ContentStylesTop.MinFileName());
+    console.log('dest: ' + vars.ContentStylesTop.AutoBuildRoot);
 
-    return gulp.src(vars.ContentStyles.SourceDirFilter())
+    return gulp.src(vars.ContentStylesTop.SourceDirFilter())
       .pipe(sass({
         outputStyle: 'compressed'
       }).on('error', sass.logError))
-      .pipe(rename(vars.ContentStyles.MinFileName()))
-      .pipe(gulp.dest(vars.ContentStyles.AutoBuildRoot));
+      .pipe(rename(vars.ContentStylesTop.MinFileName()))
+      .pipe(gulp.dest(vars.ContentStylesTop.AutoBuildRoot));
 
   },
 

@@ -1,11 +1,12 @@
 ﻿import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfCEFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateOfCEFrameProxy";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
-import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
+import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 
 export class CEFrameProxy extends _BaseScFrameProxy<IStateOfCEFrameProxy> implements IStateFullProxy {
   Friendly: string;
   StateFullProxyDisciminator = StateFullProxyDisciminator.CEFrame;
+  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.CEFrame];
   FrameTypeDiscriminator = CEFrameProxy.name;
 
   SetState(stateOfCEFrameProxy: IStateOfCEFrameProxy): Promise<void> {
@@ -16,7 +17,7 @@ export class CEFrameProxy extends _BaseScFrameProxy<IStateOfCEFrameProxy> implem
     return null;
   }
 
-  InstantiateAsyncMembers() {
+  async InstantiateAsyncMembers(): Promise<void> {
   }
 
   WireEvents() {

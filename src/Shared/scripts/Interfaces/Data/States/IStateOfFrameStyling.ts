@@ -1,4 +1,4 @@
-﻿export interface IStateOfFrameStyling {
+﻿export interface IFrameJacketStyling {
   Position: string;
   Left: string;
   Top: string;

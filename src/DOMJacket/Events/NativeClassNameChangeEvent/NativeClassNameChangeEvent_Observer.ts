@@ -1,11 +1,15 @@
 ﻿import { HindsiteEventHandler_Type } from '../../../Shared/scripts/Events/_HindSiteEvent/HindsiteEventHandler_Type';
 import { HindSiteEvent_Observer } from '../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer';
 import { IHindSiteEvent_Observer } from '../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer';
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { INativeClassNameChangeEvent_Payload } from './INativeClassNameChangeEvent_Payload';
+import { TypeDiscriminator } from '../../../Shared/scripts/Enums/70 - TypeDiscriminator';
 
 export class NativeClassNameChangeEvent_Observer extends HindSiteEvent_Observer<INativeClassNameChangeEvent_Payload> implements IHindSiteEvent_Observer<INativeClassNameChangeEvent_Payload> {
-  constructor(hindeCore: IHindeCore, callback: HindsiteEventHandler_Type) {
-    super(hindeCore, NativeClassNameChangeEvent_Observer.name, callback);
+
+  readonly TypeDiscriminator = TypeDiscriminator.NativeClassNameChangeEvent_Observer;
+
+  constructor(commonCore: ICommonCore, callback: HindsiteEventHandler_Type) {
+    super(commonCore, NativeClassNameChangeEvent_Observer.name, callback);
   }
 }

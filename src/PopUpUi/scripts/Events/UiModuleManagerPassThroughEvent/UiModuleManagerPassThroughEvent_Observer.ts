@@ -3,10 +3,14 @@ import { HindSiteEvent_Observer } from '../../../../Shared/scripts/Events/_HindS
 import { IHindSiteEvent_Observer } from '../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer';
 import { HindsiteEventHandler_Type } from '../../../../Shared/scripts/Events/_HindSiteEvent/HindsiteEventHandler_Type';
 import { IUiModuleManagerPassThroughEvent_Payload } from './IUiModuleManagerPassThroughEvent_Payload';
+import { TypeDiscriminator } from "../../../../Shared/scripts/Enums/70 - TypeDiscriminator";
+import { ICommonCore } from "../../../../Shared/scripts/Interfaces/Agents/ICommonCore";
 
 export class UiModuleManagerPassThroughEvent_Observer extends HindSiteEvent_Observer<IUiModuleManagerPassThroughEvent_Payload> implements IHindSiteEvent_Observer<IUiModuleManagerPassThroughEvent_Payload> {
 
-  constructor(hindeCore: IHindeCore, callback: HindsiteEventHandler_Type) {
+  readonly TypeDiscriminator = TypeDiscriminator.UiModuleManagerPassThroughEvent_Observer;
+
+  constructor(hindeCore: ICommonCore, callback: HindsiteEventHandler_Type) {
     super(hindeCore, UiModuleManagerPassThroughEvent_Observer.name, callback);
 
     }

@@ -1,27 +1,42 @@
-﻿import { IHindSiteScUiAPI } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
-import { _HindeCoreBase } from "../../Shared/scripts/LoggableBase";
-import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
-import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { DocumentJacket } from "../../DOMJacket/DocumentJacket";
-import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { ScWindowFacade } from "./Proxies/ScWindowFacade";
-import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+﻿import { DocumentJacket } from "../../DOMJacket/DocumentJacket";
 import { SnapShotFlavor } from "../../Shared/scripts/Enums/SnapShotFlavor";
+import { IAPICore } from "../../Shared/scripts/Interfaces/Agents/IAPICore";
+import { IHindSiteScUiAPI } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
+import { IHindSiteScUiAPIRunTimeOptions } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions";
+import { ICoreErrorHandler } from "../../Shared/scripts/Interfaces/Agents/IErrorHandlerAgent";
+import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
+import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
-import { DesktopSFProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
+import { DesktopProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
+import { ScWindowFacade } from "./Proxies/ScWindowFacade";
+import { ICoreTaskMonitor } from "../../Shared/scripts/Interfaces/Agents/Core/ITaskMonitorAgent";
+import { ScRibbonCommand } from "../../Shared/scripts/Enums/eScRibbonCommand";
+import { ICommandParams } from "../../Shared/scripts/Interfaces/ICommandParams";
 
-
-export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI {
+export class HindSiteScUiAPI implements IHindSiteScUiAPI {
   private ScUiMan: ScUiManager;
   private ScWindowFacade: IScWindowFacade;
-  DocumentJacket: DocumentJacket;
+  private DocumentJacket: DocumentJacket;
+  private ApiCore: IAPICore;
+  private Logger: ILoggerAgent;
+  private ErrorHand: ICoreErrorHandler;
 
-  constructor(hindeCore: IHindeCore, scUiMan: ScUiManager, documentJacket: DocumentJacket) {
-    super(hindeCore);
+  constructor(loggerAgent: ILoggerAgent, errorHand: ICoreErrorHandler, taskMon: ICoreTaskMonitor, documentJacket: DocumentJacket, runTimeOptions: IHindSiteScUiAPIRunTimeOptions) {
+    this.ApiCore = {
+      ErrorHand: errorHand,
+      Logger: loggerAgent,
+      RunTimeOptions: runTimeOptions,
+      TaskMonitor: taskMon,
+      //TypeDiscriminator: TypeDiscriminator.ApiCore,
+    }
+
+    this.Logger = this.ApiCore.Logger;
+    this.ErrorHand = this.ApiCore.ErrorHand;
 
     this.Logger.CTORStart(HindSiteScUiAPI.name);
 
-    this.ScUiMan = scUiMan;
     this.DocumentJacket = documentJacket;
 
     this.Logger.CTOREnd(HindSiteScUiAPI.name);
@@ -30,7 +45,7 @@ export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI 
   public async InstantiateHindSiteScUiProxy() {
     this.Logger.FuncStart(this.InstantiateHindSiteScUiProxy.name);
     try {
-      this.ScWindowFacade = new ScWindowFacade(this.HindeCore, this.DocumentJacket);
+      this.ScWindowFacade = new ScWindowFacade(this.ApiCore, this.DocumentJacket);
       await this.ScWindowFacade.InstantiateAsyncMembers_ScWindowFacade();
     }
     catch (err) {
@@ -51,7 +66,7 @@ export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI 
       if (this.ScWindowFacade) {
         await this.ScWindowFacade.GetStateOfScUiProxy(SnapShotFlavor.Live)
           .then((result: IStateOfScUi) => reply = result)
-          .then(() => reply.ErrorStackScUiProxy = this.ErrorHand.ErrorStack)
+          .then(() => reply.ErrorStack = this.ErrorHand.ErrorStack)
           .then(() => resolve(reply))
           .catch((err) => reject(err));
       } else {
@@ -62,7 +77,7 @@ export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI 
 
   AddContentEditorToDesktopAsync(apiCallPayload: IApiCallPayload): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      (<DesktopSFProxy>this.ScWindowFacade.StateFullProxy).AddContentEditorFrameAsync()
+      (<DesktopProxy>this.ScWindowFacade.StateFullProxy).AddContentEditorFrameAsync()
         .then(() => resolve())
         .catch((err) => reject());
     });
@@ -84,7 +99,7 @@ export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI 
     });
   }
 
-  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IStateOfScUi): Promise<void> {
+  SetStateOfSitecoreWindowAsync(apiCallPayload: IApiCallPayload, dataOneWindowStorage: IStateOfScUi): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.ScWindowFacade.SetStateOfScWin(dataOneWindowStorage)
         .then(() => resolve())
@@ -92,11 +107,36 @@ export class HindSiteScUiAPI extends _HindeCoreBase implements IHindSiteScUiAPI 
     });
   }
 
+  async CEGoSelected(apiCallPayload: IApiCallPayload): Promise<void> {
+    let text: string = '';
+    if (window.getSelection()) {
+      text = window.getSelection().toString();
+    }
+
+    alert(text);
+  }
+
+  async TriggerCERibbonCommand(scRibbonCommand: ScRibbonCommand): Promise<void> {
+    this.Logger.FuncStart([HindSiteScUiAPI.name, this.TriggerCERibbonCommand.name], ScRibbonCommand[scRibbonCommand]);
+    try {
+      if ((typeof scRibbonCommand !== 'undefined') && scRibbonCommand !== ScRibbonCommand.Unknown) {
+        this.ScWindowFacade.TriggerCERibbonCommand(scRibbonCommand);
+      } else {
+        this.ErrorHand.WarningAndContinue(this.TriggerCERibbonCommand.name, 'Invalid scRibbonCommand');
+      }
+    } catch (err) {
+      this.ErrorHand.ErrorAndThrow(this.TriggerCERibbonCommand.name, err);
+    }
+    this.Logger.FuncEnd([HindSiteScUiAPI.name, this.TriggerCERibbonCommand.name]);
+  }
+
   OpenContentEditor() {
     throw new Error("Method not implemented.");
   }
 
   AdminB(commandData: IApiCallPayload) {
+    this.ScUiMan = new ScUiManager(this.ApiCore);
+    this.ScUiMan.InitSitecoreUiManager();
     this.ScUiMan.AdminB(this.DocumentJacket, null);
   }
 }

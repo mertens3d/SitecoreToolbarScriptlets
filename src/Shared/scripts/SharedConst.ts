@@ -2,6 +2,24 @@
 
 export class SharedConst {
   static Const: ISharedConst = {
+    Colors: {
+      colorContent: 'cyan',
+      colorLayout: 'lightsteelblue',
+      colorMediaLibrary: 'chocolate',
+      colorSystem: 'lightgreen',
+      colorTemplates: 'white',
+      ConsoleStyles: {
+        StyleBgYellow: "[43m",
+        StyleBgRed: "[41m",
+        StyleEsc: "\x1b",
+        StyleFgBlue: "[34m",
+        StyleFgGreen: "[32m",
+        StyleFgMagenta: "[35m",
+        StyleFgRed: "[31m",
+        StyleFgYellow: "[33m",
+        StyleReset: "[0m",
+      }
+    },
     Debug: {
       ForceLoggingEnabled: false,
       SpeedUpAutoSaveIntervalFactor: 3,
@@ -36,7 +54,10 @@ export class SharedConst {
       Javascript: {
         ReadyStates: {
           Complete: "complete"
-        }
+        },
+        Events: {
+          Message: "message",
+        },
       }
     },
     Logger: {
@@ -66,7 +87,6 @@ export class SharedConst {
       QueryStrSeparatorQuest: /\?/gi,
 
       Path: {
-
         PackageDesigner: /\/sitecore\/shell/ig,
       },
 
@@ -83,10 +103,13 @@ export class SharedConst {
         ContentManager: /\/sitecore\/shell\/Applications\/Content%20Manager/ig,
 
         ///sitecore/shell/default.aspx?xmlcontrol=Application&hdl=53D315776143455784479FFB65509FF4&he=Package+Designer&ic=apps%2f32x32%2fpackager.png
-
       },
     },
 
+    UrlRelativePrefix: {
+      IconCache: '/temp/iconcache/',
+      IconShellStandardMedia: '/sitecore/shell/themes/standard/~/media/',
+    },
     UrlSuffix: {
       Desktop: '/sitecore/shell/default.aspx',
       Login: '/sitecore/login',

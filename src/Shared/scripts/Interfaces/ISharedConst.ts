@@ -1,4 +1,22 @@
 ﻿export interface ISharedConst {
+  Colors: {
+    colorContent: string,
+    colorLayout: string,
+    colorMediaLibrary: string,
+    colorSystem: string,
+    colorTemplates: string,
+    ConsoleStyles: {
+      StyleBgRed: string,
+      StyleBgYellow: string,
+      StyleEsc: string,
+      StyleFgBlue: string,
+      StyleFgGreen: string,
+      StyleFgMagenta: string,
+      StyleFgRed: string,
+      StyleFgYellow: string,
+      StyleReset: string,
+    }
+  },
   Debug: {
     ForceLoggingEnabled: boolean,
     SpeedUpAutoSaveIntervalFactor: number,
@@ -32,7 +50,10 @@
     Javascript: {
       ReadyStates: {
         Complete: DocumentReadyState
-      }
+      },
+      Events: {
+        Message: string
+      },
     }
   },
   Logger: {
@@ -54,7 +75,6 @@
   },
   QueryStringKey: {
     XmlControl: string,
-
   },
   Regex: {
     ContentEditor: RegExp,
@@ -64,7 +84,6 @@
     QueryStrSeparatorQuest: RegExp,
 
     Path: {
-
     },
     PageType: {
       Shell: RegExp,
@@ -76,6 +95,12 @@
       ContentManager: RegExp,
     },
   },
+
+  UrlRelativePrefix: {
+    IconCache: string,
+    IconShellStandardMedia: string,
+  },
+
   UrlSuffix: {
     Desktop: string,
     Login: string,

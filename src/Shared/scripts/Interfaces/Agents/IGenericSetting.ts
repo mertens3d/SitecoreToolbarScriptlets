@@ -1,6 +1,6 @@
 ﻿import { SettingFlavor } from "../../Enums/SettingFlavor";
 import { SettingType } from "../../Enums/SettingType";
-import { SettingKey } from "../../Enums/3xxx-SettingKey";
+import { SettingKey } from "../../Enums/30 - SettingKey";
 import { UiEnableState } from "../../Enums/Enabled";
 import { UiPresence } from "../../Enums/UiPresence";
 import { ModuleKey } from "../../Enums/ModuleKey";

@@ -1,4 +1,4 @@
-﻿import { ScWindowType } from '../../../Enums/scWindowType';
+﻿import { ScWindowType } from '../../../Enums/50 - scWindowType';
 import { SnapShotFlavor } from '../../../Enums/SnapShotFlavor';
 import { GuidData } from '../../../Helpers/GuidData';
 export interface IDataMetaData {

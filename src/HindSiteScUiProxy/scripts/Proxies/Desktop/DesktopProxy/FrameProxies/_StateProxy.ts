@@ -1,24 +1,27 @@
-﻿import { RecipeBasics } from "../../../../../../Shared/scripts/Classes/RecipeBasics";
-import { IHindeCore } from "../../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+﻿import { RecipeBasics } from "../../../../RecipeBasics";
+import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
-import { _HindeCoreBase } from "../../../../../../Shared/scripts/LoggableBase";
-import { ScWindowType } from "../../../../../../Shared/scripts/Enums/scWindowType";
-import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
+import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
+import { SupportFrameFactory } from "../../../SupportProxies/BaseFrameFactory";
 
 
-export abstract class _BaseStateFullProxy<T> extends _HindeCoreBase implements IStateFullProxy {
-  RecipeBasics: RecipeBasics;
-  Friendly: string = '{unknown friendly}';
-
-  constructor(hindeCore: IHindeCore) {
-    super(hindeCore);
-  }
-  abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
+export abstract class _BaseStateFullProxy<T> extends _APICoreBase implements IStateFullProxy {
   abstract GetState(): Promise<T>;
-  abstract SetState(state: T);
-  abstract WireEvents();
   abstract InstantiateAsyncMembers();
+  abstract SetState(state: T);
+  abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
+  abstract StateFullProxyDisciminatorFriendly;
   abstract TriggerInboundEventsAsync(): void;
+  abstract WireEvents();
+  Friendly: string = '{unknown friendly}';
+  protected readonly SupportFrameFactory: SupportFrameFactory;
+  RecipeBasics: RecipeBasics;
+
+  constructor(apiCore: IAPICore) {
+    super(apiCore);
+    this.SupportFrameFactory = new SupportFrameFactory(this.ApiCore)
+  }
+
 }
 

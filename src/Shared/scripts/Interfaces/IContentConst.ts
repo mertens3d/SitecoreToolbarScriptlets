@@ -52,6 +52,7 @@ export interface IContentConst {
         BuiltIn: {
           TreeNodeSitecoreRoot: string,
           MediaLibraryAnchorRootNode: string,
+          MarketingControlPanelRoodNode: string,
           TemplatesAnchorRootNode: string,
           LayoutRootAnchorNode: string,
           SystemRootAnchorNode: string,
@@ -67,38 +68,99 @@ export interface IContentConst {
       },
 
       Cancel: string,
-      ContentIframe0: string,
-      ContentIFrame1: string,
       IdStartsWithTreeNode: string,
       IframeContent: IScVerSpec,
       Frames: {
-        AppFrame: string,
-        ScContentIframeId0: string,
-        JqueryModalDialogsFrame: string,
+        ScContentIframeId0: {
+          Cancel: string
+          Filename: string,
+          Id: string,
+          Ok: string,
+        },
+        AppFrame: {
+          Id: string,
+        },
+        JqueryModalDialogsFrame: {
+          Id: string,
+        },
+        scContentIframeId1: {
+          Id: string,
+        }
+      },
+      StartMenu: {
+        Popup1: {
+          AllApplications: string,
+          DevelopmentTools: string,
+          Id: string,
+          MediaLibrary: string,
+          RecycleBin: string,
+          ReportingTools: string,
+          SecurityTools: string,
+          StartMenuLeftOption: string,
+          TemplateManager: string,
+        },
+        Popup2: {
+          AccessViewer: string,
+          Archive: string,
+          DomainManager: string,
+          Id: string,
+          InstallationWizard: string,
+          KeyboardMap: string,
+          LogViewer: string,
+          MarketingControlPanel: string,
+          PackageDesigner: string,
+          PackageDesignerButton: string,
+          RoleManager: string,
+          Run: string,
+          ScanForBrokenLinks: string,
+          Security: string,
+          SecurityEditor: string,
+          System: string,
+          UserManager: string,
+          Workbox: string,
+        },
+        Popup3: {
+          Id: string,
+          InstalledLicenses: string,
+          LicenseDetails: string,
+        }
       },
       LoginBtn: IScVerSpec,
-      MenuButtonPublish: string,
-      MenuDropDownPublishItem: string,
-      NavPublishStrip: string,
-      NextButton: string,
-      Ok: string,
-      StartMenu: {
-        DevelopmentTools: string,
-        PackageDesigner: string,
+      ScRibbon: {
+        Navigate: {
+          Id: string,
+          Links: string,
+        },
+        View: {
+          Id: string,
+          RawValues: string,
+          NavigateBack: string,
+          NavigateForward: string,
+          NavigateUp: string,
+        },
+        Presentation: {
+          Id: string,
+          Details: string,
+        },
+        Publish: {
+          MenuButtonPublish: string,
+          MenuDropDownPublishItem: string,
+          NavPublishStrip: string,
+          TheItemHasBeenPublished: string,
+          SettingsHidden: string,
+          PublishingHidden: string,
+        }
       },
-      MediaLibrary: string,
-      scStartButton: IScVerSpec,
-      StartMenuLeftOption: string,
-      TemplateManager: string,
+      NextButton: string,
+
+      Ok: string,
+
+      scStartButtonVSpec: IScVerSpec,
+
       Desktop: {
         DtStartBar: string,
         ContentTreeHolder: string,
       },
-      Publish: {
-        TheItemHasBeenPublished: string,
-        SettingsHidden: string,
-        PublishingHidden: string,
-      }
     }
   },
   Storage: {

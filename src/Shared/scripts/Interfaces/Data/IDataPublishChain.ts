@@ -3,7 +3,7 @@ import { CEFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desk
 
 export interface IDataPublishChain {
   TopScDocumentProxy: DocumentJacket,
-  Iframe0Blue: CEFrameProxy;
+  Iframe0BlueScContentIFrameId0: CEFrameProxy;
   ScDocumentProxyToPublish: DocumentJacket
   JqIframe: CEFrameProxy;
   CEFrameRed: CEFrameProxy;

@@ -1,9 +1,9 @@
-﻿import { HindSiteSettingWrapper } from '../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper';
+﻿import { HindSiteSettingWrapper } from '../../../../Shared/scripts/Agents/SettingsAgent/HindSiteSettingWrapper';
 import { BuiltDateStamp } from '../../../../Shared/scripts/AutoBuild/BuildNum';
 import { StaticHelpers } from '../../../../Shared/scripts/Classes/StaticHelpers';
 import { PopConst } from '../../../../Shared/scripts/Const/PopConst';
-import { MenuCommandKey } from '../../../../Shared/scripts/Enums/2xxx-MenuCommand';
-import { SettingKey } from '../../../../Shared/scripts/Enums/3xxx-SettingKey';
+import { MenuCommandKey } from '../../../../Shared/scripts/Enums/20 - MenuCommand';
+import { SettingKey } from '../../../../Shared/scripts/Enums/30 - SettingKey';
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { SettingFlavor } from '../../../../Shared/scripts/Enums/SettingFlavor';
 import { IHindSiteSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
@@ -19,7 +19,7 @@ import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IM
 import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IStateOfUiModules } from "../../../../Shared/scripts/Interfaces/IStateOfUiModules";
 import { UiHydrationData } from '../../../../Shared/scripts/Interfaces/UiHydrationData';
-import { _HindeCoreBase } from '../../../../Shared/scripts/LoggableBase';
+import { _FrontBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { ISelectSnapUiMutationEvent_Payload } from '../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload';
 import { SelectSnapUiMutationEvent_ObserverWithCallback } from '../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_ObserverWithCallback';
 import { UiModuleManagerPassThroughEvent_Subject } from '../../Events/UiModuleManagerPassThroughEvent/UiModuleManagerPassThroughEvent_Subject';
@@ -39,7 +39,7 @@ import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbac
 import { UiCommandsManager } from '../UiCommandsManager';
 import { _UiModuleBase } from '../../UiModules/_UiModuleBase';
 
-export class UiModulesManager extends _HindeCoreBase {
+export class UiModulesManager extends _FrontBase {
   MenuCommandParameters: IMenuCommandDefinition[];
   UiCommandsMan: UiCommandsManager;
   CurrScWindowState: IStateOfScUi;

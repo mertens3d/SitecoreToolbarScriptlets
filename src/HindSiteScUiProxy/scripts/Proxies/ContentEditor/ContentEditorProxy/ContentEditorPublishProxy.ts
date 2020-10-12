@@ -1,32 +1,32 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
-import { FrameJacket } from "../../../../../DOMJacket/FrameJacket";
+import { ElementFrameJacket } from "../../../../../DOMJacket/ElementFrameJacket";
 import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
-import { RecipeBasics } from "../../../../../Shared/scripts/Classes/RecipeBasics";
-import { ScWindowType } from "../../../../../Shared/scripts/Enums/scWindowType";
-import { FactoryHelper } from "../../../../../Shared/scripts/Helpers/FactoryHelper";
-import { IHindeCore } from "../../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
+import { RecipeBasics } from "../../../RecipeBasics";
+import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
+import { FactoryHelper } from "../../../FactoryHelper";
+import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { _HindeCoreBase } from "../../../../../Shared/scripts/LoggableBase";
+import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { DTFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { ContentEditorSFProxy } from "./ContentEditorProxy";
+import { ContentEditorProxy } from "./ContentEditorProxy";
 import { ElementJacket } from "../../../../../DOMJacket/ElementJacket";
 
-export class ContentEditorPublishProxy extends _HindeCoreBase {
- ContentEditorProxy: ContentEditorSFProxy;
- private RecipeBasics: RecipeBasics;
- private DocumentJacket: DocumentJacket;
- private FactoryHelp: FactoryHelper;
+export class ContentEditorPublishProxy extends _APICoreBase {
+  ContentEditorProxy: ContentEditorProxy;
+  private RecipeBasics: RecipeBasics;
+  private DocumentJacket: DocumentJacket;
+  private FactoryHelp: FactoryHelper;
 
-  constructor(hindeCore: IHindeCore, contentEditorProxy: ContentEditorSFProxy, documentJacket: DocumentJacket) {
-    super(hindeCore);
+  constructor(apiCore: IAPICore, contentEditorProxy: ContentEditorProxy, documentJacket: DocumentJacket) {
+    super(apiCore);
 
     this.ContentEditorProxy = contentEditorProxy;
     this.DocumentJacket = documentJacket;
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
-    this.FactoryHelp = new FactoryHelper(this.HindeCore);
+    this.RecipeBasics = new RecipeBasics(this.ApiCore);
+    this.FactoryHelp = new FactoryHelper(this.ApiCore);
   }
 
   Execute(): Promise<void> {
@@ -92,7 +92,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
       var dataPublishChain: IDataPublishChain = {
         ScDocumentProxyToPublish: docToPublish,
         TopScDocumentProxy: this.DocumentJacket,// this.scWinProxy.GetTopLevelDoc(),
-        Iframe0Blue: null,
+        Iframe0BlueScContentIFrameId0: null,
         JqIframe: null,
         CEFrameRed: null
       }
@@ -124,8 +124,8 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
   private async ClickPublishOnNav(payload: IDataPublishChain): Promise<IDataPublishChain> {
     this.Logger.FuncStart(this.ClickPublishOnNav.name);
     try {
-      await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.NavPublishStrip])
-      await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.NavPublishStrip])
+      await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.NavPublishStrip])
+      await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.NavPublishStrip])
     } catch (err) {
       throw (this.ClickPublishOnNav.name + ' ' + err);
     }
@@ -134,12 +134,12 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
   }
 
   private async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await dataPublishChain.Iframe0Blue.GetDocumentJacket().WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Publish.SettingsHidden)
+    await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.ScRibbon.Publish.SettingsHidden)
       .then(async () => {
-        await dataPublishChain.Iframe0Blue.GetDocumentJacket().WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
+        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.ScRibbon.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
-        await dataPublishChain.Iframe0Blue.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel]);
+        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel]);
       });
 
     return dataPublishChain;
@@ -152,26 +152,26 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
   }
 
   async __WaitForAndClickPublishNextButton(dataPublishChain: IDataPublishChain) {
-    await dataPublishChain.Iframe0Blue.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.NextButton],);
+    await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.NextButton],);
 
     return dataPublishChain;
   }
 
   async ClickMenuButtonPublishDropDown(payload: IDataPublishChain = null) {
-    await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.MenuButtonPublish],);
+    await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.MenuButtonPublish],);
     return payload;
   }
 
   async ClickMenuDropDownPublishItem(payload: IDataPublishChain = null) {
-    return await payload.ScDocumentProxyToPublish.WaitForAndClickWithPayload(ContentConst.Const.Selector.SC.MenuDropDownPublishItem, payload)
+    return await payload.ScDocumentProxyToPublish.WaitForAndClickWithPayload(ContentConst.Const.Selector.SC.ScRibbon.Publish. MenuDropDownPublishItem, payload)
   }
 
   async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null): Promise<IDataPublishChain> {
     try {
-      let iframeProxy: FrameJacket = null;
+      let iframeProxy: ElementFrameJacket = null;
 
-      await dataPublishChain.TopScDocumentProxy.WaitForAndReturnFoundElemJacketFromDoc(ContentConst.Const.Selector.SC.Frames. JqueryModalDialogsFrame)
-        .then((elementJacket: ElementJacket) => iframeProxy = new FrameJacket(this.HindeCore, <HTMLIFrameElement> elementJacket.NativeElement))
+      await dataPublishChain.TopScDocumentProxy.WaitForElem(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id)
+        .then((elementJacket: ElementJacket) => iframeProxy = new ElementFrameJacket(this.ApiCore, <HTMLIFrameElement>elementJacket.NativeElement))
         .then(() => this.FactoryHelp.CEFrameFactory(iframeProxy, 'jqIframe'))
         .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
@@ -187,30 +187,49 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
   async GetMessageDialog(dataPublishChain: IDataPublishChain) {
     let toReturnPublishChain: IDataPublishChain = dataPublishChain;
 
-    await dataPublishChain.JqIframe.GetDocumentJacket().WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.ContentIFrame1, 'iframeRed')
+    await this.WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.Frames.scContentIframeId1.Id, 'iframeRed') //is id1 correct?
       .then((result: CEFrameProxy) => toReturnPublishChain.CEFrameRed = result)
       .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetMessageDialog.name, err));
 
     return toReturnPublishChain;
   }
 
+  async WaitForIframeElemAndReturnCEFrameProxyWhenReady(selector: string, iframeNickName: string): Promise<CEFrameProxy> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForIframeElemAndReturnCEFrameProxyWhenReady.name);
+
+      let factoryHelp = new FactoryHelper(this.ApiCore);
+
+      let frameJacket: ElementFrameJacket = null;
+
+      await this.DocumentJacket.WaitForElem(selector)
+        .then(async (foundElem: ElementJacket) => frameJacket = new ElementFrameJacket(this.ApiCore, <HTMLIFrameElement>foundElem.NativeElement))
+       
+        .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
+        .then((result: CEFrameProxy) => resolve(result))
+        .catch((err) => reject(err));
+
+      this.Logger.FuncEnd(this.WaitForIframeElemAndReturnCEFrameProxyWhenReady.name);
+    });
+  }
+
   async GetDialogIframe0Blue(dataPublishChain: IDataPublishChain = null) {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetDialogIframe0Blue.name);
 
-      let promiseResult: PromiseResult = new PromiseResult(this.GetDialogIframe0Blue.name, this.HindeCore);
+      let promiseResult: PromiseResult = new PromiseResult(this.GetDialogIframe0Blue.name, this.ApiCore);
 
       this.Logger.LogAsJsonPretty('dataPublishChain', dataPublishChain);
 
-      await dataPublishChain.JqIframe.GetDocumentJacket().WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.ContentIframe0, 'Iframe0Blue')
+      await this.WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Id, 'Iframe0Blue')
         .then((result: CEFrameProxy) => {
           this.Logger.MarkerC();
-          dataPublishChain.Iframe0Blue = result;
+          dataPublishChain.Iframe0BlueScContentIFrameId0 = result;
           promiseResult.MarkSuccessful();
         })
         .catch((err) => promiseResult.MarkFailed(err));
 
-      this.Logger.LogAsJsonPretty('dataPublishChain.Iframe0Blue', dataPublishChain.Iframe0Blue);
+      this.Logger.LogAsJsonPretty('dataPublishChain.Iframe0Blue', dataPublishChain.Iframe0BlueScContentIFrameId0);
       //this.ContentAgents.Logger.DebugDataOneIframe(dataPublishChain.Iframe0Blue);
 
       this.Logger.FuncEnd(this.GetDialogIframe0Blue.name);
@@ -228,7 +247,7 @@ export class ContentEditorPublishProxy extends _HindeCoreBase {
       this.Logger.LogAsJsonPretty(this.__waitForThenFunc.name, targetDoc);
 
       var found: ElementJacket = null;
-      await targetDoc.WaitForAndReturnFoundElemJacketFromDoc(selector)
+      await targetDoc.WaitForElem(selector)
         .then((result: ElementJacket) => found = result);
 
       if (found) {

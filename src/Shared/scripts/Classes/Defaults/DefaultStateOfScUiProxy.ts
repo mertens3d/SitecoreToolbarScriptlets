@@ -1,5 +1,5 @@
 ﻿import { IStateOfScUi } from "../../Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfScWindow } from "../../Interfaces/Data/States/IStateOfScWindow";
+import { IRootState } from "../../Interfaces/Data/States/IStateOfScWindow";
 import { StaticHelpers } from "../StaticHelpers";
 import { IError } from "../../Interfaces/IError";
 import { DefaultFriendly } from "./DefaultFriendly";
@@ -9,9 +9,9 @@ import { DefaultStateOfScWindow } from "./DefaultStateOfScWindowProxy";
 export class DefaultStateOfScUiProxy implements IStateOfScUi {
   Friendly = new DefaultFriendly();
   Meta = new DefaultMetaData();
-  ErrorStackScUiProxy: IError[] = [];
-  StateOfScWindow: IStateOfScWindow = new DefaultStateOfScWindow();
-  StorageSchema = '2020.10.04.21:05';
+  ErrorStack: IError[] = [];
+  State: IRootState = new DefaultStateOfScWindow();
+  StorageSchema = '2020.10.09.20:19';
 
   constructor() {
     this.Meta.TimeStamp = new Date();

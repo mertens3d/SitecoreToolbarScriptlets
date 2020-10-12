@@ -1,26 +1,29 @@
 ﻿import { QueryStrKey } from "../Shared/scripts/Enums/QueryStrKey";
-import { IHindeCore } from "../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IAbsoluteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
+import { ICommonCore } from "../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { ISiteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { IUrlJacket } from "../Shared/scripts/Interfaces/IUrlAgent";
 import { IGenericUrlParts } from "../Shared/scripts/Interfaces/Jackets/IUrlParts";
-import { _HindeCoreBase } from "../Shared/scripts/LoggableBase";
+import { _FrontBase } from "../Shared/scripts/_HindeCoreBase";
 import { IOneParamPair } from "../Shared/scripts/Interfaces/IOneParamPair";
 import { SharedConst } from "../Shared/scripts/SharedConst";
+import { _CommonBase } from "../Shared/scripts/_CommonCoreBase";
 
-export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
+export class UrlJacket extends _CommonBase implements IUrlJacket {
   protected UrlParts: IGenericUrlParts;
   public readonly OriginalURL: string;
-  constructor(hindeCore: IHindeCore, url: string) {
-    super(hindeCore);
+  constructor(commonCore: ICommonCore, url: string) {
+    super(commonCore);
+    //this.Logger.CTORStart(UrlJacket.name);
     this.OriginalURL = url;
 
     this.ErrorHand.ThrowIfNullOrUndefined(UrlJacket.name, url);
     this.Init_GenericUrlAgent();
+    //this.Logger.CTOREnd(UrlJacket.name);
   }
 
   protected Init_GenericUrlAgent(): void {
+      //this.Logger.FuncStart(this.Init_GenericUrlAgent.name, UrlJacket.name);
     try {
-      this.Logger.FuncStart(this.Init_GenericUrlAgent.name, UrlJacket.name);
 
       this.SetFromHref(this.OriginalURL);
     }
@@ -28,7 +31,7 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
       throw (this.Init_GenericUrlAgent.name + ' | ' + err);
     }
 
-    this.Logger.FuncEnd(this.Init_GenericUrlAgent.name, UrlJacket.name);
+    //this.Logger.FuncEnd(this.Init_GenericUrlAgent.name, UrlJacket.name);
   }
 
   GetUrlParts(): IGenericUrlParts {
@@ -40,7 +43,7 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
   }
 
   QueryStringHasKey(key: QueryStrKey): boolean {
-    this.Logger.FuncStart(this.QueryStringHasKey.name, QueryStrKey[key]);
+    //this.Logger.FuncStart(this.QueryStringHasKey.name, QueryStrKey[key]);
     let toReturn: boolean = false;
 
     if (key !== null) {
@@ -51,20 +54,16 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
       }
     }
 
-    this.Logger.FuncEnd(this.QueryStringHasKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
+    //this.Logger.FuncEnd(this.QueryStringHasKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
     return toReturn;
   }
 
   GetQueryStringValueByKey(key: QueryStrKey): string {
-    this.Logger.FuncStart(this.GetQueryStringValueByKey.name, QueryStrKey[key]);
     let toReturn: string = '';
-
     if (this.QueryStringHasKey(key)) {
       let keyAsStr: string = QueryStrKey[key];
       toReturn = this.UrlParts.UrlSearchParameters.get(keyAsStr);
     }
-
-    this.Logger.FuncEnd(this.GetQueryStringValueByKey.name, QueryStrKey[key] + ' ' + toReturn.toString());
     return toReturn;
   }
 
@@ -83,8 +82,7 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
 
   private SetFromHref(href: string) {
     var parser = document.createElement('a');
-    parser.href = href; // resultTab.url;
-
+    parser.href = href; 
     this.UrlParts = {
       OriginalRaw: href,
       Protocol: parser.protocol,
@@ -94,27 +92,31 @@ export class UrlJacket extends _HindeCoreBase implements IUrlJacket {
       Anchor: parser.hash,
       HasError: false,
     };
-    this.Logger.LogAsJsonPretty('params', this.UrlParts.UrlSearchParameters.toString());
   }
 
-  BuildFullUrlFromParts(): IAbsoluteUrl {
-    let toReturn: IAbsoluteUrl = {
+  BuildFullUrlFromParts(): ISiteUrl {
+    let toReturn: ISiteUrl = {
       AbsUrl: '',
+      RelativeUrl: '',
     };
 
     if (this.UrlParts) {
       if (this.UrlParts && !this.UrlParts.HasError) {
         toReturn.AbsUrl = this.UrlParts.Protocol + '//' + this.UrlParts.HostAndPort;
+        toReturn.RelativeUrl = '';
 
         if (this.UrlParts.FilePath.length > 0) {
           toReturn.AbsUrl += this.UrlParts.FilePath;
+          toReturn.RelativeUrl += this.UrlParts.FilePath;
         }
 
         if (this.UrlParts.UrlSearchParameters) {
           toReturn.AbsUrl += '?' + this.UrlParts.UrlSearchParameters.toString();
+          toReturn.RelativeUrl += '?' + this.UrlParts.UrlSearchParameters.toString();
         }
         if (this.UrlParts.Anchor.length > 0) {
           toReturn.AbsUrl += '#' + this.UrlParts.Anchor;
+          toReturn.RelativeUrl += '#' + this.UrlParts.Anchor;
         }
       }
     }

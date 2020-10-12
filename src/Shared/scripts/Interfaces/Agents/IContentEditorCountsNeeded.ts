@@ -1,4 +1,4 @@
-﻿import { StateFullProxyDisciminator } from "../../Enums/4000 - StateFullProxyDisciminator";
+﻿import { StateFullProxyDisciminator } from "../../Enums/40 - StateFullProxyDisciminator";
 
 export interface IDTFramesNeeded {
   DiscriminatorAr: StateFullProxyDisciminator[];

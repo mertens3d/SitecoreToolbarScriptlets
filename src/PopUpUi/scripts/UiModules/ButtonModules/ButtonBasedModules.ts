@@ -1,5 +1,5 @@
-﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
-import { MenuCommandKey } from "../../../../Shared/scripts/Enums/2xxx-MenuCommand";
+﻿import { _FrontBase } from "../../../../Shared/scripts/_HindeCoreBase";
+import { MenuCommandKey } from "../../../../Shared/scripts/Enums/20 - MenuCommand";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
@@ -11,7 +11,7 @@ import { CloseButtonModule } from "./CloseButtonModule";
 import { InputWithButtonModule } from "./InputWithButtonModule";
 import { TypCommandButtonModule } from "./TypCommandButtonModule";
 
-export class ButtonBasedModulesBucket extends _HindeCoreBase {
+export class ButtonBasedModulesBucket extends _FrontBase {
   AllButtonBasedModules: IUiModule[] = [];
   SelectSnapShotModule: SelectSnapshotModule;
   CommandDefinitionBucket: ICommandDefinitionBucket;

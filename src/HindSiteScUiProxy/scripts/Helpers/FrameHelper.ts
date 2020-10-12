@@ -1,26 +1,20 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { FrameJacket } from "../../../DOMJacket/FrameJacket";
-import { RecipeBasics } from "../../../Shared/scripts/Classes/RecipeBasics";
-import { FactoryHelper } from "../../../Shared/scripts/Helpers/FactoryHelper";
-import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+import { ElementFrameJacket } from "../../../DOMJacket/ElementFrameJacket";
+import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
+import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 
-export class FrameHelper extends _HindeCoreBase {
-  private factoryHelper: FactoryHelper;
-  private RecipeBasics: RecipeBasics;
+export class FrameHelper extends _APICoreBase {
 
-  constructor(hindeCore: IHindeCore) {
-    super(hindeCore);
-    this.RecipeBasics = new RecipeBasics(this.HindeCore);
-    this.factoryHelper = new FactoryHelper(this.HindeCore);
+  constructor(apiCore: IAPICore) {
+    super(apiCore);
   }
 
-  async GetIFrameAsBaseFrameProxy(nativeIframeProxy: FrameJacket, ifrIdx: number): Promise<DTFrameProxy> {
+  async GetIFrameAsBaseFrameProxy(nativeIframeProxy: ElementFrameJacket, ifrIdx: number): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
       let friendly = 'desktop Iframe_' + ifrIdx;
 
-      let dTFrameProxy = new DTFrameProxy(this.HindeCore, nativeIframeProxy);
+      let dTFrameProxy = new DTFrameProxy(this.ApiCore, nativeIframeProxy);
       dTFrameProxy.InstantiateAsyncMembers();
       dTFrameProxy.WireEvents();
 
@@ -37,10 +31,9 @@ export class FrameHelper extends _HindeCoreBase {
     });
   }
 
-  async GetIFrameAsDTFrameProxy(frameJacket: FrameJacket): Promise<DTFrameProxy> {
+  async GetIFrameAsDTFrameProxy(frameJacket: ElementFrameJacket): Promise<DTFrameProxy> {
     return new Promise(async (resolve, reject) => {
-
-      let dTFrameProxy = new DTFrameProxy(this.HindeCore, frameJacket);
+      let dTFrameProxy = new DTFrameProxy(this.ApiCore, frameJacket);
 
       await dTFrameProxy.WaitForCompleteNABFrameProxyOrReject()
 
@@ -56,7 +49,7 @@ export class FrameHelper extends _HindeCoreBase {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let frameJackets: FrameJacket[] = documentJacket.GetHostedFrameJackets();
+      let frameJackets: ElementFrameJacket[] = documentJacket.GetHostedFrameJackets();
 
       let promiseAr: Promise<DTFrameProxy>[] = [];
 
@@ -83,7 +76,7 @@ export class FrameHelper extends _HindeCoreBase {
       this.Logger.FuncStart(this.GetIFramesAsBaseFrameProxies.name);
 
       var toReturn: DTFrameProxy[] = [];
-      let NativeScIframeProxyAr: FrameJacket[] = targetDocumentJacket.GetHostedFrameJackets();
+      let NativeScIframeProxyAr: ElementFrameJacket[] = targetDocumentJacket.GetHostedFrameJackets();
 
       //if (iframeAr) {
       //  iframeAr.forEach(async (iframeElem: HTMLIFrameElement, ifrIdx) => {
@@ -96,7 +89,7 @@ export class FrameHelper extends _HindeCoreBase {
 
       let promAr: Promise<DTFrameProxy>[] = [];
 
-      NativeScIframeProxyAr.forEach((nativeScIframeProxy: FrameJacket, index) => {
+      NativeScIframeProxyAr.forEach((nativeScIframeProxy: ElementFrameJacket, index) => {
         promAr.push(this.GetIFrameAsBaseFrameProxy(nativeScIframeProxy, index));
       });
 

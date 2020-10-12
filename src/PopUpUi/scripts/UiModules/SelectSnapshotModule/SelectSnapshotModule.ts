@@ -2,7 +2,7 @@
 import { BufferChar } from "../../../../Shared/scripts/Enums/BufferChar";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { BufferDirection } from "../../../../Shared/scripts/Enums/BufferDirection";
-import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+import { ScWindowType } from "../../../../Shared/scripts/Enums/50 - scWindowType";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
@@ -19,8 +19,8 @@ import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMut
 import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject";
 import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 import { _UiModuleBase } from "../_UiModuleBase";
-import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/4000 - StateFullProxyDisciminator";
-import { ContentEditorSFProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ContentEditorProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
 import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 
@@ -272,17 +272,17 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
       if (
         stateOfScUiProxy
         &&
-        stateOfScUiProxy.StateOfScWindow
+        stateOfScUiProxy.State
         &&
-        stateOfScUiProxy.StateOfScWindow.StateOf_) {
-        let stateOfDesktop: IStateOfDesktop = <IStateOfDesktop>stateOfScUiProxy.StateOfScWindow.StateOf_;
+        stateOfScUiProxy.State.ScWindow) {
+        let stateOfDesktop: IStateOfDesktop = <IStateOfDesktop>stateOfScUiProxy.State.ScWindow;
 
         if (stateOfDesktop
           &&
-          stateOfDesktop.StateOfDTArea
+          stateOfDesktop.DTArea
           &&
-          stateOfDesktop.StateOfDTArea.StateOfDTFrames) {
-          count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfDesktop.StateOfDTArea.StateOfDTFrames.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+          stateOfDesktop.DTArea.DTFrames) {
+          count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfDesktop.DTArea.DTFrames.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
           toReturn = toReturn + count;
         }
       }

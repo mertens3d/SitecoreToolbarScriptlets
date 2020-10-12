@@ -33,12 +33,12 @@ class Helper {
     var PopUpWithVar = this.MyResources(vars.PopUpHtml.AutoBuildRoot + vars.PopUpHtml.MinFileName(), vars.PopUpHtml.VarName);
     PopUpWithVar = this.CleanHtml(PopUpWithVar);
 
-    var jsContentWithVar = this.MyResources(vars.ContentJs.AutoBuildRoot + vars.ContentJs.MinFileName(), vars.ContentJs.VarName);
+    var jsContentTopWithVar = this.MyResources(vars.ContentTopJs.AutoBuildRoot + vars.ContentTopJs.MinFileName(), vars.ContentTopJs.VarName);
 
     return {
       'cssToInjectWithVar': cssToInjectWithVar,
       'PopUpWithVar': PopUpWithVar,
-      'jsContentWithVar': jsContentWithVar
+      'jsContentTopWithVar': jsContentTopWithVar
     }
   }
 }

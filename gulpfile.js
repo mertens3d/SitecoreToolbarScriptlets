@@ -26,7 +26,7 @@ gulp.task('ArchiveAndDeleteJsAndMap', gulp.series(['ArchiveJsAndMap', 'DeleteJsA
 gulp.task('BookmarkText', (cb) => WebPackTasks.BookmarkText(cb, varsObj));
 gulp.task('BuildPopUpHtml', (cb) => htmlTasks.BuildHtml(cb, varsObj));
 gulp.task('BuildPopUpStyles', (cb) => styleTasks.BuildPopUpStyles(cb, varsObj));
-gulp.task('BuildContentStyles', (cb) => styleTasks.BuildCompactCEStyles(cb, varsObj));
+gulp.task('BuildContentTopStyles', (cb) => styleTasks.BuildCompactCEStyles(cb, varsObj));
 gulp.task('BuildTypescriptAll', (cb) => tsTasks.BuildTypeScriptAll(cb, varsObj));
 gulp.task('cleanAddons', (cb) => cleanTasks.cleanAddons(cb, varsObj));
 gulp.task('CleanAutoBuildFolder', (cb) => cleanTasks.cleanAutoBuildFolder(cb, varsObj));
@@ -35,9 +35,11 @@ gulp.task('CombineJs', (cb) => jstasks.combineJs(cb, varsObj));
 gulp.task('PutToFinal', (cb) => putTasks.PutToFinal(cb, varsObj));
 gulp.task('CopyFromFinalToAddon', (cb) => putTasks.CopyFromFinalToAddon(cb, varsObj));
 
-gulp.task('WebpackContent', (cb) => WebPackTasks.WebPackOne(cb, varsObj.ContentJs, '/' + varsObj.HindSiteApiJs.Name + '|' + varsObj.PopUpUiJs.Name + '|' + varsObj.PopUpControllerJs.Name + '/'));
+let regextFoldersToIgnore = '/' + varsObj.HindSiteApiJs.Name + '|' + varsObj.PopUpUiJs.Name + '|' + varsObj.PopUpControllerJs.Name + '/';
+gulp.task('WebpackContentTop', (cb) => WebPackTasks.WebPackOne(cb, varsObj.ContentTopJs, regextFoldersToIgnore));
+gulp.task('WebpackContentAll', (cb) => WebPackTasks.WebPackOne(cb, varsObj.ContentAllJs, regextFoldersToIgnore));
 
-//var controllerNoParseRegex =  varsObj.ContentJs.SourceDirFilter() + '|' + varsObj.PopUpUiJs.SourceDirFilter() + '|' + varsObj.HindSiteApiJs.SourceDirFilter() ;
+//var controllerNoParseRegex =  varsObj.ContentTopJs.SourceDirFilter() + '|' + varsObj.PopUpUiJs.SourceDirFilter() + '|' + varsObj.HindSiteApiJs.SourceDirFilter() ;
 var controllerNoParseRegex = './src/' + varsObj.PopUpUiJs.Name;
 //controllerNoParseRegex = controllerNoParseRegex.replace(/\//g, '\/\/');
 //controllerNoParseRegex = '/' + controllerNoParseRegex + '/';
@@ -48,10 +50,10 @@ gulp.task('CleanBuildStamp', (cb) => tsTasks.CleanBuildStamp(cb, varsObj));
 gulp.task('PopulateBuildTimeStamp', (cb) => tsTasks.BuildBuildNumber(cb, varsObj));
 
 gulp.task('PreClean', gulp.series(['ArchiveAutoBuildFolder', 'CleanAutoBuildFolder']));
-gulp.task('WebpackAll', gulp.parallel(['WebpackContent', 'WebpackPopUpController']));
+gulp.task('WebpackAll', gulp.parallel(['WebpackContentTop', 'WebpackContentAll', 'WebpackPopUpController']));
 gulp.task('TimeStampAll', gulp.parallel(['CleanBuildStamp', 'PopulateBuildTimeStamp']));
 
-gulp.task('builders', gulp.series([gulp.parallel('BuildPopUpStyles', 'BuildContentStyles', 'TimeStampAll', 'BuildPopUpHtml'), 'BuildTypescriptAll', 'WebpackAll',  'PutToFinal']), function (resolve) {
+gulp.task('builders', gulp.series([gulp.parallel('BuildPopUpStyles', 'BuildContentTopStyles', 'TimeStampAll', 'BuildPopUpHtml'), 'BuildTypescriptAll', 'WebpackAll',  'PutToFinal']), function (resolve) {
   resolve();
 });
 

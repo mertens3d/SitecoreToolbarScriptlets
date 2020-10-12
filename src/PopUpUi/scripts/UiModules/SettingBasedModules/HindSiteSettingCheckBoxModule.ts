@@ -5,7 +5,7 @@ import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { UiEnableState } from "../../../../Shared/scripts/Enums/Enabled";
 import { IUiSettingBasedModuleMutationEven_Payload } from "../../Events/UiSettingBasedModuleMutationEvent/IUiSettingBasedModuleMutationEvent_Payload";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
+import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
 
 //export namespace HindSiteUiLayer {

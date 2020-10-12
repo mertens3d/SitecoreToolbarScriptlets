@@ -1,6 +1,6 @@
 ﻿import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
-import { MsgFlag } from '../../../Shared/scripts/Enums/1xxx-MessageFlag';
-import { MenuCommandKey } from '../../../Shared/scripts/Enums/2xxx-MenuCommand';
+import { ReqCommandMsgFlag } from '../../../Shared/scripts/Enums/10 - MessageFlag';
+import { MenuCommandKey } from '../../../Shared/scripts/Enums/20 - MenuCommand';
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IMenuCommandDefinition } from "../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from '../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
@@ -8,10 +8,10 @@ import { IHindSiteUiLayer } from "../../../Shared/scripts/Interfaces/IHindSiteUi
 import { MessageBroker_PopUp } from '../Agents/PopUpMessagesBrokerAgent';
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { HandlersForInternal } from '../Classes/HandlersForInternal';
-import { _HindeCoreBase } from '../../../Shared/scripts/LoggableBase';
 import { IUiCommandFlagRaisedEvent_Payload } from '../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload';
+import { _FrontBase } from '../../../Shared/scripts/_HindeCoreBase';
 
-export class CommandManager extends _HindeCoreBase {
+export class CommandManager extends _FrontBase {
   public CommandDefinitionBucket: ICommandDefinitionBucket;
   private PopUpMsgBroker: MessageBroker_PopUp;
   private UiLayer: IHindSiteUiLayer;
@@ -47,20 +47,20 @@ export class CommandManager extends _HindeCoreBase {
   }
 
   HandleCommandTypePopUp(uiCommandFlagRaisedEvent_Payload: IUiCommandFlagRaisedEvent_Payload) {
-    this.Logger.Log(this.HandleCommandTypePopUp.name + ' should be handling ' + MsgFlag[uiCommandFlagRaisedEvent_Payload.MsgFlag]);
+    this.Logger.Log(this.HandleCommandTypePopUp.name + ' should be handling ' + ReqCommandMsgFlag[uiCommandFlagRaisedEvent_Payload.MsgFlag]);
 
     switch (uiCommandFlagRaisedEvent_Payload.MsgFlag) {
-      case MsgFlag.ReqSetStateOfSitecoreNewWindow:
+      case ReqCommandMsgFlag.ReqSetStateOfSitecoreNewWindow:
         this.HandlersForInternal.HandlerForSnapShotRestoreNewTab(uiCommandFlagRaisedEvent_Payload)
         break;
-      case MsgFlag.ReqDebugClearConsole:
+      case ReqCommandMsgFlag.ReqDebugClearConsole:
         console.clear();
         break;
-      case MsgFlag.ReqDebugTriggerReload:
+      case ReqCommandMsgFlag.ReqDebugTriggerReload:
         location.reload(true);
         break;
 
-      case MsgFlag.ReqClosePopUpWindow:
+      case ReqCommandMsgFlag.ReqClosePopUpWindow:
         window.close();
         break;
 
@@ -72,11 +72,12 @@ export class CommandManager extends _HindeCoreBase {
 
   async TriggerPingEventAsync(): Promise<void> {
     this.Logger.FuncStart(this.TriggerPingEventAsync.name);
+    this.TaskMonitor.ResetCancel();
 
     try {
       let stateOfPopUp: IStateOfPopUp = this.UiLayer.GetStateOfPopUp();
 
-      this.PopUpMsgBroker.SendCommandToContentAsync(MsgFlag.Ping, stateOfPopUp) //todo put correct value in for null. query the ui?
+      this.PopUpMsgBroker.SendCommandToContentAsync(ReqCommandMsgFlag.Ping, stateOfPopUp) //todo put correct value in for null. query the ui?
     } catch (err) {
       throw (this.TriggerPingEventAsync.name + ' | ' + err);
     }

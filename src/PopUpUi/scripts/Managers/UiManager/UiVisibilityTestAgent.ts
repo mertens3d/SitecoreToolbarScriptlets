@@ -1,6 +1,6 @@
-﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
+﻿import { _FrontBase } from "../../../../Shared/scripts/_HindeCoreBase";
 import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { ScWindowType } from "../../../../Shared/scripts/Enums/scWindowType";
+import { ScWindowType } from "../../../../Shared/scripts/Enums/50 - scWindowType";
 import { VisibilityType } from "../../../../Shared/scripts/Enums/VisibilityType";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -13,7 +13,7 @@ import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
 import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 
-export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibilityTestAgent {
+export class UiVisibilityTestAgent extends _FrontBase implements IUiVisibilityTestAgent {
   private StateOfSitecoreWindow: any;
   private SelectedSnapshot: GuidData = null;
   WindowType: ScWindowType;
@@ -65,7 +65,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
     let visiblityTestResult: VisiblityTestResult = new VisiblityTestResult(this.VisibilityTestIfDesktopMinOneConentEditorOpen.name);
 
     visiblityTestResult.DidItPass = (
-      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && (<IStateOfDesktop>stateOfLiveHindSite.StateOfScWindow.StateOf_).StateOfDTArea.ActiveDTFrameIndex > -1)
+      (stateOfLiveHindSite.Meta.WindowType === ScWindowType.Desktop && (<IStateOfDesktop>stateOfLiveHindSite.State.ScWindow).DTArea.ActiveFrameIndex > -1)
       ||
       (stateOfLiveHindSite.Meta.WindowType === ScWindowType.ContentEditor));
 
@@ -123,7 +123,7 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
         break;
 
       case VisibilityType.Edit:
-        toReturn = this.VisibilityTestWindowType(ScWindowType.Edit, this.WindowType);
+        toReturn = this.VisibilityTestWindowType(ScWindowType.ExperienceEditor_Edit, this.WindowType);
         break;
 
       case VisibilityType.Launchpad:
@@ -135,11 +135,11 @@ export class UiVisibilityTestAgent extends _HindeCoreBase implements IUiVisibili
         break;
 
       case VisibilityType.Normal:
-        toReturn = this.VisibilityTestWindowType(ScWindowType.Normal, this.WindowType);
+        toReturn = this.VisibilityTestWindowType(ScWindowType.ExperienceEditor_Normal, this.WindowType);
         break;
 
       case VisibilityType.Preview:
-        toReturn = this.VisibilityTestWindowType(ScWindowType.Preview, this.WindowType);
+        toReturn = this.VisibilityTestWindowType(ScWindowType.ExperienceEditor_Preview, this.WindowType);
         break;
 
       case VisibilityType.SnapShotable:

@@ -1,14 +1,14 @@
-﻿import { IHindeCore } from "../Interfaces/Agents/IHindeCore";
-import { _HindeCoreBase } from "../LoggableBase";
+﻿import { ICommonCore } from "../Interfaces/Agents/ICommonCore";
+import { _CommonBase } from "../_CommonCoreBase";
 
-export class PromiseResult extends _HindeCoreBase {
+export class PromiseResult extends _CommonBase {
   private Success: boolean;
   privaILoggerAgentBaseggerBase;
   NickName: string;
   private prefix: string = 'Promise Successful? -> ';
   RejectReasons: string
 
-  constructor(nickname: string, hindeCore: IHindeCore) {
+  constructor(nickname: string, hindeCore: ICommonCore) {
     super(hindeCore);
     this.NickName = nickname;
   }

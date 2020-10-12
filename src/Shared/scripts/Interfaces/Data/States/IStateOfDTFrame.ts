@@ -1,10 +1,10 @@
-﻿import { ScWindowType } from "../../../Enums/scWindowType";
-import { IStateOf_ } from "./IStateofX";
-import { IStateOfFrameStyling } from "./IStateOfFrameStyling";
+﻿import { IStateOf_ } from "./IStateOf_";
+import { IFrameJacketStyling } from "./IStateOfFrameStyling";
+import { ScWindowType } from "../../../Enums/50 - scWindowType";
 
 export interface IStateOfDTFrame {
-  StateOfFrameStyling: IStateOfFrameStyling;
-  StateOfHosted: IStateOf_;
+  FrameStyling: IFrameJacketStyling;
+  HostedFrame: IStateOf_;
   WindowType: ScWindowType;
   ZIndex: number
 }

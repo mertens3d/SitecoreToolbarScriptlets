@@ -1,4 +1,4 @@
-﻿import { MenuCommandKey } from "../Enums/2xxx-MenuCommand";
+﻿import { MenuCommandKey } from "../Enums/20 - MenuCommand";
 import { VisibilityType } from "../Enums/VisibilityType";
 import { IEventHandlerData } from "./IEventHandlerData";
 import { ModuleKey } from "../Enums/ModuleKey";

@@ -1,5 +1,4 @@
-﻿import { _HindeCoreBase } from "../../../../Shared/scripts/LoggableBase";
-import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSettingWrapper";
+﻿import { HindSiteSettingWrapper } from "../../../../Shared/scripts/Agents/SettingsAgent/HindSiteSettingWrapper";
 import { SettingType } from "../../../../Shared/scripts/Enums/SettingType";
 import { UiPresence } from "../../../../Shared/scripts/Enums/UiPresence";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -8,10 +7,12 @@ import { AccordianModule } from "./AccordianModule";
 import { HindSiteSettingCheckBoxModule } from "./HindSiteSettingCheckBoxModule";
 import { HindSiteSettingNumberModule } from "./HindSiteSettingNumberModule";
 import { _SettingsBasedModulesBase } from "./_SettingsBasedModulesBase";
-import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
+import { SettingKey } from "../../../../Shared/scripts/Enums/30 - SettingKey";
 import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
+import { _CommonBase } from "../../../../Shared/scripts/_CommonCoreBase";
+import { _FrontBase } from "../../../../Shared/scripts/_HindeCoreBase";
 
-export class SettingsBasedModules extends _HindeCoreBase {
+export class SettingsBasedModules extends _FrontBase {
   private SettingsAgent: ISettingsAgent;
   CheckBoxModules: _SettingsBasedModulesBase[];
   AccordianModules: _SettingsBasedModulesBase[];

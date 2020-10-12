@@ -1,6 +1,6 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { SettingKey } from "../../../../Shared/scripts/Enums/3xxx-SettingKey";
-import { HindSiteSetting } from "../../../../Shared/scripts/Agents/Agents/SettingsAgent/HindSiteSetting";
+import { SettingKey } from "../../../../Shared/scripts/Enums/30 - SettingKey";
+import { HindSiteSetting } from "../../../../Shared/scripts/Agents/SettingsAgent/HindSiteSetting";
 import { IHindSiteSetting } from "../../../../Shared/scripts/Interfaces/Agents/IGenericSetting";
 
 export interface IUiSettingBasedModuleMutationEven_Payload {

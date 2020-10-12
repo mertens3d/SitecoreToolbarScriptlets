@@ -32,7 +32,7 @@ module.exports = {
     var buildFile = './src/shared/scripts/AutoBuild/BuildNum.ts';
     var emptyFile = './src/shared/scripts/AutoBuild/emptyFile.ts';
     return del([buildFile], cb);
-    //  vars.ContentJs.AutoBuildRoot + '/**/*'
+    //  vars.ContentTopJs.AutoBuildRoot + '/**/*'
     //], cb);
   },
 

@@ -1,12 +1,12 @@
-﻿import { _HindeCoreBase } from "../../../Shared/scripts/LoggableBase";
+﻿import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IAbsoluteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
+import { ISiteUrl } from "../../../Shared/scripts/Interfaces/IAbsoluteUrl";
 import { ICommandHandlerDataForPopUp } from "../../../Shared/scripts/Interfaces/ICommandHandlerDataForPopUp";
-import { BrowserTabAgent } from "../Agents/BrowserTabAgent";
+import { BrowserTabAgent } from "../../../Shared/scripts/Agents/BrowserTabAgent";
 import { QueryStrKey } from "../../../Shared/scripts/Enums/QueryStrKey";
 import { IUiCommandFlagRaisedEvent_Payload } from "../../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
 
-export class HandlersForInternal extends _HindeCoreBase {
+export class HandlersForInternal extends _FrontBase {
   private BrowserTabAgent: BrowserTabAgent;
 
   constructor(hindeCore: IHindeCore, browserTabAgent: BrowserTabAgent) {
@@ -38,7 +38,7 @@ export class HandlersForInternal extends _HindeCoreBase {
 
     this.BrowserTabAgent.SetQueryStringKeyValue(QueryStrKey.hsTargetSs, uiCommandFlagRaisedEvent_Payload.StateOfPopUp.SelectSnapShotId.Raw);
 
-    let newUrl: IAbsoluteUrl = this.BrowserTabAgent.GetFullUrl();
+    let newUrl: ISiteUrl = this.BrowserTabAgent.GetFullUrl();
 
     await this.CreateNewWindow(newUrl)
       .catch((ex) => {
@@ -48,7 +48,7 @@ export class HandlersForInternal extends _HindeCoreBase {
     this.Logger.FuncEnd(this.HandlerForSnapShotRestoreNewTab.name);
   }
 
-  CreateNewWindow(tabUrl: IAbsoluteUrl): Promise<void> {
+  CreateNewWindow(tabUrl: ISiteUrl): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.CreateNewWindow.name);
 

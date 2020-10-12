@@ -4,7 +4,7 @@ const del = require('del');
 module.exports = {
   cleanAutoBuildFolder: function (cb, vars) {
     return del([
-      vars.ContentJs.AutoBuildRoot + '/**/*'
+      vars.ContentTopJs.AutoBuildRoot + '/**/*'
     ], cb);
   },
 
@@ -22,7 +22,7 @@ module.exports = {
 
   ArchiveAutoBuildFolder: function (cb, vars) {
     console.log('s) ArchiveAutoBuildFolder');
-    let target = vars.ContentJs.AutoBuildRoot + '/**/*';
+    let target = vars.ContentTopJs.AutoBuildRoot + '/**/*';
 
     console.log('source filter: ' + JSON.stringify(target));
     return gulp.src(target, { base: './' })

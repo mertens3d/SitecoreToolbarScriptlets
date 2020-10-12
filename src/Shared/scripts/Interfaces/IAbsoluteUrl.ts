@@ -1,3 +1,4 @@
-﻿export interface IAbsoluteUrl {
-    AbsUrl: string;
+﻿export interface ISiteUrl {
+  AbsUrl: string;
+  RelativeUrl: string;
 }
