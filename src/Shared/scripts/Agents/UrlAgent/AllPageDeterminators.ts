@@ -3,30 +3,30 @@ import { ScWindowType } from "../../Enums/50 - scWindowType";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
 import { IPageDeterminator } from "../../Interfaces/IPageDeterminator";
 
-export class AllPageDeterminators {
+export class ScWindowTypeDeterminators {
   static regexPathTest_Sitecore_Shell: RegExp = /sitecore\/shell/ig;
   static regexMatchAll: RegExp = /.*/ig;
   static regexMatchApplicationsContentManager: RegExp = /sitecore\/shell\/Applications\/Content.*Manager/ig;
 
-  static KVPXMLControlApplication: IQueryKeyValuePair = {
+  static XMLControlApplication: IQueryKeyValuePair = {
     Key: QueryStrKey.xmlcontrol,
     ValueMatch: /Application/ig,
   }
 
-  static ScPages: IPageDeterminator[] = [
+  static ScWindows: IPageDeterminator[] = [
 
     {
       ///sitecore/shell/default.aspx?xmlcontrol=Application&hdl=14FA8CCA18714BCEBA863F19885346B9&he=Access+Viewer&ic=Apps%2f16x16%2fLock.png
       ConfidenceScore: 0,
       Friendly: "Access View",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Access.?Viewer/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.AccessViewer,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.AccessViewer],
     },
@@ -36,13 +36,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Archive",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Archive/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.Archive,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.Archive],
     },
@@ -93,7 +93,7 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Desktop",
       QueryKeyValuePairs: [],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.Desktop,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.Desktop],
     },
@@ -118,13 +118,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Domain Manager",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Domain.?Manager/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.DomainManager,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.DomainManager],
     },
@@ -199,29 +199,46 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Installation Wizard",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Installation?.Wizard/ig,
         },
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.InstallationWizard,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.InstallationWizard],
     },
+
+
+    {
+    ///sitecore/shell/default.aspx?xmlcontrol=Installer.BuildPackage&source=C%3a%5cWINDOWS%5cTEMP%5ctmpE956.tmp
+      ConfidenceScore: 0,
+      Friendly: "Installer Build Package",
+      QueryKeyValuePairs: [
+        {
+          Key: QueryStrKey.xmlcontrol,
+          ValueMatch: /Installer.?BuildPackage/ig,
+        }
+      ],
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
+      ScWindowType: ScWindowType.InstallerBuildPackage,
+      ScWindowTypeFriendly: ScWindowType[ScWindowType.InstallerBuildPackage],
+    },
+
 
     {
       // /sitecore/shell/default.aspx?xmlcontrol=Application&hdl=C3E29B4729B445BBBD746343BFA27AC0&he=Installed+Licenses&ic=apps%2f32x32%2fCertificate.png
       ConfidenceScore: 0,
       Friendly: "Installed Licenses",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Installed.?Licenses/ig,
         },
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.InstalledLicenses,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.InstalledLicenses],
     },
@@ -231,13 +248,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Keyboard Map",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Keyboard.?Map/ig,
         },
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.KeyboardMap,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.KeyboardMap],
     },
@@ -257,13 +274,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "License Details",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /License.?Details/ig,
         },
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.LicenseDetails,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.LicenseDetails],
     },
@@ -281,13 +298,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Log Viewer",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Log.?Viewer/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.LogViewer,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.LogViewer],
     },
@@ -302,7 +319,7 @@ export class AllPageDeterminators {
           ValueMatch: /Marketing.?Control.?Panel/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexMatchApplicationsContentManager,
+      RegexPathTest: ScWindowTypeDeterminators.regexMatchApplicationsContentManager,
       ScWindowType: ScWindowType.MarketingControlPanel,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.MarketingControlPanel],
     },
@@ -317,7 +334,7 @@ export class AllPageDeterminators {
           ValueMatch: /Media.?Library/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexMatchApplicationsContentManager,
+      RegexPathTest: ScWindowTypeDeterminators.regexMatchApplicationsContentManager,
       ScWindowType: ScWindowType.MediaLibrary,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.MediaLibrary],
     },
@@ -327,13 +344,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Package Designer",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Package.?Designer/ig
         },
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.PackageDesigner,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.PackageDesigner],
     },
@@ -342,7 +359,7 @@ export class AllPageDeterminators {
       // /?sc_site=website&sc_mode=preview
       ConfidenceScore: 0,
       Friendly: "Preview",
-      RegexPathTest: AllPageDeterminators.regexMatchAll,
+      RegexPathTest: ScWindowTypeDeterminators.regexMatchAll,
       QueryKeyValuePairs: [
         {
           Key: QueryStrKey.sc_mode,
@@ -368,13 +385,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Recycle Bin",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Recycle.?Bin/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.RecycleBin,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.RecycleBin],
     },
@@ -384,13 +401,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Run",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Run/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.Run,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.Run],
     },
@@ -401,13 +418,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Role Manager",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Role.?Manager/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.RoleManager,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.RoleManager],
     },
@@ -417,14 +434,14 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Scan for Broken Links",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Scan.?for.?Broken.?Links/ig,
         }
 
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.ScanForBrokenLinks,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.ScanForBrokenLinks],
     },
@@ -434,14 +451,14 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "Security Editor",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /Security.?Editor/ig,
         }
 
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.SecurityEditor,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.SecurityEditor],
     },
@@ -461,7 +478,7 @@ export class AllPageDeterminators {
           ValueMatch: /templateworkspace/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexMatchApplicationsContentManager,
+      RegexPathTest: ScWindowTypeDeterminators.regexMatchApplicationsContentManager,
       ScWindowType: ScWindowType.TemplateManager,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.TemplateManager],
     },
@@ -481,13 +498,13 @@ export class AllPageDeterminators {
       ConfidenceScore: 0,
       Friendly: "User Manager",
       QueryKeyValuePairs: [
-        AllPageDeterminators.KVPXMLControlApplication,
+        ScWindowTypeDeterminators.XMLControlApplication,
         {
           Key: QueryStrKey.he,
           ValueMatch: /User.?Manager/ig,
         }
       ],
-      RegexPathTest: AllPageDeterminators.regexPathTest_Sitecore_Shell,
+      RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.UserManager,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.UserManager],
     },

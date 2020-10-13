@@ -3,7 +3,7 @@ import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWind
 import { IButtonSelectors } from "./IButtonSelectors";
 
 
-export class AllStartMenuButtonSelectos {
+export class AllStartMenuButtonSelectors {
     static AllWindowTypes: IButtonSelectors[] = [
         {
             ScWindowTypeX: ScWindowType.AccessViewer,

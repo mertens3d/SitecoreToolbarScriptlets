@@ -8,7 +8,7 @@ import { IScUrlAgent } from "../../Interfaces/Jackets/IScUrlAgent";
 import { IGenericUrlParts } from "../../Interfaces/Jackets/IUrlParts";
 import { SharedConst } from "../../SharedConst";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
-import { AllPageDeterminators } from "./AllPageDeterminators";
+import { ScWindowTypeDeterminators } from "./AllPageDeterminators";
 import { _CommonBase } from "../../_CommonCoreBase";
 import { IPageDeterminator } from "../../Interfaces/IPageDeterminator";
 
@@ -21,7 +21,7 @@ export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
   }
 
   RunJacketAgainstAllDeterminators(): IPageDeterminator {
-    let determinators: IPageDeterminator[] = AllPageDeterminators.ScPages;
+    let determinators: IPageDeterminator[] = ScWindowTypeDeterminators.ScWindows;
     let toReturnPageDeterminator: IPageDeterminator = null;
 
     determinators.forEach((determinant: IPageDeterminator) => {

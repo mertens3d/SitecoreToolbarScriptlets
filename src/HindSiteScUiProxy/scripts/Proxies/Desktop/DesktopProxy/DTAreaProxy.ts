@@ -31,6 +31,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
   private DocumentProxyMutationEvent_Observer: DocumentJacketMutationEvent_Observer;
 
   public DTAreaProxyMutationEvent_Subject: DTAreaProxyMutationEvent_Subject;
+  
   //DocumentJacketWatcher: DocumentJacket_Watcher;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
@@ -46,6 +47,9 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
       this.DTAreaProxyMutationEvent_Subject = new DTAreaProxyMutationEvent_Subject(this.ApiCore);//, this.OnDTAreaProxyMutationEvent.bind(this));
       this.DTFrameProxyManyMutationEvent_Observer = new DTFrameProxyMutationEvent_Observer(this.ApiCore, this.OnDTFProxyMutationEvent.bind(this));
       this.DocumentProxyMutationEvent_Observer = new DocumentJacketMutationEvent_Observer(this.ApiCore, this.CallBackOnDocumentProxyMutationEvent.bind(this));
+
+    
+
       //this.DocumentJacketWatcher = new DocumentJacket_Watcher(this.ApiCore, this.AssociatedScDocumentJacket);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err);
@@ -350,7 +354,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     let maxZFound: number = -1;
 
     this.FramesBucket.forEach((dtframeProxy) => {
-            let cadidateVal: number = dtframeProxy.GetZindexAsInt();
+      let cadidateVal: number = dtframeProxy.GetZindexAsInt();
       if (cadidateVal > maxZFound) {
         maxZFound = cadidateVal;
         toReturn = dtframeProxy;
@@ -359,7 +363,6 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
       //  toReturn = dtframeProxy;
       //}
     });
-
 
     this.Logger.LogVal(this.GetTopFrame.name, toReturn.GetZindexAsInt().toString());
     return toReturn;
