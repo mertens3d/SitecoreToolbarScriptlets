@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IScWindowFacade } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IApiCallPayload } from "../../../../Shared/scripts/Interfaces/IApiCallPayload";

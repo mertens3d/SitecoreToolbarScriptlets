@@ -1,5 +1,5 @@
 ﻿import { DTFrameProxy } from "./Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { ElementFrameJacket } from "../../DOMJacket/ElementFrameJacket";
+import { ElementFrameJacket } from "../../DOMJacket/Elements/ElementFrameJacket";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { CEFrameProxy } from "./Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { _APICoreBase } from "../../Shared/scripts/_APICoreBase";

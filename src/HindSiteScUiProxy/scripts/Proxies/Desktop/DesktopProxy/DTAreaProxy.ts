@@ -1,38 +1,37 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
-import { DocumentJacketWatcher } from "../../../../../DOMJacket/DocumentWatcher";
-import { ElementFrameJacket } from "../../../../../DOMJacket/ElementFrameJacket";
+﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
+import { ElementFrameJacket } from "../../../../../DOMJacket/Elements/ElementFrameJacket";
 import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
 import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
-import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
+import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
+import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { ContentEditorProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { DocumentProxyMutationEvent_Observer } from "./Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Observer";
-import { IDocumentProxyMutationEvent_Payload } from "./Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
+import { StateFullProxyResolver } from "../../ProxyResolver";
+import { DocumentJacketMutationEvent_Observer } from "./Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Observer";
+import { IDocumentJacketMutationEvent_Payload } from "./Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
 import { DTAreaProxyMutationEvent_Subject } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Subject";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
-import { StateFullProxyResolver } from "../../ProxyResolver";
-import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
 
 export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements IStateFullProxy {
   public readonly StateFullProxyDisciminator = StateFullProxyDisciminator.DTArea;
-  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.DTArea];
+  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.DTArea];
   private AssociatedScDocumentJacket: DocumentJacket;
   private DTFrameProxyManyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
   private FramesBucket: DTFrameProxy[] = [];
   private IncomingSetStateList: IStateOfDTFrame[] = [];
-  private DocumentProxyMutationEvent_Observer: DocumentProxyMutationEvent_Observer;
+  private DocumentProxyMutationEvent_Observer: DocumentJacketMutationEvent_Observer;
 
   public DTAreaProxyMutationEvent_Subject: DTAreaProxyMutationEvent_Subject;
-  DocumentJacketWatcher: DocumentJacketWatcher;
+  //DocumentJacketWatcher: DocumentJacket_Watcher;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
@@ -46,8 +45,8 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
     try {
       this.DTAreaProxyMutationEvent_Subject = new DTAreaProxyMutationEvent_Subject(this.ApiCore);//, this.OnDTAreaProxyMutationEvent.bind(this));
       this.DTFrameProxyManyMutationEvent_Observer = new DTFrameProxyMutationEvent_Observer(this.ApiCore, this.OnDTFProxyMutationEvent.bind(this));
-      this.DocumentProxyMutationEvent_Observer = new DocumentProxyMutationEvent_Observer(this.ApiCore, this.CallBackOnDocumentProxyMutationEvent.bind(this));
-      this.DocumentJacketWatcher = new DocumentJacketWatcher(this.ApiCore, this.AssociatedScDocumentJacket);
+      this.DocumentProxyMutationEvent_Observer = new DocumentJacketMutationEvent_Observer(this.ApiCore, this.CallBackOnDocumentProxyMutationEvent.bind(this));
+      //this.DocumentJacketWatcher = new DocumentJacket_Watcher(this.ApiCore, this.AssociatedScDocumentJacket);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err);
     }
@@ -57,7 +56,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
   public WireEvents() {
     this.Logger.FuncStart(this.WireEvents.name, DTAreaProxy.name);
 
-    this.DocumentJacketWatcher.DocumentProxyMutationEvent_Subject.RegisterObserver(this.DocumentProxyMutationEvent_Observer);
+    this.AssociatedScDocumentJacket.DocumentJacketMutationEvent_Subject.RegisterObserver(this.DocumentProxyMutationEvent_Observer);
 
     this.Logger.FuncEnd(this.WireEvents.name, DTAreaProxy.name);
   }
@@ -121,7 +120,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
 
   //---------------------------------------------------------------------------------------------
 
-  private async CallBackOnDocumentProxyMutationEvent(documentProxyMutationEvent_Payload: IDocumentProxyMutationEvent_Payload): Promise<void> {
+  private async CallBackOnDocumentProxyMutationEvent(documentProxyMutationEvent_Payload: IDocumentJacketMutationEvent_Payload): Promise<void> {
     this.Logger.FuncStart(this.CallBackOnDocumentProxyMutationEvent.name);
     this.Logger.LogAsJsonPretty('payload', documentProxyMutationEvent_Payload);
     try {

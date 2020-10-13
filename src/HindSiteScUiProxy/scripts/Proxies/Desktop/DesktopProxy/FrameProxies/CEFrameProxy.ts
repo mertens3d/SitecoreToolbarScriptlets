@@ -5,8 +5,8 @@ import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enu
 
 export class CEFrameProxy extends _BaseScFrameProxy<IStateOfCEFrameProxy> implements IStateFullProxy {
   Friendly: string;
-  StateFullProxyDisciminator = StateFullProxyDisciminator.CEFrame;
-  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.CEFrame];
+  readonly StateFullProxyDisciminator = StateFullProxyDisciminator.CEFrame;
+  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.CEFrame];
   FrameTypeDiscriminator = CEFrameProxy.name;
 
   SetState(stateOfCEFrameProxy: IStateOfCEFrameProxy): Promise<void> {

@@ -1,7 +1,7 @@
-﻿import { ElementJacket } from "../../../../../../../DOMJacket/ElementJacket";
-import { ElementDivJacket } from "../../../../../../../DOMJacket/ElementDivJacket";
-import { ElementImgJacket } from "../../../../../../../DOMJacket/ElementImgJacket";
-import { ElementAnchorJacket } from "../../../../../../../DOMJacket/ElementAnchorJacket";
+﻿import { ElementJacket } from "../../../../../../../DOMJacket/Elements/ElementJacket";
+import { ElementDivJacket } from "../../../../../../../DOMJacket/Elements/ElementDivJacket";
+import { ElementImgJacket } from "../../../../../../../DOMJacket/Elements/ElementImgJacket";
+import { ElementAnchorJacket } from "../../../../../../../DOMJacket/Elements/ElementAnchorJacket";
 import { RecipeBasics } from "../../../../../RecipeBasics";
 import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";

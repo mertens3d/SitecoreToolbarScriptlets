@@ -1,30 +1,38 @@
-﻿import { IterationDrone } from "../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { ReadyStateNAB } from "../Shared/scripts/Classes/ReadyState";
-import { ICommonCore } from "../Shared/scripts/Interfaces/Agents/ICommonCore";
-import { ContentConst } from "../Shared/scripts/Interfaces/InjectConst";
-import { IScVerSpec } from "../Shared/scripts/Interfaces/IScVerSpec";
-import { ElementFrameJacket } from "./ElementFrameJacket";
-import { ElementJacket } from "./ElementJacket";
-import { CEFrameProxy } from "../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
-import { FactoryHelper } from "../HindSiteScUiProxy/scripts/FactoryHelper";
-import { UrlJacket } from "./UrlJacket";
-import { SharedConst } from "../Shared/scripts/SharedConst";
-import { ISiteUrl } from "../Shared/scripts/Interfaces/IAbsoluteUrl";
-import { Guid } from "../Shared/scripts/Helpers/Guid";
-import { GuidData } from "../Shared/scripts/Helpers/GuidData";
-import { PromiseFailAction } from "../Shared/scripts/Enums/PromiseFailAction";
-import { StaticHelpers } from "../Shared/scripts/Classes/StaticHelpers";
-import { _CommonBase } from "../Shared/scripts/_CommonCoreBase";
+﻿import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
+import { ReadyStateNAB } from "../../Shared/scripts/Classes/ReadyState";
+import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { ContentConst } from "../../Shared/scripts/Interfaces/InjectConst";
+import { IScVerSpec } from "../../Shared/scripts/Interfaces/IScVerSpec";
+import { ElementJacket } from "../Elements/ElementJacket";
+import { UrlJacket } from "../UrlJacket";
+import { SharedConst } from "../../Shared/scripts/SharedConst";
+import { ISiteUrl } from "../../Shared/scripts/Interfaces/IAbsoluteUrl";
+import { Guid } from "../../Shared/scripts/Helpers/Guid";
+import { GuidData } from "../../Shared/scripts/Helpers/GuidData";
+import { PromiseFailAction } from "../../Shared/scripts/Enums/PromiseFailAction";
+import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
+import { _CommonBase } from "../../Shared/scripts/_CommonCoreBase";
+import { DocumentJacket_Watcher } from "./DocumentJacket.Watcher";
+import { ElementFrameJacket } from "../Elements/ElementFrameJacket";
+import { DocumentJacketMutationEvent_Subject } from "../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Subject";
 
 export class DocumentJacket extends _CommonBase {
   private NativeDocument: Document;
   public readonly UrlJacket: UrlJacket;
   readonly DocId: GuidData = Guid.NewRandomGuid();
+  private DocumentJacketWatcher: DocumentJacket_Watcher;
+  public DocumentJacketMutationEvent_Subject: DocumentJacketMutationEvent_Subject;
 
   constructor(commonCore: ICommonCore, nativeDocument: Document) {
     super(commonCore);
     this.NativeDocument = nativeDocument;
     this.UrlJacket = new UrlJacket(this.CommonCore, nativeDocument.URL);
+    this.Instantiate();
+  }
+
+  private Instantiate() {
+    this.DocumentJacketMutationEvent_Subject = new DocumentJacketMutationEvent_Subject(this.CommonCore);
+    this.DocumentJacketWatcher = new DocumentJacket_Watcher(this.CommonCore, this, this.DocumentJacketMutationEvent_Subject);
   }
 
   GetElementById(idStr: string): ElementJacket {
@@ -141,7 +149,6 @@ export class DocumentJacket extends _CommonBase {
     }
   }
 
-
   public async WaitForElem(selector: string, promiseFailAction: PromiseFailAction = PromiseFailAction.Default): Promise<ElementJacket> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForElem.name, selector);
@@ -187,7 +194,6 @@ export class DocumentJacket extends _CommonBase {
       var foundHtmlElement: HTMLElement = null;
       var iterationJr = new IterationDrone(this.CommonCore, this.WaitForThenClick.name + ' | ' + JSON.stringify(selectorAr), true);
       let foundSelector: string = '';
-
 
       while (!foundHtmlElement && iterationJr.DecrementAndKeepGoing()) { // todo put back && !this.MsgMan().OperationCancelled) {
         for (var idx = 0; idx < selectorAr.length; idx++) {

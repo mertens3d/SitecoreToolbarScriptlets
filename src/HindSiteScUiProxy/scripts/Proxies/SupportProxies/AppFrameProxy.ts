@@ -1,10 +1,10 @@
-﻿import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
+﻿import { ElementFrameJacket } from "../../../../DOMJacket/Elements/ElementFrameJacket";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { PromiseFailAction } from "../../../../Shared/scripts/Enums/PromiseFailAction";
-import { ElementDivJacket } from "../../../../DOMJacket/ElementDivJacket";
+import { ElementDivJacket } from "../../../../DOMJacket/Elements/ElementDivJacket";
 import { PackageDesignerInstallerRibbonToolbarProxy } from "../PackageDesignerProxy/PackageDesignerInstallerRibbonToolbarProxy";
-import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
+import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
 import { _baseSupportStatelessFrameProxy } from "./_baseSupportFrameProxy";
 
 export class AppFrameProxy extends _baseSupportStatelessFrameProxy {

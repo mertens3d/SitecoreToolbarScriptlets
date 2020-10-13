@@ -44,17 +44,17 @@ export class DeepHotKeyAgent extends _CommonBase {
   CallBackOnMessageFromFrame(event: MessageEvent) {
     console.log(this.CallBackOnMessageFromFrame.name)
     if (event && event.origin === this.GetDomain()) {
-      this.Logger.LogImportant('Frame message received');
+      //this.Logger.LogImportant('Frame message received');
 
       let deepHotKeydata: IDeepHotKeyData = <IDeepHotKeyData>event.data;
-        console.log('Frame message received ' + JSON.stringify(deepHotKeydata));
+        //console.log('Frame message received ' + JSON.stringify(deepHotKeydata));
       if (deepHotKeydata) {
         let hotKeyPayload: IHotKeyEvent_Payload = {
           ReqCommandMsgFlag: deepHotKeydata.ReqCommandMsgFlag,
           SelectText: window.getSelection ? window.getSelection().toString() : '',
         };
 
-        console.log('Frame message sending ' + JSON.stringify(hotKeyPayload));
+        //console.log('Frame message sending ' + JSON.stringify(hotKeyPayload));
         this.HotKeyEvent_Subject.NotifyObserversAsync(hotKeyPayload);
       } else {
         console.log('incorrect data');
@@ -68,7 +68,7 @@ export class DeepHotKeyAgent extends _CommonBase {
     this.Logger.FuncStart(this.CallBackOnKeyboardComboEvent.name);
 
     this.Logger.LogVal('keyBoardComboEvent ', ReqCommandMsgFlag[keyboardComboEvent_Payload.ReqCommandMsgFlag]);
-    console.log('keyBoardComboEvent ' + ReqCommandMsgFlag[keyboardComboEvent_Payload.ReqCommandMsgFlag]);
+    //console.log('keyBoardComboEvent ' + ReqCommandMsgFlag[keyboardComboEvent_Payload.ReqCommandMsgFlag]);
     this.HandleHotKeyPayload(keyboardComboEvent_Payload);
     this.Logger.FuncEnd(this.CallBackOnKeyboardComboEvent.name);
   }
@@ -100,7 +100,7 @@ export class DeepHotKeyAgent extends _CommonBase {
     //}
 
     //if (window.top) {
-    console.log('posting from ' + this.GetDomain());
+    //console.log('posting from ' + this.GetDomain());
 
     window.top.postMessage(hotKeyPayload, this.GetDomain());
     //} else {
@@ -110,15 +110,15 @@ export class DeepHotKeyAgent extends _CommonBase {
   }
 
   private HandleHotKeyPayload(hotKeyPayload: IKeyBoardComboEvent_Payload) {
-    console.log(this.HandleHotKeyPayload.name);
+    //console.log(this.HandleHotKeyPayload.name);
     if (hotKeyPayload) {
       if (window.self !== window.top) {
-        console.log('bubble up');
+        //console.log('bubble up');
         this.BubbleMessageUp(hotKeyPayload);
       }
     }
     else {
-      console.log('at top');
+      //console.log('at top');
       this.HandleTopWindow(hotKeyPayload);
     }
   }

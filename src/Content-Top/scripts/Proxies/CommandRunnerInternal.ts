@@ -1,5 +1,4 @@
-﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/ReplyCommandMsgFlag";
+﻿import { ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/ReplyCommandMsgFlag";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -14,6 +13,7 @@ import { RecipeInitFromQueryStr, RecipeSetStateFromMostRecent } from "../Recipes
 import { RecipeRemoveItemFromStorage } from "../Recipes/RecipeRemoveItemFromStorage";
 import { RecipeSaveStateManual } from "../Recipes/RecipeSaveState";
 import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
+import { DocumentJacket } from "../../../DOMJacket/Document/DocumentJacket";
 
 export class CommandRunnerInternal extends _FrontBase {
     Dependancies: ICommandDependancies;

@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
 import { CEFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 
 export interface IDataPublishChain {

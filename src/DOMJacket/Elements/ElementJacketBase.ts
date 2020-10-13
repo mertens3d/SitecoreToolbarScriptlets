@@ -1,6 +1,6 @@
-﻿import { IterationDrone } from "../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { ICommonCore } from "../Shared/scripts/Interfaces/Agents/ICommonCore";
-import { _CommonBase } from "../Shared/scripts/_CommonCoreBase";
+﻿import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
+import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { _CommonBase } from "../../Shared/scripts/_CommonCoreBase";
 
 export interface IAbortToken {
   Continue: boolean;

@@ -1,5 +1,5 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
-import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
+import { ElementFrameJacket } from "../../../../DOMJacket/Elements/ElementFrameJacket";
 import { DefaultStateOfPackageDesigner } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfPackageDesigner";
 import { RecipeBasics } from "../../RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
@@ -12,8 +12,8 @@ import { _BaseStateFullProxy } from "../Desktop/DesktopProxy/FrameProxies/_State
 import { AppFrameProxy } from "../SupportProxies/AppFrameProxy";
 
 export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
-  StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
-  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.PackageDesigner];
+  readonly StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
+  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.PackageDesigner];
   private DocumentJacket: DocumentJacket;
   Friendly: string;
 

@@ -1,5 +1,5 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
-import { ElementFrameJacket } from "../../../../../DOMJacket/ElementFrameJacket";
+﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
+import { ElementFrameJacket } from "../../../../../DOMJacket/Elements/ElementFrameJacket";
 import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
 import { RecipeBasics } from "../../../RecipeBasics";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
@@ -12,7 +12,7 @@ import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { DTFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 import { ContentEditorProxy } from "./ContentEditorProxy";
-import { ElementJacket } from "../../../../../DOMJacket/ElementJacket";
+import { ElementJacket } from "../../../../../DOMJacket/Elements/ElementJacket";
 
 export class ContentEditorPublishProxy extends _APICoreBase {
   ContentEditorProxy: ContentEditorProxy;
@@ -163,7 +163,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
   }
 
   async ClickMenuDropDownPublishItem(payload: IDataPublishChain = null) {
-    return await payload.ScDocumentProxyToPublish.WaitForAndClickWithPayload(ContentConst.Const.Selector.SC.ScRibbon.Publish. MenuDropDownPublishItem, payload)
+    return await payload.ScDocumentProxyToPublish.WaitForAndClickWithPayload(ContentConst.Const.Selector.SC.ScRibbon.Publish.MenuDropDownPublishItem, payload)
   }
 
   async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null): Promise<IDataPublishChain> {
@@ -204,7 +204,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
 
       await this.DocumentJacket.WaitForElem(selector)
         .then(async (foundElem: ElementJacket) => frameJacket = new ElementFrameJacket(this.ApiCore, <HTMLIFrameElement>foundElem.NativeElement))
-       
+
         .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
         .then((result: CEFrameProxy) => resolve(result))
         .catch((err) => reject(err));

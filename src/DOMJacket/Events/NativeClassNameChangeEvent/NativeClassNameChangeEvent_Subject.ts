@@ -1,7 +1,7 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
-import { ElementJacket } from "../../ElementJacket";
+import { ElementJacket } from "../../Elements/ElementJacket";
 import { INativeClassNameChangeEvent_Payload } from "./INativeClassNameChangeEvent_Payload";
 import { TypeDiscriminator } from "../../../Shared/scripts/Enums/70 - TypeDiscriminator";
 

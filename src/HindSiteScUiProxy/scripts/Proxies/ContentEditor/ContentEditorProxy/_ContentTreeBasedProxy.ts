@@ -1,5 +1,5 @@
-﻿import { DocumentJacket } from '../../../../../DOMJacket/DocumentJacket';
-import { ElementJacket } from '../../../../../DOMJacket/ElementJacket';
+﻿import { DocumentJacket } from '../../../../../DOMJacket/Document/DocumentJacket';
+import { ElementJacket } from '../../../../../DOMJacket/Elements/ElementJacket';
 import { _baseDefaultStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Classes/Defaults/_baseDefaultStateOfContentTreeBasedProxies';
 import { RecipeBasics } from '../../../RecipeBasics';
 import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
@@ -23,8 +23,8 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
   protected RecipeBasic: RecipeBasics;
   protected TreeMutationEvent_Observer: ContentTreeBasedProxyMutationEvent_Observer;
   public __ContentTreeBasedProxyMutationEvent_Subject: __ContentTreeBasedProxyMutationEvent__Subject;
-  public abstract readonly  StateFullProxyDisciminator: StateFullProxyDisciminator;
-  readonly abstract  StateFullProxyDisciminatorFriendly: string;
+  public abstract readonly StateFullProxyDisciminator: StateFullProxyDisciminator;
+  readonly abstract StateFullProxyDisciminatorFriendly: string;
   readonly abstract TreeRootSelector: string;
   readonly AssociatedHindsiteId: GuidData;
 
@@ -91,11 +91,10 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
       this.Logger.FuncStart(_ContentTreeBasedProxy.name, this.__baseGetState.name);
 
       let toReturn: IStateOfContentTreeBasedProxies = {
-        Disciminator : this.StateFullProxyDisciminator,
-        DisciminatorFriendly : StateFullProxyDisciminator[this.StateFullProxyDisciminator],
-        ContentTree : null
+        Disciminator: this.StateFullProxyDisciminator,
+        DisciminatorFriendly: StateFullProxyDisciminator[this.StateFullProxyDisciminator],
+        ContentTree: null
       }
-
 
       await this.ContentTreeProxy.GetStateOfContentTree()
         .then((stateOfContentTree: IStateOfContentTree) => toReturn.ContentTree = stateOfContentTree)

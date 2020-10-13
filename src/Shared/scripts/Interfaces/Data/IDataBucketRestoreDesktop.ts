@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
 import { DTFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 import { IStateOfContentEditor } from "./States/IStateOfContentEditor";
 

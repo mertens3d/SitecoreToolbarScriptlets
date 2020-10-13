@@ -1,5 +1,5 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
-import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
+import { ElementFrameJacket } from "../../../../DOMJacket/Elements/ElementFrameJacket";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { AppFrameProxy } from "./AppFrameProxy";
 

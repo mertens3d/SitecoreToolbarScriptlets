@@ -1,6 +1,6 @@
-﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
-import { ElementImgJacket } from '../../../../../../DOMJacket/ElementImgJacket';
-import { ElementJacket } from "../../../../../../DOMJacket/ElementJacket";
+﻿import { DocumentJacket } from '../../../../../../DOMJacket/Document/DocumentJacket';
+import { ElementImgJacket } from '../../../../../../DOMJacket/Elements/ElementImgJacket';
+import { ElementJacket } from "../../../../../../DOMJacket/Elements/ElementJacket";
 import { INativeClassNameChangeEvent_Payload } from '../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
 import { NativeClassNameChangeEvent_Observer } from "../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Observer";
 import { NativeClassNameChangeEvent_Subject } from "../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";

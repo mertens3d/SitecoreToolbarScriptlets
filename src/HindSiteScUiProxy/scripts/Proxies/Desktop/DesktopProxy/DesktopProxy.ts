@@ -1,7 +1,8 @@
-import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
+import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 import { StateFullProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
+import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
@@ -12,20 +13,39 @@ import { StateFullProxyResolver } from "../../ProxyResolver";
 import { AsyncLock } from "./DesktopStartBarProxy/AsyncLock";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
+import { DocumentJacketMutationEvent_Subject } from "./Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Subject";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
-import { ScRibbonProxy } from "../../ContentEditor/ContentEditorProxy/ScRibbonProxy/ScRibbonProxy";
-import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
+import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
+
+//export class ScDocumentWatcher extends _APICoreBase {
+//  ScDocumentProxyMutationEvent_Subject: ScDocumentProxyMutationEvent_Subject;
+
+//  //*  This watches the attached document and sends out notices when it changes
+
+//  constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
+//    super(apiCore);
+//    this.Instantiate();
+//  }
+
+//  private Instantiate() {
+//    this.ScDocumentProxyMutationEvent_Subject = new ScDocumentProxyMutationEvent_Subject(this.ApiCore);
+//    //this.DocumentJacketMutationEvent_Observer = new DocumentJacketWatcher
+//  }
+
+
+//}
 
 export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implements IStateFullProxy {
-  StateFullProxyDisciminator = StateFullProxyDisciminator.Desktop;
-  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.Desktop];
+  readonly StateFullProxyDisciminator = StateFullProxyDisciminator.Desktop;
+  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.Desktop];
   private DocumentJacket: DocumentJacket;
   private DTAreaProxy: DTAreaProxy;
   private DTStartBarProxy: DTStartBarProxy;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
-  ScRibbonProxy: ScRibbonProxy;
+   //ScRibbonProxy: ScRibbonProxy;
+
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
@@ -45,8 +65,10 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
     this.RecipeBasics = new RecipeBasics(this.ApiCore);
     this.DTAreaProxy = new DTAreaProxy(this.ApiCore, this.DocumentJacket);
     this.DTStartBarProxy = new DTStartBarProxy(this.ApiCore, this.DocumentJacket);
-    this.ScRibbonProxy = new ScRibbonProxy(this.ApiCore, this.DocumentJacket);
+    //this.ScRibbonProxy = new ScRibbonProxy(this.ApiCore, this.DocumentJacket);
     this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.ApiCore, this.OnAreaProxyMutationEvent.bind(this));
+
+    //this.DocumentJacket.DocumentJacketWatcher
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
@@ -67,6 +89,7 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
 
     this.DTAreaProxy.WireEvents();
     this.DTStartBarProxy.WireEvent();
+
 
     this.DTAreaProxy.DTAreaProxyMutationEvent_Subject.RegisterObserver(this.DTAreaProxyMutationEvent_Observer);
 
@@ -140,7 +163,6 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
 
   GetAssociatedDoc(): DocumentJacket {
     return this.DocumentJacket;
-
   }
   async PublishItem(): Promise<void> {
     await this.DTAreaProxy.PublishTopFrame();

@@ -1,10 +1,10 @@
 ﻿import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
-import { ElementFrameJacket } from "../../ElementFrameJacket";
 import { IFrameJacketAddRemoveEvent_Payload } from "./IFrameJacketAddRemoveEvent_Payload";
-import { DocumentJacket } from "../../DocumentJacket";
-import { ElementJacket } from "../../ElementJacket";
+import { DocumentJacket } from "../../Document/DocumentJacket";
+import { ElementJacket } from "../../Elements/ElementJacket";
 import { TypeDiscriminator } from "../../../Shared/scripts/Enums/70 - TypeDiscriminator";
+import { ElementFrameJacket } from "../../Elements/ElementFrameJacket";
 
 export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IFrameJacketAddRemoveEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.FrameJacketAddRemoveEvent_Subject;

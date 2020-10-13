@@ -1,6 +1,6 @@
 ﻿import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { ElementFrameJacket } from "../../../../DOMJacket/ElementFrameJacket";
-import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
+import { ElementFrameJacket } from "../../../../DOMJacket/Elements/ElementFrameJacket";
+import { ElementJacket } from "../../../../DOMJacket/Elements/ElementJacket";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 

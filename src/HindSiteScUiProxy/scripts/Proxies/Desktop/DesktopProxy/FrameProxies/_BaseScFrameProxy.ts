@@ -1,17 +1,17 @@
-﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
-import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJacket";
+﻿import { DocumentJacket } from "../../../../../../DOMJacket/Document/DocumentJacket";
 import { RecipeBasics } from "../../../../RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
 import { _BaseStateFullProxy } from "./_StateProxy";
+import { ElementFrameJacket } from "../../../../../../DOMJacket/Elements/ElementFrameJacket";
 
 export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implements IStateFullProxy {
   public readonly FrameJacket: ElementFrameJacket = null;
-  abstract StateFullProxyDisciminatorFriendly;
+  abstract readonly StateFullProxyDisciminatorFriendly;
   Id: string = null;
-  abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
+  abstract readonly StateFullProxyDisciminator: StateFullProxyDisciminator;
   abstract Friendly: string;
   RecipeBasics: RecipeBasics;
 

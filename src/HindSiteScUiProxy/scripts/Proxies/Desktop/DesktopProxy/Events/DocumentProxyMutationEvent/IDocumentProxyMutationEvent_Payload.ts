@@ -1,6 +1,6 @@
-﻿import { ElementFrameJacket } from "../../../../../../../DOMJacket/ElementFrameJacket";
+﻿import { ElementFrameJacket } from "../../../../../../../DOMJacket/Elements/ElementFrameJacket";
 
-export interface IDocumentProxyMutationEvent_Payload {
+export interface IDocumentJacketMutationEvent_Payload {
   RemovedIFrameId: string;
   AddedFrameJacket: ElementFrameJacket;
 }

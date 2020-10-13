@@ -1,4 +1,4 @@
-import { DocumentJacket } from '../../DOMJacket/DocumentJacket';
+import { DocumentJacket } from '../../DOMJacket/Document/DocumentJacket';
 import { UrlJacket } from '../../DOMJacket/UrlJacket';
 import { HindSiteScUiAPI } from "../../HindSiteScUiProxy/scripts/HindSiteScUiAPI";
 import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/ErrorHandler/ErrorHandlerAgent";

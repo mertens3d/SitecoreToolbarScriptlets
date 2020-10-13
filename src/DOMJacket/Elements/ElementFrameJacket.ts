@@ -1,10 +1,10 @@
-﻿import { IterationDrone } from "../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { ReadyStateNAB } from "../Shared/scripts/Classes/ReadyState";
-import { ICommonCore } from "../Shared/scripts/Interfaces/Agents/ICommonCore";
-import { IFrameJacketStyling } from "../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
-import { DocumentJacket } from "./DocumentJacket";
-import { UrlJacket } from "./UrlJacket";
+﻿import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
+import { ReadyStateNAB } from "../../Shared/scripts/Classes/ReadyState";
+import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { IFrameJacketStyling } from "../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
+import { UrlJacket } from "./../UrlJacket";
 import { ElementJacketBase } from "./ElementJacketBase";
+import { DocumentJacket } from "../Document/DocumentJacket";
 
 export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
     public DocumentJacket: DocumentJacket;

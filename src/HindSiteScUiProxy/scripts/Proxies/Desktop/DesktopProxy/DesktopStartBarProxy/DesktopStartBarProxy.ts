@@ -1,5 +1,5 @@
-﻿import { DocumentJacket } from '../../../../../../DOMJacket/DocumentJacket';
-import { ElementJacket } from '../../../../../../DOMJacket/ElementJacket';
+﻿import { DocumentJacket } from '../../../../../../DOMJacket/Document/DocumentJacket';
+import { ElementJacket } from '../../../../../../DOMJacket/Elements/ElementJacket';
 import { RecipeBasics } from '../../../../RecipeBasics';
 import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";

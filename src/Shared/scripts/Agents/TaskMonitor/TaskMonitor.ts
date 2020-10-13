@@ -10,21 +10,17 @@ export class TaskMonitor implements ICoreTaskMonitor {
   private TaskBucketStarted: string[] = [];
   private TaskBucketCompleted: string[] = [];
   public TaskMutationEvent_Subject: TaskListMutationEvent_Subject;
-  private DelaySendMs: number = 3000;
+  private DelaySendMs: number = 20;
   private CancelRequestedFlag: boolean = false;
   private IdleNotificationSent: boolean = false;
   private LastActivityTime: number;
-  private MinElapsedBeforeIsIdleMs: number = 3000;
+  private MinElapsedBeforeIsIdleMs: number = 20;
   TypeDiscriminator = TypeDiscriminator.TaskMonitor;
   private ErrorHand: ICoreErrorHandler;
   private Logger: ILoggerAgent;
 
   constructor() {
   }
-
-
-
-
 
   IntroduceSiblings(logger: ILoggerAgent, errorHand: ICoreErrorHandler) {
     this.Logger = logger;
@@ -65,10 +61,8 @@ export class TaskMonitor implements ICoreTaskMonitor {
   NotifyWaiting(waitingMessage: boolean): void {
     if (waitingMessage) {
       this.BuildAndSendPayload(TaskMutationType.TaskWaitingYes, waitingMessage);
-
     } else {
-
-    this.BuildAndSendPayload(TaskMutationType.TaskWaitingNo, waitingMessage);
+      this.BuildAndSendPayload(TaskMutationType.TaskWaitingNo, waitingMessage);
     }
   }
 

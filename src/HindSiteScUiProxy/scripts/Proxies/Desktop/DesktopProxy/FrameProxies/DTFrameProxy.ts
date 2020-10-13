@@ -1,5 +1,4 @@
-﻿import { DocumentJacket } from "../../../../../../DOMJacket/DocumentJacket";
-import { ElementFrameJacket } from "../../../../../../DOMJacket/ElementFrameJacket";
+﻿import { DocumentJacket } from "../../../../../../DOMJacket/Document/DocumentJacket";
 import { ScPageTypeResolver } from "../../../../../../Shared/scripts/Agents/UrlAgent/ScPageTypeResolver";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
@@ -20,6 +19,7 @@ import { I_ContentTreeBasedProxyMutationEvent_Payload } from "../Events/ContentE
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
+import { ElementFrameJacket } from "../../../../../../DOMJacket/Elements/ElementFrameJacket";
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullProxy {
   FrameTypeDiscriminator = DTFrameProxy.name;

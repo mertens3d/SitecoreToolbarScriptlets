@@ -63,16 +63,18 @@
     <TypeScriptCompile Include="src\Content-Top\scripts\Proxies\BrowserMessageBroker_Content.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Proxies\CommandRouter.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Proxies\CommandToExecuteData.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\AllRibbonCommands.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\DocumentJacketWatcher.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\BuiltInContentTreeNodeResolver.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ScRibbonProxy\AllRibbonCommands.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ScRibbonProxy\RibbonMenuButtonResolver.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ScRibbonProxy\ScRibbonProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\AllStartMenuButtonSelectos.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\RibbonMenuButtonResolver.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\DeepHotKey\DeepHotKeyAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\DeepHotKey\HotKeys.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\ErrorHandler\ErrorHandlerAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\TaskMonitor\TaskMonitor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\eScRibbonCommand.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\InternalInterfaces\IRibbonClickSequence.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\ScRibbonProxy.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Proxies\InternalCommandRunner.ts" />
     <TypeScriptCompile Include="src\DOMJacket\KeyPressJacket.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\CoreFactory.ts" />
@@ -92,17 +94,16 @@
     <TypeScriptCompile Include="src\Shared\scripts\Proxies\Browser\_BaseBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Recipes\_ContentRecipeBase.ts" />
     <TypeScriptCompile Include="src\DOMJacket\DocumentJacket.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\ElementAnchorJacket.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\ElementDivJacket.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\ElementFrameJacket.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\ElementImgJacket.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\ElementJacket.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\ElementJacketBase.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Elements\ElementAnchorJacket.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Elements\ElementDivJacket.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Elements\ElementFrameJacket.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Elements\ElementImgJacket.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Elements\ElementJacket.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Elements\ElementJacketBase.ts" />
     <TypeScriptCompile Include="src\DOMJacket\Events\NativeIFrameAddedEvent\FrameJacketAddRemoveEvent_Observer.ts" />
     <TypeScriptCompile Include="src\DOMJacket\Events\NativeIFrameAddedEvent\FrameJacketAddRemoveEvent_Subject.ts" />
     <TypeScriptCompile Include="src\DOMJacket\Events\NativeIFrameAddedEvent\IFrameJacketAddRemoveEvent_Payload.ts" />
     <TypeScriptCompile Include="src\DOMJacket\UrlJacket.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\DocumentWatcher.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\ContentApi\Recipes\RecipeAdminB.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\ContentApi\Recipes\RecipeAutoSaveState.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Recipes\RecipeForceAutoSnapShot.ts" />
@@ -459,7 +460,6 @@
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
     <Folder Include="src\Content-All\css\" />
-    <Folder Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ScRibbonProxy\" />
     <Folder Include="src\Shared\scripts\Agents\Agents\" />
   </ItemGroup>
   <ItemGroup>

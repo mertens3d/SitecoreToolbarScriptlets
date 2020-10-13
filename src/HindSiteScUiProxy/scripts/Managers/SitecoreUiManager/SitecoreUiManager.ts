@@ -1,11 +1,11 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
-import { ElementJacket } from "../../../../DOMJacket/ElementJacket";
+import { ElementJacket } from "../../../../DOMJacket/Elements/ElementJacket";
 import { ContentBrowserProxy } from "../../../../Content-Top/scripts/Proxies/ContentBrowserProxy";
 
 export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {

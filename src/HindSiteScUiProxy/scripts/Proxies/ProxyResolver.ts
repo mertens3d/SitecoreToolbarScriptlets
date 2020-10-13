@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
+﻿import { DocumentJacket } from "../../../DOMJacket/Document/DocumentJacket";
 import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";

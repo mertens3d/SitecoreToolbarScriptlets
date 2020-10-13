@@ -10,8 +10,8 @@ export abstract class _BaseStateFullProxy<T> extends _APICoreBase implements ISt
   abstract GetState(): Promise<T>;
   abstract InstantiateAsyncMembers();
   abstract SetState(state: T);
-  abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
-  abstract StateFullProxyDisciminatorFriendly;
+  abstract readonly StateFullProxyDisciminator: StateFullProxyDisciminator;
+  abstract readonly StateFullProxyDisciminatorFriendly;
   abstract TriggerInboundEventsAsync(): void;
   abstract WireEvents();
   Friendly: string = '{unknown friendly}';

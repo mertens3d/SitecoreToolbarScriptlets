@@ -7,7 +7,7 @@ import { _ContentTreeBasedProxy } from "./ContentEditor/ContentEditorProxy/_Cont
 export class MediaLibraryProxy extends _ContentTreeBasedProxy<IStateOfMediaLibrary> implements IStateFullProxy {
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.MediaLibraryAnchorRootNode;
   readonly StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.MediaLibrary;
-  StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.MediaLibrary];
+  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.MediaLibrary];
 
   async InstantiateAsyncMembers(): Promise<void> {
     return this.__baseInstantiateAsyncMembers();

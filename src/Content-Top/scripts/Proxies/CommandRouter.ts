@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
+﻿import { DocumentJacket } from "../../../DOMJacket/Document/DocumentJacket";
 import { DeepHotKeyAgent } from "../../../Shared/scripts/Agents/DeepHotKey/DeepHotKeyAgent";
 import { ApiCommandPayload } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/ApiCommandPayload";
 import { CommandPayloadForInternal } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandPayloadForInternal";

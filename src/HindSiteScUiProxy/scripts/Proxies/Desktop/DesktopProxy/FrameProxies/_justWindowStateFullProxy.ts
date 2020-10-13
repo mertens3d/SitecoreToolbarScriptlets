@@ -7,8 +7,8 @@ import { SupportFrameFactory } from "../../../SupportProxies/BaseFrameFactory";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
 
 export abstract class _justWindowStateFullProxy extends _APICoreBase implements IStateFullProxy {
-  abstract StateFullProxyDisciminator: StateFullProxyDisciminator;
-  abstract StateFullProxyDisciminatorFriendly;
+  abstract readonly StateFullProxyDisciminator: StateFullProxyDisciminator;
+  abstract readonly StateFullProxyDisciminatorFriendly;
   Friendly: string = '{unknown friendly}';
   protected readonly SupportFrameFactory: SupportFrameFactory;
   RecipeBasics: RecipeBasics;

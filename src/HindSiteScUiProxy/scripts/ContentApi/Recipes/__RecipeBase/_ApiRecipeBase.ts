@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
 import { RecipeBasics } from "../../../RecipeBasics";
 import { SnapShotFlavor } from "../../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";

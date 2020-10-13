@@ -1,4 +1,4 @@
-﻿import { ElementFrameJacket } from "../../ElementFrameJacket";
+﻿import { ElementFrameJacket } from "../../Elements/ElementFrameJacket";
 
 export interface IFrameJacketAddRemoveEvent_Payload {
     RemovedIFrameId: string;

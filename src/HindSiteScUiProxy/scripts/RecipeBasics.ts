@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../../node_modules/web-ext-types/global/index.d.ts" />
 
-import { DocumentJacket } from '../../DOMJacket/DocumentJacket';
+import { DocumentJacket } from '../../DOMJacket/Document/DocumentJacket';
 import { IterationDrone } from '../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { ReadyStateNAB } from '../../Shared/scripts/Classes/ReadyState';
 import { IAPICore } from '../../Shared/scripts/Interfaces/Agents/IAPICore';
