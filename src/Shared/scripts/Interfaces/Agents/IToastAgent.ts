@@ -1,5 +1,5 @@
 ﻿
 export interface IToastAgent {
-  LiftToast(arg0: string);
-  DropToast(arg0: string);
+  HideToast(arg0: string);
+  ShowToastAsync(arg0: string);
 }

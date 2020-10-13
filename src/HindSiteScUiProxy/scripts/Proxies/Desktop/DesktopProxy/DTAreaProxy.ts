@@ -348,12 +348,21 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
 
   private GetTopFrame(): DTFrameProxy {
     let toReturn: DTFrameProxy = null;
+    let maxZFound: number = -1;
 
     this.FramesBucket.forEach((dtframeProxy) => {
-      if (dtframeProxy.GetZindexAsInt() == 1) {
+            let cadidateVal: number = dtframeProxy.GetZindexAsInt();
+      if (cadidateVal > maxZFound) {
+        maxZFound = cadidateVal;
         toReturn = dtframeProxy;
       }
+      //if (dtframeProxy.GetZindexAsInt() == 1) {
+      //  toReturn = dtframeProxy;
+      //}
     });
+
+
+    this.Logger.LogVal(this.GetTopFrame.name, toReturn.GetZindexAsInt().toString());
     return toReturn;
   }
 

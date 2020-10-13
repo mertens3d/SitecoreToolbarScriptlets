@@ -188,7 +188,7 @@ export class LoggerAgent implements ILoggerAgent {
     text = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleBgYellow, text);
     this.Log(text);
   }
-  async Log(text, optionalValue: string = '', hasPrefix = false) {
+  async Log(text, hasPrefix = false) {
     if (this.HasWriters) {
       var indent = '  ';
 
@@ -260,28 +260,34 @@ export class LoggerAgent implements ILoggerAgent {
     return displayText;
   }
 
+  private AddOptionalValueToText(text: string, optionalValue: number | string | boolean) {
+    let toReturn: string = text;
+
+    if (optionalValue) {
+      optionalValue = optionalValue.toString();
+
+      if (optionalValue.length > 0) {
+        toReturn = toReturn + ' : ' + optionalValue;
+      }
+    }
+
+    return toReturn;
+  }
   FuncStart(text: string | string[], optionalValue?: number): void;
   FuncStart(text: string | string[], optionalValue?: string): void;
   FuncStart(text: string | string[], optionalValue?: boolean): void;
   FuncStart(text: string | string[], optionalValue: number | string | boolean): void {
     text = this.resolveFuncText(text);
 
+    if (optionalValue) {
+      text = this.AddOptionalValueToText(text, optionalValue)
+    }
+
     text = 's' + ' ' + this.__callDepth + ') ' + text;
-
-    if (!optionalValue) {
-      optionalValue = '';
-    }
-    else {
-      optionalValue = optionalValue.toString();
-    }
-
-    if (optionalValue.length > 0) {
-      text = text + ' : ' + optionalValue;
-    }
 
     let formatted = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleFgGreen, text);
 
-    this.Log(formatted, '', true);
+    this.Log(formatted, true);
     this.__callDepth++;
     if (this.__callDepth > this.MaxDepthBeforeThrow) {
       throw ('Logger - Max Depth Exceeded: ' + this.__callDepth);
@@ -308,20 +314,15 @@ export class LoggerAgent implements ILoggerAgent {
     }
 
     text = 'e' + ' ' + this.__callDepth + ') ' + text;
-    if (optionalValue !== null && (typeof optionalValue === typeof Boolean)) {
-      optionalValue = optionalValue.toString();
+
+
+    if (optionalValueInput) {
+      text = this.AddOptionalValueToText(text, optionalValueInput);
     }
 
-    if (!optionalValueInput) {
-      optionalValueInput = '';
-    }
-    var optionalValue = optionalValueInput.toString();
-    if (optionalValue.length > 0) {
-      text = text + ' : ' + optionalValue;
-    }
     let formatted = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleFgRed, text);
-    //this.Log(formatted, '', true);
-    this.Log(formatted, optionalValue, true);
+
+    this.Log(formatted, true);
   }
 
   NotNullCheck(title: string, value: any): void {

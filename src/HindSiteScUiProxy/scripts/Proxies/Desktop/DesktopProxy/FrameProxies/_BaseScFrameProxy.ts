@@ -28,7 +28,9 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implem
   abstract WireEvents();
 
   GetZindexAsInt(): number {
-    return this.FrameJacket.ZindexAsInt();
+    let toReturn: number = this.FrameJacket.ZindexAsInt();
+    this.Logger.LogVal(this.GetZindexAsInt.name, toReturn.toString());
+    return toReturn;
   }
 
   GetDocumentJacket(): DocumentJacket {

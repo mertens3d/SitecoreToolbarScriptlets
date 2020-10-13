@@ -79,8 +79,14 @@ export class IterationDrone extends _CommonBase {
 
   Wait(): Promise<void> {
     if (!this.OperationCancelled) {
+      this.TaskMonitor.NotifyWaiting(true);
+
       return new Promise((resolve) => {
-        setTimeout(resolve, this.Timeout);
+        setTimeout(() => {
+      this.TaskMonitor.NotifyWaiting(false);
+
+          resolve();
+        }   , this.Timeout);
       });
     }
   }

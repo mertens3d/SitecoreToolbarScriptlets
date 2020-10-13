@@ -40,11 +40,12 @@ export class ScRibbonProxy extends _APICoreBase {
 
         .then(() => this.DocumentJacket.WaitForThenClick([ribbonClickSequence.Step1Selector]))
         .then(() => this.TaskMonitor.AsyncTaskStarted(this.TriggerRibbonMenuItem.name))
-        //.then(() => this.TriggerPopXButton(ribbonButtonSequence.Pop1Selector, ContentConst.Const.Selector.SC.StartMenu.Popup1.Id))
         .then(() => this.DocumentJacket.WaitForThenClick([ribbonClickSequence.Step2Selector]))
-        .then(() => methodLock.ReleaseLock())
-        .then(() => this.TaskMonitor.AsyncTaskCompleted(this.TriggerRibbonMenuItem.name))
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.TriggerRibbonMenuItem.name, err))
+        .catch((err) => this.ErrorHand.WarningAndContinue(this.TriggerRibbonMenuItem.name, err))
+        .finally(() => {
+          methodLock.ReleaseLock();
+          this.TaskMonitor.AsyncTaskCompleted(this.TriggerRibbonMenuItem.name);
+        });
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.TriggerRibbonMenuItem.name, err);
     }

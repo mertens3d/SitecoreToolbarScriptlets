@@ -6,4 +6,5 @@ export interface ITaskListMutationEvent_Payload {
   IsTaskEmpty: boolean;
   TotalTaskCount: number,
   RemainingTaskCount: number,
+  AdditionalMessage: string,
 }

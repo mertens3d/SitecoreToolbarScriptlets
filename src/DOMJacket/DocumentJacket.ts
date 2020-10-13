@@ -69,7 +69,7 @@ export class DocumentJacket extends _CommonBase {
 
       await this.WaitForElem(querySelector)
         .then((elemJacket: ElementJacket) => resolve(new ElementFrameJacket(this.CommonCore, <HTMLIFrameElement>elemJacket.NativeElement)))
-        .catch((err) => reject(this.ErrorHand.FormatejectMessage([this.WaitForFirstHostedFrame.name], err)));
+        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([this.WaitForFirstHostedFrame.name], err)));
 
       //  let matchingJackets: FrameJacket[] = this.GetHostedFramesFilteredBySelector(querySelector);
       //if (matchingJackets && matchingJackets.length > 0) {

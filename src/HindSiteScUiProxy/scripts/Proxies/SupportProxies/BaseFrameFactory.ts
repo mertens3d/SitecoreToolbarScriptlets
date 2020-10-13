@@ -10,7 +10,7 @@ export class SupportFrameFactory extends _APICoreBase {
         let appFrameProxy = new AppFrameProxy(this.ApiCore, frameJacket, parentJacket);
         await appFrameProxy.FrameJacket.WaitForCompleteNABHtmlIframeElement(AppFrameProxy.name)
           .then(() => resolve(appFrameProxy))
-          .catch((err) => reject(this.ErrorHand.FormatejectMessage([SupportFrameFactory.name, this.MakeAppFrameProxy.name], err)))
+          .catch((err) => reject(this.ErrorHand.FormatRejectMessage([SupportFrameFactory.name, this.MakeAppFrameProxy.name], err)))
       })
     }
 }

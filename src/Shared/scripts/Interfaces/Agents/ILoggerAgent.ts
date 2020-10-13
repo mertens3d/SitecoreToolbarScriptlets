@@ -32,9 +32,10 @@ export interface ILoggerAgent  {
   IntroduceSiblings(taskMonitor: ICoreTaskMonitor, errorHand: ICoreErrorHandler);
 
   LogImportant(text);
-  Log(text);
-  Log(text, optionalValue: string);
-  Log(text, optionalValue: string, hasPrefix: boolean);
+
+  Log(text: string);
+  //Log(text, optionalValue: string);
+  Log(text: string , hasPrefix: boolean);
 
 
   LogAsJsonPretty(texValName: string, jsonObj: any);

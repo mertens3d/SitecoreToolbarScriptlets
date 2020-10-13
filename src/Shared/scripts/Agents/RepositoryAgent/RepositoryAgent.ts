@@ -58,7 +58,7 @@ export class RepositoryAgent extends _CommonBase implements IRepositoryAgent {
     if (storageValue != null) {
       toReturn = storageValue.toString();
     } else {
-      this.Logger.Log(this.ReadDataOfKey.name, "No value returned from storage")
+      this.Logger.LogVal(this.ReadDataOfKey.name, "No value returned from storage")
     }
     this.Logger.FuncEnd(this.ReadDataOfKey.name);
     return toReturn;

@@ -3,6 +3,7 @@ import { ILoggerAgent } from "../ILoggerAgent";
 import { ICoreErrorHandler } from "../IErrorHandlerAgent";
 
 export interface ICoreTaskMonitor {
+  NotifyWaiting(waitingMessage: boolean): void;
   InitAfterErrorHand(taskMutationEvent_Subject: TaskListMutationEvent_Subject);
   IntroduceSiblings(Logger: ILoggerAgent, ErrorHand: ICoreErrorHandler);
   ResetCancel();

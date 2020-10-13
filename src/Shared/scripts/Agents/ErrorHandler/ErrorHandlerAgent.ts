@@ -130,17 +130,21 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     console.log('********** ' + text + ' **********');
   }
 
-  FormatejectMessage(container: string[], err: string): string {
+  FormatRejectMessage(container: string | string[], err: string): string {
     let toReturn: string = '';
 
-    let isFirstInArray = true;
-    container.forEach((subContainer: string) => {
-      if (!isFirstInArray) {
-        toReturn += '.';
-      }
-      isFirstInArray = false;
-      toReturn += subContainer
-    })
+    if (Array.isArray(container)) {
+      let isFirstInArray = true;
+      container.forEach((arrayItem: string) => {
+        if (!isFirstInArray) {
+          toReturn += '.';
+        }
+        isFirstInArray = false;
+        toReturn += arrayItem
+      })
+    } else {
+      toReturn = container;
+    }
 
     toReturn += ' | ' + err;
 

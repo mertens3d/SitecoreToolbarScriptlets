@@ -79,10 +79,10 @@ export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
         let toReturn: number = -99;
 
         if (this.NativeElement.style && this.NativeElement.style.zIndex) {
-            //toReturn = this.IframeElem.style.zIndex;
             toReturn = parseInt(this.NativeElement.style.zIndex);
         }
 
+      this.Logger.LogVal(this.ZindexAsInt.name, toReturn.toString());
         return toReturn;
     }
 
@@ -129,7 +129,7 @@ export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
                         this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, this.NativeElement.contentDocument.readyState);
                         resolve(result);
                     })
-                    .catch((err) => reject(this.ErrorHand.FormatejectMessage([this.WaitForCompleteNABHtmlIframeElement.name], err)));
+                    .catch((err) => reject(this.ErrorHand.FormatRejectMessage([this.WaitForCompleteNABHtmlIframeElement.name], err)));
             }
             else {
                 this.ErrorHand.ErrorAndThrow([ElementFrameJacket.name, this.WaitForCompleteNABHtmlIframeElement.name], 'No target doc: ' + friendly);

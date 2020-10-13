@@ -34,7 +34,7 @@ export class BaseBrowserProxy extends _CommonBase implements IBaseBrowserProxy {
           this.ActiveBrowserTabProxy = new BrowserTabProxy(this.CommonCore, resultTab);
         })
         .then(() => resolve())
-        .catch((err) => reject(this.ErrorHand.FormatejectMessage([BaseBrowserProxy.name, this.SetActiveBrowserTab.name], err)));
+        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([BaseBrowserProxy.name, this.SetActiveBrowserTab.name], err)));
     });
   }
 }

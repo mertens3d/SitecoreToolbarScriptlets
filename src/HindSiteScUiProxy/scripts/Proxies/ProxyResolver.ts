@@ -140,7 +140,7 @@ export class StateFullProxyResolver extends _APICoreBase {
       await StateFullProxy.InstantiateAsyncMembers()
         .then(() => StateFullProxy.WireEvents())
         .then(() => resolve(StateFullProxy))
-        .catch((err) => reject(this.ErrorHand.FormatejectMessage([StateFullProxyResolver.name, this.StateFullProxyFactory.name], err)))
+        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([StateFullProxyResolver.name, this.StateFullProxyFactory.name], err)))
     });
   }
 

@@ -67,7 +67,7 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
             .then((returnedAppFrameProxy: AppFrameProxy) => appFrameProxy = returnedAppFrameProxy)
             .then(() => appFrameProxy.OpenFile(stateOfPackageDesigner.StatusText))
             .then(() => resolve())
-            .catch((err) => reject(this.ErrorHand.FormatejectMessage([PackageDesignerProxy.name, this.SetState.name], err)));
+            .catch((err) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerProxy.name, this.SetState.name], err)));
         }
       }
 

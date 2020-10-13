@@ -74,7 +74,7 @@ class ContentEntry {
       this.InitLogger();
       this.AtticAgent = new ContentAtticAgent(this.RepoAgent, this.HindeCore);
       this.ToastAgent = new ToastAgent(this.HindeCore, document);
-      this.ToastAgent.Instantiate();
+      this.ToastAgent.WireEvents();
 
       this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
     } catch (err) {

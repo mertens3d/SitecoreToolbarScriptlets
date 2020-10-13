@@ -21,6 +21,11 @@ export class TaskMonitor implements ICoreTaskMonitor {
 
   constructor() {
   }
+
+
+
+
+
   IntroduceSiblings(logger: ILoggerAgent, errorHand: ICoreErrorHandler) {
     this.Logger = logger;
     this.ErrorHand = errorHand;
@@ -55,6 +60,16 @@ export class TaskMonitor implements ICoreTaskMonitor {
   private MarkActivity() {
     this.LastActivityTime = new Date().getTime();
     this.IdleNotificationSent = false;
+  }
+
+  NotifyWaiting(waitingMessage: boolean): void {
+    if (waitingMessage) {
+      this.BuildAndSendPayload(TaskMutationType.TaskWaitingYes, waitingMessage);
+
+    } else {
+
+    this.BuildAndSendPayload(TaskMutationType.TaskWaitingNo, waitingMessage);
+    }
   }
 
   IsTaskListEmpty(): boolean {
@@ -95,13 +110,14 @@ export class TaskMonitor implements ICoreTaskMonitor {
     }
   }
 
-  private BuildAndSendPayload(mutationType: TaskMutationType) {
+  private BuildAndSendPayload(mutationType: TaskMutationType, additionalMessage: boolean = false) {
     let payload: ITaskListMutationEvent_Payload = {
       MutationType: mutationType,
       IsTaskEmpty: this.IsTaskListEmpty(),
       RemainingTaskCount: this.TaskBucketStarted.length,
       TotalTaskCount: this.totalTaskCount(),
       CompletedCount: this.TaskBucketCompleted.length,
+      AdditionalMessage: additionalMessage.toString(),
     };
 
     this.TaskMutationEvent_Subject.NotifyObserversAsync(payload);

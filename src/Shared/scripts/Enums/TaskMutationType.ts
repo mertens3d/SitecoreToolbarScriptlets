@@ -1,5 +1,7 @@
 ﻿export enum TaskMutationType {
     TaskAdded,
     TaskCompleted,
-    TasksHaveGoneIdle
+    TaskWaitingYes,
+    TasksHaveGoneIdle,
+    TaskWaitingNo
 }

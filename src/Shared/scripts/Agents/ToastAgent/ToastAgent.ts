@@ -18,11 +18,15 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
   private BodyTag: HTMLBodyElement;
   private HasBeenInit: boolean = false;
   private TargetDoc: Document;
-  private ButtonElem: HTMLInputElement;
   OnButtonClick_Subject: SingleClickEvent_Subject;
   OnButtonClick_ObserverTest: SingleClickEvent_Observer;
   private FlagTextDiv: HTMLDivElement;
+  private WaitingLight: HTMLDivElement;
   private TaskMutationEvent_Observer: TaskListMutationEvent_Observer;
+  private MessageDiv: HTMLDivElement;
+  private CancelButtonElem: HTMLInputElement;
+  private waitingLightClassOn: string = 'waiting-on';
+  private waitingLightClassOff: string = 'waiting-off';
 
   constructor(commonCore: ICommonCore, targetDoc: Document) {
     super(commonCore);
@@ -30,36 +34,55 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     this.DivineElements();
   }
 
-  Instantiate() {
+  public WireEvents() {
+    this.Logger.FuncStart(this.WireEvents.name);
     this.TaskMutationEvent_Observer = new TaskListMutationEvent_Observer(this.CommonCore, this.CallBackOnTaskListMutationEvent.bind(this))
     this.TaskMonitor.TaskMutationEvent_Subject.RegisterObserver(this.TaskMutationEvent_Observer);
+    this.Logger.FuncEnd(this.WireEvents.name);
   }
 
   CallBackOnTaskListMutationEvent(payload: ITaskListMutationEvent_Payload) {
     if (payload.MutationType === TaskMutationType.TasksHaveGoneIdle) {
-      this.LiftToast('');
+      this.HideToast('');
     } else {
+      if (payload.MutationType === TaskMutationType.TaskWaitingYes) {
+        this.TurnOnWaitingLight(true);
+      } else {
+        this.TurnOnWaitingLight(false);
+      }
+
       this.SetSliderDivText(payload.CompletedCount + ':' + payload.TotalTaskCount);//+ '  ' + Math.ceil((payload.CompletedCount / payload.TotalTaskCount) * 100) +  '% ')
     }
   }
 
-  async LiftToast(message: string): Promise<void> {
-    this.Logger.FuncStart(this.DropToast.name);
-    this.SetSliderDivText(message);
-    await this.LowerToastA();
-    this.Logger.FuncEnd(this.DropToast.name);
+  TurnOnWaitingLight(isOn: boolean) {
+    this.Logger.LogImportant(this.TurnOnWaitingLight.name + ' ' + isOn.toString())
+    if (isOn) {
+
+      this.WaitingLight.classList.add(this.waitingLightClassOn);
+      this.WaitingLight.classList.remove(this.waitingLightClassOff);
+    } else {
+      this.WaitingLight.classList.remove(this.waitingLightClassOn);
+      this.WaitingLight.classList.add(this.waitingLightClassOff);
+    }
   }
 
-  async DropToast(message: string): Promise<void> {
+  async HideToast(message: string): Promise<void> {
+    this.Logger.FuncStart(this.HideToast.name);
+    this.SetSliderDivText(message);
+    this.LowerToastAsync();
+    this.Logger.FuncEnd(this.HideToast.name);
+  }
+
+  async ShowToastAsync(message: string): Promise<void> {
     try {
-      this.Logger.FuncStart(this.DropToast.name);
+      this.Logger.FuncStart(this.ShowToastAsync.name);
       this.SetSliderDivText(message);
-
-      await this.RaiseToastA();
-
-      this.Logger.FuncEnd(this.DropToast.name);
+      this.TurnOnWaitingLight(false);
+      this.RaiseToastAsync();
+      this.Logger.FuncEnd(this.ShowToastAsync.name);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.DropToast.name, err);
+      this.ErrorHand.ErrorAndThrow(this.ShowToastAsync.name, err);
     }
   }
 
@@ -70,7 +93,7 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
       this.ToastContainer = this.CreateToastContainer(this.TargetDoc);
       this.CreateSliderDiv();
       this.CreateCancelButton();
-      this.FlagSlider.appendChild(this.ButtonElem);
+      this.FlagSlider.appendChild(this.CancelButtonElem);
 
       this.BodyTag.appendChild(this.ToastContainer);
     }
@@ -78,34 +101,50 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     this.Logger.FuncEnd(this.DivineElements.name);
   }
 
-  private async RaiseToastA(): Promise<void> {
+  private async RaiseToastAsync(): Promise<void> {
     try {
       var self = this;
-      await setTimeout(async function () {
+      setTimeout(async function () {
         self.ToastContainer.appendChild(self.FlagSlider);
         self.FlagSlider.classList.remove(self.classSlideDown);
         self.FlagSlider.classList.add(self.classSlideUp);
       }, 1000);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.RaiseToastA.name, err);
+      this.ErrorHand.ErrorAndThrow(this.RaiseToastAsync.name, err);
     }
   }
 
-  private async LowerToastA(): Promise<void> {
+  private async LowerToastAsync(): Promise<void> {
     try {
       var self = this;
-      await setTimeout(async function () {
+      setTimeout(async function () {
         self.FlagSlider.classList.remove(self.classSlideUp);
         self.FlagSlider.classList.add(self.classSlideDown);
       }, 1000);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.LowerToastA.name, err);
+      this.ErrorHand.ErrorAndThrow(this.LowerToastAsync.name, err);
     }
   }
 
   private SetSliderDivText(sliderDivText: string) {
-    if (this.FlagSlider) {
-      this.FlagTextDiv.innerHTML = '<div class="header">HindSite</div><div class="message">' + sliderDivText + '</div>';
+    if (this.MessageDiv) {
+      //let headerElem: HTMLDivElement = this.TargetDoc.createElement('div');
+      //headerElem.innerText = "HindSite";
+      //headerElem.classList.add("header");
+
+      //let headWrapper: HTMLDivElement = this.TargetDoc.createElement('div');
+      //headWrapper.innerText = "HindSite";
+      //headWrapper.classList.add("header");
+
+      //this.MessageDiv = this.TargetDoc.createElement('div');
+      //this.MessageDiv.innerText = "";
+      //this.MessageDiv.classList.add("message");
+
+      //let bigDiv: HTMLDivElement = this.TargetDoc.createElement('div');
+
+      //let closeButton: HTMLInputElement = this.CreateCloseButton();
+
+      this.FlagTextDiv.innerHTML = sliderDivText;
     }
   }
 
@@ -113,15 +152,36 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     this.TaskMonitor.RequestCancel();
   }
 
+  private CallbackOnCloseButton() {
+    this.HideToast('Closing');
+  }
+
+  private CreateCloseButton(): HTMLInputElement {
+    let closeButtonElem: HTMLInputElement = this.TargetDoc.createElement('input');
+    closeButtonElem.type = "button";
+    closeButtonElem.value = "X";
+    closeButtonElem.classList.add("close-btn");
+
+    //let closeButton: string = '<div class="close-btn" id="toast-close-btn">X</div>'
+
+    //this.OnButtonClick_Subject_Close = new SingleClickEvent_Subject(this.CommonCore);
+    //this.OnButtonClick_ObserverTest_Close = new SingleClickEvent_Observer(this.CommonCore, this.CallbackOnCloseButton.bind(this));
+    //this.OnButtonClick_Subject_Close.RegisterObserver(this.OnButtonClick_ObserverTest);
+
+    closeButtonElem.addEventListener('click', (() => this.CallbackOnCloseButton()));
+
+    return closeButtonElem;
+  }
+
   private CreateCancelButton(): void {
-    this.ButtonElem = this.TargetDoc.createElement('input');
-    this.ButtonElem.type = "button";
-    this.ButtonElem.value = "Cancel";
+    this.CancelButtonElem = this.TargetDoc.createElement('input');
+    this.CancelButtonElem.type = "button";
+    this.CancelButtonElem.value = "Cancel";
 
     this.OnButtonClick_Subject = new SingleClickEvent_Subject(this.CommonCore);
     this.OnButtonClick_ObserverTest = new SingleClickEvent_Observer(this.CommonCore, this.TestCancelCallback.bind(this));
     this.OnButtonClick_Subject.RegisterObserver(this.OnButtonClick_ObserverTest);
-    this.ButtonElem.addEventListener('click', (() => {
+    this.CancelButtonElem.addEventListener('click', (() => {
       let payload: ISingleClickEvent_Payload = {
         HandlerData: null
       }
@@ -134,7 +194,34 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     this.FlagSlider.classList.add('slider');
     this.FlagSlider.classList.add(this.classSlideDown);
 
+
+    this.WaitingLight = this.TargetDoc.createElement('div');
+    this.WaitingLight.classList.add(this.waitingLightClassOff);
+    this.WaitingLight.classList.add('waiting');
+
+    let closeButton: HTMLInputElement = this.CreateCloseButton();
+
+    let headerElem: HTMLDivElement = this.TargetDoc.createElement('div');
+    headerElem.innerText = "HindSite";
+    headerElem.classList.add("header");
+
+    let headWrapper: HTMLDivElement = this.TargetDoc.createElement('div');
+    headWrapper.classList.add("header-wrapper");
+
+    this.MessageDiv = this.TargetDoc.createElement('div');
+    this.MessageDiv.innerText = "";
+    this.MessageDiv.classList.add("message");
+
     this.FlagTextDiv = this.TargetDoc.createElement('div');
+
+
+    headWrapper.appendChild(headerElem);
+    headWrapper.appendChild(closeButton);
+
+    this.FlagSlider.appendChild(headWrapper);
+    this.FlagSlider.appendChild(this.WaitingLight);
+    this.FlagSlider.appendChild(this.MessageDiv);
+
     this.FlagSlider.appendChild(this.FlagTextDiv);
   }
 

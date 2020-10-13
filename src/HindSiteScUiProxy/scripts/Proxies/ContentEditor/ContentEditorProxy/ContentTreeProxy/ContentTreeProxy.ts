@@ -210,6 +210,8 @@ export class ContentTreeProxy extends _APICoreBase {
 
   private GetTreeNodeProxy(): Promise<ScContentTreeNodeProxy> {
     return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetTreeNodeProxy.name);
+
       if (this.DocumentJacket) {
         if (this.rootTreeNodeJacket) {
           var rootParent: ElementJacket = this.rootTreeNodeJacket.parentElement();
@@ -228,7 +230,10 @@ export class ContentTreeProxy extends _APICoreBase {
       else {
         this.ErrorHand.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no targetDoc');
       }
+
       resolve(this._treeNodeProxy);
+
+      this.Logger.FuncEnd(this.GetTreeNodeProxy.name);
     });
   }
 

@@ -1,11 +1,12 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/DocumentJacket";
-import { ScUiManager } from "../../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
+import { DeepHotKeyAgent } from "../../../Shared/scripts/Agents/DeepHotKey/DeepHotKeyAgent";
 import { ApiCommandPayload } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/ApiCommandPayload";
 import { CommandPayloadForInternal } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandPayloadForInternal";
 import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/DefaultMsgContentToController";
-import { StaticHelpers } from "../../../Shared/scripts/Classes/StaticHelpers";
 import { ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
 import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
+import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
+import { HotKeyEvent_Observer } from "../../../Shared/scripts/Events/HotKeyEvent/HotKeyEvent_Observer";
 import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
@@ -19,14 +20,11 @@ import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandStartEndCancelEvent_Observer } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Observer";
 import { CommandStartEndCancelEvent_Subject } from "../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Subject";
-import { ICommandStartEndCancelEvent_Payload } from "../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
 import { CommandState_State } from "../Events/CommandStartEndCancelEvent/CommandState_State";
-import { CommandToExecuteData } from "./CommandToExecuteData";
+import { ICommandStartEndCancelEvent_Payload } from "../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
 import { CommandRunnerInternal } from "./CommandRunnerInternal";
-import { DeepHotKeyAgent } from "../../../Shared/scripts/Agents/DeepHotKey/DeepHotKeyAgent";
-import { HotKeyEvent_Observer } from "../../../Shared/scripts/Events/KeyBoardComboEvent/HotKeyEvent_Observer";
-import { IHotKeyEvent_Payload } from "../../../Shared/scripts/Events/KeyBoardComboEvent/IHotKeyEvent_Payload";
-import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
+import { CommandToExecuteData } from "./CommandToExecuteData";
+import { IHotKeyEvent_Payload } from "../../../Shared/scripts/Events/HotKeyEvent/IHotKeyEvent_Payload";
 
 export class CommandRouter extends _FrontBase {
   private AtticAgent: IContentAtticAgent;
@@ -90,7 +88,7 @@ export class CommandRouter extends _FrontBase {
   private async OnCommandStartEndCancelEvent(payload: ICommandStartEndCancelEvent_Payload): Promise<void> {
     this.Logger.FuncStart(this.OnCommandStartEndCancelEvent.name);
     if (payload.CommandState == CommandState_State.CommandStarted) {
-      await this.ToastAgent.DropToast('Starting to do something')
+      this.ToastAgent.ShowToastAsync('Starting to do something')
     } else if (payload.CommandState == CommandState_State.CommandCompletedSuccessfully) {
     }
 
@@ -109,11 +107,8 @@ export class CommandRouter extends _FrontBase {
           commandParams.NewNickname = routingParams.NewNickName;
         }
 
-        let payload: ICommandStartEndCancelEvent_Payload = {
-          CommandState: CommandState_State.CommandStarted
-        }
         let self = this;
-        this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payload);
+       
         await commandToExecute.bind(self.InternalCommandRunner)(commandParams, this.Dependancies)
           .then(() => this.Logger.MarkerC())
           .then(() => {
@@ -122,7 +117,6 @@ export class CommandRouter extends _FrontBase {
             }
             //this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payloadComplete);
           })
-          .then(() => this.Logger.MarkerD())
           .then(() => resolve())
           .catch((err) => this.ErrorHand.ErrorAndThrow(this.ExecuteInternalCommand.name, err));
         //}, 1000)
@@ -148,6 +142,19 @@ export class CommandRouter extends _FrontBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RouteCommand.name, ReqCommandMsgFlag[routingParams.MsgFlag]);
       let commandData: CommandToExecuteData = this.CalculateCommandToExec(routingParams.MsgFlag);
+
+
+
+      let payload: ICommandStartEndCancelEvent_Payload = {
+        CommandState: CommandState_State.CommandStarted
+      }
+
+      this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payload);
+
+
+
+
+
 
       if (commandData.CommandType == CommandType.Api) {
 
@@ -307,7 +314,7 @@ export class CommandRouter extends _FrontBase {
         break;
 
       default:
-        this.Logger.Log('Unhandled MsgFlag', ReqCommandMsgFlag[msgFlag]);
+        this.Logger.LogVal('Unhandled MsgFlag', ReqCommandMsgFlag[msgFlag]);
         break;
     }
 
