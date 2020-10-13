@@ -1,6 +1,28 @@
 ﻿@import "vars";
 
 body {
+  $mouseBlockZ: 1002; // red button is 1001
+  $toastZ: $mouseBlockZ + 1;
+
+  .mouse-blocker {
+    position: absolute;
+    z-index: $mouseBlockZ;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    &.mouse-blocker-on {
+      display: block;
+      background-color: white;
+      opacity: 0.6;
+    }
+
+    &.mouse-blocker-off {
+      display: none;
+    }
+  }
+
   .toast {
     $ToastHeight: 140px;
     $ToastBottomGap: 0px;
@@ -12,7 +34,7 @@ body {
     position: absolute;
     right: 15px;
     width: 200px;
-    z-index: 999;
+    z-index: $toastZ;
 
     .slider {
       overflow: hidden;

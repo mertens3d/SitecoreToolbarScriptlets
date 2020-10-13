@@ -27,6 +27,9 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
   private CancelButtonElem: HTMLInputElement;
   private waitingLightClassOn: string = 'waiting-on';
   private waitingLightClassOff: string = 'waiting-off';
+  private mouseBlockerClassOff: string = 'mouse-blocker-off';
+  private mouseBlockerClassOn: string = 'mouse-blocker-on';
+  private MouseBlocker: HTMLDivElement;
 
   constructor(commonCore: ICommonCore, targetDoc: Document) {
     super(commonCore);
@@ -58,7 +61,6 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
   TurnOnWaitingLight(isOn: boolean) {
     this.Logger.LogImportant(this.TurnOnWaitingLight.name + ' ' + isOn.toString())
     if (isOn) {
-
       this.WaitingLight.classList.add(this.waitingLightClassOn);
       this.WaitingLight.classList.remove(this.waitingLightClassOff);
     } else {
@@ -69,6 +71,7 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
 
   async HideToast(message: string): Promise<void> {
     this.Logger.FuncStart(this.HideToast.name);
+    this.TurnOnMouseBlocker(false);
     this.SetSliderDivText(message);
     this.LowerToastAsync();
     this.Logger.FuncEnd(this.HideToast.name);
@@ -78,11 +81,24 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     try {
       this.Logger.FuncStart(this.ShowToastAsync.name);
       this.SetSliderDivText(message);
+      this.TurnOnMouseBlocker(true);
       this.TurnOnWaitingLight(false);
       this.RaiseToastAsync();
       this.Logger.FuncEnd(this.ShowToastAsync.name);
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.ShowToastAsync.name, err);
+    }
+  }
+  private TurnOnMouseBlocker(isOn: boolean) {
+    if (this.MouseBlocker) {
+      if (isOn) {
+        this.MouseBlocker.classList.add(this.mouseBlockerClassOn);
+        this.MouseBlocker.classList.remove(this.mouseBlockerClassOff);
+
+      } else {
+        this.MouseBlocker.classList.add(this.mouseBlockerClassOff);
+        this.MouseBlocker.classList.remove(this.mouseBlockerClassOn);
+      }
     }
   }
 
@@ -93,6 +109,7 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
       this.ToastContainer = this.CreateToastContainer(this.TargetDoc);
       this.CreateSliderDiv();
       this.CreateCancelButton();
+      this.CreateMouseBlocker();
       this.FlagSlider.appendChild(this.CancelButtonElem);
 
       this.BodyTag.appendChild(this.ToastContainer);
@@ -173,6 +190,13 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     return closeButtonElem;
   }
 
+  private CreateMouseBlocker(): void {
+    this.MouseBlocker = this.TargetDoc.createElement('div');
+    this.MouseBlocker.classList.add('mouse-blocker');
+    this.MouseBlocker.classList.add('mouse-blocker-off');
+    document.body.appendChild(this.MouseBlocker);
+  }
+
   private CreateCancelButton(): void {
     this.CancelButtonElem = this.TargetDoc.createElement('input');
     this.CancelButtonElem.type = "button";
@@ -194,7 +218,6 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     this.FlagSlider.classList.add('slider');
     this.FlagSlider.classList.add(this.classSlideDown);
 
-
     this.WaitingLight = this.TargetDoc.createElement('div');
     this.WaitingLight.classList.add(this.waitingLightClassOff);
     this.WaitingLight.classList.add('waiting');
@@ -213,7 +236,6 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     this.MessageDiv.classList.add("message");
 
     this.FlagTextDiv = this.TargetDoc.createElement('div');
-
 
     headWrapper.appendChild(headerElem);
     headWrapper.appendChild(closeButton);

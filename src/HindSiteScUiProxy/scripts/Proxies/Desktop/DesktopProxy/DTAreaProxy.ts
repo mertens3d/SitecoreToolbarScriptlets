@@ -83,7 +83,7 @@ export class DTAreaProxy extends _BaseStateFullProxy<IStateOfDTArea> implements 
             }
           });
         })
-        .then(() => this.Logger.LogAsJsonPretty('DTAreaState', stateOfDTArea))
+        //.then(() => this.Logger.LogAsJsonPretty('DTAreaState', stateOfDTArea))
         .then(() => resolve(stateOfDTArea))
         .catch((err) => reject(this.GetState.name + ' | ' + err));
 
