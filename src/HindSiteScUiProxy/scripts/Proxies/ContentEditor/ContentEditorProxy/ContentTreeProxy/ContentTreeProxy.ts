@@ -28,7 +28,7 @@ export class ContentTreeProxy extends _APICoreBase {
   private TreeContainerJacket: ElementJacket;
 
   public ContentTreeMutationEvent_Subject: ContentTreeMutationEvent_Subject;
-  private  ConResolver: ConResolver;
+  private ConResolver: ConResolver;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, treeContainerJacket: ElementJacket, TreeRootSelector: string) {
     super(apiCore);
@@ -106,16 +106,17 @@ export class ContentTreeProxy extends _APICoreBase {
           .then(() => scContentTreeNodeProxy.Instantiate())
           .then(() => resolve(scContentTreeNodeProxy))
           .catch((err) => reject(this.GetTreeNodeByGlyph.name + ' | ' + err));
+      } else {
+        reject(() => this.ErrorHand.FormatRejectMessage(this.GetTreeNodeByGlyph.name, 'null target node or null treeContainerJacket'));
       }
     });
   }
 
   async SetStateOfNodeRecursive(currentNodeData: IStateOfScContentTreeNodeDeep, depth: number): Promise<void> {
-    this.Logger.FuncStart(this.SetStateOfNodeRecursive.name, currentNodeData.Friendly);
+    this.Logger.FuncStart(this.SetStateOfNodeRecursive.name, currentNodeData.Friendly + ' ' + depth.toString());
     try {
       let maxIterDepth: number = 200;
 
-      let targetScContentTreeNodeProxy: ScContentTreeNodeProxy = null;
       let promisesAr: Promise<void>[] = [];
 
       if (depth > maxIterDepth) {
@@ -123,19 +124,25 @@ export class ContentTreeProxy extends _APICoreBase {
       }
 
       if (depth < maxIterDepth && currentNodeData) {
+        //there is a chance the node may not be found. It may have been moved or deleted
+        let targetScContentTreeNodeProxy: ScContentTreeNodeProxy = null;
+
         await this.GetTreeNodeByGlyph(currentNodeData)
-          .then((scContentTreeNodeProxy: ScContentTreeNodeProxy) => {
-            targetScContentTreeNodeProxy = scContentTreeNodeProxy;
-          })
-          .then(() => targetScContentTreeNodeProxy.SetStateOfTreeNode(currentNodeData, depth))
-          .then(() => {
-            if (currentNodeData.NodeChildren.length > 0) {
-              currentNodeData.NodeChildren.forEach((nodeChild: IStateOfScContentTreeNodeDeep) =>
-                promisesAr.push(this.SetStateOfNodeRecursive(nodeChild, depth + 1))
-              )
-            }
-          })
-          .then(() => Promise.all(promisesAr));
+          .then((scContentTreeNodeProxy: ScContentTreeNodeProxy) => targetScContentTreeNodeProxy = scContentTreeNodeProxy)
+          .catch((err) => this.ErrorHand.WarningAndContinue(this.SetStateOfNodeRecursive.name, 'Tree node not found: ' + currentNodeData.Friendly + ' ' + currentNodeData.ItemId));
+
+        if (targetScContentTreeNodeProxy) {
+          await targetScContentTreeNodeProxy.SetStateOfTreeNode(currentNodeData, depth)
+        }
+
+        if (currentNodeData.NodeChildren.length > 0) {
+          currentNodeData.NodeChildren.forEach((nodeChild: IStateOfScContentTreeNodeDeep) =>
+            promisesAr.push(this.SetStateOfNodeRecursive(nodeChild, depth + 1))
+          )
+          await Promise.all(promisesAr);
+        }
+      } else {
+        this.ErrorHand.ErrorAndThrow(this.SetStateOfNodeRecursive.name, 'no node date or max depth hit ' + depth.toString())
       }
     } catch (err) {
       this.ErrorHand.ErrorAndThrow(this.SetStateOfNodeRecursive.name, err);

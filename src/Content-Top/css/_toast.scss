@@ -31,6 +31,7 @@ body {
     bottom: 0;
     height: $ToastHeight + $ToastBottomGap;
     overflow: hidden;
+    pointer-events: none;
     position: absolute;
     right: 15px;
     width: 200px;
@@ -38,6 +39,7 @@ body {
 
     .slider {
       overflow: hidden;
+      pointer-events: all;
       /* complete liquid height based on the parent's height!! */
       height: 100%;
       background-color: $SitecoreRed;
