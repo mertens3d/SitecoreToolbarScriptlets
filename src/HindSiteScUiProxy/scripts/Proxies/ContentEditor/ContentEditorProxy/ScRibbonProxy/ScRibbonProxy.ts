@@ -33,7 +33,7 @@ export class ScRibbonProxy extends _APICoreBase {
 
       if (!ribbonClickSequence || !ribbonClickSequence.ScRibbonCommand) { // todo put back once we have more commands || ribbonClickSequence.ScRibbonCommand == ScRibbonCommand.Unknown) {
         this.Logger.LogAsJsonPretty('ribbonButtonSequence', ribbonClickSequence);
-        this.ErrorHand.ErrorAndThrow([this.TriggerRibbonMenuItem.name], 'something is wrong with the ribbon selectors');
+        this.ErrorHand.HandleFatalError([this.TriggerRibbonMenuItem.name], 'something is wrong with the ribbon selectors');
       }
 
       await methodLock.WaitForLockControl(ScRibbonCommand[scRibbonButtonCommand])
@@ -47,7 +47,7 @@ export class ScRibbonProxy extends _APICoreBase {
           this.TaskMonitor.AsyncTaskCompleted(this.TriggerRibbonMenuItem.name);
         });
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.TriggerRibbonMenuItem.name, err);
+      this.ErrorHand.HandleFatalError(this.TriggerRibbonMenuItem.name, err);
     }
     this.Logger.FuncEnd(this.TriggerRibbonMenuItem.name);
   }

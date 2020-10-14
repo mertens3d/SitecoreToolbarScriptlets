@@ -1,6 +1,6 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
 import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
-import { IStateFullProxy } from "../IStateProxy";
+import { IStateFullProxy } from "../IStateFullProxy";
 import { ScWindowType } from "../../../Enums/50 - scWindowType";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { ScRibbonCommand } from "../../../Enums/eScRibbonCommand";

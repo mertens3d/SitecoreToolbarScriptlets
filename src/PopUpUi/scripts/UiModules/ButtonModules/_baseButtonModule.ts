@@ -54,10 +54,10 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
           this.WireDoubleClickEvent()
         }
       } else {
-        this.ErrorHand.ErrorAndThrow(this.WireClickEvents.name, 'did not find placeholder: ' + this.MenuCommandDefinition.PlaceHolderSelector);
+        this.ErrorHand.HandleFatalError(this.WireClickEvents.name, 'did not find placeholder: ' + this.MenuCommandDefinition.PlaceHolderSelector);
       }
     } else {
-      this.ErrorHand.ErrorAndThrow(this.WireClickEvents.name, 'no command or no command placeholder');
+      this.ErrorHand.HandleFatalError(this.WireClickEvents.name, 'no command or no command placeholder');
     }
   }
 
@@ -79,7 +79,7 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
         this.SingleButtonClickEvent_Subject.NotifyObserversAsync(singleClickEvent_payload);
       });
     } else {
-      this.ErrorHand.ErrorAndThrow(this.WireSingleClickEvent.name, 'No button element: ' + this.MenuCommandDefinition.PlaceHolderSelector);
+      this.ErrorHand.HandleFatalError(this.WireSingleClickEvent.name, 'No button element: ' + this.MenuCommandDefinition.PlaceHolderSelector);
     }
   }
 

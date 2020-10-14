@@ -36,7 +36,7 @@ export class ConResolver extends _APICoreBase {
     }
     else if (itemIconSource.IconPath === ScIconPath.Unknown) { toReturn = itemIconSource.IconSuffix; }
     else if (itemIconSource.IconPath === ScIconPath.IconCache) { toReturn = SharedConst.Const.UrlRelativePrefix.IconCache + itemIconSource.IconSuffix; }
-    else { this.ErrorHand.ErrorAndThrow([ConResolver.name, this.ResolveIconPath.name], 'unaccounted for iconPath type'); }
+    else { this.ErrorHand.HandleFatalError([ConResolver.name, this.ResolveIconPath.name], 'unaccounted for iconPath type'); }
 
     return toReturn;
   }

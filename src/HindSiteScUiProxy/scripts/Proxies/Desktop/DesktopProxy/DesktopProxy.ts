@@ -5,7 +5,7 @@ import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowT
 import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
-import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { RecipeBasics } from "../../../RecipeBasics";
@@ -13,16 +13,10 @@ import { StateFullProxyResolver } from "../../ProxyResolver";
 import { AsyncLock } from "./DesktopStartBarProxy/AsyncLock";
 import { DTStartBarProxy } from "./DesktopStartBarProxy/DesktopStartBarProxy";
 import { DTAreaProxy } from "./DTAreaProxy";
-import { DocumentJacketMutationEvent_Subject } from "./Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Subject";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { _BaseStateFullProxy } from "./FrameProxies/_StateProxy";
-import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
-import { DocumentJacketMutationEvent_Observer } from "./Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Observer";
-import { IDocumentJacketMutationEvent_Payload } from "./Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
-import { ElementFrameJacket } from "../../../../../DOMJacket/Elements/ElementFrameJacket";
-import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
-import { JqueryFrameProxy } from "../../SupportProxies/JqueryFrameProxy";
+import { JqueryModalDialogsFrameProxy } from "../../SupportProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
 //export class ScDocumentWatcher extends _APICoreBase {
 //  ScDocumentProxyMutationEvent_Subject: ScDocumentProxyMutationEvent_Subject;
@@ -48,8 +42,7 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
   private DTAreaProxy: DTAreaProxy;
   private DTStartBarProxy: DTStartBarProxy;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
-  private JqueryFrameProxy: JqueryFrameProxy;
-  //ScRibbonProxy: ScRibbonProxy;
+    JqueryFrameProxy: JqueryModalDialogsFrameProxy;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
@@ -58,7 +51,7 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
     if (documentJacket) {
       this.DocumentJacket = documentJacket;
     } else {
-      this.ErrorHand.ErrorAndThrow(DesktopProxy.name, 'No associated doc');
+      this.ErrorHand.HandleFatalError(DesktopProxy.name, 'No associated doc');
     }
 
     this.Instantiate();
@@ -71,6 +64,7 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
     this.DTStartBarProxy = new DTStartBarProxy(this.ApiCore, this.DocumentJacket);
     //this.ScRibbonProxy = new ScRibbonProxy(this.ApiCore, this.DocumentJacket);
     this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.ApiCore, this.OnAreaProxyMutationEvent.bind(this));
+    this.JqueryFrameProxy = new JqueryModalDialogsFrameProxy(this.ApiCore, this.DocumentJacket);
 
     //this.DocumentJacket.DocumentJacketWatcher
   }
@@ -80,14 +74,12 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
       this.Logger.FuncStart(this.InstantiateAsyncMembers.name, DesktopProxy.name);
 
       this.DTStartBarProxy.Instantiate_DTStartBarProxy();
-      this.DTAreaProxy.InstantiateAsyncMembers();
+      await this.DTAreaProxy.InstantiateAsyncMembers()
+        .catch((err) => this.ErrorHand.HandleFatalError([DesktopProxy.name, this.InstantiateAsyncMembers.name], err))
 
-      await this.DocumentJacket.WaitForFirstHostedFrame("[id=jqueryModalDialogsFrame]")
-        .then((elemJacket: ElementFrameJacket) => this.JqueryFrameProxy = new JqueryFrameProxy(this.ApiCore, elemJacket))
-        .then(() => this.JqueryFrameProxy.InstantiateAsyncMembers())
-        .catch((err) => this.ErrorHand.ThrowIfNullOrUndefined(this.InstantiateAsyncMembers.name, err));
+      
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
     }
 
     this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, DesktopProxy.name);
@@ -143,9 +135,9 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
           });
         })
         .then(() => Promise.all(promAr))
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.SetState.name, err));
+        .catch((err) => this.ErrorHand.HandleFatalError(this.SetState.name, err));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.SetState.name + ' ' + DesktopProxy.name, err);
+      this.ErrorHand.HandleFatalError(this.SetState.name + ' ' + DesktopProxy.name, err);
     }
 
     this.TaskMonitor.AsyncTaskCompleted(this.SetState.name);
@@ -162,9 +154,9 @@ export class DesktopProxy extends _BaseStateFullProxy<IStateOfDesktop> implement
     try {
       let asyncLock: AsyncLock = new AsyncLock(this.ApiCore);
       await this.DTStartBarProxy.TriggerRedButtonAsync(ScWindowType.ContentEditor, asyncLock)
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.AddContentEditorFrameAsync.name, err));
+        .catch((err) => this.ErrorHand.HandleFatalError(this.AddContentEditorFrameAsync.name, err));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.AddContentEditorFrameAsync.name, err);
+      this.ErrorHand.HandleFatalError(this.AddContentEditorFrameAsync.name, err);
     }
     this.Logger.FuncEnd(this.AddContentEditorFrameAsync.name);
   }

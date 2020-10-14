@@ -2,7 +2,7 @@
 import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
@@ -13,6 +13,7 @@ import { MediaLibraryProxy } from "./MediaLibraryProxy";
 import { PackageDesignerProxy } from "./PackageDesignerProxy/PackageDesignerProxy";
 import { AccessViewerProxy, ArchiveProxy, DomainManagerProxy, EmailExpeprienceManagerProxy, InstallationWizardProxy, InstallLicensesProxy, KeyBoardMapProxy, LicenseDetailsProxy, LogViewerProxy, RecycleBinProxy, RoleManagerProxy, RunProxy, ScanForBrokenLinksProxy, SecurityEditorProxy, UserManagerProxy, WorkboxProxy } from "./PackageDesignerProxy/RecycleBinProxy";
 import { TemplateManagerProxy } from "./TemplateManagerProxy";
+import { JqueryModalDialogsDocProxy } from "./SupportProxies/JqueryModalDialogsProxy";
 
 export class StateFullProxyResolver extends _APICoreBase {
   constructor(apiCore: IAPICore) {
@@ -50,6 +51,8 @@ export class StateFullProxyResolver extends _APICoreBase {
       ScWindowType.LoginPage,
       ScWindowType.LogViewer,
 
+      ScWindowType.JqueryModalDialogs,
+
       ScWindowType.MarketingAutomation,
       ScWindowType.MarketingControlPanel,
       ScWindowType.MediaLibrary,
@@ -74,7 +77,7 @@ export class StateFullProxyResolver extends _APICoreBase {
     ];
   }
 
-  StateFullProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket): Promise<IStateFullProxy> {
+  StateFullProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket, jqueryModalDialogsProxy: JqueryModalDialogsDocProxy): Promise<IStateFullProxy> {
     return new Promise(async (resolve, reject) => {
       let StateFullProxy: IStateFullProxy = null;
 
@@ -104,6 +107,7 @@ export class StateFullProxyResolver extends _APICoreBase {
 
       else if (windowType === ScWindowType.InstallationWizard) { StateFullProxy = new InstallationWizardProxy(this.ApiCore); }
       else if (windowType === ScWindowType.InstalledLicenses) { StateFullProxy = new InstallLicensesProxy(this.ApiCore); }
+      else if (windowType === ScWindowType.JqueryModalDialogs) { StateFullProxy = new JqueryModalDialogsDocProxy(this.ApiCore, documentJacket); }
 
       else if (windowType === ScWindowType.KeyboardMap) { StateFullProxy = new KeyBoardMapProxy(this.ApiCore); }
 
@@ -117,7 +121,7 @@ export class StateFullProxyResolver extends _APICoreBase {
       else if (windowType === ScWindowType.MarketingAutomation) { StateFullProxy = new FallBackProxy(this.ApiCore); }
       else if (windowType === ScWindowType.MediaLibrary) { StateFullProxy = new MediaLibraryProxy(this.ApiCore, documentJacket); }
 
-      else if (windowType === ScWindowType.PackageDesigner) { StateFullProxy = new PackageDesignerProxy(this.ApiCore, documentJacket, 'PackageDesigner'); }
+      else if (windowType === ScWindowType.PackageDesigner) { StateFullProxy = new PackageDesignerProxy(this.ApiCore, documentJacket, 'PackageDesigner', jqueryModalDialogsProxy); }
       else if (windowType === ScWindowType.PathAnalyzer) { StateFullProxy = new FallBackProxy(this.ApiCore); }
       else if (windowType === ScWindowType.Publish) { StateFullProxy = new FallBackProxy(this.ApiCore); }
 
@@ -135,7 +139,7 @@ export class StateFullProxyResolver extends _APICoreBase {
 
       else if (windowType === ScWindowType.Workbox) { StateFullProxy = new WorkboxProxy(this.ApiCore); }
 
-      else { this.ErrorHand.ErrorAndThrow(this.StateFullProxyFactory.name, 'unhandled windowType ' + ScWindowType[windowType]); }
+      else { this.ErrorHand.HandleFatalError(this.StateFullProxyFactory.name, 'unhandled windowType ' + ScWindowType[windowType]); }
 
       await StateFullProxy.InstantiateAsyncMembers()
         .then(() => StateFullProxy.WireEvents())
@@ -151,10 +155,11 @@ export class StateFullProxyResolver extends _APICoreBase {
     else if (proxyDiscriminator === StateFullProxyDisciminator.AccessViewer) { toReturn = ScWindowType.AccessViewer; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.Archive) { toReturn = ScWindowType.Archive; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.ContentEditor) { toReturn = ScWindowType.ContentEditor; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.Desktop) { this.ErrorHand.ErrorAndThrow(this.MapProxyDiscriminatorToScWindowType.name, 'Something has gone wrong'); }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.Desktop) { this.ErrorHand.HandleFatalError(this.MapProxyDiscriminatorToScWindowType.name, 'Something has gone wrong'); }
     else if (proxyDiscriminator === StateFullProxyDisciminator.DomainManager) { toReturn = ScWindowType.DomainManager; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.InstallationWizard) { toReturn = ScWindowType.InstallationWizard; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.InstalledLicenses) { toReturn = ScWindowType.InstalledLicenses; }
+    else if (proxyDiscriminator === StateFullProxyDisciminator.JqueryModalDialogsProxy) { toReturn = ScWindowType.JqueryModalDialogs; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.KeyBoardMap) { toReturn = ScWindowType.KeyboardMap; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.LicenseDetails) { toReturn = ScWindowType.LicenseDetails; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.LogViewer) { toReturn = ScWindowType.LogViewer; }
@@ -169,7 +174,7 @@ export class StateFullProxyResolver extends _APICoreBase {
     else if (proxyDiscriminator === StateFullProxyDisciminator.TemplateManager) { toReturn = ScWindowType.TemplateManager; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.UserManager) { toReturn = ScWindowType.UserManager; }
     else if (proxyDiscriminator === StateFullProxyDisciminator.Workbox) { toReturn = ScWindowType.Workbox; }
-    else { this.ErrorHand.ErrorAndThrow(this.MapProxyDiscriminatorToScWindowType.name, 'unhandled mapping') };
+    else { this.ErrorHand.HandleFatalError(this.MapProxyDiscriminatorToScWindowType.name, 'unhandled mapping') };
 
     return toReturn;
   }

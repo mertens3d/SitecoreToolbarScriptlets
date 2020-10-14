@@ -1,4 +1,4 @@
-﻿import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+﻿import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IStateOfCEFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateOfCEFrameProxy";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";

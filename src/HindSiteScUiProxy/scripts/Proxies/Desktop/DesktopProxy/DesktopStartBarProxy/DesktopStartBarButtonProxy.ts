@@ -40,7 +40,7 @@ export class DesktopStartBarButtonProxy extends _APICoreBase {
       await this.FoundStartBarButton.WaitForElement(':scope > div > span', this.Instantiate_DestopStartBarButtonProxyAsyncItems.name)
         .then((containerSpanElement: ElementJacket) => this.ContainerSpanElement = containerSpanElement);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Instantiate_DestopStartBarButtonProxyAsyncItems.name, err);
+      this.ErrorHand.HandleFatalError(this.Instantiate_DestopStartBarButtonProxyAsyncItems.name, err);
     }
   }
 
@@ -163,7 +163,7 @@ export class DesktopStartBarButtonProxy extends _APICoreBase {
     if (this.ContainerSpanElement) {
       this.ContainerSpanElement.NativeElement.innerHTML = bothWrapper.outerHTML;
     } else {
-      this.ErrorHand.ErrorAndThrow(this.SetStateOfDesktopStartBarButtonAsync.name, 'no container span element');
+      this.ErrorHand.HandleFatalError(this.SetStateOfDesktopStartBarButtonAsync.name, 'no container span element');
     }
   }
 

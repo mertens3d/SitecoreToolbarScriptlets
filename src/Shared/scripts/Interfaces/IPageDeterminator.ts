@@ -1,7 +1,7 @@
 ﻿import { IQueryKeyValuePair } from "../Agents/UrlAgent/IQueryKeyValuePair";
 import { ScWindowType } from "../Enums/50 - scWindowType";
 
-export interface IPageDeterminator {
+export interface IScWindowTypeDeterminator {
     ConfidenceScore: number;
     Friendly: string;
     QueryKeyValuePairs: IQueryKeyValuePair[];

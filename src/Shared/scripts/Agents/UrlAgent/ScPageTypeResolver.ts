@@ -8,9 +8,9 @@ import { IScUrlAgent } from "../../Interfaces/Jackets/IScUrlAgent";
 import { IGenericUrlParts } from "../../Interfaces/Jackets/IUrlParts";
 import { SharedConst } from "../../SharedConst";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
-import { ScWindowTypeDeterminators } from "./AllPageDeterminators";
+import { ScWindowTypeDeterminators } from "./ScWindowTypeDeterminators";
 import { _CommonBase } from "../../_CommonCoreBase";
-import { IPageDeterminator } from "../../Interfaces/IPageDeterminator";
+import { IScWindowTypeDeterminator } from "../../Interfaces/IPageDeterminator";
 
 export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
   public UrlJacket: IUrlJacket;
@@ -20,11 +20,11 @@ export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
     this.UrlJacket = urlJacket;
   }
 
-  RunJacketAgainstAllDeterminators(): IPageDeterminator {
-    let determinators: IPageDeterminator[] = ScWindowTypeDeterminators.ScWindows;
-    let toReturnPageDeterminator: IPageDeterminator = null;
+  RunJacketAgainstAllDeterminators(): IScWindowTypeDeterminator {
+    let determinators: IScWindowTypeDeterminator[] = ScWindowTypeDeterminators.ScWindowTypeDeterminators;
+    let toReturnPageDeterminator: IScWindowTypeDeterminator = null;
 
-    determinators.forEach((determinant: IPageDeterminator) => {
+    determinators.forEach((determinant: IScWindowTypeDeterminator) => {
       let passed: boolean = true;
       determinant.ConfidenceScore = 0;
 
@@ -173,9 +173,9 @@ export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
     //  this.ErrorHand.ErrorAndThrow(this.GetScWindowType.name, 'null url');
     //}
 
-    let result: IPageDeterminator = this.RunJacketAgainstAllDeterminators();
+    let result: IScWindowTypeDeterminator = this.RunJacketAgainstAllDeterminators();
     if (!result) {
-      this.ErrorHand.ErrorAndThrow(this.GetScWindowType.name, 'Undetermined page');
+      this.ErrorHand.HandleFatalError(this.GetScWindowType.name, 'Undetermined page');
     } else {
       toReturn = result.ScWindowType;
     }
@@ -227,7 +227,7 @@ export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
         break;
       default:
         this.UrlJacket.SetFilePath('');
-        this.ErrorHand.ErrorAndThrow(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
+        this.ErrorHand.HandleFatalError(this.SetFilePathFromWindowType.name, 'unaccounted for window type');
         break;
     }
   }

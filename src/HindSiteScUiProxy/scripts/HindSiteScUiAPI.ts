@@ -49,7 +49,7 @@ export class HindSiteScUiAPI implements IHindSiteScUiAPI {
       await this.ScWindowFacade.InstantiateAsyncMembers_ScWindowFacade();
     }
     catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.InstantiateHindSiteScUiProxy.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateHindSiteScUiProxy.name, err);
     }
 
     this.Logger.FuncEnd(this.InstantiateHindSiteScUiProxy.name);
@@ -125,7 +125,7 @@ export class HindSiteScUiAPI implements IHindSiteScUiAPI {
         this.ErrorHand.WarningAndContinue(this.TriggerCERibbonCommand.name, 'Invalid scRibbonCommand');
       }
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.TriggerCERibbonCommand.name, err);
+      this.ErrorHand.HandleFatalError(this.TriggerCERibbonCommand.name, err);
     }
     this.Logger.FuncEnd([HindSiteScUiAPI.name, this.TriggerCERibbonCommand.name]);
   }

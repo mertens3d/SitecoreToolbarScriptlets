@@ -57,7 +57,7 @@ export abstract class HindeSiteEvent_Subject<T> extends _CommonBase implements I
         this.ErrorHand.WarningAndContinue(this.RegisterObserver.name, 'Observer already registered');
       }
     } else {
-      this.ErrorHand.ErrorAndThrow(this.RegisterObserver.name, 'Observer is null');
+      this.ErrorHand.HandleFatalError(this.RegisterObserver.name, 'Observer is null');
     }
   }
 

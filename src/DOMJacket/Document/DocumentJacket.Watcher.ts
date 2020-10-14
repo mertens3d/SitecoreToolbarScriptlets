@@ -54,7 +54,7 @@ export class DocumentJacket_Watcher extends _CommonBase {
       this.DocumentJacketMutationEvent_Subject.NotifyObserversAsync(payload);
     }
     catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.CallBackOnNativeIFrameAddRemoveEventAsync.name, err);
+      this.ErrorHand.HandleFatalError(this.CallBackOnNativeIFrameAddRemoveEventAsync.name, err);
     }
     this.Logger.FuncEnd(this.CallBackOnNativeIFrameAddRemoveEventAsync.name);
   }

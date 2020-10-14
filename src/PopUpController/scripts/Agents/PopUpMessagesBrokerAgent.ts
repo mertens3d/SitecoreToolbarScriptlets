@@ -58,9 +58,9 @@ export class MessageBroker_PopUp extends _FrontBase {
 
         this.SendMessageToContentAsync(messageControllerToContent)
           .then((controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) => this.HandleReply(controllerMessageReceivedEvent_Payload))
-          .catch((err) => this.ErrorHand.ErrorAndThrow(this.SendCommandToContentAsync.name, err));
+          .catch((err) => this.ErrorHand.HandleFatalError(this.SendCommandToContentAsync.name, err));
       } else {
-        this.ErrorHand.ErrorAndThrow(this.SendCommandToContentAsync.name, 'null check');
+        this.ErrorHand.HandleFatalError(this.SendCommandToContentAsync.name, 'null check');
       }
     } catch (err) {
       throw (this.SendCommandToContentAsync.name + ' | ' + err);
@@ -95,7 +95,7 @@ export class MessageBroker_PopUp extends _FrontBase {
           .then((result: IControllerMessageReceivedEvent_Payload) => resolve(result))
           .catch((err) => reject(err));
       } else {
-        this.ErrorHand.ErrorAndThrow(this.SendMessageToContentAsync.name, 'null stateOfPopUp');
+        this.ErrorHand.HandleFatalError(this.SendMessageToContentAsync.name, 'null stateOfPopUp');
       }
 
       this.Logger.FuncEnd(this.SendMessageToContentAsync.name, StaticHelpers.MsgFlagAsString(messageFromController.MsgFlag));
@@ -116,7 +116,7 @@ export class MessageBroker_PopUp extends _FrontBase {
         })
 
         .catch((ex) => {
-          this.ErrorHand.ErrorAndThrow(this.SendMessageToSingleTabAsync.name, ex);
+          this.ErrorHand.HandleFatalError(this.SendMessageToSingleTabAsync.name, ex);
           resolve(null);
         });
 

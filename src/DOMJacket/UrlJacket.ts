@@ -72,7 +72,7 @@ export class UrlJacket extends _CommonBase implements IUrlJacket {
       this.UrlParts.UrlSearchParameters.set(QueryStrKey[key], newValue);
     }
     else {
-      this.ErrorHand.ErrorAndThrow(this.SetParameterValueByKey.name, 'No URLParts ' + QueryStrKey[key] + ' ' + newValue);
+      this.ErrorHand.HandleFatalError(this.SetParameterValueByKey.name, 'No URLParts ' + QueryStrKey[key] + ' ' + newValue);
     }
   }
 
@@ -121,7 +121,7 @@ export class UrlJacket extends _CommonBase implements IUrlJacket {
       }
     }
     else {
-      this.ErrorHand.ErrorAndThrow(this.BuildFullUrlFromParts.name, 'Null UrlParts');
+      this.ErrorHand.HandleFatalError(this.BuildFullUrlFromParts.name, 'Null UrlParts');
     }
 
     return toReturn;

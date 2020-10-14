@@ -16,7 +16,7 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
 
     this.Logger.CTORStart(FrameJacketAddRemoveEvent_Subject.name);
     if (!documentJacket) {
-      this.ErrorHand.ErrorAndThrow(FrameJacketAddRemoveEvent_Subject.name, 'No target doc');
+      this.ErrorHand.HandleFatalError(FrameJacketAddRemoveEvent_Subject.name, 'No target doc');
     }
     this.DocumentJacket = documentJacket;
     this.InitMutationObserver();
@@ -99,7 +99,7 @@ export class FrameJacketAddRemoveEvent_Subject extends HindeSiteEvent_Subject<IF
         }
       }
       else {
-        this.ErrorHand.ErrorAndThrow(this.InitMutationObserver.name, 'no AssociatedDoc');
+        this.ErrorHand.HandleFatalError(this.InitMutationObserver.name, 'no AssociatedDoc');
       }
     }
     catch (err) {

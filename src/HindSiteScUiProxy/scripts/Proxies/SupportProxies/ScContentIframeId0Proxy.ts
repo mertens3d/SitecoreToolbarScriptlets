@@ -3,17 +3,24 @@ import { ElementFrameJacket } from "../../../../DOMJacket/Elements/ElementFrameJ
 import { ElementJacket } from "../../../../DOMJacket/Elements/ElementJacket";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
+import { IStateLessDocProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateLessDocProxy";
+import { IStateLessFrameProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateLessFrameProxy";
 
-export class ScContentIframeId0Proxy extends _APICoreBase {
+export class ScContentIframeId0Proxy extends _APICoreBase implements IStateLessFrameProxy {
   ScContentIframeId0FrameJacket: ElementFrameJacket;
+  FrameJacket: ElementFrameJacket;
+  HostedDocProxy: IStateLessDocProxy;
 
   constructor(apiCore: IAPICore, frameJacket: ElementFrameJacket) {
     super(apiCore);
     this.ScContentIframeId0FrameJacket = frameJacket;
   }
 
-  async OpenFile(fileName: string): Promise<void> {
+  async InstantiateAsyncMembers(): Promise<void> {
+    //empty
+  }
 
+  async OpenFile(fileName: string): Promise<void> {
     //todo - handle case where filename no longer exists
     try {
       let FileNameInput: ElementJacket = null;
@@ -30,7 +37,7 @@ export class ScContentIframeId0Proxy extends _APICoreBase {
           this.Logger.LogImportant('filename jacket found');
 
           if (!FileNameInput || !OpenOkButton || !CancelButton) {
-            this.ErrorHand.ErrorAndThrow([ScContentIframeId0Proxy.name, this.OpenFile.name], 'missing buttons');
+            this.ErrorHand.HandleFatalError([ScContentIframeId0Proxy.name, this.OpenFile.name], 'missing buttons');
           }
         })
         .then(() => {
@@ -40,10 +47,11 @@ export class ScContentIframeId0Proxy extends _APICoreBase {
           } else {
             CancelButton.NativeElement.click();
           }
-        });
+        })
+        .catch((err) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err))        ;
     }
     catch (err) {
-      this.ErrorHand.ErrorAndThrow([ScContentIframeId0Proxy.name, this.OpenFile.name], err);
+      this.ErrorHand.HandleFatalError([ScContentIframeId0Proxy.name, this.OpenFile.name], err);
     }
   }
 }

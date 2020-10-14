@@ -17,7 +17,7 @@ export class ContentBrowserProxy extends BaseBrowserProxy implements IContentBro
   async InitAsyncProperties(): Promise<void> {
     try {
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow([ContentBrowserProxy.name, this.InitAsyncProperties.name], err);
+      this.ErrorHand.HandleFatalError([ContentBrowserProxy.name, this.InitAsyncProperties.name], err);
     }
   }
 }

@@ -4,7 +4,7 @@ import { ReadyStateNAB } from "../Classes/ReadyState";
 import { ISiteUrl } from "./IAbsoluteUrl";
 
 export interface IRecipeBasics {
-  WaitForNewIframe(allIframeDataAtBeginning: any, documentJacket: DocumentJacket): Promise<DTFrameProxy>;
+  //WaitForNewIframek(allIframeDataAtBeginning: any, documentJacket: DocumentJacket): Promise<DTFrameProxy>;
   WaitForCompleteNAB_DataOneDoc(targetDoc: DocumentJacket, friendly: string): Promise<ReadyStateNAB>;
-  GetTopLevelIframe(targetDoc: DocumentJacket): Promise<DTFrameProxy>
+  //GetTopLevelIframe(targetDoc: DocumentJacket): Promise<DTFrameProxy>
 }

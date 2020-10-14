@@ -51,7 +51,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     this.Logger.FuncStart(this.WireEvents_Module.name, this.ContainerSelector);
 
     if (!this.SelectElement) {
-      this.ErrorHand.ErrorAndThrow(this.WireEvents_Module.name, 'No Id: ' + this.ContainerSelector);
+      this.ErrorHand.HandleFatalError(this.WireEvents_Module.name, 'No Id: ' + this.ContainerSelector);
     } else {
       this.SelectElement.onchange = (() => {
         let self = this;

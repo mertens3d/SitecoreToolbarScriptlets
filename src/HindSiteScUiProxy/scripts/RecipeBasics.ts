@@ -77,24 +77,24 @@ export class RecipeBasics extends _APICoreBase implements IRecipeBasics {
     });
   }
 
-  async GetTopLevelIframe(documentJacket: DocumentJacket): Promise<DTFrameProxy> {
-    var toReturn: DTFrameProxy = null;
-    let frameHelper = new FrameHelper(this.ApiCore);
-    await frameHelper.GetIFramesAsBaseFrameProxies(documentJacket)
-      .then((allIframe: DTFrameProxy[]) => {
-        var maxZVal = -1;
-        if (allIframe && allIframe.length > 0) {
-          for (var idx = 0; idx < allIframe.length; idx++) {
-            var candidateIframe: DTFrameProxy = allIframe[idx];
-            if (candidateIframe && candidateIframe.GetZindexAsInt() > maxZVal) {
-              toReturn = candidateIframe;
-              maxZVal = candidateIframe.GetZindexAsInt();
-            }
-          }
-        }
-      })
-    return toReturn;
-  }
+  //async GetTopLevelIframe(documentJacket: DocumentJacket): Promise<DTFrameProxy> {
+  //  var toReturn: DTFrameProxy = null;
+  //  let frameHelper = new FrameHelper(this.ApiCore);
+  //  await frameHelper.GetIFramesAsBaseFrameProxies(documentJacket)
+  //    .then((allIframe: DTFrameProxy[]) => {
+  //      var maxZVal = -1;
+  //      if (allIframe && allIframe.length > 0) {
+  //        for (var idx = 0; idx < allIframe.length; idx++) {
+  //          var candidateIframe: DTFrameProxy = allIframe[idx];
+  //          if (candidateIframe && candidateIframe.GetZindexAsInt() > maxZVal) {
+  //            toReturn = candidateIframe;
+  //            maxZVal = candidateIframe.GetZindexAsInt();
+  //          }
+  //        }
+  //      }
+  //    })
+  //  return toReturn;
+  //}
 
   //async WaitForNewIframeContentEditor(allIframesBefore: HTMLIFrameElement[], targetDoc: ScDocumentProxy): Promise<DTFrameProxy> {
   //  return new Promise(async (resolve, reject) => {
@@ -147,48 +147,48 @@ export class RecipeBasics extends _APICoreBase implements IRecipeBasics {
   //  });
   //}
 
-  async WaitForNewIframe(allIframesBefore: DTFrameProxy[], documentJacket: DocumentJacket): Promise<DTFrameProxy> {
-    return new Promise<DTFrameProxy>(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForNewIframe.name);
-      this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);
+  //async WaitForNewIframe(allIframesBefore: DTFrameProxy[], documentJacket: DocumentJacket): Promise<DTFrameProxy> {
+  //  return new Promise<DTFrameProxy>(async (resolve, reject) => {
+  //    this.Logger.FuncStart(this.WaitForNewIframe.name);
+  //    this.Logger.LogAsJsonPretty('allIframesBefore', allIframesBefore);
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, documentJacket]);
+  //    this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForNewIframe.name, [allIframesBefore, documentJacket]);
 
-      var toReturn: DTFrameProxy = null;
+  //    var toReturn: DTFrameProxy = null;
 
-      var iterationJr = new IterationDrone(this.ApiCore, this.WaitForNewIframe.name, true)
-      let beforeCount: number = allIframesBefore.length;
+  //    var iterationJr = new IterationDrone(this.ApiCore, this.WaitForNewIframe.name, true)
+  //    let beforeCount: number = allIframesBefore.length;
 
-      while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
-        var allIframesAfter: DTFrameProxy[];
+  //    while (!toReturn && iterationJr.DecrementAndKeepGoing()) {
+  //      var allIframesAfter: DTFrameProxy[];
 
-        let frameHelper = new FrameHelper(this.ApiCore);
+  //      let frameHelper = new FrameHelper(this.ApiCore);
 
-        await frameHelper.GetIFramesAsBaseFrameProxies(documentJacket)
-          .then((result) => allIframesAfter = result)
-          .catch((err) => reject(this.WaitForNewIframe.name + ' ' + err));
+  //      await frameHelper.GetIFramesAsBaseFrameProxies(documentJacket)
+  //        .then((result) => allIframesAfter = result)
+  //        .catch((err) => reject(this.WaitForNewIframe.name + ' ' + err));
 
-        var count: number = allIframesAfter.length;
-        this.Logger.Log('iFrame count before: ' + beforeCount);
-        this.Logger.Log('iFrame count after: ' + allIframesAfter.length);
+  //      var count: number = allIframesAfter.length;
+  //      this.Logger.Log('iFrame count before: ' + beforeCount);
+  //      this.Logger.Log('iFrame count after: ' + allIframesAfter.length);
 
-        if (count > beforeCount) {
-          var newIframes: DTFrameProxy[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
+  //      if (count > beforeCount) {
+  //        var newIframes: DTFrameProxy[] = allIframesAfter.filter(e => !allIframesBefore.includes(e));
 
-          toReturn = newIframes[0];
-        } else {
-          await iterationJr.Wait();
-        }
-      }
+  //        toReturn = newIframes[0];
+  //      } else {
+  //        await iterationJr.Wait();
+  //      }
+  //    }
 
-      this.Logger.FuncEnd(this.WaitForNewIframe.name);
-      if (toReturn) {
-        resolve(toReturn);
-      } else {
-        reject(iterationJr.IsExhaustedMsg);
-      }
-    });
-  }
+  //    this.Logger.FuncEnd(this.WaitForNewIframe.name);
+  //    if (toReturn) {
+  //      resolve(toReturn);
+  //    } else {
+  //      reject(iterationJr.IsExhaustedMsg);
+  //    }
+  //  });
+  //}
 
   async WaitForElemToHaveClassOrReject(htmlElement: HTMLElement, classNames: string[], friendly: string): Promise<void> {
     return new Promise(async (resolve, reject) => {

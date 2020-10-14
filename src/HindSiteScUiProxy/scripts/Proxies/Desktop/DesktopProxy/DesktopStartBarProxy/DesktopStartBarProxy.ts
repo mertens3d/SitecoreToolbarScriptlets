@@ -55,7 +55,7 @@ export class DTStartBarProxy extends _APICoreBase {
 
       if (!buttonSelectors || !buttonSelectors.Pop1Selector) {
         this.Logger.LogAsJsonPretty('buttonSelectors', buttonSelectors);
-        this.ErrorHand.ErrorAndThrow([this.TriggerRedButtonAsync.name], 'something is wrong with the button selectors');
+        this.ErrorHand.HandleFatalError([this.TriggerRedButtonAsync.name], 'something is wrong with the button selectors');
       }
       //let pop1ElemJacket: ElementJacket
 
@@ -69,9 +69,9 @@ export class DTStartBarProxy extends _APICoreBase {
         .then(() => methodLock.ReleaseLock())
         .then(() => this.RecipeBasics.WaitForTimePeriod(1, this.TriggerRedButtonAsync.name))
         .then(() => this.TaskMonitor.AsyncTaskCompleted(this.TriggerRedButtonAsync.name))
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.TriggerRedButtonAsync.name, err))
+        .catch((err) => this.ErrorHand.HandleFatalError(this.TriggerRedButtonAsync.name, err))
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.TriggerRedButtonAsync.name, err);
+      this.ErrorHand.HandleFatalError(this.TriggerRedButtonAsync.name, err);
     }
     this.Logger.FuncEnd(this.TriggerRedButtonAsync.name);
   }
@@ -90,12 +90,12 @@ export class DTStartBarProxy extends _APICoreBase {
           .then(() => this.Logger.LogImportant('About to click ' + buttonSelector))
           .then(() => buttonElemJacket.Click())
           .then(() => this.RecipeBasics.WaitForTimePeriod(1, this.TriggerPopXButton.name))
-          .catch((err) => this.ErrorHand.ErrorAndThrow(this.TriggerPopXButton.name + ' ' + buttonSelector + ' ' + containerSelector, err));
+          .catch((err) => this.ErrorHand.HandleFatalError(this.TriggerPopXButton.name + ' ' + buttonSelector + ' ' + containerSelector, err));
       } else {
         // do nothing
       }
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.TriggerPopXButton.name, err);
+      this.ErrorHand.HandleFatalError(this.TriggerPopXButton.name, err);
     }
     this.Logger.FuncEnd(this.TriggerPopXButton.name, buttonSelector + ' | ' + containerSelector);
   }
@@ -148,7 +148,7 @@ export class DTStartBarProxy extends _APICoreBase {
         if (contentTreeProxyMutationEvent_Payload.ContentTree.ActiveNodeShallow) {
           this.GetAssociatedStartBarButton(dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload)
             .then((startBarButtonProxy: DesktopStartBarButtonProxy) => startBarButtonProxy.SetStateOfDesktopStartBarButtonAsync(contentTreeProxyMutationEvent_Payload.ContentTree))
-            .catch((err) => this.ErrorHand.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, err));
+            .catch((err) => this.ErrorHand.HandleFatalError(this.OnTreeMutationEvent_DesktopStartBarProxy.name, err));
         }
         else {
           this.Logger.Log('null activeNodeFlat provided');
@@ -158,7 +158,7 @@ export class DTStartBarProxy extends _APICoreBase {
         this.Logger.LogAsJsonPretty('dTAreaProxyMutationEvent_Payload', dTAreaProxyMutationEvent_Payload)
       }
     } else {
-      this.ErrorHand.ErrorAndThrow(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Null payload');
+      this.ErrorHand.HandleFatalError(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Null payload');
     }
 
     this.TaskMonitor.AsyncTaskCompleted(this.OnTreeMutationEvent_DesktopStartBarProxy.name);

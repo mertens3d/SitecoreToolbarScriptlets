@@ -56,7 +56,7 @@ export class ContentTreeProxy extends _APICoreBase {
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.ApiCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Instantiate_TreeProxyAsyncElem.name, err);
+      this.ErrorHand.HandleFatalError(this.Instantiate_TreeProxyAsyncElem.name, err);
     }
 
     this.Logger.FuncEnd(this.Instantiate_TreeProxyAsyncElem.name);
@@ -81,7 +81,7 @@ export class ContentTreeProxy extends _APICoreBase {
           this.ContentTreeMutationEvent_Subject.NotifyObserversAsync(TreeMutationEvent_Payload)
         })
         .then(() => this.Logger.Log(this.CallBackOnNativeClassNameChangeEventAsync.name + ' completed'))
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.CallBackOnNativeClassNameChangeEventAsync.name, err));
+        .catch((err) => this.ErrorHand.HandleFatalError(this.CallBackOnNativeClassNameChangeEventAsync.name, err));
     }
 
     this.TaskMonitor.AsyncTaskCompleted(this.CallBackOnNativeClassNameChangeEventAsync.name);
@@ -120,7 +120,7 @@ export class ContentTreeProxy extends _APICoreBase {
       let promisesAr: Promise<void>[] = [];
 
       if (depth > maxIterDepth) {
-        this.ErrorHand.ErrorAndThrow(this.SetStateOfNodeRecursive.name, 'Iteration check - max depth exceed. Something is probably wrong');
+        this.ErrorHand.HandleFatalError(this.SetStateOfNodeRecursive.name, 'Iteration check - max depth exceed. Something is probably wrong');
       }
 
       if (depth < maxIterDepth && currentNodeData) {
@@ -142,10 +142,10 @@ export class ContentTreeProxy extends _APICoreBase {
           await Promise.all(promisesAr);
         }
       } else {
-        this.ErrorHand.ErrorAndThrow(this.SetStateOfNodeRecursive.name, 'no node date or max depth hit ' + depth.toString())
+        this.ErrorHand.HandleFatalError(this.SetStateOfNodeRecursive.name, 'no node date or max depth hit ' + depth.toString())
       }
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.SetStateOfNodeRecursive.name, err);
+      this.ErrorHand.HandleFatalError(this.SetStateOfNodeRecursive.name, err);
     }
     this.Logger.FuncEnd(this.SetStateOfNodeRecursive.name, currentNodeData.Friendly);
   }
@@ -157,7 +157,7 @@ export class ContentTreeProxy extends _APICoreBase {
       this.ContentTreeMutationEvent_Subject.DisableNotifications();
       await this.SetStateOfNodeRecursive(currentNodeData, 0);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.SetStateOfContentTree.name, err);
+      this.ErrorHand.HandleFatalError(this.SetStateOfContentTree.name, err);
     }
 
     this.ContentTreeMutationEvent_Subject.EnableNotifications();
@@ -170,7 +170,7 @@ export class ContentTreeProxy extends _APICoreBase {
       await this.DocumentJacket.WaitForElem(this.TreeRootSelector)
         .then((elementJacket: ElementJacket) => this.rootTreeNodeJacket = elementJacket);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.SetRootNodeFromSelector.name, err);
+      this.ErrorHand.HandleFatalError(this.SetRootNodeFromSelector.name, err);
     }
 
     //let toReturn: ElementJacket = this.TreeContainerJacket.querySelector(ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot);
@@ -231,11 +231,11 @@ export class ContentTreeProxy extends _APICoreBase {
             .catch((err) => reject(this.GetTreeNodeProxy.name + ' | ' + err));
         }
         else {
-          this.ErrorHand.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no root node');
+          this.ErrorHand.HandleFatalError(this.GetStateOfContentTreeNodeDeep.name, 'no root node');
         }
       }
       else {
-        this.ErrorHand.ErrorAndThrow(this.GetStateOfContentTreeNodeDeep.name, 'no targetDoc');
+        this.ErrorHand.HandleFatalError(this.GetStateOfContentTreeNodeDeep.name, 'no targetDoc');
       }
 
       resolve(this._treeNodeProxy);

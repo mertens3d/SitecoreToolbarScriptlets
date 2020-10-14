@@ -142,10 +142,10 @@ export class DocumentJacket extends _CommonBase {
     let url: ISiteUrl = this.UrlJacket.BuildFullUrlFromParts();
 
     if (!url) {
-      this.ErrorHand.ErrorAndThrow(this.Validate.name, 'No URL');
+      this.ErrorHand.HandleFatalError(this.Validate.name, 'No URL');
     }
     else if (url.AbsUrl === SharedConst.Const.UrlSuffix.AboutBlank) {
-      this.ErrorHand.ErrorAndThrow(this.Validate.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
+      this.ErrorHand.HandleFatalError(this.Validate.name, SharedConst.Const.UrlSuffix.AboutBlank + ' not allowed');
     }
   }
 
@@ -241,7 +241,7 @@ export class DocumentJacket extends _CommonBase {
       await this.WaitForThenClick([selector])
         .then(() => resolve(payload))
         .catch(ex => {
-          this.ErrorHand.ErrorAndThrow(this.WaitForAndClickWithPayload.name, ex);
+          this.ErrorHand.HandleFatalError(this.WaitForAndClickWithPayload.name, ex);
           reject(ex);
         });
     });

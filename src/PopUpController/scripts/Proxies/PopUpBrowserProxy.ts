@@ -25,7 +25,7 @@ export class PopUpBrowserProxy extends BaseBrowserProxy implements IPopUpBrowser
         });
     }
     catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Init_BrowserProxyAsyncElements.name, err);
+      this.ErrorHand.HandleFatalError(this.Init_BrowserProxyAsyncElements.name, err);
     }
     this.Logger.FuncEnd(this.Init_BrowserProxyAsyncElements.name);
   }

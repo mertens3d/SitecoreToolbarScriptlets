@@ -47,7 +47,7 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
       this.FeedbackTextContainer.insertAdjacentHTML(SharedConst.Const.KeyWords.Html.beforeend, htmlText);
     }
     else {
-      this.ErrorHand.ErrorAndThrow(this.AddHtmlString.name, 'htmlText');
+      this.ErrorHand.HandleFatalError(this.AddHtmlString.name, 'htmlText');
     }
   }
 
@@ -58,7 +58,7 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
       }
     }
     else {
-      this.ErrorHand.ErrorAndThrow(this.WriteManyLines.name, 'No strAr');
+      this.ErrorHand.HandleFatalError(this.WriteManyLines.name, 'No strAr');
     }
   }
 
@@ -67,7 +67,7 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
       this.FeedbackTextContainer.innerHTML = '';
     }
     else {
-      this.ErrorHand.ErrorAndThrow(this.ClearFeedbackElem.name, 'No feedback elem found');
+      this.ErrorHand.HandleFatalError(this.ClearFeedbackElem.name, 'No feedback elem found');
     }
   }
 

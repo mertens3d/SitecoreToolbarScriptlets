@@ -19,9 +19,9 @@ export class BaseBrowserProxy extends _CommonBase implements IBaseBrowserProxy {
     try {
       await browserTabProxy.UpdateAndWaitForComplete(AbsUrl)
 
-        .catch((err) => this.ErrorHand.ErrorAndThrow([BaseBrowserProxy.name, this.UpdateAndWaitForComplete.name], err));
+        .catch((err) => this.ErrorHand.HandleFatalError([BaseBrowserProxy.name, this.UpdateAndWaitForComplete.name], err));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow([BaseBrowserProxy.name, this.UpdateAndWaitForComplete.name], err);
+      this.ErrorHand.HandleFatalError([BaseBrowserProxy.name, this.UpdateAndWaitForComplete.name], err);
     }
   }
 

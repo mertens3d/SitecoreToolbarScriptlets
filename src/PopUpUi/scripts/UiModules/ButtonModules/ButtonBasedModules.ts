@@ -31,7 +31,7 @@ export class ButtonBasedModulesBucket extends _FrontBase {
 
     try {
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.InstantiateButtonBasedModules.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateButtonBasedModules.name, err);
     }
     this.Logger.FuncEnd(this.InstantiateButtonBasedModules.name);
   }
@@ -57,7 +57,7 @@ export class ButtonBasedModulesBucket extends _FrontBase {
         }
       })
     } else {
-      this.ErrorHand.ErrorAndThrow(this.PopulateMenuButtons.name, 'no bucket or no array inside');
+      this.ErrorHand.HandleFatalError(this.PopulateMenuButtons.name, 'no bucket or no array inside');
     }
 
     this.Logger.FuncEnd(this.PopulateMenuButtons.name);

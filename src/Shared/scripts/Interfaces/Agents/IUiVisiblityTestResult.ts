@@ -10,7 +10,7 @@ export class VisiblityTestResultsBucket extends _CommonBase {
     if (this.TestResults) {
       this.TestResults.forEach((oneTest) => oneFailed = oneFailed || !oneTest || !oneTest.DidItPass);
     } else {
-      this.ErrorHand.ErrorAndThrow(this.HasFailures.name, 'null test results');
+      this.ErrorHand.HandleFatalError(this.HasFailures.name, 'null test results');
     }
     return oneFailed;
   }
@@ -28,11 +28,11 @@ export class VisiblityTestResultsBucket extends _CommonBase {
           }
         } else {
           this.Logger.LogAsJsonPretty('this.TestResults', this.TestResults);
-          this.ErrorHand.ErrorAndThrow(this.GetFriendlyFails.name, 'null single test result');
+          this.ErrorHand.HandleFatalError(this.GetFriendlyFails.name, 'null single test result');
         }
       });
     } else {
-      this.ErrorHand.ErrorAndThrow(this.GetFriendlyFails.name, 'null testResults');
+      this.ErrorHand.HandleFatalError(this.GetFriendlyFails.name, 'null testResults');
     }
 
     return toReturn;

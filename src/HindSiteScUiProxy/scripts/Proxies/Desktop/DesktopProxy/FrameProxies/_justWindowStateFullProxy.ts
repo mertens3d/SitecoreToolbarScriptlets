@@ -1,7 +1,7 @@
 ﻿import { RecipeBasics } from "../../../../RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { SupportFrameFactory } from "../../../SupportProxies/BaseFrameFactory";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOf_";

@@ -118,7 +118,7 @@ export class CommandRouter extends _FrontBase {
             //this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payloadComplete);
           })
           .then(() => resolve())
-          .catch((err) => this.ErrorHand.ErrorAndThrow(this.ExecuteInternalCommand.name, err));
+          .catch((err) => this.ErrorHand.HandleFatalError(this.ExecuteInternalCommand.name, err));
         //}, 1000)
       }
       this.Logger.FuncEnd(this.ExecuteInternalCommand.name);
@@ -175,7 +175,7 @@ export class CommandRouter extends _FrontBase {
       if (commandData) {
       }
       else {
-        this.ErrorHand.ErrorAndThrow(this.RouteCommand.name, 'did not find command');
+        this.ErrorHand.HandleFatalError(this.RouteCommand.name, 'did not find command');
       }
       this.Logger.FuncEnd(this.RouteCommand.name);
     });

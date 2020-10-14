@@ -2,7 +2,7 @@
 import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateProxy';
+import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';

@@ -75,11 +75,11 @@ export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
         }
       }
       else {
-        this.ErrorHand.ErrorAndThrow(this.AdminB.name, 'No loginButton');
+        this.ErrorHand.HandleFatalError(this.AdminB.name, 'No loginButton');
       }
     }
     else {
-      this.ErrorHand.ErrorAndThrow(this.AdminB.name, 'No Username or password field');
+      this.ErrorHand.HandleFatalError(this.AdminB.name, 'No Username or password field');
     }
     this.Logger.FuncEnd(this.AdminB.name);
   }

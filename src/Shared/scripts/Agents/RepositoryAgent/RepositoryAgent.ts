@@ -13,7 +13,7 @@ export class RepositoryAgent extends _CommonBase implements IRepositoryAgent {
     try {
       window.localStorage.removeItem(key);
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.RemoveByKey.name, err);
+      this.ErrorHand.HandleFatalError(this.RemoveByKey.name, err);
     }
   }
 
@@ -45,7 +45,7 @@ export class RepositoryAgent extends _CommonBase implements IRepositoryAgent {
       }
     }
     catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.GetBulkLocalStorageByKeyPrefix.name, err);
+      this.ErrorHand.HandleFatalError(this.GetBulkLocalStorageByKeyPrefix.name, err);
     }
     return toReturn;
   }

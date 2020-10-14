@@ -42,7 +42,7 @@ export class HandlersForInternal extends _FrontBase {
 
     await this.CreateNewWindow(newUrl)
       .catch((ex) => {
-        this.ErrorHand.ErrorAndThrow(this.HandlerForSnapShotRestoreNewTab.name, ex.toString());
+        this.ErrorHand.HandleFatalError(this.HandlerForSnapShotRestoreNewTab.name, ex.toString());
       });
 
     this.Logger.FuncEnd(this.HandlerForSnapShotRestoreNewTab.name);

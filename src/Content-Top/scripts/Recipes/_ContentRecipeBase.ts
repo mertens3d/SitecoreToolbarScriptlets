@@ -17,7 +17,7 @@ export abstract class _ContentRecipeBase extends _FrontBase {
       this.CommandParams = commandParams;
       this.Dependancies = dependancies;
     } else {
-      this.ErrorHand.ErrorAndThrow(_ContentRecipeBase.name, 'null check: ' + this.Friendly);
+      this.ErrorHand.HandleFatalError(_ContentRecipeBase.name, 'null check: ' + this.Friendly);
     }
   }
 }

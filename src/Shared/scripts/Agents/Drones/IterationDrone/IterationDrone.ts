@@ -35,7 +35,7 @@ export class IterationDrone extends _CommonBase {
       this.Timeout += this.Timeout * SharedConst.Const.IterHelper.GrowthPerIteration;
 
       if (this.TaskMonitor.IsCancelRequested()) {
-        this.ErrorHand.ErrorAndThrow('CANCEL REQUESTED', '-----------------------------------');
+        this.ErrorHand.HandleFatalError('CANCEL REQUESTED', '-----------------------------------');
       }
 
       if (this.Timeout > SharedConst.Const.IterHelper.Timeouts.Max) {

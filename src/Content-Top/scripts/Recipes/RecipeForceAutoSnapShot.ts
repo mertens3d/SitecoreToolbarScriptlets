@@ -16,7 +16,7 @@ export class RecipeForceAutoSnapShot extends _ContentRecipeBase implements IComm
         this.Dependancies.AutoSnapShotAgent.AutoSaveSnapShot();
         }
         catch (err) {
-            this.ErrorHand.ErrorAndThrow(this.Execute.name, err);
+            this.ErrorHand.HandleFatalError(this.Execute.name, err);
         }
     }
 }

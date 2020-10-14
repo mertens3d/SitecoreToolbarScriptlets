@@ -1,5 +1,5 @@
 ﻿import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IStateOfMarketingControlPanel } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfMarketingControlPanel";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { _ContentTreeBasedProxy } from "./ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";

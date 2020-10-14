@@ -6,7 +6,7 @@ import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from '../../../../../Shared/scripts/Helpers/GuidData';
 import { IAPICore } from '../../../../../Shared/scripts/Interfaces/Agents/IAPICore';
-import { IStateFullProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateProxy';
+import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
 import { IStateOfContentTreeBasedProxies } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTreeBasedProxies";
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
@@ -54,7 +54,7 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
         this.TreeMutationEvent_Observer = new ContentTreeBasedProxyMutationEvent_Observer(this.ApiCore, this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.bind(this));
       })
       .then(() => { })
-      .catch((err) => this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers.name, err));
+      .catch((err) => this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err));
   }
   protected __baseWireEvents() {
     this.ContentTreeProxy.WireEvents_TreeProxy();
@@ -120,7 +120,7 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
 
   private ValidateAssociatedDocContentEditor() {
     if (!this.DocumentJacket) {
-      this.ErrorHand.ErrorAndThrow(this.ValidateAssociatedDocContentEditor.name, 'No doc provided');
+      this.ErrorHand.HandleFatalError(this.ValidateAssociatedDocContentEditor.name, 'No doc provided');
     }
 
     this.DocumentJacket.Validate();

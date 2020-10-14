@@ -55,7 +55,7 @@ export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
             };
         }
         catch (err) {
-            this.ErrorHand.ErrorAndThrow(this.GetFrameStyling.name, err);
+            this.ErrorHand.HandleFatalError(this.GetFrameStyling.name, err);
         }
         return toReturn;
     }
@@ -108,7 +108,7 @@ export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
             }
         }
         catch (err) {
-            this.ErrorHand.ErrorAndThrow(this.WaitForNABHostedDoc.name, err);
+            this.ErrorHand.HandleFatalError(this.WaitForNABHostedDoc.name, err);
         }
         this.Logger.FuncEnd(this.WaitForNABHostedDoc.name);
     }
@@ -132,7 +132,7 @@ export class ElementFrameJacket extends ElementJacketBase<HTMLIFrameElement> {
                     .catch((err) => reject(this.ErrorHand.FormatRejectMessage([this.WaitForCompleteNABHtmlIframeElement.name], err)));
             }
             else {
-                this.ErrorHand.ErrorAndThrow([ElementFrameJacket.name, this.WaitForCompleteNABHtmlIframeElement.name], 'No target doc: ' + friendly);
+              reject(this.ErrorHand.FormatRejectMessage([ElementFrameJacket.name, this.WaitForCompleteNABHtmlIframeElement.name], 'No target doc: ' + friendly));
             }
             this.Logger.FuncEnd(this.WaitForCompleteNABHtmlIframeElement.name, friendly);;
         });

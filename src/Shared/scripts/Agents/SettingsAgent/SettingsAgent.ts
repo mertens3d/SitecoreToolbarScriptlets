@@ -97,7 +97,7 @@ export class SettingsAgent extends _CommonBase implements ISettingsAgent {
             this.ErrorHand.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, 'matching setting not found ' + StaticHelpers.SettingKeyAsString(storageSetting.SettingKey));
           }
         } else {
-          this.ErrorHand.ErrorAndThrow(this.UpdateSettingValuesFromStorage.name, 'null matching setting');
+          this.ErrorHand.HandleFatalError(this.UpdateSettingValuesFromStorage.name, 'null matching setting');
         }
       }
     } catch (err) {
@@ -124,7 +124,7 @@ export class SettingsAgent extends _CommonBase implements ISettingsAgent {
       foundSetting.HindSiteSetting.ValueAsObj = value;
       this.WriteAllSettingValuesToStorage();
     } else {
-      this.ErrorHand.ErrorAndThrow(this.SetByKey.name, 'setting match not found');
+      this.ErrorHand.HandleFatalError(this.SetByKey.name, 'setting match not found');
     }
   }
 

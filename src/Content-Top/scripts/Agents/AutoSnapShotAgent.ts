@@ -48,7 +48,7 @@ export class AutoSnapShotAgent extends _FrontBase {
         this.LastKnownSavedState = windowStateNew;
       })
       //.then((result: IStateOfScUi) => this.LastKnownSavedState = result);
-      .catch((err) => this.ErrorHand.ErrorAndThrow(this.AutoSaveSnapShot.name, err));
+      .catch((err) => this.ErrorHand.HandleFatalError(this.AutoSaveSnapShot.name, err));
 
     this.Logger.FuncEnd(this.AutoSaveSnapShot.name);
   }

@@ -35,7 +35,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
           console.log('Error in: ' + this.ThrowIfNullOrUndefined.name + '  ' + err);
         }
 
-        this.ErrorAndThrow(title, 'Failed Null check A');
+        this.HandleFatalError(title, 'Failed Null check A');
       } else {
         //passed
       }
@@ -151,7 +151,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     return toReturn;
   }
 
-  ErrorAndThrow(container: string | string[], text: string): void {
+  HandleFatalError(container: string | string[], text: string): void {
     let stack = new Error().stack;
 
     let containerTextToRender: string = '';

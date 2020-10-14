@@ -93,7 +93,7 @@ export class UiVisibilityTestAgent extends _FrontBase implements IUiVisibilityTe
         visiblityTestResult.FriendlyFailReason = 'Requires Content Editor or Desktop';
       }
     } else {
-      this.ErrorHand.ErrorAndThrow(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name, 'null state');
+      this.ErrorHand.HandleFatalError(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name, 'null state');
     }
 
     this.Logger.FuncEnd(this.VisibilityTestDesktopOrContentEditorOrPackageDesigner.name);
@@ -174,19 +174,19 @@ export class UiVisibilityTestAgent extends _FrontBase implements IUiVisibilityTe
         break;
 
       case VisibilityType.Unknown:
-        this.ErrorHand.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+        this.ErrorHand.HandleFatalError(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
         break;
 
 
 
 
       default:
-        this.ErrorHand.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
+        this.ErrorHand.HandleFatalError(this.TestAgainstAllSetControllers.name, 'unknown visibility type');
         break;
     }
 
     if (!toReturn) {
-      this.ErrorHand.ErrorAndThrow(this.TestAgainstOneControl.name, 'null test result');
+      this.ErrorHand.HandleFatalError(this.TestAgainstOneControl.name, 'null test result');
     }
 
     this.Logger.FuncEnd(this.TestAgainstOneControl.name, toReturn.DidItPass.toString());
@@ -210,7 +210,7 @@ export class UiVisibilityTestAgent extends _FrontBase implements IUiVisibilityTe
         }
       }
     } else {
-      this.ErrorHand.ErrorAndThrow(this.TestAgainstAllSetControllers.name, 'null stateOfSitecoreWindow');
+      this.ErrorHand.HandleFatalError(this.TestAgainstAllSetControllers.name, 'null stateOfSitecoreWindow');
     }
 
     this.Logger.FuncEnd(this.TestAgainstAllSetControllers.name, allResults.HasFailures().toString());

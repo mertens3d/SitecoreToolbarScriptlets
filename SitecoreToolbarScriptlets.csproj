@@ -71,10 +71,14 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ScRibbonProxy\RibbonMenuButtonResolver.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ScRibbonProxy\ScRibbonProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\AllStartMenuButtonSelectos.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\StateLessFrameProxies\JqueryModalDialogsFrameProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\JqueryModalDialogsProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\StateLessFrameProxies\_baseStatelessFrameProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\DeepHotKey\DeepHotKeyAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\DeepHotKey\HotKeys.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\ErrorHandler\ErrorHandlerAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\TaskMonitor\TaskMonitor.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Agents\UrlAgent\ScWindowTypeDeterminators.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\eScRibbonCommand.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\InternalInterfaces\IRibbonClickSequence.ts" />
     <TypeScriptCompile Include="src\DOMJacket\KeyPressJacket.ts" />
@@ -91,6 +95,9 @@
     <TypeScriptCompile Include="src\Shared\scripts\HindeCore.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\IHindSiteScUiAPIRunTimeOptions.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IKeypressPayload.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IStateFullProxy.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IStateLessDocProxy.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IStateLessFrameProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUserKeyPressCombo.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Proxies\Browser\_BaseBrowserProxy.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Recipes\_ContentRecipeBase.ts" />
@@ -147,18 +154,15 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_StateProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\FallBackProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ProxyResolver.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\AppFrameProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\StateLessFrameProxies\AppFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\BaseFrameFactory.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\JqueryFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\LaunchPadProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\MediaLibraryProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\PackageDesignerProxy\PackageDesignerInstallerRibbonToolbarProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\PackageDesignerProxy\PackageDesignerProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ScWindowFacade.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\ScContentIframeId0Proxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\_baseSupportFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\TemplateManagerProxy.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Agents\UrlAgent\AllPageDeterminators.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\UrlAgent\IQueryKeyValuePair.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\UrlAgent\ScPageTypeResolver.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\CommandHandlerDataForContent\ApiCommandPayload.ts" />
@@ -215,7 +219,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IErrorHandlerAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHindeCore.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IStateOfCEFrameProxy.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IStateProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\Core\ITaskMonitorAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Data\IScIcon.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\60 - ScIconPath.ts" />
@@ -457,6 +460,7 @@
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
     <Folder Include="src\Content-All\css\" />
+    <Folder Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\StateLessDocProxies\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentEditorProxy.ts" />

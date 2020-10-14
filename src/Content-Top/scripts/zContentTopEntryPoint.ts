@@ -78,7 +78,7 @@ class ContentEntry {
 
       this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.InstantiateAgents_Content.name, err)
+      this.ErrorHand.HandleFatalError(this.InstantiateAgents_Content.name, err)
     }
   }
 
@@ -125,11 +125,11 @@ class ContentEntry {
         })
         .then(() => this.StartUp())
         .then(() => this.HindeCore.Logger.Log('Init success'))
-        .catch((err) => this.ErrorHand.ErrorAndThrow('Content Entry Point', err));
+        .catch((err) => this.ErrorHand.HandleFatalError('Content Entry Point', err));
 
       this.HindeCore.Logger.SectionMarker('e) Instantiate and Initialize Managers');
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.InstantiateAndInit_Managers.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAndInit_Managers.name, err);
     }
   }
 

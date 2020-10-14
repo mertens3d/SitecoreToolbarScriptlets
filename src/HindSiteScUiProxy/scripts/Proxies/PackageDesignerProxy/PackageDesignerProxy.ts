@@ -4,25 +4,28 @@ import { DefaultStateOfPackageDesigner } from "../../../../Shared/scripts/Classe
 import { RecipeBasics } from "../../RecipeBasics";
 import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfPackageDesigner";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { ContentEditorProxy } from '../ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { _BaseStateFullProxy } from "../Desktop/DesktopProxy/FrameProxies/_StateProxy";
-import { AppFrameProxy } from "../SupportProxies/AppFrameProxy";
+import { AppFrameProxy } from "../SupportProxies/StateLessFrameProxies/AppFrameProxy";
+import { JqueryModalDialogsDocProxy } from "../SupportProxies/JqueryModalDialogsProxy";
 
 export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
   readonly StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
   readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.PackageDesigner];
   private DocumentJacket: DocumentJacket;
   Friendly: string;
+  private JqueryModalDialogsProxy: JqueryModalDialogsDocProxy;
 
-  constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string) {
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string, jqueryModalDialogsProxy: JqueryModalDialogsDocProxy) {
     super(apiCore);
     this.Logger.CTORStart(ContentEditorProxy.name);
     this.DocumentJacket = documentJacket;
     this.Friendly = friendly;
     this.RecipeBasics = new RecipeBasics(this.ApiCore);
+    this.JqueryModalDialogsProxy = jqueryModalDialogsProxy;
     this.Logger.CTOREnd(ContentEditorProxy.name);
   }
 
@@ -63,9 +66,9 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
 
           await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.SetState.name + ' ' + PackageDesignerProxy.name)
             .then(() => this.DocumentJacket.WaitForFirstHostedFrame(ContentConst.Const.Selector.SC.Frames.AppFrame.Id))
-            .then((frameJacket: ElementFrameJacket) => this.SupportFrameFactory.MakeAppFrameProxy(frameJacket, parentJacket))
+            .then((frameJacket: ElementFrameJacket) => this.SupportFrameFactory.MakeAppFrameProxy(parentJacket))
             .then((returnedAppFrameProxy: AppFrameProxy) => appFrameProxy = returnedAppFrameProxy)
-            .then(() => appFrameProxy.OpenFile(stateOfPackageDesigner.StatusText))
+            .then(() => appFrameProxy.OpenFile(stateOfPackageDesigner.StatusText, this.JqueryModalDialogsProxy))
             .then(() => resolve())
             .catch((err) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerProxy.name, this.SetState.name], err)));
         }

@@ -37,28 +37,28 @@ export class ContentEditorPublishProxy extends _APICoreBase {
     });
   }
 
-  private async GetDocToPublish(scWindowType: ScWindowType, targetDocJacket: DocumentJacket): Promise<DocumentJacket> {
-    return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetDocToPublish.name);
+  //private async GetDocToPublish(scWindowType: ScWindowType, targetDocJacket: DocumentJacket): Promise<DocumentJacket> {
+  //  return new Promise(async (resolve, reject) => {
+  //    this.Logger.FuncStart(this.GetDocToPublish.name);
 
-      try {
-        if (scWindowType === ScWindowType.Desktop) {
-          await this.RecipeBasics.GetTopLevelIframe(targetDocJacket)
-            .then((topIframe: DTFrameProxy) => {
-              resolve(topIframe.GetDocumentJacket());
-            })
-            .catch((err) => reject(this.GetDocToPublish.name + ' ' + err));
-        }
-        else {
-          resolve(this.DocumentJacket);
-        }
-      } catch (err) {
-        reject(this.GetDocToPublish.name + ' ' + err)
-      }
+  //    try {
+  //      if (scWindowType === ScWindowType.Desktop) {
+  //        await this.RecipeBasics.GetTopLevelIframe(targetDocJacket)
+  //          .then((topIframe: DTFrameProxy) => {
+  //            resolve(topIframe.GetDocumentJacket());
+  //          })
+  //          .catch((err) => reject(this.GetDocToPublish.name + ' ' + err));
+  //      }
+  //      else {
+  //        resolve(this.DocumentJacket);
+  //      }
+  //    } catch (err) {
+  //      reject(this.GetDocToPublish.name + ' ' + err)
+  //    }
 
-      this.Logger.FuncEnd(this.GetDocToPublish.name);
-    })
-  }
+  //    this.Logger.FuncEnd(this.GetDocToPublish.name);
+  //  })
+  //}
 
   async PublishActiveCE(): Promise<void> {
     this.Logger.FuncStart(this.PublishActiveCE.name);
@@ -113,7 +113,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
         .then((dataPublishChain: IDataPublishChain) => this.__waitForAndClickClose(dataPublishChain))
 
         .catch(ex => {
-          this.ErrorHand.ErrorAndThrow(this.PublishCE.name, ex);
+          this.ErrorHand.HandleFatalError(this.PublishCE.name, ex);
         });
     } catch (err) {
       throw (this.PublishCE.name + ' ' + err);
@@ -189,7 +189,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
 
     await this.WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.Frames.scContentIframeId1.Id, 'iframeRed') //is id1 correct?
       .then((result: CEFrameProxy) => toReturnPublishChain.CEFrameRed = result)
-      .catch((err) => this.ErrorHand.ErrorAndThrow(this.GetMessageDialog.name, err));
+      .catch((err) => this.ErrorHand.HandleFatalError(this.GetMessageDialog.name, err));
 
     return toReturnPublishChain;
   }

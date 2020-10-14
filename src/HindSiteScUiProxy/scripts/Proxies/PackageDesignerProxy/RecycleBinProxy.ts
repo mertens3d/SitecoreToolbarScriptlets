@@ -1,5 +1,5 @@
 ﻿import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
-import { IStateFullProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { _justWindowStateFullProxy } from "../Desktop/DesktopProxy/FrameProxies/_justWindowStateFullProxy";
 
 export class WorkboxProxy extends _justWindowStateFullProxy implements IStateFullProxy {

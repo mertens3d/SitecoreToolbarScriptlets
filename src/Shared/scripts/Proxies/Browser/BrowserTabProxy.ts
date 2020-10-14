@@ -26,7 +26,7 @@ export class BrowserTabProxy extends _CommonBase {
 
         .then(() => this.TabWaitForReadyStateCompleteNative())
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow([BrowserTabProxy.name, this.UpdateAndWaitForComplete.name], err);
+      this.ErrorHand.HandleFatalError([BrowserTabProxy.name, this.UpdateAndWaitForComplete.name], err);
     }
   }
 

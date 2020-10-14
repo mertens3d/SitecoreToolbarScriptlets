@@ -12,7 +12,7 @@ import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IScWindowFacade } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateProxy";
+import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IDataFriendly } from '../../../Shared/scripts/Interfaces/Data/States/IDataFriendly';
 import { IDataMetaData } from '../../../Shared/scripts/Interfaces/Data/States/IDataMetaData';
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
@@ -60,12 +60,12 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
 
       await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket('Window.Document') // recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
         .then((result: ReadyStateNAB) => windowType = this.ScPageTypeResolver.GetScWindowType())
-        .then(() => this.StateFullProxyFactory.StateFullProxyFactory(windowType, this.DocumentJacket))
+        .then(() => this.StateFullProxyFactory.StateFullProxyFactory(windowType, this.DocumentJacket, null))
         .then((stateFullProxy: IStateFullProxy) => this.StateFullProxy = stateFullProxy)
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers_ScWindowFacade.name, err));
+        .catch((err) => this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers_ScWindowFacade.name, err));
     }
     catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.InstantiateAsyncMembers_ScWindowFacade.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers_ScWindowFacade.name, err);
     }
 
     this.Logger.FuncEnd(this.InstantiateAsyncMembers_ScWindowFacade.name);
@@ -162,7 +162,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
               .catch((err) => reject(this.SetStateOfScWin.name + ' | ' + err));
           }
           else {
-            this.ErrorHand.ErrorAndThrow(this.SetStateOfScWin.name, 'no states in dataToRestore');
+            this.ErrorHand.HandleFatalError(this.SetStateOfScWin.name, 'no states in dataToRestore');
           }
         }
         else {

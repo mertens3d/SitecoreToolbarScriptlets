@@ -24,7 +24,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
     if (!StaticHelpers.IsNullOrUndefined(this.AccordionTriggerElem)) {
       this.AccordionTriggerElem.addEventListener('click', (evt) => this.OnToggleAccordion(evt));
     } else {
-      this.ErrorHand.ErrorAndThrow(this.DroneRestoreAccordionState.name, 'trigger not found ' + this.SettingJacket.HindSiteSetting.FriendlySetting);
+      this.ErrorHand.HandleFatalError(this.DroneRestoreAccordionState.name, 'trigger not found ' + this.SettingJacket.HindSiteSetting.FriendlySetting);
     }
   }
   DisableSelf() {
@@ -45,12 +45,12 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
       if (!StaticHelpers.IsNullOrUndefined([this.AccordionTriggerElem, this.AccordionContentElem])) {
         this.AccordionTriggerElem.innerHTML = this.SettingJacket.HindSiteSetting.FriendlySetting;
       } else {
-        this.ErrorHand.ErrorAndThrow(this.BuildHtmlForModule.name, 'null trigger: ' + this.ContainerSelector);
+        this.ErrorHand.HandleFatalError(this.BuildHtmlForModule.name, 'null trigger: ' + this.ContainerSelector);
       }
     }
 
     if (StaticHelpers.IsNullOrUndefined([this.AccordionTriggerElem, this.AccordionContentElem])) {
-      this.ErrorHand.ErrorAndThrow(this.BuildHtmlForModule.name, AccordianModule.name + '  missing elem')
+      this.ErrorHand.HandleFatalError(this.BuildHtmlForModule.name, AccordianModule.name + '  missing elem')
     }
 
 
@@ -98,7 +98,7 @@ export class AccordianModule extends _SettingsBasedModulesBase implements IUiMod
       }
     }
     else {
-      this.ErrorHand.ErrorAndThrow(this.OnToggleAccordion.name, 'did not find sib');
+      this.ErrorHand.HandleFatalError(this.OnToggleAccordion.name, 'did not find sib');
     }
     this.Logger.FuncEnd(this.OnToggleAccordion.name);
   }

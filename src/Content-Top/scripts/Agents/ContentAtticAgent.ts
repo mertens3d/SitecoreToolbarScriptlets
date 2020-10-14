@@ -96,7 +96,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
         candidate.Friendly.NickName = '';
       }
     } else {
-      this.ErrorHand.ErrorAndThrow(this.ValidateStorageData.name, 'Saved data did not import correctly')
+      this.ErrorHand.HandleFatalError(this.ValidateStorageData.name, 'Saved data did not import correctly')
     }
     return candidate
   }
@@ -150,7 +150,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
         this.Logger.LogVal('Cleaning old autosave', candidate.Meta.SnapshotId);
         window.localStorage.removeItem(candidate.Meta.StorageKey)
       } catch (e) {
-        this.ErrorHand.ErrorAndThrow(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.Meta.SnapshotId)
+        this.ErrorHand.HandleFatalError(this.CleanOutOldAutoSavedData.name, 'unable to delete key: ' + candidate.Meta.SnapshotId)
       }
     }
 
@@ -235,7 +235,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
     let result = this.RepoAgent.ReadDataOfKey(storageKey);
 
     if (result) {
-      this.ErrorHand.ErrorAndThrow(this.RemoveAndConfirmRemoval.name, 'Snapshot still exists after deleting');
+      this.ErrorHand.HandleFatalError(this.RemoveAndConfirmRemoval.name, 'Snapshot still exists after deleting');
     }
   }
 
@@ -253,7 +253,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
         this.ErrorHand.WarningAndContinue(this.RemoveSnapshotFromStorageById.name, 'no target id');
       }
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.RemoveSnapshotFromStorageById.name, err);
+      this.ErrorHand.HandleFatalError(this.RemoveSnapshotFromStorageById.name, err);
     }
 
     this.Logger.FuncEnd(this.RemoveSnapshotFromStorageById.name);

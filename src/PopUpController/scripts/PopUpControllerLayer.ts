@@ -132,7 +132,7 @@ class PopUpControllerLayer {
     this.UiCommandRaisedFlag_Observer = new UiCommandFlagRaisedEvent_Observer(this.HindeCore, this.OnUiCommandRaisedEvent.bind(this))
 
     if (StaticHelpers.IsNullOrUndefined([this.UiLayer.UiCommandRaisedFlag_Subject, this.PopUpMessageBrokerAgent.ContentReplyReceivedEvent_Subject])) {
-      this.HindeCore.ErrorHand.ErrorAndThrow(this.WireEvents_Controller.name, 'Null check');
+      this.HindeCore.ErrorHand.HandleFatalError(this.WireEvents_Controller.name, 'Null check');
     } else {
       this.UiLayer.UiCommandRaisedFlag_Subject.RegisterObserver(this.UiCommandRaisedFlag_Observer);
       let contentReplyReceivedEvent_Observer = new ContentReplyReceivedEvent_Observer(this.HindeCore, this.OnContentReplyReceivedEventCallBack.bind(this));

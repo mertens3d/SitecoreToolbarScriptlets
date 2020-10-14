@@ -72,10 +72,10 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
       } else if (sourceElemJacket.NativeElement.classList.contains('scContentTreeNode')) {
         this.InferFromDivElement(<HTMLDivElement>sourceElemJacket.NativeElement)
       } else {
-        this.ErrorHand.ErrorAndThrow(ScContentTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElemJacket));
+        this.ErrorHand.HandleFatalError(ScContentTreeNodeProxy.name, 'invalid source element type: ' + (typeof sourceElemJacket));
       }
     } else {
-      this.ErrorHand.ErrorAndThrow(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
+      this.ErrorHand.HandleFatalError(ScContentTreeNodeProxy.name, 'null sourceElement or associatedDoc');
     }
 
     this.ParentTreeNode = parent;
@@ -86,7 +86,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     try {
       await this.HarvestNodeState();
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.Instantiate.name, err);
+      this.ErrorHand.HandleFatalError(this.Instantiate.name, err);
     }
   }
 
@@ -113,9 +113,9 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     try {
       await this.ScContentTreeNodeDivElem.WaitForElement(":scope > img", this.PolllinateGlyphNodeElem.name)
         .then((elemImgJacket: ElementImgJacket) => this.glyphElem = elemImgJacket)
-        .catch((err) => this.ErrorHand.ErrorAndThrow(this.PolllinateGlyphNodeElem.name, err));
+        .catch((err) => this.ErrorHand.HandleFatalError(this.PolllinateGlyphNodeElem.name, err));
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.PolllinateGlyphNodeElem.name, err)
+      this.ErrorHand.HandleFatalError(this.PolllinateGlyphNodeElem.name, err)
     }
   }
 
@@ -131,7 +131,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
         .catch((err) => {
         });
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.PollinateNodeElem.name, err);
+      this.ErrorHand.HandleFatalError(this.PollinateNodeElem.name, err);
     }
   }
 
@@ -329,7 +329,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
         await this.ActivateNode();
       }
     } catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.SetStateOfTreeNode.name, err);
+      this.ErrorHand.HandleFatalError(this.SetStateOfTreeNode.name, err);
     }
   }
 
@@ -367,7 +367,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
       }
     }
     catch (err) {
-      this.ErrorHand.ErrorAndThrow(this.ExpandNode.name, err);
+      this.ErrorHand.HandleFatalError(this.ExpandNode.name, err);
     }
   }
 

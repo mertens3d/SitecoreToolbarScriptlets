@@ -1,7 +1,7 @@
 ﻿import { QueryStrKey } from "../../Enums/QueryStrKey";
 import { ScWindowType } from "../../Enums/50 - scWindowType";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
-import { IPageDeterminator } from "../../Interfaces/IPageDeterminator";
+import { IScWindowTypeDeterminator } from "../../Interfaces/IPageDeterminator";
 
 export class ScWindowTypeDeterminators {
   static regexPathTest_Sitecore_Shell: RegExp = /sitecore\/shell/ig;
@@ -11,10 +11,9 @@ export class ScWindowTypeDeterminators {
   static XMLControlApplication: IQueryKeyValuePair = {
     Key: QueryStrKey.xmlcontrol,
     ValueMatch: /Application/ig,
-  }
+  };
 
-  static ScWindows: IPageDeterminator[] = [
-
+  static ScWindowTypeDeterminators: IScWindowTypeDeterminator[] = [
     {
       ///sitecore/shell/default.aspx?xmlcontrol=Application&hdl=14FA8CCA18714BCEBA863F19885346B9&he=Access+Viewer&ic=Apps%2f16x16%2fLock.png
       ConfidenceScore: 0,
@@ -81,8 +80,7 @@ export class ScWindowTypeDeterminators {
       // /sitecore/shell/Applications/Control%20panel.aspx?sc_bw=1
       ConfidenceScore: 0,
       Friendly: "Control Panel",
-      QueryKeyValuePairs: [
-      ],
+      QueryKeyValuePairs: [],
       RegexPathTest: /sitecore\/shell\/Applications\/Control.*20panel/ig,
       ScWindowType: ScWindowType.ControlPanel,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.ControlPanel],
@@ -210,9 +208,8 @@ export class ScWindowTypeDeterminators {
       ScWindowTypeFriendly: ScWindowType[ScWindowType.InstallationWizard],
     },
 
-
     {
-    ///sitecore/shell/default.aspx?xmlcontrol=Installer.BuildPackage&source=C%3a%5cWINDOWS%5cTEMP%5ctmpE956.tmp
+      ///sitecore/shell/default.aspx?xmlcontrol=Installer.BuildPackage&source=C%3a%5cWINDOWS%5cTEMP%5ctmpE956.tmp
       ConfidenceScore: 0,
       Friendly: "Installer Build Package",
       QueryKeyValuePairs: [
@@ -225,7 +222,6 @@ export class ScWindowTypeDeterminators {
       ScWindowType: ScWindowType.InstallerBuildPackage,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.InstallerBuildPackage],
     },
-
 
     {
       // /sitecore/shell/default.aspx?xmlcontrol=Application&hdl=C3E29B4729B445BBBD746343BFA27AC0&he=Installed+Licenses&ic=apps%2f32x32%2fCertificate.png
@@ -241,6 +237,16 @@ export class ScWindowTypeDeterminators {
       RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.InstalledLicenses,
       ScWindowTypeFriendly: ScWindowType[ScWindowType.InstalledLicenses],
+    },
+
+    {
+      // /sitecore/shell/Controls/JqueryModalDialogs.html
+      ConfidenceScore: 0,
+      Friendly: "JqueryModalDialogs",
+      QueryKeyValuePairs: [],
+      RegexPathTest: /sitecore\/shell\/Controls\/JqueryModalDialogs.html/ig,
+      ScWindowType: ScWindowType.JqueryModalDialogs,
+      ScWindowTypeFriendly: ScWindowType[ScWindowType.JqueryModalDialogs],
     },
 
     {
@@ -439,7 +445,6 @@ export class ScWindowTypeDeterminators {
           Key: QueryStrKey.he,
           ValueMatch: /Scan.?for.?Broken.?Links/ig,
         }
-
       ],
       RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.ScanForBrokenLinks,
@@ -456,7 +461,6 @@ export class ScWindowTypeDeterminators {
           Key: QueryStrKey.he,
           ValueMatch: /Security.?Editor/ig,
         }
-
       ],
       RegexPathTest: ScWindowTypeDeterminators.regexPathTest_Sitecore_Shell,
       ScWindowType: ScWindowType.SecurityEditor,

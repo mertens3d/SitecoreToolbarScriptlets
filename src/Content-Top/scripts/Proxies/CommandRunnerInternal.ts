@@ -85,7 +85,7 @@ export class CommandRunnerInternal extends _FrontBase {
             await recipe.Execute();
         }
         catch (err) {
-            this.ErrorHand.ErrorAndThrow(this.SetStateFromQueryString.name, err);
+            this.ErrorHand.HandleFatalError(this.SetStateFromQueryString.name, err);
         }
         this.Logger.FuncEnd(this.SetStateFromMostRecent.name);
     }
@@ -97,7 +97,7 @@ export class CommandRunnerInternal extends _FrontBase {
             recipe.Execute();
         }
         catch (err) {
-            this.ErrorHand.ErrorAndThrow(this.SetStateFromQueryString.name, err);
+            this.ErrorHand.HandleFatalError(this.SetStateFromQueryString.name, err);
         }
     }
 
