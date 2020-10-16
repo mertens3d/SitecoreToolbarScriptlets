@@ -1,6 +1,7 @@
 ﻿import { ScDocProxyDisciminator } from "../../Enums/40 - StateFullProxyDisciminator";
 
-export interface IScDocOrFrameProxy {
+export interface IBaseScDocProxy {
+  ScwindowType: any;
   readonly ScDocProxyDisciminator: ScDocProxyDisciminator;
   readonly ScDocProxyDisciminatorFriendly: string;
   TriggerInboundEventsAsync();
@@ -8,23 +9,17 @@ export interface IScDocOrFrameProxy {
   WireEvents();
 }
 
-export interface IStateFullFrameProxy extends IScDocOrFrameProxy {
+export interface IStateFullFrameProxy extends IBaseScDocProxy {
   GetState(): Promise<any>;
   SetState(state: any): Promise<any>;
 }
-
-
 
 export interface IStateFullElemProxy {
-
   GetState(): Promise<any>;
   SetState(state: any): Promise<any>;
 }
 
-
-export interface IStateFullDocProxy extends IScDocOrFrameProxy {
-
-  
+export interface IStateFullDocProxy extends IBaseScDocProxy {
   GetState(): Promise<any>;
   SetState(state: any): Promise<any>;
 }

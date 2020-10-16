@@ -1,5 +1,5 @@
 ﻿import { ScDocProxyDisciminator } from "../../Enums/40 - StateFullProxyDisciminator";
-import { IScDocOrFrameProxy } from "./IStateFullProxy";
+import { IBaseScDocProxy } from "./IStateFullProxy";
 
-export interface IStateLessDocProxy extends IScDocOrFrameProxy{
+export interface IStateLessDocProxy extends IBaseScDocProxy{
 }

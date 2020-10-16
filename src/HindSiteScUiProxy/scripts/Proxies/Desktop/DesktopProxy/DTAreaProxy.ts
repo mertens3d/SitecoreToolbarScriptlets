@@ -11,7 +11,7 @@ import { IStateFullDocProxy } from "../../../../../Shared/scripts/Interfaces/Age
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTProxy";
 import { ContentEditorProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { ScDocProxyResolver } from "../../ProxyResolver";
+import { ScDocProxyResolver } from "../../ScDocProxyResolver";
 import { JqueryModalDialogsDocProxy } from "../../SupportProxies/JqueryModalDialogsDocProxy";
 import { DocumentJacketMutationEvent_Observer } from "./Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Observer";
 import { IDocumentJacketMutationEvent_Payload } from "./Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";

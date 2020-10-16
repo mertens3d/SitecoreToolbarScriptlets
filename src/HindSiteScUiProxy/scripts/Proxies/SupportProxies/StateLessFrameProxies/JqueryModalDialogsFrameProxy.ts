@@ -4,8 +4,10 @@ import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICo
 import { IStateLessDTFrameProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateLessFrameProxy";
 import { JqueryModalDialogsDocProxy } from "../JqueryModalDialogsDocProxy";
 import { _baseStatelessDTFrameProxy } from "./_baseStatelessFrameProxy";
+import { InstallerBuildPackageDocProxy } from "../../PackageDesignerProxy/PackageDesignerProxy";
+import { StateLessFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/StateLessFrameProxy";
 
-export class JqueryModalDialogsFrameProxy extends _baseStatelessDTFrameProxy implements IStateLessDTFrameProxy {
+export class JqueryModalDialogsFrameProxy extends StateLessFrameProxy implements IStateLessDTFrameProxy {
   FrameSelectorOnHost: string = "[id=jqueryModalDialogsFrame]";
   readonly StateFullProxyDisciminator: ScDocProxyDisciminator = ScDocProxyDisciminator.JqueryModalDialogsFrameProxy;
   private JqueryModalDialogsDocProxy: JqueryModalDialogsDocProxy;
@@ -25,9 +27,13 @@ export class JqueryModalDialogsFrameProxy extends _baseStatelessDTFrameProxy imp
     }
   }
 
-  async OpenFile(fileName: string): Promise<void> {
-    this.Logger.FuncStart([JqueryModalDialogsFrameProxy.name, this.OpenFile.name]);
+  async PackageDesignerOpenFile(fileName: string): Promise<void> {
+    this.Logger.FuncStart([JqueryModalDialogsFrameProxy.name, this.PackageDesignerOpenFile.name]);
     //this.
+
+
+    let installerBuildPackage: InstallerBuildPackageDocProxy = this.
+
     if (this.JqueryModalDialogsDocProxy) {
       this.JqueryModalDialogsDocProxy.OpenFile(fileName);
     }
@@ -36,6 +42,6 @@ export class JqueryModalDialogsFrameProxy extends _baseStatelessDTFrameProxy imp
     //if (this.HostedDocProxy.ProxyDiscriminator == StateFullProxyDisciminator.InstallerBrowseProxy) {
     //  let installerBrowse: InstallerBrowseProxy = <InstallerBrowseProxy>this.host;
     //}
-    this.Logger.FuncEnd([JqueryModalDialogsFrameProxy.name, this.OpenFile.name]);
+    this.Logger.FuncEnd([JqueryModalDialogsFrameProxy.name, this.PackageDesignerOpenFile.name]);
   }
 }

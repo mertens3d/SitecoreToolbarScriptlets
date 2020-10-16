@@ -1,7 +1,7 @@
 ﻿import { RecipeBasics } from "../../../../RecipeBasics";
 import { ScDocProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullDocProxy, IScDocOrFrameProxy, IStateFullFrameProxy, IStateFullElemProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { IStateFullDocProxy, IBaseScDocProxy, IStateFullFrameProxy, IStateFullElemProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { SupportFrameFactory } from "../../../SupportProxies/BaseFrameFactory";
 import { IStateLessDocProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateLessDocProxy";
@@ -9,7 +9,7 @@ import { DocumentJacket } from "../../../../../../DOMJacket/Document/DocumentJac
 import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJacket";
 
 
-export abstract class _BaseScDocProxy extends _APICoreBase implements IScDocOrFrameProxy {
+export abstract class _BaseScDocProxy extends _APICoreBase implements IBaseScDocProxy {
 
   abstract readonly ScDocProxyDisciminator: ScDocProxyDisciminator;
   abstract readonly ScDocProxyDisciminatorFriendly;

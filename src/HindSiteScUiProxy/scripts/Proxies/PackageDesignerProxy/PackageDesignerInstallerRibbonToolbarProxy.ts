@@ -41,7 +41,7 @@ export class PackageDesignerInstallerRibbonToolbarProxy extends _APICoreBase {
     //  })
 
     if (this.JqueryModalDialogsFrameProxy) {
-      this.JqueryModalDialogsFrameProxy.OpenFile(fileName);
+      this.JqueryModalDialogsFrameProxy.PackageDesignerOpenFile(fileName);
     } else {
       this.ErrorHand.HandleFatalError(this.OpenFile.name, 'no jquery proxy');
     }

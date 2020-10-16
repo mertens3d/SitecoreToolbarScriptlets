@@ -13,7 +13,7 @@ import { RecipeBasics } from "../../../../RecipeBasics";
 import { ContentEditorProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { MarketingControlPanelProxy } from "../../../MarketingControlPanelProxy";
 import { MediaLibraryProxy } from "../../../MediaLibraryProxy";
-import { ScDocProxyResolver } from "../../../ProxyResolver";
+import { ScDocProxyResolver } from "../../../ScDocProxyResolver";
 import { JqueryModalDialogsFrameProxy } from "../../../SupportProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { TemplateManagerProxy } from "../../../TemplateManagerProxy";
 import { _ContentTreeBasedProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
@@ -21,22 +21,6 @@ import { I_ContentTreeBasedProxyMutationEvent_Payload } from "../Events/ContentE
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
-import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
-
-export class StateLessFrameProxy extends _APICoreBase  {
-  FrameJacket: FrameElemJacket;
-  GetScWindowType(): ScWindowType {
-    let scPageTypeResolver = new ScPageTypeResolver(this.ApiCore, this.FrameJacket.DocumentJacket.UrlJacket);
-    return scPageTypeResolver.GetScWindowType();
-  }
-  constructor(apiCore: IAPICore, frameJacket: FrameElemJacket) { //HTMLIFrameElement |
-    super(apiCore);
-    this.FrameJacket = frameJacket;
-
-  }
-
-}
-
 
 export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements IStateFullDocProxy {
   FrameTypeDiscriminator = DTFrameProxy.name;

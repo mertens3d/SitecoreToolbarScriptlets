@@ -1,21 +1,20 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
 import { FrameElemJacket } from "../../../../DOMJacket/Elements/FrameElemJacket";
+import { GenericElemJacket } from "../../../../DOMJacket/Elements/GenericElemJacket";
 import { ScDocProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/50 - scWindowType";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateLessDocProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateLessDocProxy";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
+import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { DocumentJacketMutationEvent_Observer } from "../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Observer";
 import { ElementJacketMutationEvent_Subject } from "../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/ElementJacketMutationEvent_Subject";
 import { IDocumentJacketMutationEvent_Payload } from "../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
 import { IElemJacketWatcherParameters } from "../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IElemJacketWatcherParameters";
-import { DTFrameProxy, StateLessFrameProxy } from "../Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
-import { ScDocProxyResolver } from "../ProxyResolver";
+import { StateLessFrameProxy } from "../Desktop/DesktopProxy/FrameProxies/StateLessFrameProxy";
 import { ScContentIframeId0Proxy } from "./ScContentIframeId0Proxy";
 import { JqueryModalDialogsFrameProxy } from "./StateLessFrameProxies/JqueryModalDialogsFrameProxy";
-import { GenericElemJacket } from "../../../../DOMJacket/Elements/GenericElemJacket";
-import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 
 export class JqueryModalDialogsDocProxy extends _APICoreBase implements IStateLessDocProxy {
   readonly ScDocProxyDisciminator: ScDocProxyDisciminator = ScDocProxyDisciminator.JqueryModalDialogsProxy;
@@ -25,6 +24,7 @@ export class JqueryModalDialogsDocProxy extends _APICoreBase implements IStateLe
   private DocumentJacketMutationEvent_Observer: DocumentJacketMutationEvent_Observer;
   private ElemJacketMutationEvent_Subject: ElementJacketMutationEvent_Subject;
   ParentJqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
+  private HostedFrameProxies: StateLessFrameProxy[] = [];
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, parentJqueryModalDialogsDocFrameProxy: JqueryModalDialogsFrameProxy) {
     super(apiCore);
@@ -32,9 +32,9 @@ export class JqueryModalDialogsDocProxy extends _APICoreBase implements IStateLe
     this.ParentJqueryModalDialogsFrameProxy = parentJqueryModalDialogsDocFrameProxy;
     this.Instantiate();
   }
-    TriggerInboundEventsAsync() {
-      //empty
-    }
+  TriggerInboundEventsAsync() {
+    //empty
+  }
 
   private Instantiate() {
     this.DocumentJacketMutationEvent_Observer = new DocumentJacketMutationEvent_Observer(this.ApiCore, this.CallbackOnDocumentJacketMutationEvent.bind(this));
@@ -81,44 +81,29 @@ export class JqueryModalDialogsDocProxy extends _APICoreBase implements IStateLe
     this.Logger.FuncEnd(this.CallbackOnDocumentJacketMutationEvent.name);
   }
 
-  private async HandleFrameElemJacketAddedToDoc(elemJacket: FrameElemJacket): Promise<void> {
+  private GetHostedFrameProxyByScWindowType(scWindowType: ScWindowType): StateLessFrameProxy {
+    let stateLessFrameProxyToReturn: StateLessFrameProxy = null;
+
+    this.HostedFrameProxies.forEach((stateLessFrameProxy: StateLessFrameProxy) => {
+      if (stateLessFrameProxy.GetHostedDocScWindowType() === scWindowType) {
+        stateLessFrameProxyToReturn = stateLessFrameProxy;
+      }
+    })
+
+    return stateLessFrameProxyToReturn;
+  }
+
+  private async HandleFrameElemJacketAddedToDoc(frameElemJacket: FrameElemJacket): Promise<void> {
     this.Logger.FuncStart([JqueryModalDialogsDocProxy.name, this.CallbackOnDocumentJacketMutationEvent.name]);
     try {
-      let stateLessFrameProxy: StateLessFrameProxy = null;
-      let jacketWindowType: ScWindowType = ScWindowType.Unknown;
-
-      await elemJacket.WaitForCompleteNABHtmlIframeElement(this.HandleElemJacketAddedToDocument.name)
-        .then(() => this.Logger.LogVal('URL', elemJacket.DocumentJacket.UrlJacket.GetOriginalURL()))
-        .then(() => stateLessFrameProxy = new StateLessFrameProxy(this.ApiCore, elemJacket))
-        .then(() => {
-          jacketWindowType = stateLessFrameProxy.GetScWindowType();
-
-          let stateFullProxyFactory: ScDocProxyResolver = new ScDocProxyResolver(this.ApiCore);
-          let recognizedWindowtypes: ScWindowType[] = stateFullProxyFactory.StateLessScWindowTypes();
-
-          if (recognizedWindowtypes.indexOf(jacketWindowType) < 0) {
-            this.Logger.LogVal('scWindowType', ScWindowType[jacketWindowType]);
-            this.ErrorHand.HandleFatalError(this.HandleElemJacketAddedToDocument.name, 'unrecognized window type bbb: ' + ScWindowType[jacketWindowType]);
-          }
-        })
-        .then(() => this.Logger.Log(this.HandleElemJacketAddedToDocument.name + 'step1 Complete'))
+      await StateLessFrameProxy.StateLessFrameProxyFactory(this.ApiCore, frameElemJacket)
+        .then((stateLessFrameProxy: StateLessFrameProxy) => this.HostedFrameProxies.push(stateLessFrameProxy))
+        .then(() => this.Logger.Log(this.HandleFrameElemJacketAddedToDoc.name + 'step1 Complete'))
         .catch((err) => this.ErrorHand.HandleFatalError(this.HandleElemJacketAddedToDocument.name, err));
 
-      let targetedFrames: ScWindowType[] = [ScWindowType.InstallerBuildPackage];
-      if (targetedFrames.indexOf(jacketWindowType) > -1) {
-        await elemJacket.WaitForCompleteNABHtmlIframeElement(this.HandleElemJacketAddedToDocument.name)
-          .then(() => this.Logger.LogVal('url', elemJacket.GetUrlJacket().GetOriginalURL()))
-          .then(() => stateLessFrameProxy = new StateLessFrameProxy(this.ApiCore, elemJacket))
-          .then(() => {
-            if (jacketWindowType === ScWindowType.InstallerBuildPackage) {
-              //this.ProcessInboundInstallerBuildPackage(dtFrameProxy);
-              this.Logger.LogImportant('recognized installer build package!');
-            }
-          })
-          .then(() => this.Logger.Log(this.HandleElemJacketAddedToDocument.name + ' step2 Complete'))
-          .catch((err) => this.ErrorHand.HandleFatalError(this.HandleElemJacketAddedToDocument.name, err));
-      }
-    } catch (err) {
+      //let targetedFrames: ScWindowType[] = [ScWindowType.InstallerBuildPackage];
+    }
+    catch (err) {
       this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.HandleFrameElemJacketAddedToDoc.name], err);
     }
     this.Logger.FuncEnd([JqueryModalDialogsDocProxy.name, this.CallbackOnDocumentJacketMutationEvent.name]);

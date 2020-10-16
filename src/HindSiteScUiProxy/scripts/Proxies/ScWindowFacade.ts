@@ -22,7 +22,7 @@ import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
-import { ScDocProxyResolver } from "./ProxyResolver";
+import { ScDocProxyResolver } from "./ScDocProxyResolver";
 import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
 
 export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {

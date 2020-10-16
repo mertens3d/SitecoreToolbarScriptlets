@@ -77,6 +77,8 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\AllStartMenuButtonSelectos.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DocumentProxyMutationEvent\ElementJacketMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DocumentProxyMutationEvent\IElemJacketWatcherParameters.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\StateLessFrameProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ScDocProxyResolver.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\JqueryModalDialogsDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\StateLessFrameProxies\InstallerBrowseProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\StateLessFrameProxies\InstallerDesignerProxy.ts" />
@@ -158,7 +160,6 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseScFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_StateProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\FallBackProxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ProxyResolver.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\SupportProxies\BaseFrameFactory.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\LaunchPadProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\MediaLibraryProxy.ts" />
