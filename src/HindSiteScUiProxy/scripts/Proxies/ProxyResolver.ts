@@ -1,8 +1,9 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/Document/DocumentJacket";
-import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScDocProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { IScDocOrFrameProxy, IStateFullDocProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { IStateLessDocProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateLessDocProxy";
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { ContentEditorProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
@@ -10,17 +11,25 @@ import { FallBackProxy } from "./FallBackProxy";
 import { LaunchPadProxy } from "./LaunchPadProxy";
 import { MarketingControlPanelProxy } from "./MarketingControlPanelProxy";
 import { MediaLibraryProxy } from "./MediaLibraryProxy";
-import { PackageDesignerProxy } from "./PackageDesignerProxy/PackageDesignerProxy";
+import { PackageDesignerDocProxy, InstallerBuildPackageDocProxy } from "./PackageDesignerProxy/PackageDesignerProxy";
 import { AccessViewerProxy, ArchiveProxy, DomainManagerProxy, EmailExpeprienceManagerProxy, InstallationWizardProxy, InstallLicensesProxy, KeyBoardMapProxy, LicenseDetailsProxy, LogViewerProxy, RecycleBinProxy, RoleManagerProxy, RunProxy, ScanForBrokenLinksProxy, SecurityEditorProxy, UserManagerProxy, WorkboxProxy } from "./PackageDesignerProxy/RecycleBinProxy";
+import { JqueryModalDialogsDocProxy } from "./SupportProxies/JqueryModalDialogsDocProxy";
+import { JqueryModalDialogsFrameProxy } from "./SupportProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { TemplateManagerProxy } from "./TemplateManagerProxy";
-import { JqueryModalDialogsDocProxy } from "./SupportProxies/JqueryModalDialogsProxy";
 
-export class StateFullProxyResolver extends _APICoreBase {
+export class ScDocProxyResolver extends _APICoreBase {
   constructor(apiCore: IAPICore) {
     super(apiCore);
   }
 
-  RecognizedWindowTypes(): ScWindowType[] {
+  StateLessScWindowTypes(): ScWindowType[] {
+    return [
+      ScWindowType.JqueryModalDialogs,
+      ScWindowType.InstallerBuildPackage,
+    ]
+  }
+
+  StateFullScWindowTypes(): ScWindowType[] {
     return [
       ScWindowType.AccessViewer,
       ScWindowType.Archive,
@@ -29,6 +38,7 @@ export class StateFullProxyResolver extends _APICoreBase {
       ScWindowType.ControlPanel,
 
       ScWindowType.Debug,
+      ScWindowType.Desktop,
       ScWindowType.DomainManager,
 
       ScWindowType.EmailExperienceManager,
@@ -50,8 +60,6 @@ export class StateFullProxyResolver extends _APICoreBase {
       ScWindowType.ListManager,
       ScWindowType.LoginPage,
       ScWindowType.LogViewer,
-
-      ScWindowType.JqueryModalDialogs,
 
       ScWindowType.MarketingAutomation,
       ScWindowType.MarketingControlPanel,
@@ -77,103 +85,128 @@ export class StateFullProxyResolver extends _APICoreBase {
     ];
   }
 
-  StateFullProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket, jqueryModalDialogsProxy: JqueryModalDialogsDocProxy): Promise<IStateFullProxy> {
+  private StateLessScDocProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy): IStateLessDocProxy {
+    let stateLessScDocProxy: IStateLessDocProxy = null;
+
+    if (false) { }
+    else if (windowType === ScWindowType.JqueryModalDialogs) { stateLessScDocProxy = new JqueryModalDialogsDocProxy(this.ApiCore, documentJacket, jqueryModalDialogsFrameProxy); }
+    else if (windowType === ScWindowType.InstallerBuildPackage) { stateLessScDocProxy = new InstallerBuildPackageDocProxy(this.ApiCore, documentJacket); }
+
+    return stateLessScDocProxy;
+  }
+
+  private StateFullScDocProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy): IStateFullDocProxy {
+    let stateFullScDocProxy: IStateFullDocProxy = null;
+
+    if (false) { }
+    else if (windowType === ScWindowType.AccessViewer) { stateFullScDocProxy = new AccessViewerProxy(this.ApiCore); }
+    else if (windowType === ScWindowType.Archive) { stateFullScDocProxy = new ArchiveProxy(this.ApiCore); }
+
+    else if (windowType === ScWindowType.ContentEditor) { stateFullScDocProxy = new ContentEditorProxy(this.ApiCore, documentJacket, 'Solo Content Editor doc'); }
+
+    else if (windowType === ScWindowType.ControlPanel) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.Debug) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.Desktop) { stateFullScDocProxy = new DesktopProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.DomainManager) { stateFullScDocProxy = new DomainManagerProxy(this.ApiCore); }
+
+    else if (windowType === ScWindowType.EmailExperienceManager) { stateFullScDocProxy = new EmailExpeprienceManagerProxy(this.ApiCore); }
+    else if (windowType === ScWindowType.ExperienceAnalytics) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.ExperienceEditor_Edit) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.ExperienceEditor_Normal) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.ExperienceEditor_Preview) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.ExperienceOptimization) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.ExperienceProfile) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+
+    else if (windowType === ScWindowType.FallBack) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.FederatedExperienceManager) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.Forms) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+
+    else if (windowType === ScWindowType.InstallationWizard) { stateFullScDocProxy = new InstallationWizardProxy(this.ApiCore); }
+    else if (windowType === ScWindowType.InstalledLicenses) { stateFullScDocProxy = new InstallLicensesProxy(this.ApiCore); }
+
+    else if (windowType === ScWindowType.KeyboardMap) { stateFullScDocProxy = new KeyBoardMapProxy(this.ApiCore); }
+
+    else if (windowType === ScWindowType.Launchpad) { stateFullScDocProxy = new LaunchPadProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.LicenseDetails) { stateFullScDocProxy = new LicenseDetailsProxy(this.ApiCore); }
+    else if (windowType === ScWindowType.ListManager) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.LoginPage) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.LogViewer) { stateFullScDocProxy = new LogViewerProxy(this.ApiCore); }
+
+    else if (windowType === ScWindowType.MarketingControlPanel) { stateFullScDocProxy = new MarketingControlPanelProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.MarketingAutomation) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.MediaLibrary) { stateFullScDocProxy = new MediaLibraryProxy(this.ApiCore, documentJacket); }
+
+    else if (windowType === ScWindowType.PackageDesigner) { stateFullScDocProxy = new PackageDesignerDocProxy(this.ApiCore, documentJacket, 'PackageDesigner', jqueryModalDialogsFrameProxy); }
+    else if (windowType === ScWindowType.PathAnalyzer) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.Publish) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+
+    else if (windowType === ScWindowType.RecycleBin) { stateFullScDocProxy = new RecycleBinProxy(this.ApiCore); }
+    else if (windowType === ScWindowType.RoleManager) { stateFullScDocProxy = new RoleManagerProxy(this.ApiCore); }
+    else if (windowType === ScWindowType.Run) { stateFullScDocProxy = new RunProxy(this.ApiCore); }
+
+    else if (windowType === ScWindowType.ScanForBrokenLinks) { stateFullScDocProxy = new ScanForBrokenLinksProxy(this.ApiCore); }
+    else if (windowType === ScWindowType.SecurityEditor) { stateFullScDocProxy = new SecurityEditorProxy(this.ApiCore); }
+
+    else if (windowType === ScWindowType.TemplateManager) { stateFullScDocProxy = new TemplateManagerProxy(this.ApiCore, documentJacket); }
+
+    else if (windowType === ScWindowType.UpdateCenter) { stateFullScDocProxy = new FallBackProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.UserManager) { stateFullScDocProxy = new UserManagerProxy(this.ApiCore); }
+
+    else if (windowType === ScWindowType.Workbox) { stateFullScDocProxy = new WorkboxProxy(this.ApiCore); }
+
+    return stateFullScDocProxy;
+  }
+
+  ScDocProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy): Promise<IScDocOrFrameProxy> {
+    //return new Promise(async (resolve, reject) => {
     return new Promise(async (resolve, reject) => {
-      let StateFullProxy: IStateFullProxy = null;
+      this.Logger.FuncStart([ScDocProxyResolver.name, this.ScDocProxyFactory.name], ScWindowType[windowType]);
 
-      if (false) {
+      let scDocProxy: IScDocOrFrameProxy = null;
+
+      if (this.StateFullScWindowTypes().indexOf(windowType) > -1) {
+        scDocProxy = this.StateFullScDocProxyFactory(windowType, documentJacket, jqueryModalDialogsFrameProxy);
+      } else if (this.StateLessScWindowTypes().indexOf(windowType) > -1) {
+        scDocProxy = this.StateLessScDocProxyFactory(windowType, documentJacket, jqueryModalDialogsFrameProxy)
+      } else {
+        this.ErrorHand.HandleFatalError([ScDocProxyResolver.name, this.ScDocProxyFactory.name], 'unhandled windowType ' + ScWindowType[windowType]);
       }
-      else if (windowType === ScWindowType.AccessViewer) { StateFullProxy = new AccessViewerProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.Archive) { StateFullProxy = new ArchiveProxy(this.ApiCore); }
 
-      else if (windowType === ScWindowType.ContentEditor) { StateFullProxy = new ContentEditorProxy(this.ApiCore, documentJacket, 'Solo Content Editor doc'); }
+      await scDocProxy.InstantiateAsyncMembers()
+        .then(() => scDocProxy.WireEvents())
+        .then(() => resolve(scDocProxy))
+        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([ScDocProxyResolver.name, this.ScDocProxyFactory.name], err)))
 
-      else if (windowType === ScWindowType.ControlPanel) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.Debug) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.Desktop) { StateFullProxy = new DesktopProxy(this.ApiCore, documentJacket); }
-      else if (windowType === ScWindowType.DomainManager) { StateFullProxy = new DomainManagerProxy(this.ApiCore); }
-
-      else if (windowType === ScWindowType.EmailExperienceManager) { StateFullProxy = new EmailExpeprienceManagerProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.ExperienceAnalytics) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.ExperienceEditor_Edit) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.ExperienceEditor_Normal) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.ExperienceEditor_Preview) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.ExperienceOptimization) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.ExperienceProfile) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-
-      else if (windowType === ScWindowType.FallBack) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.FederatedExperienceManager) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.Forms) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-
-      else if (windowType === ScWindowType.InstallationWizard) { StateFullProxy = new InstallationWizardProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.InstalledLicenses) { StateFullProxy = new InstallLicensesProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.JqueryModalDialogs) { StateFullProxy = new JqueryModalDialogsDocProxy(this.ApiCore, documentJacket); }
-
-      else if (windowType === ScWindowType.KeyboardMap) { StateFullProxy = new KeyBoardMapProxy(this.ApiCore); }
-
-      else if (windowType === ScWindowType.Launchpad) { StateFullProxy = new LaunchPadProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.LicenseDetails) { StateFullProxy = new LicenseDetailsProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.ListManager) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.LoginPage) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.LogViewer) { StateFullProxy = new LogViewerProxy(this.ApiCore); }
-
-      else if (windowType === ScWindowType.MarketingControlPanel) { StateFullProxy = new MarketingControlPanelProxy(this.ApiCore, documentJacket); }
-      else if (windowType === ScWindowType.MarketingAutomation) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.MediaLibrary) { StateFullProxy = new MediaLibraryProxy(this.ApiCore, documentJacket); }
-
-      else if (windowType === ScWindowType.PackageDesigner) { StateFullProxy = new PackageDesignerProxy(this.ApiCore, documentJacket, 'PackageDesigner', jqueryModalDialogsProxy); }
-      else if (windowType === ScWindowType.PathAnalyzer) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.Publish) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-
-      else if (windowType === ScWindowType.RecycleBin) { StateFullProxy = new RecycleBinProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.RoleManager) { StateFullProxy = new RoleManagerProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.Run) { StateFullProxy = new RunProxy(this.ApiCore); }
-
-      else if (windowType === ScWindowType.ScanForBrokenLinks) { StateFullProxy = new ScanForBrokenLinksProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.SecurityEditor) { StateFullProxy = new SecurityEditorProxy(this.ApiCore); }
-
-      else if (windowType === ScWindowType.TemplateManager) { StateFullProxy = new TemplateManagerProxy(this.ApiCore, documentJacket); }
-
-      else if (windowType === ScWindowType.UpdateCenter) { StateFullProxy = new FallBackProxy(this.ApiCore); }
-      else if (windowType === ScWindowType.UserManager) { StateFullProxy = new UserManagerProxy(this.ApiCore); }
-
-      else if (windowType === ScWindowType.Workbox) { StateFullProxy = new WorkboxProxy(this.ApiCore); }
-
-      else { this.ErrorHand.HandleFatalError(this.StateFullProxyFactory.name, 'unhandled windowType ' + ScWindowType[windowType]); }
-
-      await StateFullProxy.InstantiateAsyncMembers()
-        .then(() => StateFullProxy.WireEvents())
-        .then(() => resolve(StateFullProxy))
-        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([StateFullProxyResolver.name, this.StateFullProxyFactory.name], err)))
+      this.Logger.FuncEnd([ScDocProxyResolver.name, this.ScDocProxyFactory.name], ScWindowType[windowType]);
     });
   }
 
-  MapProxyDiscriminatorToScWindowType(proxyDiscriminator: StateFullProxyDisciminator): ScWindowType {
+  MapProxyDiscriminatorToScWindowType(proxyDiscriminator: ScDocProxyDisciminator): ScWindowType {
     let toReturn: ScWindowType = ScWindowType.Unknown;
 
     if (false) { }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.AccessViewer) { toReturn = ScWindowType.AccessViewer; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.Archive) { toReturn = ScWindowType.Archive; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.ContentEditor) { toReturn = ScWindowType.ContentEditor; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.Desktop) { this.ErrorHand.HandleFatalError(this.MapProxyDiscriminatorToScWindowType.name, 'Something has gone wrong'); }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.DomainManager) { toReturn = ScWindowType.DomainManager; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.InstallationWizard) { toReturn = ScWindowType.InstallationWizard; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.InstalledLicenses) { toReturn = ScWindowType.InstalledLicenses; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.JqueryModalDialogsProxy) { toReturn = ScWindowType.JqueryModalDialogs; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.KeyBoardMap) { toReturn = ScWindowType.KeyboardMap; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.LicenseDetails) { toReturn = ScWindowType.LicenseDetails; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.LogViewer) { toReturn = ScWindowType.LogViewer; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.MarketingControlPanel) { toReturn = ScWindowType.MarketingControlPanel; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.MediaLibrary) { toReturn = ScWindowType.MediaLibrary; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.PackageDesigner) { toReturn = ScWindowType.PackageDesigner; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.RecycleBin) { toReturn = ScWindowType.RecycleBin; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.RoleManager) { toReturn = ScWindowType.RoleManager; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.Run) { toReturn = ScWindowType.Run; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.ScanForBrokenLinks) { toReturn = ScWindowType.ScanForBrokenLinks; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.SecurityEditor) { toReturn = ScWindowType.SecurityEditor; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.TemplateManager) { toReturn = ScWindowType.TemplateManager; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.UserManager) { toReturn = ScWindowType.UserManager; }
-    else if (proxyDiscriminator === StateFullProxyDisciminator.Workbox) { toReturn = ScWindowType.Workbox; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.AccessViewer) { toReturn = ScWindowType.AccessViewer; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.Archive) { toReturn = ScWindowType.Archive; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.ContentEditor) { toReturn = ScWindowType.ContentEditor; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.Desktop) { this.ErrorHand.HandleFatalError(this.MapProxyDiscriminatorToScWindowType.name, 'Something has gone wrong'); }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.DomainManager) { toReturn = ScWindowType.DomainManager; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.InstallationWizard) { toReturn = ScWindowType.InstallationWizard; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.InstalledLicenses) { toReturn = ScWindowType.InstalledLicenses; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.JqueryModalDialogsProxy) { toReturn = ScWindowType.JqueryModalDialogs; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.KeyBoardMap) { toReturn = ScWindowType.KeyboardMap; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.LicenseDetails) { toReturn = ScWindowType.LicenseDetails; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.LogViewer) { toReturn = ScWindowType.LogViewer; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.MarketingControlPanel) { toReturn = ScWindowType.MarketingControlPanel; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.MediaLibrary) { toReturn = ScWindowType.MediaLibrary; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.PackageDesigner) { toReturn = ScWindowType.PackageDesigner; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.RecycleBin) { toReturn = ScWindowType.RecycleBin; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.RoleManager) { toReturn = ScWindowType.RoleManager; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.Run) { toReturn = ScWindowType.Run; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.ScanForBrokenLinks) { toReturn = ScWindowType.ScanForBrokenLinks; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.SecurityEditor) { toReturn = ScWindowType.SecurityEditor; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.TemplateManager) { toReturn = ScWindowType.TemplateManager; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.UserManager) { toReturn = ScWindowType.UserManager; }
+    else if (proxyDiscriminator === ScDocProxyDisciminator.Workbox) { toReturn = ScWindowType.Workbox; }
     else { this.ErrorHand.HandleFatalError(this.MapProxyDiscriminatorToScWindowType.name, 'unhandled mapping') };
 
     return toReturn;

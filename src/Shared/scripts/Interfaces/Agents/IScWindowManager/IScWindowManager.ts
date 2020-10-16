@@ -1,6 +1,6 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
 import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
-import { IStateFullProxy } from "../IStateFullProxy";
+import { IStateFullDocProxy } from "../IStateFullProxy";
 import { ScWindowType } from "../../../Enums/50 - scWindowType";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { ScRibbonCommand } from "../../../Enums/eScRibbonCommand";
@@ -13,5 +13,5 @@ export interface IScWindowFacade {
   PublishActiveCE();
   SetCompactCss(targetDoc: DocumentJacket);
   SetStateOfScWin(dataToRestore: IStateOfScUi): Promise<void>
-  StateFullProxy: IStateFullProxy;
+  StateFullProxy: IStateFullDocProxy;
 }

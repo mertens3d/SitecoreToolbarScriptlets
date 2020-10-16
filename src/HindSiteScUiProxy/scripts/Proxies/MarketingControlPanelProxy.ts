@@ -1,12 +1,12 @@
-﻿import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+﻿import { ScDocProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { IStateFullDocProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IStateOfMarketingControlPanel } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfMarketingControlPanel";
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { _ContentTreeBasedProxy } from "./ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
 
-export class MarketingControlPanelProxy extends _ContentTreeBasedProxy<IStateOfMarketingControlPanel> implements IStateFullProxy {
-  readonly StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.MarketingControlPanel;
-  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.MarketingControlPanel];
+export class MarketingControlPanelProxy extends _ContentTreeBasedProxy<IStateOfMarketingControlPanel> implements IStateFullDocProxy {
+  readonly ScDocProxyDisciminator: ScDocProxyDisciminator = ScDocProxyDisciminator.MarketingControlPanel;
+  readonly ScDocProxyDisciminatorFriendly = ScDocProxyDisciminator[ScDocProxyDisciminator.MarketingControlPanel];
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.MarketingControlPanelRoodNode;
 
   async InstantiateAsyncMembers(): Promise<void> {

@@ -3,7 +3,7 @@ import { IDocumentJacketMutationEvent_Payload } from "./IDocumentProxyMutationEv
 import { TypeDiscriminator } from "../../../../../../../Shared/scripts/Enums/70 - TypeDiscriminator";
 
 
-export class DocumentJacketMutationEvent_Subject extends HindeSiteEvent_Subject<IDocumentJacketMutationEvent_Payload> {
-  readonly TypeDiscriminator = TypeDiscriminator.DocumentJacketMutationEvent_Subject;
-  ShowLogActions: boolean = true;
+export class ElementJacketMutationEvent_Subject extends HindeSiteEvent_Subject<IDocumentJacketMutationEvent_Payload> {
+    readonly TypeDiscriminator = TypeDiscriminator.DocumentJacketMutationEvent_Subject;
+    ShowLogActions: boolean = true;
 }

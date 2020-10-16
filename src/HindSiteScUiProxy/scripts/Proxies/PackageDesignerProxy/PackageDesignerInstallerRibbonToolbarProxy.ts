@@ -1,29 +1,34 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
-import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { ElementFrameJacket } from "../../../../DOMJacket/Elements/ElementFrameJacket";
-import { ElementJacket } from "../../../../DOMJacket/Elements/ElementJacket";
 import { ElementDivJacket } from "../../../../DOMJacket/Elements/ElementDivJacket";
+import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
-import { JqueryModalDialogsDocProxy } from "../SupportProxies/JqueryModalDialogsProxy";
+import { JqueryModalDialogsDocProxy } from "../SupportProxies/JqueryModalDialogsDocProxy";
+import { JqueryModalDialogsFrameProxy } from "../SupportProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
+import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
+import { GenericElemJacket } from "../../../../DOMJacket/Elements/GenericElemJacket";
 
 export class PackageDesignerInstallerRibbonToolbarProxy extends _APICoreBase {
   private parentDocumentJacket: DocumentJacket;
   ElementDivJacket: ElementDivJacket;
-  JqueryModalDialogsProxy: JqueryModalDialogsDocProxy;
+  JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
 
-  constructor(apiCore: IAPICore, elementDivJacket: ElementDivJacket, parentDocumentJacket: DocumentJacket, jqueryModalDialogsProxy: JqueryModalDialogsDocProxy) {
+  constructor(apiCore: IAPICore, elementDivJacket: ElementDivJacket, parentDocumentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) {
     super(apiCore);
     this.parentDocumentJacket = parentDocumentJacket;
     this.ElementDivJacket = elementDivJacket;
-    this.JqueryModalDialogsProxy = jqueryModalDialogsProxy;
+    this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
+
+    this.ErrorHand.ThrowIfNullOrUndefined(PackageDesignerInstallerRibbonToolbarProxy.name, [jqueryModalDialogsFrameProxy])
+
   }
 
   async OpenFile(fileName: string): Promise<void> {
     //let jqueryFrameProxy: JqueryModalDialogsProxy = null;
 
-    //await this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
-    //  .then((elemJacket: ElementJacket) => elemJacket.NativeElement.click())
+    await this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
+      .then((elemJacket: GenericElemJacket) => elemJacket.NativeElement.click())
+      .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarProxy.name, this.OpenFile.name], err))
+
     //  .then(() => {
     //    let matchingJackets: ElementFrameJacket[] = this.parentDocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id);
     //    if (matchingJackets && matchingJackets.length > 0) {
@@ -35,13 +40,12 @@ export class PackageDesignerInstallerRibbonToolbarProxy extends _APICoreBase {
     //    }
     //  })
 
-    if (this.JqueryModalDialogsProxy) {
-      this.JqueryModalDialogsProxy.OpenFile(fileName);
+    if (this.JqueryModalDialogsFrameProxy) {
+      this.JqueryModalDialogsFrameProxy.OpenFile(fileName);
     } else {
       this.ErrorHand.HandleFatalError(this.OpenFile.name, 'no jquery proxy');
     }
 
       //.then(() => jqueryFrameProxy.OpenFile(fileName))
-      //.catch((err) => this.ErrorHand.ErrorAndThrow([PackageDesignerInstallerRibbonToolbarProxy.name, this.OpenFile.name], err))
   }
 }

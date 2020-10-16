@@ -15,7 +15,7 @@ import { DefaultStateOfStorageSnapshots } from "./Defaults/DefaultStateOfSnapsho
 import { DefaultStateOfContentTree } from "./Defaults/DefaultStateOfContentTree";
 import { IStateOfStorageSnapShots } from "../Interfaces/Data/States/IStateOfStorageSnapShots";
 import { StaticHelpers } from "./StaticHelpers";
-import { StateFullProxyDisciminator } from "../Enums/40 - StateFullProxyDisciminator";
+import { ScDocProxyDisciminator } from "../Enums/40 - StateFullProxyDisciminator";
 
 export class ControllerMessageReceivedEventValidator extends _CommonBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {
@@ -70,11 +70,11 @@ export class ControllerMessageReceivedEventValidator extends _CommonBase {
       stateOfScWindow = new DefaultStateOfScWindow();
     }
 
-    let discriminator: StateFullProxyDisciminator = stateOfScWindow.ScWindow.Disciminator;
+    let discriminator: ScDocProxyDisciminator = stateOfScWindow.ScWindow.Disciminator;
 
-    if (discriminator === StateFullProxyDisciminator.ContentEditor) {
+    if (discriminator === ScDocProxyDisciminator.ContentEditor) {
       stateOfScWindow.ScWindow = this.ValidateStateOfContentEditorProxy(<IStateOfContentEditor>stateOfScWindow.ScWindow);
-    } else if (discriminator === StateFullProxyDisciminator.Desktop) {
+    } else if (discriminator === ScDocProxyDisciminator.Desktop) {
       stateOfScWindow.ScWindow = this.ValidateStateOfDesktopProxy(<IStateOfDesktop>stateOfScWindow.ScWindow);
     }
     return stateOfScWindow;

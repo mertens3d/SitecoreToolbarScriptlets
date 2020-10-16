@@ -1,6 +1,6 @@
-﻿import { ElementJacketBase } from "./ElementJacketBase";
+﻿import { ElementJacketOfType } from "./ElementJacketBaseOfType";
 
-export class ElementImgJacket extends ElementJacketBase<HTMLImageElement> {
+export class ElementImgJacket extends ElementJacketOfType<HTMLImageElement> {
 
 
 }

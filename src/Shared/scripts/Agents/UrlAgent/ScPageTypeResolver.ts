@@ -16,8 +16,10 @@ export class ScPageTypeResolver extends _CommonBase implements IScUrlAgent {
   public UrlJacket: IUrlJacket;
   constructor(commonCore: ICommonCore, urlJacket: IUrlJacket) {
     super(commonCore);
+    this.Logger.CTORStart(ScPageTypeResolver.name);
     this.ErrorHand.ThrowIfNullOrUndefined(ScPageTypeResolver.name, [urlJacket]);
     this.UrlJacket = urlJacket;
+    this.Logger.FuncEnd(ScPageTypeResolver.name);
   }
 
   RunJacketAgainstAllDeterminators(): IScWindowTypeDeterminator {

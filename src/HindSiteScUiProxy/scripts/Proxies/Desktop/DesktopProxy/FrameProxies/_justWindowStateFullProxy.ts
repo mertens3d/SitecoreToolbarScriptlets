@@ -1,14 +1,14 @@
 ﻿import { RecipeBasics } from "../../../../RecipeBasics";
-import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScDocProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { IStateFullDocProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { SupportFrameFactory } from "../../../SupportProxies/BaseFrameFactory";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
 
-export abstract class _justWindowStateFullProxy extends _APICoreBase implements IStateFullProxy {
-  abstract readonly StateFullProxyDisciminator: StateFullProxyDisciminator;
-  abstract readonly StateFullProxyDisciminatorFriendly;
+export abstract class _justWindowStateFullProxy extends _APICoreBase implements IStateFullDocProxy {
+  abstract readonly ScDocProxyDisciminator: ScDocProxyDisciminator;
+  abstract readonly ScDocProxyDisciminatorFriendly;
   Friendly: string = '{unknown friendly}';
   protected readonly SupportFrameFactory: SupportFrameFactory;
   RecipeBasics: RecipeBasics;
@@ -23,8 +23,8 @@ export abstract class _justWindowStateFullProxy extends _APICoreBase implements 
       this.Logger.FuncStart(this.GetState.name, _justWindowStateFullProxy.name);
 
       let stateOf_: IStateOf_ = {
-        Disciminator: this.StateFullProxyDisciminator,
-        DisciminatorFriendly: this.StateFullProxyDisciminatorFriendly
+        Disciminator: this.ScDocProxyDisciminator,
+        DisciminatorFriendly: this.ScDocProxyDisciminatorFriendly
       }
       resolve(stateOf_);
 

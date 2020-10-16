@@ -1,6 +1,6 @@
-﻿import { ElementFrameJacket } from "../../Elements/ElementFrameJacket";
+﻿import { GenericElemJacket } from "../../Elements/GenericElemJacket";
 
-export interface IFrameJacketAddRemoveEvent_Payload {
-    RemovedIFrameId: string;
-    AddedFrameJacket: ElementFrameJacket;
+export interface NativeAddRemoveEvent_Payload {
+  RemovedIFrameId: string;
+  AddedElementJacket: GenericElemJacket;
 }

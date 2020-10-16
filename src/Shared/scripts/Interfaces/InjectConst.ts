@@ -89,6 +89,10 @@ export class ContentConst {
       }
     },
     Selector: {
+      Html: {
+        Body: 'body'
+
+      },
       SC: {
         ContentEditor: {
           ScContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
@@ -215,6 +219,7 @@ export class ContentConst {
         Desktop: {
           DtStartBar: '[id=Startbar]',
           ContentTreeHolder: '[id=ContentTreeHolder]',
+          Id: '[id=Desktop]',
         },
       },
     },

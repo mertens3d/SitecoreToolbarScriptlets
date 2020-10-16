@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/Document/DocumentJacket';
-import { ElementJacket } from '../../../../../../DOMJacket/Elements/ElementJacket';
+import { GenericElemJacket } from "../../../../../../DOMJacket/Elements/GenericElemJacket";
 import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
@@ -14,8 +14,8 @@ import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTr
 
 export class DesktopStartBarButtonProxy extends _APICoreBase {
   private DocumentJacket: DocumentJacket;
-  private ContainerSpanElement: ElementJacket;
-  private FoundStartBarButton: ElementJacket;
+  private ContainerSpanElement: GenericElemJacket;
+  private FoundStartBarButton: GenericElemJacket;
   private StartBarButtonElemId: string;
 
   public FrameId: string;
@@ -38,7 +38,7 @@ export class DesktopStartBarButtonProxy extends _APICoreBase {
       let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
       this.FoundStartBarButton = this.DocumentJacket.QuerySelector(querySelectBtn);
       await this.FoundStartBarButton.WaitForElement(':scope > div > span', this.Instantiate_DestopStartBarButtonProxyAsyncItems.name)
-        .then((containerSpanElement: ElementJacket) => this.ContainerSpanElement = containerSpanElement);
+        .then((containerSpanElement: GenericElemJacket) => this.ContainerSpanElement = containerSpanElement);
     } catch (err) {
       this.ErrorHand.HandleFatalError(this.Instantiate_DestopStartBarButtonProxyAsyncItems.name, err);
     }

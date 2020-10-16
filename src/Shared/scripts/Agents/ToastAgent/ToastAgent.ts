@@ -59,7 +59,6 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
   }
 
   TurnOnWaitingLight(isOn: boolean) {
-    this.Logger.LogImportant(this.TurnOnWaitingLight.name + ' ' + isOn.toString())
     if (isOn) {
       this.WaitingLight.classList.add(this.waitingLightClassOn);
       this.WaitingLight.classList.remove(this.waitingLightClassOff);
@@ -165,8 +164,8 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     }
   }
 
-  TestCancelCallback() {
-    this.TaskMonitor.RequestCancel();
+  CancelCallback() {
+    this.TaskMonitor.RequestCancel(ToastAgent.name + '.' + this.CancelCallback.name);
   }
 
   private CallbackOnCloseButton() {
@@ -203,7 +202,7 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     this.CancelButtonElem.value = "Cancel";
 
     this.OnButtonClick_Subject = new SingleClickEvent_Subject(this.CommonCore);
-    this.OnButtonClick_ObserverTest = new SingleClickEvent_Observer(this.CommonCore, this.TestCancelCallback.bind(this));
+    this.OnButtonClick_ObserverTest = new SingleClickEvent_Observer(this.CommonCore, this.CancelCallback.bind(this));
     this.OnButtonClick_Subject.RegisterObserver(this.OnButtonClick_ObserverTest);
     this.CancelButtonElem.addEventListener('click', (() => {
       let payload: ISingleClickEvent_Payload = {

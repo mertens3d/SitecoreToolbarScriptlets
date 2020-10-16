@@ -51,14 +51,18 @@ class ContentEntry {
   TaskMonitor: TaskMonitor;
   TopDocumentJacket: DocumentJacket;
 
-  async StartUpContent() {
-    this.Instantiate_HindeCore();
+  async StartUpContent() :Promise<void>{
+
+    let commonCore: ICommonCore = CoreFactory.BuildCommonCore();
+    this.HindeCore = new HindeCore(commonCore);
+
     this.InstantiateAgents_Content();
-    await this.InstantiateDocumentJacket()
-    await this.InstantiateAndInit_Managers()
-      .then(() => {
-        this.AtticAgent.CleanOutOldAutoSavedData();
-      })
+
+    await await DocumentJacket.FactoryMakeDocumentJacket(this.HindeCore, document)
+      .then((documentJacket: DocumentJacket) => this.TopDocumentJacket = documentJacket)
+      .then(() => this.InstantiateAndInit_Managers())
+      .then(() => this.AtticAgent.CleanOutOldAutoSavedData())
+      .catch((err) => commonCore.ErrorHand.HandleFatalError(this.StartUpContent.name, err));
 
     this.HindeCore.Logger.SectionMarker('e) ' + this.StartUpContent.name);
     this.HindeCore.Logger.Log('standing by');
@@ -82,17 +86,7 @@ class ContentEntry {
     }
   }
 
-  private async InstantiateDocumentJacket(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.TopDocumentJacket = new DocumentJacket(this.HindeCore, document);
-
-      await this.TopDocumentJacket.WaitForCompleteNAB_DocumentJacket(this.InstantiateDocumentJacket.name)
-        .then(() => resolve())
-        .catch((err) => reject(this.InstantiateDocumentJacket.name + ' | ' + err));
-    })
-  }
-
-  private async InstantiateAndInit_Managers(): Promise<void> {
+    private async InstantiateAndInit_Managers(): Promise<void> {
     try {
       this.HindeCore.Logger.SectionMarker('Instantiate and Initialize Managers');
 
@@ -114,7 +108,6 @@ class ContentEntry {
 
       let contentMessageBroker: IMessageBroker_Content = new BrowserMessageBroker_Content(this.HindeCore, this.SettingsAgent,
         this.ScUiAPI, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
-
 
       contentMessageMan = new ContentMessageManager(this.HindeCore, contentMessageBroker);
 
@@ -180,10 +173,6 @@ class ContentEntry {
     this.HindeCore.Logger.FuncEnd(this.InitLogger.name);
   }
 
-  private Instantiate_HindeCore(): void {
-    let commonCore: ICommonCore = CoreFactory.BuildCommonCore();
-    this.HindeCore = new HindeCore(commonCore);
-  }
 }
 
 let contentEntry: ContentEntry = new ContentEntry();

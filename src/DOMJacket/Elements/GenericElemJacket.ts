@@ -1,37 +1,56 @@
-﻿import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
+﻿import { ElementJacketMutationEvent_Subject } from "../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/ElementJacketMutationEvent_Subject";
+import { IElemJacketWatcherParameters } from "../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IElemJacketWatcherParameters";
+import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
 import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { _CommonBase } from "../../Shared/scripts/_CommonCoreBase";
+import { ElementJacketWatcher } from "../Document/JacketElem_Watcher";
 
-export interface IAbortToken {
-  Continue: boolean;
-}
+export class GenericElemJacket extends _CommonBase {
+  private ElemJacketWatchers: ElementJacketWatcher[] = [];
+  NodeTagName: string;
+  NativeElement: HTMLElement;
 
-export class ElementJacketBase<T extends HTMLElement> extends _CommonBase {
-  public NativeElement: T;
-
-  constructor(commonCore: ICommonCore, htmlElement: T) {
+  constructor(commonCore: ICommonCore, htmlElement: HTMLElement) {
     super(commonCore);
     this.NativeElement = htmlElement;
+    this.NodeTagName = htmlElement.tagName;
   }
 
   Click(): any {
     this.NativeElement.click()
   }
 
-  parentElement(): ElementJacketBase<HTMLElement> {
-    let toReturn: ElementJacketBase<HTMLElement>
+  parentElement(): GenericElemJacket {
+    let toReturn: GenericElemJacket
     let candidate = this.NativeElement.parentElement;
     if (candidate) {
-      toReturn = new ElementJacketBase<HTMLElement>(this.CommonCore, candidate);
+      toReturn = new GenericElemJacket(this.CommonCore, candidate);
     }
     return toReturn;
   }
 
-  querySelector(selector: string): ElementJacketBase<HTMLElement> {
-    let toReturn: ElementJacketBase<HTMLElement> = null;
+  async AddWatcher(watcherParams: IElemJacketWatcherParameters): Promise<ElementJacketMutationEvent_Subject> {
+    return new Promise((resolve, reject) => {
+      this.Logger.FuncStart([GenericElemJacket.name, this.AddWatcher.name], (watcherParams && watcherParams.Friendly) ? watcherParams.Friendly : 'no watcher params');
+
+      let jacketElemWatcher = new ElementJacketWatcher(this.CommonCore, this, watcherParams);
+      this.ElemJacketWatchers.push(jacketElemWatcher);
+
+      if (jacketElemWatcher) {
+        resolve(jacketElemWatcher.ElemJacketMutationEvent_Subject);
+      } else {
+        reject(this.ErrorHand.FormatRejectMessage([GenericElemJacket.name, this.AddWatcher.name], 'Unknown reason'));
+      }
+
+      this.Logger.FuncEnd([GenericElemJacket.name, this.AddWatcher.name], (watcherParams && watcherParams.Friendly) ? watcherParams.Friendly : 'no watcher params');
+    });
+  }
+
+  querySelector(selector: string): GenericElemJacket {
+    let toReturn: GenericElemJacket = null;
     let candidate: HTMLElement = this.NativeElement.querySelector(selector);
     if (candidate) {
-      toReturn = new ElementJacketBase<HTMLElement>(this.CommonCore, candidate);
+      toReturn = new GenericElemJacket(this.CommonCore, candidate);
     }
 
     return toReturn;
@@ -68,7 +87,7 @@ export class ElementJacketBase<T extends HTMLElement> extends _CommonBase {
   //  });
   //}
 
-  async WaitForElement(selector: string | string[], friendly: string = ''): Promise<ElementJacketBase<HTMLElement>> {
+  async WaitForElement(selector: string | string[], friendly: string = ''): Promise<GenericElemJacket> {
     return new Promise(async (resolve, reject) => {
       //this.Logger.FuncStart(this.WaitForElement.name, selector);
 
@@ -79,8 +98,8 @@ export class ElementJacketBase<T extends HTMLElement> extends _CommonBase {
         selectorAr.push(selector);
       }
 
-      this.ErrorHand.ThrowIfNullOrUndefined([ElementJacketBase.name, this.WaitForElement.name], selectorAr);
-      var toReturnElemJacket: ElementJacketBase<HTMLElement> = null;
+      this.ErrorHand.ThrowIfNullOrUndefined([GenericElemJacket.name, this.WaitForElement.name], selectorAr);
+      var toReturnElemJacket: GenericElemJacket = null;
       var iterationJr = new IterationDrone(this.CommonCore, this.WaitForElement.name + ' : ' + selectorAr.join(',') + ' ' + friendly, false);
       let foundSelector: string = '';
       var foundHtmlElement: HTMLElement = null;
@@ -91,7 +110,7 @@ export class ElementJacketBase<T extends HTMLElement> extends _CommonBase {
           foundHtmlElement = this.NativeElement.querySelector(foundSelector);
 
           if (foundHtmlElement) {
-            toReturnElemJacket = new ElementJacketBase<HTMLElement>(this.CommonCore, foundHtmlElement);
+            toReturnElemJacket = new GenericElemJacket(this.CommonCore, foundHtmlElement);
             break;
           }
         }
@@ -121,7 +140,7 @@ export class ElementJacketBase<T extends HTMLElement> extends _CommonBase {
       //let foundSelector: string = '';
 
       await this.WaitForElement(selectorAr)
-        .then((elemJacket: ElementJacketBase<HTMLElement>) => elemJacket.Click())
+        .then((elemJacket: GenericElemJacket) => elemJacket.Click())
         .then(() => resolve())
         .catch((err) => this.ErrorHand.FormatRejectMessage(this.WaitForThenClick.name, err));
 

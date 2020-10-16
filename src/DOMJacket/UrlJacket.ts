@@ -11,14 +11,15 @@ import { _CommonBase } from "../Shared/scripts/_CommonCoreBase";
 export class UrlJacket extends _CommonBase implements IUrlJacket {
   protected UrlParts: IGenericUrlParts;
   public readonly OriginalURL: string;
+
   constructor(commonCore: ICommonCore, url: string) {
     super(commonCore);
-    //this.Logger.CTORStart(UrlJacket.name);
+    this.Logger.CTORStart(UrlJacket.name);
     this.OriginalURL = url;
 
     this.ErrorHand.ThrowIfNullOrUndefined(UrlJacket.name, url);
     this.Init_GenericUrlAgent();
-    //this.Logger.CTOREnd(UrlJacket.name);
+    this.Logger.CTOREnd(UrlJacket.name);
   }
 
   protected Init_GenericUrlAgent(): void {

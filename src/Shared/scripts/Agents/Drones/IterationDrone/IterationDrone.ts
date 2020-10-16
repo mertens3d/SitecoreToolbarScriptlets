@@ -2,7 +2,6 @@
 import { ICommonCore } from "../../../Interfaces/Agents/ICommonCore";
 import { SharedConst } from "../../../SharedConst";
 
-
 export class IterationDrone extends _CommonBase {
   IsExhausted: boolean;
   IsExhaustedMsg: string = 'Iteration helper exhausted';
@@ -12,6 +11,7 @@ export class IterationDrone extends _CommonBase {
   private NickName: string;
   private Timeout: number;
   private LogThisDroneInstance: boolean;
+   private IsCanceled: boolean = false;
 
   constructor(hindeCore: ICommonCore, nickname: string, logThisDroneInstance: boolean, maxIterations: number = null) {
     super(hindeCore);
@@ -30,13 +30,9 @@ export class IterationDrone extends _CommonBase {
   DecrementAndKeepGoing() {
     var toReturn = false;
 
-    if (this.CurrentIteration > 0) {
+    if (this.CurrentIteration > 0 && !this.TaskMonitor.IsCancelRequested()) {
       this.CurrentIteration -= 1;
       this.Timeout += this.Timeout * SharedConst.Const.IterHelper.GrowthPerIteration;
-
-      if (this.TaskMonitor.IsCancelRequested()) {
-        this.ErrorHand.HandleFatalError('CANCEL REQUESTED', '-----------------------------------');
-      }
 
       if (this.Timeout > SharedConst.Const.IterHelper.Timeouts.Max) {
         this.Timeout = SharedConst.Const.IterHelper.Timeouts.Max;
@@ -48,9 +44,15 @@ export class IterationDrone extends _CommonBase {
 
       toReturn = true;
     } else {
-      this.IsExhausted = true;
-      this.NotifyExhausted();
       toReturn = false;
+
+      if (this.TaskMonitor.IsCancelRequested()) {
+        this.ErrorHand.HandleCancelReaction('CANCEL REQUESTED', '-----------------------------------');
+        this.IsCanceled = true;
+      } else {
+        this.IsExhausted = true;
+        this.NotifyExhausted();
+      }
     }
     return toReturn
   }
@@ -83,10 +85,10 @@ export class IterationDrone extends _CommonBase {
 
       return new Promise((resolve) => {
         setTimeout(() => {
-      this.TaskMonitor.NotifyWaiting(false);
+          this.TaskMonitor.NotifyWaiting(false);
 
           resolve();
-        }   , this.Timeout);
+        }, this.Timeout);
       });
     }
   }

@@ -1,17 +1,21 @@
 ﻿import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { ElementFrameJacket } from "../../../../DOMJacket/Elements/ElementFrameJacket";
-import { ElementJacket } from "../../../../DOMJacket/Elements/ElementJacket";
+import { FrameElemJacket } from "../../../../DOMJacket/Elements/FrameElemJacket";
+import { GenericElemJacket } from "../../../../DOMJacket/Elements/GenericElemJacket";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IStateLessDocProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateLessDocProxy";
-import { IStateLessFrameProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateLessFrameProxy";
+import { IStateLessDTFrameProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateLessFrameProxy";
 
-export class ScContentIframeId0Proxy extends _APICoreBase implements IStateLessFrameProxy {
-  ScContentIframeId0FrameJacket: ElementFrameJacket;
-  FrameJacket: ElementFrameJacket;
+
+
+
+
+export class ScContentIframeId0Proxy extends _APICoreBase implements IStateLessDTFrameProxy {
+  ScContentIframeId0FrameJacket: FrameElemJacket;
+  FrameJacket: FrameElemJacket;
   HostedDocProxy: IStateLessDocProxy;
 
-  constructor(apiCore: IAPICore, frameJacket: ElementFrameJacket) {
+  constructor(apiCore: IAPICore, frameJacket: FrameElemJacket) {
     super(apiCore);
     this.ScContentIframeId0FrameJacket = frameJacket;
   }
@@ -23,14 +27,14 @@ export class ScContentIframeId0Proxy extends _APICoreBase implements IStateLessF
   async OpenFile(fileName: string): Promise<void> {
     //todo - handle case where filename no longer exists
     try {
-      let FileNameInput: ElementJacket = null;
-      let OpenOkButton: ElementJacket = null;
-      let CancelButton: ElementJacket = null;
+      let FileNameInput: GenericElemJacket = null;
+      let OpenOkButton: GenericElemJacket = null;
+      let CancelButton: GenericElemJacket = null;
       let trimmedFileName: string = fileName.trim();
 
       await this.ScContentIframeId0FrameJacket.WaitForCompleteNABHtmlIframeElement('scContentIframeId0')
-        .then(() => this.ScContentIframeId0FrameJacket.DocumentJacket.WaitForElem(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Filename))
-        .then((fileNameElemJacket: ElementJacket) => FileNameInput = fileNameElemJacket)
+        .then(() => this.ScContentIframeId0FrameJacket.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Filename))
+        .then((fileNameElemJacket: FrameElemJacket) => FileNameInput = fileNameElemJacket)
         .then(() => OpenOkButton = this.ScContentIframeId0FrameJacket.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Ok))
         .then(() => CancelButton = this.ScContentIframeId0FrameJacket.DocumentJacket.QuerySelector(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Cancel))
         .then(() => {

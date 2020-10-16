@@ -1,5 +1,4 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/Document/DocumentJacket';
-import { ElementJacket } from '../../../../../../DOMJacket/Elements/ElementJacket';
 import { RecipeBasics } from '../../../../RecipeBasics';
 import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
@@ -14,6 +13,8 @@ import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { IButtonSelectors } from './IButtonSelectors';
 import { StartMenuButtonResolver } from './StartMenuButtonResolver';
 import { IHindSiteScUiAPIRunTimeOptions } from "../../../../../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiAPIRunTimeOptions";
+import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJacket";
+import { GenericElemJacket } from "../../../../../../DOMJacket/Elements/GenericElemJacket";
 
 export class DTStartBarProxy extends _APICoreBase {
   private DocumentJacket: DocumentJacket;
@@ -80,13 +81,13 @@ export class DTStartBarProxy extends _APICoreBase {
     this.Logger.FuncStart(this.TriggerPopXButton.name, buttonSelector + ' | ' + containerSelector);
     try {
       if (buttonSelector && buttonSelector.length > 0 && containerSelector && containerSelector.length > 0) {
-        let containerElemJacket: ElementJacket = null;
-        let buttonElemJacket: ElementJacket = null;
+        let containerElemJacket: GenericElemJacket = null;
+        let buttonElemJacket: GenericElemJacket = null;
 
-        await this.DocumentJacket.WaitForElem(containerSelector)
-          .then((elementJacket: ElementJacket) => containerElemJacket = elementJacket)
+        await this.DocumentJacket.WaitForGenericElemJacket(containerSelector)
+          .then((elementJacket: GenericElemJacket) => containerElemJacket = elementJacket)
           .then(() => containerElemJacket.WaitForElement(buttonSelector, this.TriggerRedButtonAsync.name))
-          .then((elementJacket: ElementJacket) => buttonElemJacket = elementJacket)
+          .then((elementJacket: GenericElemJacket) => buttonElemJacket = elementJacket)
           .then(() => this.Logger.LogImportant('About to click ' + buttonSelector))
           .then(() => buttonElemJacket.Click())
           .then(() => this.RecipeBasics.WaitForTimePeriod(1, this.TriggerPopXButton.name))

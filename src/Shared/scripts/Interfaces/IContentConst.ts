@@ -41,6 +41,10 @@ export interface IContentConst {
   },
 
   Selector: {
+    Html: {
+      Body: string
+
+    },
     SC: {
       ContentEditor: {
         ScContentTreeNodeGlyph: string,
@@ -160,6 +164,7 @@ export interface IContentConst {
       Desktop: {
         DtStartBar: string,
         ContentTreeHolder: string,
+        Id: string,
       },
     }
   },

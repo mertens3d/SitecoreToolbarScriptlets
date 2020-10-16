@@ -1,7 +1,8 @@
-﻿import { ElementJacketBase } from "./ElementJacketBase";
+﻿import { GenericElemJacket } from "./GenericElemJacket";
 import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { ElementJacketOfType } from "./ElementJacketBaseOfType";
 
-export class ElementDivJacket extends ElementJacketBase<HTMLDivElement> {
+export class ElementDivJacket extends ElementJacketOfType<HTMLDivElement> {
     constructor(commonCore: ICommonCore, htmlElement: HTMLDivElement) {
         super(commonCore, htmlElement);
     }

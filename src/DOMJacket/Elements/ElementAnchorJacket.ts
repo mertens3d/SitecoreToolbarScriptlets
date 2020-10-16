@@ -1,4 +1,4 @@
-﻿import { ElementJacketBase } from "./ElementJacketBase";
+﻿import { ElementJacketOfType } from "./ElementJacketBaseOfType";
 
-export class ElementAnchorJacket extends ElementJacketBase<HTMLAnchorElement> {
+export class ElementAnchorJacket extends ElementJacketOfType<HTMLAnchorElement> {
 }

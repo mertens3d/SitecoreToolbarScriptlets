@@ -1,18 +1,16 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
-import { ElementFrameJacket } from "../../../../../DOMJacket/Elements/ElementFrameJacket";
+import { FrameElemJacket } from "../../../../../DOMJacket/Elements/FrameElemJacket";
+import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
 import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
-import { RecipeBasics } from "../../../RecipeBasics";
-import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
-import { FactoryHelper } from "../../../FactoryHelper";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
+import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
+import { FactoryHelper } from "../../../FactoryHelper";
+import { RecipeBasics } from "../../../RecipeBasics";
 import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
-import { DTFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
 import { ContentEditorProxy } from "./ContentEditorProxy";
-import { ElementJacket } from "../../../../../DOMJacket/Elements/ElementJacket";
 
 export class ContentEditorPublishProxy extends _APICoreBase {
   ContentEditorProxy: ContentEditorProxy;
@@ -134,9 +132,9 @@ export class ContentEditorPublishProxy extends _APICoreBase {
   }
 
   private async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.ScRibbon.Publish.SettingsHidden)
+    await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ScRibbon.Publish.SettingsHidden)
       .then(async () => {
-        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForElem(ContentConst.Const.Selector.SC.ScRibbon.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
+        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ScRibbon.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
       })
       .then(async () => {
         await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel]);
@@ -168,11 +166,12 @@ export class ContentEditorPublishProxy extends _APICoreBase {
 
   async GetThePublishItemDialog(dataPublishChain: IDataPublishChain = null): Promise<IDataPublishChain> {
     try {
-      let iframeProxy: ElementFrameJacket = null;
+      let frameElemJacketB: FrameElemJacket = null;
 
-      await dataPublishChain.TopScDocumentProxy.WaitForElem(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id)
-        .then((elementJacket: ElementJacket) => iframeProxy = new ElementFrameJacket(this.ApiCore, <HTMLIFrameElement>elementJacket.NativeElement))
-        .then(() => this.FactoryHelp.CEFrameFactory(iframeProxy, 'jqIframe'))
+      await dataPublishChain.TopScDocumentProxy.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id)
+        .then((elementJacket: FrameElemJacket) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore,[elementJacket]))
+        .then((frameElemJackets: FrameElemJacket[]) => frameElemJacketB = frameElemJackets[0])
+        .then(() => this.FactoryHelp.CEFrameFactory(frameElemJacketB, 'jqIframe'))
         .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
         .then(() => dataPublishChain.JqIframe.WaitForCompleteNABFrameProxyOrReject())
@@ -200,11 +199,11 @@ export class ContentEditorPublishProxy extends _APICoreBase {
 
       let factoryHelp = new FactoryHelper(this.ApiCore);
 
-      let frameJacket: ElementFrameJacket = null;
+      let frameJacket: FrameElemJacket = null;
 
-      await this.DocumentJacket.WaitForElem(selector)
-        .then(async (foundElem: ElementJacket) => frameJacket = new ElementFrameJacket(this.ApiCore, <HTMLIFrameElement>foundElem.NativeElement))
-
+      await this.DocumentJacket.WaitForGenericElemJacket(selector)
+        .then(async (genericElemJacket: GenericElemJacket) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore,[genericElemJacket]))
+        .then((frameElemJackets: FrameElemJacket[]) => frameJacket = frameElemJackets[0])
         .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
         .then((result: CEFrameProxy) => resolve(result))
         .catch((err) => reject(err));
@@ -246,9 +245,9 @@ export class ContentEditorPublishProxy extends _APICoreBase {
       this.Logger.FuncStart(this.__waitForThenFunc.name, selector);
       this.Logger.LogAsJsonPretty(this.__waitForThenFunc.name, targetDoc);
 
-      var found: ElementJacket = null;
-      await targetDoc.WaitForElem(selector)
-        .then((result: ElementJacket) => found = result);
+      var found: FrameElemJacket = null;
+      await targetDoc.WaitForGenericElemJacket(selector)
+        .then((result: FrameElemJacket) => found = result);
 
       if (found) {
         this.Logger.Log('found');

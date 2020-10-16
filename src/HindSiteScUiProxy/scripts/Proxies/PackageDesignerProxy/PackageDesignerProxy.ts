@@ -1,31 +1,51 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
-import { ElementFrameJacket } from "../../../../DOMJacket/Elements/ElementFrameJacket";
 import { DefaultStateOfPackageDesigner } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfPackageDesigner";
-import { RecipeBasics } from "../../RecipeBasics";
-import { StateFullProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScDocProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { IStateFullDocProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { IStateLessDocProxy } from "../../../../Shared/scripts/Interfaces/Agents/IStateLessDocProxy";
 import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfPackageDesigner";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
+import { RecipeBasics } from "../../RecipeBasics";
 import { ContentEditorProxy } from '../ContentEditor/ContentEditorProxy/ContentEditorProxy';
-import { _BaseStateFullProxy } from "../Desktop/DesktopProxy/FrameProxies/_StateProxy";
-import { AppFrameProxy } from "../SupportProxies/StateLessFrameProxies/AppFrameProxy";
-import { JqueryModalDialogsDocProxy } from "../SupportProxies/JqueryModalDialogsProxy";
+import { _BaseStateFullDocProxy, _BaseStateLessScDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_StateProxy";
+import { InstallerDesignerProxy } from "../SupportProxies/StateLessFrameProxies/InstallerDesignerProxy";
+import { JqueryModalDialogsFrameProxy } from "../SupportProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
-export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDesigner> implements IStateFullProxy {
-  readonly StateFullProxyDisciminator = StateFullProxyDisciminator.PackageDesigner;
-  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.PackageDesigner];
-  private DocumentJacket: DocumentJacket;
+export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy implements IStateLessDocProxy {
+    ScDocProxyDisciminator: ScDocProxyDisciminator;
+    ScDocProxyDisciminatorFriendly: any;
+
+
+  async InstantiateAsyncMembers() {
+        //empty
+    }
+    TriggerInboundEventsAsync(): void {
+        //empty
+    }
+    WireEvents() {
+        //empty
+    }
+
+
+}
+
+export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPackageDesigner> implements IStateFullDocProxy {
+  readonly ScDocProxyDisciminator = ScDocProxyDisciminator.PackageDesigner;
+  readonly ScDocProxyDisciminatorFriendly = ScDocProxyDisciminator[ScDocProxyDisciminator.PackageDesigner];
+  
   Friendly: string;
-  private JqueryModalDialogsProxy: JqueryModalDialogsDocProxy;
+  private JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
 
-  constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string, jqueryModalDialogsProxy: JqueryModalDialogsDocProxy) {
-    super(apiCore);
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) {
+    super(apiCore, documentJacket);
     this.Logger.CTORStart(ContentEditorProxy.name);
-    this.DocumentJacket = documentJacket;
     this.Friendly = friendly;
     this.RecipeBasics = new RecipeBasics(this.ApiCore);
-    this.JqueryModalDialogsProxy = jqueryModalDialogsProxy;
+    this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
+
+    this.ErrorHand.ThrowIfNullOrUndefined([PackageDesignerDocProxy.name], [documentJacket, jqueryModalDialogsFrameProxy]);
+
     this.Logger.CTOREnd(ContentEditorProxy.name);
   }
 
@@ -41,45 +61,53 @@ export class PackageDesignerProxy extends _BaseStateFullProxy<IStateOfPackageDes
 
   async GetState(): Promise<IStateOfPackageDesigner> {
     return new Promise((resolve, reject) => {
-      this.Logger.FuncStart(this.GetState.name, PackageDesignerProxy.name);
+      this.Logger.FuncStart(this.GetState.name, PackageDesignerDocProxy.name);
 
       let stateOfPackageDesigner: IStateOfPackageDesigner = new DefaultStateOfPackageDesigner();
       stateOfPackageDesigner.StatusText = this.GetLoadedPackageFileName();
 
       resolve(stateOfPackageDesigner);
 
-      this.Logger.FuncEnd(this.GetState.name, PackageDesignerProxy.name);
+      this.Logger.FuncEnd(this.GetState.name, PackageDesignerDocProxy.name);
     });
   }
 
   async SetState(stateOfPackageDesigner: IStateOfPackageDesigner): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetState.name, PackageDesignerProxy.name);
+      this.Logger.FuncStart(this.SetState.name, PackageDesignerDocProxy.name);
 
       if (stateOfPackageDesigner) {
         if (stateOfPackageDesigner.StatusText.length > 0) {
-          let appFrameProxy: AppFrameProxy = null;
-          let parentJacket: DocumentJacket = this.DocumentJacket.GetParentJacket();
-          if (!parentJacket) {
-            reject(this.GetState + ' - ' + PackageDesignerProxy.name + ' - no parent jacket');
-          }
+          let installerDesignerProxy: InstallerDesignerProxy = null;
 
-          await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.SetState.name + ' ' + PackageDesignerProxy.name)
-            .then(() => this.DocumentJacket.WaitForFirstHostedFrame(ContentConst.Const.Selector.SC.Frames.AppFrame.Id))
-            .then((frameJacket: ElementFrameJacket) => this.SupportFrameFactory.MakeAppFrameProxy(parentJacket))
-            .then((returnedAppFrameProxy: AppFrameProxy) => appFrameProxy = returnedAppFrameProxy)
-            .then(() => appFrameProxy.OpenFile(stateOfPackageDesigner.StatusText, this.JqueryModalDialogsProxy))
+          installerDesignerProxy = new InstallerDesignerProxy(this.ApiCore, this.DocumentJacket, this.JqueryModalDialogsFrameProxy);
+
+          await installerDesignerProxy.InstantiateAsyncMembers()
+            .then(() => installerDesignerProxy.OpenFile(stateOfPackageDesigner.StatusText))
             .then(() => resolve())
-            .catch((err) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerProxy.name, this.SetState.name], err)));
+            .catch((err) => this.ErrorHand.FormatRejectMessage([PackageDesignerDocProxy.name, this.SetState.name], err));
+
+          //let parentJacket: DocumentJacket = this.DocumentJacket.GetParentJacket();
+          //if (!parentJacket) {
+          //  reject(this.GetState + ' - ' + PackageDesignerDocProxy.name + ' - no parent jacket');
+          //}
+
+          //await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(this.SetState.name + ' ' + PackageDesignerDocProxy.name)
+          //  .then(() => this.DocumentJacket.WaitForFirstHostedFrame(ContentConst.Const.Selector.SC.Frames.AppFrame.Id))
+          //  .then((frameJacket: ElementFrameJacket) => this.SupportFrameFactory.MakeAppFrameProxy(parentJacket))
+          //  .then((returnedAppFrameProxy: AppFrameProxy) => appFrameProxy = returnedAppFrameProxy)
+          //  .then(() => appFrameProxy.OpenFile(stateOfPackageDesigner.StatusText, this.JqueryModalDialogsProxy))
+          //  .then(() => resolve())
+          //  .catch((err) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerDocProxy.name, this.SetState.name], err)));
         }
       }
 
-      this.Logger.FuncEnd(this.SetState.name, PackageDesignerProxy.name);
+      this.Logger.FuncEnd(this.SetState.name, PackageDesignerDocProxy.name);
     });
   }
 
   TriggerInboundEventsAsync(): void {
-    this.Logger.Log('todo ' + PackageDesignerProxy.name);
+    this.Logger.Log('todo ' + PackageDesignerDocProxy.name);
   }
 
   //----------------------------------------------------

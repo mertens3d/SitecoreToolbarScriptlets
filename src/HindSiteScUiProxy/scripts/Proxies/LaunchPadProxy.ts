@@ -1,11 +1,11 @@
-﻿import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+﻿import { ScDocProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { IStateFullDocProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IStateOfLaunchPad } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfLaunchPad";
-import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
+import { _BaseStateFullDocProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
 
-export class LaunchPadProxy extends _BaseStateFullProxy<IStateOfLaunchPad> implements IStateFullProxy {
-  readonly StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.LaunchPad;
-  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.LaunchPad];
+export class LaunchPadProxy extends _BaseStateFullDocProxy<IStateOfLaunchPad> implements IStateFullDocProxy {
+  readonly ScDocProxyDisciminator: ScDocProxyDisciminator = ScDocProxyDisciminator.LaunchPad;
+  readonly ScDocProxyDisciminatorFriendly = ScDocProxyDisciminator[ScDocProxyDisciminator.LaunchPad];
   async GetState(): Promise<any> {
     //empty
   }

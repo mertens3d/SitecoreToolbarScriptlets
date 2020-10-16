@@ -33,6 +33,7 @@
     },
   },
   KeyWords: {
+
     Html: {
       Tags: {
         Body: string,
@@ -54,7 +55,10 @@
       Events: {
         Message: string
       },
-    }
+    },
+    NodeTagName: {
+      IFrame: 'IFRAME',
+    },
   },
   Logger: {
     MinTimeDiffMs: number

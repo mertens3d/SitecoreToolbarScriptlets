@@ -14,6 +14,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
 
   constructor() {
   }
+    
   IntroduceSiblings(logger: ILoggerAgent, taskMonitor: ICoreTaskMonitor) {
     this.Logger = logger;
     this.TaskMonitor = taskMonitor;
@@ -27,7 +28,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
       if (typeof testSubject === 'undefined' || testSubject === null) {
         try {
           if (this.TaskMonitor) {
-            this.TaskMonitor.RequestCancel();
+            this.TaskMonitor.RequestCancel(ErrorHandlerAgent.name + '.' + this.ThrowIfNullOrUndefined.name + '-' + title);
           } else {
             console.log('No Task Monitor found');
           }
@@ -171,10 +172,14 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
 
     this.DrawErrorMessage(containerTextToRender, [text, stack]);
     try {
-      this.TaskMonitor.RequestCancel();
+      this.TaskMonitor.RequestCancel(ErrorHandlerAgent.name + '.' + this.HandleFatalError.name );
     } catch (err) {
       console.log(err);
     }
-    throw ('----- sigh...sad face ');
+    console.log ('----- sigh...sad face ');
+  }
+
+  HandleCancelReaction(arg0: string, arg1: string) {
+    console.log('Reacting to cancel');
   }
 }

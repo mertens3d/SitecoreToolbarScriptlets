@@ -10,7 +10,7 @@ export interface ICoreTaskMonitor {
   IsTaskListEmpty(): boolean;
   AsyncTaskCompleted(name: string);
   AsyncTaskStarted(name: string);
-  RequestCancel();
+  RequestCancel(requestor: string);
   IsCancelRequested(): boolean;
   TaskMutationEvent_Subject: TaskListMutationEvent_Subject;
 }

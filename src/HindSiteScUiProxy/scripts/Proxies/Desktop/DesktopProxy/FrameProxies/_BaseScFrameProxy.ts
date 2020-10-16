@@ -1,22 +1,22 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/Document/DocumentJacket";
 import { RecipeBasics } from "../../../../RecipeBasics";
-import { StateFullProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScDocProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
-import { _BaseStateFullProxy } from "./_StateProxy";
-import { ElementFrameJacket } from "../../../../../../DOMJacket/Elements/ElementFrameJacket";
+import { IStateFullDocProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { _BaseStateFullDocProxy, _BaseStateFullFrameProxy } from "./_StateProxy";
+import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJacket";
 
-export abstract class _BaseScFrameProxy<T> extends _BaseStateFullProxy<T> implements IStateFullProxy {
-  public readonly FrameJacket: ElementFrameJacket = null;
-  abstract readonly StateFullProxyDisciminatorFriendly;
+export abstract class _BaseScFrameProxy<T> extends _BaseStateFullFrameProxy<T> implements IStateFullDocProxy {
+  public readonly FrameJacket: FrameElemJacket = null;
+  abstract readonly ScDocProxyDisciminatorFriendly;
   Id: string = null;
-  abstract readonly StateFullProxyDisciminator: StateFullProxyDisciminator;
+  abstract readonly ScDocProxyDisciminator: ScDocProxyDisciminator;
   abstract Friendly: string;
   RecipeBasics: RecipeBasics;
 
-  constructor(apiCore: IAPICore, frameJacket: ElementFrameJacket) {
-    super(apiCore);
+  constructor(apiCore: IAPICore, frameJacket: FrameElemJacket) {
+    super(apiCore, frameJacket);
 
     this.ErrorHand.ThrowIfNullOrUndefined(_BaseScFrameProxy.name, [frameJacket]);
     this.FrameJacket = frameJacket;

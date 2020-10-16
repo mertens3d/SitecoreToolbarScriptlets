@@ -5,7 +5,7 @@ import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
-import { ElementJacket } from "../../../../DOMJacket/Elements/ElementJacket";
+import { GenericElemJacket } from "../../../../DOMJacket/Elements/GenericElemJacket";
 import { ContentBrowserProxy } from "../../../../Content-Top/scripts/Proxies/ContentBrowserProxy";
 
 export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
@@ -51,8 +51,8 @@ export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
     this.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(documentJacket.DocId));
     this.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
-    let userNameElem: ElementJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginUserName);
-    let passwordElem: ElementJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginPassword);
+    let userNameElem: GenericElemJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginUserName);
+    let passwordElem: GenericElemJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginPassword);
 
     if (this.Logger.IsNotNullOrUndefinedBool('userNameElem', userNameElem)
       &&
@@ -60,7 +60,7 @@ export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
       userNameElem.NativeElement.setAttribute('value', ContentConst.Const.Names.scDefaultAdminUserName);
       passwordElem.NativeElement.setAttribute('value', ContentConst.Const.Names.scDefaultAdminPassword);
 
-      var loginButton: ElementJacket = this.GetLoginButton(documentJacket);
+      var loginButton: GenericElemJacket = this.GetLoginButton(documentJacket);
 
       if (this.Logger.IsNotNullOrUndefinedBool('loginButton', loginButton)) {
         this.Logger.Log('clicking loginbutton');
@@ -84,10 +84,10 @@ export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
     this.Logger.FuncEnd(this.AdminB.name);
   }
 
-  GetLoginButton(documentJacket: DocumentJacket): ElementJacket {
+  GetLoginButton(documentJacket: DocumentJacket): GenericElemJacket {
     this.Logger.FuncStart(this.GetLoginButton.name);
 
-    var toReturn: ElementJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginBtn.sc920);
+    var toReturn: GenericElemJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginBtn.sc920);
 
     if (!toReturn) {
       toReturn = documentJacket.QuerySelector(ContentConst.Const.Selector.SC.LoginBtn.sc820);

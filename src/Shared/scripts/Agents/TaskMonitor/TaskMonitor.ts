@@ -156,8 +156,8 @@ export class TaskMonitor implements ICoreTaskMonitor {
     }
   }
 
-  RequestCancel(): void {
-    console.log("Cancel Requested");
+  RequestCancel(requestor: string): void {
+    console.log("Cancel Requested by: " + requestor);
     this.CancelRequestedFlag = true;
   }
 

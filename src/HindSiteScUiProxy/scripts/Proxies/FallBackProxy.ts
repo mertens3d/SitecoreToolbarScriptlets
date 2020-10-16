@@ -1,16 +1,16 @@
-﻿import { StateFullProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
-import { IStateFullProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
-import { _BaseStateFullProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
+﻿import { ScDocProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { IStateFullDocProxy } from "../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { _BaseStateFullDocProxy } from "./Desktop/DesktopProxy/FrameProxies/_StateProxy";
 import { IStateOfFallBack } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfFallBack";
 
-export class FallBackProxy extends _BaseStateFullProxy<IStateOfFallBack> implements IStateFullProxy {
-  readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.FallBack];
-  readonly StateFullProxyDisciminator: StateFullProxyDisciminator = StateFullProxyDisciminator.FallBack;
+export class FallBackProxy extends _BaseStateFullDocProxy<IStateOfFallBack> implements IStateFullDocProxy {
+  readonly ScDocProxyDisciminatorFriendly = ScDocProxyDisciminator[ScDocProxyDisciminator.FallBack];
+  readonly ScDocProxyDisciminator: ScDocProxyDisciminator = ScDocProxyDisciminator.FallBack;
 
   async GetState(): Promise<IStateOfFallBack> {
     let toReturn: IStateOfFallBack = {
-      Disciminator: this.StateFullProxyDisciminator,
-      DisciminatorFriendly: StateFullProxyDisciminator[this.StateFullProxyDisciminator]
+      Disciminator: this.ScDocProxyDisciminator,
+      DisciminatorFriendly: ScDocProxyDisciminator[this.ScDocProxyDisciminator]
     }
     try {
     } catch (err) {

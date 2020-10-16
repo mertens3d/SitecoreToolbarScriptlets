@@ -1,6 +1,6 @@
 ﻿import { IStateLessDocProxy } from "./IStateLessDocProxy";
 
-export interface IStateLessFrameProxy {
+export interface IStateLessDTFrameProxy {
     InstantiateAsyncMembers(): Promise<void>;
     //HostedDocProxy: IStateLessDocProxy;
 }

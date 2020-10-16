@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/Document/DocumentJacket";
-import { ElementFrameJacket } from "../../../DOMJacket/Elements/ElementFrameJacket";
+import { FrameElemJacket } from "../../../DOMJacket/Elements/FrameElemJacket";
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { DTFrameProxy } from "../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";

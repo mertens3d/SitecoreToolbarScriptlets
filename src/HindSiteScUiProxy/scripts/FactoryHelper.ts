@@ -1,4 +1,4 @@
-﻿import { ElementFrameJacket } from "../../DOMJacket/Elements/ElementFrameJacket";
+﻿import { FrameElemJacket } from "../../DOMJacket/Elements/FrameElemJacket";
 import { IAPICore } from "../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { _APICoreBase } from "../../Shared/scripts/_APICoreBase";
@@ -11,7 +11,7 @@ export class FactoryHelper extends _APICoreBase {
     super(apiCore);
   }
 
-  CEFrameFactory(frameJacket: ElementFrameJacket, nickname: string): CEFrameProxy {
+  CEFrameFactory(frameJacket: FrameElemJacket, nickname: string): CEFrameProxy {
     this.Logger.FuncStart(this.CEFrameFactory.name);
 
 

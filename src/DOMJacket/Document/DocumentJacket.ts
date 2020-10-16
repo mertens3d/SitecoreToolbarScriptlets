@@ -1,54 +1,82 @@
 ﻿import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
 import { ReadyStateNAB } from "../../Shared/scripts/Classes/ReadyState";
-import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
-import { ContentConst } from "../../Shared/scripts/Interfaces/InjectConst";
-import { IScVerSpec } from "../../Shared/scripts/Interfaces/IScVerSpec";
-import { ElementJacket } from "../Elements/ElementJacket";
-import { UrlJacket } from "../UrlJacket";
-import { SharedConst } from "../../Shared/scripts/SharedConst";
-import { ISiteUrl } from "../../Shared/scripts/Interfaces/IAbsoluteUrl";
+import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
+import { PromiseFailAction } from "../../Shared/scripts/Enums/PromiseFailAction";
 import { Guid } from "../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../Shared/scripts/Helpers/GuidData";
-import { PromiseFailAction } from "../../Shared/scripts/Enums/PromiseFailAction";
-import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
+import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { ISiteUrl } from "../../Shared/scripts/Interfaces/IAbsoluteUrl";
+import { ContentConst } from "../../Shared/scripts/Interfaces/InjectConst";
+import { IScVerSpec } from "../../Shared/scripts/Interfaces/IScVerSpec";
+import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { _CommonBase } from "../../Shared/scripts/_CommonCoreBase";
-import { DocumentJacket_Watcher } from "./DocumentJacket.Watcher";
-import { ElementFrameJacket } from "../Elements/ElementFrameJacket";
-import { DocumentJacketMutationEvent_Subject } from "../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Subject";
+import { GenericElemJacket } from "../Elements/GenericElemJacket";
+import { FrameElemJacket } from "../Elements/FrameElemJacket";
+import { UrlJacket } from "../UrlJacket";
 
 export class DocumentJacket extends _CommonBase {
   private NativeDocument: Document;
-  public readonly UrlJacket: UrlJacket;
+  public UrlJacket: UrlJacket = null;
   readonly DocId: GuidData = Guid.NewRandomGuid();
-  private DocumentJacketWatcher: DocumentJacket_Watcher;
-  public DocumentJacketMutationEvent_Subject: DocumentJacketMutationEvent_Subject;
+  private LastKnownReadyStateNAB: ReadyStateNAB = null;
 
-  constructor(commonCore: ICommonCore, nativeDocument: Document) {
+  private constructor(commonCore: ICommonCore, nativeDocument: Document) {
     super(commonCore);
+    this.Logger.CTORStart(DocumentJacket.name);
     this.NativeDocument = nativeDocument;
-    this.UrlJacket = new UrlJacket(this.CommonCore, nativeDocument.URL);
     this.Instantiate();
+    this.Logger.FuncEnd(DocumentJacket.name);
   }
 
   private Instantiate() {
-    this.DocumentJacketMutationEvent_Subject = new DocumentJacketMutationEvent_Subject(this.CommonCore);
-    this.DocumentJacketWatcher = new DocumentJacket_Watcher(this.CommonCore, this, this.DocumentJacketMutationEvent_Subject);
+    //empty
+  }
+  GetLastKnownReadyState(): ReadyStateNAB {
+    return this.LastKnownReadyStateNAB
   }
 
-  GetElementById(idStr: string): ElementJacket {
-    let elementJacket: ElementJacket = null;
+  private async InstantiateSyncProperties(): Promise<void> {
+    this.Logger.FuncStart([DocumentJacket.name, this.InstantiateSyncProperties.name]);
+    try {
+      this.UrlJacket = new UrlJacket(this.CommonCore, this.NativeDocument.URL);
+
+      await this.WaitForCompleteNAB_DocumentJacket(DocumentJacket.name)
+        .catch((err) => this.ErrorHand.HandleFatalError([DocumentJacket.name, this.InstantiateSyncProperties.name], err));
+    } catch (err) {
+      this.ErrorHand.HandleFatalError([DocumentJacket.name, this.InstantiateSyncProperties.name], err);
+    }
+
+    this.Logger.FuncEnd([DocumentJacket.name, this.InstantiateSyncProperties.name]);
+  }
+
+  public static async FactoryMakeDocumentJacket(commonCore: ICommonCore, nativeDocument: Document): Promise<DocumentJacket> {
+    return new Promise(async (resolve, reject) => {
+      commonCore.Logger.FuncStart(this.FactoryMakeDocumentJacket.name);
+
+      let documentJacket: DocumentJacket = new DocumentJacket(commonCore, nativeDocument);
+
+      await documentJacket.InstantiateSyncProperties()
+        .then(() => resolve(documentJacket))
+        .catch((err) => reject(commonCore.ErrorHand.FormatRejectMessage(this.FactoryMakeDocumentJacket.name, err)));
+
+      commonCore.Logger.FuncEnd(this.FactoryMakeDocumentJacket.name);
+    })
+  }
+
+  GetElementById(idStr: string): GenericElemJacket {
+    let elementJacket: GenericElemJacket = null;
     let htmlElement: HTMLElement = this.NativeDocument.getElementById(idStr);
     if (htmlElement) {
-      elementJacket = new ElementJacket(this.CommonCore, htmlElement);
+      elementJacket = new GenericElemJacket(this.CommonCore, htmlElement);
     }
     return elementJacket;
   }
 
-  QuerySelector(selector: string): ElementJacket {
-    let elementJacket: ElementJacket = null;
+  QuerySelector(selector: string): GenericElemJacket {
+    let elementJacket: GenericElemJacket = null;
     let htmlElement: HTMLElement = this.NativeDocument.querySelector(selector);
     if (htmlElement) {
-      elementJacket = new ElementJacket(this.CommonCore, htmlElement);
+      elementJacket = new GenericElemJacket(this.CommonCore, htmlElement);
     }
     return elementJacket;
   }
@@ -70,72 +98,76 @@ export class DocumentJacket extends _CommonBase {
     return toReturn;
   }
 
-  async WaitForFirstHostedFrame(querySelector: string): Promise<ElementFrameJacket> {
+  async WaitForFirstHostedFrame(querySelector: string): Promise<FrameElemJacket> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForFirstHostedFrame.name, querySelector);
-      let firstFrameJacket: ElementFrameJacket = null;
 
-      await this.WaitForElem(querySelector)
-        .then((elemJacket: ElementJacket) => resolve(new ElementFrameJacket(this.CommonCore, <HTMLIFrameElement>elemJacket.NativeElement)))
+      await this.WaitForGenericElemJacket(querySelector)
+        .then((genericElemJacket: GenericElemJacket) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
+        .then((frameElemJackets: FrameElemJacket[]) => resolve(frameElemJackets[0]))
         .catch((err) => reject(this.ErrorHand.FormatRejectMessage([this.WaitForFirstHostedFrame.name], err)));
-
-      //  let matchingJackets: FrameJacket[] = this.GetHostedFramesFilteredBySelector(querySelector);
-      //if (matchingJackets && matchingJackets.length > 0) {
-      //  firstFrameJacket = matchingJackets[0];
-      //}
 
       this.Logger.FuncEnd(this.WaitForFirstHostedFrame.name, querySelector);
     })
   }
 
-  GetHostedFramesFilteredBySelector(querySelector: string): ElementFrameJacket[] {
-    this.Logger.FuncStart(this.GetHostedFramesFilteredBySelector.name, querySelector);
-    let frameJackets: ElementFrameJacket[] = [];
+  async GetHostedFramesFilteredBySelector(querySelector: string): Promise<FrameElemJacket[]> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.GetHostedFramesFilteredBySelector.name, querySelector);
+      let frameJackets: FrameElemJacket[] = [];
 
-    this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFramesFilteredBySelector.name, [this.NativeDocument]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFramesFilteredBySelector.name, [this.NativeDocument]);
 
-    var queryResultIframes: NodeList = this.NativeDocument.querySelectorAll('iframe');
-    this.Logger.LogVal('found iframes', queryResultIframes.length);
-    let filteredList: NodeList = this.NativeDocument.querySelectorAll('iframe' + querySelector);
-    this.Logger.LogVal('found filtered iframes', filteredList.length);
+      var queryResultIframes: NodeList = this.NativeDocument.querySelectorAll('iframe');
+      this.Logger.LogVal('found iframes', queryResultIframes.length);
+      let filteredList: NodeList = this.NativeDocument.querySelectorAll('iframe' + querySelector);
+      this.Logger.LogVal('found filtered iframes', filteredList.length);
 
-    if (filteredList && filteredList.length > 0) {
-      filteredList.forEach((iframeNode: Node) => {
-        let candidate: ElementFrameJacket = new ElementFrameJacket(this.CommonCore, <HTMLIFrameElement>iframeNode);
-        if (candidate) {
-          frameJackets.push(candidate);
-        } else {
-          this.Logger.Log('one of the iframes did not work');
-        }
-      });
-    }
-    this.Logger.FuncEnd(this.GetHostedFramesFilteredBySelector.name, querySelector);
-    return frameJackets;
+      let htmlElemAr: HTMLElement[] = [];
+
+      if (filteredList && filteredList.length > 0) {
+        filteredList.forEach((iframeNode: Node) => {
+          htmlElemAr.push(<HTMLElement>iframeNode);
+        });
+      }
+
+      await FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, htmlElemAr)
+        .then((frameElemJackets: FrameElemJacket[]) => frameJackets = frameElemJackets)
+        .then(() => resolve(frameJackets))
+        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFramesFilteredBySelector.name], err)));
+
+      this.Logger.FuncEnd(this.GetHostedFramesFilteredBySelector.name, querySelector);
+    });
   }
 
-  GetHostedFrameJackets(): ElementFrameJacket[] {
-    let frameJackets: ElementFrameJacket[] = [];
+  private QueryResultNodeListToHtmlAr(queryResult: NodeList): HTMLElement[] {
+    let htmlElements: HTMLElement[] = [];
 
-    this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFrameJackets.name, [this.NativeDocument]);
-
-    var queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
-
-    if (!queryResults) {
-      queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
+    if (queryResult) {
+      queryResult.forEach((result) => {
+        htmlElements.push(<HTMLElement>result);
+      })
     }
 
-    if (queryResults) {
-      for (var ifrIdx = 0; ifrIdx < queryResults.length; ifrIdx++) {
-        var frameJacket: ElementFrameJacket = new ElementFrameJacket(this.CommonCore, <HTMLIFrameElement>queryResults[ifrIdx]);
-        if (frameJacket) {
-          frameJackets.push(frameJacket);
-        }
+    return htmlElements;
+  }
+
+  GetHostedFrameJackets(): Promise<FrameElemJacket[]> {
+    return new Promise(async (resolve, reject) => {
+      this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFrameJackets.name, [this.NativeDocument]);
+
+      var queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc920);
+
+      if (!queryResults) {
+        queryResults = this.NativeDocument.querySelectorAll(ContentConst.Const.Selector.SC.IframeContent.sc820);
       }
-    }
 
-    this.Logger.LogVal('found iframes count', frameJackets.length);
+      let htmlElements: HTMLElement[] = this.QueryResultNodeListToHtmlAr(queryResults);
 
-    return frameJackets;
+      await FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, htmlElements)
+        .then((frameElemJackets: FrameElemJacket[]) => resolve(frameElemJackets))
+        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFrameJackets.name], err)));
+    });
   }
 
   Validate() {
@@ -149,26 +181,26 @@ export class DocumentJacket extends _CommonBase {
     }
   }
 
-  public async WaitForElem(selector: string, promiseFailAction: PromiseFailAction = PromiseFailAction.Default): Promise<ElementJacket> {
+  public async WaitForGenericElemJacket(selector: string, promiseFailAction: PromiseFailAction = PromiseFailAction.Default): Promise<GenericElemJacket> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForElem.name, selector);
+      this.Logger.FuncStart(this.WaitForGenericElemJacket.name, selector);
 
-      var toReturnFoundElem: HTMLElement = null;
-      var iterationJr = new IterationDrone(this.CommonCore, this.WaitForElem.name + ' - selector: "' + selector + '"', true);
+      var htmlElement: HTMLElement = null;
+      var iterationJr = new IterationDrone(this.CommonCore, this.WaitForGenericElemJacket.name + ' - selector: "' + selector + '"', true);
       let firstFind = true;
 
-      while (!toReturnFoundElem && iterationJr.DecrementAndKeepGoing()) {
-        toReturnFoundElem = this.NativeDocument.querySelector(selector);
+      while (!htmlElement && iterationJr.DecrementAndKeepGoing()) {
+        htmlElement = this.NativeDocument.querySelector(selector);
 
-        if (toReturnFoundElem && !StaticHelpers.IsNullOrUndefined(toReturnFoundElem)) {
+        if (htmlElement && !StaticHelpers.IsNullOrUndefined(htmlElement)) {
           if (firstFind) {
-            toReturnFoundElem = null;
+            htmlElement = null;
             firstFind = false;
           } else {
             this.Logger.Log('found it');
-            let elemJacket: ElementJacket = new ElementJacket(this.CommonCore, toReturnFoundElem);
-            this.Logger.LogAsJsonPretty('found', elemJacket);
-            resolve(elemJacket);
+            let genericElemJacket: GenericElemJacket = new GenericElemJacket(this.CommonCore, htmlElement);
+            this.Logger.LogAsJsonPretty('found', genericElemJacket);
+            resolve(genericElemJacket);
           }
         }
         else {
@@ -181,7 +213,7 @@ export class DocumentJacket extends _CommonBase {
       } else if (promiseFailAction === PromiseFailAction.ResolveNull) {
         resolve(null);
       }
-      this.Logger.FuncEnd(this.WaitForElem.name, selector);
+      this.Logger.FuncEnd(this.WaitForGenericElemJacket.name, selector);
     });
   }
 
@@ -256,10 +288,10 @@ export class DocumentJacket extends _CommonBase {
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForCompleteNAB_DocumentJacket.name, this.NativeDocument);
 
       var iterationJr: IterationDrone = new IterationDrone(this.CommonCore, this.WaitForCompleteNAB_DocumentJacket.name, false);
-      let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.CommonCore, this.NativeDocument);
+      this.LastKnownReadyStateNAB = new ReadyStateNAB(this.CommonCore, this.NativeDocument);
 
-      while (iterationJr.DecrementAndKeepGoing() && !readyStateNAB.IsCompleteNAB()) {
-        readyStateNAB.LogDebugValues();
+      while (iterationJr.DecrementAndKeepGoing() && !this.LastKnownReadyStateNAB.IsCompleteNAB()) {
+        this.LastKnownReadyStateNAB.LogDebugValues();
         await iterationJr.Wait();
       }
 
@@ -268,7 +300,7 @@ export class DocumentJacket extends _CommonBase {
         reject(iterationJr.IsExhaustedMsg);
       }
       else {
-        resolve(readyStateNAB);
+        resolve(this.LastKnownReadyStateNAB);
       }
 
       this.Logger.FuncEnd(this.WaitForCompleteNAB_DocumentJacket.name, friendly);

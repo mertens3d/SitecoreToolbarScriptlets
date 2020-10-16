@@ -1,8 +1,8 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/Document/DocumentJacket';
-import { StateFullProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
+import { ScDocProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { IStateFullDocProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
@@ -11,11 +11,11 @@ import { ScRibbonCommand } from '../../../../../Shared/scripts/Enums/eScRibbonCo
 import { ScRibbonProxy } from './ScRibbonProxy/ScRibbonProxy';
 import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
 
-export class ContentEditorProxy extends _ContentTreeBasedProxy<IStateOfContentEditor> implements IStateFullProxy {
+export class ContentEditorProxy extends _ContentTreeBasedProxy<IStateOfContentEditor> implements IStateFullDocProxy {
   
-  public readonly StateFullProxyDisciminatorFriendly = StateFullProxyDisciminator[StateFullProxyDisciminator.ContentEditor];
+  public readonly ScDocProxyDisciminatorFriendly = ScDocProxyDisciminator[ScDocProxyDisciminator.ContentEditor];
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
-  public readonly StateFullProxyDisciminator = StateFullProxyDisciminator.ContentEditor;
+  public readonly ScDocProxyDisciminator = ScDocProxyDisciminator.ContentEditor;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string) {
     super(apiCore, documentJacket);

@@ -37,6 +37,7 @@ export class SharedConst {
       },
     },
     KeyWords: {
+    
       Html: {
         Tags: {
           Body: 'body',
@@ -58,7 +59,10 @@ export class SharedConst {
         Events: {
           Message: "message",
         },
-      }
+      },
+      NodeTagName: {
+        IFrame: 'IFRAME',
+      },
     },
     Logger: {
       MinTimeDiffMs: 100
