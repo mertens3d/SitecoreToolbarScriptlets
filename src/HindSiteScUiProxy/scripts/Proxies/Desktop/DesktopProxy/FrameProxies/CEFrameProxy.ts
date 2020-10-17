@@ -1,12 +1,12 @@
-﻿import { IStateFullDocProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+﻿import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IStateOfCEFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateOfCEFrameProxy";
+import { IStateFullFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullFrameProxy";
 import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
-import { ScDocProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 
-export class CEFrameProxy extends _BaseScFrameProxy<IStateOfCEFrameProxy> implements IStateFullDocProxy {
+export class CEFrameProxy extends _BaseScFrameProxy<IStateOfCEFrameProxy> implements IStateFullFrameProxy {
   Friendly: string;
-  readonly ScDocProxyDisciminator = ScDocProxyDisciminator.CEFrame;
-  readonly ScDocProxyDisciminatorFriendly = ScDocProxyDisciminator[ScDocProxyDisciminator.CEFrame];
+  readonly ScProxyDisciminator = ScProxyDisciminator.CEFrame;
+  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.CEFrame];
   FrameTypeDiscriminator = CEFrameProxy.name;
 
   SetState(stateOfCEFrameProxy: IStateOfCEFrameProxy): Promise<void> {

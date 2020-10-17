@@ -7,23 +7,22 @@ import { NativeClassNameChangeEvent_Subject } from "../../../../../../DOMJacket/
 import { DefaultStateOfContentTree } from '../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentTree';
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
-import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode';
-import { IStateOfScContentTreeNodeShallow } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeShallow";
+import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
+import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfScContentTreeNode';
+import { IStateOfScContentTreeNodeShallow } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfScContentTreeNodeShallow";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { ContentTreeMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Subject";
 import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNodeProxy';
 import { ConResolver } from './ScContentTreeNodeProxy/ConResolver';
-import { _BaseStateFullElemProxy } from '../../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
-import { IStateFullElemProxy } from '../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy';
+import { _BaseStateFullElemProxy } from "../../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullElemProxy";
+import { IStateFullElemProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
 
 //ContentTree is the name Sitecore uses
-export class ContentTreeProxy extends _BaseStateFullElemProxy<IStateOfContentTree> implements IStateFullElemProxy {
+export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfContentTree> implements IStateFullElemProxy {
   private TreeRootSelector: string;
   private _treeNodeProxy: ScContentTreeNodeProxy;
-  private DocumentJacket: DocumentJacket;
   private NativeClassNameChangeEvent_Observer: NativeClassNameChangeEvent_Observer;
   private NativeClassNameChangeEvent_Subject: NativeClassNameChangeEvent_Subject;
   private rootTreeNodeJacket: GenericElemJacket;
@@ -32,11 +31,10 @@ export class ContentTreeProxy extends _BaseStateFullElemProxy<IStateOfContentTre
   public ContentTreeMutationEvent_Subject: ContentTreeMutationEvent_Subject;
   private ConResolver: ConResolver;
 
-  constructor(apiCore: IAPICore, documentJacket: DocumentJacket, treeContainerJacket: GenericElemJacket, TreeRootSelector: string) {
-    super(apiCore);
+  constructor(apiCore: IAPICore, hostDocumentJacket: DocumentJacket, treeContainerJacket: GenericElemJacket, TreeRootSelector: string) {
+    super(apiCore, hostDocumentJacket);
 
-    this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeProxy.name, [documentJacket, treeContainerJacket]);
-    this.DocumentJacket = documentJacket;
+    this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeElemProxy.name, [hostDocumentJacket, treeContainerJacket]);
     this.TreeRootSelector = TreeRootSelector;
     this.TreeContainerJacket = treeContainerJacket;
 
@@ -153,7 +151,7 @@ export class ContentTreeProxy extends _BaseStateFullElemProxy<IStateOfContentTre
   }
 
   async SetState(stateOfContentTree: IStateOfContentTree): Promise<void> {
-    this.Logger.FuncStart([ContentTreeProxy.name, this.SetState.name]);
+    this.Logger.FuncStart([ContentTreeElemProxy.name, this.SetState.name]);
     this.TaskMonitor.AsyncTaskStarted(this.SetState.name);
     try {
       this.ContentTreeMutationEvent_Subject.DisableNotifications();
@@ -164,12 +162,12 @@ export class ContentTreeProxy extends _BaseStateFullElemProxy<IStateOfContentTre
 
     this.ContentTreeMutationEvent_Subject.EnableNotifications();
     this.TaskMonitor.AsyncTaskCompleted(this.SetState.name);
-    this.Logger.FuncEnd([ContentTreeProxy.name, this.SetState.name]);
+    this.Logger.FuncEnd([ContentTreeElemProxy.name, this.SetState.name]);
   }
 
  private async SetRootNodeFromSelector(): Promise<void> {
-    try {
-      await this.DocumentJacket.WaitForGenericElemJacket(this.TreeRootSelector)
+   try {
+     await this.HostDocumentJacket.WaitForGenericElemJacket(this.TreeRootSelector)
         .then((elementJacket: GenericElemJacket) => this.rootTreeNodeJacket = elementJacket);
     } catch (err) {
       this.ErrorHand.HandleFatalError(this.SetRootNodeFromSelector.name, err);
@@ -196,7 +194,7 @@ export class ContentTreeProxy extends _BaseStateFullElemProxy<IStateOfContentTre
 
   GetState(): Promise<IStateOfContentTree> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart([ContentTreeProxy.name, this.GetState.name]);
+      this.Logger.FuncStart([ContentTreeElemProxy.name, this.GetState.name]);
 
       let stateOfContentTree: IStateOfContentTree = new DefaultStateOfContentTree();
 
@@ -213,7 +211,7 @@ export class ContentTreeProxy extends _BaseStateFullElemProxy<IStateOfContentTre
         .then(() => resolve(stateOfContentTree))
         .catch((err) => reject(this.GetState.name + ' | ' + err));
 
-      this.Logger.FuncEnd([ContentTreeProxy.name, this.GetState.name]);
+      this.Logger.FuncEnd([ContentTreeElemProxy.name, this.GetState.name]);
     });
   }
 
@@ -221,7 +219,7 @@ export class ContentTreeProxy extends _BaseStateFullElemProxy<IStateOfContentTre
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetTreeNodeProxy.name);
 
-      if (this.DocumentJacket) {
+      if (this.HostDocumentJacket) {
         if (this.rootTreeNodeJacket) {
           var rootParent: GenericElemJacket = this.rootTreeNodeJacket.parentElement();
 

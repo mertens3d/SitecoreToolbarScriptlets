@@ -13,13 +13,15 @@ export abstract class _base_ButtonModule extends _UiModuleBase {
   abstract ModuleKey: ModuleKey = ModuleKey.Unknown;
   HTMLButtonElement: HTMLButtonElement = null;
   protected MenuCommandDefinition: IMenuCommandDefinition;
+  public Friendly = '';
   protected RefreshData: UiHydrationData;
-  public Friendly = this.MenuCommandDefinition ? MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey] : this.ContainerSelector;
   public SingleButtonClickEvent_Subject: SingleClickEvent_Subject;
 
   constructor(hindeCore: IHindeCore, menuCommandDefinition: IMenuCommandDefinition) {
     super(hindeCore, menuCommandDefinition ? menuCommandDefinition.PlaceHolderSelector : null);
+
     this.MenuCommandDefinition = menuCommandDefinition;
+    this.Friendly = this.MenuCommandDefinition ? MenuCommandKey[this.MenuCommandDefinition.MenuCommandKey] : this.ContainerSelector;
   }
 
   protected Init_BaseButtonModule(): void {

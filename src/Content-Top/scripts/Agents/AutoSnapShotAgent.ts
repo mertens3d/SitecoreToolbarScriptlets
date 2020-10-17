@@ -6,7 +6,7 @@ import { IHindSiteScUiAPI } from "../../../Shared/scripts/Interfaces/Agents/ICon
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
-import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 

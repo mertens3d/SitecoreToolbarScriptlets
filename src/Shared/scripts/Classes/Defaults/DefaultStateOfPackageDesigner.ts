@@ -1,8 +1,8 @@
-﻿import { ScDocProxyDisciminator } from "../../Enums/40 - StateFullProxyDisciminator";
-import { IStateOfPackageDesigner } from "../../Interfaces/Data/States/IStateOfPackageDesigner";
+﻿import { ScProxyDisciminator } from "../../Enums/40 - StateFullProxyDisciminator";
+import { IStateOfPackageDesigner } from "../../Interfaces/StateOf/IStateOfPackageDesigner";
 
 export class DefaultStateOfPackageDesigner implements IStateOfPackageDesigner {
-  DisciminatorFriendly = ScDocProxyDisciminator[ScDocProxyDisciminator.PackageDesigner];
-  Disciminator = ScDocProxyDisciminator.PackageDesigner;
+  DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.PackageDesigner];
+  Disciminator = ScProxyDisciminator.PackageDesigner;
   StatusText: '';
 }

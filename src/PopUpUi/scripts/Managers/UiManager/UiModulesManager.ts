@@ -8,13 +8,13 @@ import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { SettingFlavor } from '../../../../Shared/scripts/Enums/SettingFlavor';
 import { IHindSiteSetting } from '../../../../Shared/scripts/Interfaces/Agents/IGenericSetting';
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScUrlAgent } from '../../../../Shared/scripts/Interfaces/Jackets/IScUrlAgent';
+import { IScWindowTypeResolver } from '../../../../Shared/scripts/Interfaces/Jackets/IScUrlAgent';
 import { ISettingsAgent } from '../../../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
 import { IUiModule } from '../../../../Shared/scripts/Interfaces/Agents/IUiModule';
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots';
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from '../../../../Shared/scripts/Interfaces/StateOf/IStateOfStorageSnapShots';
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { ICommandDefinitionBucket } from '../../../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket';
 import { IStateOfUiModules } from "../../../../Shared/scripts/Interfaces/IStateOfUiModules";
@@ -38,6 +38,8 @@ import { FeedbackModuleStateOfPopUp } from '../../UiModules/UiFeedbackModules/Fe
 import { UiFeedbackModuleLog } from '../../UiModules/UiFeedbackModules/UiFeedbackModuleLog';
 import { UiCommandsManager } from '../UiCommandsManager';
 import { _UiModuleBase } from '../../UiModules/_UiModuleBase';
+import { ScURLResolver } from '../../../../Shared/scripts/Agents/UrlAgent/ScPathResolver';
+import { IScURLResolver } from '../../../../Shared/scripts/Interfaces/Jackets/IScPathResolver';
 
 export class UiModulesManager extends _FrontBase {
   MenuCommandParameters: IMenuCommandDefinition[];
@@ -58,12 +60,13 @@ export class UiModulesManager extends _FrontBase {
   private UiModules: _UiModuleBase[] = [];
   UiModuleManagerMutationEvent_Subject: UiModuleManagerPassThroughEvent_Subject;
   FacetSettingsBasedModules: _SettingsBasedModulesBase[] = [];
-  private ScUrlAgent: IScUrlAgent;
+  private ScWindowTypeResolver: IScWindowTypeResolver;
   FacetRenameButton: InputWithButtonModule;
   LastKnownSelectSnapshotNickname: string;
   private DebuggingEnabled: boolean;
+  private ScPathResolver: IScURLResolver;
 
-  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiCommandsManager: UiCommandsManager, uiVisibilityTestAgent: IUiVisibilityTestAgent, scUrlagent: IScUrlAgent) {
+  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, uiCommandsManager: UiCommandsManager, uiVisibilityTestAgent: IUiVisibilityTestAgent, scWindowTypeResolver: IScWindowTypeResolver, scPathResolver: IScURLResolver) {
     super(hindeCore);
     this.Logger.CTORStart(UiModulesManager.name);
 
@@ -71,11 +74,11 @@ export class UiModulesManager extends _FrontBase {
     this.CommandDefinitionBucket = commandDefinitionBucket;
     this.UiVisibilityTestAgent = uiVisibilityTestAgent
     this.UiCommandsMan = uiCommandsManager;
-    this.ScUrlAgent = scUrlagent;
-
+    this.ScWindowTypeResolver = scWindowTypeResolver;
+    this.ScPathResolver = scPathResolver;
     this.DebuggingEnabled = this.SettingsAgent.GetByKey(SettingKey.EnableDebugging).ValueAsBool();
 
-    if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScUrlAgent])) {
+    if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScWindowTypeResolver])) {
       throw (UiModulesManager.name + ' null at constructor');
     }
 
@@ -393,7 +396,7 @@ export class UiModulesManager extends _FrontBase {
     if (this.LastKnownStateOfLiveHindSite && this.LastKnownStateOfLiveHindSite.Meta) {
       this.UiVisibilityTestAgent.Hydrate(this.LastKnownStateOfLiveHindSite, this.LastKnownStateOfStorageSnapShots, this.LastKnownStateOfLiveHindSite.Meta.WindowType, this.LastKnownSelectSnapshotId);
 
-      let refreshData: UiHydrationData = new UiHydrationData(this.LastKnownStateOfLiveHindSite, this.ScUrlAgent, this.LastKnownStateOfStorageSnapShots, this.LastKnownSelectSnapshotId, this.UiVisibilityTestAgent, this.LastKnownSelectSnapshotNickname);
+      let refreshData: UiHydrationData = new UiHydrationData(this.LastKnownStateOfLiveHindSite, this.ScWindowTypeResolver, this.LastKnownStateOfStorageSnapShots, this.LastKnownSelectSnapshotId, this.UiVisibilityTestAgent, this.LastKnownSelectSnapshotNickname, this.ScPathResolver);
 
       this.HydrateUi_UiModulesManager(refreshData);
       this.RefreshModuleUis()

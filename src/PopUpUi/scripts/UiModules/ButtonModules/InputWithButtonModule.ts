@@ -1,7 +1,7 @@
 ﻿import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IUiModuleButton } from "../../../../Shared/scripts/Interfaces/Agents/IUiModuleButton";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _base_ButtonModule } from "./_baseButtonModule";
 

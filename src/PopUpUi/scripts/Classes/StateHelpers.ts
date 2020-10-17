@@ -1,10 +1,10 @@
-﻿import { IStateOfContentEditor } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
-import { IStateOfDesktop } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
-import { IStateOfDTFrame } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { IStateOfScContentTreeNodeDeep } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNode";
-import { IStateOfContentTree } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree";
+﻿import { IStateOfContentEditor } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfContentEditor";
+import { IStateOfDesktop } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
+import { IStateOfDTFrame } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
+import { IStateOfScContentTreeNodeDeep } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfScContentTreeNode";
+import { IStateOfContentTree } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree";
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { IStateOfScContentTreeNodeShallow } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfScContentTreeNodeShallow";
+import { IStateOfScContentTreeNodeShallow } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfScContentTreeNodeShallow";
 
 export class StateHelpers extends _FrontBase {
   GetActiveTreeNodeFromStateOfTreeFlat(stateOfTree: IStateOfContentTree): IStateOfScContentTreeNodeShallow {

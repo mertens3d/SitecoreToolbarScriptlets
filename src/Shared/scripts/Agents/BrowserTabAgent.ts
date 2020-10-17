@@ -8,23 +8,26 @@ import { ICommonCore } from "../Interfaces/Agents/ICommonCore";
 import { ISettingsAgent } from '../Interfaces/Agents/ISettingsAgent';
 import { IDataBrowserTab } from '../Interfaces/Data/IDataBrowserWindow';
 import { ISiteUrl } from '../Interfaces/IAbsoluteUrl';
-import { IScUrlAgent } from '../Interfaces/Jackets/IScUrlAgent';
+import { IScWindowTypeResolver } from '../Interfaces/Jackets/IScUrlAgent';
 import { IPopUpBrowserProxy } from '../Interfaces/Proxies/IBrowserProxy';
 import { BaseBrowserProxy } from '../Proxies/Browser/_BaseBrowserProxy';
 import { _CommonBase } from "../_CommonCoreBase";
 import { IterationDrone } from './Drones/IterationDrone/IterationDrone';
+import { IScURLResolver } from '../Interfaces/Jackets/IScPathResolver';
 
 export class BrowserTabAgent extends _CommonBase {
   TypeDiscriminator = TypeDiscriminator.BrowserTabAgent;
-  private ScUrlAgent: IScUrlAgent;
+  private ScURLResolver: IScURLResolver;
+  private ScWindowTypeResolver: IScWindowTypeResolver;
   private SettingsAgent: ISettingsAgent;
   private PopUpBrowserProxy: IPopUpBrowserProxy;
 
-  constructor(commonCore: ICommonCore, scUrlAgent: IScUrlAgent, settingsAgent: ISettingsAgent, popUpBrowserProxy: IPopUpBrowserProxy) {
+  constructor(commonCore: ICommonCore, scWindowTypeResolver: IScWindowTypeResolver, settingsAgent: ISettingsAgent, popUpBrowserProxy: IPopUpBrowserProxy, scURLResolver: IScURLResolver) {
     super(commonCore);
     this.Logger.CTORStart(BrowserTabAgent.name);
-    this.ScUrlAgent = scUrlAgent;
+    this.ScWindowTypeResolver = scWindowTypeResolver;
     this.SettingsAgent = settingsAgent;
+    this.ScURLResolver = scURLResolver;
 
     this.PopUpBrowserProxy = popUpBrowserProxy;
 
@@ -32,15 +35,15 @@ export class BrowserTabAgent extends _CommonBase {
   }
 
   GetFullUrl(): ISiteUrl {
-    return this.ScUrlAgent.UrlJacket.BuildFullUrlFromParts();
+    return this.ScURLResolver.UrlJacket.BuildFullUrlFromParts();
   }
 
   SetQueryStringKeyValue(qsKey: QueryStrKey, qsValue: string) {
-    this.ScUrlAgent.SetParameterValueByKey(qsKey, qsValue)
+    this.ScURLResolver.SetParameterValueByKey(qsKey, qsValue)
   }
 
   GetWindowType(): ScWindowType {
-    return this.ScUrlAgent.GetScWindowType();
+    return this.ScWindowTypeResolver.GetScWindowType(this.ScURLResolver.UrlJacket);
   }
 
   async CreateNewTab(tabUrl: ISiteUrl) {
@@ -65,7 +68,7 @@ export class BrowserTabAgent extends _CommonBase {
     var iteration: IterationDrone = new IterationDrone(this.CommonCore, this.ChangeLocationSwitchBoard.name, true);
 
     if (iteration.DecrementAndKeepGoing()) {
-      var currentScWindowType: ScWindowType = this.ScUrlAgent.GetScWindowType();//.ScWindowType;
+      var currentScWindowType: ScWindowType = this.ScWindowTypeResolver.GetScWindowType(this.ScURLResolver.UrlJacket);//.ScWindowType;
 
       if (currentScWindowType === ScWindowType.LoginPage) {
         var self = this;
@@ -74,9 +77,9 @@ export class BrowserTabAgent extends _CommonBase {
       else if (currentScWindowType === ScWindowType.Launchpad || currentScWindowType === ScWindowType.ContentEditor || currentScWindowType === ScWindowType.Desktop) {
         var self = this;
 
-        this.ScUrlAgent.SetFilePathFromWindowType(desiredPageType);
+        this.ScURLResolver.SetFilePathFromWindowType(desiredPageType);
 
-        var absUrl: ISiteUrl = this.ScUrlAgent.UrlJacket.BuildFullUrlFromParts();
+        var absUrl: ISiteUrl = this.ScURLResolver.UrlJacket.BuildFullUrlFromParts();
 
         var callBackOnSuccessfulHrefChange: Function = function () {
           self.Logger.Log('Callback triggered');

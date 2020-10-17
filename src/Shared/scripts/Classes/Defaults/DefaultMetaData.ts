@@ -1,6 +1,6 @@
 ﻿import { ScWindowType } from "../../Enums/50 - scWindowType";
 import { SnapShotFlavor } from "../../Enums/SnapShotFlavor";
-import { IDataMetaData } from "../../Interfaces/Data/States/IDataMetaData";
+import { IDataMetaData } from "../../Interfaces/StateOf/IDataMetaData";
 import { Guid } from "../../Helpers/Guid";
 
 export class DefaultMetaData implements IDataMetaData {

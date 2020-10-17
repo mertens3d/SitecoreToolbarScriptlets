@@ -1,7 +1,7 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";

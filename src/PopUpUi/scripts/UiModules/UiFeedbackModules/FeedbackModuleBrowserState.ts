@@ -20,9 +20,11 @@ export class FeedbackModuleBrowserState extends _UiFeedbackModuleBase implements
     var allStateText: string = 'Browser State' + this.lineBreak;
     allStateText += this.lineBreak + 'URL Parts';
 
-    allStateText += this.indentedLineBreak + '<strong>Page Type:</strong> ' + StaticHelpers.ScWindowTypeFriendly(this.RefreshData.ScUrlAgent.GetScWindowType());
+    
 
-    let UrlParts: IGenericUrlParts = this.RefreshData.ScUrlAgent.UrlJacket.GetUrlParts();
+    allStateText += this.indentedLineBreak + '<strong>Page Type:</strong> ' + StaticHelpers.ScWindowTypeFriendly(this.RefreshData.ScWindowTypeResolver.GetScWindowType(this.RefreshData.ScPathResolver.UrlJacket));
+
+    let UrlParts: IGenericUrlParts = this.RefreshData.ScPathResolver.UrlJacket.GetUrlParts();
 
     allStateText += this.indentedLineBreak + 'Url Full (raw  ): ' + UrlParts.OriginalRaw;
 

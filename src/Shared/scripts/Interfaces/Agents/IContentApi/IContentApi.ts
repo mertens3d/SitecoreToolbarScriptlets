@@ -1,4 +1,4 @@
-﻿import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
+﻿import { IStateOfScUi } from "../../StateOf/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../IApiCallPayload";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { ScRibbonCommand } from "../../../Enums/eScRibbonCommand";

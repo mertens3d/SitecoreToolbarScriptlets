@@ -4,7 +4,7 @@ import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHe
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
+import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { SharedConst } from '../../../../../../Shared/scripts/SharedConst';

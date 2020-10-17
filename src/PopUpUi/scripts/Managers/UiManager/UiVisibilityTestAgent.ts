@@ -7,11 +7,11 @@ import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeC
 import { IUiVisibilityTestAgent } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { VisiblityTestResultsBucket } from "../../../../Shared/scripts/Interfaces/Agents/IUiVisiblityTestResult";
 import { VisiblityTestResult } from "../../../../Shared/scripts/Interfaces/Agents/VisiblityTestResult";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { IMenuCommandDefinition } from "../../../../Shared/scripts/Interfaces/IMenuCommandDefinition";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
-import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
-import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
+import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfStorageSnapShots";
+import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
 
 export class UiVisibilityTestAgent extends _FrontBase implements IUiVisibilityTestAgent {
   private StateOfSitecoreWindow: any;

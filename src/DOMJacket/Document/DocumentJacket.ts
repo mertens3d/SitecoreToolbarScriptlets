@@ -111,32 +111,35 @@ export class DocumentJacket extends _CommonBase {
     })
   }
 
-  async GetHostedFramesFilteredBySelector(querySelector: string): Promise<FrameElemJacket[]> {
+  async GetHostedFirstMatchingFrameElemJacket(querySelector: string): Promise<FrameElemJacket> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetHostedFramesFilteredBySelector.name, querySelector);
-      let frameJackets: FrameElemJacket[] = [];
+      this.Logger.FuncStart(this.GetHostedFirstMatchingFrameElemJacket.name, querySelector);
+      let toReturnFrameElemJacket: FrameElemJacket = null;
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFramesFilteredBySelector.name, [this.NativeDocument]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFirstMatchingFrameElemJacket.name, [this.NativeDocument]);
 
       var queryResultIframes: NodeList = this.NativeDocument.querySelectorAll('iframe');
       this.Logger.LogVal('found iframes', queryResultIframes.length);
       let filteredList: NodeList = this.NativeDocument.querySelectorAll('iframe' + querySelector);
+      
       this.Logger.LogVal('found filtered iframes', filteredList.length);
 
       let htmlElemAr: HTMLElement[] = [];
+      let firstHtmlIframeElement: HTMLIFrameElement = null;
 
       if (filteredList && filteredList.length > 0) {
-        filteredList.forEach((iframeNode: Node) => {
-          htmlElemAr.push(<HTMLElement>iframeNode);
-        });
+        firstHtmlIframeElement = <HTMLIFrameElement> filteredList[0];
+        //filteredList.forEach((iframeNode: Node) => {
+        //  htmlElemAr.push(<HTMLElement>iframeNode);
+        //});
       }
 
-      await FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, htmlElemAr)
-        .then((frameElemJackets: FrameElemJacket[]) => frameJackets = frameElemJackets)
-        .then(() => resolve(frameJackets))
-        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFramesFilteredBySelector.name], err)));
+      await FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [firstHtmlIframeElement])
+        .then((frameElemJackets: FrameElemJacket[]) => toReturnFrameElemJacket = frameElemJackets[0])
+        .then(() => resolve(toReturnFrameElemJacket))
+        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFirstMatchingFrameElemJacket.name], err)));
 
-      this.Logger.FuncEnd(this.GetHostedFramesFilteredBySelector.name, querySelector);
+      this.Logger.FuncEnd(this.GetHostedFirstMatchingFrameElemJacket.name, querySelector);
     });
   }
 

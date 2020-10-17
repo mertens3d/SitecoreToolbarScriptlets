@@ -6,7 +6,7 @@ import { IHindSiteScUiAPIRunTimeOptions } from "../../Shared/scripts/Interfaces/
 import { ICoreErrorHandler } from "../../Shared/scripts/Interfaces/Agents/IErrorHandlerAgent";
 import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { IStateOfScUi } from "../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfScUi } from "../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
 import { DesktopProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";

@@ -1,6 +1,6 @@
 ﻿import { GuidData } from "../../../Helpers/GuidData";
-import { IStateOfScUi } from "../../Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfStorageSnapShots } from "../../Data/States/IStateOfStorageSnapShots";
+import { IStateOfScUi } from "../../StateOf/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../StateOf/IStateOfStorageSnapShots";
 
 export interface IContentAtticAgent {
   CleanOutOldAutoSavedData(): void;

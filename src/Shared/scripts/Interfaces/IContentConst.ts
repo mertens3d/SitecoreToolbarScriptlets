@@ -77,6 +77,7 @@ export interface IContentConst {
       Frames: {
         ScContentIframeId0: {
           Cancel: string
+          PackageFile: string,
           Filename: string,
           Id: string,
           Ok: string,

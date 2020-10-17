@@ -6,8 +6,8 @@ import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/IComman
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
-import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
+import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfStorageSnapShots";
 
 export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements ICommandRecipes {
   constructor(hindeCore: IHindeCore, commandData: ICommandParams, dependancies: ICommandDependancies) {

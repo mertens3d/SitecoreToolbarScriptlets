@@ -1,6 +1,6 @@
 ﻿import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IScUrlAgent } from "../../Shared/scripts/Interfaces/Jackets/IScUrlAgent";
+import { IScWindowTypeResolver } from "../../Shared/scripts/Interfaces/Jackets/IScUrlAgent";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IUiVisibilityTestAgent } from "../../Shared/scripts/Interfaces/Agents/IUiVisibilityTestProctorAgent";
 import { ICommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
@@ -16,6 +16,8 @@ import { _FrontBase } from "../../Shared/scripts/_HindeCoreBase";
 import { UiCommandFlagRaisedEvent_Subject } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Subject";
 import { UiCommandFlagRaisedEvent_Observer } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/UiCommandFlagRaisedEvent_Observer";
 import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+import { ScURLResolver } from "../../Shared/scripts/Agents/UrlAgent/ScPathResolver";
+import { IScURLResolver } from "../../Shared/scripts/Interfaces/Jackets/IScPathResolver";
 
 export namespace HindSiteUiLayer {
   export class HindSiteUiLayer extends _FrontBase implements IHindSiteUiLayer {
@@ -24,23 +26,25 @@ export namespace HindSiteUiLayer {
     FeedbackModuleMsg_Observer: DebuggingFeedbackModuleMessages_Observer;
 
     readonly SettingsAgent: ISettingsAgent;
-    private readonly ScUrlAgent: IScUrlAgent;
+    private readonly ScWindowTypeResolver: IScWindowTypeResolver;
     UiCommandRaisedFlag_Subject: UiCommandFlagRaisedEvent_Subject;
     UiCommandsMan: UiCommandsManager;
     UiModulesMan: UiModulesManager;
     UiVisibilityTestAgent: IUiVisibilityTestAgent;
     UiCommandRaisedFlag_Observer: UiCommandFlagRaisedEvent_Observer;
+    private ScPathResolver: IScURLResolver;
 
-    constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, scUrlAgent: IScUrlAgent) {
+    constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, commandDefinitionBucket: ICommandDefinitionBucket, scWindowTypeResolver: IScWindowTypeResolver, scPathResolver: IScURLResolver) {
       super(hindeCore);
       this.Logger.CTORStart(HindSiteUiLayer.name);
 
       try {
         this.SettingsAgent = settingsAgent;
         this.CommandDefinitionBucket = commandDefinitionBucket;
-        this.ScUrlAgent = scUrlAgent;
+        this.ScWindowTypeResolver = scWindowTypeResolver;
+        this.ScPathResolver = scPathResolver;
 
-        if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.ScUrlAgent, this.CommandDefinitionBucket])) {
+        if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.ScWindowTypeResolver, this.CommandDefinitionBucket])) {
           this.ErrorHand.HandleFatalError(HindSiteUiLayer.name, 'null at constructor');
         }
 
@@ -80,7 +84,7 @@ export namespace HindSiteUiLayer {
         this.UiVisibilityTestAgent = new UiVisibilityTestAgent(this.HindeCore);
 
         this.UiCommandsMan = new UiCommandsManager(this.HindeCore, this.CommandDefinitionBucket, this.UiVisibilityTestAgent);
-        this.UiModulesMan = new UiModulesManager(this.HindeCore, this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScUrlAgent); //after tabman, after HelperAgent
+        this.UiModulesMan = new UiModulesManager(this.HindeCore, this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScWindowTypeResolver, this.ScPathResolver); //after tabman, after HelperAgent
         this.UiEventMan = new UiEventManager(this.HindeCore, this.UiModulesMan); // after uiman
       } catch (err) {
         console.log(err);

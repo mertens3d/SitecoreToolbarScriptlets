@@ -131,6 +131,7 @@ export class ContentConst {
             Filename: '[id=Filename]',
             Id: '[id=scContentIframeId0]',
             Ok: '[id=OK]',
+            PackageFile: '[id=PackageFile]',
           },
           AppFrame: {
             Id: '[id=AppFrame]',

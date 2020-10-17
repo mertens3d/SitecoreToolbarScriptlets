@@ -1,4 +1,4 @@
-﻿import { IRootState } from "../../Interfaces/Data/States/IStateOfScWindow";
+﻿import { IRootState } from "../../Interfaces/StateOf/IStateOfScWindow";
 import { DefaultStateOfStateFullProxy } from "./DefaultStateOfStateFullProxy";
 
 export class DefaultStateOfScWindow implements IRootState {

@@ -1,5 +1,5 @@
-﻿import { IStateOf_ } from "../Data/States/IStateOf_";
-import { IStateOfScContentTreeNodeShallow } from "../Data/States/IStateOfScContentTreeNodeShallow";
+﻿import { IStateOf_ } from "../StateOf/IStateOf_";
+import { IStateOfScContentTreeNodeShallow } from "../StateOf/IStateOfScContentTreeNodeShallow";
 
 export interface IFirstActive {
   StateOfHostedFrame: IStateOf_,

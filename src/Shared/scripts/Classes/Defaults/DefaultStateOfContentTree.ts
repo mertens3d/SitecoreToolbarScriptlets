@@ -1,7 +1,7 @@
-﻿import { IStateOfScContentTreeNodeDeep } from "../../Interfaces/Data/States/IStateOfScContentTreeNode";
-import { IScContentTreeNodeCoord } from "../../Interfaces/Data/States/IScContentTreeNodeCoord";
-import { IStateOfContentTree } from "../../Interfaces/Data/States/IStateOfContentTree";
-import { IStateOfScContentTreeNodeShallow } from "../../Interfaces/Data/States/IStateOfScContentTreeNodeShallow";
+﻿import { IStateOfScContentTreeNodeDeep } from "../../Interfaces/StateOf/IStateOfScContentTreeNode";
+import { IScContentTreeNodeCoord } from "../../Interfaces/StateOf/IScContentTreeNodeCoord";
+import { IStateOfContentTree } from "../../Interfaces/StateOf/IStateOfContentTree";
+import { IStateOfScContentTreeNodeShallow } from "../../Interfaces/StateOf/IStateOfScContentTreeNodeShallow";
 
 export class DefaultStateOfContentTree implements IStateOfContentTree {
   ActiveNodeShallow: IStateOfScContentTreeNodeShallow = null;

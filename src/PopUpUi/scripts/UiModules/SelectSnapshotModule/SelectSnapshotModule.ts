@@ -9,8 +9,8 @@ import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDTFrame";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
+import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { PopConst } from "../../../../Shared/scripts/Const/PopConst";
@@ -19,10 +19,10 @@ import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMut
 import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject";
 import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 import { _UiModuleBase } from "../_UiModuleBase";
-import { ScDocProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ContentEditorProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor";
-import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfDesktop";
+import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentEditor";
+import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
 
 export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   private StateHelpers: StateHelpers;

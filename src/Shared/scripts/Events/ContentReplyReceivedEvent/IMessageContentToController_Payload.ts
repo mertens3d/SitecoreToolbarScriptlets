@@ -1,6 +1,6 @@
 ﻿import { ReqCommandMsgFlag } from "../../../../Shared/scripts/Enums/10 - MessageFlag";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
+import { IStateOfScUi } from "../../Interfaces/StateOf/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../Interfaces/StateOf/IStateOfStorageSnapShots";
 
 export interface IMessageContentToController_Payload {
     StateOfStorageSnapShots: IStateOfStorageSnapShots;

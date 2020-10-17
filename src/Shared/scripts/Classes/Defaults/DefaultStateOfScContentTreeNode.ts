@@ -1,6 +1,6 @@
 ﻿//import { GuidData } from "../../Helpers/GuidData";
-//import { IStateOfScContentTreeNodeDeep } from "../../Interfaces/Data/States/IStateOfScContentTreeNode";
-//import { IScContentTreeNodeCoord } from "../../Interfaces/Data/States/IScContentTreeNodeCoord";
+//import { IStateOfScContentTreeNodeDeep } from "../../Interfaces/Data/StateOf/IStateOfScContentTreeNode";
+//import { IScContentTreeNodeCoord } from "../../Interfaces/Data/StateOf/IScContentTreeNodeCoord";
 
 //export class DefaultStateOfScContentTreeNode implements IStateOfScContentTreeNodeDeep {
 //  IsActive = false;

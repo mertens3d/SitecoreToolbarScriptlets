@@ -1,8 +1,8 @@
-﻿import { IStateOfContentEditor } from "../../Interfaces/Data/States/IStateOfContentEditor";
-import { ScDocProxyDisciminator } from "../../Enums/40 - StateFullProxyDisciminator";
+﻿import { IStateOfContentEditor } from "../../Interfaces/StateOf/IStateOfContentEditor";
+import { ScProxyDisciminator } from "../../Enums/40 - StateFullProxyDisciminator";
 import { _baseDefaultStateOfContentTreeBasedProxies } from "./_baseDefaultStateOfContentTreeBasedProxies";
 
 export class DefaultStateOfContentEditor extends _baseDefaultStateOfContentTreeBasedProxies implements IStateOfContentEditor {
-    DisciminatorFriendly = ScDocProxyDisciminator[ScDocProxyDisciminator.ContentEditor];
-    Disciminator = ScDocProxyDisciminator.ContentEditor;
+    DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.ContentEditor];
+    Disciminator = ScProxyDisciminator.ContentEditor;
 }

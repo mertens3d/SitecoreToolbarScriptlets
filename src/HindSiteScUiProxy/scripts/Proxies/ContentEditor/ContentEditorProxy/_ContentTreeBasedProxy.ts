@@ -1,43 +1,43 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/Document/DocumentJacket';
 import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
 import { _baseDefaultStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Classes/Defaults/_baseDefaultStateOfContentTreeBasedProxies';
-import { ScDocProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
+import { ScProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from '../../../../../Shared/scripts/Helpers/GuidData';
 import { IAPICore } from '../../../../../Shared/scripts/Interfaces/Agents/IAPICore';
-import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTree';
-import { IStateOfContentTreeBasedProxies } from "../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentTreeBasedProxies";
+import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
+import { IStateOfContentTreeBasedProxies } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies";
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
+import { IStateFullDocProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy';
 import { RecipeBasics } from '../../../RecipeBasics';
 import { __ContentTreeBasedProxyMutationEvent__Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
 import { I_ContentTreeBasedProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
 import { ContentTreeBasedProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Observer';
 import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
-import { _BaseStateFullElemProxy } from '../../Desktop/DesktopProxy/FrameProxies/_StateProxy';
-import { ContentTreeProxy } from "./ContentTreeProxy/ContentTreeProxy";
-import { IStateFullElemProxy } from '../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy';
+import { _BaseStateFullDocProxy } from '../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy';
+import { ContentTreeElemProxy } from "./ContentTreeProxy/ContentTreeProxy";
 
-export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfContentTreeBasedProxies> extends _BaseStateFullElemProxy<T> implements IStateFullElemProxy {
-  protected ContentTreeProxy: ContentTreeProxy;
+export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfContentTreeBasedProxies> extends _BaseStateFullDocProxy<T> implements IStateFullDocProxy {
+  protected ContentTreeProxy: ContentTreeElemProxy;
   protected DocumentJacket: DocumentJacket;
   protected RecipeBasic: RecipeBasics;
   protected TreeMutationEvent_Observer: ContentTreeBasedProxyMutationEvent_Observer;
   public __ContentTreeBasedProxyMutationEvent_Subject: __ContentTreeBasedProxyMutationEvent__Subject;
-  public abstract readonly ScDocProxyDisciminator: ScDocProxyDisciminator;
-  readonly abstract ScDocProxyDisciminatorFriendly: string;
+  public abstract readonly ScProxyDisciminator: ScProxyDisciminator;
+  readonly abstract ScProxyDisciminatorFriendly: string;
   readonly abstract TreeRootSelector: string;
   readonly AssociatedHindsiteId: GuidData;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
-    super(apiCore);
-    this.Logger.CTORStart(_ContentTreeBasedProxy.name);
+    super(apiCore, documentJacket);
+    this.Logger.CTORStart(_ContentTreeBasedDocProxy.name);
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.DocumentJacket = documentJacket;
     this.AssociatedHindsiteId = Guid.NewRandomGuid();
     this.ValidateAssociatedDocContentEditor();
 
     this.Instantiate();
-    this.Logger.CTOREnd(_ContentTreeBasedProxy.name);
+    this.Logger.CTOREnd(_ContentTreeBasedDocProxy.name);
   }
 
   private Instantiate() {
@@ -45,9 +45,9 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
   }
 
   async __baseInstantiateAsyncMembers(): Promise<void> {
-    await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(_ContentTreeBasedProxy.name)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
+    await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(_ContentTreeBasedDocProxy.name)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
       .then(() => this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
-      .then((treeContainer: GenericElemJacket) => this.ContentTreeProxy = new ContentTreeProxy(this.ApiCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
+      .then((treeContainer: GenericElemJacket) => this.ContentTreeProxy = new ContentTreeElemProxy(this.ApiCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
       .then(() => this.ContentTreeProxy.Instantiate_TreeProxyAsyncElem())
       .then(() => {
         this.__ContentTreeBasedProxyMutationEvent_Subject = new __ContentTreeBasedProxyMutationEvent__Subject(this.ApiCore);
@@ -64,8 +64,8 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
 
   async __baseSetState(stateOfContentTreeBasedProxies: IStateOfContentTreeBasedProxies): Promise<boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-      this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedProxy.name, stateOfContentTreeBasedProxies);
-      this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedProxy.name, stateOfContentTreeBasedProxies.ContentTree);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedDocProxy.name, stateOfContentTreeBasedProxies);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedDocProxy.name, stateOfContentTreeBasedProxies.ContentTree);
       this.__ContentTreeBasedProxyMutationEvent_Subject.DisableNotifications();
 
       await this.RecipeBasic.WaitForTimePeriod(1, this.SetState.name)
@@ -83,17 +83,17 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
   }
 
   __BaseTriggerInboundEventsAsync(): void {
-    this.ErrorHand.ThrowIfNullOrUndefined(this.__BaseTriggerInboundEventsAsync.name + ' ' + _ContentTreeBasedProxy.name, this.ContentTreeProxy);
+    this.ErrorHand.ThrowIfNullOrUndefined(this.__BaseTriggerInboundEventsAsync.name + ' ' + _ContentTreeBasedDocProxy.name, this.ContentTreeProxy);
     this.ContentTreeProxy.TriggerActiveNodeChangeEvent();
   }
 
   __baseGetState(): Promise<IStateOfContentTreeBasedProxies> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(_ContentTreeBasedProxy.name, this.__baseGetState.name);
+      this.Logger.FuncStart(_ContentTreeBasedDocProxy.name, this.__baseGetState.name);
 
       let toReturn: IStateOfContentTreeBasedProxies = {
-        Disciminator: this.ScDocProxyDisciminator,
-        DisciminatorFriendly: ScDocProxyDisciminator[this.ScDocProxyDisciminator],
+        Disciminator: this.ScProxyDisciminator,
+        DisciminatorFriendly: ScProxyDisciminator[this.ScProxyDisciminator],
         ContentTree: null
       }
 
@@ -101,7 +101,7 @@ export abstract class _ContentTreeBasedProxy<T extends _baseDefaultStateOfConten
         .then((stateOfContentTree: IStateOfContentTree) => toReturn.ContentTree = stateOfContentTree)
         .then(() => resolve(toReturn))
         .catch((err) => reject(this.GetState.name + ' | ' + err));
-      this.Logger.FuncEnd(_ContentTreeBasedProxy.name, this.__baseGetState.name);
+      this.Logger.FuncEnd(_ContentTreeBasedDocProxy.name, this.__baseGetState.name);
     });
   }
 

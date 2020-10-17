@@ -1,21 +1,18 @@
-﻿import { RecipeBasics } from "../../../../RecipeBasics";
-import { ScDocProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+﻿import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullDocProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
+import { IStateFullDocProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
+import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
-import { SupportFrameFactory } from "../../../SupportProxies/BaseFrameFactory";
-import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/Data/States/IStateOf_";
+import { RecipeBasics } from "../../../../RecipeBasics";
 
 export abstract class _justWindowStateFullProxy extends _APICoreBase implements IStateFullDocProxy {
-  abstract readonly ScDocProxyDisciminator: ScDocProxyDisciminator;
-  abstract readonly ScDocProxyDisciminatorFriendly;
+  abstract readonly ScProxyDisciminator: ScProxyDisciminator;
+  abstract readonly ScProxyDisciminatorFriendly;
   Friendly: string = '{unknown friendly}';
-  protected readonly SupportFrameFactory: SupportFrameFactory;
   RecipeBasics: RecipeBasics;
 
   constructor(apiCore: IAPICore) {
     super(apiCore);
-    this.SupportFrameFactory = new SupportFrameFactory(this.ApiCore);
   }
 
   GetState(): Promise<IStateOf_> {
@@ -23,15 +20,20 @@ export abstract class _justWindowStateFullProxy extends _APICoreBase implements 
       this.Logger.FuncStart(this.GetState.name, _justWindowStateFullProxy.name);
 
       let stateOf_: IStateOf_ = {
-        Disciminator: this.ScDocProxyDisciminator,
-        DisciminatorFriendly: this.ScDocProxyDisciminatorFriendly
+        Disciminator: this.ScProxyDisciminator,
+        DisciminatorFriendly: this.ScProxyDisciminatorFriendly
       }
       resolve(stateOf_);
 
       this.Logger.FuncEnd(this.GetState.name, _justWindowStateFullProxy.name);
     });
   }
+
   async InstantiateAsyncMembers(): Promise<void> {
+  }
+
+  async OnFocus(): Promise<any> {
+    // empty by default
   }
 
   async SetState(state: IStateOf_): Promise<void> {
@@ -40,6 +42,7 @@ export abstract class _justWindowStateFullProxy extends _APICoreBase implements 
   TriggerInboundEventsAsync(): void {
     //empty
   }
+
   WireEvents() {
     //empty
   }

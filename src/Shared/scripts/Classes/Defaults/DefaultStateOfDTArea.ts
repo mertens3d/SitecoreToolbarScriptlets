@@ -1,4 +1,4 @@
-﻿import { IStateOfDTArea } from "../../Interfaces/Data/States/IStateOfDTProxy";
+﻿import { IStateOfDTArea } from "../../Interfaces/StateOf/IStateOfDTProxy";
 
 export class DefaultStateOfDTArea implements IStateOfDTArea {
     DTFrames = [];

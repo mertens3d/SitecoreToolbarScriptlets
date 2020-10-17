@@ -1,21 +1,20 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/Document/DocumentJacket';
-import { ScDocProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
+import { ScProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullDocProxy } from "../../../../../Shared/scripts/Interfaces/Agents/IStateFullProxy";
-import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/Data/States/IStateOfContentEditor';
+import { IStateFullDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
+import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentEditor';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
-import { _ContentTreeBasedProxy } from './_ContentTreeBasedProxy';
+import { _ContentTreeBasedDocProxy } from './_ContentTreeBasedProxy';
 import { ScRibbonCommand } from '../../../../../Shared/scripts/Enums/eScRibbonCommand';
 import { ScRibbonProxy } from './ScRibbonProxy/ScRibbonProxy';
 import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
 
-export class ContentEditorProxy extends _ContentTreeBasedProxy<IStateOfContentEditor> implements IStateFullDocProxy {
-  
-  public readonly ScDocProxyDisciminatorFriendly = ScDocProxyDisciminator[ScDocProxyDisciminator.ContentEditor];
+export class ContentEditorProxy extends _ContentTreeBasedDocProxy<IStateOfContentEditor> implements IStateFullDocProxy {
+  public readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.ContentEditor];
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
-  public readonly ScDocProxyDisciminator = ScDocProxyDisciminator.ContentEditor;
+  public readonly ScProxyDisciminator = ScProxyDisciminator.ContentEditor;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string) {
     super(apiCore, documentJacket);
@@ -40,7 +39,7 @@ export class ContentEditorProxy extends _ContentTreeBasedProxy<IStateOfContentEd
   }
 
   GetState(): Promise<IStateOfContentEditor> {
-    return this.__baseGetState();    
+    return this.__baseGetState();
   }
 
   async SetState(dataToRestore: IStateOfContentEditor): Promise<Boolean> {
@@ -49,7 +48,6 @@ export class ContentEditorProxy extends _ContentTreeBasedProxy<IStateOfContentEd
 
   TriggerInboundEventsAsync(): void {
     this.__BaseTriggerInboundEventsAsync();
-    
   }
 
   //----------------------------------------------------------------------
@@ -71,6 +69,4 @@ export class ContentEditorProxy extends _ContentTreeBasedProxy<IStateOfContentEd
 
     this.Logger.FuncStart(this.SetCompactCss.name, Guid.AsShort(this.DocumentJacket.DocId));
   }
-
- 
 }

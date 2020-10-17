@@ -1,5 +1,5 @@
-﻿import { IStateOfScUi } from "../../Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IRootState } from "../../Interfaces/Data/States/IStateOfScWindow";
+﻿import { IStateOfScUi } from "../../Interfaces/StateOf/IDataStateOfSitecoreWindow";
+import { IRootState } from "../../Interfaces/StateOf/IStateOfScWindow";
 import { StaticHelpers } from "../StaticHelpers";
 import { IError } from "../../Interfaces/IError";
 import { DefaultFriendly } from "./DefaultFriendly";

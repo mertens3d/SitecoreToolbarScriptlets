@@ -1,7 +1,7 @@
 ﻿import { ReqCommandMsgFlag } from "../../../../Shared/scripts/Enums/10 - MessageFlag";
 import { IError } from "../../../../Shared/scripts/Interfaces/IError";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/Data/States/IDataStateOfSitecoreWindow";
-import { IStateOfStorageSnapShots } from "../../../../Shared/scripts/Interfaces/Data/States/IStateOfStorageSnapShots";
+import { IStateOfScUi } from "../../Interfaces/StateOf/IDataStateOfSitecoreWindow";
+import { IStateOfStorageSnapShots } from "../../Interfaces/StateOf/IStateOfStorageSnapShots";
 
 export interface IControllerMessageReceivedEvent_Payload {
   ErrorStack: IError[];

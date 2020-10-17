@@ -1,7 +1,7 @@
 ﻿import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
 import { ReadyStateNAB } from "../../Shared/scripts/Classes/ReadyState";
 import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
-import { IFrameJacketStyling } from "../../Shared/scripts/Interfaces/Data/States/IStateOfFrameStyling";
+import { IFrameJacketStyling } from "../../Shared/scripts/Interfaces/StateOf/IStateOfFrameStyling";
 import { DocumentJacket } from "../Document/DocumentJacket";
 import { UrlJacket } from "./../UrlJacket";
 import { ElementJacketOfType } from "./ElementJacketBaseOfType";
