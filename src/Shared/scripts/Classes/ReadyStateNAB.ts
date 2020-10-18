@@ -1,6 +1,7 @@
 ﻿import { SharedConst } from "../SharedConst";
 import { _CommonBase } from "../_CommonCoreBase";
 import { ICommonCore } from "../Interfaces/Agents/ICommonCore";
+import { DocReadyState } from "../Enums/ReadyState";
 
 export class ReadyStateNAB extends _CommonBase {
   private Document: Document;
@@ -44,7 +45,7 @@ export class ReadyStateNAB extends _CommonBase {
     if (currentReadyState === 'complete') {
       toReturn = DocReadyState.Complete;
     } else if (currentReadyState === 'interactive') {
-      toReturn = DocReadyState.Interactive
+      toReturn = DocReadyState.Interactive;
     } else if (currentReadyState === 'loading') {
       toReturn = DocReadyState.Loading;
     }
@@ -55,11 +56,4 @@ export class ReadyStateNAB extends _CommonBase {
   DocUrl(): string {
     return this.Document.URL;
   }
-}
-
-export enum DocReadyState {
-  ReadyStateUnknown = 0,
-  Complete,
-  Interactive,
-  Loading
 }

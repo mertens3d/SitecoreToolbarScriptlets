@@ -6,6 +6,8 @@ import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICo
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
 import { IStateLessScFrameProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessFrameProxy";
+import { ElementJacketMutationEvent_Subject } from "../../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/ElementJacketMutationEvent_Subject";
+import { IElemJacketWatcherParameters } from "../../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IElemJacketWatcherParameters";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
 import { _BaseStateLessScDocProxy } from "./_BaseStateLessScDocProxy";
 
@@ -29,6 +31,38 @@ export class JqueryModalDialogsDocProxy extends _BaseStateLessScDocProxy impleme
     //})
 
     return stateLessFrameProxyToReturn;
+  }
+
+  async WireEvents(): Promise<void> {
+    this._BaseWireEvents();
+    this.WireWatcher();
+  }
+
+  private async  WireWatcher(): Promise<void> {
+    this.Logger.FuncStart([JqueryModalDialogsDocProxy.name, this.WireWatcher.name]);
+    try {
+      let bodyElement: FrameElemJacket;
+      let watcherParams: IElemJacketWatcherParameters = {
+        Attributes: false,
+        ChildList: true,
+        OwnerFriendly: JqueryModalDialogsDocProxy.name,
+        Subtree: false,
+        TagFilter: ['IFRAME']
+      };
+
+      await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.Html.Body)
+        .then((elemJacket: FrameElemJacket) => bodyElement = elemJacket)
+        .then(() => bodyElement.AddWatcher(watcherParams))
+        .then((elemJacketMutationEvent_Subject: ElementJacketMutationEvent_Subject) => this.ElemJacketMutationEvent_Subject = elemJacketMutationEvent_Subject)
+        .then(() => this.ElemJacketMutationEvent_Subject.RegisterObserver(this.DocumentJacketMutationEvent_Observer))
+        .catch((err) => this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEvents.name], err));
+    }
+    catch (err) {
+      this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEvents.name], err);
+    }
+
+
+    this.Logger.FuncEnd([JqueryModalDialogsDocProxy.name, this.WireWatcher.name]);
   }
 
   //private async ProcessInboundInstallerBuildPackage(dtFrameProxy: DTFrameProxy): Promise<void> {

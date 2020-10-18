@@ -8,19 +8,19 @@ export class ContentMessageManager extends _FrontBase {
 
   constructor(hindeCore: IHindeCore, contentMessageBroker: IMessageBroker_Content) {
     super(hindeCore);
-    this.Logger.FuncStart(ContentMessageManager.name);
+    this.Logger.CTORStart(ContentMessageManager.name);
 
 
     this.ContentMessageBroker = contentMessageBroker;
 
-    this.Logger.FuncEnd(ContentMessageManager.name);
+    this.Logger.CTOREnd(ContentMessageManager.name);
   }
 
   InitContentMessageManager() {
-    this.Logger.FuncStart(this.InitContentMessageManager.name + ' ' + ContentMessageManager.name);
+    this.Logger.FuncStart([ContentMessageManager.name,this.InitContentMessageManager.name ]);
 
     this.ContentMessageBroker.BeginListening();
-    this.Logger.FuncEnd(this.InitContentMessageManager.name);
+    this.Logger.FuncEnd([ContentMessageManager.name, this.InitContentMessageManager.name]);
   }
 
   //private ToggleCompactCss(): Promise<void> {

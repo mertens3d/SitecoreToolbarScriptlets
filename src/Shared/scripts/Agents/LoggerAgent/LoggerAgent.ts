@@ -252,7 +252,15 @@ export class LoggerAgent implements ILoggerAgent {
     let displayText: string = '';
 
     if (Array.isArray(text)) {
-      text.forEach((oneText: string) => displayText += '.' + oneText);
+      let isFirst: boolean = true;
+      text.forEach((oneText: string) => {
+        if (!isFirst) {
+          displayText += '.';
+        }
+        isFirst = false;
+        displayText += oneText;
+      }
+      );
     } else {
       displayText = text.toString();
     }
@@ -314,7 +322,6 @@ export class LoggerAgent implements ILoggerAgent {
     }
 
     text = 'e' + ' ' + this.__callDepth + ') ' + text;
-
 
     if (optionalValueInput) {
       text = this.AddOptionalValueToText(text, optionalValueInput);

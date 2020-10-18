@@ -3,7 +3,7 @@ import { IElemJacketWatcherParameters } from "../../HindSiteScUiProxy/scripts/Pr
 import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
 import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { _CommonBase } from "../../Shared/scripts/_CommonCoreBase";
-import { ElementJacketWatcher } from "../Document/JacketElem_Watcher";
+import { ElementJacketWatcher } from "../Document/ElementJacketWatcher";
 
 export class GenericElemJacket extends _CommonBase {
   private ElemJacketWatchers: ElementJacketWatcher[] = [];
@@ -31,7 +31,7 @@ export class GenericElemJacket extends _CommonBase {
 
   async AddWatcher(watcherParams: IElemJacketWatcherParameters): Promise<ElementJacketMutationEvent_Subject> {
     return new Promise((resolve, reject) => {
-      this.Logger.FuncStart([GenericElemJacket.name, this.AddWatcher.name], (watcherParams && watcherParams.Friendly) ? watcherParams.Friendly : 'no watcher params');
+      this.Logger.FuncStart([GenericElemJacket.name, this.AddWatcher.name], (watcherParams && watcherParams.OwnerFriendly) ? watcherParams.OwnerFriendly : 'no watcher params');
 
       let jacketElemWatcher = new ElementJacketWatcher(this.CommonCore, this, watcherParams);
       this.ElemJacketWatchers.push(jacketElemWatcher);
@@ -42,7 +42,7 @@ export class GenericElemJacket extends _CommonBase {
         reject(this.ErrorHand.FormatRejectMessage([GenericElemJacket.name, this.AddWatcher.name], 'Unknown reason'));
       }
 
-      this.Logger.FuncEnd([GenericElemJacket.name, this.AddWatcher.name], (watcherParams && watcherParams.Friendly) ? watcherParams.Friendly : 'no watcher params');
+      this.Logger.FuncEnd([GenericElemJacket.name, this.AddWatcher.name], (watcherParams && watcherParams.OwnerFriendly) ? watcherParams.OwnerFriendly : 'no watcher params');
     });
   }
 

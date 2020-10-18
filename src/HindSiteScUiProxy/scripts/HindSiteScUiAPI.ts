@@ -46,7 +46,7 @@ export class HindSiteScUiAPI implements IHindSiteScUiAPI {
     this.Logger.FuncStart(this.InstantiateHindSiteScUiProxy.name);
     try {
       this.ScWindowFacade = new ScWindowFacade(this.ApiCore, this.DocumentJacket);
-      await this.ScWindowFacade.InstantiateAsyncMembers_ScWindowFacade();
+      await this.ScWindowFacade.InstantiateAsyncMembers();
     }
     catch (err) {
       this.ErrorHand.HandleFatalError(this.InstantiateHindSiteScUiProxy.name, err);

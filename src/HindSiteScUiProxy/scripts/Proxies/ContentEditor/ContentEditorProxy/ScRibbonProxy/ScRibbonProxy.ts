@@ -2,7 +2,7 @@
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { AsyncLock } from '../../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
-import { DTStartBarProxy } from '../../../Desktop/DesktopProxy/DesktopStartBarProxy/DesktopStartBarProxy';
+import { DTStartBarProxy } from "../../../Desktop/DesktopProxy/DesktopStartBarProxy/DTStartBarProxy";
 import { RibbonMenuButtonResolver } from "./RibbonMenuButtonResolver";
 import { ScRibbonCommand } from '../../../../../../Shared/scripts/Enums/eScRibbonCommand';
 import { IRibbonClickSequence } from '../../../../InternalInterfaces/IRibbonClickSequence';

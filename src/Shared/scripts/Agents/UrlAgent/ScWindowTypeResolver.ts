@@ -5,7 +5,7 @@ import { IUrlJacket } from "../../Interfaces/IUrlAgent";
 import { IScWindowTypeResolver } from "../../Interfaces/Jackets/IScUrlAgent";
 import { _CommonBase } from "../../_CommonCoreBase";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
-import { ScWindowTypeDeterminators } from "./ScWindowTypeDeterminators";
+import { ScWindowTypeDeterminators } from "../../Collections/ScWindowTypeDeterminators";
 
 export class ScWindowTypeResolver extends _CommonBase implements IScWindowTypeResolver {
   constructor(commonCore: ICommonCore) {
@@ -53,13 +53,13 @@ export class ScWindowTypeResolver extends _CommonBase implements IScWindowTypeRe
       });
       if (passed) {
         if (!toReturnPageDeterminator || toReturnPageDeterminator.ConfidenceScore < determinant.ConfidenceScore) {
-          this.Logger.LogAsJsonPretty('current determinant winner', determinant);
+          //this.Logger.LogAsJsonPretty('current determinant winner', determinant);
           toReturnPageDeterminator = determinant;
         }
       }
     });
 
-    this.Logger.LogAsJsonPretty('Final winner', toReturnPageDeterminator);
+    this.Logger.LogAsJsonPretty('Final determinant winner', toReturnPageDeterminator);
 
     return toReturnPageDeterminator;
   }

@@ -2,7 +2,7 @@
 
 import { DocumentJacket } from '../../DOMJacket/Document/DocumentJacket';
 import { IterationDrone } from '../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
-import { ReadyStateNAB } from '../../Shared/scripts/Classes/ReadyState';
+import { ReadyStateNAB } from "../../Shared/scripts/Classes/ReadyStateNAB";
 import { IAPICore } from '../../Shared/scripts/Interfaces/Agents/IAPICore';
 import { IRecipeBasics } from '../../Shared/scripts/Interfaces/IPromiseHelper';
 import { _APICoreBase } from '../../Shared/scripts/_APICoreBase';

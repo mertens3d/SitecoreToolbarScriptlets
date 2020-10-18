@@ -1,5 +1,5 @@
 ﻿import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { ReadyStateNAB } from "../../Shared/scripts/Classes/ReadyState";
+import { ReadyStateNAB } from "../../Shared/scripts/Classes/ReadyStateNAB";
 import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { IFrameJacketStyling } from "../../Shared/scripts/Interfaces/StateOf/IStateOfFrameStyling";
 import { DocumentJacket } from "../Document/DocumentJacket";
@@ -37,7 +37,7 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
       let frameElemJacketAr: FrameElemJacket[] = [];
 
       inputValue.forEach((inputValue: GenericElemJacket | HTMLElement) => {
-                frameElemJacketAr.push(this.MfgrFrameElemJacketsStep1(commonCore, inputValue));
+        frameElemJacketAr.push(this.MfgrFrameElemJacketsStep1(commonCore, inputValue));
       });
 
       let promiseArFrame: Promise<void>[] = [];
@@ -53,9 +53,9 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
   }
 
   private async PrepareFrameJacket(): Promise<void> {
-    this.Logger.FuncStart(this.PrepareFrameJacket.name, FrameElemJacket.name);
+    this.Logger.FuncStart([FrameElemJacket.name, this.PrepareFrameJacket.name]);
     try {
-      this.WaitForCompleteNABHtmlIframeElement(FrameElemJacket.name + this.PrepareFrameJacket.name)
+      this.WaitForCompleteNABFrameElement(FrameElemJacket.name + this.PrepareFrameJacket.name)
         .then(() => DocumentJacket.FactoryMakeDocumentJacket(this.CommonCore, this.NativeElement.contentDocument))
         .then((documentJacket: DocumentJacket) => this.DocumentJacket = documentJacket)
         .catch((err) => this.ErrorHand.HandleFatalError(this.PrepareFrameJacket.name, err));
@@ -64,7 +64,7 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
     } catch (err) {
       this.ErrorHand.HandleFatalError(this.PrepareFrameJacket.name, err)
     }
-    this.Logger.FuncEnd(this.PrepareFrameJacket.name, FrameElemJacket.name);
+    this.Logger.FuncEnd([FrameElemJacket.name, this.PrepareFrameJacket.name]);
   }
 
   GetUrlJacket(): UrlJacket {
@@ -135,12 +135,21 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
     this.Logger.FuncStart(this.WaitForNABHostedDoc.name);
     try {
       var iterationJr: IterationDrone = new IterationDrone(this.CommonCore, this.WaitForNABHostedDoc.name, false);
-      let readyStateNAB: ReadyStateNAB = new ReadyStateNAB(this.CommonCore, this.NativeElement.contentDocument);
+      let readyStateNAB: ReadyStateNAB = null;
 
-      while (iterationJr.DecrementAndKeepGoing() && readyStateNAB.DocIsAboutBlank()) {
+      let keepGoing: boolean = true;
+
+      while (iterationJr.DecrementAndKeepGoing() && keepGoing) {
+        if (this.NativeElement.contentDocument) {
+          readyStateNAB = new ReadyStateNAB(this.CommonCore, this.NativeElement.contentDocument);
+
+          //readyStateNAB.SetDocument(this.NativeElement.contentDocument);
+          keepGoing = readyStateNAB.DocIsAboutBlank();
+          readyStateNAB.LogDebugValues();
+        } else {
+          keepGoing = true;
+        }
         await iterationJr.Wait();
-        readyStateNAB.SetDocument(this.NativeElement.contentDocument);
-        readyStateNAB.LogDebugValues();
       }
 
       if (iterationJr.IsExhausted) {
@@ -153,9 +162,9 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
     this.Logger.FuncEnd(this.WaitForNABHostedDoc.name);
   }
 
-  async WaitForCompleteNABHtmlIframeElement(friendly: string): Promise<ReadyStateNAB> {
+  async WaitForCompleteNABFrameElement(friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForCompleteNABHtmlIframeElement.name, friendly);
+      this.Logger.FuncStart([FrameElemJacket.name, this.WaitForCompleteNABFrameElement.name], friendly);
       //this.Logger.Log(this.DocumentJacket.UrlJacket.GetOriginalURL());
 
       if (this.NativeElement) {
@@ -170,12 +179,12 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
           //  this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, this.NativeElement.contentDocument.readyState);
           //  resolve(result);
           //})
-          .catch((err) => reject(this.ErrorHand.FormatRejectMessage([this.WaitForCompleteNABHtmlIframeElement.name], err)));
+          .catch((err) => reject(this.ErrorHand.FormatRejectMessage([FrameElemJacket.name, this.WaitForCompleteNABFrameElement.name], err)));
       }
       else {
-        reject(this.ErrorHand.FormatRejectMessage([FrameElemJacket.name, this.WaitForCompleteNABHtmlIframeElement.name], 'No target doc: ' + friendly));
+        reject(this.ErrorHand.FormatRejectMessage([FrameElemJacket.name, this.WaitForCompleteNABFrameElement.name], 'No target doc: ' + friendly));
       }
-      this.Logger.FuncEnd(this.WaitForCompleteNABHtmlIframeElement.name, friendly);;
+      this.Logger.FuncEnd([FrameElemJacket.name, this.WaitForCompleteNABFrameElement.name], friendly);;
     });
   }
 }

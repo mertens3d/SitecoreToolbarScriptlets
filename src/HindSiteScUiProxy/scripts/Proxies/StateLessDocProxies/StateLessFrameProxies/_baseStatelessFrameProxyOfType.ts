@@ -36,7 +36,7 @@ export class _baseStatelessFrameProxyOfType<T extends _BaseStateLessScDocProxy> 
   async _base_InstantiateAsyncProperties(): Promise<void> {
     //this.BaseFrameFactory = new SupportFrameFactory(this.ApiCore);
     try {
-      await this.FrameElemJacket.WaitForCompleteNABHtmlIframeElement(this.FrameSelectorOnHost)
+      await this.FrameElemJacket.WaitForCompleteNABFrameElement(this.FrameSelectorOnHost)
         //.then(() => this.HostedDocProxy = this.FrameJacket.DocumentJacket)
         .catch((err) => this.ErrorHand.HandleFatalError(this._base_InstantiateAsyncProperties.name, err));
     } catch (err) {

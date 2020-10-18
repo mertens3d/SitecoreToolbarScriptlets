@@ -9,7 +9,7 @@ export interface IScWindowFacade {
   TriggerCERibbonCommand(ribbonCommand: ScRibbonCommand);
   GetCurrentPageType(): ScWindowType;
   GetStateOfScUiProxy(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUi>;
-  InstantiateAsyncMembers_ScWindowFacade();
+  InstantiateAsyncMembers();
   PublishActiveCE();
   SetCompactCss(targetDoc: DocumentJacket);
   SetStateOfScWin(dataToRestore: IStateOfScUi): Promise<void>

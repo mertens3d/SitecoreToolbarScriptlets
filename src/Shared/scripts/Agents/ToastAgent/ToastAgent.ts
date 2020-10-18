@@ -8,6 +8,7 @@ import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { _CommonBase } from "../../_CommonCoreBase";
 import { TaskMutationType } from "../../Enums/TaskMutationType";
+import { SharedConst } from "../../SharedConst";
 
 export class ToastAgent extends _CommonBase implements IToastAgent {
   readonly TypeDiscriminator = TypeDiscriminator.ToastAgent;
@@ -104,7 +105,7 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
   private DivineElements() {
     this.Logger.FuncStart(this.DivineElements.name);
     if (!this.HasBeenInit) {
-      this.BodyTag = this.TargetDoc.getElementsByTagName('body')[0];//(treeGlyphTargetId);
+      this.BodyTag = <HTMLBodyElement> this.TargetDoc.getElementsByTagName(SharedConst.Const.KeyWords.Html.Tags.Body)[0];//(treeGlyphTargetId);
       this.ToastContainer = this.CreateToastContainer(this.TargetDoc);
       this.CreateSliderDiv();
       this.CreateCancelButton();

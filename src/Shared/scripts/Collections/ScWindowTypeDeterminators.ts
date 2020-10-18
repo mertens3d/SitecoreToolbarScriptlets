@@ -1,7 +1,7 @@
-﻿import { QueryStrKey } from "../../Enums/QueryStrKey";
-import { ScWindowType } from "../../Enums/50 - scWindowType";
-import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
-import { IScWindowTypeDeterminator } from "../../Interfaces/IPageDeterminator";
+﻿import { QueryStrKey } from "../Enums/QueryStrKey";
+import { ScWindowType } from "../Enums/50 - scWindowType";
+import { IQueryKeyValuePair } from "../Agents/UrlAgent/IQueryKeyValuePair";
+import { IScWindowTypeDeterminator } from "../Interfaces/IPageDeterminator";
 
 export class ScWindowTypeDeterminators {
   static regexPathTest_Sitecore_Shell: RegExp = /sitecore\/shell/ig;

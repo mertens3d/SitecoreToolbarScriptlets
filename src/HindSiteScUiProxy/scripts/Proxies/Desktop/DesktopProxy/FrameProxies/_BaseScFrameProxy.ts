@@ -1,6 +1,7 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/Document/DocumentJacket";
 import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJacket";
-import { DocReadyState, ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
+import { DocReadyState } from "../../../../../../Shared/scripts/Enums/ReadyState";
+import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyStateNAB";
 import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullFrameProxy";
@@ -41,7 +42,7 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullFrameProxy<T> i
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForCompleteNABFrameProxyOrReject.name, this.Friendly);
 
-      await this.FrameJacket.WaitForCompleteNABHtmlIframeElement(this.Friendly)
+      await this.FrameJacket.WaitForCompleteNABFrameElement(this.Friendly)
         .then((result: ReadyStateNAB) => {
           if (result.IsCompleteNAB()) {
             resolve(result.DocumentReadyState());

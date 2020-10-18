@@ -1,7 +1,7 @@
 ﻿export interface IElemJacketWatcherParameters {
-    TagFilter: string[];
-    Friendly: string ;
-    Attributes: boolean;
-    ChildList: boolean;
-    Subtree: boolean;
+  Attributes: boolean;
+  ChildList: boolean;
+  OwnerFriendly: string;
+  Subtree: boolean;
+  TagFilter: string[];
 }

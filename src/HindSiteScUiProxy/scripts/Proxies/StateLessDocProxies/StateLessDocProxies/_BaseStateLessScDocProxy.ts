@@ -6,16 +6,16 @@ import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectCon
 import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
 import { IStateLessScFrameProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessFrameProxy";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
-import { DocumentJacketMutationEvent_Observer } from "../../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/DocumentProxyMutationEvent_Observer";
+import { ElementJacketMutationEvent_Observer } from "../../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/ElementJacketMutationEvent_Observer";
 import { ElementJacketMutationEvent_Subject } from "../../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/ElementJacketMutationEvent_Subject";
-import { IDocumentJacketMutationEvent_Payload } from "../../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IDocumentProxyMutationEvent_Payload";
+import { IElementJacketMutationEvent_Payload } from "../../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IElementJacketMutationEvent_Payload";
 import { IElemJacketWatcherParameters } from "../../Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IElemJacketWatcherParameters";
 import { _BaseScDocProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseScDocProxy";
 import { GenericStateLessFrameProxy } from "../StateLessFrameProxies/GenericStateLessFrameProxy";
 
 export abstract class _BaseStateLessScDocProxy extends _BaseScDocProxy implements IStateLessDocProxy {
   HostedFrameStatelessFrameProxies: IStateLessScFrameProxy[] = [];
-  protected DocumentJacketMutationEvent_Observer: DocumentJacketMutationEvent_Observer;
+  protected DocumentJacketMutationEvent_Observer: ElementJacketMutationEvent_Observer;
   ElemJacketMutationEvent_Subject: ElementJacketMutationEvent_Subject;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
@@ -27,7 +27,7 @@ export abstract class _BaseStateLessScDocProxy extends _BaseScDocProxy implement
   }
 
   protected _BaseInstantiateAsyncMembers() {
-    this.DocumentJacketMutationEvent_Observer = new DocumentJacketMutationEvent_Observer(this.ApiCore, this.CallbackOnDocumentJacketMutationEvent.bind(this));
+    this.DocumentJacketMutationEvent_Observer = new ElementJacketMutationEvent_Observer(this.ApiCore, this.CallbackOnDocumentJacketMutationEvent.bind(this));
   }
 
   async InstantiateAsyncMembers() {
@@ -39,31 +39,12 @@ export abstract class _BaseStateLessScDocProxy extends _BaseScDocProxy implement
   }
 
   async WireEvents(): Promise<void> {
-    return this._BaseWireEvents();
+    //return this._BaseWireEvents();
   }
 
   protected async _BaseWireEvents(): Promise<void> {
     this.Logger.FuncStart([_BaseStateLessScDocProxy.name, this.WireEvents.name]);
-    try {
-      let bodyElement: FrameElemJacket;
-      let watcherParams: IElemJacketWatcherParameters = {
-        Attributes: false,
-        ChildList: true,
-        Friendly: _BaseStateLessScDocProxy.name,
-        Subtree: true,
-        TagFilter: ['IFRAME']
-      };
-
-      await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.Html.Body)
-        .then((elemJacket: FrameElemJacket) => bodyElement = elemJacket)
-        .then(() => bodyElement.AddWatcher(watcherParams))
-        .then((elemJacketMutationEvent_Subject: ElementJacketMutationEvent_Subject) => this.ElemJacketMutationEvent_Subject = elemJacketMutationEvent_Subject)
-        .then(() => this.ElemJacketMutationEvent_Subject.RegisterObserver(this.DocumentJacketMutationEvent_Observer))
-        .catch((err) => this.ErrorHand.HandleFatalError([_BaseStateLessScDocProxy.name, this.WireEvents.name], err));
-    }
-    catch (err) {
-      this.ErrorHand.HandleFatalError([_BaseStateLessScDocProxy.name, this.WireEvents.name], err);
-    }
+   
     this.Logger.FuncEnd([_BaseStateLessScDocProxy.name, this.WireEvents.name]);
   }
 
@@ -99,7 +80,7 @@ export abstract class _BaseStateLessScDocProxy extends _BaseScDocProxy implement
     }
     this.Logger.FuncEnd([_BaseStateLessScDocProxy.name, this.CallbackOnDocumentJacketMutationEvent.name]);
   }
-  CallbackOnDocumentJacketMutationEvent(DocumentJacketMutationEvent_Payload: IDocumentJacketMutationEvent_Payload) {
+  CallbackOnDocumentJacketMutationEvent(DocumentJacketMutationEvent_Payload: IElementJacketMutationEvent_Payload) {
     this.Logger.FuncStart(this.CallbackOnDocumentJacketMutationEvent.name);
     if (DocumentJacketMutationEvent_Payload && DocumentJacketMutationEvent_Payload.AddedGenericElemJacket) {
       this.HandleElemJacketAddedToDocument(DocumentJacketMutationEvent_Payload.AddedGenericElemJacket);

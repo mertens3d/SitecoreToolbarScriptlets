@@ -1,5 +1,5 @@
 ﻿import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { ReadyStateNAB } from "../../Shared/scripts/Classes/ReadyState";
+import { ReadyStateNAB } from "../../Shared/scripts/Classes/ReadyStateNAB";
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { PromiseFailAction } from "../../Shared/scripts/Enums/PromiseFailAction";
 import { Guid } from "../../Shared/scripts/Helpers/Guid";
@@ -121,14 +121,14 @@ export class DocumentJacket extends _CommonBase {
       var queryResultIframes: NodeList = this.NativeDocument.querySelectorAll('iframe');
       this.Logger.LogVal('found iframes', queryResultIframes.length);
       let filteredList: NodeList = this.NativeDocument.querySelectorAll('iframe' + querySelector);
-      
+
       this.Logger.LogVal('found filtered iframes', filteredList.length);
 
       let htmlElemAr: HTMLElement[] = [];
       let firstHtmlIframeElement: HTMLIFrameElement = null;
 
       if (filteredList && filteredList.length > 0) {
-        firstHtmlIframeElement = <HTMLIFrameElement> filteredList[0];
+        firstHtmlIframeElement = <HTMLIFrameElement>filteredList[0];
         //filteredList.forEach((iframeNode: Node) => {
         //  htmlElemAr.push(<HTMLElement>iframeNode);
         //});
@@ -284,7 +284,7 @@ export class DocumentJacket extends _CommonBase {
 
   public async WaitForCompleteNAB_DocumentJacket(friendly: string): Promise<ReadyStateNAB> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.WaitForCompleteNAB_DocumentJacket.name, friendly);
+      this.Logger.FuncStart([DocumentJacket.name, this.WaitForCompleteNAB_DocumentJacket.name], friendly);
       this.Logger.LogVal('url', this.NativeDocument.URL);
       this.Logger.LogVal('readyState', this.NativeDocument.readyState);
 
@@ -298,6 +298,8 @@ export class DocumentJacket extends _CommonBase {
         await iterationJr.Wait();
       }
 
+      this.LastKnownReadyStateNAB.LogDebugValues();
+
       if (iterationJr.IsExhausted) {
         this.Logger.Log(iterationJr.IsExhaustedMsg);
         reject(iterationJr.IsExhaustedMsg);
@@ -306,7 +308,7 @@ export class DocumentJacket extends _CommonBase {
         resolve(this.LastKnownReadyStateNAB);
       }
 
-      this.Logger.FuncEnd(this.WaitForCompleteNAB_DocumentJacket.name, friendly);
+      this.Logger.FuncEnd([DocumentJacket.name, this.WaitForCompleteNAB_DocumentJacket.name], friendly);
     });
   }
 }

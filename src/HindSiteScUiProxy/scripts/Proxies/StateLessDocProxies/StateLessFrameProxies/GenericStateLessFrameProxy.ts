@@ -44,7 +44,7 @@ export class GenericStateLessFrameProxy extends _baseStatelessFrameProxyOfType<_
 
       let stateLessFrameProxyToReturn: _baseStatelessFrameProxyOfType<T> = null;
 
-      await frameElemJacket.WaitForCompleteNABHtmlIframeElement(this.StateLessFrameProxyFactory.name)
+      await frameElemJacket.WaitForCompleteNABFrameElement(this.StateLessFrameProxyFactory.name)
         .then(() => stateLessFrameProxyToReturn = (new _baseStatelessFrameProxyOfType<T>(apiCore, frameElemJacket)))
         .then(() => resolve(stateLessFrameProxyToReturn))
         .catch((err) => reject(apiCore.ErrorHand.FormatRejectMessage([GenericStateLessFrameProxy.name, this.ProcessFrameProxy.name], err)));

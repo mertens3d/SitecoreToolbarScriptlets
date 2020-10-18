@@ -2,7 +2,7 @@
 import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJacket";
 import { ScWindowTypeResolver } from "../../../../../../Shared/scripts/Agents/UrlAgent/ScWindowTypeResolver";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
-import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyState";
+import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyStateNAB";
 import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
@@ -57,7 +57,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
 
       this.ErrorHand.ThrowIfNullOrUndefined(this.InstantiateAsyncMembers.name, [this.FrameJacket]);
 
-      await this.FrameJacket.WaitForCompleteNABHtmlIframeElement(this.Friendly)
+      await this.FrameJacket.WaitForCompleteNABFrameElement(this.Friendly)
         .then((result: ReadyStateNAB) => {
           if (!result.IsCompleteNAB()) {
             reject(result.DocumentReadtStateFriendly())

@@ -3,7 +3,7 @@ import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore"
 import { IScWindowFacade } from '../../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { IApiCallPayload } from "../../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ICommandRecipes } from '../../../../Shared/scripts/Interfaces/ICommandRecipes';
-import { DTStartBarProxy } from '../../Proxies/Desktop/DesktopProxy/DesktopStartBarProxy/DesktopStartBarProxy';
+import { DTStartBarProxy } from "../../Proxies/Desktop/DesktopProxy/DesktopStartBarProxy/DTStartBarProxy";
 import { DTFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
 import { _ApiRecipeBase } from './__RecipeBase/_ApiRecipeBase';
 

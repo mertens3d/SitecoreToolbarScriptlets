@@ -7,7 +7,7 @@ import { DefaultStateOfScWindow } from "../../../Shared/scripts/Classes/Defaults
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ScProxyDisciminator } from "../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
-import { ReadyStateNAB } from '../../../Shared/scripts/Classes/ReadyState';
+import { ReadyStateNAB } from "../../../Shared/scripts/Classes/ReadyStateNAB";
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
@@ -50,9 +50,9 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
     this.Logger.FuncEnd([ScWindowFacade.name, this.Instantiate.name]);
   }
 
-  async InstantiateAsyncMembers_ScWindowFacade(): Promise<void> {
+  async InstantiateAsyncMembers(): Promise<void> {
     try {
-      this.Logger.FuncStart(this.InstantiateAsyncMembers_ScWindowFacade.name);
+      this.Logger.FuncStart([ScWindowFacade.name,  this.InstantiateAsyncMembers.name]);
 
       this.TabSessionId = sessionStorage.getItem(ContentConst.Const.Storage.SessionKey);
 
@@ -61,19 +61,19 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
         sessionStorage.setItem(ContentConst.Const.Storage.SessionKey, this.TabSessionId);
       }
 
-      let windowType: ScWindowType = ScWindowType.Unknown;
+      let windowType: ScWindowType = ScWindowType.Unknown; 
 
       await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket('Window.Document') // recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
         .then((result: ReadyStateNAB) => windowType = this.ScPageTypeResolver.GetScWindowType(this.DocumentJacket.UrlJacket))
         .then(() => this.StateFullProxyFactory.ScDocProxyFactory( this.DocumentJacket, null))
         .then((stateFullProxy: IStateFullDocProxy) => this.StateFullProxy = stateFullProxy)
-        .catch((err) => this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers_ScWindowFacade.name, err));
+        .catch((err) => this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err));
     }
     catch (err) {
-      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers_ScWindowFacade.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
     }
 
-    this.Logger.FuncEnd(this.InstantiateAsyncMembers_ScWindowFacade.name);
+    this.Logger.FuncEnd([ScWindowFacade.name, this.InstantiateAsyncMembers.name]);
   }
 
   GetCurrentPageType(): ScWindowType {

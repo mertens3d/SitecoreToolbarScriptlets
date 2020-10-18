@@ -2,14 +2,14 @@
 import { TypeDiscriminator } from "../../../Shared/scripts/Enums/70 - TypeDiscriminator";
 import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
-import { FrameElemJacket } from "../../Elements/FrameElemJacket";
+import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { GenericElemJacket } from "../../Elements/GenericElemJacket";
-import { NativeAddRemoveEvent_Payload } from "./IFrameJacketAddRemoveEvent_Payload";
+import { INativeAddRemoveEvent_Payload } from "./INativeAddRemoveEvent_Payload";
 
-export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<NativeAddRemoveEvent_Payload> {
+export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INativeAddRemoveEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.FrameJacketAddRemoveEvent_Subject;
   ShowLogActions: boolean = true;
-  private ElemJacket: GenericElemJacket;
+  private ContainerElemJacket: GenericElemJacket;
   private WatcherParams: IElemJacketWatcherParameters;
 
   constructor(commonCore: ICommonCore, elemJacket: GenericElemJacket, watcherParams: IElemJacketWatcherParameters) {
@@ -19,7 +19,7 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<NativeA
     if (!elemJacket) {
       this.ErrorHand.HandleFatalError(NativeAddRemoveEvent_Subject.name, 'No target doc');
     }
-    this.ElemJacket = elemJacket;
+    this.ContainerElemJacket = elemJacket;
     this.WatcherParams = watcherParams;
 
     this.InitMutationObserver();
@@ -41,7 +41,7 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<NativeA
   }
 
   private HandleAddedNodes(addedNodes: NodeList): GenericElemJacket[] {
-    this.Logger.FuncStart(this.HandleAddedNodes.name);
+    this.Logger.FuncStart([NativeAddRemoveEvent_Subject.name, this.HandleAddedNodes.name], 'for: ' + this.WatcherParams.OwnerFriendly);
 
     let addedElementJackets: GenericElemJacket[] = [];
 
@@ -54,6 +54,11 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<NativeA
           passesFilterTest = (this.WatcherParams.TagFilter.indexOf(addedHtmlElement.tagName) > -1);
         }
 
+        if (passesFilterTest && addedHtmlElement.tagName === SharedConst.Const.KeyWords.NodeTagName.IFrame) {
+          passesFilterTest = passesFilterTest && (<HTMLIFrameElement>addedHtmlElement).contentDocument !== null;
+        }
+
+
         if (passesFilterTest) {
           if (addedHtmlElement instanceof HTMLIFrameElement) {
             addedElementJackets.push(new GenericElemJacket(this.CommonCore, addedHtmlElement));
@@ -62,7 +67,7 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<NativeA
       }
     });
 
-    this.Logger.FuncEnd(this.HandleAddedNodes.name, addedElementJackets.length);
+    this.Logger.FuncEnd([NativeAddRemoveEvent_Subject.name, this.HandleAddedNodes.name], addedElementJackets.length +  '  for: ' + this.WatcherParams.OwnerFriendly);
     return addedElementJackets;
   }
 
@@ -75,9 +80,10 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<NativeA
         this.Logger.LogVal('mutation.addedNodes.length ', mutation.addedNodes.length);
 
         if (mutation.type === 'childList' && (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0)) {
-          let nativeDomAddRemoveEvent_Payload: NativeAddRemoveEvent_Payload = {
+          let nativeDomAddRemoveEvent_Payload: INativeAddRemoveEvent_Payload = {
             AddedElementJacket: null,
             RemovedIFrameId: null,
+            OnBehalfOfFriendly: this.WatcherParams.OwnerFriendly
           };
 
           if (mutation.addedNodes.length > 0) {
@@ -110,19 +116,22 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<NativeA
   private InitMutationObserver() {
     this.Logger.FuncStart(this.InitMutationObserver.name);
     try {
-      if (this.ElemJacket) {
+      if (this.ContainerElemJacket) {
         let self = this;
         let mutationObserver = new MutationObserver((mutations: MutationRecord[]) => { self.CallBackOnNativeMutation(mutations); });
         //let desktop: HTMLElement = <HTMLElement> this.NativeDocument.getElementsByTagName(SharedConst.Const.KeyWords.Html.Tags.Body)[0];
         //let desktopElemJacket: ElementJacket = this.DocumentJacket.GetElementById('Desktop');
+
+        this.Logger.LogAsJsonPretty(this.InitMutationObserver.name, this.WatcherParams);
+
         if (this.WatcherParams) {
-          mutationObserver.observe(this.ElemJacket.NativeElement, { attributes: this.WatcherParams.Attributes, subtree: this.WatcherParams.Subtree, childList: this.WatcherParams.ChildList });
+          mutationObserver.observe(this.ContainerElemJacket.NativeElement, { attributes: this.WatcherParams.Attributes, subtree: this.WatcherParams.Subtree, childList: this.WatcherParams.ChildList });
         } else {
           this.ErrorHand.HandleFatalError(this.InitMutationObserver.name, ' no params');
         }
       }
       else {
-        this.ErrorHand.HandleFatalError(this.InitMutationObserver.name, 'no AssociatedDoc');
+        this.ErrorHand.HandleFatalError(this.InitMutationObserver.name, 'no container element');
       }
     }
     catch (err) {
