@@ -43,7 +43,6 @@ export interface IContentConst {
   Selector: {
     Html: {
       Body: string
-
     },
     SC: {
       ContentEditor: {
@@ -62,6 +61,9 @@ export interface IContentConst {
           SystemRootAnchorNode: string,
           ContentRootAnchorNode: string,
         }
+      },
+      InstallerDesigner: {
+        GenerateZip: string,
       },
       PackageDesigner: {
         Ribbon: {

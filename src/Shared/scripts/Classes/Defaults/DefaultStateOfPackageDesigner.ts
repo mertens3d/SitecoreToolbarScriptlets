@@ -1,4 +1,4 @@
-﻿import { ScProxyDisciminator } from "../../Enums/40 - StateFullProxyDisciminator";
+﻿import { ScProxyDisciminator } from "../../Enums/40 - ScProxyDisciminator";
 import { IStateOfPackageDesigner } from "../../Interfaces/StateOf/IStateOfPackageDesigner";
 
 export class DefaultStateOfPackageDesigner implements IStateOfPackageDesigner {

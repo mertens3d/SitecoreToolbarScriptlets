@@ -10,15 +10,15 @@ import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
 import { FactoryHelper } from "../../../FactoryHelper";
 import { RecipeBasics } from "../../../RecipeBasics";
 import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
-import { ContentEditorProxy } from "./ContentEditorProxy";
+import { ContentEditorDocProxy } from "./ContentEditorProxy";
 
 export class ContentEditorPublishProxy extends _APICoreBase {
-  ContentEditorProxy: ContentEditorProxy;
+  ContentEditorProxy: ContentEditorDocProxy;
   private RecipeBasics: RecipeBasics;
   private DocumentJacket: DocumentJacket;
   private FactoryHelp: FactoryHelper;
 
-  constructor(apiCore: IAPICore, contentEditorProxy: ContentEditorProxy, documentJacket: DocumentJacket) {
+  constructor(apiCore: IAPICore, contentEditorProxy: ContentEditorDocProxy, documentJacket: DocumentJacket) {
     super(apiCore);
 
     this.ContentEditorProxy = contentEditorProxy;
@@ -61,11 +61,11 @@ export class ContentEditorPublishProxy extends _APICoreBase {
   async PublishActiveCE(): Promise<void> {
     this.Logger.FuncStart(this.PublishActiveCE.name);
     try {
-      await this.PublishCE(this.DocumentJacket)
-        .catch((err) => { throw (err) });
+      await this.PublishCE(this.DocumentJacket);
+        //.catch((err) => { throw (err) });
     }
     catch (err) {
-      throw (this.PublishActiveCE.name + ' ' + err);
+      this.ErrorHand.HandleFatalError(this.PublishActiveCE.name ,err);
     }
     this.Logger.FuncEnd(this.PublishActiveCE.name);
   }
@@ -114,7 +114,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
           this.ErrorHand.HandleFatalError(this.PublishCE.name, ex);
         });
     } catch (err) {
-      throw (this.PublishCE.name + ' ' + err);
+          this.ErrorHand.HandleFatalError(this.PublishCE.name, err);
     }
     this.Logger.FuncEnd(this.PublishCE.name);
   }
@@ -125,26 +125,31 @@ export class ContentEditorPublishProxy extends _APICoreBase {
       await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.NavPublishStrip])
       await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.NavPublishStrip])
     } catch (err) {
-      throw (this.ClickPublishOnNav.name + ' ' + err);
+      this.ErrorHand.HandleFatalError(this.ClickPublishOnNav.name, err);
     }
     this.Logger.FuncEnd(this.ClickPublishOnNav.name);
     return payload;
   }
 
   private async __waitForAndClickClose(dataPublishChain: IDataPublishChain) {
-    await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ScRibbon.Publish.SettingsHidden)
-      .then(async () => {
-        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ScRibbon.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
-      })
-      .then(async () => {
-        await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel]);
-      });
+    try {
+      await dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ScRibbon.Publish.SettingsHidden)
+        .then(() => dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ScRibbon.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
+        )
+        .then(() => dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel]));
+    } catch (err) {
+      this.ErrorHand.HandleFatalError(this.__waitForAndClickClose.name, err);
+    }
 
     return dataPublishChain;
   }
 
   private async __waitForAndClickOk(dataPublishChain: IDataPublishChain) {
-    await dataPublishChain.CEFrameRed.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Ok],);
+    try {
+      await dataPublishChain.CEFrameRed.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Ok],);
+    } catch (err) {
+      this.ErrorHand.HandleFatalError(this.__waitForAndClickOk.name, err);
+    }
 
     return dataPublishChain;
   }
@@ -169,15 +174,15 @@ export class ContentEditorPublishProxy extends _APICoreBase {
       let frameElemJacketB: FrameElemJacket = null;
 
       await dataPublishChain.TopScDocumentProxy.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id)
-        .then((elementJacket: FrameElemJacket) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore,[elementJacket]))
+        .then((elementJacket: FrameElemJacket) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [elementJacket]))
         .then((frameElemJackets: FrameElemJacket[]) => frameElemJacketB = frameElemJackets[0])
         .then(() => this.FactoryHelp.CEFrameFactory(frameElemJacketB, 'jqIframe'))
         .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
         .then(() => dataPublishChain.JqIframe.WaitForCompleteNABFrameProxyOrReject())
-        .catch((err) => { throw (this.GetThePublishItemDialog.name + ' ' + err) });
+        .catch((err) => this.ErrorHand.HandleFatalError(this.GetThePublishItemDialog.name, err));
     } catch (err) {
-      throw (this.GetThePublishItemDialog.name + ' ' + err);
+      this.ErrorHand.HandleFatalError(this.GetThePublishItemDialog.name, err);
     }
 
     return dataPublishChain;
@@ -202,7 +207,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
       let frameJacket: FrameElemJacket = null;
 
       await this.DocumentJacket.WaitForGenericElemJacket(selector)
-        .then(async (genericElemJacket: GenericElemJacket) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore,[genericElemJacket]))
+        .then((genericElemJacket: GenericElemJacket) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
         .then((frameElemJackets: FrameElemJacket[]) => frameJacket = frameElemJackets[0])
         .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
         .then((result: CEFrameProxy) => resolve(result))
@@ -247,7 +252,8 @@ export class ContentEditorPublishProxy extends _APICoreBase {
 
       var found: FrameElemJacket = null;
       await targetDoc.WaitForGenericElemJacket(selector)
-        .then((result: FrameElemJacket) => found = result);
+        .then((result: FrameElemJacket) => found = result)
+        .catch((err) => this.ErrorHand.HandleFatalError([ContentEditorDocProxy.name, this.__waitForThenFunc.name], err));
 
       if (found) {
         this.Logger.Log('found');

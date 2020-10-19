@@ -129,7 +129,7 @@ var NativeAddRemoveEvent_Subject = /** @class */ (function (_super) {
             }
         }
         catch (err) {
-            throw (err);
+            this.ErrorHand.HandleFatalError(this.InitMutationObserver.name, err);
         }
         this.Logger.FuncEnd(this.InitMutationObserver.name);
     };

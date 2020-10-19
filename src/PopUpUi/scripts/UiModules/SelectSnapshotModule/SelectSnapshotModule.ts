@@ -1,28 +1,23 @@
 ﻿import { StaticHelpers } from "../../../../Shared/scripts/Classes/StaticHelpers";
-import { BufferChar } from "../../../../Shared/scripts/Enums/BufferChar";
-import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
-import { BufferDirection } from "../../../../Shared/scripts/Enums/BufferDirection";
+import { PopConst } from "../../../../Shared/scripts/Const/PopConst";
 import { ScWindowType } from "../../../../Shared/scripts/Enums/50 - scWindowType";
+import { BufferChar } from "../../../../Shared/scripts/Enums/BufferChar";
+import { BufferDirection } from "../../../../Shared/scripts/Enums/BufferDirection";
+import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
 import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
-import { IStateOfDTFrame } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
+import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { PopConst } from "../../../../Shared/scripts/Const/PopConst";
 import { StateHelpers } from "../../Classes/StateHelpers";
 import { ISelectSnapUiMutationEvent_Payload } from "../../Events/SelectSnapUiMutationEvent/ISelectSnapUiMutationEvent_Payload";
 import { SelectSnapUiMutationEvent_Subject } from "../../Events/SelectSnapUiMutationEvent/SelectSnapUiMutationEvent_Subject";
-import { _UiFeedbackModuleBase } from "../UiFeedbackModules/_UiFeedbackModuleBase";
 import { _UiModuleBase } from "../_UiModuleBase";
-import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
-import { ContentEditorProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { IStateOfContentEditor } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentEditor";
-import { IStateOfDesktop } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
 
 export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
   private StateHelpers: StateHelpers;

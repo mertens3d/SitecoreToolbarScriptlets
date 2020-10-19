@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/Document/DocumentJacket';
-import { ScProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
+import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
@@ -10,17 +10,21 @@ import { _ContentTreeBasedDocProxy } from './_ContentTreeBasedProxy';
 import { ScRibbonCommand } from '../../../../../Shared/scripts/Enums/eScRibbonCommand';
 import { ScRibbonProxy } from './ScRibbonProxy/ScRibbonProxy';
 import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
+import { IStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies';
+import { IStateFullElemProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy';
 
-export class ContentEditorProxy extends _ContentTreeBasedDocProxy<IStateOfContentEditor> implements IStateFullDocProxy {
+export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfContentTreeBasedProxies> implements IStateFullDocProxy {
   public readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.ContentEditor];
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
   public readonly ScProxyDisciminator = ScProxyDisciminator.ContentEditor;
 
+  public HostedElemProxies: IStateFullElemProxy[] = [];
+
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string) {
     super(apiCore, documentJacket);
-    this.Logger.CTORStart(ContentEditorProxy.name);
+    this.Logger.CTORStart(ContentEditorDocProxy.name);
 
-    this.Logger.CTOREnd(ContentEditorProxy.name);
+    this.Logger.CTOREnd(ContentEditorDocProxy.name);
   }
 
   async PublishItem(): Promise<void> {
@@ -33,9 +37,9 @@ export class ContentEditorProxy extends _ContentTreeBasedDocProxy<IStateOfConten
   }
 
   WireEvents() {
-    this.Logger.FuncStart(this.WireEvents.name, ContentEditorProxy.name);
+    this.Logger.FuncStart(this.WireEvents.name, ContentEditorDocProxy.name);
     this.__baseWireEvents()
-    this.Logger.FuncEnd(this.WireEvents.name, ContentEditorProxy.name);
+    this.Logger.FuncEnd(this.WireEvents.name, ContentEditorDocProxy.name);
   }
 
   GetState(): Promise<IStateOfContentEditor> {
@@ -53,13 +57,13 @@ export class ContentEditorProxy extends _ContentTreeBasedDocProxy<IStateOfConten
   //----------------------------------------------------------------------
 
   TriggerCERibbonCommand(scRibbonCommand: ScRibbonCommand) {
-    this.Logger.FuncStart([ContentEditorProxy.name, this.TriggerCERibbonCommand.name], ScRibbonCommand[scRibbonCommand]);
+    this.Logger.FuncStart([ContentEditorDocProxy.name, this.TriggerCERibbonCommand.name], ScRibbonCommand[scRibbonCommand]);
     let scRibbonProxy: ScRibbonProxy = new ScRibbonProxy(this.ApiCore, this.DocumentJacket);
 
     let asyncLock: AsyncLock = new AsyncLock(this.ApiCore); //todo - this needs to be lower...maybe in core
 
     scRibbonProxy.TriggerRibbonMenuItem(scRibbonCommand, asyncLock);
-    this.Logger.FuncEnd([ContentEditorProxy.name, this.TriggerCERibbonCommand.name]);
+    this.Logger.FuncEnd([ContentEditorDocProxy.name, this.TriggerCERibbonCommand.name]);
   }
 
   SetCompactCss() {

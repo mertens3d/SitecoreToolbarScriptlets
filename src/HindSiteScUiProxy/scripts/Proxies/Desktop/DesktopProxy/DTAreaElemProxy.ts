@@ -3,7 +3,7 @@ import { FrameElemJacket } from "../../../../../DOMJacket/Elements/FrameElemJack
 import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
 import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
-import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
@@ -12,12 +12,8 @@ import { IStateFullElemProxy } from "../../../../../Shared/scripts/Interfaces/Pr
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTProxy";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
-import { ContentEditorProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { ContentEditorDocProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
-import { ElementJacketMutationEvent_Observer } from "./Events/DocumentProxyMutationEvent/ElementJacketMutationEvent_Observer";
-import { ElementJacketMutationEvent_Subject } from "./Events/DocumentProxyMutationEvent/ElementJacketMutationEvent_Subject";
-import { IElementJacketMutationEvent_Payload } from "./Events/DocumentProxyMutationEvent/IElementJacketMutationEvent_Payload";
-import { IElemJacketWatcherParameters } from "./Events/DocumentProxyMutationEvent/IElemJacketWatcherParameters";
 import { DTAreaProxyMutationEvent_Subject } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Subject";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
@@ -26,6 +22,10 @@ import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { JqueryModalDialogsFrameProxy } from "../../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { _BaseStateFullElemProxy } from "./FrameProxies/_BaseStateFullElemProxy";
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
+import { ElementJacketMutationEvent_Subject } from "../../../../../DOMJacket/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
+import { ElementJacketMutationEvent_Observer } from "../../../../../DOMJacket/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Observer";
+import { IElemJacketWatcherParameters } from "../../../../../DOMJacket/Events/ElementJacketMutationEvent/IElemJacketWatcherParameters";
+import { IElementJacketMutationEvent_Payload } from "../../../../../DOMJacket/Events/ElementJacketMutationEvent/IElementJacketMutationEvent_Payload";
 
 export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> implements IStateFullElemProxy {
   public readonly ScProxyDisciminator = ScProxyDisciminator.DTAreaElemProxy;
@@ -44,7 +44,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
     super(apiCore, containerElemJacket);
 
     this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
-    this.ErrorHand.ThrowIfNullOrUndefined(DTAreaElemProxy.name, containerElemJacket);
+    this.ErrorHand.ThrowIfNullOrUndefined(DTAreaElemProxy.name, [containerElemJacket, this.JqueryModalDialogsFrameProxy]);
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
@@ -165,6 +165,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
 
     if (genericElemJacket) {
       if (genericElemJacket.NodeTagName === SharedConst.Const.KeyWords.NodeTagName.IFrame) {
+        this.HandleAddedFrameElemJacket(genericElemJacket);
       }
     } else {
       this.Logger.Log('Not a FrameJacket - no action');
@@ -373,7 +374,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
     let dtFrameProxy: DTFrameProxy = this.GetTopFrame();
     if (dtFrameProxy) {
       //todo - put back? //if (dtFrameProxy.StateFullProxyDisciminator === StateFullProxyDisciminator.ContentEditor) {
-      await (<ContentEditorProxy>dtFrameProxy.HostedStateFullProxy).PublishItem();
+      //await (<ContentEditorDocProxy>dtFrameProxy.HostedStateFullProxy).PublishItem();
       //}
     }
   }
@@ -414,7 +415,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
   TriggerCERibbonCommand(ribbonCommand: ScRibbonCommand) {
     let topFrameProxy: DTFrameProxy = this.GetTopFrame();
     if (topFrameProxy.HostedStateFullProxy.ScProxyDisciminator === ScProxyDisciminator.ContentEditor) {
-      let contentEditorProxy: ContentEditorProxy = <ContentEditorProxy>topFrameProxy.HostedStateFullProxy;
+      let contentEditorProxy: ContentEditorDocProxy = <ContentEditorDocProxy>topFrameProxy.HostedStateFullProxy;
       if (contentEditorProxy) {
         contentEditorProxy.TriggerCERibbonCommand(ribbonCommand);
       }

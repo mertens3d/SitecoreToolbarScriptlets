@@ -1,4 +1,4 @@
-﻿import { ScProxyDisciminator } from "../../Enums/40 - StateFullProxyDisciminator";
+﻿import { ScProxyDisciminator } from "../../Enums/40 - ScProxyDisciminator";
 import { IStateOfTemplateManager } from "../../Interfaces/StateOf/IStateOfTemplateManager";
 import { _baseDefaultStateOfContentTreeBasedProxies } from "./_baseDefaultStateOfContentTreeBasedProxies";
 

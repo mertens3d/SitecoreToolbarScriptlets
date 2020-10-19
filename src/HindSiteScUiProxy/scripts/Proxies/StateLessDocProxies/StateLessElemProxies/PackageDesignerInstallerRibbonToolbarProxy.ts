@@ -7,18 +7,46 @@ import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElem
 import { JqueryModalDialogsFrameProxy } from "../StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { _BaseStateLessElemProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateLessElemProxy";
 
-export class PackageDesignerInstallerRibbonToolbarElemProxy  extends _BaseStateLessElemProxy {
-  private parentDocumentJacket: DocumentJacket;
+export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLessElemProxy {
   ElementDivJacket: ElementDivJacket;
   JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
+  private GenerateZipButton: GenericElemJacket;
 
-  constructor(apiCore: IAPICore, elementDivJacket: ElementDivJacket,  jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) {
+  constructor(apiCore: IAPICore, elementDivJacket: ElementDivJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) {
     super(apiCore);
     this.ElementDivJacket = elementDivJacket;
     this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
 
     this.ErrorHand.ThrowIfNullOrUndefined(PackageDesignerInstallerRibbonToolbarElemProxy.name, [jqueryModalDialogsFrameProxy])
+  }
 
+  private async AttachClickEventToGenZip(): Promise<void> {
+    this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
+
+    this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.InstallerDesigner.GenerateZip)
+      .then((genericElemJacket: GenericElemJacket) => this.GenerateZipButton = genericElemJacket)
+      .then(() => this.GenerateZipButton.NativeElement.addEventListener('click', ((event: Event) => this.CallBackOnGenerateZipButtonClicked(event))))
+      .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name], err));
+
+    this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
+  }
+
+  async InstantiateAsyncMembers(): Promise<void> {
+    try {
+      this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name]);
+      await this.AttachClickEventToGenZip()
+        .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name], err));
+    } catch (err) {
+      this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name], err);
+    }
+    this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name]);
+  }
+
+  private CallBackOnGenerateZipButtonClicked(event: Event): void {
+    //this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.CallBackOnGenerateZipButtonClicked.name]);
+
+    ////alert('generate zip button clicked');
+    //this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.CallBackOnGenerateZipButtonClicked.name]);
   }
 
   async OpenFile(fileName: string): Promise<void> {
@@ -45,6 +73,6 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy  extends _BaseStateL
       this.ErrorHand.HandleFatalError(this.OpenFile.name, 'no jquery proxy');
     }
 
-      //.then(() => jqueryFrameProxy.OpenFile(fileName))
+    //.then(() => jqueryFrameProxy.OpenFile(fileName))
   }
 }

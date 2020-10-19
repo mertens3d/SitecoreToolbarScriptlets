@@ -2,11 +2,11 @@
 import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJacket";
 import { DocReadyState } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyStateNAB";
-import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
-import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullFrameProxy";
 import { RecipeBasics } from "../../../../RecipeBasics";
 import { _BaseStateFullFrameProxy } from "./_BaseStateFullFrameProxy";
+import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
+import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 
 export abstract class _BaseScFrameProxy<T> extends _BaseStateFullFrameProxy<T> implements IStateFullFrameProxy {
   public readonly FrameJacket: FrameElemJacket = null;

@@ -1,4 +1,4 @@
-﻿import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+﻿import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IStateFullDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
 import { IStateOfMediaLibrary } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfMediaLibrary";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";

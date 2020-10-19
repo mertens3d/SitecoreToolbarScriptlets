@@ -67,7 +67,6 @@
     <TypeScriptCompile Include="src\Content-Top\scripts\Proxies\CommandToExecuteData.ts" />
     <TypeScriptCompile Include="src\DOMJacket\Document\ElementJacketWatcher.ts" />
     <TypeScriptCompile Include="src\DOMJacket\Elements\ElementJacketBaseOfType.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\Elements\ElemJacketFactory.ts" />
     <TypeScriptCompile Include="src\DOMJacket\Elements\FrameElemJacket.ts" />
     <TypeScriptCompile Include="src\DOMJacket\Elements\IAbortToken.ts" />
     <TypeScriptCompile Include="src\DOMJacket\Events\NativeIFrameAddedEvent\INativeAddRemoveEvent_Payload.ts" />
@@ -80,11 +79,12 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\AllStartMenuButtonSelectos.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\DTStartBarProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DTAreaElemProxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DocumentProxyMutationEvent\ElementJacketMutationEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DocumentProxyMutationEvent\ElementJacketMutationEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DocumentProxyMutationEvent\IElementJacketMutationEvent_Payload.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DocumentProxyMutationEvent\IElemJacketWatcherParameters.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseScDocProxy.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Events\ElementJacketMutationEvent\ElementJacketMutationEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Events\ElementJacketMutationEvent\ElementJacketMutationEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Events\ElementJacketMutationEvent\IElementJacketMutationEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\Events\ElementJacketMutationEvent\IElemJacketWatcherParameters.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\ScDocProxyWatcherForFrames.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\_BaseScDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseStateFullDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseStateFullElemProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseStateFullFrameProxy.ts" />
@@ -123,15 +123,17 @@
     <TypeScriptCompile Include="src\Shared\scripts\Agents\TaskMonitor\TaskMonitor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\UrlAgent\ScPathResolver.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\ReadyStateNAB.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Collections\ScWindowTypeDeterminators.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Collections\ScWindowTypeDeterminators.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Agents\UrlAgent\ScWindowTypeResolver.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\eScRibbonCommand.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\InternalInterfaces\IRibbonClickSequence.ts" />
     <TypeScriptCompile Include="src\DOMJacket\KeyPressJacket.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\CoreFactory.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\DefaultMsgContentToController.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\HistoryItemKey.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\KeyPressComboFlag.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\ReplyCommandMsgFlag.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\40 - ScProxyDisciminator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\HotKeyEvent\HotKeyEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\HotKeyEvent\HotKeyEvent_Subject.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\HotKeyEvent\IHotKeyEvent_Payload.ts" />
@@ -139,6 +141,8 @@
     <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\KeyBoardComboEvent_Observer.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\KeyBoardComboEvent\KeyBoardComboEvent_Subject.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\HindeCore.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHindSiteHistoryStrAr.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHistoryItem.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Jackets\IScPathResolver.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\IBaseScDocProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IBaseScFrameProxy.ts" />
@@ -220,7 +224,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\_baseDefaultStateOfContentTreeBasedProxies.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\PromiseFailAction.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\ReadyState.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Enums\40 - StateFullProxyDisciminator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Events\ContentReplyReceivedEvent\ContentReplyReceivedEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentEditorProxyMutationEvent\ContentEditorProxyMutationEvent_Subject.ts" />
@@ -240,13 +243,12 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DTFrameProxyMutationEvent\DTFrameProxyMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Recipes\RecipeInitFromQueryStr.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Agents\AutoSnapShotAgent.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\ContentApi\Recipes\__RecipeBase\_ApiRecipeBase.ts" />
+    <TypeScriptCompile Include="src\Content-Top\scripts\Recipes\__RecipeBase\_ApiRecipeBase.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Recipes\RecipeChangeNickName.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentEditorPublishProxy.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Recipes\RecipeRemoveItemFromStorage.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Recipes\RecipeSaveState.ts" />
     <TypeScriptCompile Include="src\Content-Top\scripts\Recipes\RecipeToggleFavorite.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Helpers\FrameHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\70 - TypeDiscriminator.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\ISnapShotsAgent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentEditorCountsNeeded.ts" />
@@ -495,7 +497,7 @@
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
     <Folder Include="src\Content-All\css\" />
-    <Folder Include="src\HindSiteScUiProxy\scripts\Collections\" />
+    <Folder Include="src\Shared\scripts\Collections\" />
     <Folder Include="src\Shared\scripts\Interfaces\Proxies\_Base\" />
   </ItemGroup>
   <ItemGroup>

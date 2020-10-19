@@ -35,3 +35,6 @@ node_modules
 /src/HindSiteScUiProxy/scripts/*.js
 /src/HindSiteScUiProxy/scripts/**/*.js
 /src/PopUpController/scripts/**/*.js
+/src/Content-Top/scripts/**/*.js
+/src/PopUpUi/scripts/**/*.js
+/src/DOMJacket/**/*.js

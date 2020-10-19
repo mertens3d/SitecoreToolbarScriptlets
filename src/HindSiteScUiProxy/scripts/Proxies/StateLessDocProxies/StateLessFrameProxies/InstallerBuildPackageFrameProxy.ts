@@ -1,4 +1,4 @@
-﻿import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+﻿import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IStateLessScFrameProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessFrameProxy";
 import { InstallerBuildPackageDocProxy } from "../StateLessDocProxies/InstallerBuildPackageDocProxy";
 import { _baseStatelessFrameProxyOfType } from "./_baseStatelessFrameProxyOfType";

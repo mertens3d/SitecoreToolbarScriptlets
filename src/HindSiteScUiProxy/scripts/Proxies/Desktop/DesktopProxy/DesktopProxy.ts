@@ -2,12 +2,13 @@ import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket
 import { FrameElemJacket } from "../../../../../DOMJacket/Elements/FrameElemJacket";
 import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
-import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IStateFullDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
+import { IStateFullElemProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTProxy";
 import { RecipeBasics } from "../../../RecipeBasics";
@@ -47,6 +48,9 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
   private DTStartBarProxy: DTStartBarProxy;
   public DTAreaProxyMutationEvent_Observer: DTAreaProxyMutationEvent_Observer;
   JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy = null;
+  HostedElemProxies: IStateFullElemProxy[] = [];
+
+
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore, documentJacket);
@@ -66,7 +70,6 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
     this.DTStartBarProxy = new DTStartBarProxy(this.ApiCore, this.DocumentJacket);
     //this.ScRibbonProxy = new ScRibbonProxy(this.ApiCore, this.DocumentJacket);
     this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.ApiCore, this.OnAreaProxyMutationEvent.bind(this));
-
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
@@ -76,10 +79,12 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
       this.DTStartBarProxy.Instantiate_DTStartBarProxy();
 
       await
-        this.DocumentJacket.WaitForGenericElemJacket('.DesktopArea')
-          .then((genericElemJacket: GenericElemJacket) => this.DTAreaProxy = new DTAreaElemProxy(this.ApiCore, this.JqueryModalDialogsFrameProxy, genericElemJacket))
-          .then(() => this.GetJqueryModalsFrameProxy())
+        this.GetJqueryModalsFrameProxy()
           .then((jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) => this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy)
+
+          .then(() => this.DocumentJacket.WaitForGenericElemJacket('.DesktopArea'))
+          .then((genericElemJacket: GenericElemJacket) => this.DTAreaProxy = new DTAreaElemProxy(this.ApiCore, this.JqueryModalDialogsFrameProxy, genericElemJacket))
+
           .then(() => this.DTAreaProxy.InstantiateAsyncMembers())
           .catch((err) => this.ErrorHand.HandleFatalError([DesktopProxy.name, this.InstantiateAsyncMembers.name], err))
     } catch (err) {

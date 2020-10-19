@@ -1,5 +1,5 @@
 ﻿import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
-import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
 import { _BaseStateLessScDocProxy } from "./_BaseStateLessScDocProxy";
@@ -8,13 +8,45 @@ export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy impl
   ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.InstallerBuildPackageDocProxy;
   ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.InstallerBuildPackageDocProxy];
 
-
-
   async OnFocus(): Promise<void> {
+    let parentElem: HTMLElement = null;
 
-
-    this.Logger.LogImportant('FFFFFFOOOOCCCCCUUUUUUSSSSSS!');
+    await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.PackageFile)
+      .then((genericElemJacket: GenericElemJacket) => parentElem = genericElemJacket.NativeElement.parentElement)
+      .then(() => {
+        this.AddPackageNameCandidateButtons(parentElem)
+      })
+      .catch((err) => this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OnFocus.name], err));
   }
+
+  private AddPackageNameCandidateButtons(parentElem: HTMLElement): void {
+    for (var idx = 0; idx < 3; idx++) {
+      let candidateButton: HTMLDivElement = this.BuildOneCandidatePackageNameButton('candidate-package-name-' + idx, 'Candidate Name ' + idx);
+      parentElem.appendChild(candidateButton);
+    }
+  }
+
+  private BuildOneCandidatePackageNameButton(buttonId: string, candidatePackageName: string): HTMLDivElement {
+    let buttonToReturn: HTMLInputElement = document.createElement('input');
+    buttonToReturn.type = 'button';
+    buttonToReturn.classList.add('candidate-package-name');
+    buttonToReturn.id = buttonId;
+    buttonToReturn.setAttribute('data-candidate-package-name', candidatePackageName);
+    buttonToReturn.value = candidatePackageName;
+    buttonToReturn.addEventListener('click', ((event: Event) => this.PopulateCandidatePackageName(event)));
+
+    let wrapperDiv: HTMLDivElement = document.createElement('div');
+    wrapperDiv.appendChild(buttonToReturn);
+
+
+    return wrapperDiv;
+  }
+
+  private PopulateCandidatePackageName(event: Event) {
+    this.Logger.LogImportant('Populate! ');
+  }
+
+
 
   async OpenFile(fileName: string): Promise<void> {
     try {
@@ -22,8 +54,6 @@ export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy impl
       let OpenOkButton: GenericElemJacket = null;
       let CancelButton: GenericElemJacket = null;
       let trimmedFileName: string = fileName.trim();
-
-
 
       await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Ok)
         .then((genericElemJacket: GenericElemJacket) => OpenOkButton = genericElemJacket)
@@ -39,6 +69,8 @@ export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy impl
             CancelButton.NativeElement.click();
           }
         })
+        .catch((err) => this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OpenFile.name], err));
+
     } catch (err) {
       this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OpenFile.name], err);
     }

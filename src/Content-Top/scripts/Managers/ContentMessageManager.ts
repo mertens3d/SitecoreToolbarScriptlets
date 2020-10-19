@@ -10,14 +10,13 @@ export class ContentMessageManager extends _FrontBase {
     super(hindeCore);
     this.Logger.CTORStart(ContentMessageManager.name);
 
-
     this.ContentMessageBroker = contentMessageBroker;
 
     this.Logger.CTOREnd(ContentMessageManager.name);
   }
 
   InitContentMessageManager() {
-    this.Logger.FuncStart([ContentMessageManager.name,this.InitContentMessageManager.name ]);
+    this.Logger.FuncStart([ContentMessageManager.name, this.InitContentMessageManager.name]);
 
     this.ContentMessageBroker.BeginListening();
     this.Logger.FuncEnd([ContentMessageManager.name, this.InitContentMessageManager.name]);
@@ -26,10 +25,6 @@ export class ContentMessageManager extends _FrontBase {
   //private ToggleCompactCss(): Promise<void> {
   //  return new Promise(async (resolve, reject) => {
   //    this.Logger.FuncStart(this.ToggleCompactCss.name);
-
-
-
-      
 
   //    var targetDoc: IDataOneDoc = this.scWinProxy.GetTopLevelDoc();
   //    if (targetDoc) {

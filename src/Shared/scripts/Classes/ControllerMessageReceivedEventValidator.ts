@@ -15,7 +15,7 @@ import { DefaultStateOfStorageSnapshots } from "./Defaults/DefaultStateOfSnapsho
 import { DefaultStateOfContentTree } from "./Defaults/DefaultStateOfContentTree";
 import { IStateOfStorageSnapShots } from "../Interfaces/StateOf/IStateOfStorageSnapShots";
 import { StaticHelpers } from "./StaticHelpers";
-import { ScProxyDisciminator } from "../Enums/40 - StateFullProxyDisciminator";
+import { ScProxyDisciminator } from "../Enums/40 - ScProxyDisciminator";
 
 export class ControllerMessageReceivedEventValidator extends _CommonBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {

@@ -1,7 +1,7 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/Document/DocumentJacket';
 import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
 import { _baseDefaultStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Classes/Defaults/_baseDefaultStateOfContentTreeBasedProxies';
-import { ScProxyDisciminator } from '../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator';
+import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from '../../../../../Shared/scripts/Helpers/GuidData';
 import { IAPICore } from '../../../../../Shared/scripts/Interfaces/Agents/IAPICore';
@@ -16,6 +16,7 @@ import { ContentTreeBasedProxyMutationEvent_Observer } from '../../Desktop/Deskt
 import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { _BaseStateFullDocProxy } from '../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy';
 import { ContentTreeElemProxy } from "./ContentTreeProxy/ContentTreeProxy";
+import { IStateFullElemProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy';
 
 export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfContentTreeBasedProxies> extends _BaseStateFullDocProxy<T> implements IStateFullDocProxy {
   protected ContentTreeProxy: ContentTreeElemProxy;
@@ -92,9 +93,10 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
       this.Logger.FuncStart(_ContentTreeBasedDocProxy.name, this.__baseGetState.name);
 
       let toReturn: IStateOfContentTreeBasedProxies = {
-        Disciminator: this.ScProxyDisciminator,
         DisciminatorFriendly: ScProxyDisciminator[this.ScProxyDisciminator],
+        Disciminator: this.ScProxyDisciminator,
         ContentTree: null
+        
       }
 
       await this.ContentTreeProxy.GetState()

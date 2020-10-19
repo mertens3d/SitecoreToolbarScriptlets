@@ -112,6 +112,9 @@ export class ContentConst {
             ContentRootAnchorNode: '[id=Tree_Node_0DE95AE441AB4D019EB067441B7C2450]',
           }
         },
+        InstallerDesigner: {
+          GenerateZip: 'img[src$="folder_zip.png"]',
+        },
         PackageDesigner: {
           Ribbon: {
             InstallerRibbon_Nav_Package: '[id=InstallerRibbon_Nav_Package]',

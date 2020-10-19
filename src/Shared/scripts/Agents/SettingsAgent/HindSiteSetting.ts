@@ -5,6 +5,7 @@ import { IHindSiteSetting } from "../../Interfaces/Agents/IGenericSetting";
 import { UiEnableState } from "../../Enums/Enabled";
 import { UiPresence } from "../../Enums/UiPresence";
 import { ModuleKey } from "../../Enums/ModuleKey";
+import { IHindSiteHistory } from "../../Interfaces/Agents/IHindSiteHistoryStrAr";
 
 export class HindSiteSetting implements IHindSiteSetting {
   EnabledState: UiEnableState;
@@ -18,7 +19,6 @@ export class HindSiteSetting implements IHindSiteSetting {
   HasUi: UiPresence;
   ModuleType: ModuleKey;
 
-
   constructor(settingKey: SettingKey, dataType: SettingType, uiContainerSelector: string, defaultValue: any, settingFlavor: SettingFlavor, friendly: string, enableState: UiEnableState, hasUi: UiPresence, moduleType: ModuleKey) {
     this.SettingKey = settingKey;
     this.DataType = dataType;
@@ -30,6 +30,29 @@ export class HindSiteSetting implements IHindSiteSetting {
     this.HasUi = hasUi;
     this.EnabledState = enableState;
     this.ModuleType = moduleType;
+  }
+
+  ValueAsHistory(): IHindSiteHistory {
+    let toReturn: IHindSiteHistory = {
+      Age_1: '',
+      Age_2: '',
+      Age_3: '',
+    }
+
+    if (this.ValueAsObj !== undefined && this.ValueAsObj !== null) {
+      try {
+        let candidate: IHindSiteHistory = <IHindSiteHistory>this.ValueAsObj;
+
+        if (candidate) {
+          toReturn = candidate;
+        }
+      }
+      catch (err) {
+        throw (HindSiteSetting.name + '.' + this.ValueAsHistory.name + ' | ' + err);
+      }
+    }
+
+    return toReturn;
   }
 
   ValueAsInt(): number {

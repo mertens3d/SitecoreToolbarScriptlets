@@ -5,14 +5,14 @@ import { ModuleKey } from "../../Enums/ModuleKey";
 import { SettingFlavor } from "../../Enums/SettingFlavor";
 import { SettingType } from "../../Enums/SettingType";
 import { UiPresence } from "../../Enums/UiPresence";
+import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
 import { IHindSiteSetting } from "../../Interfaces/Agents/IGenericSetting";
 import { ContentConst } from "../../Interfaces/InjectConst";
 import { SharedConst } from "../../SharedConst";
-import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
+import { _CommonBase } from "../../_CommonCoreBase";
 import { HindSiteSetting } from "./HindSiteSetting";
 import { HindSiteSettingForNumbers } from "./HindSiteSettingForNumbers";
 import { HindSiteSettingWrapper } from "./HindSiteSettingWrapper";
-import { _CommonBase } from "../../_CommonCoreBase";
 
 export class DefaultSettings extends _CommonBase {
 
@@ -21,6 +21,8 @@ export class DefaultSettings extends _CommonBase {
   }
 
   GetDefaultSettingsWrapper(): HindSiteSettingWrapper[] {
+
+    
     let rawData: IHindSiteSetting[] = [
 
       new HindSiteSetting(
@@ -34,6 +36,7 @@ export class DefaultSettings extends _CommonBase {
         UiEnableState.Enabled,
         UiPresence.HasNoUi,
         ModuleKey.Unknown,
+        
 
       ),
       new HindSiteSetting(

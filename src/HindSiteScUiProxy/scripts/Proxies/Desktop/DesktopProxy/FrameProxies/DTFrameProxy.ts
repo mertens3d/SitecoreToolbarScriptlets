@@ -3,14 +3,14 @@ import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJ
 import { ScWindowTypeResolver } from "../../../../../../Shared/scripts/Agents/UrlAgent/ScWindowTypeResolver";
 import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTFrame";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyStateNAB";
-import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullDocProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { RecipeBasics } from "../../../../RecipeBasics";
-import { ContentEditorProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { ContentEditorDocProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { MarketingControlPanelDocProxy } from "../../../StateFullDocProxies/MarketingControlPanelProxy";
 import { MediaLibraryProxy } from "../../../StateFullDocProxies/MediaLibraryProxy";
 import { ScDocProxyResolver } from "../../../ScDocProxyResolver";
@@ -63,7 +63,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
             reject(result.DocumentReadtStateFriendly())
           }
         })
-        .then(() => this.StateFullProxyFactory.ScDocProxyFactory( this.FrameJacket.DocumentJacket, this.JqueryModalDialogsFrameProxy))
+        .then(() => this.StateFullProxyFactory.ScDocProxyFactoryMake( this.FrameJacket.DocumentJacket, this.JqueryModalDialogsFrameProxy))
         .then((stateFullProxy: IStateFullDocProxy) => this.HostedStateFullProxy = stateFullProxy)
 
         .then(() => {
@@ -82,7 +82,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
     this.Logger.FuncStart(this.WireEvents.name, DTFrameProxy.name);
 
     if (this.HostedStateFullProxy.ScProxyDisciminator === ScProxyDisciminator.ContentEditor) {
-      (<ContentEditorProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
+      (<ContentEditorDocProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
     } else if (this.HostedStateFullProxy.ScProxyDisciminator === ScProxyDisciminator.MediaLibrary) {
       (<MediaLibraryProxy>this.HostedStateFullProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
     } else if (this.HostedStateFullProxy.ScProxyDisciminator === ScProxyDisciminator.TemplateManager) {

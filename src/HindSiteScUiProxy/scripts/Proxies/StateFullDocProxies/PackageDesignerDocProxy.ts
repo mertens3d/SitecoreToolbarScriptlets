@@ -1,20 +1,28 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
+import { ElementDivJacket } from "../../../../DOMJacket/Elements/ElementDivJacket";
 import { DefaultStateOfPackageDesigner } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfPackageDesigner";
-import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
+import { PromiseFailAction } from "../../../../Shared/scripts/Enums/PromiseFailAction";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
-import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfPackageDesigner";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
+import { IStateFullDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
+import { IStateFullElemProxy } from "../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
+import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfPackageDesigner";
 import { RecipeBasics } from "../../RecipeBasics";
 import { _BaseStateFullDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
 import { InstallerDesignerProxy } from "../StateLessDocProxies/StateLessDocProxies/InstallerDesignerProxy";
+import { PackageDesignerInstallerRibbonToolbarElemProxy } from "../StateLessDocProxies/StateLessElemProxies/PackageDesignerInstallerRibbonToolbarProxy";
 import { JqueryModalDialogsFrameProxy } from "../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
 export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPackageDesigner> implements IStateFullDocProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.PackageDesigner;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.PackageDesigner];
-
+  packagedesignerInstallerRibbonToolbarElem: PackageDesignerInstallerRibbonToolbarElemProxy = null;
+  HostedElemProxies: IStateFullElemProxy[] = [];
   Friendly: string;
+
+  //note; /en/sitecore/shell/Applications/Tools/Installer/Designer gets loaded into this doc
+
   private JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) {
@@ -30,12 +38,34 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
   }
 
   async InstantiateAsyncMembers(): Promise<void> {
-    this.Logger.FuncStart(this.InstantiateAsyncMembers.name, this.Friendly);
-    this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, this.Friendly);
+    this.Logger.FuncStart([PackageDesignerDocProxy.name, this.InstantiateAsyncMembers.name], this.Friendly);
+
+    await this.HarvestElements()
+      .then(() => this.HarvestRibbonToolbar())
+      .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.InstantiateAsyncMembers.name], err));
+    try {
+    } catch (err) {
+      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
+    }
+
+    this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.InstantiateAsyncMembers.name], this.Friendly);
   }
 
-  WireEvents() {
+  private async HarvestElements(): Promise<void> {
+    this.Logger.FuncStart([PackageDesignerDocProxy.name, this.HarvestElements.name], this.Friendly);
+    try {
+    } catch (err) {
+      this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEvents.name], err);
+    }
+    this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.HarvestElements.name], this.Friendly);
+  }
+
+  async WireEvents(): Promise<void> {
     this.Logger.FuncStart(this.WireEvents.name, this.Friendly);
+
+    await this.EnableWatcherForFrames()
+      .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEvents.name], err));
+
     this.Logger.FuncEnd(this.WireEvents.name, this.Friendly);
   }
 
@@ -52,18 +82,46 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
     });
   }
 
+  private async HarvestRibbonToolbar(): Promise<void> {
+    this.Logger.FuncStart([InstallerDesignerProxy.name, this.HarvestRibbonToolbar.name]);
+
+    await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.InstallerRibbon_Toolbar, PromiseFailAction.RejectThrow)
+      .then((elementDivJacket: ElementDivJacket) => this.packagedesignerInstallerRibbonToolbarElem = new PackageDesignerInstallerRibbonToolbarElemProxy(this.ApiCore, elementDivJacket, this.JqueryModalDialogsFrameProxy))
+      .then(() => this.packagedesignerInstallerRibbonToolbarElem.InstantiateAsyncMembers())
+      .catch((err) => this.ErrorHand.HandleFatalError([InstallerDesignerProxy.name, this.HarvestRibbonToolbar.name], err));
+
+    this.Logger.FuncEnd([InstallerDesignerProxy.name, this.HarvestRibbonToolbar.name]);
+  }
+
+  async OpenFile(fileName: string): Promise<void> {
+    this.Logger.FuncStart([InstallerDesignerProxy.name, this.OpenFile.name]);
+    try {
+      this.packagedesignerInstallerRibbonToolbarElem = null;
+
+      if (this.packagedesignerInstallerRibbonToolbarElem) {
+        await this.packagedesignerInstallerRibbonToolbarElem.OpenFile(fileName)
+          .catch((err) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err));
+      }
+    }
+    catch (err) {
+      this.ErrorHand.HandleFatalError([InstallerDesignerProxy.name, this.OpenFile.name], err);
+    }
+
+    this.Logger.FuncEnd([InstallerDesignerProxy.name, this.OpenFile.name]);
+  }
+
   async SetState(stateOfPackageDesigner: IStateOfPackageDesigner): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.SetState.name, PackageDesignerDocProxy.name);
 
       if (stateOfPackageDesigner) {
         if (stateOfPackageDesigner.StatusText.length > 0) {
-          let installerDesignerProxy: InstallerDesignerProxy = null;
+          //let installerDesignerProxy: InstallerDesignerProxy = null;
 
-          installerDesignerProxy = new InstallerDesignerProxy(this.ApiCore, this.DocumentJacket, this.JqueryModalDialogsFrameProxy);
+          //installerDesignerProxy = new InstallerDesignerProxy(this.ApiCore, this.DocumentJacket, this.JqueryModalDialogsFrameProxy);
 
-          await installerDesignerProxy.InstantiateAsyncMembers()
-            .then(() => installerDesignerProxy.OpenFile(stateOfPackageDesigner.StatusText))
+          //await installerDesignerProxy.InstantiateAsyncMembers()
+          await this.OpenFile(stateOfPackageDesigner.StatusText)
             .then(() => resolve())
             .catch((err) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerDocProxy.name, this.SetState.name], err)));
 

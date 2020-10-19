@@ -1,13 +1,10 @@
 ﻿import { AutoSnapShotAgent } from "../../../../Content-Top/scripts/Agents/AutoSnapShotAgent";
 import { BrowserMessageBroker_Content } from "../../../../Content-Top/scripts/Proxies/BrowserMessageBroker_Content";
 import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
-import { ScUiManager } from "../../../../HindSiteScUiProxy/scripts/Managers/SitecoreUiManager/SitecoreUiManager";
-import { ContentEditorProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/ContentEditor/ContentEditorProxy/ContentEditorProxy";
-import { DesktopProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/DesktopProxy";
 import { GuidData } from "../../Helpers/GuidData";
+import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
 import { IHindSiteScUiAPI } from "../../Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
@@ -19,9 +16,7 @@ export class CommandPayloadForInternal extends _CommonBase implements ICommandPa
   TargetSnapShotId: GuidData;
   AtticAgent: IContentAtticAgent;
   ContentMessageBroker: BrowserMessageBroker_Content = null;
-  DesktopProxy: DesktopProxy = null;
   hindeCore: ICommonCore = null;
-  TargetCeProxy: ContentEditorProxy;
   TargetDoc: DocumentJacket = null;
   TargetNickName: string = '';
   ToastAgent: IToastAgent = null;

@@ -4,6 +4,7 @@ import { SettingKey } from "../../Enums/30 - SettingKey";
 import { UiEnableState } from "../../Enums/Enabled";
 import { UiPresence } from "../../Enums/UiPresence";
 import { ModuleKey } from "../../Enums/ModuleKey";
+import { IHindSiteHistory } from "./IHindSiteHistoryStrAr";
 
 export interface IHindSiteSetting {
   DataType: SettingType;
@@ -18,4 +19,5 @@ export interface IHindSiteSetting {
   ValueAsBool(): boolean;
   ValueAsInt(): number
   ValueAsObj: any;
+  ValueAsHistory(): IHindSiteHistory;
 }

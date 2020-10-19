@@ -1,5 +1,5 @@
 ﻿import { FrameElemJacket } from "../../../../../DOMJacket/Elements/FrameElemJacket";
-import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IStateLessScFrameProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessFrameProxy";
 import { JqueryModalDialogsDocProxy } from "../StateLessDocProxies/JqueryModalDialogsDocProxy";
 import { _baseStatelessFrameProxyOfType } from "./_baseStatelessFrameProxyOfType";

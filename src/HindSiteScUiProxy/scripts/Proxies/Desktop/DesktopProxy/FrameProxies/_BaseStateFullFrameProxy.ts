@@ -1,4 +1,4 @@
-﻿import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+﻿import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJacket";
@@ -19,4 +19,10 @@ export abstract class _BaseStateFullFrameProxy<T> extends _APICoreBase implement
 
     this.FrameJacket = frameJacket;
   }
+    WaitForCompleteNABFrameProxyOrReject() {
+        //empty
+    }
+    GetDocumentJacket() {
+        //empty
+    }
 }

@@ -1,6 +1,6 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
 import { FrameElemJacket } from "../../../../../DOMJacket/Elements/FrameElemJacket";
-import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - StateFullProxyDisciminator";
+import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IBaseScDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
 import { IStateLessScFrameProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessFrameProxy";
@@ -33,7 +33,7 @@ export class GenericStateLessFrameProxy extends _baseStatelessFrameProxyOfType<_
   public static async ProcessHostedScDocProxy(apiCore: IAPICore, documentJacket: DocumentJacket): Promise<IBaseScDocProxy> {
     return new Promise(async (resolve, reject) => {
       let scDocProxyResolver: ScDocProxyResolver = new ScDocProxyResolver(apiCore);
-      await scDocProxyResolver.ScDocProxyFactory( documentJacket, null)
+      await scDocProxyResolver.ScDocProxyFactoryMake( documentJacket, null)
         .then((scDocProxy: IBaseScDocProxy) => resolve(scDocProxy))
         .catch((err) => reject(apiCore.ErrorHand.FormatRejectMessage([GenericStateLessFrameProxy.name, this.ProcessHostedScDocProxy.name], err)));
     });
