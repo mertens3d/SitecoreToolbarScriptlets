@@ -1,5 +1,4 @@
 ﻿import { ScProxyDisciminator } from "../../Enums/40 - ScProxyDisciminator";
-import { IStateFullElemProxy } from "./StateFull/IStateFullElemProxy";
 
 export interface IBaseScDocProxy {
   readonly ScProxyDisciminator: ScProxyDisciminator;
@@ -9,5 +8,4 @@ export interface IBaseScDocProxy {
   WireEvents();
   OnFocus(): Promise<any>
   EnableWatcherForFrames(): void;
-  HostedElemProxies: IStateFullElemProxy[];
 }

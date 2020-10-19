@@ -22,7 +22,10 @@ module.exports = {
 
   BuildTypeScriptAll: function (cb, vars) {
     console.log('\t Src: ' + vars.SharedJs.Ts.SourceFilter());
-    return gulp.src([vars.SharedJs.Ts.SourceFilter()])
+    var source = vars.SharedJs.Ts.SourceFilter();//'./src/**/HindSiteScUiProxy/**/*.ts';
+
+
+    return gulp.src([source])
       .pipe(sort())
       .pipe(gulpTypescript(this.CommonSettings))
       .pipe(gulp.dest(vars.SharedJs.Ts.TranspiledFolder));

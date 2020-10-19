@@ -24,8 +24,8 @@ class Vars {
     this.ContentAllJs = new InjectableClass('Content-All', '/**/*.js', 'js', this.FinalFolderShort);
     this.ContentAllJs.Ts.TranspiledEntryPointFile = 'zContentAllEntryPoint.js';
 
-    this.HindSiteApiJs = new InjectableClass('HindSiteScUiProxy', '/**/*.js', 'js', this.FinalFolderShort);
-    this.HindSiteApiJs.Ts.TranspiledEntryPointFile = 'HindSiteScUiProxy.js';
+    this.HindSiteScUiProxyJs = new InjectableClass('HindSiteScUiProxy', '/**/*.js', 'js', this.FinalFolderShort);
+    this.HindSiteScUiProxyJs.Ts.TranspiledEntryPointFile = 'HindSiteScUiProxy.js';
 
     this.BrowserPolyFillJs = new InjectableClass('browser-polyfill', '/**/*.js', 'js', this.FinalFolderShort);
     this.BrowserPolyFillJs.MinSuffix = '';

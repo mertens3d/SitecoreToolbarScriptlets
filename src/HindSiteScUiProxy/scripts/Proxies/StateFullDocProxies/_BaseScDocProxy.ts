@@ -6,18 +6,16 @@ import { IStateFullElemProxy } from "../../../../Shared/scripts/Interfaces/Proxi
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
 import { ScDocProxyWatcherForFrames } from "./ScDocProxyWatcherForFrames";
 
-export abstract class _BaseScDocProxy extends _APICoreBase implements IBaseScDocProxy {
+export abstract class _BaseScDocProxy extends _APICoreBase  {
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
   abstract readonly ScProxyDisciminatorFriendly;
+  protected HostedElemProxies: IStateFullElemProxy[] = [];
   private WatcherForFrames: ScDocProxyWatcherForFrames;
-  abstract InstantiateAsyncMembers();
-  abstract TriggerInboundEventsAsync(): void;
-  abstract WireEvents();
-
-  HostedElemProxies: IStateFullElemProxy[] = [];
-
   protected readonly DocumentJacket: DocumentJacket;
 
+  abstract WireEvents();
+  abstract TriggerInboundEventsAsync(): void;
+  abstract InstantiateAsyncMembers();
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
     this.DocumentJacket = documentJacket;

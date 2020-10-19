@@ -3,11 +3,7 @@ import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICo
 import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
 import { _BaseScDocProxy } from "../../StateFullDocProxies/_BaseScDocProxy";
 
-export abstract class _BaseStateLessScDocProxy extends _BaseScDocProxy implements IStateLessDocProxy {
-
-
-
-
+export abstract class _BaseStateLessScDocProxy extends _BaseScDocProxy  {
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore, documentJacket);
   }

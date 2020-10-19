@@ -35,9 +35,10 @@ gulp.task('CombineJs', (cb) => jstasks.combineJs(cb, varsObj));
 gulp.task('PutToFinal', (cb) => putTasks.PutToFinal(cb, varsObj));
 gulp.task('CopyFromFinalToAddon', (cb) => putTasks.CopyFromFinalToAddon(cb, varsObj));
 
-let regextFoldersToIgnore = '/' + varsObj.HindSiteApiJs.Name + '|' + varsObj.PopUpUiJs.Name + '|' + varsObj.PopUpControllerJs.Name + '/';
+let regextFoldersToIgnore = '/' + varsObj.HindSiteScUiProxyJs.Name + '|' + varsObj.PopUpUiJs.Name + '|' + varsObj.PopUpControllerJs.Name + '/';
 gulp.task('WebpackContentTop', (cb) => WebPackTasks.WebPackOne(cb, varsObj.ContentTopJs, regextFoldersToIgnore));
 gulp.task('WebpackContentAll', (cb) => WebPackTasks.WebPackOne(cb, varsObj.ContentAllJs, regextFoldersToIgnore));
+gulp.task('WebpackContentHindSiteScUiProxy', (cb) => WebPackTasks.WebPackOne(cb, varsObj.HindSiteScUiProxyJs, regextFoldersToIgnore));
 
 //var controllerNoParseRegex =  varsObj.ContentTopJs.SourceDirFilter() + '|' + varsObj.PopUpUiJs.SourceDirFilter() + '|' + varsObj.HindSiteApiJs.SourceDirFilter() ;
 var controllerNoParseRegex = './src/' + varsObj.PopUpUiJs.Name;

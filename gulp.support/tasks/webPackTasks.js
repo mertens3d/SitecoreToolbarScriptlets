@@ -14,6 +14,7 @@ module.exports = {
     console.log(typeof targetVar);
 
     console.log('source: ' + targetVar.Ts.TranspiledFolder);
+    console.log('Entry Point: ' + targetVar.Ts.TranspiledEntryPointFull());
     console.log('regexIgnore: ' + regexIgnore);
 
     console.log('e) WebPackOne ' + targetVar.Ts.MinFileName);
@@ -23,6 +24,12 @@ module.exports = {
         {
           entry: targetVar.Ts.TranspiledEntryPointFull(),
           mode: 'production',//'development', //,
+          externals: [
+            ///^DOMJacket\/.+$/,
+            ///^HindSiteScUiAPI\/.+$/,
+            ///^Shared\/.+$/,
+            
+          ],
           output: {
             path: targetVar.WebpackContentOutputFilePathAbs(),
             filename: targetVar.MinFileName() // 'jsContent.min.js'
@@ -30,6 +37,7 @@ module.exports = {
           optimization: {
             minimize: false
           },
+         
           plugins: [
             new CopyWebpackPlugin({
               patterns: [
@@ -39,6 +47,7 @@ module.exports = {
               ]
             })
           ]
+          
         }))
       .pipe(gulp.dest(targetVar.WebpackContentOutputFilePathAbs()));
     //cb();
