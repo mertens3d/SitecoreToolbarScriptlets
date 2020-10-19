@@ -1,5 +1,5 @@
 ﻿import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
-import { _ApiRecipeBase } from "../../../HindSiteScUiProxy/scripts/ContentApi/Recipes/__RecipeBase/_ApiRecipeBase";
+import { _ApiRecipeBase } from "./__RecipeBase/_ApiRecipeBase";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";

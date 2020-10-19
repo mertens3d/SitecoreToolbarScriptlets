@@ -1,10 +1,10 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
-import { CEFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
+import { IStateFullFrameProxy } from "../Proxies/StateFull/IStateFullFrameProxy";
 
 export interface IDataPublishChain {
   TopScDocumentProxy: DocumentJacket,
-  Iframe0BlueScContentIFrameId0: CEFrameProxy;
+  Iframe0BlueScContentIFrameId0: IStateFullFrameProxy;
   ScDocumentProxyToPublish: DocumentJacket
-  JqIframe: CEFrameProxy;
-  CEFrameRed: CEFrameProxy;
+  JqIframe: IStateFullFrameProxy;
+  CEFrameRed: IStateFullFrameProxy;
 }

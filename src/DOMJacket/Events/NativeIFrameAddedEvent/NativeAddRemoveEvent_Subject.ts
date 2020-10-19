@@ -1,4 +1,4 @@
-﻿import { IElemJacketWatcherParameters } from "../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IElemJacketWatcherParameters";
+﻿import { IElemJacketWatcherParameters } from "../ElementJacketMutationEvent/IElemJacketWatcherParameters";
 import { TypeDiscriminator } from "../../../Shared/scripts/Enums/70 - TypeDiscriminator";
 import { HindeSiteEvent_Subject } from "../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
@@ -135,7 +135,7 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INative
       }
     }
     catch (err) {
-      throw (err);
+      this.ErrorHand.HandleFatalError(this.InitMutationObserver.name, err);
     }
     this.Logger.FuncEnd(this.InitMutationObserver.name);
   }

@@ -28,7 +28,7 @@ export class HandlersForInternal extends _FrontBase {
         //todo - put back maybe await this.HandlerForSnapShotRestoreNewTab(data);
       }
     } catch (err) {
-      throw (err);
+      this.ErrorHand.HandleFatalError(this.HandlerForSnapShotRestoreTBDTab.name, err);
     }
     this.Logger.FuncEnd(this.HandlerForSnapShotRestoreTBDTab.name);
   }

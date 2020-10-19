@@ -84,7 +84,8 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
 
   async Instantiate(): Promise<void> {
     try {
-      await this.HarvestNodeState();
+      await this.HarvestNodeState()
+        .catch((err) => this.ErrorHand.HandleFatalError(this.Instantiate.name, err));
     } catch (err) {
       this.ErrorHand.HandleFatalError(this.Instantiate.name, err);
     }
@@ -128,8 +129,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     try {
       await this.ScContentTreeNodeDivElem.WaitForElement(":scope > a", this.Friendly())
         .then((htmlAnchorElement: ElementAnchorJacket) => this.LinkNodeElem = htmlAnchorElement)
-        .catch((err) => {
-        });
+        .catch((err) => this.ErrorHand.HandleFatalError(this.PollinateNodeElem.name, err));
     } catch (err) {
       this.ErrorHand.HandleFatalError(this.PollinateNodeElem.name, err);
     }
@@ -294,8 +294,10 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
         let PromiseAr: Promise<void>[] = [];
         toReturn.forEach((newScContentTreeNodeProxy: ScContentTreeNodeProxy) => PromiseAr.push(newScContentTreeNodeProxy.Instantiate()));
 
-        await Promise.all(PromiseAr);
-        resolve(toReturn);
+        await Promise.all(PromiseAr)
+          .then(() => resolve(toReturn))
+          .catch((err) => reject(err));
+        
       } catch (err) {
         reject(this.GetChildren.name + ' | ' + err);
       }

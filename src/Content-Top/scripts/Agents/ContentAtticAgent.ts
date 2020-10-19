@@ -168,7 +168,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
         }
       }
     } catch (err) {
-      throw (this.CleanFoundStorage.name, err);
+      this.ErrorHand.HandleFatalError(this.CleanFoundStorage.name, err);
     }
   }
 

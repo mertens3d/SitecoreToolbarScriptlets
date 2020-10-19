@@ -63,28 +63,25 @@ export class MessageBroker_PopUp extends _FrontBase {
         this.ErrorHand.HandleFatalError(this.SendCommandToContentAsync.name, 'null check');
       }
     } catch (err) {
-      throw (this.SendCommandToContentAsync.name + ' | ' + err);
+      this.ErrorHand.HandleFatalError(this.SendCommandToContentAsync.name, err);
     }
     this.Logger.FuncEnd(this.SendCommandToContentAsync.name);
   }
 
   private HandleReply(controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
-
     if (!StaticHelpers.IsNullOrUndefined(controllerMessageReceivedEvent_Payload)) {
       this.ContentReplyReceivedEvent_Subject.NotifyObserversAsync(controllerMessageReceivedEvent_Payload);
     } else {
       this.ErrorHand.WarningAndContinue(this.HandleReply.name, 'null payload. Not notifying ')
     }
-
   }
-    //ValidateControllerMessageReceivedEvent_Payload(controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
-    //  let toReturn: IControllerMessageReceivedEvent_Payload = {
-    //    ErrorStack: null,
-    //    LastReq: null,
-    //  }
+  //ValidateControllerMessageReceivedEvent_Payload(controllerMessageReceivedEvent_Payload: IControllerMessageReceivedEvent_Payload) {
+  //  let toReturn: IControllerMessageReceivedEvent_Payload = {
+  //    ErrorStack: null,
+  //    LastReq: null,
+  //  }
 
-
-    //}
+  //}
 
   async SendMessageToContentAsync(messageFromController: IMessageControllerToContent): Promise<IControllerMessageReceivedEvent_Payload> {
     return new Promise(async (resolve, reject) => {
@@ -161,6 +158,4 @@ export class MessageBroker_PopUp extends _FrontBase {
       this.Logger.FuncEnd(this.ReceiveResponseHandler.name);
     });
   }
-
-  
 }

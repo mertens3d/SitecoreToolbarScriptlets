@@ -78,10 +78,7 @@ export class UiModulesManager extends _FrontBase {
     this.ScPathResolver = scPathResolver;
     this.DebuggingEnabled = this.SettingsAgent.GetByKey(SettingKey.EnableDebugging).ValueAsBool();
 
-    if (StaticHelpers.IsNullOrUndefined([this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScWindowTypeResolver])) {
-      throw (UiModulesManager.name + ' null at constructor');
-    }
-
+    this.ErrorHand.ThrowIfNullOrUndefined(UiModulesManager.name, [this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScWindowTypeResolver]);
     this.InstantiateModules();
     this.Logger.CTOREnd(UiModulesManager.name);
   }

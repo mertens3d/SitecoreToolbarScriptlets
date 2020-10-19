@@ -29,7 +29,7 @@ export class UrlJacket extends _CommonBase implements IUrlJacket {
       this.SetFromHref(this.OriginalURL);
     }
     catch (err) {
-      throw (this.Init_GenericUrlAgent.name + ' | ' + err);
+      this.ErrorHand.HandleFatalError(this.Init_GenericUrlAgent.name , err);
     }
 
     //this.Logger.FuncEnd(this.Init_GenericUrlAgent.name, UrlJacket.name);

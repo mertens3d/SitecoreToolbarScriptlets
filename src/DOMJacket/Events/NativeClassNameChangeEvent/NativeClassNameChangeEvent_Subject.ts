@@ -27,7 +27,7 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
       }
     }
     catch (err) {
-      throw (this.InitTreeMutationEvent_Observer.name + ' | ' + err);
+      this.ErrorHand.HandleFatalError (this.InitTreeMutationEvent_Observer.name , err);
     }
   }
 

@@ -87,7 +87,7 @@ export class HindSiteScUiAPI implements IHindSiteScUiAPI {
     return new Promise(async (resolve, reject) => {
       this.ScWindowFacade.PublishActiveCE()
         .then(() => resolve())
-        .ca;
+        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([HindSiteScUiAPI.name, this.PublischActiveCE.name], err)));
     });
   }
 

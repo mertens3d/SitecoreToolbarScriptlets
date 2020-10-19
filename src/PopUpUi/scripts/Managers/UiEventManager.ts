@@ -20,9 +20,7 @@ export class UiEventManager extends _FrontBase {
     super(hindeCore);
     this.UiModulesMan = uimodulesMan;
 
-    if (StaticHelpers.IsNullOrUndefined([uimodulesMan])) {
-      throw (UiModulesManager.name + ' null at constructor');
-    }
+    this.ErrorHand.ThrowIfNullOrUndefined(UiEventManager.name, [uimodulesMan]);
   }
 
   Init_UiEventManager() {

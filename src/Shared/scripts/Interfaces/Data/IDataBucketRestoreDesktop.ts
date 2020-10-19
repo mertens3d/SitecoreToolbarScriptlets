@@ -1,10 +1,10 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
-import { DTFrameProxy } from "../../../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy";
+import { IStateFullFrameProxy } from "../Proxies/StateFull/IStateFullFrameProxy";
 import { IStateOfContentEditor } from "../StateOf/IStateOfContentEditor";
 
 export interface IDataBucketRestoreDesktop {
   LastChainLinkSuccessful: boolean,
-  IFramesbefore: DTFrameProxy[],
+  IFramesbefore: IStateFullFrameProxy[],
   oneTreeState: IStateOfContentEditor,
   targetDocumentJacket: DocumentJacket,
 }

@@ -1,11 +1,11 @@
-﻿import { ScWindowType } from "../../Enums/50 - scWindowType";
+﻿import { ScWindowTypeDeterminators } from "../../../../HindSiteScUiProxy/scripts/Collections/ScWindowTypeDeterminators";
+import { ScWindowType } from "../../Enums/50 - scWindowType";
 import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
 import { IScWindowTypeDeterminator } from "../../Interfaces/IPageDeterminator";
 import { IUrlJacket } from "../../Interfaces/IUrlAgent";
 import { IScWindowTypeResolver } from "../../Interfaces/Jackets/IScUrlAgent";
 import { _CommonBase } from "../../_CommonCoreBase";
 import { IQueryKeyValuePair } from "./IQueryKeyValuePair";
-import { ScWindowTypeDeterminators } from "../../Collections/ScWindowTypeDeterminators";
 
 export class ScWindowTypeResolver extends _CommonBase implements IScWindowTypeResolver {
   constructor(commonCore: ICommonCore) {

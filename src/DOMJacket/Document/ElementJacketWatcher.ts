@@ -1,6 +1,6 @@
-﻿import { ElementJacketMutationEvent_Subject } from "../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/ElementJacketMutationEvent_Subject";
-import { IElementJacketMutationEvent_Payload } from "../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IElementJacketMutationEvent_Payload";
-import { IElemJacketWatcherParameters } from "../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IElemJacketWatcherParameters";
+﻿import { ElementJacketMutationEvent_Subject } from "../Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
+import { IElementJacketMutationEvent_Payload } from "../Events/ElementJacketMutationEvent/IElementJacketMutationEvent_Payload";
+import { IElemJacketWatcherParameters } from "../Events/ElementJacketMutationEvent/IElemJacketWatcherParameters";
 import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { _CommonBase } from "../../Shared/scripts/_CommonCoreBase";
 import { GenericElemJacket } from "../Elements/GenericElemJacket";

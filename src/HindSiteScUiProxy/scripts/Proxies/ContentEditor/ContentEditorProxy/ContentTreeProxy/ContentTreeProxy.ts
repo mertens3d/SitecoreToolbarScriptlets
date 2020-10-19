@@ -221,6 +221,8 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
         if (this.rootTreeNodeJacket) {
           var rootParent: GenericElemJacket = this.rootTreeNodeJacket.parentElement();
 
+
+          // todo - fix this await mess
           await rootParent.WaitForElement(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
             .then(async (firstChildGlyphNode: ElementImgJacket) => {
               this._treeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, firstChildGlyphNode, 0, 0, 1, null, this.ConResolver)

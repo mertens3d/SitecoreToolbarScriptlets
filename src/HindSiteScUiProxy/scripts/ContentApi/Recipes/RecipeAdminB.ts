@@ -5,7 +5,7 @@ import { IApiCallPayload } from "../../../../Shared/scripts/Interfaces/IApiCallP
 import { ICommandRecipes } from '../../../../Shared/scripts/Interfaces/ICommandRecipes';
 import { DTStartBarProxy } from "../../Proxies/Desktop/DesktopProxy/DesktopStartBarProxy/DTStartBarProxy";
 import { DTFrameProxy } from '../../Proxies/Desktop/DesktopProxy/FrameProxies/DTFrameProxy';
-import { _ApiRecipeBase } from './__RecipeBase/_ApiRecipeBase';
+import { _ApiRecipeBase } from '../../../../Content-Top/scripts/Recipes/__RecipeBase/_ApiRecipeBase';
 
 export class RecipeAdminB extends _ApiRecipeBase implements ICommandRecipes {
   constructor(apiCore: IAPICore, apiCallPayload: IApiCallPayload, targetDoc: DocumentJacket, ceButtonTabAgent: DTStartBarProxy, scWinProxy: IScWindowFacade) {

@@ -25,9 +25,11 @@ export class CommandManager extends _FrontBase {
     this.HandlersForInternal = handlerInternal;
     this.UiLayer = uiLayer;
 
-    if (StaticHelpers.IsNullOrUndefined([this.CommandDefinitionBucket, this.PopUpMsgBroker, this.UiLayer, this.HandlersForInternal])) {
-      throw (CommandManager.name + ' | null at constructor');
-    }
+    this.ErrorHand.ThrowIfNullOrUndefined(CommandManager.name, [this.CommandDefinitionBucket, this.PopUpMsgBroker, this.UiLayer, this.HandlersForInternal]);
+    //if (StaticHelpers.IsNullOrUndefined([this.CommandDefinitionBucket, this.PopUpMsgBroker, this.UiLayer, this.HandlersForInternal])) {
+    //  this.ErrorHand.WarningAndContinue(this.HandleCommandTypePopUp.name, 'Unhandled command');
+    //  throw (CommandManager.name + ' | null at constructor');
+    //}
   }
 
   Init_CommandManager() {
@@ -79,7 +81,7 @@ export class CommandManager extends _FrontBase {
 
       this.PopUpMsgBroker.SendCommandToContentAsync(ReqCommandMsgFlag.Ping, stateOfPopUp) //todo put correct value in for null. query the ui?
     } catch (err) {
-      throw (this.TriggerPingEventAsync.name + ' | ' + err);
+      this.ErrorHand.HandleFatalError(this.TriggerPingEventAsync.name, err);
     }
 
     this.Logger.FuncEnd(this.TriggerPingEventAsync.name);

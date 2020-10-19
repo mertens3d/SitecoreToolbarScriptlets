@@ -1,9 +1,9 @@
-﻿import { ElementJacketMutationEvent_Subject } from "../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/ElementJacketMutationEvent_Subject";
-import { IElemJacketWatcherParameters } from "../../HindSiteScUiProxy/scripts/Proxies/Desktop/DesktopProxy/Events/DocumentProxyMutationEvent/IElemJacketWatcherParameters";
-import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
+﻿import { IterationDrone } from "../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
 import { ICommonCore } from "../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { _CommonBase } from "../../Shared/scripts/_CommonCoreBase";
 import { ElementJacketWatcher } from "../Document/ElementJacketWatcher";
+import { ElementJacketMutationEvent_Subject } from "../Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
+import { IElemJacketWatcherParameters } from "../Events/ElementJacketMutationEvent/IElemJacketWatcherParameters";
 
 export class GenericElemJacket extends _CommonBase {
   private ElemJacketWatchers: ElementJacketWatcher[] = [];
@@ -56,37 +56,6 @@ export class GenericElemJacket extends _CommonBase {
     return toReturn;
   }
 
-  //private async WaitForElementSingleAsync(selector: string, abortToken: IAbortToken): Promise<ElementJacketBase<HTMLElement>> {
-  //  return new Promise(async (resolve, reject) => {
-  //    var iterationJr = new IterationDrone(this.CommonCore, this.WaitForElementSingleAsync.name + ' : ' + selector, false);
-
-  //    var toReturnElemJacket: ElementJacketBase<HTMLElement> = null;
-  //    let candidate: HTMLElement;
-
-  //    while (!toReturnElemJacket && iterationJr.DecrementAndKeepGoing() && abortToken.Continue) {
-  //      candidate = this.NativeElement.querySelector(selector);
-
-  //      if (candidate) {
-  //        break;
-  //      } else {
-  //        await iterationJr.Wait();
-  //      }
-  //    }
-
-  //    if (candidate) {
-  //      resolve(new ElementJacketBase<HTMLElement>(this.CommonCore, candidate));
-  //    } else {
-  //      if (iterationJr.IsExhausted) {
-  //        reject(iterationJr.IsExhaustedMsg)
-  //      } else if (!abortToken.Continue) {
-  //        reject('aborted');
-  //      } else {
-  //        reject('unknown reason');
-  //      }
-  //    }
-  //  });
-  //}
-
   async WaitForElement(selector: string | string[], friendly: string = ''): Promise<GenericElemJacket> {
     return new Promise(async (resolve, reject) => {
       //this.Logger.FuncStart(this.WaitForElement.name, selector);
@@ -135,43 +104,10 @@ export class GenericElemJacket extends _CommonBase {
     return new Promise(async (resolve, reject) => {
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr]);
 
-      //var foundHtmlElement: HTMLElement = null;
-      //var iterationJr = new IterationDrone(this.CommonCore, this.WaitForThenClick.name + ' | ' + JSON.stringify(selectorAr), true);
-      //let foundSelector: string = '';
-
       await this.WaitForElement(selectorAr)
         .then((elemJacket: GenericElemJacket) => elemJacket.Click())
         .then(() => resolve())
         .catch((err) => this.ErrorHand.FormatRejectMessage(this.WaitForThenClick.name, err));
-
-      //while (!foundHtmlElement && iterationJr.DecrementAndKeepGoing()) { // todo put back && !this.MsgMan().OperationCancelled) {
-      //  for (var idx = 0; idx < selectorAr.length; idx++) {
-      //    foundSelector = selectorAr[idx];
-      //    foundHtmlElement = this.NativeElement.querySelector(foundSelector);
-
-      //    if (foundHtmlElement) {
-      //      break;
-      //    }
-      //  }
-      //  await iterationJr.Wait();
-      //}
-
-      //if (foundHtmlElement) {
-      //  try {
-      //    this.Logger.LogAsJsonPretty(this.WaitForThenClick.name + ' clicking', foundSelector);
-      //    foundHtmlElement.click();
-      //    resolve();
-      //  }
-      //  catch (err) {
-      //    reject(this.WaitForThenClick.name + ' | ' + err);
-      //  }
-      //} else {
-      //  if (!foundHtmlElement && iterationJr.IsExhausted) {
-      //    reject(iterationJr.IsExhaustedMsg);
-      //  } else {
-      //    reject('unknown reason');
-      //  }
-      //}
     });
   }
 }
