@@ -1,6 +1,9 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
-import { FrameElemJacket } from "../../../../../DOMJacket/Elements/FrameElemJacket";
-import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
+﻿import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
+import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+import { ElementJacketMutationEvent_Observer } from "../../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Observer";
+import { ElementJacketMutationEvent_Subject } from "../../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
+import { IElementJacketMutationEvent_Payload } from "../../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/IElementJacketMutationEvent_Payload";
+import { IElemJacketWatcherParameters } from "../../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/IElemJacketWatcherParameters";
 import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
@@ -9,23 +12,18 @@ import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCo
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IStateFullElemProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
+import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTProxy";
-import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { ContentEditorDocProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
+import { JqueryModalDialogsFrameProxy } from "../../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { DTAreaProxyMutationEvent_Subject } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Subject";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
-import { JqueryModalDialogsFrameProxy } from "../../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { _BaseStateFullElemProxy } from "./FrameProxies/_BaseStateFullElemProxy";
-import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
-import { ElementJacketMutationEvent_Subject } from "../../../../../DOMJacket/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
-import { ElementJacketMutationEvent_Observer } from "../../../../../DOMJacket/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Observer";
-import { IElemJacketWatcherParameters } from "../../../../../DOMJacket/Events/ElementJacketMutationEvent/IElemJacketWatcherParameters";
-import { IElementJacketMutationEvent_Payload } from "../../../../../DOMJacket/Events/ElementJacketMutationEvent/IElementJacketMutationEvent_Payload";
 
 export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> implements IStateFullElemProxy {
   public readonly ScProxyDisciminator = ScProxyDisciminator.DTAreaElemProxy;

@@ -1,5 +1,5 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
-import { ElementDivJacket } from "../../../../DOMJacket/Elements/ElementDivJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { ElementDivJacket } from "../../../../DOMJacket/scripts/Elements/ElementDivJacket";
 import { DefaultStateOfPackageDesigner } from "../../../../Shared/scripts/Classes/Defaults/DefaultStateOfPackageDesigner";
 import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { PromiseFailAction } from "../../../../Shared/scripts/Enums/PromiseFailAction";
@@ -8,7 +8,6 @@ import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst"
 import { IStateFullDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
 import { IStateFullElemProxy } from "../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
 import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfPackageDesigner";
-import { RecipeBasics } from "../../RecipeBasics";
 import { _BaseStateFullDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
 import { InstallerDesignerProxy } from "../StateLessDocProxies/StateLessDocProxies/InstallerDesignerProxy";
 import { PackageDesignerInstallerRibbonToolbarElemProxy } from "../StateLessDocProxies/StateLessElemProxies/PackageDesignerInstallerRibbonToolbarProxy";
@@ -30,7 +29,6 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
     this.Logger.CTORStart(PackageDesignerDocProxy.name);
 
     this.Friendly = friendly;
-    this.RecipeBasics = new RecipeBasics(this.ApiCore);
     this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
     this.ErrorHand.ThrowIfNullOrUndefined([PackageDesignerDocProxy.name], [documentJacket, jqueryModalDialogsFrameProxy]);
 

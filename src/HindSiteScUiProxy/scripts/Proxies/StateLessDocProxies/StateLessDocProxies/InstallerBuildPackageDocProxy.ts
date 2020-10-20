@@ -1,4 +1,4 @@
-﻿import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
+﻿import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";

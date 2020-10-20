@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { IStateFullFrameProxy } from "../Proxies/StateFull/IStateFullFrameProxy";
 import { IStateOfContentEditor } from "../StateOf/IStateOfContentEditor";
 

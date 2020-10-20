@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
 import { _BaseScDocProxy } from "../../StateFullDocProxies/_BaseScDocProxy";

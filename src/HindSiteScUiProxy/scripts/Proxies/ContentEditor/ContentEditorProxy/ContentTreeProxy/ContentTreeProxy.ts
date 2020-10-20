@@ -1,9 +1,9 @@
-﻿import { DocumentJacket } from '../../../../../../DOMJacket/Document/DocumentJacket';
-import { ElementImgJacket } from '../../../../../../DOMJacket/Elements/ElementImgJacket';
-import { GenericElemJacket } from "../../../../../../DOMJacket/Elements/GenericElemJacket";
-import { INativeClassNameChangeEvent_Payload } from '../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
-import { NativeClassNameChangeEvent_Observer } from "../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Observer";
-import { NativeClassNameChangeEvent_Subject } from "../../../../../../DOMJacket/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";
+﻿import { DocumentJacket } from '../../../../../../DOMJacket/scripts/Document/DocumentJacket';
+import { ElementImgJacket } from '../../../../../../DOMJacket/scripts/Elements/ElementImgJacket';
+import { GenericElemJacket } from "../../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+import { INativeClassNameChangeEvent_Payload } from '../../../../../../DOMJacket/scripts/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
+import { NativeClassNameChangeEvent_Observer } from "../../../../../../DOMJacket/scripts/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Observer";
+import { NativeClassNameChangeEvent_Subject } from "../../../../../../DOMJacket/scripts/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";
 import { DefaultStateOfContentTree } from '../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentTree';
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";

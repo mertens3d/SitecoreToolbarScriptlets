@@ -1,4 +1,4 @@
-﻿import { FrameElemJacket } from "../../../../../DOMJacket/Elements/FrameElemJacket";
+﻿import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateLessScFrameProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessFrameProxy";

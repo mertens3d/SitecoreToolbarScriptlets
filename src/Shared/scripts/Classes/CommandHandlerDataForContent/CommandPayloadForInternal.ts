@@ -1,9 +1,8 @@
-﻿import { AutoSnapShotAgent } from "../../../../Content-Top/scripts/Agents/AutoSnapShotAgent";
-import { BrowserMessageBroker_Content } from "../../../../Content-Top/scripts/Proxies/BrowserMessageBroker_Content";
-import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
+﻿import { AutoSnapShotAgent } from "../../../../ContentTop/scripts/Agents/AutoSnapShotAgent";
+import { BrowserMessageBroker_Content } from "../../../../ContentTop/scripts/Proxies/BrowserMessageBroker_Content";
+import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { GuidData } from "../../Helpers/GuidData";
 import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
-import { IHindSiteScUiAPI } from "../../Interfaces/Agents/IContentApi/IContentApi";
 import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
 import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
 import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
@@ -24,7 +23,6 @@ export class CommandPayloadForInternal extends _CommonBase implements ICommandPa
   SettingsAgent: ISettingsAgent;
   AutoSnapShotAgent: AutoSnapShotAgent;
   ApiPayload: IApiCallPayload;
-  ScUiProxy: IHindSiteScUiAPI;
 
   constructor(hindeCore: ICommonCore, atticAgent: IContentAtticAgent, toastAgent: IToastAgent,  settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, apiPayload: IApiCallPayload) {
     super(hindeCore);

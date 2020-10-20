@@ -1,9 +1,9 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
-import { ElementDivJacket } from "../../../../../DOMJacket/Elements/ElementDivJacket";
+﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { ElementDivJacket } from "../../../../../DOMJacket/scripts/Elements/ElementDivJacket";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
+import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { JqueryModalDialogsFrameProxy } from "../StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { _BaseStateLessElemProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateLessElemProxy";
 

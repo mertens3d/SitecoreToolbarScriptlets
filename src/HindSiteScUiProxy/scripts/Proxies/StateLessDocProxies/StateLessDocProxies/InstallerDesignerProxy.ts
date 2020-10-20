@@ -1,5 +1,5 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
-import { ElementDivJacket } from "../../../../../DOMJacket/Elements/ElementDivJacket";
+﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { ElementDivJacket } from "../../../../../DOMJacket/scripts/Elements/ElementDivJacket";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { PromiseFailAction } from "../../../../../Shared/scripts/Enums/PromiseFailAction";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";

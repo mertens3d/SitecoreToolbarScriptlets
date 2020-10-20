@@ -1,4 +1,4 @@
-﻿import { FrameElemJacket } from "../../DOMJacket/Elements/FrameElemJacket";
+﻿import { FrameElemJacket } from "../../DOMJacket/scripts/Elements/FrameElemJacket";
 import { IAPICore } from "../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ISettingsAgent } from "../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { _APICoreBase } from "../../Shared/scripts/_APICoreBase";

@@ -1,27 +1,25 @@
-﻿import { DocumentJacket } from '../../../../../DOMJacket/Document/DocumentJacket';
-import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
+﻿import { DocumentJacket } from '../../../../../DOMJacket/scripts/Document/DocumentJacket';
+import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+import { IterationDrone } from '../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { _baseDefaultStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Classes/Defaults/_baseDefaultStateOfContentTreeBasedProxies';
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from '../../../../../Shared/scripts/Helpers/GuidData';
 import { IAPICore } from '../../../../../Shared/scripts/Interfaces/Agents/IAPICore';
-import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
-import { IStateOfContentTreeBasedProxies } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies";
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { IStateFullDocProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy';
-import { RecipeBasics } from '../../../RecipeBasics';
+import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
+import { IStateOfContentTreeBasedProxies } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies";
 import { __ContentTreeBasedProxyMutationEvent__Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
 import { I_ContentTreeBasedProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
 import { ContentTreeBasedProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Observer';
 import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { _BaseStateFullDocProxy } from '../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy';
 import { ContentTreeElemProxy } from "./ContentTreeProxy/ContentTreeProxy";
-import { IStateFullElemProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy';
 
 export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfContentTreeBasedProxies> extends _BaseStateFullDocProxy<T> implements IStateFullDocProxy {
   protected ContentTreeProxy: ContentTreeElemProxy;
   protected DocumentJacket: DocumentJacket;
-  protected RecipeBasic: RecipeBasics;
   protected TreeMutationEvent_Observer: ContentTreeBasedProxyMutationEvent_Observer;
   public __ContentTreeBasedProxyMutationEvent_Subject: __ContentTreeBasedProxyMutationEvent__Subject;
   public abstract readonly ScProxyDisciminator: ScProxyDisciminator;
@@ -42,7 +40,6 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
   }
 
   private Instantiate() {
-    this.RecipeBasic = new RecipeBasics(this.ApiCore);
   }
 
   async __baseInstantiateAsyncMembers(): Promise<void> {
@@ -69,8 +66,8 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
       this.ErrorHand.ThrowIfNullOrUndefined(this.SetState.name + ' ' + _ContentTreeBasedDocProxy.name, stateOfContentTreeBasedProxies.ContentTree);
       this.__ContentTreeBasedProxyMutationEvent_Subject.DisableNotifications();
 
-      await this.RecipeBasic.WaitForTimePeriod(1, this.SetState.name)
-        .then(() => this.RecipeBasic.WaitForNoUiFrontOverlay(this.SetState.name))
+      await this.WaitForTimePeriod(1, this.SetState.name)
+        .then(() => this.WaitForNoUiFrontOverlay(this.SetState.name))
         .then(() => this.ContentTreeProxy.SetState(stateOfContentTreeBasedProxies.ContentTree))
         .then(() => {
           this.__ContentTreeBasedProxyMutationEvent_Subject.EnableNotifications();
@@ -80,6 +77,34 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
           this.__ContentTreeBasedProxyMutationEvent_Subject.EnableNotifications();
           reject(this.SetState.name + " " + err);
         });
+    });
+  }
+
+  WaitForNoUiFrontOverlay(friendly: string): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.WaitForNoUiFrontOverlay.name, friendly);
+      var iterationJr: IterationDrone = new IterationDrone(this.ApiCore, this.WaitForNoUiFrontOverlay.name, true);
+
+      let overLayExists: boolean = true;
+
+      let iframeElem: HTMLIFrameElement = <HTMLIFrameElement>document.getElementById('jqueryModalDialogsFrame');
+      let iframeContentDoc: Document = iframeElem.contentDocument;
+      let iframeContentDocBody: HTMLBodyElement = <HTMLBodyElement>iframeContentDoc.body;
+
+      while (iterationJr.DecrementAndKeepGoing() && overLayExists) {
+        await iterationJr.Wait();
+
+        let foundElem: HTMLElement = iframeContentDocBody.querySelector(':scope > .ui-widget-overlay.ui-front');
+        overLayExists = foundElem !== null;
+      }
+
+      if (iterationJr.IsExhausted) {
+        this.Logger.Log(iterationJr.IsExhaustedMsg);
+        reject(iterationJr.IsExhaustedMsg);
+      } else {
+        resolve();
+      }
+      this.Logger.FuncEnd(this.WaitForNoUiFrontOverlay.name, friendly);
     });
   }
 
@@ -96,7 +121,6 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
         DisciminatorFriendly: ScProxyDisciminator[this.ScProxyDisciminator],
         Disciminator: this.ScProxyDisciminator,
         ContentTree: null
-        
       }
 
       await this.ContentTreeProxy.GetState()

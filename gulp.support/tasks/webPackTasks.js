@@ -1,11 +1,6 @@
 ﻿const gulp = require('gulp');
-const ts = require('gulp-typescript');
-const sort = require('gulp-sort');
-const header = require('gulp-header');
+const webpack = require('webpack');
 const Webpack_stream = require('Webpack-stream');
-//const WebpackContent_config = require('./../../Webpack.config');
-const rename = require('gulp-rename');
-const vars = require('../vars');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
@@ -19,25 +14,50 @@ module.exports = {
 
     console.log('e) WebPackOne ' + targetVar.Ts.MinFileName);
 
-    return gulp.src(targetVar.Ts.TranspiledFolder)
+    return gulp.src('./AutoBuild/TsTranspiled/')//targetVar.Ts.TranspiledFolder)//targetVar.Ts.TranspiledFolder)
       .pipe(Webpack_stream(
         {
-          entry: targetVar.Ts.TranspiledEntryPointFull(),
-          mode: 'production',//'development', //,
-          externals: [
-            ///^DOMJacket\/.+$/,
-            ///^HindSiteScUiAPI\/.+$/,
-            ///^Shared\/.+$/,
-            
-          ],
+          cache: false,
+          entry: {
+            //main: targetVar.Ts.TranspiledEntryPointFull(),
+            Shared: {
+              import: './AutoBuild/TsTranspiled/Shared/scripts/SharedEntry.js',
+            },
+
+            DOMJacket: {
+              import: './AutoBuild/TsTranspiled/DOMJacket/scripts/DOMJacketEntry.js',
+              dependOn: 'Shared',
+            },
+            contentTop: {
+              import: './AutoBuild/TsTranspiled/ContentTop/scripts/zContentTopEntryPoint.js',
+              dependOn: ['HindSiteScUiProxy','DOMJacket'],
+            },
+            ContentAllFrames: {
+              import: './AutoBuild/TsTranspiled/ContentAllFrames/scripts/zContentAllEntryPoint.js'
+            },
+            HindSiteScUiProxy: {
+              import: './AutoBuild/TsTranspiled/HindSiteScUiProxy/scripts/HindSiteScUiProxy.js',
+              dependOn: 'DOMJacket'
+            },
+            PopUpController: {
+              import: './AutoBuild/TsTranspiled/PopUpController/scripts/PopUpControllerLayer.js'
+            }
+          },
+          mode: 'development',//'production', //,
+          //externals: [
+          //  ///.*DOMJacket\/.+$/,
+          //  ///.*HindSiteScUiProxy\/.+$/,
+          //  ///.*Shared\/.+$/,
+
+          //],
           output: {
+            filename: '[name].min.js', //targetVar.MinFileName() // 'jsContent.min.js'
             path: targetVar.WebpackContentOutputFilePathAbs(),
-            filename: targetVar.MinFileName() // 'jsContent.min.js'
           },
           optimization: {
-            minimize: false
+            minimize: false,
           },
-         
+
           plugins: [
             new CopyWebpackPlugin({
               patterns: [
@@ -46,9 +66,9 @@ module.exports = {
                 }
               ]
             })
-          ]
-          
-        }))
+          ],
+          stats: 'detailed'
+        }, webpack))
       .pipe(gulp.dest(targetVar.WebpackContentOutputFilePathAbs()));
     //cb();
   },

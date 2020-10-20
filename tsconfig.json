@@ -7,7 +7,7 @@
     "noImplicitUseStrict": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2017",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "typeRoots": [ "node_modules/@types", "node_modules/web-ext-types" ]
   },
   "exclude": [

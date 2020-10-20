@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/Document/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IBaseScDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";

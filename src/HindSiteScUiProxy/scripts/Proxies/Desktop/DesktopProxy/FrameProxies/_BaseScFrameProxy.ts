@@ -1,9 +1,8 @@
-﻿import { DocumentJacket } from "../../../../../../DOMJacket/Document/DocumentJacket";
-import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJacket";
+﻿import { DocumentJacket } from "../../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { FrameElemJacket } from "../../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
 import { DocReadyState } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyStateNAB";
 import { IStateFullFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullFrameProxy";
-import { RecipeBasics } from "../../../../RecipeBasics";
 import { _BaseStateFullFrameProxy } from "./_BaseStateFullFrameProxy";
 import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
@@ -14,7 +13,6 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullFrameProxy<T> i
   Id: string = null;
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
   abstract Friendly: string;
-  RecipeBasics: RecipeBasics;
 
   constructor(apiCore: IAPICore, frameJacket: FrameElemJacket) {
     super(apiCore, frameJacket);

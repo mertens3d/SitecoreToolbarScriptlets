@@ -1,7 +1,7 @@
 ﻿import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
-import { FrameElemJacket } from "../../../../../../DOMJacket/Elements/FrameElemJacket";
+import { FrameElemJacket } from "../../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
 import { IStateFullFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullFrameProxy";
 
 export abstract class _BaseStateFullFrameProxy<T> extends _APICoreBase implements IStateFullFrameProxy {

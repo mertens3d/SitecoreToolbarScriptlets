@@ -1,10 +1,9 @@
-﻿import { DocumentJacket } from '../../../../../../DOMJacket/Document/DocumentJacket';
-import { GenericElemJacket } from "../../../../../../DOMJacket/Elements/GenericElemJacket";
+﻿import { DocumentJacket } from '../../../../../../DOMJacket/scripts/Document/DocumentJacket';
+import { GenericElemJacket } from "../../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
-import { RecipeBasics } from '../../../../RecipeBasics';
 import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
 import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
@@ -19,7 +18,6 @@ export class DTStartBarProxy extends _APICoreBase {
     private DocumentJacket: DocumentJacket;
     private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
     private StartMenuButtonResolver: StartMenuButtonResolver;
-    private RecipeBasics: RecipeBasics;
     private ConResolver: ConResolver;
 
     constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
@@ -31,7 +29,6 @@ export class DTStartBarProxy extends _APICoreBase {
     }
 
     private InstantiateInstance() {
-        this.RecipeBasics = new RecipeBasics(this.ApiCore);
         this.ConResolver = new ConResolver(this.ApiCore);
     }
 
@@ -66,7 +63,7 @@ export class DTStartBarProxy extends _APICoreBase {
                 .then(() => this.TriggerPopXButton(buttonSelectors.Pop2Selector, ContentConst.Const.Selector.SC.StartMenu.Popup2.Id))
                 .then(() => this.TriggerPopXButton(buttonSelectors.Pop3Selector, ContentConst.Const.Selector.SC.StartMenu.Popup3.Id))
                 .then(() => methodLock.ReleaseLock())
-                .then(() => this.RecipeBasics.WaitForTimePeriod(1, this.TriggerRedButtonAsync.name))
+                .then(() => this.WaitForTimePeriod(1, this.TriggerRedButtonAsync.name))
                 .then(() => this.TaskMonitor.AsyncTaskCompleted(this.TriggerRedButtonAsync.name))
                 .catch((err) => this.ErrorHand.HandleFatalError(this.TriggerRedButtonAsync.name, err));
         } catch (err) {
@@ -88,7 +85,7 @@ export class DTStartBarProxy extends _APICoreBase {
                     .then((elementJacket: GenericElemJacket) => buttonElemJacket = elementJacket)
                     .then(() => this.Logger.LogImportant('About to click ' + buttonSelector))
                     .then(() => buttonElemJacket.Click())
-                    .then(() => this.RecipeBasics.WaitForTimePeriod(1, this.TriggerPopXButton.name))
+                    .then(() => this.WaitForTimePeriod(1, this.TriggerPopXButton.name))
                     .catch((err) => this.ErrorHand.HandleFatalError(this.TriggerPopXButton.name + ' ' + buttonSelector + ' ' + containerSelector, err));
             } else {
                 // do nothing

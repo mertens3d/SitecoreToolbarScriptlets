@@ -1,6 +1,6 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
-import { FrameElemJacket } from "../../../../../DOMJacket/Elements/FrameElemJacket";
-import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
+﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
+import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
@@ -8,13 +8,11 @@ import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectCon
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
 import { FactoryHelper } from "../../../FactoryHelper";
-import { RecipeBasics } from "../../../RecipeBasics";
 import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { ContentEditorDocProxy } from "./ContentEditorProxy";
 
 export class ContentEditorPublishProxy extends _APICoreBase {
   ContentEditorProxy: ContentEditorDocProxy;
-  private RecipeBasics: RecipeBasics;
   private DocumentJacket: DocumentJacket;
   private FactoryHelp: FactoryHelper;
 
@@ -23,7 +21,6 @@ export class ContentEditorPublishProxy extends _APICoreBase {
 
     this.ContentEditorProxy = contentEditorProxy;
     this.DocumentJacket = documentJacket;
-    this.RecipeBasics = new RecipeBasics(this.ApiCore);
     this.FactoryHelp = new FactoryHelper(this.ApiCore);
   }
 

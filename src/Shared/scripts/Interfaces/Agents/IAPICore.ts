@@ -1,6 +1,6 @@
 ﻿import { ICommonCore } from "./ICommonCore";
-import { IHindSiteScUiAPIRunTimeOptions } from "./IContentApi/IHindSiteScUiAPIRunTimeOptions";
+import { IHindSiteScUiProxyRunTimeOptions } from "./IContentApi/IHindSiteScUiProxyRunTimeOptions";
 
 export interface IAPICore extends ICommonCore {
-  RunTimeOptions: IHindSiteScUiAPIRunTimeOptions,
+  RunTimeOptions: IHindSiteScUiProxyRunTimeOptions,
 }

@@ -1,7 +1,7 @@
 ﻿{
   "manifest_version": 2,
   "name": "Hind•Site",
-  "version": "1.52",
+  "version": "1.53",
 
   "description": "Sitecore Tools",
 
@@ -15,26 +15,28 @@
       "all_frames": false,
       "js": [
         "AutoBuild/final/browser-polyfill.js",
-        "AutoBuild/final/Content-Top.min.js"
+        "AutoBuild/final/Shared.min.js",
+        "AutoBuild/final/DOMJacket.min.js",
+        "AutoBuild/final/ContentTop.min.js"
       ]
     },
     {
       "matches": [ "http://*/*", "https://*/*" ],
       "all_frames": true,
       "js": [
-        "AutoBuild/final/content-all.min.js"
+        "AutoBuild/final/ContentAllFrames.min.js"
       ]
     },
     {
       "matches": [ "http://*/sitecore/shell/*", "https://*/sitecore/shell/*" ],
       "all_frames": true,
-      "css": [ "AutoBuild/final/content-top.min.css" ]
+      "css": [ "AutoBuild/final/ContentTop.min.css" ]
     }
 
   ],
 
 
-  "web_accessible_resources": [ "AutoBuild/final/content-top.min.css" ],
+  "web_accessible_resources": [ "AutoBuild/final/ContentTop.min.css" ],
 
   "permissions": [
     "activeTab",

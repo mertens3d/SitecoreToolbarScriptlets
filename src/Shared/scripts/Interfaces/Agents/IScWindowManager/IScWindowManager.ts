@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { IStateOfScUi } from "../../StateOf/IDataStateOfSitecoreWindow";
 import { IStateFullDocProxy } from "../../Proxies/StateFull/IStateFullDocProxy";
 import { ScWindowType } from "../../../Enums/50 - scWindowType";

@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from "../../../DOMJacket/Document/DocumentJacket";
+﻿import { DocumentJacket } from "../../../DOMJacket/scripts/Document/DocumentJacket";
 import { ScWindowTypeResolver } from "../../../Shared/scripts/Agents/UrlAgent/ScWindowTypeResolver";
 import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
 import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";

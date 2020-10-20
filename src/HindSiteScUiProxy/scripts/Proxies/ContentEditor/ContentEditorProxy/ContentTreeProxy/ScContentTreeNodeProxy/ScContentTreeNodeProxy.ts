@@ -1,23 +1,21 @@
-﻿import { GenericElemJacket } from "../../../../../../../DOMJacket/Elements/GenericElemJacket";
-import { ElementDivJacket } from "../../../../../../../DOMJacket/Elements/ElementDivJacket";
-import { ElementImgJacket } from "../../../../../../../DOMJacket/Elements/ElementImgJacket";
-import { ElementAnchorJacket } from "../../../../../../../DOMJacket/Elements/ElementAnchorJacket";
-import { RecipeBasics } from "../../../../../RecipeBasics";
+﻿import { ElementAnchorJacket } from "../../../../../../../DOMJacket/scripts/Elements/ElementAnchorJacket";
+import { ElementDivJacket } from "../../../../../../../DOMJacket/scripts/Elements/ElementDivJacket";
+import { ElementImgJacket } from "../../../../../../../DOMJacket/scripts/Elements/ElementImgJacket";
+import { GenericElemJacket } from "../../../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+import { ScIconPath } from "../../../../../../../Shared/scripts/Enums/60 - ScIconPath";
 import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
 import { IAPICore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
+import { IScIcon } from "../../../../../../../Shared/scripts/Interfaces/Data/IScIcon";
+import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
 import { IStateOfScContentTreeNodeDeep } from "../../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfScContentTreeNode";
 import { IStateOfScContentTreeNodeShallow } from "../../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfScContentTreeNodeShallow";
-import { ContentConst } from "../../../../../../../Shared/scripts/Interfaces/InjectConst";
 import { _APICoreBase } from "../../../../../../../Shared/scripts/_APICoreBase";
 import { ConResolver } from "./ConResolver";
-import { IScIcon } from "../../../../../../../Shared/scripts/Interfaces/Data/IScIcon";
-import { ScIconPath } from "../../../../../../../Shared/scripts/Enums/60 - ScIconPath";
 
 //scContentTreeNode is the name sitecore uses
 export class ScContentTreeNodeProxy extends _APICoreBase {
   private ScContentTreeNodeDivElem: ElementDivJacket;
-  private RecipeBasics: RecipeBasics;
 
   private LinkNodeElem: ElementAnchorJacket;
   private glyphElem: ElementImgJacket;
@@ -79,7 +77,6 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     }
 
     this.ParentTreeNode = parent;
-    this.RecipeBasics = new RecipeBasics(this.ApiCore);
   }
 
   async Instantiate(): Promise<void> {
@@ -274,7 +271,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     let foundElement: ElementImgJacket = <ElementImgJacket>this.ScContentTreeNodeDivElem.querySelector(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
 
     if (foundElement) {
-      toReturn = this.ConResolver.ResolveIconData( foundElement.NativeElement.src);
+      toReturn = this.ConResolver.ResolveIconData(foundElement.NativeElement.src);
     }
 
     return toReturn;
@@ -297,7 +294,6 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
         await Promise.all(PromiseAr)
           .then(() => resolve(toReturn))
           .catch((err) => reject(err));
-        
       } catch (err) {
         reject(this.GetChildren.name + ' | ' + err);
       }
@@ -347,13 +343,12 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
 
       this.Logger.Log('activating node: ' + this.StateOfScContentTreeNode.Friendly);
 
-      await this.RecipeBasics.WaitForElemToHaveClassOrReject(this.LinkNodeElem.NativeElement,
+      await this.LinkNodeElem.WaitForElemToHaveClassOrReject(
         [ContentConst.Const.ClassNames.SC.scContentTreeNodeActive, ContentConst.Const.ClassNames.SC.scContentTreeNodeNormal],
         this.StateOfScContentTreeNode.Friendly)
       this.LinkNodeElem.NativeElement.click();
 
-      await this.RecipeBasics.WaitForElemToHaveClassOrReject(this.LinkNodeElem.NativeElement,
-        [ContentConst.Const.ClassNames.SC.scContentTreeNodeActive],
+      await this.LinkNodeElem.WaitForElemToHaveClassOrReject([ContentConst.Const.ClassNames.SC.scContentTreeNodeActive],
         this.StateOfScContentTreeNode.Friendly)
         .then(() => resolve())
         .catch((err) => reject(this.ActivateNode.name + ' | ' + err));

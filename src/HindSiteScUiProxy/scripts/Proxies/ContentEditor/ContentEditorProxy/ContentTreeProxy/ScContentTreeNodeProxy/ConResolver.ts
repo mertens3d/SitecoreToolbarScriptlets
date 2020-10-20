@@ -1,6 +1,6 @@
 ﻿import { _APICoreBase } from "../../../../../../../Shared/scripts/_APICoreBase";
 import { IScIcon } from "../../../../../../../Shared/scripts/Interfaces/Data/IScIcon";
-import { UrlJacket } from "../../../../../../../DOMJacket/UrlJacket";
+import { UrlJacket } from "../../../../../../../DOMJacket/scripts/UrlJacket";
 import { IUrlJacket } from "../../../../../../../Shared/scripts/Interfaces/IUrlAgent";
 import { SharedConst } from "../../../../../../../Shared/scripts/SharedConst";
 import { ScIconPath } from "../../../../../../../Shared/scripts/Enums/60 - ScIconPath";

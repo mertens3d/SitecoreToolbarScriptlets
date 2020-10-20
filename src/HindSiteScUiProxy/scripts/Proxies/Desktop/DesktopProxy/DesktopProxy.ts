@@ -1,6 +1,6 @@
-import { DocumentJacket } from "../../../../../DOMJacket/Document/DocumentJacket";
-import { FrameElemJacket } from "../../../../../DOMJacket/Elements/FrameElemJacket";
-import { GenericElemJacket } from "../../../../../DOMJacket/Elements/GenericElemJacket";
+import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
+import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
@@ -11,7 +11,6 @@ import { IStateFullDocProxy } from "../../../../../Shared/scripts/Interfaces/Pro
 import { IStateFullElemProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTProxy";
-import { RecipeBasics } from "../../../RecipeBasics";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
 import { JqueryModalDialogsDocProxy } from "../../StateLessDocProxies/StateLessDocProxies/JqueryModalDialogsDocProxy";
 import { GenericStateLessFrameProxy } from "../../StateLessDocProxies/StateLessFrameProxies/GenericStateLessFrameProxy";
@@ -66,7 +65,6 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
   }
 
   private Instantiate() {
-    this.RecipeBasics = new RecipeBasics(this.ApiCore);
     this.DTStartBarProxy = new DTStartBarProxy(this.ApiCore, this.DocumentJacket);
     //this.ScRibbonProxy = new ScRibbonProxy(this.ApiCore, this.DocumentJacket);
     this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.ApiCore, this.OnAreaProxyMutationEvent.bind(this));

@@ -1,4 +1,4 @@
-﻿import { DocumentJacket } from '../../../../../../DOMJacket/Document/DocumentJacket';
+﻿import { DocumentJacket } from '../../../../../../DOMJacket/scripts/Document/DocumentJacket';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { AsyncLock } from '../../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';

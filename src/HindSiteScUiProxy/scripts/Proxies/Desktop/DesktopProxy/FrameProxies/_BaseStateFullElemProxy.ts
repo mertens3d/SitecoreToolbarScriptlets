@@ -1,5 +1,5 @@
-﻿import { DocumentJacket } from "../../../../../../DOMJacket/Document/DocumentJacket";
-import { GenericElemJacket } from "../../../../../../DOMJacket/Elements/GenericElemJacket";
+﻿import { DocumentJacket } from "../../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { GenericElemJacket } from "../../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullElemProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";

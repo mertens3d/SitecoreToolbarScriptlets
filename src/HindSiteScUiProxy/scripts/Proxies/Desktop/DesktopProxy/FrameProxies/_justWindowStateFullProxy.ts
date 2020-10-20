@@ -1,18 +1,16 @@
-﻿import { DocumentJacket } from "../../../../../../DOMJacket/Document/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateFullDocProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
 import { IStateFullElemProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
-import { RecipeBasics } from "../../../../RecipeBasics";
 import { _BaseScDocProxy } from "../../../StateFullDocProxies/_BaseScDocProxy";
 
 export abstract class _justWindowStateFullDocProxy extends _BaseScDocProxy implements IStateFullDocProxy {
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
   abstract readonly ScProxyDisciminatorFriendly;
   Friendly: string = '{unknown friendly}';
-  RecipeBasics: RecipeBasics;
   HostedElemProxies: IStateFullElemProxy[] = [];
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {

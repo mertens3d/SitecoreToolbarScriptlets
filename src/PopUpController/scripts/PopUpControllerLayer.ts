@@ -1,4 +1,4 @@
-﻿import { UrlJacket } from "../../DOMJacket/UrlJacket";
+﻿import { UrlJacket } from "../../DOMJacket/scripts/UrlJacket";
 import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
 import { BrowserTabAgent } from "../../Shared/scripts/Agents/BrowserTabAgent";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";

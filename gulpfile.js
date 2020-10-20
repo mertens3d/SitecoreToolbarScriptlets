@@ -39,6 +39,7 @@ let regextFoldersToIgnore = '/' + varsObj.HindSiteScUiProxyJs.Name + '|' + varsO
 gulp.task('WebpackContentTop', (cb) => WebPackTasks.WebPackOne(cb, varsObj.ContentTopJs, regextFoldersToIgnore));
 gulp.task('WebpackContentAll', (cb) => WebPackTasks.WebPackOne(cb, varsObj.ContentAllJs, regextFoldersToIgnore));
 gulp.task('WebpackContentHindSiteScUiProxy', (cb) => WebPackTasks.WebPackOne(cb, varsObj.HindSiteScUiProxyJs, regextFoldersToIgnore));
+gulp.task('WebpackContentSolution', (cb) => WebPackTasks.WebPackOne(cb, varsObj.HindSiteScUiProxyJs, regextFoldersToIgnore));
 
 //var controllerNoParseRegex =  varsObj.ContentTopJs.SourceDirFilter() + '|' + varsObj.PopUpUiJs.SourceDirFilter() + '|' + varsObj.HindSiteApiJs.SourceDirFilter() ;
 var controllerNoParseRegex = './src/' + varsObj.PopUpUiJs.Name;
@@ -51,7 +52,7 @@ gulp.task('CleanBuildStamp', (cb) => tsTasks.CleanBuildStamp(cb, varsObj));
 gulp.task('PopulateBuildTimeStamp', (cb) => tsTasks.BuildBuildNumber(cb, varsObj));
 
 gulp.task('PreClean', gulp.series(['ArchiveAutoBuildFolder', 'CleanAutoBuildFolder']));
-gulp.task('WebpackAll', gulp.parallel(['WebpackContentTop', 'WebpackContentAll', 'WebpackPopUpController']));
+gulp.task('WebpackAll', gulp.parallel('WebpackContentSolution'));//   ['WebpackContentTop', 'WebpackContentAll', 'WebpackPopUpController']));
 gulp.task('TimeStampAll', gulp.parallel(['CleanBuildStamp', 'PopulateBuildTimeStamp']));
 
 gulp.task('builders', gulp.series([gulp.parallel('BuildPopUpStyles', 'BuildContentTopStyles', 'TimeStampAll', 'BuildPopUpHtml'), 'BuildTypescriptAll', 'WebpackAll',  'PutToFinal']), function (resolve) {

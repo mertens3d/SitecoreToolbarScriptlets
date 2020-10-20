@@ -1,4 +1,4 @@
-﻿import { KeyPressJacket } from "../../../../DOMJacket/KeyPressJacket";
+﻿import { KeyPressJacket } from "../../../../DOMJacket/scripts/KeyPressJacket";
 import { ReqCommandMsgFlag } from "../../Enums/10 - MessageFlag";
 import { IKeyBoardComboEvent_Payload } from "../../Events/KeyBoardComboEvent/IKeyBoardComboEvent_Payload";
 import { KeyBoardComboEvent_Observer } from "../../Events/KeyBoardComboEvent/KeyBoardComboEvent_Observer";

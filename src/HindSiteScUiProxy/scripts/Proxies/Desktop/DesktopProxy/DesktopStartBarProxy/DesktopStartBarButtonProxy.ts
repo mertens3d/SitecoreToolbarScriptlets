@@ -1,5 +1,5 @@
-﻿import { DocumentJacket } from '../../../../../../DOMJacket/Document/DocumentJacket';
-import { GenericElemJacket } from "../../../../../../DOMJacket/Elements/GenericElemJacket";
+﻿import { DocumentJacket } from '../../../../../../DOMJacket/scripts/Document/DocumentJacket';
+import { GenericElemJacket } from "../../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
