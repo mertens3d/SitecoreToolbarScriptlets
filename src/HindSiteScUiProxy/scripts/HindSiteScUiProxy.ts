@@ -41,13 +41,13 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     this.Logger.CTOREnd(HindSiteScUiProxy.name);
   }
 
-  public async InstantiateHindSiteScUiProxy() {
+  public async InstantiateHindSiteScUiProxy(): Promise<void> {
     this.Logger.FuncStart(this.InstantiateHindSiteScUiProxy.name);
     try {
       this.ScWindowFacade = new ScWindowFacade(this.ApiCore, this.DocumentJacket);
       await this.ScWindowFacade.InstantiateAsyncMembers();
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InstantiateHindSiteScUiProxy.name, err);
     }
 
@@ -67,7 +67,7 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
           .then((result: IStateOfScUi) => reply = result)
           .then(() => reply.ErrorStack = this.ErrorHand.ErrorStack)
           .then(() => resolve(reply))
-          .catch((err) => reject(err));
+          .catch((err: any) => reject(err));
       } else {
         resolve(reply);
       }
@@ -78,7 +78,7 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     return new Promise(async (resolve, reject) => {
       (<DesktopProxy>this.ScWindowFacade.StateFullProxy).AddContentEditorFrameAsync()
         .then(() => resolve())
-        .catch((err) => reject());
+        .catch((err: any) => reject());
     });
   }
 
@@ -86,15 +86,15 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     return new Promise(async (resolve, reject) => {
       this.ScWindowFacade.PublishActiveCE()
         .then(() => resolve())
-        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.PublischActiveCE.name], err)));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.PublischActiveCE.name], err)));
     });
   }
 
-  async ToggleCompactCss(commandData: IApiCallPayload) {
+  async ToggleCompactCss(commandData: IApiCallPayload): Promise<void> {
     return new Promise(async (resolve, reject) => {
       //await this.ToggleCompactCss()
       //  .then(() => resolve())
-      //  .catch((err) => reject(err));
+      //  .catch((err: any) => reject(err));
     });
   }
 
@@ -102,7 +102,7 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     return new Promise(async (resolve, reject) => {
       this.ScWindowFacade.SetStateOfScWin(dataOneWindowStorage)
         .then(() => resolve())
-        .catch((err) => reject(err));
+        .catch((err: any) => reject(err));
     });
   }
 
@@ -123,17 +123,17 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
       } else {
         this.ErrorHand.WarningAndContinue(this.TriggerCERibbonCommand.name, 'Invalid scRibbonCommand');
       }
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.TriggerCERibbonCommand.name, err);
     }
     this.Logger.FuncEnd([HindSiteScUiProxy.name, this.TriggerCERibbonCommand.name]);
   }
 
-  OpenContentEditor() {
+  OpenContentEditor(): Promise<void>{
     throw new Error("Method not implemented.");
   }
 
-  AdminB(commandData: IApiCallPayload) {
+  AdminB(commandData: IApiCallPayload):void{
     this.ScUiMan = new ScUiManager(this.ApiCore);
     this.ScUiMan.InitSitecoreUiManager();
     this.ScUiMan.AdminB(this.DocumentJacket, null);

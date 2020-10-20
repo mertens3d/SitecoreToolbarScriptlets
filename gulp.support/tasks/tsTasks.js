@@ -12,11 +12,12 @@ module.exports = {
     'removeComments': true,
     'sourceMap': false,
     'alwaysStrict': false,
-    'noImplicitUseStrict': true,
-    'allowSyntheticDefaultImports': true,
-    'target': 'es6',
+    'noImplicitAny': true,
+    //'allowSyntheticDefaultImports': true,
     'module': 'es6',
+    'target': 'es5',
     'moduleResolution': 'node',
+    'allowJs': true,
     "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"]
   },
 

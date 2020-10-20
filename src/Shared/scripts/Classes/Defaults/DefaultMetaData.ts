@@ -8,7 +8,7 @@ export class DefaultMetaData implements IDataMetaData {
   SessionId = '';
   SnapshotId = Guid.NewRandomGuid();
   StorageKey = '';
-  TimeStamp = null;
+  TimeStamp: Date = null;
   WindowType = ScWindowType.Unknown;
   Hash = -1;
   StorageId = Guid.NewRandomGuid();

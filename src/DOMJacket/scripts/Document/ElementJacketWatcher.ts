@@ -56,7 +56,7 @@ export class ElementJacketWatcher extends _CommonBase {
 
       this.ElemJacketMutationEvent_Subject.NotifyObserversAsync(payload);
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.CallBackOnNativeAddRemoveEventAsync.name, err);
     }
     this.Logger.FuncEnd([ElementJacketWatcher.name, this.CallBackOnNativeAddRemoveEventAsync.name], 'On Behalf of: ' + nativeIFrameAddRemoveEvent_Payload.OnBehalfOfFriendly);

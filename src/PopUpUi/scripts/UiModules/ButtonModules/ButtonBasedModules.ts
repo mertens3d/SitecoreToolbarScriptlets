@@ -30,7 +30,7 @@ export class ButtonBasedModulesBucket extends _FrontBase {
     this.PopulateMenuButtons();
 
     try {
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InstantiateButtonBasedModules.name, err);
     }
     this.Logger.FuncEnd(this.InstantiateButtonBasedModules.name);

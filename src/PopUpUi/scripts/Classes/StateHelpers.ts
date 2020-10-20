@@ -22,7 +22,7 @@ export class StateHelpers extends _FrontBase {
     //      })
     //    }
     //    //toReturn = stateOfTree.StateOfScContentTreeNodeProxy[stateOfTree.ActiveNodeCoord.LevelIndex][stateOfTree.ActiveNodeCoord.SiblingIndex];
-    //  } catch (err) {
+    //  } catch (err: any) {
     //    this.ErrorHand.WarningAndContinue(this.GetActiveTreeNodeFromStateOfTree.name, 'Invalid indices');
     //  }
     //}

@@ -1,6 +1,7 @@
-﻿import { IStateOfDTArea } from "../../Interfaces/StateOf/IStateOfDTProxy";
+﻿import { IStateOfDTFrame } from "../../Interfaces/StateOf/IStateOfDTFrame";
+import { IStateOfDTArea } from "../../Interfaces/StateOf/IStateOfDTProxy";
 
 export class DefaultStateOfDTArea implements IStateOfDTArea {
-    DTFrames = [];
-    ActiveFrameIndex = -1;
+  DTFrames: IStateOfDTFrame[] = [];
+  ActiveFrameIndex = -1;
 }

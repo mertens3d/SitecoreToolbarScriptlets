@@ -5,13 +5,13 @@ import { InstallerBrowseDocProxy } from "../StateLessDocProxies/InstallerBrowseD
 import { _baseStatelessFrameProxyOfType } from "./_baseStatelessFrameProxyOfType";
 
 export class InstallerBrowseFrameProxy extends _baseStatelessFrameProxyOfType<InstallerBrowseDocProxy> implements IStateLessScFrameProxy {
-  TriggerInboundEventsAsync() {
+  async TriggerInboundEventsAsync(): Promise<void> {
       // empty
   }
   async InstantiateAsyncMembers(): Promise<void> {
       // empty
   }
-  WireEvents() {
+  async WireEvents() : Promise<void>{
       // empty
   }
   FrameElemJacket: FrameElemJacket;

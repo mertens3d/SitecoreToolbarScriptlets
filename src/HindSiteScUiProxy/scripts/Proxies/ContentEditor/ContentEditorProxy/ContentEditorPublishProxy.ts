@@ -28,7 +28,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
     return new Promise(async (resolve, reject) => {
       await this.PublishActiveCE()
         .then(() => resolve())
-        .catch((err) => reject(err));
+        .catch((err: any) => reject(err));
     });
   }
 
@@ -42,12 +42,12 @@ export class ContentEditorPublishProxy extends _APICoreBase {
   //          .then((topIframe: DTFrameProxy) => {
   //            resolve(topIframe.GetDocumentJacket());
   //          })
-  //          .catch((err) => reject(this.GetDocToPublish.name + ' ' + err));
+  //          .catch((err: any) => reject(this.GetDocToPublish.name + ' ' + err));
   //      }
   //      else {
   //        resolve(this.DocumentJacket);
   //      }
-  //    } catch (err) {
+  //    } catch (err: any) {
   //      reject(this.GetDocToPublish.name + ' ' + err)
   //    }
 
@@ -59,9 +59,9 @@ export class ContentEditorPublishProxy extends _APICoreBase {
     this.Logger.FuncStart(this.PublishActiveCE.name);
     try {
       await this.PublishCE(this.DocumentJacket);
-        //.catch((err) => { throw (err) });
+        //.catch((err: any) => { throw (err: any) });
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.PublishActiveCE.name ,err);
     }
     this.Logger.FuncEnd(this.PublishActiveCE.name);
@@ -110,7 +110,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
         .catch(ex => {
           this.ErrorHand.HandleFatalError(this.PublishCE.name, ex);
         });
-    } catch (err) {
+    } catch (err: any) {
           this.ErrorHand.HandleFatalError(this.PublishCE.name, err);
     }
     this.Logger.FuncEnd(this.PublishCE.name);
@@ -121,7 +121,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
     try {
       await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.NavPublishStrip])
       await payload.ScDocumentProxyToPublish.WaitForThenClick([ContentConst.Const.Selector.SC.ScRibbon.Publish.NavPublishStrip])
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.ClickPublishOnNav.name, err);
     }
     this.Logger.FuncEnd(this.ClickPublishOnNav.name);
@@ -134,7 +134,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
         .then(() => dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ScRibbon.Publish.TheItemHasBeenPublished, SharedConst.Const.IterHelper.MaxCount.OverridePublishing)
         )
         .then(() => dataPublishChain.Iframe0BlueScContentIFrameId0.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Cancel]));
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.__waitForAndClickClose.name, err);
     }
 
@@ -144,7 +144,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
   private async __waitForAndClickOk(dataPublishChain: IDataPublishChain) {
     try {
       await dataPublishChain.CEFrameRed.GetDocumentJacket().WaitForThenClick([ContentConst.Const.Selector.SC.Ok],);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.__waitForAndClickOk.name, err);
     }
 
@@ -177,8 +177,8 @@ export class ContentEditorPublishProxy extends _APICoreBase {
         .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
         .then(() => dataPublishChain.JqIframe.WaitForCompleteNABFrameProxyOrReject())
-        .catch((err) => this.ErrorHand.HandleFatalError(this.GetThePublishItemDialog.name, err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.GetThePublishItemDialog.name, err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.GetThePublishItemDialog.name, err);
     }
 
@@ -190,7 +190,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
 
     await this.WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.Frames.scContentIframeId1.Id, 'iframeRed') //is id1 correct?
       .then((result: CEFrameProxy) => toReturnPublishChain.CEFrameRed = result)
-      .catch((err) => this.ErrorHand.HandleFatalError(this.GetMessageDialog.name, err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError(this.GetMessageDialog.name, err));
 
     return toReturnPublishChain;
   }
@@ -208,7 +208,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
         .then((frameElemJackets: FrameElemJacket[]) => frameJacket = frameElemJackets[0])
         .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
         .then((result: CEFrameProxy) => resolve(result))
-        .catch((err) => reject(err));
+        .catch((err: any) => reject(err));
 
       this.Logger.FuncEnd(this.WaitForIframeElemAndReturnCEFrameProxyWhenReady.name);
     });
@@ -228,7 +228,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
           dataPublishChain.Iframe0BlueScContentIFrameId0 = result;
           promiseResult.MarkSuccessful();
         })
-        .catch((err) => promiseResult.MarkFailed(err));
+        .catch((err: any) => promiseResult.MarkFailed(err));
 
       this.Logger.LogAsJsonPretty('dataPublishChain.Iframe0Blue', dataPublishChain.Iframe0BlueScContentIFrameId0);
       //this.ContentAgents.Logger.DebugDataOneIframe(dataPublishChain.Iframe0Blue);
@@ -250,7 +250,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
       var found: FrameElemJacket = null;
       await targetDoc.WaitForGenericElemJacket(selector)
         .then((result: FrameElemJacket) => found = result)
-        .catch((err) => this.ErrorHand.HandleFatalError([ContentEditorDocProxy.name, this.__waitForThenFunc.name], err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError([ContentEditorDocProxy.name, this.__waitForThenFunc.name], err));
 
       if (found) {
         this.Logger.Log('found');

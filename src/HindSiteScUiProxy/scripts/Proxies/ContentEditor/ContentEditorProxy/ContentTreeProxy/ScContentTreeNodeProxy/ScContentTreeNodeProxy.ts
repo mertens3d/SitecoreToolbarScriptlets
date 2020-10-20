@@ -82,8 +82,8 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
   async Instantiate(): Promise<void> {
     try {
       await this.HarvestNodeState()
-        .catch((err) => this.ErrorHand.HandleFatalError(this.Instantiate.name, err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.Instantiate.name, err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.Instantiate.name, err);
     }
   }
@@ -111,8 +111,8 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     try {
       await this.ScContentTreeNodeDivElem.WaitForElement(":scope > img", this.PolllinateGlyphNodeElem.name)
         .then((elemImgJacket: ElementImgJacket) => this.glyphElem = elemImgJacket)
-        .catch((err) => this.ErrorHand.HandleFatalError(this.PolllinateGlyphNodeElem.name, err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.PolllinateGlyphNodeElem.name, err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.PolllinateGlyphNodeElem.name, err)
     }
   }
@@ -126,8 +126,8 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     try {
       await this.ScContentTreeNodeDivElem.WaitForElement(":scope > a", this.Friendly())
         .then((htmlAnchorElement: ElementAnchorJacket) => this.LinkNodeElem = htmlAnchorElement)
-        .catch((err) => this.ErrorHand.HandleFatalError(this.PollinateNodeElem.name, err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.PollinateNodeElem.name, err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.PollinateNodeElem.name, err);
     }
   }
@@ -148,7 +148,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
           })
         })
         .then(() => resolve(this.StateOfScContentTreeNode))
-        .catch((err) => reject(this.GetStateOfScContentTreeNodeGeneric.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetStateOfScContentTreeNodeGeneric.name + ' | ' + err));
     });
   }
 
@@ -156,7 +156,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     return new Promise(async (resolve, reject) => {
       await this.GetStateOfScContentTreeNodeGeneric(true)
         .then((stateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep) => resolve(stateOfScContentTreeNodeDeep))
-        .catch((err) => reject(this.GetStateOfScContentTreeNodeDeep.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetStateOfScContentTreeNodeDeep.name + ' | ' + err));
     });
   }
 
@@ -166,7 +166,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
 
       await this.GetStateOfScContentTreeNodeGeneric(false)
         .then((stateOfContentTreeNodeShallow: IStateOfScContentTreeNodeShallow) => resolve(stateOfContentTreeNodeShallow))
-        .catch((err) => reject(this.GetStateOfScContentTreeNodeDeep.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetStateOfScContentTreeNodeDeep.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.GetStateOfScContentTreeNodeFlat.name);
     });
@@ -248,7 +248,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
             .then(() => this.GetChildren())
             .then((children: ScContentTreeNodeProxy[]) => this.Children = children)
             .then(() => resolve())
-            .catch((err) => {
+            .catch((err: any) => {
               reject(this.HarvestNodeState.name + ' | ' + err);
             });
         this.HasBeenHarvested = true;
@@ -293,8 +293,8 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
 
         await Promise.all(PromiseAr)
           .then(() => resolve(toReturn))
-          .catch((err) => reject(err));
-      } catch (err) {
+          .catch((err: any) => reject(err));
+      } catch (err: any) {
         reject(this.GetChildren.name + ' | ' + err);
       }
     });
@@ -326,7 +326,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
       if (newData.IsActive) {
         await this.ActivateNode();
       }
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.SetStateOfTreeNode.name, err);
     }
   }
@@ -351,7 +351,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
       await this.LinkNodeElem.WaitForElemToHaveClassOrReject([ContentConst.Const.ClassNames.SC.scContentTreeNodeActive],
         this.StateOfScContentTreeNode.Friendly)
         .then(() => resolve())
-        .catch((err) => reject(this.ActivateNode.name + ' | ' + err));
+        .catch((err: any) => reject(this.ActivateNode.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.ActivateNode.name);
     });
@@ -363,7 +363,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
         this.glyphElem.NativeElement.click();
       }
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.ExpandNode.name, err);
     }
   }

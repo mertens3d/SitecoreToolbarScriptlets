@@ -183,7 +183,7 @@ export class ScDocProxyResolver extends _APICoreBase {
         .then(() => scDocProxy.WireEvents())
         .then(() => scDocProxy.OnFocus())
         .then(() => resolve(scDocProxy))
-        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], err)));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], err)));
 
       this.Logger.FuncEnd([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], ScWindowType[desiredScWindowType]);
     });

@@ -5,7 +5,7 @@ import { _BaseScDocProxy } from "../../../StateFullDocProxies/_BaseScDocProxy";
 
 export abstract class _BaseStateFullDocProxy<T> extends _BaseScDocProxy implements IStateFullDocProxy {
   abstract GetState(): Promise<T>;
-  abstract SetState(state: T);
+  abstract SetState(state: T): Promise<void>;
   Friendly: string = '{unknown friendly}';
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {

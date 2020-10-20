@@ -13,7 +13,7 @@ export class MediaLibraryProxy extends _ContentTreeBasedDocProxy<IStateOfMediaLi
     return this.__baseInstantiateAsyncMembers();
   }
 
-  WireEvents() {
+  async  WireEvents(): Promise<void>{
     this.__baseWireEvents();
   }
 
@@ -25,7 +25,7 @@ export class MediaLibraryProxy extends _ContentTreeBasedDocProxy<IStateOfMediaLi
     return this.__baseGetState();
   }
 
-  async SetState(dataToRestore: IStateOfMediaLibrary) {
+  async SetState(dataToRestore: IStateOfMediaLibrary) : Promise<any>{
     return this.__baseSetState(dataToRestore);
   }
 }

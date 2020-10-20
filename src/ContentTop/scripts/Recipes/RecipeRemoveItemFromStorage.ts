@@ -15,7 +15,7 @@ export class RecipeRemoveItemFromStorage extends _ContentRecipeBase implements I
       this.Dependancies.AtticAgent.RemoveSnapshotFromStorageById(this.CommandParams.TargetSnapShotId);
 
       //this.ToastAgent.RaiseToastNotification(this.scWinProxy.GetTopLevelDoc(), "Success");
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.Execute.name, err);
     }
   }

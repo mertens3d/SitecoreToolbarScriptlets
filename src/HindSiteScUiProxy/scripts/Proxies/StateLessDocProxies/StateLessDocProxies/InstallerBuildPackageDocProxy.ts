@@ -16,7 +16,7 @@ export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy impl
       .then(() => {
         this.AddPackageNameCandidateButtons(parentElem)
       })
-      .catch((err) => this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OnFocus.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OnFocus.name], err));
   }
 
   private AddPackageNameCandidateButtons(parentElem: HTMLElement): void {
@@ -69,9 +69,9 @@ export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy impl
             CancelButton.NativeElement.click();
           }
         })
-        .catch((err) => this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OpenFile.name], err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OpenFile.name], err));
 
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OpenFile.name], err);
     }
   }

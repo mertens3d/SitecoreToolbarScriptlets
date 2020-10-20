@@ -38,7 +38,7 @@ export class CancelButtonModule extends _base_ButtonModule implements IUiModuleB
     }
   }
 
-  ClearCancelFlag() {
+  ClearCancelFlag() :void{
     var btn = this.__GetCancelButton();
     if (btn) {
       btn.classList.remove('red');

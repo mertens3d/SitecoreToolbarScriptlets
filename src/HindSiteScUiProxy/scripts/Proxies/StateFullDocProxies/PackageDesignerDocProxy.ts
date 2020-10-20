@@ -40,9 +40,9 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
 
     await this.HarvestElements()
       .then(() => this.HarvestRibbonToolbar())
-      .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.InstantiateAsyncMembers.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.InstantiateAsyncMembers.name], err));
     try {
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
     }
 
@@ -52,7 +52,7 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
   private async HarvestElements(): Promise<void> {
     this.Logger.FuncStart([PackageDesignerDocProxy.name, this.HarvestElements.name], this.Friendly);
     try {
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEvents.name], err);
     }
     this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.HarvestElements.name], this.Friendly);
@@ -62,7 +62,7 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
     this.Logger.FuncStart(this.WireEvents.name, this.Friendly);
 
     await this.EnableWatcherForFrames()
-      .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEvents.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEvents.name], err));
 
     this.Logger.FuncEnd(this.WireEvents.name, this.Friendly);
   }
@@ -86,7 +86,7 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
     await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.InstallerRibbon_Toolbar, PromiseFailAction.RejectThrow)
       .then((elementDivJacket: ElementDivJacket) => this.packagedesignerInstallerRibbonToolbarElem = new PackageDesignerInstallerRibbonToolbarElemProxy(this.ApiCore, elementDivJacket, this.JqueryModalDialogsFrameProxy))
       .then(() => this.packagedesignerInstallerRibbonToolbarElem.InstantiateAsyncMembers())
-      .catch((err) => this.ErrorHand.HandleFatalError([InstallerDesignerProxy.name, this.HarvestRibbonToolbar.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([InstallerDesignerProxy.name, this.HarvestRibbonToolbar.name], err));
 
     this.Logger.FuncEnd([InstallerDesignerProxy.name, this.HarvestRibbonToolbar.name]);
   }
@@ -98,10 +98,10 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
 
       if (this.packagedesignerInstallerRibbonToolbarElem) {
         await this.packagedesignerInstallerRibbonToolbarElem.OpenFile(fileName)
-          .catch((err) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err));
+          .catch((err: any) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err));
       }
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError([InstallerDesignerProxy.name, this.OpenFile.name], err);
     }
 
@@ -121,7 +121,7 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
           //await installerDesignerProxy.InstantiateAsyncMembers()
           await this.OpenFile(stateOfPackageDesigner.StatusText)
             .then(() => resolve())
-            .catch((err) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerDocProxy.name, this.SetState.name], err)));
+            .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerDocProxy.name, this.SetState.name], err)));
 
           //let parentJacket: DocumentJacket = this.DocumentJacket.GetParentJacket();
           //if (!parentJacket) {
@@ -133,7 +133,7 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
           //  .then((returnedAppFrameProxy: AppFrameProxy) => appFrameProxy = returnedAppFrameProxy)
           //  .then(() => appFrameProxy.OpenFile(stateOfPackageDesigner.StatusText, this.JqueryModalDialogsProxy))
           //  .then(() => resolve())
-          //  .catch((err) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerDocProxy.name, this.SetState.name], err)));
+          //  .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerDocProxy.name, this.SetState.name], err)));
         }
       }
 

@@ -31,7 +31,7 @@ export class ContentMessageManager extends _FrontBase {
   //      var self = this;
   //      await this.scWinProxy.SetCompactCss(targetDoc)
   //        .then(() => resolve())
-  //        .catch((err) => reject(err));
+  //        .catch((err: any) => reject(err));
   //    }
 
   //    this.Logger.FuncEnd(this.ToggleCompactCss.name);

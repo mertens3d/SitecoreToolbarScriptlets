@@ -70,7 +70,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
         })
 
         .then(() => resolve())
-        .catch((err) => reject(this.InstantiateAsyncMembers.name + ' | ' + err));
+        .catch((err: any) => reject(this.InstantiateAsyncMembers.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, DTFrameProxy.name);
     });
@@ -105,7 +105,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       if (this.HostedStateFullProxy) {
         await this.HostedStateFullProxy.GetState()
           .then((statefullProxyState: IStateOf_) => stateOfDTFrame.HostedFrame = statefullProxyState)
-          .catch((err) => reject(this.GetState.name + ' | ' + err));
+          .catch((err: any) => reject(this.GetState.name + ' | ' + err));
       }
 
       resolve(stateOfDTFrame);
@@ -123,7 +123,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
           this.SetFrameStyling(stateOfDTFrame)
           this.DTFrameProxyMutationEvent_Subject.EnableNotifications();
         });
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.SetState.name, err);
     }
     this.Logger.FuncEnd(this.SetState.name, DTFrameProxy.name);

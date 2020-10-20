@@ -8,14 +8,14 @@ import { ScDocProxyWatcherForFrames } from "./ScDocProxyWatcherForFrames";
 
 export abstract class _BaseScDocProxy extends _APICoreBase  {
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
-  abstract readonly ScProxyDisciminatorFriendly;
+  abstract readonly ScProxyDisciminatorFriendly :string;
   protected HostedElemProxies: IStateFullElemProxy[] = [];
   private WatcherForFrames: ScDocProxyWatcherForFrames;
   protected readonly DocumentJacket: DocumentJacket;
 
-  abstract WireEvents();
+  abstract WireEvents(): Promise<void>;
   abstract TriggerInboundEventsAsync(): void;
-  abstract InstantiateAsyncMembers();
+  abstract InstantiateAsyncMembers(): Promise<void>;
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
     this.DocumentJacket = documentJacket;
@@ -29,9 +29,9 @@ export abstract class _BaseScDocProxy extends _APICoreBase  {
     try {
       this.WatcherForFrames = new ScDocProxyWatcherForFrames(this.ApiCore, this.DocumentJacket, this.ScProxyDisciminatorFriendly);
       this.WatcherForFrames.EnableWatcherForFrames()
-        .catch((err) => this.ErrorHand.HandleFatalError([_BaseScDocProxy.name, this.EnableWatcherForFrames, this.ScProxyDisciminatorFriendly], err));
-    } catch (err) {
-      this.ErrorHand.HandleFatalError([_BaseScDocProxy.name, this.EnableWatcherForFrames, this.ScProxyDisciminatorFriendly], err);
+        .catch((err: any) => this.ErrorHand.HandleFatalError([_BaseScDocProxy.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err));
+    } catch (err: any) {
+      this.ErrorHand.HandleFatalError([_BaseScDocProxy.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err);
     }
   }
 }

@@ -22,15 +22,16 @@ export class JqueryModalDialogsFrameProxy extends _baseStatelessFrameProxyOfType
   //    //  .then(() => this.JqueryModalDialogsDocProxy = new JqueryModalDialogsDocProxy(this.ApiCore, this.FrameJacket.DocumentJacket, this))
   //    //  .then(() => this.JqueryModalDialogsDocProxy.InstantiateAsyncMembers())
   //    //  .then(() => this.JqueryModalDialogsDocProxy.WireEvents())
-  //    //  .catch((err) => this.ErrorHand.HandleFatalError([JqueryModalDialogsFrameProxy.name, this.InstantiateAsyncMembers.name], err));
+  //    //  .catch((err: any) => this.ErrorHand.HandleFatalError([JqueryModalDialogsFrameProxy.name, this.InstantiateAsyncMembers.name], err));
   //  } catch (e) {
   //  }
   //}
 
-  TriggerInboundEventsAsync() {
+  async TriggerInboundEventsAsync(): Promise<void> {
     // empty
   }
-  WireEvents() {
+
+  async WireEvents() : Promise<void>{
     // empty
   }
 

@@ -55,7 +55,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
 
       //this.AddJqueryProxy();
       //this.DocumentJacketWatcher = new DocumentJacket_Watcher(this.ApiCore, this.AssociatedScDocumentJacket);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
     }
     this.Logger.FuncEnd([DTAreaElemProxy.name, this.InstantiateAsyncMembers.name]);
@@ -79,7 +79,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
       .then((elemJacketWatcher: ElementJacketMutationEvent_Subject) => this.ElemJacketMutationEvent_Subject = elemJacketWatcher)
       //.then(() =>  this.AssociatedScDocumentJacket.DocumentJacketMutationEvent_Subject.RegisterObserver(this.DocumentProxyMutationEvent_Observer);)
       .then(() => this.ElemJacketMutationEvent_Subject.RegisterObserver(this.DocumentProxyMutationEvent_Observer))
-      .catch((err) => this.ErrorHand.HandleFatalError([DTAreaElemProxy.name, this.WireEvents.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([DTAreaElemProxy.name, this.WireEvents.name], err));
 
     this.Logger.FuncEnd([DTAreaElemProxy.name, this.WireEvents.name]);
   }
@@ -107,7 +107,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
         })
         //.then(() => this.Logger.LogAsJsonPretty('DTAreaState', stateOfDTArea))
         .then(() => resolve(stateOfDTArea))
-        .catch((err) => reject(this.GetState.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetState.name + ' | ' + err));
 
       this.Logger.FuncEnd([DTAreaElemProxy.name, this.GetState.name]);
     });
@@ -149,9 +149,9 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
         await this.HandleAddedGenericElemJacket(<FrameElemJacket>elementJacketMutationEvent_Payload.AddedGenericElemJacket)
           .then(() => this.HandleRemovedIframe(elementJacketMutationEvent_Payload.RemovedIFrameId))
           .then(() => { })
-          .catch((err) => this.ErrorHand.HandleFatalError(this.CallBackOnElementMutationEvent.name, err));
+          .catch((err: any) => this.ErrorHand.HandleFatalError(this.CallBackOnElementMutationEvent.name, err));
       }
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.CallBackOnElementMutationEvent.name, err);
     }
 
@@ -198,7 +198,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
       })
       .then(() => this.ProcessInboundNativeIFrameProxy(frameElemJacket)) //todo - why pass the frameElemJacket instead of the dtProxy?
       .then(() => this.Logger.Log(this.HandleAddedGenericElemJacket.name + ' Complete'))
-      .catch((err) => this.ErrorHand.HandleFatalError(this.HandleAddedGenericElemJacket.name, err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError(this.HandleAddedGenericElemJacket.name, err));
 
     this.Logger.FuncEnd(this.HandleAddedFrameElemJacket.name);
   }
@@ -228,7 +228,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
       }
 
       this.Logger.LogVal('Bucket size after', this.FramesBucket.length);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.HandleRemovedIframe.name, err);
     }
     this.Logger.FuncEnd([DTAreaElemProxy.name, this.HandleRemovedIframe.name]);
@@ -248,8 +248,8 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
         .then(() => this.NewFrameStep4_NotifyObserversOfAreaProxyMutation(dtFrameProxy))
         .then(() => this.NewFrameStep5_AddToDTFrameProxyBucket(dtFrameProxy))
         .then(() => this.NewFrameStep6_TriggerEvents(dtFrameProxy))
-        .catch((err) => this.ErrorHand.HandleFatalError(this.ProcessInboundNativeIFrameProxy.name, err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.ProcessInboundNativeIFrameProxy.name, err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.ProcessInboundNativeIFrameProxy.name, err);
     }
     this.Logger.FuncEnd(this.ProcessInboundNativeIFrameProxy.name, nativeIframeProxy.GetNativeIframeId());
@@ -260,8 +260,8 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
     try {
       await dtFrameProxy.InstantiateAsyncMembers()
         .then(() => { })
-        .catch((err) => this.ErrorHand.HandleFatalError(this.newFrameStep1_Instantiate.name, err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.newFrameStep1_Instantiate.name, err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.newFrameStep1_Instantiate.name, err);
     }
     this.Logger.FuncEnd(this.newFrameStep1_Instantiate.name);
@@ -341,7 +341,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
   ////        });
   ////      });
   ////  }
-  ////  catch (err) {
+  ////  catch (err: any) {
   ////    this.ErrorHand.ErrorAndThrow(this.PopulateFrameBucketWithExistingFrames.name, err);
   ////  }
   ////}

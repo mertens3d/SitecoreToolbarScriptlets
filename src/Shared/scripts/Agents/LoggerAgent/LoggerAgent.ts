@@ -35,7 +35,7 @@ export class LoggerAgent implements ILoggerAgent {
     this.Instantiate();
   }
 
-  private Instantiate() {
+  private Instantiate(): void {
     this.Timer = new LoggerTimer;
     this.BufferWriter = new LogWriterBuffer();
     this.AddWriter(this.BufferWriter);
@@ -43,12 +43,12 @@ export class LoggerAgent implements ILoggerAgent {
     this.LogVal('TimeStamp', this.Timer.LogTimeStamp());
   }
 
-  IntroduceSiblings(taskMonitor: TaskMonitor, errorHand: ErrorHandlerAgent) {
+  IntroduceSiblings(taskMonitor: TaskMonitor, errorHand: ErrorHandlerAgent): void {
     this.TaskMonitor = taskMonitor;
     this.ErrorHand = errorHand;
   }
 
-  FlushBuffer() {
+  FlushBuffer(): void {
     this.RemoveWriter(this.BufferWriter);
 
     this.LogVal('TimeStamp B', Date.now());
@@ -60,7 +60,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
 
-  RemoveWriter(BufferWriter: LogWriterBuffer) {
+  RemoveWriter(BufferWriter: LogWriterBuffer): void {
     for (var idx = 0; idx < this.AllLogWriters.length; idx++) {
       let candidate: ILoggerWriter = this.AllLogWriters[idx];
       if (candidate == BufferWriter) {
@@ -70,7 +70,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
 
-  AddWriter(writter: ILoggerWriter) {
+  AddWriter(writter: ILoggerWriter): void {
     this.HasWriters = true;
     this.AllLogWriters.push(writter);
   }
@@ -87,7 +87,7 @@ export class LoggerAgent implements ILoggerAgent {
   //  }
   //}
 
-  IsNotNullOrUndefinedBool(title, subject): boolean {
+  IsNotNullOrUndefinedBool(title: string, subject: string): boolean {
     var toReturn: boolean = false;
     if (subject) {
       if ((typeof subject) === 'undefined') {
@@ -120,34 +120,26 @@ export class LoggerAgent implements ILoggerAgent {
     this.FuncEnd(this.HandlerClearDebugText.name);
   }
 
-  MarkerA() {
-    this.__markerRaw('A');
-  }
+  MarkerA(): void { this.__markerRaw('A'); }
 
-  MarkerB() {
-    this.__markerRaw('B');
-  }
+  MarkerB(): void { this.__markerRaw('B'); }
 
-  MarkerC() {
-    this.__markerRaw('C');
-  }
+  MarkerC(): void { this.__markerRaw('C'); }
 
-  MarkerD() {
-    this.__markerRaw('D');
-  }
+  MarkerD(): void { this.__markerRaw('D'); }
 
-  MarkerE() { this.__markerRaw('E'); }
+  MarkerE(): void { this.__markerRaw('E'); }
 
-  MarkerF() { this.__markerRaw('F'); }
+  MarkerF(): void { this.__markerRaw('F'); }
 
-  private __markerRaw(marker) {
+  private __markerRaw(marker: string): void {
     this.Log('Marker ' + marker);
   }
 
-  LogAsJsonPretty(texValName: string, jsonObj: any) {
+  LogAsJsonPretty(texValName: string, jsonObj: any): void{
     try {
       this.LogVal(texValName, JSON.stringify(jsonObj, null, 2));
-    } catch (err) {
+    } catch (err: any) {
       this.Log('Unable to stringify obj');
     }
   }
@@ -156,7 +148,7 @@ export class LoggerAgent implements ILoggerAgent {
   LogVal(textValName: string, textVal: string): void;
   LogVal(textValName: string, textVal: boolean): void;
   LogVal(textValName: string, textVal: number): void;
-  LogVal(textValName: string, textVal: string | boolean | number | GuidData): any {
+  LogVal(textValName: string, textVal: string | boolean | number | GuidData): void {
     if (typeof textVal === 'undefined') {
       textVal = '{undefined}';
     }
@@ -184,11 +176,12 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log(formattedText);
   }
 
-  LogImportant(text) {
+  LogImportant(text: string): void{
     text = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleBgYellow, text);
     this.Log(text);
   }
-  async Log(text, hasPrefix = false) {
+
+  async Log(text: string, hasPrefix = false): Promise<void> {
     if (this.HasWriters) {
       var indent = '  ';
 
@@ -217,13 +210,13 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
 
-  private WriteToAllWriters(text: string) {
+  private WriteToAllWriters(text: string): void {
     if (this.AllLogWriters) {
       this.AllLogWriters.forEach((oneWriter) => {
         if (oneWriter) {
           try {
             oneWriter.WriteText(text)
-          } catch (err) {
+          } catch (err: any) {
             console.log(this.WriteToAllWriters.name + ' ' + oneWriter.FriendlyName + ' | ' + err);
           }
         } else {
@@ -233,7 +226,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
 
-  __triggerAllDebugTextChangedCallbacks(data: ICallbackDataDebugTextChanged) {
+  __triggerAllDebugTextChangedCallbacks(data: ICallbackDataDebugTextChanged): void {
     for (var idx = 0; idx < this.__debugTextChangedCallbacks.length; idx++) {
       var oneCallback: IDataDebugCallback = this.__debugTextChangedCallbacks[idx];
       oneCallback.Func(oneCallback.Caller, data);
@@ -244,7 +237,7 @@ export class LoggerAgent implements ILoggerAgent {
     return SharedConst.Const.Colors.ConsoleStyles.StyleEsc + color + text + SharedConst.Const.Colors.ConsoleStyles.StyleEsc + SharedConst.Const.Colors.ConsoleStyles.StyleReset;
   }
 
-  CtorName(ctorName: string) {
+  CtorName(ctorName: string): void {
     this.Log('Constructor: ' + ctorName);
   }
 
@@ -268,7 +261,7 @@ export class LoggerAgent implements ILoggerAgent {
     return displayText;
   }
 
-  private AddOptionalValueToText(text: string, optionalValue: number | string | boolean) {
+  private AddOptionalValueToText(text: string, optionalValue: number | string | boolean): string {
     let toReturn: string = text;
 
     if (optionalValue) {
@@ -310,10 +303,10 @@ export class LoggerAgent implements ILoggerAgent {
     this.FuncEnd("[CTOR] " + text);
   }
 
-  FuncEnd(text: string | string[], optionalValueInput?: number);
-  FuncEnd(text: string | string[], optionalValueInput?: boolean);
-  FuncEnd(text: string | string[], optionalValueInput?: string);
-  FuncEnd(text: string | string[], optionalValueInput: string | number | boolean) {
+  FuncEnd(text: string | string[], optionalValueInput?: number): void;
+  FuncEnd(text: string | string[], optionalValueInput?: boolean): void;
+  FuncEnd(text: string | string[], optionalValueInput?: string): void;
+  FuncEnd(text: string | string[], optionalValueInput: string | number | boolean): void{
     text = this.resolveFuncText(text);
 
     this.__callDepth--;
@@ -344,7 +337,7 @@ export class LoggerAgent implements ILoggerAgent {
     }
   }
 
-  IsNullOrUndefined(subject): string {
+  IsNullOrUndefined(subject: any): string {
     var toReturn = '{unknown}';
     if (subject) {
       if ((typeof subject) === 'undefined') {

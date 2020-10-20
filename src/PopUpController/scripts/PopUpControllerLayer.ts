@@ -61,7 +61,7 @@ class PopUpControllerLayer {
           this.InstantiateManagers_Controller();
           this.Init_Controller();
         });
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
     }
   }

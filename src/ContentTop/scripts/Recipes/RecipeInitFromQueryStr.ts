@@ -32,7 +32,7 @@ export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements 
 
         await this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ApiPayload, mostRecent)
           .then(() => resolve())
-          .catch((err) => reject(RecipeSetStateFromMostRecent.name + ' | ' + err));
+          .catch((err: any) => reject(RecipeSetStateFromMostRecent.name + ' | ' + err));
       }
       this.Logger.FuncEnd(RecipeSetStateFromMostRecent.name);
     });
@@ -48,7 +48,7 @@ export class RecipeInitFromQueryStr extends _ContentRecipeBase implements IComma
     return new Promise(async (resolve, reject) => {
       await this.PvtInitFromQueryString()
         .then(() => resolve())
-        .catch((err) => reject(err));
+        .catch((err: any) => reject(err));
     });
   }
 

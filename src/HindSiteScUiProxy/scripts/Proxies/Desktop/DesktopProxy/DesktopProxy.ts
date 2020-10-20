@@ -82,15 +82,15 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
           .then((genericElemJacket: IJacketOfType) => this.DTAreaProxy = new DTAreaElemProxy(this.ApiCore, this.JqueryModalDialogsFrameProxy, genericElemJacket))
 
           .then(() => this.DTAreaProxy.InstantiateAsyncMembers())
-          .catch((err) => this.ErrorHand.HandleFatalError([DesktopProxy.name, this.InstantiateAsyncMembers.name], err))
-    } catch (err) {
+          .catch((err: any) => this.ErrorHand.HandleFatalError([DesktopProxy.name, this.InstantiateAsyncMembers.name], err))
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
     }
 
     this.Logger.FuncEnd(this.InstantiateAsyncMembers.name, DesktopProxy.name);
   }
 
-  WireEvents() {
+ async  WireEvents() : Promise<void>{
     this.Logger.FuncStart(this.WireEvents.name, DesktopProxy.name);
 
     this.DTAreaProxy.WireEvents();
@@ -110,7 +110,7 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
       await this.DTAreaProxy.GetState()
         .then((stateOfDTArea: IStateOfDTArea) => toReturnDesktopState.DTArea = stateOfDTArea)
         .then(() => resolve(toReturnDesktopState))
-        .catch((err) => reject(this.GetState.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetState.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.GetState.name, DesktopProxy.name);
     });
@@ -140,8 +140,8 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
           });
         })
         .then(() => Promise.all(promAr))
-        .catch((err) => this.ErrorHand.HandleFatalError(this.SetState.name, err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.SetState.name, err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.SetState.name + ' ' + DesktopProxy.name, err);
     }
 
@@ -160,8 +160,8 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
     try {
       let asyncLock: AsyncLock = new AsyncLock(this.ApiCore);
       await this.DTStartBarProxy.TriggerRedButtonAsync(ScWindowType.ContentEditor, asyncLock)
-        .catch((err) => this.ErrorHand.HandleFatalError(this.AddContentEditorFrameAsync.name, err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.AddContentEditorFrameAsync.name, err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.AddContentEditorFrameAsync.name, err);
     }
     this.Logger.FuncEnd(this.AddContentEditorFrameAsync.name);
@@ -180,7 +180,7 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
         .then((frameElemJacket: FrameElemJacket) => jqueryIframeelem = frameElemJacket)
         .then(() => GenericStateLessFrameProxy.StateLessFrameProxyFactory<JqueryModalDialogsDocProxy>(this.ApiCore, jqueryIframeelem))
         .then((stateLessFrameProxy: _baseStatelessFrameProxyOfType<JqueryModalDialogsDocProxy>) => resolve(<JqueryModalDialogsFrameProxy>stateLessFrameProxy))
-        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([DesktopProxy.name, this.GetJqueryModalsFrameProxy.name], err)));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([DesktopProxy.name, this.GetJqueryModalsFrameProxy.name], err)));
 
       this.Logger.FuncEnd([DesktopProxy.name, this.GetJqueryModalsFrameProxy.name]);
     });

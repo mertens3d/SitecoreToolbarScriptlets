@@ -20,7 +20,7 @@ export class RecipeChangeNickName extends _ContentRecipeBase implements ICommand
     return new Promise(async (resolve, reject) => {
       this.UpdateNickname()
         .then(() => resolve())
-        .catch((err) => reject(err));
+        .catch((err: any) => reject(err));
     });
   }
 

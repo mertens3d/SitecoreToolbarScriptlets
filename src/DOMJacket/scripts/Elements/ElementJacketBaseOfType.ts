@@ -1,20 +1,27 @@
 ﻿import { IterationDrone } from "../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone";
-import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
-import { ElementJacketWatcher } from "../Document/ElementJacketWatcher";
-import { ElementJacketMutationEvent_Subject } from "../Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
 import { IElemJacketWatcherParameters } from "../../../Shared/scripts/IElemJacketWatcherParameters";
 import { IJacketOfType } from "../../../Shared/scripts/IJacketOfType";
-import { _baseElemJacket } from "./_baseElemJacket";
+import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { _CommonBase } from "../../../Shared/scripts/_CommonCoreBase";
+import { ElementJacketWatcher } from "../Document/ElementJacketWatcher";
+import { ElementJacketMutationEvent_Subject } from "../Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
 
 
-export class ElementJacketOfType<T extends HTMLElement> extends _baseElemJacket implements IJacketOfType {
+export class ElementJacketOfType<T extends HTMLElement> extends _CommonBase implements IJacketOfType {
   public NativeElement: T;
+
+  //constructor(commonCore: ICommonCore, htmlElement: HTMLElement) {
+  //  super(commonCore, htmlElement);
+  //  this.NodeTagName = htmlElement.tagName;
+  //}
+
 
   private ElemJacketWatchers: ElementJacketWatcher[] = [];
   NodeTagName: string;
 
   constructor(commonCore: ICommonCore, htmlElement: T) {
     super(commonCore)//, htmlElement);
+    this.NativeElement = htmlElement;
     this.NodeTagName = htmlElement.tagName;
   }
 
@@ -109,7 +116,7 @@ export class ElementJacketOfType<T extends HTMLElement> extends _baseElemJacket 
       await this.WaitForElement(selectorAr)
         .then((elemJacket: IJacketOfType) => elemJacket.Click())
         .then(() => resolve())
-        .catch((err) => this.ErrorHand.FormatRejectMessage(this.WaitForThenClick.name, err));
+        .catch((err: any) => this.ErrorHand.FormatRejectMessage(this.WaitForThenClick.name, err));
     });
   }
 

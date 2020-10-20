@@ -6,8 +6,8 @@ export interface IBaseScFrameProxy {
 
     readonly ScProxyDisciminator: ScProxyDisciminator;
     readonly ScProxyDisciminatorFriendly: string;
-    TriggerInboundEventsAsync();
+    TriggerInboundEventsAsync(): Promise<void>;
     InstantiateAsyncMembers(): Promise<void>;
-    WireEvents();
+    WireEvents(): Promise<void>;
     FrameElemJacket: FrameElemJacket;
 }

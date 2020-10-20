@@ -1,4 +1,4 @@
 ﻿export interface ILoggerWriter {
-  WriteText(text: string);
+  WriteText(text: string):void;
   FriendlyName: string;
 }

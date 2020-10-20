@@ -3,8 +3,8 @@ import { ICoreTaskMonitor } from "./Core/ITaskMonitorAgent";
 import { ILoggerAgent } from "./ILoggerAgent";
 
 export interface ICoreErrorHandler  {
-  HandleCancelReaction(arg0: string, arg1: string);
-  IntroduceSiblings(Logger: ILoggerAgent, TaskMonitor: ICoreTaskMonitor);
+  HandleCancelReaction(arg0: string, arg1: string):void;
+  IntroduceSiblings(Logger: ILoggerAgent, TaskMonitor: ICoreTaskMonitor):void;
   FormatRejectMessage(arg0:string| string[], err: string): string;
   HandleFatalError(container: string | string[], text: string): void;
   ErrorAndContinue(container: string, text: any): void;

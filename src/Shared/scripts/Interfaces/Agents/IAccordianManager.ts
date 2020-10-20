@@ -1,5 +1,5 @@
 ﻿import { IHindSiteSetting } from "./IGenericSetting";
 
 export interface IAccordianManager {
-    AddAccordianDrone( oneSetting: IHindSiteSetting, uiElem: HTMLElement);
+    AddAccordianDrone( oneSetting: IHindSiteSetting, uiElem: HTMLElement):void;
 }

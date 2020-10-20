@@ -5,18 +5,18 @@ import { _baseStatelessFrameProxyOfType } from "./_baseStatelessFrameProxyOfType
 
 export class InstallerBuildPackageFrameProxy extends _baseStatelessFrameProxyOfType<InstallerBuildPackageDocProxy> implements IStateLessScFrameProxy {
   ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.InstallerBuildPackageFrameProxy;
-  ScProxyDisciminatorFriendly: any;
+  ScProxyDisciminatorFriendly:string;
   FrameSelectorOnHost: string;
 
   async OpenFile(fileName: string): Promise<void> {
     //todo - handle case where filename no longer exists
     try {
-      if (this.HostedStatelessDocProxy) {
-        await this.HostedStatelessDocProxy.OpenFile(fileName)
-          .catch((err) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err));
+      if (this.HostedDocProxy) {
+        await this.HostedDocProxy.OpenFile(fileName)
+          .catch((err: any) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err));
       }
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError([InstallerBuildPackageFrameProxy.name, this.OpenFile.name], err);
     }
   }

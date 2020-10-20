@@ -110,7 +110,7 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
               this.Logger.Log('responding: ' + ReplyCommandMsgFlag[msgContentToController.MsgFlagReply]);
               resolve(msgContentToController);
             })
-            .catch((err) => {
+            .catch((err: any) => {
               this.NotifyFail(err);
               resolve(new DefaultMsgContentToController(ReplyCommandMsgFlag.RespTaskFailed));
             });
@@ -150,7 +150,7 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
         .then((response: DefaultMsgContentToController) => {
           resolve(response);
         })
-        .catch((err) => reject(this.ReqMsgRouter.name + ' | ' + err));
+        .catch((err: any) => reject(this.ReqMsgRouter.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.ReqMsgRouter.name);
     });
@@ -172,7 +172,7 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
         .then(() => this.AtticAgent.GetStateOfStorageSnapShots())
         .then((stateOfStorageSnapShots: IStateOfStorageSnapShots) => responseContentToController.Payload.StateOfStorageSnapShots = stateOfStorageSnapShots)
         .then(() => resolve(responseContentToController))
-        .catch((err) => reject(err));
+        .catch((err: any) => reject(err));
 
       this.Logger.FuncEnd(this.ConstructResponse.name);
     });

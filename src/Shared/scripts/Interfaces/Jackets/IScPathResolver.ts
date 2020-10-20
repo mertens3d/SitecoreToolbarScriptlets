@@ -4,7 +4,7 @@ import { IUrlJacket } from "../IUrlAgent";
 
 
 export interface IScURLResolver {
-    SetFilePathFromWindowType(desiredPageType: ScWindowType);
-    SetParameterValueByKey(qsKey: QueryStrKey, qsValue: string);
+    SetFilePathFromWindowType(desiredPageType: ScWindowType):void;
+    SetParameterValueByKey(qsKey: QueryStrKey, qsValue: string):void;
     UrlJacket: IUrlJacket;
 }

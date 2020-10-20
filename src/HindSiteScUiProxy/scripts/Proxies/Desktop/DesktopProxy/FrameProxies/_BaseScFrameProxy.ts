@@ -9,7 +9,7 @@ import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAP
 
 export abstract class _BaseScFrameProxy<T> extends _BaseStateFullFrameProxy<T> implements IStateFullFrameProxy {
   public readonly FrameJacket: FrameElemJacket = null;
-  abstract readonly ScProxyDisciminatorFriendly;
+  abstract readonly ScProxyDisciminatorFriendly: string;
   Id: string = null;
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
   abstract Friendly: string;
@@ -22,9 +22,9 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullFrameProxy<T> i
     this.Id = 'base_' + this.FrameJacket.GetNativeIframeId();
   }
 
-  abstract InstantiateAsyncMembers();
+  abstract InstantiateAsyncMembers(): Promise<void>;
 
-  abstract WireEvents();
+  abstract WireEvents(): Promise<void>;
 
   GetZindexAsInt(): number {
     let toReturn: number = this.FrameJacket.ZindexAsInt();
@@ -49,7 +49,7 @@ export abstract class _BaseScFrameProxy<T> extends _BaseStateFullFrameProxy<T> i
             reject(result.DocumentReadtStateFriendly);
           }
         })
-        .catch((err) => reject(this.WaitForCompleteNABFrameProxyOrReject.name + ' | ' + err));
+        .catch((err: any) => reject(this.WaitForCompleteNABFrameProxyOrReject.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.WaitForCompleteNABFrameProxyOrReject.name, this.Friendly);
     });

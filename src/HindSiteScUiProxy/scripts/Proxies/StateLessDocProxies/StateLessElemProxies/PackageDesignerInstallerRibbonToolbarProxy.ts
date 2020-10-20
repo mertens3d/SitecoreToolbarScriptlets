@@ -24,7 +24,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
     this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.InstallerDesigner.GenerateZip)
       .then((genericElemJacket: IJacketOfType) => this.GenerateZipButton = genericElemJacket)
       .then(() => this.GenerateZipButton.NativeElement.addEventListener('click', ((event: Event) => this.CallBackOnGenerateZipButtonClicked(event))))
-      .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name], err));
 
     this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
   }
@@ -33,8 +33,8 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
     try {
       this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name]);
       await this.AttachClickEventToGenZip()
-        .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name], err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name], err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name], err);
     }
     this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name]);
@@ -52,7 +52,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
 
     await this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
       .then((elemJacket: IJacketOfType) => elemJacket.NativeElement.click())
-      .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.OpenFile.name], err))
+      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.OpenFile.name], err))
 
     //  .then(() => {
     //    let matchingJackets: ElementFrameJacket[] = this.parentDocumentJacket.GetHostedFramesFilteredBySelector(ContentConst.Const.Selector.SC.Frames.JqueryModalDialogsFrame.Id);

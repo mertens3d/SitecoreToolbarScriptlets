@@ -26,7 +26,7 @@
 //          result.LogDebugValues();
 //          resolve(result);
 //        })
-//        .catch((err) => reject(this.WaitForCompleteNAB_DataOneDoc.name + ' | ' + err));
+//        .catch((err: any) => reject(this.WaitForCompleteNAB_DataOneDoc.name + ' | ' + err));
 
 //      this.Logger.FuncEnd(this.WaitForCompleteNAB_DataOneDoc.name, friendly);
 //    });

@@ -27,7 +27,7 @@ export class HandlersForInternal extends _FrontBase {
       } else {
         //todo - put back maybe await this.HandlerForSnapShotRestoreNewTab(data);
       }
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.HandlerForSnapShotRestoreTBDTab.name, err);
     }
     this.Logger.FuncEnd(this.HandlerForSnapShotRestoreTBDTab.name);
@@ -54,7 +54,7 @@ export class HandlersForInternal extends _FrontBase {
 
       await this.BrowserTabAgent.CreateNewTab(tabUrl)
         .then(() => resolve())
-        .catch((err) => reject(err));
+        .catch((err: any) => reject(err));
 
       this.Logger.FuncEnd(this.CreateNewWindow.name);
     });

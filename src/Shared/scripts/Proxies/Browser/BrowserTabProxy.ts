@@ -25,7 +25,7 @@ export class BrowserTabProxy extends _CommonBase {
       browser.tabs.update(this.NativeBrowserTab.id, { url: AbsUrl })
 
         .then(() => this.TabWaitForReadyStateCompleteNative())
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError([BrowserTabProxy.name, this.UpdateAndWaitForComplete.name], err);
     }
   }

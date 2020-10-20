@@ -11,7 +11,7 @@ import { _baseStatelessFrameProxyOfType } from "./_baseStatelessFrameProxyOfType
 export class GenericStateLessFrameProxy extends _baseStatelessFrameProxyOfType<_BaseStateLessScDocProxy> implements IStateLessScFrameProxy {
   FrameSelectorOnHost: string;
   FrameElemJacket: FrameElemJacket;
-  public HostedDocProxy: IBaseScDocProxy;
+  public HostedDocProxy: _BaseStateLessScDocProxy;
   ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.GenericStateLessFrameProxy;
   ScProxyDisciminatorFriendly: string;
 
@@ -20,13 +20,13 @@ export class GenericStateLessFrameProxy extends _baseStatelessFrameProxyOfType<_
     this.FrameElemJacket = frameJacket;
   }
 
-  TriggerInboundEventsAsync() {
+  async TriggerInboundEventsAsync() : Promise<void>{
     //empty
   }
   async InstantiateAsyncMembers(): Promise<void> {
     //empty
   }
-  WireEvents() {
+  async WireEvents(): Promise<void> {
     //empty
   }
 
@@ -35,7 +35,7 @@ export class GenericStateLessFrameProxy extends _baseStatelessFrameProxyOfType<_
       let scDocProxyResolver: ScDocProxyResolver = new ScDocProxyResolver(apiCore);
       await scDocProxyResolver.ScDocProxyFactoryMake( documentJacket, null)
         .then((scDocProxy: IBaseScDocProxy) => resolve(scDocProxy))
-        .catch((err) => reject(apiCore.ErrorHand.FormatRejectMessage([GenericStateLessFrameProxy.name, this.ProcessHostedScDocProxy.name], err)));
+        .catch((err: any) => reject(apiCore.ErrorHand.FormatRejectMessage([GenericStateLessFrameProxy.name, this.ProcessHostedScDocProxy.name], err)));
     });
   }
 
@@ -47,21 +47,21 @@ export class GenericStateLessFrameProxy extends _baseStatelessFrameProxyOfType<_
       await frameElemJacket.WaitForCompleteNABFrameElement(this.StateLessFrameProxyFactory.name)
         .then(() => stateLessFrameProxyToReturn = (new _baseStatelessFrameProxyOfType<T>(apiCore, frameElemJacket)))
         .then(() => resolve(stateLessFrameProxyToReturn))
-        .catch((err) => reject(apiCore.ErrorHand.FormatRejectMessage([GenericStateLessFrameProxy.name, this.ProcessFrameProxy.name], err)));
+        .catch((err: any) => reject(apiCore.ErrorHand.FormatRejectMessage([GenericStateLessFrameProxy.name, this.ProcessFrameProxy.name], err)));
     });
   }
 
-  public static async StateLessFrameProxyFactory<T extends _BaseStateLessScDocProxy>(apiCore: IAPICore, frameElemJacket: FrameElemJacket): Promise<_baseStatelessFrameProxyOfType<T>> {
+  public static async StateLessFrameProxyFactory<T extends _BaseStateLessScDocProxy>(apiCore: IAPICore, frameElemJacket: FrameElemJacket): Promise<IStateLessScFrameProxy> {
     return new Promise(async (resolve, reject) => {
       apiCore.Logger.FuncStart([GenericStateLessFrameProxy.name, this.StateLessFrameProxyFactory.name]);
-      let stateLessFrameProxyToReturn: _baseStatelessFrameProxyOfType<T> = null;
+      let stateLessFrameProxyToReturn: IStateLessScFrameProxy = null;
 
       await GenericStateLessFrameProxy.ProcessFrameProxy(apiCore, frameElemJacket)
         .then((frameProxy: _baseStatelessFrameProxyOfType<T>) => stateLessFrameProxyToReturn = frameProxy)
         .then(() => GenericStateLessFrameProxy.ProcessHostedScDocProxy(apiCore, frameElemJacket.DocumentJacket))
-        .then((statelessDocProxy: T) => stateLessFrameProxyToReturn.HostedStatelessDocProxy = statelessDocProxy)
+        .then((statelessDocProxy: T) => stateLessFrameProxyToReturn.HostedDocProxy = statelessDocProxy)
         .then(() => resolve(stateLessFrameProxyToReturn))
-        .catch((err) => reject(apiCore.ErrorHand.FormatRejectMessage([GenericStateLessFrameProxy.name, this.StateLessFrameProxyFactory.name], err)));
+        .catch((err: any) => reject(apiCore.ErrorHand.FormatRejectMessage([GenericStateLessFrameProxy.name, this.StateLessFrameProxyFactory.name], err)));
 
       apiCore.Logger.FuncStart([GenericStateLessFrameProxy.name, this.StateLessFrameProxyFactory.name]);
     });

@@ -19,8 +19,8 @@ export class BaseBrowserProxy extends _CommonBase implements IBaseBrowserProxy {
     try {
       await browserTabProxy.UpdateAndWaitForComplete(AbsUrl)
 
-        .catch((err) => this.ErrorHand.HandleFatalError([BaseBrowserProxy.name, this.UpdateAndWaitForComplete.name], err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError([BaseBrowserProxy.name, this.UpdateAndWaitForComplete.name], err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError([BaseBrowserProxy.name, this.UpdateAndWaitForComplete.name], err);
     }
   }
@@ -34,7 +34,7 @@ export class BaseBrowserProxy extends _CommonBase implements IBaseBrowserProxy {
           this.ActiveBrowserTabProxy = new BrowserTabProxy(this.CommonCore, resultTab);
         })
         .then(() => resolve())
-        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([BaseBrowserProxy.name, this.SetActiveBrowserTab.name], err)));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([BaseBrowserProxy.name, this.SetActiveBrowserTab.name], err)));
     });
   }
 }

@@ -36,7 +36,7 @@ export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfCon
     return this.__baseInstantiateAsyncMembers();
   }
 
-  WireEvents() {
+  async WireEvents(): Promise<void> {
     this.Logger.FuncStart(this.WireEvents.name, ContentEditorDocProxy.name);
     this.__baseWireEvents()
     this.Logger.FuncEnd(this.WireEvents.name, ContentEditorDocProxy.name);
@@ -46,8 +46,8 @@ export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfCon
     return this.__baseGetState();
   }
 
-  async SetState(dataToRestore: IStateOfContentEditor): Promise<Boolean> {
-    return this.__baseSetState(dataToRestore);
+  async SetState(dataToRestore: IStateOfContentEditor): Promise<void> {
+    this.__baseSetState(dataToRestore);
   }
 
   TriggerInboundEventsAsync(): void {

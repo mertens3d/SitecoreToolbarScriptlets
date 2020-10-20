@@ -26,7 +26,7 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
         observer.observe(this.TreeElement, { attributes: true, subtree: true, childList: true });
       }
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError (this.InitTreeMutationEvent_Observer.name , err);
     }
   }

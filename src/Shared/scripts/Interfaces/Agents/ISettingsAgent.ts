@@ -6,13 +6,13 @@ import { IOneGenericSettingForStorage } from "../IOneGenericSettingForStorage";
 import { IHindSiteSetting } from "./IGenericSetting";
 
 export interface ISettingsAgent {
-  BooleanSettingChanged(SettingKey: SettingKey, checked: boolean);
+  BooleanSettingChanged(SettingKey: SettingKey, checked: boolean): void;
   GetByKey(EnableLogging: SettingKey): IHindSiteSetting;
   GetSettingsByFlavor(arg0: SettingFlavor[]): HindSiteSettingWrapper[];
   HindSiteSettingsBucket: HindSiteSettingsBucket;
   Init_SettingsAgent(): void;
-  NumberSettingChanged(SettingKey: SettingKey, value: number);
+  NumberSettingChanged(SettingKey: SettingKey, value: number):void;
   ReadGenericSettingsFromStorage(): IOneGenericSettingForStorage[];
   SetByKey(settingKey: SettingKey, value: any): any;
-  UpdateSettingsFromPopUpMsg(CurrentContentPrefs: IHindSiteSetting[]);
+  UpdateSettingsFromPopUpMsg(CurrentContentPrefs: IHindSiteSetting[]):void;
 }

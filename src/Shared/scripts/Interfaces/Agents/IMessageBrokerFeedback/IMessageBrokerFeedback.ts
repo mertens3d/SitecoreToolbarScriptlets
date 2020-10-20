@@ -1,3 +1,3 @@
 ﻿export interface IMessageBrokerFeedback {
-  UpdateMsgStatusStack(arg0: string);
+  UpdateMsgStatusStack(arg0: string):void;
 }

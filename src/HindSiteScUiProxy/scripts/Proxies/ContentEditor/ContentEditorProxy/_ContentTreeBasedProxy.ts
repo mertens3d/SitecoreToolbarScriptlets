@@ -52,10 +52,10 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
         this.TreeMutationEvent_Observer = new ContentTreeBasedProxyMutationEvent_Observer(this.ApiCore, this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.bind(this));
       })
       .then(() => { })
-      .catch((err) => this.ErrorHand.HandleFatalError(this.__baseInstantiateAsyncMembers.name, err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError(this.__baseInstantiateAsyncMembers.name, err));
   }
 
-  protected __baseWireEvents() {
+  protected __baseWireEvents():void {
     this.ContentTreeProxy.WireEvents_TreeProxy();
     this.ContentTreeProxy.ContentTreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
   }
@@ -73,7 +73,7 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
           this.__ContentTreeBasedProxyMutationEvent_Subject.EnableNotifications();
           resolve(true);
         })
-        .catch((err) => {
+        .catch((err: any) => {
           this.__ContentTreeBasedProxyMutationEvent_Subject.EnableNotifications();
           reject(this.SetState.name + " " + err);
         });
@@ -126,7 +126,7 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
       await this.ContentTreeProxy.GetState()
         .then((stateOfContentTree: IStateOfContentTree) => toReturn.ContentTree = stateOfContentTree)
         .then(() => resolve(toReturn))
-        .catch((err) => reject(this.GetState.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetState.name + ' | ' + err));
       this.Logger.FuncEnd(_ContentTreeBasedDocProxy.name, this.__baseGetState.name);
     });
   }

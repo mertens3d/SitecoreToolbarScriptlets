@@ -3,7 +3,6 @@ import { _CommonBase } from "../_CommonCoreBase";
 
 export class PromiseResult extends _CommonBase {
   private Success: boolean;
-  privaILoggerAgentBaseggerBase;
   NickName: string;
   private prefix: string = 'Promise Successful? -> ';
   RejectReasons: string
@@ -12,10 +11,12 @@ export class PromiseResult extends _CommonBase {
     super(hindeCore);
     this.NickName = nickname;
   }
-  WasSuccessful() {
+
+  WasSuccessful(): boolean {
     return this.Success;
   }
-  MarkSuccessful() {
+
+  MarkSuccessful():void {
     this.Success = true;
     if (this.Logger) {
       this.Logger.LogVal(this.prefix + this.NickName, this.Success);
@@ -24,7 +25,7 @@ export class PromiseResult extends _CommonBase {
     }
   }
 
-  MarkFailed(ex: string) {
+  MarkFailed(ex: string):void {
     if (ex) {
       ex = ex.toString();
     }

@@ -67,9 +67,9 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
         .then((result: ReadyStateNAB) => windowType = this.ScPageTypeResolver.GetScWindowType(this.DocumentJacket.UrlJacket))
         .then(() => this.StateFullProxyFactory.ScDocProxyFactoryMake( this.DocumentJacket, null))
         .then((stateFullProxy: IStateFullDocProxy) => this.StateFullProxy = stateFullProxy)
-        .catch((err) => this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err));
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
     }
 
@@ -112,7 +112,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
           .then((stateOf_: IStateOf_) => toReturn.ScWindow = stateOf_)
           .then(() => toReturn.ScWindow.DisciminatorFriendly = ScProxyDisciminator[toReturn.ScWindow.Disciminator])
           .then(() => resolve(toReturn))
-          .catch((err) => reject(this.GetState.name + ' | ' + err));
+          .catch((err: any) => reject(this.GetState.name + ' | ' + err));
       }
       else {
         resolve(toReturn);
@@ -133,7 +133,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
           toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(toReturnStateOfSitecoreWindow.Meta);
         })
         .then(() => resolve(toReturnStateOfSitecoreWindow))
-        .catch((err) => reject(this.GetStateOfScUiProxy.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetStateOfScUiProxy.name + ' | ' + err));
       this.Logger.FuncEnd(this.GetStateOfScUiProxy.name);
     });
   }
@@ -143,13 +143,13 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
       if (this.GetCurrentPageType() == ScWindowType.ContentEditor) {
         await (<ContentEditorDocProxy>this.StateFullProxy).PublishItem()
           .then(() => resolve())
-          .catch((err) => reject(this.PublishActiveCE.name + ' | ' + err));
+          .catch((err: any) => reject(this.PublishActiveCE.name + ' | ' + err));
 
       }
       else if (this.GetCurrentPageType() == ScWindowType.Desktop) {
         (<DesktopProxy>this.StateFullProxy).PublishItem()
           .then(() => resolve())
-          .catch((err) => reject(this.PublishActiveCE.name + ' | ' + err));
+          .catch((err: any) => reject(this.PublishActiveCE.name + ' | ' + err));
       }
       else {
         reject(this.PublishActiveCE.name + ' Unhandled page type');
@@ -166,7 +166,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
           if (dataToRestore.State.ScWindow) {
             await this.StateFullProxy.SetState(dataToRestore.State.ScWindow)
               .then(() => resolve())
-              .catch((err) => reject(this.SetStateOfScWin.name + ' | ' + err));
+              .catch((err: any) => reject(this.SetStateOfScWin.name + ' | ' + err));
           }
           else {
             this.ErrorHand.HandleFatalError(this.SetStateOfScWin.name, 'no states in dataToRestore');

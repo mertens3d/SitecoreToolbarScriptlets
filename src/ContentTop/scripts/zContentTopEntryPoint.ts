@@ -62,7 +62,7 @@ class ContentEntry {
       .then((documentJacket: DocumentJacket) => this.TopDocumentJacket = documentJacket)
       .then(() => this.InstantiateAndInit_Managers())
       .then(() => this.AtticAgent.CleanOutOldAutoSavedData())
-      .catch((err) => commonCore.ErrorHand.HandleFatalError(this.StartUpContent.name, err));
+      .catch((err: any) => commonCore.ErrorHand.HandleFatalError(this.StartUpContent.name, err));
 
     this.HindeCore.Logger.SectionMarker('e) ' + this.StartUpContent.name);
     this.HindeCore.Logger.Log('standing by');
@@ -81,7 +81,7 @@ class ContentEntry {
       this.ToastAgent.WireEvents();
 
       this.AtticAgent.InitContentAtticManager(this.SettingsAgent.GetByKey(SettingKey.AutoSaveRetainDays).ValueAsInt());
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InstantiateAgents_Content.name, err)
     }
   }
@@ -118,10 +118,10 @@ class ContentEntry {
         })
         .then(() => this.StartUp())
         .then(() => this.HindeCore.Logger.Log('Init success'))
-        .catch((err) => this.ErrorHand.HandleFatalError('Content Entry Point', err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError('Content Entry Point', err));
 
       this.HindeCore.Logger.SectionMarker('e) Instantiate and Initialize Managers');
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InstantiateAndInit_Managers.name, err);
     }
   }

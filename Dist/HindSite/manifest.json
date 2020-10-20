@@ -1,7 +1,7 @@
 ﻿{
   "manifest_version": 2,
   "name": "Hind•Site",
-  "version": "1.54",
+  "version": "1.5",
 
   "description": "Sitecore Tools",
 
@@ -17,6 +17,7 @@
         "AutoBuild/final/browser-polyfill.js",
         "AutoBuild/final/Shared.min.js",
         "AutoBuild/final/DOMJacket.min.js",
+        "AutoBuild/final/HindSiteScUiProxy.min.js",
         "AutoBuild/final/ContentTop.min.js"
       ]
     },

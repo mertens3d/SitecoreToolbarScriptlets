@@ -85,7 +85,7 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
       this.TurnOnWaitingLight(false);
       this.RaiseToastAsync();
       this.Logger.FuncEnd(this.ShowToastAsync.name);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.ShowToastAsync.name, err);
     }
   }
@@ -126,7 +126,7 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
         self.FlagSlider.classList.remove(self.classSlideDown);
         self.FlagSlider.classList.add(self.classSlideUp);
       }, 1000);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.RaiseToastAsync.name, err);
     }
   }
@@ -138,7 +138,7 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
         self.FlagSlider.classList.remove(self.classSlideUp);
         self.FlagSlider.classList.add(self.classSlideDown);
       }, 1000);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.LowerToastAsync.name, err);
     }
   }

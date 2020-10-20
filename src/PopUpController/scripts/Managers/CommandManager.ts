@@ -80,7 +80,7 @@ export class CommandManager extends _FrontBase {
       let stateOfPopUp: IStateOfPopUp = this.UiLayer.GetStateOfPopUp();
 
       this.PopUpMsgBroker.SendCommandToContentAsync(ReqCommandMsgFlag.Ping, stateOfPopUp) //todo put correct value in for null. query the ui?
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.TriggerPingEventAsync.name, err);
     }
 

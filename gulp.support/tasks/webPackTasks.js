@@ -20,30 +20,33 @@ module.exports = {
           cache: false,
           entry: {
             //main: targetVar.Ts.TranspiledEntryPointFull(),
-            Shared: {
-              import: './AutoBuild/TsTranspiled/Shared/scripts/SharedEntry.js',
-            },
 
+            contentTop: {
+              import: './AutoBuild/TsTranspiled/ContentTop/scripts/zContentTopEntryPoint.js',
+              dependOn: ['HindSiteScUiProxy','DOMJacket', 'Shared'],
+            },
+            ContentAllFrames: {
+              import: './AutoBuild/TsTranspiled/ContentAllFrames/scripts/zContentAllEntryPoint.js',
+              dependOn: ['Shared']
+            },
+            HindSiteScUiProxy: {
+              import: './AutoBuild/TsTranspiled/HindSiteScUiProxy/scripts/HindSiteScUiProxy.js',
+              dependOn: ['DOMJacket', 'Shared']
+            },
+            PopUpController: {
+              import: './AutoBuild/TsTranspiled/PopUpController/scripts/PopUpControllerLayer.js',
+              dependOn: ['Shared']
+            },
             DOMJacket: {
               import: './AutoBuild/TsTranspiled/DOMJacket/scripts/DOMJacketEntry.js',
               dependOn: 'Shared',
             },
-            contentTop: {
-              import: './AutoBuild/TsTranspiled/ContentTop/scripts/zContentTopEntryPoint.js',
-              dependOn: ['HindSiteScUiProxy','DOMJacket'],
+            Shared: {
+              import: './AutoBuild/TsTranspiled/Shared/scripts/SharedEntry.js',
             },
-            ContentAllFrames: {
-              import: './AutoBuild/TsTranspiled/ContentAllFrames/scripts/zContentAllEntryPoint.js'
-            },
-            HindSiteScUiProxy: {
-              import: './AutoBuild/TsTranspiled/HindSiteScUiProxy/scripts/HindSiteScUiProxy.js',
-              dependOn: 'DOMJacket'
-            },
-            PopUpController: {
-              import: './AutoBuild/TsTranspiled/PopUpController/scripts/PopUpControllerLayer.js'
-            }
           },
-          mode: 'development',//'production', //,
+          //mode: 'development',//'production', //,
+          mode: 'production',
           //externals: [
           //  ///.*DOMJacket\/.+$/,
           //  ///.*HindSiteScUiProxy\/.+$/,
@@ -56,6 +59,7 @@ module.exports = {
           },
           optimization: {
             minimize: false,
+            concatenateModules: true
           },
 
           plugins: [

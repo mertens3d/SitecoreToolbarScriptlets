@@ -3,26 +3,27 @@ import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAP
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { FrameElemJacket } from "../../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
 import { IStateFullFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullFrameProxy";
+import { DocumentJacket } from "../../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { DocReadyState } from "../../../../../../Shared/scripts/Enums/ReadyState";
 
 export abstract class _BaseStateFullFrameProxy<T> extends _APICoreBase implements IStateFullFrameProxy {
   FrameJacket: FrameElemJacket;
   abstract GetState(): Promise<T>;
-  abstract SetState(state: T);
+  abstract SetState(state: T): Promise<any>;
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
-  abstract readonly ScProxyDisciminatorFriendly;
-  abstract InstantiateAsyncMembers();
+  abstract readonly ScProxyDisciminatorFriendly:string;
+  abstract InstantiateAsyncMembers(): Promise<void>;
   abstract TriggerInboundEventsAsync(): void;
-  abstract WireEvents();
+  abstract WireEvents(): Promise<void>;
 
   constructor(apiCore: IAPICore, frameJacket: FrameElemJacket) {
     super(apiCore);
 
     this.FrameJacket = frameJacket;
   }
-    WaitForCompleteNABFrameProxyOrReject() {
-        //empty
-    }
-    GetDocumentJacket() {
-        //empty
-    }
+  abstract WaitForCompleteNABFrameProxyOrReject(): Promise<DocReadyState>;
+
+  GetDocumentJacket(): DocumentJacket {
+    return null; //todo - why null?
+  }
 }

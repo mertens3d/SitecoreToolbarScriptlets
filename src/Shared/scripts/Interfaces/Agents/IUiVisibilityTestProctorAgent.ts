@@ -6,6 +6,6 @@ import { VisiblityTestResultsBucket } from "./IUiVisiblityTestResult";
 import { GuidData } from "../../Helpers/GuidData";
 
 export interface IUiVisibilityTestAgent {
-  Hydrate(stateOfSitecoreWindow: IStateOfScUi, stateOfStorageSnapShots: IStateOfStorageSnapShots, windowType: ScWindowType, selectSnapShotId: GuidData);
+  Hydrate(stateOfSitecoreWindow: IStateOfScUi, stateOfStorageSnapShots: IStateOfStorageSnapShots, windowType: ScWindowType, selectSnapShotId: GuidData):void;
   TestAgainstAllSetControllers(Command: IMenuCommandDefinition): VisiblityTestResultsBucket;
 }

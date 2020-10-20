@@ -20,9 +20,9 @@ export class CEFrameProxy extends _BaseScFrameProxy<IStateOfCEFrameProxy> implem
   async InstantiateAsyncMembers(): Promise<void> {
   }
 
-  WireEvents() {
+  async WireEvents(): Promise<void> {
   }
 
-  TriggerInboundEventsAsync(): void {
+  async TriggerInboundEventsAsync() : Promise<void> {
   }
 }

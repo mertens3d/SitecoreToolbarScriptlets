@@ -10,7 +10,7 @@ export class _baseStatelessFrameProxyOfType<T extends _BaseStateLessScDocProxy> 
   ScProxyDisciminatorFriendly: string;
   FrameSelectorOnHost: string;
   FrameElemJacket: FrameElemJacket;
-  HostedStatelessDocProxy: T;
+  HostedDocProxy: T;
 
   constructor(apiCore: IAPICore, frameElemJacket: FrameElemJacket) {
     super(apiCore);
@@ -21,11 +21,11 @@ export class _baseStatelessFrameProxyOfType<T extends _BaseStateLessScDocProxy> 
   Instantiate() {
   }
 
-  TriggerInboundEventsAsync() {
+  async  TriggerInboundEventsAsync() : Promise<void>{
     //empty by default
   }
 
-  WireEvents() {
+  async WireEvents(): Promise<void>{
     //empty by default
   }
 
@@ -38,8 +38,8 @@ export class _baseStatelessFrameProxyOfType<T extends _BaseStateLessScDocProxy> 
     try {
       await this.FrameElemJacket.WaitForCompleteNABFrameElement(this.FrameSelectorOnHost)
         //.then(() => this.HostedDocProxy = this.FrameJacket.DocumentJacket)
-        .catch((err) => this.ErrorHand.HandleFatalError(this._base_InstantiateAsyncProperties.name, err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this._base_InstantiateAsyncProperties.name, err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
     }
   }

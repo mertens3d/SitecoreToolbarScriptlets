@@ -53,7 +53,7 @@ export namespace HindSiteUiLayer {
         this.Instantiate_Ui();
         this.Init_Ui();
         this.WireEvents_Ui();
-      } catch (err) {
+      } catch (err: any) {
         this.ErrorHand.HandleFatalError(HindSiteUiLayer.name, err);
       }
 
@@ -86,7 +86,7 @@ export namespace HindSiteUiLayer {
         this.UiCommandsMan = new UiCommandsManager(this.HindeCore, this.CommandDefinitionBucket, this.UiVisibilityTestAgent);
         this.UiModulesMan = new UiModulesManager(this.HindeCore, this.SettingsAgent, this.CommandDefinitionBucket, this.UiCommandsMan, this.UiVisibilityTestAgent, this.ScWindowTypeResolver, this.ScPathResolver); //after tabman, after HelperAgent
         this.UiEventMan = new UiEventManager(this.HindeCore, this.UiModulesMan); // after uiman
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
       }
 

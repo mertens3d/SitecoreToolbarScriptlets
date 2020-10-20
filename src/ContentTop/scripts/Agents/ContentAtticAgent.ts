@@ -167,7 +167,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
           autoCount = this.CleanOneStorageItem(candidate, autoCount);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.CleanFoundStorage.name, err);
     }
   }
@@ -183,7 +183,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
       let currentWindowStorage: IStateOfStorageSnapShots = this.GetStateOfStorageSnapShots();
 
       this.CleanFoundStorage(currentWindowStorage);
-    } catch (err) {
+    } catch (err: any) {
       throw (this.CleanOutOldAutoSavedData.name, err);
     }
 
@@ -239,7 +239,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
     }
   }
 
-  RemoveSnapshotFromStorageById(targetId: GuidData): void {
+  async RemoveSnapshotFromStorageById(targetId: GuidData): Promise<void> {
     this.Logger.FuncStart(this.RemoveSnapshotFromStorageById.name);
     try {
       if (targetId) {
@@ -252,7 +252,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
       } else {
         this.ErrorHand.WarningAndContinue(this.RemoveSnapshotFromStorageById.name, 'no target id');
       }
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.RemoveSnapshotFromStorageById.name, err);
     }
 

@@ -45,9 +45,9 @@ export class ScDocProxyWatcherForFrames extends _APICoreBase {
         .then(() => bodyElement.AddWatcher(watcherParams))
         .then((elemJacketMutationEvent_Subject: ElementJacketMutationEvent_Subject) => this.ElemJacketMutationEvent_Subject = elemJacketMutationEvent_Subject)
         .then(() => this.ElemJacketMutationEvent_Subject.RegisterObserver(this.DocumentJacketMutationEvent_Observer))
-        .catch((err) => this.ErrorHand.HandleFatalError([ScDocProxyWatcherForFrames.name, this.EnableWatcherForFrames.name], err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError([ScDocProxyWatcherForFrames.name, this.EnableWatcherForFrames.name], err));
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError([ScDocProxyWatcherForFrames.name, this.EnableWatcherForFrames.name], err);
     }
 
@@ -68,7 +68,7 @@ export class ScDocProxyWatcherForFrames extends _APICoreBase {
       if (elemJacket.NodeTagName === SharedConst.Const.KeyWords.NodeTagName.IFrame) {
         await FrameElemJacket.FactoryFrameElemJackets(this.ApiCore, [elemJacket])
           .then((frameElemJackets: FrameElemJacket[]) => this.HandleFrameElemJacketAddedToDoc(frameElemJackets[0]))
-          .catch((err) => this.ErrorHand.HandleFatalError([ScDocProxyWatcherForFrames.name, this.HandleFrameElemJacketAddedToDoc.name], err));
+          .catch((err: any) => this.ErrorHand.HandleFatalError([ScDocProxyWatcherForFrames.name, this.HandleFrameElemJacketAddedToDoc.name], err));
       }
     }
     else {
@@ -84,11 +84,11 @@ export class ScDocProxyWatcherForFrames extends _APICoreBase {
       await GenericStateLessFrameProxy.StateLessFrameProxyFactory(this.ApiCore, frameElemJacket)
         .then((stateLessFrameProxy: IStateLessScFrameProxy) => this.HostedFrameStatelessFrameProxies.push(stateLessFrameProxy))
         .then(() => this.Logger.Log(this.HandleFrameElemJacketAddedToDoc.name + 'step1 Complete'))
-        .catch((err) => this.ErrorHand.HandleFatalError(this.HandleElemJacketAddedToDocument.name, err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.HandleElemJacketAddedToDocument.name, err));
 
       //let targetedFrames: ScWindowType[] = [ScWindowType.InstallerBuildPackage];
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError([ScDocProxyWatcherForFrames.name, this.HandleFrameElemJacketAddedToDoc.name], err);
     }
     this.Logger.FuncEnd([ScDocProxyWatcherForFrames.name, this.CallbackOnDocumentJacketMutationEvent.name]);

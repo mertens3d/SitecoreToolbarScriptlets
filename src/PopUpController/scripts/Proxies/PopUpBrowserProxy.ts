@@ -24,7 +24,7 @@ export class PopUpBrowserProxy extends BaseBrowserProxy implements IPopUpBrowser
           this.BrowserTabId = this.ActiveBrowserTabProxy.Id();
         });
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.Init_BrowserProxyAsyncElements.name, err);
     }
     this.Logger.FuncEnd(this.Init_BrowserProxyAsyncElements.name);
@@ -34,7 +34,7 @@ export class PopUpBrowserProxy extends BaseBrowserProxy implements IPopUpBrowser
     return new Promise(async (resolve, reject) => {
       browser.tabs.sendMessage(this.BrowserTabId, message)
         .then((response: IMessageContentToController) => resolve(response))
-        .catch((err) => reject(this.SendMessageAsync_BrowserProxy.name + ' | ' + JSON.stringify(err)));
+        .catch((err: any) => reject(this.SendMessageAsync_BrowserProxy.name + ' | ' + JSON.stringify(err)));
     });
   }
 }

@@ -54,7 +54,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
           this.NativeClassNameChangeEvent_Subject = new NativeClassNameChangeEvent_Subject(this.ApiCore, this.ContainerElemJacket);
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.ApiCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.Instantiate_TreeProxyAsyncElem.name, err);
     }
 
@@ -80,7 +80,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
           this.ContentTreeMutationEvent_Subject.NotifyObserversAsync(TreeMutationEvent_Payload)
         })
         .then(() => this.Logger.Log(this.CallBackOnNativeClassNameChangeEventAsync.name + ' completed'))
-        .catch((err) => this.ErrorHand.HandleFatalError(this.CallBackOnNativeClassNameChangeEventAsync.name, err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.CallBackOnNativeClassNameChangeEventAsync.name, err));
     }
 
     this.TaskMonitor.AsyncTaskCompleted(this.CallBackOnNativeClassNameChangeEventAsync.name);
@@ -104,7 +104,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
           .then((elemJacket: IJacketOfType) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth, null, this.ConResolver))
           .then(() => scContentTreeNodeProxy.Instantiate())
           .then(() => resolve(scContentTreeNodeProxy))
-          .catch((err) => reject(this.GetTreeNodeByGlyph.name + ' | ' + err));
+          .catch((err: any) => reject(this.GetTreeNodeByGlyph.name + ' | ' + err));
       } else {
         reject(() => this.ErrorHand.FormatRejectMessage(this.GetTreeNodeByGlyph.name, 'null target node or null treeContainerJacket'));
       }
@@ -128,7 +128,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
 
         await this.GetTreeNodeByGlyph(currentNodeData)
           .then((scContentTreeNodeProxy: ScContentTreeNodeProxy) => targetScContentTreeNodeProxy = scContentTreeNodeProxy)
-          .catch((err) => this.ErrorHand.WarningAndContinue(this.SetStateOfNodeRecursive.name, 'Tree node not found: ' + currentNodeData.Friendly + ' ' + currentNodeData.ItemId));
+          .catch((err: any) => this.ErrorHand.WarningAndContinue(this.SetStateOfNodeRecursive.name, 'Tree node not found: ' + currentNodeData.Friendly + ' ' + currentNodeData.ItemId));
 
         if (targetScContentTreeNodeProxy) {
           await targetScContentTreeNodeProxy.SetStateOfTreeNode(currentNodeData, depth)
@@ -143,7 +143,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
       } else {
         this.ErrorHand.HandleFatalError(this.SetStateOfNodeRecursive.name, 'no node date or max depth hit ' + depth.toString())
       }
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.SetStateOfNodeRecursive.name, err);
     }
     this.Logger.FuncEnd(this.SetStateOfNodeRecursive.name, currentNodeData.Friendly);
@@ -155,7 +155,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
     try {
       this.ContentTreeMutationEvent_Subject.DisableNotifications();
       await this.SetStateOfNodeRecursive(stateOfContentTree.ContentTreeNodeDeep, 0);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.SetState.name, err);
     }
 
@@ -168,7 +168,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
    try {
      await this.ContainerElemJacket.WaitForElement(this.TreeRootSelector)
        .then((elementJacket: IJacketOfType) => this.rootTreeNodeJacket = elementJacket);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.SetRootNodeFromSelector.name, err);
     }
 
@@ -208,7 +208,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
           }
         })
         .then(() => resolve(stateOfContentTree))
-        .catch((err) => reject(this.GetState.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetState.name + ' | ' + err));
 
       this.Logger.FuncEnd([ContentTreeElemProxy.name, this.GetState.name]);
     });
@@ -231,7 +231,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
               this._treeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, firstChildGlyphNode, 0, 0, 1, null, this.ConResolver)
               await this._treeNodeProxy.Instantiate();
             })
-            .catch((err) => reject(this.GetTreeNodeProxy.name + ' | ' + err));
+            .catch((err: any) => reject(this.GetTreeNodeProxy.name + ' | ' + err));
         }
         else {
           this.ErrorHand.HandleFatalError(this.GetStateOfContentTreeNodeDeep.name, 'no root node');
@@ -256,7 +256,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
         .then((stateOfScContentTreeNodeProxy: IStateOfScContentTreeNodeDeep) => {
           resolve(stateOfScContentTreeNodeProxy)
         })
-        .catch((err) => reject(this.GetStateOfContentTreeNodeDeep.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetStateOfContentTreeNodeDeep.name + ' | ' + err));
 
       this.Logger.FuncEnd(this.GetStateOfContentTreeNodeDeep.name);
     });

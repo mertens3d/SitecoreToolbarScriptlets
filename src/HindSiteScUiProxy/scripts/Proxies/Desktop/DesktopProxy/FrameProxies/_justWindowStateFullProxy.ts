@@ -9,7 +9,7 @@ import { _BaseScDocProxy } from "../../../StateFullDocProxies/_BaseScDocProxy";
 
 export abstract class _justWindowStateFullDocProxy extends _BaseScDocProxy implements IStateFullDocProxy {
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
-  abstract readonly ScProxyDisciminatorFriendly;
+  abstract readonly ScProxyDisciminatorFriendly: string;
   Friendly: string = '{unknown friendly}';
   HostedElemProxies: IStateFullElemProxy[] = [];
 
@@ -45,7 +45,7 @@ export abstract class _justWindowStateFullDocProxy extends _BaseScDocProxy imple
     //empty
   }
 
-  WireEvents() {
+  async WireEvents(): Promise<void> {
     //empty
   }
 }

@@ -58,7 +58,7 @@ export class BrowserTabAgent extends _CommonBase {
 
       await browser.tabs.create({ url: tabUrl.AbsUrl })
         .then(() => resolve())
-        .catch((err) => reject(err));
+        .catch((err: any) => reject(err));
     })
   }
 

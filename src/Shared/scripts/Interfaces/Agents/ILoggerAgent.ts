@@ -1,23 +1,20 @@
 ﻿import { LoggerConsoleWriter } from "../../Agents/LoggerAgent/LoggerConsoleWriter";
 import { GuidData } from "../../Helpers/GuidData";
-import { ICommonCore } from "./ICommonCore";
-import { IHindeCore } from "./IHindeCore";
-import { TaskMonitor } from "../../Agents/TaskMonitor/TaskMonitor";
-import { ErrorHandlerAgent } from "../../Agents/ErrorHandler/ErrorHandlerAgent";
-import { ICoreErrorHandler } from "./IErrorHandlerAgent";
 import { ICoreTaskMonitor } from "./Core/ITaskMonitorAgent";
+import { ICommonCore } from "./ICommonCore";
+import { ICoreErrorHandler } from "./IErrorHandlerAgent";
 
 export interface ILoggerAgent  {
   
 
-  FlushBuffer();
-  __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; });
-  AddWriter(arg0: LoggerConsoleWriter);
-  CtorName(name: string);
-  FuncEnd(text: string | string[], optionalValueInput: string | number);
-  FuncEnd(text: string | string[], optionalValueInput?: boolean);
-  FuncEnd(text: string | string[], optionalValueInput?: number);
-  FuncEnd(text: string | string[], optionalValueInput?: string);
+  FlushBuffer(): void;
+  __triggerAllDebugTextChangedCallbacks(arg0: { NewText: string; Append: boolean; }): void;
+  AddWriter(arg0: LoggerConsoleWriter): void;
+  CtorName(name: string): void;
+  FuncEnd(text: string | string[], optionalValueInput: string | number): void;
+  FuncEnd(text: string | string[], optionalValueInput?: boolean): void;
+  FuncEnd(text: string | string[], optionalValueInput?: number): void;
+  FuncEnd(text: string | string[], optionalValueInput?: string): void;
   FuncStart(textOrFunc: string | string[], optionalValue: number | string | boolean): void;
   FuncStart(textOrFunc: string | string[], optionalValue?: boolean): void;
   FuncStart(textOrFunc: string | string[], optionalValue?: number): void;
@@ -26,23 +23,23 @@ export interface ILoggerAgent  {
   HandlerClearDebugText(self: ICommonCore, verify: boolean): void
   CTOREnd(text: string): void;
   CTORStart(text: string): void;
-  IsNotNullOrUndefinedBool(title: string, dataToCheck: any);
+  IsNotNullOrUndefinedBool(title: string, dataToCheck: any): boolean;
   IsNullOrUndefined(dataToCheck: any): string;
 
-  IntroduceSiblings(taskMonitor: ICoreTaskMonitor, errorHand: ICoreErrorHandler);
+  IntroduceSiblings(taskMonitor: ICoreTaskMonitor, errorHand: ICoreErrorHandler):void;
 
-  LogImportant(text);
+  LogImportant(text:string): void;
 
-  Log(text: string);
+  Log(text: string):void;
   //Log(text, optionalValue: string);
-  Log(text: string , hasPrefix: boolean);
+  Log(text: string, hasPrefix: boolean): void;
 
 
-  LogAsJsonPretty(texValName: string, jsonObj: any);
-  LogVal(textValName: string, textVal: string | boolean | Boolean | number | GuidData): any;
-  MarkerA();
-  MarkerB();
-  MarkerC();
-  MarkerD();
-  SectionMarker(arg0: string);
+  LogAsJsonPretty(texValName: string, jsonObj: any): void;
+  LogVal(textValName: string, textVal: string | boolean | Boolean | number | GuidData): void;
+  MarkerA(): void;
+  MarkerB(): void;
+  MarkerC(): void;
+  MarkerD(): void;
+  SectionMarker(arg0: string): void;
 }

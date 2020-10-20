@@ -65,8 +65,8 @@ export class DTStartBarProxy extends _APICoreBase {
                 .then(() => methodLock.ReleaseLock())
                 .then(() => this.WaitForTimePeriod(1, this.TriggerRedButtonAsync.name))
                 .then(() => this.TaskMonitor.AsyncTaskCompleted(this.TriggerRedButtonAsync.name))
-                .catch((err) => this.ErrorHand.HandleFatalError(this.TriggerRedButtonAsync.name, err));
-        } catch (err) {
+                .catch((err: any) => this.ErrorHand.HandleFatalError(this.TriggerRedButtonAsync.name, err));
+        } catch (err: any) {
             this.ErrorHand.HandleFatalError(this.TriggerRedButtonAsync.name, err);
         }
         this.Logger.FuncEnd(this.TriggerRedButtonAsync.name);
@@ -86,11 +86,11 @@ export class DTStartBarProxy extends _APICoreBase {
                     .then(() => this.Logger.LogImportant('About to click ' + buttonSelector))
                     .then(() => buttonElemJacket.Click())
                     .then(() => this.WaitForTimePeriod(1, this.TriggerPopXButton.name))
-                    .catch((err) => this.ErrorHand.HandleFatalError(this.TriggerPopXButton.name + ' ' + buttonSelector + ' ' + containerSelector, err));
+                    .catch((err: any) => this.ErrorHand.HandleFatalError(this.TriggerPopXButton.name + ' ' + buttonSelector + ' ' + containerSelector, err));
             } else {
                 // do nothing
             }
-        } catch (err) {
+        } catch (err: any) {
             this.ErrorHand.HandleFatalError(this.TriggerPopXButton.name, err);
         }
         this.Logger.FuncEnd(this.TriggerPopXButton.name, buttonSelector + ' | ' + containerSelector);
@@ -112,7 +112,7 @@ export class DTStartBarProxy extends _APICoreBase {
             if (!foundStartBarButtonProxy) {
                 foundStartBarButtonProxy = new DesktopStartBarButtonProxy(this.ApiCore, dTFrameProxyMutationEventPayload.FrameId, this.DocumentJacket, this.ConResolver);
                 await foundStartBarButtonProxy.Instantiate_DestopStartBarButtonProxyAsyncItems()
-                    .catch((err) => reject(this.GetAssociatedStartBarButton.name + ' | ' + err));
+                    .catch((err: any) => reject(this.GetAssociatedStartBarButton.name + ' | ' + err));
 
                 this.StartBarButtonProxyBucket.push(foundStartBarButtonProxy);
             }
@@ -142,7 +142,7 @@ export class DTStartBarProxy extends _APICoreBase {
                 if (contentTreeProxyMutationEvent_Payload.ContentTree.ActiveNodeShallow) {
                     this.GetAssociatedStartBarButton(dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload)
                         .then((startBarButtonProxy: DesktopStartBarButtonProxy) => startBarButtonProxy.SetStateOfDesktopStartBarButtonAsync(contentTreeProxyMutationEvent_Payload.ContentTree))
-                        .catch((err) => this.ErrorHand.HandleFatalError(this.OnTreeMutationEvent_DesktopStartBarProxy.name, err));
+                        .catch((err: any) => this.ErrorHand.HandleFatalError(this.OnTreeMutationEvent_DesktopStartBarProxy.name, err));
                 }
                 else {
                     this.Logger.Log('null activeNodeFlat provided');

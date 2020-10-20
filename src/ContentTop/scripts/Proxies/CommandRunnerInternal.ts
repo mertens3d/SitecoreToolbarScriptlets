@@ -38,7 +38,7 @@ export class CommandRunnerInternal extends _FrontBase {
 
             recipe.Execute()
                 .then(() => resolve())
-                .catch((err) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
+                .catch((err: any) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
         });
     }
 
@@ -55,7 +55,7 @@ export class CommandRunnerInternal extends _FrontBase {
 
             recipe.Execute()
                 .then(() => resolve())
-                .catch((err) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
+                .catch((err: any) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
         });
     }
 
@@ -65,7 +65,7 @@ export class CommandRunnerInternal extends _FrontBase {
             let recipe = new RecipeSaveStateManual(this.HindeCore, commandParams, this.Dependancies);
             await recipe.Execute()
                 .then(resolve)
-                .catch((err) => reject(err));
+                .catch((err: any) => reject(err));
         });
     }
 
@@ -73,7 +73,7 @@ export class CommandRunnerInternal extends _FrontBase {
         return new Promise(async (resolve, reject) => {
             await new RecipeToggleFavorite(this.HindeCore, commandParams, this.Dependancies).Execute()
                 .then(() => resolve())
-                .catch((err) => reject(err));
+                .catch((err: any) => reject(err));
         });
     }
 
@@ -84,7 +84,7 @@ export class CommandRunnerInternal extends _FrontBase {
             let recipe = new RecipeSetStateFromMostRecent(this.HindeCore, commandParams, this.Dependancies);
             await recipe.Execute();
         }
-        catch (err) {
+        catch (err: any) {
             this.ErrorHand.HandleFatalError(this.SetStateFromQueryString.name, err);
         }
         this.Logger.FuncEnd(this.SetStateFromMostRecent.name);
@@ -96,7 +96,7 @@ export class CommandRunnerInternal extends _FrontBase {
             let recipe = new RecipeInitFromQueryStr(this.HindeCore, commandParams, this.Dependancies);
             recipe.Execute();
         }
-        catch (err) {
+        catch (err: any) {
             this.ErrorHand.HandleFatalError(this.SetStateFromQueryString.name, err);
         }
     }
@@ -107,7 +107,7 @@ export class CommandRunnerInternal extends _FrontBase {
             let recipe = new RecipeRemoveItemFromStorage(this.HindeCore, commandParams, this.Dependancies);
             await recipe.Execute()
                 .then(resolve)
-                .catch((err) => reject(err));
+                .catch((err: any) => reject(err));
         });
     }
 
@@ -119,7 +119,7 @@ export class CommandRunnerInternal extends _FrontBase {
             if (dataOneWindowStorage) {
                 dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(commandParams.ApiPayload, dataOneWindowStorage)
                     .then(() => resolve())
-                    .catch((err) => reject(this.SetStateOfSitecoreWindow.name + ' | ' + err));
+                    .catch((err: any) => reject(this.SetStateOfSitecoreWindow.name + ' | ' + err));
             };
         });
     }

@@ -28,7 +28,7 @@ export class UrlJacket extends _CommonBase implements IUrlJacket {
 
       this.SetFromHref(this.OriginalURL);
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.Init_GenericUrlAgent.name , err);
     }
 

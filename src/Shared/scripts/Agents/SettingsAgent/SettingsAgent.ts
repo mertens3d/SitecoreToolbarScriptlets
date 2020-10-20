@@ -100,7 +100,7 @@ export class SettingsAgent extends _CommonBase implements ISettingsAgent {
           this.ErrorHand.HandleFatalError(this.UpdateSettingValuesFromStorage.name, 'null matching setting');
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.ErrorAndContinue(this.UpdateSettingValuesFromStorage.name, err);
     }
 

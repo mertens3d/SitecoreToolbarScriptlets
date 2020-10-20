@@ -118,7 +118,7 @@ export class CommandRouter extends _FrontBase {
             //this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payloadComplete);
           })
           .then(() => resolve())
-          .catch((err) => this.ErrorHand.HandleFatalError(this.ExecuteInternalCommand.name, err));
+          .catch((err: any) => this.ErrorHand.HandleFatalError(this.ExecuteInternalCommand.name, err));
         //}, 1000)
       }
       this.Logger.FuncEnd(this.ExecuteInternalCommand.name);
@@ -160,7 +160,7 @@ export class CommandRouter extends _FrontBase {
 
         await this.ExecuteApiCommand(commandData.commandToExecute, routingParams.MsgFlag)
           .then(() => resolve())
-          .catch((err) => reject(err));
+          .catch((err: any) => reject(err));
       }
       else if (commandData.CommandType = CommandType.ContentInternal) {
         await this.ExecuteInternalCommand(commandData.commandToExecute, routingParams)
@@ -169,7 +169,7 @@ export class CommandRouter extends _FrontBase {
             this.Logger.Log('Completed the internal command');
             resolve();
           })
-          .catch((err) => reject(err));
+          .catch((err: any) => reject(err));
       }
 
       if (commandData) {
@@ -192,7 +192,7 @@ export class CommandRouter extends _FrontBase {
             this.Logger.Log('Completed the API command');
             resolve(response)
           })
-          .catch((err) => reject(err));
+          .catch((err: any) => reject(err));
       } else {
         reject(this.ExecuteApiCommand.name + ' | no functionToExecute');
       }

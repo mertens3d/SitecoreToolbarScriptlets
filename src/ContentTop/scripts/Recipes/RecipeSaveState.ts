@@ -18,7 +18,7 @@ export class RecipeSaveStateManual extends _ContentRecipeBase implements IComman
           //todo - put back this.ErrorHand.WarningAndContinue(this.Execute.name, 'empty ce ar - not writing to storage');
         })
         .then(() => resolve())
-        .catch((err) => reject(err));
+        .catch((err: any) => reject(err));
     });
   }
 }

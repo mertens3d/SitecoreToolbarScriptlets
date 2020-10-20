@@ -3,9 +3,9 @@
 export interface IBaseScDocProxy {
   readonly ScProxyDisciminator: ScProxyDisciminator;
   readonly ScProxyDisciminatorFriendly: string;
-  TriggerInboundEventsAsync();
+  TriggerInboundEventsAsync():void;
   InstantiateAsyncMembers(): Promise<void>;
-  WireEvents();
+  WireEvents(): Promise<void>;
   OnFocus(): Promise<any>
   EnableWatcherForFrames(): void;
 }

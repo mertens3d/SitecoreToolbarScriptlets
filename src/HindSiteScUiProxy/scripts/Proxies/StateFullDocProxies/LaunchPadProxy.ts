@@ -13,11 +13,11 @@ export class LaunchPadProxy extends _BaseStateFullDocProxy<IStateOfLaunchPad> im
     //empty
   }
 
-  async SetState(state: any) {
+  async SetState(state: any): Promise<void> {
     //empty
   }
 
-  WireEvents() {
+  async  WireEvents(): Promise<void> {
     //empty
   }
 

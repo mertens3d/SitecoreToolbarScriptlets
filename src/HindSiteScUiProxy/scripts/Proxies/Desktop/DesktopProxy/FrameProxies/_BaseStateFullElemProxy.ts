@@ -7,7 +7,7 @@ export abstract class _BaseStateFullElemProxy<T> extends _APICoreBase implements
   protected ContainerElemJacket: IJacketOfType;
 
   abstract GetState(): Promise<T>;
-  abstract SetState(state: T);
+  abstract SetState(state: T): Promise<any>;
 
   constructor(apiCore: IAPICore, containerElemJacket: IJacketOfType) {
     super(apiCore);

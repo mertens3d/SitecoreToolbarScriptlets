@@ -19,8 +19,8 @@ export class JqueryModalDialogsDocProxy extends _BaseStateLessScDocProxy impleme
     try {
       this._BaseWireEvents();
       await this.EnableWatcherForFrames()
-        .catch((err) => this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEvents.name], err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEvents.name], err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEvents.name], err);
     }
   }
@@ -29,9 +29,9 @@ export class JqueryModalDialogsDocProxy extends _BaseStateLessScDocProxy impleme
   //  this.Logger.FuncStart(this.ProcessInboundInstallerBuildPackage.name);
   //  try {
   //    this.Logger.Log('Installer Build Package opened');
-  //    //.catch ((err) => this.ErrorHand.ErrorAndThrow(this.ProcessInboundInstallerBuildPackage.name, err));
+  //    //.catch ((err: any) => this.ErrorHand.ErrorAndThrow(this.ProcessInboundInstallerBuildPackage.name, err));
   //  }
-  //  catch (err) {
+  //  catch (err: any) {
   //    this.ErrorHand.HandleFatalError(this.ProcessInboundInstallerBuildPackage.name, err);
   //  }
   //  this.Logger.FuncEnd(this.ProcessInboundInstallerBuildPackage.name);
@@ -50,9 +50,9 @@ export class JqueryModalDialogsDocProxy extends _BaseStateLessScDocProxy impleme
         .then((matchingJacket: FrameElemJacket) => id0FrameJacket = matchingJacket)
         //.then(() => proxyFactory.ScDocProxyFactory(ScWindowType.ScContentProxy, )
         //.then(() => scContentIframeId0Proxy.OpenFile(fileName))
-        .catch((err) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err));
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.OpenFile.name], err);
     }
   }

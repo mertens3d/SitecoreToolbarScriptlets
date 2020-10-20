@@ -7,5 +7,5 @@ export interface IContentBrowserProxy extends IBaseBrowserProxy {
   ActiveBrowserTabProxy: BrowserTabProxy;
   //TabWaitForReadyStateCompleteNative(targetTab: any);
   InitAsyncProperties(): Promise<void>;
-  AddListenerForPopUp(callback: (request: IMessageControllerToContent) => Promise<DefaultMsgContentToController>);
+  AddListenerForPopUp(callback: (request: IMessageControllerToContent) => Promise<DefaultMsgContentToController>):void;
 }

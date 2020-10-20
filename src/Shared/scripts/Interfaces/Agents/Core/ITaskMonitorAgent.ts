@@ -4,13 +4,13 @@ import { ICoreErrorHandler } from "../IErrorHandlerAgent";
 
 export interface ICoreTaskMonitor {
   NotifyWaiting(waitingMessage: boolean): void;
-  InitAfterErrorHand(taskMutationEvent_Subject: TaskListMutationEvent_Subject);
-  IntroduceSiblings(Logger: ILoggerAgent, ErrorHand: ICoreErrorHandler);
-  ResetCancel();
+  InitAfterErrorHand(taskMutationEvent_Subject: TaskListMutationEvent_Subject):void;
+  IntroduceSiblings(Logger: ILoggerAgent, ErrorHand: ICoreErrorHandler):void;
+  ResetCancel(): void;
   IsTaskListEmpty(): boolean;
-  AsyncTaskCompleted(name: string);
-  AsyncTaskStarted(name: string);
-  RequestCancel(requestor: string);
+  AsyncTaskCompleted(name: string):void;
+  AsyncTaskStarted(name: string):void;
+  RequestCancel(requestor: string):void;
   IsCancelRequested(): boolean;
   TaskMutationEvent_Subject: TaskListMutationEvent_Subject;
 }

@@ -404,7 +404,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfDesktop.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IError.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IEventHandlerData.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IFactoryHelper.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IStateOfPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IStateOfUiModules.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\IBrowserProxy.ts" />

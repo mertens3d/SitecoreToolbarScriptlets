@@ -13,7 +13,7 @@ export class MarketingControlPanelDocProxy extends _ContentTreeBasedDocProxy<ISt
     return this.__baseInstantiateAsyncMembers();
   }
 
-  WireEvents() {
+  async WireEvents() : Promise<void>{
     this.__baseWireEvents();
   }
 
@@ -25,7 +25,7 @@ export class MarketingControlPanelDocProxy extends _ContentTreeBasedDocProxy<ISt
     return this.__baseGetState();
   }
 
-  async SetState(dataToRestore: IStateOfMarketingControlPanel): Promise<boolean> {
-    return this.__baseSetState(dataToRestore);
+  async SetState(dataToRestore: IStateOfMarketingControlPanel): Promise<void> {
+     this.__baseSetState(dataToRestore);
   }
 }

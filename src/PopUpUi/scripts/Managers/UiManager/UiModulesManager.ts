@@ -189,7 +189,7 @@ export class UiModulesManager extends _FrontBase {
       }
 
       this.WireEventsOnCheckBoxes();
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.WireEvents_ModulesManager.name, err);
     }
 
@@ -310,7 +310,7 @@ export class UiModulesManager extends _FrontBase {
           this.Logger.Log('Window not closed because of setting: ' + setting.FriendlySetting)
         }
         resolve();
-      } catch (err) {
+      } catch (err: any) {
         reject(this.ClosePopUp.name + ' ' + err);
       }
       this.Logger.FuncEnd(this.ClosePopUp.name);

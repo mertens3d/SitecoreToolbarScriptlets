@@ -20,7 +20,7 @@ export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
     this.Logger.FuncStart(this.InitSitecoreUiManager.name);
     try {
       this.InjectCss();
-    } catch (err) {
+    } catch (err: any) {
       throw (err);
     }
     this.Logger.FuncEnd(this.InitSitecoreUiManager.name);

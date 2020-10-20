@@ -12,7 +12,7 @@ export abstract class HindSiteEvent_Observer<T> extends _CommonBase implements I
       if (this.CallbackAsync) {
         this.CallbackAsync(payload);
       }
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.ErrorAndContinue(HindSiteEvent_Observer.name, err);
     }
   }

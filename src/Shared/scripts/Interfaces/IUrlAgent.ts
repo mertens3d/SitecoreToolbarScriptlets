@@ -4,10 +4,10 @@ import { ISiteUrl } from "./IAbsoluteUrl";
 
 export interface IUrlJacket {
   readonly OriginalURL: string;
-  SetFilePath(CE: string);
-  SetParameterValueByKey(qsKey: QueryStrKey, qsValue: string);
+  SetFilePath(CE: string):void;
+  SetParameterValueByKey(qsKey: QueryStrKey, qsValue: string):void;
   GetUrlParts(): IGenericUrlParts;
   GetQueryStringValueByKey(hsTargetSs: QueryStrKey): string;
-  QueryStringHasKey(hsTargetSs: QueryStrKey);
+  QueryStringHasKey(hsTargetSs: QueryStrKey): boolean;
   BuildFullUrlFromParts():ISiteUrl; //newUrlParts: any
 }

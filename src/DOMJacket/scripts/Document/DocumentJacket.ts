@@ -42,8 +42,8 @@ export class DocumentJacket extends _CommonBase {
       this.UrlJacket = new UrlJacket(this.CommonCore, this.NativeDocument.URL);
 
       await this.WaitForCompleteNAB_DocumentJacket(DocumentJacket.name)
-        .catch((err) => this.ErrorHand.HandleFatalError([DocumentJacket.name, this.InstantiateSyncProperties.name], err));
-    } catch (err) {
+        .catch((err: any) => this.ErrorHand.HandleFatalError([DocumentJacket.name, this.InstantiateSyncProperties.name], err));
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError([DocumentJacket.name, this.InstantiateSyncProperties.name], err);
     }
 
@@ -53,12 +53,13 @@ export class DocumentJacket extends _CommonBase {
   public static async FactoryMakeDocumentJacket(commonCore: ICommonCore, nativeDocument: Document): Promise<DocumentJacket> {
     return new Promise(async (resolve, reject) => {
       commonCore.Logger.FuncStart(this.FactoryMakeDocumentJacket.name);
+      commonCore.ErrorHand.ThrowIfNullOrUndefined([DocumentJacket.name, this.FactoryMakeDocumentJacket.name], [nativeDocument]);
 
       let documentJacket: DocumentJacket = new DocumentJacket(commonCore, nativeDocument);
 
       await documentJacket.InstantiateSyncProperties()
         .then(() => resolve(documentJacket))
-        .catch((err) => reject(commonCore.ErrorHand.FormatRejectMessage(this.FactoryMakeDocumentJacket.name, err)));
+        .catch((err: any) => reject(commonCore.ErrorHand.FormatRejectMessage(this.FactoryMakeDocumentJacket.name, err)));
 
       commonCore.Logger.FuncEnd(this.FactoryMakeDocumentJacket.name);
     })
@@ -106,7 +107,7 @@ export class DocumentJacket extends _CommonBase {
       await this.WaitForGenericElemJacket(querySelector)
         .then((genericElemJacket: IJacketOfType) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
         .then((frameElemJackets: FrameElemJacket[]) => resolve(frameElemJackets[0]))
-        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([this.WaitForFirstHostedFrame.name], err)));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([this.WaitForFirstHostedFrame.name], err)));
 
       this.Logger.FuncEnd(this.WaitForFirstHostedFrame.name, querySelector);
     })
@@ -138,7 +139,7 @@ export class DocumentJacket extends _CommonBase {
       await FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [firstHtmlIframeElement])
         .then((frameElemJackets: FrameElemJacket[]) => toReturnFrameElemJacket = frameElemJackets[0])
         .then(() => resolve(toReturnFrameElemJacket))
-        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFirstMatchingFrameElemJacket.name], err)));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFirstMatchingFrameElemJacket.name], err)));
 
       this.Logger.FuncEnd(this.GetHostedFirstMatchingFrameElemJacket.name, querySelector);
     });
@@ -170,7 +171,7 @@ export class DocumentJacket extends _CommonBase {
 
       await FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, htmlElements)
         .then((frameElemJackets: FrameElemJacket[]) => resolve(frameElemJackets))
-        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFrameJackets.name], err)));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFrameJackets.name], err)));
     });
   }
 
@@ -249,7 +250,7 @@ export class DocumentJacket extends _CommonBase {
           foundHtmlElement.click();
           resolve();
         }
-        catch (err) {
+        catch (err: any) {
           reject(this.WaitForThenClick.name + ' | ' + err);
         }
       } else {
@@ -266,7 +267,7 @@ export class DocumentJacket extends _CommonBase {
     return new Promise(async (resolve, reject) => {
       await this.WaitForThenClick([selector.sc920, selector.sc820])
         .then(() => resolve())
-        .catch((err) => reject(this.RaceWaitAndClick.name + ' | ' + err));
+        .catch((err: any) => reject(this.RaceWaitAndClick.name + ' | ' + err));
     });
   }
 

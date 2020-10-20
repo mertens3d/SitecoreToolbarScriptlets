@@ -17,7 +17,7 @@ export class StaticHelpers {
     let toReturn: string = ''
     try {
       toReturn = 'SettingKey.' + SettingKey[settingKey] + '(' + settingKey + ')';
-    } catch (err) {
+    } catch (err: any) {
       toReturn = err;
     }
     return toReturn;
@@ -58,7 +58,7 @@ export class StaticHelpers {
       } else {
         toReturn = (typeof testSubject === 'undefined' || testSubject === null);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err)
     }
 
@@ -113,7 +113,7 @@ export class StaticHelpers {
     if (msg) {
       try {
         toReturn = 'MsgFlag.' + ReqCommandMsgFlag[msg] + '(' + msg + ')';
-      } catch (err) {
+      } catch (err: any) {
         console.log(this.MsgFlagAsString.name + ' ' + err);
       }
     }

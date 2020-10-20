@@ -18,10 +18,10 @@ export abstract class _UiModuleBase extends _FrontBase implements IUiModule {
     this.ContainerSelector = containerSelector;
   }
 
-  abstract Init_Module();
-  abstract BuildHtmlForModule();
-  abstract RefreshUi_Module();
-  abstract WireEvents_Module();
+  abstract Init_Module():void;
+  abstract BuildHtmlForModule(): void;
+  abstract RefreshUi_Module(): void;
+  abstract WireEvents_Module(): void;
 
   protected Init_UiModuleBase() {
     this.Logger.FuncStart(this.Init_UiModuleBase.name, this.Friendly);

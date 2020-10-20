@@ -6,8 +6,8 @@ export interface IContentAtticAgent {
   CleanOutOldAutoSavedData(): void;
   GetFromStorageBySnapShotId(storageKey: GuidData): IStateOfScUi;
   GetStateOfStorageSnapShots(): IStateOfStorageSnapShots;
-  InitContentAtticManager(retainDayCount: number);
-  RemoveSnapshotFromStorageById(TargetSnapShotId: GuidData);
-  WriteStateOfSitecoreToStorage(storageMatch: IStateOfScUi);
-  WriteStateOfSitecoreToStorage(storageMatch: IStateOfScUi);
+  InitContentAtticManager(retainDayCount: number):void;
+  RemoveSnapshotFromStorageById(TargetSnapShotId: GuidData): Promise<void>;
+  WriteStateOfSitecoreToStorage(storageMatch: IStateOfScUi): Promise<void>;
+  WriteStateOfSitecoreToStorage(storageMatch: IStateOfScUi): Promise<void>;
 }

@@ -16,7 +16,7 @@ export class FallBackDocProxy extends _BaseStateFullDocProxy<IStateOfFallBack> i
       DisciminatorFriendly: ScProxyDisciminator[this.ScProxyDisciminator]
     }
     try {
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.GetState + '.' + FallBackDocProxy.name, err)
     }
 
@@ -27,7 +27,7 @@ export class FallBackDocProxy extends _BaseStateFullDocProxy<IStateOfFallBack> i
     //empty
   }
 
-  WireEvents() {
+ async WireEvents() : Promise<void>{
     //empty
   }
 

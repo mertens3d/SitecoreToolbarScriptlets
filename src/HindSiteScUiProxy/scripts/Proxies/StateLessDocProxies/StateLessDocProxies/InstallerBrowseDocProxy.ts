@@ -4,7 +4,7 @@ import { _BaseStateLessScDocProxy } from "./_BaseStateLessScDocProxy";
 
 export class InstallerBrowseDocProxy extends _BaseStateLessScDocProxy implements IStateLessDocProxy {
   ScProxyDisciminator: ScProxyDisciminator;
-  ScProxyDisciminatorFriendly: any;
+  ScProxyDisciminatorFriendly: string;
   //empty
   async InstantiateAsyncMembers() {
     //empty

@@ -6,7 +6,9 @@
     "alwaysStrict": false,
     "noImplicitUseStrict": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2017",
+    "module": "ES6",
+    "target": "ES5",
+    "allowJs": true,
     "moduleResolution": "Node",
     "typeRoots": [ "node_modules/@types", "node_modules/web-ext-types" ]
   },

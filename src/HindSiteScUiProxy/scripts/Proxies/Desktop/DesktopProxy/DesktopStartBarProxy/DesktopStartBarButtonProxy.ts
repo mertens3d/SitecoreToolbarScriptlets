@@ -39,7 +39,7 @@ export class DesktopStartBarButtonProxy extends _APICoreBase {
       this.FoundStartBarButton = this.DocumentJacket.QuerySelector(querySelectBtn);
       await this.FoundStartBarButton.WaitForElement(':scope > div > span', this.Instantiate_DestopStartBarButtonProxyAsyncItems.name)
         .then((containerSpanElement: IJacketOfType) => this.ContainerSpanElement = containerSpanElement);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.Instantiate_DestopStartBarButtonProxyAsyncItems.name, err);
     }
   }

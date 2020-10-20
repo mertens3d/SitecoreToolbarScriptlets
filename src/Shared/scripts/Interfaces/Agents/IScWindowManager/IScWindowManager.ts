@@ -6,12 +6,12 @@ import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { ScRibbonCommand } from "../../../Enums/eScRibbonCommand";
 
 export interface IScWindowFacade {
-  TriggerCERibbonCommand(ribbonCommand: ScRibbonCommand);
+  TriggerCERibbonCommand(ribbonCommand: ScRibbonCommand): void;
   GetCurrentPageType(): ScWindowType;
   GetStateOfScUiProxy(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUi>;
   InstantiateAsyncMembers(): Promise<void>;
   PublishActiveCE():Promise<void>;
-  SetCompactCss(targetDoc: DocumentJacket);
+  SetCompactCss(targetDoc: DocumentJacket):void;
   SetStateOfScWin(dataToRestore: IStateOfScUi): Promise<void>
   StateFullProxy: IStateFullDocProxy;
 }

@@ -9,10 +9,10 @@ export class RepositoryAgent extends _CommonBase implements IRepositoryAgent {
     super(hindeCore);
   }
 
-  RemoveByKey(key: string) {
+  RemoveByKey(key: string) : void{
     try {
       window.localStorage.removeItem(key);
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.RemoveByKey.name, err);
     }
   }
@@ -44,7 +44,7 @@ export class RepositoryAgent extends _CommonBase implements IRepositoryAgent {
         }
       }
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.GetBulkLocalStorageByKeyPrefix.name, err);
     }
     return toReturn;

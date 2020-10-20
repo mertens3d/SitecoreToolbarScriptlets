@@ -48,7 +48,7 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
 
       await Promise.all(promiseArFrame)
         .then(() => resolve(frameElemJacketAr))
-        .catch((err) => reject(commonCore.ErrorHand.FormatRejectMessage([FrameElemJacket.name, this.FactoryFrameElemJackets.name], err)));
+        .catch((err: any) => reject(commonCore.ErrorHand.FormatRejectMessage([FrameElemJacket.name, this.FactoryFrameElemJackets.name], err)));
     });
   }
 
@@ -58,10 +58,10 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
       this.WaitForCompleteNABFrameElement(FrameElemJacket.name + this.PrepareFrameJacket.name)
         .then(() => DocumentJacket.FactoryMakeDocumentJacket(this.CommonCore, this.NativeElement.contentDocument))
         .then((documentJacket: DocumentJacket) => this.DocumentJacket = documentJacket)
-        .catch((err) => this.ErrorHand.HandleFatalError(this.PrepareFrameJacket.name, err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.PrepareFrameJacket.name, err));
 
       this.NativeIframeId = this.NativeElement.id;
-    } catch (err) {
+    } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.PrepareFrameJacket.name, err)
     }
     this.Logger.FuncEnd([FrameElemJacket.name, this.PrepareFrameJacket.name]);
@@ -95,7 +95,7 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
         ZIndex: sourceStyle.zIndex
       };
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.GetFrameStyling.name, err);
     }
     return toReturn;
@@ -156,7 +156,7 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
         this.Logger.Log(iterationJr.IsExhaustedMsg);
       }
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.WaitForNABHostedDoc.name, err);
     }
     this.Logger.FuncEnd(this.WaitForNABHostedDoc.name);
@@ -179,7 +179,7 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
           //  this.Logger.LogVal(this.WaitForCompleteNABHtmlIframeElement.name, this.NativeElement.contentDocument.readyState);
           //  resolve(result);
           //})
-          .catch((err) => reject(this.ErrorHand.FormatRejectMessage([FrameElemJacket.name, this.WaitForCompleteNABFrameElement.name], err)));
+          .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([FrameElemJacket.name, this.WaitForCompleteNABFrameElement.name], err)));
       }
       else {
         reject(this.ErrorHand.FormatRejectMessage([FrameElemJacket.name, this.WaitForCompleteNABFrameElement.name], 'No target doc: ' + friendly));

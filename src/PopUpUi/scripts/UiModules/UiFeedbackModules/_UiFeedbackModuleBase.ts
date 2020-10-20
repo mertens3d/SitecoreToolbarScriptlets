@@ -18,8 +18,8 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
     this.Init_UiModuleBase();
   }
 
-  abstract RefreshUi_Module();
-  abstract WireEvents_Module();
+  abstract RefreshUi_Module():void;
+  abstract WireEvents_Module():void;
 
 
   BuildHtmlForModule() {

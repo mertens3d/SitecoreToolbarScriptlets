@@ -135,7 +135,7 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INative
         this.ErrorHand.HandleFatalError(this.InitMutationObserver.name, 'no container element');
       }
     }
-    catch (err) {
+    catch (err: any) {
       this.ErrorHand.HandleFatalError(this.InitMutationObserver.name, err);
     }
     this.Logger.FuncEnd(this.InitMutationObserver.name);

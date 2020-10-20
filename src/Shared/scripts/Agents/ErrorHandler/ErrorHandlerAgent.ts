@@ -32,7 +32,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
           } else {
             console.log('No Task Monitor found');
           }
-        } catch (err) {
+        } catch (err: any) {
           console.log('Error in: ' + this.ThrowIfNullOrUndefined.name + '  ' + err);
         }
 
@@ -127,7 +127,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     this.DrawErrorMessage(container, text);
   }
 
-  async ErrorLogger(text) {
+   ErrorLogger(text: string) :void{
     console.log('********** ' + text + ' **********');
   }
 
@@ -173,7 +173,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     this.DrawErrorMessage(containerTextToRender, [text, stack]);
     try {
       this.TaskMonitor.RequestCancel(ErrorHandlerAgent.name + '.' + this.HandleFatalError.name );
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
     }
     console.log ('----- sigh...sad face ');

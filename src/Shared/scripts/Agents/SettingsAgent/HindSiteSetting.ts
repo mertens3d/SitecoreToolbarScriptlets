@@ -47,7 +47,7 @@ export class HindSiteSetting implements IHindSiteSetting {
           toReturn = candidate;
         }
       }
-      catch (err) {
+      catch (err: any) {
         throw (HindSiteSetting.name + '.' + this.ValueAsHistory.name + ' | ' + err);
       }
     }

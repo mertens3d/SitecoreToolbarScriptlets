@@ -13,11 +13,11 @@ export class TemplateManagerProxy extends _ContentTreeBasedDocProxy<IStateOfTemp
     return this.__baseInstantiateAsyncMembers();
   }
 
-  WireEvents() {
+  async WireEvents(): Promise<void> {
     this.__baseWireEvents();
   }
 
-  TriggerInboundEventsAsync(): void {
+  async TriggerInboundEventsAsync(): Promise<void> {
     return this.__BaseTriggerInboundEventsAsync();
   }
 
@@ -25,7 +25,7 @@ export class TemplateManagerProxy extends _ContentTreeBasedDocProxy<IStateOfTemp
     return this.__baseGetState();
   }
 
-  async SetState(dataToRestore: IStateOfTemplateManager): Promise<boolean> {
-    return this.__baseSetState(dataToRestore);
+  async SetState(dataToRestore: IStateOfTemplateManager): Promise<void> {
+     this.__baseSetState(dataToRestore);
   }
 }
