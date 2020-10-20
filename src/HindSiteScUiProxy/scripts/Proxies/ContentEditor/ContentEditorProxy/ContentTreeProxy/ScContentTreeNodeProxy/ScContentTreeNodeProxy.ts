@@ -1,7 +1,7 @@
 ﻿import { ElementAnchorJacket } from "../../../../../../../DOMJacket/scripts/Elements/ElementAnchorJacket";
 import { ElementDivJacket } from "../../../../../../../DOMJacket/scripts/Elements/ElementDivJacket";
 import { ElementImgJacket } from "../../../../../../../DOMJacket/scripts/Elements/ElementImgJacket";
-import { GenericElemJacket } from "../../../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+import { IJacketOfType } from "../../../../../../../Shared/scripts/IJacketOfType";
 import { ScIconPath } from "../../../../../../../Shared/scripts/Enums/60 - ScIconPath";
 import { Guid } from "../../../../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../../../../Shared/scripts/Helpers/GuidData";
@@ -54,7 +54,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
   ParentTreeNode: ScContentTreeNodeProxy;
   private ConResolver: ConResolver;
 
-  constructor(apiCore: IAPICore, sourceElemJacket: GenericElemJacket, level: number, siblingIndex: number, totalSiblings: number, parent: ScContentTreeNodeProxy, conResolver: ConResolver) {
+  constructor(apiCore: IAPICore, sourceElemJacket: IJacketOfType, level: number, siblingIndex: number, totalSiblings: number, parent: ScContentTreeNodeProxy, conResolver: ConResolver) {
     super(apiCore);
 
     if (sourceElemJacket) {

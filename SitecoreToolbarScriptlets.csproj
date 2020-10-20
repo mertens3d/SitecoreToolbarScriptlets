@@ -70,6 +70,8 @@
     <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\ElementJacketBaseOfType.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\FrameElemJacket.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\IAbortToken.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\_baseElemJacket.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\IJacketOfType.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\NativeIFrameAddedEvent\INativeAddRemoveEvent_Payload.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\NativeIFrameAddedEvent\NativeAddRemoveEvent_Observer.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\NativeIFrameAddedEvent\NativeAddRemoveEvent_Subject.ts" />
@@ -83,7 +85,7 @@
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\ElementJacketMutationEvent\ElementJacketMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\ElementJacketMutationEvent\ElementJacketMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\ElementJacketMutationEvent\IElementJacketMutationEvent_Payload.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\scripts\Events\ElementJacketMutationEvent\IElemJacketWatcherParameters.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\IElemJacketWatcherParameters.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\ScDocProxyWatcherForFrames.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\_BaseScDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseStateFullDocProxy.ts" />

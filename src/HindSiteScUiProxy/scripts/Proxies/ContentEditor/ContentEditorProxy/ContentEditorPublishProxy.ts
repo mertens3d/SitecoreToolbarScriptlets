@@ -1,6 +1,6 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
-import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { PromiseResult } from "../../../../../Shared/scripts/Classes/PromiseResult";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDataPublishChain } from "../../../../../Shared/scripts/Interfaces/Data/IDataPublishChain";
@@ -204,7 +204,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
       let frameJacket: FrameElemJacket = null;
 
       await this.DocumentJacket.WaitForGenericElemJacket(selector)
-        .then((genericElemJacket: GenericElemJacket) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
+        .then((genericElemJacket: IJacketOfType) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
         .then((frameElemJackets: FrameElemJacket[]) => frameJacket = frameElemJackets[0])
         .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
         .then((result: CEFrameProxy) => resolve(result))

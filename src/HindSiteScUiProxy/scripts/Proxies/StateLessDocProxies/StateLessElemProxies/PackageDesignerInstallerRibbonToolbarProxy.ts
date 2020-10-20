@@ -1,16 +1,14 @@
-﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
-import { ElementDivJacket } from "../../../../../DOMJacket/scripts/Elements/ElementDivJacket";
+﻿import { ElementDivJacket } from "../../../../../DOMJacket/scripts/Elements/ElementDivJacket";
+import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
-import { JqueryModalDialogsFrameProxy } from "../StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { _BaseStateLessElemProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateLessElemProxy";
+import { JqueryModalDialogsFrameProxy } from "../StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
 export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLessElemProxy {
   ElementDivJacket: ElementDivJacket;
   JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
-  private GenerateZipButton: GenericElemJacket;
+  private GenerateZipButton: IJacketOfType;
 
   constructor(apiCore: IAPICore, elementDivJacket: ElementDivJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) {
     super(apiCore);
@@ -24,7 +22,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
     this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
 
     this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.InstallerDesigner.GenerateZip)
-      .then((genericElemJacket: GenericElemJacket) => this.GenerateZipButton = genericElemJacket)
+      .then((genericElemJacket: IJacketOfType) => this.GenerateZipButton = genericElemJacket)
       .then(() => this.GenerateZipButton.NativeElement.addEventListener('click', ((event: Event) => this.CallBackOnGenerateZipButtonClicked(event))))
       .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name], err));
 
@@ -53,7 +51,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
     //let jqueryFrameProxy: JqueryModalDialogsProxy = null;
 
     await this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
-      .then((elemJacket: GenericElemJacket) => elemJacket.NativeElement.click())
+      .then((elemJacket: IJacketOfType) => elemJacket.NativeElement.click())
       .catch((err) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.OpenFile.name], err))
 
     //  .then(() => {

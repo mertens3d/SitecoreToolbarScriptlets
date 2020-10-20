@@ -2,11 +2,11 @@
 import { ReadyStateNAB } from "../../../Shared/scripts/Classes/ReadyStateNAB";
 import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { IFrameJacketStyling } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfFrameStyling";
+import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { DocumentJacket } from "../Document/DocumentJacket";
 import { UrlJacket } from "./../UrlJacket";
 import { ElementJacketOfType } from "./ElementJacketBaseOfType";
-import { GenericElemJacket } from "./GenericElemJacket";
-import { SharedConst } from "../../../Shared/scripts/SharedConst";
+import { IJacketOfType } from "../../../Shared/scripts/IJacketOfType";
 
 export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
   public DocumentJacket: DocumentJacket;
@@ -16,9 +16,9 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
     super(commonCore, htmlIframeElement);
   }
 
-  private static MfgrFrameElemJacketsStep1(commonCore: ICommonCore, inputValue: GenericElemJacket | HTMLElement): FrameElemJacket {
+  private static MfgrFrameElemJacketsStep1(commonCore: ICommonCore, inputValue: IJacketOfType | HTMLElement): FrameElemJacket {
     let htmlIframeElement: HTMLIFrameElement = null;
-    if (inputValue instanceof GenericElemJacket) {
+    if (inputValue instanceof ElementJacketOfType) {
       if (inputValue.NodeTagName === SharedConst.Const.KeyWords.NodeTagName.IFrame) {
         htmlIframeElement = <HTMLIFrameElement>inputValue.NativeElement;
       } else {
@@ -32,11 +32,11 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
     return frameElemJacket;
   }
 
-  public static FactoryFrameElemJackets(commonCore: ICommonCore, inputValue: GenericElemJacket[] | HTMLElement[]): Promise<FrameElemJacket[]> {
+  public static FactoryFrameElemJackets(commonCore: ICommonCore, inputValue: IJacketOfType[] | HTMLElement[]): Promise<FrameElemJacket[]> {
     return new Promise(async (resolve, reject) => {
       let frameElemJacketAr: FrameElemJacket[] = [];
 
-      inputValue.forEach((inputValue: GenericElemJacket | HTMLElement) => {
+      inputValue.forEach((inputValue: IJacketOfType | HTMLElement) => {
         frameElemJacketAr.push(this.MfgrFrameElemJacketsStep1(commonCore, inputValue));
       });
 

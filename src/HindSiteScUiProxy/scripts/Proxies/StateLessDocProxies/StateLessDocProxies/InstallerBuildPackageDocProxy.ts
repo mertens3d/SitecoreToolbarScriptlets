@@ -1,4 +1,4 @@
-﻿import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+﻿import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
@@ -12,7 +12,7 @@ export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy impl
     let parentElem: HTMLElement = null;
 
     await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.PackageFile)
-      .then((genericElemJacket: GenericElemJacket) => parentElem = genericElemJacket.NativeElement.parentElement)
+      .then((genericElemJacket: IJacketOfType) => parentElem = genericElemJacket.NativeElement.parentElement)
       .then(() => {
         this.AddPackageNameCandidateButtons(parentElem)
       })
@@ -50,17 +50,17 @@ export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy impl
 
   async OpenFile(fileName: string): Promise<void> {
     try {
-      let FileNameInput: GenericElemJacket = null;
-      let OpenOkButton: GenericElemJacket = null;
-      let CancelButton: GenericElemJacket = null;
+      let FileNameInput: IJacketOfType = null;
+      let OpenOkButton: IJacketOfType = null;
+      let CancelButton: IJacketOfType = null;
       let trimmedFileName: string = fileName.trim();
 
       await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Ok)
-        .then((genericElemJacket: GenericElemJacket) => OpenOkButton = genericElemJacket)
+        .then((genericElemJacket: IJacketOfType) => OpenOkButton = genericElemJacket)
         .then(() => this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Cancel))
-        .then((genericElemJacket: GenericElemJacket) => CancelButton = genericElemJacket)
+        .then((genericElemJacket: IJacketOfType) => CancelButton = genericElemJacket)
         .then(() => this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.PackageFile))
-        .then((genericElemJacket: GenericElemJacket) => FileNameInput = genericElemJacket)
+        .then((genericElemJacket: IJacketOfType) => FileNameInput = genericElemJacket)
         .then(() => {
           if (trimmedFileName.length > 0) {
             (<HTMLInputElement>FileNameInput.NativeElement).value = fileName;

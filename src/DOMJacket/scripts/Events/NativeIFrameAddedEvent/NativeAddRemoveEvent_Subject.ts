@@ -1,18 +1,19 @@
-﻿import { IElemJacketWatcherParameters } from "../ElementJacketMutationEvent/IElemJacketWatcherParameters";
-import { TypeDiscriminator } from "../../../../Shared/scripts/Enums/70 - TypeDiscriminator";
+﻿import { TypeDiscriminator } from "../../../../Shared/scripts/Enums/70 - TypeDiscriminator";
 import { HindeSiteEvent_Subject } from "../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
+import { IElemJacketWatcherParameters } from "../../../../Shared/scripts/IElemJacketWatcherParameters";
+import { IJacketOfType } from "../../../../Shared/scripts/IJacketOfType";
 import { ICommonCore } from "../../../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { GenericElemJacket } from "../../Elements/GenericElemJacket";
+import { ElementJacketOfType } from "../../Elements/ElementJacketBaseOfType";
 import { INativeAddRemoveEvent_Payload } from "./INativeAddRemoveEvent_Payload";
 
 export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INativeAddRemoveEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.FrameJacketAddRemoveEvent_Subject;
   ShowLogActions: boolean = true;
-  private ContainerElemJacket: GenericElemJacket;
+  private ContainerElemJacket: IJacketOfType;
   private WatcherParams: IElemJacketWatcherParameters;
 
-  constructor(commonCore: ICommonCore, elemJacket: GenericElemJacket, watcherParams: IElemJacketWatcherParameters) {
+  constructor(commonCore: ICommonCore, elemJacket: IJacketOfType, watcherParams: IElemJacketWatcherParameters) {
     super(commonCore);
 
     this.Logger.CTORStart(NativeAddRemoveEvent_Subject.name);
@@ -40,10 +41,10 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INative
     return removedIframeIds;
   }
 
-  private HandleAddedNodes(addedNodes: NodeList): GenericElemJacket[] {
+  private HandleAddedNodes(addedNodes: NodeList): IJacketOfType[] {
     this.Logger.FuncStart([NativeAddRemoveEvent_Subject.name, this.HandleAddedNodes.name], 'for: ' + this.WatcherParams.OwnerFriendly);
 
-    let addedElementJackets: GenericElemJacket[] = [];
+    let addedElementJackets: IJacketOfType[] = [];
 
     addedNodes.forEach((addedNode) => {
       if (addedNode instanceof HTMLElement) {
@@ -61,7 +62,7 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INative
 
         if (passesFilterTest) {
           if (addedHtmlElement instanceof HTMLIFrameElement) {
-            addedElementJackets.push(new GenericElemJacket(this.CommonCore, addedHtmlElement));
+            addedElementJackets.push(new ElementJacketOfType < HTMLElement>(this.CommonCore, addedHtmlElement));
           }
         }
       }
@@ -87,8 +88,8 @@ export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INative
           };
 
           if (mutation.addedNodes.length > 0) {
-            let addedNodes: GenericElemJacket[] = this.HandleAddedNodes(mutation.addedNodes);
-            addedNodes.forEach((addedNode: GenericElemJacket) => {
+            let addedNodes: IJacketOfType[] = this.HandleAddedNodes(mutation.addedNodes);
+            addedNodes.forEach((addedNode: IJacketOfType) => {
               nativeDomAddRemoveEvent_Payload.AddedElementJacket = addedNode;
               nativeDomAddRemoveEvent_Payload.RemovedIFrameId = null;
               this.NotifyObserversAsync(nativeDomAddRemoveEvent_Payload);

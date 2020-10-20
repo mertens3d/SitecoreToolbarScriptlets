@@ -13,6 +13,7 @@ import { _CommonBase } from "../../../Shared/scripts/_CommonCoreBase";
 import { GenericElemJacket } from "../Elements/GenericElemJacket";
 import { FrameElemJacket } from "../Elements/FrameElemJacket";
 import { UrlJacket } from "../UrlJacket";
+import { IJacketOfType } from "../../../Shared/scripts/IJacketOfType";
 
 export class DocumentJacket extends _CommonBase {
   private NativeDocument: Document;
@@ -63,8 +64,8 @@ export class DocumentJacket extends _CommonBase {
     })
   }
 
-  GetElementById(idStr: string): GenericElemJacket {
-    let elementJacket: GenericElemJacket = null;
+  GetElementById(idStr: string): IJacketOfType {
+    let elementJacket: IJacketOfType = null;
     let htmlElement: HTMLElement = this.NativeDocument.getElementById(idStr);
     if (htmlElement) {
       elementJacket = new GenericElemJacket(this.CommonCore, htmlElement);
@@ -72,8 +73,8 @@ export class DocumentJacket extends _CommonBase {
     return elementJacket;
   }
 
-  QuerySelector(selector: string): GenericElemJacket {
-    let elementJacket: GenericElemJacket = null;
+  QuerySelector(selector: string): IJacketOfType {
+    let elementJacket: IJacketOfType = null;
     let htmlElement: HTMLElement = this.NativeDocument.querySelector(selector);
     if (htmlElement) {
       elementJacket = new GenericElemJacket(this.CommonCore, htmlElement);
@@ -103,7 +104,7 @@ export class DocumentJacket extends _CommonBase {
       this.Logger.FuncStart(this.WaitForFirstHostedFrame.name, querySelector);
 
       await this.WaitForGenericElemJacket(querySelector)
-        .then((genericElemJacket: GenericElemJacket) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
+        .then((genericElemJacket: IJacketOfType) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
         .then((frameElemJackets: FrameElemJacket[]) => resolve(frameElemJackets[0]))
         .catch((err) => reject(this.ErrorHand.FormatRejectMessage([this.WaitForFirstHostedFrame.name], err)));
 
@@ -184,7 +185,7 @@ export class DocumentJacket extends _CommonBase {
     }
   }
 
-  public async WaitForGenericElemJacket(selector: string, promiseFailAction: PromiseFailAction = PromiseFailAction.Default): Promise<GenericElemJacket> {
+  public async WaitForGenericElemJacket(selector: string, promiseFailAction: PromiseFailAction = PromiseFailAction.Default): Promise<IJacketOfType> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForGenericElemJacket.name, selector);
 
@@ -201,7 +202,7 @@ export class DocumentJacket extends _CommonBase {
             firstFind = false;
           } else {
             this.Logger.Log('found it');
-            let genericElemJacket: GenericElemJacket = new GenericElemJacket(this.CommonCore, htmlElement);
+            let genericElemJacket: IJacketOfType = new GenericElemJacket(this.CommonCore, htmlElement);
             this.Logger.LogAsJsonPretty('found', genericElemJacket);
             resolve(genericElemJacket);
           }

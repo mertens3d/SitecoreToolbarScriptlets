@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/scripts/Document/DocumentJacket';
-import { GenericElemJacket } from "../../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
 import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
@@ -76,13 +76,13 @@ export class DTStartBarProxy extends _APICoreBase {
         this.Logger.FuncStart(this.TriggerPopXButton.name, buttonSelector + ' | ' + containerSelector);
         try {
             if (buttonSelector && buttonSelector.length > 0 && containerSelector && containerSelector.length > 0) {
-                let containerElemJacket: GenericElemJacket = null;
-                let buttonElemJacket: GenericElemJacket = null;
+              let containerElemJacket: IJacketOfType = null;
+              let buttonElemJacket: IJacketOfType = null;
 
                 await this.DocumentJacket.WaitForGenericElemJacket(containerSelector)
-                    .then((elementJacket: GenericElemJacket) => containerElemJacket = elementJacket)
+                  .then((elementJacket: IJacketOfType) => containerElemJacket = elementJacket)
                     .then(() => containerElemJacket.WaitForElement(buttonSelector, this.TriggerRedButtonAsync.name))
-                    .then((elementJacket: GenericElemJacket) => buttonElemJacket = elementJacket)
+                  .then((elementJacket: IJacketOfType) => buttonElemJacket = elementJacket)
                     .then(() => this.Logger.LogImportant('About to click ' + buttonSelector))
                     .then(() => buttonElemJacket.Click())
                     .then(() => this.WaitForTimePeriod(1, this.TriggerPopXButton.name))

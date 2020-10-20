@@ -1,7 +1,7 @@
-﻿import { GenericElemJacket } from "../../Elements/GenericElemJacket";
+﻿import { IJacketOfType } from "../../../../Shared/scripts/IJacketOfType";
 
 export interface INativeAddRemoveEvent_Payload {
   RemovedIFrameId: string;
-  AddedElementJacket: GenericElemJacket;
+  AddedElementJacket: IJacketOfType;
   OnBehalfOfFriendly: string;
 }

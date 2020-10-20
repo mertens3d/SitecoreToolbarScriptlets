@@ -1,6 +1,6 @@
 import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
-import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
@@ -49,8 +49,6 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
   JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy = null;
   HostedElemProxies: IStateFullElemProxy[] = [];
 
-
-
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore, documentJacket);
     this.Logger.CTORStart(DesktopProxy.name);
@@ -81,7 +79,7 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
           .then((jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) => this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy)
 
           .then(() => this.DocumentJacket.WaitForGenericElemJacket('.DesktopArea'))
-          .then((genericElemJacket: GenericElemJacket) => this.DTAreaProxy = new DTAreaElemProxy(this.ApiCore, this.JqueryModalDialogsFrameProxy, genericElemJacket))
+          .then((genericElemJacket: IJacketOfType) => this.DTAreaProxy = new DTAreaElemProxy(this.ApiCore, this.JqueryModalDialogsFrameProxy, genericElemJacket))
 
           .then(() => this.DTAreaProxy.InstantiateAsyncMembers())
           .catch((err) => this.ErrorHand.HandleFatalError([DesktopProxy.name, this.InstantiateAsyncMembers.name], err))

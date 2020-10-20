@@ -1,21 +1,21 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/scripts/Document/DocumentJacket';
-import { GenericElemJacket } from "../../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
 import { StaticHelpers } from '../../../../../../Shared/scripts/Classes/StaticHelpers';
 import { BufferChar } from '../../../../../../Shared/scripts/Enums/BufferChar';
 import { BufferDirection } from '../../../../../../Shared/scripts/Enums/BufferDirection';
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
-import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
-import { SharedConst } from '../../../../../../Shared/scripts/SharedConst';
 import { IScContentTreeNodeLineage } from '../../../../../../Shared/scripts/Interfaces/Data/IScContentTreeNodeLineage';
 import { IScIcon } from '../../../../../../Shared/scripts/Interfaces/Data/IScIcon';
+import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
+import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
+import { SharedConst } from '../../../../../../Shared/scripts/SharedConst';
+import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
 
 export class DesktopStartBarButtonProxy extends _APICoreBase {
   private DocumentJacket: DocumentJacket;
-  private ContainerSpanElement: GenericElemJacket;
-  private FoundStartBarButton: GenericElemJacket;
+  private ContainerSpanElement: IJacketOfType;
+  private FoundStartBarButton: IJacketOfType;
   private StartBarButtonElemId: string;
 
   public FrameId: string;
@@ -38,7 +38,7 @@ export class DesktopStartBarButtonProxy extends _APICoreBase {
       let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
       this.FoundStartBarButton = this.DocumentJacket.QuerySelector(querySelectBtn);
       await this.FoundStartBarButton.WaitForElement(':scope > div > span', this.Instantiate_DestopStartBarButtonProxyAsyncItems.name)
-        .then((containerSpanElement: GenericElemJacket) => this.ContainerSpanElement = containerSpanElement);
+        .then((containerSpanElement: IJacketOfType) => this.ContainerSpanElement = containerSpanElement);
     } catch (err) {
       this.ErrorHand.HandleFatalError(this.Instantiate_DestopStartBarButtonProxyAsyncItems.name, err);
     }

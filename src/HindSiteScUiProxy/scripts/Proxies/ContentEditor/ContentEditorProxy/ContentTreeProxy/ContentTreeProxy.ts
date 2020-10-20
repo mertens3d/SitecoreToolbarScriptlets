@@ -18,6 +18,7 @@ import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNo
 import { ConResolver } from './ScContentTreeNodeProxy/ConResolver';
 import { _BaseStateFullElemProxy } from "../../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullElemProxy";
 import { IStateFullElemProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
+import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
 
 //ContentTree is the name Sitecore uses
 export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfContentTree> implements IStateFullElemProxy {
@@ -25,12 +26,12 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
   private _treeNodeProxy: ScContentTreeNodeProxy;
   private NativeClassNameChangeEvent_Observer: NativeClassNameChangeEvent_Observer;
   private NativeClassNameChangeEvent_Subject: NativeClassNameChangeEvent_Subject;
-  private rootTreeNodeJacket: GenericElemJacket;
+  private rootTreeNodeJacket: IJacketOfType;
 
   public ContentTreeMutationEvent_Subject: ContentTreeMutationEvent_Subject;
   private ConResolver: ConResolver;
 
-  constructor(apiCore: IAPICore, hostDocumentJacket: DocumentJacket, treeContainerJacket: GenericElemJacket, TreeRootSelector: string) {
+  constructor(apiCore: IAPICore, hostDocumentJacket: DocumentJacket, treeContainerJacket: IJacketOfType, TreeRootSelector: string) {
     super(apiCore,  treeContainerJacket);
 
     this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeElemProxy.name, [hostDocumentJacket, treeContainerJacket]);
@@ -100,7 +101,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
         var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.ItemId);
 
         await this.ContainerElemJacket.WaitForElement('[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
-          .then((elemJacket: GenericElemJacket) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth, null, this.ConResolver))
+          .then((elemJacket: IJacketOfType) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth, null, this.ConResolver))
           .then(() => scContentTreeNodeProxy.Instantiate())
           .then(() => resolve(scContentTreeNodeProxy))
           .catch((err) => reject(this.GetTreeNodeByGlyph.name + ' | ' + err));
@@ -166,7 +167,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
  private async SetRootNodeFromSelector(): Promise<void> {
    try {
      await this.ContainerElemJacket.WaitForElement(this.TreeRootSelector)
-        .then((elementJacket: GenericElemJacket) => this.rootTreeNodeJacket = elementJacket);
+       .then((elementJacket: IJacketOfType) => this.rootTreeNodeJacket = elementJacket);
     } catch (err) {
       this.ErrorHand.HandleFatalError(this.SetRootNodeFromSelector.name, err);
     }
@@ -219,7 +220,9 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
 
       if (this.ContainerElemJacket) {
         if (this.rootTreeNodeJacket) {
-          var rootParent: GenericElemJacket = this.rootTreeNodeJacket.parentElement();
+
+          let parentHtmlElement = this.rootTreeNodeJacket.NativeElement.parentElement;
+          var rootParent: IJacketOfType = new GenericElemJacket(this.ApiCore, parentHtmlElement);//  this.rootTreeNodeJacket.parentElement();
 
 
           // todo - fix this await mess

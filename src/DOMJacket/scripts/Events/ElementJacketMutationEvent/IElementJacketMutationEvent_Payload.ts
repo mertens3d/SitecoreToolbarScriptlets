@@ -1,6 +1,6 @@
-﻿import { GenericElemJacket } from "../../Elements/GenericElemJacket";
+﻿import { IJacketOfType } from "../../../../Shared/scripts/IJacketOfType";
 
 export interface IElementJacketMutationEvent_Payload {
   RemovedIFrameId: string;
-  AddedGenericElemJacket: GenericElemJacket;
+  AddedGenericElemJacket: IJacketOfType;
 }

@@ -177,3 +177,6 @@ class ContentEntry {
 
 let contentEntry: ContentEntry = new ContentEntry();
 contentEntry.StartUpContent();
+
+
+console.log('addddddddddddddddddddddddd');

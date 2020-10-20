@@ -1,10 +1,8 @@
-﻿import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
-import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+﻿import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
+import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
 import { ElementJacketMutationEvent_Observer } from "../../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Observer";
 import { ElementJacketMutationEvent_Subject } from "../../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
 import { IElementJacketMutationEvent_Payload } from "../../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/IElementJacketMutationEvent_Payload";
-import { IElemJacketWatcherParameters } from "../../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/IElemJacketWatcherParameters";
-import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
@@ -24,6 +22,8 @@ import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutatio
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { _BaseStateFullElemProxy } from "./FrameProxies/_BaseStateFullElemProxy";
+import { IElemJacketWatcherParameters } from "../../../../../Shared/scripts/IElemJacketWatcherParameters";
+import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
 
 export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> implements IStateFullElemProxy {
   public readonly ScProxyDisciminator = ScProxyDisciminator.DTAreaElemProxy;
@@ -38,7 +38,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
   ElemJacketMutationEvent_Subject: ElementJacketMutationEvent_Subject;
   //JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
   //DocumentJacketWatcher: DocumentJacket_Watcher;
-  constructor(apiCore: IAPICore, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy, containerElemJacket: GenericElemJacket) {
+  constructor(apiCore: IAPICore, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy, containerElemJacket: IJacketOfType) {
     super(apiCore, containerElemJacket);
 
     this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
@@ -158,7 +158,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
     this.Logger.FuncEnd([DTAreaElemProxy.name, this.CallBackOnElementMutationEvent.name]);
   }
 
-  private async HandleAddedGenericElemJacket(genericElemJacket: GenericElemJacket): Promise<void> {
+  private async HandleAddedGenericElemJacket(genericElemJacket: IJacketOfType): Promise<void> {
     this.Logger.FuncStart([DTAreaElemProxy.name, this.HandleAddedGenericElemJacket.name]);
 
     if (genericElemJacket) {
@@ -172,7 +172,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
     this.Logger.FuncEnd([DTAreaElemProxy.name, this.HandleAddedGenericElemJacket.name]);
   }
 
-  private async HandleAddedFrameElemJacket(genericElemJacket: GenericElemJacket): Promise<void> {
+  private async HandleAddedFrameElemJacket(genericElemJacket: IJacketOfType): Promise<void> {
     this.Logger.FuncStart(this.HandleAddedFrameElemJacket.name);
 
     let dtFrameProxy: DTFrameProxy = null;

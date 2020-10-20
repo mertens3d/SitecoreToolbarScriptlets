@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/scripts/Document/DocumentJacket';
-import { GenericElemJacket } from "../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
+import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { IterationDrone } from '../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { _baseDefaultStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Classes/Defaults/_baseDefaultStateOfContentTreeBasedProxies';
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
@@ -45,7 +45,7 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
   async __baseInstantiateAsyncMembers(): Promise<void> {
     await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(_ContentTreeBasedDocProxy.name)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
       .then(() => this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
-      .then((treeContainer: GenericElemJacket) => this.ContentTreeProxy = new ContentTreeElemProxy(this.ApiCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
+      .then((treeContainer: IJacketOfType) => this.ContentTreeProxy = new ContentTreeElemProxy(this.ApiCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
       .then(() => this.ContentTreeProxy.Instantiate_TreeProxyAsyncElem())
       .then(() => {
         this.__ContentTreeBasedProxyMutationEvent_Subject = new __ContentTreeBasedProxyMutationEvent__Subject(this.ApiCore);

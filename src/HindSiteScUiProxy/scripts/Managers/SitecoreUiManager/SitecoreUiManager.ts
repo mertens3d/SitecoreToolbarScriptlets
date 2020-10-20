@@ -1,12 +1,12 @@
-﻿import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
+﻿import { ContentBrowserProxy } from "../../../../ContentTop/scripts/Proxies/ContentBrowserProxy";
+import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { IJacketOfType } from "../../../../Shared/scripts/IJacketOfType";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
+import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
-import { GenericElemJacket } from "../../../../DOMJacket/scripts/Elements/GenericElemJacket";
-import { ContentBrowserProxy } from "../../../../ContentTop/scripts/Proxies/ContentBrowserProxy";
 
 export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IStateOfScUi;
@@ -51,8 +51,8 @@ export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
     this.Logger.FuncStart(this.AdminB.name, 'targetDoc: ' + Guid.AsShort(documentJacket.DocId));
     this.Logger.Log('callback passed: ' + (callbackOnComplete !== null));
 
-    let userNameElem: GenericElemJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginUserName);
-    let passwordElem: GenericElemJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginPassword);
+    let userNameElem: IJacketOfType = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginUserName);
+    let passwordElem: IJacketOfType = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginPassword);
 
     if (this.Logger.IsNotNullOrUndefinedBool('userNameElem', userNameElem)
       &&
@@ -60,7 +60,7 @@ export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
       userNameElem.NativeElement.setAttribute('value', ContentConst.Const.Names.scDefaultAdminUserName);
       passwordElem.NativeElement.setAttribute('value', ContentConst.Const.Names.scDefaultAdminPassword);
 
-      var loginButton: GenericElemJacket = this.GetLoginButton(documentJacket);
+      var loginButton: IJacketOfType = this.GetLoginButton(documentJacket);
 
       if (this.Logger.IsNotNullOrUndefinedBool('loginButton', loginButton)) {
         this.Logger.Log('clicking loginbutton');
@@ -84,10 +84,10 @@ export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
     this.Logger.FuncEnd(this.AdminB.name);
   }
 
-  GetLoginButton(documentJacket: DocumentJacket): GenericElemJacket {
+  GetLoginButton(documentJacket: DocumentJacket): IJacketOfType {
     this.Logger.FuncStart(this.GetLoginButton.name);
 
-    var toReturn: GenericElemJacket = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginBtn.sc920);
+    var toReturn: IJacketOfType = documentJacket.GetElementById(ContentConst.Const.ElemId.SC.scLoginBtn.sc920);
 
     if (!toReturn) {
       toReturn = documentJacket.QuerySelector(ContentConst.Const.Selector.SC.LoginBtn.sc820);

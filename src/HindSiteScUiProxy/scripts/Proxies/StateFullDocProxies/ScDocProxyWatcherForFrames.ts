@@ -1,16 +1,16 @@
-﻿import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
-import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { IJacketOfType } from "../../../../Shared/scripts/IJacketOfType";
 import { FrameElemJacket } from "../../../../DOMJacket/scripts/Elements/FrameElemJacket";
-import { IElemJacketWatcherParameters } from "../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/IElemJacketWatcherParameters";
-import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { ElementJacketMutationEvent_Subject } from "../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
 import { ElementJacketMutationEvent_Observer } from "../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Observer";
+import { ElementJacketMutationEvent_Subject } from "../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
 import { IElementJacketMutationEvent_Payload } from "../../../../DOMJacket/scripts/Events/ElementJacketMutationEvent/IElementJacketMutationEvent_Payload";
-import { GenericElemJacket } from "../../../../DOMJacket/scripts/Elements/GenericElemJacket";
-import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { GenericStateLessFrameProxy } from "../StateLessDocProxies/StateLessFrameProxies/GenericStateLessFrameProxy";
+import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IStateLessScFrameProxy } from "../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessFrameProxy";
+import { SharedConst } from "../../../../Shared/scripts/SharedConst";
+import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
+import { GenericStateLessFrameProxy } from "../StateLessDocProxies/StateLessFrameProxies/GenericStateLessFrameProxy";
+import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
+import { IElemJacketWatcherParameters } from "../../../../Shared/scripts/IElemJacketWatcherParameters";
 
 export class ScDocProxyWatcherForFrames extends _APICoreBase {
   ScProxyDisciminatorFriendly: string;
@@ -61,7 +61,7 @@ export class ScDocProxyWatcherForFrames extends _APICoreBase {
 
     this.Logger.FuncEnd(this.CallbackOnDocumentJacketMutationEvent.name);
   }
-  private async HandleElemJacketAddedToDocument(elemJacket: GenericElemJacket): Promise<void> {
+  private async HandleElemJacketAddedToDocument(elemJacket: IJacketOfType): Promise<void> {
     this.Logger.FuncStart([ScDocProxyWatcherForFrames.name, this.HandleElemJacketAddedToDocument.name]);
 
     if (elemJacket) {
