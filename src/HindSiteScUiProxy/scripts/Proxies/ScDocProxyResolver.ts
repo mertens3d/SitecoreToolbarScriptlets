@@ -34,6 +34,7 @@ import { UserManagerProxy } from "./StateFullDocProxies/UserManagerProxy";
 import { WorkboxProxy } from "./StateFullDocProxies/WorkboxProxy";
 import { IBaseScDocProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
 import { ScWindowTypeResolver } from "../../../Shared/scripts/Agents/UrlAgent/ScWindowTypeResolver";
+import { AppToolsInstallerDesignerProxy } from "./StateFullDocProxies/AppToolsInstallerDesignerProxy";
 
 export class ScDocProxyResolver extends _APICoreBase {
   constructor(apiCore: IAPICore) {
@@ -117,6 +118,7 @@ export class ScDocProxyResolver extends _APICoreBase {
 
     if (false) { }
     else if (windowType === ScWindowType.AccessViewer) { stateFullScDocProxy = new AccessViewerProxy(this.ApiCore, documentJacket); }
+    else if (windowType === ScWindowType.AppToolsInstallerDesigner) { stateFullScDocProxy = new AppToolsInstallerDesignerProxy(this.ApiCore, documentJacket, jqueryModalDialogsFrameProxy); }
     else if (windowType === ScWindowType.Archive) { stateFullScDocProxy = new ArchiveProxy(this.ApiCore, documentJacket); }
     else if (windowType === ScWindowType.ContentEditor) { stateFullScDocProxy = new ContentEditorDocProxy(this.ApiCore, documentJacket, 'Solo Content Editor doc'); }
     else if (windowType === ScWindowType.ControlPanel) { stateFullScDocProxy = new FallBackDocProxy(this.ApiCore, documentJacket); }
@@ -144,7 +146,7 @@ export class ScDocProxyResolver extends _APICoreBase {
     else if (windowType === ScWindowType.MarketingControlPanel) { stateFullScDocProxy = new MarketingControlPanelDocProxy(this.ApiCore, documentJacket); }
     else if (windowType === ScWindowType.MarketingAutomation) { stateFullScDocProxy = new FallBackDocProxy(this.ApiCore, documentJacket); }
     else if (windowType === ScWindowType.MediaLibrary) { stateFullScDocProxy = new MediaLibraryProxy(this.ApiCore, documentJacket); }
-    else if (windowType === ScWindowType.PackageDesigner) { stateFullScDocProxy = new PackageDesignerDocProxy(this.ApiCore, documentJacket, 'PackageDesigner', jqueryModalDialogsFrameProxy); }
+    else if (windowType === ScWindowType.PackageDesigner) { stateFullScDocProxy = new PackageDesignerDocProxy(this.ApiCore, documentJacket); }
     else if (windowType === ScWindowType.PathAnalyzer) { stateFullScDocProxy = new FallBackDocProxy(this.ApiCore, documentJacket); }
     else if (windowType === ScWindowType.Publish) { stateFullScDocProxy = new FallBackDocProxy(this.ApiCore, documentJacket); }
     else if (windowType === ScWindowType.RecycleBin) { stateFullScDocProxy = new RecycleBinProxy(this.ApiCore, documentJacket); }
@@ -215,6 +217,7 @@ export class ScDocProxyResolver extends _APICoreBase {
     else if (proxyDiscriminator === ScProxyDisciminator.TemplateManager) { toReturn = ScWindowType.TemplateManager; }
     else if (proxyDiscriminator === ScProxyDisciminator.UserManager) { toReturn = ScWindowType.UserManager; }
     else if (proxyDiscriminator === ScProxyDisciminator.Workbox) { toReturn = ScWindowType.Workbox; }
+    else if (proxyDiscriminator === ScProxyDisciminator.AppToolsInstallerDesigner) { toReturn = ScWindowType.AppToolsInstallerDesigner; }
     else { this.ErrorHand.HandleFatalError(this.MapProxyDiscriminatorToScWindowType.name, 'unhandled mapping'); };
 
     return toReturn;

@@ -10,13 +10,16 @@ class Vars {
 
     this.PopUpStyles = new InjectableClass('PopUpUi', '/**/popup.scss', 'css', this.FinalFolderShort);
 
-    this.ContentStylesTop = new InjectableClass('ContentTop', '/**/content.scss', 'css', this.FinalFolderShort);
-
     this.PopUpUiJs = new InjectableClass('PopUpUi', '/**/*.js', 'js', this.FinalFolderShort);
-    this.PopUpUiJs.Ts.TranspiledEntryPointFile = 'HindSiteUiLayer.js';
+    this.PopUpUiJs.Ts.TranspiledEntryPointFile = 'PopUpUi.js';
 
     this.PopUpControllerJs = new InjectableClass('PopUpController', '/**/*.js', 'js', this.FinalFolderShort);
     this.PopUpControllerJs.Ts.TranspiledEntryPointFile = 'PopUpControllerLayer.js';
+      
+
+    this.ContentStylesTop = new InjectableClass('ContentTop', '/**/content.scss', 'css', this.FinalFolderShort);
+
+
 
     this.ContentTopJs = new InjectableClass('ContentTop', '/**/*.js', 'js', this.FinalFolderShort);
     this.ContentTopJs.Ts.TranspiledEntryPointFile = 'zContentTopEntryPoint.js';
@@ -27,6 +30,7 @@ class Vars {
     this.DomJacketJs = new InjectableClass('DOMJacket', '/**/*.js', 'js', this.FinalFolderShort);
     this.DomJacketJs.Ts.TranspiledEntryPointFile = 'DOMJacketEntry.js';
     
+
 
     this.SharedJs = new InjectableClass('Shared', '/**/*.js', 'js', this.FinalFolderShort);
     this.SharedJs.Ts.TranspiledEntryPointFile = 'SharedEntry.js';

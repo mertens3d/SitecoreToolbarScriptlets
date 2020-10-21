@@ -33,9 +33,15 @@ module.exports = {
               import: './AutoBuild/TsTranspiled/HindSiteScUiProxy/scripts/HindSiteScUiProxy.js',
               dependOn: ['DOMJacket', 'Shared']
             },
+
+            PopUpUi: {
+              import: './AutoBuild/TsTranspiled/PopUpUi/scripts/PopUpUi.js',
+              dependOn: [ 'Shared']
+            },
+
             PopUpController: {
               import: './AutoBuild/TsTranspiled/PopUpController/scripts/PopUpControllerLayer.js',
-              dependOn: ['Shared']
+              dependOn: ['Shared','PopUpUi']
             },
             DOMJacket: {
               import: './AutoBuild/TsTranspiled/DOMJacket/scripts/DOMJacketEntry.js',

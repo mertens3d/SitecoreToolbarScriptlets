@@ -14,6 +14,18 @@ export class ScWindowTypeDeterminators {
   };
 
   static ScWindowTypeDeterminators: IScWindowTypeDeterminator[] = [
+
+
+    {
+    // /en/sitecore/shell/Applications/Tools/Installer/Designer
+      ConfidenceScore: 0,
+      Friendly: "Access View",
+      QueryKeyValuePairs: [      ],
+      RegexPathTest: /sitecore\/shell\/Applications\/Tools\/Installer\/Designer/ig,
+      ScWindowType: ScWindowType.AppToolsInstallerDesigner,
+      ScWindowTypeFriendly: ScWindowType[ScWindowType.AppToolsInstallerDesigner],
+    },
+
     {
       ///sitecore/shell/default.aspx?xmlcontrol=Application&hdl=14FA8CCA18714BCEBA863F19885346B9&he=Access+Viewer&ic=Apps%2f16x16%2fLock.png
       ConfidenceScore: 0,

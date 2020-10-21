@@ -71,6 +71,7 @@
     <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\FrameElemJacket.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\IAbortToken.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\_baseElemJacket.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\AppToolsInstallerDesignerProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\IJacketOfType.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\NativeIFrameAddedEvent\INativeAddRemoveEvent_Payload.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\NativeIFrameAddedEvent\NativeAddRemoveEvent_Observer.ts" />
@@ -414,7 +415,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IOneParamPair.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Jackets\IUrlParts.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\__global.ts" />
-    <TypeScriptCompile Include="src\PopUpUi\scripts\HindSiteUiLayer.ts" />
+    <TypeScriptCompile Include="src\PopUpUi\scripts\PopUpUi.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\PayloadDataFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\MsgPayloadResponseFromContent.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\10 - MessageFlag.ts" />

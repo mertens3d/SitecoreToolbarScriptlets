@@ -15,7 +15,10 @@ module.exports = {
 
   PutToFinal: function (cb, vars) {
     return gulp.src([
+
       vars.PopUpHtml.AutoBuildMinFileNameFull(),
+      vars.PopUpUiJs.WebpackFileFull(),
+      vars.PopUpStyles.AutoBuildMinFileNameFull(),
 
       vars.ContentTopJs.WebpackFileFull(),
       vars.ContentAllJs.WebpackFileFull(),
@@ -24,7 +27,6 @@ module.exports = {
       vars.DomJacketJs.WebpackFileFull(),
       vars.SharedJs.WebpackFileFull(),
 
-      vars.PopUpStyles.AutoBuildMinFileNameFull(),
       vars.ContentStylesTop.AutoBuildMinFileNameFull(),
 
       vars.BrowserPolyFillJs.WebpackFileFull(),
@@ -48,6 +50,8 @@ module.exports = {
       path.join(vars.HindSiteScUiProxyJs.FinalFolderNameFull(), vars.HindSiteScUiProxyJs.MinFileName()),
 
       path.join(vars.DomJacketJs.FinalFolderNameFull(), vars.DomJacketJs.MinFileName()),
+
+      path.join(vars.PopUpUiJs.FinalFolderNameFull(), vars.PopUpUiJs.MinFileName()),
 
       path.join(vars.SharedJs.FinalFolderNameFull(), vars.SharedJs.MinFileName()),
 

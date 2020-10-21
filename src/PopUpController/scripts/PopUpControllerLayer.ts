@@ -1,5 +1,5 @@
 ﻿import { UrlJacket } from "../../DOMJacket/scripts/UrlJacket";
-import { HindSiteUiLayer } from "../../PopUpUi/scripts/HindSiteUiLayer";
+import { HindSiteUiLayer } from "../../PopUpUi/scripts/PopUpUi";
 import { BrowserTabAgent } from "../../Shared/scripts/Agents/BrowserTabAgent";
 import { RollingLogIdDrone } from "../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone";
 import { LoggerConsoleWriter } from "../../Shared/scripts/Agents/LoggerAgent/LoggerConsoleWriter";

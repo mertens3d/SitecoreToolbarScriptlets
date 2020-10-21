@@ -21,8 +21,8 @@ export class SharedConst {
       }
     },
     Debug: {
-      ForceLoggingEnabled: false,
-      SpeedUpAutoSaveIntervalFactor: 3,
+      ForceLoggingEnabled: true,
+      SpeedUpAutoSaveIntervalFactor: 1,
     },
     IterHelper: {
       GrowthPerIteration: 0.5,
