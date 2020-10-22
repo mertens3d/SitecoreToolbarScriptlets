@@ -1,5 +1,4 @@
-﻿import { ErrorHandlerAgent } from './Agents/ErrorHandler/ErrorHandlerAgent';
-import { IHindeCore } from './Interfaces/Agents/IHindeCore';
+﻿import { IHindeCore } from './Interfaces/Agents/IHindeCore';
 import { _CommonBase } from './_CommonCoreBase';
 
 export abstract class _FrontBase extends _CommonBase {
@@ -7,8 +6,8 @@ export abstract class _FrontBase extends _CommonBase {
 
   constructor(hindeCore: IHindeCore) {
     super(hindeCore)
-        ErrorHandlerAgent.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [hindeCore]);
-        ErrorHandlerAgent.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [ hindeCore.ErrorHand, hindeCore.Logger, hindeCore.TaskMonitor]);
+    //hindeCore.ErrorHand.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [hindeCore]);
+    //hindeCore.ErrorHand.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [  hindeCore.Logger, hindeCore.TaskMonitor]);
 
         this.Logger = hindeCore.Logger;
         this.HindeCore = hindeCore;

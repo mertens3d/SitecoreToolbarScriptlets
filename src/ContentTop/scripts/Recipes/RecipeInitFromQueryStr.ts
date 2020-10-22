@@ -30,7 +30,9 @@ export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements 
           }
         });
 
-        await this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ApiPayload, mostRecent)
+        this.CommandParams.ApiPayload.SnapShotOfStateScUiApi = mostRecent;
+
+        await this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ApiPayload)
           .then(() => resolve())
           .catch((err: any) => reject(RecipeSetStateFromMostRecent.name + ' | ' + err));
       }
@@ -66,7 +68,11 @@ export class RecipeInitFromQueryStr extends _ContentRecipeBase implements IComma
             var dataOneWindowStorage;
 
             dataOneWindowStorage = this.Dependancies.AtticAgent.GetFromStorageBySnapShotId(targetGuid);
-            this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ApiPayload, dataOneWindowStorage);
+
+            this.CommandParams.ApiPayload.DataOneWindowStorage = dataOneWindowStorage;
+
+
+            this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ApiPayload);
           } else {
             reject('Either no snapshot provided or an illegal one was found');
           }

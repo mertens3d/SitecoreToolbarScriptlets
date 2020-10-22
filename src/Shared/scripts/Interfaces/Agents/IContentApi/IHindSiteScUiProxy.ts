@@ -1,18 +1,14 @@
-﻿import { IStateOfScUi } from "../../StateOf/IDataStateOfSitecoreWindow";
-import { IApiCallPayload } from "../../IApiCallPayload";
-import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
-import { ScRibbonCommand } from "../../../Enums/eScRibbonCommand";
+﻿import { IApiCallPayload } from "../../IApiCallPayload";
+import { IScUiReturnPayload } from "../../StateOf/IScUiReturnPayload";
 
 export interface IHindSiteScUiProxy {
-  CEGoSelected(commandData: IApiCallPayload): Promise<void>;
-  TriggerCERibbonCommand(scRibbonCommand: ScRibbonCommand): Promise<void>;
-  AddContentEditorToDesktopAsync(commandData: IApiCallPayload): Promise<void>;
-  AdminB(commandData: IApiCallPayload): void;
-  GetStateOfScUiProxy(): Promise<IStateOfScUi>;
-  GetStateOfScUiProxyWindow(Manual: SnapShotFlavor): Promise<IStateOfScUi>;
-  InstantiateHindSiteScUiProxy(): Promise<void>;
-  OpenContentEditor(): Promise<void>;
-  PublischActiveCE(commandData: IApiCallPayload): Promise<void>;
-  SetStateOfSitecoreWindowAsync(commandData: IApiCallPayload, dataOneWindowStorage: IStateOfScUi): Promise<void>;
-  ToggleCompactCss(commandData: IApiCallPayload): Promise<void>;
+  CEGoSelected(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload>;
+  TriggerCERibbonCommand(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload>;
+  AddContentEditorToDesktopAsync(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload>;
+  AdminB(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload>;
+  GetStateOfScUiProxy(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload>;
+  OpenContentEditor(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload>;
+  PublischActiveCE(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload>;
+  SetStateOfSitecoreWindowAsync(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload>;
+  ToggleCompactCss(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload>;
 }

@@ -17,6 +17,10 @@ import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
 import { CommandRouter } from "./CommandRouter";
+import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
+import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
+import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
+import { IScUiReturnPayload } from "../../../Shared/scripts/Interfaces/StateOf/IScUiReturnPayload";
 
 export class BrowserMessageBroker_Content extends _FrontBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
@@ -93,44 +97,50 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
 
   async ContentReceiveRequest(messageControllerToContent: IMessageControllerToContent): Promise<IMessageContentToController> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.Log('');
-      this.Logger.Log('');
-      this.Logger.Log('');
-      this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(messageControllerToContent.MsgFlag));
+      try {
+        this.Logger.Log('');
+        this.Logger.Log('');
+        this.Logger.Log('');
+        this.Logger.FuncStart(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(messageControllerToContent.MsgFlag));
 
-      this.Logger.LogVal('ce butt', this.SettingsAgent.GetByKey(SettingKey.AutoLogin).ValueAsBool());
+        this.Logger.LogVal('ce butt', this.SettingsAgent.GetByKey(SettingKey.AutoLogin).ValueAsBool());
 
-      if (messageControllerToContent) {
-        messageControllerToContent = this.ValidateRequest(messageControllerToContent);
-        if (messageControllerToContent.IsValid) {
-          this.SettingsAgent.UpdateSettingsFromPopUpMsg(messageControllerToContent.CurrentContentPrefs);
+        if (messageControllerToContent) {
+          messageControllerToContent = this.ValidateRequest(messageControllerToContent);
+          if (messageControllerToContent.IsValid) {
+            this.SettingsAgent.UpdateSettingsFromPopUpMsg(messageControllerToContent.CurrentContentPrefs);
 
-          await this.ReqMsgRouter(messageControllerToContent)
-            .then((msgContentToController: IMessageContentToController) => {
-              this.Logger.Log('responding: ' + ReplyCommandMsgFlag[msgContentToController.MsgFlagReply]);
-              resolve(msgContentToController);
-            })
-            .catch((err: any) => {
-              this.NotifyFail(err);
-              resolve(new DefaultMsgContentToController(ReplyCommandMsgFlag.RespTaskFailed));
-            });
+            await this.ReqMsgRouter(messageControllerToContent)
+              .then((msgContentToController: IMessageContentToController) => {
+                this.Logger.Log('responding: ' + ReplyCommandMsgFlag[msgContentToController.MsgFlagReply]);
+                resolve(msgContentToController);
+              })
+              .catch((err: any) => {
+                this.NotifyFail(err);
+                resolve(new DefaultMsgContentToController(ReplyCommandMsgFlag.RespTaskFailed));
+              });
+          }
+          else {
+            resolve(new DefaultMsgContentToController(ReplyCommandMsgFlag.RespFailedDidNotValidate));
+          }
         }
         else {
-          resolve(new DefaultMsgContentToController(ReplyCommandMsgFlag.RespFailedDidNotValidate));
+          reject('no request');
         }
-      }
-      else {
-        reject('no request');
-      }
 
-      this.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(messageControllerToContent.MsgFlag));
-      this.Logger.Log('');
-      this.Logger.Log('');
-      this.Logger.Log('');
-      this.Logger.Log('Resuming Standby');
-      this.Logger.Log('');
-      this.Logger.Log('');
-      this.Logger.Log('');
+        this.Logger.FuncEnd(this.ContentReceiveRequest.name, StaticHelpers.MsgFlagAsString(messageControllerToContent.MsgFlag));
+        this.Logger.Log('');
+        this.Logger.Log('');
+        this.Logger.Log('');
+        this.Logger.Log('Resuming Standby');
+        this.Logger.Log('');
+        this.Logger.Log('');
+        this.Logger.Log('');
+
+
+      } catch (err) {
+        this.ErrorHand.HandleTopLevelTryCatch([BrowserMessageBroker_Content.name, this.ContentReceiveRequest.name], err);
+      }
     });
   }
 
@@ -161,9 +171,18 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
       this.Logger.FuncStart(this.ConstructResponse.name);
       let responseContentToController = new DefaultMsgContentToController(ReplyCommandMsgFlag.Unknown);
 
-      await this.HindSiteScUiProxy.GetStateOfScUiProxy()
-        .then((stateOfScUiProxy: IStateOfScUi) => {
-          responseContentToController.Payload.StateOfScUiProxy_Live = stateOfScUiProxy;
+
+
+      let payload: IApiCallPayload = {
+        DataOneWindowStorage: null,
+        ScRibbonCommand: ScRibbonCommand.Unknown,
+        SnapShotFlavor: SnapShotFlavor.Live,
+        SnapShotOfStateScUiApi: null
+      }
+
+      await this.HindSiteScUiProxy.GetStateOfScUiProxy(payload)
+        .then((returnPayload: IScUiReturnPayload) => {
+          responseContentToController.Payload.StateOfScUiProxy_Live = returnPayload.StateOfScUi;
           responseContentToController.Payload.LastReq = msgFlag;
           responseContentToController.MsgFlagReply = ReplyCommandMsgFlag.RespTaskSuccessful;
           responseContentToController.Payload.LastReqFriendly = ReqCommandMsgFlag[msgFlag];

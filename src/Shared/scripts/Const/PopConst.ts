@@ -101,6 +101,7 @@ export class PopConst {
           BtnCompactScUi: '[id=id-ph-btn-compact-sc-ui]',
           BtnDebugClearPopUpConsole: '[id=id-container-btn-debug-clear-console]',
           BtnDebugForceAutoSnapShot: '[id=id-container-btn-debug-force-auto-snapshot]',
+          BtnDebugTriggerContentFataError: '[id=id-container-btn-debug-trigger-content-fatal-error]',
           BtnDebugTriggerPopUpReload: '[id=id-container-btn-debug-trigger-pop-up-reload]',
           BtnGoContentEditor: '[id=id-ph-btn-go-content-editor]',
           BtnModeEdit: '[id=id-ph-btn-sc-mode-edit]',

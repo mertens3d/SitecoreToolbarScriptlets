@@ -1,14 +1,14 @@
 import { DocumentJacket } from '../../DOMJacket/scripts/Document/DocumentJacket';
 import { UrlJacket } from '../../DOMJacket/scripts/UrlJacket';
 import { HindSiteScUiProxy } from "../../HindSiteScUiProxy/scripts/HindSiteScUiProxy";
+import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { ErrorHandlerAgent } from "../../Shared/scripts/Agents/ErrorHandler/ErrorHandlerAgent";
 import { LoggerConsoleWriter } from '../../Shared/scripts/Agents/LoggerAgent/LoggerConsoleWriter';
 import { LoggerStorageWriter } from '../../Shared/scripts/Agents/LoggerAgent/LoggerStorageWriter';
-import { TaskMonitor } from "../../Shared/scripts/Agents/TaskMonitor/TaskMonitor";
 import { RepositoryAgent } from '../../Shared/scripts/Agents/RepositoryAgent/RepositoryAgent';
 import { SettingsAgent } from '../../Shared/scripts/Agents/SettingsAgent/SettingsAgent';
+import { TaskMonitor } from "../../Shared/scripts/Agents/TaskMonitor/TaskMonitor";
 import { ToastAgent } from '../../Shared/scripts/Agents/ToastAgent/ToastAgent';
-import { RollingLogIdDrone } from '../../Shared/scripts/Agents/Drones/RollingLogIdDrone/RollingLogIdDrone';
 import { CoreFactory } from '../../Shared/scripts/Classes/CoreFactory';
 import { ReqCommandMsgFlag } from '../../Shared/scripts/Enums/10 - MessageFlag';
 import { SettingKey } from '../../Shared/scripts/Enums/30 - SettingKey';
@@ -29,11 +29,12 @@ import { IUrlJacket } from '../../Shared/scripts/Interfaces/IUrlAgent';
 import { SharedConst } from '../../Shared/scripts/SharedConst';
 import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent';
 import { ContentAtticAgent } from './Agents/ContentAtticAgent';
+import { CommandSolicitorForHotKeys } from './CommandSolicitors/CommandSolicitorHotKeys';
+import { CommandSolicitorForQueryString } from "./CommandSolicitors/CommandSolicitorForQueryString";
 import { ContentMessageManager } from './Managers/ContentMessageManager';
 import { BrowserMessageBroker_Content } from "./Proxies/BrowserMessageBroker_Content";
 import { CommandRouter } from "./Proxies/CommandRouter";
 import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
-import { DeepHotKeyAgent } from "../../Shared/scripts/Agents/DeepHotKey/DeepHotKeyAgent";
 
 class ContentEntry {
   private RepoAgent: IRepositoryAgent;
@@ -50,22 +51,30 @@ class ContentEntry {
   ErrorHand: ErrorHandlerAgent;
   TaskMonitor: TaskMonitor;
   TopDocumentJacket: DocumentJacket;
+  CommandSolicitorHotKeys: CommandSolicitorForHotKeys;
+  CommandSolicitorForQueryString: CommandSolicitorForQueryString;
 
-  async StartUpContent() :Promise<void>{
+  async StartUpContent(): Promise<void> {
+    try {
+      let commonCore: ICommonCore = CoreFactory.BuildCommonCore();
+      this.HindeCore = new HindeCore(commonCore);
 
-    let commonCore: ICommonCore = CoreFactory.BuildCommonCore();
-    this.HindeCore = new HindeCore(commonCore);
+      this.InstantiateAgents_Content();
 
-    this.InstantiateAgents_Content();
+      await await DocumentJacket.FactoryMakeDocumentJacket(this.HindeCore, document)
+        .then((documentJacket: DocumentJacket) => this.TopDocumentJacket = documentJacket)
+        .then(() => this.InstantiateAndInit_Managers())
+        .then(() => this.AtticAgent.CleanOutOldAutoSavedData())
+        .catch((err: any) => commonCore.ErrorHand.HandleFatalError(this.StartUpContent.name, err));
 
-    await await DocumentJacket.FactoryMakeDocumentJacket(this.HindeCore, document)
-      .then((documentJacket: DocumentJacket) => this.TopDocumentJacket = documentJacket)
-      .then(() => this.InstantiateAndInit_Managers())
-      .then(() => this.AtticAgent.CleanOutOldAutoSavedData())
-      .catch((err: any) => commonCore.ErrorHand.HandleFatalError(this.StartUpContent.name, err));
-
-    this.HindeCore.Logger.SectionMarker('e) ' + this.StartUpContent.name);
-    this.HindeCore.Logger.Log('standing by');
+      this.HindeCore.Logger.SectionMarker('e) ' + this.StartUpContent.name);
+      this.HindeCore.Logger.Log('standing by');
+    } catch (err) {
+      if (this.ErrorHand) {
+        this.ErrorHand.HandleFatalError([ContentEntry.name, this.StartUpContent.name], err);
+      }
+      console.log('top level try catch');
+    }
   }
 
   private InstantiateAgents_Content(): void {
@@ -86,7 +95,7 @@ class ContentEntry {
     }
   }
 
-    private async InstantiateAndInit_Managers(): Promise<void> {
+  private async InstantiateAndInit_Managers(): Promise<void> {
     try {
       this.HindeCore.Logger.SectionMarker('Instantiate and Initialize Managers');
 
@@ -103,22 +112,25 @@ class ContentEntry {
       this.ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore)
 
       let urlJacket: IUrlJacket = new UrlJacket(this.HindeCore, window.URL.toString());
-      let deepHotKeyAgent: DeepHotKeyAgent = new DeepHotKeyAgent(this.HindeCore, urlJacket);
-      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiAPI, this.ToastAgent, this.AtticAgent, this.SettingsAgent, this.AutoSnapShotAgent, this.TopDocumentJacket, deepHotKeyAgent);
+
+      this.CommandRouter = new CommandRouter(this.HindeCore, this.ScUiAPI, this.AtticAgent, this.AutoSnapShotAgent, this.TopDocumentJacket);
+
+      this.ToastAgent.ObserveRouter(this.CommandRouter);
+
+      this.CommandSolicitorHotKeys = new CommandSolicitorForHotKeys(this.HindeCore, this.CommandRouter, this.TopDocumentJacket);
+      this.CommandSolicitorForQueryString = new CommandSolicitorForQueryString(this.HindeCore, this.CommandRouter, this.TopDocumentJacket, this.SettingsAgent)
 
       let contentMessageBroker: IMessageBroker_Content = new BrowserMessageBroker_Content(this.HindeCore, this.SettingsAgent,
         this.ScUiAPI, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
 
       contentMessageMan = new ContentMessageManager(this.HindeCore, contentMessageBroker);
 
-      await this.ScUiAPI.InstantiateHindSiteScUiProxy()
-        .then(() => contentMessageMan.InitContentMessageManager())
-        .then(() => {
-          this.AutoSnapShotAgent.ScheduleIntervalTasks();
-        })
-        .then(() => this.StartUp())
-        .then(() => this.HindeCore.Logger.Log('Init success'))
-        .catch((err: any) => this.ErrorHand.HandleFatalError('Content Entry Point', err));
+      contentMessageMan.InitContentMessageManager()
+      this.AutoSnapShotAgent.ScheduleIntervalTasks();
+
+      this.StartUp()
+      this.HindeCore.Logger.Log('Init success')
+      //.catch((err: any) => this.ErrorHand.HandleFatalError('Content Entry Point', err));
 
       this.HindeCore.Logger.SectionMarker('e) Instantiate and Initialize Managers');
     } catch (err: any) {
@@ -126,29 +138,10 @@ class ContentEntry {
     }
   }
 
-  private TriggerStartupCommands() {
-    let setStateFromX: ICommandRouterParams = {
-      MsgFlag: ReqCommandMsgFlag.SetStateFromQueryString,
-      NewNickName: null,
-      SelectSnapShotId: null,
-      SelectText: null,
-    }
-
-    if (this.TopDocumentJacket.UrlJacket.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
-      setStateFromX.MsgFlag = ReqCommandMsgFlag.SetStateFromQueryString,
-        this.CommandRouter.RouteCommand(setStateFromX);
-    } else if ((this.SettingsAgent.GetByKey(SettingKey.AutoRestoreState)).ValueAsBool()) {
-      this.HindeCore.Logger.Log('yup...has the setting');
-      setStateFromX.MsgFlag = ReqCommandMsgFlag.SetStateFromMostRecent;
-      this.CommandRouter.RouteCommand(setStateFromX);
-    }
-  }
-
   private StartUp() {
     this.HindeCore.Logger.FuncStart(this.StartUp.name);
 
-    this.TriggerStartupCommands();
-
+    this.CommandSolicitorForQueryString.StatUp()
     this.HindeCore.Logger.FuncEnd(this.StartUp.name);
   }
 
@@ -172,11 +165,7 @@ class ContentEntry {
     this.HindeCore.Logger.FlushBuffer();
     this.HindeCore.Logger.FuncEnd(this.InitLogger.name);
   }
-
 }
 
 let contentEntry: ContentEntry = new ContentEntry();
 contentEntry.StartUpContent();
-
-
-console.log('addddddddddddddddddddddddd');

@@ -7,8 +7,11 @@ import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IC
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISettingsAgent";
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
+import { IScUiReturnPayload } from "../../../Shared/scripts/Interfaces/StateOf/IScUiReturnPayload";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
+import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
+import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
 
 export class AutoSnapShotAgent extends _FrontBase {
   private AtticAgent: IContentAtticAgent;
@@ -33,19 +36,27 @@ export class AutoSnapShotAgent extends _FrontBase {
 
     let windowStatePrior = this.LastKnownSavedState;
 
-    this.ScUiProxy.GetStateOfScUiProxyWindow(SnapShotFlavor.Autosave)
-      .then((windowStateNew: IStateOfScUi) => {
-        let hasCorrectData = windowStateNew && windowStateNew.Meta && windowStateNew.Meta.Hash
+
+    let payload: IApiCallPayload = {
+      DataOneWindowStorage: null,
+      ScRibbonCommand: ScRibbonCommand.Unknown,
+      SnapShotFlavor: SnapShotFlavor.Autosave,
+      SnapShotOfStateScUiApi: null,
+    }
+
+    this.ScUiProxy.GetStateOfScUiProxy(payload)
+      .then((returnPayload: IScUiReturnPayload) => {
+        let hasCorrectData = returnPayload && returnPayload.StateOfScUi && returnPayload.StateOfScUi.Meta && returnPayload.StateOfScUi.Meta.Hash
           && windowStatePrior && windowStatePrior.Meta && windowStatePrior.Meta.Hash;
 
-        if (!hasCorrectData || (windowStateNew.Meta.Hash !== windowStatePrior.Meta.Hash)) {
+        if (!hasCorrectData || (returnPayload.StateOfScUi.Meta.Hash !== windowStatePrior.Meta.Hash)) {
           this.Logger.Log('states are different, save snap shot');
 
-          this.AtticAgent.WriteStateOfSitecoreToStorage(windowStateNew);
+          this.AtticAgent.WriteStateOfSitecoreToStorage(returnPayload.StateOfScUi);
         } else {
           this.Logger.Log('states are same, no save');
         }
-        this.LastKnownSavedState = windowStateNew;
+        this.LastKnownSavedState = returnPayload.StateOfScUi;
       })
       //.then((result: IStateOfScUi) => this.LastKnownSavedState = result);
       .catch((err: any) => this.ErrorHand.HandleFatalError(this.AutoSaveSnapShot.name, err));

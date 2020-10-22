@@ -116,8 +116,9 @@ export class CommandRunnerInternal extends _FrontBase {
             dependancies.HindeCore.Logger.LogAsJsonPretty("IdOfSelect", commandParams.TargetSnapShotId);
             let dataOneWindowStorage: IStateOfScUi = dependancies.AtticAgent.GetFromStorageBySnapShotId(commandParams.TargetSnapShotId);
 
-            if (dataOneWindowStorage) {
-                dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(commandParams.ApiPayload, dataOneWindowStorage)
+          if (dataOneWindowStorage) {
+            commandParams.ApiPayload.SnapShotOfStateScUiApi = dataOneWindowStorage;
+                dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(commandParams.ApiPayload)
                     .then(() => resolve())
                     .catch((err: any) => reject(this.SetStateOfSitecoreWindow.name + ' | ' + err));
             };

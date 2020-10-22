@@ -11,10 +11,15 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
   ErrorStack: IError[] = [];
   private TaskMonitor: ICoreTaskMonitor;
   private Logger: ILoggerAgent;
+  errorContents: HTMLDivElement = null;
+  MessageDiv: any;
+  FlagTextDiv: any;
+  errorFlagContainer: HTMLElement;
+  CancelButtonElem: HTMLInputElement;
 
   constructor() {
   }
-    
+
   IntroduceSiblings(logger: ILoggerAgent, taskMonitor: ICoreTaskMonitor) {
     this.Logger = logger;
     this.TaskMonitor = taskMonitor;
@@ -43,15 +48,21 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     }
   }
 
-  static ThrowIfNullOrUndefinedStatic(title: string, testSubject: any): void;
-  static ThrowIfNullOrUndefinedStatic(title: string, testSubject: any[]): void;
-  static ThrowIfNullOrUndefinedStatic(title: string, testSubject: any | any[]): void {
+
+  private CommonThrow(errorMessage: string) :void{
+    this.CreateFlag();
+    throw (errorMessage);
+  }
+
+   ThrowIfNullOrUndefinedStatic(title: string, testSubject: any): void;
+   ThrowIfNullOrUndefinedStatic(title: string, testSubject: any[]): void;
+   ThrowIfNullOrUndefinedStatic(title: string, testSubject: any | any[]): void {
     if (testSubject instanceof Array) {
-      (<any[]>testSubject).forEach((testSubject: any) => ErrorHandlerAgent.ThrowIfNullOrUndefinedStatic(title, testSubject));
+      (<any[]>testSubject).forEach((testSubject: any) => this.ThrowIfNullOrUndefinedStatic(title, testSubject));
     }
     else {
       if (typeof testSubject === 'undefined' || testSubject === null) {
-        throw (title + ' Failed Null check B');
+        this.CommonThrow(title + ' Failed Null check B');
       }
     }
   }
@@ -127,7 +138,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     this.DrawErrorMessage(container, text);
   }
 
-   ErrorLogger(text: string) :void{
+  ErrorLogger(text: string): void {
     console.log('********** ' + text + ' **********');
   }
 
@@ -152,6 +163,95 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     return toReturn;
   }
 
+  DisplayErrorFlag() {
+  }
+
+  private CreateFlag() {
+    this.Logger.FuncStart(this.CreateFlag.name);
+    let BodyTag = <HTMLBodyElement>document.getElementsByTagName(SharedConst.Const.KeyWords.Html.Tags.Body)[0];//(treeGlyphTargetId);
+    this.errorFlagContainer = this.CreateContainer();
+    this.CreateFlagContents();
+    this.CreateResetButton();
+    this.errorContents.appendChild(this.CancelButtonElem);
+
+    BodyTag.appendChild(this.errorFlagContainer);
+    this.Logger.FuncEnd(this.CreateFlag.name);
+  }
+
+  private Reset(): void {
+    alert('reset code needed');
+  }
+
+  private CreateResetButton(): void {
+    this.CancelButtonElem = document.createElement('input');
+    this.CancelButtonElem.type = "button";
+    this.CancelButtonElem.value = "Reset";
+    this.CancelButtonElem.addEventListener('click', (() => this.Reset()));
+  }
+
+  private CreateFlagContents(): void {
+    this.errorContents = document.createElement('div');
+    this.errorContents.classList.add('error-contents');
+
+    let closeButton: HTMLInputElement = this.CreateCloseButton();
+
+    let headerElem: HTMLDivElement = document.createElement('div');
+    headerElem.innerText = "HindSite";
+    headerElem.classList.add("header");
+
+    let headWrapper: HTMLDivElement = document.createElement('div');
+    headWrapper.classList.add("header-wrapper");
+
+    this.MessageDiv = document.createElement('div');
+    this.MessageDiv.innerText = "";
+    this.MessageDiv.classList.add("message");
+
+    this.FlagTextDiv = document.createElement('div');
+
+    headWrapper.appendChild(headerElem);
+    headWrapper.appendChild(closeButton);
+
+    this.errorContents.appendChild(headWrapper);
+    this.errorContents.appendChild(this.MessageDiv);
+
+    this.errorContents.appendChild(this.FlagTextDiv);
+  }
+
+  async HideErrorFlag(message: string): Promise<void> {
+    this.Logger.FuncStart(this.HideErrorFlag.name);
+    if (this.errorFlagContainer) {
+      this.errorFlagContainer.style.display = 'none';
+    }
+    this.Logger.FuncEnd(this.HideErrorFlag.name);
+  }
+
+  private CreateCloseButton(): HTMLInputElement {
+    let closeButtonElem: HTMLInputElement = document.createElement('input');
+    closeButtonElem.type = "button";
+    closeButtonElem.value = "X";
+    closeButtonElem.classList.add("close-btn");
+
+    closeButtonElem.addEventListener('click', (() => this.CallbackOnCloseButton()));
+
+    return closeButtonElem;
+  }
+
+  private CallbackOnCloseButton() {
+    this.HideErrorFlag('Closing');
+  }
+
+  CreateContainer(): HTMLElement {
+    let flagContainer: HTMLElement = document.createElement('div');
+    flagContainer.classList.add('error-flag');
+
+    return flagContainer
+  }
+
+  HandleTopLevelTryCatch(container: string | string[], text: string): void {
+    console.log('Top level Try/Catch');
+
+  }
+
   HandleFatalError(container: string | string[], text: string): void {
     let stack = new Error().stack;
 
@@ -172,11 +272,11 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
 
     this.DrawErrorMessage(containerTextToRender, [text, stack]);
     try {
-      this.TaskMonitor.RequestCancel(ErrorHandlerAgent.name + '.' + this.HandleFatalError.name );
+      this.TaskMonitor.RequestCancel(ErrorHandlerAgent.name + '.' + this.HandleFatalError.name);
     } catch (err: any) {
       console.log(err);
     }
-    console.log ('----- sigh...sad face ');
+    console.log('----- sigh...sad face ');
   }
 
   HandleCancelReaction(arg0: string, arg1: string) {

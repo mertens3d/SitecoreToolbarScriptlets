@@ -1,5 +1,4 @@
 ﻿import { IterationDrone } from './Agents/Drones/IterationDrone/IterationDrone';
-import { ErrorHandlerAgent } from './Agents/ErrorHandler/ErrorHandlerAgent';
 import { IAPICore } from './Interfaces/Agents/IAPICore';
 import { IHindSiteScUiProxyRunTimeOptions } from './Interfaces/Agents/IContentApi/IHindSiteScUiProxyRunTimeOptions';
 import { _CommonBase } from './_CommonCoreBase';
@@ -10,8 +9,8 @@ export abstract class _APICoreBase extends _CommonBase {
 
   constructor(apiCore: IAPICore) {
     super(apiCore);
-    ErrorHandlerAgent.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [apiCore]);
-    ErrorHandlerAgent.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [apiCore.ErrorHand, apiCore.Logger, apiCore.TaskMonitor]);
+    apiCore.ErrorHand.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [apiCore]);
+    apiCore.ErrorHand.ThrowIfNullOrUndefinedStatic(_CommonBase.name, [apiCore.ErrorHand, apiCore.Logger, apiCore.TaskMonitor]);
 
     this.Logger = apiCore.Logger;
     this.ApiCore = apiCore;

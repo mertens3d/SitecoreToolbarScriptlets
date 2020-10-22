@@ -9,8 +9,13 @@ import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
 import { _CommonBase } from "../../_CommonCoreBase";
 import { TaskMutationType } from "../../Enums/TaskMutationType";
 import { SharedConst } from "../../SharedConst";
+import { CommandStartEndCancelEvent_Observer } from "../../Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Observer";
+import { ICommandStartEndCancelEvent_Payload } from "../../Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
+import { CommandState_State } from "../../Events/CommandStartEndCancelEvent/CommandState_State";
+import { CommandRouter } from "../../../../ContentTop/scripts/Proxies/CommandRouter";
 
 export class ToastAgent extends _CommonBase implements IToastAgent {
+
   readonly TypeDiscriminator = TypeDiscriminator.ToastAgent;
   private classSlideUp: string = 'slide-up';
   private classSlideDown: string = 'slide-down';
@@ -31,6 +36,7 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
   private mouseBlockerClassOff: string = 'mouse-blocker-off';
   private mouseBlockerClassOn: string = 'mouse-blocker-on';
   private MouseBlocker: HTMLDivElement;
+   private  CommandTriggeredEvent_Observer: CommandStartEndCancelEvent_Observer;
 
   constructor(commonCore: ICommonCore, targetDoc: Document) {
     super(commonCore);
@@ -42,9 +48,29 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     this.Logger.FuncStart(this.WireEvents.name);
     this.TaskMutationEvent_Observer = new TaskListMutationEvent_Observer(this.CommonCore, this.CallBackOnTaskListMutationEvent.bind(this))
     this.TaskMonitor.TaskMutationEvent_Subject.RegisterObserver(this.TaskMutationEvent_Observer);
+
+
+    this.CommandTriggeredEvent_Observer = new CommandStartEndCancelEvent_Observer(this.CommonCore, this.OnCommandStartEndCancelEvent.bind(this));
+
+
     this.Logger.FuncEnd(this.WireEvents.name);
   }
 
+  private async OnCommandStartEndCancelEvent(payload: ICommandStartEndCancelEvent_Payload): Promise<void> {
+    this.Logger.FuncStart(this.OnCommandStartEndCancelEvent.name);
+    if (payload.CommandState == CommandState_State.CommandStarted) {
+      this.ShowToastAsync('Starting to do something')
+    } else if (payload.CommandState == CommandState_State.CommandCompletedSuccessfully) {
+    }
+
+    this.Logger.FuncEnd(this.OnCommandStartEndCancelEvent.name);
+  }
+
+  ObserveRouter(CommandRouter: CommandRouter) {
+    if (this.CommandTriggeredEvent_Observer && CommandRouter) {
+      CommandRouter.CommandTriggeredEvent_Subject.RegisterObserver(this.CommandTriggeredEvent_Observer);
+    }
+  }
   CallBackOnTaskListMutationEvent(payload: ITaskListMutationEvent_Payload) {
     if (payload.MutationType === TaskMutationType.TasksHaveGoneIdle) {
       this.HideToast('');

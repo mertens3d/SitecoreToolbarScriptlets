@@ -1,7 +1,11 @@
-﻿import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
+﻿//import { ScRibbonCommand } from "../../Enums/eScRibbonCommand";
+//import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
 
-export class ApiCommandPayload implements IApiCallPayload {
+//export class ApiCommandPayload implements IApiCallPayload {
 
-    constructor() {
-    }
-}
+//    constructor() {
+//    }
+//    scRibbonCommand: ScRibbonCommand;
+//    dataOneWindowStorage: any;
+//    SnapShotFlavor: any;
+//}

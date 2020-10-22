@@ -13,23 +13,15 @@ import { _CommonBase } from "../../_CommonCoreBase";
 export class CommandPayloadForInternal extends _CommonBase implements ICommandParams {
   NewNickname: string;
   TargetSnapShotId: GuidData;
-  AtticAgent: IContentAtticAgent;
   ContentMessageBroker: BrowserMessageBroker_Content = null;
   hindeCore: ICommonCore = null;
   TargetDoc: DocumentJacket = null;
   TargetNickName: string = '';
-  ToastAgent: IToastAgent = null;
   TopLevelDoc: DocumentJacket = null;
-  SettingsAgent: ISettingsAgent;
-  AutoSnapShotAgent: AutoSnapShotAgent;
   ApiPayload: IApiCallPayload;
 
-  constructor(hindeCore: ICommonCore, atticAgent: IContentAtticAgent, toastAgent: IToastAgent,  settingsAgent: ISettingsAgent, autoSnapShotAgent: AutoSnapShotAgent, apiPayload: IApiCallPayload) {
+  constructor(hindeCore: ICommonCore,    apiPayload: IApiCallPayload) {
     super(hindeCore);
-    this.AtticAgent = atticAgent;
-    this.ToastAgent = toastAgent;
-    this.SettingsAgent = settingsAgent;
-    this.AutoSnapShotAgent = autoSnapShotAgent;
     this.ApiPayload = apiPayload;
   }
 }

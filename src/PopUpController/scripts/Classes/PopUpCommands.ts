@@ -304,6 +304,19 @@ export class CommandDefintionFactory extends _FrontBase {
           }
         },
         {
+          MenuCommandKey: MenuCommandKey.DebugTriggerfatalError,
+          PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnDebugTriggerContentFataError,
+          VisibilityControllers: [VisibilityType.Always],
+          IconClassName: PopConst.Const.ClassNames.HS.Buttons.TakeSnapShot,
+          InnerText: "Force Content Fatal Error",
+          ModuleKey: ModuleKey.ButtonTypical,
+          EventHandlerData: {
+            Event: CommandButtonEvents.OnSingleClick,
+            MsgFlag: ReqCommandMsgFlag.ReqDebugContentFatalError,
+            CommandType: CommandType.Content,
+          }
+        },
+        {
           MenuCommandKey: MenuCommandKey.DebugClearPopUpConsole,
           PlaceHolderSelector: PopConst.Const.Selector.HS.ModuleContainers.BtnDebugClearPopUpConsole,
           VisibilityControllers: [VisibilityType.Always],

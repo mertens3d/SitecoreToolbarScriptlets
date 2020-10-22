@@ -1,8 +1,9 @@
 ﻿import { GuidData } from "../Helpers/GuidData";
-import { ApiCommandPayload } from "../Classes/CommandHandlerDataForContent/ApiCommandPayload";
+import { IApiCallPayload } from "./IApiCallPayload";
 
 export interface ICommandParams {
+  ApiPayload: IApiCallPayload,
   NewNickname: string;
   TargetSnapShotId: GuidData;
-  ApiPayload: ApiCommandPayload
+  
 }
