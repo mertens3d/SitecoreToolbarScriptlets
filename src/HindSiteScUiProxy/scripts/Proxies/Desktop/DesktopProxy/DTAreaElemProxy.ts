@@ -24,6 +24,7 @@ import { DTFrameProxy } from "./FrameProxies/DTFrameProxy";
 import { _BaseStateFullElemProxy } from "./FrameProxies/_BaseStateFullElemProxy";
 import { IElemJacketWatcherParameters } from "../../../../../Shared/scripts/IElemJacketWatcherParameters";
 import { DefaultStateOfDTArea } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDTArea";
+import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 
 export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> implements IStateFullElemProxy {
   public readonly ScProxyDisciminator = ScProxyDisciminator.DTAreaElemProxy;
@@ -105,7 +106,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
             }
           });
         })
-        //.then(() => this.Logger.LogAsJsonPretty('DTAreaState', stateOfDTArea))
+        .then(() => this.Logger.LogAsJsonPretty('DTAreaState', stateOfDTArea))
         .then(() => resolve(stateOfDTArea))
         .catch((err: any) => reject(this.GetState.name + ' | ' + err));
 
@@ -124,7 +125,11 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
         if (!StaticHelpers.IsNullOrUndefined([this.ContainerElemJacket])) {
           this.AddToIncomingSetStateList(StateOfDTArea);
 
-          StateOfDTArea.DTFrames.forEach((dtFrame: IStateOfDTFrame) => dtFramesNeeded.DiscriminatorAr.push(dtFrame.HostedFrame.Disciminator));
+          StateOfDTArea.DTFrames.forEach((dtFrame: IStateOfDTFrame) => {
+            dtFrame.StateOfHostedProxies.forEach((hostedProxy: IStateOf_) =>
+              dtFramesNeeded.DiscriminatorAr.push(hostedProxy.Disciminator)
+            )
+          });
         } else {
           reject(this.SetState.name + ' bad data');
         }
@@ -275,10 +280,12 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
     let foundMatchingIndex: number = -1;
 
     this.IncomingSetStateList.forEach((stateOfDtFrame: IStateOfDTFrame, index: number) => {
-      if (stateOfDtFrame.HostedFrame.Disciminator === dtFrameProxy.HostedStateFullProxy.ScProxyDisciminator) {
-        foundMatchingState = stateOfDtFrame;
-        foundMatchingIndex = index;
-      }
+      stateOfDtFrame.StateOfHostedProxies.forEach((stateOfHostedProxy: IStateOf_) => {
+        if (stateOfHostedProxy.Disciminator === dtFrameProxy.HostedStateFullProxy.ScProxyDisciminator) {
+          foundMatchingState = stateOfDtFrame;
+          foundMatchingIndex = index;
+        }
+      })
     });
 
     if (foundMatchingIndex > -1) {

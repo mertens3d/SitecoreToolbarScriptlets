@@ -165,7 +165,10 @@ export class CommandRunnerInternal extends _FrontBase {
       }
 
       this.CommandRouter.RouteCommand(routingParams)
-        .then((commandRouterResults: ICommandRouterResult) => this.AtticAgent.WriteStateOfSitecoreToStorage(commandRouterResults.ReturnPayload.StateOfScUi))
+        .then((commandRouterResults: ICommandRouterResult) => {
+          this.Logger.LogAsJsonPretty('commandRouterResults', commandRouterResults);
+          this.AtticAgent.WriteStateOfSitecoreToStorage(commandRouterResults.ScUiReturnPayload.StateOfScUi)
+        })
         .then(() => resolve())
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.SaveWindowState.name], err)));
     });

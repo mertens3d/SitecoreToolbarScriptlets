@@ -2,5 +2,5 @@
 
 
 export interface ICommandRouterResult {
-    ReturnPayload: IScUiReturnPayload;
+    ScUiReturnPayload: IScUiReturnPayload;
 }

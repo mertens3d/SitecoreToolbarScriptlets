@@ -95,7 +95,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
 
   async GetState(): Promise<IStateOfDTFrame> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.GetState.name, DTFrameProxy.name);
+      this.Logger.FuncStart([DTFrameProxy.name,this.GetState.name]);
       let stateOfDTFrame: IStateOfDTFrame = new DefaultStateOfDTFrame();
 
       stateOfDTFrame.FrameStyling = stateOfDTFrame.FrameStyling = this.FrameJacket.GetFrameStyling();
@@ -104,12 +104,12 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
 
       if (this.HostedStateFullProxy) {
         await this.HostedStateFullProxy.GetState()
-          .then((statefullProxyState: IStateOf_) => stateOfDTFrame.HostedFrame = statefullProxyState)
+          .then((statefullProxyState: IStateOf_) => stateOfDTFrame.StateOfHostedProxies.push(statefullProxyState))
           .catch((err: any) => reject(this.GetState.name + ' | ' + err));
       }
 
       resolve(stateOfDTFrame);
-      this.Logger.FuncEnd(this.GetState.name, DTFrameProxy.name);
+      this.Logger.FuncEnd([DTFrameProxy.name, this.GetState.name]);
     });
   }
 
@@ -118,7 +118,7 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
       this.Logger.FuncStart(this.SetState.name, DTFrameProxy.name);
       this.DTFrameProxyMutationEvent_Subject.DisableNotifications();
 
-      await this.HostedStateFullProxy.SetState(stateOfDTFrame.HostedFrame)
+      await this.HostedStateFullProxy.SetState(stateOfDTFrame.StateOfHostedProxies)
         .then(() => {
           this.SetFrameStyling(stateOfDTFrame)
           this.DTFrameProxyMutationEvent_Subject.EnableNotifications();

@@ -4,7 +4,7 @@ import { ScWindowType } from "../../Enums/50 - scWindowType";
 
 export interface IStateOfDTFrame {
   FrameStyling: IFrameJacketStyling;
-  HostedFrame: IStateOf_;
+  StateOfHostedProxies: IStateOf_[];
   WindowType: ScWindowType;
   ZIndex: number
 }

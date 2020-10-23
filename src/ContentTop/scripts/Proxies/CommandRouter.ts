@@ -75,11 +75,20 @@ export class CommandRouter extends _FrontBase {
         CommandState: CommandState_State.CommandStarted
       }
 
+
+      let commandRouterResult: ICommandRouterResult = {
+        ScUiReturnPayload: null,
+
+      }
+
       this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payload);
 
       if (calculatedCommandData.CommandType == CommandTypeFlag.Api) {
         await this.ExecuteApiCommand(calculatedCommandData)
-          .then((a) => resolve())
+          .then((scUiReturnPayload: IScUiReturnPayload) => {
+            commandRouterResult.ScUiReturnPayload = scUiReturnPayload;
+            resolve(commandRouterResult);
+          })
           .finally(() => reject('need to do'));
       }
       else if (calculatedCommandData.CommandType = CommandTypeFlag.ContentInternal) {

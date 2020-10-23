@@ -5,10 +5,12 @@ import { IStateOfDTFrame } from "../../Interfaces/StateOf/IStateOfDTFrame";
 import { IFrameJacketStyling } from "../../Interfaces/StateOf/IStateOfFrameStyling";
 
 export class DefaultStateOfDTFrame implements IStateOfDTFrame {
-  HostedFrame: IStateOf_ = {
-    Disciminator: ScProxyDisciminator.Unknown,
-    DisciminatorFriendly : ScProxyDisciminator[ScProxyDisciminator.Unknown]
-  };
+  StateOfHostedProxies: IStateOf_[] = []
+  
+  //{
+  //  Disciminator: ScProxyDisciminator.Unknown,
+  //  DisciminatorFriendly : ScProxyDisciminator[ScProxyDisciminator.Unknown]
+  //};
   FrameStyling: IFrameJacketStyling = null;
   WindowType: ScWindowType;
   ZIndex: number;

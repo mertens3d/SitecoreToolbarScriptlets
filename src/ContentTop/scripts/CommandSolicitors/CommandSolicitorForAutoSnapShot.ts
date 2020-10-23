@@ -70,7 +70,7 @@ export class SolicitorForScheduledAutoSnapShot extends _CommandSolicitorForEvent
 
     this.CommandRouter.RouteCommand(setStateFromX)
       .then((commandRouterResult: ICommandRouterResult) => {
-        let returnPayload: IScUiReturnPayload = commandRouterResult.ReturnPayload;
+        let returnPayload: IScUiReturnPayload = commandRouterResult.ScUiReturnPayload;
         let hasCorrectData = returnPayload && returnPayload.StateOfScUi && returnPayload.StateOfScUi.Meta && returnPayload.StateOfScUi.Meta.Hash
           && windowStatePrior && windowStatePrior.Meta && windowStatePrior.Meta.Hash;
 
