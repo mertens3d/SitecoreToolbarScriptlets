@@ -8,11 +8,11 @@ import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 -
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 
 export abstract class _BaseScFrameProxy<T> extends _BaseStateFullFrameProxy<T> implements IStateFullFrameProxy {
-  public readonly FrameJacket: FrameElemJacket = null;
-  abstract readonly ScProxyDisciminatorFriendly: string;
-  Id: string = null;
-  abstract readonly ScProxyDisciminator: ScProxyDisciminator;
   abstract Friendly: string;
+  abstract readonly Disciminator: ScProxyDisciminator;
+  abstract readonly DisciminatorFriendly: string;
+  Id: string = null;
+  public readonly FrameJacket: FrameElemJacket = null;
 
   constructor(apiCore: IAPICore, frameJacket: FrameElemJacket) {
     super(apiCore, frameJacket);

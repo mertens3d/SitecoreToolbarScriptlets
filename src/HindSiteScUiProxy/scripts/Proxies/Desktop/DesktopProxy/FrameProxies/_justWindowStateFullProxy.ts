@@ -1,17 +1,15 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullDocProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
-import { IStateFullElemProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
+import { IBaseScDocProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
-import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
-import { _BaseScDocProxy } from "../../../StateFullDocProxies/_BaseScDocProxy";
+import { _BaseScProxy } from "../../../StateFullDocProxies/_BaseScDocProxy";
 
-export abstract class _justWindowStateFullDocProxy extends _BaseScDocProxy implements IStateFullDocProxy {
+export abstract class _justWindowStateFullDocProxy extends _BaseScProxy implements IBaseScDocProxy {
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
   abstract readonly ScProxyDisciminatorFriendly: string;
   Friendly: string = '{unknown friendly}';
-  HostedElemProxies: IStateFullElemProxy[] = [];
+
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore, documentJacket);
@@ -23,7 +21,8 @@ export abstract class _justWindowStateFullDocProxy extends _BaseScDocProxy imple
 
       let stateOf_: IStateOf_ = {
         Disciminator: this.ScProxyDisciminator,
-        DisciminatorFriendly: this.ScProxyDisciminatorFriendly
+        DisciminatorFriendly: this.ScProxyDisciminatorFriendly,
+        StateOfHostedProxies: null,
       }
       resolve(stateOf_);
 

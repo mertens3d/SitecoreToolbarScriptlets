@@ -1,24 +1,21 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/scripts/Document/DocumentJacket';
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
+import { APICommandFlag } from "../../../../../Shared/scripts/Enums/APICommand";
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
-import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentEditor';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
-import { _ContentTreeBasedDocProxy } from './_ContentTreeBasedProxy';
-import { APICommandFlag } from "../../../../../Shared/scripts/Enums/APICommand";
-import { ScRibbonProxy } from './ScRibbonProxy/ScRibbonProxy';
-import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
+import { IBaseScDocProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy';
+import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentEditor';
 import { IStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies';
-import { IStateFullElemProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy';
+import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
+import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
+import { ScRibbonProxy } from './ScRibbonProxy/ScRibbonProxy';
+import { _ContentTreeBasedDocProxy } from './_ContentTreeBasedProxy';
 
-export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfContentTreeBasedProxies> implements IStateFullDocProxy {
+export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfContentTreeBasedProxies> implements IBaseScDocProxy {
   public readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.ContentEditor];
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
   public readonly ScProxyDisciminator = ScProxyDisciminator.ContentEditor;
-
-  public HostedElemProxies: IStateFullElemProxy[] = [];
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string) {
     super(apiCore, documentJacket);

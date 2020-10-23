@@ -62,7 +62,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
     this.Logger.FuncEnd([DTAreaElemProxy.name, this.InstantiateAsyncMembers.name]);
   }
 
-  public WireEvents() {
+  public WireEvents():void {
     this.Logger.FuncStart([DTAreaElemProxy.name, this.WireEvents.name]);
 
     //mutationObserver.observe(this.WatcherParams.ContainerJacket.NativeElement, { attributes: false, subtree: false, childList: true });

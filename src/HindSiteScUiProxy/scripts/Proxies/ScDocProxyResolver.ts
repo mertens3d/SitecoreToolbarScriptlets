@@ -1,40 +1,39 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/scripts/Document/DocumentJacket";
+import { ScWindowTypeResolver } from "../../../Shared/scripts/Agents/UrlAgent/ScWindowTypeResolver";
 import { ScProxyDisciminator } from "../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullDocProxy } from "../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
+import { IBaseScDocProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
 import { IStateLessDocProxy } from "../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { ContentEditorDocProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
-import { LaunchPadProxy } from "./StateFullDocProxies/LaunchPadProxy";
-import { MarketingControlPanelDocProxy } from "./StateFullDocProxies/MarketingControlPanelProxy";
-import { MediaLibraryProxy } from "./StateFullDocProxies/MediaLibraryProxy";
-import { PackageDesignerDocProxy } from "./StateFullDocProxies/PackageDesignerDocProxy";
-import { InstallerBuildPackageDocProxy } from "./StateLessDocProxies/StateLessDocProxies/InstallerBuildPackageDocProxy";
-import { JqueryModalDialogsFrameProxy } from "./StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
-import { TemplateManagerProxy } from "./StateFullDocProxies/TemplateManagerProxy";
-import { JqueryModalDialogsDocProxy } from "./StateLessDocProxies/StateLessDocProxies/JqueryModalDialogsDocProxy";
 import { AccessViewerProxy } from "./StateFullDocProxies/AccessViewerProxy";
+import { AppToolsInstallerDesignerProxy } from "./StateFullDocProxies/AppToolsInstallerDesignerProxy";
 import { ArchiveProxy } from "./StateFullDocProxies/ArchiveProxy";
-import { FallBackDocProxy } from "./StateFullDocProxies/FallBackDocProxy";
 import { DomainManagerProxy } from "./StateFullDocProxies/DomainManagerProxy";
 import { EmailExpeprienceManagerProxy } from "./StateFullDocProxies/EmailExpeprienceManagerProxy";
+import { FallBackDocProxy } from "./StateFullDocProxies/FallBackDocProxy";
 import { InstallationWizardProxy } from "./StateFullDocProxies/InstallationWizardProxy";
 import { InstallLicensesProxy } from "./StateFullDocProxies/InstallLicensesProxy";
 import { KeyBoardMapProxy } from "./StateFullDocProxies/KeyBoardMapProxy";
+import { LaunchPadProxy } from "./StateFullDocProxies/LaunchPadProxy";
 import { LicenseDetailsProxy } from "./StateFullDocProxies/LicenseDetailsProxy";
 import { LogViewerProxy } from "./StateFullDocProxies/LogViewerProxy";
+import { MarketingControlPanelDocProxy } from "./StateFullDocProxies/MarketingControlPanelProxy";
+import { MediaLibraryProxy } from "./StateFullDocProxies/MediaLibraryProxy";
+import { PackageDesignerDocProxy } from "./StateFullDocProxies/PackageDesignerDocProxy";
 import { RecycleBinProxy } from "./StateFullDocProxies/RecycleBinProxy";
 import { RoleManagerProxy } from "./StateFullDocProxies/RoleManagerProxy";
 import { RunProxy } from "./StateFullDocProxies/RunProxy";
 import { ScanForBrokenLinksProxy } from "./StateFullDocProxies/ScanForBrokenLinksProxy";
 import { SecurityEditorDocProxy } from "./StateFullDocProxies/SecurityEditorProxy";
+import { TemplateManagerProxy } from "./StateFullDocProxies/TemplateManagerProxy";
 import { UserManagerProxy } from "./StateFullDocProxies/UserManagerProxy";
 import { WorkboxProxy } from "./StateFullDocProxies/WorkboxProxy";
-import { IBaseScDocProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
-import { ScWindowTypeResolver } from "../../../Shared/scripts/Agents/UrlAgent/ScWindowTypeResolver";
-import { AppToolsInstallerDesignerProxy } from "./StateFullDocProxies/AppToolsInstallerDesignerProxy";
+import { InstallerBuildPackageDocProxy } from "./StateLessDocProxies/StateLessDocProxies/InstallerBuildPackageDocProxy";
+import { JqueryModalDialogsDocProxy } from "./StateLessDocProxies/StateLessDocProxies/JqueryModalDialogsDocProxy";
+import { JqueryModalDialogsFrameProxy } from "./StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
 export class ScDocProxyResolver extends _APICoreBase {
   constructor(apiCore: IAPICore) {
@@ -113,8 +112,8 @@ export class ScDocProxyResolver extends _APICoreBase {
     return stateLessScDocProxy;
   }
 
-  private StateFullScDocProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy): IStateFullDocProxy {
-    let stateFullScDocProxy: IStateFullDocProxy = null;
+  private StateFullScDocProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy): IBaseScDocProxy {
+    let stateFullScDocProxy: IBaseScDocProxy = null;
 
     if (false) { }
     else if (windowType === ScWindowType.AccessViewer) { stateFullScDocProxy = new AccessViewerProxy(this.ApiCore, documentJacket); }

@@ -19,9 +19,14 @@ import { ConResolver } from './ScContentTreeNodeProxy/ConResolver';
 import { _BaseStateFullElemProxy } from "../../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullElemProxy";
 import { IStateFullElemProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
 import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
+import { ScProxyDisciminator } from '../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator';
 
 //ContentTree is the name Sitecore uses
 export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfContentTree> implements IStateFullElemProxy {
+
+  readonly ScProxyDisciminator = ScProxyDisciminator.ContentTreeElem;
+  readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.ContentTreeElem];
+
   private TreeRootSelector: string;
   private _treeNodeProxy: ScContentTreeNodeProxy;
   private NativeClassNameChangeEvent_Observer: NativeClassNameChangeEvent_Observer;
@@ -44,8 +49,8 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
     this.ConResolver = new ConResolver(this.ApiCore);
   }
 
-  async Instantiate_TreeProxyAsyncElem(): Promise<void> {
-    this.Logger.FuncStart(this.Instantiate_TreeProxyAsyncElem.name);
+  async InstantiateAsyncMembers(): Promise<void> {
+    this.Logger.FuncStart(this.InstantiateAsyncMembers.name);
 
     try {
       await this.SetRootNodeFromSelector()
@@ -55,10 +60,10 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.ApiCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.Instantiate_TreeProxyAsyncElem.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
     }
 
-    this.Logger.FuncEnd(this.Instantiate_TreeProxyAsyncElem.name);
+    this.Logger.FuncEnd(this.InstantiateAsyncMembers.name);
   }
 
   WireEvents_TreeProxy() {
@@ -87,10 +92,13 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
     this.Logger.FuncEnd(this.CallBackOnNativeClassNameChangeEventAsync.name);
   }
 
-  public TriggerActiveNodeChangeEvent(): void {
-    this.Logger.FuncStart(this.TriggerActiveNodeChangeEvent.name);
+  public TriggerInboundEventAsync(): void {
+    this.Logger.FuncStart([ContentTreeElemProxy.name,  this.TriggerInboundEventAsync.name]);
+
     this.CallBackOnNativeClassNameChangeEventAsync(null);
-    this.Logger.FuncEnd(this.TriggerActiveNodeChangeEvent.name);
+    this.TriggerInboundEventsAsyncOnHosted();
+
+    this.Logger.FuncEnd([ContentTreeElemProxy.name, this.TriggerInboundEventAsync.name]);
   }
 
   private GetTreeNodeByGlyph(targetNode: IStateOfScContentTreeNodeDeep): Promise<ScContentTreeNodeProxy> {

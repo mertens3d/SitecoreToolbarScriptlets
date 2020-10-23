@@ -1,9 +1,9 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
-import { IStateOfScUi } from "../../StateOf/IDataStateOfSitecoreWindow";
-import { IStateFullDocProxy } from "../../Proxies/StateFull/IStateFullDocProxy";
 import { ScWindowType } from "../../../Enums/50 - scWindowType";
-import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
 import { APICommandFlag } from "../../../Enums/APICommand";
+import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
+import { IBaseScDocProxy } from "../../Proxies/IBaseScDocProxy";
+import { IStateOfScUi } from "../../StateOf/IDataStateOfSitecoreWindow";
 
 export interface IScWindowFacade {
   TriggerCERibbonCommand(ribbonCommand: APICommandFlag): void;
@@ -13,5 +13,5 @@ export interface IScWindowFacade {
   PublishActiveCE():Promise<void>;
   SetCompactCss(targetDoc: DocumentJacket):void;
   SetStateOfScWin(dataToRestore: IStateOfScUi): Promise<void>
-  StateFullProxy: IStateFullDocProxy;
+  StateFullProxy: IBaseScDocProxy;
 }

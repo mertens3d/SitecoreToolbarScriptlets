@@ -4,12 +4,12 @@ import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - ScPro
 import { PromiseFailAction } from "../../../../Shared/scripts/Enums/PromiseFailAction";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { IStateFullDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
+import { IBaseScDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
 import { _justWindowStateFullDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_justWindowStateFullProxy";
 import { PackageDesignerInstallerRibbonToolbarElemProxy } from "../StateLessDocProxies/StateLessElemProxies/PackageDesignerInstallerRibbonToolbarProxy";
 import { JqueryModalDialogsFrameProxy } from "../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
-export class AppToolsInstallerDesignerProxy extends _justWindowStateFullDocProxy implements IStateFullDocProxy {
+export class AppToolsInstallerDesignerProxy extends _justWindowStateFullDocProxy implements IBaseScDocProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.AppToolsInstallerDesigner;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.AppToolsInstallerDesigner];
 

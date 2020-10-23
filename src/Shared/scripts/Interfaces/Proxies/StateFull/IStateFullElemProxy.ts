@@ -1,6 +1,6 @@
-﻿import { IStateLessElemProxy } from "../StateLess/IStateLessElemProxy";
+﻿import { IBaseScProxy } from "../IBaseScProxy";
 
-export interface IStateFullElemProxy extends IStateLessElemProxy {
+export interface IStateFullElemProxy extends IBaseScProxy {
   GetState(): Promise<any>;
   SetState(state: any): Promise<any>;
 }

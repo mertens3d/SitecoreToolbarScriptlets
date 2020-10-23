@@ -1,9 +1,10 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/scripts/Document/DocumentJacket';
+import { ScProxyDisciminator } from '../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator';
 import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
 import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { IStateLessElemProxy } from '../../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessElemProxy';
+import { IBaseScProxy } from '../../../../../../Shared/scripts/Interfaces/Proxies/IBaseScProxy';
 import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
 import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
@@ -15,18 +16,19 @@ import { IButtonSelectors } from './IButtonSelectors';
 import { StartMenuButtonResolver } from './StartMenuButtonResolver';
 
 
-export class DTStartBarProxy extends _BaseStateLessElemProxy implements IStateLessElemProxy {
-    private DocumentJacket: DocumentJacket;
+export class DTStartBarElemProxy extends _BaseStateLessElemProxy implements IBaseScProxy {
+  readonly ScProxyDisciminator = ScProxyDisciminator.DTStartBarElem;
+  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.DTStartBarElem];
+
     private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
     private StartMenuButtonResolver: StartMenuButtonResolver;
     private ConResolver: ConResolver;
 
-    constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
-        super(apiCore);
-        this.Logger.CTORStart(DTStartBarProxy.name);
-        this.DocumentJacket = documentJacket;
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
+    super(apiCore, documentJacket);
+        this.Logger.CTORStart(DTStartBarElemProxy.name);
         this.InstantiateInstance();
-        this.Logger.CTOREnd(DTStartBarProxy.name);
+        this.Logger.CTOREnd(DTStartBarElemProxy.name);
     }
 
     private InstantiateInstance() {
@@ -34,13 +36,13 @@ export class DTStartBarProxy extends _BaseStateLessElemProxy implements IStateLe
     }
 
     public async InstantiateAsyncMembers():Promise<void> {
-      this.Logger.FuncStart([DTStartBarProxy.name,this.InstantiateAsyncMembers.name]);
-      this.Logger.FuncEnd([DTStartBarProxy.name, this.InstantiateAsyncMembers.name]);
+      this.Logger.FuncStart([DTStartBarElemProxy.name,this.InstantiateAsyncMembers.name]);
+      this.Logger.FuncEnd([DTStartBarElemProxy.name, this.InstantiateAsyncMembers.name]);
     }
 
     WireEvent() {
-        this.Logger.FuncStart(this.WireEvent.name, DTStartBarProxy.name);
-        this.Logger.FuncEnd(this.WireEvent.name, DTStartBarProxy.name);
+        this.Logger.FuncStart(this.WireEvent.name, DTStartBarElemProxy.name);
+        this.Logger.FuncEnd(this.WireEvent.name, DTStartBarElemProxy.name);
     }
 
     async TriggerRedButtonAsync(scWindowType: ScWindowType, methodLock: AsyncLock): Promise<void> {

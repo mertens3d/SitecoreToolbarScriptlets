@@ -1,18 +1,22 @@
 ﻿import { ElementDivJacket } from "../../../../../DOMJacket/scripts/Elements/ElementDivJacket";
+import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
+import { IBaseScProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IBaseScProxy";
 import { _BaseStateLessElemProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateLessElemProxy";
 import { JqueryModalDialogsFrameProxy } from "../StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
-export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLessElemProxy {
-  ElementDivJacket: ElementDivJacket;
+export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLessElemProxy implements IBaseScProxy {
+  readonly ScProxyDisciminator = ScProxyDisciminator.PackageDesignerInstallerRibbonToolbarElemProxy;
+  readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.PackageDesignerInstallerRibbonToolbarElemProxy];
+
   JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
   private GenerateZipButton: IJacketOfType;
 
   constructor(apiCore: IAPICore, elementDivJacket: ElementDivJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) {
-    super(apiCore);
-    this.ElementDivJacket = elementDivJacket;
+    super(apiCore, elementDivJacket);
+
     this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
 
     this.ErrorHand.ThrowIfNullOrUndefined(PackageDesignerInstallerRibbonToolbarElemProxy.name, [jqueryModalDialogsFrameProxy])
@@ -21,7 +25,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
   private async AttachClickEventToGenZip(): Promise<void> {
     this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
 
-    this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.InstallerDesigner.GenerateZip)
+    this.ContainerJacket.WaitForElement(ContentConst.Const.Selector.SC.InstallerDesigner.GenerateZip)
       .then((genericElemJacket: IJacketOfType) => this.GenerateZipButton = genericElemJacket)
       .then(() => this.GenerateZipButton.NativeElement.addEventListener('click', ((event: Event) => this.CallBackOnGenerateZipButtonClicked(event))))
       .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name], err));
@@ -50,7 +54,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
   async OpenFile(fileName: string): Promise<void> {
     //let jqueryFrameProxy: JqueryModalDialogsProxy = null;
 
-    await this.ElementDivJacket.WaitForElement(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
+    await this.ContainerJacket.WaitForElement(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
       .then((elemJacket: IJacketOfType) => elemJacket.NativeElement.click())
       .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.OpenFile.name], err))
 

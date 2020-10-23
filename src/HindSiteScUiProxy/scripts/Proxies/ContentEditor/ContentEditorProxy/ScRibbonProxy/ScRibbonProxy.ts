@@ -2,7 +2,7 @@
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { AsyncLock } from '../../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
-import { DTStartBarProxy } from "../../../Desktop/DesktopProxy/DesktopStartBarProxy/DTStartBarProxy";
+import { DTStartBarElemProxy } from "../../../Desktop/DesktopProxy/DesktopStartBarProxy/DTStartBarProxy";
 import { RibbonMenuButtonResolver } from "./RibbonMenuButtonResolver";
 import { APICommandFlag } from "../../../../../../Shared/scripts/Enums/APICommand";
 import { IRibbonClickSequence } from '../../../../InternalInterfaces/IRibbonClickSequence';
@@ -13,10 +13,10 @@ export class ScRibbonProxy extends _APICoreBase {
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
-    this.Logger.CTORStart(DTStartBarProxy.name);
+    this.Logger.CTORStart(DTStartBarElemProxy.name);
     this.DocumentJacket = documentJacket;
     this.InstantiateInstance();
-    this.Logger.CTOREnd(DTStartBarProxy.name);
+    this.Logger.CTOREnd(DTStartBarElemProxy.name);
   }
 
   private InstantiateInstance() {

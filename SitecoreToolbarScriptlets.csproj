@@ -166,6 +166,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\IBaseScDocProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IBaseScFrameProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IKeypressPayload.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\IBaseScProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\StateFull\IStateFullDocProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\StateFull\IStateFullElemProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\StateFull\IStateFullFrameProxy.ts" />

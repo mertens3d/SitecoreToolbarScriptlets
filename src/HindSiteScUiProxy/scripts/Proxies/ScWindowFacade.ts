@@ -4,34 +4,34 @@ import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/Defaul
 import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";
 import { DefaultStateOfScUiProxy } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScUiProxy";
 import { DefaultStateOfScWindow } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScWindowProxy";
+import { ReadyStateNAB } from "../../../Shared/scripts/Classes/ReadyStateNAB";
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ScProxyDisciminator } from "../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
-import { ReadyStateNAB } from "../../../Shared/scripts/Classes/ReadyStateNAB";
+import { APICommandFlag } from "../../../Shared/scripts/Enums/APICommand";
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IScWindowFacade } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
-import { IStateFullDocProxy } from "../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
-
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
+import { IBaseScDocProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
+import { IDataFriendly } from "../../../Shared/scripts/Interfaces/StateOf/IDataFriendly";
+import { IDataMetaData } from "../../../Shared/scripts/Interfaces/StateOf/IDataMetaData";
+import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
+import { IRootState } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfScWindow";
+import { IStateOf_ } from "../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { ContentEditorDocProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
 import { ScDocProxyResolver } from "./ScDocProxyResolver";
-import { APICommandFlag } from "../../../Shared/scripts/Enums/APICommand";
-import { IRootState } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfScWindow";
-import { IStateOf_ } from "../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
-import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
-import { IDataFriendly } from "../../../Shared/scripts/Interfaces/StateOf/IDataFriendly";
-import { IDataMetaData } from "../../../Shared/scripts/Interfaces/StateOf/IDataMetaData";
+
 
 export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
   private DocumentJacket: DocumentJacket;
   private StateFullProxyFactory: ScDocProxyResolver;
   private ScPageTypeResolver: ScWindowTypeResolver;
   private TabSessionId: string;
-  public StateFullProxy: IStateFullDocProxy;
+  public StateFullProxy: IBaseScDocProxy;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
@@ -65,8 +65,8 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
 
       await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket('Window.Document') // recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
         .then((result: ReadyStateNAB) => windowType = this.ScPageTypeResolver.GetScWindowType(this.DocumentJacket.UrlJacket))
-        .then(() => this.StateFullProxyFactory.ScDocProxyFactoryMake( this.DocumentJacket, null))
-        .then((stateFullProxy: IStateFullDocProxy) => this.StateFullProxy = stateFullProxy)
+        .then(() => this.StateFullProxyFactory.ScDocProxyFactoryMake(this.DocumentJacket, null))
+        .then((stateFullProxy: IBaseScDocProxy) => this.StateFullProxy = stateFullProxy)
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err));
     }
     catch (err: any) {

@@ -1,11 +1,6 @@
-﻿import { ScProxyDisciminator } from "../../Enums/40 - ScProxyDisciminator";
+﻿import { IBaseScProxy } from "./IBaseScProxy";
 
-export interface IBaseScDocProxy {
-  readonly ScProxyDisciminator: ScProxyDisciminator;
-  readonly ScProxyDisciminatorFriendly: string;
-  TriggerInboundEventsAsync():void;
-  InstantiateAsyncMembers(): Promise<void>;
-  WireEvents(): Promise<void>;
+export interface IBaseScDocProxy extends IBaseScProxy{
   OnFocus(): Promise<any>
   EnableWatcherForFrames(): void;
 }

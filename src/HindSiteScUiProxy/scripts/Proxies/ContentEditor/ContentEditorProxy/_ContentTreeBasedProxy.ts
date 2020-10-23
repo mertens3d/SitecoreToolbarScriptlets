@@ -1,13 +1,13 @@
 ﻿import { DocumentJacket } from '../../../../../DOMJacket/scripts/Document/DocumentJacket';
-import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { IterationDrone } from '../../../../../Shared/scripts/Agents/Drones/IterationDrone/IterationDrone';
 import { _baseDefaultStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Classes/Defaults/_baseDefaultStateOfContentTreeBasedProxies';
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { GuidData } from '../../../../../Shared/scripts/Helpers/GuidData';
+import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { IAPICore } from '../../../../../Shared/scripts/Interfaces/Agents/IAPICore';
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { IStateFullDocProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy';
+import { IBaseScDocProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy';
 import { IStateOfContentTree } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
 import { IStateOfContentTreeBasedProxies } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies";
 import { __ContentTreeBasedProxyMutationEvent__Subject } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Subject';
@@ -17,7 +17,7 @@ import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopPro
 import { _BaseStateFullDocProxy } from '../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy';
 import { ContentTreeElemProxy } from "./ContentTreeProxy/ContentTreeProxy";
 
-export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfContentTreeBasedProxies> extends _BaseStateFullDocProxy<T> implements IStateFullDocProxy {
+export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfContentTreeBasedProxies> extends _BaseStateFullDocProxy<T> implements IBaseScDocProxy {
   protected ContentTreeProxy: ContentTreeElemProxy;
   protected DocumentJacket: DocumentJacket;
   protected TreeMutationEvent_Observer: ContentTreeBasedProxyMutationEvent_Observer;
@@ -46,7 +46,7 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
     await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(_ContentTreeBasedDocProxy.name)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
       .then(() => this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
       .then((treeContainer: IJacketOfType) => this.ContentTreeProxy = new ContentTreeElemProxy(this.ApiCore, this.DocumentJacket, treeContainer, this.TreeRootSelector))
-      .then(() => this.ContentTreeProxy.Instantiate_TreeProxyAsyncElem())
+      .then(() => this.ContentTreeProxy.InstantiateAsyncMembers())
       .then(() => {
         this.__ContentTreeBasedProxyMutationEvent_Subject = new __ContentTreeBasedProxyMutationEvent__Subject(this.ApiCore);
         this.TreeMutationEvent_Observer = new ContentTreeBasedProxyMutationEvent_Observer(this.ApiCore, this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.bind(this));
@@ -110,7 +110,7 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
 
   __BaseTriggerInboundEventsAsync(): void {
     this.ErrorHand.ThrowIfNullOrUndefined(this.__BaseTriggerInboundEventsAsync.name + ' ' + _ContentTreeBasedDocProxy.name, this.ContentTreeProxy);
-    this.ContentTreeProxy.TriggerActiveNodeChangeEvent();
+    this.ContentTreeProxy.TriggerInboundEventAsync();
   }
 
   __baseGetState(): Promise<IStateOfContentTreeBasedProxies> {
@@ -120,7 +120,8 @@ export abstract class _ContentTreeBasedDocProxy<T extends _baseDefaultStateOfCon
       let toReturn: IStateOfContentTreeBasedProxies = {
         DisciminatorFriendly: ScProxyDisciminator[this.ScProxyDisciminator],
         Disciminator: this.ScProxyDisciminator,
-        ContentTree: null
+        ContentTree: null,
+        StateOfHostedProxies: null,
       }
 
       await this.ContentTreeProxy.GetState()

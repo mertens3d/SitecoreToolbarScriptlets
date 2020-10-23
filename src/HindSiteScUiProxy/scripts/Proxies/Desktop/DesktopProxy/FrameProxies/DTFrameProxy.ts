@@ -6,7 +6,7 @@ import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadySta
 import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/50 - scWindowType";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IStateFullDocProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullDocProxy";
+import { IBaseScDocProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
 import { IStateFullFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullFrameProxy";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
@@ -28,9 +28,9 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
   private _ContentTreeBasedProxyMutationEvent_Observer: _ContentTreeBasedProxyMutationEvent_Observer;
   private StateFullProxyFactory: ScDocProxyResolver;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
-  public HostedStateFullProxy: IStateFullDocProxy;
-  readonly ScProxyDisciminator = ScProxyDisciminator.DTFrameProxy;
-  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.DTFrameProxy];
+  public HostedStateFullProxy: IBaseScDocProxy;
+  readonly Disciminator = ScProxyDisciminator.DTFrameProxy;
+  readonly DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.DTFrameProxy];
   private JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
 
   constructor(apiCore: IAPICore, frameJacket: FrameElemJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) { //HTMLIFrameElement |
@@ -61,8 +61,8 @@ export class DTFrameProxy extends _BaseScFrameProxy<IStateOfDTFrame> implements 
             reject(result.DocumentReadtStateFriendly())
           }
         })
-        .then(() => this.StateFullProxyFactory.ScDocProxyFactoryMake( this.FrameJacket.DocumentJacket, this.JqueryModalDialogsFrameProxy))
-        .then((stateFullProxy: IStateFullDocProxy) => this.HostedStateFullProxy = stateFullProxy)
+        .then(() => this.StateFullProxyFactory.ScDocProxyFactoryMake(this.FrameJacket.DocumentJacket, this.JqueryModalDialogsFrameProxy))
+        .then((stateFullProxy: IBaseScDocProxy) => this.HostedStateFullProxy = stateFullProxy)
 
         .then(() => {
           this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.ApiCore);

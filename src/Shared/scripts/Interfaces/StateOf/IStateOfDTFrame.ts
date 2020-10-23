@@ -2,9 +2,9 @@
 import { IFrameJacketStyling } from "./IStateOfFrameStyling";
 import { ScWindowType } from "../../Enums/50 - scWindowType";
 
-export interface IStateOfDTFrame {
+export interface IStateOfDTFrame extends IStateOf_ {
   FrameStyling: IFrameJacketStyling;
-  StateOfHostedProxies: IStateOf_[];
+  
   WindowType: ScWindowType;
   ZIndex: number
 }

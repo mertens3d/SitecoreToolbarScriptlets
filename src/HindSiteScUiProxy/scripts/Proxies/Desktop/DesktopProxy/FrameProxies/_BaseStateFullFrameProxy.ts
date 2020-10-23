@@ -5,16 +5,18 @@ import { FrameElemJacket } from "../../../../../../DOMJacket/scripts/Elements/Fr
 import { IStateFullFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullFrameProxy";
 import { DocumentJacket } from "../../../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { DocReadyState } from "../../../../../../Shared/scripts/Enums/ReadyState";
+import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 
 export abstract class _BaseStateFullFrameProxy<T> extends _APICoreBase implements IStateFullFrameProxy {
   FrameJacket: FrameElemJacket;
   abstract GetState(): Promise<T>;
   abstract SetState(state: T): Promise<any>;
-  abstract readonly ScProxyDisciminator: ScProxyDisciminator;
-  abstract readonly ScProxyDisciminatorFriendly:string;
+  abstract readonly Disciminator: ScProxyDisciminator;
+  abstract readonly DisciminatorFriendly:string;
   abstract InstantiateAsyncMembers(): Promise<void>;
   abstract TriggerInboundEventsAsync(): void;
   abstract WireEvents(): Promise<void>;
+  StateOfHostedProxies: IStateOf_[] = [];
 
   constructor(apiCore: IAPICore, frameJacket: FrameElemJacket) {
     super(apiCore);

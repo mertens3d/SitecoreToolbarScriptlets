@@ -1,2 +1,2 @@
-﻿export interface IStateLessElemProxy {
-}
+﻿//export interface IStateLessElemProxy {
+//}

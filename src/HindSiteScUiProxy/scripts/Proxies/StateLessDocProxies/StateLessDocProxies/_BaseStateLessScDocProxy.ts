@@ -1,9 +1,9 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
-import { _BaseScDocProxy } from "../../StateFullDocProxies/_BaseScDocProxy";
+import { _BaseScProxy } from "../../StateFullDocProxies/_BaseScDocProxy";
 
-export abstract class _BaseStateLessScDocProxy extends _BaseScDocProxy  {
+export abstract class _BaseStateLessScDocProxy extends _BaseScProxy  {
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore, documentJacket);
   }
