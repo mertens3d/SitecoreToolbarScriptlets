@@ -1,0 +1,13 @@
+﻿@import "vars";
+
+body {
+  .hind-site-error-flag {
+    width: 140px;
+    height: 140px;
+    position: absolute;
+    right: 240px;
+    bottom: 0;
+    z-index: 9999;
+    background-color: red;
+  }
+}

@@ -107,13 +107,13 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     }
   }
 
-  private async PolllinateGlyphNodeElem(): Promise<void> {
+  private async GetOwnGlyphNodeElem(): Promise<void> {
     try {
-      await this.ScContentTreeNodeDivElem.WaitForElement(":scope > img", this.PolllinateGlyphNodeElem.name)
+      await this.ScContentTreeNodeDivElem.WaitForElement(":scope > img", this.GetOwnGlyphNodeElem.name)
         .then((elemImgJacket: ElementImgJacket) => this.glyphElem = elemImgJacket)
-        .catch((err: any) => this.ErrorHand.HandleFatalError(this.PolllinateGlyphNodeElem.name, err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.GetOwnGlyphNodeElem.name, err));
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.PolllinateGlyphNodeElem.name, err)
+      this.ErrorHand.HandleFatalError(this.GetOwnGlyphNodeElem.name, err)
     }
   }
 
@@ -172,7 +172,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     });
   }
 
-  private HarvestProperties() {
+  private GetOwnProperties() {
     this.ErrorHand.ThrowIfNullOrUndefined(this.HarvestNodeState.name, [this.LinkNodeElem, this.glyphElem]);
     this.StateOfScContentTreeNode.IsActive = this.QueryIsActive();
     this.StateOfScContentTreeNode.IsExpanded = this.QueryIsExpanded();
@@ -243,9 +243,9 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
         this.Children = [],
 
           await this.PollinateNodeElem()
-            .then(() => this.PolllinateGlyphNodeElem())
-            .then(() => this.HarvestProperties())
-            .then(() => this.GetChildren())
+            .then(() => this.GetOwnGlyphNodeElem())
+            .then(() => this.GetOwnProperties())
+            .then(() => this.GetOwnChildren())
             .then((children: ScContentTreeNodeProxy[]) => this.Children = children)
             .then(() => resolve())
             .catch((err: any) => {
@@ -277,7 +277,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     return toReturn;
   }
 
-  private GetChildren(): Promise<ScContentTreeNodeProxy[]> {
+  private GetOwnChildren(): Promise<ScContentTreeNodeProxy[]> {
     return new Promise(async (resolve, reject) => {
       try {
         let toReturn: ScContentTreeNodeProxy[] = [];
@@ -295,7 +295,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
           .then(() => resolve(toReturn))
           .catch((err: any) => reject(err));
       } catch (err: any) {
-        reject(this.GetChildren.name + ' | ' + err);
+        reject(this.GetOwnChildren.name + ' | ' + err);
       }
     });
   }

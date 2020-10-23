@@ -1,20 +1,21 @@
 ﻿import { DocumentJacket } from '../../../../../../DOMJacket/scripts/Document/DocumentJacket';
-import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
 import { ScWindowType } from '../../../../../../Shared/scripts/Enums/50 - scWindowType';
+import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
+import { IStateLessElemProxy } from '../../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessElemProxy';
 import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
 import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
+import { _BaseStateLessElemProxy } from '../FrameProxies/_BaseStateLessElemProxy';
 import { AsyncLock } from './AsyncLock';
 import { DesktopStartBarButtonProxy } from './DesktopStartBarButtonProxy';
 import { IButtonSelectors } from './IButtonSelectors';
 import { StartMenuButtonResolver } from './StartMenuButtonResolver';
 
 
-export class DTStartBarProxy extends _APICoreBase {
+export class DTStartBarProxy extends _BaseStateLessElemProxy implements IStateLessElemProxy {
     private DocumentJacket: DocumentJacket;
     private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
     private StartMenuButtonResolver: StartMenuButtonResolver;
@@ -32,9 +33,9 @@ export class DTStartBarProxy extends _APICoreBase {
         this.ConResolver = new ConResolver(this.ApiCore);
     }
 
-    public Instantiate_DTStartBarProxy() {
-        this.Logger.FuncStart(this.Instantiate_DTStartBarProxy.name, DTStartBarProxy.name);
-        this.Logger.FuncEnd(this.Instantiate_DTStartBarProxy.name, DTStartBarProxy.name);
+    public async InstantiateAsyncMembers():Promise<void> {
+      this.Logger.FuncStart([DTStartBarProxy.name,this.InstantiateAsyncMembers.name]);
+      this.Logger.FuncEnd([DTStartBarProxy.name, this.InstantiateAsyncMembers.name]);
     }
 
     WireEvent() {

@@ -63,7 +63,7 @@ export class GenericStateLessFrameProxy extends _baseStatelessFrameProxyOfType<_
         .then(() => resolve(stateLessFrameProxyToReturn))
         .catch((err: any) => reject(apiCore.ErrorHand.FormatRejectMessage([GenericStateLessFrameProxy.name, this.StateLessFrameProxyFactory.name], err)));
 
-      apiCore.Logger.FuncStart([GenericStateLessFrameProxy.name, this.StateLessFrameProxyFactory.name]);
+      apiCore.Logger.FuncEnd([GenericStateLessFrameProxy.name, this.StateLessFrameProxyFactory.name]);
     });
   }
 }

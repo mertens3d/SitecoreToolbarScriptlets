@@ -1,27 +1,30 @@
-﻿import { AutoSnapShotAgent } from "../../../../ContentTop/scripts/Agents/AutoSnapShotAgent";
-import { BrowserMessageBroker_Content } from "../../../../ContentTop/scripts/Proxies/BrowserMessageBroker_Content";
+﻿import { BrowserMessageBroker_Content } from "../../../../ContentTop/scripts/Proxies/BrowserMessageBroker_Content";
 import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { CommandTypeFlag } from "../../Enums/CommandType";
+import { APICommandFlag } from "../../Enums/APICommand";
+import { InternalCommandFlag } from "../../Enums/InternalCommand";
+import { SnapShotFlavor } from "../../Enums/SnapShotFlavor";
 import { GuidData } from "../../Helpers/GuidData";
 import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
-import { IContentAtticAgent } from "../../Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
-import { ISettingsAgent } from "../../Interfaces/Agents/ISettingsAgent";
-import { IToastAgent } from "../../Interfaces/Agents/IToastAgent";
-import { IApiCallPayload } from "../../Interfaces/IApiCallPayload";
-import { ICommandParams } from "../../Interfaces/ICommandParams";
+import { IToApiCallPayload } from "../../Interfaces/IApiCallPayload";
+import { ICommandData } from "../../Interfaces/ICommandParams";
 import { _CommonBase } from "../../_CommonCoreBase";
 
-export class CommandPayloadForInternal extends _CommonBase implements ICommandParams {
-  NewNickname: string;
-  TargetSnapShotId: GuidData;
+export class DefaultCommandData  implements ICommandData {
+  NewNickname = '';
+  TargetSnapShotId: GuidData = null;
   ContentMessageBroker: BrowserMessageBroker_Content = null;
   hindeCore: ICommonCore = null;
   TargetDoc: DocumentJacket = null;
   TargetNickName: string = '';
   TopLevelDoc: DocumentJacket = null;
-  ApiPayload: IApiCallPayload;
+  CommandType: CommandTypeFlag;
+  InternalCommandFlag: InternalCommandFlag;
 
-  constructor(hindeCore: ICommonCore,    apiPayload: IApiCallPayload) {
-    super(hindeCore);
-    this.ApiPayload = apiPayload;
+  ToAPIPayload: IToApiCallPayload = {
+    DataOneWindowStorage: null,
+    APICommand: APICommandFlag.Unknown,
+    SnapShotFlavor: SnapShotFlavor.Unknown,
+    SnapShotOfStateScUiApi: null,
   }
 }

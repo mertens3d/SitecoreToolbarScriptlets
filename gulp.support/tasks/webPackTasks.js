@@ -51,7 +51,7 @@ module.exports = {
               import: './AutoBuild/TsTranspiled/Shared/scripts/SharedEntry.js',
             },
           },
-          //mode: 'development',//'production', //,
+          //mode: 'development',
           mode: 'production',
           //externals: [
           //  ///.*DOMJacket\/.+$/,

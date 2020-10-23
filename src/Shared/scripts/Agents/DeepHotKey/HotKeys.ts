@@ -6,7 +6,7 @@ export class HotKeys {
 
     { Friendly: 'Go Selected - Ctrl+Alt+G', IsAltKey: true, IsCtrlKey: true, IsShiftKey: false, HotKeyCommandFlag: ReqCommandMsgFlag.ReqGoToSelected, KeyWhich: 71 },
 
-    { Friendly: 'Take Snap Shot - Ctrl+Alt+P', IsAltKey: true, IsCtrlKey: true, IsShiftKey: false, HotKeyCommandFlag: ReqCommandMsgFlag.ReqTakeSnapShot, KeyWhich: 80 },
+    { Friendly: 'Take Snap Shot - Ctrl+Alt+P', IsAltKey: true, IsCtrlKey: true, IsShiftKey: false, HotKeyCommandFlag: ReqCommandMsgFlag.ReqTakeAndSaveSnapShot, KeyWhich: 80 },
 
     { Friendly: 'Presentation Details - Ctrl+Alt+D', IsAltKey: true, IsCtrlKey: true, IsShiftKey: false, HotKeyCommandFlag: ReqCommandMsgFlag.OpenCERibbonPresentationDetails, KeyWhich: 68 },
 

@@ -6,5 +6,5 @@ import { TypeDiscriminator } from "../../../../../../../Shared/scripts/Enums/70 
 export class DTFrameProxyMutationEvent_Subject extends HindeSiteEvent_Subject<IDTFrameProxyMutationEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.DTFrameProxyMutationEvent_Subject;
   readonly Friendly_Subject = DTFrameProxyMutationEvent_Subject.name;
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
 }

@@ -1,127 +1,226 @@
-﻿import { ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/ReplyCommandMsgFlag";
-import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiProxy";
+﻿import { DocumentJacket } from "../../../DOMJacket/scripts/Document/DocumentJacket";
+import { ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { TypeDiscriminator } from "../../../Shared/scripts/Enums/70 - TypeDiscriminator";
+import { InternalCommandFlag } from "../../../Shared/scripts/Enums/InternalCommand";
+import { ReplyCommandMsgFlag } from "../../../Shared/scripts/Enums/ReplyCommandMsgFlag";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
+import { ISolicitor } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/ISolicitor";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
-import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
+import { ICommandData } from "../../../Shared/scripts/Interfaces/ICommandParams";
+import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
+import { IInternalCommandResults } from "../../../Shared/scripts/Interfaces/IInternalCommandResults";
+import { ICommandRouterResult } from "../../../Shared/scripts/Interfaces/StateOf/ICommandRouterResult";
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
+import { SolicitorForScheduledAutoSnapShot } from "../CommandSolicitors/CommandSolicitorForAutoSnapShot";
 import { RecipeChangeNickName } from "../Recipes/RecipeChangeNickName";
-import { RecipeForceAutoSnapShot } from "../Recipes/RecipeForceAutoSnapShot";
-import { RecipeInitFromQueryStr, RecipeSetStateFromMostRecent } from "../Recipes/RecipeInitFromQueryStr";
 import { RecipeRemoveItemFromStorage } from "../Recipes/RecipeRemoveItemFromStorage";
-import { RecipeSaveStateManual } from "../Recipes/RecipeSaveState";
 import { RecipeToggleFavorite } from "../Recipes/RecipeToggleFavorite";
-import { DocumentJacket } from "../../../DOMJacket/scripts/Document/DocumentJacket";
+import { CommandRouter } from "./CommandRouter";
 
 export class CommandRunnerInternal extends _FrontBase {
-    Dependancies: ICommandDependancies;
+  private Dependancies: ICommandDependancies;
+  private CommandRouter: CommandRouter;
+  private Solicitors: ISolicitor[];
+  private AtticAgent: IContentAtticAgent;
 
-    constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, scUiProxy: IHindSiteScUiProxy, documentJacket: DocumentJacket) {
-        super(hindeCore);
+  constructor(hindeCore: IHindeCore, atticAgent: IContentAtticAgent, solicitorForAutoSnapShot: SolicitorForScheduledAutoSnapShot, documentJacket: DocumentJacket, commandRouter: CommandRouter, solicitors: ISolicitor[]) {
+    super(hindeCore);
 
-        this.Dependancies = {
-            AtticAgent: atticAgent,
-            AutoSnapShotAgent: autoSnapShotAgent,
-            ScUiProxy: scUiProxy,
-            HindeCore: this.HindeCore,
-            DocumentJacket: documentJacket
-        };
-    }
+    this.CommandRouter = commandRouter;
+    this.Solicitors = solicitors;
+    this.AtticAgent = atticAgent;
 
+    this.Dependancies = {
+      AtticAgent: atticAgent,
+      SolicitorForAutoSnapShot: solicitorForAutoSnapShot,
+      HindeCore: this.HindeCore,
+      DocumentJacket: documentJacket
+    };
+  }
 
-    async SetNickName(commandParams: ICommandParams): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            //let recipe = new RecipeForceAutoSnapShot(this.Logger, commandParams, this.Dependancies);
-            let recipe = new RecipeChangeNickName(this.HindeCore, commandParams, this.Dependancies);
+  HandleInternalCommand(commandData: ICommandData): Promise<IInternalCommandResults> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(this.HandleInternalCommand.name);
 
-            recipe.Execute()
-                .then(() => resolve())
-                .catch((err: any) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
-        });
-    }
+      try {
+        if (commandData) {
+          switch (commandData.InternalCommandFlag) {
+            case InternalCommandFlag.DebugForceAutoSnapShot:
+              this.DebugForceAutoSnapShot(commandData)
+                .then((internalCommandResults: IInternalCommandResults) => resolve(internalCommandResults))
+                .catch((err) => this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.HandleInternalCommand.name], err));
+              break;
 
-    Ping() {
-        return new Promise(async (resolve, reject) => {
-            resolve(ReplyCommandMsgFlag.RespListeningAndReady);
-        });
-    }
+            case InternalCommandFlag.Ping:
+              this.Ping(commandData)
+                .then((internalCommandResults: IInternalCommandResults) => resolve(internalCommandResults))
+                .catch((err) => this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.HandleInternalCommand.name], err));
+              break;
 
+            case InternalCommandFlag.RemoveSnapShot:
+              this.RemoveSnapShot(commandData)
+                .then((internalCommandResults: IInternalCommandResults) => resolve(internalCommandResults))
+                .catch((err) => this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.HandleInternalCommand.name], err));
+              break;
 
-    async DebugForceAutoSnapShot(commandParams: ICommandParams): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            let recipe = new RecipeForceAutoSnapShot(this.HindeCore, commandParams, this.Dependancies);
+            case InternalCommandFlag.SaveWindowState:
+              this.SaveWindowState(commandData)
+                .then((internalCommandResults: IInternalCommandResults) => resolve(internalCommandResults))
+                .catch((err) => this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.HandleInternalCommand.name], err));
+              break;
 
-            recipe.Execute()
-                .then(() => resolve())
-                .catch((err: any) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
-        });
-    }
+            case InternalCommandFlag.SetNickName:
+              this.SetNickName(commandData)
+                .then((internalCommandResults: IInternalCommandResults) => resolve(internalCommandResults))
+                .catch((err) => this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.HandleInternalCommand.name], err));
+              break;
 
+            //case InternalCommandFlag.SetStateFromMostRecent:
+            //  this.SetStateFromMostRecent(commandData)
+            //    .then((internalCommandResults: IInternalCommandResults) => resolve(internalCommandResults))
+            //    .catch((err) => this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.HandleInternalCommand.name], err));
+            //  break;
 
-    async SaveWindowState(commandParams: ICommandParams): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            let recipe = new RecipeSaveStateManual(this.HindeCore, commandParams, this.Dependancies);
-            await recipe.Execute()
-                .then(resolve)
-                .catch((err: any) => reject(err));
-        });
-    }
+            case InternalCommandFlag.ThrowFatalError:
+              throw ('error throw test');
 
-    ToggleFavorite(commandParams: ICommandParams) {
-        return new Promise(async (resolve, reject) => {
-            await new RecipeToggleFavorite(this.HindeCore, commandParams, this.Dependancies).Execute()
-                .then(() => resolve())
-                .catch((err: any) => reject(err));
-        });
-    }
+            case InternalCommandFlag.ToggleFavorite:
+              this.ToggleFavorite(commandData)
+                .then((internalCommandResults: IInternalCommandResults) => resolve(internalCommandResults))
+                .catch((err) => this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.HandleInternalCommand.name], err));
+              break;
 
-
-    async SetStateFromMostRecent(commandParams: ICommandParams): Promise<void> {
-        try {
-            this.Logger.FuncStart(this.SetStateFromMostRecent.name);
-            let recipe = new RecipeSetStateFromMostRecent(this.HindeCore, commandParams, this.Dependancies);
-            await recipe.Execute();
+            default:
+              reject(this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.HandleInternalCommand.name], 'unhandled Internal command flag: ' + InternalCommandFlag[commandData.InternalCommandFlag]));
+              break;
+          }
+        } else {
+          reject(this.HandleInternalCommand.name + ' | no functionToExecute');
         }
-        catch (err: any) {
-            this.ErrorHand.HandleFatalError(this.SetStateFromQueryString.name, err);
-        }
-        this.Logger.FuncEnd(this.SetStateFromMostRecent.name);
+      } catch (err) {
+        reject(err);
+      }
+
+      this.Logger.FuncEnd(this.HandleInternalCommand.name);
+    });
+  }
+
+  async SetNickName(commandParams: ICommandData): Promise<IInternalCommandResults> {
+    return new Promise(async (resolve, reject) => {
+      //let recipe = new RecipeForceAutoSnapShot(this.Logger, commandParams, this.Dependancies);
+      let recipe = new RecipeChangeNickName(this.HindeCore, commandParams, this.Dependancies);
+
+      recipe.Execute()
+        .then(() => resolve())
+        .catch((err: any) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
+    });
+  }
+
+  Ping(commandParams: ICommandData): Promise<IInternalCommandResults> {
+    return new Promise(async (resolve, reject) => {
+      resolve(ReplyCommandMsgFlag.RespListeningAndReady);
+    });
+  }
+
+  private DefaultInternalCommandResult(): IInternalCommandResults {
+    let toReturn: IInternalCommandResults = {
     }
 
+    return toReturn;
+  }
 
-    async SetStateFromQueryString(commandParams: ICommandParams): Promise<void> {
-        try {
-            let recipe = new RecipeInitFromQueryStr(this.HindeCore, commandParams, this.Dependancies);
-            recipe.Execute();
-        }
-        catch (err: any) {
-            this.ErrorHand.HandleFatalError(this.SetStateFromQueryString.name, err);
-        }
-    }
+  async DebugForceAutoSnapShot(commandParams: ICommandData): Promise<IInternalCommandResults> {
+    return new Promise(async (resolve, reject) => {
+      let result: IInternalCommandResults = this.DefaultInternalCommandResult();
 
+      let targetSolicitor: SolicitorForScheduledAutoSnapShot = null;
 
-    async RemoveSnapShot(commandParams: ICommandParams): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            let recipe = new RecipeRemoveItemFromStorage(this.HindeCore, commandParams, this.Dependancies);
-            await recipe.Execute()
-                .then(resolve)
-                .catch((err: any) => reject(err));
+      if (this.Solicitors) {
+        this.Solicitors.forEach((solicitor: ISolicitor) => {
+          if (solicitor.TypeDiscriminator === TypeDiscriminator.SolicitorForScheduledAutoSnapShot) {
+            targetSolicitor = <SolicitorForScheduledAutoSnapShot>solicitor;
+          }
         });
-    }
+      }
 
-    SetStateOfSitecoreWindow(commandParams: ICommandParams, dependancies: ICommandDependancies): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            dependancies.HindeCore.Logger.LogAsJsonPretty("IdOfSelect", commandParams.TargetSnapShotId);
-            let dataOneWindowStorage: IStateOfScUi = dependancies.AtticAgent.GetFromStorageBySnapShotId(commandParams.TargetSnapShotId);
+      if (targetSolicitor) {
+        targetSolicitor.ExecuteTest()
+          .then((testResult: any) => { })
+          .then(() => resolve(result))
+          .catch((err) => this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.DebugForceAutoSnapShot.name], err));
+      }
+    });
+  }
 
-          if (dataOneWindowStorage) {
-            commandParams.ApiPayload.SnapShotOfStateScUiApi = dataOneWindowStorage;
-                dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(commandParams.ApiPayload)
-                    .then(() => resolve())
-                    .catch((err: any) => reject(this.SetStateOfSitecoreWindow.name + ' | ' + err));
-            };
-        });
-    }
+  async SaveWindowState(commandParams: ICommandData): Promise<IInternalCommandResults> {
+    return new Promise(async (resolve, reject) => {
+      let routingParams: ICommandRouterParams = {
+        NewNickName: '',
+        ReqMsgFlag: ReqCommandMsgFlag.GetStateOfWindow,
+        ReqMsgFlagFriendly: ReqCommandMsgFlag[ReqCommandMsgFlag.GetStateOfWindow],
+        SelectSnapShotId: null,
+        SelectText: '',
+        StateSnapShot: null
+      }
+
+      this.CommandRouter.RouteCommand(routingParams)
+        .then((commandRouterResults: ICommandRouterResult) => this.AtticAgent.WriteStateOfSitecoreToStorage(commandRouterResults.ReturnPayload.StateOfScUi))
+        .then(() => resolve())
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.SaveWindowState.name], err)));
+    });
+  }
+
+  async ToggleFavorite(commandParams: ICommandData): Promise<IInternalCommandResults> {
+    return new Promise(async (resolve, reject) => {
+      await new RecipeToggleFavorite(this.HindeCore, commandParams, this.Dependancies).Execute()
+        .then(() => resolve())
+        .catch((err: any) => reject(err));
+    });
+  }
+
+  //async SetStateFromMostRecent(commandParams: ICommandData): Promise<IInternalCommandResults> {
+  //  try {
+  //    this.Logger.FuncStart(this.SetStateFromMostRecent.name);
+  //    let recipe = new RecipeSetStateFromMostRecent(this.HindeCore, commandParams, this.Dependancies);
+  //    await recipe.Execute();
+  //  }
+  //  catch (err: any) {
+  //    this.ErrorHand.HandleFatalError(this.SetStateFromMostRecent.name, err);
+  //  }
+  //  this.Logger.FuncEnd(this.SetStateFromMostRecent.name);
+  //}
+
+  //async SetStateFromQueryString(commandParams: ICommandData): Promise<void> {
+  //  try {
+  //    let recipe = new RecipeInitFromQueryStr(this.HindeCore, commandParams, this.Dependancies);
+  //    recipe.Execute();
+  //  }
+  //  catch (err: any) {
+  //    this.ErrorHand.HandleFatalError(this.SetStateFromQueryString.name, err);
+  //  }
+  //}
+
+  async RemoveSnapShot(commandParams: ICommandData): Promise<IInternalCommandResults> {
+    return new Promise(async (resolve, reject) => {
+      let recipe = new RecipeRemoveItemFromStorage(this.HindeCore, commandParams, this.Dependancies);
+      await recipe.Execute()
+        .then(() => resolve())
+        .catch((err: any) => reject(err));
+    });
+  }
+
+  //SetStateOfSitecoreWindow(commandParams: ICommandData, dependancies: ICommandDependancies): Promise<void> {
+  //    return new Promise(async (resolve, reject) => {
+  //        dependancies.HindeCore.Logger.LogAsJsonPretty("IdOfSelect", commandParams.TargetSnapShotId);
+  //        let dataOneWindowStorage: IStateOfScUi = dependancies.AtticAgent.GetFromStorageBySnapShotId(commandParams.TargetSnapShotId);
+
+  //      if (dataOneWindowStorage) {
+  //        comToAPIPayload.ApiPayload.SnapShotOfStateScUiApi = dataOneWindowStorage;
+  //            dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(comToAPIPayload.ApiPayload)
+  //                .then(() => resolve())
+  //                .catch((err: any) => reject(this.SetStateOfSitecoreWindow.name + ' | ' + err));
+  //        };
+  //    });
+  //}
 }

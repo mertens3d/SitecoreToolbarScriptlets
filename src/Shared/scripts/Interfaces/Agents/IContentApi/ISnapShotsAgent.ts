@@ -1,6 +1,6 @@
-﻿import { ICommandParams } from "../../ICommandParams";
+﻿import { ICommandData } from "../../ICommandParams";
 
 export interface ISnapShotsAgent {
 
-    SetNickName(commandData: ICommandParams): Promise<void>;
+    SetNickName(commandData: ICommandData): Promise<void>;
 }

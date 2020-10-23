@@ -136,7 +136,7 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log('Marker ' + marker);
   }
 
-  LogAsJsonPretty(texValName: string, jsonObj: any): void{
+  LogAsJsonPretty(texValName: string, jsonObj: any): void {
     try {
       this.LogVal(texValName, JSON.stringify(jsonObj, null, 2));
     } catch (err: any) {
@@ -176,7 +176,7 @@ export class LoggerAgent implements ILoggerAgent {
     this.Log(formattedText);
   }
 
-  LogImportant(text: string): void{
+  LogImportant(text: string): void {
     text = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleBgYellow, text);
     this.Log(text);
   }
@@ -274,6 +274,20 @@ export class LoggerAgent implements ILoggerAgent {
 
     return toReturn;
   }
+
+  private CalcFuncStartEndColor(): string {
+    let toReturn: string = '';
+
+    let modValue: number = this.__callDepth % 2;
+    if (modValue > 0) {
+      toReturn =  SharedConst.Const.Colors.ConsoleStyles.StyleFgGreen;
+    } else {
+      toReturn = SharedConst.Const.Colors.ConsoleStyles.StyleFgBlue;
+    }
+
+    return toReturn;
+  }
+
   FuncStart(text: string | string[], optionalValue?: number): void;
   FuncStart(text: string | string[], optionalValue?: string): void;
   FuncStart(text: string | string[], optionalValue?: boolean): void;
@@ -286,7 +300,7 @@ export class LoggerAgent implements ILoggerAgent {
 
     text = 's' + ' ' + this.__callDepth + ') ' + text;
 
-    let formatted = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleFgGreen, text);
+    let formatted = this.StyleFormat(this.CalcFuncStartEndColor(), text);
 
     this.Log(formatted, true);
     this.__callDepth++;
@@ -306,7 +320,7 @@ export class LoggerAgent implements ILoggerAgent {
   FuncEnd(text: string | string[], optionalValueInput?: number): void;
   FuncEnd(text: string | string[], optionalValueInput?: boolean): void;
   FuncEnd(text: string | string[], optionalValueInput?: string): void;
-  FuncEnd(text: string | string[], optionalValueInput: string | number | boolean): void{
+  FuncEnd(text: string | string[], optionalValueInput: string | number | boolean): void {
     text = this.resolveFuncText(text);
 
     this.__callDepth--;
@@ -320,7 +334,7 @@ export class LoggerAgent implements ILoggerAgent {
       text = this.AddOptionalValueToText(text, optionalValueInput);
     }
 
-    let formatted = this.StyleFormat(SharedConst.Const.Colors.ConsoleStyles.StyleFgRed, text);
+    let formatted = this.StyleFormat(this.CalcFuncStartEndColor(), text);
 
     this.Log(formatted, true);
   }

@@ -8,7 +8,7 @@ import { TypeDiscriminator } from "../../../../../../../Shared/scripts/Enums/70 
 export class _ContentTreeBasedProxyMutationEvent_Observer extends HindSiteEvent_Observer<I_ContentTreeBasedProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<I_ContentTreeBasedProxyMutationEvent_Payload>  {
   TypeDiscriminator = TypeDiscriminator._ContentTreeBasedProxyMutationEvent_Observer;
 
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
   private OwnerDTFrameProxy: DTFrameProxy;
   Friendly: string;
 

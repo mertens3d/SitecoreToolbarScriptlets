@@ -4,5 +4,5 @@ import { ISingleClickEvent_Payload } from "./ISingleClickEvent_Payload";
 
 export class SingleClickEvent_Subject extends HindeSiteEvent_Subject<ISingleClickEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.SingleClickEvent_Subject;
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
 }

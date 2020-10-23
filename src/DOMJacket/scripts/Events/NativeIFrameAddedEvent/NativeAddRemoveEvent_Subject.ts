@@ -9,7 +9,7 @@ import { INativeAddRemoveEvent_Payload } from "./INativeAddRemoveEvent_Payload";
 
 export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INativeAddRemoveEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.FrameJacketAddRemoveEvent_Subject;
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
   private ContainerElemJacket: IJacketOfType;
   private WatcherParams: IElemJacketWatcherParameters;
 

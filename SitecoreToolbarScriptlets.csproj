@@ -57,10 +57,19 @@
     <Content Include="ReadmeResoures\external-tools.png" />
     <Content Include="ReadmeResoures\file.png" />
     <TypeScriptCompile Include="src\ContentAllFrames\scripts\zContentAllEntryPoint.ts" />
-    <TypeScriptCompile Include="src\ContentTop\scripts\Events\CommandStartEndCancelEvent\CommandState_State.ts" />
-    <TypeScriptCompile Include="src\ContentTop\scripts\Events\CommandStartEndCancelEvent\ICommandStartEndCancelEvent_Payload.ts" />
-    <TypeScriptCompile Include="src\ContentTop\scripts\Events\CommandStartEndCancelEvent\CommandStartEndCancelEvent_Observer.ts" />
-    <TypeScriptCompile Include="src\ContentTop\scripts\Events\CommandStartEndCancelEvent\CommandStartEndCancelEvent_Subject.ts" />
+    <TypeScriptCompile Include="src\ContentTop\scripts\CommandSolicitors\CommandSolicitorForAutoSnapShot.ts" />
+    <TypeScriptCompile Include="src\ContentTop\scripts\CommandSolicitors\CommandSolicitorForQueryString.ts" />
+    <TypeScriptCompile Include="src\ContentTop\scripts\CommandSolicitors\CommandSolicitorHotKeys.ts" />
+    <TypeScriptCompile Include="src\ContentTop\scripts\CommandSolicitors\_CommandSolicitorFor_.ts" />
+    <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\APICommandMappingB.ts" />
+    <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\CommandMapping.ts" />
+    <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\RecipeSetStateFromMostRecent.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\APICommand.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Enums\InternalCommand.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\CommandStartEndCancelEvent\CommandState_State.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\CommandStartEndCancelEvent\ICommandStartEndCancelEvent_Payload.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\CommandStartEndCancelEvent\CommandStartEndCancelEvent_Observer.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Events\CommandStartEndCancelEvent\CommandStartEndCancelEvent_Subject.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\BrowserMessageBroker_Content.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\CommandRouter.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\CommandRunnerInternal.ts" />
@@ -147,8 +156,12 @@
     <TypeScriptCompile Include="src\Shared\scripts\HindeCore.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\IHindSiteScUiProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentApi\IHindSiteScUiProxyRunTimeOptions.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentAtticAgent\ISolicitor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHindSiteHistoryStrAr.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHistoryItem.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IInternalCommandResults.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMapMsgFlagToAPICommand.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMapMsgFlagToInternalFlag.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Jackets\IScPathResolver.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\IBaseScDocProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IBaseScFrameProxy.ts" />
@@ -160,6 +173,8 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\StateLess\IStateLessElemProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Proxies\StateLess\IStateLessFrameProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUserKeyPressCombo.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\ICommandRouterResult.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IScUiReturnPayload.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Proxies\Browser\_BaseBrowserProxy.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\_ContentRecipeBase.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Document\DocumentJacket.ts" />
@@ -247,7 +262,6 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\IContentTreeProxyMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DTFrameProxyMutationEvent\DTFrameProxyMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\RecipeInitFromQueryStr.ts" />
-    <TypeScriptCompile Include="src\ContentTop\scripts\Agents\AutoSnapShotAgent.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\__RecipeBase\_ApiRecipeBase.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\RecipeChangeNickName.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentEditorPublishProxy.ts" />
@@ -425,6 +439,7 @@
     <None Include="Readme.Installing.md" />
     <None Include="Readme.Contibuting.md" />
     <None Include="Readme.Using.md" />
+    <None Include="src\ContentTop\css\_partials\_errorFlag.scss" />
     <None Include="src\ContentTop\css\_toast.scss" />
     <None Include="src\ContentTop\css\_compact\_desktopArea.scss" />
     <None Include="src\ContentTop\css\_compact\_scStartbar.scss" />
@@ -501,6 +516,7 @@
     <Folder Include="Dist\HindSite\icons\" />
     <Folder Include="Misc\" />
     <Folder Include="src\ContentAllFrames\css\" />
+    <Folder Include="src\ContentTop\scripts\Events\" />
     <Folder Include="src\Shared\scripts\Collections\" />
     <Folder Include="src\Shared\scripts\Interfaces\Proxies\_Base\" />
   </ItemGroup>

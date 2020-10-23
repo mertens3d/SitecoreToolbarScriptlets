@@ -3,10 +3,10 @@ import { IStateOfScUi } from "../../StateOf/IDataStateOfSitecoreWindow";
 import { IStateFullDocProxy } from "../../Proxies/StateFull/IStateFullDocProxy";
 import { ScWindowType } from "../../../Enums/50 - scWindowType";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
-import { ScRibbonCommand } from "../../../Enums/eScRibbonCommand";
+import { APICommandFlag } from "../../../Enums/APICommand";
 
 export interface IScWindowFacade {
-  TriggerCERibbonCommand(ribbonCommand: ScRibbonCommand): void;
+  TriggerCERibbonCommand(ribbonCommand: APICommandFlag): void;
   GetCurrentPageType(): ScWindowType;
   GetStateOfScUiProxy(snapshotFlavor: SnapShotFlavor): Promise<IStateOfScUi>;
   InstantiateAsyncMembers(): Promise<void>;

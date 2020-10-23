@@ -7,7 +7,7 @@ export class ContentTreeMutationEvent_Subject extends HindeSiteEvent_Subject<ICo
   readonly Friendly_Subject = ContentTreeMutationEvent_Subject.name;
   readonly TypeDiscriminator = TypeDiscriminator.ContentTreeMutationEvent_Subject;
 
-    ShowLogActions: boolean = true;
+   protected ShowLogActions: boolean = true;
     constructor(apiCore: IAPICore) {
         super(apiCore);
     }

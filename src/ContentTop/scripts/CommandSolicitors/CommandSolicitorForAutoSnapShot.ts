@@ -10,21 +10,38 @@ import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataSt
 import { IScUiReturnPayload } from "../../../Shared/scripts/Interfaces/StateOf/IScUiReturnPayload";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
-import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
-import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
+import { IToApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
+import { APICommandFlag } from "../../../Shared/scripts/Enums/APICommand";
+import { CommandRouter } from "../Proxies/CommandRouter";
+import { _CommandSolicitorForEvent_ } from "./_CommandSolicitorFor_";
+import { DocumentJacket } from "../../../DOMJacket/scripts/Document/DocumentJacket";
+import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
+import { ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
+import { ICommandRouterResult } from "../../../Shared/scripts/Interfaces/StateOf/ICommandRouterResult";
+import { ISolicitor } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/ISolicitor";
+import { TypeDiscriminator } from "../../../Shared/scripts/Enums/70 - TypeDiscriminator";
 
-export class AutoSnapShotAgent extends _FrontBase {
+export class SolicitorForScheduledAutoSnapShot extends _CommandSolicitorForEvent_ implements ISolicitor {
+  readonly TypeDiscriminator: TypeDiscriminator = TypeDiscriminator.SolicitorForScheduledAutoSnapShot;
   private AtticAgent: IContentAtticAgent;
   private AutoSaveHasBeenScheduled: boolean = false;
   private LastKnownSavedState: IStateOfScUi = null;
   private SettingsAgent: ISettingsAgent;
   ScUiProxy: IHindSiteScUiProxy;
 
-  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, atticAgent: IContentAtticAgent, scUiProxy: IHindSiteScUiProxy) {
-    super(hindeCore);
+  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, atticAgent: IContentAtticAgent, scUiProxy: IHindSiteScUiProxy, commandRouter: CommandRouter, documentJacket: DocumentJacket) {
+    super(hindeCore, commandRouter, documentJacket);
     this.SettingsAgent = settingsAgent;
     this.AtticAgent = atticAgent;
     this.ScUiProxy = scUiProxy;
+    this.CommandRouter = commandRouter;
+  }
+
+  async ExecuteTest(): Promise<any> {
+  }
+
+  protected Instantiate(): void {
+    //empty
   }
 
   async AutoSaveSnapShot() {
@@ -33,19 +50,27 @@ export class AutoSnapShotAgent extends _FrontBase {
     //if (!this.RecipeAutoSaveState) {
     //  this.RecipeAutoSaveState = new RecipeAutoSaveState(this.HindeCore, this.ScUiProxy, this.AtticAgent);
     //}
-
     let windowStatePrior = this.LastKnownSavedState;
 
-
-    let payload: IApiCallPayload = {
+    let payload: IToApiCallPayload = {
       DataOneWindowStorage: null,
-      ScRibbonCommand: ScRibbonCommand.Unknown,
+      APICommand: APICommandFlag.Unknown,
       SnapShotFlavor: SnapShotFlavor.Autosave,
       SnapShotOfStateScUiApi: null,
-    }
+    };
 
-    this.ScUiProxy.GetStateOfScUiProxy(payload)
-      .then((returnPayload: IScUiReturnPayload) => {
+    let setStateFromX: ICommandRouterParams = {
+      ReqMsgFlag: ReqCommandMsgFlag.GetStateOfWindow,
+      ReqMsgFlagFriendly: ReqCommandMsgFlag[ReqCommandMsgFlag.GetStateOfWindow],
+      NewNickName: null,
+      SelectSnapShotId: null,
+      SelectText: null,
+      StateSnapShot: null,
+    };
+
+    this.CommandRouter.RouteCommand(setStateFromX)
+      .then((commandRouterResult: ICommandRouterResult) => {
+        let returnPayload: IScUiReturnPayload = commandRouterResult.ReturnPayload;
         let hasCorrectData = returnPayload && returnPayload.StateOfScUi && returnPayload.StateOfScUi.Meta && returnPayload.StateOfScUi.Meta.Hash
           && windowStatePrior && windowStatePrior.Meta && windowStatePrior.Meta.Hash;
 
@@ -58,7 +83,6 @@ export class AutoSnapShotAgent extends _FrontBase {
         }
         this.LastKnownSavedState = returnPayload.StateOfScUi;
       })
-      //.then((result: IStateOfScUi) => this.LastKnownSavedState = result);
       .catch((err: any) => this.ErrorHand.HandleFatalError(this.AutoSaveSnapShot.name, err));
 
     this.Logger.FuncEnd(this.AutoSaveSnapShot.name);
@@ -66,8 +90,8 @@ export class AutoSnapShotAgent extends _FrontBase {
 
   ScheduleIntervalTasks() {
     this.Logger.FuncStart(this.ScheduleIntervalTasks.name);
-    this.Logger.LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled)
-    let autoSaveSetting: HindSiteSettingWrapper = this.SettingsAgent.HindSiteSettingsBucket.GetByKey(SettingKey.AutoSaveIntervalMin)
+    this.Logger.LogVal('Has been scheduled: ', this.AutoSaveHasBeenScheduled);
+    let autoSaveSetting: HindSiteSettingWrapper = this.SettingsAgent.HindSiteSettingsBucket.GetByKey(SettingKey.AutoSaveIntervalMin);
     this.Logger.LogVal('autoSaveSetting: ', autoSaveSetting.HindSiteSetting.ValueAsInt());
 
     if (autoSaveSetting.HindSiteSetting.ValueAsInt() > 0) {
@@ -78,7 +102,7 @@ export class AutoSnapShotAgent extends _FrontBase {
 
         window.setInterval(() => {
           self.AutoSaveSnapShot();
-        }, intervalMs / SharedConst.Const.Debug.SpeedUpAutoSaveIntervalFactor)
+        }, intervalMs / SharedConst.Const.Debug.SpeedUpAutoSaveIntervalFactor);
 
         this.AutoSaveHasBeenScheduled = true;
       }

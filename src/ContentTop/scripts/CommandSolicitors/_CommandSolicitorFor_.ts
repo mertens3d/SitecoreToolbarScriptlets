@@ -6,7 +6,7 @@ import { _FrontBase } from '../../../Shared/scripts/_HindeCoreBase';
 import { CommandRouter } from '../Proxies/CommandRouter';
 
 
-export abstract class _CommandSolicitorFor_ extends _FrontBase {
+export abstract class _CommandSolicitorForEvent_ extends _FrontBase {
     protected CommandRouter: CommandRouter;
     protected HotKeyEvent_Observer: HotKeyEvent_Observer;
     protected DeepHotKeyAgent: DeepHotKeyAgent;

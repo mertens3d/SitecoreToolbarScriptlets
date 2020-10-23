@@ -3,9 +3,9 @@ import { ReqCommandMsgFlag } from '../../../Shared/scripts/Enums/10 - MessageFla
 import { HotKeyEvent_Observer } from '../../../Shared/scripts/Events/HotKeyEvent/HotKeyEvent_Observer';
 import { IHotKeyEvent_Payload } from '../../../Shared/scripts/Events/HotKeyEvent/IHotKeyEvent_Payload';
 import { ICommandRouterParams } from '../../../Shared/scripts/Interfaces/ICommandRouterParams';
-import { _CommandSolicitorFor_ } from './_CommandSolicitorFor_';
+import { _CommandSolicitorForEvent_ } from './_CommandSolicitorFor_';
 
-export class CommandSolicitorForHotKeys extends _CommandSolicitorFor_ {
+export class CommandSolicitorForHotKeys extends _CommandSolicitorForEvent_ {
   protected Instantiate() {
     this.DeepHotKeyAgent = new DeepHotKeyAgent(this.HindeCore, this.DocumentJacket.UrlJacket);
     this.HotKeyEvent_Observer = new HotKeyEvent_Observer(this.CommonCore, this.CallBackOnHotKeyEvent.bind(this));
@@ -16,10 +16,12 @@ export class CommandSolicitorForHotKeys extends _CommandSolicitorFor_ {
     this.Logger.LogImportant('received : ' + ReqCommandMsgFlag[hotKeyEvent_Payload.ReqCommandMsgFlag]);
 
     let commandParams: ICommandRouterParams = {
-      MsgFlag: hotKeyEvent_Payload.ReqCommandMsgFlag,
+      ReqMsgFlag: hotKeyEvent_Payload.ReqCommandMsgFlag,
+      ReqMsgFlagFriendly: ReqCommandMsgFlag[hotKeyEvent_Payload.ReqCommandMsgFlag],
       NewNickName: null,
       SelectSnapShotId: null,
       SelectText: hotKeyEvent_Payload.SelectText,
+      StateSnapShot: null,
     }
 
     if (this.CommandRouter) {

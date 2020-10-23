@@ -28,7 +28,7 @@ export abstract class _BaseScDocProxy extends _APICoreBase  {
   public async EnableWatcherForFrames(): Promise<void> {
     try {
       this.WatcherForFrames = new ScDocProxyWatcherForFrames(this.ApiCore, this.DocumentJacket, this.ScProxyDisciminatorFriendly);
-      this.WatcherForFrames.EnableWatcherForFrames()
+      await this.WatcherForFrames.EnableWatcherForFrames()
         .catch((err: any) => this.ErrorHand.HandleFatalError([_BaseScDocProxy.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err));
     } catch (err: any) {
       this.ErrorHand.HandleFatalError([_BaseScDocProxy.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err);

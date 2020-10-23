@@ -10,9 +10,7 @@ import { SettingsAgent } from '../../Shared/scripts/Agents/SettingsAgent/Setting
 import { TaskMonitor } from "../../Shared/scripts/Agents/TaskMonitor/TaskMonitor";
 import { ToastAgent } from '../../Shared/scripts/Agents/ToastAgent/ToastAgent';
 import { CoreFactory } from '../../Shared/scripts/Classes/CoreFactory';
-import { ReqCommandMsgFlag } from '../../Shared/scripts/Enums/10 - MessageFlag';
 import { SettingKey } from '../../Shared/scripts/Enums/30 - SettingKey';
-import { QueryStrKey } from '../../Shared/scripts/Enums/QueryStrKey';
 import { HindeCore } from '../../Shared/scripts/HindeCore';
 import { ICommonCore } from '../../Shared/scripts/Interfaces/Agents/ICommonCore';
 import { IHindSiteScUiProxy } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiProxy";
@@ -24,13 +22,12 @@ import { IHindSiteSetting } from '../../Shared/scripts/Interfaces/Agents/IGeneri
 import { IHindeCore } from "../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IRepositoryAgent } from '../../Shared/scripts/Interfaces/Agents/IRepositoryAgent';
 import { ISettingsAgent } from '../../Shared/scripts/Interfaces/Agents/ISettingsAgent';
-import { ICommandRouterParams } from "../../Shared/scripts/Interfaces/ICommandRouterParams";
 import { IUrlJacket } from '../../Shared/scripts/Interfaces/IUrlAgent';
 import { SharedConst } from '../../Shared/scripts/SharedConst';
-import { AutoSnapShotAgent } from './Agents/AutoSnapShotAgent';
 import { ContentAtticAgent } from './Agents/ContentAtticAgent';
+import { SolicitorForScheduledAutoSnapShot } from './CommandSolicitors/CommandSolicitorForAutoSnapShot';
+import { CommandSolicitorForEventQueryString, CommandSolicitorForEventRestoreMostRecent } from "./CommandSolicitors/CommandSolicitorForQueryString";
 import { CommandSolicitorForHotKeys } from './CommandSolicitors/CommandSolicitorHotKeys';
-import { CommandSolicitorForQueryString } from "./CommandSolicitors/CommandSolicitorForQueryString";
 import { ContentMessageManager } from './Managers/ContentMessageManager';
 import { BrowserMessageBroker_Content } from "./Proxies/BrowserMessageBroker_Content";
 import { CommandRouter } from "./Proxies/CommandRouter";
@@ -44,7 +41,7 @@ class ContentEntry {
   private AtticAgent: IContentAtticAgent;
   //ScUrlAgent: ScUrlAgent;
   ContentBrowserProxy: IContentBrowserProxy;
-  AutoSnapShotAgent: AutoSnapShotAgent;
+  AutoSnapShotAgent: SolicitorForScheduledAutoSnapShot;
 
   CommandRouter: CommandRouter;
   HindeCore: IHindeCore;
@@ -52,7 +49,8 @@ class ContentEntry {
   TaskMonitor: TaskMonitor;
   TopDocumentJacket: DocumentJacket;
   CommandSolicitorHotKeys: CommandSolicitorForHotKeys;
-  CommandSolicitorForQueryString: CommandSolicitorForQueryString;
+  CommandSolicitorForEventQueryString: CommandSolicitorForEventQueryString;
+  CommandSolicitorForEventStartup: CommandSolicitorForEventRestoreMostRecent;
 
   async StartUpContent(): Promise<void> {
     try {
@@ -107,7 +105,7 @@ class ContentEntry {
 
       this.ScUiAPI = new HindSiteScUiProxy(this.HindeCore.Logger, this.HindeCore.ErrorHand, this.HindeCore.TaskMonitor, this.TopDocumentJacket, runTimeOptions);
 
-      this.AutoSnapShotAgent = new AutoSnapShotAgent(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiAPI);
+      this.AutoSnapShotAgent = new SolicitorForScheduledAutoSnapShot(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiAPI, this.CommandRouter, this.TopDocumentJacket);
 
       this.ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore)
 
@@ -118,7 +116,9 @@ class ContentEntry {
       this.ToastAgent.ObserveRouter(this.CommandRouter);
 
       this.CommandSolicitorHotKeys = new CommandSolicitorForHotKeys(this.HindeCore, this.CommandRouter, this.TopDocumentJacket);
-      this.CommandSolicitorForQueryString = new CommandSolicitorForQueryString(this.HindeCore, this.CommandRouter, this.TopDocumentJacket, this.SettingsAgent)
+
+      this.CommandSolicitorForEventQueryString = new CommandSolicitorForEventQueryString(this.HindeCore, this.CommandRouter, this.TopDocumentJacket, this.SettingsAgent, this.AtticAgent)
+      this.CommandSolicitorForEventStartup = new CommandSolicitorForEventRestoreMostRecent(this.HindeCore, this.CommandRouter, this.TopDocumentJacket, this.SettingsAgent, this.AtticAgent)
 
       let contentMessageBroker: IMessageBroker_Content = new BrowserMessageBroker_Content(this.HindeCore, this.SettingsAgent,
         this.ScUiAPI, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
@@ -138,11 +138,17 @@ class ContentEntry {
     }
   }
 
-  private StartUp() {
-    this.HindeCore.Logger.FuncStart(this.StartUp.name);
+  private async StartUp() {
+    this.HindeCore.Logger.FuncStart([ContentEntry.name, this.StartUp.name]);
 
-    this.CommandSolicitorForQueryString.StatUp()
-    this.HindeCore.Logger.FuncEnd(this.StartUp.name);
+    await this.ScUiAPI.StartUp()
+      .then(() => {
+        this.CommandSolicitorForEventQueryString.StartUp();
+        this.CommandSolicitorForEventStartup.StartUp();
+      })
+      .catch((err) => this.ErrorHand.HandleFatalError([ContentEntry.name, this.StartUp.name], err));
+
+    this.HindeCore.Logger.FuncEnd([ContentEntry.name, this.StartUp.name]);
   }
 
   private InitLogger() {

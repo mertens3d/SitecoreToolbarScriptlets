@@ -55,7 +55,7 @@ export class FrameElemJacket extends ElementJacketOfType<HTMLIFrameElement> {
   private async PrepareFrameJacket(): Promise<void> {
     this.Logger.FuncStart([FrameElemJacket.name, this.PrepareFrameJacket.name]);
     try {
-      this.WaitForCompleteNABFrameElement(FrameElemJacket.name + this.PrepareFrameJacket.name)
+      await this.WaitForCompleteNABFrameElement(FrameElemJacket.name + this.PrepareFrameJacket.name)
         .then(() => DocumentJacket.FactoryMakeDocumentJacket(this.CommonCore, this.NativeElement.contentDocument))
         .then((documentJacket: DocumentJacket) => this.DocumentJacket = documentJacket)
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.PrepareFrameJacket.name, err));

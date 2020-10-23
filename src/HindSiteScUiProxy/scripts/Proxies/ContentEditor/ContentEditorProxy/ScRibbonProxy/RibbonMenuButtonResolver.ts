@@ -1,10 +1,10 @@
 ﻿import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { AllRibbonCommands } from "./AllRibbonCommands";
 import { IRibbonClickSequence } from "../../../../InternalInterfaces/IRibbonClickSequence";
-import { ScRibbonCommand } from "../../../../../../Shared/scripts/Enums/eScRibbonCommand";
+import { APICommandFlag } from "../../../../../../Shared/scripts/Enums/APICommand";
 
 export class RibbonMenuButtonResolver extends _APICoreBase {
-    GetRibbonButtonSequence(scRibbonCommand: ScRibbonCommand): IRibbonClickSequence {
+    GetRibbonButtonSequence(scRibbonCommand: APICommandFlag): IRibbonClickSequence {
         let ribbonClickSequences: IRibbonClickSequence[] = AllRibbonCommands.Const;
         let toReturnRibbonClickSequence: IRibbonClickSequence = null;
 
@@ -16,7 +16,7 @@ export class RibbonMenuButtonResolver extends _APICoreBase {
 
         if (!toReturnRibbonClickSequence) {
             toReturnRibbonClickSequence = {
-                ScRibbonCommand: ScRibbonCommand.Unknown,
+                ScRibbonCommand: APICommandFlag.Unknown,
                 Step1Selector: null,
                 Step2Selector: null,
             };

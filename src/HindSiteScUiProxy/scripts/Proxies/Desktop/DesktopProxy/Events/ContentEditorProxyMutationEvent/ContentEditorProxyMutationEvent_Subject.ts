@@ -5,5 +5,5 @@ import { I_ContentTreeBasedProxyMutationEvent_Payload } from "./IContentEditorPr
 export class __ContentTreeBasedProxyMutationEvent__Subject extends HindeSiteEvent_Subject<I_ContentTreeBasedProxyMutationEvent_Payload>  {
   readonly TypeDiscriminator = TypeDiscriminator.__ContentTreeBasedProxyMutationEvent__Subject;
   readonly Friendly_Subject = __ContentTreeBasedProxyMutationEvent__Subject.name;
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
 }

@@ -1,5 +1,5 @@
 ﻿import { DocumentJacket } from "../../DOMJacket/scripts/Document/DocumentJacket";
-import { ScRibbonCommand } from "../../Shared/scripts/Enums/eScRibbonCommand";
+import { APICommandFlag } from "../../Shared/scripts/Enums/APICommand";
 import { ICoreTaskMonitor } from "../../Shared/scripts/Interfaces/Agents/Core/ITaskMonitorAgent";
 import { IAPICore } from "../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IHindSiteScUiProxy } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiProxy";
@@ -7,7 +7,7 @@ import { IHindSiteScUiProxyRunTimeOptions } from "../../Shared/scripts/Interface
 import { ICoreErrorHandler } from "../../Shared/scripts/Interfaces/Agents/IErrorHandlerAgent";
 import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
 import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
-import { IApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
+import { IToApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { IStateOfScUi } from "../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { IScUiReturnPayload } from "../../Shared/scripts/Interfaces/StateOf/IScUiReturnPayload";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
@@ -42,20 +42,121 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     this.Logger.CTOREnd(HindSiteScUiProxy.name);
   }
 
-  private async InstantiateHindSiteScUiProxy(): Promise<void> {
-    this.Logger.FuncStart(this.InstantiateHindSiteScUiProxy.name);
+
+  public async StartUp(): Promise<void> {
+    this.Logger.FuncStart([HindSiteScUiProxy.name, this.StartUp.name]);
     try {
       if (!this.IsInstatiated) {
         this.ScWindowFacade = new ScWindowFacade(this.ApiCore, this.DocumentJacket);
         await this.ScWindowFacade.InstantiateAsyncMembers()
           .then(() => this.IsInstatiated = true)
+          .catch((err) => this.ErrorHand.HandleFatalError([HindSiteScUiProxy.name, this.StartUp.name], err));
       }
     }
     catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateHindSiteScUiProxy.name, err);
+      this.ErrorHand.HandleFatalError([HindSiteScUiProxy.name, this.StartUp.name], err);
     }
 
-    this.Logger.FuncEnd(this.InstantiateHindSiteScUiProxy.name);
+    this.Logger.FuncEnd([HindSiteScUiProxy.name, this.StartUp.name]);
+  }
+
+  APICommand(commandData: IToApiCallPayload): Promise<IScUiReturnPayload> {
+    return new Promise(async (resolve, reject) => {
+
+      this.Logger.FuncStart([HindSiteScUiProxy.name, this.APICommand.name], APICommandFlag[commandData.APICommand]);
+
+
+      let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
+      await this.StartUp()
+        .then(async () => {
+          switch (commandData.APICommand) {
+            case APICommandFlag.NavigateBack:
+              this.TriggerCERibbonCommand(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+            case APICommandFlag.NavigateForward:
+              this.TriggerCERibbonCommand(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+            case APICommandFlag.NavigateLinks:
+              this.TriggerCERibbonCommand(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+            case APICommandFlag.NavigateUp:
+              this.TriggerCERibbonCommand(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+            case APICommandFlag.PresentationDetails:
+              this.TriggerCERibbonCommand(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+            case APICommandFlag.ToggleRawValues:
+              this.TriggerCERibbonCommand(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+            case APICommandFlag.GetStateOfScUiProxy:
+              await      this.GetStateOfScUiProxy(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+
+            case APICommandFlag.AddContentEditorToDesktopAsync:
+              this.AddContentEditorToDesktopAsync(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+
+            case APICommandFlag.PublischActiveCE:
+              this.PublischActiveCE(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+
+            case APICommandFlag.ToggleCompactCss:
+              this.ToggleCompactCss(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+
+            case APICommandFlag.SetStateOfSitecoreWindowAsync:
+              this.SetStateOfSitecoreWindowAsync(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+
+            case APICommandFlag.CEGoSelected:
+              this.CEGoSelected(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+
+            case APICommandFlag.OpenContentEditor:
+              this.OpenContentEditor(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+
+            case APICommandFlag.AdminB:
+              this.AdminB(commandData)
+                .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
+                .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
+              break;
+
+            default:
+          }
+        })
+        .then(() => resolve(returnPayload))
+        .catch((err) => reject(this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.GetStateOfScUiProxy.name], err)));
+
+
+      this.Logger.FuncEnd([HindSiteScUiProxy.name, this.APICommand.name], APICommandFlag[commandData.APICommand]);
+    });
   }
 
   private DefaultReturnPayload(): IScUiReturnPayload {
@@ -65,10 +166,10 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     return defaultVal;
   }
 
-  async GetStateOfScUiProxy(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload> {
+  private async GetStateOfScUiProxy(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
-      await this.InstantiateHindSiteScUiProxy()
+      await this.StartUp()
         .then(() => this.ScWindowFacade.GetStateOfScUiProxy(apiCallPayload.SnapShotFlavor))
         .then((stateOfScUi: IStateOfScUi) => returnPayload.StateOfScUi = stateOfScUi)
         .then(() => resolve(returnPayload))
@@ -76,50 +177,50 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     });
   }
 
-  public async AddContentEditorToDesktopAsync(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload> {
+  private async AddContentEditorToDesktopAsync(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
-      await this.InstantiateHindSiteScUiProxy()
+      await this.StartUp()
         .then(() => (<DesktopProxy>this.ScWindowFacade.StateFullProxy).AddContentEditorFrameAsync())
         .then(() => resolve(returnPayload))
         .catch((err: any) => reject(err));
     });
   }
 
-  public async PublischActiveCE(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload> {
+  private async PublischActiveCE(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
-      await this.InstantiateHindSiteScUiProxy()
+      await this.StartUp()
         .then(() => this.ScWindowFacade.PublishActiveCE())
         .then(() => resolve(returnPayload))
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.PublischActiveCE.name], err)));
     });
   }
 
-  public async ToggleCompactCss(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload> {
+  private async ToggleCompactCss(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
-      await this.InstantiateHindSiteScUiProxy()
+      await this.StartUp()
         //await this.ToggleCompactCss()
         .then(() => resolve(returnPayload))
         .catch((err: any) => reject(err));
     });
   }
 
-  public async SetStateOfSitecoreWindowAsync(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload> {
+  private async SetStateOfSitecoreWindowAsync(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
-      await this.InstantiateHindSiteScUiProxy()
+      await this.StartUp()
         .then(() => this.ScWindowFacade.SetStateOfScWin(apiCallPayload.DataOneWindowStorage))
         .then(() => resolve(returnPayload))
         .catch((err: any) => reject(err));
     });
   }
 
-  public async CEGoSelected(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload> {
+  private async CEGoSelected(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
-      await this.InstantiateHindSiteScUiProxy()
+      await this.StartUp()
         .then(() => {
           let text: string = '';
           if (window.getSelection()) {
@@ -132,14 +233,14 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     });
   }
 
-  public async TriggerCERibbonCommand(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload> {
+  private async TriggerCERibbonCommand(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart([HindSiteScUiProxy.name, this.TriggerCERibbonCommand.name], ScRibbonCommand[apiCallPayload.ScRibbonCommand]);
+      this.Logger.FuncStart([HindSiteScUiProxy.name, this.TriggerCERibbonCommand.name], APICommandFlag[apiCallPayload.APICommand]);
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
-      await this.InstantiateHindSiteScUiProxy()
+      await this.StartUp()
         .then(() => {
-          if ((typeof apiCallPayload.ScRibbonCommand !== 'undefined') && apiCallPayload.ScRibbonCommand !== ScRibbonCommand.Unknown) {
-            this.ScWindowFacade.TriggerCERibbonCommand(apiCallPayload.ScRibbonCommand);
+          if ((typeof apiCallPayload.APICommand !== 'undefined') && apiCallPayload.APICommand !== APICommandFlag.Unknown) {
+            this.ScWindowFacade.TriggerCERibbonCommand(apiCallPayload.APICommand);
           } else {
             this.ErrorHand.WarningAndContinue(this.TriggerCERibbonCommand.name, 'Invalid scRibbonCommand');
           }
@@ -150,15 +251,15 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     });
   }
 
-  public async OpenContentEditor(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload> {
+  private async OpenContentEditor(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     throw new Error("Method not implemented.");
   }
 
-  public async AdminB(apiCallPayload: IApiCallPayload): Promise<IScUiReturnPayload> {
+  private async AdminB(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart([HindSiteScUiProxy.name, this.TriggerCERibbonCommand.name], ScRibbonCommand[apiCallPayload.ScRibbonCommand]);
+      this.Logger.FuncStart([HindSiteScUiProxy.name, this.TriggerCERibbonCommand.name], APICommandFlag[apiCallPayload.APICommand]);
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
-      await this.InstantiateHindSiteScUiProxy()
+      await this.StartUp()
         .then(() => {
           this.ScUiMan = new ScUiManager(this.ApiCore);
           this.ScUiMan.InitSitecoreUiManager();

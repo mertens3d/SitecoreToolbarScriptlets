@@ -5,5 +5,5 @@ import { TypeDiscriminator } from "../../../../Shared/scripts/Enums/70 - TypeDis
 
 export class UiSettingBasedModuleMutationEvent_Subject extends HindeSiteEvent_Subject<IUiSettingBasedModuleMutationEven_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.UiSettingBasedModuleMutationEvent_Subject;
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
 }

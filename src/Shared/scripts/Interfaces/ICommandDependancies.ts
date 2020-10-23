@@ -1,13 +1,11 @@
-﻿import { DocumentJacket } from "../../../DOMJacket/scripts/Document/DocumentJacket";
-import { IContentAtticAgent } from "./Agents/IContentAtticAgent/IContentAtticAgent";
+﻿import { SolicitorForScheduledAutoSnapShot } from "../../../ContentTop/scripts/CommandSolicitors/CommandSolicitorForAutoSnapShot";
+import { DocumentJacket } from "../../../DOMJacket/scripts/Document/DocumentJacket";
 import { ICommonCore } from "./Agents/ICommonCore";
-import { AutoSnapShotAgent } from "../../../ContentTop/scripts/Agents/AutoSnapShotAgent";
-import { IHindSiteScUiProxy } from "./Agents/IContentApi/IHindSiteScUiProxy";
+import { IContentAtticAgent } from "./Agents/IContentAtticAgent/IContentAtticAgent";
 
 export interface ICommandDependancies {
   AtticAgent: IContentAtticAgent;
-  AutoSnapShotAgent: AutoSnapShotAgent;
+  SolicitorForAutoSnapShot: SolicitorForScheduledAutoSnapShot;
   HindeCore: ICommonCore;
-  ScUiProxy: IHindSiteScUiProxy;
   DocumentJacket: DocumentJacket
 }

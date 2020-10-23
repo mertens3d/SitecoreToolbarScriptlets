@@ -6,7 +6,7 @@ import { IElementJacketMutationEvent_Payload } from "../../../../../DOMJacket/sc
 import { StaticHelpers } from "../../../../../Shared/scripts/Classes/StaticHelpers";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
-import { ScRibbonCommand } from "../../../../../Shared/scripts/Enums/eScRibbonCommand";
+import { APICommandFlag } from "../../../../../Shared/scripts/Enums/APICommand";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
 import { IStateFullElemProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
@@ -410,7 +410,7 @@ export class DTAreaElemProxy extends _BaseStateFullElemProxy<IStateOfDTArea> imp
     return toReturn;
   }
 
-  TriggerCERibbonCommand(ribbonCommand: ScRibbonCommand) {
+  TriggerCERibbonCommand(ribbonCommand: APICommandFlag) {
     let topFrameProxy: DTFrameProxy = this.GetTopFrame();
     if (topFrameProxy.HostedStateFullProxy.ScProxyDisciminator === ScProxyDisciminator.ContentEditor) {
       let contentEditorProxy: ContentEditorDocProxy = <ContentEditorDocProxy>topFrameProxy.HostedStateFullProxy;

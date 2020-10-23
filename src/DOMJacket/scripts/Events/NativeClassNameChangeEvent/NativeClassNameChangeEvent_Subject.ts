@@ -9,7 +9,7 @@ export class NativeClassNameChangeEvent_Subject extends HindeSiteEvent_Subject<I
   readonly Friendly_Subject = NativeClassNameChangeEvent_Subject.name;
   readonly TypeDiscriminator = TypeDiscriminator.NativeClassNameChangeEvent_Subject;
 
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
   private TreeElement: HTMLElement;
   constructor(commonCore: ICommonCore, treeElementJacket: IJacketOfType) {
     super(commonCore);

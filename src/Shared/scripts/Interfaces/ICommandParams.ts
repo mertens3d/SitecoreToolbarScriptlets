@@ -1,9 +1,12 @@
-﻿import { GuidData } from "../Helpers/GuidData";
-import { IApiCallPayload } from "./IApiCallPayload";
+﻿import { CommandTypeFlag } from "../Enums/CommandType";
+import { InternalCommandFlag } from "../Enums/InternalCommand";
+import { GuidData } from "../Helpers/GuidData";
+import { IToApiCallPayload } from "./IApiCallPayload";
 
-export interface ICommandParams {
-  ApiPayload: IApiCallPayload,
+export interface ICommandData {
+  CommandType: CommandTypeFlag;
+  ToAPIPayload: IToApiCallPayload,
   NewNickname: string;
   TargetSnapShotId: GuidData;
-  
+  InternalCommandFlag: InternalCommandFlag;
 }

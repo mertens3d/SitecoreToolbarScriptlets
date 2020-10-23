@@ -15,12 +15,12 @@ import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/IComman
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
+import { SolicitorForScheduledAutoSnapShot } from "../CommandSolicitors/CommandSolicitorForAutoSnapShot";
 import { CommandRouter } from "./CommandRouter";
-import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
-import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
+import { IToApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IScUiReturnPayload } from "../../../Shared/scripts/Interfaces/StateOf/IScUiReturnPayload";
+import { APICommandFlag } from "../../../Shared/scripts/Enums/APICommand";
 
 export class BrowserMessageBroker_Content extends _FrontBase implements IMessageBroker_Content {
   private SettingsAgent: ISettingsAgent;
@@ -29,10 +29,10 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
   private AtticAgent: IContentAtticAgent;
 
   ContentBrowserProxy: IContentBrowserProxy;
-  AutoSnapShotAgent: AutoSnapShotAgent;
+  AutoSnapShotAgent: SolicitorForScheduledAutoSnapShot;
   CommandRouter: CommandRouter;
 
-  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: AutoSnapShotAgent, commandRouter: CommandRouter) {
+  constructor(hindeCore: IHindeCore, settingsAgent: ISettingsAgent, apiManager: IHindSiteScUiProxy, atticMan: IContentAtticAgent, contentBrowserProxy: IContentBrowserProxy, autoSnapShotAgent: SolicitorForScheduledAutoSnapShot, commandRouter: CommandRouter) {
     super(hindeCore);
     this.Logger.CTORStart(BrowserMessageBroker_Content.name);
 
@@ -149,10 +149,12 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
       this.Logger.FuncStart(this.ReqMsgRouter.name, StaticHelpers.MsgFlagAsString(messageFromController.MsgFlag));
 
       let commandRouterParams: ICommandRouterParams = {
-        MsgFlag: messageFromController.MsgFlag,
+        ReqMsgFlag: messageFromController.MsgFlag,
+        ReqMsgFlagFriendly: ReqCommandMsgFlag[messageFromController.MsgFlag],
         NewNickName: messageFromController.StateOfPopUI.NewNickName,
         SelectSnapShotId: messageFromController.StateOfPopUI.SelectSnapShotId,
         SelectText: '',
+        StateSnapShot: null
       };
 
       await this.CommandRouter.RouteCommand(commandRouterParams)
@@ -173,14 +175,14 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
 
 
 
-      let payload: IApiCallPayload = {
+      let payload: IToApiCallPayload = {
         DataOneWindowStorage: null,
-        ScRibbonCommand: ScRibbonCommand.Unknown,
+        APICommand:   APICommandFlag.Unknown,
         SnapShotFlavor: SnapShotFlavor.Live,
         SnapShotOfStateScUiApi: null
       }
 
-      await this.HindSiteScUiProxy.GetStateOfScUiProxy(payload)
+      await this.HindSiteScUiProxy.APICommand(payload)
         .then((returnPayload: IScUiReturnPayload) => {
           responseContentToController.Payload.StateOfScUiProxy_Live = returnPayload.StateOfScUi;
           responseContentToController.Payload.LastReq = msgFlag;

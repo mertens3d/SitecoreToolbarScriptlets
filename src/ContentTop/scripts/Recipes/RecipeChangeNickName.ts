@@ -2,13 +2,13 @@
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
-import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
+import { ICommandData } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
 import { ICommandRecipes } from "../../../Shared/scripts/Interfaces/ICommandRecipes";
 import { _ContentRecipeBase } from "./_ContentRecipeBase";
 
 export class RecipeChangeNickName extends _ContentRecipeBase implements ICommandRecipes {
-  constructor(hindeCore: IHindeCore, commandParams: ICommandParams, dependancies: ICommandDependancies) {
+  constructor(hindeCore: IHindeCore, commandParams: ICommandData, dependancies: ICommandDependancies) {
     super(hindeCore, commandParams, dependancies, RecipeChangeNickName.name);
 
     if (StaticHelpers.IsNullOrUndefined([this.CommandParams.NewNickname, this.CommandParams.TargetSnapShotId, this.Dependancies.AtticAgent])) {

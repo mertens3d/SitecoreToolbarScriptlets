@@ -1,37 +1,44 @@
 ﻿import { DocumentJacket } from "../../../DOMJacket/scripts/Document/DocumentJacket";
-import { CommandPayloadForInternal } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandPayloadForInternal";
-import { DefaultMsgContentToController } from "../../../Shared/scripts/Classes/DefaultMsgContentToController";
+import { DefaultCommandData } from "../../../Shared/scripts/Classes/CommandHandlerDataForContent/CommandPayloadForInternal";
 import { ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFlag";
-import { CommandType } from "../../../Shared/scripts/Enums/CommandType";
-import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
+import { CommandTypeFlag } from "../../../Shared/scripts/Enums/CommandType";
+import { APICommandFlag } from "../../../Shared/scripts/Enums/APICommand";
+import { InternalCommandFlag } from "../../../Shared/scripts/Enums/InternalCommand";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { CommandStartEndCancelEvent_Subject } from "../../../Shared/scripts/Events/CommandStartEndCancelEvent/CommandStartEndCancelEvent_Subject";
 import { CommandState_State } from "../../../Shared/scripts/Events/CommandStartEndCancelEvent/CommandState_State";
 import { ICommandStartEndCancelEvent_Payload } from "../../../Shared/scripts/Events/CommandStartEndCancelEvent/ICommandStartEndCancelEvent_Payload";
 import { IHindSiteScUiProxy } from "../../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiProxy";
 import { IContentAtticAgent } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/IContentAtticAgent";
+import { ISolicitor } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/ISolicitor";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";
-import { IApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { ICommandDependancies } from "../../../Shared/scripts/Interfaces/ICommandDependancies";
-import { ICommandParams } from "../../../Shared/scripts/Interfaces/ICommandParams";
+import { ICommandData } from "../../../Shared/scripts/Interfaces/ICommandParams";
 import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
+import { IInternalCommandResults } from "../../../Shared/scripts/Interfaces/IInternalCommandResults";
+import { IMapMsgFlagToAPICommand } from "../../../Shared/scripts/Interfaces/IMapMsgFlagToAPICommand";
+import { IMapMsgFlagToInternalFlag } from "../../../Shared/scripts/Interfaces/IMapMsgFlagToInternalFlag";
+import { ICommandRouterResult } from "../../../Shared/scripts/Interfaces/StateOf/ICommandRouterResult";
+import { IScUiReturnPayload } from "../../../Shared/scripts/Interfaces/StateOf/IScUiReturnPayload";
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { AutoSnapShotAgent } from "../Agents/AutoSnapShotAgent";
+import { SolicitorForScheduledAutoSnapShot } from "../CommandSolicitors/CommandSolicitorForAutoSnapShot";
+import { CommandMappingMsgFlagToInternalFlag } from "./APICommandMappingB";
+import { MappingMsgFlagToAPIFlag } from "./CommandMapping";
 import { CommandRunnerInternal } from "./CommandRunnerInternal";
-import { CommandToExecuteData } from "./CommandToExecuteData";
 
 export class CommandRouter extends _FrontBase {
   private AtticAgent: IContentAtticAgent;
-  private AutoSnapShotAgent: AutoSnapShotAgent;
+  private AutoSnapShotAgent: SolicitorForScheduledAutoSnapShot;
   public CommandTriggeredEvent_Subject: CommandStartEndCancelEvent_Subject;
 
+  private Solicitors: ISolicitor[] = [];
   private Dependancies: ICommandDependancies;
   private DocumentJacket: DocumentJacket;
 
   private InternalCommandRunner: CommandRunnerInternal;
   private ScUiProxy: IHindSiteScUiProxy;
 
-  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiProxy, atticAgent: IContentAtticAgent, autoSnapShotAgent: AutoSnapShotAgent, documentJacket: DocumentJacket) {
+  constructor(hindeCore: IHindeCore, scUiProxy: IHindSiteScUiProxy, atticAgent: IContentAtticAgent, autoSnapShotAgent: SolicitorForScheduledAutoSnapShot, documentJacket: DocumentJacket) {
     super(hindeCore);
     this.ScUiProxy = scUiProxy;
     this.AtticAgent = atticAgent;
@@ -41,24 +48,28 @@ export class CommandRouter extends _FrontBase {
     this.Instantiate();
   }
 
+  public RegisterAsSolicitor(solicitor: ISolicitor): void {
+    this.Solicitors.push(solicitor);
+  }
+
   private Instantiate() {
-    this.InternalCommandRunner = new CommandRunnerInternal(this.HindeCore, this.AtticAgent, this.AutoSnapShotAgent, this.ScUiProxy, this.DocumentJacket);
+    this.InternalCommandRunner = new CommandRunnerInternal(this.HindeCore, this.AtticAgent, this.AutoSnapShotAgent, this.DocumentJacket, this, this.Solicitors);
 
     this.CommandTriggeredEvent_Subject = new CommandStartEndCancelEvent_Subject(this.HindeCore);
 
     this.Dependancies = {
       AtticAgent: this.AtticAgent,
-      AutoSnapShotAgent: this.AutoSnapShotAgent,
-      ScUiProxy: this.ScUiProxy,
+      SolicitorForAutoSnapShot: this.AutoSnapShotAgent,
       DocumentJacket: this.DocumentJacket,
       HindeCore: this.HindeCore
     }
   }
 
-  async RouteCommand(routingParams: ICommandRouterParams): Promise<void> {
+  public async RouteCommand(routingParams: ICommandRouterParams): Promise<ICommandRouterResult> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.RouteCommand.name, ReqCommandMsgFlag[routingParams.MsgFlag]);
-      let commandData: CommandToExecuteData = this.CalculateCommandToExec(routingParams.MsgFlag);
+      this.Logger.FuncStart(this.RouteCommand.name, ReqCommandMsgFlag[routingParams.ReqMsgFlag]);
+
+      let calculatedCommandData: ICommandData = this.CalculateCommandToExec(routingParams);
 
       let payload: ICommandStartEndCancelEvent_Payload = {
         CommandState: CommandState_State.CommandStarted
@@ -66,16 +77,16 @@ export class CommandRouter extends _FrontBase {
 
       this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payload);
 
-      if (commandData.CommandType == CommandType.Api) {
-        await this.ExecuteApiCommand(commandData.commandToExecute, routingParams.MsgFlag)
-          .then(() => resolve())
+      if (calculatedCommandData.CommandType == CommandTypeFlag.Api) {
+        await this.ExecuteApiCommand(calculatedCommandData)
+          .then((a) => resolve())
           .finally(() => reject('need to do'));
       }
-      else if (commandData.CommandType = CommandType.ContentInternal) {
+      else if (calculatedCommandData.CommandType = CommandTypeFlag.ContentInternal) {
         try {
-          await this.ExecuteInternalCommand(commandData.commandToExecute, routingParams)
+          await this.ExecuteInternalCommand(calculatedCommandData)
             //.then(() => this.ScUiProxy.RaiseToastNotification('Completed'))
-            .then(() => {
+            .then((internalCommandResults: IInternalCommandResults) => {
               this.Logger.Log('Completed the internal command');
               resolve();
             })
@@ -85,8 +96,6 @@ export class CommandRouter extends _FrontBase {
           this.ErrorHand.HandleTopLevelTryCatch(err, err)
         }
       }
-      if (commandData) {
-      }
       else {
         this.ErrorHand.HandleFatalError(this.RouteCommand.name, 'did not find command');
       }
@@ -94,32 +103,24 @@ export class CommandRouter extends _FrontBase {
     });
   }
 
-  private ExecuteInternalCommand(commandToExecute: Function, routingParams: ICommandRouterParams): Promise<void> {
+  private async ExecuteInternalCommand(commandData: ICommandData): Promise<IInternalCommandResults> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteInternalCommand.name);
-      if (commandToExecute) {
-        this.Logger.LogVal('msgFlag', ReqCommandMsgFlag[routingParams.MsgFlag]);
-        let commandParams = this.BuildCommandPayloadForInternal();
-
-        if (routingParams) {
-          commandParams.TargetSnapShotId = routingParams.SelectSnapShotId;
-          commandParams.NewNickname = routingParams.NewNickName;
-        }
-
+      if (commandData) {
         let self = this;
+        let internalCommandResults: IInternalCommandResults = null;
 
         try {
-          await commandToExecute.bind(self.InternalCommandRunner)(commandParams, this.Dependancies)
-            .then(() => this.Logger.MarkerC())
+
+          this.InternalCommandRunner.HandleInternalCommand(commandData)
+            .then((result: IInternalCommandResults) => { internalCommandResults = result})
             .then(() => {
               let payloadComplete: ICommandStartEndCancelEvent_Payload = {
                 CommandState: CommandState_State.CommandCompletedSuccessfully
               }
-              //this.CommandTriggeredEvent_Subject.NotifyObserversAsync(payloadComplete);
             })
-            .then(() => resolve())
-            .catch((err: any) => this.ErrorHand.HandleFatalError(this.ExecuteInternalCommand.name, err));
-          //}, 1000)
+            .then(() => resolve(internalCommandResults))
+            .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage(this.ExecuteInternalCommand.name, err)));
         } catch (err) {
           this.ErrorHand.HandleTopLevelTryCatch(err, err);
         }
@@ -128,31 +129,12 @@ export class CommandRouter extends _FrontBase {
     });
   }
 
-  private BuildCommandPayloadForInternal(): ICommandParams {
-    let scProxyPayload = this.BuildScProxyPayload();
-    let commandParams: ICommandParams = new CommandPayloadForInternal(this.HindeCore, scProxyPayload);
-
-    return commandParams;
-  }
-
-  private BuildScProxyPayload(): IApiCallPayload {
-    let commandData: IApiCallPayload = {
-      DataOneWindowStorage: null,
-      ScRibbonCommand: ScRibbonCommand.Unknown,
-      SnapShotFlavor: SnapShotFlavor.Unknown,
-      SnapShotOfStateScUiApi: null,
-    }
-    return commandData;
-  }
-
-  private ExecuteApiCommand(functionToExecute: Function, msgFlag: ReqCommandMsgFlag): Promise<DefaultMsgContentToController> {
+  private ExecuteApiCommand(commandData: ICommandData): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.ExecuteApiCommand.name);
-      if (functionToExecute) {
-        let commandData = this.BuildScProxyPayload();
-
-        await functionToExecute(commandData)
-          .then((response: DefaultMsgContentToController) => {
+      if (commandData) {
+        await this.ScUiProxy.APICommand(commandData.ToAPIPayload)
+          .then((response: IScUiReturnPayload) => {
             this.Logger.Log('Completed the API command');
             resolve(response)
           })
@@ -165,151 +147,48 @@ export class CommandRouter extends _FrontBase {
     });
   }
 
-  private CalculateCommandToExec(msgFlag: ReqCommandMsgFlag): CommandToExecuteData {
-    let commandData = new CommandToExecuteData(this.HindeCore);
-    commandData.commandToExecute = null;
-    commandData.CommandType = CommandType.Unknown;
+  private CalculateCommandToExec(routingParams: ICommandRouterParams): ICommandData {
+    let commandData = new DefaultCommandData();
+    commandData.CommandType = CommandTypeFlag.Unknown;
+    commandData.InternalCommandFlag = InternalCommandFlag.Unknown;
 
-    let payload: IApiCallPayload = {
+    commandData.ToAPIPayload = {
       DataOneWindowStorage: null,
-      ScRibbonCommand: ScRibbonCommand.NavigateForward,
+      APICommand: APICommandFlag.NavigateForward,
       SnapShotFlavor: SnapShotFlavor.Unknown,
       SnapShotOfStateScUiApi: null,
     }
 
-    switch (msgFlag) {
-      case ReqCommandMsgFlag.ReqAddCETab:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ScUiProxy.AddContentEditorToDesktopAsync;
-        break;
+    let apiCommandMapping: IMapMsgFlagToAPICommand[] = MappingMsgFlagToAPIFlag.AllMapping;
 
-      case ReqCommandMsgFlag.GetStateOfWindow:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ScUiProxy.GetStateOfScUiProxy;
-        break;
+    let foundMatch: boolean = false;
 
-      case ReqCommandMsgFlag.ReqUpdateNickName:
+    apiCommandMapping.forEach((pair: IMapMsgFlagToAPICommand) => {
+      if (pair.MsgFlag === routingParams.ReqMsgFlag) {
+        commandData.ToAPIPayload.APICommand = pair.APICommand;
+        commandData.CommandType = CommandTypeFlag.Api;
+        foundMatch = true;
+      }
+    });
 
-        commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.SetNickName;
-        break;
+    if (!foundMatch) {
+      let internalMapping: IMapMsgFlagToInternalFlag[] = CommandMappingMsgFlagToInternalFlag.AllMapping;
 
-      case ReqCommandMsgFlag.ReqAdminB:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ScUiProxy.AdminB;
-        break;
+      internalMapping.forEach((pair: IMapMsgFlagToInternalFlag) => {
+        if (pair.MsgFlag === routingParams.ReqMsgFlag) {
+          commandData.CommandType = CommandTypeFlag.ContentInternal;
+          commandData.InternalCommandFlag = pair.InternalCommand;
+          foundMatch = true;
+          
+        }
+      });
+    }
 
-      case ReqCommandMsgFlag.Ping:
-        commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.Ping;
-        break;
+    this.Logger.LogAsJsonPretty('routingParams', routingParams);
+    this.Logger.LogAsJsonPretty('commandData', commandData);
 
-      case ReqCommandMsgFlag.ReqOpenCE:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ScUiProxy.OpenContentEditor;
-        break;
-
-      case ReqCommandMsgFlag.ReqToggleRawValues:
-        commandData.CommandType = CommandType.Api;
-        payload.ScRibbonCommand = ScRibbonCommand.ToggleRawValues;
-
-        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(payload));
-        break;
-
-      case ReqCommandMsgFlag.OpenCERibbonPresentationDetails:
-        commandData.CommandType = CommandType.Api;
-        payload.ScRibbonCommand = ScRibbonCommand.PresentationDetails;
-        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(payload));
-        break;
-
-      case ReqCommandMsgFlag.OpenCERibbonNavigateLinks:
-        commandData.CommandType = CommandType.Api;
-        payload.ScRibbonCommand = ScRibbonCommand.NavigateLinks;
-        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(payload));
-        break;
-
-      case ReqCommandMsgFlag.ReqNavigateBack:
-        commandData.CommandType = CommandType.Api;
-        payload.ScRibbonCommand = ScRibbonCommand.NavigateBack;
-        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(payload));
-        break;
-
-      case ReqCommandMsgFlag.ReqNavigateForward:
-        commandData.CommandType = CommandType.Api;
-
-        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(payload));
-        break;
-
-      case ReqCommandMsgFlag.ReqNavigateUp:
-        commandData.CommandType = CommandType.Api;
-        payload.ScRibbonCommand = ScRibbonCommand.NavigateUp;
-        commandData.commandToExecute = (() => this.ScUiProxy.TriggerCERibbonCommand(payload));
-        break;
-
-      case ReqCommandMsgFlag.ReqToggleFavorite:
-        commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.ToggleFavorite;
-        break;
-
-      case ReqCommandMsgFlag.ReqQuickPublish:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ScUiProxy.PublischActiveCE;
-        break;
-
-      case ReqCommandMsgFlag.ReqGoToSelected:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = (() => this.ScUiProxy.CEGoSelected(payload));
-        break;
-
-      case ReqCommandMsgFlag.ReqSetStateOfSitecoreSameWindow:
-        commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.SetStateOfSitecoreWindow;
-        break;
-
-      case ReqCommandMsgFlag.ReqToggleCompactCss:
-        commandData.CommandType = CommandType.Api;
-        commandData.commandToExecute = this.ScUiProxy.ToggleCompactCss;
-        break;
-
-      case ReqCommandMsgFlag.ReqTakeSnapShot:
-        commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.SaveWindowState;
-        break;
-
-      case ReqCommandMsgFlag.ReqRemoveFromStorage:
-        commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.RemoveSnapShot;
-        break;
-
-      case ReqCommandMsgFlag.ReqDebugAutoSnapShot:
-        commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.DebugForceAutoSnapShot;
-        break;
-
-      case ReqCommandMsgFlag.ReqDebugContentFatalError:
-        commandData.CommandType = CommandType.ContentInternal;
-
-        //let error: any = new this.ErrorHand.HandleTopLevelTryCatch(['Debug Triggered Content Fatal Error'], null);
-
-        commandData.commandToExecute = (() => {
-          throw 'Debug Triggered Content Fatal Error'
-        });
-
-        break;
-
-      case ReqCommandMsgFlag.SetStateFromQueryString:
-        commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.SetStateFromQueryString;
-        break;
-
-      case ReqCommandMsgFlag.SetStateFromMostRecent:
-        commandData.CommandType = CommandType.ContentInternal;
-        commandData.commandToExecute = this.InternalCommandRunner.SetStateFromMostRecent;
-        break;
-
-      default:
-        this.Logger.LogVal('Unhandled MsgFlag', ReqCommandMsgFlag[msgFlag]);
-        break;
+    if (!foundMatch) {
+      this.ErrorHand.HandleFatalError([CommandRouter.name, this.CalculateCommandToExec.name], 'No match found: ' + ReqCommandMsgFlag[routingParams.ReqMsgFlag]);
     }
 
     return commandData;

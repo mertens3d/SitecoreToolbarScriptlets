@@ -25,7 +25,7 @@
   ReqSetScModePreview = 10151645,
   ReqSetStateOfSitecoreNewWindow = 10202348,
   ReqSetStateOfSitecoreSameWindow = 10074231,
-  ReqTakeSnapShot = 10495640,
+  ReqTakeAndSaveSnapShot = 10495640,
   ReqToggleCompactCss = 10178105,
   ReqToggleFavorite = 10462769,
   ReqUpdateNickName = 10899837,
@@ -38,6 +38,20 @@
   ReqNavigateUp = 10872523,
   ReqGoToSelected = 10615549,
   ReqDebugContentFatalError = 10796656,
-  GetStateOfWindow = 10304388,
-  __future = 10872523,
+  GetStateOfWindow = 10063628,
+
+
+
+  //
+//727427
+//328066
+//364967
+//519011
+//037946
+//865967
+//440490
+//705753
+//211271
+
+
 }

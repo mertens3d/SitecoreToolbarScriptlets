@@ -1,7 +1,7 @@
-﻿import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
+﻿import { APICommandFlag } from "../../../Shared/scripts/Enums/APICommand";
 
 export interface IRibbonClickSequence {
-    ScRibbonCommand: ScRibbonCommand;
+    ScRibbonCommand: APICommandFlag;
     Step1Selector: string;
     Step2Selector: string;
 }

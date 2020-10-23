@@ -6,5 +6,5 @@ import { TypeDiscriminator } from "../../../../Shared/scripts/Enums/70 - TypeDis
 export class UiModuleManagerPassThroughEvent_Subject extends HindeSiteEvent_Subject<IUiModuleManagerPassThroughEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.UiModuleManagerPassThroughEvent_Subject;
   readonly Friendly_Subject = UiModuleManagerPassThroughEvent_Subject.name;
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
 }

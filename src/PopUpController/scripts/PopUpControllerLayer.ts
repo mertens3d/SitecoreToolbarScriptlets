@@ -12,7 +12,7 @@ import { ScURLResolver } from "../../Shared/scripts/Agents/UrlAgent/ScPathResolv
 import { CoreFactory } from "../../Shared/scripts/Classes/CoreFactory";
 import { StaticHelpers } from "../../Shared/scripts/Classes/StaticHelpers";
 import { SettingKey } from "../../Shared/scripts/Enums/30 - SettingKey";
-import { CommandType } from "../../Shared/scripts/Enums/CommandType";
+import { CommandTypeFlag } from "../../Shared/scripts/Enums/CommandType";
 import { ContentReplyReceivedEvent_Observer } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/ContentReplyReceivedEvent_Observer";
 import { IControllerMessageReceivedEvent_Payload } from "../../Shared/scripts/Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IUiCommandFlagRaisedEvent_Payload } from "../../Shared/scripts/Events/UiCommandFlagRaisedEvent/IUiCommandFlagRaisedEvent_Payload";
@@ -163,7 +163,7 @@ class PopUpControllerLayer {
   OnUiCommandRaisedEvent(uiCommandFlagRaisedEvent_Payload: IUiCommandFlagRaisedEvent_Payload) {
     this.HindeCore.Logger.Log('Controller got command message');
 
-    if (uiCommandFlagRaisedEvent_Payload.CommandType === CommandType.Content) {
+    if (uiCommandFlagRaisedEvent_Payload.CommandType === CommandTypeFlag.Content) {
       this.PopUpMessageBrokerAgent.SendCommandToContentAsync(uiCommandFlagRaisedEvent_Payload.MsgFlag, uiCommandFlagRaisedEvent_Payload.StateOfPopUp)
     } else {
       this.commandMan.HandleCommandTypePopUp(uiCommandFlagRaisedEvent_Payload);

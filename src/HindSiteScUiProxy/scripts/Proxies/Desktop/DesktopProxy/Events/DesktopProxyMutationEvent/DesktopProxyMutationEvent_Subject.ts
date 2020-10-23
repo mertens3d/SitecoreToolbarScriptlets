@@ -4,5 +4,5 @@ import { IDesktopProxyMutationEvent_Payload } from "./IDesktopProxyMutationEvent
 
 export class DesktopProxyMutationEvent_Subject extends HindeSiteEvent_Subject<IDesktopProxyMutationEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.DesktopProxyMutationEvent_Subject;
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
 }

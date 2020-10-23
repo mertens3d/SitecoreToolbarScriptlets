@@ -11,7 +11,7 @@ export abstract class HindeSiteEvent_Subject<T> extends _CommonBase implements I
   protected ObserverCollection: IHindSiteEvent_Observer<T>[] = [];
   private IsMuted: boolean;
   abstract TypeDiscriminator: TypeDiscriminator;
-  abstract ShowLogActions: boolean;
+  protected abstract ShowLogActions: boolean;
 
   constructor(commonCore: ICommonCore) {
     super(commonCore);
@@ -84,8 +84,13 @@ export abstract class HindeSiteEvent_Subject<T> extends _CommonBase implements I
         observer.UpdateAsync(payload);
       });
     } else {
-      this.Logger.Log('not Notifying...Subject is muted');
+      if (this.ShowLogActions) {
+        this.Logger.Log('not Notifying...Subject is muted');
+      }
     }
-    this.Logger.FuncEnd(this.NotifyObserversAsync.name + ' of: ' + bufferedFriendly, ' obs. count: ' + this.ObserverCollection.length);
+
+    if (this.ShowLogActions) {
+      this.Logger.FuncEnd(this.NotifyObserversAsync.name + ' of: ' + bufferedFriendly, ' obs. count: ' + this.ObserverCollection.length);
+    }
   }
 }

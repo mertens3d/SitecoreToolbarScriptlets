@@ -12,7 +12,7 @@ export class ScWindowTypeResolver extends _CommonBase implements IScWindowTypeRe
     super(commonCore);
     this.Logger.CTORStart(ScWindowTypeResolver.name);
     //this.ErrorHand.ThrowIfNullOrUndefined(ScPageTypeResolver.name, [urlJacket]);
-    this.Logger.FuncEnd(ScWindowTypeResolver.name);
+    this.Logger.CTOREnd(ScWindowTypeResolver.name);
   }
 
   private RunJacketAgainstAllDeterminators(UrlJacket: IUrlJacket): IScWindowTypeDeterminator {

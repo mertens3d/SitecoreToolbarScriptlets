@@ -11,18 +11,20 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
   ErrorStack: IError[] = [];
   private TaskMonitor: ICoreTaskMonitor;
   private Logger: ILoggerAgent;
-  errorContents: HTMLDivElement = null;
-  MessageDiv: any;
-  FlagTextDiv: any;
-  errorFlagContainer: HTMLElement;
-  CancelButtonElem: HTMLInputElement;
+  private errorContents: HTMLDivElement = null;
+  private MessageDiv: any;
+  private FlagTextDiv: any;
+  private errorFlagContainer: HTMLElement;
+  private CancelButtonElem: HTMLInputElement;
 
   constructor() {
+    
   }
 
   IntroduceSiblings(logger: ILoggerAgent, taskMonitor: ICoreTaskMonitor) {
     this.Logger = logger;
     this.TaskMonitor = taskMonitor;
+    this.CreateFlag();
   }
 
   ThrowIfNullOrUndefined(title: string | string[], testSubject: any | any[]): void {
@@ -48,15 +50,14 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     }
   }
 
-
-  private CommonThrow(errorMessage: string) :void{
-    this.CreateFlag();
+  private CommonThrow(errorMessage: string): void {
+    
     throw (errorMessage);
   }
 
-   ThrowIfNullOrUndefinedStatic(title: string, testSubject: any): void;
-   ThrowIfNullOrUndefinedStatic(title: string, testSubject: any[]): void;
-   ThrowIfNullOrUndefinedStatic(title: string, testSubject: any | any[]): void {
+  ThrowIfNullOrUndefinedStatic(title: string, testSubject: any): void;
+  ThrowIfNullOrUndefinedStatic(title: string, testSubject: any[]): void;
+  ThrowIfNullOrUndefinedStatic(title: string, testSubject: any | any[]): void {
     if (testSubject instanceof Array) {
       (<any[]>testSubject).forEach((testSubject: any) => this.ThrowIfNullOrUndefinedStatic(title, testSubject));
     }
@@ -164,6 +165,9 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
   }
 
   DisplayErrorFlag() {
+    if (this.errorFlagContainer) {
+      this.errorFlagContainer.style.display = 'block';
+    }
   }
 
   private CreateFlag() {
@@ -203,7 +207,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     headWrapper.classList.add("header-wrapper");
 
     this.MessageDiv = document.createElement('div');
-    this.MessageDiv.innerText = "";
+    this.MessageDiv.innerText = "Sigh...Sad Face";
     this.MessageDiv.classList.add("message");
 
     this.FlagTextDiv = document.createElement('div');
@@ -215,6 +219,8 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     this.errorContents.appendChild(this.MessageDiv);
 
     this.errorContents.appendChild(this.FlagTextDiv);
+
+    this.errorFlagContainer.appendChild(this.errorContents);
   }
 
   async HideErrorFlag(message: string): Promise<void> {
@@ -242,14 +248,17 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
 
   CreateContainer(): HTMLElement {
     let flagContainer: HTMLElement = document.createElement('div');
-    flagContainer.classList.add('error-flag');
+    flagContainer.classList.add('hind-site-error-flag');
+    flagContainer.style.display = 'none';
 
     return flagContainer
   }
 
   HandleTopLevelTryCatch(container: string | string[], text: string): void {
+    console.log(JSON.stringify(container));
+    console.log(text);
     console.log('Top level Try/Catch');
-
+    this.DisplayErrorFlag();
   }
 
   HandleFatalError(container: string | string[], text: string): void {

@@ -32,7 +32,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
   private ConResolver: ConResolver;
 
   constructor(apiCore: IAPICore, hostDocumentJacket: DocumentJacket, treeContainerJacket: IJacketOfType, TreeRootSelector: string) {
-    super(apiCore,  treeContainerJacket);
+    super(apiCore, treeContainerJacket);
 
     this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeElemProxy.name, [hostDocumentJacket, treeContainerJacket]);
     this.TreeRootSelector = TreeRootSelector;
@@ -93,7 +93,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
     this.Logger.FuncEnd(this.TriggerActiveNodeChangeEvent.name);
   }
 
- private GetTreeNodeByGlyph(targetNode: IStateOfScContentTreeNodeDeep): Promise<ScContentTreeNodeProxy> {
+  private GetTreeNodeByGlyph(targetNode: IStateOfScContentTreeNodeDeep): Promise<ScContentTreeNodeProxy> {
     return new Promise(async (resolve, reject) => {
       let scContentTreeNodeProxy: ScContentTreeNodeProxy = null;
 
@@ -164,10 +164,10 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
     this.Logger.FuncEnd([ContentTreeElemProxy.name, this.SetState.name]);
   }
 
- private async SetRootNodeFromSelector(): Promise<void> {
-   try {
-     await this.ContainerElemJacket.WaitForElement(this.TreeRootSelector)
-       .then((elementJacket: IJacketOfType) => this.rootTreeNodeJacket = elementJacket);
+  private async SetRootNodeFromSelector(): Promise<void> {
+    try {
+      await this.ContainerElemJacket.WaitForElement(this.TreeRootSelector)
+        .then((elementJacket: IJacketOfType) => this.rootTreeNodeJacket = elementJacket);
     } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.SetRootNodeFromSelector.name, err);
     }
@@ -220,29 +220,22 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
 
       if (this.ContainerElemJacket) {
         if (this.rootTreeNodeJacket) {
-
           let parentHtmlElement = this.rootTreeNodeJacket.NativeElement.parentElement;
           var rootParent: IJacketOfType = new GenericElemJacket(this.ApiCore, parentHtmlElement);//  this.rootTreeNodeJacket.parentElement();
 
-
-          // todo - fix this await mess
-          await rootParent.WaitForElement(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetStateOfContentTreeNodeDeep.name)
-            .then(async (firstChildGlyphNode: ElementImgJacket) => {
-              this._treeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, firstChildGlyphNode, 0, 0, 1, null, this.ConResolver)
-              await this._treeNodeProxy.Instantiate();
-            })
+          await rootParent.WaitForElement(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetTreeNodeProxy.name)
+            .then((firstChildGlyphNode: ElementImgJacket) => this._treeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, firstChildGlyphNode, 0, 0, 1, null, this.ConResolver))
+            .then(() => this._treeNodeProxy.Instantiate())
+            .then(() => resolve(this._treeNodeProxy))
             .catch((err: any) => reject(this.GetTreeNodeProxy.name + ' | ' + err));
         }
         else {
-          this.ErrorHand.HandleFatalError(this.GetStateOfContentTreeNodeDeep.name, 'no root node');
+          reject(this.ErrorHand.FormatRejectMessage(this.GetTreeNodeProxy.name, 'no root node'));
         }
       }
       else {
-        this.ErrorHand.HandleFatalError(this.GetStateOfContentTreeNodeDeep.name, 'no targetDoc');
+        reject(this.ErrorHand.FormatRejectMessage(this.GetTreeNodeProxy.name, 'no targetDoc'));
       }
-
-      resolve(this._treeNodeProxy);
-
       this.Logger.FuncEnd(this.GetTreeNodeProxy.name);
     });
   }

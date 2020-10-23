@@ -8,7 +8,7 @@ import { TypeDiscriminator } from "../../../../../../../Shared/scripts/Enums/70 
 export class DesktopProxyMutationEvent_Observer extends HindSiteEvent_Observer<IDesktopProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<IDesktopProxyMutationEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.DesktopProxyMutationEvent_Observer;
 
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
   constructor(apiCore: IAPICore, callback: HindsiteEventHandler_Type) {
     super(apiCore, DesktopProxyMutationEvent_Observer.name, callback);
   }

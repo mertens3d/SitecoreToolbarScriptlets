@@ -19,7 +19,7 @@ import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { ContentEditorDocProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
 import { ScDocProxyResolver } from "./ScDocProxyResolver";
-import { ScRibbonCommand } from "../../../Shared/scripts/Enums/eScRibbonCommand";
+import { APICommandFlag } from "../../../Shared/scripts/Enums/APICommand";
 import { IRootState } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfScWindow";
 import { IStateOf_ } from "../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
@@ -80,7 +80,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
     return this.ScPageTypeResolver.GetScWindowType(this.DocumentJacket.UrlJacket);
   }
 
-  TriggerCERibbonCommand(ribbonCommand: ScRibbonCommand): void {
+  TriggerCERibbonCommand(ribbonCommand: APICommandFlag): void {
     this.Logger.FuncStart([ScWindowFacade.name, this.TriggerCERibbonCommand.name]);
     if (this.StateFullProxy) {
       if (this.StateFullProxy.ScProxyDisciminator === ScProxyDisciminator.ContentEditor) {

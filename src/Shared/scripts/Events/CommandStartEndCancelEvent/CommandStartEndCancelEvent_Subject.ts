@@ -4,5 +4,5 @@ import { ICommandStartEndCancelEvent_Payload } from "./ICommandStartEndCancelEve
 
 export class CommandStartEndCancelEvent_Subject extends HindeSiteEvent_Subject<ICommandStartEndCancelEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.CommandStartEndCancelEvent_Subject;
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
 }

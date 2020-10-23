@@ -4,7 +4,7 @@ import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { AsyncLock } from '../../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
 import { DTStartBarProxy } from "../../../Desktop/DesktopProxy/DesktopStartBarProxy/DTStartBarProxy";
 import { RibbonMenuButtonResolver } from "./RibbonMenuButtonResolver";
-import { ScRibbonCommand } from '../../../../../../Shared/scripts/Enums/eScRibbonCommand';
+import { APICommandFlag } from "../../../../../../Shared/scripts/Enums/APICommand";
 import { IRibbonClickSequence } from '../../../../InternalInterfaces/IRibbonClickSequence';
 
 export class ScRibbonProxy extends _APICoreBase {
@@ -23,8 +23,8 @@ export class ScRibbonProxy extends _APICoreBase {
     //empty
   }
 
-  async TriggerRibbonMenuItem(scRibbonButtonCommand: ScRibbonCommand, methodLock: AsyncLock): Promise<void> {
-    this.Logger.FuncStart([ScRibbonProxy.name, this.TriggerRibbonMenuItem.name], ScRibbonCommand[scRibbonButtonCommand]);
+  async TriggerRibbonMenuItem(scRibbonButtonCommand: APICommandFlag, methodLock: AsyncLock): Promise<void> {
+    this.Logger.FuncStart([ScRibbonProxy.name, this.TriggerRibbonMenuItem.name], APICommandFlag[scRibbonButtonCommand]);
 
     try {
       this.RibbonMenuButtonResolver = new RibbonMenuButtonResolver(this.ApiCore);
@@ -36,7 +36,7 @@ export class ScRibbonProxy extends _APICoreBase {
         this.ErrorHand.HandleFatalError([this.TriggerRibbonMenuItem.name], 'something is wrong with the ribbon selectors');
       }
 
-      await methodLock.WaitForLockControl(ScRibbonCommand[scRibbonButtonCommand])
+      await methodLock.WaitForLockControl(APICommandFlag[scRibbonButtonCommand])
 
         .then(() => this.DocumentJacket.WaitForThenClick([ribbonClickSequence.Step1Selector]))
         .then(() => this.TaskMonitor.AsyncTaskStarted(this.TriggerRibbonMenuItem.name))

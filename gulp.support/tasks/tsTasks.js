@@ -15,7 +15,7 @@ module.exports = {
     'noImplicitAny': true,
     //'allowSyntheticDefaultImports': true,
     'module': 'es6',
-    'target': 'es5',
+    'target': 'es6', //changing to es5 will destroy the function.name capability of debugging
     'moduleResolution': 'node',
     'allowJs': true,
     "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"]

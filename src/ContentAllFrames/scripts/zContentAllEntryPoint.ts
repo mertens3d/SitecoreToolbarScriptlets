@@ -5,7 +5,7 @@ import { UrlJacket } from "../../DOMJacket/scripts/UrlJacket";
 class ContentAllEntry {
   DeepHotKeyAgent: DeepHotKeyAgent;
 
-  StartUpContent() {
+  StartUpContentAll() {
     let commonCore = CoreFactory.BuildCommonCore();
     let urlJacket = new UrlJacket(commonCore, document.URL);
     this.DeepHotKeyAgent = new DeepHotKeyAgent(commonCore, urlJacket)
@@ -14,5 +14,5 @@ class ContentAllEntry {
 
 if (window.top != window.self) {
   let contentAllEntry: ContentAllEntry = new ContentAllEntry();
-  contentAllEntry.StartUpContent();
+  contentAllEntry.StartUpContentAll();
 }

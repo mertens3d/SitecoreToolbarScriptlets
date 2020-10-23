@@ -5,5 +5,5 @@ import { TypeDiscriminator } from "../../Enums/70 - TypeDiscriminator";
 
 export class ContentReplyReceivedEvent_Subject extends HindeSiteEvent_Subject<IControllerMessageReceivedEvent_Payload>  {
   readonly TypeDiscriminator = TypeDiscriminator.ContentReplyReceivedEvent_Subject;
-  ShowLogActions: boolean = true;
+ protected ShowLogActions: boolean = true;
 }

@@ -7,7 +7,7 @@ import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
 import { _ContentTreeBasedDocProxy } from './_ContentTreeBasedProxy';
-import { ScRibbonCommand } from '../../../../../Shared/scripts/Enums/eScRibbonCommand';
+import { APICommandFlag } from "../../../../../Shared/scripts/Enums/APICommand";
 import { ScRibbonProxy } from './ScRibbonProxy/ScRibbonProxy';
 import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
 import { IStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies';
@@ -56,8 +56,8 @@ export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfCon
 
   //----------------------------------------------------------------------
 
-  TriggerCERibbonCommand(scRibbonCommand: ScRibbonCommand) {
-    this.Logger.FuncStart([ContentEditorDocProxy.name, this.TriggerCERibbonCommand.name], ScRibbonCommand[scRibbonCommand]);
+  TriggerCERibbonCommand(scRibbonCommand: APICommandFlag) {
+    this.Logger.FuncStart([ContentEditorDocProxy.name, this.TriggerCERibbonCommand.name], APICommandFlag[scRibbonCommand]);
     let scRibbonProxy: ScRibbonProxy = new ScRibbonProxy(this.ApiCore, this.DocumentJacket);
 
     let asyncLock: AsyncLock = new AsyncLock(this.ApiCore); //todo - this needs to be lower...maybe in core
