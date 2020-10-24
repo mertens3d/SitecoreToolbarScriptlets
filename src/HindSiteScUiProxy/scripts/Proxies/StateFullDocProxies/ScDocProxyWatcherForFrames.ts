@@ -10,7 +10,7 @@ import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst"
 import { IScFrameProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
-import { BaseFrameProxy } from "../Desktop/DesktopProxy/FrameProxies/BaseFrameProxy";
+import { BaseScFrameProxy } from "../Desktop/DesktopProxy/FrameProxies/BaseFrameProxy";
 
 export class ScDocProxyWatcherForFrames extends _APICoreBase {
   ScProxyDisciminatorFriendly: string;
@@ -21,8 +21,10 @@ export class ScDocProxyWatcherForFrames extends _APICoreBase {
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, scProxyDisciminatorFriendly: string) {
     super(apiCore);
+    this.Logger.CTORStart(ScDocProxyWatcherForFrames.name);
     this.DocumentJacket = documentJacket;
     this.ScProxyDisciminatorFriendly = scProxyDisciminatorFriendly;
+    this.Logger.CTOREnd(ScDocProxyWatcherForFrames.name);
   }
 
   public async EnableWatcherForFrames(): Promise<void> {
@@ -44,7 +46,13 @@ export class ScDocProxyWatcherForFrames extends _APICoreBase {
         .then((elemJacket: FrameJacket) => bodyElement = elemJacket)
         .then(() => bodyElement.AddWatcher(watcherParams))
         .then((elemJacketMutationEvent_Subject: ElementJacketMutationEvent_Subject) => this.ElemJacketMutationEvent_Subject = elemJacketMutationEvent_Subject)
-        .then(() => this.ElemJacketMutationEvent_Subject.RegisterObserver(this.DocumentJacketMutationEvent_Observer))
+        .then(() => {
+          if (this.ElemJacketMutationEvent_Subject) {
+            this.ElemJacketMutationEvent_Subject.RegisterObserver(this.DocumentJacketMutationEvent_Observer);
+          } else {
+            this.ErrorHand.WarningAndContinue(this.EnableWatcherForFrames.name, 'no ElemJacketMutationEvent_Subject');
+          }
+        })
         .catch((err: any) => this.ErrorHand.HandleFatalError([ScDocProxyWatcherForFrames.name, this.EnableWatcherForFrames.name], err));
     }
     catch (err: any) {
@@ -81,7 +89,7 @@ export class ScDocProxyWatcherForFrames extends _APICoreBase {
   private async HandleFrameElemJacketAddedToDoc(frameElemJacket: FrameJacket): Promise<void> {
     this.Logger.FuncStart([ScDocProxyWatcherForFrames.name, this.CallbackOnDocumentJacketMutationEvent.name]);
     try {
-      await BaseFrameProxy.StateLessFrameProxyFactory(this.ApiCore, frameElemJacket)
+      await BaseScFrameProxy.ScFrameProxyFactory(this.ApiCore, frameElemJacket, null)
         .then((stateLessFrameProxy: IScFrameProxy) => this.HostedFrameStatelessFrameProxies.push(stateLessFrameProxy))
         .then(() => this.Logger.Log(this.HandleFrameElemJacketAddedToDoc.name + 'step1 Complete'))
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.HandleElemJacketAddedToDocument.name, err));

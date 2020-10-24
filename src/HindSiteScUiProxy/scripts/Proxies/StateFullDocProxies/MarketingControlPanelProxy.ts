@@ -8,24 +8,4 @@ export class MarketingControlPanelDocProxy extends _ContentTreeBasedDocProxy<ISt
   readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.MarketingControlPanel;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.MarketingControlPanel];
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.MarketingControlPanelRoodNode;
-
-  async InstantiateAsyncMembersSelf(): Promise<void> {
-    return this.__baseInstantiateAsyncMembers();
-  }
-
-  async WireEventsSelf() : Promise<void>{
-    this.__baseWireEvents();
-  }
-
-  TriggerEventsForInboundSelf(): void {
-    return this.__BaseTriggerInboundEventsAsync();
-  }
-
-  GetStateOfSelf(): Promise<IStateOfMarketingControlPanel> {
-    return this.__baseGetState();
-  }
-
-  async SetStateSelf(dataToRestore: IStateOfMarketingControlPanel): Promise<void> {
-     this.__baseSetState(dataToRestore);
-  }
 }

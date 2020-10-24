@@ -5,7 +5,6 @@ import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
 import { IScDocProxy } from '../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy';
-import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentEditor';
 import { IStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies';
 import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
 import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
@@ -29,27 +28,8 @@ export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfCon
     await publishProxy.Execute();
   }
 
-  async InstantiateAsyncMembersSelf(): Promise<void> {
-    return this.__baseInstantiateAsyncMembers();
-  }
 
-  async WireEventsSelf(): Promise<void> {
-    this.Logger.FuncStart(this.WireEventsSelf.name, ContentEditorDocProxy.name);
-    this.__baseWireEvents()
-    this.Logger.FuncEnd(this.WireEventsSelf.name, ContentEditorDocProxy.name);
-  }
 
-  GetStateOfSelf(): Promise<IStateOfContentEditor> {
-    return this.__baseGetState();
-  }
-
-  async SetStateSelf(dataToRestore: IStateOfContentEditor): Promise<void> {
-    this.__baseSetState(dataToRestore);
-  }
-
-  TriggerEventsForInboundSelf(): void {
-    this.__BaseTriggerInboundEventsAsync();
-  }
 
   //----------------------------------------------------------------------
 

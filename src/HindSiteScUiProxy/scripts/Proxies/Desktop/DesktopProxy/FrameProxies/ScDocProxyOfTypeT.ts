@@ -6,7 +6,7 @@ import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/I
 import { ScDocProxyWatcherForFrames } from "../../../StateFullDocProxies/ScDocProxyWatcherForFrames";
 import { _BaseScProxy } from "../../../StateFullDocProxies/_BaseScProxy";
 
-export abstract class ScDocProxy<T extends IStateOf_> extends _BaseScProxy implements IScDocProxy {
+export abstract class ScDocProxyOfTypeT<T extends IStateOf_> extends _BaseScProxy implements IScDocProxy {
   //abstract GetState(): Promise<T>;
   //abstract SetState(state: T): Promise<void>;
   Friendly: string = '{unknown friendly}';
@@ -19,7 +19,7 @@ export abstract class ScDocProxy<T extends IStateOf_> extends _BaseScProxy imple
       Disciminator: ScProxyDisciminator.Unknown,
       DisciminatorFriendly: ScProxyDisciminator[ScProxyDisciminator.Unknown],
       StateOfHostedProxies: []
-    }
+    };
 
     return Promise.resolve(<T>stateOf);
   }
@@ -33,12 +33,16 @@ export abstract class ScDocProxy<T extends IStateOf_> extends _BaseScProxy imple
     this.DocumentJacket = documentJacket;
   }
   public async EnableWatcherForFrames(): Promise<void> {
+    this.Logger.FuncStart([ScDocProxyOfTypeT.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly]);
+
     try {
       this.WatcherForFrames = new ScDocProxyWatcherForFrames(this.ApiCore, this.DocumentJacket, this.ScProxyDisciminatorFriendly);
       await this.WatcherForFrames.EnableWatcherForFrames()
-        .catch((err: any) => this.ErrorHand.HandleFatalError([_BaseScProxy.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError([ScDocProxyOfTypeT.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err));
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError([_BaseScProxy.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err);
+      this.ErrorHand.HandleFatalError([ScDocProxyOfTypeT.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err);
     }
+
+    this.Logger.FuncEnd([ScDocProxyOfTypeT.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly]);
   }
 }

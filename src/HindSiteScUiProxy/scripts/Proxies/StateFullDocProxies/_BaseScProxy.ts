@@ -12,13 +12,6 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
 
   //protected readonly DocumentJacket: DocumentJacket;
   //readonly ContainerJacket: GenericElemJacket;
-  WireEventsSelf(): void {
-    //empty by default
-  }
-
-  async InstantiateAsyncMembersSelf(): Promise<void> {
-    //empty by default
-  }
 
   constructor(apiCore: IAPICore) {
     super(apiCore);
@@ -30,20 +23,34 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     //}
   }
 
-  TriggerEventsForInboundSelf(): void {
+  TriggerEventsForInbound(): void {
     this.TriggerEventsForInboundSelf();
+    this.TriggerEventsForInboundHosted();
+  }
+
+  TriggerEventsForInboundSelf(): void {
+    //empty by default
   }
 
   protected TriggerInboundEventsAsyncOnHosted() {
     if (this.HostedProxies) {
-      this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => hostedProxy.TriggerEventsForInboundSelf());
+      this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => hostedProxy.TriggerEventsForInbound());
     }
   }
 
-  GetHostedByDisciminator(needleScProxyDiscriminator: ScProxyDisciminator): IBaseScProxy {
+  GetOnlyOrNullHostedProxiesByDisciminator(needleScProxyDiscriminator: ScProxyDisciminator): IBaseScProxy {
     let toReturn: IBaseScProxy = null;
+    let found: IBaseScProxy[] = this.GetHostedProxiesStateByDisciminator(needleScProxyDiscriminator);
+    if (found.length === 1) {
+      toReturn = found[0];
+    }
+    return toReturn;
+  }
+
+  GetHostedProxiesStateByDisciminator(needleScProxyDiscriminator: ScProxyDisciminator): IBaseScProxy[] {
+    let toReturn: IBaseScProxy[] = [];
     if (this.HostedProxies) {
-      this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => { if (hostedProxy.ScProxyDisciminator === needleScProxyDiscriminator) { toReturn = hostedProxy } });
+      this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => { if (hostedProxy.ScProxyDisciminator === needleScProxyDiscriminator) { toReturn.push(hostedProxy) } });
     }
     return toReturn;
   }
@@ -57,7 +64,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
       let promAr: Promise<IStateOf_>[] = [];
 
       if (this.HostedProxies) {
-        this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => promAr.push(hostedProxy.GetStateOfSelf()));
+        this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => promAr.push(hostedProxy.GetState()));
         //await this.HostedStateFullProxy.GetState()
         //  .then((statefullProxyState: IStateOf_) => stateOfDTFrame.StateOfHostedProxies.push(statefullProxyState))
         //  .catch((err: any) => reject(this.GetStateOfSelf.name + ' | ' + err));
@@ -69,7 +76,36 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     });
   }
 
-  async GetStateOfSelf(): Promise<any> {
+  async GetState(): Promise<IStateOf_> {
+    return new Promise(async (resolve, reject) => {
+      let toReturn: IStateOf_ = null;
+
+      await this.GetStateOfSelf()
+        .then((state: IStateOf_) => toReturn = state)
+        .then(() => this.GetStateOfHosted())
+        .then((stateOfHostedProxies: IStateOf_[]) => toReturn.StateOfHostedProxies = stateOfHostedProxies)
+        .then(() => resolve(toReturn))
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.GetState.name, this.ScProxyDisciminatorFriendly], err)));
+    })
+  }
+
+  async GetStateOfSelf(): Promise<IStateOf_> {
+    let toReturn: IStateOf_ = {
+      DisciminatorFriendly: this.ScProxyDisciminatorFriendly,
+      Disciminator: this.ScProxyDisciminator,
+      StateOfHostedProxies: [],
+    }
+
+    return Promise.resolve(toReturn);
+  }
+
+  async SetState(state: IStateOf_): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      await this.SetStateSelf(state)
+        .then(() => this.SetStateOfHosted(state.StateOfHostedProxies))
+        .then(() => resolve())
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.SetState.name, this.ScProxyDisciminatorFriendly], err)));
+    })
   }
 
   async SetStateSelf(state: any): Promise<any> {
@@ -102,7 +138,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
         let foundMatch: IBaseScProxy = this.GetMatchingHostedProxy(stateOf.Disciminator);
         if (foundMatch) {
           foundMatch.StateHasBeenSet = true;
-          promAr.push(foundMatch.SetStateSelf(stateOf));
+          promAr.push(foundMatch.SetState(stateOf));
         }
       });
 
@@ -114,7 +150,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
 
   TriggerEventsForInboundHosted() {
     if (this.HostedProxies) {
-      this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => hostedProxy.TriggerEventsForInboundSelf ());
+      this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => hostedProxy.TriggerEventsForInbound());
     }
   }
   //empty by default;
@@ -131,23 +167,50 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
 
   //})
 
-  protected async InstantiateAsyncMembersOnHostedProxies(): Promise<void> {
+  async InstantiateChildren(): Promise<void> {
+    this.Logger.FuncStart([_BaseScProxy.name, this.InstantiateChildren.name, this.ScProxyDisciminatorFriendly]);
+
+    await this.InstantiateChildrenSelf()
+      .then(() => this.InstantiateChildrenOnHostedProxies())
+      .then(() => Promise.resolve())
+      .catch((err) => Promise.reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.InstantiateChildren.name, this.ScProxyDisciminatorFriendly], err)));
+
+    this.Logger.FuncEnd([_BaseScProxy.name, this.InstantiateChildren.name, this.ScProxyDisciminatorFriendly]);
+  }
+  async InstantiateChildrenSelf(): Promise<void> {
+    //empty by default
+  }
+
+  private async InstantiateChildrenOnHostedProxies(): Promise<void> {
+    this.Logger.FuncStart([_BaseScProxy.name, this.InstantiateChildrenOnHostedProxies.name, this.ScProxyDisciminatorFriendly]);
     if (this.HostedProxies) {
       let promAr: Promise<void>[] = [];
 
-      this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => promAr.push(hostedProxy.InstantiateAsyncMembersSelf()));
+      this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => promAr.push(hostedProxy.InstantiateChildren()));
 
       await Promise.all(promAr)
         .catch((err) => this.ErrorHand.HandleFatalError(this.ScProxyDisciminatorFriendly, err));
     }
+    this.Logger.FuncEnd([_BaseScProxy.name, this.InstantiateChildrenOnHostedProxies.name, this.ScProxyDisciminatorFriendly]);
   }
 
-  protected WireEventsOnHostedProxies() {
+  WireEvents(): void {
+    this.Logger.FuncStart([_BaseScProxy.name, this.WireEvents.name, this.ScProxyDisciminatorFriendly]);
+    this.WireEventsSelf();
+    this.WireEventsOnHostedProxies();
+    this.Logger.FuncEnd([_BaseScProxy.name, this.WireEvents.name, this.ScProxyDisciminatorFriendly]);
+  }
+
+  WireEventsSelf(): void {
+    //empty by default
+  }
+
+  private WireEventsOnHostedProxies() {
     this.Logger.FuncStart([_BaseScProxy.name, this.WireEventsOnHostedProxies.name], 'On behalf of : ' + this.ScProxyDisciminatorFriendly);
     if (this.HostedProxies) {
       this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => {
         if (hostedProxy) {
-          hostedProxy.WireEventsSelf();
+          hostedProxy.WireEvents();
         } else {
           this.ErrorHand.WarningAndContinue(this.WireEventsOnHostedProxies.name, 'Null hosted proxy. On behalf of: ' + this.ScProxyDisciminatorFriendly);
         }

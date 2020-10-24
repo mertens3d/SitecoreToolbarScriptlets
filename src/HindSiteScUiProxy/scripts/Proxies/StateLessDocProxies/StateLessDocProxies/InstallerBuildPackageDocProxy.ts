@@ -3,9 +3,9 @@ import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { IScDocProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
-import { ScDocProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
+import { ScDocProxyOfTypeT } from "../../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
 
-export class InstallerBuildPackageDocProxy extends ScDocProxy<IStateOf_> implements IScDocProxy {
+export class InstallerBuildPackageDocProxy extends ScDocProxyOfTypeT<IStateOf_> implements IScDocProxy {
   readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.InstallerBuildPackageDocProxy;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.InstallerBuildPackageDocProxy];
 

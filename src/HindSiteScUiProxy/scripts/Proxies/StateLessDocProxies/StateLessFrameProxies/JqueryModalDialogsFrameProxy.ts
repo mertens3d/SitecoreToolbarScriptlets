@@ -2,14 +2,13 @@
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IScFrameProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
-import { BaseFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/BaseFrameProxy";
+import { BaseScFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/BaseFrameProxy";
 
-export class JqueryModalDialogsFrameProxy extends BaseFrameProxy<IStateOfDTFrame> implements IScFrameProxy {
+export class JqueryModalDialogsFrameProxy extends BaseScFrameProxy<IStateOfDTFrame> implements IScFrameProxy {
   FrameElemJacket: FrameJacket;
-  //readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.JqueryModalDialogsFrameProxy;
-  //readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.JqueryModalDialogsFrameProxy];
+  readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.JqueryModalDialogsFrameProxy;
+  readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.JqueryModalDialogsFrameProxy];
 
-  FrameSelectorOnHost: string = "[id=jqueryModalDialogsFrame]";
   readonly StateFullProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.JqueryModalDialogsFrameProxy;
 
   //constructor(apiCore: IAPICore, hostJacket: DocumentJacket) {
@@ -27,13 +26,6 @@ export class JqueryModalDialogsFrameProxy extends BaseFrameProxy<IStateOfDTFrame
   //  }
   //}
 
-  async TriggerEventsForInboundSelf(): Promise<void> {
-    // empty
-  }
-
-  async WireEventsSelf() : Promise<void>{
-    // empty
-  }
 
   async PackageDesignerOpenFile(fileName: string): Promise<void> {
     this.Logger.FuncStart([JqueryModalDialogsFrameProxy.name, this.PackageDesignerOpenFile.name]);

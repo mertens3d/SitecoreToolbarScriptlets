@@ -34,15 +34,15 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseElemPro
     this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
   }
 
-  async InstantiateAsyncMembersSelf(): Promise<void> {
+  async InstantiateChildrenSelf(): Promise<void> {
     try {
-      this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembersSelf.name]);
+      this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateChildrenSelf.name]);
       await this.AttachClickEventToGenZip()
-        .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembersSelf.name], err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateChildrenSelf.name], err));
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembersSelf.name], err);
+      this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateChildrenSelf.name], err);
     }
-    this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembersSelf.name]);
+    this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateChildrenSelf.name]);
   }
 
   private CallBackOnGenerateZipButtonClicked(event: Event): void {

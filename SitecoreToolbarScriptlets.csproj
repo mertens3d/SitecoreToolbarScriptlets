@@ -64,8 +64,13 @@
     <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\APICommandMappingB.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\CommandMapping.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\RecipeSetStateFromMostRecent.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Collections\DTAreaValidProxies.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Collections\ScFrameToScDocDiscriminatorMapping.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\BaseFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\DTFrameProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScDocProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScDocProxyOfTypeT.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScFrameProxyFactory.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseElemProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\_BaseScProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateLessDocProxies\StateLessFrameProxies\_BaseFrameProxy.ts" />
@@ -103,7 +108,6 @@
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\ElementJacketMutationEvent\IElementJacketMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\IElemJacketWatcherParameters.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\ScDocProxyWatcherForFrames.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseStateFullDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseStateFullFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\PackageDesignerDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateLessDocProxies\StateLessDocProxies\InstallerBrowseDocProxy.ts" />
@@ -158,6 +162,7 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IContentAtticAgent\ISolicitor.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHindSiteHistoryStrAr.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IHistoryItem.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IDiscriminatorMappingPair.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IInternalCommandResults.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMapMsgFlagToAPICommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IMapMsgFlagToInternalFlag.ts" />

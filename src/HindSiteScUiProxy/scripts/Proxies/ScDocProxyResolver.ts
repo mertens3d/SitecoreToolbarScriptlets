@@ -165,8 +165,8 @@ export class ScDocProxyResolver extends _APICoreBase {
         this.ErrorHand.HandleFatalError([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], 'unhandled windowType ' + ScWindowType[desiredScWindowType]);
       }
 
-      await scDocProxy.InstantiateAsyncMembersSelf()
-        .then(() => scDocProxy.WireEventsSelf())
+      await scDocProxy.InstantiateChildren()
+        .then(() => scDocProxy.WireEvents())
         .then(() => scDocProxy.OnFocus())
         .then(() => resolve(scDocProxy))
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], err)));

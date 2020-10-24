@@ -49,8 +49,8 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
     this.ConResolver = new ConResolver(this.ApiCore);
   }
 
-  async InstantiateAsyncMembersSelf(): Promise<void> {
-    this.Logger.FuncStart(this.InstantiateAsyncMembersSelf.name);
+  async InstantiateChildrenSelf(): Promise<void> {
+    this.Logger.FuncStart(this.InstantiateChildrenSelf.name);
 
     try {
       await this.SetRootNodeFromSelector()
@@ -60,16 +60,16 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.ApiCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembersSelf.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateChildrenSelf.name, err);
     }
 
-    this.Logger.FuncEnd(this.InstantiateAsyncMembersSelf.name);
+    this.Logger.FuncEnd(this.InstantiateChildrenSelf.name);
   }
 
-  WireEvents_TreeProxy() {
-    this.Logger.FuncStart(this.WireEvents_TreeProxy.name);
+  WireEventsSelf() {
+    this.Logger.FuncStart(this.WireEventsSelf.name);
     this.NativeClassNameChangeEvent_Subject.RegisterObserver(this.NativeClassNameChangeEvent_Observer);
-    this.Logger.FuncEnd(this.WireEvents_TreeProxy.name);
+    this.Logger.FuncEnd(this.WireEventsSelf.name);
   }
 
   private CallBackOnNativeClassNameChangeEventAsync(notUsed: INativeClassNameChangeEvent_Payload) {

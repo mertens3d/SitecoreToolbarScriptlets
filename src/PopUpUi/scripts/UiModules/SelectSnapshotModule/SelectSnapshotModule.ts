@@ -274,10 +274,8 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
 
         if (stateOfDesktop
           &&
-          stateOfDesktop.DTArea
-          &&
-          stateOfDesktop.DTArea.DTFrames) {
-          count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfDesktop.DTArea.DTFrames.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+          stateOfDesktop.StateOfHostedProxies          ) {
+          count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfDesktop.StateOfHostedProxies.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
           toReturn = toReturn + count;
         }
       }

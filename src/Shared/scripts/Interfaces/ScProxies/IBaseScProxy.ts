@@ -5,11 +5,11 @@ export interface IBaseScProxy {
   readonly ScProxyDisciminator: ScProxyDisciminator;
   readonly ScProxyDisciminatorFriendly: string;
   readonly HostedProxies: IBaseScProxy[];
-  InstantiateAsyncMembersSelf(): Promise<void>;
-  TriggerEventsForInboundSelf(): void;
-  InstantiateAsyncMembersSelf(): Promise<void>;
-  WireEventsSelf(): void;
-  GetStateOfSelf(): Promise<any>;
-  SetStateSelf(state: any): Promise<any>;
+
+  TriggerEventsForInbound(): void;
+  InstantiateChildren(): Promise<void>;
+  WireEvents(): void;
+  GetState(): Promise<any>;
+  SetState(state: any): Promise<any>;
 
 }

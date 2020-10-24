@@ -4,9 +4,9 @@ import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAP
 import { IScDocProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { _BaseScProxy } from "../../../StateFullDocProxies/_BaseScProxy";
-import { ScDocProxy } from "./_BaseStateFullDocProxy";
+import { ScDocProxyOfTypeT } from "./ScDocProxyOfTypeT";
 
-export abstract class _justWindowStateFullDocProxy extends ScDocProxy<IStateOf_> implements IScDocProxy {
+export abstract class _justWindowStateFullDocProxy extends ScDocProxyOfTypeT<IStateOf_> implements IScDocProxy {
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
   abstract readonly ScProxyDisciminatorFriendly: string;
   Friendly: string = '{unknown friendly}';
@@ -31,7 +31,7 @@ export abstract class _justWindowStateFullDocProxy extends ScDocProxy<IStateOf_>
     });
   }
 
-  async InstantiateAsyncMembersSelf(): Promise<void> {
+  async InstantiateChildrenSelf(): Promise<void> {
   }
 
   async OnFocus(): Promise<any> {

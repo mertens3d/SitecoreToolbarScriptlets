@@ -5,10 +5,10 @@ import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore"
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IScDocProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfPackageDesigner";
-import { ScDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
+import { ScDocProxyOfTypeT } from "../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
 import { InstallerDesignerProxy } from "../StateLessDocProxies/StateLessDocProxies/InstallerDesignerProxy";
 
-export class PackageDesignerDocProxy extends ScDocProxy<IStateOfPackageDesigner> implements IScDocProxy {
+export class PackageDesignerDocProxy extends ScDocProxyOfTypeT<IStateOfPackageDesigner> implements IScDocProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.PackageDesigner;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.PackageDesigner];
 
@@ -24,18 +24,18 @@ export class PackageDesignerDocProxy extends ScDocProxy<IStateOfPackageDesigner>
     this.Logger.CTOREnd(PackageDesignerDocProxy.name);
   }
 
-  async InstantiateAsyncMembersSelf(): Promise<void> {
-    this.Logger.FuncStart([PackageDesignerDocProxy.name, this.InstantiateAsyncMembersSelf.name], this.Friendly);
+  async InstantiateChildrenSelf(): Promise<void> {
+    this.Logger.FuncStart([PackageDesignerDocProxy.name, this.InstantiateChildrenSelf.name], this.Friendly);
 
     await this.HarvestElements()
       
-      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.InstantiateAsyncMembersSelf.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.InstantiateChildrenSelf.name], err));
     try {
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembersSelf.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateChildrenSelf.name, err);
     }
 
-    this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.InstantiateAsyncMembersSelf.name], this.Friendly);
+    this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.InstantiateChildrenSelf.name], this.Friendly);
   }
 
   private async HarvestElements(): Promise<void> {

@@ -84,9 +84,9 @@ export class ControllerMessageReceivedEventValidator extends _CommonBase {
     if (!StateOfContentEditor) {
       StateOfContentEditor = new DefaultStateOfContentEditor();
     }
-    if (!StateOfContentEditor.ContentTree) {
-      StateOfContentEditor.ContentTree = new DefaultStateOfContentTree();
-    }
+    //if (!StateOfContentEditor.ContentTree) {
+    //  StateOfContentEditor.ContentTree = new DefaultStateOfContentTree();
+    //}
     return StateOfContentEditor;
   }
 
@@ -104,7 +104,7 @@ export class ControllerMessageReceivedEventValidator extends _CommonBase {
     if (!StateOfDesktop) {
       StateOfDesktop = new DefaultStateOfDesktop();
     }
-    StateOfDesktop.DTArea = this.ValidateStateOfDTAreaProxy(StateOfDesktop.DTArea);
+    //todo - put back StateOfDesktop.DTArea = this.ValidateStateOfDTAreaProxy(StateOfDesktop.DTArea);
 
     return StateOfDesktop;
   }

@@ -5,10 +5,10 @@ import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICo
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
 import { IScDocProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
-import { ScDocProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
+import { ScDocProxyOfTypeT } from "../../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
 
-export class JqueryModalDialogsDocProxy extends ScDocProxy<IStateOf_> implements IScDocProxy {
+export class JqueryModalDialogsDocProxy extends ScDocProxyOfTypeT<IStateOf_> implements IScDocProxy {
   readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.JqueryModalDialogsDocProxy;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.JqueryModalDialogsDocProxy];
 

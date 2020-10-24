@@ -15,10 +15,11 @@ export class FactoryHelper extends _APICoreBase {
     this.Logger.FuncStart(this.CEFrameFactory.name);
 
     this.ErrorHand.ThrowIfNullOrUndefined(this.CEFrameFactory.name, [frameJacket]);
-    let toReturn = new CEFrameProxy(this.ApiCore, frameJacket);
-    toReturn.InstantiateAsyncMembersSelf();
-    toReturn.WireEventsSelf();
-    this.Logger.FuncEnd(this.CEFrameFactory.name);
-    return toReturn;
+    let toReturn = null;// new CEFrameProxy(this.ApiCore, frameJacket);
+    throw ('need to finish this');
+    //toReturn.InstantiateAsyncMembersSelf();
+    //toReturn.WireEventsSelf();
+    //this.Logger.FuncEnd(this.CEFrameFactory.name);
+    //return toReturn;
   }
 } 

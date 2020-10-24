@@ -34,9 +34,9 @@ export class DTStartBarElemProxy extends _BaseElemProxy<IStateOf_> implements IB
     this.ConResolver = new ConResolver(this.ApiCore);
   }
 
-  public async InstantiateAsyncMembersSelf(): Promise<void> {
-    this.Logger.FuncStart([DTStartBarElemProxy.name, this.InstantiateAsyncMembersSelf.name]);
-    this.Logger.FuncEnd([DTStartBarElemProxy.name, this.InstantiateAsyncMembersSelf.name]);
+  public async InstantiateChildrenSelf(): Promise<void> {
+    this.Logger.FuncStart([DTStartBarElemProxy.name, this.InstantiateChildrenSelf.name]);
+    this.Logger.FuncEnd([DTStartBarElemProxy.name, this.InstantiateChildrenSelf.name]);
   }
 
   WireEvent() {

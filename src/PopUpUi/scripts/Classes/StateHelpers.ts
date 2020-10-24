@@ -29,12 +29,13 @@ export class StateHelpers extends _FrontBase {
     //return toReturn;
   }
 
-  GetActiveTreeNodeFromStateOfContentEditor(stateOfContentEditor: IStateOfContentEditor): IStateOfScContentTreeNodeShallow {
-    return this.GetActiveTreeNodeFromStateOfTreeFlat(stateOfContentEditor.ContentTree);
-  }
+  //GetActiveTreeNodeFromStateOfContentEditor(stateOfContentEditor: IStateOfContentEditor): IStateOfScContentTreeNodeShallow {
+  //  return this.GetActiveTreeNodeFromStateOfTreeFlat(stateOfContentEditor.ContentTree);
+  //}
 
   GetActiveFrameFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfDTFrame {
-    return stateOfDesktop.DTArea.DTFrames[stateOfDesktop.DTArea.ActiveFrameIndex];
+    return null;
+   //todo - put back return stateOfDesktop.DTArea.DTFrames[stateOfDesktop.DTArea.ActiveFrameIndex];
   }
 
   //GetActiveContentEditFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfContentEditor {
