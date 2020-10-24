@@ -16,13 +16,13 @@ import { ContentTreeMutationEvent_Subject } from "../../../Desktop/DesktopProxy/
 import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNodeProxy';
 import { ConResolver } from './ScContentTreeNodeProxy/ConResolver';
-import { _BaseStateFullElemProxy } from "../../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullElemProxy";
-import { IStateFullElemProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullElemProxy";
+import { _BaseElemProxy } from "../../../Desktop/DesktopProxy/FrameProxies/_BaseElemProxy";
+import { IScElemProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullElemProxy";
 import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
 import { ScProxyDisciminator } from '../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator';
 
 //ContentTree is the name Sitecore uses
-export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfContentTree> implements IStateFullElemProxy {
+export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> implements IScElemProxy {
 
   readonly ScProxyDisciminator = ScProxyDisciminator.ContentTreeElem;
   readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.ContentTreeElem];
@@ -49,8 +49,8 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
     this.ConResolver = new ConResolver(this.ApiCore);
   }
 
-  async InstantiateAsyncMembers(): Promise<void> {
-    this.Logger.FuncStart(this.InstantiateAsyncMembers.name);
+  async InstantiateAsyncMembersSelf(): Promise<void> {
+    this.Logger.FuncStart(this.InstantiateAsyncMembersSelf.name);
 
     try {
       await this.SetRootNodeFromSelector()
@@ -60,10 +60,10 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.ApiCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembersSelf.name, err);
     }
 
-    this.Logger.FuncEnd(this.InstantiateAsyncMembers.name);
+    this.Logger.FuncEnd(this.InstantiateAsyncMembersSelf.name);
   }
 
   WireEvents_TreeProxy() {
@@ -76,7 +76,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
     this.Logger.FuncStart(this.CallBackOnNativeClassNameChangeEventAsync.name);
     this.TaskMonitor.AsyncTaskStarted(this.CallBackOnNativeClassNameChangeEventAsync.name);
     if (this.ContentTreeMutationEvent_Subject) {
-      this.GetState()
+      this.GetStateOfSelf()
         .then((stateOfContentTree: IStateOfContentTree) => {
           let TreeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = {
             ContentTree: stateOfContentTree
@@ -108,7 +108,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
       if (targetNode && this.ContainerElemJacket) {
         var treeGlyphTargetId: string = ContentConst.Const.Names.SC.TreeGlyphPrefix + Guid.WithoutDashes(targetNode.ItemId);
 
-        await this.ContainerElemJacket.WaitForElement('[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
+        await this.ContainerElemJacket.WaitFor('[id=' + treeGlyphTargetId + ']', this.GetTreeNodeByGlyph.name + ' ' + treeGlyphTargetId)
           .then((elemJacket: IJacketOfType) => scContentTreeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, elemJacket, targetNode.Coord.LevelIndex, targetNode.Coord.SiblingIndex, targetNode.Coord.LevelWidth, null, this.ConResolver))
           .then(() => scContentTreeNodeProxy.Instantiate())
           .then(() => resolve(scContentTreeNodeProxy))
@@ -157,24 +157,24 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
     this.Logger.FuncEnd(this.SetStateOfNodeRecursive.name, currentNodeData.Friendly);
   }
 
-  async SetState(stateOfContentTree: IStateOfContentTree): Promise<void> {
-    this.Logger.FuncStart([ContentTreeElemProxy.name, this.SetState.name]);
-    this.TaskMonitor.AsyncTaskStarted(this.SetState.name);
+  async SetStateSelf(stateOfContentTree: IStateOfContentTree): Promise<void> {
+    this.Logger.FuncStart([ContentTreeElemProxy.name, this.SetStateSelf.name]);
+    this.TaskMonitor.AsyncTaskStarted(this.SetStateSelf.name);
     try {
       this.ContentTreeMutationEvent_Subject.DisableNotifications();
       await this.SetStateOfNodeRecursive(stateOfContentTree.ContentTreeNodeDeep, 0);
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.SetState.name, err);
+      this.ErrorHand.HandleFatalError(this.SetStateSelf.name, err);
     }
 
     this.ContentTreeMutationEvent_Subject.EnableNotifications();
-    this.TaskMonitor.AsyncTaskCompleted(this.SetState.name);
-    this.Logger.FuncEnd([ContentTreeElemProxy.name, this.SetState.name]);
+    this.TaskMonitor.AsyncTaskCompleted(this.SetStateSelf.name);
+    this.Logger.FuncEnd([ContentTreeElemProxy.name, this.SetStateSelf.name]);
   }
 
   private async SetRootNodeFromSelector(): Promise<void> {
     try {
-      await this.ContainerElemJacket.WaitForElement(this.TreeRootSelector)
+      await this.ContainerElemJacket.WaitFor(this.TreeRootSelector)
         .then((elementJacket: IJacketOfType) => this.rootTreeNodeJacket = elementJacket);
     } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.SetRootNodeFromSelector.name, err);
@@ -199,13 +199,13 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
     return foundNode;
   }
 
-  GetState(): Promise<IStateOfContentTree> {
+  GetStateOfSelf(): Promise<IStateOfContentTree> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart([ContentTreeElemProxy.name, this.GetState.name]);
+      this.Logger.FuncStart([ContentTreeElemProxy.name, this.GetStateOfSelf.name]);
 
       let stateOfContentTree: IStateOfContentTree = new DefaultStateOfContentTree();
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.GetState.name, [stateOfContentTree]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.GetStateOfSelf.name, [stateOfContentTree]);
 
       await this.GetStateOfContentTreeNodeDeep()
         .then((result: IStateOfScContentTreeNodeDeep) => stateOfContentTree.ContentTreeNodeDeep = result)
@@ -216,9 +216,9 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
           }
         })
         .then(() => resolve(stateOfContentTree))
-        .catch((err: any) => reject(this.GetState.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetStateOfSelf.name + ' | ' + err));
 
-      this.Logger.FuncEnd([ContentTreeElemProxy.name, this.GetState.name]);
+      this.Logger.FuncEnd([ContentTreeElemProxy.name, this.GetStateOfSelf.name]);
     });
   }
 
@@ -231,7 +231,7 @@ export class ContentTreeElemProxy extends _BaseStateFullElemProxy<IStateOfConten
           let parentHtmlElement = this.rootTreeNodeJacket.NativeElement.parentElement;
           var rootParent: IJacketOfType = new GenericElemJacket(this.ApiCore, parentHtmlElement);//  this.rootTreeNodeJacket.parentElement();
 
-          await rootParent.WaitForElement(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetTreeNodeProxy.name)
+          await rootParent.WaitFor(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetTreeNodeProxy.name)
             .then((firstChildGlyphNode: ElementImgJacket) => this._treeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, firstChildGlyphNode, 0, 0, 1, null, this.ConResolver))
             .then(() => this._treeNodeProxy.Instantiate())
             .then(() => resolve(this._treeNodeProxy))

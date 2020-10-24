@@ -1,4 +1,5 @@
 ﻿export enum ScProxyDisciminator {
+    //number = '40' + random six digit number
     Unknown = 0,
 
     AccessViewer = 40641679,
@@ -36,7 +37,10 @@
     UserManager = 40249854,
     Workbox = 40855665,
     AppToolsInstallerDesigner = 40521954,
-    DTStartBarElem,
-    PackageDesignerInstallerRibbonToolbarElemProxy,
-    ContentTreeElem
+    DTStartBarElem = 40028264,
+    PackageDesignerInstallerRibbonToolbarElemProxy = 40028264,
+    ContentTreeElem = 40797680,
+    DesktopStartBarButtonProxy = 40519977,
+    InstallerBrowseDocProxy,
+    InstallerBrowseFrameProxy
 }

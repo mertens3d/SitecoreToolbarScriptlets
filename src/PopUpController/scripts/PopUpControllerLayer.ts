@@ -26,7 +26,7 @@ import { IHindSiteUiLayer } from "../../Shared/scripts/Interfaces/IHindSiteUiLay
 import { ICommandDefinitionBucket } from "../../Shared/scripts/Interfaces/IMenuCommandDefinitionBucket";
 import { IScURLResolver } from "../../Shared/scripts/Interfaces/Jackets/IScPathResolver";
 import { IScWindowTypeResolver } from "../../Shared/scripts/Interfaces/Jackets/IScUrlAgent";
-import { IPopUpBrowserProxy } from "../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
+import { IPopUpBrowserProxy } from "../../Shared/scripts/Interfaces/ScProxies/IBrowserProxy";
 import { SharedConst } from "../../Shared/scripts/SharedConst";
 import { MessageBroker_PopUp } from "./Agents/PopUpMessagesBrokerAgent";
 import { HandlersForInternal } from "./Classes/HandlersForInternal";

@@ -109,7 +109,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
 
   private async GetOwnGlyphNodeElem(): Promise<void> {
     try {
-      await this.ScContentTreeNodeDivElem.WaitForElement(":scope > img", this.GetOwnGlyphNodeElem.name)
+      await this.ScContentTreeNodeDivElem.WaitFor(":scope > img", this.GetOwnGlyphNodeElem.name)
         .then((elemImgJacket: ElementImgJacket) => this.glyphElem = elemImgJacket)
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.GetOwnGlyphNodeElem.name, err));
     } catch (err: any) {
@@ -124,7 +124,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
 
   private async PollinateNodeElem(): Promise<void> {
     try {
-      await this.ScContentTreeNodeDivElem.WaitForElement(":scope > a", this.Friendly())
+      await this.ScContentTreeNodeDivElem.WaitFor(":scope > a", this.Friendly())
         .then((htmlAnchorElement: ElementAnchorJacket) => this.LinkNodeElem = htmlAnchorElement)
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.PollinateNodeElem.name, err));
     } catch (err: any) {

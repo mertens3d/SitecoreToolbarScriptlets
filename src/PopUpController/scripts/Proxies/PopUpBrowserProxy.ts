@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../../../node_modules/web-ext-types/global/index.d.ts" />
 
-import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
+import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/ScProxies/IBrowserProxy";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IHindeCore } from "../../../Shared/scripts/Interfaces/Agents/IHindeCore";

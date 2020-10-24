@@ -1,6 +1,8 @@
 ﻿import { IStateOfDTFrame } from "./IStateOfDTFrame";
+import { IStateOf_ } from "./IStateOf_";
 
-export interface IStateOfDTArea {
+
+export interface IStateOfDTArea extends IStateOf_ {
   ActiveFrameIndex: number;
   DTFrames: IStateOfDTFrame[];
 }

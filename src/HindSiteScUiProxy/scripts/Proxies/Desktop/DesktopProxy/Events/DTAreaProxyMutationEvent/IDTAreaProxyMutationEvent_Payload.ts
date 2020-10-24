@@ -1,8 +1,8 @@
-﻿import { IDTFrameProxyMutationEvent_Payload } from "../DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
-import { DTFrameProxy } from "../../FrameProxies/DTFrameProxy";
+﻿import { IScFrameProxy } from "../../../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
+import { IDTFrameProxyMutationEvent_Payload } from "../DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
 
 export interface IDTAreaProxyMutationEvent_Payload {
   DTFrameProxyMutationEvent_Payload: IDTFrameProxyMutationEvent_Payload,
-  AddedDTFrameProxies: DTFrameProxy[]
-  RemovedDTFrameProxies: DTFrameProxy[]
+  AddedDTFrameProxies: IScFrameProxy[]
+  RemovedDTFrameProxies: IScFrameProxy[]
 }

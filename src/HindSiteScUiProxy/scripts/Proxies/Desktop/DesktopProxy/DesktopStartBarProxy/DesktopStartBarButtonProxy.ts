@@ -11,9 +11,15 @@ import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces
 import { SharedConst } from '../../../../../../Shared/scripts/SharedConst';
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
+import { _BaseElemProxy } from "../FrameProxies/_BaseElemProxy";
+import { IStateOf_ } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_';
+import { IBaseScProxy } from '../../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScProxy';
+import { ScProxyDisciminator } from '../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator';
 
-export class DesktopStartBarButtonProxy extends _APICoreBase {
-  private DocumentJacket: DocumentJacket;
+export class DesktopStartBarButtonProxy extends _BaseElemProxy<IStateOf_> implements IBaseScProxy {
+  readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.DesktopStartBarButtonProxy;
+  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.DesktopStartBarButtonProxy];
+
   private ContainerSpanElement: IJacketOfType;
   private FoundStartBarButton: IJacketOfType;
   private StartBarButtonElemId: string;
@@ -21,9 +27,8 @@ export class DesktopStartBarButtonProxy extends _APICoreBase {
   public FrameId: string;
   private ConResolver: ConResolver;
 
-  constructor(apiCore: IAPICore, iframeElemId: string, documentJacket: DocumentJacket, conResolver: ConResolver) {
-    super(apiCore);
-    this.DocumentJacket = documentJacket;
+  constructor(apiCore: IAPICore, iframeElemId: string, documentJacket: IJacketOfType, conResolver: ConResolver) {
+    super(apiCore, documentJacket);
     this.FrameId = iframeElemId;
     this.ConResolver = conResolver;
     this.InstantiateInstance();
@@ -36,8 +41,10 @@ export class DesktopStartBarButtonProxy extends _APICoreBase {
   async Instantiate_DestopStartBarButtonProxyAsyncItems(): Promise<void> {
     try {
       let querySelectBtn = '[id=' + this.StartBarButtonElemId + ']';
-      this.FoundStartBarButton = this.DocumentJacket.QuerySelector(querySelectBtn);
-      await this.FoundStartBarButton.WaitForElement(':scope > div > span', this.Instantiate_DestopStartBarButtonProxyAsyncItems.name)
+
+      await this.ContainerElemJacket.WaitFor(querySelectBtn)
+        .then((elementJacket: IJacketOfType) => this.FoundStartBarButton = elementJacket)
+        .then(() => this.FoundStartBarButton.WaitFor(':scope > div > span', this.Instantiate_DestopStartBarButtonProxyAsyncItems.name))
         .then((containerSpanElement: IJacketOfType) => this.ContainerSpanElement = containerSpanElement);
     } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.Instantiate_DestopStartBarButtonProxyAsyncItems.name, err);
@@ -121,7 +128,7 @@ export class DesktopStartBarButtonProxy extends _APICoreBase {
   }
 
   private BuildLxSpan(stateOfContentTree: IStateOfContentTree): HTMLSpanElement {
-    let nodeImage: HTMLImageElement = this.LxNodeImg(this.ConResolver.ResolveIconPath( stateOfContentTree.ActiveNodeShallow.IconSrc));
+    let nodeImage: HTMLImageElement = this.LxNodeImg(this.ConResolver.ResolveIconPath(stateOfContentTree.ActiveNodeShallow.IconSrc));
     let nodeSpan: HTMLSpanElement = this.LxNodeSpan(stateOfContentTree.ActiveNodeShallow.Friendly);
 
     let toReturn: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');

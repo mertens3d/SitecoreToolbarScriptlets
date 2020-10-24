@@ -12,7 +12,6 @@ import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { SnapShotFlavor } from "../../../Shared/scripts/Enums/SnapShotFlavor";
 import { IToApiCallPayload } from "../../../Shared/scripts/Interfaces/IApiCallPayload";
 import { APICommandFlag } from "../../../Shared/scripts/Enums/APICommand";
-import { CommandRouter } from "../Proxies/CommandRouter";
 import { _CommandSolicitorForEvent_ } from "./_CommandSolicitorFor_";
 import { DocumentJacket } from "../../../DOMJacket/scripts/Document/DocumentJacket";
 import { ICommandRouterParams } from "../../../Shared/scripts/Interfaces/ICommandRouterParams";
@@ -20,6 +19,7 @@ import { ReqCommandMsgFlag } from "../../../Shared/scripts/Enums/10 - MessageFla
 import { ICommandRouterResult } from "../../../Shared/scripts/Interfaces/StateOf/ICommandRouterResult";
 import { ISolicitor } from "../../../Shared/scripts/Interfaces/Agents/IContentAtticAgent/ISolicitor";
 import { TypeDiscriminator } from "../../../Shared/scripts/Enums/70 - TypeDiscriminator";
+import { CommandRouter } from "../Proxies/CommandRouter";
 
 export class SolicitorForScheduledAutoSnapShot extends _CommandSolicitorForEvent_ implements ISolicitor {
   readonly TypeDiscriminator: TypeDiscriminator = TypeDiscriminator.SolicitorForScheduledAutoSnapShot;

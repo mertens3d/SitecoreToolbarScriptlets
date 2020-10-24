@@ -1,15 +1,44 @@
 ﻿import { DocumentJacket } from "../../../../../../DOMJacket/scripts/Document/DocumentJacket";
+import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IBaseScDocProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
-import { _BaseScProxy } from "../../../StateFullDocProxies/_BaseScDocProxy";
+import { IScDocProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
+import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
+import { ScDocProxyWatcherForFrames } from "../../../StateFullDocProxies/ScDocProxyWatcherForFrames";
+import { _BaseScProxy } from "../../../StateFullDocProxies/_BaseScProxy";
 
-export abstract class _BaseStateFullDocProxy<T> extends _BaseScProxy implements IBaseScDocProxy {
-  abstract GetState(): Promise<T>;
-  abstract SetState(state: T): Promise<void>;
+export abstract class ScDocProxy<T extends IStateOf_> extends _BaseScProxy implements IScDocProxy {
+  //abstract GetState(): Promise<T>;
+  //abstract SetState(state: T): Promise<void>;
   Friendly: string = '{unknown friendly}';
+  protected readonly DocumentJacket: DocumentJacket;
+  private WatcherForFrames: ScDocProxyWatcherForFrames;
+
+  async GetStateOfSelf(): Promise<T> {
+    //empty by default
+    let stateOf: IStateOf_ = {
+      Disciminator: ScProxyDisciminator.Unknown,
+      DisciminatorFriendly: ScProxyDisciminator[ScProxyDisciminator.Unknown],
+      StateOfHostedProxies: []
+    }
+
+    return Promise.resolve(<T>stateOf);
+  }
+
+  async SetStateSelf(state: T): Promise<any> {
+    //empty by default
+  }
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
-    super(apiCore, documentJacket);
-
+    super(apiCore);
+    this.DocumentJacket = documentJacket;
+  }
+  public async EnableWatcherForFrames(): Promise<void> {
+    try {
+      this.WatcherForFrames = new ScDocProxyWatcherForFrames(this.ApiCore, this.DocumentJacket, this.ScProxyDisciminatorFriendly);
+      await this.WatcherForFrames.EnableWatcherForFrames()
+        .catch((err: any) => this.ErrorHand.HandleFatalError([_BaseScProxy.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err));
+    } catch (err: any) {
+      this.ErrorHand.HandleFatalError([_BaseScProxy.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err);
+    }
   }
 }

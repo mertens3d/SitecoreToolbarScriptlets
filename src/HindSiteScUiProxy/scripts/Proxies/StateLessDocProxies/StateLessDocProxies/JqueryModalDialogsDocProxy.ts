@@ -1,13 +1,14 @@
 ﻿import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
-import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
+import { FrameJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
+import { IScDocProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
+import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
+import { ScDocProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
-import { _BaseStateLessScDocProxy } from "./_BaseStateLessScDocProxy";
 
-export class JqueryModalDialogsDocProxy extends _BaseStateLessScDocProxy implements IStateLessDocProxy {
+export class JqueryModalDialogsDocProxy extends ScDocProxy<IStateOf_> implements IScDocProxy {
   readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.JqueryModalDialogsDocProxy;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.JqueryModalDialogsDocProxy];
 
@@ -15,13 +16,12 @@ export class JqueryModalDialogsDocProxy extends _BaseStateLessScDocProxy impleme
     super(apiCore, documentJacket);
   }
 
-  async WireEvents(): Promise<void> {
+  async WireEventsSelf(): Promise<void> {
     try {
-      this._BaseWireEvents();
       await this.EnableWatcherForFrames()
-        .catch((err: any) => this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEvents.name], err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEventsSelf.name], err));
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEvents.name], err);
+      this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEventsSelf.name], err);
     }
   }
 
@@ -41,13 +41,13 @@ export class JqueryModalDialogsDocProxy extends _BaseStateLessScDocProxy impleme
     try {
       //let scContentIframeId0Proxy: ScContentIframeId0Proxy;
 
-      let id0FrameProxy: IStateLessDocProxy = null;
-      let id0FrameJacket: FrameElemJacket = null;
+      let id0FrameProxy: IScDocProxy = null;
+      let id0FrameJacket: FrameJacket = null;
       let proxyFactory: ScDocProxyResolver = new ScDocProxyResolver(this.ApiCore);
 
       await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket('jquery jacket')
         .then(() => this.DocumentJacket.GetHostedFirstMatchingFrameElemJacket(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Id))
-        .then((matchingJacket: FrameElemJacket) => id0FrameJacket = matchingJacket)
+        .then((matchingJacket: FrameJacket) => id0FrameJacket = matchingJacket)
         //.then(() => proxyFactory.ScDocProxyFactory(ScWindowType.ScContentProxy, )
         //.then(() => scContentIframeId0Proxy.OpenFile(fileName))
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err));

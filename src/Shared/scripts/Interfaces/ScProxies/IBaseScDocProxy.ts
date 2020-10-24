@@ -1,6 +1,6 @@
 ﻿import { IBaseScProxy } from "./IBaseScProxy";
 
-export interface IBaseScDocProxy extends IBaseScProxy{
+export interface IScDocProxy extends IBaseScProxy{
   OnFocus(): Promise<any>
   EnableWatcherForFrames(): void;
 }

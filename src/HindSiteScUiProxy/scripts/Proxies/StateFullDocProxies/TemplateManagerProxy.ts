@@ -1,31 +1,32 @@
 ﻿import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { IBaseScDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
+import { IScDocProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IStateOfTemplateManager } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfTemplateManager";
 import { _ContentTreeBasedDocProxy } from "../ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
 
-export class TemplateManagerProxy extends _ContentTreeBasedDocProxy<IStateOfTemplateManager> implements IBaseScDocProxy {
+export class TemplateManagerProxy extends _ContentTreeBasedDocProxy<IStateOfTemplateManager> implements IScDocProxy {
   readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.TemplateManager;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.TemplateManager];
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TemplatesAnchorRootNode;
 
-  async InstantiateAsyncMembers(): Promise<void> {
+  async InstantiateAsyncMembersSelf(): Promise<void> {
+    
     return this.__baseInstantiateAsyncMembers();
   }
 
-  async WireEvents(): Promise<void> {
+  async WireEventsSelf(): Promise<void> {
     this.__baseWireEvents();
   }
 
-  TriggerInboundEventsAsync(): void {
+  TriggerEventsForInboundSelf(): void {
     return this.__BaseTriggerInboundEventsAsync();
   }
 
-  GetState(): Promise<IStateOfTemplateManager> {
+  GetStateOfSelf(): Promise<IStateOfTemplateManager> {
     return this.__baseGetState();
   }
 
-  async SetState(dataToRestore: IStateOfTemplateManager): Promise<void> {
+  async SetStateSelf(dataToRestore: IStateOfTemplateManager): Promise<void> {
      this.__baseSetState(dataToRestore);
   }
 }

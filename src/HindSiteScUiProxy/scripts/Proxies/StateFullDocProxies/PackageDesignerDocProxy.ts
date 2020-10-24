@@ -3,12 +3,12 @@ import { DefaultStateOfPackageDesigner } from "../../../../Shared/scripts/Classe
 import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
-import { IBaseScDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
+import { IScDocProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfPackageDesigner";
-import { _BaseStateFullDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
+import { ScDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
 import { InstallerDesignerProxy } from "../StateLessDocProxies/StateLessDocProxies/InstallerDesignerProxy";
 
-export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPackageDesigner> implements IBaseScDocProxy {
+export class PackageDesignerDocProxy extends ScDocProxy<IStateOfPackageDesigner> implements IScDocProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.PackageDesigner;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.PackageDesigner];
 
@@ -24,48 +24,48 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
     this.Logger.CTOREnd(PackageDesignerDocProxy.name);
   }
 
-  async InstantiateAsyncMembers(): Promise<void> {
-    this.Logger.FuncStart([PackageDesignerDocProxy.name, this.InstantiateAsyncMembers.name], this.Friendly);
+  async InstantiateAsyncMembersSelf(): Promise<void> {
+    this.Logger.FuncStart([PackageDesignerDocProxy.name, this.InstantiateAsyncMembersSelf.name], this.Friendly);
 
     await this.HarvestElements()
       
-      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.InstantiateAsyncMembers.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.InstantiateAsyncMembersSelf.name], err));
     try {
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembersSelf.name, err);
     }
 
-    this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.InstantiateAsyncMembers.name], this.Friendly);
+    this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.InstantiateAsyncMembersSelf.name], this.Friendly);
   }
 
   private async HarvestElements(): Promise<void> {
     this.Logger.FuncStart([PackageDesignerDocProxy.name, this.HarvestElements.name], this.Friendly);
     try {
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEvents.name], err);
+      this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEventsSelf.name], err);
     }
     this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.HarvestElements.name], this.Friendly);
   }
 
-  async WireEvents(): Promise<void> {
-    this.Logger.FuncStart(this.WireEvents.name, this.Friendly);
+  async WireEventsSelf(): Promise<void> {
+    this.Logger.FuncStart(this.WireEventsSelf.name, this.Friendly);
 
     await this.EnableWatcherForFrames()
-      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEvents.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEventsSelf.name], err));
 
-    this.Logger.FuncEnd(this.WireEvents.name, this.Friendly);
+    this.Logger.FuncEnd(this.WireEventsSelf.name, this.Friendly);
   }
 
-  async GetState(): Promise<IStateOfPackageDesigner> {
+  async GetStateOfSelf(): Promise<IStateOfPackageDesigner> {
     return new Promise((resolve, reject) => {
-      this.Logger.FuncStart(this.GetState.name, PackageDesignerDocProxy.name);
+      this.Logger.FuncStart(this.GetStateOfSelf.name, PackageDesignerDocProxy.name);
 
       let stateOfPackageDesigner: IStateOfPackageDesigner = new DefaultStateOfPackageDesigner();
       stateOfPackageDesigner.StatusText = this.GetLoadedPackageFileName();
 
       resolve(stateOfPackageDesigner);
 
-      this.Logger.FuncEnd(this.GetState.name, PackageDesignerDocProxy.name);
+      this.Logger.FuncEnd(this.GetStateOfSelf.name, PackageDesignerDocProxy.name);
     });
   }
 
@@ -78,9 +78,9 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
     this.Logger.FuncEnd([InstallerDesignerProxy.name, this.OpenFile.name]);
   }
 
-  async SetState(stateOfPackageDesigner: IStateOfPackageDesigner): Promise<void> {
+  async SetStateSelf(stateOfPackageDesigner: IStateOfPackageDesigner): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetState.name, PackageDesignerDocProxy.name);
+      this.Logger.FuncStart(this.SetStateSelf.name, PackageDesignerDocProxy.name);
 
       if (stateOfPackageDesigner) {
         if (stateOfPackageDesigner.StatusText.length > 0) {
@@ -91,7 +91,7 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
           //await installerDesignerProxy.InstantiateAsyncMembers()
           await this.OpenFile(stateOfPackageDesigner.StatusText)
             .then(() => resolve())
-            .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerDocProxy.name, this.SetState.name], err)));
+            .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([PackageDesignerDocProxy.name, this.SetStateSelf.name], err)));
 
           //let parentJacket: DocumentJacket = this.DocumentJacket.GetParentJacket();
           //if (!parentJacket) {
@@ -107,11 +107,11 @@ export class PackageDesignerDocProxy extends _BaseStateFullDocProxy<IStateOfPack
         }
       }
 
-      this.Logger.FuncEnd(this.SetState.name, PackageDesignerDocProxy.name);
+      this.Logger.FuncEnd(this.SetStateSelf.name, PackageDesignerDocProxy.name);
     });
   }
 
-  TriggerInboundEventsAsync(): void {
+  TriggerEventsForInboundSelf(): void {
     this.Logger.Log('todo ' + PackageDesignerDocProxy.name);
   }
 

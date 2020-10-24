@@ -1,14 +1,13 @@
 ﻿import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
-import { IBaseScDocProxy } from "../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
+import { IScDocProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IStateOfFallBack } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfFallBack";
-import { _BaseStateFullDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
+import { ScDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
 
-
-export class FallBackDocProxy extends _BaseStateFullDocProxy<IStateOfFallBack> implements IBaseScDocProxy {
+export class FallBackDocProxy extends ScDocProxy<IStateOfFallBack> implements IScDocProxy {
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.FallBack];
   readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.FallBack;
 
-  async GetState(): Promise<IStateOfFallBack> {
+  async GetStateOfSelf(): Promise<IStateOfFallBack> {
     let toReturn: IStateOfFallBack = {
       Disciminator: this.ScProxyDisciminator,
       DisciminatorFriendly: ScProxyDisciminator[this.ScProxyDisciminator],
@@ -16,27 +15,10 @@ export class FallBackDocProxy extends _BaseStateFullDocProxy<IStateOfFallBack> i
     }
 
     try {
-
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.GetState + '.' + FallBackDocProxy.name, err)
+      this.ErrorHand.HandleFatalError(this.GetStateOfSelf + '.' + FallBackDocProxy.name, err)
     }
 
     return toReturn;
-  }
-
-  async SetState(state: any) {
-    //empty
-  }
-
- async WireEvents() : Promise<void>{
-    //empty
-  }
-
-  async InstantiateAsyncMembers(): Promise<void> {
-    //empty
-  }
-
-  TriggerInboundEventsAsync(): void {
-    //empty
   }
 }

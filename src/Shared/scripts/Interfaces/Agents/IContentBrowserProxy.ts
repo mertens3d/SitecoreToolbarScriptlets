@@ -1,7 +1,7 @@
 ﻿import { DefaultMsgContentToController } from "../../Classes/DefaultMsgContentToController";
-import { IMessageControllerToContent } from "../IMessageControllerToContent";
-import { IBaseBrowserProxy } from "./IBaseBrowserProxy";
 import { BrowserTabProxy } from "../../Proxies/Browser/BrowserTabProxy";
+import { IMessageControllerToContent } from "../IMessageControllerToContent";
+import { IBaseBrowserProxy } from "../ScProxies/IBaseBrowserProxy";
 
 export interface IContentBrowserProxy extends IBaseBrowserProxy {
   ActiveBrowserTabProxy: BrowserTabProxy;

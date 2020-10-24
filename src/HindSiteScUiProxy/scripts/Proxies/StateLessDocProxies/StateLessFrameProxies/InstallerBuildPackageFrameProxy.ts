@@ -1,18 +1,22 @@
 ﻿import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
-import { IStateLessScFrameProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessFrameProxy";
+import { IScFrameProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
+import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
+import { BaseFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/BaseFrameProxy";
 import { InstallerBuildPackageDocProxy } from "../StateLessDocProxies/InstallerBuildPackageDocProxy";
-import { _baseStatelessFrameProxyOfType } from "./_baseStatelessFrameProxyOfType";
 
-export class InstallerBuildPackageFrameProxy extends _baseStatelessFrameProxyOfType<InstallerBuildPackageDocProxy> implements IStateLessScFrameProxy {
-  ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.InstallerBuildPackageFrameProxy;
-  ScProxyDisciminatorFriendly:string;
+export class InstallerBuildPackageFrameProxy extends BaseFrameProxy<IStateOf_> implements IScFrameProxy {
+  readonly ScProxyDisciminator = ScProxyDisciminator.InstallerBuildPackageFrameProxy;
+  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.InstallerBuildPackageFrameProxy];
+
   FrameSelectorOnHost: string;
 
   async OpenFile(fileName: string): Promise<void> {
     //todo - handle case where filename no longer exists
     try {
-      if (this.HostedDocProxy) {
-        await this.HostedDocProxy.OpenFile(fileName)
+      let InstallerBuildPackageDocProxy: InstallerBuildPackageDocProxy = <InstallerBuildPackageDocProxy> this.GetHostedByDisciminator(ScProxyDisciminator.InstallerBuildPackageDocProxy);
+
+      if (InstallerBuildPackageDocProxy) {
+        await InstallerBuildPackageDocProxy.OpenFile(fileName)
           .catch((err: any) => this.ErrorHand.HandleFatalError(this.OpenFile.name, err));
       }
     }

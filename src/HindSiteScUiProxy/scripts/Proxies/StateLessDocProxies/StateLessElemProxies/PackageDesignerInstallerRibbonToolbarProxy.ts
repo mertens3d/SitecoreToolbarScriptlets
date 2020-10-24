@@ -3,11 +3,12 @@ import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - Sc
 import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { IBaseScProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IBaseScProxy";
-import { _BaseStateLessElemProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateLessElemProxy";
+import { IBaseScProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScProxy";
+import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
+import { _BaseElemProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseElemProxy";
 import { JqueryModalDialogsFrameProxy } from "../StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
-export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLessElemProxy implements IBaseScProxy {
+export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseElemProxy<IStateOf_> implements IBaseScProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.PackageDesignerInstallerRibbonToolbarElemProxy;
   readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.PackageDesignerInstallerRibbonToolbarElemProxy];
 
@@ -25,7 +26,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
   private async AttachClickEventToGenZip(): Promise<void> {
     this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
 
-    this.ContainerJacket.WaitForElement(ContentConst.Const.Selector.SC.InstallerDesigner.GenerateZip)
+    this.ContainerElemJacket.WaitFor(ContentConst.Const.Selector.SC.InstallerDesigner.GenerateZip)
       .then((genericElemJacket: IJacketOfType) => this.GenerateZipButton = genericElemJacket)
       .then(() => this.GenerateZipButton.NativeElement.addEventListener('click', ((event: Event) => this.CallBackOnGenerateZipButtonClicked(event))))
       .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name], err));
@@ -33,15 +34,15 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
     this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
   }
 
-  async InstantiateAsyncMembers(): Promise<void> {
+  async InstantiateAsyncMembersSelf(): Promise<void> {
     try {
-      this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name]);
+      this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembersSelf.name]);
       await this.AttachClickEventToGenZip()
-        .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name], err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembersSelf.name], err));
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name], err);
+      this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembersSelf.name], err);
     }
-    this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembers.name]);
+    this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAsyncMembersSelf.name]);
   }
 
   private CallBackOnGenerateZipButtonClicked(event: Event): void {
@@ -54,7 +55,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseStateLe
   async OpenFile(fileName: string): Promise<void> {
     //let jqueryFrameProxy: JqueryModalDialogsProxy = null;
 
-    await this.ContainerJacket.WaitForElement(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
+    await this.ContainerElemJacket.WaitFor(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.Open, this.OpenFile.name)
       .then((elemJacket: IJacketOfType) => elemJacket.NativeElement.click())
       .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.OpenFile.name], err))
 

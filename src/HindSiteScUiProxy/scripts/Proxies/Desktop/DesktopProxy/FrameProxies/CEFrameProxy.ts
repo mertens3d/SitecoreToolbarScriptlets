@@ -1,28 +1,11 @@
 ﻿import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IStateOfCEFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Agents/IStateOfCEFrameProxy";
-import { IStateFullFrameProxy } from "../../../../../../Shared/scripts/Interfaces/Proxies/StateFull/IStateFullFrameProxy";
-import { _BaseScFrameProxy } from "./_BaseScFrameProxy";
+import { IScFrameProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
+import { BaseFrameProxy } from "./BaseFrameProxy";
 
-export class CEFrameProxy extends _BaseScFrameProxy<IStateOfCEFrameProxy> implements IStateFullFrameProxy {
-  Friendly: string;
-  readonly Disciminator = ScProxyDisciminator.CEFrame;
-  readonly DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.CEFrame];
+export class CEFrameProxy extends BaseFrameProxy<IStateOfCEFrameProxy> implements IScFrameProxy {
+  readonly ScProxyDisciminator = ScProxyDisciminator.CEFrame;
+  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.CEFrame];
   FrameTypeDiscriminator = CEFrameProxy.name;
 
-  SetState(stateOfCEFrameProxy: IStateOfCEFrameProxy): Promise<void> {
-    return null;
-  }
-
-  GetState(): Promise<IStateOfCEFrameProxy> {
-    return null;
-  }
-
-  async InstantiateAsyncMembers(): Promise<void> {
-  }
-
-  async WireEvents(): Promise<void> {
-  }
-
-  async TriggerInboundEventsAsync() : Promise<void> {
-  }
 }

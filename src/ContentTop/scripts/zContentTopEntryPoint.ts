@@ -29,8 +29,8 @@ import { SolicitorForScheduledAutoSnapShot } from './CommandSolicitors/CommandSo
 import { CommandSolicitorForEventQueryString, CommandSolicitorForEventRestoreMostRecent } from "./CommandSolicitors/CommandSolicitorForQueryString";
 import { CommandSolicitorForHotKeys } from './CommandSolicitors/CommandSolicitorHotKeys';
 import { ContentMessageManager } from './Managers/ContentMessageManager';
-import { BrowserMessageBroker_Content } from "./Proxies/BrowserMessageBroker_Content";
-import { CommandRouter } from "./Proxies/CommandRouter";
+import { BrowserMessageBroker_Content } from './Proxies/BrowserMessageBroker_Content';
+import { CommandRouter } from './Proxies/CommandRouter';
 import { ContentBrowserProxy } from './Proxies/ContentBrowserProxy';
 
 class ContentEntry {
@@ -40,7 +40,7 @@ class ContentEntry {
   private SettingsAgent: ISettingsAgent;
   private AtticAgent: IContentAtticAgent;
   //ScUrlAgent: ScUrlAgent;
-  ContentBrowserProxy: IContentBrowserProxy;
+  contentBrowserProxy: IContentBrowserProxy;
   AutoSnapShotAgent: SolicitorForScheduledAutoSnapShot;
 
   CommandRouter: CommandRouter;
@@ -107,7 +107,7 @@ class ContentEntry {
 
       this.AutoSnapShotAgent = new SolicitorForScheduledAutoSnapShot(this.HindeCore, this.SettingsAgent, this.AtticAgent, this.ScUiAPI, this.CommandRouter, this.TopDocumentJacket);
 
-      this.ContentBrowserProxy = new ContentBrowserProxy(this.HindeCore)
+      this.contentBrowserProxy = new ContentBrowserProxy(this.HindeCore)
 
       let urlJacket: IUrlJacket = new UrlJacket(this.HindeCore, window.URL.toString());
 
@@ -121,7 +121,7 @@ class ContentEntry {
       this.CommandSolicitorForEventStartup = new CommandSolicitorForEventRestoreMostRecent(this.HindeCore, this.CommandRouter, this.TopDocumentJacket, this.SettingsAgent, this.AtticAgent)
 
       let contentMessageBroker: IMessageBroker_Content = new BrowserMessageBroker_Content(this.HindeCore, this.SettingsAgent,
-        this.ScUiAPI, this.AtticAgent, this.ContentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
+        this.ScUiAPI, this.AtticAgent, this.contentBrowserProxy, this.AutoSnapShotAgent, this.CommandRouter);
 
       contentMessageMan = new ContentMessageManager(this.HindeCore, contentMessageBroker);
 

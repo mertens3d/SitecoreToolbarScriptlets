@@ -50,6 +50,7 @@ export abstract class HindeSiteEvent_Subject<T> extends _CommonBase implements I
 
   RegisterObserver(observer: IHindSiteEvent_Observer<T>): void {
     if (observer) {
+      this.Logger.Log(this.RegisterObserver.name + ' ' + TypeDiscriminator[this.TypeDiscriminator]);
       if (this.ObserverCollection.indexOf(observer) < 0) {
         this.ObserverCollection.push(observer);
         this.Logger.Log(this.RegisterObserver.name + ' ' + observer.Friendly + ' to ' + TypeDiscriminator[this.TypeDiscriminator] + ' - count after: ' + this.ObserverCollection.length.toString());

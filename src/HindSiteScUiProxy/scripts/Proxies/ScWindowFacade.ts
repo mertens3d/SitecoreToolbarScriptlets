@@ -14,7 +14,7 @@ import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IScWindowFacade } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
-import { IBaseScDocProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
+import { IScDocProxy } from "../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IDataFriendly } from "../../../Shared/scripts/Interfaces/StateOf/IDataFriendly";
 import { IDataMetaData } from "../../../Shared/scripts/Interfaces/StateOf/IDataMetaData";
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
@@ -31,7 +31,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
   private StateFullProxyFactory: ScDocProxyResolver;
   private ScPageTypeResolver: ScWindowTypeResolver;
   private TabSessionId: string;
-  public StateFullProxy: IBaseScDocProxy;
+  public StateFullProxy: IScDocProxy;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
@@ -66,7 +66,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
       await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket('Window.Document') // recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
         .then((result: ReadyStateNAB) => windowType = this.ScPageTypeResolver.GetScWindowType(this.DocumentJacket.UrlJacket))
         .then(() => this.StateFullProxyFactory.ScDocProxyFactoryMake(this.DocumentJacket, null))
-        .then((stateFullProxy: IBaseScDocProxy) => this.StateFullProxy = stateFullProxy)
+        .then((stateFullProxy: IScDocProxy) => this.StateFullProxy = stateFullProxy)
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err));
     }
     catch (err: any) {
@@ -108,7 +108,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
       let toReturn: IRootState = new DefaultStateOfScWindow();
 
       if (this.StateFullProxy) {
-        await this.StateFullProxy.GetState()
+        await this.StateFullProxy.GetStateOfSelf()
           .then((stateOf_: IStateOf_) => toReturn.ScWindow = stateOf_)
           .then(() => toReturn.ScWindow.DisciminatorFriendly = ScProxyDisciminator[toReturn.ScWindow.Disciminator])
           .then(() => resolve(toReturn))
@@ -164,7 +164,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
           if (dataToRestore.State.ScWindow) {
-            await this.StateFullProxy.SetState(dataToRestore.State.ScWindow)
+            await this.StateFullProxy.SetStateSelf(dataToRestore.State.ScWindow)
               .then(() => resolve())
               .catch((err: any) => reject(this.SetStateOfScWin.name + ' | ' + err));
           }

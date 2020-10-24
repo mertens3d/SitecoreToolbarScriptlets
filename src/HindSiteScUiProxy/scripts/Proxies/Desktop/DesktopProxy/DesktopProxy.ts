@@ -1,5 +1,5 @@
 import { DocumentJacket } from "../../../../../DOMJacket/scripts/Document/DocumentJacket";
-import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
+import { FrameJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
 import { DefaultStateOfDesktop } from "../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfDesktop";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../Shared/scripts/Enums/50 - scWindowType";
@@ -7,21 +7,20 @@ import { APICommandFlag } from "../../../../../Shared/scripts/Enums/APICommand";
 import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IDTFramesNeeded } from "../../../../../Shared/scripts/Interfaces/Agents/IContentEditorCountsNeeded";
-import { IBaseScDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy";
-import { IBaseScProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IBaseScProxy";
+import { IScDocProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTProxy";
+import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
 import { JqueryModalDialogsDocProxy } from "../../StateLessDocProxies/StateLessDocProxies/JqueryModalDialogsDocProxy";
-import { GenericStateLessFrameProxy } from "../../StateLessDocProxies/StateLessFrameProxies/GenericStateLessFrameProxy";
 import { JqueryModalDialogsFrameProxy } from "../../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
-import { _baseStatelessFrameProxyOfType } from "../../StateLessDocProxies/StateLessFrameProxies/_baseStatelessFrameProxyOfType";
 import { AsyncLock } from "./DesktopStartBarProxy/AsyncLock";
 import { DTStartBarElemProxy } from "./DesktopStartBarProxy/DTStartBarProxy";
 import { DTAreaElemProxy } from "./DTAreaElemProxy";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
-import { _BaseStateFullDocProxy } from "./FrameProxies/_BaseStateFullDocProxy";
+import { BaseFrameProxy } from "./FrameProxies/BaseFrameProxy";
+import { ScDocProxy } from "./FrameProxies/_BaseStateFullDocProxy";
 
 //export class ScDocumentWatcher extends _APICoreBase {
 //  ScDocumentProxyMutationEvent_Subject: ScDocumentProxyMutationEvent_Subject;
@@ -40,7 +39,7 @@ import { _BaseStateFullDocProxy } from "./FrameProxies/_BaseStateFullDocProxy";
 
 //}
 
-export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implements IBaseScDocProxy {
+export class DesktopProxy extends ScDocProxy<IStateOfDesktop> implements IScDocProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.Desktop;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.Desktop];
   private DTAreaProxy: DTAreaElemProxy;
@@ -62,7 +61,7 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
   }
 
   private Instantiate() {
-    this.DTStartBarProxy = new DTStartBarElemProxy(this.ApiCore, this.DocumentJacket);
+    this.DTStartBarProxy = new DTStartBarElemProxy(this.ApiCore, this.DocumentJacket.QuerySelector(SharedConst.Const.KeyWords.Html.Tags.Body));
     //this.ScRibbonProxy = new ScRibbonProxy(this.ApiCore, this.DocumentJacket);
 
     this.HostedProxies.push(this.DTStartBarProxy);
@@ -70,9 +69,9 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
     this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.ApiCore, this.OnAreaProxyMutationEvent.bind(this));
   }
 
-  async InstantiateAsyncMembers(): Promise<void> {
+  async InstantiateAsyncMembersSelf(): Promise<void> {
     try {
-      this.Logger.FuncStart([DesktopProxy.name, this.InstantiateAsyncMembers.name]);
+      this.Logger.FuncStart([DesktopProxy.name, this.InstantiateAsyncMembersSelf.name]);
 
       await
 
@@ -86,47 +85,51 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
             this.HostedProxies.push(this.DTAreaProxy);
           })
 
-          .catch((err: any) => this.ErrorHand.HandleFatalError([DesktopProxy.name, this.InstantiateAsyncMembers.name], err))
+          .catch((err: any) => this.ErrorHand.HandleFatalError([DesktopProxy.name, this.InstantiateAsyncMembersSelf.name], err))
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembersSelf.name, err);
     }
 
-    this.Logger.FuncEnd([DesktopProxy.name, this.InstantiateAsyncMembers.name]);
+    this.Logger.FuncEnd([DesktopProxy.name, this.InstantiateAsyncMembersSelf.name]);
   }
 
-  async WireEvents(): Promise<void> {
-    this.Logger.FuncStart(this.WireEvents.name, DesktopProxy.name);
+  async WireEventsSelf(): Promise<void> {
+    this.Logger.FuncStart(this.WireEventsSelf.name, DesktopProxy.name);
 
-    this.DTAreaProxy.DTAreaProxyMutationEvent_Subject.RegisterObserver(this.DTAreaProxyMutationEvent_Observer);
+    if (this.DTAreaProxy) {
+      this.DTAreaProxy.DTAreaProxyMutationEvent_Subject.RegisterObserver(this.DTAreaProxyMutationEvent_Observer);
+    } else {
+      this.ErrorHand.HandleFatalError([DesktopProxy.name, this.WireEventsSelf.name], 'null dtareaproxy');
+    }
 
     this.WireEventsOnHostedProxies();
 
-    this.Logger.FuncEnd(this.WireEvents.name, DesktopProxy.name);
+    this.Logger.FuncEnd(this.WireEventsSelf.name, DesktopProxy.name);
   }
 
-  async GetState(): Promise<IStateOfDesktop> {
+  async GetStateOfSelf(): Promise<IStateOfDesktop> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart([DesktopProxy.name, this.GetState.name]);
+      this.Logger.FuncStart([DesktopProxy.name, this.GetStateOfSelf.name]);
 
       let toReturnDesktopState: IStateOfDesktop = new DefaultStateOfDesktop();
 
-      await this.DTAreaProxy.GetState()
+      await this.DTAreaProxy.GetStateOfSelf()
         .then((stateOfDTArea: IStateOfDTArea) => toReturnDesktopState.DTArea = stateOfDTArea)
         .then(() => resolve(toReturnDesktopState))
-        .catch((err: any) => reject(this.GetState.name + ' | ' + err));
+        .catch((err: any) => reject(this.GetStateOfSelf.name + ' | ' + err));
 
-      this.Logger.FuncEnd([DesktopProxy.name, this.GetState.name]);
+      this.Logger.FuncEnd([DesktopProxy.name, this.GetStateOfSelf.name]);
     });
   }
 
-  async SetState(stateOfDesktop: IStateOfDesktop): Promise<void> {
-    this.Logger.FuncStart(this.SetState.name, DesktopProxy.name);
-    this.TaskMonitor.AsyncTaskStarted(this.SetState.name);
+  async SetStateSelf(stateOfDesktop: IStateOfDesktop): Promise<void> {
+    this.Logger.FuncStart(this.SetStateSelf.name, DesktopProxy.name);
+    this.TaskMonitor.AsyncTaskStarted(this.SetStateSelf.name);
 
     try {
       let promAr: Promise<void>[] = [];
 
-      await this.DTAreaProxy.SetState(stateOfDesktop.DTArea)
+      await this.DTAreaProxy.SetStateSelf(stateOfDesktop.DTArea)
         .then((dtFramesNeeded: IDTFramesNeeded) => {
           let asyncLock: AsyncLock = new AsyncLock(this.ApiCore);
           dtFramesNeeded.DiscriminatorAr.forEach((disciminator: ScProxyDisciminator) => {
@@ -143,16 +146,16 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
           });
         })
         .then(() => Promise.all(promAr))
-        .catch((err: any) => this.ErrorHand.HandleFatalError(this.SetState.name, err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.SetStateSelf.name, err));
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.SetState.name + ' ' + DesktopProxy.name, err);
+      this.ErrorHand.HandleFatalError(this.SetStateSelf.name + ' ' + DesktopProxy.name, err);
     }
 
-    this.TaskMonitor.AsyncTaskCompleted(this.SetState.name);
-    this.Logger.FuncEnd(this.SetState.name, DesktopProxy.name);
+    this.TaskMonitor.AsyncTaskCompleted(this.SetStateSelf.name);
+    this.Logger.FuncEnd(this.SetStateSelf.name, DesktopProxy.name);
   }
 
-  TriggerInboundEventsAsync() {
+  TriggerEventsForInboundSelf() {
     // n/a
   }
 
@@ -177,12 +180,12 @@ export class DesktopProxy extends _BaseStateFullDocProxy<IStateOfDesktop> implem
   private GetJqueryModalsFrameProxy(): Promise<JqueryModalDialogsFrameProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart([DesktopProxy.name, this.GetJqueryModalsFrameProxy.name]);
-      let jqueryIframeelem: FrameElemJacket = null;
+      let jqueryIframeelem: FrameJacket = null;
 
       await this.DocumentJacket.GetHostedFirstMatchingFrameElemJacket("[id=jqueryModalDialogsFrame]")
-        .then((frameElemJacket: FrameElemJacket) => jqueryIframeelem = frameElemJacket)
-        .then(() => GenericStateLessFrameProxy.StateLessFrameProxyFactory<JqueryModalDialogsDocProxy>(this.ApiCore, jqueryIframeelem))
-        .then((stateLessFrameProxy: _baseStatelessFrameProxyOfType<JqueryModalDialogsDocProxy>) => resolve(<JqueryModalDialogsFrameProxy>stateLessFrameProxy))
+        .then((frameElemJacket: FrameJacket) => jqueryIframeelem = frameElemJacket)
+        .then(() => BaseFrameProxy.StateLessFrameProxyFactory<JqueryModalDialogsDocProxy>(this.ApiCore, jqueryIframeelem))
+        .then((stateLessFrameProxy: BaseFrameProxy<JqueryModalDialogsDocProxy>) => resolve(<JqueryModalDialogsFrameProxy>stateLessFrameProxy))
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([DesktopProxy.name, this.GetJqueryModalsFrameProxy.name], err)));
 
       this.Logger.FuncEnd([DesktopProxy.name, this.GetJqueryModalsFrameProxy.name]);

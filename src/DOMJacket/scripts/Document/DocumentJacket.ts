@@ -11,11 +11,12 @@ import { IScVerSpec } from "../../../Shared/scripts/Interfaces/IScVerSpec";
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { _CommonBase } from "../../../Shared/scripts/_CommonCoreBase";
 import { GenericElemJacket } from "../Elements/GenericElemJacket";
-import { FrameElemJacket } from "../Elements/FrameElemJacket";
+import { FrameJacket } from "../Elements/FrameElemJacket";
 import { UrlJacket } from "../UrlJacket";
 import { IJacketOfType } from "../../../Shared/scripts/IJacketOfType";
 
 export class DocumentJacket extends _CommonBase {
+  
   private NativeDocument: Document;
   public UrlJacket: UrlJacket = null;
   readonly DocId: GuidData = Guid.NewRandomGuid();
@@ -100,23 +101,23 @@ export class DocumentJacket extends _CommonBase {
     return toReturn;
   }
 
-  async WaitForFirstHostedFrame(querySelector: string): Promise<FrameElemJacket> {
+  async WaitForFirstHostedFrame(querySelector: string): Promise<FrameJacket> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForFirstHostedFrame.name, querySelector);
 
       await this.WaitForGenericElemJacket(querySelector)
-        .then((genericElemJacket: IJacketOfType) => FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
-        .then((frameElemJackets: FrameElemJacket[]) => resolve(frameElemJackets[0]))
+        .then((genericElemJacket: IJacketOfType) => FrameJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
+        .then((frameElemJackets: FrameJacket[]) => resolve(frameElemJackets[0]))
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([this.WaitForFirstHostedFrame.name], err)));
 
       this.Logger.FuncEnd(this.WaitForFirstHostedFrame.name, querySelector);
     })
   }
 
-  async GetHostedFirstMatchingFrameElemJacket(querySelector: string): Promise<FrameElemJacket> {
+  async GetHostedFirstMatchingFrameElemJacket(querySelector: string): Promise<FrameJacket> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.GetHostedFirstMatchingFrameElemJacket.name, querySelector);
-      let toReturnFrameElemJacket: FrameElemJacket = null;
+      let toReturnFrameElemJacket: FrameJacket = null;
 
       this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFirstMatchingFrameElemJacket.name, [this.NativeDocument]);
 
@@ -136,8 +137,8 @@ export class DocumentJacket extends _CommonBase {
         //});
       }
 
-      await FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, [firstHtmlIframeElement])
-        .then((frameElemJackets: FrameElemJacket[]) => toReturnFrameElemJacket = frameElemJackets[0])
+      await FrameJacket.FactoryFrameElemJackets(this.CommonCore, [firstHtmlIframeElement])
+        .then((frameElemJackets: FrameJacket[]) => toReturnFrameElemJacket = frameElemJackets[0])
         .then(() => resolve(toReturnFrameElemJacket))
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFirstMatchingFrameElemJacket.name], err)));
 
@@ -157,7 +158,7 @@ export class DocumentJacket extends _CommonBase {
     return htmlElements;
   }
 
-  GetHostedFrameJackets(): Promise<FrameElemJacket[]> {
+  GetHostedFrameJackets(): Promise<FrameJacket[]> {
     return new Promise(async (resolve, reject) => {
       this.ErrorHand.ThrowIfNullOrUndefined(this.GetHostedFrameJackets.name, [this.NativeDocument]);
 
@@ -169,8 +170,8 @@ export class DocumentJacket extends _CommonBase {
 
       let htmlElements: HTMLElement[] = this.QueryResultNodeListToHtmlAr(queryResults);
 
-      await FrameElemJacket.FactoryFrameElemJackets(this.CommonCore, htmlElements)
-        .then((frameElemJackets: FrameElemJacket[]) => resolve(frameElemJackets))
+      await FrameJacket.FactoryFrameElemJackets(this.CommonCore, htmlElements)
+        .then((frameElemJackets: FrameJacket[]) => resolve(frameElemJackets))
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.GetHostedFrameJackets.name], err)));
     });
   }

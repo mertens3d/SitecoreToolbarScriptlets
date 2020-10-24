@@ -1,15 +1,16 @@
 ﻿import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
-import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
-import { _BaseStateLessScDocProxy } from "./_BaseStateLessScDocProxy";
+import { IScDocProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
+import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
+import { ScDocProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
 
-export class InstallerBrowseDocProxy extends _BaseStateLessScDocProxy implements IStateLessDocProxy {
-  ScProxyDisciminator: ScProxyDisciminator;
-  ScProxyDisciminatorFriendly: string;
+export class InstallerBrowseDocProxy extends ScDocProxy<IStateOf_> implements IScDocProxy {
+  readonly ScProxyDisciminator = ScProxyDisciminator.InstallerBrowseDocProxy;
+  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.InstallerBrowseDocProxy];
   //empty
-  async InstantiateAsyncMembers() {
+  async InstantiateAsyncMembersSelf() {
     //empty
   }
-  TriggerInboundEventsAsync(): void {
+  TriggerEventsForInboundSelf(): void {
     //empty
   }
 }

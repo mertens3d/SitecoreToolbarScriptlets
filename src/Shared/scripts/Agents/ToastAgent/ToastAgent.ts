@@ -66,9 +66,9 @@ export class ToastAgent extends _CommonBase implements IToastAgent {
     this.Logger.FuncEnd(this.OnCommandStartEndCancelEvent.name);
   }
 
-  ObserveRouter(CommandRouter: CommandRouter) {
-    if (this.CommandTriggeredEvent_Observer && CommandRouter) {
-      CommandRouter.CommandTriggeredEvent_Subject.RegisterObserver(this.CommandTriggeredEvent_Observer);
+  ObserveRouter(commandRouter: CommandRouter) {
+    if (this.CommandTriggeredEvent_Observer && commandRouter) {
+      commandRouter.CommandTriggeredEvent_Subject.RegisterObserver(this.CommandTriggeredEvent_Observer);
     }
   }
   CallBackOnTaskListMutationEvent(payload: ITaskListMutationEvent_Payload) {

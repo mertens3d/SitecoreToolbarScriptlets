@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../../../../node_modules/web-ext-types/global/index.d.ts" />
 
 import { BrowserTabProxy } from "./BrowserTabProxy";
-import { IBaseBrowserProxy } from "../../Interfaces/Agents/IBaseBrowserProxy";
+import { IBaseBrowserProxy } from "../../Interfaces/ScProxies/IBaseBrowserProxy";
 import { _CommonBase } from "../../_CommonCoreBase";
 import { ICommonCore } from "../../Interfaces/Agents/ICommonCore";
 import { TypeDiscriminator } from "../../Enums/70 - TypeDiscriminator";

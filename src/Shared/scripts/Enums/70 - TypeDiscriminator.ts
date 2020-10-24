@@ -46,7 +46,6 @@
     UiSettingBasedModuleMutationEvent_Observer = 70154996,
     UiSettingBasedModuleMutationEvent_Subject = 70935505,
     SolicitorForScheduledAutoSnapShot = 70187209,
-  CommandSolicitorForEventRestoreMostRecent = 70897006,
+    CommandSolicitorForEventRestoreMostRecent = 70897006,
     zzFuturec = 70711064,
-    
 }

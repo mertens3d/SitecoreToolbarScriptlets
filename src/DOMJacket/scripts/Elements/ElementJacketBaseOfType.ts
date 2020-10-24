@@ -2,10 +2,10 @@
 import { IElemJacketWatcherParameters } from "../../../Shared/scripts/IElemJacketWatcherParameters";
 import { IJacketOfType } from "../../../Shared/scripts/IJacketOfType";
 import { ICommonCore } from "../../../Shared/scripts/Interfaces/Agents/ICommonCore";
+import { IScVerSpec } from "../../../Shared/scripts/Interfaces/IScVerSpec";
 import { _CommonBase } from "../../../Shared/scripts/_CommonCoreBase";
 import { ElementJacketWatcher } from "../Document/ElementJacketWatcher";
 import { ElementJacketMutationEvent_Subject } from "../Events/ElementJacketMutationEvent/ElementJacketMutationEvent_Subject";
-
 
 export class ElementJacketOfType<T extends HTMLElement> extends _CommonBase implements IJacketOfType {
   public NativeElement: T;
@@ -14,7 +14,6 @@ export class ElementJacketOfType<T extends HTMLElement> extends _CommonBase impl
   //  super(commonCore, htmlElement);
   //  this.NodeTagName = htmlElement.tagName;
   //}
-
 
   private ElemJacketWatchers: ElementJacketWatcher[] = [];
   NodeTagName: string;
@@ -65,7 +64,7 @@ export class ElementJacketOfType<T extends HTMLElement> extends _CommonBase impl
     return toReturn;
   }
 
-  async WaitForElement(selector: string | string[], friendly: string = ''): Promise<IJacketOfType> {
+  async WaitFor(selector: string | string[], friendly: string = ''): Promise<IJacketOfType> {
     return new Promise(async (resolve, reject) => {
       //this.Logger.FuncStart(this.WaitForElement.name, selector);
 
@@ -76,9 +75,9 @@ export class ElementJacketOfType<T extends HTMLElement> extends _CommonBase impl
         selectorAr.push(selector);
       }
 
-      this.ErrorHand.ThrowIfNullOrUndefined([ElementJacketOfType.name, this.WaitForElement.name], selectorAr);
+      this.ErrorHand.ThrowIfNullOrUndefined([ElementJacketOfType.name, this.WaitFor.name], selectorAr);
       var toReturnElemJacket: IJacketOfType = null;
-      var iterationJr = new IterationDrone(this.CommonCore, this.WaitForElement.name + ' : ' + selectorAr.join(',') + ' ' + friendly, false);
+      var iterationJr = new IterationDrone(this.CommonCore, this.WaitFor.name + ' : ' + selectorAr.join(',') + ' ' + friendly, false);
       let foundSelector: string = '';
       var foundHtmlElement: HTMLElement = null;
 
@@ -113,18 +112,26 @@ export class ElementJacketOfType<T extends HTMLElement> extends _CommonBase impl
     return new Promise(async (resolve, reject) => {
       this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForThenClick.name, [selectorAr]);
 
-      await this.WaitForElement(selectorAr)
+      await this.WaitFor(selectorAr)
         .then((elemJacket: IJacketOfType) => elemJacket.Click())
         .then(() => resolve())
-        .catch((err: any) => this.ErrorHand.FormatRejectMessage(this.WaitForThenClick.name, err));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage(this.WaitForThenClick.name, err)));
     });
   }
 
-  async WaitForElemToHaveClassOrReject( classNames: string[], friendly: string): Promise<void> {
+  async RaceWaitAndClick(selector: IScVerSpec): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      await this.WaitForThenClick([selector.sc920, selector.sc820])
+        .then(() => resolve())
+        .catch((err: any) => reject(this.RaceWaitAndClick.name + ' | ' + err));
+    });
+  }
+
+  async WaitForElemToHaveClassOrReject(classNames: string[], friendly: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForElemToHaveClassOrReject.name, friendly + ' - ' + classNames);
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForElemToHaveClassOrReject.name, [ classNames]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.WaitForElemToHaveClassOrReject.name, [classNames]);
       var elemHasClassName: boolean = false;
       var iterationJr = new IterationDrone(this.CommonCore, this.WaitForElemToHaveClassOrReject.name + ' : ' + classNames + ' ' + friendly, true);
 
@@ -148,5 +155,15 @@ export class ElementJacketOfType<T extends HTMLElement> extends _CommonBase impl
       }
       this.Logger.FuncEnd(this.WaitForElemToHaveClassOrReject.name, friendly);
     });
+  }
+  ZindexAsInt(): number {
+    let toReturn: number = -99;
+
+    if (this.NativeElement.style && this.NativeElement.style.zIndex) {
+      toReturn = parseInt(this.NativeElement.style.zIndex);
+    }
+
+    this.Logger.LogVal(this.ZindexAsInt.name, toReturn.toString());
+    return toReturn;
   }
 }

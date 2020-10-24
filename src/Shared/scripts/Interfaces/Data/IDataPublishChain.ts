@@ -1,10 +1,10 @@
 ﻿import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
-import { IStateFullFrameProxy } from "../Proxies/StateFull/IStateFullFrameProxy";
+import { IScFrameProxy } from "../ScProxies/IStateFullFrameProxy";
 
 export interface IDataPublishChain {
   TopScDocumentProxy: DocumentJacket,
-  Iframe0BlueScContentIFrameId0: IStateFullFrameProxy;
+  Iframe0BlueScContentIFrameId0: IScFrameProxy;
   ScDocumentProxyToPublish: DocumentJacket
-  JqIframe: IStateFullFrameProxy;
-  CEFrameRed: IStateFullFrameProxy;
+  JqIframe: IScFrameProxy;
+  CEFrameRed: IScFrameProxy;
 }

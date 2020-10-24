@@ -3,17 +3,17 @@
 import { ScWindowType } from '../Enums/50 - scWindowType';
 import { QueryStrKey } from '../Enums/QueryStrKey';
 import { TypeDiscriminator } from '../Enums/70 - TypeDiscriminator';
-import { IBaseBrowserProxy } from '../Interfaces/Agents/IBaseBrowserProxy';
+import { IBaseBrowserProxy } from '../Interfaces/ScProxies/IBaseBrowserProxy';
 import { ICommonCore } from "../Interfaces/Agents/ICommonCore";
 import { ISettingsAgent } from '../Interfaces/Agents/ISettingsAgent';
 import { IDataBrowserTab } from '../Interfaces/Data/IDataBrowserWindow';
 import { ISiteUrl } from '../Interfaces/IAbsoluteUrl';
 import { IScWindowTypeResolver } from '../Interfaces/Jackets/IScUrlAgent';
-import { IPopUpBrowserProxy } from '../Interfaces/Proxies/IBrowserProxy';
-import { BaseBrowserProxy } from '../Proxies/Browser/_BaseBrowserProxy';
+import { IPopUpBrowserProxy } from '../Interfaces/ScProxies/IBrowserProxy';
 import { _CommonBase } from "../_CommonCoreBase";
 import { IterationDrone } from './Drones/IterationDrone/IterationDrone';
 import { IScURLResolver } from '../Interfaces/Jackets/IScPathResolver';
+import { BaseBrowserProxy } from '../Proxies/Browser/_BaseBrowserProxy';
 
 export class BrowserTabAgent extends _CommonBase {
   TypeDiscriminator = TypeDiscriminator.BrowserTabAgent;

@@ -2,7 +2,7 @@
 import { ScWindowType } from "../../../Enums/50 - scWindowType";
 import { APICommandFlag } from "../../../Enums/APICommand";
 import { SnapShotFlavor } from "../../../Enums/SnapShotFlavor";
-import { IBaseScDocProxy } from "../../Proxies/IBaseScDocProxy";
+import { IScDocProxy } from "../../ScProxies/IBaseScDocProxy";
 import { IStateOfScUi } from "../../StateOf/IDataStateOfSitecoreWindow";
 
 export interface IScWindowFacade {
@@ -13,5 +13,5 @@ export interface IScWindowFacade {
   PublishActiveCE():Promise<void>;
   SetCompactCss(targetDoc: DocumentJacket):void;
   SetStateOfScWin(dataToRestore: IStateOfScUi): Promise<void>
-  StateFullProxy: IBaseScDocProxy;
+  StateFullProxy: IScDocProxy;
 }

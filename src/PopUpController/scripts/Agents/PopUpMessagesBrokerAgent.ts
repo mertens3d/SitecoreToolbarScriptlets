@@ -13,7 +13,7 @@ import { ISettingsAgent } from "../../../Shared/scripts/Interfaces/Agents/ISetti
 import { IMessageContentToController } from "../../../Shared/scripts/Interfaces/IMessageContentToController";
 import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/IMessageControllerToContent";
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
-import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/Proxies/IBrowserProxy";
+import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/ScProxies/IBrowserProxy";
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
 import { ControllerMessageReceivedEventValidator } from "../../../Shared/scripts/Classes/ControllerMessageReceivedEventValidator";
 

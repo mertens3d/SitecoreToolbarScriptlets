@@ -1,13 +1,13 @@
-﻿import { FrameElemJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
+﻿import { FrameJacket } from "../../../../../DOMJacket/scripts/Elements/FrameElemJacket";
 import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
-import { IStateLessScFrameProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/StateLess/IStateLessFrameProxy";
-import { JqueryModalDialogsDocProxy } from "../StateLessDocProxies/JqueryModalDialogsDocProxy";
-import { _baseStatelessFrameProxyOfType } from "./_baseStatelessFrameProxyOfType";
+import { IScFrameProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
+import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
+import { BaseFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/BaseFrameProxy";
 
-export class JqueryModalDialogsFrameProxy extends _baseStatelessFrameProxyOfType<JqueryModalDialogsDocProxy> implements IStateLessScFrameProxy {
-  FrameElemJacket: FrameElemJacket;
-  readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.JqueryModalDialogsFrameProxy;
-  readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.JqueryModalDialogsFrameProxy];
+export class JqueryModalDialogsFrameProxy extends BaseFrameProxy<IStateOfDTFrame> implements IScFrameProxy {
+  FrameElemJacket: FrameJacket;
+  //readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.JqueryModalDialogsFrameProxy;
+  //readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.JqueryModalDialogsFrameProxy];
 
   FrameSelectorOnHost: string = "[id=jqueryModalDialogsFrame]";
   readonly StateFullProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.JqueryModalDialogsFrameProxy;
@@ -27,11 +27,11 @@ export class JqueryModalDialogsFrameProxy extends _baseStatelessFrameProxyOfType
   //  }
   //}
 
-  async TriggerInboundEventsAsync(): Promise<void> {
+  async TriggerEventsForInboundSelf(): Promise<void> {
     // empty
   }
 
-  async WireEvents() : Promise<void>{
+  async WireEventsSelf() : Promise<void>{
     // empty
   }
 

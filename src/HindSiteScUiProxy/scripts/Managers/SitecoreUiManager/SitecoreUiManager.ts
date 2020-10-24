@@ -1,5 +1,4 @@
-﻿import { ContentBrowserProxy } from "../../../../ContentTop/scripts/Proxies/ContentBrowserProxy";
-import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
+﻿import { DocumentJacket } from "../../../../DOMJacket/scripts/Document/DocumentJacket";
 import { IJacketOfType } from "../../../../Shared/scripts/IJacketOfType";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
@@ -7,6 +6,7 @@ import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst"
 import { iSitecoreUiManager } from "../../../../Shared/scripts/Interfaces/ISitecoreUiManager";
 import { IStateOfScUi } from "../../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
+import { ContentBrowserProxy } from "../../../../ContentTop/scripts/Proxies/ContentBrowserProxy";
 
 export class ScUiManager extends _APICoreBase implements iSitecoreUiManager {
   __activeWindowSnapShot: IStateOfScUi;

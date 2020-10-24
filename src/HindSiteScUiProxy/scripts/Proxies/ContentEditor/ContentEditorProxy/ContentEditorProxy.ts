@@ -4,7 +4,7 @@ import { APICommandFlag } from "../../../../../Shared/scripts/Enums/APICommand";
 import { Guid } from '../../../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from '../../../../../Shared/scripts/Interfaces/InjectConst';
-import { IBaseScDocProxy } from '../../../../../Shared/scripts/Interfaces/Proxies/IBaseScDocProxy';
+import { IScDocProxy } from '../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy';
 import { IStateOfContentEditor } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentEditor';
 import { IStateOfContentTreeBasedProxies } from '../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies';
 import { AsyncLock } from '../../Desktop/DesktopProxy/DesktopStartBarProxy/AsyncLock';
@@ -12,7 +12,7 @@ import { ContentEditorPublishProxy } from './ContentEditorPublishProxy';
 import { ScRibbonProxy } from './ScRibbonProxy/ScRibbonProxy';
 import { _ContentTreeBasedDocProxy } from './_ContentTreeBasedProxy';
 
-export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfContentTreeBasedProxies> implements IBaseScDocProxy {
+export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfContentTreeBasedProxies> implements IScDocProxy {
   public readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.ContentEditor];
   readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
   public readonly ScProxyDisciminator = ScProxyDisciminator.ContentEditor;
@@ -29,25 +29,25 @@ export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfCon
     await publishProxy.Execute();
   }
 
-  async InstantiateAsyncMembers(): Promise<void> {
+  async InstantiateAsyncMembersSelf(): Promise<void> {
     return this.__baseInstantiateAsyncMembers();
   }
 
-  async WireEvents(): Promise<void> {
-    this.Logger.FuncStart(this.WireEvents.name, ContentEditorDocProxy.name);
+  async WireEventsSelf(): Promise<void> {
+    this.Logger.FuncStart(this.WireEventsSelf.name, ContentEditorDocProxy.name);
     this.__baseWireEvents()
-    this.Logger.FuncEnd(this.WireEvents.name, ContentEditorDocProxy.name);
+    this.Logger.FuncEnd(this.WireEventsSelf.name, ContentEditorDocProxy.name);
   }
 
-  GetState(): Promise<IStateOfContentEditor> {
+  GetStateOfSelf(): Promise<IStateOfContentEditor> {
     return this.__baseGetState();
   }
 
-  async SetState(dataToRestore: IStateOfContentEditor): Promise<void> {
+  async SetStateSelf(dataToRestore: IStateOfContentEditor): Promise<void> {
     this.__baseSetState(dataToRestore);
   }
 
-  TriggerInboundEventsAsync(): void {
+  TriggerEventsForInboundSelf(): void {
     this.__BaseTriggerInboundEventsAsync();
   }
 

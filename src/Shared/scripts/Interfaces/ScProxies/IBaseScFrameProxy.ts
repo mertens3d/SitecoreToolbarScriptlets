@@ -1,5 +1,5 @@
 ﻿import { ScProxyDisciminator } from "../../Enums/40 - ScProxyDisciminator";
-import { FrameElemJacket } from "../../../../DOMJacket/scripts/Elements/FrameElemJacket";
+import { FrameJacket } from "../../../../DOMJacket/scripts/Elements/FrameElemJacket";
 
 
 export interface IBaseScFrameProxy {
@@ -9,5 +9,5 @@ export interface IBaseScFrameProxy {
     TriggerInboundEventsAsync(): Promise<void>;
     InstantiateAsyncMembers(): Promise<void>;
     WireEvents(): Promise<void>;
-    FrameElemJacket: FrameElemJacket;
+    FrameElemJacket: FrameJacket;
 }

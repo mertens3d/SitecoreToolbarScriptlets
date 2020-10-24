@@ -1,12 +1,13 @@
-﻿import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
-import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
+﻿import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
+import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { IStateLessDocProxy } from "../../../../../Shared/scripts/Interfaces/Proxies/IStateLessDocProxy";
-import { _BaseStateLessScDocProxy } from "./_BaseStateLessScDocProxy";
+import { IScDocProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
+import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
+import { ScDocProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseStateFullDocProxy";
 
-export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy implements IStateLessDocProxy {
-  ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.InstallerBuildPackageDocProxy;
-  ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.InstallerBuildPackageDocProxy];
+export class InstallerBuildPackageDocProxy extends ScDocProxy<IStateOf_> implements IScDocProxy {
+  readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.InstallerBuildPackageDocProxy;
+  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.InstallerBuildPackageDocProxy];
 
   async OnFocus(): Promise<void> {
     let parentElem: HTMLElement = null;
@@ -38,15 +39,12 @@ export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy impl
     let wrapperDiv: HTMLDivElement = document.createElement('div');
     wrapperDiv.appendChild(buttonToReturn);
 
-
     return wrapperDiv;
   }
 
   private PopulateCandidatePackageName(event: Event) {
     this.Logger.LogImportant('Populate! ');
   }
-
-
 
   async OpenFile(fileName: string): Promise<void> {
     try {
@@ -70,7 +68,6 @@ export class InstallerBuildPackageDocProxy extends _BaseStateLessScDocProxy impl
           }
         })
         .catch((err: any) => this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OpenFile.name], err));
-
     } catch (err: any) {
       this.ErrorHand.HandleFatalError([InstallerBuildPackageDocProxy.name, this.OpenFile.name], err);
     }
