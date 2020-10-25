@@ -21,9 +21,8 @@ import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNo
 
 //ContentTree is the name Sitecore uses
 export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> implements IScElemProxy {
-
-  readonly ScProxyDisciminator = ScProxyDisciminator.ContentTreeElem;
-  readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.ContentTreeElem];
+  readonly ScProxyDisciminator = ScProxyDisciminator.ContentTree;
+  readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.ContentTree];
 
   private TreeRootSelector: string;
   private _treeNodeProxy: ScContentTreeNodeProxy;
@@ -37,7 +36,7 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
   constructor(apiCore: IAPICore, treeContainerJacket: IJacketOfType, TreeRootSelector: string) {
     super(apiCore, treeContainerJacket);
 
-    this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeElemProxy.name, [ treeContainerJacket]);
+    this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeElemProxy.name, [treeContainerJacket]);
     this.TreeRootSelector = TreeRootSelector;
 
     this.InstantiateInstance();
@@ -47,7 +46,7 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
     this.ConResolver = new ConResolver(this.ApiCore);
   }
 
-  async InstantiateAwaitElementsSelf(): Promise<void> {
+  protected  async InstantiateAwaitElementsSelf(): Promise<void> {
     this.Logger.FuncStart(this.InstantiateAwaitElementsSelf.name);
 
     try {
@@ -91,7 +90,7 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
   }
 
   public TriggerInboundEventAsync(): void {
-    this.Logger.FuncStart([ContentTreeElemProxy.name,  this.TriggerInboundEventAsync.name]);
+    this.Logger.FuncStart([ContentTreeElemProxy.name, this.TriggerInboundEventAsync.name]);
 
     this.CallBackOnNativeClassNameChangeEventAsync(null);
     this.TriggerInboundEventsAsyncOnHosted();

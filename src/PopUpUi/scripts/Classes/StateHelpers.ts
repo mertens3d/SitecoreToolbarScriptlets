@@ -1,6 +1,6 @@
 ﻿import { IStateOfContentEditor } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfContentEditor";
 import { IStateOfDesktop } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
-import { IStateOfDTFrame } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
+import { IStateOfGenericFrame } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
 import { IStateOfScContentTreeNodeDeep } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfScContentTreeNode";
 import { IStateOfContentTree } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree";
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
@@ -33,7 +33,7 @@ export class StateHelpers extends _FrontBase {
   //  return this.GetActiveTreeNodeFromStateOfTreeFlat(stateOfContentEditor.ContentTree);
   //}
 
-  GetActiveFrameFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfDTFrame {
+  GetActiveFrameFromStateOfDesktop(stateOfDesktop: IStateOfDesktop): IStateOfGenericFrame {
     return null;
    //todo - put back return stateOfDesktop.DTArea.DTFrames[stateOfDesktop.DTArea.ActiveFrameIndex];
   }

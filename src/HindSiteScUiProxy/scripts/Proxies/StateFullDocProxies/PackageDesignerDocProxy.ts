@@ -24,7 +24,7 @@ export class PackageDesignerDocProxy extends _ScDocProxyOfTypeT<IStateOfPackageD
     this.Logger.CTOREnd(PackageDesignerDocProxy.name);
   }
 
-  async InstantiateAwaitElementsSelf(): Promise<void> {
+  protected async InstantiateAwaitElementsSelf(): Promise<void> {
     this.Logger.FuncStart([PackageDesignerDocProxy.name, this.InstantiateAwaitElementsSelf.name], this.Friendly);
 
     await this.HarvestElements()

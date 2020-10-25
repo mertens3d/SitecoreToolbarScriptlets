@@ -48,7 +48,7 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     try {
       if (!this.IsInstatiated) {
         this.ScWindowFacade = new ScWindowFacade(this.ApiCore, this.DocumentJacket);
-        await this.ScWindowFacade.InstantiateAsyncMembers()
+        await this.ScWindowFacade.InstantiatetRoot()
           .then(() => this.IsInstatiated = true)
           .catch((err) => this.ErrorHand.HandleFatalError([HindSiteScUiProxy.name, this.StartUp.name], err));
       }
@@ -181,7 +181,7 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
       await this.StartUp()
-        .then(() => (<DesktopProxy>this.ScWindowFacade.ScDocProxy).AddContentEditorFrameAsync())
+        .then(() => (<DesktopProxy>this.ScWindowFacade.RootProxy).AddContentEditorFrameAsync())
         .then(() => resolve(returnPayload))
         .catch((err: any) => reject(err));
     });

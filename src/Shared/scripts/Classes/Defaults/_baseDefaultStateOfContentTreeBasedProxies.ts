@@ -4,8 +4,8 @@ import { ScProxyDisciminator } from "../../Enums/40 - ScProxyDisciminator";
 import { IStateOf_ } from "../../Interfaces/StateOf/IStateOf_";
 
 export abstract class _baseDefaultStateOfContentTreeBasedProxies implements IStateOfContentTreeBasedProxies {
-  DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.Unknown];
-  Disciminator = ScProxyDisciminator.Unknown;
+  DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.ContentTreeBased];
+  Disciminator = ScProxyDisciminator.ContentTreeBased;
   ContentTree = new DefaultStateOfContentTree();
-  StateOfHostedProxies: IStateOf_[] = [];
+  Children: IStateOf_[] = [];
 }

@@ -274,8 +274,8 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
 
         if (stateOfDesktop
           &&
-          stateOfDesktop.StateOfHostedProxies          ) {
-          count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfDesktop.StateOfHostedProxies.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
+          stateOfDesktop.Children          ) {
+          count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfDesktop.Children.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
           toReturn = toReturn + count;
         }
       }

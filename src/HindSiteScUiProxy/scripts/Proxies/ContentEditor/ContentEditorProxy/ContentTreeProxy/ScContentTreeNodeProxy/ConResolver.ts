@@ -12,7 +12,14 @@ export class ConResolver extends _APICoreBase {
     let urlJacket: IUrlJacket = new UrlJacket(this.ApiCore, mainIconSrc);
     let relativePath = urlJacket.BuildFullUrlFromParts().RelativeUrl;
 
-    if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconCache)) {
+    if (false) {
+    }
+    else if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconCacheSoftware16x16)) {
+      toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCacheSoftware16x16, '');
+      toReturn.IconPath = ScIconPath.IconCacheSoftware16x16;
+    }
+
+    else if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconCache)) {
       toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCache, '');
       toReturn.IconPath = ScIconPath.IconCache
     }
@@ -20,6 +27,7 @@ export class ConResolver extends _APICoreBase {
       toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconShellStandardMedia, '');
       toReturn.IconPath = ScIconPath.StandardMedia
     }
+
     else {
       toReturn.IconSuffix = relativePath;
       toReturn.IconPath = ScIconPath.Unknown;

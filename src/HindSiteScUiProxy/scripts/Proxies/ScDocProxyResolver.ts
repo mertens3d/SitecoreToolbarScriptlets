@@ -4,6 +4,7 @@ import { ScProxyDisciminator } from "../../../Shared/scripts/Enums/40 - ScProxyD
 import { ScWindowType } from '../../../Shared/scripts/Enums/50 - scWindowType';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IScDocProxy } from "../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
+import { IScFrameProxy } from "../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { ContentEditorDocProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
@@ -32,7 +33,6 @@ import { UserManagerProxy } from "./StateFullDocProxies/UserManagerProxy";
 import { WorkboxProxy } from "./StateFullDocProxies/WorkboxProxy";
 import { InstallerBuildPackageDocProxy } from "./StateLessDocProxies/StateLessDocProxies/InstallerBuildPackageDocProxy";
 import { JqueryModalDialogsDocProxy } from "./StateLessDocProxies/StateLessDocProxies/JqueryModalDialogsDocProxy";
-import { JqueryModalDialogsFrameProxy } from "./StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
 export class ScDocProxyResolver extends _APICoreBase {
   constructor(apiCore: IAPICore) {
@@ -98,7 +98,7 @@ export class ScDocProxyResolver extends _APICoreBase {
     ];
   }
 
-  private ScDocProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy): IScDocProxy {
+  private ScDocProxyFactory(windowType: ScWindowType, documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: IScFrameProxy): IScDocProxy {
     let ScDocProxy: IScDocProxy = null;
 
     if (false) { }
@@ -149,7 +149,7 @@ export class ScDocProxyResolver extends _APICoreBase {
     return ScDocProxy;
   }
 
-  ScDocProxyFactoryMake(documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy): Promise<IScDocProxy> {
+  ScDocProxyFactoryMake(documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: IScFrameProxy): Promise<IScDocProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], documentJacket.UrlJacket.GetUrlParts().FilePath);
 
@@ -165,11 +165,13 @@ export class ScDocProxyResolver extends _APICoreBase {
         this.ErrorHand.HandleFatalError([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], 'unhandled windowType ' + ScWindowType[detectedWindowType]);
       }
 
-      await scDocProxy.InstantiateAwaitElements()
-        .then(() => scDocProxy.WireEvents())
-        .then(() => scDocProxy.OnFocus())
-        .then(() => resolve(scDocProxy))
-        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], err)));
+      resolve(scDocProxy);
+
+      //await scDocProxy.InstantiateAwaitElementsTop()
+      //  .then(() => scDocProxy.WireEvents())
+      //  .then(() => scDocProxy.OnFocus())
+      //  .then(() => resolve(scDocProxy))
+      //  .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], err)));
 
       this.Logger.FuncEnd([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], ScWindowType[detectedWindowType] + ' ' +  documentJacket.UrlJacket.GetUrlParts().FilePath);
     });

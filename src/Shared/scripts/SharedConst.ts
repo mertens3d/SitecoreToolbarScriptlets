@@ -113,6 +113,7 @@ export class SharedConst {
     UrlRelativePrefix: {
       IconCache: '/temp/iconcache/',
       IconShellStandardMedia: '/sitecore/shell/themes/standard/~/media/',
+      IconCacheSoftware16x16: '/temp/iconcache/software/16x16/',
     },
     UrlSuffix: {
       Desktop: '/sitecore/shell/default.aspx',

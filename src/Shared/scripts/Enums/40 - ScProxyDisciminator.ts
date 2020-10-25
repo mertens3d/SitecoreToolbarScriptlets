@@ -8,11 +8,11 @@
     ContentEditor = 40805149,
     Desktop = 40034160,
     DomainManager = 40883841,
-    DTAreaElemProxy = 40950793,
-    DTFrameProxy = 40071479,
+    DTArea = 40950793,
+    FrameProxy = 40071479,
     EmailExperienceManager = 40597945,
     FallBack = 40949195,
-    GenericFrameProxy = 40945013,
+    What = 40945013,
     InstallationWizard = 40632864,
     InstalledLicenses = 40808841,
     InstallerBuildPackageDocProxy = 40493480,
@@ -39,8 +39,22 @@
     AppToolsInstallerDesigner = 40521954,
     DTStartBarElem = 40028264,
     PackageDesignerInstallerRibbonToolbarElemProxy = 40028264,
-    ContentTreeElem = 40797680,
+    ContentTree = 40797680,
     DesktopStartBarButtonProxy = 40519977,
-    InstallerBrowseDocProxy,
-    InstallerBrowseFrameProxy
+  InstallerBrowseDocProxy = 40277719,
+  InstallerBrowseFrameProxy = 40241408,
+  ContentTreeBased = 40522091,
+
+  /*
+  
+
+
+331996
+097707
+396835
+063355
+103646
+793626
+110169
+*/
 }

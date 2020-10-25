@@ -35,7 +35,7 @@ export abstract class _ContentTreeBasedDocProxy<T extends IStateOfContentTreeBas
   private Instantiate() {
   }
 
-  async InstantiateAwaitElementsSelf(): Promise<void> {
+  protected async InstantiateAwaitElementsSelf(): Promise<void> {
     this.Logger.FuncStart([_ContentTreeBasedDocProxy.name, this.InstantiateAwaitElementsSelf.name, this.ScProxyDisciminatorFriendly]);
 
     //await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(_ContentTreeBasedDocProxy.name)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
@@ -53,7 +53,7 @@ export abstract class _ContentTreeBasedDocProxy<T extends IStateOfContentTreeBas
 
   WireEventsSelf(): void {
     this.Logger.FuncStart([_ContentTreeBasedDocProxy.name, this.WireEventsSelf.name, this.ScProxyDisciminatorFriendly]);
-    let contentTreeProxy: ContentTreeElemProxy = <ContentTreeElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.ContentTreeElem);
+    let contentTreeProxy: ContentTreeElemProxy = <ContentTreeElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.ContentTree);
 
     if (contentTreeProxy) {
       contentTreeProxy.ContentTreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
@@ -110,25 +110,25 @@ export abstract class _ContentTreeBasedDocProxy<T extends IStateOfContentTreeBas
     });
   }
 
-  //GetStateSelf(): Promise<IStateOfContentTreeBasedProxies> {
-  //  return new Promise(async (resolve, reject) => {
-  //    this.Logger.FuncStart(_ContentTreeBasedDocProxy.name, this.GetStateSelf.name);
+  GetStateSelf(): Promise<IStateOfContentTreeBasedProxies> {
+    return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart(_ContentTreeBasedDocProxy.name, this.GetStateSelf.name);
 
-  //    let toReturn: IStateOfContentTreeBasedProxies = {
-  //      DisciminatorFriendly: ScProxyDisciminator[this.ScProxyDisciminator],
-  //      Disciminator: this.ScProxyDisciminator,
-  //      StateOfHostedProxies: null,
-  //    }
+      let toReturn: IStateOfContentTreeBasedProxies = {
+        DisciminatorFriendly: ScProxyDisciminator[this.ScProxyDisciminator],
+        Disciminator: this.ScProxyDisciminator,
+        Children: []
+      }
 
-  //    resolve(toReturn);
+      resolve(toReturn);
 
-  //    //await this.ContentTreeProxy.GetStateOfSelf()
-  //    //  .then((stateOfContentTree: IStateOfContentTree) => toReturn.ContentTree = stateOfContentTree)
-  //    //  .then(() => resolve(toReturn))
-  //    //  .catch((err: any) => reject(this.GetStateOfSelf.name + ' | ' + err));
-  //    //this.Logger.FuncEnd(_ContentTreeBasedDocProxy.name, this.GetStateSelf.name);
-  //  });
-  //}
+      //await this.ContentTreeProxy.GetStateOfSelf()
+      //  .then((stateOfContentTree: IStateOfContentTree) => toReturn.ContentTree = stateOfContentTree)
+      //  .then(() => resolve(toReturn))
+      //  .catch((err: any) => reject(this.GetStateOfSelf.name + ' | ' + err));
+      //this.Logger.FuncEnd(_ContentTreeBasedDocProxy.name, this.GetStateSelf.name);
+    });
+  }
 
   CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync(treeMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload) {
     this.Logger.FuncStart(this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.name);

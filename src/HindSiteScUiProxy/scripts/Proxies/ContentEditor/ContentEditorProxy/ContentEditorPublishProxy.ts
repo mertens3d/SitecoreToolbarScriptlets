@@ -8,8 +8,8 @@ import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectCon
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { _APICoreBase } from "../../../../../Shared/scripts/_APICoreBase";
 import { FactoryHelper } from "../../../FactoryHelper";
-import { CEFrameProxy } from "../../Desktop/DesktopProxy/FrameProxies/CEFrameProxy";
 import { ContentEditorDocProxy } from "./ContentEditorProxy";
+import { IScFrameProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 
 export class ContentEditorPublishProxy extends _APICoreBase {
   ContentEditorProxy: ContentEditorDocProxy;
@@ -174,7 +174,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
         .then((elementJacket: FrameJacket) => FrameJacket.FactoryFrameElemJackets(this.CommonCore, [elementJacket]))
         .then((frameElemJackets: FrameJacket[]) => frameElemJacketB = frameElemJackets[0])
         .then(() => this.FactoryHelp.CEFrameFactory(frameElemJacketB, 'jqIframe'))
-        .then((result: CEFrameProxy) => dataPublishChain.JqIframe = result)
+        .then((result: IScFrameProxy) => dataPublishChain.JqIframe = result)
         // opens publish item dialog
         .then(() => dataPublishChain.JqIframe.WaitForCompleteNABFrameProxyOrReject())
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.GetThePublishItemDialog.name, err));
@@ -189,13 +189,13 @@ export class ContentEditorPublishProxy extends _APICoreBase {
     let toReturnPublishChain: IDataPublishChain = dataPublishChain;
 
     await this.WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.Frames.scContentIframeId1.Id, 'iframeRed') //is id1 correct?
-      .then((result: CEFrameProxy) => toReturnPublishChain.CEFrameRed = result)
+      .then((result: IScFrameProxy) => toReturnPublishChain.CEFrameRed = result)
       .catch((err: any) => this.ErrorHand.HandleFatalError(this.GetMessageDialog.name, err));
 
     return toReturnPublishChain;
   }
 
-  async WaitForIframeElemAndReturnCEFrameProxyWhenReady(selector: string, iframeNickName: string): Promise<CEFrameProxy> {
+  async WaitForIframeElemAndReturnCEFrameProxyWhenReady(selector: string, iframeNickName: string): Promise<IScFrameProxy> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.WaitForIframeElemAndReturnCEFrameProxyWhenReady.name);
 
@@ -207,7 +207,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
         .then((genericElemJacket: IJacketOfType) => FrameJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket]))
         .then((frameElemJackets: FrameJacket[]) => frameJacket = frameElemJackets[0])
         .then(() => factoryHelp.CEFrameFactory(frameJacket, iframeNickName))
-        .then((result: CEFrameProxy) => resolve(result))
+        .then((result: IScFrameProxy) => resolve(result))
         .catch((err: any) => reject(err));
 
       this.Logger.FuncEnd(this.WaitForIframeElemAndReturnCEFrameProxyWhenReady.name);
@@ -223,7 +223,7 @@ export class ContentEditorPublishProxy extends _APICoreBase {
       this.Logger.LogAsJsonPretty('dataPublishChain', dataPublishChain);
 
       await this.WaitForIframeElemAndReturnCEFrameProxyWhenReady(ContentConst.Const.Selector.SC.Frames.ScContentIframeId0.Id, 'Iframe0Blue')
-        .then((result: CEFrameProxy) => {
+        .then((result: IScFrameProxy) => {
           this.Logger.MarkerC();
           dataPublishChain.Iframe0BlueScContentIFrameId0 = result;
           promiseResult.MarkSuccessful();

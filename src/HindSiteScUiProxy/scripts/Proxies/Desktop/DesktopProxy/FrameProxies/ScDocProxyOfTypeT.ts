@@ -16,9 +16,9 @@ export abstract class _ScDocProxyOfTypeT<T extends IStateOf_> extends _BaseScPro
   async GetStateOfSelf(): Promise<T> {
     //empty by default
     let stateOf: IStateOf_ = {
-      Disciminator: ScProxyDisciminator.Unknown,
-      DisciminatorFriendly: ScProxyDisciminator[ScProxyDisciminator.Unknown],
-      StateOfHostedProxies: []
+      Disciminator: this.ScProxyDisciminator,
+      DisciminatorFriendly: this.ScProxyDisciminatorFriendly,
+      Children: []
     };
 
     return Promise.resolve(<T>stateOf);

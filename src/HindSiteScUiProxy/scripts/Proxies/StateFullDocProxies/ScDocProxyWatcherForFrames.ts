@@ -10,7 +10,7 @@ import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst"
 import { IScFrameProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { _APICoreBase } from "../../../../Shared/scripts/_APICoreBase";
-import { BaseScFrameProxy } from "../Desktop/DesktopProxy/FrameProxies/BaseFrameProxy";
+import { GenericFrameProxy } from "../Desktop/DesktopProxy/FrameProxies/GenericFrameProxy";
 
 export class ScDocProxyWatcherForFrames extends _APICoreBase {
   ScProxyDisciminatorFriendly: string;
@@ -89,7 +89,7 @@ export class ScDocProxyWatcherForFrames extends _APICoreBase {
   private async HandleFrameElemJacketAddedToDoc(frameElemJacket: FrameJacket): Promise<void> {
     this.Logger.FuncStart([ScDocProxyWatcherForFrames.name, this.CallbackOnDocumentJacketMutationEvent.name]);
     try {
-      await BaseScFrameProxy.ScFrameProxyFactory(this.ApiCore, frameElemJacket, null)
+      await GenericFrameProxy.ScFrameProxyFactory(this.ApiCore, frameElemJacket, null)
         .then((stateLessFrameProxy: IScFrameProxy) => this.HostedFrameStatelessFrameProxies.push(stateLessFrameProxy))
         .then(() => this.Logger.Log(this.HandleFrameElemJacketAddedToDoc.name + 'step1 Complete'))
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.HandleElemJacketAddedToDocument.name, err));

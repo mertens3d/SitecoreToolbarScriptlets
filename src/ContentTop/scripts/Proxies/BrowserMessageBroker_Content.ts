@@ -177,7 +177,7 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
 
       let payload: IToApiCallPayload = {
         DataOneWindowStorage: null,
-        APICommand:   APICommandFlag.Unknown,
+        APICommand: APICommandFlag.GetStateOfScUiProxy,
         SnapShotFlavor: SnapShotFlavor.Live,
         SnapShotOfStateScUiApi: null
       }

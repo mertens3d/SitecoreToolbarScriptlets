@@ -5,9 +5,9 @@ import { IStateOfScContentTreeNodeShallow } from "../../Interfaces/StateOf/IStat
 import { IStateOf_ } from "../../Interfaces/StateOf/IStateOf_";
 
 export class DefaultStateOfContentTree implements IStateOfContentTree {
-  Disciminator = ScProxyDisciminator.ContentTreeElem;
-  DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.ContentTreeElem];
-  StateOfHostedProxies: IStateOf_[];
+  Disciminator = ScProxyDisciminator.ContentTree;
+  DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.ContentTree];
+  Children: IStateOf_[];
   ActiveNodeShallow: IStateOfScContentTreeNodeShallow = null;
   ContentTreeNodeDeep: IStateOfScContentTreeNodeDeep = null;
 }

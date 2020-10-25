@@ -2,7 +2,7 @@
 import { IFrameJacketStyling } from "./IStateOfFrameStyling";
 import { ScWindowType } from "../../Enums/50 - scWindowType";
 
-export interface IStateOfDTFrame extends IStateOf_ {
+export interface IStateOfGenericFrame extends IStateOf_ {
   FrameStyling: IFrameJacketStyling;
   
   WindowType: ScWindowType;

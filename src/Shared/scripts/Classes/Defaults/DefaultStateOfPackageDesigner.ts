@@ -6,5 +6,5 @@ export class DefaultStateOfPackageDesigner implements IStateOfPackageDesigner {
   DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.PackageDesigner];
   Disciminator = ScProxyDisciminator.PackageDesigner;
   StatusText: '';
-  StateOfHostedProxies: IStateOf_[] = [];
+  Children: IStateOf_[] = [];
 }

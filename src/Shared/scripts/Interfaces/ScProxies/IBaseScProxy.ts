@@ -1,5 +1,6 @@
 ﻿import { ScProxyDisciminator } from "../../Enums/40 - ScProxyDisciminator";
 
+export interface IProxyCommand { }
 export interface IBaseScProxy {
   StateHasBeenSet: any;
   readonly ScProxyDisciminator: ScProxyDisciminator;
@@ -7,7 +8,7 @@ export interface IBaseScProxy {
   readonly HostedProxies: IBaseScProxy[];
 
   TriggerEventsForInbound(): void;
-  InstantiateAwaitElements(): Promise<void>;
+  InstantiateAwaitElementsTop(): Promise<void>;
   WireEvents(): void;
   GetState(): Promise<any>;
   SetState(state: any): Promise<any>;

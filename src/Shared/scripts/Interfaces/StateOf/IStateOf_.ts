@@ -3,5 +3,5 @@
 export interface IStateOf_ {
   DisciminatorFriendly: string;
   Disciminator: ScProxyDisciminator;
-  StateOfHostedProxies: IStateOf_[];
+  Children: IStateOf_[];
 }

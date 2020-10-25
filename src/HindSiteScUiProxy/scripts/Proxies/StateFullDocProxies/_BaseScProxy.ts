@@ -44,7 +44,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     if (found.length === 1) {
       toReturn = found[0];
     } else {
-      this.ErrorHand.WarningAndContinue([_BaseScProxy.name, this.GetHostedProxiesStateByDisciminator.name, this.ScProxyDisciminatorFriendly], 'Num needles found: ' + found.length + ' of ' + found.length + ' candidates');
+      this.ErrorHand.WarningAndContinue([_BaseScProxy.name, this.GetOnlyOrNullHostedProxiesByDisciminator.name, this.ScProxyDisciminatorFriendly], 'Num needles found: ' + found.length + ' of ' + found.length + ' candidates');
     }
     return toReturn;
   }
@@ -86,7 +86,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
       await this.GetStateOfSelf()
         .then((state: IStateOf_) => toReturn = state)
         .then(() => this.GetStateOfHosted())
-        .then((stateOfHostedProxies: IStateOf_[]) => toReturn.StateOfHostedProxies = stateOfHostedProxies)
+        .then((stateOfHostedProxies: IStateOf_[]) => toReturn.Children = stateOfHostedProxies)
         .then(() => resolve(toReturn))
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.GetState.name, this.ScProxyDisciminatorFriendly], err)));
     })
@@ -96,7 +96,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     let toReturn: IStateOf_ = {
       DisciminatorFriendly: this.ScProxyDisciminatorFriendly,
       Disciminator: this.ScProxyDisciminator,
-      StateOfHostedProxies: [],
+      Children: [],
     }
 
     return Promise.resolve(toReturn);
@@ -105,7 +105,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
   async SetState(state: IStateOf_): Promise<any> {
     return new Promise(async (resolve, reject) => {
       await this.SetStateSelf(state)
-        .then(() => this.SetStateOfHosted(state.StateOfHostedProxies))
+        .then(() => this.SetStateOfHosted(state.Children))
         .then(() => resolve())
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.SetState.name, this.ScProxyDisciminatorFriendly], err)));
     })
@@ -151,7 +151,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     });
   }
 
-  TriggerEventsForInboundHosted() {
+  private TriggerEventsForInboundHosted() {
     if (this.HostedProxies) {
       this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => hostedProxy.TriggerEventsForInbound());
     }
@@ -170,18 +170,18 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
 
   //})
 
-  async InstantiateAwaitElements(): Promise<void> {
-    this.Logger.FuncStart([_BaseScProxy.name, this.InstantiateAwaitElements.name, this.ScProxyDisciminatorFriendly]);
+  async InstantiateAwaitElementsTop(): Promise<void> {
+    this.Logger.FuncStart([_BaseScProxy.name, this.InstantiateAwaitElementsTop.name, this.ScProxyDisciminatorFriendly]);
 
     await this.InstantiateAwaitElementsSelf()
       .then(() => this.InstantiateElementsOnHostedProxies())
       .then(() => Promise.resolve())
-      .catch((err) => Promise.reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.InstantiateAwaitElements.name, this.ScProxyDisciminatorFriendly], err)));
+      .catch((err) => Promise.reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.InstantiateAwaitElementsTop.name, this.ScProxyDisciminatorFriendly], err)));
 
-    this.Logger.FuncEnd([_BaseScProxy.name, this.InstantiateAwaitElements.name, this.ScProxyDisciminatorFriendly]);
+    this.Logger.FuncEnd([_BaseScProxy.name, this.InstantiateAwaitElementsTop.name, this.ScProxyDisciminatorFriendly]);
   }
 
-  async InstantiateAwaitElementsSelf(): Promise<void> {
+  protected  async InstantiateAwaitElementsSelf(): Promise<void> {
     //empty by default
   }
 
@@ -189,7 +189,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     this.Logger.FuncStart([_BaseScProxy.name, this.InstantiateElementsOnHostedProxies.name, this.ScProxyDisciminatorFriendly], 'count: ' + this.HostedProxies.length);
     let promAr: Promise<void>[] = [];
 
-    this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => promAr.push(hostedProxy.InstantiateAwaitElements()));
+    this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => promAr.push(hostedProxy.InstantiateAwaitElementsTop()));
 
     await Promise.all(promAr)
       .catch((err) => this.ErrorHand.HandleFatalError(this.ScProxyDisciminatorFriendly, err));

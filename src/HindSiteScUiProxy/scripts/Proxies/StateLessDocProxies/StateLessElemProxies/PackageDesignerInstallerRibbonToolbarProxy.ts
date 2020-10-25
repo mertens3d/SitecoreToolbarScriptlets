@@ -3,19 +3,19 @@ import { ScProxyDisciminator } from "../../../../../Shared/scripts/Enums/40 - Sc
 import { IJacketOfType } from "../../../../../Shared/scripts/IJacketOfType";
 import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../../Shared/scripts/Interfaces/InjectConst";
-import { IBaseScProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScProxy";
+import { IBaseScProxy, IProxyCommand } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScProxy";
+import { IScFrameProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { _BaseElemProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseElemProxy";
-import { JqueryModalDialogsFrameProxy } from "../StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
 export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseElemProxy<IStateOf_> implements IBaseScProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.PackageDesignerInstallerRibbonToolbarElemProxy;
   readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.PackageDesignerInstallerRibbonToolbarElemProxy];
 
-  JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
+  JqueryModalDialogsFrameProxy: IScFrameProxy;
   private GenerateZipButton: IJacketOfType;
 
-  constructor(apiCore: IAPICore, elementDivJacket: ElementDivJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) {
+  constructor(apiCore: IAPICore, elementDivJacket: ElementDivJacket, jqueryModalDialogsFrameProxy: IScFrameProxy) {
     super(apiCore, elementDivJacket);
 
     this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
@@ -34,7 +34,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseElemPro
     this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
   }
 
-  async InstantiateAwaitElementsSelf(): Promise<void> {
+  protected  async InstantiateAwaitElementsSelf(): Promise<void> {
     try {
       this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAwaitElementsSelf.name]);
       await this.AttachClickEventToGenZip()
@@ -71,7 +71,8 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseElemPro
     //  })
 
     if (this.JqueryModalDialogsFrameProxy) {
-      this.JqueryModalDialogsFrameProxy.PackageDesignerOpenFile(fileName);
+      let flowCommand: IProxyCommand = {};
+      this.JqueryModalDialogsFrameProxy.SendCommand(flowCommand);
     } else {
       this.ErrorHand.HandleFatalError(this.OpenFile.name, 'no jquery proxy');
     }

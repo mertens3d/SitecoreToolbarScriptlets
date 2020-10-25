@@ -5,10 +5,10 @@ import { PromiseFailAction } from "../../../../Shared/scripts/Enums/PromiseFailA
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IScDocProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
+import { IScFrameProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 import { IStateOf_ } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { _ScDocProxyOfTypeT } from "../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
 import { PackageDesignerInstallerRibbonToolbarElemProxy } from "../StateLessDocProxies/StateLessElemProxies/PackageDesignerInstallerRibbonToolbarProxy";
-import { JqueryModalDialogsFrameProxy } from "../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
 export class AppToolsInstallerDesignerProxy extends _ScDocProxyOfTypeT<IStateOf_> implements IScDocProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.AppToolsInstallerDesigner;
@@ -17,9 +17,9 @@ export class AppToolsInstallerDesignerProxy extends _ScDocProxyOfTypeT<IStateOf_
   packagedesignerInstallerRibbonToolbarElem: PackageDesignerInstallerRibbonToolbarElemProxy = null;
 
 
-  private JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
+  private JqueryModalDialogsFrameProxy: IScFrameProxy;
 
-  constructor(apiCore: IAPICore, documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) {
+  constructor(apiCore: IAPICore, documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: IScFrameProxy) {
     super(apiCore, documentJacket);
     this.Logger.CTORStart(AppToolsInstallerDesignerProxy.name);
 
@@ -30,7 +30,7 @@ export class AppToolsInstallerDesignerProxy extends _ScDocProxyOfTypeT<IStateOf_
   }
 
 
-  async InstantiateAwaitElementsSelf(): Promise<void> {
+  protected async InstantiateAwaitElementsSelf(): Promise<void> {
     this.Logger.FuncStart([AppToolsInstallerDesignerProxy.name, this.InstantiateAwaitElementsSelf.name]);
 
     await this.HarvestRibbonToolbar()
@@ -64,7 +64,7 @@ export class AppToolsInstallerDesignerProxy extends _ScDocProxyOfTypeT<IStateOf_
 
     await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.InstallerRibbon_Toolbar, PromiseFailAction.RejectThrow)
       .then((elementDivJacket: ElementDivJacket) => this.packagedesignerInstallerRibbonToolbarElem = new PackageDesignerInstallerRibbonToolbarElemProxy(this.ApiCore, elementDivJacket, this.JqueryModalDialogsFrameProxy))
-      .then(() => this.packagedesignerInstallerRibbonToolbarElem.InstantiateAwaitElementsSelf())
+      //todo - should this come back in some fashion? .then(() => this.packagedesignerInstallerRibbonToolbarElem.InstantiateAwaitElementsSelf())
       .catch((err: any) => this.ErrorHand.HandleFatalError([AppToolsInstallerDesignerProxy.name, this.HarvestRibbonToolbar.name], err));
 
     this.Logger.FuncEnd([AppToolsInstallerDesignerProxy.name, this.HarvestRibbonToolbar.name]);

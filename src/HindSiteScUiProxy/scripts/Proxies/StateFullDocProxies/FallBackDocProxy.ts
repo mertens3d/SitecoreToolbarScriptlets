@@ -11,7 +11,7 @@ export class FallBackDocProxy extends _ScDocProxyOfTypeT<IStateOfFallBack> imple
     let toReturn: IStateOfFallBack = {
       Disciminator: this.ScProxyDisciminator,
       DisciminatorFriendly: ScProxyDisciminator[this.ScProxyDisciminator],
-      StateOfHostedProxies: [],
+      Children: [],
     }
 
     try {

@@ -94,8 +94,8 @@ export class ControllerMessageReceivedEventValidator extends _CommonBase {
     if (stateOfDTAreaProxy.ActiveFrameIndex === null) {
       stateOfDTAreaProxy.ActiveFrameIndex = -1;
     }
-    if (!stateOfDTAreaProxy.DTFrames) {
-      stateOfDTAreaProxy.DTFrames = [];
+    if (!stateOfDTAreaProxy.Children) {
+      stateOfDTAreaProxy.Children = [];
     }
     return stateOfDTAreaProxy;
   }

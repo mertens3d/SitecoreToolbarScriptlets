@@ -73,7 +73,6 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScFrameProxyFactory.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseElemProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\_BaseScProxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateLessDocProxies\StateLessFrameProxies\_BaseFrameProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\APICommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\InternalCommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\TaskMutationType.ts" />
@@ -108,7 +107,6 @@
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\ElementJacketMutationEvent\IElementJacketMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\IElemJacketWatcherParameters.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\ScDocProxyWatcherForFrames.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseStateFullFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\PackageDesignerDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateLessDocProxies\StateLessDocProxies\InstallerBrowseDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\AccessViewerProxy.ts" />
@@ -218,7 +216,6 @@
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\NativeClassNameChangeEvent\NativeClassNameChangeEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\TreeMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\CEFrameProxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseScFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\FallBackDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\LaunchPadProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\MediaLibraryProxy.ts" />

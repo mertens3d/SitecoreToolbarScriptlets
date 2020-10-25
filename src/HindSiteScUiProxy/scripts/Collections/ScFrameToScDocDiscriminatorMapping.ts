@@ -10,7 +10,7 @@ export class ScWindowTypeToScDocDiscriminatorMapping {
 export class ScFrameToScDocDiscriminatorMapping {
   static Mappings: IDiscriminatorMappingPair[] = [
     {
-      FrameProxyDiscriminator: ScProxyDisciminator.GenericFrameProxy,
+      FrameProxyDiscriminator: ScProxyDisciminator.FrameProxy,
       DocProxyDisciminator: ScProxyDisciminator.ScDocumentProxy,
     },
     {
@@ -27,7 +27,7 @@ export class ScFrameToScDocDiscriminatorMapping {
     },
 
     {
-      FrameProxyDiscriminator: ScProxyDisciminator.GenericFrameProxy,
+      FrameProxyDiscriminator: ScProxyDisciminator.FrameProxy,
       DocProxyDisciminator: ScProxyDisciminator.ContentEditor,
     },
   ];

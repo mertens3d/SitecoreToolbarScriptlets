@@ -13,41 +13,40 @@ import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICo
 import { IBaseScProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScProxy";
 import { IScElemProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullElemProxy";
 import { IScFrameProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
-import { IStateOfDTFrame } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
+import { IStateOfGenericFrame } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
 import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTProxy";
 import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { DTAreaValidProxies } from "../../../Collections/DTAreaValidProxies";
 import { ContentEditorDocProxy } from "../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
-import { JqueryModalDialogsFrameProxy } from "../../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { DTAreaProxyMutationEvent_Subject } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Subject";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Observer } from "./Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Observer";
 import { IDTFrameProxyMutationEvent_Payload } from "./Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
-import { BaseScFrameProxy } from "./FrameProxies/BaseFrameProxy";
+import { GenericFrameProxy } from "./FrameProxies/GenericFrameProxy";
 import { _BaseElemProxy } from "./FrameProxies/_BaseElemProxy";
 
 export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements IScElemProxy {
-  public readonly ScProxyDisciminator = ScProxyDisciminator.DTAreaElemProxy;
-  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.DTAreaElemProxy];
+  public readonly ScProxyDisciminator = ScProxyDisciminator.DTArea;
+  readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.DTArea];
   private DTFrameProxyManyMutationEvent_Observer: DTFrameProxyMutationEvent_Observer;
-  private IncomingSetStateList: IStateOfDTFrame[] = [];
+  private IncomingSetStateList: IStateOfGenericFrame[] = [];
   private DocumentProxyMutationEvent_Observer: ElementJacketMutationEvent_Observer;
 
   public DTAreaProxyMutationEvent_Subject: DTAreaProxyMutationEvent_Subject;
-  private JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
+  private JqueryModalDialogsFrameProxy: IScFrameProxy;
   ElemJacketMutationEvent_Subject: ElementJacketMutationEvent_Subject;
   //JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
   //DocumentJacketWatcher: DocumentJacket_Watcher;
-  constructor(apiCore: IAPICore, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy, containerElemJacket: IJacketOfType) {
+  constructor(apiCore: IAPICore, jqueryModalDialogsFrameProxy: IScFrameProxy, containerElemJacket: IJacketOfType) {
     super(apiCore, containerElemJacket);
 
     this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
     this.ErrorHand.ThrowIfNullOrUndefined(DTAreaElemProxy.name, [containerElemJacket, this.JqueryModalDialogsFrameProxy]);
   }
 
-  async InstantiateAwaitElementsSelf(): Promise<void> {
+  protected async InstantiateAwaitElementsSelf(): Promise<void> {
     this.Logger.FuncStart([DTAreaElemProxy.name, this.InstantiateAwaitElementsSelf.name]);
 
     try {
@@ -88,18 +87,18 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
 
   GetStateOfSelf(): Promise<IStateOfDTArea> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart([DTAreaElemProxy.name, this.GetStateOfSelf.name], this.HostedProxies.length.toString());
+      this.Logger.FuncStart([DTAreaElemProxy.name, this.GetStateOfSelf.name]);
       let stateOfDTArea: IStateOfDTArea = new DefaultStateOfDTArea();
-      let promiseAr: Promise<IStateOfDTFrame>[] = [];
+      let promiseAr: Promise<IStateOfGenericFrame>[] = [];
 
       //for (let idx = 0; idx < this.HostedProxies.length; idx++) {
       //  let dtframeProxy: DTFrameProxy<IStateOf_> = this.HostedProxies[idx];
       //  promiseAr.push(dtframeProxy.GetStateSelf());
       //}
 
-      await this.GetStateOfHosted()
-        .then((states: IStateOf_[]) => stateOfDTArea.StateOfHostedProxies = states)
-        .catch((err: any) => reject(this.GetStateOfSelf.name + ' | ' + err));
+      // todo - being done by base await this.GetStateOfHosted()
+      //  .then((states: IStateOf_[]) => stateOfDTArea.Children = states)
+      //  .catch((err: any) => reject(this.GetStateOfSelf.name + ' | ' + err));
 
       resolve(stateOfDTArea);
 
@@ -137,7 +136,7 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
             this.ErrorHand.WarningAndContinue(this.GetProxiesToSpawn.name, 'invalid discriminator ' + ScProxyDisciminator[stateOf.Disciminator]);
           }
 
-          stateOf.StateOfHostedProxies.forEach((hostedProxy: IStateOf_) =>
+          stateOf.Children.forEach((hostedProxy: IStateOf_) =>
             toReturn.push(hostedProxy.Disciminator)
           )
         });
@@ -194,9 +193,9 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
 
     await FrameJacket.FactoryFrameElemJackets(this.CommonCore, [genericElemJacket])
       .then((frameElemjackets: FrameJacket[]) => frameElemJacket = frameElemjackets[0])
-      .then(() => frameElemJacket.WaitForCompleteNABFrameElement(this.HandleAddedJacketOfType.name))
-      .then(() => this.Logger.LogVal('URL', frameElemJacket.DocumentJacket.UrlJacket.GetOriginalURL()))
-      .then(() => BaseScFrameProxy.ScFrameProxyFactory(this.ApiCore, frameElemJacket, this.JqueryModalDialogsFrameProxy))
+      //.then(() => frameElemJacket.WaitForCompleteNABFrameElement(this.HandleAddedJacketOfType.name))
+      //.then(() => this.Logger.LogVal('URL', frameElemJacket.DocumentJacket.UrlJacket.GetOriginalURL()))
+      .then(() => GenericFrameProxy.ScFrameProxyFactory(this.ApiCore, frameElemJacket, this.JqueryModalDialogsFrameProxy))
       .then((scFrameProxy: IScFrameProxy) => newScFrameProxy = scFrameProxy)
       //.then(() => newScFrameProxy.InstantiateChildrenSelf())
       //.then(() => newScFrameProxy.WireEventsSelf())
@@ -227,7 +226,7 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
         let foundMatch: number = -1;
 
         this.HostedProxies.forEach((hostedProxy: IBaseScProxy, index: number) => {
-          let frameProxy: IScFrameProxy = <BaseScFrameProxy<IStateOf_>>hostedProxy;
+          let frameProxy: IScFrameProxy = <IScFrameProxy> hostedProxy;
 
           if (frameProxy && frameProxy.GetNativeFrameId() === needleIframeId) {
             foundMatch = index;
@@ -393,8 +392,8 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
   }
 
   AddToIncomingSetStateList(stateOfFrame: IStateOfDTArea): void {
-    this.Logger.FuncStart(this.AddToIncomingSetStateList.name, stateOfFrame.DTFrames.length);
-    stateOfFrame.DTFrames.forEach((stateOfDTFrame) => this.IncomingSetStateList.push(stateOfDTFrame));
+    this.Logger.FuncStart(this.AddToIncomingSetStateList.name, stateOfFrame.Children.length);
+    stateOfFrame.Children.forEach((stateOfDTFrame: IStateOfGenericFrame) => this.IncomingSetStateList.push(stateOfDTFrame));
     this.Logger.FuncEnd(this.AddToIncomingSetStateList.name);
   }
 
@@ -412,7 +411,7 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
     let maxZFound: number = -1;
 
     this.HostedProxies.forEach((baseScProxy: IBaseScProxy) => {
-      if (baseScProxy instanceof BaseScFrameProxy) {
+      if (baseScProxy instanceof GenericFrameProxy) {
         let cadidateVal: number = baseScProxy.GetZindexAsInt();
         if (cadidateVal > maxZFound) {
           maxZFound = cadidateVal;

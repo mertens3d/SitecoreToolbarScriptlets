@@ -16,7 +16,7 @@ export class JqueryModalDialogsDocProxy extends _ScDocProxyOfTypeT<IStateOf_> im
     super(apiCore, documentJacket);
   }
 
-  async InstantiateAwaitElementsSelf(): Promise<void> {
+  protected async InstantiateAwaitElementsSelf(): Promise<void> {
     try {
       await this.CreateWatcherForFrames()
         .catch((err: any) => this.ErrorHand.HandleFatalError([JqueryModalDialogsDocProxy.name, this.WireEventsSelf.name], err));
