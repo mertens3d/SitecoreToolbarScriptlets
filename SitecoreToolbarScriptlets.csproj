@@ -66,8 +66,8 @@
     <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\RecipeSetStateFromMostRecent.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Collections\DTAreaValidProxies.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Collections\ScFrameToScDocDiscriminatorMapping.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\BaseFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\DTFrameProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\GenericFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScDocProxyOfTypeT.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScFrameProxyFactory.ts" />
@@ -215,7 +215,6 @@
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\NativeClassNameChangeEvent\INativeClassNameChangeEvent_Payload.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Events\NativeClassNameChangeEvent\NativeClassNameChangeEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\TreeMutationEvent_Subject.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\CEFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\FallBackDocProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\LaunchPadProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\MediaLibraryProxy.ts" />
