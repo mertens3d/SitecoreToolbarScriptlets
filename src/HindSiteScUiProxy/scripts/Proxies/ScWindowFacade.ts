@@ -28,10 +28,10 @@ import { ScDocProxyResolver } from "./ScDocProxyResolver";
 
 export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
   private DocumentJacket: DocumentJacket;
-  private StateFullProxyFactory: ScDocProxyResolver;
+  private ScDocProxyResolver: ScDocProxyResolver;
   private ScPageTypeResolver: ScWindowTypeResolver;
   private TabSessionId: string;
-  public StateFullProxy: IScDocProxy;
+  public ScDocProxy: IScDocProxy;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
@@ -45,7 +45,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
     this.Logger.FuncStart([ScWindowFacade.name, this.Instantiate.name]);
 
     this.ScPageTypeResolver = new ScWindowTypeResolver(this.ApiCore);
-    this.StateFullProxyFactory = new ScDocProxyResolver(this.ApiCore);
+    this.ScDocProxyResolver = new ScDocProxyResolver(this.ApiCore);
 
     this.Logger.FuncEnd([ScWindowFacade.name, this.Instantiate.name]);
   }
@@ -65,8 +65,8 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
 
       await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket('Window.Document') // recipesBasic.WaitForCompleteNAB_DataOneDoc(this.GetTopLevelDoc(), 'Window.Document')
         .then((result: ReadyStateNAB) => windowType = this.ScPageTypeResolver.GetScWindowType(this.DocumentJacket.UrlJacket))
-        .then(() => this.StateFullProxyFactory.ScDocProxyFactoryMake(this.DocumentJacket, null))
-        .then((stateFullProxy: IScDocProxy) => this.StateFullProxy = stateFullProxy)
+        .then(() => this.ScDocProxyResolver.ScDocProxyFactoryMake(this.DocumentJacket, null))
+        .then((scDocProxy: IScDocProxy) => this.ScDocProxy = scDocProxy)
         .catch((err: any) => this.ErrorHand.HandleFatalError(this.InstantiateAsyncMembers.name, err));
     }
     catch (err: any) {
@@ -82,15 +82,15 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
 
   TriggerCERibbonCommand(ribbonCommand: APICommandFlag): void {
     this.Logger.FuncStart([ScWindowFacade.name, this.TriggerCERibbonCommand.name]);
-    if (this.StateFullProxy) {
-      if (this.StateFullProxy.ScProxyDisciminator === ScProxyDisciminator.ContentEditor) {
-        let contentEditorProxy: ContentEditorDocProxy = <ContentEditorDocProxy>this.StateFullProxy;
+    if (this.ScDocProxy) {
+      if (this.ScDocProxy.ScProxyDisciminator === ScProxyDisciminator.ContentEditor) {
+        let contentEditorProxy: ContentEditorDocProxy = <ContentEditorDocProxy>this.ScDocProxy;
         if (contentEditorProxy) {
           contentEditorProxy.TriggerCERibbonCommand(ribbonCommand);
         }
       }
-      else if (this.StateFullProxy.ScProxyDisciminator === ScProxyDisciminator.Desktop) {
-        let desktopProxy: DesktopProxy = <DesktopProxy>this.StateFullProxy;
+      else if (this.ScDocProxy.ScProxyDisciminator === ScProxyDisciminator.Desktop) {
+        let desktopProxy: DesktopProxy = <DesktopProxy>this.ScDocProxy;
         if (desktopProxy) {
           desktopProxy.TriggerCERibbonCommand(ribbonCommand);
         }
@@ -107,8 +107,8 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
     return new Promise(async (resolve, reject) => {
       let toReturn: IRootState = new DefaultStateOfScWindow();
 
-      if (this.StateFullProxy) {
-        await this.StateFullProxy.GetState()
+      if (this.ScDocProxy) {
+        await this.ScDocProxy.GetState()
           .then((stateOf_: IStateOf_) => toReturn.ScWindow = stateOf_)
           .then(() => toReturn.ScWindow.DisciminatorFriendly = ScProxyDisciminator[toReturn.ScWindow.Disciminator])
           .then(() => resolve(toReturn))
@@ -141,13 +141,13 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
  async PublishActiveCE():Promise<void> {
     return new Promise(async (resolve, reject) => {
       if (this.GetCurrentPageType() == ScWindowType.ContentEditor) {
-        await (<ContentEditorDocProxy>this.StateFullProxy).PublishItem()
+        await (<ContentEditorDocProxy>this.ScDocProxy).PublishItem()
           .then(() => resolve())
           .catch((err: any) => reject(this.PublishActiveCE.name + ' | ' + err));
 
       }
       else if (this.GetCurrentPageType() == ScWindowType.Desktop) {
-        (<DesktopProxy>this.StateFullProxy).PublishItem()
+        (<DesktopProxy>this.ScDocProxy).PublishItem()
           .then(() => resolve())
           .catch((err: any) => reject(this.PublishActiveCE.name + ' | ' + err));
       }
@@ -164,7 +164,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
           if (dataToRestore.State.ScWindow) {
-            await this.StateFullProxy.SetState(dataToRestore.State.ScWindow)
+            await this.ScDocProxy.SetState(dataToRestore.State.ScWindow)
               .then(() => resolve())
               .catch((err: any) => reject(this.SetStateOfScWin.name + ' | ' + err));
           }

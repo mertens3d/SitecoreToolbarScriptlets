@@ -3,7 +3,7 @@ import { _CommonBase } from "../../_CommonCoreBase";
 import { HindsiteEventHandler_Type } from "./HindsiteEventHandler_Type";
 import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
 
-export abstract class HindSiteEvent_Observer<T> extends _CommonBase implements IHindSiteEvent_Observer<T> {
+export abstract class _HindSiteEvent_Observer<T> extends _CommonBase implements IHindSiteEvent_Observer<T> {
   readonly Friendly: string;
   CallbackAsync: HindsiteEventHandler_Type = null;
 
@@ -13,7 +13,7 @@ export abstract class HindSiteEvent_Observer<T> extends _CommonBase implements I
         this.CallbackAsync(payload);
       }
     } catch (err: any) {
-      this.ErrorHand.ErrorAndContinue(HindSiteEvent_Observer.name, err);
+      this.ErrorHand.ErrorAndContinue(_HindSiteEvent_Observer.name, err);
     }
   }
   constructor(hindeCore: ICommonCore, friendly: string, callbackAsync: HindsiteEventHandler_Type = null) {

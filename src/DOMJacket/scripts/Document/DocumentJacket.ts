@@ -16,7 +16,6 @@ import { UrlJacket } from "../UrlJacket";
 import { IJacketOfType } from "../../../Shared/scripts/IJacketOfType";
 
 export class DocumentJacket extends _CommonBase {
-  
   private NativeDocument: Document;
   public UrlJacket: UrlJacket = null;
   readonly DocId: GuidData = Guid.NewRandomGuid();
@@ -27,7 +26,7 @@ export class DocumentJacket extends _CommonBase {
     this.Logger.CTORStart(DocumentJacket.name);
     this.NativeDocument = nativeDocument;
     this.Instantiate();
-    this.Logger.FuncEnd(DocumentJacket.name);
+    this.Logger.CTOREnd(DocumentJacket.name);
   }
 
   private Instantiate() {
@@ -194,8 +193,9 @@ export class DocumentJacket extends _CommonBase {
       var htmlElement: HTMLElement = null;
       var iterationJr = new IterationDrone(this.CommonCore, this.WaitForGenericElemJacket.name + ' - selector: "' + selector + '"', true);
       let firstFind = true;
+      let genericElemJacket: IJacketOfType = null;
 
-      while (!htmlElement && iterationJr.DecrementAndKeepGoing()) {
+      while (!genericElemJacket && iterationJr.DecrementAndKeepGoing()) {
         htmlElement = this.NativeDocument.querySelector(selector);
 
         if (htmlElement && !StaticHelpers.IsNullOrUndefined(htmlElement)) {
@@ -204,9 +204,7 @@ export class DocumentJacket extends _CommonBase {
             firstFind = false;
           } else {
             this.Logger.Log('found it');
-            let genericElemJacket: IJacketOfType = new GenericElemJacket(this.CommonCore, htmlElement);
-            this.Logger.LogAsJsonPretty('found', genericElemJacket);
-            resolve(genericElemJacket);
+            genericElemJacket = new GenericElemJacket(this.CommonCore, htmlElement);
           }
         }
         else {
@@ -214,10 +212,14 @@ export class DocumentJacket extends _CommonBase {
         }
       }
 
-      if (promiseFailAction === PromiseFailAction.Default || promiseFailAction == PromiseFailAction.RejectThrow) {
-        reject(iterationJr.IsExhaustedMsg);
-      } else if (promiseFailAction === PromiseFailAction.ResolveNull) {
-        resolve(null);
+      if (genericElemJacket) {
+        resolve(genericElemJacket);
+      } else {
+        if (promiseFailAction === PromiseFailAction.Default || promiseFailAction == PromiseFailAction.RejectThrow) {
+          reject(iterationJr.IsExhaustedMsg);
+        } else if (promiseFailAction === PromiseFailAction.ResolveNull) {
+          resolve(null);
+        }
       }
       this.Logger.FuncEnd(this.WaitForGenericElemJacket.name, selector);
     });

@@ -7,7 +7,7 @@ import { _CommonBase } from "../../_CommonCoreBase";
 import { IHindeSite_Observable } from "./IHindeSite_Observable";
 import { IHindSiteEvent_Observer } from "./IHindSiteEvent_Observer";
 
-export abstract class HindeSiteEvent_Subject<T> extends _CommonBase implements IHindeSite_Observable<T> {
+export abstract class _HindeSiteEvent_Subject<T> extends _CommonBase implements IHindeSite_Observable<T> {
   protected ObserverCollection: IHindSiteEvent_Observer<T>[] = [];
   private IsMuted: boolean;
   abstract TypeDiscriminator: TypeDiscriminator;

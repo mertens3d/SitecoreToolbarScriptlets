@@ -1,5 +1,5 @@
 ﻿import { TypeDiscriminator } from "../../../../Shared/scripts/Enums/70 - TypeDiscriminator";
-import { HindeSiteEvent_Subject } from "../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
+import { _HindeSiteEvent_Subject } from "../../../../Shared/scripts/Events/_HindSiteEvent/HindeSiteEvent_Subject";
 import { IElemJacketWatcherParameters } from "../../../../Shared/scripts/IElemJacketWatcherParameters";
 import { IJacketOfType } from "../../../../Shared/scripts/IJacketOfType";
 import { ICommonCore } from "../../../../Shared/scripts/Interfaces/Agents/ICommonCore";
@@ -7,7 +7,7 @@ import { SharedConst } from "../../../../Shared/scripts/SharedConst";
 import { ElementJacketOfType } from "../../Elements/ElementJacketBaseOfType";
 import { INativeAddRemoveEvent_Payload } from "./INativeAddRemoveEvent_Payload";
 
-export class NativeAddRemoveEvent_Subject extends HindeSiteEvent_Subject<INativeAddRemoveEvent_Payload> {
+export class NativeAddRemoveEvent_Subject extends _HindeSiteEvent_Subject<INativeAddRemoveEvent_Payload> {
   readonly TypeDiscriminator = TypeDiscriminator.FrameJacketAddRemoveEvent_Subject;
  protected ShowLogActions: boolean = true;
   private ContainerElemJacket: IJacketOfType;

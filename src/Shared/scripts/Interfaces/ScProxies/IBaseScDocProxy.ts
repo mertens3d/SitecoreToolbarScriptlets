@@ -2,5 +2,5 @@
 
 export interface IScDocProxy extends IBaseScProxy{
   OnFocus(): Promise<any>
-  EnableWatcherForFrames(): void;
+  WireWatcherForFrames(): void;
 }

@@ -268,7 +268,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
     let toReturn: IScIcon = null;
     //((document.getElementById('Tree_Node_709C05C504394E1A9D4711E824C87B39')).parentElement).querySelector('.scContentTreeNodeIcon').src
     //((document.getElementById('Tree_Node_EB443C0BF923409E85F3E7893C8C30C2')).parentElement).querySelector('.scContentTreeNodeIcon').outerHTML
-    let foundElement: ElementImgJacket = <ElementImgJacket>this.ScContentTreeNodeDivElem.querySelector(ContentConst.Const.Selector.SC.ContentEditor.scContentTreeNodeIcon);
+    let foundElement: ElementImgJacket = <ElementImgJacket>this.ScContentTreeNodeDivElem.querySelector(ContentConst.Const.Selector.SC.ContentTree.scContentTreeNodeIcon);
 
     if (foundElement) {
       toReturn = this.ConResolver.ResolveIconData(foundElement.NativeElement.src);
@@ -282,7 +282,7 @@ export class ScContentTreeNodeProxy extends _APICoreBase {
       try {
         let toReturn: ScContentTreeNodeProxy[] = [];
 
-        let childNodes = this.ScContentTreeNodeDivElem.NativeElement.querySelectorAll(':scope > div > ' + ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNode); //targetNode.children;
+        let childNodes = this.ScContentTreeNodeDivElem.NativeElement.querySelectorAll(':scope > div > ' + ContentConst.Const.Selector.SC.ContentTree.ScContentTreeNode); //targetNode.children;
         childNodes.forEach((childNode: HTMLDivElement, index: number) => {
           let childJacket = new ElementDivJacket(this.ApiCore, childNode);
           toReturn.push(new ScContentTreeNodeProxy(this.ApiCore, childJacket, this.StateOfScContentTreeNode.Coord.LevelIndex + 1, index, childNodes.length, this, this.ConResolver))

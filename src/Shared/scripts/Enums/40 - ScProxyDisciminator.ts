@@ -12,7 +12,7 @@
     DTFrameProxy = 40071479,
     EmailExperienceManager = 40597945,
     FallBack = 40949195,
-    GenericStateLessFrameProxy = 40945013,
+    GenericFrameProxy = 40945013,
     InstallationWizard = 40632864,
     InstalledLicenses = 40808841,
     InstallerBuildPackageDocProxy = 40493480,

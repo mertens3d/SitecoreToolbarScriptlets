@@ -1,9 +1,10 @@
 ﻿import { ScProxyDisciminator } from "../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IScDocProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
-import { _justWindowStateFullDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_justWindowStateFullProxy";
+import { IStateOf_ } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
+import { _ScDocProxyOfTypeT } from "../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
 
 
-export class RoleManagerProxy extends _justWindowStateFullDocProxy implements IScDocProxy {
+export class RoleManagerProxy extends _ScDocProxyOfTypeT<IStateOf_> implements IScDocProxy {
     readonly ScProxyDisciminator = ScProxyDisciminator.RoleManager;
     readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[this.ScProxyDisciminator];
 }

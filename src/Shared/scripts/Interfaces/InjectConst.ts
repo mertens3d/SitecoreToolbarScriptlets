@@ -94,14 +94,12 @@ export class ContentConst {
 
       },
       SC: {
-        ContentEditor: {
+        
+        ContentTree: {
           ScContentTreeNodeGlyph: '.scContentTreeNodeGlyph',
           ScContentTreeNode: '.scContentTreeNode',
           ScContentTreeContainer: '.scContentTreeContainer',
           scContentTreeNodeIcon: '.scContentTreeNodeIcon',
-        },
-
-        ContentTree: {
           BuiltIn: {
             TreeNodeSitecoreRoot: '[id=Tree_Node_11111111111111111111111111111111]',
             MediaLibraryAnchorRootNode: '[id=Tree_Node_3D6658D8A0BF4E75B3E2D050FABCF4E1]',

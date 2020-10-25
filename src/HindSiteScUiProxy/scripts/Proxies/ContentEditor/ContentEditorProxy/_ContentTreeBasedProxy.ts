@@ -12,10 +12,10 @@ import { __ContentTreeBasedProxyMutationEvent__Subject } from '../../Desktop/Des
 import { I_ContentTreeBasedProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload';
 import { ContentTreeBasedProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Observer';
 import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
-import { ScDocProxyOfTypeT } from "../../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
+import { _ScDocProxyOfTypeT } from "../../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
 import { ContentTreeElemProxy } from "./ContentTreeProxy/ContentTreeProxy";
 
-export abstract class _ContentTreeBasedDocProxy<T extends IStateOfContentTreeBasedProxies> extends ScDocProxyOfTypeT<T> implements IScDocProxy {
+export abstract class _ContentTreeBasedDocProxy<T extends IStateOfContentTreeBasedProxies> extends _ScDocProxyOfTypeT<T> implements IScDocProxy {
   protected TreeMutationEvent_Observer: ContentTreeBasedProxyMutationEvent_Observer;
   public __ContentTreeBasedProxyMutationEvent_Subject: __ContentTreeBasedProxyMutationEvent__Subject;
   public abstract readonly ScProxyDisciminator: ScProxyDisciminator;
@@ -35,37 +35,32 @@ export abstract class _ContentTreeBasedDocProxy<T extends IStateOfContentTreeBas
   private Instantiate() {
   }
 
-  
+  async InstantiateAwaitElementsSelf(): Promise<void> {
+    this.Logger.FuncStart([_ContentTreeBasedDocProxy.name, this.InstantiateAwaitElementsSelf.name, this.ScProxyDisciminatorFriendly]);
 
-
-  async __baseInstantiateAsyncMembers(): Promise<void> {
-
-    this.Logger.FuncStart([this.ScProxyDisciminatorFriendly, this.__baseInstantiateAsyncMembers.name]);
-
-
-    await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(_ContentTreeBasedDocProxy.name)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
-      .then(() => this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeContainer))
-      .then((treeContainer: IJacketOfType) => this.HostedProxies.push( new ContentTreeElemProxy(this.ApiCore, this.DocumentJacket, treeContainer, this.TreeRootSelector)))
+    //await this.DocumentJacket.WaitForCompleteNAB_DocumentJacket(_ContentTreeBasedDocProxy.name)// this.RecipeBasic.WaitForCompleteNAB_DataOneDoc(this.AssociatedScDocumentProxy, this.Friendly)
+    await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.ContentTree.ScContentTreeContainer)
+      .then((treeContainer: IJacketOfType) => this.HostedProxies.push(new ContentTreeElemProxy(this.ApiCore, treeContainer, this.TreeRootSelector)))
       .then(() => {
         this.__ContentTreeBasedProxyMutationEvent_Subject = new __ContentTreeBasedProxyMutationEvent__Subject(this.ApiCore);
         this.TreeMutationEvent_Observer = new ContentTreeBasedProxyMutationEvent_Observer(this.ApiCore, this.CallBackOn__ContentTreeBasedProxyTreeMutationEventAsync.bind(this));
       })
       .then(() => { })
-      .catch((err: any) => this.ErrorHand.HandleFatalError(this.__baseInstantiateAsyncMembers.name, err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError(this.InstantiateAwaitElementsSelf.name, err));
 
-    this.Logger.FuncEnd([this.ScProxyDisciminatorFriendly, this.__baseInstantiateAsyncMembers.name]);
+    this.Logger.FuncEnd([_ContentTreeBasedDocProxy.name, this.InstantiateAwaitElementsSelf.name, this.ScProxyDisciminatorFriendly]);
   }
 
   WireEventsSelf(): void {
-
-    let contentTreeProxy: ContentTreeElemProxy = <ContentTreeElemProxy> this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.ContentTreeElem);
+    this.Logger.FuncStart([_ContentTreeBasedDocProxy.name, this.WireEventsSelf.name, this.ScProxyDisciminatorFriendly]);
+    let contentTreeProxy: ContentTreeElemProxy = <ContentTreeElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.ContentTreeElem);
 
     if (contentTreeProxy) {
       contentTreeProxy.ContentTreeMutationEvent_Subject.RegisterObserver(this.TreeMutationEvent_Observer);
-
     } else {
       this.ErrorHand.HandleFatalError([_ContentTreeBasedDocProxy.name, this.WireEventsSelf.name], "Solo contentTree not found");
     }
+    this.Logger.FuncEnd([_ContentTreeBasedDocProxy.name, this.WireEventsSelf.name, this.ScProxyDisciminatorFriendly]);
   }
 
   async SetStateSelf(stateOfContentTreeBasedProxies: IStateOfContentTreeBasedProxies): Promise<boolean> {
@@ -114,7 +109,6 @@ export abstract class _ContentTreeBasedDocProxy<T extends IStateOfContentTreeBas
       this.Logger.FuncEnd(this.WaitForNoUiFrontOverlay.name, friendly);
     });
   }
-
 
   //GetStateSelf(): Promise<IStateOfContentTreeBasedProxies> {
   //  return new Promise(async (resolve, reject) => {

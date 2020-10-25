@@ -59,6 +59,7 @@ export class ScWindowTypeResolver extends _CommonBase implements IScWindowTypeRe
       }
     });
 
+    this.Logger.LogAsJsonPretty('From URL', UrlJacket.BuildFullUrlFromParts().AbsUrl);
     this.Logger.LogAsJsonPretty('Final determinant winner', toReturnPageDeterminator);
 
     return toReturnPageDeterminator;
@@ -82,7 +83,7 @@ export class ScWindowTypeResolver extends _CommonBase implements IScWindowTypeRe
 
     let result: IScWindowTypeDeterminator = this.RunJacketAgainstAllDeterminators(UrlJacket);
     if (!result) {
-      this.ErrorHand.HandleFatalError(this.GetScWindowType.name, 'Undetermined page: ' + UrlJacket.BuildFullUrlFromParts());
+      this.ErrorHand.HandleFatalError(this.GetScWindowType.name, 'Undetermined page: ' + UrlJacket.BuildFullUrlFromParts().AbsUrl);
     } else {
       toReturn = result.ScWindowType;
     }

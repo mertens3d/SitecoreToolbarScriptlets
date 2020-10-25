@@ -1,25 +1,23 @@
-﻿import { DocumentJacket } from '../../../../../../DOMJacket/scripts/Document/DocumentJacket';
-import { ElementImgJacket } from '../../../../../../DOMJacket/scripts/Elements/ElementImgJacket';
+﻿import { ElementImgJacket } from '../../../../../../DOMJacket/scripts/Elements/ElementImgJacket';
 import { GenericElemJacket } from "../../../../../../DOMJacket/scripts/Elements/GenericElemJacket";
 import { INativeClassNameChangeEvent_Payload } from '../../../../../../DOMJacket/scripts/Events/NativeClassNameChangeEvent/INativeClassNameChangeEvent_Payload';
 import { NativeClassNameChangeEvent_Observer } from "../../../../../../DOMJacket/scripts/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Observer";
 import { NativeClassNameChangeEvent_Subject } from "../../../../../../DOMJacket/scripts/Events/NativeClassNameChangeEvent/NativeClassNameChangeEvent_Subject";
 import { DefaultStateOfContentTree } from '../../../../../../Shared/scripts/Classes/Defaults/DefaultStateOfContentTree';
+import { ScProxyDisciminator } from '../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator';
 import { Guid } from '../../../../../../Shared/scripts/Helpers/Guid';
+import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
+import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
+import { IScElemProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullElemProxy";
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
 import { IStateOfScContentTreeNodeDeep } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfScContentTreeNode';
 import { IStateOfScContentTreeNodeShallow } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfScContentTreeNodeShallow";
-import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
-import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
 import { ContentTreeMutationEvent_Subject } from "../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Subject";
 import { IContentTreeProxyMutationEvent_Payload } from '../../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
-import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNodeProxy';
-import { ConResolver } from './ScContentTreeNodeProxy/ConResolver';
 import { _BaseElemProxy } from "../../../Desktop/DesktopProxy/FrameProxies/_BaseElemProxy";
-import { IScElemProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullElemProxy";
-import { IJacketOfType } from "../../../../../../Shared/scripts/IJacketOfType";
-import { ScProxyDisciminator } from '../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator';
+import { ConResolver } from './ScContentTreeNodeProxy/ConResolver';
+import { ScContentTreeNodeProxy } from './ScContentTreeNodeProxy/ScContentTreeNodeProxy';
 
 //ContentTree is the name Sitecore uses
 export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> implements IScElemProxy {
@@ -36,10 +34,10 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
   public ContentTreeMutationEvent_Subject: ContentTreeMutationEvent_Subject;
   private ConResolver: ConResolver;
 
-  constructor(apiCore: IAPICore, hostDocumentJacket: DocumentJacket, treeContainerJacket: IJacketOfType, TreeRootSelector: string) {
+  constructor(apiCore: IAPICore, treeContainerJacket: IJacketOfType, TreeRootSelector: string) {
     super(apiCore, treeContainerJacket);
 
-    this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeElemProxy.name, [hostDocumentJacket, treeContainerJacket]);
+    this.ErrorHand.ThrowIfNullOrUndefined(ContentTreeElemProxy.name, [ treeContainerJacket]);
     this.TreeRootSelector = TreeRootSelector;
 
     this.InstantiateInstance();
@@ -49,8 +47,8 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
     this.ConResolver = new ConResolver(this.ApiCore);
   }
 
-  async InstantiateChildrenSelf(): Promise<void> {
-    this.Logger.FuncStart(this.InstantiateChildrenSelf.name);
+  async InstantiateAwaitElementsSelf(): Promise<void> {
+    this.Logger.FuncStart(this.InstantiateAwaitElementsSelf.name);
 
     try {
       await this.SetRootNodeFromSelector()
@@ -60,10 +58,10 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
           this.NativeClassNameChangeEvent_Observer = new NativeClassNameChangeEvent_Observer(this.ApiCore, this.CallBackOnNativeClassNameChangeEventAsync.bind(this));
         })
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateChildrenSelf.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAwaitElementsSelf.name, err);
     }
 
-    this.Logger.FuncEnd(this.InstantiateChildrenSelf.name);
+    this.Logger.FuncEnd(this.InstantiateAwaitElementsSelf.name);
   }
 
   WireEventsSelf() {
@@ -231,7 +229,7 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
           let parentHtmlElement = this.rootTreeNodeJacket.NativeElement.parentElement;
           var rootParent: IJacketOfType = new GenericElemJacket(this.ApiCore, parentHtmlElement);//  this.rootTreeNodeJacket.parentElement();
 
-          await rootParent.WaitFor(ContentConst.Const.Selector.SC.ContentEditor.ScContentTreeNodeGlyph, this.GetTreeNodeProxy.name)
+          await rootParent.WaitFor(ContentConst.Const.Selector.SC.ContentTree.ScContentTreeNodeGlyph, this.GetTreeNodeProxy.name)
             .then((firstChildGlyphNode: ElementImgJacket) => this._treeNodeProxy = new ScContentTreeNodeProxy(this.ApiCore, firstChildGlyphNode, 0, 0, 1, null, this.ConResolver))
             .then(() => this._treeNodeProxy.Instantiate())
             .then(() => resolve(this._treeNodeProxy))
@@ -242,7 +240,7 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
         }
       }
       else {
-        reject(this.ErrorHand.FormatRejectMessage(this.GetTreeNodeProxy.name, 'no targetDoc'));
+        reject(this.ErrorHand.FormatRejectMessage(this.GetTreeNodeProxy.name, 'no Container'));
       }
       this.Logger.FuncEnd(this.GetTreeNodeProxy.name);
     });

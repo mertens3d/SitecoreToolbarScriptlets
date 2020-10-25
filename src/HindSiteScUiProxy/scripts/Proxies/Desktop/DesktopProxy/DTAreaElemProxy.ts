@@ -47,8 +47,8 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
     this.ErrorHand.ThrowIfNullOrUndefined(DTAreaElemProxy.name, [containerElemJacket, this.JqueryModalDialogsFrameProxy]);
   }
 
-  async InstantiateChildrenSelf(): Promise<void> {
-    this.Logger.FuncStart([DTAreaElemProxy.name, this.InstantiateChildrenSelf.name]);
+  async InstantiateAwaitElementsSelf(): Promise<void> {
+    this.Logger.FuncStart([DTAreaElemProxy.name, this.InstantiateAwaitElementsSelf.name]);
 
     try {
       this.DTAreaProxyMutationEvent_Subject = new DTAreaProxyMutationEvent_Subject(this.ApiCore);
@@ -58,9 +58,9 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
       //this.AddJqueryProxy();
       //this.DocumentJacketWatcher = new DocumentJacket_Watcher(this.ApiCore, this.AssociatedScDocumentJacket);
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateChildrenSelf.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAwaitElementsSelf.name, err);
     }
-    this.Logger.FuncEnd([DTAreaElemProxy.name, this.InstantiateChildrenSelf.name]);
+    this.Logger.FuncEnd([DTAreaElemProxy.name, this.InstantiateAwaitElementsSelf.name]);
   }
 
   public WireEventsSelf(): void {
@@ -122,7 +122,7 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
   }
 
   GetProxiesToSpawn(proxyStates: IStateOf_[]): ScProxyDisciminator[] {
-    this.Logger.FuncStart(this.SetStateSelf.name, DTAreaElemProxy.name);
+    this.Logger.FuncStart(this.GetProxiesToSpawn.name, DTAreaElemProxy.name);
     //let dtFramesNeeded: IDTFramesNeeded = {
     //  DiscriminatorAr: []
     //};
@@ -142,13 +142,13 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
           )
         });
       } else {
-        this.ErrorHand.HandleFatalError(this.SetStateSelf.name, ' bad data');
+        this.ErrorHand.HandleFatalError(this.GetProxiesToSpawn.name, ' bad data');
       }
     } else {
-      this.ErrorHand.HandleFatalError(this.SetStateSelf.name, '  No state provided');
+      this.ErrorHand.HandleFatalError(this.GetProxiesToSpawn.name, '  No state provided');
     }
 
-    this.Logger.FuncEnd(this.SetStateSelf.name, DTAreaElemProxy.name);
+    this.Logger.FuncEnd(this.GetProxiesToSpawn.name, DTAreaElemProxy.name);
     return toReturn;
   }
 
@@ -198,8 +198,8 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
       .then(() => this.Logger.LogVal('URL', frameElemJacket.DocumentJacket.UrlJacket.GetOriginalURL()))
       .then(() => BaseScFrameProxy.ScFrameProxyFactory(this.ApiCore, frameElemJacket, this.JqueryModalDialogsFrameProxy))
       .then((scFrameProxy: IScFrameProxy) => newScFrameProxy = scFrameProxy)
-      .then(() => newScFrameProxy.InstantiateChildrenSelf())
-      .then(() => newScFrameProxy.WireEventsSelf())
+      //.then(() => newScFrameProxy.InstantiateChildrenSelf())
+      //.then(() => newScFrameProxy.WireEventsSelf())
       .then(() => {
         let currentWindowType = newScFrameProxy.GetScWindowType();
 
@@ -211,7 +211,7 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
           this.ErrorHand.HandleFatalError(this.HandleAddedJacketOfType.name, 'unrecognized window type aaa: ' + ScWindowType[currentWindowType]);
         }
       })
-      .then(() => this.ProcessInboundNativeIFrameProxy(newScFrameProxy)) //todo - why pass the frameElemJacket instead of the dtProxy?
+      .then(() => this.ProcessNewScFrameProxy(newScFrameProxy)) //todo - why pass the frameElemJacket instead of the dtProxy?
       .then(() => this.Logger.Log(this.HandleAddedJacketOfType.name + ' Complete'))
       .catch((err: any) => this.ErrorHand.HandleFatalError(this.HandleAddedJacketOfType.name, err));
 
@@ -251,31 +251,31 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
     this.Logger.FuncEnd([DTAreaElemProxy.name, this.HandleRemovedIframe.name]);
   }
 
-  private async ProcessInboundNativeIFrameProxy(scFrameProxy: IScFrameProxy): Promise<void> {
-    this.Logger.FuncStart(this.ProcessInboundNativeIFrameProxy.name);
+  private async ProcessNewScFrameProxy(scFrameProxy: IScFrameProxy): Promise<void> {
+    this.Logger.FuncStart(this.ProcessNewScFrameProxy.name);
     try {
       await this.newFrameStep1_Instantiate(scFrameProxy)
+        .then(() => this.NewFrameStep5_AddToHostedProxies(scFrameProxy))
         .then(() => this.NewFrameStep2_SetStateOfDTFrameIfQueued(scFrameProxy))
-        .then(() => this.NewFrameStep3_WireEvents(scFrameProxy))
+        .then(() => this.NewFrameStep3_WireEventsForArea(scFrameProxy))
         .then(() => this.NewFrameStep4_NotifyObserversOfAreaProxyMutation(scFrameProxy))
-        .then(() => this.NewFrameStep5_AddToDTFrameProxyBucket(scFrameProxy))
         .then(() => this.NewFrameStep6_TriggerEvents(scFrameProxy))
-        .catch((err: any) => this.ErrorHand.HandleFatalError(this.ProcessInboundNativeIFrameProxy.name, err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError(this.ProcessNewScFrameProxy.name, err));
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.ProcessInboundNativeIFrameProxy.name, err);
+      this.ErrorHand.HandleFatalError(this.ProcessNewScFrameProxy.name, err);
     }
-    this.Logger.FuncEnd(this.ProcessInboundNativeIFrameProxy.name);
+    this.Logger.FuncEnd(this.ProcessNewScFrameProxy.name);
   }
 
-  private async newFrameStep1_Instantiate(dtFrameProxy: IScFrameProxy): Promise<void> {
+  private async newFrameStep1_Instantiate(scFrameProxy: IScFrameProxy): Promise<void> {
     this.Logger.FuncStart(this.newFrameStep1_Instantiate.name);
-    try {
-      await dtFrameProxy.InstantiateChildrenSelf()
-        .then(() => { })
-        .catch((err: any) => this.ErrorHand.HandleFatalError(this.newFrameStep1_Instantiate.name, err));
-    } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.newFrameStep1_Instantiate.name, err);
-    }
+    //try {
+    //  await scFrameProxy.InstantiateChildrenSelf()
+    //    .then(() => { })
+    //    .catch((err: any) => this.ErrorHand.HandleFatalError(this.newFrameStep1_Instantiate.name, err));
+    //} catch (err: any) {
+    //  this.ErrorHand.HandleFatalError(this.newFrameStep1_Instantiate.name, err);
+    //}
     this.Logger.FuncEnd(this.newFrameStep1_Instantiate.name);
   }
 
@@ -311,7 +311,7 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
     let foundStateOf: IStateOf_ = this.GetQueuedStateForDiscriminator(scFrameProxy.ScProxyDisciminator);
 
     if (foundStateOf) {
-      await scFrameProxy.SetStateSelf(foundStateOf)
+      await scFrameProxy.SetState(foundStateOf)
         .catch((err) => this.ErrorHand.HandleFatalError([DTAreaElemProxy.name, this.NewFrameStep2_SetStateOfDTFrameIfQueued.name], err));
     } else {
       this.Logger.Log('no queued states');
@@ -320,12 +320,17 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
     this.Logger.FuncEnd(this.NewFrameStep2_SetStateOfDTFrameIfQueued.name);
   }
 
-  private NewFrameStep3_WireEvents(dtFrameProxy: IScFrameProxy) {
-    this.Logger.FuncStart(this.NewFrameStep3_WireEvents.name);
-    dtFrameProxy.DTFrameProxyMutationEvent_Subject.RegisterObserver(this.DTFrameProxyManyMutationEvent_Observer);
-    dtFrameProxy.WireEventsSelf();
+  private NewFrameStep3_WireEventsForArea(scFrameproxy: IScFrameProxy) {
+    this.Logger.FuncStart(this.NewFrameStep3_WireEventsForArea.name);
+    if (scFrameproxy.DTFrameProxyMutationEvent_Subject) {
+      scFrameproxy.DTFrameProxyMutationEvent_Subject.RegisterObserver(this.DTFrameProxyManyMutationEvent_Observer);
 
-    this.Logger.FuncEnd(this.NewFrameStep3_WireEvents.name);
+    } else {
+      this.ErrorHand.HandleFatalError([DTAreaElemProxy.name, this.NewFrameStep3_WireEventsForArea.name], 'Null ProxyMutationEvent_Subject');
+    }
+    //dtFrameProxy.WireEventsSelf();
+
+    this.Logger.FuncEnd(this.NewFrameStep3_WireEventsForArea.name);
   }
 
   private NewFrameStep4_NotifyObserversOfAreaProxyMutation(AddedDTFrameProxy: IScFrameProxy) {
@@ -340,20 +345,20 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
     this.Logger.FuncEnd(this.NewFrameStep4_NotifyObserversOfAreaProxyMutation.name);
   }
 
-  private NewFrameStep5_AddToDTFrameProxyBucket(dtframeProxy: IScFrameProxy): boolean {
-    this.Logger.FuncStart(this.NewFrameStep5_AddToDTFrameProxyBucket.name);
+  private NewFrameStep5_AddToHostedProxies(scFrameProxy: IScFrameProxy): boolean {
+    this.Logger.FuncStart(this.NewFrameStep5_AddToHostedProxies.name, 'count before: ' + this.HostedProxies.length);
     let toReturn: boolean = false;
-    if (!this.BucketHasSameItem(dtframeProxy)) {
-      this.HostedProxies.push(dtframeProxy);
+    if (!this.HostedHasSameFrameProxy(scFrameProxy)) {
+      this.HostedProxies.push(scFrameProxy);
       toReturn = true;
     }
-    this.Logger.FuncEnd(this.NewFrameStep5_AddToDTFrameProxyBucket.name);
+    this.Logger.FuncEnd(this.NewFrameStep5_AddToHostedProxies.name, 'count after: ' + this.HostedProxies.length);
     return (toReturn);
   }
 
   private NewFrameStep6_TriggerEvents(scFrameProxy: IScFrameProxy): void {
     this.Logger.FuncStart(this.NewFrameStep6_TriggerEvents.name);
-    scFrameProxy.TriggerEventsForInboundSelf();
+    scFrameProxy.TriggerEventsForInbound();
     this.Logger.FuncEnd(this.NewFrameStep6_TriggerEvents.name);
   }
 
@@ -423,15 +428,15 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
     return toReturn;
   }
 
-  private BucketHasSameItem(dtFrameBucketItem: IScFrameProxy): boolean {
+  private HostedHasSameFrameProxy(scFrameProxy: IScFrameProxy): boolean {
     let toReturn: boolean = true;
 
     //todo - I think we'll need to check against the iframe id
-    if (this.HostedProxies.indexOf(dtFrameBucketItem) < 0) {
+    if (this.HostedProxies.indexOf(scFrameProxy) < 0) {
       toReturn = false;
     } else {
       toReturn = true;
-      this.ErrorHand.WarningAndContinue(this.BucketHasSameItem.name, 'Proxy already exists in bucket');
+      this.ErrorHand.WarningAndContinue(this.HostedHasSameFrameProxy.name, 'Proxy already exists in bucket');
     }
 
     return toReturn;

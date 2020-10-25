@@ -43,6 +43,8 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     let found: IBaseScProxy[] = this.GetHostedProxiesStateByDisciminator(needleScProxyDiscriminator);
     if (found.length === 1) {
       toReturn = found[0];
+    } else {
+      this.ErrorHand.WarningAndContinue([_BaseScProxy.name, this.GetHostedProxiesStateByDisciminator.name, this.ScProxyDisciminatorFriendly], 'Num needles found: ' + found.length + ' of ' + found.length + ' candidates');
     }
     return toReturn;
   }
@@ -52,6 +54,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     if (this.HostedProxies) {
       this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => { if (hostedProxy.ScProxyDisciminator === needleScProxyDiscriminator) { toReturn.push(hostedProxy) } });
     }
+
     return toReturn;
   }
 
@@ -167,31 +170,31 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
 
   //})
 
-  async InstantiateChildren(): Promise<void> {
-    this.Logger.FuncStart([_BaseScProxy.name, this.InstantiateChildren.name, this.ScProxyDisciminatorFriendly]);
+  async InstantiateAwaitElements(): Promise<void> {
+    this.Logger.FuncStart([_BaseScProxy.name, this.InstantiateAwaitElements.name, this.ScProxyDisciminatorFriendly]);
 
-    await this.InstantiateChildrenSelf()
-      .then(() => this.InstantiateChildrenOnHostedProxies())
+    await this.InstantiateAwaitElementsSelf()
+      .then(() => this.InstantiateElementsOnHostedProxies())
       .then(() => Promise.resolve())
-      .catch((err) => Promise.reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.InstantiateChildren.name, this.ScProxyDisciminatorFriendly], err)));
+      .catch((err) => Promise.reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.InstantiateAwaitElements.name, this.ScProxyDisciminatorFriendly], err)));
 
-    this.Logger.FuncEnd([_BaseScProxy.name, this.InstantiateChildren.name, this.ScProxyDisciminatorFriendly]);
+    this.Logger.FuncEnd([_BaseScProxy.name, this.InstantiateAwaitElements.name, this.ScProxyDisciminatorFriendly]);
   }
-  async InstantiateChildrenSelf(): Promise<void> {
+
+  async InstantiateAwaitElementsSelf(): Promise<void> {
     //empty by default
   }
 
-  private async InstantiateChildrenOnHostedProxies(): Promise<void> {
-    this.Logger.FuncStart([_BaseScProxy.name, this.InstantiateChildrenOnHostedProxies.name, this.ScProxyDisciminatorFriendly]);
-    if (this.HostedProxies) {
-      let promAr: Promise<void>[] = [];
+  private async InstantiateElementsOnHostedProxies(): Promise<void> {
+    this.Logger.FuncStart([_BaseScProxy.name, this.InstantiateElementsOnHostedProxies.name, this.ScProxyDisciminatorFriendly], 'count: ' + this.HostedProxies.length);
+    let promAr: Promise<void>[] = [];
 
-      this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => promAr.push(hostedProxy.InstantiateChildren()));
+    this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => promAr.push(hostedProxy.InstantiateAwaitElements()));
 
-      await Promise.all(promAr)
-        .catch((err) => this.ErrorHand.HandleFatalError(this.ScProxyDisciminatorFriendly, err));
-    }
-    this.Logger.FuncEnd([_BaseScProxy.name, this.InstantiateChildrenOnHostedProxies.name, this.ScProxyDisciminatorFriendly]);
+    await Promise.all(promAr)
+      .catch((err) => this.ErrorHand.HandleFatalError(this.ScProxyDisciminatorFriendly, err));
+
+    this.Logger.FuncEnd([_BaseScProxy.name, this.InstantiateElementsOnHostedProxies.name, this.ScProxyDisciminatorFriendly]);
   }
 
   WireEvents(): void {
@@ -205,8 +208,8 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     //empty by default
   }
 
-  private WireEventsOnHostedProxies() {
-    this.Logger.FuncStart([_BaseScProxy.name, this.WireEventsOnHostedProxies.name], 'On behalf of : ' + this.ScProxyDisciminatorFriendly);
+  private WireEventsOnHostedProxies(): void {
+    this.Logger.FuncStart([_BaseScProxy.name, this.WireEventsOnHostedProxies.name, this.ScProxyDisciminatorFriendly]);
     if (this.HostedProxies) {
       this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => {
         if (hostedProxy) {
@@ -216,6 +219,6 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
         }
       });
     }
-    this.Logger.FuncEnd([_BaseScProxy.name, this.WireEventsOnHostedProxies.name], 'On behalf of : ' + this.ScProxyDisciminatorFriendly);
+    this.Logger.FuncEnd([_BaseScProxy.name, this.WireEventsOnHostedProxies.name, this.ScProxyDisciminatorFriendly]);
   }
 }

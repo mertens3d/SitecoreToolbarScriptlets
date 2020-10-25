@@ -1,10 +1,16 @@
 ﻿import { ScProxyDisciminator } from "../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { IDiscriminatorMappingPair } from "../../../Shared/scripts/Interfaces/IDiscriminatorMappingPair";
 
+export class ScWindowTypeToScDocDiscriminatorMapping {
+
+
+
+}
+
 export class ScFrameToScDocDiscriminatorMapping {
   static Mappings: IDiscriminatorMappingPair[] = [
     {
-      FrameProxyDiscriminator: ScProxyDisciminator.GenericStateLessFrameProxy,
+      FrameProxyDiscriminator: ScProxyDisciminator.GenericFrameProxy,
       DocProxyDisciminator: ScProxyDisciminator.ScDocumentProxy,
     },
     {
@@ -18,6 +24,11 @@ export class ScFrameToScDocDiscriminatorMapping {
     {
       FrameProxyDiscriminator: ScProxyDisciminator.JqueryModalDialogsFrameProxy,
       DocProxyDisciminator: ScProxyDisciminator.JqueryModalDialogsDocProxy,
+    },
+
+    {
+      FrameProxyDiscriminator: ScProxyDisciminator.GenericFrameProxy,
+      DocProxyDisciminator: ScProxyDisciminator.ContentEditor,
     },
   ];
 }

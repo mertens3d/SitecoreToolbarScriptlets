@@ -45,14 +45,14 @@ export interface IContentConst {
       Body: string
     },
     SC: {
-      ContentEditor: {
+      
+      ContentTree: {
         ScContentTreeNodeGlyph: string,
         ScContentTreeNode: string,
         ScContentTreeContainer: string,
         scContentTreeNodeIcon: string,
-      },
-      ContentTree: {
         BuiltIn: {
+
           TreeNodeSitecoreRoot: string,
           MediaLibraryAnchorRootNode: string,
           MarketingControlPanelRoodNode: string,

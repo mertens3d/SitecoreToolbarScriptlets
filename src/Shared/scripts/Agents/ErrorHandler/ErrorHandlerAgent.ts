@@ -18,7 +18,6 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
   private CancelButtonElem: HTMLInputElement;
 
   constructor() {
-    
   }
 
   IntroduceSiblings(logger: ILoggerAgent, taskMonitor: ICoreTaskMonitor) {
@@ -51,7 +50,6 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
   }
 
   private CommonThrow(errorMessage: string): void {
-    
     throw (errorMessage);
   }
 
@@ -68,7 +66,7 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     }
   }
 
-  WarningAndContinue(container: string, text: any): void {
+  WarningAndContinue(container: string | string[], text: any): void {
     if (!container) {
       container = 'unknown';
     }
@@ -76,6 +74,8 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     if (!text) {
       text = 'unknown';
     }
+
+    container = this.ResolveContainer(container);
 
     this.ErrorLogger('');
     this.ErrorLogger('\t\t** WARNING ** ' + container + ' ' + text);
@@ -103,6 +103,8 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
 
     let textToRender: string[] = [];
 
+    let indent: string = '      ';
+
     if (!text) {
       text = ['unknown'];
     }
@@ -114,10 +116,11 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     }
 
     this.ErrorLogger('');
-    this.ErrorLogger('\t\ts) '
-      + this.StyleFormat([SharedConst.Const.Colors.ConsoleStyles.StyleBgRed], '** ERROR **'));
+    this.ErrorLogger('');
+    this.ErrorLogger('');
+    this.ErrorLogger(indent + this.StyleFormat([SharedConst.Const.Colors.ConsoleStyles.StyleBgRed], 's) ERROR'));
 
-    this.ErrorLogger('\t\t  container: ' + container);
+    this.ErrorLogger(indent + 'container: ' + container);
 
     this.ErrorLogger('');
 
@@ -127,11 +130,20 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
         ErrorString: message
       });
 
-      this.ErrorLogger('\t\t' + message);
+      if (message) {
+        let msgSplit: string[] = message.toString().split(/\r?\n/g);
+        if (msgSplit) {
+          msgSplit.forEach((msg: string) => {
+            this.ErrorLogger(indent + msg);
+          })
+        }
+      }
     })
 
     this.ErrorLogger('');
-    this.ErrorLogger('\t\te)** ERROR container: ** ' + container);
+    this.ErrorLogger(indent + this.StyleFormat([SharedConst.Const.Colors.ConsoleStyles.StyleBgRed], 'e) ERROR'));
+    this.ErrorLogger('');
+    this.ErrorLogger('');
     this.ErrorLogger('');
   }
 
@@ -140,10 +152,29 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
   }
 
   ErrorLogger(text: string): void {
-    console.log('********** ' + text + ' **********');
+    this.WrapTextInStars(text);
   }
 
-  FormatRejectMessage(container: string | string[], err: string): string {
+  private WrapTextInStars(text: string) {
+    let maxTextWidth: number = 200;
+    let stars: string = '**********';
+    let starsWidth: number = stars.length;
+    let remainingText: string = text;
+    let maxIter: number = 20;
+    let currIter: number = 0;
+    while (currIter < maxIter && remainingText.length > maxTextWidth) {
+      currIter++;
+      let oneLineOfText = remainingText.substring(0, maxTextWidth);
+      remainingText = remainingText.substring(maxTextWidth);
+      console.log(stars + ' ' + oneLineOfText);
+    }
+    if (remainingText.length > 0) {
+      //let bufferSpace: string = new Array(maxTextWidth - remainingText.length + 1).join(' ');
+      console.log(stars + ' ' + remainingText);
+    }
+  }
+
+  private ResolveContainer(container: string | string[]): string {
     let toReturn: string = '';
 
     if (Array.isArray(container)) {
@@ -158,6 +189,12 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     } else {
       toReturn = container;
     }
+
+    return toReturn;
+  }
+
+  FormatRejectMessage(container: string | string[], err: string): string {
+    let toReturn: string = this.ResolveContainer(container);
 
     toReturn += ' | ' + err;
 

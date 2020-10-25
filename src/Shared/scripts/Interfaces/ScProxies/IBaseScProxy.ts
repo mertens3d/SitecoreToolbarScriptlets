@@ -7,7 +7,7 @@ export interface IBaseScProxy {
   readonly HostedProxies: IBaseScProxy[];
 
   TriggerEventsForInbound(): void;
-  InstantiateChildren(): Promise<void>;
+  InstantiateAwaitElements(): Promise<void>;
   WireEvents(): void;
   GetState(): Promise<any>;
   SetState(state: any): Promise<any>;

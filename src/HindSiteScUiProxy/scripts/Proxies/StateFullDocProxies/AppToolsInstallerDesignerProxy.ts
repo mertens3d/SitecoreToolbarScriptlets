@@ -5,11 +5,12 @@ import { PromiseFailAction } from "../../../../Shared/scripts/Enums/PromiseFailA
 import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IScDocProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
-import { _justWindowStateFullDocProxy } from "../Desktop/DesktopProxy/FrameProxies/_justWindowStateFullProxy";
+import { IStateOf_ } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
+import { _ScDocProxyOfTypeT } from "../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
 import { PackageDesignerInstallerRibbonToolbarElemProxy } from "../StateLessDocProxies/StateLessElemProxies/PackageDesignerInstallerRibbonToolbarProxy";
 import { JqueryModalDialogsFrameProxy } from "../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 
-export class AppToolsInstallerDesignerProxy extends _justWindowStateFullDocProxy implements IScDocProxy {
+export class AppToolsInstallerDesignerProxy extends _ScDocProxyOfTypeT<IStateOf_> implements IScDocProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.AppToolsInstallerDesigner;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.AppToolsInstallerDesigner];
 
@@ -29,14 +30,14 @@ export class AppToolsInstallerDesignerProxy extends _justWindowStateFullDocProxy
   }
 
 
-  async InstantiateChildrenSelf(): Promise<void> {
-    this.Logger.FuncStart([AppToolsInstallerDesignerProxy.name, this.InstantiateChildrenSelf.name]);
+  async InstantiateAwaitElementsSelf(): Promise<void> {
+    this.Logger.FuncStart([AppToolsInstallerDesignerProxy.name, this.InstantiateAwaitElementsSelf.name]);
 
     await this.HarvestRibbonToolbar()
-      .catch((err: any) => this.ErrorHand.HandleFatalError([AppToolsInstallerDesignerProxy.name, this.InstantiateChildrenSelf.name], err));
+      .catch((err: any) => this.ErrorHand.HandleFatalError([AppToolsInstallerDesignerProxy.name, this.InstantiateAwaitElementsSelf.name], err));
 
 
-    this.Logger.FuncEnd([AppToolsInstallerDesignerProxy.name, this.InstantiateChildrenSelf.name]);
+    this.Logger.FuncEnd([AppToolsInstallerDesignerProxy.name, this.InstantiateAwaitElementsSelf.name]);
   }
 
 
@@ -63,7 +64,7 @@ export class AppToolsInstallerDesignerProxy extends _justWindowStateFullDocProxy
 
     await this.DocumentJacket.WaitForGenericElemJacket(ContentConst.Const.Selector.SC.PackageDesigner.Ribbon.InstallerRibbon_Toolbar, PromiseFailAction.RejectThrow)
       .then((elementDivJacket: ElementDivJacket) => this.packagedesignerInstallerRibbonToolbarElem = new PackageDesignerInstallerRibbonToolbarElemProxy(this.ApiCore, elementDivJacket, this.JqueryModalDialogsFrameProxy))
-      .then(() => this.packagedesignerInstallerRibbonToolbarElem.InstantiateChildrenSelf())
+      .then(() => this.packagedesignerInstallerRibbonToolbarElem.InstantiateAwaitElementsSelf())
       .catch((err: any) => this.ErrorHand.HandleFatalError([AppToolsInstallerDesignerProxy.name, this.HarvestRibbonToolbar.name], err));
 
     this.Logger.FuncEnd([AppToolsInstallerDesignerProxy.name, this.HarvestRibbonToolbar.name]);

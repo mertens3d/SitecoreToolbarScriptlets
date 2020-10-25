@@ -151,27 +151,27 @@ export class ScDocProxyResolver extends _APICoreBase {
 
   ScDocProxyFactoryMake(documentJacket: DocumentJacket, jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy): Promise<IScDocProxy> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name]);
+      this.Logger.FuncStart([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], documentJacket.UrlJacket.GetUrlParts().FilePath);
 
       let scDocProxy: IScDocProxy = null;
 
       let windowTypeResolver = new ScWindowTypeResolver(this.CommonCore);
-      let desiredScWindowType = windowTypeResolver.GetScWindowType(documentJacket.UrlJacket);
+      let detectedWindowType = windowTypeResolver.GetScWindowType(documentJacket.UrlJacket);
 
-      if (this.ScWindowTypes().indexOf(desiredScWindowType) > -1) {
-        scDocProxy = this.ScDocProxyFactory(desiredScWindowType, documentJacket, jqueryModalDialogsFrameProxy);
+      if (this.ScWindowTypes().indexOf(detectedWindowType) > -1) {
+        scDocProxy = this.ScDocProxyFactory(detectedWindowType, documentJacket, jqueryModalDialogsFrameProxy);
       }
       else {
-        this.ErrorHand.HandleFatalError([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], 'unhandled windowType ' + ScWindowType[desiredScWindowType]);
+        this.ErrorHand.HandleFatalError([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], 'unhandled windowType ' + ScWindowType[detectedWindowType]);
       }
 
-      await scDocProxy.InstantiateChildren()
+      await scDocProxy.InstantiateAwaitElements()
         .then(() => scDocProxy.WireEvents())
         .then(() => scDocProxy.OnFocus())
         .then(() => resolve(scDocProxy))
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], err)));
 
-      this.Logger.FuncEnd([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], ScWindowType[desiredScWindowType]);
+      this.Logger.FuncEnd([ScDocProxyResolver.name, this.ScDocProxyFactoryMake.name], ScWindowType[detectedWindowType] + ' ' +  documentJacket.UrlJacket.GetUrlParts().FilePath);
     });
   }
 

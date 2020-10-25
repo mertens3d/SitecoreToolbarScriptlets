@@ -34,15 +34,6 @@ export class DTStartBarElemProxy extends _BaseElemProxy<IStateOf_> implements IB
     this.ConResolver = new ConResolver(this.ApiCore);
   }
 
-  public async InstantiateChildrenSelf(): Promise<void> {
-    this.Logger.FuncStart([DTStartBarElemProxy.name, this.InstantiateChildrenSelf.name]);
-    this.Logger.FuncEnd([DTStartBarElemProxy.name, this.InstantiateChildrenSelf.name]);
-  }
-
-  WireEvent() {
-    this.Logger.FuncStart(this.WireEvent.name, DTStartBarElemProxy.name);
-    this.Logger.FuncEnd(this.WireEvent.name, DTStartBarElemProxy.name);
-  }
 
   async TriggerRedButtonAsync(scWindowType: ScWindowType, methodLock: AsyncLock): Promise<void> {
     this.Logger.FuncStart(this.TriggerRedButtonAsync.name);

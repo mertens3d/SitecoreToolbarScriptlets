@@ -13,8 +13,9 @@ import { _ContentTreeBasedDocProxy } from './_ContentTreeBasedProxy';
 
 export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfContentTreeBasedProxies> implements IScDocProxy {
   public readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.ContentEditor];
-  readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
   public readonly ScProxyDisciminator = ScProxyDisciminator.ContentEditor;
+
+  readonly TreeRootSelector: string = ContentConst.Const.Selector.SC.ContentTree.BuiltIn.TreeNodeSitecoreRoot;
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket, friendly: string) {
     super(apiCore, documentJacket);
@@ -27,9 +28,6 @@ export class ContentEditorDocProxy extends _ContentTreeBasedDocProxy<IStateOfCon
     let publishProxy = new ContentEditorPublishProxy(this.ApiCore, this, this.DocumentJacket);
     await publishProxy.Execute();
   }
-
-
-
 
   //----------------------------------------------------------------------
 

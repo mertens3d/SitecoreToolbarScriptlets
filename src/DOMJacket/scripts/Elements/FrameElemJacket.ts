@@ -34,6 +34,7 @@ export class FrameJacket extends ElementJacketOfType<HTMLIFrameElement> {
 
   public static FactoryFrameElemJackets(commonCore: ICommonCore, inputValue: IJacketOfType[] | HTMLElement[]): Promise<FrameJacket[]> {
     return new Promise(async (resolve, reject) => {
+      commonCore.Logger.FuncStart([FrameJacket.name, this.FactoryFrameElemJackets.name]);
       let frameElemJacketAr: FrameJacket[] = [];
 
       inputValue.forEach((inputValue: IJacketOfType | HTMLElement) => {
@@ -49,6 +50,9 @@ export class FrameJacket extends ElementJacketOfType<HTMLIFrameElement> {
       await Promise.all(promiseArFrame)
         .then(() => resolve(frameElemJacketAr))
         .catch((err: any) => reject(commonCore.ErrorHand.FormatRejectMessage([FrameJacket.name, this.FactoryFrameElemJackets.name], err)));
+
+
+      commonCore.Logger.FuncEnd([FrameJacket.name, this.FactoryFrameElemJackets.name]);
     });
   }
 

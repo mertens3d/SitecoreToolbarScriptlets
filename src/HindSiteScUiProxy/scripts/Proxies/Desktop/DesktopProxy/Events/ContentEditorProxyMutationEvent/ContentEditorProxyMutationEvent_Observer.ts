@@ -1,11 +1,11 @@
 ﻿import { IAPICore } from "../../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { I_ContentTreeBasedProxyMutationEvent_Payload } from "./IContentEditorProxyMutationEvent_Payload";
-import { HindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer";
+import { _HindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/HindSiteEvent_Observer";
 import { IHindSiteEvent_Observer } from "../../../../../../../Shared/scripts/Events/_HindSiteEvent/IHindSiteEvent_Observer";
 import { TypeDiscriminator } from "../../../../../../../Shared/scripts/Enums/70 - TypeDiscriminator";
 import { IScFrameProxy } from "../../../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 
-export class _ContentTreeBasedProxyMutationEvent_Observer extends HindSiteEvent_Observer<I_ContentTreeBasedProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<I_ContentTreeBasedProxyMutationEvent_Payload>  {
+export class _ContentTreeBasedProxyMutationEvent_Observer extends _HindSiteEvent_Observer<I_ContentTreeBasedProxyMutationEvent_Payload> implements IHindSiteEvent_Observer<I_ContentTreeBasedProxyMutationEvent_Payload>  {
   TypeDiscriminator = TypeDiscriminator._ContentTreeBasedProxyMutationEvent_Observer;
 
   protected ShowLogActions: boolean = true;

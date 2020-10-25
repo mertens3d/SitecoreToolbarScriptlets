@@ -181,7 +181,7 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
       await this.StartUp()
-        .then(() => (<DesktopProxy>this.ScWindowFacade.StateFullProxy).AddContentEditorFrameAsync())
+        .then(() => (<DesktopProxy>this.ScWindowFacade.ScDocProxy).AddContentEditorFrameAsync())
         .then(() => resolve(returnPayload))
         .catch((err: any) => reject(err));
     });

@@ -20,7 +20,7 @@ import { DTAreaElemProxy } from "./DTAreaElemProxy";
 import { DTAreaProxyMutationEvent_Observer } from "./Events/DTAreaProxyMutationEvent/DTAreaProxyMutationEvent_Observer";
 import { IDTAreaProxyMutationEvent_Payload } from "./Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload";
 import { BaseScFrameProxy } from "./FrameProxies/BaseFrameProxy";
-import { ScDocProxyOfTypeT } from "./FrameProxies/ScDocProxyOfTypeT";
+import { _ScDocProxyOfTypeT } from "./FrameProxies/ScDocProxyOfTypeT";
 
 //export class ScDocumentWatcher extends _APICoreBase {
 //  ScDocumentProxyMutationEvent_Subject: ScDocumentProxyMutationEvent_Subject;
@@ -39,7 +39,7 @@ import { ScDocProxyOfTypeT } from "./FrameProxies/ScDocProxyOfTypeT";
 
 //}
 
-export class DesktopProxy extends ScDocProxyOfTypeT<IStateOfDesktop> implements IScDocProxy {
+export class DesktopProxy extends _ScDocProxyOfTypeT<IStateOfDesktop> implements IScDocProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.Desktop;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.Desktop];
 
@@ -68,9 +68,9 @@ export class DesktopProxy extends ScDocProxyOfTypeT<IStateOfDesktop> implements 
     this.DTAreaProxyMutationEvent_Observer = new DTAreaProxyMutationEvent_Observer(this.ApiCore, this.OnAreaProxyMutationEvent.bind(this));
   }
 
-  async InstantiateChildrenSelf(): Promise<void> {
+  async InstantiateAwaitElementsSelf(): Promise<void> {
     try {
-      this.Logger.FuncStart([DesktopProxy.name, this.InstantiateChildrenSelf.name]);
+      this.Logger.FuncStart([DesktopProxy.name, this.InstantiateAwaitElementsSelf.name]);
 
       await this.GetJqueryModalsFrameProxy()
         .then((jqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy) => this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy)
@@ -81,15 +81,15 @@ export class DesktopProxy extends ScDocProxyOfTypeT<IStateOfDesktop> implements 
           this.HostedProxies.push(dTAreaProxy);
         })
 
-        .catch((err: any) => this.ErrorHand.HandleFatalError([DesktopProxy.name, this.InstantiateChildrenSelf.name], err))
+        .catch((err: any) => this.ErrorHand.HandleFatalError([DesktopProxy.name, this.InstantiateAwaitElementsSelf.name], err))
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateChildrenSelf.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAwaitElementsSelf.name, err);
     }
 
-    this.Logger.FuncEnd([DesktopProxy.name, this.InstantiateChildrenSelf.name]);
+    this.Logger.FuncEnd([DesktopProxy.name, this.InstantiateAwaitElementsSelf.name]);
   }
 
-  async WireEventsSelf(): Promise<void> {
+   WireEventsSelf(): void {
     this.Logger.FuncStart(this.WireEventsSelf.name, DesktopProxy.name);
 
     let dtareaProxy: DTAreaElemProxy = <DTAreaElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.DTAreaElemProxy);

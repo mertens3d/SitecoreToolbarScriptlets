@@ -6,7 +6,7 @@ import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/I
 import { ScDocProxyWatcherForFrames } from "../../../StateFullDocProxies/ScDocProxyWatcherForFrames";
 import { _BaseScProxy } from "../../../StateFullDocProxies/_BaseScProxy";
 
-export abstract class ScDocProxyOfTypeT<T extends IStateOf_> extends _BaseScProxy implements IScDocProxy {
+export abstract class _ScDocProxyOfTypeT<T extends IStateOf_> extends _BaseScProxy implements IScDocProxy {
   //abstract GetState(): Promise<T>;
   //abstract SetState(state: T): Promise<void>;
   Friendly: string = '{unknown friendly}';
@@ -32,17 +32,28 @@ export abstract class ScDocProxyOfTypeT<T extends IStateOf_> extends _BaseScProx
     super(apiCore);
     this.DocumentJacket = documentJacket;
   }
-  public async EnableWatcherForFrames(): Promise<void> {
-    this.Logger.FuncStart([ScDocProxyOfTypeT.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly]);
 
+  public async CreateWatcherForFrames(): Promise<void> {
     try {
       this.WatcherForFrames = new ScDocProxyWatcherForFrames(this.ApiCore, this.DocumentJacket, this.ScProxyDisciminatorFriendly);
       await this.WatcherForFrames.EnableWatcherForFrames()
-        .catch((err: any) => this.ErrorHand.HandleFatalError([ScDocProxyOfTypeT.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err));
+        .catch((err: any) => this.ErrorHand.HandleFatalError([_ScDocProxyOfTypeT.name, this.CreateWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err));
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError([ScDocProxyOfTypeT.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err);
+      this.ErrorHand.HandleFatalError([_ScDocProxyOfTypeT.name, this.CreateWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err);
+    }
+  }
+
+
+  public  WireWatcherForFrames():void {
+    this.Logger.FuncStart([_ScDocProxyOfTypeT.name, this.WireWatcherForFrames.name, this.ScProxyDisciminatorFriendly]);
+
+    try {
+    
+      
+    } catch (err: any) {
+      this.ErrorHand.HandleFatalError([_ScDocProxyOfTypeT.name, this.WireWatcherForFrames.name, this.ScProxyDisciminatorFriendly], err);
     }
 
-    this.Logger.FuncEnd([ScDocProxyOfTypeT.name, this.EnableWatcherForFrames.name, this.ScProxyDisciminatorFriendly]);
+    this.Logger.FuncEnd([_ScDocProxyOfTypeT.name, this.WireWatcherForFrames.name, this.ScProxyDisciminatorFriendly]);
   }
 }

@@ -5,10 +5,10 @@ import { IAPICore } from "../../../../Shared/scripts/Interfaces/Agents/IAPICore"
 import { ContentConst } from "../../../../Shared/scripts/Interfaces/InjectConst";
 import { IScDocProxy } from "../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IStateOfPackageDesigner } from "../../../../Shared/scripts/Interfaces/StateOf/IStateOfPackageDesigner";
-import { ScDocProxyOfTypeT } from "../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
+import { _ScDocProxyOfTypeT } from "../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
 import { InstallerDesignerProxy } from "../StateLessDocProxies/StateLessDocProxies/InstallerDesignerProxy";
 
-export class PackageDesignerDocProxy extends ScDocProxyOfTypeT<IStateOfPackageDesigner> implements IScDocProxy {
+export class PackageDesignerDocProxy extends _ScDocProxyOfTypeT<IStateOfPackageDesigner> implements IScDocProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.PackageDesigner;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.PackageDesigner];
 
@@ -24,18 +24,18 @@ export class PackageDesignerDocProxy extends ScDocProxyOfTypeT<IStateOfPackageDe
     this.Logger.CTOREnd(PackageDesignerDocProxy.name);
   }
 
-  async InstantiateChildrenSelf(): Promise<void> {
-    this.Logger.FuncStart([PackageDesignerDocProxy.name, this.InstantiateChildrenSelf.name], this.Friendly);
+  async InstantiateAwaitElementsSelf(): Promise<void> {
+    this.Logger.FuncStart([PackageDesignerDocProxy.name, this.InstantiateAwaitElementsSelf.name], this.Friendly);
 
     await this.HarvestElements()
-      
-      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.InstantiateChildrenSelf.name], err));
+      .then(() => this.CreateWatcherForFrames())
+      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.InstantiateAwaitElementsSelf.name], err));
     try {
     } catch (err: any) {
-      this.ErrorHand.HandleFatalError(this.InstantiateChildrenSelf.name, err);
+      this.ErrorHand.HandleFatalError(this.InstantiateAwaitElementsSelf.name, err);
     }
 
-    this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.InstantiateChildrenSelf.name], this.Friendly);
+    this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.InstantiateAwaitElementsSelf.name], this.Friendly);
   }
 
   private async HarvestElements(): Promise<void> {
@@ -47,11 +47,11 @@ export class PackageDesignerDocProxy extends ScDocProxyOfTypeT<IStateOfPackageDe
     this.Logger.FuncEnd([PackageDesignerDocProxy.name, this.HarvestElements.name], this.Friendly);
   }
 
-  async WireEventsSelf(): Promise<void> {
+   WireEventsSelf(): void {
     this.Logger.FuncStart(this.WireEventsSelf.name, this.Friendly);
 
-    await this.EnableWatcherForFrames()
-      .catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEventsSelf.name], err));
+    this.WireWatcherForFrames();
+      //.catch((err: any) => this.ErrorHand.HandleFatalError([PackageDesignerDocProxy.name, this.WireEventsSelf.name], err));
 
     this.Logger.FuncEnd(this.WireEventsSelf.name, this.Friendly);
   }

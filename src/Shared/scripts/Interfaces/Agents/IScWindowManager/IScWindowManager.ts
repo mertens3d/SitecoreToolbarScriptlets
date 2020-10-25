@@ -13,5 +13,5 @@ export interface IScWindowFacade {
   PublishActiveCE():Promise<void>;
   SetCompactCss(targetDoc: DocumentJacket):void;
   SetStateOfScWin(dataToRestore: IStateOfScUi): Promise<void>
-  StateFullProxy: IScDocProxy;
+  ScDocProxy: IScDocProxy;
 }

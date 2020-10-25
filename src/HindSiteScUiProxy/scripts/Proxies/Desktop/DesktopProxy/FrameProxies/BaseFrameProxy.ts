@@ -5,35 +5,31 @@ import { DefaultStateOfDTFrame } from "../../../../../../Shared/scripts/Classes/
 import { ReadyStateNAB } from "../../../../../../Shared/scripts/Classes/ReadyStateNAB";
 import { ScProxyDisciminator } from "../../../../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
 import { ScWindowType } from "../../../../../../Shared/scripts/Enums/50 - scWindowType";
+import { DocReadyState } from "../../../../../../Shared/scripts/Enums/ReadyState";
 import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAPICore";
 import { IScDocProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
+import { IBaseScProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScProxy";
 import { IScFrameProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
+import { IStateOfContentTreeBasedProxies } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies";
 import { IStateOfDTFrame } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
 import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
-import { ContentEditorDocProxy } from "../../../ContentEditor/ContentEditorProxy/ContentEditorProxy";
+import { _ContentTreeBasedDocProxy } from "../../../ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
 import { ScDocProxyResolver } from "../../../ScDocProxyResolver";
-import { MarketingControlPanelDocProxy } from "../../../StateFullDocProxies/MarketingControlPanelProxy";
-import { MediaLibraryProxy } from "../../../StateFullDocProxies/MediaLibraryProxy";
-import { TemplateManagerProxy } from "../../../StateFullDocProxies/TemplateManagerProxy";
 import { JqueryModalDialogsFrameProxy } from "../../../StateLessDocProxies/StateLessFrameProxies/JqueryModalDialogsFrameProxy";
 import { _ContentTreeBasedProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";
 import { I_ContentTreeBasedProxyMutationEvent_Payload } from "../Events/ContentEditorProxyMutationEvent/IContentEditorProxyMutationEvent_Payload";
 import { DTFrameProxyMutationEvent_Subject } from "../Events/DTFrameProxyMutationEvent/DTFrameProxyMutationEvent_Subject";
 import { IDTFrameProxyMutationEvent_Payload } from "../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload";
-import { _BaseElemProxy } from "./_BaseElemProxy";
-import { DocReadyState } from "../../../../../../Shared/scripts/Enums/ReadyState";
-import { IBaseScProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScProxy";
-import { ScDocProxyOfTypeT } from "./ScDocProxyOfTypeT";
-import { ScFrameToScDocDiscriminatorMapping } from "../../../../Collections/ScFrameToScDocDiscriminatorMapping";
-import { IDiscriminatorMappingPair } from "../../../../../../Shared/scripts/Interfaces/IDiscriminatorMappingPair";
+import { _ScDocProxyOfTypeT } from "./ScDocProxyOfTypeT";
 import { ScFrameProxyFactory } from "./ScFrameProxyFactory";
+import { _BaseElemProxy } from "./_BaseElemProxy";
 
 export class BaseScFrameProxy<T extends IStateOf_> extends _BaseElemProxy<T> implements IScFrameProxy {
   readonly ScProxyDisciminator: ScProxyDisciminator = ScProxyDisciminator.DTFrameProxy;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.DTFrameProxy];
 
   private _ContentTreeBasedProxyMutationEvent_Observer: _ContentTreeBasedProxyMutationEvent_Observer;
-  private StateFullProxyFactory: ScDocProxyResolver;
+  private ScDocProxyResolver: ScDocProxyResolver;
   public DTFrameProxyMutationEvent_Subject: DTFrameProxyMutationEvent_Subject;
   Id: string = null;
   public readonly JqueryModalDialogsFrameProxy: JqueryModalDialogsFrameProxy;
@@ -43,6 +39,9 @@ export class BaseScFrameProxy<T extends IStateOf_> extends _BaseElemProxy<T> imp
 
     //this.ScProxyDisciminator = P;
     this.JqueryModalDialogsFrameProxy = jqueryModalDialogsFrameProxy;
+    if (frameProxyDisciminator === ScProxyDisciminator.Unknown) {
+      this.ErrorHand.HandleFatalError([BaseScFrameProxy.name, 'ctor'], 'ScProxyDisciminator.Unknown');
+    }
     this.ScProxyDisciminator = frameProxyDisciminator;
     this.ScProxyDisciminatorFriendly = ScProxyDisciminator[frameProxyDisciminator];
 
@@ -52,14 +51,14 @@ export class BaseScFrameProxy<T extends IStateOf_> extends _BaseElemProxy<T> imp
   }
 
   InstantiateInstance(): void {
-    this.StateFullProxyFactory = new ScDocProxyResolver(this.ApiCore);
+    this.ScDocProxyResolver = new ScDocProxyResolver(this.ApiCore);
   }
 
-  async InstantiateChildrenSelf(): Promise<void> {
+  async InstantiateAwaitElementsSelf(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.InstantiateChildrenSelf.name, BaseScFrameProxy.name);
+      this.Logger.FuncStart([BaseScFrameProxy.name, this.InstantiateAwaitElementsSelf.name, this.ScProxyDisciminatorFriendly]);
 
-      this.ErrorHand.ThrowIfNullOrUndefined(this.InstantiateChildrenSelf.name, [this.ContainerElemJacket]);
+      this.ErrorHand.ThrowIfNullOrUndefined(this.InstantiateAwaitElementsSelf.name, [this.ContainerElemJacket]);
 
       let frameJacket: FrameJacket = this.ContainerJacketAsFrameJacket();
 
@@ -70,7 +69,7 @@ export class BaseScFrameProxy<T extends IStateOf_> extends _BaseElemProxy<T> imp
               reject(result.DocumentReadtStateFriendly());
             }
           })
-          .then(() => this.StateFullProxyFactory.ScDocProxyFactoryMake(frameJacket.DocumentJacket, this.JqueryModalDialogsFrameProxy))
+          .then(() => this.ScDocProxyResolver.ScDocProxyFactoryMake(frameJacket.DocumentJacket, this.JqueryModalDialogsFrameProxy))
           .then((scDocProxy: IScDocProxy) => this.HostedProxies.push(scDocProxy))
           .then(() => {
             this.DTFrameProxyMutationEvent_Subject = new DTFrameProxyMutationEvent_Subject(this.ApiCore);
@@ -78,28 +77,38 @@ export class BaseScFrameProxy<T extends IStateOf_> extends _BaseElemProxy<T> imp
           })
 
           .then(() => resolve())
-          .catch((err: any) => reject(this.InstantiateChildrenSelf.name + ' | ' + err));
+          .catch((err: any) => reject(this.InstantiateAwaitElementsSelf.name + ' | ' + err));
       }
-      this.Logger.FuncEnd(this.InstantiateChildrenSelf.name, BaseScFrameProxy.name);
+      this.Logger.FuncEnd([BaseScFrameProxy.name, this.InstantiateAwaitElementsSelf.name, this.ScProxyDisciminatorFriendly]);
     });
   }
 
-  async WireEventsSelf() {
-    this.Logger.FuncStart(this.WireEventsSelf.name, BaseScFrameProxy.name);
+   WireEventsSelf():void {
+    this.Logger.FuncStart([BaseScFrameProxy.name, this.WireEventsSelf.name, this.ScProxyDisciminatorFriendly]);
 
     let hostedDocProxy: IScDocProxy = this.GetHostedDocProxy();
+    if (hostedDocProxy) {
+      if (hostedDocProxy instanceof _ContentTreeBasedDocProxy) {
 
-    if (hostedDocProxy.ScProxyDisciminator === ScProxyDisciminator.ContentEditor) {
-      (<ContentEditorDocProxy>hostedDocProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
-    } else if (hostedDocProxy.ScProxyDisciminator === ScProxyDisciminator.MediaLibrary) {
-      (<MediaLibraryProxy>hostedDocProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
-    } else if (hostedDocProxy.ScProxyDisciminator === ScProxyDisciminator.TemplateManager) {
-      (<TemplateManagerProxy>hostedDocProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
-    } else if (hostedDocProxy.ScProxyDisciminator === ScProxyDisciminator.MarketingControlPanel) {
-      (<MarketingControlPanelDocProxy>hostedDocProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
+        (<_ContentTreeBasedDocProxy<IStateOfContentTreeBasedProxies>>hostedDocProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
+
+
+      }
+
+      //if (hostedDocProxy.ScProxyDisciminator === ScProxyDisciminator.ContentEditor) {
+      //  (<ContentEditorDocProxy>hostedDocProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
+      //} else if (hostedDocProxy.ScProxyDisciminator === ScProxyDisciminator.MediaLibrary) {
+      //  (<MediaLibraryProxy>hostedDocProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
+      //} else if (hostedDocProxy.ScProxyDisciminator === ScProxyDisciminator.TemplateManager) {
+      //  (<TemplateManagerProxy>hostedDocProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
+      //} else if (hostedDocProxy.ScProxyDisciminator === ScProxyDisciminator.MarketingControlPanel) {
+      //  (<MarketingControlPanelDocProxy>hostedDocProxy).__ContentTreeBasedProxyMutationEvent_Subject.RegisterObserver(this._ContentTreeBasedProxyMutationEvent_Observer);
+      //}
+    } else {
+      this.ErrorHand.HandleFatalError([BaseScFrameProxy.name, this.WireEventsSelf.name, this.ScProxyDisciminatorFriendly], 'No hosted doc found');
     }
 
-    this.Logger.FuncEnd(this.WireEventsSelf.name, BaseScFrameProxy.name);
+    this.Logger.FuncEnd([BaseScFrameProxy.name, this.WireEventsSelf.name, this.ScProxyDisciminatorFriendly]);
   }
 
   async GetStateOfSelf(): Promise<IStateOfDTFrame> {
@@ -191,16 +200,23 @@ export class BaseScFrameProxy<T extends IStateOf_> extends _BaseElemProxy<T> imp
   }
 
   GetHostedDocProxy(): IScDocProxy {
+    this.Logger.FuncStart([BaseScFrameProxy.name, this.GetHostedDocProxy.name, this.ScProxyDisciminatorFriendly], 'Hosted Count: ' + this.HostedProxies.length);
     let toReturn: IScDocProxy = null;
 
-    let firstHosted: IBaseScProxy = null;
+    //let firstHosted: IBaseScProxy = null;
 
     this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => {
-      if (hostedProxy instanceof ScDocProxyOfTypeT) {
-        toReturn = <IScDocProxy>firstHosted;
+      if (hostedProxy instanceof _ScDocProxyOfTypeT) {
+        toReturn = <IScDocProxy>hostedProxy;
       }
     });
 
+    if (!toReturn) {
+      this.Logger.LogAsJsonPretty('did not find hosted doc proxy', this.HostedProxies);
+    }
+
+
+    this.Logger.FuncEnd([BaseScFrameProxy.name, this.GetHostedDocProxy.name, this.ScProxyDisciminatorFriendly], (toReturn !== null).toString());
     return toReturn;
   }
 
