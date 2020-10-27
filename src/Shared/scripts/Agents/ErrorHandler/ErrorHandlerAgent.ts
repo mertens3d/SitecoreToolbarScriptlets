@@ -322,6 +322,9 @@ export class ErrorHandlerAgent implements ICoreErrorHandler {
     } catch (err: any) {
       console.log(err);
     }
+
+    this.DisplayErrorFlag();
+
     console.log('----- sigh...sad face ');
   }
 

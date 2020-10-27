@@ -4,7 +4,7 @@ import { IElemJacketWatcherParameters } from "../../../../Shared/scripts/IElemJa
 import { IJacketOfType } from "../../../../Shared/scripts/IJacketOfType";
 import { ICommonCore } from "../../../../Shared/scripts/Interfaces/Agents/ICommonCore";
 import { SharedConst } from "../../../../Shared/scripts/SharedConst";
-import { ElementJacketOfType } from "../../Elements/ElementJacketBaseOfType";
+import { ElementJacketOfType } from "../../Elements/ElementJacketOfType";
 import { INativeAddRemoveEvent_Payload } from "./INativeAddRemoveEvent_Payload";
 
 export class NativeAddRemoveEvent_Subject extends _HindeSiteEvent_Subject<INativeAddRemoveEvent_Payload> {

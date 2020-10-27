@@ -149,7 +149,7 @@ export class CommandRouter extends _FrontBase {
           })
           .catch((err: any) => reject(err));
       } else {
-        reject(this.ExecuteApiCommand.name + ' | no functionToExecute');
+        reject(this.ErrorHand.FormatRejectMessage([CommandRouter.name,  this.ExecuteApiCommand.name], ' No functionToExecute'));
       }
 
       this.Logger.FuncEnd(this.ExecuteApiCommand.name);

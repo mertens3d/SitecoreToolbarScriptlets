@@ -104,6 +104,8 @@
     IconCache: string,
     IconShellStandardMedia: string,
     IconCacheSoftware16x16: string,
+    IconCachePeople16x16: string,
+    IconCacheApplications16x16: string,
   },
 
   UrlSuffix: {

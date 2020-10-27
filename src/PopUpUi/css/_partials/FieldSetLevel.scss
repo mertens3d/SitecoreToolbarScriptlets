@@ -58,13 +58,6 @@ fieldset {
   display: none;
 }
 
-.scroller {
-  height: 160px;
-  display: inline-block;
-  width: $MaxScrollerWidth;
-  overflow: scroll;
-  margin: $hsTypMargin;
-}
 
 .accordion-content {
   /*display: flex;*/

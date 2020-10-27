@@ -5,7 +5,7 @@ import { IAPICore } from "../../../../../../Shared/scripts/Interfaces/Agents/IAP
 import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/InjectConst';
 import { IBaseScProxy } from '../../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScProxy';
 import { IStateOf_ } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_';
-import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
+import { IConResolver } from "../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/IConResolver";
 import { IContentTreeProxyMutationEvent_Payload } from '../Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { IDTAreaProxyMutationEvent_Payload } from '../Events/DTAreaProxyMutationEvent/IDTAreaProxyMutationEvent_Payload';
 import { IDTFrameProxyMutationEvent_Payload } from '../Events/DTFrameProxyMutationEvent/IDTFrameProxyMutationEvent_Payload';
@@ -21,7 +21,7 @@ export class DTStartBarElemProxy extends _BaseElemProxy<IStateOf_> implements IB
 
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
   private StartMenuButtonResolver: StartMenuButtonResolver;
-  private ConResolver: ConResolver;
+  private ConResolver: IConResolver;
 
   constructor(apiCore: IAPICore, containerElemJacket: IJacketOfType) {
     super(apiCore, containerElemJacket);
@@ -31,7 +31,7 @@ export class DTStartBarElemProxy extends _BaseElemProxy<IStateOf_> implements IB
   }
 
   private InstantiateInstance() {
-    this.ConResolver = new ConResolver(this.ApiCore);
+    this.ConResolver = new IConResolver(this.ApiCore);
   }
 
 
@@ -129,10 +129,10 @@ export class DTStartBarElemProxy extends _BaseElemProxy<IStateOf_> implements IB
         &&
         dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.ContentTree
         &&
-        dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.ContentTree.ActiveNodeShallow) {
+        dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload.ContentTree.ContentTreeNodeDeep) {
         let contentTreeProxyMutationEvent_Payload: IContentTreeProxyMutationEvent_Payload = dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload.ContentEditorProxyMutationPayload.TreeMutationEvent_Payload;
 
-        if (contentTreeProxyMutationEvent_Payload.ContentTree.ActiveNodeShallow) {
+        if (contentTreeProxyMutationEvent_Payload.ContentTree.ContentTreeNodeDeep) {
           this.GetAssociatedStartBarButton(dTAreaProxyMutationEvent_Payload.DTFrameProxyMutationEvent_Payload)
             .then((startBarButtonProxy: DesktopStartBarButtonProxy) => startBarButtonProxy.SetStateOfDesktopStartBarButtonAsync(contentTreeProxyMutationEvent_Payload.ContentTree))
             .catch((err: any) => this.ErrorHand.HandleFatalError(this.OnTreeMutationEvent_DesktopStartBarProxy.name, err));

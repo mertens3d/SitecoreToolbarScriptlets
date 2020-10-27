@@ -113,7 +113,7 @@ export class CommandRunnerInternal extends _FrontBase {
 
       recipe.Execute()
         .then(() => resolve())
-        .catch((err: any) => reject(this.DebugForceAutoSnapShot.name + ' | ' + err));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([CommandRunnerInternal.name, this.DebugForceAutoSnapShot.name], err)));
     });
   }
 

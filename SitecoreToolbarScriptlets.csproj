@@ -64,8 +64,14 @@
     <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\APICommandMappingB.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\CommandMapping.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\RecipeSetStateFromMostRecent.ts" />
+    <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\ElementJacketOfType.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Collections\DTAreaValidProxies.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Collections\ScFrameToScDocDiscriminatorMapping.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\ContentTreeElemProxy.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\ScContentTreeNodeProxy\IConResolver.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\ScContentTreeNodeProxy\ScContentTreeNodeGetState.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\ScContentTreeNodeProxy\TreeNodeProperties.ts" />
+    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\ScContentTreeNodeProxy\TreeNodeProxyCandidate.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\DTFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\GenericFrameProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScDocProxy.ts" />
@@ -86,7 +92,6 @@
     <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\CommandToExecuteData.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Document\ElementJacketWatcher.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\DOMJacketEntry.ts" />
-    <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\ElementJacketBaseOfType.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\FrameElemJacket.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\IAbortToken.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Elements\_baseElemJacket.ts" />
@@ -187,7 +192,6 @@
     <TypeScriptCompile Include="src\ContentTop\scripts\Proxies\ContentBrowserProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\HindSiteScUiProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IAPICore.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\ScContentTreeNodeProxy\ConResolver.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\AsyncLock.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\IButtonSelectors.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\StartMenuButtonResolver.ts" />
@@ -254,7 +258,6 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DTFrameProxyMutationEvent\DTFrameProxyMutationEvent_Observer.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\DesktopStartBarProxy\DesktopStartBarButtonProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\ScContentTreeNodeProxy\ScContentTreeNodeProxy.ts" />
-    <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\ContentEditor\ContentEditorProxy\ContentTreeProxy\ContentTreeProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\ContentTreeProxyMutationEvent\IContentTreeProxyMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\Events\DTFrameProxyMutationEvent\DTFrameProxyMutationEvent_Subject.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\RecipeInitFromQueryStr.ts" />
@@ -447,6 +450,7 @@
     <None Include="src\PopUpUi\css\_partials\global.scss" />
     <None Include="src\PopUpUi\css\_partials\header.scss" />
     <Content Include="src\Browser-PolyFill\browser-polyfill.js" />
+    <None Include="src\PopUpUi\css\_partials\_scroller.scss" />
     <Content Include="webpack.config.js" />
     <None Include=".editorconfig" />
     <None Include=".jshintrc" />

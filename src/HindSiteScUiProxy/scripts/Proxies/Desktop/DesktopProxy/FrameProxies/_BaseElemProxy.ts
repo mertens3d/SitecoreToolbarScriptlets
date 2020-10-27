@@ -9,7 +9,6 @@ import { _BaseScProxy } from "../../../StateFullDocProxies/_BaseScProxy";
 export abstract class _BaseElemProxy<T extends IStateOf_> extends _BaseScProxy implements IScElemProxy {
   readonly abstract ScProxyDisciminator: ScProxyDisciminator;
   readonly abstract ScProxyDisciminatorFriendly: string;
-  readonly HostedProxies: IBaseScProxy[] = [];
 
   protected ContainerElemJacket: IJacketOfType;
 

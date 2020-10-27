@@ -70,7 +70,6 @@ export class PopConst {
         BuildStamp: '[id=build-stamp]',
 
         DivOverlayModule: '[id=menu-overlay]',
-        DivStateContent: '[id=feedback-div-state-content]',
         FeedbackBrowserState: '[id=feedback-div-browser-state]',
         FeedbackPopUpState: '[id=feedback-div-pop-up-state]',
         FeedbackContentState: '[id=feedback-div-state-content]',

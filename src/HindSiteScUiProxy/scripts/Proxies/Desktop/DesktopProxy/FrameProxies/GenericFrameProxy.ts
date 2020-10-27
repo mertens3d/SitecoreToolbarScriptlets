@@ -12,7 +12,6 @@ import { IBaseScProxy, IProxyCommand } from "../../../../../../Shared/scripts/In
 import { IScFrameProxy } from "../../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 import { IStateOfContentTreeBasedProxies } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTreeBasedProxies";
 import { IStateOfGenericFrame } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTFrame";
-import { IStateOf_ } from "../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { _ContentTreeBasedDocProxy } from "../../../ContentEditor/ContentEditorProxy/_ContentTreeBasedProxy";
 import { ScDocProxyResolver } from "../../../ScDocProxyResolver";
 import { _ContentTreeBasedProxyMutationEvent_Observer } from "../Events/ContentEditorProxyMutationEvent/ContentEditorProxyMutationEvent_Observer";

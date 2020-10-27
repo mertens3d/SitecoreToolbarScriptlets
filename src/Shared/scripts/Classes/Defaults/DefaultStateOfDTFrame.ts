@@ -5,7 +5,6 @@ import { IStateOfGenericFrame } from "../../Interfaces/StateOf/IStateOfDTFrame";
 import { IFrameJacketStyling } from "../../Interfaces/StateOf/IStateOfFrameStyling";
 
 export class DefaultStateOfFrameProxy implements IStateOfGenericFrame {
-  Children: IStateOf_[] = []
 
   Disciminator = ScProxyDisciminator.FrameProxy;
   DisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.FrameProxy];
@@ -13,4 +12,6 @@ export class DefaultStateOfFrameProxy implements IStateOfGenericFrame {
   FrameStyling: IFrameJacketStyling = null;
   WindowType: ScWindowType;
   ZIndex: number;
+
+  Children: IStateOf_[] = []
 }

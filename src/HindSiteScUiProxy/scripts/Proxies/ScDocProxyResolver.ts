@@ -58,6 +58,7 @@ export class ScDocProxyResolver extends _APICoreBase {
       ScWindowType.ExperienceOptimization,
       ScWindowType.ExperienceProfile,
 
+      ScWindowType.FallBack,
       ScWindowType.FederatedExperienceManager,
       ScWindowType.Forms,
 
@@ -66,6 +67,7 @@ export class ScDocProxyResolver extends _APICoreBase {
 
       ScWindowType.KeyboardMap,
 
+      ScWindowType.Launchpad,
       ScWindowType.LicenseDetails,
       ScWindowType.ListManager,
       ScWindowType.LoginPage,

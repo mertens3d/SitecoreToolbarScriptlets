@@ -162,7 +162,7 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
         .then((response: DefaultMsgContentToController) => {
           resolve(response);
         })
-        .catch((err: any) => reject(this.ReqMsgRouter.name + ' | ' + err));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([BrowserMessageBroker_Content.name,  this.ReqMsgRouter.name ], err)));
 
       this.Logger.FuncEnd(this.ReqMsgRouter.name);
     });

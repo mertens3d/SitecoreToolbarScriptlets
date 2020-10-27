@@ -13,7 +13,7 @@ import { I_ContentTreeBasedProxyMutationEvent_Payload } from '../../Desktop/Desk
 import { ContentTreeBasedProxyMutationEvent_Observer } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/ContentTreeProxyMutationEvent_Observer';
 import { IContentTreeProxyMutationEvent_Payload } from '../../Desktop/DesktopProxy/Events/ContentTreeProxyMutationEvent/IContentTreeProxyMutationEvent_Payload';
 import { _ScDocProxyOfTypeT } from "../../Desktop/DesktopProxy/FrameProxies/ScDocProxyOfTypeT";
-import { ContentTreeElemProxy } from "./ContentTreeProxy/ContentTreeProxy";
+import { ContentTreeElemProxy } from "./ContentTreeProxy/ContentTreeElemProxy";
 
 export abstract class _ContentTreeBasedDocProxy<T extends IStateOfContentTreeBasedProxies> extends _ScDocProxyOfTypeT<T> implements IScDocProxy {
   protected TreeMutationEvent_Observer: ContentTreeBasedProxyMutationEvent_Observer;

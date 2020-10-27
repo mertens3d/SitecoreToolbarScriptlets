@@ -182,7 +182,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
         resolve();
       }
 
-      reject(this.SetStateOfScWin.name + ' : unknown reason');
+      reject(this.ErrorHand.FormatRejectMessage([ScWindowFacade.name,  this.SetStateOfScWin.name], 'unknown reason'));
 
       this.Logger.FuncEnd(this.SetStateOfScWin.name);
     });

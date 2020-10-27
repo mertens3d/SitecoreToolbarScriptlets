@@ -1,4 +1,4 @@
-﻿import { ElementJacketOfType } from "./ElementJacketBaseOfType";
+﻿import { ElementJacketOfType } from "./ElementJacketOfType";
 
 export class ElementImgJacket extends ElementJacketOfType<HTMLImageElement> {
 

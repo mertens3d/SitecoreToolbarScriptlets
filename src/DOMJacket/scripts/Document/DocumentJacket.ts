@@ -254,13 +254,13 @@ export class DocumentJacket extends _CommonBase {
           resolve();
         }
         catch (err: any) {
-          reject(this.WaitForThenClick.name + ' | ' + err);
+          reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name,  this.WaitForThenClick.name ], err));
         }
       } else {
         if (!foundHtmlElement && iterationJr.IsExhausted) {
           reject(iterationJr.IsExhaustedMsg);
         } else {
-          reject('unknown reason');
+          reject(this.ErrorHand.FormatRejectMessage([DocumentJacket.name, this.WaitForThenClick.name], 'unknown reason'));
         }
       }
     });

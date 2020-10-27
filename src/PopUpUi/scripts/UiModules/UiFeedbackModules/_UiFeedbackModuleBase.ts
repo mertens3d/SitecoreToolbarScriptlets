@@ -8,6 +8,7 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
   protected lineBreak = '<br/>';
   ModuleKey: ModuleKey = ModuleKey.Unknown;
   FeedbackTextContainer: HTMLDivElement;
+  private Scroller: HTMLDivElement;
 
   constructor(hindeCore: IHindeCore, selector: string) {
     super(hindeCore, selector);
@@ -18,21 +19,42 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
     this.Init_UiModuleBase();
   }
 
-  abstract RefreshUi_Module():void;
-  abstract WireEvents_Module():void;
+  abstract RefreshUi_Module(): void;
+  abstract WireEvents_Module(): void;
 
+  private BuildScroller(): void {
+    this.Scroller = document.createElement('div');
+    this.Scroller.classList.add('scroller');
+    this.Scroller.classList.add('short');
+
+    let scrollExpandButton: HTMLInputElement = document.createElement('input');
+    scrollExpandButton.type = 'button';
+    scrollExpandButton.value = 'Toggle Height';
+    scrollExpandButton.classList.add('scroll-expand-btn');
+
+    scrollExpandButton.addEventListener('click', (event: Event) => this.HandleExpandClick(event));
+
+    this.Scroller.appendChild(scrollExpandButton);
+  }
+
+  HandleExpandClick(event: Event) {
+    if (this.Scroller) {
+      this.Scroller.classList.toggle('short');
+    }
+  }
 
   BuildHtmlForModule() {
     this.FeedbackTextContainer = document.createElement('div');
-    let scroller = document.createElement('div');
-    scroller.classList.add('scroller');
+
     let fullCol = document.createElement('div');
     fullCol.classList.add('col-full');
     let flexContainer = document.createElement('div');
     flexContainer.classList.add('flex-container');
 
-    scroller.appendChild(this.FeedbackTextContainer);
-    fullCol.appendChild(scroller);
+    this.BuildScroller();
+
+    this.Scroller.appendChild(this.FeedbackTextContainer);
+    fullCol.appendChild(this.Scroller);
     flexContainer.appendChild(fullCol);
 
     if (this.ContainerUiDivElem) {
@@ -101,6 +123,6 @@ export abstract class _UiFeedbackModuleBase extends _UiModuleBase {
   }
 
   WriteSingleLine(text: string): void {
-    this.FeedbackTextContainer.innerHTML += this.ConvertNBSP( this.ConvertIndents(this.ConvertTabs(this.ConvertLineBreaks(text)) + '<br/>'));
+    this.FeedbackTextContainer.innerHTML += this.ConvertNBSP(this.ConvertIndents(this.ConvertTabs(this.ConvertLineBreaks(text)) + '<br/>'));
   }
 }

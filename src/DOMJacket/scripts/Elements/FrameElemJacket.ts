@@ -5,7 +5,7 @@ import { IFrameJacketStyling } from "../../../Shared/scripts/Interfaces/StateOf/
 import { SharedConst } from "../../../Shared/scripts/SharedConst";
 import { DocumentJacket } from "../Document/DocumentJacket";
 import { UrlJacket } from "./../UrlJacket";
-import { ElementJacketOfType } from "./ElementJacketBaseOfType";
+import { ElementJacketOfType } from "./ElementJacketOfType";
 import { IJacketOfType } from "../../../Shared/scripts/IJacketOfType";
 
 export class FrameJacket extends ElementJacketOfType<HTMLIFrameElement> {

@@ -1,0 +1,22 @@
+﻿@import "../vars";
+
+.hindsite {
+
+  .scroller {
+    display: inline-block;
+    width: $MaxScrollerWidth;
+    overflow: scroll;
+    margin: $hsTypMargin;
+    position: relative;
+
+    &.short {
+      height: 160px;
+    }
+
+    .scroll-expand-btn {
+      position: absolute;
+      top: 0;
+      right: 8px;
+    }
+  }
+}

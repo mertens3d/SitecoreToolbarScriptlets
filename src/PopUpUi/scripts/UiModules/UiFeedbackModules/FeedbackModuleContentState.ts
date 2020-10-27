@@ -12,7 +12,9 @@ export class FeedbackModuleContentState extends _UiFeedbackModuleBase implements
   RefreshUi_Module(): void {
     this.ClearFeedbackElem();
     var allStateText: string = '';
-    allStateText += JSON.stringify(this.RefreshData.StateOfLiveHindSite, null, '&nbsp;');
+    let spacer: string = '/t';
+    allStateText += JSON.stringify(this.RefreshData.StateOfLiveHindSite, null, spacer);
+    allStateText = allStateText.replace(/\/t/gi,'&nbsp;&nbsp;')
     this.WriteSingleLine(allStateText);
   }
 }

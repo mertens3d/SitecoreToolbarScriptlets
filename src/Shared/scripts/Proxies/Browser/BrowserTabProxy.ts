@@ -47,7 +47,7 @@ export class BrowserTabProxy extends _CommonBase {
           reject(iterHelper.IsExhaustedMsg);
         }
         else {
-          reject('unknown reason');
+          reject(this.ErrorHand.FormatRejectMessage([BrowserTabProxy.name, this.TabWaitForReadyStateCompleteNative.name], 'unknown reason'));
         }
       }
     });

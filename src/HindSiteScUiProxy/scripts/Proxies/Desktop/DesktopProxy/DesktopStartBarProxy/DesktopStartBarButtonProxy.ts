@@ -10,7 +10,7 @@ import { ContentConst } from '../../../../../../Shared/scripts/Interfaces/Inject
 import { IStateOfContentTree } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOfContentTree';
 import { SharedConst } from '../../../../../../Shared/scripts/SharedConst';
 import { _APICoreBase } from "../../../../../../Shared/scripts/_APICoreBase";
-import { ConResolver } from '../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/ConResolver';
+import { IConResolver } from "../../../ContentEditor/ContentEditorProxy/ContentTreeProxy/ScContentTreeNodeProxy/IConResolver";
 import { _BaseElemProxy } from "../FrameProxies/_BaseElemProxy";
 import { IStateOf_ } from '../../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_';
 import { IBaseScProxy } from '../../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScProxy';
@@ -25,9 +25,9 @@ export class DesktopStartBarButtonProxy extends _BaseElemProxy<IStateOf_> implem
   private StartBarButtonElemId: string;
 
   public FrameId: string;
-  private ConResolver: ConResolver;
+  private ConResolver: IConResolver;
 
-  constructor(apiCore: IAPICore, iframeElemId: string, documentJacket: IJacketOfType, conResolver: ConResolver) {
+  constructor(apiCore: IAPICore, iframeElemId: string, documentJacket: IJacketOfType, conResolver: IConResolver) {
     super(apiCore, documentJacket);
     this.FrameId = iframeElemId;
     this.ConResolver = conResolver;
@@ -121,15 +121,16 @@ export class DesktopStartBarButtonProxy extends _BaseElemProxy<IStateOf_> implem
 
   private DrawBorderColor(stateOfContentTree: IStateOfContentTree) {
     let borderColor: string = '';
-    borderColor = this.ProcessColor(stateOfContentTree.ActiveNodeShallow.Lineage.L1Icon.IconSuffix);
+    //todo - calculate the active node
+    borderColor = this.ProcessColor(stateOfContentTree.ContentTreeNodeDeep.Lineage.L1Icon.IconSuffix);
     if (borderColor.length > 0) {
       this.FoundStartBarButton.NativeElement.style.borderBottomColor = borderColor;
     }
   }
 
   private BuildLxSpan(stateOfContentTree: IStateOfContentTree): HTMLSpanElement {
-    let nodeImage: HTMLImageElement = this.LxNodeImg(this.ConResolver.ResolveIconPath(stateOfContentTree.ActiveNodeShallow.IconSrc));
-    let nodeSpan: HTMLSpanElement = this.LxNodeSpan(stateOfContentTree.ActiveNodeShallow.Friendly);
+    let nodeImage: HTMLImageElement = this.LxNodeImg(this.ConResolver.ResolveIconPath(stateOfContentTree.ContentTreeNodeDeep.IconSrc));
+    let nodeSpan: HTMLSpanElement = this.LxNodeSpan(stateOfContentTree.ContentTreeNodeDeep.Friendly);
 
     let toReturn: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
     toReturn.style.position = 'relative';
@@ -144,8 +145,8 @@ export class DesktopStartBarButtonProxy extends _BaseElemProxy<IStateOf_> implem
     return toReturn;
   }
   private BuildAncestorSpan(stateOfContentTree: IStateOfContentTree): HTMLSpanElement {
-    let nodeImage: HTMLImageElement = this.AncestorNodeIcon(stateOfContentTree.ActiveNodeShallow.Lineage.L1Icon);
-    let nodeSpan: HTMLSpanElement = this.AncestorNodeSpan(stateOfContentTree.ActiveNodeShallow.Lineage);
+    let nodeImage: HTMLImageElement = this.AncestorNodeIcon(stateOfContentTree.ContentTreeNodeDeep.Lineage.L1Icon);
+    let nodeSpan: HTMLSpanElement = this.AncestorNodeSpan(stateOfContentTree.ContentTreeNodeDeep.Lineage);
 
     let toReturn: HTMLSpanElement = <HTMLSpanElement>document.createElement('span');
     toReturn.style.position = 'absolute';
@@ -179,7 +180,7 @@ export class DesktopStartBarButtonProxy extends _BaseElemProxy<IStateOf_> implem
     this.TaskMonitor.AsyncTaskStarted(this.SetStateOfDesktopStartBarButtonAsync.name);
     this.ErrorHand.ThrowIfNullOrUndefined(this.SetStateOfDesktopStartBarButtonAsync.name, [stateOfContentTree]);
 
-    this.Logger.LogAsJsonPretty('stateOfContentTree.ActiveNodeFlat', stateOfContentTree.ActiveNodeShallow);
+    this.Logger.LogAsJsonPretty('stateOfContentTree.ActiveNodeFlat', stateOfContentTree.ContentTreeNodeDeep);
 
     if (stateOfContentTree) {
       this.DrawTextAndIcons(stateOfContentTree);

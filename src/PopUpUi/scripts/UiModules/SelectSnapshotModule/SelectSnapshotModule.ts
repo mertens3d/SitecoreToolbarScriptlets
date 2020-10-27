@@ -7,7 +7,6 @@ import { ModuleKey } from "../../../../Shared/scripts/Enums/ModuleKey";
 import { SnapShotFlavor } from "../../../../Shared/scripts/Enums/SnapShotFlavor";
 import { Guid } from "../../../../Shared/scripts/Helpers/Guid";
 import { GuidData } from "../../../../Shared/scripts/Helpers/GuidData";
-import { IFirstActive } from "../../../../Shared/scripts/Interfaces/Agents/IFirstActive";
 import { IHindeCore } from "../../../../Shared/scripts/Interfaces/Agents/IHindeCore";
 import { IUiModule } from "../../../../Shared/scripts/Interfaces/Agents/IUiModule";
 import { ISelectionHeaders } from "../../../../Shared/scripts/Interfaces/ISelectionHeaders";
@@ -205,35 +204,34 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     this.Logger.FuncEnd(this.PopulateStateOfSnapShotSelectElement.name);
   }
 
-  GetFirstDataWithActiveNode(stateOfScUiProxy: IStateOfScUi): IFirstActive {
-    let toReturn: IFirstActive = {
-      StateOfHostedFrame: null,
-      activeTreeNodeFlat: null
-    }
+  //GetFirstDataWithActiveNode(stateOfScUiProxy: IStateOfScUi): IFirstActive {
+  //  let toReturn: IFirstActive = {
+  //    StateOfHostedFrame: null,
+  //    activeTreeNodeFlat: null
+  //  }
 
+  //  // todo - put back
+  //  //if (stateOfScUiProxy.Meta.WindowType === ScWindowType.Desktop) {
+  //  //  if (stateOfScUiProxy.StateOfScWindow && stateOfScUiProxy.StateOfScWindow.StateOfDesktop && (stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1) && stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
+  //  //    let activeFrame: IStateOfDTFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(stateOfScUiProxy.StateOfScWindow.StateOfDesktop);
+  //  //    toReturn.StateOfHostedProxy = activeFrame.StateOfHostedProxy;
+  //  //    if (toReturn.StateOfHostedProxy.StatefullDisciminator === StateFullProxyDisciminator.ContentEditor) {
+  //  //      toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(<IStateOfContentEditor>activeFrame.StateOfHostedProxy);
+  //  //    } else {
+  //  //      toReturn.activeTreeNodeFlat = null;
+  //  //    }
+  //  //  } else {
+  //  //    //this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
+  //  //  }
+  //  //}
+  //  //else if ((stateOfScUiProxy.Meta.WindowType === ScWindowType.ContentEditor) && stateOfScUiProxy.StateOfScWindow.StateOfContentEditor && stateOfScUiProxy.StateOfScWindow.StateOfContentEditor.StateOfContentTree) {
+  //  //  toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(<IStateOfContentEditor>(toReturn.StateOfHostedProxy));
+  //  //} else {
+  //  //  this.ErrorHand.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(stateOfScUiProxy.Meta.WindowType));
+  //  //}
 
-    // todo - put back
-    //if (stateOfScUiProxy.Meta.WindowType === ScWindowType.Desktop) {
-    //  if (stateOfScUiProxy.StateOfScWindow && stateOfScUiProxy.StateOfScWindow.StateOfDesktop && (stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.ActiveDTFrameIndex > -1) && stateOfScUiProxy.StateOfScWindow.StateOfDesktop.StateOfDTArea.StateOfDTFrames) {
-    //    let activeFrame: IStateOfDTFrame = this.StateHelpers.GetActiveFrameFromStateOfDesktop(stateOfScUiProxy.StateOfScWindow.StateOfDesktop);
-    //    toReturn.StateOfHostedProxy = activeFrame.StateOfHostedProxy;
-    //    if (toReturn.StateOfHostedProxy.StatefullDisciminator === StateFullProxyDisciminator.ContentEditor) {
-    //      toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(<IStateOfContentEditor>activeFrame.StateOfHostedProxy);
-    //    } else {
-    //      toReturn.activeTreeNodeFlat = null;
-    //    }
-    //  } else {
-    //    //this.Logger.LogAsJsonPretty('something is wrong with the data (maybe)', data);
-    //  }
-    //}
-    //else if ((stateOfScUiProxy.Meta.WindowType === ScWindowType.ContentEditor) && stateOfScUiProxy.StateOfScWindow.StateOfContentEditor && stateOfScUiProxy.StateOfScWindow.StateOfContentEditor.StateOfContentTree) {
-    //  toReturn.activeTreeNodeFlat = this.StateHelpers.GetActiveTreeNodeFromStateOfContentEditor(<IStateOfContentEditor>(toReturn.StateOfHostedProxy));
-    //} else {
-    //  this.ErrorHand.WarningAndContinue(this.GetFirstDataWithActiveNode.name, 'Not implemented ' + StaticHelpers.ScWindowTypeFriendly(stateOfScUiProxy.Meta.WindowType));
-    //}
-
-    return toReturn
-  }
+  //  return toReturn
+  //}
 
   TimeNicknameFavStr(stateOfScUiProxy: IStateOfScUi): string {
     var typeStr: string = '';
@@ -248,16 +246,16 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
     var activeCeNode: string = '';
     let MainSectionNode: string = '';
 
-    let candidateCe: IFirstActive = this.GetFirstDataWithActiveNode(stateOfScUiProxy);
+    //let candidateCe: IFirstActive = this.GetFirstDataWithActiveNode(stateOfScUiProxy);
 
-    if (candidateCe && candidateCe.activeTreeNodeFlat && candidateCe.activeTreeNodeFlat.Friendly) {
-      activeCeNode = candidateCe.activeTreeNodeFlat.Friendly.trim();
-      //todo - put back if (candidateCe.StateOfContentEditorProxy.StateOfContentEditorTreeProxy.StateOfTreeNodes.length >= 2) {
-      //  MainSectionNode = candidateCe.StateOfContentEditorProxy.StateOfContentEditorTreeProxy.StateOfTreeNodes[1].FriendlyTreeNode.trim();
-      //}
-    } else {
-      MainSectionNode = 'todo ' + this.TimeNicknameFavStr.name;
-    }
+    //if (candidateCe && candidateCe.activeTreeNodeFlat && candidateCe.activeTreeNodeFlat.Friendly) {
+    //  activeCeNode = candidateCe.activeTreeNodeFlat.Friendly.trim();
+    //  //todo - put back if (candidateCe.StateOfContentEditorProxy.StateOfContentEditorTreeProxy.StateOfTreeNodes.length >= 2) {
+    //  //  MainSectionNode = candidateCe.StateOfContentEditorProxy.StateOfContentEditorTreeProxy.StateOfTreeNodes[1].FriendlyTreeNode.trim();
+    //  //}
+    //} else {
+    //  MainSectionNode = 'todo ' + this.TimeNicknameFavStr.name;
+    //}
 
     let toReturn = this.FormatDisplayString(stateOfScUiProxy, typeStr, MainSectionNode, activeCeNode);
 
@@ -274,7 +272,7 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
 
         if (stateOfDesktop
           &&
-          stateOfDesktop.Children          ) {
+          stateOfDesktop.Children) {
           count = PopConst.Const.SnapShotFormat.colSep + StaticHelpers.BufferString(stateOfDesktop.Children.length.toString(), PopConst.Const.SnapShotFormat.lenCeCount, BufferChar.Nbsp, BufferDirection.right);
           toReturn = toReturn + count;
         }

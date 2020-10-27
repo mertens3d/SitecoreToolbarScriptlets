@@ -114,6 +114,8 @@ export class SharedConst {
       IconCache: '/temp/iconcache/',
       IconShellStandardMedia: '/sitecore/shell/themes/standard/~/media/',
       IconCacheSoftware16x16: '/temp/iconcache/software/16x16/',
+      IconCacheApplications16x16: '/temp/iconcache/applications/16x16/',
+      IconCachePeople16x16: '/temp/iconcache/people/16x16/',
     },
     UrlSuffix: {
       Desktop: '/sitecore/shell/default.aspx',
