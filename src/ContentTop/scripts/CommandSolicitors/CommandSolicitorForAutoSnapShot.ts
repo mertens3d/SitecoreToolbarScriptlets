@@ -53,10 +53,9 @@ export class SolicitorForScheduledAutoSnapShot extends _CommandSolicitorForEvent
     let windowStatePrior = this.LastKnownSavedState;
 
     let payload: IToApiCallPayload = {
-      DataOneWindowStorage: null,
+      StateOfScUi: null,
       APICommand: APICommandFlag.Unknown,
       SnapShotFlavor: SnapShotFlavor.Autosave,
-      SnapShotOfStateScUiApi: null,
     };
 
     let setStateFromX: ICommandRouterParams = {

@@ -79,6 +79,8 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScFrameProxyFactory.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseElemProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\_BaseScProxy.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfStateOfScWindowProxy.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfTree.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\APICommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\InternalCommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\TaskMutationType.ts" />
@@ -178,7 +180,9 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ScProxies\IStateFullFrameProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\Agents\IUserKeyPressCombo.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\ICommandRouterResult.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IRootState.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IScUiReturnPayload.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfScWindow.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Proxies\Browser\_BaseBrowserProxy.ts" />
     <TypeScriptCompile Include="src\ContentTop\scripts\Recipes\_ContentRecipeBase.ts" />
     <TypeScriptCompile Include="src\DOMJacket\scripts\Document\DocumentJacket.ts" />
@@ -238,8 +242,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfPackageDesigner.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfScContentTreeNode.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfScUiProxy.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfScWindowProxy.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfStateFullProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfTemplateManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\_baseDefaultStateOfContentTreeBasedProxies.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\PromiseFailAction.ts" />
@@ -286,7 +288,6 @@
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfMediaLibrary.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfPackageDesigner.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfScContentTreeNodeShallow.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfScWindow.1.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfTemplateManager.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOf_.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\IApiCallPayload.ts" />
@@ -386,7 +387,6 @@
     <TypeScriptCompile Include="src\PopUpUi\scripts\Events\SelectSnapUiMutationEvent\ISelectSnapUiMutationEvent_Payload.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfDTFrame.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfContentTree.ts" />
-    <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfScWindow.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\StateOf\IStateOfFrameStyling.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandHandlerDataForPopUp.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Interfaces\ICommandRecipes.ts" />

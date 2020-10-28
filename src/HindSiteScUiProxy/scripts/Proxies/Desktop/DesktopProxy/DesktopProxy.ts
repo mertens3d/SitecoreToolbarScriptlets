@@ -9,6 +9,7 @@ import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICo
 import { IScDocProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IScFrameProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
+import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
 import { AsyncLock } from "./DesktopStartBarProxy/AsyncLock";
@@ -86,7 +87,7 @@ export class DesktopProxy extends _ScDocProxyOfTypeT<IStateOfDesktop> implements
     this.Logger.FuncEnd([DesktopProxy.name, this.InstantiateAwaitElementsSelf.name]);
   }
 
-   WireEventsSelf(): void {
+  WireEventsSelf(): void {
     this.Logger.FuncStart(this.WireEventsSelf.name, DesktopProxy.name);
 
     let dtareaProxy: DTAreaElemProxy = <DTAreaElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.DTArea);
@@ -116,6 +117,21 @@ export class DesktopProxy extends _ScDocProxyOfTypeT<IStateOfDesktop> implements
     });
   }
 
+  GetFrameDocProxies(Children: IStateOf_[]): ScProxyDisciminator[] {
+    let frameDocProxies: ScProxyDisciminator[] = [];
+
+    if (Children) {
+      Children.forEach((child: IStateOf_) => {
+        if (child && child.Disciminator === ScProxyDisciminator.FrameProxy && child.Children) {
+          let firstChild: IStateOf_ = child.Children[0];
+          frameDocProxies.push(firstChild.Disciminator);
+        }
+      });
+    }
+
+    return frameDocProxies;
+  }
+
   async SetStateSelf(stateOfDesktop: IStateOfDesktop): Promise<void> {
     this.Logger.FuncStart(this.SetStateSelf.name, DesktopProxy.name);
     this.TaskMonitor.AsyncTaskStarted(this.SetStateSelf.name);
@@ -123,21 +139,23 @@ export class DesktopProxy extends _ScDocProxyOfTypeT<IStateOfDesktop> implements
     try {
       let promAr: Promise<void>[] = [];
       let dtareaProxy: DTAreaElemProxy = <DTAreaElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.DTArea);
-      let dTStateBarProxy: DTStartBarElemProxy = <DTStartBarElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.DTStartBarElem);
+      let dTStartBarProxy: DTStartBarElemProxy = <DTStartBarElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.DTStartBarElem);
 
-      if (dtareaProxy && dTStateBarProxy) {
-        let proxiesToSpawn: ScProxyDisciminator[] = dtareaProxy.GetProxiesToSpawn(stateOfDesktop.Children)
+      if (dtareaProxy && dTStartBarProxy) {
+        let frameDocProxiesToSpawn: ScProxyDisciminator[] = this.GetFrameDocProxies(stateOfDesktop.Children);
+
+        dtareaProxy.QueueFrameProxyDocStates(stateOfDesktop.Children);
 
         //await this.DTAreaProxy.SetStateSelf(stateOfDesktop.DTArea)
         //  .then((dtFramesNeeded: IDTFramesNeeded) => {
         let asyncLock: AsyncLock = new AsyncLock(this.ApiCore);
-        proxiesToSpawn.forEach((disciminator: ScProxyDisciminator) => {
+        frameDocProxiesToSpawn.forEach((disciminator: ScProxyDisciminator) => {
           if (disciminator !== ScProxyDisciminator.FallBack) {
             let proxyResolver: ScDocProxyResolver = new ScDocProxyResolver(this.ApiCore);
             let windowType: ScWindowType = proxyResolver.MapProxyDiscriminatorToScWindowType(disciminator);
 
             if (windowType !== ScWindowType.Unknown) {
-              promAr.push(dTStateBarProxy.TriggerRedButtonAsync(windowType, asyncLock));
+              promAr.push(dTStartBarProxy.TriggerRedButtonAsync(windowType, asyncLock));
             }
           } else {
             // do nothing
@@ -222,7 +240,6 @@ export class DesktopProxy extends _ScDocProxyOfTypeT<IStateOfDesktop> implements
   async PublishItem(): Promise<void> {
     let dTStartBarProxy: DTStartBarElemProxy = <DTStartBarElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.DTStartBarElem);
     if (dTStartBarProxy) {
-
       // todo - put back await dTStartBarProxy.PublishTopFrame();
     }
   }

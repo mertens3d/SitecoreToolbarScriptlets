@@ -1,21 +1,20 @@
-﻿import { IControllerMessageReceivedEvent_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
+﻿import { ScProxyDisciminator } from "../Enums/40 - ScProxyDisciminator";
+import { IControllerMessageReceivedEvent_Payload } from "../Events/ContentReplyReceivedEvent/IDataContentReplyReceivedEvent_Payload";
 import { IMessageContentToController_Payload } from "../Events/ContentReplyReceivedEvent/IMessageContentToController_Payload";
 import { IStateOfScUi } from "../Interfaces/StateOf/IDataStateOfSitecoreWindow";
+import { IWindowStateTree } from "../Interfaces/StateOf/IRootState";
 import { IStateOfContentEditor } from "../Interfaces/StateOf/IStateOfContentEditor";
 import { IStateOfDesktop } from "../Interfaces/StateOf/IStateOfDesktop";
 import { IStateOfDTArea } from "../Interfaces/StateOf/IStateOfDTProxy";
-import { IRootState } from "../Interfaces/StateOf/IStateOfScWindow";
+import { IStateOfStorageSnapShots } from "../Interfaces/StateOf/IStateOfStorageSnapShots";
 import { _CommonBase } from "../_CommonCoreBase";
 import { DefaultControllerMessageReceivedEvent_Payload } from "./Defaults/DefaultControllerMessageReceivedEvent_Payload";
 import { DefaultStateOfContentEditor } from "./Defaults/DefaultStateOfContentEditor";
 import { DefaultStateOfDesktop } from "./Defaults/DefaultStateOfDesktop";
+import { DefaultWindowStateTree } from "./Defaults/DefaultStateOfTree";
 import { DefaultStateOfScUiProxy } from "./Defaults/DefaultStateOfScUiProxy";
-import { DefaultStateOfScWindow } from "./Defaults/DefaultStateOfScWindowProxy";
 import { DefaultStateOfStorageSnapshots } from "./Defaults/DefaultStateOfSnapshots";
-import { DefaultStateOfContentTree } from "./Defaults/DefaultStateOfContentTree";
-import { IStateOfStorageSnapShots } from "../Interfaces/StateOf/IStateOfStorageSnapShots";
 import { StaticHelpers } from "./StaticHelpers";
-import { ScProxyDisciminator } from "../Enums/40 - ScProxyDisciminator";
 
 export class ControllerMessageReceivedEventValidator extends _CommonBase {
   TranslateAndValidatePayload(messageContentToController_Payload: IMessageContentToController_Payload): IControllerMessageReceivedEvent_Payload {
@@ -61,21 +60,21 @@ export class ControllerMessageReceivedEventValidator extends _CommonBase {
     if (!stateOfScUiProxy) {
       stateOfScUiProxy = new DefaultStateOfScUiProxy();
     }
-    stateOfScUiProxy.State = this.ValidateStateOfScWindowProxy(stateOfScUiProxy.State);
+    stateOfScUiProxy.WindowState = this.ValidateStateOfScWindowProxy(stateOfScUiProxy.WindowState);
     return stateOfScUiProxy;
   }
 
-  private ValidateStateOfScWindowProxy(stateOfScWindow: IRootState): IRootState {
-    if (!stateOfScWindow || ! stateOfScWindow.ScWindow) {
-      stateOfScWindow = new DefaultStateOfScWindow();
+  private ValidateStateOfScWindowProxy(stateOfScWindow: IWindowStateTree): IWindowStateTree {
+    if (!stateOfScWindow) {
+      stateOfScWindow = new DefaultWindowStateTree();
     }
 
-    let discriminator: ScProxyDisciminator = stateOfScWindow.ScWindow.Disciminator;
+    let discriminator: ScProxyDisciminator = stateOfScWindow.Disciminator;
 
     if (discriminator === ScProxyDisciminator.ContentEditor) {
-      stateOfScWindow.ScWindow = this.ValidateStateOfContentEditorProxy(<IStateOfContentEditor>stateOfScWindow.ScWindow);
+      stateOfScWindow = this.ValidateStateOfContentEditorProxy(<IStateOfContentEditor>stateOfScWindow);
     } else if (discriminator === ScProxyDisciminator.Desktop) {
-      stateOfScWindow.ScWindow = this.ValidateStateOfDesktopProxy(<IStateOfDesktop>stateOfScWindow.ScWindow);
+      stateOfScWindow = this.ValidateStateOfDesktopProxy(<IStateOfDesktop>stateOfScWindow);
     }
     return stateOfScWindow;
   }

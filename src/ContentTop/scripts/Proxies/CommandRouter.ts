@@ -69,6 +69,8 @@ export class CommandRouter extends _FrontBase {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart(this.RouteCommand.name, ReqCommandMsgFlag[routingParams.ReqMsgFlag]);
 
+      
+
       let calculatedCommandData: ICommandData = this.CalculateCommandToExec(routingParams);
 
       let payload: ICommandStartEndCancelEvent_Payload = {
@@ -162,10 +164,9 @@ export class CommandRouter extends _FrontBase {
     commandData.InternalCommandFlag = InternalCommandFlag.Unknown;
 
     commandData.ToAPIPayload = {
-      DataOneWindowStorage: null,
       APICommand: APICommandFlag.NavigateForward,
       SnapShotFlavor: SnapShotFlavor.Unknown,
-      SnapShotOfStateScUiApi: null,
+      StateOfScUi: routingParams.StateSnapShot,
     }
 
     let apiCommandMapping: IMapMsgFlagToAPICommand[] = MappingMsgFlagToAPIFlag.AllMapping;

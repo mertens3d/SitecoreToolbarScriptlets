@@ -240,7 +240,9 @@ export class ContentTreeElemProxy extends _BaseElemProxy<IStateOfContentTree> im
       await this.GetRootNodeProxy(this.ContainerElemJacket)
         .then((treeNodeProxy: ScContentTreeNodeProxy) => treeRootProxy = treeNodeProxy)
         //.then(() => treeRootProxy.InstantiateAwaitElementsTop())
+        .then(() => treeRootProxy.InstantiateAwaitElementsTop())
         .then(() => this.HostedProxies.push(treeRootProxy))
+        
         //.then(() => this.HostedProxies)
         .then(() => resolve(stateOfContentTree))
         .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([ContentTreeElemProxy.name, this.GetStateOfSelf.name], err)));

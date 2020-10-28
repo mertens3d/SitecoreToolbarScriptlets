@@ -26,9 +26,10 @@ export class ScContentTreeNodeGetState extends _APICoreBase {
       if (this.TreeNodeProperties) {
         //private StateOfScContentTreeNode: IStateOfScContentTreeNodeDeep = new DefaultStateOfScContentTreeNode();
 
-        this.StateOfScContentTreeNode.Coord.LevelWidth = this.TreeNodeProperties.CandidateTreeNode.Coord.LevelWidth;
-        this.StateOfScContentTreeNode.Coord.SiblingIndex = this.TreeNodeProperties.CandidateTreeNode.Coord.SiblingIndex;
-        this.StateOfScContentTreeNode.Coord.LevelIndex = this.TreeNodeProperties.CandidateTreeNode.Coord.LevelIndex;
+        this.StateOfScContentTreeNode.Coord = this.TreeNodeProperties.CandidateTreeNode.Coord;
+        //this.StateOfScContentTreeNode.Coord.LevelWidth = this.TreeNodeProperties.CandidateTreeNode.Coord.LevelWidth;
+        //this.StateOfScContentTreeNode.Coord.SiblingIndex = this.TreeNodeProperties.CandidateTreeNode.Coord.SiblingIndex;
+        //this.StateOfScContentTreeNode.Coord.LevelIndex = this.TreeNodeProperties.CandidateTreeNode.Coord.LevelIndex;
 
         await this.HarvestNodeState()
           .catch((err: any) => this.ErrorHand.HandleFatalError(this.GetStateOfScContentTreeNodeGeneric.name, err));
@@ -60,7 +61,7 @@ export class ScContentTreeNodeGetState extends _APICoreBase {
 
     this.StateOfScContentTreeNode.IsActive = this.TreeNodeProperties.IsActive;
     this.StateOfScContentTreeNode.IsExpanded = this.TreeNodeProperties.IsExpanded;
-    this.StateOfScContentTreeNode.Friendly = this.TreeNodeProperties.CandidateTreeNode.LinkNodeElem.NativeElement.innerText;
+    this.StateOfScContentTreeNode.Friendly = this.TreeNodeProperties.InnerText; 
     this.StateOfScContentTreeNode.ItemId = this.GetApparentItemId(this.TreeNodeProperties.CandidateTreeNode.glyphElem);
     this.StateOfScContentTreeNode.IconSrc = this.TreeNodeProperties.GetIconSrc();
 

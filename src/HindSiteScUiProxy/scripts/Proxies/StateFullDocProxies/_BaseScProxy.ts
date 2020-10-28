@@ -8,6 +8,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
   abstract readonly ScProxyDisciminator: ScProxyDisciminator;
   abstract readonly ScProxyDisciminatorFriendly: string;
   readonly HostedProxies: IBaseScProxy[] = [];
+  readonly IsStateFull: boolean = true;
   StateHasBeenSet: boolean = false;
 
   //protected readonly DocumentJacket: DocumentJacket;
@@ -83,12 +84,16 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     return new Promise(async (resolve, reject) => {
       let toReturn: IStateOf_ = null;
 
-      await this.GetStateOfSelf()
-        .then((state: IStateOf_) => toReturn = state)
-        .then(() => this.GetStateOfHosted())
-        .then((stateOfHostedProxies: IStateOf_[]) => toReturn.Children = stateOfHostedProxies)
-        .then(() => resolve(toReturn))
-        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.GetState.name, this.ScProxyDisciminatorFriendly], err)));
+      if (this.IsStateFull) {
+        await this.GetStateOfSelf()
+          .then((state: IStateOf_) => toReturn = state)
+          .then(() => this.GetStateOfHosted())
+          .then((stateOfHostedProxies: IStateOf_[]) => toReturn.Children = stateOfHostedProxies)
+          .then(() => resolve(toReturn))
+          .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([_BaseScProxy.name, this.GetState.name, this.ScProxyDisciminatorFriendly], err)));
+      } else {
+        resolve(toReturn);
+      }
     })
   }
 
@@ -119,7 +124,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
 
     if (this.HostedProxies) {
       this.HostedProxies.forEach((hostedProxy: IBaseScProxy) => {
-        if (hostedProxy.ScProxyDisciminator === needleDiscriminator
+        if (hostedProxy && hostedProxy.ScProxyDisciminator === needleDiscriminator
           &&
           !hostedProxy.StateHasBeenSet) {
           toReturn = hostedProxy;
@@ -137,11 +142,13 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
       let promAr: Promise<any>[] = [];
 
       states.forEach((stateOf: IStateOf_) => {
-        // find matching proxy without state restored
-        let foundMatch: IBaseScProxy = this.GetMatchingHostedProxy(stateOf.Disciminator);
-        if (foundMatch) {
-          foundMatch.StateHasBeenSet = true;
-          promAr.push(foundMatch.SetState(stateOf));
+        if (stateOf) {
+          // find matching proxy without state restored
+          let foundMatch: IBaseScProxy = this.GetMatchingHostedProxy(stateOf.Disciminator);
+          if (foundMatch) {
+            foundMatch.StateHasBeenSet = true;
+            promAr.push(foundMatch.SetState(stateOf));
+          }
         }
       });
 
@@ -181,7 +188,7 @@ export abstract class _BaseScProxy extends _APICoreBase implements IBaseScProxy 
     this.Logger.FuncEnd([_BaseScProxy.name, this.InstantiateAwaitElementsTop.name, this.ScProxyDisciminatorFriendly]);
   }
 
-  protected  async InstantiateAwaitElementsSelf(): Promise<void> {
+  protected async InstantiateAwaitElementsSelf(): Promise<void> {
     //empty by default
   }
 

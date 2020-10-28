@@ -22,9 +22,8 @@ export class DefaultCommandData  implements ICommandData {
   InternalCommandFlag: InternalCommandFlag;
 
   ToAPIPayload: IToApiCallPayload = {
-    DataOneWindowStorage: null,
     APICommand: APICommandFlag.Unknown,
     SnapShotFlavor: SnapShotFlavor.Unknown,
-    SnapShotOfStateScUiApi: null,
+    StateOfScUi: null,
   }
 }

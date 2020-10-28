@@ -120,38 +120,34 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
     });
   }
 
-  GetProxiesToSpawn(proxyStates: IStateOf_[]): ScProxyDisciminator[] {
-    this.Logger.FuncStart(this.GetProxiesToSpawn.name, DTAreaElemProxy.name);
+  QueueFrameProxyDocStates(proxyStates: IStateOf_[]): void {
+    this.Logger.FuncStart(this.QueueFrameProxyDocStates.name, DTAreaElemProxy.name);
     //let dtFramesNeeded: IDTFramesNeeded = {
     //  DiscriminatorAr: []
     //};
-    let toReturn: ScProxyDisciminator[] = [];
 
     if (proxyStates) {
       if (!StaticHelpers.IsNullOrUndefined([this.ContainerElemJacket])) {
-        proxyStates.forEach((stateOf: IStateOf_) => {
-          if (DTAreaValidProxies.Values.indexOf(stateOf.Disciminator) > -1) {
-           //todo - put back? this.AddToIncomingSetStateList(stateOf);
+        proxyStates.forEach((stateOf: IStateOf_, index: number) => {
+          if (stateOf) {
+            if (DTAreaValidProxies.Values.indexOf(stateOf.Disciminator) > -1) {
+              //todo - put back? this.AddToIncomingSetStateList(stateOf);
+            } else {
+              this.ErrorHand.WarningAndContinue(this.QueueFrameProxyDocStates.name, 'invalid discriminator ' + ScProxyDisciminator[stateOf.Disciminator]);
+            }
           } else {
-            this.ErrorHand.WarningAndContinue(this.GetProxiesToSpawn.name, 'invalid discriminator ' + ScProxyDisciminator[stateOf.Disciminator]);
+            this.ErrorHand.WarningAndContinue([DTAreaElemProxy.name, this.QueueFrameProxyDocStates.name], 'null state found. idx: ' + index);
+            this.Logger.LogAsJsonPretty('proxyStates', proxyStates);
           }
-
-          stateOf.Children.forEach((hostedProxy: IStateOf_) =>
-            toReturn.push(hostedProxy.Disciminator)
-          )
         });
       } else {
-        this.ErrorHand.HandleFatalError(this.GetProxiesToSpawn.name, ' bad data');
+        this.ErrorHand.HandleFatalError(this.QueueFrameProxyDocStates.name, ' bad data');
       }
     } else {
-      this.ErrorHand.HandleFatalError(this.GetProxiesToSpawn.name, '  No state provided');
+      this.ErrorHand.HandleFatalError(this.QueueFrameProxyDocStates.name, '  No state provided');
     }
 
-    this.Logger.FuncEnd(this.GetProxiesToSpawn.name, DTAreaElemProxy.name);
-    return toReturn;
-  }
-
-  TriggerEventsForInboundSelf(): void {
+    this.Logger.FuncEnd(this.QueueFrameProxyDocStates.name, DTAreaElemProxy.name);
   }
 
   //---------------------------------------------------------------------------------------------
@@ -226,7 +222,7 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
         let foundMatch: number = -1;
 
         this.HostedProxies.forEach((hostedProxy: IBaseScProxy, index: number) => {
-          let frameProxy: IScFrameProxy = <IScFrameProxy> hostedProxy;
+          let frameProxy: IScFrameProxy = <IScFrameProxy>hostedProxy;
 
           if (frameProxy && frameProxy.GetNativeFrameId() === needleIframeId) {
             foundMatch = index;
@@ -323,7 +319,6 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
     this.Logger.FuncStart(this.NewFrameStep3_WireEventsForArea.name);
     if (scFrameproxy.DTFrameProxyMutationEvent_Subject) {
       scFrameproxy.DTFrameProxyMutationEvent_Subject.RegisterObserver(this.DTFrameProxyManyMutationEvent_Observer);
-
     } else {
       this.ErrorHand.HandleFatalError([DTAreaElemProxy.name, this.NewFrameStep3_WireEventsForArea.name], 'Null ProxyMutationEvent_Subject');
     }

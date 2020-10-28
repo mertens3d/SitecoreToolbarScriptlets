@@ -3,7 +3,7 @@ import { ScWindowTypeResolver } from "../../../Shared/scripts/Agents/UrlAgent/Sc
 import { DefaultFriendly } from "../../../Shared/scripts/Classes/Defaults/DefaultFriendly";
 import { DefaultMetaData } from "../../../Shared/scripts/Classes/Defaults/DefaultMetaData";
 import { DefaultStateOfScUiProxy } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScUiProxy";
-import { DefaultStateOfScWindow } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfScWindowProxy";
+import { DefaultWindowStateTree } from "../../../Shared/scripts/Classes/Defaults/DefaultStateOfTree";
 import { ReadyStateNAB } from "../../../Shared/scripts/Classes/ReadyStateNAB";
 import { StaticHelpers } from '../../../Shared/scripts/Classes/StaticHelpers';
 import { ScProxyDisciminator } from "../../../Shared/scripts/Enums/40 - ScProxyDisciminator";
@@ -12,20 +12,20 @@ import { APICommandFlag } from "../../../Shared/scripts/Enums/APICommand";
 import { SnapShotFlavor } from '../../../Shared/scripts/Enums/SnapShotFlavor';
 import { Guid } from '../../../Shared/scripts/Helpers/Guid';
 import { IAPICore } from "../../../Shared/scripts/Interfaces/Agents/IAPICore";
-import { IScWindowFacade } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
+import { IScWindowTreeProxy } from '../../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager';
 import { ContentConst } from '../../../Shared/scripts/Interfaces/InjectConst';
 import { IScDocProxy } from "../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IDataFriendly } from "../../../Shared/scripts/Interfaces/StateOf/IDataFriendly";
 import { IDataMetaData } from "../../../Shared/scripts/Interfaces/StateOf/IDataMetaData";
 import { IStateOfScUi } from "../../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
-import { IRootState } from "../../../Shared/scripts/Interfaces/StateOf/IStateOfScWindow";
+import { IWindowStateTree } from "../../../Shared/scripts/Interfaces/StateOf/IRootState";
 import { IStateOf_ } from "../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { _APICoreBase } from "../../../Shared/scripts/_APICoreBase";
 import { ContentEditorDocProxy } from './ContentEditor/ContentEditorProxy/ContentEditorProxy';
 import { DesktopProxy } from './Desktop/DesktopProxy/DesktopProxy';
 import { ScDocProxyResolver } from "./ScDocProxyResolver";
 
-export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
+export class ScWindowTreeProxy extends _APICoreBase implements IScWindowTreeProxy {
   private DocumentJacket: DocumentJacket;
   private ScDocProxyResolver: ScDocProxyResolver;
   private ScPageTypeResolver: ScWindowTypeResolver;
@@ -34,24 +34,24 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
 
   constructor(apiCore: IAPICore, documentJacket: DocumentJacket) {
     super(apiCore);
-    this.Logger.CTORStart(ScWindowFacade.name);
+    this.Logger.CTORStart(ScWindowTreeProxy.name);
     this.DocumentJacket = documentJacket;
     this.Instantiate();
-    this.Logger.CTOREnd(ScWindowFacade.name);
+    this.Logger.CTOREnd(ScWindowTreeProxy.name);
   }
 
   private Instantiate() {
-    this.Logger.FuncStart([ScWindowFacade.name, this.Instantiate.name]);
+    this.Logger.FuncStart([ScWindowTreeProxy.name, this.Instantiate.name]);
 
     this.ScPageTypeResolver = new ScWindowTypeResolver(this.ApiCore);
     this.ScDocProxyResolver = new ScDocProxyResolver(this.ApiCore);
 
-    this.Logger.FuncEnd([ScWindowFacade.name, this.Instantiate.name]);
+    this.Logger.FuncEnd([ScWindowTreeProxy.name, this.Instantiate.name]);
   }
 
   async InstantiatetRoot(): Promise<void> {
     try {
-      this.Logger.FuncStart([ScWindowFacade.name, this.InstantiatetRoot.name]);
+      this.Logger.FuncStart([ScWindowTreeProxy.name, this.InstantiatetRoot.name]);
 
       this.TabSessionId = sessionStorage.getItem(ContentConst.Const.Storage.SessionKey);
 
@@ -75,7 +75,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
       this.ErrorHand.HandleFatalError(this.InstantiatetRoot.name, err);
     }
 
-    this.Logger.FuncEnd([ScWindowFacade.name, this.InstantiatetRoot.name]);
+    this.Logger.FuncEnd([ScWindowTreeProxy.name, this.InstantiatetRoot.name]);
   }
 
   GetCurrentPageType(): ScWindowType {
@@ -83,7 +83,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
   }
 
   TriggerCERibbonCommand(ribbonCommand: APICommandFlag): void {
-    this.Logger.FuncStart([ScWindowFacade.name, this.TriggerCERibbonCommand.name]);
+    this.Logger.FuncStart([ScWindowTreeProxy.name, this.TriggerCERibbonCommand.name]);
     if (this.RootProxy) {
       if (this.RootProxy.ScProxyDisciminator === ScProxyDisciminator.ContentEditor) {
         let contentEditorProxy: ContentEditorDocProxy = <ContentEditorDocProxy>this.RootProxy;
@@ -98,21 +98,21 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
         }
       }
     }
-    this.Logger.FuncEnd([ScWindowFacade.name, this.TriggerCERibbonCommand.name]);
+    this.Logger.FuncEnd([ScWindowTreeProxy.name, this.TriggerCERibbonCommand.name]);
   }
 
   async SetCompactCss(documentJacket: DocumentJacket) {
     //await this.ContentEditorProxy.SetCompactCss();
   }
 
-  private GetState(): Promise<IRootState> {
+  private GetState(): Promise<IWindowStateTree> {
     return new Promise(async (resolve, reject) => {
-      let toReturn: IRootState = new DefaultStateOfScWindow();
+      let toReturn: IWindowStateTree = new DefaultWindowStateTree();
 
       if (this.RootProxy) {
         await this.RootProxy.GetState()
-          .then((stateOf_: IStateOf_) => toReturn.ScWindow = stateOf_)
-          .then(() => toReturn.ScWindow.DisciminatorFriendly = ScProxyDisciminator[toReturn.ScWindow.Disciminator])
+          .then((stateOf_: IStateOf_) => toReturn = stateOf_)
+          //.then(() => toReturn.DisciminatorFriendly = ScProxyDisciminator[toReturn.Disciminator])
           .then(() => resolve(toReturn))
           .catch((err: any) => reject(this.GetState.name + ' | ' + err));
       }
@@ -129,9 +129,9 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
       let toReturnStateOfSitecoreWindow: IStateOfScUi = new DefaultStateOfScUiProxy();
 
       await this.GetState()
-        .then((dataSitecoreWindowStates: IRootState) => toReturnStateOfSitecoreWindow.State = dataSitecoreWindowStates)
+        .then((dataSitecoreWindowStates: IWindowStateTree) => toReturnStateOfSitecoreWindow.WindowState = dataSitecoreWindowStates)
         .then(() => {
-          toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor, toReturnStateOfSitecoreWindow.State);
+          toReturnStateOfSitecoreWindow.Meta = this.PopulateMetaData(snapshotFlavor, toReturnStateOfSitecoreWindow.WindowState);
           toReturnStateOfSitecoreWindow.Friendly = this.PopulateFriendly(toReturnStateOfSitecoreWindow.Meta);
         })
         .then(() => resolve(toReturnStateOfSitecoreWindow))
@@ -160,12 +160,13 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
 
   async SetStateOfScWin(dataToRestore: IStateOfScUi): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.SetStateOfScWin.name);
+      this.Logger.FuncStart([ScWindowTreeProxy.name, this.SetStateOfScWin.name]);
+ 
 
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
-          if (dataToRestore.State.ScWindow) {
-            await this.RootProxy.SetState(dataToRestore.State.ScWindow)
+          if (dataToRestore.WindowState) {
+            await this.RootProxy.SetState(dataToRestore.WindowState)
               .then(() => resolve())
               .catch((err: any) => reject(this.SetStateOfScWin.name + ' | ' + err));
           }
@@ -182,9 +183,9 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
         resolve();
       }
 
-      reject(this.ErrorHand.FormatRejectMessage([ScWindowFacade.name,  this.SetStateOfScWin.name], 'unknown reason'));
+      reject(this.ErrorHand.FormatRejectMessage([ScWindowTreeProxy.name,  this.SetStateOfScWin.name], 'unknown reason'));
 
-      this.Logger.FuncEnd(this.SetStateOfScWin.name);
+      this.Logger.FuncEnd([ScWindowTreeProxy.name, this.SetStateOfScWin.name]);
     });
   }
 
@@ -213,7 +214,7 @@ export class ScWindowFacade extends _APICoreBase implements IScWindowFacade {
     return hash;
   }
 
-  PopulateMetaData(snapshotFlavor: SnapShotFlavor, stateOfScWindow: IRootState): IDataMetaData {
+  PopulateMetaData(snapshotFlavor: SnapShotFlavor, stateOfScWindow: IWindowStateTree): IDataMetaData {
     let toReturn: IDataMetaData = new DefaultMetaData();
     toReturn.WindowType = this.ScPageTypeResolver.GetScWindowType(this.DocumentJacket.UrlJacket);
     toReturn.TimeStamp = new Date();

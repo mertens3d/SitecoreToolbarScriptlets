@@ -136,8 +136,6 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
         this.Logger.Log('');
         this.Logger.Log('');
         this.Logger.Log('');
-
-
       } catch (err) {
         this.ErrorHand.HandleTopLevelTryCatch([BrowserMessageBroker_Content.name, this.ContentReceiveRequest.name], err);
       }
@@ -162,7 +160,7 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
         .then((response: DefaultMsgContentToController) => {
           resolve(response);
         })
-        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([BrowserMessageBroker_Content.name,  this.ReqMsgRouter.name ], err)));
+        .catch((err: any) => reject(this.ErrorHand.FormatRejectMessage([BrowserMessageBroker_Content.name, this.ReqMsgRouter.name], err)));
 
       this.Logger.FuncEnd(this.ReqMsgRouter.name);
     });
@@ -173,13 +171,10 @@ export class BrowserMessageBroker_Content extends _FrontBase implements IMessage
       this.Logger.FuncStart(this.ConstructResponse.name);
       let responseContentToController = new DefaultMsgContentToController(ReplyCommandMsgFlag.Unknown);
 
-
-
       let payload: IToApiCallPayload = {
-        DataOneWindowStorage: null,
         APICommand: APICommandFlag.GetStateOfScUiProxy,
         SnapShotFlavor: SnapShotFlavor.Live,
-        SnapShotOfStateScUiApi: null
+        StateOfScUi: null
       }
 
       await this.HindSiteScUiProxy.APICommand(payload)

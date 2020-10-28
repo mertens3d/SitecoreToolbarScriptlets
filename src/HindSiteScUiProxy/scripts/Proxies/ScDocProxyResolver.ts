@@ -206,7 +206,7 @@ export class ScDocProxyResolver extends _APICoreBase {
     else if (proxyDiscriminator === ScProxyDisciminator.UserManager) { toReturn = ScWindowType.UserManager; }
     else if (proxyDiscriminator === ScProxyDisciminator.Workbox) { toReturn = ScWindowType.Workbox; }
     else if (proxyDiscriminator === ScProxyDisciminator.AppToolsInstallerDesigner) { toReturn = ScWindowType.AppToolsInstallerDesigner; }
-    else { this.ErrorHand.HandleFatalError(this.MapProxyDiscriminatorToScWindowType.name, 'unhandled mapping'); };
+    else { this.ErrorHand.HandleFatalError(this.MapProxyDiscriminatorToScWindowType.name, 'unhandled mapping ' + ScProxyDisciminator[proxyDiscriminator]); };
 
     return toReturn;
   }

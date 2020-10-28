@@ -22,7 +22,7 @@ export class ScContentTreeNodeProxy extends _BaseElemProxy<IStateOfScContentTree
 
     this.Logger.CTORStart(ScContentTreeNodeProxy.name);
 
-    this.TreeNodeProperties = new TreeNodeProperties(apiCore, candidateTreeNode, sourceElemJacket, this,  conResolver, parent)
+    this.TreeNodeProperties = new TreeNodeProperties(apiCore, candidateTreeNode, sourceElemJacket, this, conResolver, parent)
     this.Logger.CTOREnd(ScContentTreeNodeProxy.name);
   }
 
@@ -38,11 +38,14 @@ export class ScContentTreeNodeProxy extends _BaseElemProxy<IStateOfScContentTree
 
   async GetStateOfSelf(): Promise<IStateOfScContentTreeNodeDeep> {
     return new Promise(async (resolve, reject) => {
+      this.Logger.FuncStart([ScContentTreeNodeProxy.name, this.GetStateOfSelf.name, this.TreeNodeProperties.InnerText], 'Children: ' + this.TreeNodeProperties.Children.length);
       let contentTreeNodeProxyGetState: ScContentTreeNodeGetState = new ScContentTreeNodeGetState(this.ApiCore, this.TreeNodeProperties);
 
       await contentTreeNodeProxyGetState.GetStateOfScContentTreeNodeGeneric(true)
         .then((stateOfScContentTreeNodeDeep: IStateOfScContentTreeNodeDeep) => resolve(stateOfScContentTreeNodeDeep))
         .catch((err: any) => reject(this.GetStateOfSelf.name + ' | ' + err));
+
+      this.Logger.FuncEnd([ScContentTreeNodeProxy.name, this.GetStateOfSelf.name, this.TreeNodeProperties.InnerText])
     });
   }
 

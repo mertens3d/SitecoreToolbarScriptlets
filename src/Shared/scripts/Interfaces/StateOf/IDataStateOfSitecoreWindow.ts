@@ -1,12 +1,12 @@
-﻿import { IRootState } from './IStateOfScWindow';
+﻿import { IError } from '../IError';
 import { IDataFriendly } from "./IDataFriendly";
 import { IDataMetaData } from "./IDataMetaData";
-import { IError } from '../IError';
+import { IWindowStateTree } from "./IRootState";
 
 export interface IStateOfScUi {
   ErrorStack: IError[];
   Friendly: IDataFriendly;
   Meta: IDataMetaData;
-  State: IRootState;
+  WindowState: IWindowStateTree;
   StorageSchema: string;
 }

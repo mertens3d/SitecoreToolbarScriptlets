@@ -18,7 +18,7 @@ import { StartMenuButtonResolver } from './StartMenuButtonResolver';
 export class DTStartBarElemProxy extends _BaseElemProxy<IStateOf_> implements IBaseScProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.DTStartBarElem;
   readonly ScProxyDisciminatorFriendly = ScProxyDisciminator[ScProxyDisciminator.DTStartBarElem];
-
+  readonly IsStateFull = false;
   private StartBarButtonProxyBucket: DesktopStartBarButtonProxy[] = [];
   private StartMenuButtonResolver: StartMenuButtonResolver;
   private ConResolver: IConResolver;

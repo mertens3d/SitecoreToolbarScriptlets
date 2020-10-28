@@ -6,17 +6,17 @@ import { IHindSiteScUiProxy } from "../../Shared/scripts/Interfaces/Agents/ICont
 import { IHindSiteScUiProxyRunTimeOptions } from "../../Shared/scripts/Interfaces/Agents/IContentApi/IHindSiteScUiProxyRunTimeOptions";
 import { ICoreErrorHandler } from "../../Shared/scripts/Interfaces/Agents/IErrorHandlerAgent";
 import { ILoggerAgent } from "../../Shared/scripts/Interfaces/Agents/ILoggerAgent";
-import { IScWindowFacade } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
+import { IScWindowTreeProxy } from "../../Shared/scripts/Interfaces/Agents/IScWindowManager/IScWindowManager";
 import { IToApiCallPayload } from "../../Shared/scripts/Interfaces/IApiCallPayload";
 import { IStateOfScUi } from "../../Shared/scripts/Interfaces/StateOf/IDataStateOfSitecoreWindow";
 import { IScUiReturnPayload } from "../../Shared/scripts/Interfaces/StateOf/IScUiReturnPayload";
 import { ScUiManager } from "./Managers/SitecoreUiManager/SitecoreUiManager";
 import { DesktopProxy } from "./Proxies/Desktop/DesktopProxy/DesktopProxy";
-import { ScWindowFacade } from "./Proxies/ScWindowFacade";
+import { ScWindowTreeProxy } from "./Proxies/ScWindowFacade";
 
 export class HindSiteScUiProxy implements IHindSiteScUiProxy {
   private ScUiMan: ScUiManager;
-  private ScWindowFacade: IScWindowFacade;
+  private ScWindowFacade: IScWindowTreeProxy;
   private DocumentJacket: DocumentJacket;
   private ApiCore: IAPICore;
   private Logger: ILoggerAgent;
@@ -42,12 +42,11 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     this.Logger.CTOREnd(HindSiteScUiProxy.name);
   }
 
-
   public async StartUp(): Promise<void> {
     this.Logger.FuncStart([HindSiteScUiProxy.name, this.StartUp.name]);
     try {
       if (!this.IsInstatiated) {
-        this.ScWindowFacade = new ScWindowFacade(this.ApiCore, this.DocumentJacket);
+        this.ScWindowFacade = new ScWindowTreeProxy(this.ApiCore, this.DocumentJacket);
         await this.ScWindowFacade.InstantiatetRoot()
           .then(() => this.IsInstatiated = true)
           .catch((err) => this.ErrorHand.HandleFatalError([HindSiteScUiProxy.name, this.StartUp.name], err));
@@ -62,13 +61,13 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
 
   APICommand(commandData: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
-
       this.Logger.FuncStart([HindSiteScUiProxy.name, this.APICommand.name], APICommandFlag[commandData.APICommand]);
-
 
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
       await this.StartUp()
-        .then(async () => {
+        .then(async () =>
+        {
+          this.Logger.LogAsJsonPretty(this.APICommand.name, commandData);
           switch (commandData.APICommand) {
             case APICommandFlag.NavigateBack:
               this.TriggerCERibbonCommand(commandData)
@@ -101,7 +100,7 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
                 .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
               break;
             case APICommandFlag.GetStateOfScUiProxy:
-              await      this.GetStateOfScUiProxy(commandData)
+              await this.GetStateOfScUiProxy(commandData)
                 .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
                 .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
               break;
@@ -153,7 +152,6 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
         })
         .then(() => resolve(returnPayload))
         .catch((err) => reject(this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.GetStateOfScUiProxy.name], err)));
-
 
       this.Logger.FuncEnd([HindSiteScUiProxy.name, this.APICommand.name], APICommandFlag[commandData.APICommand]);
     });
@@ -210,10 +208,12 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
   private async SetStateOfSitecoreWindowAsync(apiCallPayload: IToApiCallPayload): Promise<IScUiReturnPayload> {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
+      this.Logger.FuncStart([HindSiteScUiProxy.name, this.SetStateOfSitecoreWindowAsync.name]);
       await this.StartUp()
-        .then(() => this.ScWindowFacade.SetStateOfScWin(apiCallPayload.DataOneWindowStorage))
+        .then(() => this.ScWindowFacade.SetStateOfScWin(apiCallPayload.StateOfScUi))
         .then(() => resolve(returnPayload))
         .catch((err: any) => reject(err));
+      this.Logger.FuncEnd([HindSiteScUiProxy.name, this.SetStateOfSitecoreWindowAsync.name]);
     });
   }
 

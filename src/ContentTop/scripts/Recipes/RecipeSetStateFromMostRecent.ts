@@ -27,7 +27,7 @@ export class RecipeSetStateFromMostRecent extends _ContentRecipeBase implements 
           }
         });
 
-        this.CommandParams.ToAPIPayload.SnapShotOfStateScUiApi = mostRecent;
+        this.CommandParams.ToAPIPayload.StateOfScUi = mostRecent;
 
         //await this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ToAPIPayload)
         //  .then(() => resolve())

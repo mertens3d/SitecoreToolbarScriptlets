@@ -265,10 +265,9 @@ export class SelectSnapshotModule extends _UiModuleBase implements IUiModule {
       if (
         stateOfScUiProxy
         &&
-        stateOfScUiProxy.State
-        &&
-        stateOfScUiProxy.State.ScWindow) {
-        let stateOfDesktop: IStateOfDesktop = <IStateOfDesktop>stateOfScUiProxy.State.ScWindow;
+        stateOfScUiProxy.WindowState
+        ) {
+        let stateOfDesktop: IStateOfDesktop = <IStateOfDesktop>stateOfScUiProxy.WindowState;
 
         if (stateOfDesktop
           &&

@@ -21,6 +21,7 @@ export class TreeNodeProperties extends _APICoreBase {
   readonly IsExpanded: boolean;
   readonly IsActive: boolean;
   readonly CandidateTreeNode: TreeNodeProxyCandidate;
+  public InnerText: string;
 
   constructor(apiCore: IAPICore, candidateTreeNode: TreeNodeProxyCandidate, containerElemJacket: IJacketOfType, ownerNode: ScContentTreeNodeProxy, conResolver: IConResolver, parentTreeNode: ScContentTreeNodeProxy) {
     super(apiCore);
@@ -48,10 +49,15 @@ export class TreeNodeProperties extends _APICoreBase {
   async InstantiateAwaitElementsSelf(): Promise<void> {
     this.Logger.FuncStart([TreeNodeProperties.name, this.InstantiateAwaitElementsSelf.name]);
     await this.GetOwnChildren()
+      .then(() => this.HarvestProperties())
       .then(() => this.HarvestLineageProperties())
       .catch((err: string) => this.ErrorHand.FormatRejectMessage([TreeNodeProperties.name, this.InstantiateAwaitElementsSelf.name], err));
 
     this.Logger.FuncEnd([TreeNodeProperties.name, this.InstantiateAwaitElementsSelf.name]);
+  }
+
+  public HarvestProperties() {
+    this.InnerText = this.CandidateTreeNode.LinkNodeElem.NativeElement.innerText;
   }
 
   public Friendly(): string {
@@ -83,7 +89,6 @@ export class TreeNodeProperties extends _APICoreBase {
             candidateChildren.push(candidateChild);
           });
 
-
           await Promise.all(promAr)
             .then((treeNodeProxyCandidates: TreeNodeProxyCandidate[]) => treeNodeProxyCandidates.forEach((processedCandidateChildCandidate: TreeNodeProxyCandidate) => {
               if (processedCandidateChildCandidate.IsNoteWorthy()) {
@@ -109,7 +114,7 @@ export class TreeNodeProperties extends _APICoreBase {
 
     this.Linieage.L1Icon = mainIconSrc;
 
-    if (this.CandidateTreeNode.Coord. LevelIndex === 0) {
+    if (this.CandidateTreeNode.Coord.LevelIndex === 0) {
       this.Linieage.L1Icon = this.IconResolver.DefaultScIcon();
       this.Linieage.L1Text = '';
       this.Linieage.L2Icon = this.IconResolver.DefaultScIcon();

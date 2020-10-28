@@ -49,30 +49,30 @@ export class CommandSolicitorForEventQueryString extends _CommandSolicitorForEve
     //empty
   }
 
-  StartUp(): any {
-    let RouterParams: ICommandRouterParams = {
-      ReqMsgFlag: ReqCommandMsgFlag.SetStateFromQueryString,
-      ReqMsgFlagFriendly: ReqCommandMsgFlag[ReqCommandMsgFlag.SetStateFromQueryString],
-      NewNickName: null,
-      SelectSnapShotId: null,
-      SelectText: null,
-      StateSnapShot: null,
-    };
+  //StartUp(): any {
+  //  let RouterParams: ICommandRouterParams = {
+  //    ReqMsgFlag: ReqCommandMsgFlag.SetStateFromQueryString,
+  //    ReqMsgFlagFriendly: ReqCommandMsgFlag[ReqCommandMsgFlag.SetStateFromQueryString],
+  //    NewNickName: null,
+  //    SelectSnapShotId: null,
+  //    SelectText: null,
+  //    StateSnapShot: null,
+  //  };
 
-    if (this.DocumentJacket.UrlJacket.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
-      RouterParams.ReqMsgFlag = ReqCommandMsgFlag.SetStateFromQueryString,
-        this.CommandRouter.RouteCommand(RouterParams);
-    } else if ((this.SettingsAgent.GetByKey(SettingKey.AutoRestoreState)).ValueAsBool()) {
-      this.HindeCore.Logger.Log('yup...has the setting');
-      RouterParams.ReqMsgFlag = ReqCommandMsgFlag.SetStateFromMostRecent;
-      RouterParams.ReqMsgFlagFriendly = ReqCommandMsgFlag[ReqCommandMsgFlag.SetStateFromMostRecent];
-      this.CommandRouter.RouteCommand(RouterParams);
-    }
-  }
+  //  if (this.DocumentJacket.UrlJacket.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
+  //    RouterParams.ReqMsgFlag = ReqCommandMsgFlag.SetStateFromQueryString,
+  //      this.CommandRouter.RouteCommand(RouterParams);
+  //  } else if ((this.SettingsAgent.GetByKey(SettingKey.AutoRestoreState)).ValueAsBool()) {
+  //    this.HindeCore.Logger.Log('yup...has the setting');
+  //    RouterParams.ReqMsgFlag = ReqCommandMsgFlag.SetStateFromMostRecent;
+  //    RouterParams.ReqMsgFlagFriendly = ReqCommandMsgFlag[ReqCommandMsgFlag.SetStateFromMostRecent];
+  //    this.CommandRouter.RouteCommand(RouterParams);
+  //  }
+  //}
 
-  private async InitFromQueryString(): Promise<void> {
+  public async StartUp(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      this.Logger.FuncStart(this.InitFromQueryString.name);
+      this.Logger.FuncStart([CommandSolicitorForEventQueryString.name, this.StartUp.name]);
       if (this.DocumentJacket.UrlJacket.QueryStringHasKey(QueryStrKey.hsTargetSs)) {
         let qsValue: string = (this.DocumentJacket.UrlJacket.GetQueryStringValueByKey(QueryStrKey.hsTargetSs));
 
@@ -94,7 +94,7 @@ export class CommandSolicitorForEventQueryString extends _CommandSolicitorForEve
               StateSnapShot: dataOneWindowStorage
             }
 
-            this.CommandRouter.RouteCommand(routingParams);
+           await this.CommandRouter.RouteCommand(routingParams);
             //this.CommandParams.ToAPIPayload.DataOneWindowStorage = dataOneWindowStorage;
 
             //this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ToAPIPayload);
@@ -109,7 +109,7 @@ export class CommandSolicitorForEventQueryString extends _CommandSolicitorForEve
         resolve();
       }
 
-      this.Logger.FuncEnd(this.InitFromQueryString.name);
+      this.Logger.FuncEnd([CommandSolicitorForEventQueryString.name, this.StartUp.name]);
     });
   }
 }

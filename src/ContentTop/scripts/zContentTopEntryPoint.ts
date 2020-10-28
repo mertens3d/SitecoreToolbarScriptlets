@@ -128,7 +128,8 @@ class ContentEntry {
       contentMessageMan.InitContentMessageManager()
       this.AutoSnapShotAgent.ScheduleIntervalTasks();
 
-      this.StartUp()
+      await this.StartUp();
+
       this.HindeCore.Logger.Log('Init success')
       //.catch((err: any) => this.ErrorHand.HandleFatalError('Content Entry Point', err));
 

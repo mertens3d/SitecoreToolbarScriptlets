@@ -102,10 +102,11 @@
 
   UrlRelativePrefix: {
     IconCache: string,
-    IconShellStandardMedia: string,
-    IconCacheSoftware16x16: string,
-    IconCachePeople16x16: string,
     IconCacheApplications16x16: string,
+    IconCacheOffice16x16: string,
+    IconCachePeople16x16: string,
+    IconCacheSoftware16x16: string,
+    IconShellStandardMedia: string,
   },
 
   UrlSuffix: {

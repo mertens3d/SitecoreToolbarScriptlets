@@ -11,6 +11,8 @@ import { _BaseElemProxy } from "../../Desktop/DesktopProxy/FrameProxies/_BaseEle
 export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseElemProxy<IStateOf_> implements IBaseScProxy {
   readonly ScProxyDisciminator = ScProxyDisciminator.PackageDesignerInstallerRibbonToolbarElemProxy;
   readonly ScProxyDisciminatorFriendly: string = ScProxyDisciminator[ScProxyDisciminator.PackageDesignerInstallerRibbonToolbarElemProxy];
+  readonly IsStateFull: boolean = false;
+
 
   JqueryModalDialogsFrameProxy: IScFrameProxy;
   private GenerateZipButton: IJacketOfType;
@@ -34,6 +36,13 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseElemPro
     this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.AttachClickEventToGenZip.name]);
   }
 
+  private CallBackOnGenerateZipButtonClicked(event: Event): void {
+    //this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.CallBackOnGenerateZipButtonClicked.name]);
+
+    ////alert('generate zip button clicked');
+    //this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.CallBackOnGenerateZipButtonClicked.name]);
+  }
+
   protected  async InstantiateAwaitElementsSelf(): Promise<void> {
     try {
       this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAwaitElementsSelf.name]);
@@ -45,12 +54,7 @@ export class PackageDesignerInstallerRibbonToolbarElemProxy extends _BaseElemPro
     this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.InstantiateAwaitElementsSelf.name]);
   }
 
-  private CallBackOnGenerateZipButtonClicked(event: Event): void {
-    //this.Logger.FuncStart([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.CallBackOnGenerateZipButtonClicked.name]);
 
-    ////alert('generate zip button clicked');
-    //this.Logger.FuncEnd([PackageDesignerInstallerRibbonToolbarElemProxy.name, this.CallBackOnGenerateZipButtonClicked.name]);
-  }
 
   async OpenFile(fileName: string): Promise<void> {
     //let jqueryFrameProxy: JqueryModalDialogsProxy = null;
