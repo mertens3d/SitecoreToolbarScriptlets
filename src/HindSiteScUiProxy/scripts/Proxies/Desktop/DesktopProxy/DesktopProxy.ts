@@ -9,6 +9,7 @@ import { IAPICore } from "../../../../../Shared/scripts/Interfaces/Agents/IAPICo
 import { IScDocProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IBaseScDocProxy";
 import { IScFrameProxy } from "../../../../../Shared/scripts/Interfaces/ScProxies/IStateFullFrameProxy";
 import { IStateOfDesktop } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDesktop";
+import { IStateOfDTArea } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOfDTProxy";
 import { IStateOf_ } from "../../../../../Shared/scripts/Interfaces/StateOf/IStateOf_";
 import { SharedConst } from "../../../../../Shared/scripts/SharedConst";
 import { ScDocProxyResolver } from "../../ScDocProxyResolver";
@@ -119,16 +120,28 @@ export class DesktopProxy extends _ScDocProxyOfTypeT<IStateOfDesktop> implements
 
   GetFrameDocProxies(Children: IStateOf_[]): ScProxyDisciminator[] {
     let frameDocProxies: ScProxyDisciminator[] = [];
+    let stateOfDTArea: IStateOfDTArea = null;
 
     if (Children) {
-      Children.forEach((child: IStateOf_) => {
-        if (child && child.Disciminator === ScProxyDisciminator.FrameProxy && child.Children) {
-          let firstChild: IStateOf_ = child.Children[0];
-          frameDocProxies.push(firstChild.Disciminator);
+      Children.forEach((child: IStateOfDTArea) => {
+        if (child) {
+          if (child.Disciminator === ScProxyDisciminator.DTArea) {
+            stateOfDTArea = child;
+          }
         }
       });
     }
 
+    if (stateOfDTArea && stateOfDTArea.Children) {
+      stateOfDTArea.Children.forEach((child: IStateOf_) => {
+        if (child) {
+          if (child && child.Disciminator === ScProxyDisciminator.FrameProxy && child.Children) {
+            let firstChild: IStateOf_ = child.Children[0];
+            frameDocProxies.push(firstChild.Disciminator);
+          }
+        }
+      });
+    }
     return frameDocProxies;
   }
 
@@ -144,7 +157,10 @@ export class DesktopProxy extends _ScDocProxyOfTypeT<IStateOfDesktop> implements
       if (dtareaProxy && dTStartBarProxy) {
         let frameDocProxiesToSpawn: ScProxyDisciminator[] = this.GetFrameDocProxies(stateOfDesktop.Children);
 
-        dtareaProxy.QueueFrameProxyDocStates(stateOfDesktop.Children);
+        this.Logger.LogAsJsonPretty('proxies to spawn', frameDocProxiesToSpawn);
+
+        //let dtAreaData: IStateOfDTArea =
+        //dtareaProxy.QueueFrameProxyDocStates(stateOfDesktop.Children);
 
         //await this.DTAreaProxy.SetStateSelf(stateOfDesktop.DTArea)
         //  .then((dtFramesNeeded: IDTFramesNeeded) => {

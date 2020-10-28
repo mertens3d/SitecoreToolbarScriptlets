@@ -128,6 +128,8 @@ export class DTAreaElemProxy extends _BaseElemProxy<IStateOfDTArea> implements I
 
     if (proxyStates) {
       if (!StaticHelpers.IsNullOrUndefined([this.ContainerElemJacket])) {
+        this.Logger.LogAsJsonPretty(this.QueueFrameProxyDocStates.name, proxyStates);
+
         proxyStates.forEach((stateOf: IStateOf_, index: number) => {
           if (stateOf) {
             if (DTAreaValidProxies.Values.indexOf(stateOf.Disciminator) > -1) {
