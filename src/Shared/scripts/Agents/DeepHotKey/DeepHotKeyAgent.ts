@@ -113,12 +113,12 @@ export class DeepHotKeyAgent extends _CommonBase {
     //console.log(this.HandleHotKeyPayload.name);
     if (hotKeyPayload) {
       if (window.self !== window.top) {
-        //console.log('bubble up');
+        console.log('bubble up');
         this.BubbleMessageUp(hotKeyPayload);
       }
     }
     else {
-      //console.log('at top');
+      console.log('at top');
       this.HandleTopWindow(hotKeyPayload);
     }
   }

@@ -16,37 +16,37 @@ export class IConResolver extends _APICoreBase {
     }
 
     else if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconCacheApplications16x16)) {
-      toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCacheApplications16x16, '');
-      toReturn.IconPath = ScIconPath.IconCacheApplications16x16;
+      toReturn.Suffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCacheApplications16x16, '');
+      toReturn.Path = ScIconPath.IconCacheApplications16x16;
     }
 
     else if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconCacheOffice16x16)) {
-      toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCacheOffice16x16, '');
-      toReturn.IconPath = ScIconPath.IconCacheOffice16x16;
+      toReturn.Suffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCacheOffice16x16, '');
+      toReturn.Path = ScIconPath.IconCacheOffice16x16;
     }
 
     else if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconCachePeople16x16)) {
-      toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCachePeople16x16, '');
-      toReturn.IconPath = ScIconPath.IconCachePeople16x16;
+      toReturn.Suffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCachePeople16x16, '');
+      toReturn.Path = ScIconPath.IconCachePeople16x16;
     }
 
     else if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconCacheSoftware16x16)) {
-      toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCacheSoftware16x16, '');
-      toReturn.IconPath = ScIconPath.IconCacheSoftware16x16;
+      toReturn.Suffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCacheSoftware16x16, '');
+      toReturn.Path = ScIconPath.IconCacheSoftware16x16;
     }
 
     else if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconCache)) {
-      toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCache, '');
-      toReturn.IconPath = ScIconPath.IconCache;
+      toReturn.Suffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconCache, '');
+      toReturn.Path = ScIconPath.IconCache;
     }
     else if (relativePath.startsWith(SharedConst.Const.UrlRelativePrefix.IconShellStandardMedia)) {
-      toReturn.IconSuffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconShellStandardMedia, '');
-      toReturn.IconPath = ScIconPath.StandardMedia;
+      toReturn.Suffix = relativePath.replace(SharedConst.Const.UrlRelativePrefix.IconShellStandardMedia, '');
+      toReturn.Path = ScIconPath.StandardMedia;
     }
 
     else {
-      toReturn.IconSuffix = relativePath;
-      toReturn.IconPath = ScIconPath.Unknown;
+      toReturn.Suffix = relativePath;
+      toReturn.Path = ScIconPath.Unknown;
     }
 
     return toReturn;
@@ -57,8 +57,8 @@ export class IConResolver extends _APICoreBase {
     //.BuildFullUrlFromParts().AbsUrl.toString()
     if (false) {
     }
-    else if (itemIconSource.IconPath === ScIconPath.Unknown) { toReturn = itemIconSource.IconSuffix; }
-    else if (itemIconSource.IconPath === ScIconPath.IconCache) { toReturn = SharedConst.Const.UrlRelativePrefix.IconCache + itemIconSource.IconSuffix; }
+    else if (itemIconSource.Path === ScIconPath.Unknown) { toReturn = itemIconSource.Suffix; }
+    else if (itemIconSource.Path === ScIconPath.IconCache) { toReturn = SharedConst.Const.UrlRelativePrefix.IconCache + itemIconSource.Suffix; }
     else { this.ErrorHand.HandleFatalError([IConResolver.name, this.ResolveIconPath.name], 'unaccounted for iconPath type'); }
 
     return toReturn;
@@ -66,8 +66,8 @@ export class IConResolver extends _APICoreBase {
 
   DefaultScIcon(): IScIcon {
     return {
-      IconSuffix: '',
-      IconPath: ScIconPath.Unknown,
+      Suffix: '',
+      Path: ScIconPath.Unknown,
     };
   }
 }

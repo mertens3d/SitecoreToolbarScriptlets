@@ -94,7 +94,9 @@ export class CommandSolicitorForEventQueryString extends _CommandSolicitorForEve
               StateSnapShot: dataOneWindowStorage
             }
 
-           await this.CommandRouter.RouteCommand(routingParams);
+            await this.CommandRouter.RouteCommand(routingParams)
+              .then(() => resolve())
+              .catch((err: any) => this.ErrorHand.FormatRejectMessage([CommandSolicitorForEventQueryString.name, this.StartUp.name], err));
             //this.CommandParams.ToAPIPayload.DataOneWindowStorage = dataOneWindowStorage;
 
             //this.Dependancies.ScUiProxy.SetStateOfSitecoreWindowAsync(this.CommandParams.ToAPIPayload);

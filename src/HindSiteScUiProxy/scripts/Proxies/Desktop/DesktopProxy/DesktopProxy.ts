@@ -179,8 +179,14 @@ export class DesktopProxy extends _ScDocProxyOfTypeT<IStateOfDesktop> implements
           //});
         })
 
+        this.Logger.MarkerA();
+
         await Promise.all(promAr)
+          .then(() => Promise.resolve())
           .catch((err: any) => this.ErrorHand.HandleFatalError(this.SetStateSelf.name, err));
+
+        this.Logger.MarkerB();
+
       }
     } catch (err: any) {
       this.ErrorHand.HandleFatalError(this.SetStateSelf.name + ' ' + DesktopProxy.name, err);
@@ -244,10 +250,15 @@ export class DesktopProxy extends _ScDocProxyOfTypeT<IStateOfDesktop> implements
   }
 
   TriggerCERibbonCommand(ribbonCommand: APICommandFlag) {
-    this.Logger.FuncStart([DesktopProxy.name, this.TriggerCERibbonCommand.name]);
-    let dTStartBarProxy: DTStartBarElemProxy = <DTStartBarElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.DTStartBarElem);
-    if (dTStartBarProxy) {
-      //todo - put back dTStartBarProxy.TriggerCERibbonCommand(ribbonCommand);
+    this.Logger.FuncStart([DesktopProxy.name, this.TriggerCERibbonCommand.name], APICommandFlag[ribbonCommand]);
+    //let dTStartBarProxy: DTStartBarElemProxy = <DTStartBarElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.DTStartBarElem);
+    //if (dTStartBarProxy) {
+    //  //todo - put back dTStartBarProxy.TriggerCERibbonCommand(ribbonCommand);
+    //}
+
+    let dtareaProxy: DTAreaElemProxy = <DTAreaElemProxy>this.GetOnlyOrNullHostedProxiesByDisciminator(ScProxyDisciminator.DTArea);
+    if (dtareaProxy) {
+      dtareaProxy.TriggerCERibbonCommand(ribbonCommand);
     }
 
     this.Logger.FuncEnd([DesktopProxy.name, this.TriggerCERibbonCommand.name]);

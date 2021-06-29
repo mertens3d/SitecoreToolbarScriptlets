@@ -20,8 +20,8 @@ export class ElementJacketOfType<T extends HTMLElement> extends _CommonBase impl
 
     constructor(commonCore: ICommonCore, htmlElement: T) {
         super(commonCore); //, htmlElement);
-        this.NativeElement = htmlElement;
-        this.NodeTagName = htmlElement.tagName;
+      this.NativeElement = htmlElement;
+      this.NodeTagName = htmlElement ? htmlElement.tagName : 'undefined-null';
     }
 
     Click(): any {

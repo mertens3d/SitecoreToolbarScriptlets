@@ -12,6 +12,8 @@ import { IStateOfStorageSnapShots } from "../../../Shared/scripts/Interfaces/Sta
 import { ContentConst } from "../../../Shared/scripts/Interfaces/InjectConst";
 import { IOneStorageData } from "../../../Shared/scripts/Interfaces/IOneStorageData";
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
+import { SnapShotValidator } from "../../../Shared/scripts/Classes/ControllerMessageReceivedEventValidator";
+import { SnapShotValidatorB } from "../../../Shared/scripts/Classes/SnapShotValidatorB";
 
 export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent {
   private RepoAgent: IRepositoryAgent;
@@ -73,33 +75,7 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
     return DateOneWinStoreMatch;
   }
 
-  private ValidateStorageData(oneRaw: IOneStorageData): IStateOfScUi {
-    var candidate: IStateOfScUi = <IStateOfScUi>JSON.parse(oneRaw.data);
 
-    if (candidate) {
-      if (!candidate.Meta) {
-        candidate.Meta = new DefaultMetaData();
-      }
-
-      candidate.Meta.TimeStamp = new Date(candidate.Meta.TimeStamp);
-
-      if (!candidate.Meta.WindowType) {
-        candidate.Meta.WindowType = ScWindowType.Unknown;
-        candidate.Friendly.WindowType = ScWindowType[candidate.Meta.WindowType];
-      }
-
-      if (!candidate.Friendly) {
-        candidate.Friendly = new DefaultFriendly();
-      }
-
-      if (!candidate.Friendly.NickName) {
-        candidate.Friendly.NickName = '';
-      }
-    } else {
-      this.ErrorHand.HandleFatalError(this.ValidateStorageData.name, 'Saved data did not import correctly')
-    }
-    return candidate
-  }
 
   private GetAllLocalStorageAsIOneStorageData(): IOneStorageData[] {
     let prefix = ContentConst.Const.Storage.WindowRoot + ContentConst.Const.Storage.SnapShotPrefix;
@@ -112,9 +88,19 @@ export class ContentAtticAgent extends _FrontBase implements IContentAtticAgent 
 
     let rawStorageData: IOneStorageData[] = this.GetAllLocalStorageAsIOneStorageData();
 
+
+    let snapShotValidator: SnapShotValidatorB = new SnapShotValidatorB(this.CommonCore);
+
     if (rawStorageData) {
       for (var idx = 0; idx < rawStorageData.length; idx++) {
-        toReturn.push(this.ValidateStorageData(rawStorageData[idx]));
+
+        let storageItem: IOneStorageData = rawStorageData[idx];
+
+        let validatedData: IStateOfScUi = snapShotValidator.ValidateStorageData(storageItem);
+
+        validatedData = snapShotValidator.ValidateStateOfScUiProxy(validatedData)
+
+        toReturn.push(validatedData);
       }
     }
 

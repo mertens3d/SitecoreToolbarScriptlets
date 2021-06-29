@@ -15,7 +15,7 @@ import { IMessageControllerToContent } from "../../../Shared/scripts/Interfaces/
 import { IStateOfPopUp } from "../../../Shared/scripts/Interfaces/IStateOfPopUp";
 import { IPopUpBrowserProxy } from "../../../Shared/scripts/Interfaces/ScProxies/IBrowserProxy";
 import { _FrontBase } from "../../../Shared/scripts/_HindeCoreBase";
-import { ControllerMessageReceivedEventValidator } from "../../../Shared/scripts/Classes/ControllerMessageReceivedEventValidator";
+import { SnapShotValidator } from "../../../Shared/scripts/Classes/ControllerMessageReceivedEventValidator";
 
 export class MessageBroker_PopUp extends _FrontBase {
   LastKnownContentState: IControllerMessageReceivedEvent_Payload;
@@ -105,7 +105,7 @@ export class MessageBroker_PopUp extends _FrontBase {
       this.BrowserProxy.SendMessageAsync_BrowserProxy(messageControllerToContent)
         .then((response: IMessageContentToController) => this.ReceiveResponseHandler(response))
         .then((messageContentToController_Payload: IMessageContentToController_Payload) => {
-          let ContollerMessageReceivedEventValidator = new ControllerMessageReceivedEventValidator(this.HindeCore);
+          let ContollerMessageReceivedEventValidator = new SnapShotValidator(this.HindeCore);
 
           let validatedPayload: IControllerMessageReceivedEvent_Payload = ContollerMessageReceivedEventValidator.TranslateAndValidatePayload(messageContentToController_Payload);
 

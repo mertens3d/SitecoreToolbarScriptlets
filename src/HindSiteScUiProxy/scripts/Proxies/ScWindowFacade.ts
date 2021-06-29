@@ -161,7 +161,6 @@ export class ScWindowTreeProxy extends _APICoreBase implements IScWindowTreeProx
   async SetStateOfScWin(dataToRestore: IStateOfScUi): Promise<void> {
     return new Promise(async (resolve, reject) => {
       this.Logger.FuncStart([ScWindowTreeProxy.name, this.SetStateOfScWin.name]);
- 
 
       if (dataToRestore) {
         if (dataToRestore.Meta.WindowType == ScWindowType.Desktop) {
@@ -183,7 +182,7 @@ export class ScWindowTreeProxy extends _APICoreBase implements IScWindowTreeProx
         resolve();
       }
 
-      reject(this.ErrorHand.FormatRejectMessage([ScWindowTreeProxy.name,  this.SetStateOfScWin.name], 'unknown reason'));
+      reject(this.ErrorHand.FormatRejectMessage([ScWindowTreeProxy.name, this.SetStateOfScWin.name], 'unknown reason'));
 
       this.Logger.FuncEnd([ScWindowTreeProxy.name, this.SetStateOfScWin.name]);
     });

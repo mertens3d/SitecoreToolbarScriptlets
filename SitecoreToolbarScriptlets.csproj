@@ -79,8 +79,11 @@
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\ScFrameProxyFactory.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\Desktop\DesktopProxy\FrameProxies\_BaseElemProxy.ts" />
     <TypeScriptCompile Include="src\HindSiteScUiProxy\scripts\Proxies\StateFullDocProxies\_BaseScProxy.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultScContentTreeNodeLineage.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultScIcon.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfStateOfScWindowProxy.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Classes\Defaults\DefaultStateOfTree.ts" />
+    <TypeScriptCompile Include="src\Shared\scripts\Classes\SnapShotValidatorB.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\APICommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\InternalCommand.ts" />
     <TypeScriptCompile Include="src\Shared\scripts\Enums\TaskMutationType.ts" />

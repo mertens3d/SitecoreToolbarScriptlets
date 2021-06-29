@@ -122,7 +122,7 @@ export class DesktopStartBarButtonProxy extends _BaseElemProxy<IStateOf_> implem
   private DrawBorderColor(stateOfContentTree: IStateOfContentTree) {
     let borderColor: string = '';
     //todo - calculate the active node
-    borderColor = this.ProcessColor(stateOfContentTree.ContentTreeNodeDeep.Lineage.L1Icon.IconSuffix);
+    borderColor = this.ProcessColor(stateOfContentTree.ContentTreeNodeDeep.Lineage.L1Icon.Suffix);
     if (borderColor.length > 0) {
       this.FoundStartBarButton.NativeElement.style.borderBottomColor = borderColor;
     }

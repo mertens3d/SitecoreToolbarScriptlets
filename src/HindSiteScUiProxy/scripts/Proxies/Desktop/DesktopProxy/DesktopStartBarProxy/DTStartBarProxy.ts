@@ -49,7 +49,6 @@ export class DTStartBarElemProxy extends _BaseElemProxy<IStateOf_> implements IB
       }
       //let pop1ElemJacket: ElementJacket
       await methodLock.WaitForLockControl(ScWindowType[scWindowType])
-
         .then(() => this.ContainerElemJacket.RaceWaitAndClick(ContentConst.Const.Selector.SC.scStartButtonVSpec))
         .then(() => this.TaskMonitor.AsyncTaskStarted(this.TriggerRedButtonAsync.name))
         .then(() => this.TriggerPopXButton(buttonSelectors.Pop1Selector, ContentConst.Const.Selector.SC.StartMenu.Popup1.Id))
@@ -142,7 +141,7 @@ export class DTStartBarElemProxy extends _BaseElemProxy<IStateOf_> implements IB
         }
       }
       else {
-        this.Logger.LogAsJsonPretty('dTAreaProxyMutationEvent_Payload', dTAreaProxyMutationEvent_Payload);
+        this.Logger.Log('no DTFrameProxyMutationEvent_Payload');
       }
     } else {
       this.ErrorHand.HandleFatalError(this.OnTreeMutationEvent_DesktopStartBarProxy.name, 'Null payload');

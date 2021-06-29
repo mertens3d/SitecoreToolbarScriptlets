@@ -194,8 +194,8 @@ export class CommandRouter extends _FrontBase {
       });
     }
 
-    this.Logger.LogAsJsonPretty('routingParams', routingParams);
-    this.Logger.LogAsJsonPretty('commandData', commandData);
+    //this.Logger.LogAsJsonPretty('routingParams', routingParams);
+    //this.Logger.LogAsJsonPretty('commandData', commandData);
 
     if (!foundMatch) {
       this.ErrorHand.HandleFatalError([CommandRouter.name, this.CalculateCommandToExec.name], 'No match found: ' + ReqCommandMsgFlag[routingParams.ReqMsgFlag]);

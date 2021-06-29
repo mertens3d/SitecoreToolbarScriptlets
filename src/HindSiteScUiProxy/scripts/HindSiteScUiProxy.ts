@@ -65,9 +65,8 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
 
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
       await this.StartUp()
-        .then(async () =>
-        {
-          this.Logger.LogAsJsonPretty(this.APICommand.name, commandData);
+        .then(async () => {
+          //this.Logger.LogAsJsonPretty(this.APICommand.name, commandData);
           switch (commandData.APICommand) {
             case APICommandFlag.NavigateBack:
               this.TriggerCERibbonCommand(commandData)
@@ -124,7 +123,7 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
               break;
 
             case APICommandFlag.SetStateOfSitecoreWindowAsync:
-              this.SetStateOfSitecoreWindowAsync(commandData)
+              await this.SetStateOfSitecoreWindowAsync(commandData)
                 .then((scUiReturnPayload: IScUiReturnPayload) => returnPayload = scUiReturnPayload)
                 .catch((err) => this.ErrorHand.FormatRejectMessage([HindSiteScUiProxy.name, this.APICommand.name, JSON.stringify(commandData, null, 2)], err));
               break;
@@ -209,10 +208,11 @@ export class HindSiteScUiProxy implements IHindSiteScUiProxy {
     return new Promise(async (resolve, reject) => {
       let returnPayload: IScUiReturnPayload = this.DefaultReturnPayload();
       this.Logger.FuncStart([HindSiteScUiProxy.name, this.SetStateOfSitecoreWindowAsync.name]);
-      await this.StartUp()
-        .then(() => this.ScWindowFacade.SetStateOfScWin(apiCallPayload.StateOfScUi))
+
+      await this.ScWindowFacade.SetStateOfScWin(apiCallPayload.StateOfScUi)
         .then(() => resolve(returnPayload))
         .catch((err: any) => reject(err));
+
       this.Logger.FuncEnd([HindSiteScUiProxy.name, this.SetStateOfSitecoreWindowAsync.name]);
     });
   }
